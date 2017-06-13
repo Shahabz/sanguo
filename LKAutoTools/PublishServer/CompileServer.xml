@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="start" basedir=".">
+	
+	<!-- 开始编译打包任务 -->
+	<target name="start" depends ="local_upload_dev, sshexecdev, dev_download_local, checksql_game, local_upload_test, sshexectest">
+			
+					 
+	</target>
+	
+	
+	<!-- 本地代码上传到dev -->
+	<target name="local_upload_dev">
+			
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/AutoS/include/" port="22022" trust="true">
+		   <fileset dir="../../HRServer/GameServer/AutoS/include/"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/AutoS/src/" port="22022" trust="true">
+		   <fileset dir="../../HRServer/GameServer/AutoS/src/"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/include/" port="22022" trust="true">
+		   <fileset dir="../../HRServer/GameServer/include"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/src/" port="22022" trust="true">
+		   <fileset dir="../../HRServer/GameServer/src/"/>
+		</scp>
+			
+			
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKNetServer/include/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/LKNetServer/include/"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKNetServer/src/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/LKNetServer/src/"/>
+		</scp>
+		
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKUtils/include/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/LKUtils/include/"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKUtils/src/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/LKUtils/src/"/>
+		</scp>
+		
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/Lua/src/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/Lua/src/"/>
+		</scp>
+		
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/hiredis_linux/" port="22022" trust="true">
+		   <fileset dir="../../LKEngine/hiredis_linux/"/>
+		</scp>
+		
+	</target>
+	
+	
+	<!-- 编译打包 -->
+	<target name="sshexecdev" >  
+			
+      		<sshexec host="119.29.56.213"  port="22022" username="root"  password="jiazhi198772"  
+         		trust="true" command="cd /root/hero/compile;make clean;make;./n"/>
+		
+	</target>
+
+	
+	<!-- dev打好的包下载到本地 -->
+	<target name="dev_download_local" >
+			
+		<scp file="root:jiazhi198772@119.29.56.213:/root/hero/hrServer.tar.gz" todir="./"  port="22022" trust="true"/>
+		<scp file="root:jiazhi198772@119.29.56.213:/root/hero/hrSql.tar.gz" todir="./"  port="22022" trust="true"/>
+		<delete dir="hrServer"/>
+			
+	</target>
+	
+	
+	<!-- 执行比较game表的批处理,将有变化的数据取出来 -->
+	<target name="checksql_game">  
+    		<exec dir="../PublishSQL/CompareGame" executable="cmd.exe">
+						<arg line="/c dev_check_test.bat" />
+        		<arg line="/c exit" />
+    		</exec> 
+
+				<move file="../PublishSQL/CompareGame/hr_dev_game_patch.sql" todir="./" />
+	</target>
+	
+	
+	<!-- 将本地包上传到外网测试服务器 -->
+	<target name="local_upload_test">
+			
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/"  port="22022" trust="true">
+		   <fileset file="./hrServer.tar.gz"/>
+		</scp>
+
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/"  port="22022" trust="true">
+		   <fileset file="./hrSql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/sql"  port="22022" trust="true">
+		   <fileset file="./hr_dev_game_patch.sql"/>
+		</scp>
+		 
+	</target>
+
+	<!-- 将上传135的数据库和服务器包解压，停服开服等操作 -->
+	<target name="sshexectest" >  
+			
+      		<sshexec host="119.29.56.213"  port="22022" username="root"  password="jiazhi198772"  
+         		trust="true" command="cd /usr/local/hero;./stop_shell;./sql_shell;./start_shell"/>
+		
+	</target>
+
+</project>

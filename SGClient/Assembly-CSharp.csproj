@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{6A20D25F-AFB7-032A-72F0-D8153951786A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Temp\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Source\Base\Const.cs" />
+     <Compile Include="Assets\Source\Base\Converter.cs" />
+     <Compile Include="Assets\Source\Base\DeviceHelper.cs" />
+     <Compile Include="Assets\Source\Base\Global.cs" />
+     <Compile Include="Assets\Source\Base\Localization.cs" />
+     <Compile Include="Assets\Source\Base\LuaConst.cs" />
+     <Compile Include="Assets\Source\Base\LuaFun.cs" />
+     <Compile Include="Assets\Source\Base\LuaHelper.cs" />
+     <Compile Include="Assets\Source\Base\ShareData.cs" />
+     <Compile Include="Assets\Source\Base\ShowFPS.cs" />
+     <Compile Include="Assets\Source\Base\Utils.cs" />
+     <Compile Include="Assets\Source\Camera\Camera2D.cs" />
+     <Compile Include="Assets\Source\Camera\Camera2dDragable.cs" />
+     <Compile Include="Assets\Source\Camera\Camera3D.cs" />
+     <Compile Include="Assets\Source\Camera\Camera3dDragable.cs" />
+     <Compile Include="Assets\Source\Camera\CityCamera.cs" />
+     <Compile Include="Assets\Source\Camera\FightCamera.cs" />
+     <Compile Include="Assets\Source\Effect\Bezier.cs" />
+     <Compile Include="Assets\Source\Effect\BezierMove.cs" />
+     <Compile Include="Assets\Source\Effect\FXTypeWriter.cs" />
+     <Compile Include="Assets\Source\Effect\Shake.cs" />
+     <Compile Include="Assets\Source\Effect\Subtitle.cs" />
+     <Compile Include="Assets\Source\Effect\TypeWriter.cs" />
+     <Compile Include="Assets\Source\Effect\UIGradient.cs" />
+     <Compile Include="Assets\Source\FileSystem\FileUtil.cs" />
+     <Compile Include="Assets\Source\FileSystem\IniUtil.cs" />
+     <Compile Include="Assets\Source\FileSystem\LogUtil.cs" />
+     <Compile Include="Assets\Source\FileSystem\PathUtil.cs" />
+     <Compile Include="Assets\Source\FileSystem\StringUtil.cs" />
+     <Compile Include="Assets\Source\FileSystem\TableUtil.cs" />
+     <Compile Include="Assets\Source\Generate\BezierMoveWrap.cs" />
+     <Compile Include="Assets\Source\Generate\BezierWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ByteBufferWrap.cs" />
+     <Compile Include="Assets\Source\Generate\Camera2DWrap.cs" />
+     <Compile Include="Assets\Source\Generate\CityCameraWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ConstWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
+     <Compile Include="Assets\Source\Generate\DeviceHelperWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_ActionDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_ActionTypeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationConfigWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationFadeOutModeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationStateWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationTimelineStateWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_AnimationWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_ArmatureDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_ArmatureTypeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_ArmatureWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BaseFactoryWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BaseObjectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BoneDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BoneFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BoneTimelineDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BoneTimelineStateWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_BoneWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_DragonBonesDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_DragonBonesWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_FrameData_DragonBones_AnimationFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_FrameData_DragonBones_BoneFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TimelineData_DragonBones_AnimationFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TimelineData_DragonBones_BoneFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TimelineState_DragonBones_AnimationFrameData_DragonBones_AnimationDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TimelineState_DragonBones_BoneFrameData_DragonBones_BoneTimelineDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TransformObjectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TransformWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TweenFrameData_DragonBones_BoneFrameDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_TweenTimelineState_DragonBones_BoneFrameData_DragonBones_BoneTimelineDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_UnityArmatureComponentWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_UnityEventDispatcher_DragonBones_EventObjectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_UnityFactoryWrap.cs" />
+     <Compile Include="Assets\Source\Generate\FXTypeWriterWrap.cs" />
+     <Compile Include="Assets\Source\Generate\FileUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\GameManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\GizmoBezierLineWrap.cs" />
+     <Compile Include="Assets\Source\Generate\GizmoPlaneWrap.cs" />
+     <Compile Include="Assets\Source\Generate\GlobalWrap.cs" />
+     <Compile Include="Assets\Source\Generate\IniUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\LocalizationWrap.cs" />
+     <Compile Include="Assets\Source\Generate\LogUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\LuaBinder.cs" />
+     <Compile Include="Assets\Source\Generate\LuaInterface_DebuggerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\NetworkManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\PathUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ResourceManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ShakeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ShareDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\StringUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\TableUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\TypeWriterWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIButtonAgentWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIButtonWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIDragSensorWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIGradientWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIHighLightMaskWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIInputFieldSubmitWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIInputFieldWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIModWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIPopWindowWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIProgressWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIScrollBaseWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIScrollRectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIScrollRingWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UIScrollViewWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UISliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UISystemWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextAutoOmitWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextNumCountdownWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextTimeCountdownWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextTimeCountdown_DirectTypeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextUnderlineWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITextWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenCityBuildingWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenColorWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenFadeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenLocalPositionBetweenWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenLocalPositionWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenPositionWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenRectPositionWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenScaleWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenSizeDeltaWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnitMoveWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationBlendModeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationClipWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationStateWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AnimatorWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ApplicationWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AssetBundleWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AsyncOperationWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AudioClipWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_AudioSourceWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_BehaviourWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_BlendWeightsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_BoxColliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_CameraClearFlagsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_CameraWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_CapsuleColliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_CharacterControllerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ColliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_Color32Wrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ComponentWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_EventSystems_UIBehaviourWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_Experimental_Director_PlayableWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_GUIUtilityWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_GameObjectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_InputWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_KeyCodeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_LightTypeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_MaterialWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_MeshColliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_MeshRendererWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_MonoBehaviourWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_MotionWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ParticleSystemWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_PhysicsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_PlayModeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_QualitySettingsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_QueueModeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RectTransformWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RenderSettingsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RenderTextureWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RendererWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ResourcesWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RigidbodyWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SceneManagement_SceneManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ScreenWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_ShaderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SkinnedMeshRendererWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SleepTimeoutWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SpaceWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SphereColliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SpriteRendererWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_SpriteWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TextGenerationSettingsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TextGeneratorWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_Texture2DWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TextureWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TimeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TrackedReferenceWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_TransformWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UICharInfoWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_BaseMeshEffectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_ButtonWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_GraphicWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_GridLayoutGroupWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_ImageWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_InputFieldWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_LayoutElementWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_LayoutGroupWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_MaskableGraphicWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_ScrollRectWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_SelectableWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_SliderWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_UI_TextWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_WWWWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UtilsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\eyeWrap.cs" />
+     <Compile Include="Assets\Source\Gizmo\GizmoBezierLine.cs" />
+     <Compile Include="Assets\Source\Gizmo\GizmoPlane.cs" />
+     <Compile Include="Assets\Source\Gizmo\GizmoRing.cs" />
+     <Compile Include="Assets\Source\Manager\GameManager.cs" />
+     <Compile Include="Assets\Source\Manager\LockStepManager.cs" />
+     <Compile Include="Assets\Source\Manager\LuaManager.cs" />
+     <Compile Include="Assets\Source\Manager\NetworkManager.cs" />
+     <Compile Include="Assets\Source\Manager\PackageManager.cs" />
+     <Compile Include="Assets\Source\Manager\ResourceManager.cs" />
+     <Compile Include="Assets\Source\Manager\ThreadManager.cs" />
+     <Compile Include="Assets\Source\Manager\UIManager.cs" />
+     <Compile Include="Assets\Source\Net\ByteBuffer.cs" />
+     <Compile Include="Assets\Source\Net\IPv6SupportMidleware.cs" />
+     <Compile Include="Assets\Source\Net\SocketClient.cs" />
+     <Compile Include="Assets\Source\UI\RTL.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITween.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenCityBuilding.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenColor.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenFade.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenLocalPosition.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenLocalPositionBetween.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenLocalRotation.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenPosition.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenRectPosition.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenScale.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenSizeDelta.cs" />
+     <Compile Include="Assets\Source\UI\UIButton.cs" />
+     <Compile Include="Assets\Source\UI\UIButtonAgent.cs" />
+     <Compile Include="Assets\Source\UI\UIClippingLoop.cs" />
+     <Compile Include="Assets\Source\UI\UIDragSensor.cs" />
+     <Compile Include="Assets\Source\UI\UIDragger.cs" />
+     <Compile Include="Assets\Source\UI\UIDropper.cs" />
+     <Compile Include="Assets\Source\UI\UIHighLightMask.cs" />
+     <Compile Include="Assets\Source\UI\UIIgnoreRaycast.cs" />
+     <Compile Include="Assets\Source\UI\UIInputField.cs" />
+     <Compile Include="Assets\Source\UI\UIInputFieldSubmit.cs" />
+     <Compile Include="Assets\Source\UI\UIMod.cs" />
+     <Compile Include="Assets\Source\UI\UIPopWindow.cs" />
+     <Compile Include="Assets\Source\UI\UIProgress.cs" />
+     <Compile Include="Assets\Source\UI\UIScrollBase.cs" />
+     <Compile Include="Assets\Source\UI\UIScrollRect.cs" />
+     <Compile Include="Assets\Source\UI\UIScrollRing.cs" />
+     <Compile Include="Assets\Source\UI\UIScrollView.cs" />
+     <Compile Include="Assets\Source\UI\UISlider.cs" />
+     <Compile Include="Assets\Source\UI\UISystem.cs" />
+     <Compile Include="Assets\Source\UI\UIText.cs" />
+     <Compile Include="Assets\Source\UI\UITextAutoOmit.cs" />
+     <Compile Include="Assets\Source\UI\UITextFirstUpper.cs" />
+     <Compile Include="Assets\Source\UI\UITextNumCountdown.cs" />
+     <Compile Include="Assets\Source\UI\UITextTimeCountdown.cs" />
+     <Compile Include="Assets\Source\UI\UITextTimeCountdownEx.cs" />
+     <Compile Include="Assets\Source\UI\UITextTimeCountup.cs" />
+     <Compile Include="Assets\Source\UI\UITextUnderline.cs" />
+     <Compile Include="Assets\Source\UI\UITextUnderlineEx.cs" />
+     <Compile Include="Assets\Source\Unit\FightUnit.cs" />
+     <Compile Include="Assets\Source\Unit\UnitMove.cs" />
+     <Compile Include="Assets\Source\eye.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\3rdParty\MiniJSON.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\Animation.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\AnimationState.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\BaseTimelineState.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\IAnimateble.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\TimelineState.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\WorldClock.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\armature\Armature.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\armature\Bone.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\armature\IArmatureProxy.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\armature\Slot.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\armature\TransformObject.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\core\BaseObject.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\core\DragonBones.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\event\EventObject.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\event\IEventDispatcher.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\factory\BaseFactory.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\geom\Geom.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\AnimationConfig.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\AnimationData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\ArmatureData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\DragonBonesData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\FrameData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\model\TimelineData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\parser\DataParser.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\parser\ObjectDataParser.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\texture\TextureData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityArmatureComponent.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityEventDispatcher.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityFactory.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnitySlot.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityTextureData.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_EventObjectWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaFieldWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaMethodWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaOutWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaPropertyWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_ArrayWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_Generic_DictionaryWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_Generic_Dictionary_KeyCollectionWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_Generic_Dictionary_ValueCollectionWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_Generic_KeyValuePairWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_Generic_ListWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_IEnumeratorWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_Collections_ObjectModel_ReadOnlyCollectionWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_DelegateWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_EnumWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_NullObjectWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_ObjectWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_StringWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\System_TypeWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\UnityEngine_CoroutineWrap.cs" />
+     <Compile Include="Assets\ToLua\BaseType\UnityEngine_ObjectWrap.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaAttributes.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaBaseRef.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaBeatEvent.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaDLL.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaEvent.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaException.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaFileUtils.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaFunction.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaMethodCache.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaMisc.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaState.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaStatePtr.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaStatic.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaTable.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaThread.cs" />
+     <Compile Include="Assets\ToLua\Core\LuaUnityLibs.cs" />
+     <Compile Include="Assets\ToLua\Core\ObjectPool.cs" />
+     <Compile Include="Assets\ToLua\Core\ObjectTranslator.cs" />
+     <Compile Include="Assets\ToLua\Core\ToLua.cs" />
+     <Compile Include="Assets\ToLua\Core\TypeChecker.cs" />
+     <Compile Include="Assets\ToLua\Misc\LuaClient.cs" />
+     <Compile Include="Assets\ToLua\Misc\LuaCoroutine.cs" />
+     <Compile Include="Assets\ToLua\Misc\LuaLooper.cs" />
+     <Compile Include="Assets\ToLua\Misc\LuaResLoader.cs" />
+     <Compile Include="Assets\ToLua\Reflection\LuaConstructor.cs" />
+     <Compile Include="Assets\ToLua\Reflection\LuaField.cs" />
+     <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
+     <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
+     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
+     <None Include="Assets\Resources\PackAssets\ArtFont\BMFont_Number_Big.fnt" />
+     <None Include="Assets\Resources\PackAssets\Shader\UIRenderTexture.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\en-us\localize.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\WaterAnimation.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\Wind.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageGray.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\resmap_object.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageSoftMask.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\UI-Default.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\SpriteMask.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ParticleMask&amp;Scaler_Additive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageMask.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ScreenBlur.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\MaskWord.txt" />
+     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive(Soft).shader" />
+     <None Include="Assets\Resources\PackAssets\Data\localization_language.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\plat.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_quest.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\DoubleAnimationAdditive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\UI_Line.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageAdditive.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\localization_country.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\app.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageWithAlpha.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\SpriteTile.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\Dissolution.shader" />
+     <None Include="Assets\ToLua\readme.txt" />
+     <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
+     <None Include="Assets\Resources\PackAssets\Shader\SpriteDissolve.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\ImageBlur.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\SpriteGray.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive_Cull.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\Dissolution3D.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\UVAnimation.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\en-us\localize_item.txt" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.TestRunner">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.framework">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/nunit.framework.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.HoloLens">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.VR">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="ArabicSupport">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
+ </Reference>
+ <Reference Include="Debugger">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
+ </Reference>
+ <Reference Include="ICSharpCode.SharpZipLib">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween43">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween46">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween50">
+ <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

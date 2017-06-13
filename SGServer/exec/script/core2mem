@@ -1,0 +1,36 @@
+p &g_army[0]
+p &g_army[8191]
+dump binary memory ./army.mem $1 $2
+p &g_actors[0]
+p &g_actors[1023]
+dump binary memory ./actor.mem $3 $4
+p &g_city[0]
+p &g_city[79999]
+dump binary memory ./city.mem $5 $6
+p &g_club[0]
+p &g_club[2000]
+dump binary memory ./club.mem $7 $8
+p &g_map_town[0]
+p &g_map_town[43]
+dump binary memory ./maptown.mem $9 $10
+p &g_map_res[0]
+p &g_map_res[99999]
+dump binary memory ./mapres.mem $11 $12
+p &g_club_town[0]
+p &g_club_town[4095]
+dump binary memory ./clubtown.mem $13 $14
+p &g_club_store[0]
+p &g_club_store[2043]
+dump binary memory ./clubstore.mem $15 $16
+p &g_club_jet[0]
+p &g_club_jet[4095]
+dump binary memory ./clubjet.mem $17 $18
+p &g_club_res[0]
+p &g_club_res[2043]
+dump binary memory ./clubres.mem $19 $20
+p &g_kingcity
+p &g_kingcity+1
+dump binary memory ./kingcity.mem $21 $22
+p &g_kingtower[0]
+p &g_kingtower[3]+1
+dump binary memory ./kingtower.mem $23 $24
