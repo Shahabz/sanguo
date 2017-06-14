@@ -57,6 +57,7 @@ int city_loadcb( int city_index )
 int city_load()
 {
 	g_city_maxcount = g_Config.max_citycount;
+	
 	printf_msg( "City  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", g_city_maxcount, (sizeof(City)* g_city_maxcount) / 1024.0 / 1024.0, sizeof(City) / 1024.0 );
 	city_load_auto( city_indexptr, city_loadcb, "city");
 	g_city_allinited = 1;

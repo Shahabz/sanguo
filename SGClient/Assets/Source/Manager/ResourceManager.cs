@@ -35,13 +35,13 @@ public class ResourceManager : MonoBehaviour
     static Dictionary<string, string[]> m_resmap_object;    // 资源映射表
 
     // AssetBundle名称列表
-    static string[] m_AssetBundleNameList = null;
+    static public string[] m_AssetBundleNameList = null;
 
     // Manifest文件缓存
-    static AssetBundleManifest m_AssetBundleManifest = null;
+    static public AssetBundleManifest m_AssetBundleManifest = null;
 
     // 每个AssetBundle的依赖信息
-    static Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]>();
+    static public Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]>();
 
     // 正在请求异步加载的资源
     static Dictionary<string, List<LoadAssetRequest>> m_LoadRequests = new Dictionary<string, List<LoadAssetRequest>>();
@@ -193,7 +193,6 @@ public class ResourceManager : MonoBehaviour
         string[] dependencies = m_AssetBundleManifest.GetAllDependencies( assetBundleName );
         if ( dependencies.Length == 0 )
             return;
-
         for ( int i = 0; i < dependencies.Length; i++ )
         {
             dependencies[i] = RemapVariantName( dependencies[i] );
@@ -216,7 +215,7 @@ public class ResourceManager : MonoBehaviour
 
         int bestFit = int.MaxValue;
         int bestFitIndex = -1;
-
+        LogUtil.GetInstance().WriteGame( "bundlesWithVariant.Length:"+bundlesWithVariant.Length );
         for ( int i = 0; i < bundlesWithVariant.Length; i++ )
         {
             string[] curSplit = bundlesWithVariant[i].Split( '.' );

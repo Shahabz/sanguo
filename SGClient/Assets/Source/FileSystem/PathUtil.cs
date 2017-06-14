@@ -288,4 +288,32 @@ public static class PathUtil
         }
         return false;
     }
+
+    public static string updateFileListName()
+    {
+        // 不同平台不同的文件前缀
+        if ( Application.platform == RuntimePlatform.Android )
+            return "android_files.txt";
+        else if ( Application.platform == RuntimePlatform.IPhonePlayer )
+            return "io_files.txts";
+        else if ( Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer )
+            return "windows_files.txt";
+        else if ( Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer )
+            return "osx_files.txt";
+        return "windows_files.txt";
+    }
+
+    public static string updateFileName()
+    {
+        // 不同平台不同的文件前缀
+        if ( Application.platform == RuntimePlatform.Android )
+            return "update_android";
+        else if ( Application.platform == RuntimePlatform.IPhonePlayer )
+            return "update_ios";
+        else if ( Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer )
+            return "update_windows";
+        else if ( Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer )
+            return "update_osx";
+        return "update_windows";
+    }
 }

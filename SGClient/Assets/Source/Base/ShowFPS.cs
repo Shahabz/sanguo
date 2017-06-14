@@ -26,11 +26,11 @@ public class ShowFPS : MonoBehaviour
             f_Fps = i_Frames / ( Time.realtimeSinceStartup - f_LastInterval );
             i_Frames = 0;
             f_LastInterval = Time.realtimeSinceStartup;
-            if ( f_Fps <= 20.0 )
+            if ( f_Fps <= 15.0 )
             {
                 m_uiText.color = new Color( 1, 0, 0, 1 );
             }
-            else if ( f_Fps <= 40.0 )
+            else if ( f_Fps <= 24.0 )
             {
                 m_uiText.color = new Color( 1, 1, 0, 1 );
             }

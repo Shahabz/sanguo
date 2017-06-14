@@ -24,9 +24,10 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     void Awake () 
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        Application.targetFrameRate = Const.GameFrameRate;
+    }
 
+    public bool Initialize()
+    {
         // 创建日志系统
         LogUtil.GetInstance().Create( PathUtil.LogPath() );
         LogUtil.GetInstance().WriteGame( "------------------ Game Log Begin ------------------" );
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour {
         if ( Localization.init() < 0 )
         {
             LogUtil.GetInstance().WriteGame( "Localization Init Failed" );
-            return;
+            return false;
         }
         LogUtil.GetInstance().WriteGame( "STEP 1" );
         // 再次读取本地程序配置文件,因为编辑器模式下，启动场景不使用
@@ -70,18 +71,22 @@ public class GameManager : MonoBehaviour {
         LuaInited();
         LogUtil.GetInstance().WriteGame( "LuaInited" );
 
-        // 初始化资源管理
-        eye.resourceManager.Initialize( delegate ()
-        {
-            // 先读取部分AssetBundle
-            ResourceManager.LoadAssetBundle( "ui_dialog_login" );
+        //// 初始化资源管理
+        //eye.resourceManager.Initialize( delegate ()
+        //{
+        //    // 游戏开始
+        //    LuaFun.gameStart.Call();
 
-            // 游戏开始
-            LuaFun.gameStart.Call();
+        //    // 启动游戏主逻辑, 每分钟调用
+        //    StartCoroutine( GameLogic() );
+        //} );
 
-            // 启动游戏主逻辑, 每分钟调用
-            StartCoroutine( GameLogic() );
-        } );
+        // 游戏开始
+        LuaFun.gameStart.Call();
+
+        // 启动游戏主逻辑, 每分钟调用
+        StartCoroutine( GameLogic() );
+        return true;
     }
 
     /// <summary>
@@ -148,8 +153,8 @@ public class GameManager : MonoBehaviour {
         {
             int width = Screen.currentResolution.width;
             int height = Screen.currentResolution.height;
-            int designWidth = 1334;
-            int designHeight = 750;
+            int designWidth = 750;
+            int designHeight = 1334;
             float s1 = (float)designWidth / (float)designHeight;
             float s2 = (float)width / (float)height;
             if ( s1 < s2 )

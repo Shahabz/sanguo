@@ -96,7 +96,7 @@ function LoginModOnAwake( gameObject )
 	m_uiFastEnter = objs[9];
 	m_uiRegEnter = objs[10];
 	-- 版本号
-	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")  ".."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry();
+	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	LoginModOpenTestLogin();
 end
 
@@ -230,34 +230,13 @@ function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress
 	if progress == totalProgress then
 		m_uiLoading.transform:GetComponent( "Slider" ).value = progress/totalProgress;
 		-- 加载主城
-		LoadPrefabAsyn( "MainCityScence", function( obj )
-			GameManager.MainCityScence = GameObject.Instantiate( obj );
+		LoadPrefabAsyn( "MainCity", function( obj )
+			GameManager.MainCity = GameObject.Instantiate( obj );
 			MainDlgOpen();
 			LoginModClose();
 			netsend_list_C( 0 );
 			
-			coroutine.start( function()
-			-- 测试对象
-			eye.objectPoolManager:CreatePool("hero_brute_dragon", 5, 10, LoadPrefab(heroprefab[1]))
-
-			eye.objectPoolManager:CreatePool("hero_centaur", 5, 10, LoadPrefab(heroprefab[2]))
-
-			eye.objectPoolManager:CreatePool("hero_faith_healer", 5, 10, LoadPrefab(heroprefab[3]))
-
-			eye.objectPoolManager:CreatePool("hero_orc_monk", 5, 10, LoadPrefab(heroprefab[4]))
-
-			eye.objectPoolManager:CreatePool("hero_pirate", 5, 10, LoadPrefab(heroprefab[5]))
-
-			eye.objectPoolManager:CreatePool("hero_polemaster", 5, 10, LoadPrefab(heroprefab[6]))
-
-			eye.objectPoolManager:CreatePool("hero_shadow_assassin", 5, 10, LoadPrefab(heroprefab[7]))
-			--coroutine.wait( 1/30 );
-			end)
-	
 		end );
---[[		LoginModClose();
-		FightDlgOpen();
-		GetFightRoom():Create( { m_fightid = 1, m_side = 1, m_maxtime = 150 } );--]]
 	end
 end
 

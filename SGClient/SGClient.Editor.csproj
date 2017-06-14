@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B01CFD20-FA1E-81A3-F19F-F28A777B2A2E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityVersion>5.6.1f1</UnityVersion>
+    <RootNamespace></RootNamespace>
+    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>Library\UnityAssemblies\UnityEditor.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>Library\UnityAssemblies\UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TreeEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.TreeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.HoloLens">
+      <HintPath>Library\UnityAssemblies\UnityEditor.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.VR">
+      <HintPath>Library\UnityAssemblies\UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ArabicSupport">
+      <HintPath>Assets\ThirdPartyPlugin\ArabicSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="Debugger">
+      <HintPath>Assets\ThirdPartyPlugin\Debugger.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\ThirdPartyPlugin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween50.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="SGClient.csproj">
+      <Project>{41DF1C1D-70C8-6607-3414-291D6BC2C992}</Project>
+      <Name>SGClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Editor\Custom\CustomSettings.cs" />
+    <Compile Include="Assets\Editor\Custom\LocalizeReload.cs" />
+    <Compile Include="Assets\Editor\Custom\LuaUITemplate.cs" />
+    <Compile Include="Assets\Editor\Custom\Packager.cs" />
+    <Compile Include="Assets\Source\StandardAssets\Editor\ImageEffects\CameraMotionBlurEditor.cs" />
+    <Compile Include="Assets\Source\StandardAssets\Editor\ImageEffects\SunShaftsEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\BMFont.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\BMFontReader.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\BMGlyph.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\BetterList.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\ByteReader.cs" />
+    <Compile Include="Assets\Source\UI\Editor\FontTools\CreateBMFont.cs" />
+    <Compile Include="Assets\Source\UI\Editor\MyRangeAttributeDrawer.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UIButtonEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UIInputFieldEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UIModEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UIProgressEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UIScrollRectEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UISliderEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UISystemEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextFirstUpperEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextTimeCountdownEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextTimeCountupEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextUnderlineEditor.cs" />
+    <Compile Include="Assets\Source\UI\Editor\UITextUnderlineExEditor.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\AssetProcess.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\DragonBonesIcons.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\UnityArmatureEditor.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\UnityEditor.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_EventObject.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaField.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaMethod.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaProperty.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Delegate.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Enum.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Object.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_String.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Type.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_GameObject.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_Input.cs" />
+    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_Object.cs" />
+    <Compile Include="Assets\ToLua\Editor\ToLuaExport.cs" />
+    <Compile Include="Assets\ToLua\Editor\ToLuaMenu.cs" />
+    <Compile Include="Assets\ToLua\Editor\ToLuaTree.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+    <None Include="Assets\Resources\PackAssets\Data\MaskWord.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\app.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\en-us\localize.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\en-us\localize_item.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\localization_country.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\localization_language.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\plat.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\resmap_object.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_quest.txt" />
+    <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive_Cull.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\Dissolution.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\Dissolution3D.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\DoubleAnimationAdditive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageAdditive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageBlur.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageGray.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageMask.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageSoftMask.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ImageWithAlpha.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ParticleMask&amp;Scaler_Additive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive(Soft).shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\ScreenBlur.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\SpriteDissolve.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\SpriteGray.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\SpriteMask.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\SpriteTile.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlur.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlurDX11.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SimpleClear.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SunShaftsComposite.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\UI-Default.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\UIRenderTexture.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\UI_Line.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\UVAnimation.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\WaterAnimation.shader" />
+    <None Include="Assets\Resources\PackAssets\Shader\Wind.shader" />
+    <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
+    <None Include="Assets\StreamingAssets\Data\MaskWord.txt" />
+    <None Include="Assets\StreamingAssets\Data\app.txt" />
+    <None Include="Assets\StreamingAssets\Data\en-us\localize.txt" />
+    <None Include="Assets\StreamingAssets\Data\en-us\localize_item.txt" />
+    <None Include="Assets\StreamingAssets\Data\en-us\localize_quest.txt" />
+    <None Include="Assets\StreamingAssets\Data\localization_country.txt" />
+    <None Include="Assets\StreamingAssets\Data\localization_language.txt" />
+    <None Include="Assets\StreamingAssets\Data\plat.txt" />
+    <None Include="Assets\StreamingAssets\Data\resmap_object.txt" />
+    <None Include="Assets\StreamingAssets\Data\resmap_prefab.txt" />
+    <None Include="Assets\StreamingAssets\Data\resmap_sprite.txt" />
+    <None Include="Assets\StreamingAssets\Data\zh-cn\localize.txt" />
+    <None Include="Assets\StreamingAssets\Data\zh-cn\localize_item.txt" />
+    <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />
+    <None Include="Assets\StreamingAssets\android_files.txt" />
+    <None Include="Assets\StreamingAssets\resver.txt" />
+    <None Include="Assets\ToLua\readme.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="GenerateTargetFrameworkMonikerAttribute" />
+</Project>
