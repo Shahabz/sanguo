@@ -18,7 +18,7 @@ struct _actor {
 				char name[22];	//角色名称
 				char aclass;	//角色种类
 				unsigned char shape;	//形象
-				unsigned char level;	//级别
+				short level;	//级别
 				int city_index;	//城池索引
 				int token;	//钻石
 				int total_charge;	//总充值

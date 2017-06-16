@@ -17,6 +17,18 @@ public class UITweenColor : UITween
         _Graphic = GetComponent<Graphic>();
         if( _Graphic == null )
             _SpriteRender = GetComponent<SpriteRenderer>();
+        if( _SpriteRender == null )
+        { // 找到子组件
+            for ( int i = 0; i < transform.childCount; i++ )
+            {
+                GameObject obj = transform.GetChild( i ).gameObject;
+                if ( obj.activeSelf == false )
+                    continue;
+                _SpriteRender = obj.GetComponent<SpriteRenderer>();
+                if ( _SpriteRender )
+                    break;
+            }
+        }
 	}
 
     protected override void OnEnable()
@@ -59,4 +71,25 @@ public class UITweenColor : UITween
 		// 最后调
 		base.Play( forward );
 	}
+
+    public override void Kill( bool complete )
+    {
+        if ( _Graphic == null && _SpriteRender == null )
+        {
+            Debug.LogError( "Can't Find Graphic or SpriteRender!" );
+            return;
+        }
+
+        if ( _Graphic != null )
+        {
+            _Graphic.color = from;
+        }
+        else if ( _SpriteRender != null )
+        {
+            _SpriteRender.color = from;
+        }
+
+        // 最后调
+        base.Kill( complete );
+    }
 }

@@ -9,7 +9,7 @@ CREATE TABLE `actor` (
   `name` varbinary(22) NOT NULL DEFAULT '' COMMENT '角色名称',
   `aclass` tinyint(4) NOT NULL DEFAULT '0' COMMENT '角色种类',
   `shape` tinyint(4) NOT NULL DEFAULT '0' COMMENT '形象',
-  `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '级别',
+  `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '级别',
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '钻石',
   `total_charge` int(11) NOT NULL DEFAULT '0' COMMENT '总充值',
   `itemext` tinyint(4) NOT NULL DEFAULT '0' COMMENT '扩展的背包栏位数',

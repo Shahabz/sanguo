@@ -9,6 +9,7 @@ public class UITweenWrap
 		L.BeginClass(typeof(UITween), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("ToInit", ToInit);
 		L.RegFunction("Play", Play);
+		L.RegFunction("Kill", Kill);
 		L.RegFunction("IsPlaying", IsPlaying);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
@@ -52,6 +53,23 @@ public class UITweenWrap
 			UITween obj = (UITween)ToLua.CheckObject(L, 1, typeof(UITween));
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.Play(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Kill(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UITween obj = (UITween)ToLua.CheckObject(L, 1, typeof(UITween));
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.Kill(arg0);
 			return 0;
 		}
 		catch(Exception e)

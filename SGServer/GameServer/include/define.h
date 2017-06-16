@@ -10,6 +10,9 @@
 #include "auto_data_item.h"
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
+#include "auto_city_building.h"
+#include "auto_city_building_barracks.h"
+#include "auto_city_building_res.h"
 #include "auto_city.h"
 
 

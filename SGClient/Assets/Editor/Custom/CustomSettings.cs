@@ -264,7 +264,9 @@ public static class CustomSettings
         _GT(typeof(DragonBones.UnityArmatureComponent)),
         // END
 
+        _GT(typeof(City)),
         _GT(typeof(CityCamera)),
+        _GT(typeof(CityBuilding)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

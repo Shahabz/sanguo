@@ -69,7 +69,9 @@ public static class LuaBinder
 		GizmoBezierLineWrap.Register(L);
 		BezierWrap.Register(L);
 		BezierMoveWrap.Register(L);
+		CityWrap.Register(L);
 		CityCameraWrap.Register(L);
+		CityBuildingWrap.Register(L);
 		Camera2DWrap.Register(L);
 		L.BeginModule("UnityEngine");
 		UnityEngine_ComponentWrap.Register(L);

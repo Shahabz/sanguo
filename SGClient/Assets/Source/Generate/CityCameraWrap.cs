@@ -10,6 +10,7 @@ public class CityCameraWrap
 		L.RegFunction("OnCityClick", OnCityClick);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("city", get_city, set_city);
 		L.RegVar("trail", get_trail, set_trail);
 		L.RegVar("layers", get_layers, set_layers);
 		L.RegVar("layersMoveRatios", get_layersMoveRatios, set_layersMoveRatios);
@@ -49,6 +50,25 @@ public class CityCameraWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_city(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityCamera obj = (CityCamera)o;
+			City ret = obj.city;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index city on a nil value" : e.Message);
 		}
 	}
 
@@ -125,6 +145,25 @@ public class CityCameraWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index layersScaleRatios on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_city(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityCamera obj = (CityCamera)o;
+			City arg0 = (City)ToLua.CheckUnityObject(L, 2, typeof(City));
+			obj.city = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index city on a nil value" : e.Message);
 		}
 	}
 

@@ -15,6 +15,35 @@ UI_EVENT_TIMECOUNTCHANGED   = 12;       -- 计数修改
 UI_EVENT_VOICE              = 13;       -- UIVoice
 UI_EVENT_PUSHEVENT		    = 1000;		-- UI通用事件，不想定义新事件可用			    参数
 
+-- 可升级的普通建筑
+BUILDING_Main           = 1  -- 主城
+BUILDING_Wall           = 2  -- 城墙
+BUILDING_StoreHouse     = 3  -- 仓库
+BUILDING_Tech           = 4  -- 太学院
+BUILDING_Craftsman      = 5  -- 材料作坊
+BUILDING_Cabinet        = 6  -- 内阁
+
+-- 兵营
+BUILDING_Infantry       = 11   -- 步兵营
+BUILDING_Cavalry        = 12   -- 骑兵营
+BUILDING_Archer         = 13   -- 弓兵营
+BUILDING_Militiaman     = 14   -- 民兵营
+
+-- 资源建筑
+BUILDING_Silver		    =  21	-- 银币
+BUILDING_Wood		    =  22	-- 木材
+BUILDING_Food		    =  23	-- 食物
+BUILDING_Iron		    =  24 -- 镔铁
+
+-- 纯入口建筑
+BUILDING_Smithy		    =  31	-- 铁匠铺
+BUILDING_Wash		    =  32	-- 洗炼铺
+BUILDING_Fangshi	    =  33	-- 坊市
+BUILDING_Shop		    =  34	-- 商店
+BUILDING_Hero		    =  35	-- 聚贤馆
+BUILDING_Wishing	    =  36	-- 聚宝盆
+BUILDING_Help		    =  37	-- 帮助
+		
 -- 文字表
 -- 获取本地化文字
 function GetLocalizeText( id )

@@ -4,6 +4,7 @@ using LuaInterface;
 
 public class CityCamera : Camera2D
 {
+    public City				city;
     public Transform        trail;
 
     // 分层拖动
@@ -34,23 +35,16 @@ public class CityCamera : Camera2D
 		_DragGain = false;
 	}
 
-    public void OnCityClick(Transform obj)
+    public void OnCityClick( Transform obj )
 	{
         if( _DragGain )
             return;
-
-        if ( obj != null && obj.tag == "Building" )
-        {
-            TweenPosToInBound( obj.transform.localPosition, 0.2f );
-            //TweenSizeTo( defaultSize *0.8f, 0.2f );
-            LuaFun.buildingselect.Call( obj );
-        }
+        if ( obj == null || (obj.tag != "Building" && obj.tag != "BuildingLand") )
+            city.SelectBuilding( null );
         else
-        {
-            //TweenSizeTo( defaultSize, 0.2f );
-        }
+            city.SelectBuilding( obj.transform );
 	}
-    protected override void OnClick(Transform obj)
+    protected override void OnClick( Transform obj )
     {
         OnCityClick(obj);
     }

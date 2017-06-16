@@ -24,6 +24,9 @@ public class ResourceManagerWrap
 		L.RegFunction("LoadPrefabAsyn", LoadPrefabAsyn);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("m_AssetBundleNameList", get_m_AssetBundleNameList, set_m_AssetBundleNameList);
+		L.RegVar("m_AssetBundleManifest", get_m_AssetBundleManifest, set_m_AssetBundleManifest);
+		L.RegVar("m_Dependencies", get_m_Dependencies, set_m_Dependencies);
 		L.EndClass();
 	}
 
@@ -357,6 +360,93 @@ public class ResourceManagerWrap
 			bool o = arg0 == arg1;
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_m_AssetBundleNameList(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, ResourceManager.m_AssetBundleNameList);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_m_AssetBundleManifest(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, ResourceManager.m_AssetBundleManifest);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_m_Dependencies(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, ResourceManager.m_Dependencies);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_m_AssetBundleNameList(IntPtr L)
+	{
+		try
+		{
+			string[] arg0 = ToLua.CheckStringArray(L, 2);
+			ResourceManager.m_AssetBundleNameList = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_m_AssetBundleManifest(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.AssetBundleManifest arg0 = (UnityEngine.AssetBundleManifest)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.AssetBundleManifest));
+			ResourceManager.m_AssetBundleManifest = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_m_Dependencies(IntPtr L)
+	{
+		try
+		{
+			System.Collections.Generic.Dictionary<string,string[]> arg0 = (System.Collections.Generic.Dictionary<string,string[]>)ToLua.CheckObject(L, 2, typeof(System.Collections.Generic.Dictionary<string,string[]>));
+			ResourceManager.m_Dependencies = arg0;
+			return 0;
 		}
 		catch(Exception e)
 		{

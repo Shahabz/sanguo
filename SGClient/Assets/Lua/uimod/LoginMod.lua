@@ -232,6 +232,7 @@ function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress
 		-- 加载主城
 		LoadPrefabAsyn( "MainCity", function( obj )
 			GameManager.MainCity = GameObject.Instantiate( obj );
+			GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 			MainDlgOpen();
 			LoginModClose();
 			netsend_list_C( 0 );

@@ -45,6 +45,12 @@ int city_loadcb( int city_index )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
 		return -1;
+	// 读取普通建筑
+
+	// 读取兵营建筑
+
+	// 读取资源建筑
+
 
 	// 添加到地图显示单元
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
@@ -57,8 +63,9 @@ int city_loadcb( int city_index )
 int city_load()
 {
 	g_city_maxcount = g_Config.max_citycount;
-	
-	printf_msg( "City  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", g_city_maxcount, (sizeof(City)* g_city_maxcount) / 1024.0 / 1024.0, sizeof(City) / 1024.0 );
+	g_city = (City*)malloc( sizeof(City)* g_city_maxcount );
+	printf_msg( "City  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", g_city_maxcount, (sizeof(City)*g_city_maxcount) / 1024.0 / 1024.0, sizeof(City) / 1024.0 );
+	city_reset();
 	city_load_auto( city_indexptr, city_loadcb, "city");
 	g_city_allinited = 1;
 	return 0;
@@ -67,13 +74,26 @@ int city_load()
 // 服务器关闭，所有城池信息存到数据库
 int city_save( FILE *fp )
 {
-	city_batch_save_auto( g_city, g_city_maxcount, "city", fp );
+	for ( int city_index = 0; city_index < g_city_maxcount; city_index++ )
+	{
+		printf_msg( "city_save %d/%d\r", city_index + 1, g_city_maxcount );
+		if ( g_city[city_index].cityid <= 0 )
+			continue;
+		city_single_save( &g_city[city_index], fp );
+	}
 	return 0;
 }
 
+// 单城池存储
 int city_single_save( City *pCity, FILE *fp )
 {
+	// 城池基本信息
 	city_save_auto( pCity, "city", fp );
+	// 普通建筑
+
+	// 兵营建筑
+
+	// 资源建筑
 	return 0;
 }
 

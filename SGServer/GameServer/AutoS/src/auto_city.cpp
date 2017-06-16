@@ -20,7 +20,7 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *
 	City *pCity;
 	int actorid = 0;
 
-	sprintf( szSQL, "select `cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`politics`,`politics_exp`,`farm`,`farm_exp`,`business`,`business_exp`,`military`,`military_exp`,`people`,`food`,`money`,`soldiers` from %s ", pTab );
+	sprintf( szSQL, "select `cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`nation`,`official`,`place`,`domain`,`battlepower`,`mokilllv`,`body`,`silver`,`wood`,`food`,`iron`,`people` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -57,18 +57,18 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *
 		pCity->sflag = atoi(row[offset++]);
 		pCity->level = atoi(row[offset++]);
 		pCity->vipexp = atoi(row[offset++]);
-		pCity->politics = atoi(row[offset++]);
-		pCity->politics_exp = atoi(row[offset++]);
-		pCity->farm = atoi(row[offset++]);
-		pCity->farm_exp = atoi(row[offset++]);
-		pCity->business = atoi(row[offset++]);
-		pCity->business_exp = atoi(row[offset++]);
-		pCity->military = atoi(row[offset++]);
-		pCity->military_exp = atoi(row[offset++]);
-		pCity->people = atoi(row[offset++]);
+		pCity->nation = atoi(row[offset++]);
+		pCity->official = atoi(row[offset++]);
+		pCity->place = atoi(row[offset++]);
+		pCity->domain = atoi(row[offset++]);
+		pCity->battlepower = atoi(row[offset++]);
+		pCity->mokilllv = atoi(row[offset++]);
+		pCity->body = atoi(row[offset++]);
+		pCity->silver = atoi(row[offset++]);
+		pCity->wood = atoi(row[offset++]);
 		pCity->food = atoi(row[offset++]);
-		pCity->money = atoi(row[offset++]);
-		pCity->soldiers = atoi(row[offset++]);
+		pCity->iron = atoi(row[offset++]);
+		pCity->people = atoi(row[offset++]);
 		if( pCB_LoadCity )
 			pCB_LoadCity( pCity->actorid );
 		actorid += 1;
@@ -87,7 +87,7 @@ int city_save_auto( City *pCity, char *pTab, FILE *fp )
 	char szText_name[MAX_PATH]={0};
 	char szText_ipcountry[MAX_PATH]={0};
 RE_CITY_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`politics`,`politics_exp`,`farm`,`farm_exp`,`business`,`business_exp`,`military`,`military_exp`,`people`,`food`,`money`,`soldiers`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity->cityid,pCity->actorid,db_escape((const char *)pCity->name,szText_name,0),pCity->type,pCity->shape,pCity->headid,pCity->country,db_escape((const char *)pCity->ipcountry,szText_ipcountry,0),pCity->language,pCity->os,pCity->platid,pCity->createtime,pCity->lastlogin,pCity->lastlogout,pCity->state,pCity->posx,pCity->posy,pCity->sflag,pCity->level,pCity->vipexp,pCity->politics,pCity->politics_exp,pCity->farm,pCity->farm_exp,pCity->business,pCity->business_exp,pCity->military,pCity->military_exp,pCity->people,pCity->food,pCity->money,pCity->soldiers);
+	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`nation`,`official`,`place`,`domain`,`battlepower`,`mokilllv`,`body`,`silver`,`wood`,`food`,`iron`,`people`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity->cityid,pCity->actorid,db_escape((const char *)pCity->name,szText_name,0),pCity->type,pCity->shape,pCity->headid,pCity->country,db_escape((const char *)pCity->ipcountry,szText_ipcountry,0),pCity->language,pCity->os,pCity->platid,pCity->createtime,pCity->lastlogin,pCity->lastlogout,pCity->state,pCity->posx,pCity->posy,pCity->sflag,pCity->level,pCity->vipexp,pCity->nation,pCity->official,pCity->place,pCity->domain,pCity->battlepower,pCity->mokilllv,pCity->body,pCity->silver,pCity->wood,pCity->food,pCity->iron,pCity->people);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -125,11 +125,11 @@ int city_batch_save_auto( City *pCity, int maxcount, char *pTab, FILE *fp )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`politics`,`politics_exp`,`farm`,`farm_exp`,`business`,`business_exp`,`military`,`military_exp`,`people`,`food`,`money`,`soldiers`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity[index].cityid,pCity[index].actorid,db_escape((const char *)pCity[index].name,szText_name,0),pCity[index].type,pCity[index].shape,pCity[index].headid,pCity[index].country,db_escape((const char *)pCity[index].ipcountry,szText_ipcountry,0),pCity[index].language,pCity[index].os,pCity[index].platid,pCity[index].createtime,pCity[index].lastlogin,pCity[index].lastlogout,pCity[index].state,pCity[index].posx,pCity[index].posy,pCity[index].sflag,pCity[index].level,pCity[index].vipexp,pCity[index].politics,pCity[index].politics_exp,pCity[index].farm,pCity[index].farm_exp,pCity[index].business,pCity[index].business_exp,pCity[index].military,pCity[index].military_exp,pCity[index].people,pCity[index].food,pCity[index].money,pCity[index].soldiers);
+			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`actorid`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`vipexp`,`nation`,`official`,`place`,`domain`,`battlepower`,`mokilllv`,`body`,`silver`,`wood`,`food`,`iron`,`people`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity[index].cityid,pCity[index].actorid,db_escape((const char *)pCity[index].name,szText_name,0),pCity[index].type,pCity[index].shape,pCity[index].headid,pCity[index].country,db_escape((const char *)pCity[index].ipcountry,szText_ipcountry,0),pCity[index].language,pCity[index].os,pCity[index].platid,pCity[index].createtime,pCity[index].lastlogin,pCity[index].lastlogout,pCity[index].state,pCity[index].posx,pCity[index].posy,pCity[index].sflag,pCity[index].level,pCity[index].vipexp,pCity[index].nation,pCity[index].official,pCity[index].place,pCity[index].domain,pCity[index].battlepower,pCity[index].mokilllv,pCity[index].body,pCity[index].silver,pCity[index].wood,pCity[index].food,pCity[index].iron,pCity[index].people);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pCity[index].cityid,pCity[index].actorid,db_escape((const char *)pCity[index].name,szText_name,0),pCity[index].type,pCity[index].shape,pCity[index].headid,pCity[index].country,db_escape((const char *)pCity[index].ipcountry,szText_ipcountry,0),pCity[index].language,pCity[index].os,pCity[index].platid,pCity[index].createtime,pCity[index].lastlogin,pCity[index].lastlogout,pCity[index].state,pCity[index].posx,pCity[index].posy,pCity[index].sflag,pCity[index].level,pCity[index].vipexp,pCity[index].politics,pCity[index].politics_exp,pCity[index].farm,pCity[index].farm_exp,pCity[index].business,pCity[index].business_exp,pCity[index].military,pCity[index].military_exp,pCity[index].people,pCity[index].food,pCity[index].money,pCity[index].soldiers);
+			sprintf( szSQL, ",('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pCity[index].cityid,pCity[index].actorid,db_escape((const char *)pCity[index].name,szText_name,0),pCity[index].type,pCity[index].shape,pCity[index].headid,pCity[index].country,db_escape((const char *)pCity[index].ipcountry,szText_ipcountry,0),pCity[index].language,pCity[index].os,pCity[index].platid,pCity[index].createtime,pCity[index].lastlogin,pCity[index].lastlogout,pCity[index].state,pCity[index].posx,pCity[index].posy,pCity[index].sflag,pCity[index].level,pCity[index].vipexp,pCity[index].nation,pCity[index].official,pCity[index].place,pCity[index].domain,pCity[index].battlepower,pCity[index].mokilllv,pCity[index].body,pCity[index].silver,pCity[index].wood,pCity[index].food,pCity[index].iron,pCity[index].people);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

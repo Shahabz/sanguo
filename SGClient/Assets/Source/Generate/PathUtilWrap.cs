@@ -25,6 +25,8 @@ public class PathUtilWrap
 		L.RegFunction("ConfigPath", ConfigPath);
 		L.RegFunction("localLuaExists", localLuaExists);
 		L.RegFunction("localDataExists", localDataExists);
+		L.RegFunction("updateFileListName", updateFileListName);
+		L.RegFunction("updateFileName", updateFileName);
 		L.EndStaticLibs();
 	}
 
@@ -342,6 +344,38 @@ public class PathUtilWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			bool o = PathUtil.localDataExists(arg0);
 			LuaDLL.lua_pushboolean(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int updateFileListName(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			string o = PathUtil.updateFileListName();
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int updateFileName(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			string o = PathUtil.updateFileName();
+			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}
 		catch(Exception e)
