@@ -34,7 +34,7 @@ public class Const {
 	}
 
     public static int TimerInterval = 1;
-    public static int GameFrameRate = 30;                       // 游戏帧频
+    public static int GameFrameRate = 60;                       // 游戏帧频
 
     public static TextAsset[] luaScripts;                       // Lua公共脚本
     public static bool LuaStop = false;                         // 暂停所有lua调用

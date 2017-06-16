@@ -9,7 +9,6 @@ end
 
 -- 选择建筑
 function MainCity.BuildingSelect( transform )
-
 	if MainCity.m_LastSelect ~= nil then
 		-- 点击相同对象直接返回
 		if MainCity.m_LastSelect == transform then
@@ -25,10 +24,10 @@ function MainCity.BuildingSelect( transform )
 		
 		return;
 	else
-		gamelog( "wwwwwwwwwwwwwww" )
+
 		building = transform:GetComponent("CityBuilding");
 		MainCity.m_LastSelect = transform;
-		MainCity.m_LastSelect:GetComponent("UITweenColor"):Play( true );
+		MainCity.m_LastSelect:GetComponent("UITweenColor"):Play(true);
 	end
 	
 	
