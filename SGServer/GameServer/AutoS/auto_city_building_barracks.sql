@@ -1,0 +1,28 @@
+CREATE TABLE `city_building_barracks` (
+  `cityid` int(11) NOT NULL DEFAULT '0' COMMENT '',
+  `offset` tinyint(4) NOT NULL DEFAULT '0' COMMENT '',
+  `kind` tinyint(4) NOT NULL DEFAULT '0' COMMENT '兵营种类',
+  `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '兵营等级',
+  `finish` int(11) NOT NULL DEFAULT '0' COMMENT '升级结束时间',
+  `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '本营兵力',
+  `queue` tinyint(4) NOT NULL DEFAULT '0' COMMENT '扩容队列数量',
+  `trainnum0` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum1` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum2` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum3` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum4` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum5` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum6` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainnum7` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
+  `trainfinish0` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish1` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish2` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish3` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish4` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish5` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish6` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainfinish7` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列完成时间',
+  `trainlong` tinyint(4) NOT NULL DEFAULT '0' COMMENT '募兵加时级别',
+  PRIMARY KEY (`cityid`)
+  KEY (`offset`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
