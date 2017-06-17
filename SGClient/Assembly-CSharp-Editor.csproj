@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{50912421-FB86-F4F1-3781-DF4B4FF7C0D1}</ProjectGuid>
+    <ProjectGuid>{350BF854-DD22-A5FE-A12A-CDF2FB672CCB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;UNITY_64;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -50,6 +50,8 @@
      <Compile Include="Assets\Editor\Custom\LocalizeReload.cs" />
      <Compile Include="Assets\Editor\Custom\LuaUITemplate.cs" />
      <Compile Include="Assets\Editor\Custom\Packager.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Editor\ImageEffects\CameraMotionBlurEditor.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Editor\ImageEffects\SunShaftsEditor.cs" />
      <Compile Include="Assets\Source\UI\Editor\FontTools\BMFont.cs" />
      <Compile Include="Assets\Source\UI\Editor\FontTools\BMFontReader.cs" />
      <Compile Include="Assets\Source\UI\Editor\FontTools\BMGlyph.cs" />
@@ -70,6 +72,9 @@
      <Compile Include="Assets\Source\UI\Editor\UITextTimeCountupEditor.cs" />
      <Compile Include="Assets\Source\UI\Editor\UITextUnderlineEditor.cs" />
      <Compile Include="Assets\Source\UI\Editor\UITextUnderlineExEditor.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\AssetProcess.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\DragonBonesIcons.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\UnityArmatureEditor.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\Editor\UnityEditor.cs" />
      <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_EventObject.cs" />
      <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />
@@ -87,8 +92,9 @@
      <Compile Include="Assets\ToLua\Editor\ToLuaExport.cs" />
      <Compile Include="Assets\ToLua\Editor\ToLuaMenu.cs" />
      <Compile Include="Assets\ToLua\Editor\ToLuaTree.cs" />
-     <None Include="Assets\Resources\PackAssets\ArtFont\BMFont_Number_Big.fnt" />
+     <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\Resources\PackAssets\Shader\UIRenderTexture.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SunShaftsComposite.shader" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
@@ -112,6 +118,8 @@
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\DoubleAnimationAdditive.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlurDX11.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\UI_Line.shader" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
@@ -122,6 +130,7 @@
      <None Include="Assets\Resources\PackAssets\Shader\ImageWithAlpha.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteTile.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\Dissolution.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SimpleClear.shader" />
      <None Include="Assets\ToLua\readme.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteDissolve.shader" />
@@ -192,25 +201,25 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="ArabicSupport">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
  </Reference>
  <Reference Include="Debugger">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
  </Reference>
  <Reference Include="ICSharpCode.SharpZipLib">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
  <Reference Include="DOTween">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
  </Reference>
  <Reference Include="DOTween43">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
  </Reference>
  <Reference Include="DOTween46">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
  </Reference>
  <Reference Include="DOTween50">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -221,7 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{6A20D25F-AFB7-032A-72F0-D8153951786A}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{B27AE1C6-3D69-624C-ACFA-08F8EF6C961B}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

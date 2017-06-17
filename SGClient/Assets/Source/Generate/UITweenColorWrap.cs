@@ -9,6 +9,7 @@ public class UITweenColorWrap
 		L.BeginClass(typeof(UITweenColor), typeof(UITween));
 		L.RegFunction("ToInit", ToInit);
 		L.RegFunction("Play", Play);
+		L.RegFunction("Kill", Kill);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("from", get_from, set_from);
@@ -41,6 +42,23 @@ public class UITweenColorWrap
 			UITweenColor obj = (UITweenColor)ToLua.CheckObject(L, 1, typeof(UITweenColor));
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.Play(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Kill(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UITweenColor obj = (UITweenColor)ToLua.CheckObject(L, 1, typeof(UITweenColor));
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.Kill(arg0);
 			return 0;
 		}
 		catch(Exception e)

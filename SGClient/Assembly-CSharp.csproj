@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6A20D25F-AFB7-032A-72F0-D8153951786A}</ProjectGuid>
+    <ProjectGuid>{B27AE1C6-3D69-624C-ACFA-08F8EF6C961B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;UNITY_64;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -49,11 +49,16 @@
      <Compile Include="Assets\Source\Base\Const.cs" />
      <Compile Include="Assets\Source\Base\Converter.cs" />
      <Compile Include="Assets\Source\Base\DeviceHelper.cs" />
+     <Compile Include="Assets\Source\Base\FullScreenSprite.cs" />
+     <Compile Include="Assets\Source\Base\GameObjectPool.cs" />
      <Compile Include="Assets\Source\Base\Global.cs" />
      <Compile Include="Assets\Source\Base\Localization.cs" />
      <Compile Include="Assets\Source\Base\LuaConst.cs" />
      <Compile Include="Assets\Source\Base\LuaFun.cs" />
      <Compile Include="Assets\Source\Base\LuaHelper.cs" />
+     <Compile Include="Assets\Source\Base\ObjectPool.cs" />
+     <Compile Include="Assets\Source\Base\OpenUDID.cs" />
+     <Compile Include="Assets\Source\Base\ProgressSprite.cs" />
      <Compile Include="Assets\Source\Base\ShareData.cs" />
      <Compile Include="Assets\Source\Base\ShowFPS.cs" />
      <Compile Include="Assets\Source\Base\Utils.cs" />
@@ -63,6 +68,8 @@
      <Compile Include="Assets\Source\Camera\Camera3dDragable.cs" />
      <Compile Include="Assets\Source\Camera\CityCamera.cs" />
      <Compile Include="Assets\Source\Camera\FightCamera.cs" />
+     <Compile Include="Assets\Source\City\City.cs" />
+     <Compile Include="Assets\Source\City\CityBuilding.cs" />
      <Compile Include="Assets\Source\Effect\Bezier.cs" />
      <Compile Include="Assets\Source\Effect\BezierMove.cs" />
      <Compile Include="Assets\Source\Effect\FXTypeWriter.cs" />
@@ -80,7 +87,9 @@
      <Compile Include="Assets\Source\Generate\BezierWrap.cs" />
      <Compile Include="Assets\Source\Generate\ByteBufferWrap.cs" />
      <Compile Include="Assets\Source\Generate\Camera2DWrap.cs" />
+     <Compile Include="Assets\Source\Generate\CityBuildingWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityCameraWrap.cs" />
+     <Compile Include="Assets\Source\Generate\CityWrap.cs" />
      <Compile Include="Assets\Source\Generate\ConstWrap.cs" />
      <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
      <Compile Include="Assets\Source\Generate\DeviceHelperWrap.cs" />
@@ -105,6 +114,7 @@
      <Compile Include="Assets\Source\Generate\DragonBones_BoneWrap.cs" />
      <Compile Include="Assets\Source\Generate\DragonBones_DragonBonesDataWrap.cs" />
      <Compile Include="Assets\Source\Generate\DragonBones_DragonBonesWrap.cs" />
+     <Compile Include="Assets\Source\Generate\DragonBones_EventObjectWrap.cs" />
      <Compile Include="Assets\Source\Generate\DragonBones_FrameData_DragonBones_AnimationFrameDataWrap.cs" />
      <Compile Include="Assets\Source\Generate\DragonBones_FrameData_DragonBones_BoneFrameDataWrap.cs" />
      <Compile Include="Assets\Source\Generate\DragonBones_TimelineData_DragonBones_AnimationFrameDataWrap.cs" />
@@ -130,7 +140,10 @@
      <Compile Include="Assets\Source\Generate\LuaBinder.cs" />
      <Compile Include="Assets\Source\Generate\LuaInterface_DebuggerWrap.cs" />
      <Compile Include="Assets\Source\Generate\NetworkManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ObjectPoolManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\OpenUDIDPhone_OpenUDIDWrap.cs" />
      <Compile Include="Assets\Source\Generate\PathUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\ProgressSpriteWrap.cs" />
      <Compile Include="Assets\Source\Generate\ResourceManagerWrap.cs" />
      <Compile Include="Assets\Source\Generate\ShakeWrap.cs" />
      <Compile Include="Assets\Source\Generate\ShareDataWrap.cs" />
@@ -252,18 +265,26 @@
      <Compile Include="Assets\Source\Gizmo\GizmoPlane.cs" />
      <Compile Include="Assets\Source\Gizmo\GizmoRing.cs" />
      <Compile Include="Assets\Source\Manager\GameManager.cs" />
+     <Compile Include="Assets\Source\Manager\LaunchLoad.cs" />
      <Compile Include="Assets\Source\Manager\LockStepManager.cs" />
      <Compile Include="Assets\Source\Manager\LuaManager.cs" />
      <Compile Include="Assets\Source\Manager\NetworkManager.cs" />
-     <Compile Include="Assets\Source\Manager\PackageManager.cs" />
+     <Compile Include="Assets\Source\Manager\ObjectPoolManager.cs" />
      <Compile Include="Assets\Source\Manager\ResourceManager.cs" />
      <Compile Include="Assets\Source\Manager\ThreadManager.cs" />
      <Compile Include="Assets\Source\Manager\UIManager.cs" />
+     <Compile Include="Assets\Source\Manager\UpdateManager.cs" />
      <Compile Include="Assets\Source\Net\ByteBuffer.cs" />
      <Compile Include="Assets\Source\Net\IPv6SupportMidleware.cs" />
+     <Compile Include="Assets\Source\Net\NetWorkInfo.cs" />
      <Compile Include="Assets\Source\Net\SocketClient.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\CameraMotionBlur.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsBase.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsHelper.cs" />
+     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\SunShafts.cs" />
      <Compile Include="Assets\Source\UI\RTL.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITween.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenBeat.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenCityBuilding.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenColor.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenFade.cs" />
@@ -271,7 +292,9 @@
      <Compile Include="Assets\Source\UI\Tween\UITweenLocalPositionBetween.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenLocalRotation.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenPosition.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenPositionBetween.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenRectPosition.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenRectPositionBetween.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenScale.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenSizeDelta.cs" />
      <Compile Include="Assets\Source\UI\UIButton.cs" />
@@ -333,10 +356,14 @@
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\parser\ObjectDataParser.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\texture\TextureData.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityArmatureComponent.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityBone.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityCombineMesh.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityDragonBonesData.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityEventDispatcher.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityFactory.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnitySlot.cs" />
      <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityTextureData.cs" />
+     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityUGUIDisplay.cs" />
      <Compile Include="Assets\ToLua\BaseType\LuaInterface_EventObjectWrap.cs" />
      <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
      <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaFieldWrap.cs" />
@@ -388,8 +415,9 @@
      <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
-     <None Include="Assets\Resources\PackAssets\ArtFont\BMFont_Number_Big.fnt" />
+     <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\Resources\PackAssets\Shader\UIRenderTexture.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SunShaftsComposite.shader" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
@@ -413,6 +441,8 @@
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\DoubleAnimationAdditive.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlurDX11.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\UI_Line.shader" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
@@ -423,6 +453,7 @@
      <None Include="Assets\Resources\PackAssets\Shader\ImageWithAlpha.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteTile.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\Dissolution.shader" />
+     <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SimpleClear.shader" />
      <None Include="Assets\ToLua\readme.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteDissolve.shader" />
@@ -454,25 +485,25 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="ArabicSupport">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
  </Reference>
  <Reference Include="Debugger">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
  </Reference>
  <Reference Include="ICSharpCode.SharpZipLib">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
  <Reference Include="DOTween">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
  </Reference>
  <Reference Include="DOTween43">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
  </Reference>
  <Reference Include="DOTween46">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
  </Reference>
  <Reference Include="DOTween50">
- <HintPath>/Users/miya/HeroRebirth/HRClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
+ <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
