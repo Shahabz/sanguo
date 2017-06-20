@@ -7,7 +7,7 @@ CREATE TABLE `actor` (
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `forbidtime` int(11) NOT NULL DEFAULT '0' COMMENT '禁言时间',
   `name` varbinary(22) NOT NULL DEFAULT '' COMMENT '角色名称',
-  `aclass` tinyint(4) NOT NULL DEFAULT '0' COMMENT '角色种类',
+  `nation` tinyint(4) NOT NULL DEFAULT '0' COMMENT '角色国家',
   `shape` tinyint(4) NOT NULL DEFAULT '0' COMMENT '形象',
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '级别',
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '钻石',

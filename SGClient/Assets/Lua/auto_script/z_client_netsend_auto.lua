@@ -8,7 +8,7 @@ function netsend_login_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
--- m_aclass=0,m_name_length=0,m_name="[m_name_length]",
+-- m_nation=0,m_name_length=0,m_name="[m_name_length]",
 function netsend_create_C( sendValue )
 	local buf = ByteBuffer.New();
 	buf:WriteShort( CMDC_CREATE );

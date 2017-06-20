@@ -778,13 +778,13 @@ int actor_new( int actor_index )
 // actor_create
 // 函数说明: 创建角色
 //-----------------------------------------------------------------------------
-int actor_create( int client_index, int aclass, char *szActorName )
+int actor_create( int client_index, char nation, char *szActorName )
 {
 	int result = 0;
 	i64 userid;
 	int platid;
 	char *username;
-	if ( aclass < 0 )
+	if ( nation <= 0 || nation > 3 )
 		return -1;
 	client_setwait( client_index, 0 );
 
@@ -794,7 +794,7 @@ int actor_create( int client_index, int aclass, char *szActorName )
 	platid = client_getplatid( client_index );
 	username = client_getusername( client_index );
 	strcpy( ListInfo.m_name, szActorName );
-	ListInfo.m_aclass = aclass;
+	ListInfo.m_nation = nation;
 	ListInfo.m_offset = 0;
 	result = actor_db_create( client_index, platid, userid, username, &ListInfo );
 	if ( result > 0 )
@@ -844,8 +844,8 @@ int actor_db_create( int client_index, int platid, i64 userid, char *username, S
 	// 插入记录到 actor_list
 	db_escape( (const char *)pListInfo->m_name, ActorName, 0 );
 	db_escape( (const char *)client_getdevdata( client_index ), szText_devdata, 0 );
-	sprintf( szSQL, "insert into actor_list (actorid,platid,userid,username,offset,create_time,name,aclass,channelid,os,devdata) values('%d','%d','%s','%s','%d','%d','%s','%d','%d','%d','%s')",
-					actorid, platid, szUserID, username, 0, thistime, ActorName, pListInfo->m_aclass, client_getchannelid( client_index ), client_getos( client_index ), szText_devdata );
+	sprintf( szSQL, "insert into actor_list (actorid,platid,userid,username,offset,create_time,name,nation,channelid,os,devdata) values('%d','%d','%s','%s','%d','%d','%s','%d','%d','%d','%s')",
+					actorid, platid, szUserID, username, 0, thistime, ActorName, pListInfo->m_nation, client_getchannelid( client_index ), client_getos( client_index ), szText_devdata );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
@@ -859,8 +859,8 @@ int actor_db_create( int client_index, int platid, i64 userid, char *username, S
 	}
 
 	// 插入记录到 actor
-	sprintf( szSQL, "insert into actor (actorid,name,aclass,lastip,createtime) values('%d','%s','%d','%s','%d')",
-					actorid, ActorName, pListInfo->m_aclass, client_getip( client_index ), thistime );
+	sprintf( szSQL, "insert into actor (actorid,name,nation,lastip,createtime) values('%d','%s','%d','%s','%d')",
+					actorid, ActorName, pListInfo->m_nation, client_getip( client_index ), thistime );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );

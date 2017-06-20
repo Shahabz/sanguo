@@ -95,8 +95,8 @@ int actor_getlist( int platid, i64 userid, SLK_NetS_List *pValue )
 	pValue->m_actor_num = 0;
 	lltoa( userid, szUserID, 10 );
 RE_QUERY:
-	//sprintf( szSQL, "select actorid,name,aclass,level,lock_time,delete_stoptime from actor_list where userid='%s' and platid='%d' and offset >= 0 ", szUserID, platid );
-	sprintf( szSQL, "select actorid,name,aclass,level,lock_time,delete_stoptime from actor_list where userid='%s' and offset >= 0 ", szUserID );
+	//sprintf( szSQL, "select actorid,name,nation,level,lock_time,delete_stoptime from actor_list where userid='%s' and platid='%d' and offset >= 0 ", szUserID, platid );
+	sprintf( szSQL, "select actorid,name,nation,level,lock_time,delete_stoptime from actor_list where userid='%s' and offset >= 0 ", szUserID );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
@@ -118,7 +118,7 @@ RE_QUERY:
 		index = 0;
 		pValue->m_listinfo[pValue->m_actor_num].m_actorid = atoi( row[index++] );
 		memcpy( pValue->m_listinfo[pValue->m_actor_num].m_name, row[index++], NAME_SIZE*sizeof(char) );
-		pValue->m_listinfo[pValue->m_actor_num].m_aclass = atoi( row[index++] );
+		pValue->m_listinfo[pValue->m_actor_num].m_nation = atoi( row[index++] );
 		pValue->m_listinfo[pValue->m_actor_num].m_level = atoi( row[index++] );
 		locktime = atoi( row[index++] );
 		pValue->m_listinfo[pValue->m_actor_num].m_delete_stoptime = atoi( row[index++] );

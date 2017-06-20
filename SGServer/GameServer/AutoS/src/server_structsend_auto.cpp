@@ -42,7 +42,7 @@ int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue )
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_aclass, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_lockstat, (*psize) );

@@ -16,7 +16,7 @@ struct _actor {
 				unsigned char isexit;	//是否离开游戏中
 				short view_areaindex;	//当前视口的地图区域
 				char name[22];	//角色名称
-				char aclass;	//角色种类
+				char nation;	//角色国家
 				unsigned char shape;	//形象
 				short level;	//级别
 				int city_index;	//城池索引

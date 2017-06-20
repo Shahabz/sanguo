@@ -364,12 +364,12 @@ static int lua_c_actor_info( lua_State *servL )
 	int actor_index = (int )lua_tointeger( servL, 1 );
 	//--Process script
 	int actorid = 0;
-	int aclass = 0;
+	int nation = 0;
 	int level = 0;
 	char *name = 0;
 	short language = 0;
 	lua_pushinteger( servL, actorid );
-	lua_pushinteger( servL, aclass );
+	lua_pushinteger( servL, nation );
 	lua_pushinteger( servL, level );
 	lua_pushstring( servL, name );
 	lua_pushinteger( servL, language );

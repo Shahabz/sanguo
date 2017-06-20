@@ -1,6 +1,10 @@
 -- 界面
 local m_Dlg = nil;
+local m_uiWeiTalkPanel = nil; --UnityEngine.GameObject
+local m_uiShuTalkPanel = nil; --UnityEngine.GameObject
+local m_uiWuTalkPanel = nil; --UnityEngine.GameObject
 
+local m_SelectNation = 0;
 -- 打开界面
 function CreateDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CreateDlg" );
@@ -29,9 +33,10 @@ end
 function CreateDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-            CreateDlgClose();
-		elseif nControlID == 1 then
-			print(os.time())
+		elseif nControlID == 1 or nControlID == 2 or nControlID == 3 then
+			CreateDlgSelect( nControlID )
+		elseif nControlID == 10 then
+			CreateDlgCreate()
         end
 	end
 end
@@ -40,6 +45,9 @@ end
 function CreateDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
+	m_uiWeiTalkPanel = objs[0];
+	m_uiShuTalkPanel = objs[1];
+	m_uiWuTalkPanel = objs[2];
 end
 
 -- 界面初始化时调用
@@ -71,3 +79,31 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function CreateDlgSelect( nation )
+	--pop( "获得银币×1000" )		
+	m_SelectNation = nation;
+	m_uiWeiTalkPanel:SetActive( false );
+	m_uiShuTalkPanel:SetActive( false );
+	m_uiWuTalkPanel:SetActive( false );
+	if nation == 1 then
+		m_uiWeiTalkPanel:SetActive( true );
+	elseif nation == 2 then
+		m_uiShuTalkPanel:SetActive( true );
+	elseif nation == 3 then
+		m_uiWuTalkPanel:SetActive( true );
+	end
+end
+
+function CreateDlgCreate()
+	if m_SelectNation <= 0 then
+		return;
+	end
+	
+	-- 创建角色
+	local sendValue = {};
+	sendValue.m_nation = m_SelectNation;
+	sendValue.m_name = ""
+	sendValue.m_name_length = string.len( sendValue.m_name );
+	netsend_create_C( sendValue );
+	CreateDlgClose();
+end

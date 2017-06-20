@@ -15,7 +15,7 @@ typedef struct _slk_NetS_Login SLK_NetS_Login;	//服务器端发送登录结果给客户端
 struct _slk_ListInfo {
 	int m_actorid;	//角色ID
 	char m_name[22];	//角色名字
-	char m_aclass;	//角色种族
+	char m_nation;	//角色国家
 	short m_level;	//角色等级
 	char m_offset;	//角色位置
 	char m_lockstat;	//锁定状态

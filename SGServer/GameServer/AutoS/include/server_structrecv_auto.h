@@ -16,7 +16,7 @@ struct _slk_NetC_Login {
 typedef struct _slk_NetC_Login SLK_NetC_Login;	//客户端请求登录
 
 struct _slk_NetC_Create {
-	char m_aclass;	//客户端请求-创建的角色种类
+	char m_nation;	//客户端请求-创建的角色国家
 	short m_name_length;	//客户端请求-创建的角色名称长度
 	char m_name[22];	//客户端请求-创建的角色名称
 };

@@ -52,15 +52,7 @@ function proc_list_C( recvValue )
 	-- EventProtocol.dispatchEvent( "proc_list_C", recvValue );
 	-- 无角色
 	if recvValue.m_actor_num <= 0 then
-		
 		CreateDlgOpen();
---[[		-- 创建角色
-		local sendValue = {};
-		sendValue.m_aclass = 0;
-		sendValue.m_name = "xx"
-		sendValue.m_name_length = string.len( sendValue.m_name );
-		netsend_create_C( sendValue );--]]
-		
 	else
 		if recvValue.m_listinfo[1].m_lockstat == 1 then
 			Data.userini:WriteValue( "USERNAME", "" );
@@ -106,6 +98,14 @@ function proc_enterinfo_C( recvValue )
 	Const.serverid = recvValue.m_serverid;
 	Const.actorid = recvValue.m_actorid;
 	GetPlayer().m_createtime = recvValue.m_createtime;
+	
+	-- 加载主城
+	LoadPrefabAsyn( "MainCity", function( obj )
+		GameManager.MainCity = GameObject.Instantiate( obj );
+		GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
+		MainDlgOpen();
+		LoginModClose();
+	end );
 end
 
 -- m_result=0,m_actorid=0,

@@ -13,7 +13,7 @@ function struct_NetC_Login_send( buf, sendValue )
 end
 
 function struct_NetC_Create_send( buf, sendValue )
-	buf:WriteSByte( sendValue.m_aclass );
+	buf:WriteSByte( sendValue.m_nation );
 	buf:WriteShort( sendValue.m_name_length );
 	buf:WriteStringWithLength( sendValue.m_name );
 end

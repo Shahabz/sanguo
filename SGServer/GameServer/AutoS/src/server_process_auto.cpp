@@ -68,8 +68,8 @@ void proc_create_S( int client_index, SLK_NetC_Create *pValue )
 {
 	// process.
 	client_setwait( client_index, 0 );
-	actor_create( client_index, pValue->m_aclass, pValue->m_name );
-	write_gamelog( "[Serv_CREATE]_idx:%d_aclass:%d_name:%s", client_index, pValue->m_aclass, pValue->m_name );
+	actor_create( client_index, pValue->m_nation, pValue->m_name );
+	write_gamelog( "[Serv_CREATE]_idx:%d_nation:%d_name:%s", client_index, pValue->m_nation, pValue->m_name );
 }
 
 void proc_list_S( int client_index, char *pValue )

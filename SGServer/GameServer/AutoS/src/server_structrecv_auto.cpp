@@ -49,7 +49,7 @@ int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue )
 {
 	int tmpi = 0;
 
-	LKSET_SBYTE_RECV( &pValue->m_aclass, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_nation, (*pptr), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_name_length, (*pptr), (*psize) );
 	if( pValue->m_name_length < 0 || pValue->m_name_length > (*psize)*(int)sizeof(char) || pValue->m_name_length > 22 )
 		return -1;

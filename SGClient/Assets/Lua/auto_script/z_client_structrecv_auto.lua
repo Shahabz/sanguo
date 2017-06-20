@@ -15,7 +15,7 @@ function struct_ListInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_actorid = buffer:ReadInt();
 	recvValue.m_name = buffer:ReadStringWithLen( 22 );
-	recvValue.m_aclass = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_offset = buffer:ReadSByte();
 	recvValue.m_lockstat = buffer:ReadSByte();

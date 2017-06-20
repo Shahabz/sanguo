@@ -63,7 +63,7 @@ function LoginModOnEvent( nType, nControlID, value )
 		-- 账户登陆	
 		elseif nControlID == 2 then
 			LoginModLogin();
-		
+			
 		-- 显示服务器列表	
 		elseif nControlID == 10 then
 			LoginModOpenServerList();
@@ -166,17 +166,6 @@ function LoginModOpenTestLogin()
 		end 
 	
 	end );
-	
-	-- test
---[[	for i=1, 100, 1 do
-		Invoke( function() 
-						local prefab = LoadPrefab( "UIU_Damage" ) 
-						local obj = GameObject.Instantiate( prefab );
-						obj.transform:SetParent( m_Dlg.transform );
-						--obj.transform.localScale = Vector3( 1, 1, 1 );
-						obj.transform:Find("Text"):GetComponent("UIText").text = custom.rand(10, 100);
-		end, i, obj)
-	end--]]
 end
 
 -- 关闭测试模式登陆
@@ -222,22 +211,17 @@ function LoginModOpenLoading()
 	m_uiLoading.transform:GetComponent( "Slider" ).value = 0.0;
 	
     -- 读取所有AssetBundle
-    eye.resourceManager:LoadAllAssetBundle();	
+    eye.resourceManager:LoadAllAssetBundle();
 end
 
 -- 读取AssetBundle的回调
 function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress )
+	m_uiLoading.transform:GetComponent( "Slider" ).value = progress/totalProgress;
 	if progress == totalProgress then
-		m_uiLoading.transform:GetComponent( "Slider" ).value = progress/totalProgress;
-		-- 加载主城
-		LoadPrefabAsyn( "MainCity", function( obj )
-			GameManager.MainCity = GameObject.Instantiate( obj );
-			GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
-			MainDlgOpen();
-			LoginModClose();
-			netsend_list_C( 0 );
-			
-		end );
+		-- 资源初始化类放在这
+		-- 初始化提示文字对象池
+		PopTextModPoolInit();
+		netsend_list_C( 0 );
 	end
 end
 

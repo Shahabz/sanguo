@@ -69,7 +69,7 @@ int actor_load( int actor_index, int actorid );
 int actor_new( int actor_index );
 
 // 创建角色
-int actor_create( int client_index, int aclass, char *szActorName );
+int actor_create( int client_index, char nation, char *szActorName );
 
 // 创建角色,数据库
 int actor_db_create( int client_index, int platid, i64 userid, char *username, SLK_ListInfo *pListInfo );
