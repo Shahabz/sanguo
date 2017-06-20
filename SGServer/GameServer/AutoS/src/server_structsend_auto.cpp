@@ -149,13 +149,27 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_aclass, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
-	LKSET_LONG_SEND( (*pptr), &pValue->m_experience, (*psize) );
-	LKSET_LONG_SEND( (*pptr), &pValue->m_experience_max, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_viplevel, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_vipexp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_vipexp_max, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_body, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_official, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_zone, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_wood, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_food, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_iron, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_infantry_num, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_cavalry_num, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_archer_num, (*psize) );
 	return 0;
 }
 

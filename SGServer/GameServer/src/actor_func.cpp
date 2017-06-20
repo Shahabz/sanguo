@@ -550,7 +550,7 @@ int actor_getinfo( int actor_index )
 	SLK_NetS_ActorInfo info = { 0 };
 	info.m_actorid = g_actors[actor_index].actorid;
 	memcpy( info.m_name, g_actors[actor_index].name, sizeof(char)*NAME_SIZE );
-	info.m_aclass = g_actors[actor_index].aclass;
+	//info.m_nation = g_actors[actor_index].nation;
 	info.m_shape = g_actors[actor_index].shape;
 	info.m_level = g_actors[actor_index].level;
 	//info.m_experience_max = g_upgradeexp[g_actors[actor_index].level];

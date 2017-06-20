@@ -52,13 +52,14 @@ function proc_list_C( recvValue )
 	-- EventProtocol.dispatchEvent( "proc_list_C", recvValue );
 	-- 无角色
 	if recvValue.m_actor_num <= 0 then
-	
-		-- 创建角色
+		
+		CreateDlgOpen();
+--[[		-- 创建角色
 		local sendValue = {};
 		sendValue.m_aclass = 0;
 		sendValue.m_name = "xx"
 		sendValue.m_name_length = string.len( sendValue.m_name );
-		netsend_create_C( sendValue );
+		netsend_create_C( sendValue );--]]
 		
 	else
 		if recvValue.m_listinfo[1].m_lockstat == 1 then

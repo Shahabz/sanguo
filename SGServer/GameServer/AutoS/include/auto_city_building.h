@@ -4,10 +4,11 @@
 
 struct _city_building {
 //--Automatically generated
-				char kind;	//资源建筑种类
-				char level;	//资源建筑等级
-				int finish;	//结束时间
-				char official;	//官员级别
+				char kind;	//建筑种类
+				char level;	//建筑等级
+				char official;	//正在使用官员级别
+				char officialfree;	//官员体验级别
+				int officialsec;	//剩余时间
 				int value;	//通用值
 };
 typedef struct _city_building Building;

@@ -15,28 +15,16 @@
 #define ITEM_COLOR_LEVEL_ORANGE 6 // 橙色
 #define ITEM_COLOR_LEVEL_MAX	7 // 最大颜色数量
 
-// 背包装备的位置起始
-#define ITEM_OFFSETBASE			0
-#define EQUIP_OFFSETBASE		1000
-#define HEROEQUIP_OFFSETBASE	2000
+/* 背包最大数量*/
+#define MAX_DEFAULT_ITEMNUM	200
+#define MAX_ACTOR_ITEMNUM	300
 
-/* 背包装备栏最大数量*/
-#define MAX_DEFAULT_ITEMNUM	500
-#define MAX_ACTOR_ITEMNUM	500
-#define MAX_ACTOR_EQUIPNUM	10
+/* 装备最大数量*/
+#define MAX_DEFAULT_EQUIPNUM	30
+#define MAX_ACTOR_EQUIPNUM	100
 
 /* 物品类型 */
 #define ITEM_TYPE_NORMAL					0	//	普通使用类
-#define ITEM_TYPE_EQUIP1					1	// 
-#define ITEM_TYPE_EQUIP2					2	// 
-#define ITEM_TYPE_EQUIP3					3	// 
-#define ITEM_TYPE_EQUIP4					4	// 
-#define ITEM_TYPE_EQUIP5					5	// 
-#define ITEM_TYPE_EQUIP6					6	// 
-#define ITEM_TYPE_EQUIP7					7	// 
-#define ITEM_TYPE_EQUIP8					8   // 
-#define ITEM_TYPE_EQUIP9					9   //
-#define ITEM_TYPE_EQUIP10					10  //
 #define ITEM_TYPE_NORMAL_USE				22	// 使用
 
 /* 动态属性 */
@@ -94,12 +82,12 @@ Item *item_getptr( int actor_index, int offset );
 /* 服务器道具操作部分 */
 int item_load( int actor_index );	// 玩家读取道具
 int item_save( int actor_index, FILE *fp ); // 玩家保存所有道具
-int item_insert( int actor_index, short offset ); // 创建装备的时候调用，保存刚创建的道具
+int item_insert( int actor_index, short offset ); // 创建道具的时候调用，保存刚创建的道具
 int item_getitem( int actor_index, int itemkind, int itemnum, char color, char path ); // 玩家获得道具
 int item_create( int actor_index, int itemkind, int itemnum, char color, ItemOut *pOut ); // 玩家创建道具
 int item_lost( int actor_index, int itemkind, int num, char path ); // 服务器丢掉道具，根据kind
 int item_lostitem( int actor_index, int itemoffset, int num, char path ); // 服务器丢掉道具，根据offset
-int item_deletebox( int actor_index, int item_offset, char type ); // 删除一个格子的道具
+int item_deletebox( int actor_index, int item_offset ); // 删除一个格子的道具
 int item_deleteitemdb( int actorid, i64 itemid ); // 删除一个道具格子
 int item_hasitem( int actor_index, int itemkind, int num ); // 是否有这个数量的物品
 int item_hasitem_between( int actor_index, int minitemkind, int maxitemkind ); // 是否有这个数量的物品区间

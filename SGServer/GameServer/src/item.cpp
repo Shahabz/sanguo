@@ -224,15 +224,10 @@ int _item_set_ability_value( Item *pItem, short objability, int value )
 Item *item_getptr( int actor_index, int offset )
 {
 	int tmpi = 0;
-	if ( offset >= ITEM_OFFSETBASE && offset < ITEM_OFFSETBASE + MAX_ACTOR_ITEMNUM )
+	if ( offset >= 0 && offset < MAX_ACTOR_ITEMNUM )
 	{ // 背包
-		tmpi = offset - ITEM_OFFSETBASE;
+		tmpi = offset;
 		return &g_actors[actor_index].item[tmpi];
-	}
-	else if ( offset >= EQUIP_OFFSETBASE && offset < EQUIP_OFFSETBASE + MAX_ACTOR_EQUIPNUM )
-	{ // 主角装备栏
-		tmpi = offset - EQUIP_OFFSETBASE;
-		return &g_actors[actor_index].equip[tmpi];
 	}
 	return NULL;
 }
@@ -256,26 +251,17 @@ int item_save( int actor_index, FILE *fp )
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 
+	// 背包栏
 	int max_itemnum = MAX_DEFAULT_ITEMNUM + g_actors[actor_index].itemext;
 	if ( max_itemnum > MAX_ACTOR_ITEMNUM )
 		max_itemnum = MAX_ACTOR_ITEMNUM;
+	actor_item_batch_save_auto( g_actors[actor_index].item, max_itemnum,  "actor_item", fp );
 
-	for ( int tmpi = 0; tmpi < max_itemnum; tmpi++ )
-	{ // 背包
-		if ( g_actors[actor_index].item[tmpi].m_kind <= 0 )
-			continue;
-		g_actors[actor_index].item[tmpi].actorid = g_actors[actor_index].actorid;
-		g_actors[actor_index].item[tmpi].offset = tmpi;
-		actor_item_save_auto( &g_actors[actor_index].item[tmpi], "actor_item", fp );
-	}
-	for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
-	{ // 主角装备栏
-		if ( g_actors[actor_index].equip[tmpi].m_kind <= 0 )
-			continue;
-		g_actors[actor_index].equip[tmpi].actorid = g_actors[actor_index].actorid;
-		g_actors[actor_index].equip[tmpi].offset = tmpi + EQUIP_OFFSETBASE;
-		actor_item_save_auto( &g_actors[actor_index].equip[tmpi], "actor_item", fp );
-	}
+	// 装备栏
+	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
+	if ( max_equipnum > MAX_ACTOR_EQUIPNUM )
+		max_equipnum = MAX_ACTOR_EQUIPNUM;
+	actor_equip_batch_save_auto( g_actors[actor_index].equip, max_equipnum, "actor_equip", fp );
 	return 0;
 }
 
@@ -285,30 +271,17 @@ int item_insert( int actor_index, short offset )
 	int tmpi = 0;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	if ( offset >= ITEM_OFFSETBASE && offset < ITEM_OFFSETBASE + MAX_ACTOR_ITEMNUM )
+	if ( offset >= 0 && offset < MAX_ACTOR_ITEMNUM )
 	{ // 背包
 		tmpi = offset;
 		if ( g_actors[actor_index].item[tmpi].m_kind <= 0 )
 			return -1;
-		g_actors[actor_index].item[tmpi].m_itemid = g_maxitemid;
+		g_actors[actor_index].item[tmpi].itemid = g_maxitemid;
 		g_maxitemid++;
 		g_actors[actor_index].item[tmpi].actorid = g_actors[actor_index].actorid;
 		g_actors[actor_index].item[tmpi].offset = tmpi;
 		actor_item_save_auto( &g_actors[actor_index].item[tmpi], "actor_item", NULL );
 	}
-	else if ( offset >= EQUIP_OFFSETBASE && offset < EQUIP_OFFSETBASE + MAX_ACTOR_EQUIPNUM )
-	{ // 主角装备栏
-		tmpi = offset - EQUIP_OFFSETBASE;
-		if ( g_actors[actor_index].equip[tmpi].m_kind <= 0 )
-			return -1;
-		g_actors[actor_index].equip[tmpi].m_itemid = g_maxitemid;
-		g_maxitemid++;
-		g_actors[actor_index].equip[tmpi].actorid = g_actors[actor_index].actorid;
-		g_actors[actor_index].equip[tmpi].offset = tmpi + EQUIP_OFFSETBASE;
-		actor_item_save_auto( &g_actors[actor_index].equip[tmpi], "actor_item", NULL );
-	}
-	else
-		return -1;
 	return 0;
 }
 
@@ -468,24 +441,18 @@ int item_create( int actor_index, int itemkind, int itemnum, char color, ItemOut
 			pitem->m_kind = g_itemkind[itemkind].m_kind;
 			pitem->m_num = remain_item;
 			itemtype = item_gettype( pitem->m_kind );
-			if ( itemtype >= ITEM_TYPE_EQUIP1 && itemtype <= ITEM_TYPE_EQUIP10 )
-			{ // 如果是装备
-			}
-			else
-			{ // 其它道具
-				for ( tmpj = 0; tmpj < ITEM_ABILITY_NUM; tmpj++ )
-				{
-					pitem->m_ability[tmpj] = g_itemkind[itemkind].m_ability[tmpj];
-					tmpmin = g_itemkind[itemkind].m_value_min[tmpj];
-					tmpmax = g_itemkind[itemkind].m_value_max[tmpj];
-					if ( tmpmin == tmpmax )
-						pitem->m_value[tmpj] = tmpmin;
-					else if ( tmpmax - tmpmin < 3 )
-						pitem->m_value[tmpj] = tmpmin + rand() % (tmpmax - tmpmin + 1);
-					else
-						pitem->m_value[tmpj] = tmpmin + rand() % (tmpmax - tmpmin + 1);
-				}
 
+			for ( tmpj = 0; tmpj < ITEM_ABILITY_NUM; tmpj++ )
+			{
+				pitem->m_ability[tmpj] = g_itemkind[itemkind].m_ability[tmpj];
+				tmpmin = g_itemkind[itemkind].m_value_min[tmpj];
+				tmpmax = g_itemkind[itemkind].m_value_max[tmpj];
+				if ( tmpmin == tmpmax )
+					pitem->m_value[tmpj] = tmpmin;
+				else if ( tmpmax - tmpmin < 3 )
+					pitem->m_value[tmpj] = tmpmin + rand() % (tmpmax - tmpmin + 1);
+				else
+					pitem->m_value[tmpj] = tmpmin + rand() % (tmpmax - tmpmin + 1);
 			}
 
 			// 颜色 如果颜色信息有意义，以当前为主，否则为0
@@ -579,12 +546,12 @@ int item_lostitem( int actor_index, int itemoffset, int num, char path )
 	if ( pitem->m_num < num )
 		return -1;
 
-	wlog( 0, LOGOP_ITEMLOST, path, pitem->m_kind, num, pitem->m_itemid, g_actors[actor_index].actorid, 0 );
+	wlog( 0, LOGOP_ITEMLOST, path, pitem->m_kind, num, pitem->itemid, g_actors[actor_index].actorid, 0 );
 
 	itemkind = pitem->m_kind;
 	pitem->m_num -= num;
 	if ( pitem->m_num <= 0 )
-		item_deletebox( actor_index, itemoffset, 0 );
+		item_deletebox( actor_index, itemoffset );
 
 	// 发送角色失去物品
 	item_sendlost( actor_index, -1, itemoffset, num, path );
@@ -592,29 +559,25 @@ int item_lostitem( int actor_index, int itemoffset, int num, char path )
 }
 
 // 删除一个格子的道具
-int item_deletebox( int actor_index, int item_offset, char type )
+int item_deletebox( int actor_index, int item_offset )
 {
 	char	szSQL[1024];
 	char bigint[21];
 	Item *pItem = NULL;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	if ( type == 0 )
-	{
-		if ( item_offset >= 0 && item_offset < MAX_ACTOR_ITEMNUM )
-			pItem = &g_actors[actor_index].item[item_offset];
-		else
-			return -1;
-	}
-	else if ( type == 2 )
-		pItem = &g_actors[actor_index].equip[item_offset - EQUIP_OFFSETBASE];
+
+	if ( item_offset >= 0 && item_offset < MAX_ACTOR_ITEMNUM )
+		pItem = &g_actors[actor_index].item[item_offset];
+	else
+		return -1;
 
 	if ( pItem == NULL )
 	{
 		return -1;
 	}
 	// 数据库删除
-	lltoa( pItem->m_itemid, bigint, 10 );
+	lltoa( pItem->itemid, bigint, 10 );
 	sprintf( szSQL, "delete from actor_item where itemid='%s'", bigint );
 	if ( mysql_query( myGame, szSQL ) )
 	{
@@ -770,7 +733,7 @@ int item_getitemindex_whihitemid( int actor_index, i64 itemid )
 	int index = -1;
 	for ( int tmpi = 0; tmpi < MAX_ACTOR_ITEMNUM; tmpi++ )
 	{
-		if ( g_actors[actor_index].item[tmpi].m_itemid == itemid &&
+		if ( g_actors[actor_index].item[tmpi].itemid == itemid &&
 			g_actors[actor_index].item[tmpi].m_num > 0 )
 		{
 			index = tmpi;

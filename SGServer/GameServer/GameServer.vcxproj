@@ -93,12 +93,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AutoS\src\auto_actor.cpp" />
+    <ClCompile Include="AutoS\src\auto_actor_equip.cpp" />
     <ClCompile Include="AutoS\src\auto_actor_item.cpp" />
     <ClCompile Include="AutoS\src\auto_army.cpp" />
     <ClCompile Include="AutoS\src\auto_city.cpp" />
     <ClCompile Include="AutoS\src\auto_city_building.cpp" />
     <ClCompile Include="AutoS\src\auto_city_building_barracks.cpp" />
     <ClCompile Include="AutoS\src\auto_city_building_res.cpp" />
+    <ClCompile Include="AutoS\src\auto_city_hero.cpp" />
+    <ClCompile Include="AutoS\src\auto_city_hero_equip.cpp" />
     <ClCompile Include="AutoS\src\auto_data_item.cpp" />
     <ClCompile Include="AutoS\src\auto_data_paycountry.cpp" />
     <ClCompile Include="AutoS\src\auto_data_paygoods.cpp" />
@@ -155,12 +158,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoS\include\auto_actor.h" />
+    <ClInclude Include="AutoS\include\auto_actor_equip.h" />
     <ClInclude Include="AutoS\include\auto_actor_item.h" />
     <ClInclude Include="AutoS\include\auto_army.h" />
     <ClInclude Include="AutoS\include\auto_city.h" />
     <ClInclude Include="AutoS\include\auto_city_building.h" />
     <ClInclude Include="AutoS\include\auto_city_building_barracks.h" />
     <ClInclude Include="AutoS\include\auto_city_building_res.h" />
+    <ClInclude Include="AutoS\include\auto_city_hero.h" />
+    <ClInclude Include="AutoS\include\auto_city_hero_equip.h" />
     <ClInclude Include="AutoS\include\auto_data_item.h" />
     <ClInclude Include="AutoS\include\auto_data_paycountry.h" />
     <ClInclude Include="AutoS\include\auto_data_paygoods.h" />

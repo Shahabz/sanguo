@@ -17,7 +17,7 @@ int city_building_load_auto( int cityid, int city_index, LPCB_GETBUILDING pCB_Ge
 	int offset = 0;
 	Building *pBuilding;
 
-	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level`,`finish`,`official`,`value` from %s where cityid='%d'", pTab, cityid );
+	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value` from %s where cityid='%d'", pTab, cityid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -38,8 +38,9 @@ int city_building_load_auto( int cityid, int city_index, LPCB_GETBUILDING pCB_Ge
 		offset++;
 		pBuilding->kind = atoi(row[offset++]);
 		pBuilding->level = atoi(row[offset++]);
-		pBuilding->finish = atoi(row[offset++]);
 		pBuilding->official = atoi(row[offset++]);
+		pBuilding->officialfree = atoi(row[offset++]);
+		pBuilding->officialsec = atoi(row[offset++]);
 		pBuilding->value = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
@@ -53,7 +54,7 @@ int city_building_save_auto( int cityid, int offset, Building *pBuilding, char *
 		return -1;
 
 RE_BUILDING_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`finish`,`official`,`value`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,offset,pBuilding->kind,pBuilding->level,pBuilding->finish,pBuilding->official,pBuilding->value);
+	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,offset,pBuilding->kind,pBuilding->level,pBuilding->official,pBuilding->officialfree,pBuilding->officialsec,pBuilding->value);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -89,11 +90,11 @@ int city_building_batch_save_auto( int cityid, Building *pBuilding, int maxcount
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`finish`,`official`,`value`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].finish,pBuilding[index].official,pBuilding[index].value);
+			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].official,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d')",cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].finish,pBuilding[index].official,pBuilding[index].value);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].official,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

@@ -119,32 +119,32 @@ int item_list( int actor_index )
 // 发送装备列表
 int item_equip_list( int actor_index )
 {
-	int beginindex = 0;
-	int max_itemnum = 0;
-	int offsetbase = 0;
-	Item *pEquip = NULL;
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
-	
-	beginindex = 0;
-	max_itemnum = MAX_ACTOR_EQUIPNUM;
-	offsetbase = EQUIP_OFFSETBASE;
-	pEquip = g_actors[actor_index].equip;
+	//int beginindex = 0;
+	//int max_itemnum = 0;
+	//int offsetbase = 0;
+	//Item *pEquip = NULL;
+	//if ( actor_index < 0 || actor_index >= g_maxactornum )
+	//	return -1;
+	//
+	//beginindex = 0;
+	//max_itemnum = MAX_ACTOR_EQUIPNUM;
+	//offsetbase = EQUIP_OFFSETBASE;
+	//pEquip = g_actors[actor_index].equip;
 
-	// 装备列表
-	SLK_NetS_ItemList Value = { 0 };
-	Value.m_kindnum = 0;
-	for ( int tmpi = beginindex; tmpi < beginindex + MAX_ACTOR_EQUIPNUM; tmpi++ )
-	{
-		if ( pEquip[tmpi].m_kind <= 0 || pEquip[tmpi].m_num <= 0 )
-			continue;
-		Value.m_item[Value.m_kindnum].m_offset = offsetbase + tmpi;
-		Value.m_item[Value.m_kindnum].m_kind = pEquip[tmpi].m_kind;
-		Value.m_item[Value.m_kindnum].m_num = pEquip[tmpi].m_num;
-		Value.m_item[Value.m_kindnum].m_color_level = pEquip[tmpi].m_color_level;
-		Value.m_kindnum++;
-	}
-	netsend_itemlist_S( actor_index, SENDTYPE_ACTOR, &Value );
+	//// 装备列表
+	//SLK_NetS_ItemList Value = { 0 };
+	//Value.m_kindnum = 0;
+	//for ( int tmpi = beginindex; tmpi < beginindex + MAX_ACTOR_EQUIPNUM; tmpi++ )
+	//{
+	//	if ( pEquip[tmpi].m_kind <= 0 || pEquip[tmpi].m_num <= 0 )
+	//		continue;
+	//	Value.m_item[Value.m_kindnum].m_offset = offsetbase + tmpi;
+	//	Value.m_item[Value.m_kindnum].m_kind = pEquip[tmpi].m_kind;
+	//	Value.m_item[Value.m_kindnum].m_num = pEquip[tmpi].m_num;
+	//	Value.m_item[Value.m_kindnum].m_color_level = pEquip[tmpi].m_color_level;
+	//	Value.m_kindnum++;
+	//}
+	//netsend_itemlist_S( actor_index, SENDTYPE_ACTOR, &Value );
 	return 0;
 }
 

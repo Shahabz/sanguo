@@ -23,8 +23,9 @@ struct _actor {
 				int token;	//钻石
 				int total_charge;	//总充值
 				unsigned char itemext;	//扩展的背包栏位数
-				Item item[500];	//角色携带的道具
-				Item equip[10];	//角色装备栏
+				Item item[300];	//角色携带的道具
+				Equip equip[100];	//角色携带的装备
+				unsigned char equipext;	//扩展的装备栏位数
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数

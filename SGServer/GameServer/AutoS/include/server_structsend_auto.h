@@ -71,13 +71,27 @@ typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//通用短消息
 struct _slk_NetS_ActorInfo {
 	int m_actorid;	//服务器发送玩家基本信息-角色编号
 	char m_name[22];	//服务器发送玩家基本信息-角色名称
-	char m_aclass;	//服务器发送玩家基本信息-角色种类
-	short m_shape;	//服务器发送玩家基本信息-形象
+	char m_nation;	//服务器发送玩家基本信息-国家
+	char m_shape;	//服务器发送玩家基本信息-形象
 	short m_level;	//服务器发送玩家基本信息-级别
-	i64 m_experience;	//服务器发送玩家基本信息-经验
-	i64 m_experience_max;	//服务器发送玩家基本信息-经验上限
+	i64 m_exp;	//服务器发送玩家基本信息-经验
+	i64 m_exp_max;	//服务器发送玩家基本信息-经验上限
 	int m_token;	//服务器发送玩家基本信息-钻石
 	char m_viplevel;	//服务器发送玩家基本信息-VIP等级
+	int m_vipexp;	//服务器发送玩家基本信息-VIP经验
+	int m_vipexp_max;	//服务器发送玩家基本信息-VIP经验上限
+	short m_body;	//服务器发送玩家基本信息-体力
+	char m_place;	//服务器发送玩家基本信息-爵位
+	char m_official;	//服务器发送玩家基本信息-官职
+	short m_zone;	//服务器发送玩家基本信息-区域
+	int m_battlepower;	//服务器发送玩家基本信息-战力
+	short m_silver;	//服务器发送玩家基本信息-银币
+	short m_wood;	//服务器发送玩家基本信息-木材
+	short m_food;	//服务器发送玩家基本信息-粮食
+	short m_iron;	//服务器发送玩家基本信息-镔铁
+	int m_infantry_num;	//服务器发送玩家基本信息-步兵数
+	int m_cavalry_num;	//服务器发送玩家基本信息-骑兵数
+	int m_archer_num;	//服务器发送玩家基本信息-弓兵数
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

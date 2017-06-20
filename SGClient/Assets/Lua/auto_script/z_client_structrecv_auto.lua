@@ -89,13 +89,27 @@ function struct_NetS_ActorInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_actorid = buffer:ReadInt();
 	recvValue.m_name = buffer:ReadStringWithLen( 22 );
-	recvValue.m_aclass = buffer:ReadSByte();
-	recvValue.m_shape = buffer:ReadShort();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_shape = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
-	recvValue.m_experience = buffer:ReadLong();
-	recvValue.m_experience_max = buffer:ReadLong();
+	recvValue.m_exp = buffer:ReadLong();
+	recvValue.m_exp_max = buffer:ReadLong();
 	recvValue.m_token = buffer:ReadInt();
 	recvValue.m_viplevel = buffer:ReadSByte();
+	recvValue.m_vipexp = buffer:ReadInt();
+	recvValue.m_vipexp_max = buffer:ReadInt();
+	recvValue.m_body = buffer:ReadShort();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_official = buffer:ReadSByte();
+	recvValue.m_zone = buffer:ReadShort();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_silver = buffer:ReadShort();
+	recvValue.m_wood = buffer:ReadShort();
+	recvValue.m_food = buffer:ReadShort();
+	recvValue.m_iron = buffer:ReadShort();
+	recvValue.m_infantry_num = buffer:ReadInt();
+	recvValue.m_cavalry_num = buffer:ReadInt();
+	recvValue.m_archer_num = buffer:ReadInt();
 	return recvValue;
 end
 

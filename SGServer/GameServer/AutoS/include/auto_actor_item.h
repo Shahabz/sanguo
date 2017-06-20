@@ -4,7 +4,7 @@
 
 struct _actor_item {
 //--Automatically generated
-				i64 m_itemid;	//物品id
+				i64 itemid;	//物品id
 				int actorid;	//角色ID
 				short offset;	//物品所在位置
 				int m_kind;	//物品种类
@@ -18,5 +18,6 @@ typedef struct _actor_item Item;
 typedef Item * (*LPCB_GETITEM)( int actorid, int offset );
 int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem, char *pTab );
 int actor_item_save_auto( Item *pItem, char *pTab, FILE *fp );
+int actor_item_batch_save_auto( Item *pItem, int maxcount,  char *pTab, FILE *fp );
 
 #endif

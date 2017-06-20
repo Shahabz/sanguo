@@ -13,6 +13,7 @@ CREATE TABLE `actor` (
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '钻石',
   `total_charge` int(11) NOT NULL DEFAULT '0' COMMENT '总充值',
   `itemext` tinyint(4) NOT NULL DEFAULT '0' COMMENT '扩展的背包栏位数',
+  `equipext` tinyint(4) NOT NULL DEFAULT '0' COMMENT '扩展的装备栏位数',
   `sflag` int(11) NOT NULL DEFAULT '0' COMMENT '特定标志位',
   `fdate` int(11) NOT NULL DEFAULT '0' COMMENT '刷新的日子是哪天',
   `today_char` varbinary(512) NOT NULL DEFAULT '' COMMENT 'char类型每日次数',

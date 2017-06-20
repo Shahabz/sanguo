@@ -17,7 +17,7 @@ int city_building_res_load_auto( int cityid, int city_index, LPCB_GETBUILDINGRES
 	int offset = 0;
 	BuildingRes *pBuildingRes;
 
-	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level`,`finish` from %s where cityid='%d'", pTab, cityid );
+	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level` from %s where cityid='%d'", pTab, cityid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -38,7 +38,6 @@ int city_building_res_load_auto( int cityid, int city_index, LPCB_GETBUILDINGRES
 		offset++;
 		pBuildingRes->kind = atoi(row[offset++]);
 		pBuildingRes->level = atoi(row[offset++]);
-		pBuildingRes->finish = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -51,7 +50,7 @@ int city_building_res_save_auto( int cityid, int offset, BuildingRes *pBuildingR
 		return -1;
 
 RE_BUILDINGRES_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`finish`) Values('%d','%d','%d','%d','%d')",pTab,cityid,offset,pBuildingRes->kind,pBuildingRes->level,pBuildingRes->finish);
+	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,cityid,offset,pBuildingRes->kind,pBuildingRes->level);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -87,11 +86,11 @@ int city_building_res_batch_save_auto( int cityid, BuildingRes *pBuildingRes, in
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`finish`) Values('%d','%d','%d','%d','%d')",pTab,cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level,pBuildingRes[index].finish);
+			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d')",cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level,pBuildingRes[index].finish);
+			sprintf( szSQL, ",('%d','%d','%d','%d')",cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

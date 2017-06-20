@@ -137,12 +137,12 @@ int item_use( int actor_index, short itemindex, short itemnum, int hero_index, i
 	g_actors[actor_index].item[itemindex].m_num -= true_usenum;
 
 	// 记录物品使用日志
-	wlog( 0, LOGOP_ITEMLOST, PATH_ITEMUSE, g_actors[actor_index].item[itemindex].m_kind, true_usenum, g_actors[actor_index].item[itemindex].m_itemid, g_actors[actor_index].actorid, 0 );
+	wlog( 0, LOGOP_ITEMLOST, PATH_ITEMUSE, g_actors[actor_index].item[itemindex].m_kind, true_usenum, g_actors[actor_index].item[itemindex].itemid, g_actors[actor_index].actorid, 0 );
 
 	// 如果数量为0，那么就删掉
 	if ( g_actors[actor_index].item[itemindex].m_num <= 0 )
 	{
-		item_deletebox( actor_index, itemindex, 0 );
+		item_deletebox( actor_index, itemindex );
 		memset( &g_actors[actor_index].item[itemindex], 0, sizeof(Item) );
 	}
 
@@ -235,56 +235,56 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 //-----------------------------------------------------------------------------
 int item_equipup( int actor_index, short item_offset )
 {
-	Item *pEquip = NULL;
-	Item *pItem = NULL;
-	Item tmpItem;
-	short equip_target = -1;
-	int eff_result = 0;
-	char is_send = FALSE;
+	//Item *pEquip = NULL;
+	//Item *pItem = NULL;
+	//Item tmpItem;
+	//short equip_target = -1;
+	//int eff_result = 0;
+	//char is_send = FALSE;
 
-	// 合法性检查
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
+	//// 合法性检查
+	//if ( actor_index < 0 || actor_index >= g_maxactornum )
+	//	return -1;
 
-	// 角色装备
-	if ( item_offset >= ITEM_OFFSETBASE && item_offset < ITEM_OFFSETBASE + MAX_ACTOR_ITEMNUM )
-	{
-		pItem = &g_actors[actor_index].item[item_offset - ITEM_OFFSETBASE];
-	}
-	else
-	{
-		return -1;
-	}
+	//// 角色装备
+	//if ( item_offset >= ITEM_OFFSETBASE && item_offset < ITEM_OFFSETBASE + MAX_ACTOR_ITEMNUM )
+	//{
+	//	pItem = &g_actors[actor_index].item[item_offset - ITEM_OFFSETBASE];
+	//}
+	//else
+	//{
+	//	return -1;
+	//}
 
-	// 装备类型决定装备索引位置
-	equip_target = item_gettype( pItem->m_kind ) - 1;
-	if ( equip_target < 0 || equip_target >= MAX_ACTOR_EQUIPNUM )
-		return -1;
+	//// 装备类型决定装备索引位置
+	//equip_target = item_gettype( pItem->m_kind ) - 1;
+	//if ( equip_target < 0 || equip_target >= MAX_ACTOR_EQUIPNUM )
+	//	return -1;
 
-	// 等级检查
-	short item_level = item_getlevel( pItem->m_kind );
-	if ( g_actors[actor_index].level < item_level )
-	{
-		// 等级不够装备
-		return -1;
-	}
+	//// 等级检查
+	//short item_level = item_getlevel( pItem->m_kind );
+	//if ( g_actors[actor_index].level < item_level )
+	//{
+	//	// 等级不够装备
+	//	return -1;
+	//}
 
-	// 装备栏
-	pEquip = &g_actors[actor_index].equip[equip_target];
+	//// 装备栏
+	//pEquip = &g_actors[actor_index].equip[equip_target];
 
 
-	// 交换道具栏和装备栏的道具
-	memcpy( &tmpItem, pItem, sizeof(Item) );
-	memcpy( pItem, pEquip, sizeof(Item) );
-	memcpy( pEquip, &tmpItem, sizeof(Item) );
-	pItem->offset = item_offset;
-	pEquip->offset = equip_target;
-	
-	SLK_NetS_ItemUse Value = {};
-	Value.m_itemoffset = item_offset;
-	Value.m_usenum = equip_target;
-	Value.m_effres = 100; // 代表为装备装备,而不是道具消耗
-	netsend_itemuse_S( actor_index, SENDTYPE_ACTOR, &Value );
+	//// 交换道具栏和装备栏的道具
+	//memcpy( &tmpItem, pItem, sizeof(Item) );
+	//memcpy( pItem, pEquip, sizeof(Item) );
+	//memcpy( pEquip, &tmpItem, sizeof(Item) );
+	//pItem->offset = item_offset;
+	//pEquip->offset = equip_target;
+	//
+	//SLK_NetS_ItemUse Value = {};
+	//Value.m_itemoffset = item_offset;
+	//Value.m_usenum = equip_target;
+	//Value.m_effres = 100; // 代表为装备装备,而不是道具消耗
+	//netsend_itemuse_S( actor_index, SENDTYPE_ACTOR, &Value );
 	return 0;
 }
 
@@ -343,150 +343,150 @@ int item_equipup( int actor_index, short item_offset )
 //	city_attr_reset( city_getptr( actor_index ) );
 //	return 0;
 //}
-//-----------------------------------------------------------------------------
-// 函数说明: 放置道具到格子( 卸下装备或者交换道具格 )
-// 参数    : actor_index - 
-//           item_resource	- 源位置
-//           item_target	- 目标位置
-//-----------------------------------------------------------------------------
-int item_put( int actor_index, short item_resource, short item_target )
-{
-	Item tmpItem;
-	short item_type;
-
-	short res_num = -1;
-	short target_num = -1;
-
-	Item * pSrc = NULL;
-	Item * pDes = NULL;
-
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
-	if ( item_target < 0 || item_target >= MAX_ACTOR_ITEMNUM )
-	{
-		actor_system_message( actor_index, 75 ); // 背包已满
-		return -1;
-	}
-
-	// 检查背包格子数量
-	int max_itemnum = MAX_DEFAULT_ITEMNUM + g_actors[actor_index].itemext;
-	if ( max_itemnum > MAX_ACTOR_ITEMNUM )
-		max_itemnum = MAX_ACTOR_ITEMNUM;
-
-	// 源位置是装备栏，那么这里面进行的操作就是卸下装备
-	if ( item_resource >= EQUIP_OFFSETBASE && item_resource <= EQUIP_OFFSETBASE + MAX_ACTOR_EQUIPNUM )
-	{
-		// 目标只能是背包
-		if ( item_target >= 0 && item_target < max_itemnum )
-		{
-			// 源-装备栏的装备
-			pSrc = item_getptr( actor_index, item_resource );
-			if ( pSrc == NULL )
-				goto SENDITEMPUT;
-
-			// 在确定一下是不是装备
-			item_type = item_gettype( pSrc->m_kind );
-			if ( item_type < ITEM_TYPE_EQUIP1 || item_type > ITEM_TYPE_EQUIP10 )
-				goto SENDITEMPUT;
-
-			// 目标-背包里的道具
-			pDes = &g_actors[actor_index].item[item_target];
-
-			// 如果目标位置有道具，不能进行交换，也就是说卸下不能顶替
-			if ( pDes->m_kind > 0 )
-				goto SENDITEMPUT;
-
-			memcpy( &tmpItem, pSrc, sizeof(Item) );
-			memcpy( pSrc, pDes, sizeof(Item) );
-			memcpy( pDes, &tmpItem, sizeof(Item) );
-
-			res_num = pSrc->m_num;
-			target_num = pDes->m_num;
-		}
-		else
-		{
-			actor_system_message( actor_index, 75 ); // 背包已满
-			return -1;
-		}
-
-	}
-	// 源物品是 背包物品
-	else if ( item_resource >= 0 && item_resource < MAX_ACTOR_ITEMNUM && g_actors[actor_index].item[item_resource].m_kind > 0 )
-	{
-		pSrc = &g_actors[actor_index].item[item_resource]; // 源是背包物品
-
-		if ( item_target >= 0 && item_target < max_itemnum )
-			pDes = &g_actors[actor_index].item[item_target]; // 目标是背包物品
-
-		if ( pSrc == NULL || pDes == NULL )
-			return -1;
-
-		if ( pSrc->m_kind != pDes->m_kind )
-		{ 
-			// 不是同一种物品，就交换
-			memcpy( &tmpItem, pSrc, sizeof(Item) );
-			memcpy( pSrc, pDes, sizeof(Item) );
-			memcpy( pDes, &tmpItem, sizeof(Item) );
-
-			res_num = pSrc->m_num;
-			target_num = pDes->m_num;
-		}
-		else
-		{
-			// 如果是同样的物品,则添加堆叠的功能
-			int diff = 0;
-			int kind = pSrc->m_kind;
-			if ( g_itemkind[kind].m_overlap <= 1 )
-			{// 当overlap <= 1 时，表示不能堆叠，对物品进行简单的交换即可。
-				memcpy( &tmpItem, pSrc, sizeof(Item) );
-				memcpy( pSrc, pDes, sizeof(Item) );
-				memcpy( pDes, &tmpItem, sizeof(Item) );
-
-				res_num = pSrc->m_num;
-				target_num = pDes->m_num;
-			}
-			else
-			{
-				kind = pSrc->m_kind;
-				diff = g_itemkind[kind].m_overlap - pDes->m_num; // 差额
-				if ( diff < pSrc->m_num )
-				{ // 原物品够支付目标物品的差额
-					res_num = pSrc->m_num - diff;
-					target_num = pDes->m_num + diff;
-					pSrc->m_num = res_num;
-					pDes->m_num = target_num;
-				}
-				else
-				{ // 要删掉一个物品了
-					diff = pSrc->m_num;
-					res_num = pSrc->m_num - diff;
-					target_num = pDes->m_num + diff;
-					pSrc->m_num = res_num;
-					pDes->m_num = target_num;
-					item_deletebox( actor_index, item_resource, 0 );
-				}
-			}
-		}
-	}
-	else
-	{
-		res_num = -1;
-		target_num = -1;
-	}
-
-SENDITEMPUT:
-	SLK_NetS_ItemPut Value = {};
-	Value.m_res_offset = item_resource;
-	Value.m_res_num = res_num;
-	Value.m_target_offset = item_target;
-	Value.m_target_num = target_num;
-	netsend_itemput_S( actor_index, SENDTYPE_ACTOR, &Value );
-
-	//if ( eff_result & EFF_SULT_CHANGED )
-	//	equip_info_all( actor_index, member );
-
-	return 0;
-}
+////-----------------------------------------------------------------------------
+//// 函数说明: 放置道具到格子( 卸下装备或者交换道具格 )
+//// 参数    : actor_index - 
+////           item_resource	- 源位置
+////           item_target	- 目标位置
+////-----------------------------------------------------------------------------
+//int item_put( int actor_index, short item_resource, short item_target )
+//{
+//	Item tmpItem;
+//	short item_type;
+//
+//	short res_num = -1;
+//	short target_num = -1;
+//
+//	Item * pSrc = NULL;
+//	Item * pDes = NULL;
+//
+//	if ( actor_index < 0 || actor_index >= g_maxactornum )
+//		return -1;
+//	if ( item_target < 0 || item_target >= MAX_ACTOR_ITEMNUM )
+//	{
+//		actor_system_message( actor_index, 75 ); // 背包已满
+//		return -1;
+//	}
+//
+//	// 检查背包格子数量
+//	int max_itemnum = MAX_DEFAULT_ITEMNUM + g_actors[actor_index].itemext;
+//	if ( max_itemnum > MAX_ACTOR_ITEMNUM )
+//		max_itemnum = MAX_ACTOR_ITEMNUM;
+//
+//	// 源位置是装备栏，那么这里面进行的操作就是卸下装备
+//	if ( item_resource >= EQUIP_OFFSETBASE && item_resource <= EQUIP_OFFSETBASE + MAX_ACTOR_EQUIPNUM )
+//	{
+//		// 目标只能是背包
+//		if ( item_target >= 0 && item_target < max_itemnum )
+//		{
+//			// 源-装备栏的装备
+//			pSrc = item_getptr( actor_index, item_resource );
+//			if ( pSrc == NULL )
+//				goto SENDITEMPUT;
+//
+//			// 在确定一下是不是装备
+//			item_type = item_gettype( pSrc->m_kind );
+//			if ( item_type < ITEM_TYPE_EQUIP1 || item_type > ITEM_TYPE_EQUIP10 )
+//				goto SENDITEMPUT;
+//
+//			// 目标-背包里的道具
+//			pDes = &g_actors[actor_index].item[item_target];
+//
+//			// 如果目标位置有道具，不能进行交换，也就是说卸下不能顶替
+//			if ( pDes->m_kind > 0 )
+//				goto SENDITEMPUT;
+//
+//			memcpy( &tmpItem, pSrc, sizeof(Item) );
+//			memcpy( pSrc, pDes, sizeof(Item) );
+//			memcpy( pDes, &tmpItem, sizeof(Item) );
+//
+//			res_num = pSrc->m_num;
+//			target_num = pDes->m_num;
+//		}
+//		else
+//		{
+//			actor_system_message( actor_index, 75 ); // 背包已满
+//			return -1;
+//		}
+//
+//	}
+//	// 源物品是 背包物品
+//	else if ( item_resource >= 0 && item_resource < MAX_ACTOR_ITEMNUM && g_actors[actor_index].item[item_resource].m_kind > 0 )
+//	{
+//		pSrc = &g_actors[actor_index].item[item_resource]; // 源是背包物品
+//
+//		if ( item_target >= 0 && item_target < max_itemnum )
+//			pDes = &g_actors[actor_index].item[item_target]; // 目标是背包物品
+//
+//		if ( pSrc == NULL || pDes == NULL )
+//			return -1;
+//
+//		if ( pSrc->m_kind != pDes->m_kind )
+//		{ 
+//			// 不是同一种物品，就交换
+//			memcpy( &tmpItem, pSrc, sizeof(Item) );
+//			memcpy( pSrc, pDes, sizeof(Item) );
+//			memcpy( pDes, &tmpItem, sizeof(Item) );
+//
+//			res_num = pSrc->m_num;
+//			target_num = pDes->m_num;
+//		}
+//		else
+//		{
+//			// 如果是同样的物品,则添加堆叠的功能
+//			int diff = 0;
+//			int kind = pSrc->m_kind;
+//			if ( g_itemkind[kind].m_overlap <= 1 )
+//			{// 当overlap <= 1 时，表示不能堆叠，对物品进行简单的交换即可。
+//				memcpy( &tmpItem, pSrc, sizeof(Item) );
+//				memcpy( pSrc, pDes, sizeof(Item) );
+//				memcpy( pDes, &tmpItem, sizeof(Item) );
+//
+//				res_num = pSrc->m_num;
+//				target_num = pDes->m_num;
+//			}
+//			else
+//			{
+//				kind = pSrc->m_kind;
+//				diff = g_itemkind[kind].m_overlap - pDes->m_num; // 差额
+//				if ( diff < pSrc->m_num )
+//				{ // 原物品够支付目标物品的差额
+//					res_num = pSrc->m_num - diff;
+//					target_num = pDes->m_num + diff;
+//					pSrc->m_num = res_num;
+//					pDes->m_num = target_num;
+//				}
+//				else
+//				{ // 要删掉一个物品了
+//					diff = pSrc->m_num;
+//					res_num = pSrc->m_num - diff;
+//					target_num = pDes->m_num + diff;
+//					pSrc->m_num = res_num;
+//					pDes->m_num = target_num;
+//					item_deletebox( actor_index, item_resource );
+//				}
+//			}
+//		}
+//	}
+//	else
+//	{
+//		res_num = -1;
+//		target_num = -1;
+//	}
+//
+//SENDITEMPUT:
+//	SLK_NetS_ItemPut Value = {};
+//	Value.m_res_offset = item_resource;
+//	Value.m_res_num = res_num;
+//	Value.m_target_offset = item_target;
+//	Value.m_target_num = target_num;
+//	netsend_itemput_S( actor_index, SENDTYPE_ACTOR, &Value );
+//
+//	//if ( eff_result & EFF_SULT_CHANGED )
+//	//	equip_info_all( actor_index, member );
+//
+//	return 0;
+//}
 
 //-----------------------------------------------------------------------------
 // 函数说明: 丢弃道具
@@ -531,7 +531,7 @@ int item_drop( int actor_index, short itemindex, short dropcount )
 	// 如果数量为0，那么就删掉
 	if ( pitem->m_num <= 0 )
 	{
-		item_deletebox( actor_index, itemindex, 0 );
+		item_deletebox( actor_index, itemindex );
 		memset( &g_actors[actor_index].item[itemindex], 0, sizeof(Item) );
 	}
 	// 发送角色失去物品
@@ -618,7 +618,7 @@ int item_packeg_in( int actor_index )
 				pItem[tmpi].m_num = overlap;
 				if ( pItem[nextindex].m_num <= 0 )
 				{
-					item_deletebox( actor_index, nextindex, 0 );
+					item_deletebox( actor_index, nextindex );
 					pItem[nextindex].m_kind = 0;
 				}
 				value[0] = nextindex;
@@ -630,7 +630,7 @@ int item_packeg_in( int actor_index )
 				pItem[tmpi].m_num += pItem[nextindex].m_num;
 				haschange = 1;
 
-				item_deletebox( actor_index, nextindex, 0 );
+				item_deletebox( actor_index, nextindex );
 				pItem[nextindex].m_kind = 0;
 				pItem[nextindex].m_num = 0;
 

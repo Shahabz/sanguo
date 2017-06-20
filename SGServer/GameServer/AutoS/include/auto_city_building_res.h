@@ -6,7 +6,6 @@ struct _city_building_res {
 //--Automatically generated
 				char kind;	//资源建筑种类
 				char level;	//资源建筑等级
-				int finish;	//结束时间
 };
 typedef struct _city_building_res BuildingRes;
 

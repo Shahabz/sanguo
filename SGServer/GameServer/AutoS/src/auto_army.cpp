@@ -141,7 +141,7 @@ RE_ARMY_TRUNCATE:
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;
-		if ( count > 300 )
+		if ( count > 256 )
 		{
 			count = 0;
 			db_query( fp, g_batchsql );
