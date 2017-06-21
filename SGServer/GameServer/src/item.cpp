@@ -35,7 +35,7 @@ int item_maxid_init()
 	MYSQL_ROW		row;
 	char	szSQL[1024];
 
-	sprintf( szSQL, "select max(itemid) from actor_item" );
+	sprintf( szSQL, "select max(id) from actor_item" );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
@@ -235,14 +235,10 @@ Item *item_getptr( int actor_index, int offset )
 // 道具读取
 int item_load( int actor_index )
 {
-	int count = 0;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	actor_item_load_auto( g_actors[actor_index].actorid, actor_index, item_getptr, "actor_item" );
-
-	// 穿装备
-	//zitem_reset_equip( actor_index, member );
-	return count;
+	return 0;
 }
 
 // 道具保存
@@ -250,18 +246,10 @@ int item_save( int actor_index, FILE *fp )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-
-	// 背包栏
 	int max_itemnum = MAX_DEFAULT_ITEMNUM + g_actors[actor_index].itemext;
 	if ( max_itemnum > MAX_ACTOR_ITEMNUM )
 		max_itemnum = MAX_ACTOR_ITEMNUM;
 	actor_item_batch_save_auto( g_actors[actor_index].item, max_itemnum,  "actor_item", fp );
-
-	// 装备栏
-	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
-	if ( max_equipnum > MAX_ACTOR_EQUIPNUM )
-		max_equipnum = MAX_ACTOR_EQUIPNUM;
-	actor_equip_batch_save_auto( g_actors[actor_index].equip, max_equipnum, "actor_equip", fp );
 	return 0;
 }
 
@@ -276,7 +264,7 @@ int item_insert( int actor_index, short offset )
 		tmpi = offset;
 		if ( g_actors[actor_index].item[tmpi].m_kind <= 0 )
 			return -1;
-		g_actors[actor_index].item[tmpi].itemid = g_maxitemid;
+		g_actors[actor_index].item[tmpi].id = g_maxitemid;
 		g_maxitemid++;
 		g_actors[actor_index].item[tmpi].actorid = g_actors[actor_index].actorid;
 		g_actors[actor_index].item[tmpi].offset = tmpi;
@@ -546,7 +534,7 @@ int item_lostitem( int actor_index, int itemoffset, int num, char path )
 	if ( pitem->m_num < num )
 		return -1;
 
-	wlog( 0, LOGOP_ITEMLOST, path, pitem->m_kind, num, pitem->itemid, g_actors[actor_index].actorid, 0 );
+	wlog( 0, LOGOP_ITEMLOST, path, pitem->m_kind, num, pitem->id, g_actors[actor_index].actorid, 0 );
 
 	itemkind = pitem->m_kind;
 	pitem->m_num -= num;
@@ -577,8 +565,8 @@ int item_deletebox( int actor_index, int item_offset )
 		return -1;
 	}
 	// 数据库删除
-	lltoa( pItem->itemid, bigint, 10 );
-	sprintf( szSQL, "delete from actor_item where itemid='%s'", bigint );
+	lltoa( pItem->id, bigint, 10 );
+	sprintf( szSQL, "delete from actor_item where id='%s'", bigint );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -598,7 +586,7 @@ int item_deleteitemdb( int actorid, i64 itemid )
 	char szSQL[1024];
 	char bigint[21];
 	lltoa( itemid, bigint, 10 );
-	sprintf( szSQL, "delete from actor_item where itemid='%s' and actorid='%d'", bigint, actorid );
+	sprintf( szSQL, "delete from actor_item where id='%s' and actorid='%d'", bigint, actorid );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -733,7 +721,7 @@ int item_getitemindex_whihitemid( int actor_index, i64 itemid )
 	int index = -1;
 	for ( int tmpi = 0; tmpi < MAX_ACTOR_ITEMNUM; tmpi++ )
 	{
-		if ( g_actors[actor_index].item[tmpi].itemid == itemid &&
+		if ( g_actors[actor_index].item[tmpi].id == itemid &&
 			g_actors[actor_index].item[tmpi].m_num > 0 )
 		{
 			index = tmpi;

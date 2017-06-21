@@ -85,6 +85,67 @@ function struct_NetS_Notify_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Building_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_sec = buffer:ReadInt();
+	recvValue.m_quick = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BuildingBarracks_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_sec = buffer:ReadInt();
+	recvValue.m_quick = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BuildingRes_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_offset = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BuildingList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_building_count = buffer:ReadShort();
+	recvValue.m_building = {};
+	for tmpi=1,recvValue.m_building_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Building_recv( buffer );
+		table.insert( recvValue.m_building, tmpValue );
+	end
+	recvValue.m_barracks_count = buffer:ReadShort();
+	recvValue.m_barracks = {};
+	for tmpi=1,recvValue.m_barracks_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_BuildingBarracks_recv( buffer );
+		table.insert( recvValue.m_barracks, tmpValue );
+	end
+	recvValue.m_res_count = buffer:ReadShort();
+	recvValue.m_res = {};
+	for tmpi=1,recvValue.m_res_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_BuildingRes_recv( buffer );
+		table.insert( recvValue.m_res, tmpValue );
+	end
+	recvValue.m_levynum = buffer:ReadSByte();
+	recvValue.m_worker_kind = buffer:ReadSByte();
+	recvValue.m_worker_offset = buffer:ReadSByte();
+	recvValue.m_worker_sec = buffer:ReadInt();
+	recvValue.m_worker_kind_ex = buffer:ReadSByte();
+	recvValue.m_worker_offset_ex = buffer:ReadSByte();
+	recvValue.m_worker_sec_ex = buffer:ReadInt();
+	recvValue.m_worker_expire_ex = buffer:ReadInt();
+	recvValue.m_function = buffer:ReadInt();
+	return recvValue;
+end
+
 function struct_NetS_ActorInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_actorid = buffer:ReadInt();
@@ -110,6 +171,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_infantry_num = buffer:ReadInt();
 	recvValue.m_cavalry_num = buffer:ReadInt();
 	recvValue.m_archer_num = buffer:ReadInt();
+	recvValue.m_mokilllv = buffer:ReadShort();
+	recvValue.m_sflag = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -302,9 +365,9 @@ function struct_NetS_AddMarchRoute_recv( buffer )
 	recvValue.m_to_posx = buffer:ReadShort();
 	recvValue.m_to_posy = buffer:ReadShort();
 	recvValue.m_state = buffer:ReadSByte();
-	recvValue.m_from_cityid = buffer:ReadInt();
+	recvValue.m_from_actorid = buffer:ReadInt();
 	recvValue.m_from_clubid = buffer:ReadInt();
-	recvValue.m_to_cityid = buffer:ReadInt();
+	recvValue.m_to_actorid = buffer:ReadInt();
 	recvValue.m_to_clubid = buffer:ReadInt();
 	recvValue.m_army_index = buffer:ReadInt();
 	recvValue.m_action = buffer:ReadSByte();

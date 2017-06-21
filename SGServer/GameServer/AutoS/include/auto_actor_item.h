@@ -4,7 +4,7 @@
 
 struct _actor_item {
 //--Automatically generated
-				i64 itemid;	//物品id
+				i64 id;	//物品id
 				int actorid;	//角色ID
 				short offset;	//物品所在位置
 				int m_kind;	//物品种类

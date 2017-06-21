@@ -22,19 +22,21 @@ struct _actor {
 				int city_index;	//城池索引
 				int token;	//钻石
 				int total_charge;	//总充值
+				float charge_dollar;	//总消费多少钱
 				unsigned char itemext;	//扩展的背包栏位数
 				Item item[300];	//角色携带的道具
 				Equip equip[100];	//角色携带的装备
 				unsigned char equipext;	//扩展的装备栏位数
+				Hero hero[128];	//未上阵英雄
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数
 				int today_int[8];	//int类型每日次数
 				int cd[8];	//通用CD时间
 				char config[8];	//玩家配置
+				int function;	//功能是否开启
 				int view_lastframe;	//上次发送的区域信息时间
 				short subscribe_cmd[8];	//订阅的消息ID
-				float charge_dollar;	//总共充值多少美元
 				int cdkey1;	//是否领取该批次兑换码
 				int cdkey2;	//是否领取该批次兑换码
 				int cdkey3;	//是否领取该批次兑换码

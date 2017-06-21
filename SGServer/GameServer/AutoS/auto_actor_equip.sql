@@ -1,7 +1,7 @@
 CREATE TABLE `actor_equip` (
-  `id` bigint(20) NOT NULL DEFAULT '0' COMMENT '装备id',
+  `id` bigint(20) NOT NULL DEFAULT '0' COMMENT '主索引',
   `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '角色ID',
-  `offset` smallint(6) NOT NULL DEFAULT '0' COMMENT '物品所在位置',
+  `offset` int(11) NOT NULL DEFAULT '0' COMMENT '装备所在背包位置',
   `kind` int(11) NOT NULL DEFAULT '0' COMMENT '物品种类',
   `ability0` smallint(6) NOT NULL DEFAULT '0' COMMENT '属性',
   `ability1` smallint(6) NOT NULL DEFAULT '0' COMMENT '属性',

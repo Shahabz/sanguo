@@ -15,13 +15,6 @@
 #define ITEM_COLOR_LEVEL_ORANGE 6 // 橙色
 #define ITEM_COLOR_LEVEL_MAX	7 // 最大颜色数量
 
-/* 背包最大数量*/
-#define MAX_DEFAULT_ITEMNUM	200
-#define MAX_ACTOR_ITEMNUM	300
-
-/* 装备最大数量*/
-#define MAX_DEFAULT_EQUIPNUM	30
-#define MAX_ACTOR_EQUIPNUM	100
 
 /* 物品类型 */
 #define ITEM_TYPE_NORMAL					0	//	普通使用类

@@ -1,7 +1,7 @@
 CREATE TABLE `army` (
   `index` int(11) NOT NULL DEFAULT '0' COMMENT '部队索引',
   `id` int(11) NOT NULL DEFAULT '0' COMMENT '部队唯一ID,合法性验证',
-  `state` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
+  `state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态',
   `statetime` int(11) NOT NULL DEFAULT '0' COMMENT '状态时间戳',
   `stateduration` int(11) NOT NULL DEFAULT '0' COMMENT '状态持续多少秒',
   `action` int(11) NOT NULL DEFAULT '0' COMMENT '行为',

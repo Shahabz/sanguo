@@ -112,3 +112,9 @@ void proc_askinfo_S( int client_index, SLK_NetC_AskInfo *pValue )
 	system_askinfo( client_index, pValue->m_msgid, pValue->m_msg, pValue->m_value );
 }
 
+void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue )
+{
+	// process.
+	actor_entercity( client_index );
+}
+

@@ -157,7 +157,22 @@ int db_query( FILE *fp, const char *pSql )
 	return 0;
 }
 
-
+int db_delete( int actorid, char *pTab, FILE *fp )
+{
+	char szSQL[256] = {0};
+	sprintf( szSQL, "delete from %s where actorid='%d';", pTab, actorid );
+	if ( fp )
+	{
+		fprintf( fp, "%s\n", szSQL );
+	}
+	else if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	return 0;
+}
 
 Mthr *g_pthr_dbwork[DBWORK_THREAD_NUM];
 BOOL g_bDBEnd;

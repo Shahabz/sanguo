@@ -55,7 +55,9 @@ end
 function T( nameid )
     return GetLocalizeText( nameid );
 end
-
+function zh( text )
+    return text;
+end
 -- дgamelog
 function gamelog( msg )
 	LogUtil.GetInstance():WriteGame( msg );

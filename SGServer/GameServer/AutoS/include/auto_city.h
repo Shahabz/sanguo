@@ -4,8 +4,8 @@
 
 struct _city {
 //--Automatically generated
-				int cityid;	//城池ID
 				int actorid;	//角色ID
+				int index;	//索引
 				char name[22];	//名称
 				char type;	//城池类型
 				char shape;	//领主形象(选取)
@@ -23,6 +23,7 @@ struct _city {
 				short posy;	//位置
 				int sflag;	//标志位
 				short level;	//玩家等级
+				int exp;	//玩家经验
 				char viplevel;	//VIP等级
 				int vipexp;	//VIP经验
 				char nation;	//国家(魏蜀吴)
@@ -40,7 +41,9 @@ struct _city {
 				unsigned char levynum;	//当前征收次数
 				short levysec;	//下次征收时间(每秒-1)
 				int people;	//人口
-				CityHero hero[64];	//英雄
+				int prestige;	//威望值
+				int friendship;	//友谊积分
+				Hero hero[4];	//上阵英雄
 				Building building[8];	//普通建筑
 				BuildingBarracks building_barracks[4];	//兵营建筑
 				BuildingRes building_res[64];	//资源建筑
@@ -51,15 +54,14 @@ struct _city {
 				char worker_offset_ex;	//当前升级建筑索引(商用)
 				int worker_sec_ex;	//建造剩余时间(每秒-1)(商用)
 				int worker_expire_ex;	//商用建造队列到期时间
-				int city_index;	//城池索引
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
 				int army_index[5];	//部队
 };
 typedef struct _city City;
 
-typedef City * (*LPCB_GETCITY)( int actorid );
-typedef int (*LPCB_LOADCITY)( int actorid );
+typedef City * (*LPCB_GETCITY)( int index );
+typedef int (*LPCB_LOADCITY)( int index );
 int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *pTab );
 int city_save_auto( City *pCity, char *pTab, FILE *fp );
 

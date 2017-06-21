@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int city_building_barracks_load_auto( int cityid, int city_index, LPCB_GETBUILDINGBARRACKS pCB_GetBuildingBarracks, char *pTab )
+int city_building_barracks_load_auto( int actorid, int city_index, LPCB_GETBUILDINGBARRACKS pCB_GetBuildingBarracks, char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -17,7 +17,7 @@ int city_building_barracks_load_auto( int cityid, int city_index, LPCB_GETBUILDI
 	int offset = 0;
 	BuildingBarracks *pBuildingBarracks;
 
-	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong` from %s where cityid='%d'", pTab, cityid );
+	sprintf( szSQL, "select `actorid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong`,`quicksec`,`value` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -57,11 +57,13 @@ int city_building_barracks_load_auto( int cityid, int city_index, LPCB_GETBUILDI
 		pBuildingBarracks->trainsec[6] = atoi(row[offset++]);
 		pBuildingBarracks->trainsec[7] = atoi(row[offset++]);
 		pBuildingBarracks->trainlong = atoi(row[offset++]);
+		pBuildingBarracks->quicksec = atoi(row[offset++]);
+		pBuildingBarracks->value = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
 }
-int city_building_barracks_save_auto( int cityid, int offset, BuildingBarracks *pBuildingBarracks, char *pTab, FILE *fp )
+int city_building_barracks_save_auto( int actorid, int offset, BuildingBarracks *pBuildingBarracks, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -69,7 +71,7 @@ int city_building_barracks_save_auto( int cityid, int offset, BuildingBarracks *
 		return -1;
 
 RE_BUILDINGBARRACKS_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,offset,pBuildingBarracks->kind,pBuildingBarracks->level,pBuildingBarracks->soldiers,pBuildingBarracks->queue,pBuildingBarracks->trainnum[0],pBuildingBarracks->trainnum[1],pBuildingBarracks->trainnum[2],pBuildingBarracks->trainnum[3],pBuildingBarracks->trainnum[4],pBuildingBarracks->trainnum[5],pBuildingBarracks->trainnum[6],pBuildingBarracks->trainnum[7],pBuildingBarracks->trainsec[0],pBuildingBarracks->trainsec[1],pBuildingBarracks->trainsec[2],pBuildingBarracks->trainsec[3],pBuildingBarracks->trainsec[4],pBuildingBarracks->trainsec[5],pBuildingBarracks->trainsec[6],pBuildingBarracks->trainsec[7],pBuildingBarracks->trainlong);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong`,`quicksec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pBuildingBarracks->kind,pBuildingBarracks->level,pBuildingBarracks->soldiers,pBuildingBarracks->queue,pBuildingBarracks->trainnum[0],pBuildingBarracks->trainnum[1],pBuildingBarracks->trainnum[2],pBuildingBarracks->trainnum[3],pBuildingBarracks->trainnum[4],pBuildingBarracks->trainnum[5],pBuildingBarracks->trainnum[6],pBuildingBarracks->trainnum[7],pBuildingBarracks->trainsec[0],pBuildingBarracks->trainsec[1],pBuildingBarracks->trainsec[2],pBuildingBarracks->trainsec[3],pBuildingBarracks->trainsec[4],pBuildingBarracks->trainsec[5],pBuildingBarracks->trainsec[6],pBuildingBarracks->trainsec[7],pBuildingBarracks->trainlong,pBuildingBarracks->quicksec,pBuildingBarracks->value);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -91,7 +93,7 @@ RE_BUILDINGBARRACKS_UPDATE:
 	return 0;
 }
 
-int city_building_barracks_batch_save_auto( int cityid, BuildingBarracks *pBuildingBarracks, int maxcount, char *pTab, FILE *fp )
+int city_building_barracks_batch_save_auto( int actorid, BuildingBarracks *pBuildingBarracks, int maxcount, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pBuildingBarracks == NULL )
@@ -105,11 +107,11 @@ int city_building_barracks_batch_save_auto( int cityid, BuildingBarracks *pBuild
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,index,pBuildingBarracks[index].kind,pBuildingBarracks[index].level,pBuildingBarracks[index].soldiers,pBuildingBarracks[index].queue,pBuildingBarracks[index].trainnum[0],pBuildingBarracks[index].trainnum[1],pBuildingBarracks[index].trainnum[2],pBuildingBarracks[index].trainnum[3],pBuildingBarracks[index].trainnum[4],pBuildingBarracks[index].trainnum[5],pBuildingBarracks[index].trainnum[6],pBuildingBarracks[index].trainnum[7],pBuildingBarracks[index].trainsec[0],pBuildingBarracks[index].trainsec[1],pBuildingBarracks[index].trainsec[2],pBuildingBarracks[index].trainsec[3],pBuildingBarracks[index].trainsec[4],pBuildingBarracks[index].trainsec[5],pBuildingBarracks[index].trainsec[6],pBuildingBarracks[index].trainsec[7],pBuildingBarracks[index].trainlong);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`soldiers`,`queue`,`trainnum0`,`trainnum1`,`trainnum2`,`trainnum3`,`trainnum4`,`trainnum5`,`trainnum6`,`trainnum7`,`trainsec0`,`trainsec1`,`trainsec2`,`trainsec3`,`trainsec4`,`trainsec5`,`trainsec6`,`trainsec7`,`trainlong`,`quicksec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pBuildingBarracks[index].kind,pBuildingBarracks[index].level,pBuildingBarracks[index].soldiers,pBuildingBarracks[index].queue,pBuildingBarracks[index].trainnum[0],pBuildingBarracks[index].trainnum[1],pBuildingBarracks[index].trainnum[2],pBuildingBarracks[index].trainnum[3],pBuildingBarracks[index].trainnum[4],pBuildingBarracks[index].trainnum[5],pBuildingBarracks[index].trainnum[6],pBuildingBarracks[index].trainnum[7],pBuildingBarracks[index].trainsec[0],pBuildingBarracks[index].trainsec[1],pBuildingBarracks[index].trainsec[2],pBuildingBarracks[index].trainsec[3],pBuildingBarracks[index].trainsec[4],pBuildingBarracks[index].trainsec[5],pBuildingBarracks[index].trainsec[6],pBuildingBarracks[index].trainsec[7],pBuildingBarracks[index].trainlong,pBuildingBarracks[index].quicksec,pBuildingBarracks[index].value);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",cityid,index,pBuildingBarracks[index].kind,pBuildingBarracks[index].level,pBuildingBarracks[index].soldiers,pBuildingBarracks[index].queue,pBuildingBarracks[index].trainnum[0],pBuildingBarracks[index].trainnum[1],pBuildingBarracks[index].trainnum[2],pBuildingBarracks[index].trainnum[3],pBuildingBarracks[index].trainnum[4],pBuildingBarracks[index].trainnum[5],pBuildingBarracks[index].trainnum[6],pBuildingBarracks[index].trainnum[7],pBuildingBarracks[index].trainsec[0],pBuildingBarracks[index].trainsec[1],pBuildingBarracks[index].trainsec[2],pBuildingBarracks[index].trainsec[3],pBuildingBarracks[index].trainsec[4],pBuildingBarracks[index].trainsec[5],pBuildingBarracks[index].trainsec[6],pBuildingBarracks[index].trainsec[7],pBuildingBarracks[index].trainlong);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pBuildingBarracks[index].kind,pBuildingBarracks[index].level,pBuildingBarracks[index].soldiers,pBuildingBarracks[index].queue,pBuildingBarracks[index].trainnum[0],pBuildingBarracks[index].trainnum[1],pBuildingBarracks[index].trainnum[2],pBuildingBarracks[index].trainnum[3],pBuildingBarracks[index].trainnum[4],pBuildingBarracks[index].trainnum[5],pBuildingBarracks[index].trainnum[6],pBuildingBarracks[index].trainnum[7],pBuildingBarracks[index].trainsec[0],pBuildingBarracks[index].trainsec[1],pBuildingBarracks[index].trainsec[2],pBuildingBarracks[index].trainsec[3],pBuildingBarracks[index].trainsec[4],pBuildingBarracks[index].trainsec[5],pBuildingBarracks[index].trainsec[6],pBuildingBarracks[index].trainsec[7],pBuildingBarracks[index].trainlong,pBuildingBarracks[index].quicksec,pBuildingBarracks[index].value);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

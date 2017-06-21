@@ -1,10 +1,10 @@
 CREATE TABLE `city_building_barracks` (
-  `cityid` int(11) NOT NULL DEFAULT '0' COMMENT '',
-  `offset` tinyint(4) NOT NULL DEFAULT '0' COMMENT '',
-  `kind` tinyint(4) NOT NULL DEFAULT '0' COMMENT '兵营种类',
-  `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '兵营等级',
+  `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '',
+  `offset` tinyint(3) NOT NULL DEFAULT '0' COMMENT '',
+  `kind` tinyint(3) NOT NULL DEFAULT '0' COMMENT '兵营种类',
+  `level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '兵营等级',
   `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '本营兵力',
-  `queue` tinyint(4) NOT NULL DEFAULT '0' COMMENT '扩容队列数量',
+  `queue` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩容队列数量',
   `trainnum0` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
   `trainnum1` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
   `trainnum2` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列士兵数',
@@ -21,7 +21,9 @@ CREATE TABLE `city_building_barracks` (
   `trainsec5` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列剩余时间',
   `trainsec6` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列剩余时间',
   `trainsec7` int(11) NOT NULL DEFAULT '0' COMMENT '训练队列剩余时间',
-  `trainlong` tinyint(4) NOT NULL DEFAULT '0' COMMENT '募兵加时级别',
-  PRIMARY KEY (`cityid`)
+  `trainlong` tinyint(3) NOT NULL DEFAULT '0' COMMENT '募兵加时级别',
+  `quicksec` smallint(6) NOT NULL DEFAULT '0' COMMENT '募兵加速时间秒',
+  `value` tinyint(3) NOT NULL DEFAULT '0' COMMENT '民兵营使用',
+  PRIMARY KEY (`actorid`)
   KEY (`offset`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

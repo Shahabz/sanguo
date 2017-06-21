@@ -31,6 +31,7 @@
 #define CMDS_AWARDINFOLIST	(CMDS_BASE+24)
 #define CMDS_EXPERIENCE	(CMDS_BASE+25)
 #define CMDS_BODY	(CMDS_BASE+26)
+#define CMDS_BUILDINGLIST	(CMDS_BASE+27)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -44,6 +45,7 @@
 #define CMDC_HEART	(CMDC_BASE+6)
 #define CMDC_GMCMD	(CMDC_BASE+7)
 #define CMDC_ASKINFO	(CMDC_BASE+9)
+#define CMDC_ENTERCITY	(CMDC_BASE+10)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

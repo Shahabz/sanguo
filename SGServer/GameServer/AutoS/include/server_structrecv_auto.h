@@ -44,10 +44,16 @@ struct _slk_NetC_AskInfo {
 };
 typedef struct _slk_NetC_AskInfo SLK_NetC_AskInfo;	//客户端发送短请求
 
+struct _slk_NetC_EnterCity {
+	char m_value;	//客户端发送-我已初始化好，发过来玩家信息吧
+};
+typedef struct _slk_NetC_EnterCity SLK_NetC_EnterCity;	//请求进入城池所有信息
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
 int struct_NetC_Gmcmd_recv( char **pptr, int *psize, SLK_NetC_Gmcmd *pValue );
 int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue );
+int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pValue );
 
 #endif

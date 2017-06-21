@@ -31,7 +31,24 @@
 #define	BUILDING_Wishing	36	// 聚宝盆
 #define	BUILDING_Help		37	// 帮助
 
+// 获取建筑指针
+Building* building_getptr( int city_index, int offset );
+BuildingBarracks* buildingbarracks_getptr( int city_index, int offset );
+BuildingRes* buildingres_getptr( int city_index, int offset );
 
+// 创建建筑
+int building_create( int city_index, int kind, int offset );
 
+// 建筑升级
+int building_upgrade( int city_index, int offset );
+
+// 建筑等级
+int building_level( int city_index, int offset );
+
+// 获取士兵数量
+int building_soldiers_total( int city_index, char kind );
+
+// 发送所有建筑列表
+int building_sendlist( int city_index );
 
 #endif

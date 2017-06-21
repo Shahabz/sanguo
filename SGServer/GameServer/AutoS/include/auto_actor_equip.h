@@ -4,9 +4,9 @@
 
 struct _actor_equip {
 //--Automatically generated
-				i64 id;	//装备id
+				i64 id;	//主索引
 				int actorid;	//角色ID
-				short offset;	//物品所在位置
+				int offset;	//装备所在背包位置
 				int kind;	//物品种类
 				short ability[4];	//属性
 				int value[4];	//属性值

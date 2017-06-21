@@ -68,6 +68,48 @@ struct _slk_NetS_Notify {
 };
 typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//通用短消息
 
+struct _slk_NetS_Building {
+	char m_kind;	//普通建筑-种类
+	char m_level;	//普通建筑-等级
+	int m_sec;	//普通建筑-操作剩余时间
+	char m_quick;	//普通建筑-是否有加速(科技等)
+};
+typedef struct _slk_NetS_Building SLK_NetS_Building;	//普通建筑信息
+
+struct _slk_NetS_BuildingBarracks {
+	char m_kind;	//兵营建筑-种类
+	char m_level;	//兵营建筑-等级
+	int m_sec;	//兵营建筑-募兵剩余时间
+	char m_quick;	//兵营建筑-是否有加速
+};
+typedef struct _slk_NetS_BuildingBarracks SLK_NetS_BuildingBarracks;	//兵营建筑信息
+
+struct _slk_NetS_BuildingRes {
+	char m_kind;	//资源建筑-种类
+	char m_level;	//资源建筑-等级
+	char m_offset;	//资源建筑-索引(对应指定地块)
+};
+typedef struct _slk_NetS_BuildingRes SLK_NetS_BuildingRes;	//资源建筑信息
+
+struct _slk_NetS_BuildingList {
+	short m_building_count;	//服务器发送-普通建筑数量
+	SLK_NetS_Building m_building[8];	//服务器发送-普通建筑列表
+	short m_barracks_count;	//服务器发送-兵营建筑数量
+	SLK_NetS_BuildingBarracks m_barracks[8];	//服务器发送-兵营建筑列表
+	short m_res_count;	//服务器发送-资源建筑数量
+	SLK_NetS_BuildingRes m_res[64];	//服务器发送-资源建筑列表
+	char m_levynum;	//服务器发送-当前可征收次数
+	char m_worker_kind;	//服务器发送-当前升级建筑种类
+	char m_worker_offset;	//服务器发送-当前升级建筑索引
+	int m_worker_sec;	//服务器发送-当前升级建筑剩余时间
+	char m_worker_kind_ex;	//服务器发送-当前升级建筑种类(商用)
+	char m_worker_offset_ex;	//服务器发送-当前升级建筑索引(商用)
+	int m_worker_sec_ex;	//服务器发送-当前升级建筑剩余时间(商用)
+	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
+	int m_function;	//服务器发送-功能是否开启
+};
+typedef struct _slk_NetS_BuildingList SLK_NetS_BuildingList;	//建筑列表
+
 struct _slk_NetS_ActorInfo {
 	int m_actorid;	//服务器发送玩家基本信息-角色编号
 	char m_name[22];	//服务器发送玩家基本信息-角色名称
@@ -92,6 +134,8 @@ struct _slk_NetS_ActorInfo {
 	int m_infantry_num;	//服务器发送玩家基本信息-步兵数
 	int m_cavalry_num;	//服务器发送玩家基本信息-骑兵数
 	int m_archer_num;	//服务器发送玩家基本信息-弓兵数
+	short m_mokilllv;	//服务器发送玩家基本信息-击杀野怪最高级别
+	int m_sflag;	//服务器发送玩家基本信息-标志位
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -240,9 +284,9 @@ struct _slk_NetS_AddMarchRoute {
 	short m_to_posx;	//行军路线-到达位置
 	short m_to_posy;	//行军路线-到达位置
 	char m_state;	//行军路线-状态
-	int m_from_cityid;	//行军路线-城市
+	int m_from_actorid;	//行军路线-城市
 	int m_from_clubid;	//行军路线-联盟
-	int m_to_cityid;	//行军路线-目标城市
+	int m_to_actorid;	//行军路线-目标城市
 	int m_to_clubid;	//行军路线-目标联盟
 	int m_army_index;	//行军路线-所属部队
 	char m_action;	//行军路线-行为
@@ -295,6 +339,10 @@ int struct_NetS_EnterInfo_send( char **pptr, int *psize, SLK_NetS_EnterInfo *pVa
 int struct_NetS_Delete_send( char **pptr, int *psize, SLK_NetS_Delete *pValue );
 int struct_NetS_Heart_send( char **pptr, int *psize, SLK_NetS_Heart *pValue );
 int struct_NetS_Notify_send( char **pptr, int *psize, SLK_NetS_Notify *pValue );
+int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValue );
+int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_BuildingBarracks *pValue );
+int struct_NetS_BuildingRes_send( char **pptr, int *psize, SLK_NetS_BuildingRes *pValue );
+int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingList *pValue );
 int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pValue );
 int struct_Corrdinate_send( char **pptr, int *psize, SLK_Corrdinate *pValue );
 int struct_NetS_ItemUse_send( char **pptr, int *psize, SLK_NetS_ItemUse *pValue );

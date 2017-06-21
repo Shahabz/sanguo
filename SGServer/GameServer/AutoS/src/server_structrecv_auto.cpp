@@ -120,3 +120,11 @@ int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue 
 	return 0;
 }
 
+int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_RECV( &pValue->m_value, (*pptr), (*psize) );
+	return 0;
+}
+

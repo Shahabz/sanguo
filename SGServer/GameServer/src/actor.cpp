@@ -29,6 +29,9 @@
 #include "script_auto.h"
 #include "activity.h"
 #include "city.h"
+#include "building.h"
+#include "hero.h"
+#include "equip.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -43,6 +46,9 @@ extern int g_city_maxcount;
 Actor *g_actors = NULL;
 int g_actornum = 0;
 int g_maxactorid = 0;
+
+extern UpgradeInfo *g_upgradeinfo;
+extern int g_upgradeinfo_maxnum;
 
 //-----------------------------------------------------------------------------
 // actors_init
@@ -83,7 +89,7 @@ int actors_init()
 
 	g_actors = (Actor *)malloc( sizeof(Actor)*g_maxactornum );
 	memset( g_actors, 0, sizeof(Actor)*g_maxactornum );
-	printf_msg( "Actor  maxcount=%d  memory=%0.2fMB\n", g_maxactornum, (sizeof(Actor)*g_maxactornum) / 1024.0 / 1024.0 );
+	printf_msg( "Actor  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", g_maxactornum, (sizeof(Actor)*g_maxactornum) / 1024.0 / 1024.0, sizeof(Actor) / 1024.0 );
 
 	// 玩家在线情况清0，放置意外情况
 	sprintf( szSQL, "UPDATE `actor_list` SET `online`=0" );
@@ -164,8 +170,23 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 	// 角色列表信息保存
 	actor_update_list( actor_index );
 
-	// 保存道具
+	// 未上阵英雄保存
+	actor_hero_batch_save_auto( g_actors[actor_index].hero, HERO_ACTOR_MAX, "actor_hero", fp );
+
+	// 未上阵英雄装备保存
+	db_delete( g_actors[actor_index].actorid, "actor_hero_equip", fp );
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].id <= 0 )
+			continue;
+		actor_equip_batch_save_auto( g_actors[actor_index].hero[tmpi].equip, HEROEQUIP_MAX, "actor_equip", fp );
+	}
+
+	// 保存道具栏
 	item_save( actor_index, fp );
+
+	// 保存装备栏
+	equip_save( actor_index, fp );
 
 	return 0;
 }
@@ -609,9 +630,6 @@ int actor_enterworld( int client_index, int actorid, int actor_index )
 	g_actors[actor_index].accountid = account_in( actor_index, 0 );
 	g_actors[actor_index].cdkeywait = 0;
 
-	// 角色信息
-	actor_getinfo( actor_index );
-
 	// 发送进入游戏
 	Value.m_actorid = g_actors[actor_index].actorid;
 	Value.m_serverid = g_Config.server_code;
@@ -634,6 +652,12 @@ int actor_enterworld( int client_index, int actorid, int actor_index )
 //-----------------------------------------------------------------------------
 int actor_entercity( int actor_index )
 {
+	// 角色信息
+	actor_getinfo( actor_index );
+
+	// 建筑信息
+	building_sendlist( actor_index );
+
 	// 角色配置信息
 	actor_configinfo( actor_index );
 
@@ -661,14 +685,15 @@ int actor_load( int actor_index, int actorid )
 	g_actors[actor_index].actorid = actorid;
 	g_actors[actor_index].userid = client_getuserid( actor_index );
 
-	/* 读取玩家信息 */
+	// 读取玩家信息
 	actor_load_auto( actorid, &g_actors[actor_index], "actor" );
 	g_actors[actor_index].admin = client_getusertype( actor_index );
 	memcpy( g_actors[actor_index].lastip, client_getip( actor_index ), 15 );
 
-	/* 找到自己的城池 */
+	// 找到自己的城池
 	g_actors[actor_index].city_index = city_getindex_withactorid( actorid );
-	/* 如果没找到,并且等级为0级，是第一次进入游戏 */
+
+	// 如果没找到,并且等级为0级，是第一次进入游戏
 	char newfail = 0;
 	if ( g_actors[actor_index].city_index < 0 )
 	{
@@ -693,29 +718,39 @@ int actor_load( int actor_index, int actorid )
 		return -1;
 	}
 
-	/* 关联索引 */
-	g_city[g_actors[actor_index].city_index].actor_index = actor_index;
-	g_city[g_actors[actor_index].city_index].lastlogin = (int)time( NULL );
-	g_city[g_actors[actor_index].city_index].language = client_getlanguage( actor_index );
-	g_city[g_actors[actor_index].city_index].platid = client_getplatid( actor_index );
-	g_city[g_actors[actor_index].city_index].os = (char)client_getos( actor_index );
-	g_city[g_actors[actor_index].city_index].type = CityLairdType_Player;
-	g_city[g_actors[actor_index].city_index].country = client_getcountry( actor_index );
+	// 关联索引
+	int city_index = g_actors[actor_index].city_index;
+	g_city[city_index].actor_index = actor_index;
+	g_city[city_index].lastlogin = (int)time( NULL );
+	g_city[city_index].language = client_getlanguage( actor_index );
+	g_city[city_index].platid = client_getplatid( actor_index );
+	g_city[city_index].os = (char)client_getos( actor_index );
+	g_city[city_index].type = CityLairdType_Player;
+	g_city[city_index].country = client_getcountry( actor_index );
 
-	strncpy( g_city[g_actors[actor_index].city_index].name, g_actors[actor_index].name, NAME_SIZE );
-	g_city[g_actors[actor_index].city_index].name[NAME_SIZE - 1] = 0;
+	strncpy( g_city[city_index].name, g_actors[actor_index].name, NAME_SIZE );
+	g_city[city_index].name[NAME_SIZE - 1] = 0;
 
-	strncpy( g_city[g_actors[actor_index].city_index].ipcountry, client_getipcountry( actor_index ), 2 );
-	g_city[g_actors[actor_index].city_index].ipcountry[2] = 0;
+	strncpy( g_city[city_index].ipcountry, client_getipcountry( actor_index ), 2 );
+	g_city[city_index].ipcountry[2] = 0;
 
-	/* 初始化一些不需要存档的数据 */
+	g_actors[actor_index].shape = g_city[city_index].shape;
+	g_actors[actor_index].level = g_city[city_index].level;
+
+	// 初始化一些不需要存档的数据/
 	g_actors[actor_index].view_areaindex = -1;
 
-	/* 其它系统数据读取 */
+	// 读取未上阵英雄
+	actor_hero_load_auto( g_actors[actor_index].actorid, actor_index, actor_hero_getptr, "actor_hero" );
 
-	// 道具数据
+	// 读取未上阵英雄的装备
+	actor_equip_load_auto( g_actors[actor_index].actorid, actor_index, actor_equip_getptr, "actor_equip" );
+
+	// 道具背包数据
 	item_load( actor_index );
 
+	// 装备背包数据
+	equip_load( actor_index );
 	return 0;
 }
 
@@ -735,8 +770,8 @@ int actor_new( int actor_index )
 
 	// 给这个玩家创建一个城池
 	City city = { 0 };
-	city.type = CityLairdType_Player;
 	city.actorid = g_actors[actor_index].actorid;
+	city.type = CityLairdType_Player;
 	city.createtime = (int)time( NULL );
 	city.lastlogin = (int)time( NULL );
 	city.language = client_getlanguage( actor_index );
@@ -749,6 +784,10 @@ int actor_new( int actor_index )
 
 	strncpy( city.ipcountry, client_getipcountry( actor_index ), 2 );
 	city.ipcountry[2] = 0;
+
+	city.nation = g_actors[actor_index].nation;
+	city.shape = g_actors[actor_index].shape;
+	city.level = g_actors[actor_index].level;
 
 	if ( map_getrandcitypos( &city.posx, &city.posy ) < 0 )
 	{ // 没有可用位置了
@@ -837,7 +876,7 @@ int actor_db_create( int client_index, int platid, i64 userid, char *username, S
 	}
 	else
 	{
-		snprintf( pListInfo->m_name, NAME_SIZE, "Laird%d", actorid );
+		snprintf( pListInfo->m_name, NAME_SIZE, "sg%d", actorid );
 		pListInfo->m_name[NAME_SIZE - 1] = 0;
 	}
 

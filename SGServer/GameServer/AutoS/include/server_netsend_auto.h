@@ -28,6 +28,7 @@ int netsend_delmarchroute_S( char *databuf, int size, SLK_NetS_DelMarchRoute *pV
 int netsend_awardinfolist_S( int actor_index, char send_type, SLK_NetS_AwardInfoList *pValue );
 int netsend_experience_S( int actor_index, char send_type, SLK_NetS_Experience *pValue );
 int netsend_body_S( int actor_index, char send_type, SLK_NetS_Body *pValue );
+int netsend_buildinglist_S( int actor_index, char send_type, SLK_NetS_BuildingList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

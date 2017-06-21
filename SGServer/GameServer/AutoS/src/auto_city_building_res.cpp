@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int city_building_res_load_auto( int cityid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, char *pTab )
+int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -17,7 +17,7 @@ int city_building_res_load_auto( int cityid, int city_index, LPCB_GETBUILDINGRES
 	int offset = 0;
 	BuildingRes *pBuildingRes;
 
-	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level` from %s where cityid='%d'", pTab, cityid );
+	sprintf( szSQL, "select `actorid`,`offset`,`kind`,`level` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -42,7 +42,7 @@ int city_building_res_load_auto( int cityid, int city_index, LPCB_GETBUILDINGRES
 	mysql_free_result( res );
 	return 0;
 }
-int city_building_res_save_auto( int cityid, int offset, BuildingRes *pBuildingRes, char *pTab, FILE *fp )
+int city_building_res_save_auto( int actorid, int offset, BuildingRes *pBuildingRes, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -50,7 +50,7 @@ int city_building_res_save_auto( int cityid, int offset, BuildingRes *pBuildingR
 		return -1;
 
 RE_BUILDINGRES_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,cityid,offset,pBuildingRes->kind,pBuildingRes->level);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,actorid,offset,pBuildingRes->kind,pBuildingRes->level);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -72,7 +72,7 @@ RE_BUILDINGRES_UPDATE:
 	return 0;
 }
 
-int city_building_res_batch_save_auto( int cityid, BuildingRes *pBuildingRes, int maxcount, char *pTab, FILE *fp )
+int city_building_res_batch_save_auto( int actorid, BuildingRes *pBuildingRes, int maxcount, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pBuildingRes == NULL )
@@ -86,11 +86,11 @@ int city_building_res_batch_save_auto( int cityid, BuildingRes *pBuildingRes, in
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`) Values('%d','%d','%d','%d')",pTab,actorid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d')",cityid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
+			sprintf( szSQL, ",('%d','%d','%d','%d')",actorid,index,pBuildingRes[index].kind,pBuildingRes[index].level);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

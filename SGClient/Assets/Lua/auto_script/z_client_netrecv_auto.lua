@@ -130,6 +130,11 @@ function netrecv_body_C( buffer )
 	proc_body_C( recvValue );
 end
 
+function netrecv_buildinglist_C( buffer )
+	local recvValue = struct_NetS_BuildingList_recv( buffer );
+	proc_buildinglist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -157,6 +162,7 @@ Proc_Command = {
 	[CMDS_AWARDINFOLIST]=netrecv_awardinfolist_C;
 	[CMDS_EXPERIENCE]=netrecv_experience_C;
 	[CMDS_BODY]=netrecv_body_C;
+	[CMDS_BUILDINGLIST]=netrecv_buildinglist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

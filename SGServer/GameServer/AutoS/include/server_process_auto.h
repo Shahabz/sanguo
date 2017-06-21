@@ -15,5 +15,6 @@ void proc_delete_S( int client_index, int *pValue );
 void proc_heart_S( int client_index, SLK_NetC_Heart *pValue );
 void proc_gmcmd_S( int client_index, SLK_NetC_Gmcmd *pValue );
 void proc_askinfo_S( int client_index, SLK_NetC_AskInfo *pValue );
+void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue );
 
 #endif

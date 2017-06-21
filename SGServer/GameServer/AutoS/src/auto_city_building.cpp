@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int city_building_load_auto( int cityid, int city_index, LPCB_GETBUILDING pCB_GetBuilding, char *pTab )
+int city_building_load_auto( int actorid, int city_index, LPCB_GETBUILDING pCB_GetBuilding, char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -17,7 +17,7 @@ int city_building_load_auto( int cityid, int city_index, LPCB_GETBUILDING pCB_Ge
 	int offset = 0;
 	Building *pBuilding;
 
-	sprintf( szSQL, "select `cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value` from %s where cityid='%d'", pTab, cityid );
+	sprintf( szSQL, "select `actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -38,15 +38,17 @@ int city_building_load_auto( int cityid, int city_index, LPCB_GETBUILDING pCB_Ge
 		offset++;
 		pBuilding->kind = atoi(row[offset++]);
 		pBuilding->level = atoi(row[offset++]);
-		pBuilding->official = atoi(row[offset++]);
+		pBuilding->officialkind = atoi(row[offset++]);
 		pBuilding->officialfree = atoi(row[offset++]);
 		pBuilding->officialsec = atoi(row[offset++]);
 		pBuilding->value = atoi(row[offset++]);
+		pBuilding->sec = atoi(row[offset++]);
+		pBuilding->quicksec = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
 }
-int city_building_save_auto( int cityid, int offset, Building *pBuilding, char *pTab, FILE *fp )
+int city_building_save_auto( int actorid, int offset, Building *pBuilding, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -54,7 +56,7 @@ int city_building_save_auto( int cityid, int offset, Building *pBuilding, char *
 		return -1;
 
 RE_BUILDING_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,offset,pBuilding->kind,pBuilding->level,pBuilding->official,pBuilding->officialfree,pBuilding->officialsec,pBuilding->value);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pBuilding->kind,pBuilding->level,pBuilding->officialkind,pBuilding->officialfree,pBuilding->officialsec,pBuilding->value,pBuilding->sec,pBuilding->quicksec);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -76,7 +78,7 @@ RE_BUILDING_UPDATE:
 	return 0;
 }
 
-int city_building_batch_save_auto( int cityid, Building *pBuilding, int maxcount, char *pTab, FILE *fp )
+int city_building_batch_save_auto( int actorid, Building *pBuilding, int maxcount, char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pBuilding == NULL )
@@ -90,11 +92,11 @@ int city_building_batch_save_auto( int cityid, Building *pBuilding, int maxcount
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`cityid`,`offset`,`kind`,`level`,`official`,`officialfree`,`officialsec`,`value`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].official,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].officialkind,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value,pBuilding[index].sec,pBuilding[index].quicksec);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",cityid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].official,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].officialkind,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value,pBuilding[index].sec,pBuilding[index].quicksec);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

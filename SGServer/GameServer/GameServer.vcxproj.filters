@@ -201,14 +201,20 @@
     <ClCompile Include="AutoS\src\auto_city_building_res.cpp">
       <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_city_hero.cpp">
-      <Filter>源文件\Auto</Filter>
-    </ClCompile>
     <ClCompile Include="AutoS\src\auto_actor_equip.cpp">
       <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_city_hero_equip.cpp">
+    <ClCompile Include="src\hero.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\equip.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_actor_hero.cpp">
       <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_building_upgrade.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,13 +383,19 @@
     <ClInclude Include="AutoS\include\auto_city_building_res.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_city_hero.h">
-      <Filter>头文件\Auto</Filter>
-    </ClInclude>
     <ClInclude Include="AutoS\include\auto_actor_equip.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_city_hero_equip.h">
+    <ClInclude Include="include\hero.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\equip.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_actor_hero.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_building_upgrade.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
   </ItemGroup>

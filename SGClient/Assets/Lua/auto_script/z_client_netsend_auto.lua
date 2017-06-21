@@ -64,3 +64,11 @@ function netsend_askinfo_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_value=0,
+function netsend_entercity_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_ENTERCITY );
+	struct_NetC_EnterCity_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

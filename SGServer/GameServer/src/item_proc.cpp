@@ -137,7 +137,7 @@ int item_use( int actor_index, short itemindex, short itemnum, int hero_index, i
 	g_actors[actor_index].item[itemindex].m_num -= true_usenum;
 
 	// 记录物品使用日志
-	wlog( 0, LOGOP_ITEMLOST, PATH_ITEMUSE, g_actors[actor_index].item[itemindex].m_kind, true_usenum, g_actors[actor_index].item[itemindex].itemid, g_actors[actor_index].actorid, 0 );
+	wlog( 0, LOGOP_ITEMLOST, PATH_ITEMUSE, g_actors[actor_index].item[itemindex].m_kind, true_usenum, g_actors[actor_index].item[itemindex].id, g_actors[actor_index].actorid, 0 );
 
 	// 如果数量为0，那么就删掉
 	if ( g_actors[actor_index].item[itemindex].m_num <= 0 )

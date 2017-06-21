@@ -1,9 +1,8 @@
-CREATE TABLE `actor_item` (
-  `id` bigint(20) NOT NULL DEFAULT '0' COMMENT '物品id',
-  `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '角色ID',
+CREATE TABLE `hero_equip` (
+  `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '所属城池',
+  `herokind` smallint(6) NOT NULL DEFAULT '0' COMMENT '所属英雄',
   `offset` smallint(6) NOT NULL DEFAULT '0' COMMENT '物品所在位置',
   `kind` int(11) NOT NULL DEFAULT '0' COMMENT '物品种类',
-  `num` smallint(6) NOT NULL DEFAULT '0' COMMENT '物品个数',
   `ability0` smallint(6) NOT NULL DEFAULT '0' COMMENT '属性',
   `ability1` smallint(6) NOT NULL DEFAULT '0' COMMENT '属性',
   `ability2` smallint(6) NOT NULL DEFAULT '0' COMMENT '属性',
@@ -12,7 +11,6 @@ CREATE TABLE `actor_item` (
   `value1` int(11) NOT NULL DEFAULT '0' COMMENT '属性值',
   `value2` int(11) NOT NULL DEFAULT '0' COMMENT '属性值',
   `value3` int(11) NOT NULL DEFAULT '0' COMMENT '属性值',
-  `color_level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '颜色等级',
-  PRIMARY KEY (`id`)
-  KEY (`actorid`)
+  PRIMARY KEY (`actorid`)
+  KEY (`herokind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

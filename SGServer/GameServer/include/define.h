@@ -11,12 +11,14 @@
 #include "auto_data_item.h"
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
-#include "auto_city_hero_equip.h"
-#include "auto_city_hero.h"
+#include "auto_data_building_upgrade.h"
+#include "auto_actor_equip.h"
+#include "auto_actor_hero.h"
 #include "auto_city_building.h"
 #include "auto_city_building_barracks.h"
 #include "auto_city_building_res.h"
 #include "auto_city.h"
+#include "actor_send.h"
 
 
 #define LOG_PATH	"./log/"
@@ -29,8 +31,24 @@
 // 最小的角色ID值
 #define MINACTORID	3100
 
-// 角色最大等级
-#define MAX_ACTORLEVEL	100
+/* 背包最大数量*/
+#define MAX_DEFAULT_ITEMNUM	200
+#define MAX_ACTOR_ITEMNUM	300
+
+/* 装备最大数量*/
+#define MAX_DEFAULT_EQUIPNUM	30
+#define MAX_ACTOR_EQUIPNUM		100
+#define EQUIP_BASEOFFSET		1000	// 穿身上的英雄索引
+
+#define BUILDING_MAXNUM				8 // 普通建筑数量
+#define BUILDING_BARRACKS_MAXNUM	4 // 兵营建筑数量
+#define BUILDING_RES_MAXNUM			64// 资源建筑数量
+
+#define HERO_ACTOR_MAX				128	// 未上英雄
+#define HERO_CITY_MAX				4	// 上阵英雄
+#define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
+
+#define HEROEQUIP_MAX				6		// 装备数量
 
 // 推送秘钥长度
 #define CLIENT_PUSHKEY_MAX	256

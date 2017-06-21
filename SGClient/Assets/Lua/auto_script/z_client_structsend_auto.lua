@@ -43,3 +43,7 @@ function struct_NetC_AskInfo_send( buf, sendValue )
 	buf:WriteStringWithLength( sendValue.m_msg );
 end
 
+function struct_NetC_EnterCity_send( buf, sendValue )
+	buf:WriteSByte( sendValue.m_value );
+end
+

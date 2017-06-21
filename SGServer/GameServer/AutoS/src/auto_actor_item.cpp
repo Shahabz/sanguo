@@ -17,7 +17,7 @@ int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem
 	int offset = 0;
 	Item *pItem;
 
-	sprintf( szSQL, "select `itemid`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level` from %s where itemid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level` from %s where id='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -34,7 +34,7 @@ int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem
 		pItem = pCB_GetItem( actor_index, atoi(row[2]) );
 		if( pItem == NULL )
 			continue;
-		pItem->itemid = atoll(row[offset++]);
+		pItem->id = atoll(row[offset++]);
 		pItem->actorid = atoi(row[offset++]);
 		pItem->offset = atoi(row[offset++]);
 		pItem->m_kind = atoi(row[offset++]);
@@ -59,9 +59,9 @@ int actor_item_save_auto( Item *pItem, char *pTab, FILE *fp )
 	if ( pItem == NULL )
 		return -1;
 
-	char sz64_itemid[21]={0};
+	char sz64_id[21]={0};
 RE_ITEM_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`itemid`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pItem->itemid,sz64_itemid,10 ),pItem->actorid,pItem->offset,pItem->m_kind,pItem->m_num,pItem->m_ability[0],pItem->m_ability[1],pItem->m_ability[2],pItem->m_ability[3],pItem->m_value[0],pItem->m_value[1],pItem->m_value[2],pItem->m_value[3],pItem->m_color_level);
+	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pItem->id,sz64_id,10 ),pItem->actorid,pItem->offset,pItem->m_kind,pItem->m_num,pItem->m_ability[0],pItem->m_ability[1],pItem->m_ability[2],pItem->m_ability[3],pItem->m_value[0],pItem->m_value[1],pItem->m_value[2],pItem->m_value[3],pItem->m_color_level);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -89,20 +89,20 @@ int actor_item_batch_save_auto( Item *pItem, int maxcount, char *pTab, FILE *fp 
 	if ( pItem == NULL )
 		return -1;
 
-	char sz64_itemid[21]={0};
+	char sz64_id[21]={0};
 	int count = 0;
 	memset( g_batchsql, 0, sizeof(char)*BATCHSQL_MAXSIZE );
 	for ( int index = 0; index < maxcount; index++ )
 	{
-		if ( pItem[index].itemid <= 0 )
+		if ( pItem[index].id <= 0 )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`itemid`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pItem[index].itemid,sz64_itemid,10 ),pItem[index].actorid,pItem[index].offset,pItem[index].m_kind,pItem[index].m_num,pItem[index].m_ability[0],pItem[index].m_ability[1],pItem[index].m_ability[2],pItem[index].m_ability[3],pItem[index].m_value[0],pItem[index].m_value[1],pItem[index].m_value[2],pItem[index].m_value[3],pItem[index].m_color_level);
+			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pItem[index].id,sz64_id,10 ),pItem[index].actorid,pItem[index].offset,pItem[index].m_kind,pItem[index].m_num,pItem[index].m_ability[0],pItem[index].m_ability[1],pItem[index].m_ability[2],pItem[index].m_ability[3],pItem[index].m_value[0],pItem[index].m_value[1],pItem[index].m_value[2],pItem[index].m_value[3],pItem[index].m_color_level);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pItem[index].itemid,sz64_itemid,10 ),pItem[index].actorid,pItem[index].offset,pItem[index].m_kind,pItem[index].m_num,pItem[index].m_ability[0],pItem[index].m_ability[1],pItem[index].m_ability[2],pItem[index].m_ability[3],pItem[index].m_value[0],pItem[index].m_value[1],pItem[index].m_value[2],pItem[index].m_value[3],pItem[index].m_color_level);
+			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pItem[index].id,sz64_id,10 ),pItem[index].actorid,pItem[index].offset,pItem[index].m_kind,pItem[index].m_num,pItem[index].m_ability[0],pItem[index].m_ability[1],pItem[index].m_ability[2],pItem[index].m_ability[3],pItem[index].m_value[0],pItem[index].m_value[1],pItem[index].m_value[2],pItem[index].m_value[3],pItem[index].m_color_level);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

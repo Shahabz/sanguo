@@ -18,6 +18,8 @@
 #include "mapunit.h"
 #include "map.h"
 #include "script.h"
+#include "city.h"
+#include "building.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -28,6 +30,10 @@ extern int g_maxactornum;
 extern Global global;
 extern Map g_map;
 extern int g_world_data[WORLD_DATA_MAX];
+
+extern UpgradeInfo *g_upgradeinfo;
+extern int g_upgradeinfo_maxnum;
+
 
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
@@ -545,25 +551,37 @@ int actor_changeshape( int actor_index, int shape )
 //-----------------------------------------------------------------------------
 int actor_getinfo( int actor_index )
 {
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
+	ACTOR_CHECK_INDEX( actor_index );
 	SLK_NetS_ActorInfo info = { 0 };
 	info.m_actorid = g_actors[actor_index].actorid;
 	memcpy( info.m_name, g_actors[actor_index].name, sizeof(char)*NAME_SIZE );
-	//info.m_nation = g_actors[actor_index].nation;
+	info.m_nation = g_actors[actor_index].nation;
 	info.m_shape = g_actors[actor_index].shape;
 	info.m_level = g_actors[actor_index].level;
-	//info.m_experience_max = g_upgradeexp[g_actors[actor_index].level];
 	info.m_token = g_actors[actor_index].token;
-	/*City *pCity = city_getptr( actor_index );
+	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
-	g_actors[actor_index].vip = pCity->viplevel;
-	info.m_viplevel = pCity->viplevel;
-	info.m_vipexp = pCity->vipexp;
-	info.m_vipduration = pCity->vipduration;
-	info.m_vipexptoday = actor_get_today_int_times( actor_index, TODAY_INT_VIPEXP );
-	}*/
+		info.m_exp = pCity->exp;
+		info.m_exp_max = g_upgradeinfo[pCity->level].exp;
+		info.m_viplevel =  pCity->viplevel;
+		info.m_vipexp =  pCity->vipexp;
+		info.m_vipexp_max = 0;
+		info.m_body =  pCity->body;
+		info.m_place =  pCity->place;
+		info.m_official =  pCity->official;
+		info.m_zone =  pCity->zone;
+		info.m_battlepower =  pCity->battlepower;
+		info.m_silver =  pCity->silver;
+		info.m_wood =  pCity->wood;
+		info.m_food =  pCity->food;
+		info.m_iron =  pCity->iron;
+		info.m_infantry_num =  building_soldiers_total( pCity->index, BUILDING_Infantry );
+		info.m_cavalry_num = building_soldiers_total( pCity->index, BUILDING_Cavalry );
+		info.m_archer_num = building_soldiers_total( pCity->index, BUILDING_Archer );
+		info.m_mokilllv =  pCity->mokilllv;
+		info.m_sflag =  pCity->sflag;
+	}
 	netsend_actorinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 	return 0;
 }

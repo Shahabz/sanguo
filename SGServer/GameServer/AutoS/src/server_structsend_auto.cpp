@@ -143,6 +143,69 @@ int struct_NetU_Gmlocalcmd_send( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *p
 	return 0;
 }
 
+int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_BuildingBarracks *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingRes_send( char **pptr, int *psize, SLK_NetS_BuildingRes *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_building_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_building_count; tmpi++ )
+	{
+		struct_NetS_Building_send( pptr, psize, &pValue->m_building[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_barracks_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_barracks_count; tmpi++ )
+	{
+		struct_NetS_BuildingBarracks_send( pptr, psize, &pValue->m_barracks[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_res_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_res_count; tmpi++ )
+	{
+		struct_NetS_BuildingRes_send( pptr, psize, &pValue->m_res[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_levynum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind_ex, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
+	return 0;
+}
+
 int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pValue )
 {
 	int tmpi = 0;
@@ -170,6 +233,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_infantry_num, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_cavalry_num, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_archer_num, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_mokilllv, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sflag, (*psize) );
 	return 0;
 }
 
@@ -378,9 +443,9 @@ int struct_NetS_AddMarchRoute_send( char **pptr, int *psize, SLK_NetS_AddMarchRo
 	LKSET_WORD_SEND( (*pptr), &pValue->m_to_posx, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_to_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_from_cityid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_from_actorid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_from_clubid, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_to_cityid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_to_actorid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_to_clubid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_army_index, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );

@@ -1,6 +1,6 @@
-CREATE TABLE `city_hero` (
+CREATE TABLE `hero` (
   `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '城池',
-  `offset` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `offset` tinyint(3) NOT NULL DEFAULT '0' COMMENT '索引',
   `kind` smallint(6) NOT NULL DEFAULT '0' COMMENT '英雄种类',
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '等级',
   `exp` int(11) NOT NULL DEFAULT '0' COMMENT '经验',

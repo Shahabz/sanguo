@@ -12,6 +12,7 @@ char *db_escape( const char *pStr, char *pBuf, int size );
 int db_reconnect_game();
 int db_reconnect_log();
 int db_query( FILE *fp, const char *pSql );
+int db_delete( int actorid, char *pTab, FILE *fp );
 
 // 跟主逻辑无关的数据库插入
 #define DBWORK_THREAD_NUM					1
