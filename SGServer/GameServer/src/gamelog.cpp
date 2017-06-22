@@ -41,7 +41,7 @@ int wlogcreate()
 RE_LOG_CREATE:
 		szSQL[0] = 0;
 		reconnect_flag = 0;
-		sprintf( szSQL, "CREATE TABLE IF NOT EXISTS `glog_%d` ( `id` int(11) NOT NULL auto_increment, `group` int(11) NOT NULL default '0', `op` int(11) NOT NULL default '0', `path` tinyint(4) NOT NULL default '0', `object` int(11) NOT NULL default '0', `objectnum` int(11) NOT NULL default '0', `objectid` bigint(20) NOT NULL default '0', `actor1` int(11) NOT NULL default '0', `actor2` int(11) NOT NULL default '0', `optime` datetime NOT NULL default '0000-00-00 00:00:00', PRIMARY KEY  (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=gbk ROW_FORMAT=DYNAMIC;", datesign_now );
+		sprintf( szSQL, "CREATE TABLE IF NOT EXISTS `glog_%d` ( `id` int(11) NOT NULL auto_increment, `group` int(11) NOT NULL default '0', `op` int(11) NOT NULL default '0', `path` smallint(6) NOT NULL default '0', `object` int(11) NOT NULL default '0', `objectnum` int(11) NOT NULL default '0', `objectid` bigint(20) NOT NULL default '0', `actor1` int(11) NOT NULL default '0', `actor2` int(11) NOT NULL default '0', `optime` datetime NOT NULL default '0000-00-00 00:00:00', PRIMARY KEY  (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=gbk ROW_FORMAT=DYNAMIC;", datesign_now );
 		if( mysql_query( myLog, szSQL ) )
 		{
 			printf_msg( "Query failed (%s)\n", mysql_error(myLog) );
@@ -61,7 +61,7 @@ RE_LOG_CREATE:
 	return 0;
 }
 
-int wlog( char type, int op, char path, int object, int objectnum, i64 objectid, int source, int target )
+int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target )
 {
 	char	szSQL[1024];
 	char bigint[21];
@@ -93,7 +93,7 @@ RE_LOG_UPDATE:
 	return 0;
 }
 
-int wlog_token( char type, int op, char path, int object, int objectnum, i64 objectid, int source, int target, i64 userid )
+int wlog_token( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target, i64 userid )
 {
 	char	szSQL[1024];
 	char bigint[21];

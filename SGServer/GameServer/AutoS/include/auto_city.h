@@ -43,16 +43,19 @@ struct _city {
 				int people;	//人口
 				int prestige;	//威望值
 				int friendship;	//友谊积分
+				int function;	//功能是否开启
 				Hero hero[4];	//上阵英雄
 				Building building[8];	//普通建筑
 				BuildingBarracks building_barracks[4];	//兵营建筑
 				BuildingRes building_res[64];	//资源建筑
-				char worker_type;	//当前升级建筑类型
-				char worker_offset;	//当前升级建筑索引
+				char worker_op;	//建造队列操作
 				int worker_sec;	//建造剩余时间(每秒-1)
-				char worker_type_ex;	//当前升级建筑类型(商用)
-				char worker_offset_ex;	//当前升级建筑索引(商用)
+				char worker_kind;	//当前升级建筑类型
+				char worker_offset;	//当前升级建筑索引
+				char worker_op_ex;	//建造队列操作(商用)
 				int worker_sec_ex;	//建造剩余时间(每秒-1)(商用)
+				char worker_kind_ex;	//当前升级建筑类型(商用)
+				char worker_offset_ex;	//当前升级建筑索引(商用)
 				int worker_expire_ex;	//商用建造队列到期时间
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引

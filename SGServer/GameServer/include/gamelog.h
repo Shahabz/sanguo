@@ -12,6 +12,7 @@
 #define LOGOP_UPGRADE			6	// 角色升级
 #define LOGOP_BODY				7	// 体力
 #define LOGOP_VIPEXP			8	// vip经验
+#define LOGOP_BUILDING			9	// 建筑
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -20,10 +21,11 @@
 #define PATH_ITEMUSE					4	// 道具使用
 #define PATH_TOKENITEMUSE				5	// 钻石直接使用
 #define PATH_SELL						6	// 售卖丢弃
+#define PATH_BUILDING					7	// 建筑
 
 int log_init();
-int wlog( char type, int op, char path, int object, int objectnum, i64 objectid, int source, int target );
-int wlog_token( char type, int op, char path, int object, int objectnum, i64 objectid, int source, int target, i64 userid );
+int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );
+int wlog_token( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target, i64 userid );
 int wcount();
 
 #endif

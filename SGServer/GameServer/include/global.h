@@ -5,6 +5,10 @@
 typedef struct _global
 {
 	int actorlevel_max;
+	short body_max;
+	short body_sec;
+	short levy_sec;
+	char levy_max;
 }Global;
 int global_init();
 void global_reload();

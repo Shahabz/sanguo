@@ -20,6 +20,7 @@
 #include "script.h"
 #include "city.h"
 #include "building.h"
+#include "vip.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -186,139 +187,39 @@ int actor_verifyid( i64 userid, int actorid )
 	return verify;
 }
 
-// 角色经验升级
-int actor_exp( int actor_index, int experience, char path )
-{
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
-	if ( experience == 0 )
-		return 0;
-	char isup = 0;
-	//AwardGetInfo getinfo = { 0 };
-	//if ( experience > 0 )
-	//{
-	//	// 计算经验
-	//	g_actors[actor_index].experience += experience;
-	//	wlog( 0, LOGOP_ACTOREXP, path, experience, g_actors[actor_index].level, g_actors[actor_index].experience, g_actors[actor_index].actorid, city_mainlevel( city_getptr( actor_index ) ) );
-	//	// 检查升级
-	//	while ( g_actors[actor_index].experience >= g_upgradeexp[g_actors[actor_index].level] )
-	//	{
-	//		int curlevel = g_actors[actor_index].level;
-	//		// 可以升级
-	//		if ( actor_upgrade( actor_index, path, &getinfo ) < 0 )
-	//			break;
-	//		g_actors[actor_index].experience -= g_upgradeexp[curlevel];
-	//		isup = 1;
-	//	}
-	//}
-	//else if ( experience < 0 )
-	//{
-	//	// 扣减经验
-	//	g_actors[actor_index].experience += experience;
-	//	if ( g_actors[actor_index].experience < 0 )
-	//		g_actors[actor_index].experience = 0;
-	//	wlog( 0, LOGOP_ACTOREXP, path, experience, g_actors[actor_index].level, g_actors[actor_index].experience, g_actors[actor_index].actorid, city_mainlevel( city_getptr( actor_index ) ) );
-	//}
-
-	//SLK_NetS_Experience Value = {};
-	//Value.m_addexp = experience;
-	//Value.m_curexp = g_actors[actor_index].experience;
-	//Value.m_isup = isup;
-	//Value.m_member = -1;
-	//Value.m_path = path;
-	//if ( isup == 1 )
-	//{
-	//	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
-	//	{
-	//		Value.m_awardlist[Value.m_awardcount].m_kind = getinfo.kind[tmpi];
-	//		Value.m_awardlist[Value.m_awardcount].m_num = getinfo.num[tmpi];
-	//		Value.m_awardcount += 1;
-	//	}
-	//	Value.m_genius_point = g_upgrade_geniuspoint[g_actors[actor_index].level] - g_upgrade_geniuspoint[g_actors[actor_index].level - 1];
-	//}
-	//netsend_experience_S( actor_index, SENDTYPE_ACTOR, &Value );
-	return isup;
-}
-
-// 角色升级
-int actor_upgrade( int actor_index, char path, AwardGetInfo *getinfo )
-{
-	//if ( actor_index < 0 || actor_index >= g_maxactornum )
-	//	return -1;
-	//if ( g_actors[actor_index].level >= 60/* 暂定 */ )
-	//	return -1;
-	//int lastlevel = g_actors[actor_index].level;
-	//
-	//g_actors[actor_index].level += 1;
-	//City *pCity = city_getptr( actor_index );
-	//if ( pCity )
-	//	pCity->laird_level = g_actors[actor_index].level;
-
-	//actor_getinfo( actor_index );
-	//wlog( 0, LOGOP_UPGRADE, path, 0, g_actors[actor_index].level, 0, g_actors[actor_index].actorid, city_mainlevel( city_getptr( actor_index ) ) );
-
-	//// 体力补满
-	//city_change_body( city_getptr( actor_index ), global.actorupgrade_body, PATH_ACTORUPGRADEAWARD );
-
-	//// 等级奖励
-	//awardgroup_withindex( actor_index, g_upgrade_awardgroup[lastlevel], city_mainlevel( city_getptr( actor_index ) ), PATH_ACTORUPGRADEAWARD, getinfo );
-
-	//// 等级小于11自动加天赋
-	//if( g_actors[actor_index].level <= 10 )
-	//{
-	//	actor_genius_learn( actor_index, 2, 1 );
-	//	actor_genius_learn( actor_index, 3, 1 );
-	//	actor_genius_learn( actor_index, 4, 1 );
-	//	actor_genius_learn( actor_index, 5, 1 );
-	//	actor_genius_learn( actor_index, 6, 1 );
-	//}
-
-	//// 玩家等级触发事件
-	//attack_event_trigger_actorlevel( pCity, g_actors[actor_index].level );
-	//web_up( actor_index, 0, lastlevel, g_actors[actor_index].level, 0 );
-	return 0;
-}
-
 // 角色钻石变化
 int actor_change_token( int actor_index, int token, char path, int path_value )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	//if ( g_actors[actor_index].token + token < 0 )
-	//{
-	//	int value = 0;
-	//	actor_notify_value( actor_index, NOTIFY_WARNING, 1, &value, NULL ); // 钻石不够
-	//	return -2;
-	//}
-	//g_actors[actor_index].token += token;
-	//if ( token > 0 && path == PATH_PAY )
-	//{ // 充值量
-	//	int viplevel = 0;
-	//	g_actors[actor_index].total_charge += token;
-	//	data_record_addvalue( city_getptr( actor_index ), DATA_RECORD_RECHARGE_TOKEN, token );
-	//}
+	if ( g_actors[actor_index].token + token < 0 )
+	{
+		int value = 0;
+		//actor_notify_value( actor_index, NOTIFY_WARNING, 1, &value, NULL ); // 钻石不够
+		return -2;
+	}
+	g_actors[actor_index].token += token;
+	if ( token > 0 && path == PATH_PAY )
+	{ // 充值量
+		int viplevel = 0;
+		g_actors[actor_index].total_charge += token;
+	}
 
-	//if ( token > 0 )
-	//{ // 总拥有
-	//	data_record_addvalue( city_getptr( actor_index ), DATA_RECORD_TOTAL_TOKEN, token );
-	//}
-	//else if ( token < 0 )
-	//{ // 消耗量
-	//	// 任务数值
-	//	quest_addvalue( city_getptr( actor_index ), QUEST_DATAINDEX_COSTTOKEN, 0, -token );
-	//	// 总统计
-	//	data_record_addvalue( city_getptr( actor_index ), DATA_RECORD_COST_TOKEN, -token );
-	//	// 记录消耗
-	//	wlog_token( 0, LOGOP_TOKEN, path, g_actors[actor_index].token, token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value, g_actors[actor_index].userid );
-	//}
+	if ( token > 0 )
+	{ // 总拥有
+	}
+	else if ( token < 0 )
+	{ // 消耗量
+		// 记录消耗
+		wlog_token( 0, LOGOP_TOKEN, path, g_actors[actor_index].token, token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value, g_actors[actor_index].userid );
+	}
 
 	// 发送变化
-	//SLK_NetS_Token Value = {};
-	//Value.m_token = g_actors[actor_index].token;
-	//Value.m_total_charge = g_actors[actor_index].total_charge;
-	//Value.m_viplevel = g_actors[actor_index].vip;
-	//Value.m_path = path;
-	//netsend_token_S( actor_index, SENDTYPE_ACTOR, &Value );
+	SLK_NetS_Token Value = {};
+	Value.m_total = g_actors[actor_index].token;
+	Value.m_add = token;
+	Value.m_path = path;
+	netsend_changtoken_S( actor_index, SENDTYPE_ACTOR, &Value );
 
 	// 记录log
 	wlog( 0, LOGOP_TOKEN, path, token, g_actors[actor_index].token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value );
@@ -566,7 +467,7 @@ int actor_getinfo( int actor_index )
 		info.m_exp_max = g_upgradeinfo[pCity->level].exp;
 		info.m_viplevel =  pCity->viplevel;
 		info.m_vipexp =  pCity->vipexp;
-		info.m_vipexp_max = 0;
+		info.m_vipexp_max = vip_expmax_get( pCity->viplevel );
 		info.m_body =  pCity->body;
 		info.m_place =  pCity->place;
 		info.m_official =  pCity->official;

@@ -18,7 +18,7 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *
 	City *pCity;
 	int index = 0;
 
-	sprintf( szSQL, "select `actorid`,`index`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`exp`,`vipexp`,`nation`,`official`,`place`,`zone`,`battlepower`,`mokilllv`,`body`,`bodysec`,`silver`,`wood`,`food`,`iron`,`levynum`,`levysec`,`people`,`prestige`,`friendship`,`worker_type`,`worker_offset`,`worker_sec`,`worker_type_ex`,`worker_offset_ex`,`worker_sec_ex`,`worker_expire_ex` from %s ", pTab );
+	sprintf( szSQL, "select `actorid`,`index`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`exp`,`vipexp`,`nation`,`official`,`place`,`zone`,`battlepower`,`mokilllv`,`body`,`bodysec`,`silver`,`wood`,`food`,`iron`,`levynum`,`levysec`,`people`,`prestige`,`friendship`,`function`,`worker_op`,`worker_sec`,`worker_kind`,`worker_offset`,`worker_op_ex`,`worker_sec_ex`,`worker_kind_ex`,`worker_offset_ex`,`worker_expire_ex` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -73,12 +73,15 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *
 		pCity->people = atoi(row[offset++]);
 		pCity->prestige = atoi(row[offset++]);
 		pCity->friendship = atoi(row[offset++]);
-		pCity->worker_type = atoi(row[offset++]);
-		pCity->worker_offset = atoi(row[offset++]);
+		pCity->function = atoi(row[offset++]);
+		pCity->worker_op = atoi(row[offset++]);
 		pCity->worker_sec = atoi(row[offset++]);
-		pCity->worker_type_ex = atoi(row[offset++]);
-		pCity->worker_offset_ex = atoi(row[offset++]);
+		pCity->worker_kind = atoi(row[offset++]);
+		pCity->worker_offset = atoi(row[offset++]);
+		pCity->worker_op_ex = atoi(row[offset++]);
 		pCity->worker_sec_ex = atoi(row[offset++]);
+		pCity->worker_kind_ex = atoi(row[offset++]);
+		pCity->worker_offset_ex = atoi(row[offset++]);
 		pCity->worker_expire_ex = atoi(row[offset++]);
 		if( pCB_LoadCity )
 			pCB_LoadCity( pCity->index );
@@ -98,7 +101,7 @@ int city_save_auto( City *pCity, char *pTab, FILE *fp )
 	char szText_name[MAX_PATH]={0};
 	char szText_ipcountry[MAX_PATH]={0};
 RE_CITY_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`index`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`exp`,`vipexp`,`nation`,`official`,`place`,`zone`,`battlepower`,`mokilllv`,`body`,`bodysec`,`silver`,`wood`,`food`,`iron`,`levynum`,`levysec`,`people`,`prestige`,`friendship`,`worker_type`,`worker_offset`,`worker_sec`,`worker_type_ex`,`worker_offset_ex`,`worker_sec_ex`,`worker_expire_ex`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity->actorid,pCity->index,db_escape((const char *)pCity->name,szText_name,0),pCity->type,pCity->shape,pCity->headid,pCity->country,db_escape((const char *)pCity->ipcountry,szText_ipcountry,0),pCity->language,pCity->os,pCity->platid,pCity->createtime,pCity->lastlogin,pCity->lastlogout,pCity->state,pCity->posx,pCity->posy,pCity->sflag,pCity->level,pCity->exp,pCity->vipexp,pCity->nation,pCity->official,pCity->place,pCity->zone,pCity->battlepower,pCity->mokilllv,pCity->body,pCity->bodysec,pCity->silver,pCity->wood,pCity->food,pCity->iron,pCity->levynum,pCity->levysec,pCity->people,pCity->prestige,pCity->friendship,pCity->worker_type,pCity->worker_offset,pCity->worker_sec,pCity->worker_type_ex,pCity->worker_offset_ex,pCity->worker_sec_ex,pCity->worker_expire_ex);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`index`,`name`,`type`,`shape`,`headid`,`country`,`ipcountry`,`language`,`os`,`platid`,`createtime`,`lastlogin`,`lastlogout`,`state`,`posx`,`posy`,`sflag`,`level`,`exp`,`vipexp`,`nation`,`official`,`place`,`zone`,`battlepower`,`mokilllv`,`body`,`bodysec`,`silver`,`wood`,`food`,`iron`,`levynum`,`levysec`,`people`,`prestige`,`friendship`,`function`,`worker_op`,`worker_sec`,`worker_kind`,`worker_offset`,`worker_op_ex`,`worker_sec_ex`,`worker_kind_ex`,`worker_offset_ex`,`worker_expire_ex`) Values('%d','%d','%s','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pCity->actorid,pCity->index,db_escape((const char *)pCity->name,szText_name,0),pCity->type,pCity->shape,pCity->headid,pCity->country,db_escape((const char *)pCity->ipcountry,szText_ipcountry,0),pCity->language,pCity->os,pCity->platid,pCity->createtime,pCity->lastlogin,pCity->lastlogout,pCity->state,pCity->posx,pCity->posy,pCity->sflag,pCity->level,pCity->exp,pCity->vipexp,pCity->nation,pCity->official,pCity->place,pCity->zone,pCity->battlepower,pCity->mokilllv,pCity->body,pCity->bodysec,pCity->silver,pCity->wood,pCity->food,pCity->iron,pCity->levynum,pCity->levysec,pCity->people,pCity->prestige,pCity->friendship,pCity->function,pCity->worker_op,pCity->worker_sec,pCity->worker_kind,pCity->worker_offset,pCity->worker_op_ex,pCity->worker_sec_ex,pCity->worker_kind_ex,pCity->worker_offset_ex,pCity->worker_expire_ex);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );

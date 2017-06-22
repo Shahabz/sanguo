@@ -2,6 +2,10 @@
 #define _BUILDING_H_
 #include "define.h"
 
+#define BUILDING_MAXNUM				8 // 普通建筑数量
+#define BUILDING_BARRACKS_MAXNUM	4 // 兵营建筑数量
+#define BUILDING_RES_MAXNUM			64// 资源建筑数量
+
 // 可升级的普通建筑
 #define	BUILDING_Main		1	// 官府
 #define	BUILDING_Wall		2	// 城墙
@@ -11,10 +15,12 @@
 #define	BUILDING_Cabinet	6	// 内阁
 
 // 兵营
-#define	BUILDING_Infantry	11	// 步兵营
-#define	BUILDING_Cavalry	12	// 骑兵营
-#define	BUILDING_Archer		13	// 弓兵营
-#define	BUILDING_Militiaman	14	// 民兵营
+#define	BUILDING_Infantry				11	// 步兵营
+#define	BUILDING_Cavalry				12	// 骑兵营
+#define	BUILDING_Archer					13	// 弓兵营
+#define	BUILDING_Militiaman_Infantry	14	// 民兵营-步兵
+#define	BUILDING_Militiaman_Cavalry		15	// 民兵营-骑兵
+#define	BUILDING_Militiaman_Archer		16	// 民兵营-弓兵
 
 // 资源建筑
 #define	BUILDING_Silver		21	// 银币
@@ -31,19 +37,28 @@
 #define	BUILDING_Wishing	36	// 聚宝盆
 #define	BUILDING_Help		37	// 帮助
 
+#define	BUILDING_OP_BUILD	1	// 建造
+#define	BUILDING_OP_UPGRADE	2	// 升级
+#define	BUILDING_OP_DELETE	3	// 拆除
+
+#define	BUILDING_TRAIN_MAXNUM	8	// 兵营最多8个招募队列	
+
 // 获取建筑指针
 Building* building_getptr( int city_index, int offset );
 BuildingBarracks* buildingbarracks_getptr( int city_index, int offset );
 BuildingRes* buildingres_getptr( int city_index, int offset );
 
+// 获取建筑的配置信息
+BuildingUpgradeConfig* building_getconfig( int kind, int level );
+
 // 创建建筑
 int building_create( int city_index, int kind, int offset );
 
 // 建筑升级
-int building_upgrade( int city_index, int offset );
+int building_upgrade( int city_index, int kind, int offset );
 
-// 建筑等级
-int building_level( int city_index, int offset );
+// 建筑升级或拆除操作完成
+int building_finish( int city_index, int op, int kind, int offset );
 
 // 获取士兵数量
 int building_soldiers_total( int city_index, char kind );

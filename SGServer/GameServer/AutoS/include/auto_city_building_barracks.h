@@ -7,12 +7,13 @@ struct _city_building_barracks {
 				char kind;	//兵营种类
 				char level;	//兵营等级
 				int soldiers;	//本营兵力
+				int trainnum;	//当前训练士兵数
+				int trainsec;	//当前训练剩余时间(秒)
+				int queuenum[8];	//招募队列
+				int queuesec[8];	//招募队列
 				char queue;	//扩容队列数量
-				int trainnum[8];	//训练队列士兵数
-				int trainsec[8];	//训练队列剩余时间
 				char trainlong;	//募兵加时级别
 				short quicksec;	//募兵加速时间秒
-				char value;	//民兵营使用
 };
 typedef struct _city_building_barracks BuildingBarracks;
 

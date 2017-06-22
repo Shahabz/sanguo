@@ -24,16 +24,18 @@ BUILDING_Craftsman      = 5  -- 材料作坊
 BUILDING_Cabinet        = 6  -- 内阁
 
 -- 兵营
-BUILDING_Infantry       = 11   -- 步兵营
-BUILDING_Cavalry        = 12   -- 骑兵营
-BUILDING_Archer         = 13   -- 弓兵营
-BUILDING_Militiaman     = 14   -- 民兵营
+BUILDING_Infantry       		= 11  -- 步兵营
+BUILDING_Cavalry        		= 12  -- 骑兵营
+BUILDING_Archer         		= 13  -- 弓兵营
+BUILDING_Militiaman_Infantry	= 14  -- 民兵营-步兵
+BUILDING_Militiaman_Cavalry		= 15  -- 民兵营-骑兵
+BUILDING_Militiaman_Archer		= 16  -- 民兵营-弓兵
 
 -- 资源建筑
 BUILDING_Silver		    =  21	-- 银币
 BUILDING_Wood		    =  22	-- 木材
 BUILDING_Food		    =  23	-- 食物
-BUILDING_Iron		    =  24 -- 镔铁
+BUILDING_Iron		    =  24   -- 镔铁
 
 -- 纯入口建筑
 BUILDING_Smithy		    =  31	-- 铁匠铺

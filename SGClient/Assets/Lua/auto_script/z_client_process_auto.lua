@@ -247,3 +247,53 @@ function proc_delmarchroute_C( recvValue )
 end
 
 
+-- m_total=0,m_add=0,m_path=0,
+function proc_changelevy_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changesilver_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changewood_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changefood_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changeiron_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changepeople_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changeprestige_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changefriendship_C( recvValue )
+	-- process.
+end
+
+-- m_addexp=0,m_curexp=0,m_expmax=0,m_isup=0,m_level=0,m_path=0,
+function proc_changevip_C( recvValue )
+	-- process.
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_changtoken_C( recvValue )
+	-- process.
+end
+

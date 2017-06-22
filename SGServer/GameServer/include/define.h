@@ -12,6 +12,7 @@
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
 #include "auto_data_building_upgrade.h"
+#include "auto_data_vip.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"
@@ -19,7 +20,7 @@
 #include "auto_city_building_res.h"
 #include "auto_city.h"
 #include "actor_send.h"
-
+#include "award.h"
 
 #define LOG_PATH	"./log/"
 
@@ -39,10 +40,6 @@
 #define MAX_DEFAULT_EQUIPNUM	30
 #define MAX_ACTOR_EQUIPNUM		100
 #define EQUIP_BASEOFFSET		1000	// 穿身上的英雄索引
-
-#define BUILDING_MAXNUM				8 // 普通建筑数量
-#define BUILDING_BARRACKS_MAXNUM	4 // 兵营建筑数量
-#define BUILDING_RES_MAXNUM			64// 资源建筑数量
 
 #define HERO_ACTOR_MAX				128	// 未上英雄
 #define HERO_CITY_MAX				4	// 上阵英雄

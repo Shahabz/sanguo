@@ -88,6 +88,7 @@ end
 function struct_NetS_Building_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_offset = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_sec = buffer:ReadInt();
 	recvValue.m_quick = buffer:ReadSByte();
@@ -97,6 +98,7 @@ end
 function struct_NetS_BuildingBarracks_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_offset = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_sec = buffer:ReadInt();
 	recvValue.m_quick = buffer:ReadSByte();
@@ -106,8 +108,8 @@ end
 function struct_NetS_BuildingRes_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadSByte();
-	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_offset = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -137,9 +139,11 @@ function struct_NetS_BuildingList_recv( buffer )
 	recvValue.m_levynum = buffer:ReadSByte();
 	recvValue.m_worker_kind = buffer:ReadSByte();
 	recvValue.m_worker_offset = buffer:ReadSByte();
+	recvValue.m_worker_op = buffer:ReadSByte();
 	recvValue.m_worker_sec = buffer:ReadInt();
 	recvValue.m_worker_kind_ex = buffer:ReadSByte();
 	recvValue.m_worker_offset_ex = buffer:ReadSByte();
+	recvValue.m_worker_op_ex = buffer:ReadSByte();
 	recvValue.m_worker_sec_ex = buffer:ReadInt();
 	recvValue.m_worker_expire_ex = buffer:ReadInt();
 	recvValue.m_function = buffer:ReadInt();
@@ -215,7 +219,7 @@ function struct_NetS_LostItem_recv( buffer )
 	recvValue.m_itemoffset = buffer:ReadShort();
 	recvValue.m_itemnum = buffer:ReadShort();
 	recvValue.m_targetid = buffer:ReadInt();
-	recvValue.m_path = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -227,7 +231,7 @@ function struct_NetS_GetItem_recv( buffer )
 	recvValue.m_color = buffer:ReadSByte();
 	recvValue.m_num = buffer:ReadShort();
 	recvValue.m_targetid = buffer:ReadInt();
-	recvValue.m_path = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
 	recvValue.m_situation = buffer:ReadByte();
 	return recvValue;
 end
@@ -412,14 +416,101 @@ function struct_NetS_Experience_recv( buffer )
 	recvValue.m_curexp = buffer:ReadLong();
 	recvValue.m_isup = buffer:ReadSByte();
 	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_expmax = buffer:ReadInt();
 	return recvValue;
 end
 
 function struct_NetS_Body_recv( buffer )
 	local recvValue = {};
-	recvValue.m_body = buffer:ReadShort();
-	recvValue.m_addbody = buffer:ReadShort();
-	recvValue.m_path = buffer:ReadInt();
+	recvValue.m_total = buffer:ReadShort();
+	recvValue.m_add = buffer:ReadShort();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Levy_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadShort();
+	recvValue.m_add = buffer:ReadShort();
+	recvValue.m_max = buffer:ReadShort();
+	recvValue.m_sec = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Silver_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Wood_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Food_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Iron_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_People_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Prestige_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Friendship_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Vip_recv( buffer )
+	local recvValue = {};
+	recvValue.m_addexp = buffer:ReadInt();
+	recvValue.m_curexp = buffer:ReadInt();
+	recvValue.m_expmax = buffer:ReadInt();
+	recvValue.m_isup = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Token_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
 	return recvValue;
 end
 

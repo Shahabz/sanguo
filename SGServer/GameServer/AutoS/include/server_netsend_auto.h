@@ -29,6 +29,16 @@ int netsend_awardinfolist_S( int actor_index, char send_type, SLK_NetS_AwardInfo
 int netsend_experience_S( int actor_index, char send_type, SLK_NetS_Experience *pValue );
 int netsend_body_S( int actor_index, char send_type, SLK_NetS_Body *pValue );
 int netsend_buildinglist_S( int actor_index, char send_type, SLK_NetS_BuildingList *pValue );
+int netsend_changelevy_S( int actor_index, char send_type, SLK_NetS_Levy *pValue );
+int netsend_changesilver_S( int actor_index, char send_type, SLK_NetS_Silver *pValue );
+int netsend_changewood_S( int actor_index, char send_type, SLK_NetS_Wood *pValue );
+int netsend_changefood_S( int actor_index, char send_type, SLK_NetS_Food *pValue );
+int netsend_changeiron_S( int actor_index, char send_type, SLK_NetS_Iron *pValue );
+int netsend_changepeople_S( int actor_index, char send_type, SLK_NetS_People *pValue );
+int netsend_changeprestige_S( int actor_index, char send_type, SLK_NetS_Prestige *pValue );
+int netsend_changefriendship_S( int actor_index, char send_type, SLK_NetS_Friendship *pValue );
+int netsend_changevip_S( int actor_index, char send_type, SLK_NetS_Vip *pValue );
+int netsend_changtoken_S( int actor_index, char send_type, SLK_NetS_Token *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

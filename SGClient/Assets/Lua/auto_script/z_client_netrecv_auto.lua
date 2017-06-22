@@ -135,6 +135,56 @@ function netrecv_buildinglist_C( buffer )
 	proc_buildinglist_C( recvValue );
 end
 
+function netrecv_changelevy_C( buffer )
+	local recvValue = struct_NetS_Levy_recv( buffer );
+	proc_changelevy_C( recvValue );
+end
+
+function netrecv_changesilver_C( buffer )
+	local recvValue = struct_NetS_Silver_recv( buffer );
+	proc_changesilver_C( recvValue );
+end
+
+function netrecv_changewood_C( buffer )
+	local recvValue = struct_NetS_Wood_recv( buffer );
+	proc_changewood_C( recvValue );
+end
+
+function netrecv_changefood_C( buffer )
+	local recvValue = struct_NetS_Food_recv( buffer );
+	proc_changefood_C( recvValue );
+end
+
+function netrecv_changeiron_C( buffer )
+	local recvValue = struct_NetS_Iron_recv( buffer );
+	proc_changeiron_C( recvValue );
+end
+
+function netrecv_changepeople_C( buffer )
+	local recvValue = struct_NetS_People_recv( buffer );
+	proc_changepeople_C( recvValue );
+end
+
+function netrecv_changeprestige_C( buffer )
+	local recvValue = struct_NetS_Prestige_recv( buffer );
+	proc_changeprestige_C( recvValue );
+end
+
+function netrecv_changefriendship_C( buffer )
+	local recvValue = struct_NetS_Friendship_recv( buffer );
+	proc_changefriendship_C( recvValue );
+end
+
+function netrecv_changevip_C( buffer )
+	local recvValue = struct_NetS_Vip_recv( buffer );
+	proc_changevip_C( recvValue );
+end
+
+function netrecv_changtoken_C( buffer )
+	local recvValue = struct_NetS_Token_recv( buffer );
+	proc_changtoken_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -163,6 +213,16 @@ Proc_Command = {
 	[CMDS_EXPERIENCE]=netrecv_experience_C;
 	[CMDS_BODY]=netrecv_body_C;
 	[CMDS_BUILDINGLIST]=netrecv_buildinglist_C;
+	[CMDS_CHANGELEVY]=netrecv_changelevy_C;
+	[CMDS_CHANGESILVER]=netrecv_changesilver_C;
+	[CMDS_CHANGEWOOD]=netrecv_changewood_C;
+	[CMDS_CHANGEFOOD]=netrecv_changefood_C;
+	[CMDS_CHANGEIRON]=netrecv_changeiron_C;
+	[CMDS_CHANGEPEOPLE]=netrecv_changepeople_C;
+	[CMDS_CHANGEPRESTIGE]=netrecv_changeprestige_C;
+	[CMDS_CHANGEFRIENDSHIP]=netrecv_changefriendship_C;
+	[CMDS_CHANGEVIP]=netrecv_changevip_C;
+	[CMDS_CHANGTOKEN]=netrecv_changtoken_C;
 }
 
 function in_proc_command_C( cmd, buffer )

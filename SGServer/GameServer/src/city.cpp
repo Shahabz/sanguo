@@ -12,11 +12,15 @@
 #include "equip.h"
 #include "mapunit.h"
 #include "map.h"
+#include "server_netsend_auto.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
 extern MYSQL *myData;
 extern Global global;
+
+extern UpgradeInfo *g_upgradeinfo;
+extern int g_upgradeinfo_maxnum;
 
 extern MapUnit *g_mapunit;
 extern int g_mapunit_maxcount;
@@ -200,4 +204,389 @@ int city_new( City *pCity )
 	// 存档
 	city_save_auto( &g_city[city_index], "city", NULL );
 	return city_index;
+}
+
+// 所有城市每秒的逻辑 , 一般是检查建筑的建造升级拆除，造兵等
+void city_logic_sec()
+{
+	if ( !g_city_allinited )
+		return;
+#ifdef WIN32
+	DWORD b = timeGetTime();
+#else
+	struct timeval tpstart, tpend;
+	float timeuse;
+	gettimeofday( &tpstart, NULL );
+#endif
+	int nowtime = (int)time( NULL );
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		
+		// 普通建造队列
+		if ( g_city[city_index].worker_sec > 0 )
+		{
+			g_city[city_index].worker_sec -= 1;
+			if ( g_city[city_index].worker_sec <= 0 )
+			{
+				building_finish( city_index, g_city[city_index].worker_op, g_city[city_index].worker_kind, g_city[city_index].worker_offset );
+				g_city[city_index].worker_op = 0;
+				g_city[city_index].worker_sec = 0;
+				g_city[city_index].worker_kind = 0;
+				g_city[city_index].worker_offset = -1;
+			}
+		}
+
+		// 商用建造队列
+		if ( g_city[city_index].worker_sec_ex > 0 )
+		{
+			g_city[city_index].worker_sec_ex -= 1;
+			if ( g_city[city_index].worker_sec_ex <= 0 )
+			{
+				building_finish( city_index, g_city[city_index].worker_op_ex, g_city[city_index].worker_kind_ex, g_city[city_index].worker_offset_ex );
+				g_city[city_index].worker_op_ex = 0;
+				g_city[city_index].worker_sec_ex = 0;
+				g_city[city_index].worker_kind_ex = 0;
+				g_city[city_index].worker_offset_ex = -1;
+			}
+		}
+
+		// 普通建筑逻辑
+		for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+		{
+			if ( g_city[city_index].building[tmpi].kind <= 0 )
+				continue;
+			//g_city[city_index].building[tmpi].sec -= 1;
+		}
+
+		// 兵营建筑逻辑
+		for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+		{
+			if ( g_city[city_index].building_barracks[tmpi].kind <= 0 )
+				continue;
+			if ( g_city[city_index].building_barracks[tmpi].trainsec > 0 )
+			{
+				g_city[city_index].building_barracks[tmpi].trainsec -= 1;
+				if ( g_city[city_index].building_barracks[tmpi].trainsec <= 0 )
+				{
+					// 招募完毕
+					g_city[city_index].building_barracks[tmpi].soldiers += g_city[city_index].building_barracks[tmpi].trainnum;
+					g_city[city_index].building_barracks[tmpi].trainsec = 0;
+					g_city[city_index].building_barracks[tmpi].trainnum = 0;
+					if ( g_city[city_index].building_barracks[tmpi].queue )
+					{
+					}
+				}
+			}
+			
+		}
+
+		// 回复体力
+		if ( g_city[city_index].body < global.body_max )
+		{
+			g_city[city_index].bodysec -= 1;
+			if ( g_city[city_index].bodysec <= 0 )
+			{
+				g_city[city_index].bodysec = global.body_sec;
+				g_city[city_index].body += 1;
+			}
+		}
+
+		// 征收次数
+		if ( g_city[city_index].levynum < global.levy_max )
+		{
+			g_city[city_index].levysec -= 1;
+			if ( g_city[city_index].levysec <= 0 )
+			{
+				g_city[city_index].levysec = global.levy_sec;
+				g_city[city_index].levynum += 1;
+			}
+		}
+		
+		
+	}
+#ifdef WIN32
+	DWORD e = timeGetTime();
+	printf_msg( "sec city_logic_sec:%dms\n", e - b );
+#else
+	gettimeofday( &tpend, NULL );
+	timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+	timeuse /= 1000000;
+	printf_msg( "sec ranking_actorlevel:%fs\n", timeuse );
+#endif
+}
+
+// 城市主城等级
+int city_mainlevel( int city_index )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return 0;
+	return g_city[city_index].building[0].level;
+}
+
+// 标志位
+void city_set_sflag( City *pCity, int offset, char value )
+{
+	if ( pCity == NULL )
+		return;
+	if ( value == 0 )
+	{
+		pCity->sflag &= ~(1 << offset);
+	}
+	else
+	{
+		pCity->sflag |= (1 << offset);
+	}
+}
+int city_get_sflag( City *pCity, int offset )
+{
+	if ( pCity == NULL )
+		return 0;
+	if ( pCity->sflag & (1 << offset) )
+		return 1;
+	return 0;
+}
+
+// 功能获取
+void city_function_open( City *pCity, int offset )
+{
+	if ( pCity == NULL )
+		return;
+	pCity->function |= (1 << offset);
+}
+int city_function_check( City *pCity, int offset )
+{
+	if ( pCity == NULL )
+		return 0;
+	if ( pCity->function & (1 << offset) )
+		return 1;
+	return 0;
+}
+
+// 主角经验获取
+int city_actorexp( int city_index, int exp, char path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( exp == 0 )
+		return 0;
+	char isup = 0;
+	AwardGetInfo getinfo = { 0 };
+	if ( exp > 0 )
+	{
+		// 增加经验
+		g_city[city_index].exp += exp;
+		wlog( 0, LOGOP_ACTOREXP, path, exp, g_city[city_index].exp, g_city[city_index].level, g_city[city_index].actorid, city_mainlevel( city_index ) );
+
+		// 检查升级
+		while ( g_city[city_index].exp >= g_upgradeinfo[g_city[city_index].level].exp )
+		{
+			int curlevel = g_city[city_index].level;
+			// 可以升级
+			if ( city_actorupgrade( city_index, path, &getinfo ) < 0 )
+				break;
+			g_city[city_index].exp -= g_upgradeinfo[g_city[city_index].level].exp;
+			isup = 1;
+		}
+	}
+	else if ( exp < 0 )
+	{	
+		// 扣减经验
+		g_city[city_index].exp += exp;
+		wlog( 0, LOGOP_ACTOREXP, path, exp, g_city[city_index].exp, g_city[city_index].level, g_city[city_index].actorid, city_mainlevel( city_index ) );
+
+		// 检查降级
+		if ( g_city[city_index].exp < 0 )
+		{
+			g_city[city_index].exp = 0;
+			if ( g_city[city_index].level > 1 )
+				g_city[city_index].level -= 1;
+		}
+	}
+
+	if ( g_city[city_index].actor_index >= 0 )
+	{
+		SLK_NetS_Experience Value = {};
+		Value.m_addexp = exp;
+		Value.m_curexp = g_city[city_index].exp;
+		Value.m_level = g_city[city_index].level;
+		Value.m_isup = isup;
+		Value.m_path = path;
+		netsend_experience_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &Value );
+	}
+	return isup;
+}
+
+// 主角升级
+int city_actorupgrade( int city_index, char path, AwardGetInfo *getinfo )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].level >= global.actorlevel_max )
+		return -1;
+	int lastlevel = g_city[city_index].level;
+	g_city[city_index].level += 1;
+	wlog( 0, LOGOP_UPGRADE, path, 0, g_city[city_index].level, 0, g_city[city_index].actorid, city_mainlevel( city_index ) );
+
+	// 同步更新到玩家身上
+	if ( g_city[city_index].actor_index >= 0 && g_city[city_index].actor_index < g_maxactornum )
+	{
+		g_actors[g_city[city_index].actor_index].level = g_city[city_index].level;
+	}
+	return 0;
+}
+
+// 体力
+int city_changebody( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].body > SHRT_MAX - value )
+		g_city[city_index].body = SHRT_MAX;
+	else
+		g_city[city_index].body += value;
+	
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Body pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].body;
+	pValue.m_path = path;
+	netsend_body_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 征收次数
+int city_changelevy( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].levynum > CHAR_MAX - value )
+		g_city[city_index].levynum = CHAR_MAX;
+	else
+		g_city[city_index].levynum += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Levy pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].levynum;
+	pValue.m_sec = g_city[city_index].levysec;
+	pValue.m_max = global.levy_max;
+	pValue.m_path = path;
+	netsend_changelevy_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 银币
+int city_changesilver( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].silver > INT_MAX - value )
+		g_city[city_index].silver = INT_MAX;
+	else
+		g_city[city_index].silver += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Silver pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].silver;
+	pValue.m_path = path;
+	netsend_changesilver_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 木材
+int city_changewood( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].wood > INT_MAX - value )
+		g_city[city_index].wood = INT_MAX;
+	else
+		g_city[city_index].wood += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Wood pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].wood;
+	pValue.m_path = path;
+	netsend_changewood_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 粮草
+int city_changefood( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].food > INT_MAX - value )
+		g_city[city_index].food = INT_MAX;
+	else
+		g_city[city_index].food += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Food pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].food;
+	pValue.m_path = path;
+	netsend_changefood_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 镔铁
+int city_changeiron( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].iron > INT_MAX - value )
+		g_city[city_index].iron = INT_MAX;
+	else
+		g_city[city_index].iron += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Iron pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].iron;
+	pValue.m_path = path;
+	netsend_changeiron_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 人口
+int city_changepeople( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].people > INT_MAX - value )
+		g_city[city_index].people = INT_MAX;
+	else
+		g_city[city_index].people += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_People pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].people;
+	pValue.m_path = path;
+	netsend_changepeople_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 威望值
+int city_changeprestige( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].prestige > INT_MAX - value )
+		g_city[city_index].prestige = INT_MAX;
+	else
+		g_city[city_index].prestige += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Prestige pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].prestige;
+	pValue.m_path = path;
+	netsend_changeprestige_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+// 友谊积分
+int city_changefriendship( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].friendship > INT_MAX - value )
+		g_city[city_index].friendship = INT_MAX;
+	else
+		g_city[city_index].friendship += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_Friendship pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].friendship;
+	pValue.m_path = path;
+	netsend_changefriendship_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
 }

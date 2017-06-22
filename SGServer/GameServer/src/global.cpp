@@ -49,6 +49,22 @@ int global_init()
 			lua_pushinteger( servL, global.actorlevel_max );
 			lua_rawset( servL, -3 );
 		}	
+		else if ( id == 2 )
+		{
+			global.body_max = atoi( row[1] );
+		}
+		else if ( id == 3 )
+		{
+			global.body_sec = atoi( row[1] );
+		}
+		else if ( id == 4 )
+		{
+			global.levy_sec = atoi( row[1] );
+		}
+		else if ( id == 5 )
+		{
+			global.levy_max = atoi( row[1] );
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

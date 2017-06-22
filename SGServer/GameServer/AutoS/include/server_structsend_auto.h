@@ -70,6 +70,7 @@ typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//Í¨ÓÃ¶ÌÏûÏ¢
 
 struct _slk_NetS_Building {
 	char m_kind;	//ÆÕÍ¨½¨Öş-ÖÖÀà
+	char m_offset;	//ÆÕÍ¨½¨Öş-Î»ÖÃ
 	char m_level;	//ÆÕÍ¨½¨Öş-µÈ¼¶
 	int m_sec;	//ÆÕÍ¨½¨Öş-²Ù×÷Ê£ÓàÊ±¼ä
 	char m_quick;	//ÆÕÍ¨½¨Öş-ÊÇ·ñÓĞ¼ÓËÙ(¿Æ¼¼µÈ)
@@ -78,6 +79,7 @@ typedef struct _slk_NetS_Building SLK_NetS_Building;	//ÆÕÍ¨½¨ÖşĞÅÏ¢
 
 struct _slk_NetS_BuildingBarracks {
 	char m_kind;	//±øÓª½¨Öş-ÖÖÀà
+	char m_offset;	//±øÓª½¨Öş-Î»ÖÃ
 	char m_level;	//±øÓª½¨Öş-µÈ¼¶
 	int m_sec;	//±øÓª½¨Öş-Ä¼±øÊ£ÓàÊ±¼ä
 	char m_quick;	//±øÓª½¨Öş-ÊÇ·ñÓĞ¼ÓËÙ
@@ -86,8 +88,8 @@ typedef struct _slk_NetS_BuildingBarracks SLK_NetS_BuildingBarracks;	//±øÓª½¨ÖşĞ
 
 struct _slk_NetS_BuildingRes {
 	char m_kind;	//×ÊÔ´½¨Öş-ÖÖÀà
-	char m_level;	//×ÊÔ´½¨Öş-µÈ¼¶
 	char m_offset;	//×ÊÔ´½¨Öş-Ë÷Òı(¶ÔÓ¦Ö¸¶¨µØ¿é)
+	char m_level;	//×ÊÔ´½¨Öş-µÈ¼¶
 };
 typedef struct _slk_NetS_BuildingRes SLK_NetS_BuildingRes;	//×ÊÔ´½¨ÖşĞÅÏ¢
 
@@ -99,12 +101,14 @@ struct _slk_NetS_BuildingList {
 	short m_res_count;	//·şÎñÆ÷·¢ËÍ-×ÊÔ´½¨ÖşÊıÁ¿
 	SLK_NetS_BuildingRes m_res[64];	//·şÎñÆ÷·¢ËÍ-×ÊÔ´½¨ÖşÁĞ±í
 	char m_levynum;	//·şÎñÆ÷·¢ËÍ-µ±Ç°¿ÉÕ÷ÊÕ´ÎÊı
-	char m_worker_kind;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşÖÖÀà
-	char m_worker_offset;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşË÷Òı
-	int m_worker_sec;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşÊ£ÓàÊ±¼ä
-	char m_worker_kind_ex;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşÖÖÀà(ÉÌÓÃ)
-	char m_worker_offset_ex;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşË÷Òı(ÉÌÓÃ)
-	int m_worker_sec_ex;	//·şÎñÆ÷·¢ËÍ-µ±Ç°Éı¼¶½¨ÖşÊ£ÓàÊ±¼ä(ÉÌÓÃ)
+	char m_worker_kind;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞÖÖÀà
+	char m_worker_offset;	//·şÎñÆ÷·¢ËÍ½¨Öş¶ÓÁĞË÷Òı
+	char m_worker_op;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞ½¨Öş²Ù×÷
+	int m_worker_sec;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞÊ£ÓàÊ±¼ä
+	char m_worker_kind_ex;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞÖÖÀà(ÉÌÓÃ)
+	char m_worker_offset_ex;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞË÷Òı(ÉÌÓÃ)
+	char m_worker_op_ex;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞ²Ù×÷(ÉÌÓÃ)
+	int m_worker_sec_ex;	//·şÎñÆ÷·¢ËÍ-½¨Öş¶ÓÁĞÊ£ÓàÊ±¼ä(ÉÌÓÃ)
 	int m_worker_expire_ex;	//·şÎñÆ÷·¢ËÍ-ÉÌÓÃ½¨Ôì¶ÓÁĞµ½ÆÚÊ±¼ä
 	int m_function;	//·şÎñÆ÷·¢ËÍ-¹¦ÄÜÊÇ·ñ¿ªÆô
 };
@@ -170,7 +174,7 @@ struct _slk_NetS_LostItem {
 	short m_itemoffset;	//ÎïÆ·Î»ÖÃ
 	short m_itemnum;	//ÊıÁ¿
 	int m_targetid;	//¸³ÓèµÄ¶ÔÏóid
-	char m_path;	//Í¾¾¶
+	short m_path;	//Í¾¾¶
 };
 typedef struct _slk_NetS_LostItem SLK_NetS_LostItem;	//¶ªÊ§µÀ¾ß
 
@@ -181,7 +185,7 @@ struct _slk_NetS_GetItem {
 	char m_color;	//ÑÕÉ«
 	short m_num;	//ÊıÁ¿
 	int m_targetid;	//¸³ÓèµÄ¶ÔÏóid
-	char m_path;	//Í¾¾¶
+	short m_path;	//Í¾¾¶
 	unsigned char m_situation;	//Ê¹ÓÃ×´Ì¬
 };
 typedef struct _slk_NetS_GetItem SLK_NetS_GetItem;	//»ñµÃµÀ¾ß
@@ -317,19 +321,96 @@ struct _slk_NetS_AwardInfoList {
 typedef struct _slk_NetS_AwardInfoList SLK_NetS_AwardInfoList;	//½±ÀøĞÅÏ¢ÁĞ±í
 
 struct _slk_NetS_Experience {
-	int m_addexp;	//
-	i64 m_curexp;	//
-	char m_isup;	//
-	short m_path;	//
+	int m_addexp;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
+	i64 m_curexp;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
+	char m_isup;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
+	short m_path;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
+	short m_level;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
+	int m_expmax;	//·şÎñÆ÷·¢ËÍ-»ñÈ¡¾­Ñé
 };
-typedef struct _slk_NetS_Experience SLK_NetS_Experience;	//¾­Ñé»ñÈ¡
+typedef struct _slk_NetS_Experience SLK_NetS_Experience;	//¸Ä±ä¾­Ñé
 
 struct _slk_NetS_Body {
-	short m_body;	//ÌåÁ¦
-	short m_addbody;	//»ñÈ¡ÌåÁ¦
-	int m_path;	//Í¾¾¶
+	short m_total;	//ÌåÁ¦
+	short m_add;	//»ñÈ¡ÌåÁ¦
+	short m_path;	//Í¾¾¶
 };
-typedef struct _slk_NetS_Body SLK_NetS_Body;	//ÌåÁ¦»ñÈ¡
+typedef struct _slk_NetS_Body SLK_NetS_Body;	//¸Ä±äÌåÁ¦
+
+struct _slk_NetS_Levy {
+	short m_total;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+	short m_add;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+	short m_max;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+	int m_sec;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+	short m_path;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+};
+typedef struct _slk_NetS_Levy SLK_NetS_Levy;	//¸Ä±äÕ÷ÊÕ´ÎÊı
+
+struct _slk_NetS_Silver {
+	int m_total;	//¸Ä±äÒø±Ò
+	int m_add;	//¸Ä±äÒø±Ò
+	short m_path;	//¸Ä±äÒø±Ò
+};
+typedef struct _slk_NetS_Silver SLK_NetS_Silver;	//¸Ä±äÒø±Ò
+
+struct _slk_NetS_Wood {
+	int m_total;	//¸Ä±äÄ¾²Ä
+	int m_add;	//¸Ä±äÄ¾²Ä
+	short m_path;	//¸Ä±äÄ¾²Ä
+};
+typedef struct _slk_NetS_Wood SLK_NetS_Wood;	//¸Ä±äÄ¾²Ä
+
+struct _slk_NetS_Food {
+	int m_total;	//¸Ä±äÁ¸Ê³
+	int m_add;	//¸Ä±äÁ¸Ê³
+	short m_path;	//¸Ä±äÁ¸Ê³
+};
+typedef struct _slk_NetS_Food SLK_NetS_Food;	//¸Ä±äÁ¸Ê³
+
+struct _slk_NetS_Iron {
+	int m_total;	//¸Ä±äïÙÌú
+	int m_add;	//¸Ä±äïÙÌú
+	short m_path;	//¸Ä±äïÙÌú
+};
+typedef struct _slk_NetS_Iron SLK_NetS_Iron;	//¸Ä±äïÙÌú
+
+struct _slk_NetS_People {
+	int m_total;	//¸Ä±äÈË¿Ú
+	int m_add;	//¸Ä±äÈË¿Ú
+	short m_path;	//¸Ä±äÈË¿Ú
+};
+typedef struct _slk_NetS_People SLK_NetS_People;	//¸Ä±äÈË¿Ú
+
+struct _slk_NetS_Prestige {
+	int m_total;	//¸Ä±äÍşÍûÖµ
+	int m_add;	//¸Ä±äÍşÍûÖµ
+	short m_path;	//¸Ä±äÍşÍûÖµ
+};
+typedef struct _slk_NetS_Prestige SLK_NetS_Prestige;	//¸Ä±äÍşÍûÖµ
+
+struct _slk_NetS_Friendship {
+	int m_total;	//¸Ä±äÓÑÒê»ı·Ö
+	int m_add;	//¸Ä±äÓÑÒê»ı·Ö
+	short m_path;	//¸Ä±äÓÑÒê»ı·Ö
+};
+typedef struct _slk_NetS_Friendship SLK_NetS_Friendship;	//¸Ä±äÓÑÒê»ı·Ö
+
+struct _slk_NetS_Vip {
+	int m_addexp;	//¸Ä±äVIP¾­Ñé
+	int m_curexp;	//¸Ä±äVIP¾­Ñé
+	int m_expmax;	//¸Ä±äVIP¾­Ñé
+	char m_isup;	//¸Ä±äVIP¾­Ñé
+	char m_level;	//¸Ä±äVIP¾­Ñé
+	short m_path;	//¸Ä±äVIP¾­Ñé
+};
+typedef struct _slk_NetS_Vip SLK_NetS_Vip;	//¸Ä±äVIP¾­Ñé
+
+struct _slk_NetS_Token {
+	int m_total;	//¸Ä±ä×êÊ¯
+	int m_add;	//¸Ä±ä×êÊ¯
+	short m_path;	//¸Ä±ä×êÊ¯
+};
+typedef struct _slk_NetS_Token SLK_NetS_Token;	//¸Ä±ä×êÊ¯
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -366,5 +447,15 @@ int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pVa
 int struct_NetS_AwardInfoList_send( char **pptr, int *psize, SLK_NetS_AwardInfoList *pValue );
 int struct_NetS_Experience_send( char **pptr, int *psize, SLK_NetS_Experience *pValue );
 int struct_NetS_Body_send( char **pptr, int *psize, SLK_NetS_Body *pValue );
+int struct_NetS_Levy_send( char **pptr, int *psize, SLK_NetS_Levy *pValue );
+int struct_NetS_Silver_send( char **pptr, int *psize, SLK_NetS_Silver *pValue );
+int struct_NetS_Wood_send( char **pptr, int *psize, SLK_NetS_Wood *pValue );
+int struct_NetS_Food_send( char **pptr, int *psize, SLK_NetS_Food *pValue );
+int struct_NetS_Iron_send( char **pptr, int *psize, SLK_NetS_Iron *pValue );
+int struct_NetS_People_send( char **pptr, int *psize, SLK_NetS_People *pValue );
+int struct_NetS_Prestige_send( char **pptr, int *psize, SLK_NetS_Prestige *pValue );
+int struct_NetS_Friendship_send( char **pptr, int *psize, SLK_NetS_Friendship *pValue );
+int struct_NetS_Vip_send( char **pptr, int *psize, SLK_NetS_Vip *pValue );
+int struct_NetS_Token_send( char **pptr, int *psize, SLK_NetS_Token *pValue );
 
 #endif

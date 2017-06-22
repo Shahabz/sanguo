@@ -734,6 +734,7 @@ int actor_load( int actor_index, int actorid )
 	strncpy( g_city[city_index].ipcountry, client_getipcountry( actor_index ), 2 );
 	g_city[city_index].ipcountry[2] = 0;
 
+	g_actors[actor_index].nation = g_city[city_index].nation;
 	g_actors[actor_index].shape = g_city[city_index].shape;
 	g_actors[actor_index].level = g_city[city_index].level;
 
@@ -1070,3 +1071,17 @@ int actor_subscribecmd_check( int actor_index, short cmd )
 	return 0;
 }
 
+// 功能获取
+int actor_function_open( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	g_actors[actor_index].function |= (1 << offset);
+	return 0;
+}
+int actor_function_check( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if (g_actors[actor_index].function & (1 << offset) )
+		return 1;
+	return 0;
+}
