@@ -1,5 +1,5 @@
 HttpRequest = {};
-local SECRET_KEY = "zaya^hero"
+local SECRET_KEY = "zaya^sanguo"
 
 -- SDK获取用户信息
 function HttpRequest.GetSDKUserInfo()
