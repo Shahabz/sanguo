@@ -321,10 +321,6 @@ int configprocess( const char *pSign, const char *pValue )
 	{
 		g_Config.max_mapunitcount = atoi( pValue );
 	}
-	else if ( strcmp( pSign, "MAX_CLUBCOUNT" ) == 0 )
-	{
-		g_Config.max_clubcount = atoi( pValue );
-	}
 	else if( strcmp( pSign, "MIN_VER1" ) == 0 )
 	{
 		g_Config.minver.ss.m1 = atoi(pValue);
@@ -592,7 +588,6 @@ int main( int argc, char *argv[] )
 	g_Config.showvip = 1;
 	g_Config.showmcard = 1;
 	g_Config.max_citycount = 20000;
-	g_Config.max_clubcount = 256;
 	g_Config.global_ipaddress = 0;
 	g_Config.global_port = 0;
 	g_Config.usegate = 0;

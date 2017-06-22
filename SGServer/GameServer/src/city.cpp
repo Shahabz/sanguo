@@ -3,6 +3,8 @@
 #include <windows.h>
 #endif
 #include <mysql.h>
+#include <math.h>
+#include <limits.h>
 #include "db.h"
 #include "global.h"
 #include "actor.h"

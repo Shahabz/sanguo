@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEquip, char *pTab )
+int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEquip, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -50,7 +50,7 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 	mysql_free_result( res );
 	return 0;
 }
-int actor_equip_save_auto( Equip *pEquip, char *pTab, FILE *fp )
+int actor_equip_save_auto( Equip *pEquip, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -81,7 +81,7 @@ RE_EQUIP_UPDATE:
 	return 0;
 }
 
-int actor_equip_batch_save_auto( Equip *pEquip, int maxcount, char *pTab, FILE *fp )
+int actor_equip_batch_save_auto( Equip *pEquip, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pEquip == NULL )

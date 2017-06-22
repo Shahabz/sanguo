@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 int g_city_maxindex = 0;
 
-int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *pTab )
+int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -91,7 +91,7 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *
 	mysql_free_result( res );
 	return 0;
 }
-int city_save_auto( City *pCity, char *pTab, FILE *fp )
+int city_save_auto( City *pCity, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;

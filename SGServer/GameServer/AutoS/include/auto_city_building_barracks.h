@@ -18,8 +18,8 @@ struct _city_building_barracks {
 typedef struct _city_building_barracks BuildingBarracks;
 
 typedef BuildingBarracks * (*LPCB_GETBUILDINGBARRACKS)( int actorid, int offset );
-int city_building_barracks_load_auto( int actorid, int city_index, LPCB_GETBUILDINGBARRACKS pCB_GetBuildingBarracks, char *pTab );
-int city_building_barracks_save_auto( int actorid, int offset, BuildingBarracks *pBuildingBarracks, char *pTab, FILE *fp );
-int city_building_barracks_batch_save_auto( int actorid, BuildingBarracks *pBuildingBarracks, int maxcount,  char *pTab, FILE *fp );
+int city_building_barracks_load_auto( int actorid, int city_index, LPCB_GETBUILDINGBARRACKS pCB_GetBuildingBarracks, const char *pTab );
+int city_building_barracks_save_auto( int actorid, int offset, BuildingBarracks *pBuildingBarracks, const char *pTab, FILE *fp );
+int city_building_barracks_batch_save_auto( int actorid, BuildingBarracks *pBuildingBarracks, int maxcount, const char *pTab, FILE *fp );
 
 #endif

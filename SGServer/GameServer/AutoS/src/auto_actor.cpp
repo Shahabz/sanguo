@@ -7,7 +7,7 @@
 #include "actor.h"
 #include "auto_actor.h"
 extern MYSQL *myGame;
-int actor_load_auto( int actorid, Actor *pActor, char *pTab )
+int actor_load_auto( int actorid, Actor *pActor, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -78,7 +78,7 @@ int actor_load_auto( int actorid, Actor *pActor, char *pTab )
 	mysql_free_result( res );
 	return 0;
 }
-int actor_save_auto( Actor *pActor, char *pTab, FILE *fp )
+int actor_save_auto( Actor *pActor, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;

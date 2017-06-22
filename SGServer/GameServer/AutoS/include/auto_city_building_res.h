@@ -10,8 +10,8 @@ struct _city_building_res {
 typedef struct _city_building_res BuildingRes;
 
 typedef BuildingRes * (*LPCB_GETBUILDINGRES)( int actorid, int offset );
-int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, char *pTab );
-int city_building_res_save_auto( int actorid, int offset, BuildingRes *pBuildingRes, char *pTab, FILE *fp );
-int city_building_res_batch_save_auto( int actorid, BuildingRes *pBuildingRes, int maxcount,  char *pTab, FILE *fp );
+int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, const char *pTab );
+int city_building_res_save_auto( int actorid, int offset, BuildingRes *pBuildingRes, const char *pTab, FILE *fp );
+int city_building_res_batch_save_auto( int actorid, BuildingRes *pBuildingRes, int maxcount, const char *pTab, FILE *fp );
 
 #endif

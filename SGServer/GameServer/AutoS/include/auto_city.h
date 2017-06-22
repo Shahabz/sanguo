@@ -65,7 +65,7 @@ typedef struct _city City;
 
 typedef City * (*LPCB_GETCITY)( int index );
 typedef int (*LPCB_LOADCITY)( int index );
-int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, char *pTab );
-int city_save_auto( City *pCity, char *pTab, FILE *fp );
+int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, const char *pTab );
+int city_save_auto( City *pCity, const char *pTab, FILE *fp );
 
 #endif

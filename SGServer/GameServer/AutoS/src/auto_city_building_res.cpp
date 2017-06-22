@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, char *pTab )
+int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRES pCB_GetBuildingRes, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -42,7 +42,7 @@ int city_building_res_load_auto( int actorid, int city_index, LPCB_GETBUILDINGRE
 	mysql_free_result( res );
 	return 0;
 }
-int city_building_res_save_auto( int actorid, int offset, BuildingRes *pBuildingRes, char *pTab, FILE *fp )
+int city_building_res_save_auto( int actorid, int offset, BuildingRes *pBuildingRes, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -72,7 +72,7 @@ RE_BUILDINGRES_UPDATE:
 	return 0;
 }
 
-int city_building_res_batch_save_auto( int actorid, BuildingRes *pBuildingRes, int maxcount, char *pTab, FILE *fp )
+int city_building_res_batch_save_auto( int actorid, BuildingRes *pBuildingRes, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pBuildingRes == NULL )

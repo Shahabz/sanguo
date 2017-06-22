@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero, char *pTab )
+int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -49,7 +49,7 @@ int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero
 	mysql_free_result( res );
 	return 0;
 }
-int actor_hero_save_auto( Hero *pHero, char *pTab, FILE *fp )
+int actor_hero_save_auto( Hero *pHero, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -80,7 +80,7 @@ RE_HERO_UPDATE:
 	return 0;
 }
 
-int actor_hero_batch_save_auto( Hero *pHero, int maxcount, char *pTab, FILE *fp )
+int actor_hero_batch_save_auto( Hero *pHero, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pHero == NULL )

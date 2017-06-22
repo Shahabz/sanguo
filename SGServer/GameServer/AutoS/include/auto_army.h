@@ -29,8 +29,8 @@ typedef struct _army Army;
 
 typedef Army * (*LPCB_GETARMY)( int index );
 typedef int (*LPCB_LOADARMY)( int index );
-int army_load_auto( LPCB_GETARMY pCB_GetArmy, LPCB_LOADARMY pCB_LoadArmy, char *pTab );
-int army_save_auto( Army *pArmy, char *pTab, FILE *fp );
-int army_batch_save_auto( Army *pArmy, int maxcount,  char *pTab, FILE *fp );
+int army_load_auto( LPCB_GETARMY pCB_GetArmy, LPCB_LOADARMY pCB_LoadArmy, const char *pTab );
+int army_save_auto( Army *pArmy, const char *pTab, FILE *fp );
+int army_batch_save_auto( Army *pArmy, int maxcount,  const char *pTab, FILE *fp );
 
 #endif

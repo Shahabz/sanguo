@@ -54,10 +54,9 @@ int vip_expmax_get( int level )
 int vip_exp( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].vipexp > INT_MAX - value )
-		g_city[city_index].vipexp = INT_MAX;
-	else
-		g_city[city_index].vipexp += value;
+	if ( g_city[city_index].viplevel == (g_vipinfo_maxnum - 1) )
+		return -1;
+	g_city[city_index].vipexp += value;
 
 	char isup = 0;
 	char oldlevel = g_city[city_index].viplevel;

@@ -11,39 +11,39 @@
 	<!-- 本地代码上传到dev -->
 	<target name="local_upload_dev">
 			
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/AutoS/include/" port="22022" trust="true">
-		   <fileset dir="../../HRServer/GameServer/AutoS/include/"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/GameServer/AutoS/include/" port="22022" trust="true">
+		   <fileset dir="../../SGServer/GameServer/AutoS/include/"/>
 		</scp>
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/AutoS/src/" port="22022" trust="true">
-		   <fileset dir="../../HRServer/GameServer/AutoS/src/"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/GameServer/AutoS/src/" port="22022" trust="true">
+		   <fileset dir="../../SGServer/GameServer/AutoS/src/"/>
 		</scp>
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/include/" port="22022" trust="true">
-		   <fileset dir="../../HRServer/GameServer/include"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/GameServer/include/" port="22022" trust="true">
+		   <fileset dir="../../SGServer/GameServer/include"/>
 		</scp>
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/GameServer/src/" port="22022" trust="true">
-		   <fileset dir="../../HRServer/GameServer/src/"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/GameServer/src/" port="22022" trust="true">
+		   <fileset dir="../../SGServer/GameServer/src/"/>
 		</scp>
 			
 			
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKNetServer/include/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/LKNetServer/include/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/LKNetServer/include/"/>
 		</scp>
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKNetServer/src/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/LKNetServer/src/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/LKNetServer/src/"/>
 		</scp>
 		
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKUtils/include/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/LKUtils/include/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/LKUtils/include/"/>
 		</scp>
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/LKUtils/src/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/LKUtils/src/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/LKUtils/src/"/>
 		</scp>
 		
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/Lua/src/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/Lua/src/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/Lua/src/"/>
 		</scp>
 		
-		<scp todir="root:jiazhi198772@119.29.56.213:/root/hero/compile/project/hiredis_linux/" port="22022" trust="true">
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/hiredis_linux/" port="22022" trust="true">
 		   <fileset dir="../../LKEngine/hiredis_linux/"/>
 		</scp>
 		
@@ -54,7 +54,7 @@
 	<target name="sshexecdev" >  
 			
       		<sshexec host="119.29.56.213"  port="22022" username="root"  password="jiazhi198772"  
-         		trust="true" command="cd /root/hero/compile;make clean;make;./n"/>
+         		trust="true" command="cd /root/sg/compile;make clean;make;./n"/>
 		
 	</target>
 
@@ -62,9 +62,9 @@
 	<!-- dev打好的包下载到本地 -->
 	<target name="dev_download_local" >
 			
-		<scp file="root:jiazhi198772@119.29.56.213:/root/hero/hrServer.tar.gz" todir="./"  port="22022" trust="true"/>
-		<scp file="root:jiazhi198772@119.29.56.213:/root/hero/hrSql.tar.gz" todir="./"  port="22022" trust="true"/>
-		<delete dir="hrServer"/>
+		<scp file="root:jiazhi198772@119.29.56.213:/root/sg/sgserver.tar.gz" todir="./"  port="22022" trust="true"/>
+		<scp file="root:jiazhi198772@119.29.56.213:/root/sg/sgsql.tar.gz" todir="./"  port="22022" trust="true"/>
+		<delete dir="sgserver"/>
 			
 	</target>
 	
@@ -76,23 +76,23 @@
         		<arg line="/c exit" />
     		</exec> 
 
-				<move file="../PublishSQL/CompareGame/hr_dev_game_patch.sql" todir="./" />
+				<move file="../PublishSQL/CompareGame/sg_dev_game_patch.sql" todir="./" />
 	</target>
 	
 	
 	<!-- 将本地包上传到外网测试服务器 -->
 	<target name="local_upload_test">
 			
-		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/"  port="22022" trust="true">
-		   <fileset file="./hrServer.tar.gz"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/sanguo/"  port="22022" trust="true">
+		   <fileset file="./sgserver.tar.gz"/>
 		</scp>
 
-		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/"  port="22022" trust="true">
-		   <fileset file="./hrSql.tar.gz"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/sanguo/"  port="22022" trust="true">
+		   <fileset file="./sgsql.tar.gz"/>
 		</scp>
 		
-		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/hero/sql"  port="22022" trust="true">
-		   <fileset file="./hr_dev_game_patch.sql"/>
+		<scp todir="root:jiazhi198772@119.29.56.213:/usr/local/sanguo/sql"  port="22022" trust="true">
+		   <fileset file="./sg_dev_game_patch.sql"/>
 		</scp>
 		 
 	</target>
@@ -101,7 +101,7 @@
 	<target name="sshexectest" >  
 			
       		<sshexec host="119.29.56.213"  port="22022" username="root"  password="jiazhi198772"  
-         		trust="true" command="cd /usr/local/hero;./stop_shell;./sql_shell;./start_shell"/>
+         		trust="true" command="cd /usr/local/sanguo;./stop_shell;./sql_shell;./start_shell"/>
 		
 	</target>
 

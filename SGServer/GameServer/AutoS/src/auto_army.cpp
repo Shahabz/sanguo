@@ -11,7 +11,7 @@ extern char g_batchsql[BATCHSQL_MAXSIZE];
 
 int g_army_maxindex = 0;
 
-int army_load_auto( LPCB_GETARMY pCB_GetArmy, LPCB_LOADARMY pCB_LoadArmy, char *pTab )
+int army_load_auto( LPCB_GETARMY pCB_GetArmy, LPCB_LOADARMY pCB_LoadArmy, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -67,7 +67,7 @@ int army_load_auto( LPCB_GETARMY pCB_GetArmy, LPCB_LOADARMY pCB_LoadArmy, char *
 	mysql_free_result( res );
 	return 0;
 }
-int army_save_auto( Army *pArmy, char *pTab, FILE *fp )
+int army_save_auto( Army *pArmy, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -97,7 +97,7 @@ RE_ARMY_UPDATE:
 	return 0;
 }
 
-int army_batch_save_auto( Army *pArmy, int maxcount, char *pTab, FILE *fp )
+int army_batch_save_auto( Army *pArmy, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pArmy == NULL )
