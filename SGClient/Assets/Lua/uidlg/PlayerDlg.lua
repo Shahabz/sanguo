@@ -42,6 +42,8 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             PlayerDlgClose();
+        elseif nControlID == 1 then
+        		ChangeShapeDlgShow();
         end
 	end
 end
