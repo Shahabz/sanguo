@@ -24,6 +24,7 @@ public class ConstWrap
 		L.RegVar("platid", get_platid, set_platid);
 		L.RegVar("userid", get_userid, set_userid);
 		L.RegVar("serverid", get_serverid, set_serverid);
+		L.RegVar("servername", get_servername, set_servername);
 		L.RegVar("actorid", get_actorid, set_actorid);
 		L.RegVar("trackover", get_trackover, set_trackover);
 		L.RegVar("quality", get_quality, set_quality);
@@ -277,6 +278,20 @@ public class ConstWrap
 		try
 		{
 			LuaDLL.lua_pushstring(L, Const.serverid);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_servername(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, Const.servername);
 			return 1;
 		}
 		catch(Exception e)
@@ -838,6 +853,21 @@ public class ConstWrap
 		{
 			string arg0 = ToLua.CheckString(L, 2);
 			Const.serverid = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_servername(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			Const.servername = arg0;
 			return 0;
 		}
 		catch(Exception e)

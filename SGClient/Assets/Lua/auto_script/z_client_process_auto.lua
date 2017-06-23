@@ -113,6 +113,18 @@ end
 function proc_actorinfo_C( recvValue )
 	-- process.
 	GetPlayer():Set( recvValue );
+	MainDlgSetHead()
+	MainDlgSetLevel()
+	MainDlgSetSilver()
+	MainDlgSetWood()
+	MainDlgSetFood()
+	MainDlgSetIron()
+	MainDlgSetBody()
+	MainDlgSetInfantry()
+	MainDlgSetCavalry()
+	MainDlgSetArcher()
+	MainDlgSetToken()
+	MainDlgSetVipLevel()
 end
 
 -- m_count=0,m_building={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_barracks={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_res={m_kind=0,m_level=0,m_offset=0,[m_count]},m_levynum=0,m_worker_kind=0,m_worker_offset=0,m_worker_sec=0,m_worker_kind_ex=0,m_worker_offset_ex=0,m_worker_sec_ex=0,m_worker_expire_ex=0,
@@ -189,18 +201,6 @@ function proc_awardinfolist_C( recvValue )
 
 end
 
--- m_addexp=0,m_curexp=0,m_isup=0,m_path=0,
-function proc_experience_C( recvValue )
-	-- process.
-
-end
-
--- m_body=0,m_addbody=0,m_path=0,
-function proc_body_C( recvValue )
-	-- process.
-
-end
-
 -- m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",
 function proc_addmapunit_C( recvValue )
 	-- process.
@@ -246,6 +246,25 @@ function proc_delmarchroute_C( recvValue )
 	-- process.
 end
 
+-- m_addexp=0,m_curexp=0,m_isup=0,m_level, m_expmax, m_path=0,
+function proc_experience_C( recvValue )
+	-- process.
+	pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+	GetPlayer().m_level = recvValue.m_level;
+	GetPlayer().m_exp = recvValue.m_curexp;
+	GetPlayer().m_exp_max = recvValue.m_expmax;
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_body_C( recvValue )
+	-- process.
+	if recvValue.m_path == PATH_SYSTEM then
+		
+	end
+	pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+	GetPlayer().m_body = recvValue.m_total;
+	MainDlgSetBody()
+end
 
 -- m_total=0,m_add=0,m_path=0,
 function proc_changelevy_C( recvValue )
@@ -255,21 +274,33 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changesilver_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+	GetPlayer().m_silver = recvValue.m_total;
+	MainDlgSetSilver();
 end
 
 -- m_total=0,m_add=0,m_path=0,
 function proc_changewood_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+	GetPlayer().m_wood = recvValue.m_total;
+	MainDlgSetWood();
 end
 
 -- m_total=0,m_add=0,m_path=0,
 function proc_changefood_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+	GetPlayer().m_food = recvValue.m_total;
+	MainDlgSetFood();
 end
 
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeiron_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+	GetPlayer().m_iron = recvValue.m_total;
+	MainDlgSetIron();
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -290,10 +321,17 @@ end
 -- m_addexp=0,m_curexp=0,m_expmax=0,m_isup=0,m_level=0,m_path=0,
 function proc_changevip_C( recvValue )
 	-- process.
+	GetPlayer().m_viplevel		=	recvValue.m_level;
+	GetPlayer().m_vipexp		=	recvValue.m_curexp;
+	GetPlayer().m_vipexp_max	=	recvValue.m_expmax;
+	MainDlgSetVipLevel();
 end
 
 -- m_total=0,m_add=0,m_path=0,
 function proc_changtoken_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+	GetPlayer().m_token = recvValue.m_total;
+	MainDlgSetToken()
 end
 

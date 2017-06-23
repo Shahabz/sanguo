@@ -80,7 +80,7 @@ public class ThreadManager : MonoBehaviour
         m_thread.Start();
     }
 
-	/// <summary>
+    /// <summary>
     /// 添加到事件队列
     /// </summary>
     public void AddEvent( ThreadEvent ev, Action<NotifyData> func )
@@ -252,5 +252,6 @@ public class ThreadManager : MonoBehaviour
     {
         m_events.Clear();
         m_thread.Abort();
+        LogUtil.GetInstance().WriteGame( "ThreadManager.OnDestroy" );
     }
 }

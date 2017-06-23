@@ -93,4 +93,9 @@ public class ObjectPoolManager : MonoBehaviour
             pool.Release(obj);
         }
     }
+
+    void OnDestroy()
+    {
+        LogUtil.GetInstance().WriteGame( "ObjectPoolManager.OnDestroy" );
+    }
 }

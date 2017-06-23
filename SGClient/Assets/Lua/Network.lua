@@ -197,33 +197,38 @@ end
 -- 异常断线，需重连 
 -- 向socket写入数据异常
 function Network.OnException() 
-	if Const.NetStatus > 2 or GameManager.restart == true then
+--[[	if Const.NetStatus > 2 or GameManager.restart == true then
 		eye.uiManager:Clear();
 		LoginModDestroy();
 		SceneManager.LoadScene( "launcher" );
+	end--]]
+	if Const.NetStatus > 2 then
+		Alert( zh("与服务器连接出现异常，请重新尝试连接"), zh("重试"), function()
+			eye.uiManager:Clear();
+			LoginModDestroy();
+			SceneManager.LoadScene( "launcher" );
+		end )
 	end
-	Const.NetStatus = 0;
 	
---[[    Alert( GetLocalizeText(502), GetLocalizeText(503), function()
-		fruit.networkManager:SendConnect();
-		WaitDlgOpen();
-	end )--]]
+	Const.NetStatus = 0;
 end
 
 -- 连接中断，或者被踢掉 --
 -- 服务器发过来的包大小不对
 function Network.OnDisconnect()
 	if Const.NetStatus > 2 then
+		Alert( zh("与服务器断开连接，请重新尝试连接"), zh("重试"), function()
+			eye.uiManager:Clear();
+			LoginModDestroy();
+			SceneManager.LoadScene( "launcher" );
+		end )
+	end
+--[[	if Const.NetStatus > 2 then
 		eye.uiManager:Clear();
 		LoginModDestroy();
 		SceneManager.LoadScene( "launcher" );
-	end
+	end--]]
 	Const.NetStatus = 0;
-	
---[[	Alert( GetLocalizeText(502), GetLocalizeText(503), function()
-		fruit.networkManager:SendConnect();
-		WaitDlgOpen();
-	end )--]]
 end
 
 -- 连接服务器

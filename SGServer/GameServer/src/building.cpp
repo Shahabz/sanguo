@@ -136,7 +136,7 @@ int building_create( int city_index, int kind, int offset )
 			return -1;
 
 		Building *pBuilding = building_getptr( city_index, offset );
-		if ( pBuilding && pBuilding->kind <= 0 )
+		if ( pBuilding )
 		{ // 指定了位置
 			pBuilding->kind = kind;
 			pBuilding->level = 1;
@@ -161,7 +161,7 @@ int building_create( int city_index, int kind, int offset )
 			return -1;
 
 		BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
-		if ( pBuilding && pBuilding->kind <= 0 )
+		if ( pBuilding )
 		{ // 指定了位置
 			pBuilding->kind = kind;
 			pBuilding->level = 1;
@@ -182,7 +182,7 @@ int building_create( int city_index, int kind, int offset )
 	else if ( kind < BUILDING_Smithy )
 	{ // 资源建筑
 		BuildingRes *pBuilding = buildingres_getptr( city_index, offset );
-		if ( pBuilding && pBuilding->kind <= 0 )
+		if ( pBuilding )
 		{ // 指定了位置
 			pBuilding->kind = kind;
 			pBuilding->level = 1;
@@ -228,13 +228,16 @@ int building_upgrade( int city_index, int kind, int offset )
 		Building *pBuilding = building_getptr( city_index, offset );
 		if ( !pBuilding )
 			return -1;
+		if ( pBuilding->sec > 0 )
+			return -1;
 		level = pBuilding->level;
 	}
 	else if ( kind < BUILDING_Silver )
 	{ // 兵营建筑
-		int index = building_getindex( city_index, kind );
 		BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
 		if ( !pBuilding )
+			return -1;
+		if ( pBuilding->trainsec > 0 )
 			return -1;
 		level = pBuilding->level;
 	}
@@ -297,8 +300,61 @@ int building_upgrade( int city_index, int kind, int offset )
 	if ( ok )
 	{
 		// 扣减资源
+		city_changesilver( city_index, -config->silver, PATH_BUILDING_UPGRADE );
+		city_changewood( city_index, -config->wood, PATH_BUILDING_UPGRADE );
+		city_changefood( city_index, -config->food, PATH_BUILDING_UPGRADE );
+		city_changeiron( city_index, -config->iron, PATH_BUILDING_UPGRADE );
 
-		// 通知状态
+		// 通知建筑更新状态
+	}
+	return 0;
+}
+
+// 建筑拆除
+int building_delete( int city_index, int kind, int offset )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( kind == BUILDING_Militiaman_Infantry || kind == BUILDING_Militiaman_Cavalry || kind == BUILDING_Militiaman_Archer )
+	{ // 民兵营
+		BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
+		if ( !pBuilding )
+			return -1;
+		if ( pBuilding->trainsec > 0 )
+			return -1;
+	}
+	else if ( kind == BUILDING_Silver || kind == BUILDING_Wood || kind == BUILDING_Food || kind == BUILDING_Iron )
+	{ // 农田
+	}
+	else
+	{
+		return -1;
+	}
+
+	char ok = 0;
+	if ( g_city[city_index].worker_sec <= 0 )
+	{ // 普通建造队列
+		g_city[city_index].worker_op = BUILDING_OP_DELETE;
+		g_city[city_index].worker_sec = global.building_delete_cd;
+		g_city[city_index].worker_kind = kind;
+		g_city[city_index].worker_offset = offset;
+		ok = 1;
+	}
+	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
+	{ // 商用建造队列
+		g_city[city_index].worker_op_ex = BUILDING_OP_DELETE;
+		g_city[city_index].worker_sec_ex = global.building_delete_cd;
+		g_city[city_index].worker_kind_ex = kind;
+		g_city[city_index].worker_offset_ex = offset;
+		ok = 1;
+	}
+	else
+	{ // 建造队列繁忙
+		return -1;
+	}
+
+	if ( ok )
+	{
+
 	}
 	return 0;
 }
@@ -342,11 +398,29 @@ int building_finish( int city_index, int op, int kind, int offset )
 		BuildingUpgradeConfig *config = building_getconfig( kind, level );
 		if ( config )
 		{ // 给经验
-			city_actorexp( city_index, config->exp, PATH_BUILDING );
+			city_actorexp( city_index, config->exp, PATH_BUILDING_UPGRADE );
 		}
+
+		// 通知客户端更新状态
 	}
 	else if ( op == BUILDING_OP_DELETE )
 	{
+		if ( kind == BUILDING_Militiaman_Infantry || kind == BUILDING_Militiaman_Cavalry || kind == BUILDING_Militiaman_Archer )
+		{ // 民兵营建筑
+			BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
+			if ( !pBuilding )
+				return -1;
+			pBuilding->level = 0;
+		}
+		else if ( kind == BUILDING_Silver || kind == BUILDING_Wood || kind == BUILDING_Food || kind == BUILDING_Iron )
+		{ // 资源建筑
+			BuildingRes *pBuilding = buildingres_getptr( city_index, offset );
+			if ( !pBuilding )
+				return -1;
+			pBuilding->level = 0;
+		}
+
+		// 通知客户端更新状态
 	}
 	return 0;
 }
@@ -392,7 +466,7 @@ int building_sendlist( int actor_index )
 	// 兵营建筑
 	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
 	{
-		if ( pCity->building_barracks[tmpi].kind <= 0 )
+		if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
 			continue;
 		pValue.m_barracks[pValue.m_barracks_count].m_kind = pCity->building_barracks[tmpi].kind;
 		pValue.m_barracks[pValue.m_barracks_count].m_offset = tmpi;
@@ -406,7 +480,7 @@ int building_sendlist( int actor_index )
 	// 资源建筑
 	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
 	{
-		if ( pCity->building_res[tmpi].kind <= 0 )
+		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
 			continue;
 		pValue.m_res[pValue.m_res_count].m_kind = pCity->building_res[tmpi].kind;
 		pValue.m_res[pValue.m_res_count].m_offset = tmpi;

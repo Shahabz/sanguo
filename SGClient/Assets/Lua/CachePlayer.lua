@@ -63,8 +63,8 @@ function Player:Set( recvValue )
 	self.m_mokilllv			=	recvValue.m_mokilllv;
 	self.m_sflag			=	recvValue.m_sflag;
 	
-	self:ChangeToken( recvValue.m_exp, 0 )
-	self:ChangeExp( recvValue.m_exp, recvValue.m_expmax, 0, 0 )
+	--self:ChangeToken( recvValue.m_exp, 0 )
+	--self:ChangeExp( recvValue.m_exp, recvValue.m_expmax, 0, 0 )
 end
 
 -- ×êÊ¯¸Ä±ä

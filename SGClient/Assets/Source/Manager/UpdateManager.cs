@@ -103,6 +103,11 @@ public class UpdateManager : MonoBehaviour
         Begin();
     }
 
+    void OnDestroy()
+    {
+        LogUtil.GetInstance().WriteGame( "UpdateManager.OnDestroy" );
+    }
+
     /// <summary>
     /// 帧逻辑
     /// </summary>
@@ -256,6 +261,7 @@ public class UpdateManager : MonoBehaviour
     /// </summary>
     IEnumerator OnUpdateResource()
     {
+        m_uiText.text = Localization.text( 403 );
         LogUtil.GetInstance().WriteGame( "Start UpdateResource!" );
         // 更新过程中，每秒都需要进行网络检查
         StartCoroutine( OnCheckNetwork() );
@@ -350,7 +356,6 @@ public class UpdateManager : MonoBehaviour
         if ( latest_version < m_local_resource_version )
         {
             // 本地版本大于远端版本，不更新直接进游戏
-            //m_uiText.text = Localization.text( 403 );
             LogUtil.GetInstance().WriteGame( "Has been the latest version" );
             OnInited();
             yield break;

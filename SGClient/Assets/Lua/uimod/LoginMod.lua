@@ -143,8 +143,8 @@ function LoginModOpenTestLogin()
 
 	
 	-- 读取上次登陆过的账户密码
-	m_uiAccountEdit.Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
-	m_uiPasswordEdit.Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
+	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
+	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
 	 
 	-- 获取服务器列表
 	HttpRequest.GetServerList( function( response )
@@ -255,6 +255,7 @@ function LoginModSelectServer( id )
 	if serverinfo == nil then
 		return;
 	end
+	Const.servername = serverinfo["n"];
 	m_selectServerID = serverinfo["sid"];
 	m_uiServerInfo.transform:Find("Text"):GetComponent( "UIText" ).text = serverinfo["n"];
 	-- 对象缓存池

@@ -9,6 +9,7 @@ typedef struct _global
 	short body_sec;
 	short levy_sec;
 	char levy_max;
+	int building_delete_cd;
 }Global;
 int global_init();
 void global_reload();

@@ -50,6 +50,7 @@ public class Const {
     public static int platid = 0;                               // 平台ID
     public static string userid = string.Empty;                 // 游戏用户ID
     public static string serverid = string.Empty;               // 服务器ID
+    public static string servername = string.Empty;             // 服务器名称
     public static string actorid = string.Empty;                // 角色ID
     public static bool trackover = false;
     public static int quality = 0;                              // 0 高配， 1, 中配， 2， 低配

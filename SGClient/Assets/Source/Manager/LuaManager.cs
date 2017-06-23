@@ -45,6 +45,13 @@ public class LuaManager : MonoBehaviour
         LuaCoroutine.Register( lua, this );
     }
 
+    void OnDestroy()
+    {
+        LuaGC();
+        Close();
+        LogUtil.GetInstance().WriteGame( "LuaManager.OnDestroy" );
+    }
+
     public void InitStart()
     {
         InitLuaPath();

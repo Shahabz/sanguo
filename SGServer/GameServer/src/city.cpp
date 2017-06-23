@@ -213,13 +213,13 @@ void city_logic_sec()
 {
 	if ( !g_city_allinited )
 		return;
-#ifdef WIN32
-	DWORD b = timeGetTime();
-#else
-	struct timeval tpstart, tpend;
-	float timeuse;
-	gettimeofday( &tpstart, NULL );
-#endif
+//#ifdef WIN32
+//	DWORD b = timeGetTime();
+//#else
+//	struct timeval tpstart, tpend;
+//	float timeuse;
+//	gettimeofday( &tpstart, NULL );
+//#endif
 	int nowtime = (int)time( NULL );
 	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
 	{
@@ -291,7 +291,7 @@ void city_logic_sec()
 			if ( g_city[city_index].bodysec <= 0 )
 			{
 				g_city[city_index].bodysec = global.body_sec;
-				g_city[city_index].body += 1;
+				city_changebody( city_index, 1, PATH_SYSTEM );
 			}
 		}
 
@@ -308,15 +308,15 @@ void city_logic_sec()
 		
 		
 	}
-#ifdef WIN32
-	DWORD e = timeGetTime();
-	printf_msg( "sec city_logic_sec:%dms\n", e - b );
-#else
-	gettimeofday( &tpend, NULL );
-	timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
-	timeuse /= 1000000;
-	printf_msg( "sec ranking_actorlevel:%fs\n", timeuse );
-#endif
+//#ifdef WIN32
+//	DWORD e = timeGetTime();
+//	printf_msg( "sec city_logic_sec:%dms\n", e - b );
+//#else
+//	gettimeofday( &tpend, NULL );
+//	timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+//	timeuse /= 1000000;
+//	printf_msg( "sec ranking_actorlevel:%fs\n", timeuse );
+//#endif
 }
 
 // 城市主城等级
@@ -476,6 +476,8 @@ int city_changelevy( int city_index, int value, short path )
 // 银币
 int city_changesilver( int city_index, int value, short path )
 {
+	if ( value == 0 )
+		return -1;
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].silver > INT_MAX - value )
 		g_city[city_index].silver = INT_MAX;
@@ -493,6 +495,8 @@ int city_changesilver( int city_index, int value, short path )
 // 木材
 int city_changewood( int city_index, int value, short path )
 {
+	if ( value == 0 )
+		return -1;
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].wood > INT_MAX - value )
 		g_city[city_index].wood = INT_MAX;
@@ -510,6 +514,8 @@ int city_changewood( int city_index, int value, short path )
 // 粮草
 int city_changefood( int city_index, int value, short path )
 {
+	if ( value == 0 )
+		return -1;
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].food > INT_MAX - value )
 		g_city[city_index].food = INT_MAX;
@@ -527,6 +533,8 @@ int city_changefood( int city_index, int value, short path )
 // 镔铁
 int city_changeiron( int city_index, int value, short path )
 {
+	if ( value == 0 )
+		return -1;
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].iron > INT_MAX - value )
 		g_city[city_index].iron = INT_MAX;

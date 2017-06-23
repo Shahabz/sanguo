@@ -120,8 +120,8 @@ struct _slk_NetS_ActorInfo {
 	char m_nation;	//服务器发送玩家基本信息-国家
 	char m_shape;	//服务器发送玩家基本信息-形象
 	short m_level;	//服务器发送玩家基本信息-级别
-	i64 m_exp;	//服务器发送玩家基本信息-经验
-	i64 m_exp_max;	//服务器发送玩家基本信息-经验上限
+	int m_exp;	//服务器发送玩家基本信息-经验
+	int m_exp_max;	//服务器发送玩家基本信息-经验上限
 	int m_token;	//服务器发送玩家基本信息-钻石
 	char m_viplevel;	//服务器发送玩家基本信息-VIP等级
 	int m_vipexp;	//服务器发送玩家基本信息-VIP经验
@@ -322,7 +322,7 @@ typedef struct _slk_NetS_AwardInfoList SLK_NetS_AwardInfoList;	//奖励信息列表
 
 struct _slk_NetS_Experience {
 	int m_addexp;	//服务器发送-获取经验
-	i64 m_curexp;	//服务器发送-获取经验
+	int m_curexp;	//服务器发送-获取经验
 	char m_isup;	//服务器发送-获取经验
 	short m_path;	//服务器发送-获取经验
 	short m_level;	//服务器发送-获取经验

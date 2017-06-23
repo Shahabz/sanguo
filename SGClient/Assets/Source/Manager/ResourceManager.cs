@@ -70,6 +70,13 @@ public class ResourceManager : MonoBehaviour
         {
             Resources.UnloadUnusedAssets();
         }
+
+        AssetBundleInfo StreamingAssets = GetLoadedAssetBundle( "StreamingAssets" );
+        if ( StreamingAssets != null )
+        {
+            StreamingAssets.m_AssetBundle.Unload( true );
+        }
+
         m_LoadedAssetBundles.Clear();
         m_Dependencies.Clear();
         m_AssetBundleNameList = null;
@@ -79,6 +86,7 @@ public class ResourceManager : MonoBehaviour
         m_resmap_prefab = null;
         m_resmap_object.Clear();
         m_resmap_object = null;
+        m_AssetBundleManifest = null;
     }
 
     void InitResMap()
@@ -144,6 +152,42 @@ public class ResourceManager : MonoBehaviour
             if ( callback != null )
                 callback();
         }
+    }
+
+    /// <summary>
+    /// 载入AssetBundle
+    /// </summary>
+    static public AssetBundleInfo LoadAB_NoDependencies( string assetBundleName )
+    {
+        if ( Const.ResourceMode == "assetbundle" )
+        {
+            AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
+            if ( bundle == null )
+            {
+                // 优先查询本地资源，本地没有就找包里资源
+                string file = PathUtil.LocalPath() + assetBundleName;
+                if ( File.Exists( file ) == false )
+                {
+                    file = PathUtil.PackagePath() + assetBundleName;
+                }
+                LogUtil.GetInstance().WriteGame( "LoadAB_NoDependencies Path:" + file );
+
+                // 非异步方法最快
+                AssetBundle assetBundle = AssetBundle.LoadFromFile( file );
+                if ( assetBundle == null )
+                {
+                    // 没读到暂时什么也不做
+                    LogUtil.GetInstance().WriteGame( "LoadAB_NoDependencies is null path:[" + file + "]" );
+                }
+                else
+                {
+                    // 读到了就添加缓存
+                    m_LoadedAssetBundles.Add( assetBundleName, new AssetBundleInfo( assetBundle ) );
+                }
+            }
+            return bundle;
+        }
+        return null;
     }
 
     /// <summary>
@@ -338,7 +382,7 @@ public class ResourceManager : MonoBehaviour
                 // 如果当前AssetBundle处于Async Loading过程中，卸载会崩溃，所以等待loading完毕
                 continue;
             }
-            bundle.m_AssetBundle.Unload( false );
+            bundle.m_AssetBundle.Unload( true );
             m_LoadedAssetBundles.Remove( assetBundleName );
             break;
         }

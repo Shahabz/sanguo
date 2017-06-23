@@ -21,7 +21,7 @@
 #define PATH_ITEMUSE					4	// 道具使用
 #define PATH_TOKENITEMUSE				5	// 钻石直接使用
 #define PATH_SELL						6	// 售卖丢弃
-#define PATH_BUILDING					7	// 建筑
+#define PATH_BUILDING_UPGRADE			7	// 建筑
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

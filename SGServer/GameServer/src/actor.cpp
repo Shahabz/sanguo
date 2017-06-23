@@ -174,7 +174,6 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 	actor_hero_batch_save_auto( g_actors[actor_index].hero, HERO_ACTOR_MAX, "actor_hero", fp );
 
 	// 未上阵英雄装备保存
-	db_delete( g_actors[actor_index].actorid, "actor_hero_equip", fp );
 	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
 	{
 		if ( g_actors[actor_index].hero[tmpi].id <= 0 )
@@ -182,7 +181,7 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 		actor_equip_batch_save_auto( g_actors[actor_index].hero[tmpi].equip, HEROEQUIP_MAX, "actor_equip", fp );
 	}
 
-	// 保存道具栏
+	// 保存道具栏6
 	item_save( actor_index, fp );
 
 	// 保存装备栏

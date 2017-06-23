@@ -50,6 +50,11 @@ public class UIManager : MonoBehaviour
 		}
     }
 
+    void OnDestroy()
+    {
+        LogUtil.GetInstance().WriteGame( "UIManager.OnDestroy" );
+    }
+
     // 打开界面，每次都调
     public GameObject Open( string uiName )
     {

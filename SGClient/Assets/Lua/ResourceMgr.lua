@@ -18,3 +18,25 @@ end
 function LoadPrefabAsyn( name, callback )
 	eye.resourceManager:LoadPrefabAsyn( name, callback );
 end
+
+-- 玩家头像
+function PlayerHeadSprite( shape )
+	local name = string.format("playerhead_%02d", shape+1 );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 玩家半身像
+function PlayerFaceSprite( shape )
+	local name = string.format("playerhead_%02d_face", shape+1 );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+

@@ -19,6 +19,7 @@ public class NetworkManager : MonoBehaviour {
     /// </summary>
     void OnDestroy() 
     {
+        LogUtil.GetInstance().WriteGame( "NetworkManager.OnDestroy" );
     }
     
     /// <summary>

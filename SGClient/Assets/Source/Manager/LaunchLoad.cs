@@ -18,16 +18,25 @@ public class LaunchLoad : MonoBehaviour {
         LogUtil.GetInstance().WriteGame( "PackagePath:" + PathUtil.PackagePath() );
         LogUtil.GetInstance().WriteGame( "LocalPath:" + PathUtil.LocalPath() );
 
-        // 读取开始界面必需资源
-        string file = PathUtil.LocalPath() + "StreamingAssets";
-        if ( File.Exists( file ) == false )
+        if ( Const.ResourceMode == "assetbundle" )
         {
-            file = PathUtil.PackagePath() + "StreamingAssets";
+            AssetBundleInfo abinfo = ResourceManager.GetLoadedAssetBundle( "launchload" );
+            if ( abinfo == null )
+            {
+                // 读取开始界面必需资源
+                string file = PathUtil.LocalPath() + "StreamingAssets";
+                if ( File.Exists( file ) == false )
+                {
+                    file = PathUtil.PackagePath() + "StreamingAssets";
+                }
+
+                AssetBundle ab = AssetBundle.LoadFromFile( file );
+                ResourceManager.m_AssetBundleManifest = ab.LoadAsset( "AssetBundleManifest" ) as AssetBundleManifest;
+                ResourceManager.m_AssetBundleNameList = ResourceManager.m_AssetBundleManifest.GetAllAssetBundles();
+                ResourceManager.LoadAssetBundle( "launchload" );
+                ab.Unload( false );
+            }
         }
-        AssetBundle ab = AssetBundle.LoadFromFile( file );
-        ResourceManager.m_AssetBundleManifest = ab.LoadAsset( "AssetBundleManifest" ) as AssetBundleManifest;
-        ResourceManager.m_AssetBundleNameList = ResourceManager.m_AssetBundleManifest.GetAllAssetBundles();
-        ResourceManager.LoadAssetBundle( "launchload" );
         SceneManager.LoadScene( "game" );
 	}
 	

@@ -640,7 +640,7 @@ int process_logic()
 	}
 	else if ( tick == 1 )
 	{
-		
+		city_logic_sec();
 	}
 	else if ( tick == 2 )
 	{

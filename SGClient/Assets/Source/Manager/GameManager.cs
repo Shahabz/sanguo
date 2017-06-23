@@ -71,21 +71,15 @@ public class GameManager : MonoBehaviour {
         LuaInited();
         LogUtil.GetInstance().WriteGame( "LuaInited" );
 
-        //// 初始化资源管理
-        //eye.resourceManager.Initialize( delegate ()
-        //{
-        //    // 游戏开始
-        //    LuaFun.gameStart.Call();
+        // 初始化资源管理
+        eye.resourceManager.Initialize( delegate ()
+        {
+            // 游戏开始
+            LuaFun.gameStart.Call();
 
-        //    // 启动游戏主逻辑, 每分钟调用
-        //    StartCoroutine( GameLogic() );
-        //} );
-
-        // 游戏开始
-        LuaFun.gameStart.Call();
-
-        // 启动游戏主逻辑, 每分钟调用
-        StartCoroutine( GameLogic() );
+            // 启动游戏主逻辑, 每分钟调用
+            StartCoroutine( GameLogic() );
+        } );
         return true;
     }
 
@@ -103,8 +97,8 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     void OnDestroy() 
     {
-        // uluaMgr.lua.GetFunction( "GameManager.OnDestroy" ).Call();
         LuaFun.Destroy();
+        LogUtil.GetInstance().WriteGame( "GameManager.OnDestroy" );
 		LogUtil.GetInstance().WriteGame( "------------------ Game Log End ------------------" );
 	    LogUtil.GetInstance().WriteNet( "------------------ Net Log End ------------------" );
     }

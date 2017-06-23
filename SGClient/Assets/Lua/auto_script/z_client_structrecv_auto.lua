@@ -157,8 +157,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_nation = buffer:ReadSByte();
 	recvValue.m_shape = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
-	recvValue.m_exp = buffer:ReadLong();
-	recvValue.m_exp_max = buffer:ReadLong();
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_exp_max = buffer:ReadInt();
 	recvValue.m_token = buffer:ReadInt();
 	recvValue.m_viplevel = buffer:ReadSByte();
 	recvValue.m_vipexp = buffer:ReadInt();
@@ -413,7 +413,7 @@ end
 function struct_NetS_Experience_recv( buffer )
 	local recvValue = {};
 	recvValue.m_addexp = buffer:ReadInt();
-	recvValue.m_curexp = buffer:ReadLong();
+	recvValue.m_curexp = buffer:ReadInt();
 	recvValue.m_isup = buffer:ReadSByte();
 	recvValue.m_path = buffer:ReadShort();
 	recvValue.m_level = buffer:ReadShort();

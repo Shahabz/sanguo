@@ -45,7 +45,16 @@ BUILDING_Shop		    =  34	-- 商店
 BUILDING_Hero		    =  35	-- 聚贤馆
 BUILDING_Wishing	    =  36	-- 聚宝盆
 BUILDING_Help		    =  37	-- 帮助
-		
+
+-- 途径
+PATH_SYSTEM						=	1	-- 系统
+PATH_GM							=	2	-- GM
+PATH_PAY						=	3	-- 充值
+PATH_ITEMUSE					=	4	-- 道具使用
+PATH_TOKENITEMUSE				=	5	-- 钻石直接使用
+PATH_SELL						=	6	-- 售卖丢弃
+PATH_BUILDING_UPGRADE			=	7	-- 建筑
+
 -- 文字表
 -- 获取本地化文字
 function GetLocalizeText( id )
@@ -88,7 +97,18 @@ function Invoke(func, delay, param, name)
     eye.gameManager.delayExecute = func;
     eye.gameManager:GameInvoke(delay, param, name);
 end
+
 -- 停止延时执行
 function InvokeStop(name)
     eye.gameManager:GameInvoke_Stop(name);
 end
+
+-- 获取国家名称
+function Nation( nation )
+	return T(nation+100);
+end
+
+function NationEx( nation )
+	return T(nation+110);
+end
+

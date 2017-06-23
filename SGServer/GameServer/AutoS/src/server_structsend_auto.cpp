@@ -219,8 +219,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
-	LKSET_LONG_SEND( (*pptr), &pValue->m_exp, (*psize) );
-	LKSET_LONG_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_viplevel, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_vipexp, (*psize) );
@@ -499,7 +499,7 @@ int struct_NetS_Experience_send( char **pptr, int *psize, SLK_NetS_Experience *p
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_addexp, (*psize) );
-	LKSET_LONG_SEND( (*pptr), &pValue->m_curexp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_curexp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isup, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );

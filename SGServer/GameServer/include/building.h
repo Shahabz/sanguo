@@ -57,6 +57,9 @@ int building_create( int city_index, int kind, int offset );
 // 建筑升级
 int building_upgrade( int city_index, int kind, int offset );
 
+// 建筑拆除
+int building_delete( int city_index, int kind, int offset );
+
 // 建筑升级或拆除操作完成
 int building_finish( int city_index, int op, int kind, int offset );
 

@@ -8,6 +8,7 @@ public class ResourceManagerWrap
 	{
 		L.BeginClass(typeof(ResourceManager), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("Initialize", Initialize);
+		L.RegFunction("LoadAB_NoDependencies", LoadAB_NoDependencies);
 		L.RegFunction("LoadAssetBundle", LoadAssetBundle);
 		L.RegFunction("LoadAllAssetBundle", LoadAllAssetBundle);
 		L.RegFunction("GetLoadedAssetBundle", GetLoadedAssetBundle);
@@ -52,6 +53,23 @@ public class ResourceManagerWrap
 
 			obj.Initialize(arg0);
 			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int LoadAB_NoDependencies(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			string arg0 = ToLua.CheckString(L, 1);
+			AssetBundleInfo o = ResourceManager.LoadAB_NoDependencies(arg0);
+			ToLua.PushObject(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{
