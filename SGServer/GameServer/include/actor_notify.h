@@ -7,6 +7,7 @@
 #define	NOTIFY_ITEM			2
 #define	NOTIFY_ITEMNUM		3
 #define	NOTIFY_LOGIN_QUEUE	4
+#define	NOTIFY_CHANGESHAPE	5	// 玩家头像修改
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

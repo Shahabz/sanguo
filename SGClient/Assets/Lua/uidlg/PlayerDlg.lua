@@ -95,7 +95,13 @@ end
 ----------------------------------------
 function PlayerDlgShow()
 	PlayerDlgOpen()
-	
+	PlayerDlgSet()
+end
+
+function PlayerDlgSet()
+	if m_Dlg == nil or m_Dlg.gameObject.activeSelf == false then
+		return;
+	end
 	m_uiPlayNameText:GetComponent( "UIText" ).text = GetPlayer().m_name;
 	m_uiNationText:GetComponent( "UIText" ).text = Nation( GetPlayer().m_nation );
 	m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( GetPlayer().m_shape );
@@ -121,4 +127,3 @@ function PlayerDlgShow()
 	m_uiLabelIDText:GetComponent( "UIText" ).text = GetPlayer().m_actorid;
 	m_uiLabelBattlepowerText:GetComponent( "UIText" ).text = GetPlayer().m_battlepower;
 end
-

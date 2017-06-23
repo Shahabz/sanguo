@@ -62,7 +62,8 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
             MainDlgClose();
 
 		elseif nControlID == 1 then
-
+			system_askinfo( ASKINFO_CHANGESHAPE, "", math.random(20,25) )
+			
 		elseif nControlID == 2 then
 		
 		elseif nControlID == 100 then

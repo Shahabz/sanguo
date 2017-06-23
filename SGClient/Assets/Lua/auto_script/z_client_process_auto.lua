@@ -258,10 +258,10 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_body_C( recvValue )
 	-- process.
-	if recvValue.m_path == PATH_SYSTEM then
-		
+	if recvValue.m_path ~= PATH_SYSTEM then
+		pop( T(120)..": "..T(126).."x"..recvValue.m_add );
 	end
-	pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+	
 	GetPlayer().m_body = recvValue.m_total;
 	MainDlgSetBody()
 end

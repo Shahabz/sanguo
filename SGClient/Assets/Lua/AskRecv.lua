@@ -1,5 +1,10 @@
 -- 通用短消息接收
-NOTIFY_NORMAL = 0	-- 缺省文字提示，服务端发文字
+NOTIFY_NORMAL 		= 	0	-- 缺省文字提示，服务端发文字
+NOTIFY_TEXTTABLE	=	1	-- 
+NOTIFY_ITEM			=	2
+NOTIFY_ITEMNUM		=	3
+NOTIFY_LOGIN_QUEUE	=	4
+NOTIFY_CHANGESHAPE	=	5	-- 玩家头像修改
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -9,5 +14,10 @@ function RecvActorNotify(recvValue)
     
     if msgid == NOTIFY_NORMAL then
 		
+	-- 头像改变
+	elseif msgid == NOTIFY_CHANGESHAPE then
+		GetPlayer().m_shape = value[2];
+		MainDlgSetHead();
+		PlayerDlgSet();
     end
 end

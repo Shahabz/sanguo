@@ -120,7 +120,7 @@ int actor_changename( int actor_index, char *pname );
 int actor_changename_gm( int actorid, char *pname );
 
 // 修改头像
-int actor_changeshape( int actor_index, int shape );
+int actor_changeshape( int actor_index, char shape );
 
 // 角色信息
 int actor_getinfo( int actor_index );

@@ -38,6 +38,9 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	{
 	case ASKINFO_NORMAL:
 		break;
+	case ASKINFO_CHANGESHAPE:
+		actor_changeshape( actor_index, (char)pvalue[0] );
+		break;
 	default:
 		break;
 	}

@@ -46,6 +46,7 @@
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
 
 #define HEROEQUIP_MAX				6		// 装备数量
+#define SHAPE_MAX					64		// 形象
 
 // 推送秘钥长度
 #define CLIENT_PUSHKEY_MAX	256

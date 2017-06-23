@@ -404,45 +404,26 @@ int actor_changename_gm( int actorid, char *pname )
 }
 
 // 修改头像
-int actor_changeshape( int actor_index, int shape )
+int actor_changeshape( int actor_index, char shape )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 
-	//if ( shape < 0 || shape > SHAPE_MAXID )
-	//	return -1;
-	//
-	//int itemkind = 251;
-	//// 扣道具
-	//if ( item_lost( actor_index, itemkind, 1, PATH_ACTOR_BUY ) < 0 )
-	//{
-	//	if( actor_change_token( actor_index, -item_getprice( itemkind ), PATH_ACTOR_BUY, TOKEN_ACTOR_BUY_CHANGESHAPE ) < 0 )
-	//		return -1;
-	//}
+	if ( shape < 0 || shape >= SHAPE_MAX )
+		return -1;
 
+	g_actors[actor_index].shape = shape;
+	City *pCity = city_getptr( actor_index );
+	if ( pCity )
+	{
+		pCity->shape = g_actors[actor_index].shape;
 
-	//g_actors[actor_index].shape = (unsigned char)shape;
-	//City *pCity = city_getptr( actor_index );
-	//if ( pCity )
-	//{
-	//	pCity->laird_shape = g_actors[actor_index].shape;
-
-	//	// 取消自定义头像
-	//	if ( pCity->headid > 0 )
-	//	{
-	//		pCity->headid = 0;
-	//		g_actors[actor_index].headreview = 0;
-	//	}
-
-	//	// 发更新
-	//	int value[4] = { 0 };
-	//	value[0] = 15;
-	//	value[1] = shape;
-	//	value[2] = pCity->headid;
-	//	value[3] = g_actors[actor_index].headreview;
-	//	actor_notify_value( actor_index, NOTIFY_ACTOR, 4, value, NULL );
-	//}
-
+		// 发更新
+		int value[2] = { 0 };
+		value[0] = 0;
+		value[1] = shape;
+		actor_notify_value( actor_index, NOTIFY_CHANGESHAPE, 2, value, NULL );
+	}
 	return 0;
 }
 
