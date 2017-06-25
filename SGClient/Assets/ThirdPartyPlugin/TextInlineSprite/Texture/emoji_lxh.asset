@@ -1,0 +1,2096 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5efe682ead7eb154f97508822f9d073c, type: 3}
+  m_Name: emoji_lxh
+  m_EditorClassIdentifier: 
+  texSource: {fileID: 2800000, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+  listSpriteInfor:
+  - ID: 1
+    name: die_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300048, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: die
+  - ID: 2
+    name: die_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300050, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: die
+  - ID: 3
+    name: die_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300052, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: die
+  - ID: 4
+    name: die_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300054, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: Happly
+  - ID: 5
+    name: die_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300056, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: Happly
+  - ID: 6
+    name: die_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300058, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 7
+    name: die_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1699
+      width: 100
+      height: 100
+    sprite: {fileID: 21300060, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 8
+    name: die_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1695
+      width: 100
+      height: 100
+    sprite: {fileID: 21300062, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 9
+    name: yawn_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300096, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 10
+    name: yawn_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300098, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 11
+    name: yawn_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300100, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 12
+    name: yawn_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300102, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 13
+    name: yawn_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300104, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 14
+    name: yawn_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300106, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 15
+    name: yawn_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300108, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 16
+    name: yawn_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300110, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 17
+    name: boring_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300112, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 18
+    name: boring_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300114, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 19
+    name: boring_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300116, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 20
+    name: boring_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300118, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 21
+    name: boring_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300120, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 22
+    name: boring_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300122, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 23
+    name: boring_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300124, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 24
+    name: boring_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300126, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 25
+    name: happy_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1202
+      width: 100
+      height: 100
+    sprite: {fileID: 21300128, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 26
+    name: happy_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300130, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 27
+    name: happy_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300132, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 28
+    name: happy_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300134, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 29
+    name: happy_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 398
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300136, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 30
+    name: happy_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300138, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 31
+    name: happy_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300140, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 32
+    name: happy_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300142, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 33
+    name: rock_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300144, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 34
+    name: rock_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300146, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 35
+    name: rock_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300148, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 36
+    name: rock_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300150, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 37
+    name: rock_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300152, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 38
+    name: rock_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300154, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 39
+    name: rock_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300156, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 40
+    name: rock_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300158, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 41
+    name: gargle_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300160, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 42
+    name: gargle_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300162, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 43
+    name: gargle_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300164, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 44
+    name: gargle_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300166, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 45
+    name: gargle_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300168, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 46
+    name: gargle_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300170, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 47
+    name: gargle_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300172, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 48
+    name: gargle_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300174, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 49
+    name: sleep_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300176, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 50
+    name: sleep_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300178, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 51
+    name: sleep_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300180, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 52
+    name: sleep_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300182, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 53
+    name: sleep_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300184, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 54
+    name: sleep_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300186, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 55
+    name: sleep_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300188, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 56
+    name: sleep_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300190, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 57
+    name: idle_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300192, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 58
+    name: idle_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300194, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 59
+    name: idle_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300196, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 60
+    name: idle_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300198, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 61
+    name: idle_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300200, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 62
+    name: idle_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300202, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 63
+    name: idle_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300204, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 64
+    name: idle_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300206, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 65
+    name: pain_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300208, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 66
+    name: pain_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300210, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 67
+    name: pain_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300212, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 68
+    name: pain_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300214, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 69
+    name: pain_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300216, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 70
+    name: pain_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300218, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 71
+    name: pain_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300220, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 72
+    name: pain_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 700
+      width: 100
+      height: 100
+    sprite: {fileID: 21300222, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 73
+    name: play_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300224, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 74
+    name: play_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300226, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 75
+    name: play_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300228, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 76
+    name: play_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300230, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 77
+    name: play_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300232, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 78
+    name: play_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300234, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 79
+    name: play_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300236, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 80
+    name: play_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300238, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 81
+    name: rose_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300240, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 82
+    name: rose_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300242, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 83
+    name: rose_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300244, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 84
+    name: rose_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300246, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 85
+    name: rose_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300248, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 86
+    name: rose_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300250, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 87
+    name: rose_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300252, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 88
+    name: rose_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300254, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 89
+    name: walk_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300256, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 90
+    name: walk_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300258, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 91
+    name: walk_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300260, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 92
+    name: walk_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300262, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 93
+    name: walk_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300264, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 94
+    name: walk_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300266, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 95
+    name: walk_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300268, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 96
+    name: walk_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 400
+      width: 100
+      height: 100
+    sprite: {fileID: 21300270, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 97
+    name: angry_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300272, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 98
+    name: angry_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300274, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 99
+    name: angry_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300276, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 100
+    name: angry_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300278, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 101
+    name: angry_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300280, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 102
+    name: angry_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300282, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 103
+    name: angry_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300284, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 104
+    name: angry_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 300
+      width: 100
+      height: 100
+    sprite: {fileID: 21300286, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 105
+    name: bleeding_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300288, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 106
+    name: bleeding_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300290, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 107
+    name: bleeding_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300292, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 108
+    name: bleeding_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300294, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 109
+    name: bleeding_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300296, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 110
+    name: bleeding_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300298, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 111
+    name: bleeding_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300300, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 112
+    name: bleeding_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 200
+      width: 100
+      height: 100
+    sprite: {fileID: 21300302, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 113
+    name: nurturing_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300304, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 114
+    name: nurturing_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300306, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 115
+    name: nurturing_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300308, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 116
+    name: nurturing_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300310, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 117
+    name: nurturing_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300312, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 118
+    name: nurturing_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300314, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 119
+    name: nurturing_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300316, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 120
+    name: nurturing_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 100
+      width: 100
+      height: 100
+    sprite: {fileID: 21300318, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 121
+    name: meat_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300064, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 122
+    name: meat_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300066, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 123
+    name: meat_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300068, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 124
+    name: meat_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300070, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 125
+    name: meat_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300072, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 126
+    name: meat_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 495
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300074, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 127
+    name: meat_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300076, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 128
+    name: meat_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1600
+      width: 100
+      height: 100
+    sprite: {fileID: 21300078, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 129
+    name: roll_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300080, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 130
+    name: roll_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300082, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 131
+    name: roll_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300084, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 132
+    name: roll_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300086, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 133
+    name: roll_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300088, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 134
+    name: roll_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300090, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 135
+    name: roll_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300092, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 136
+    name: roll_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1500
+      width: 100
+      height: 100
+    sprite: {fileID: 21300094, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 137
+    name: run_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300032, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 138
+    name: run_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300034, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 139
+    name: run_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300036, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 140
+    name: run_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300038, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 141
+    name: run_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300040, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 142
+    name: run_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300042, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 143
+    name: run_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300044, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 144
+    name: run_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1800
+      width: 100
+      height: 100
+    sprite: {fileID: 21300046, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 145
+    name: sick_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300000, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 146
+    name: sick_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300002, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 147
+    name: sick_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300004, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 148
+    name: sick_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300006, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 149
+    name: sick_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300008, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 150
+    name: sick_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300010, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 151
+    name: sick_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300012, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 152
+    name: sick_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 2000
+      width: 100
+      height: 100
+    sprite: {fileID: 21300014, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 153
+    name: watermelon_0
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300016, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 154
+    name: watermelon_1
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 100
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300018, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 155
+    name: watermelon_2
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300020, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 156
+    name: watermelon_3
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 300
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300022, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 157
+    name: watermelon_4
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 400
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300024, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 158
+    name: watermelon_5
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 500
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300026, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 159
+    name: watermelon_6
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 600
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300028, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  - ID: 160
+    name: watermelon_7
+    pivot: {x: 50, y: 50}
+    rect:
+      serializedVersion: 2
+      x: 700
+      y: 1900
+      width: 100
+      height: 100
+    sprite: {fileID: 21300030, guid: 0f80732ede17ee84fbda8d7d2448dd61, type: 3}
+    size: 0
+    width: 0
+    tag: 
+  listSpriteGroup: []

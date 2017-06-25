@@ -1,7 +1,8 @@
 -- 界面
 local m_Dlg = nil;
 local m_uiShape = nil; --UnityEngine.GameObject
-
+local m_uiNameInput = nil; --UnityEngine.GameObject
+local m_uiChangeNameBtn = nil; --UnityEngine.GameObject
 local m_SelectShape = -1;
 
 -- 打开界面
@@ -35,6 +36,10 @@ function ChangeShapeDlgOnEvent( nType, nControlID, value, gameObject )
             ChangeShapeDlgClose();
         elseif nControlID >= 0 and nControlID <= 40 then
         		ChangeShapeDlgSelect( nControlID );
+       	elseif nControlID == 100 then
+       			ChangeShapeDlgChangeShape();
+       	elseif nControlID == 101 then
+       			ChangeShapeDlgChangeName();
         end
 	end
 end
@@ -43,7 +48,9 @@ end
 function ChangeShapeDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
-	m_uiShape = objs[0];	
+	m_uiShape = objs[0];
+	m_uiNameInput = objs[1];
+	m_uiChangeNameBtn = objs[2];
 end
 
 -- 界面初始化时调用
@@ -83,4 +90,15 @@ end
 function ChangeShapeDlgSelect( shape )
 	m_SelectShape = shape;
 	m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( shape );
+end
+
+function ChangeShapeDlgChangeShape()
+	if m_SelectShape < 0 or m_SelectShape == GetPlayer().m_shape then
+		return;
+	end
+	system_askinfo( ASKINFO_CHANGESHAPE, "", m_SelectShape );
+end
+
+function ChangeShapeDlgChangeName()
+	--m_uiNameInput:GetComponent( "UIInputField" ).text;
 end
