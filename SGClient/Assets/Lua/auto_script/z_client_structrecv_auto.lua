@@ -390,6 +390,46 @@ function struct_NetS_UpdateMapUnit_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Equip_recv( buffer )
+	local recvValue = {};
+	recvValue.m_offset = buffer:ReadShort();
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_washid={};
+	for tmpi=1,4,1 do
+		recvValue.m_washid[tmpi] = buffer:ReadShort();
+	end
+	return recvValue;
+end
+
+function struct_NetS_EquipList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_equipext = buffer:ReadShort();
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Equip_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_EquipGet_recv( buffer )
+	local recvValue = {};
+	recvValue.m_offset = buffer:ReadInt();
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_EquipLost_recv( buffer )
+	local recvValue = {};
+	recvValue.m_offset = buffer:ReadInt();
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
 function struct_NetS_AwardInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadInt();

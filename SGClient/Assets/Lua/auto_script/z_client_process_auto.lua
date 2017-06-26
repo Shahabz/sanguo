@@ -335,3 +335,23 @@ function proc_changtoken_C( recvValue )
 	MainDlgSetToken()
 end
 
+-- m_info={m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",},
+function proc_equiplist_C( recvValue )
+	-- process.
+end
+
+-- m_offset=0,m_kind=0,m_washid={[4]},
+function proc_equip_C( recvValue )
+	-- process.
+end
+
+-- m_offset=0,m_kind=0,m_path=0,
+function proc_equipget_C( recvValue )
+	-- process.
+end
+
+-- m_offset=0,m_kind=0,m_path=0,
+function proc_equiplost_C( recvValue )
+	-- process.
+end
+

@@ -14,6 +14,7 @@
 #include "item.h"
 #include "system.h"
 #include "map.h"
+#include "city.h"
 #include "server_netsend_auto.h"
 #include "actor_send.h"
 #include "actor_notify.h"
@@ -54,7 +55,7 @@ int item_maxid_init()
 	if ( row[0] )
 		g_maxitemid = atoll( row[0] );
 	else
-		g_maxitemid = 1000000; // 100万为起点主要给机器人预留
+		g_maxitemid = 1;
 	g_maxitemid++;
 	mysql_free_result( res );
 	return 0;
@@ -99,6 +100,13 @@ int item_getprice( int itemkind )
 	if ( itemkind <= 0 || itemkind >= g_itemkind_maxnum )
 		return 0;
 	return g_itemkind[itemkind].m_price;
+}
+
+int item_gettoken( int itemkind )
+{
+	if ( itemkind <= 0 || itemkind >= g_itemkind_maxnum )
+		return 0;
+	return g_itemkind[itemkind].m_token;
 }
 
 short item_gettype( int itemkind )
@@ -311,7 +319,7 @@ int item_getitem( int actor_index, int itemkind, int itemnum, char color, char p
 		// 记录log
 		if ( tmpi == item_count - 1 )
 			type = 0;
-		//wlog( type, LOGOP_ITEMGET, path, itemkind, ItemOut[tmpi].m_count, pitem->m_itemid, g_actors[actor_index].actorid, city_mainlevel( city_getptr( actor_index ) ) );
+		wlog( type, LOGOP_ITEMGET, path, itemkind, ItemOut[tmpi].m_count, pitem->id, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 	}
 	return 0;
 }

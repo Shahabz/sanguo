@@ -39,6 +39,10 @@ int netsend_changeprestige_S( int actor_index, char send_type, SLK_NetS_Prestige
 int netsend_changefriendship_S( int actor_index, char send_type, SLK_NetS_Friendship *pValue );
 int netsend_changevip_S( int actor_index, char send_type, SLK_NetS_Vip *pValue );
 int netsend_changtoken_S( int actor_index, char send_type, SLK_NetS_Token *pValue );
+int netsend_equip_S( int actor_index, char send_type, SLK_NetS_Equip *pValue );
+int netsend_equiplist_S( int actor_index, char send_type, SLK_NetS_EquipList *pValue );
+int netsend_equipget_S( int actor_index, char send_type, SLK_NetS_EquipGet *pValue );
+int netsend_equiplost_S( int actor_index, char send_type, SLK_NetS_EquipLost *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

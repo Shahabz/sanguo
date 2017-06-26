@@ -154,7 +154,7 @@ struct _slk_NetS_ItemUse {
 	short m_usenum;	//使用个数或装备位置
 	int m_effres;	//影响，一般用于特效显示
 };
-typedef struct _slk_NetS_ItemUse SLK_NetS_ItemUse;	//道具使用|装备
+typedef struct _slk_NetS_ItemUse SLK_NetS_ItemUse;	//道具使用
 
 struct _slk_NetS_ItemPut {
 	short m_res_offset;	//物品源
@@ -307,6 +307,34 @@ struct _slk_NetS_UpdateMapUnit {
 };
 typedef struct _slk_NetS_UpdateMapUnit SLK_NetS_UpdateMapUnit;	//更新地图显示单元信息
 
+struct _slk_NetS_Equip {
+	short m_offset;	//装备索引
+	short m_kind;	//装备种类
+	short m_washid[4];	//洗练属性
+};
+typedef struct _slk_NetS_Equip SLK_NetS_Equip;	//装备
+
+struct _slk_NetS_EquipList {
+	short m_equipext;	//装备栏扩展
+	short m_count;	//装备数量
+	SLK_NetS_Equip m_list[100];	//装备
+};
+typedef struct _slk_NetS_EquipList SLK_NetS_EquipList;	//装备列表
+
+struct _slk_NetS_EquipGet {
+	int m_offset;	//获得一件装备
+	short m_kind;	//获得一件装备
+	short m_path;	//获得一件装备
+};
+typedef struct _slk_NetS_EquipGet SLK_NetS_EquipGet;	//获得一件装备
+
+struct _slk_NetS_EquipLost {
+	int m_offset;	//丢掉一件装备
+	short m_kind;	//丢掉一件装备
+	short m_path;	//丢掉一件装备
+};
+typedef struct _slk_NetS_EquipLost SLK_NetS_EquipLost;	//丢掉一件装备
+
 struct _slk_NetS_AwardInfo {
 	int m_kind;	//种类
 	int m_num;	//数量
@@ -443,6 +471,10 @@ int struct_NetS_MapUnitCorrdinate_send( char **pptr, int *psize, SLK_NetS_MapUni
 int struct_NetS_AddMarchRoute_send( char **pptr, int *psize, SLK_NetS_AddMarchRoute *pValue );
 int struct_NetS_DelMarchRoute_send( char **pptr, int *psize, SLK_NetS_DelMarchRoute *pValue );
 int struct_NetS_UpdateMapUnit_send( char **pptr, int *psize, SLK_NetS_UpdateMapUnit *pValue );
+int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue );
+int struct_NetS_EquipList_send( char **pptr, int *psize, SLK_NetS_EquipList *pValue );
+int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValue );
+int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pValue );
 int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pValue );
 int struct_NetS_AwardInfoList_send( char **pptr, int *psize, SLK_NetS_AwardInfoList *pValue );
 int struct_NetS_Experience_send( char **pptr, int *psize, SLK_NetS_Experience *pValue );

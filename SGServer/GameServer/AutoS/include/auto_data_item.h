@@ -8,6 +8,7 @@ struct _itemkind {
 				char m_name[32];	//
 				short m_level;	//
 				int m_price;	//
+				int m_token;	//
 				short m_type;	//
 				short m_situation;	//
 				short m_overlap;	//

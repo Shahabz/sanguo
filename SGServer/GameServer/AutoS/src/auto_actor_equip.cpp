@@ -17,7 +17,7 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 	int offset = 0;
 	Equip *pEquip;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3` from %s where id='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3` from %s where id='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -38,14 +38,10 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 		pEquip->actorid = atoi(row[offset++]);
 		pEquip->offset = atoi(row[offset++]);
 		pEquip->kind = atoi(row[offset++]);
-		pEquip->ability[0] = atoi(row[offset++]);
-		pEquip->ability[1] = atoi(row[offset++]);
-		pEquip->ability[2] = atoi(row[offset++]);
-		pEquip->ability[3] = atoi(row[offset++]);
-		pEquip->value[0] = atoi(row[offset++]);
-		pEquip->value[1] = atoi(row[offset++]);
-		pEquip->value[2] = atoi(row[offset++]);
-		pEquip->value[3] = atoi(row[offset++]);
+		pEquip->washid[0] = atoi(row[offset++]);
+		pEquip->washid[1] = atoi(row[offset++]);
+		pEquip->washid[2] = atoi(row[offset++]);
+		pEquip->washid[3] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -59,7 +55,7 @@ int actor_equip_save_auto( Equip *pEquip, const char *pTab, FILE *fp )
 
 	char sz64_id[21]={0};
 RE_EQUIP_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip->id,sz64_id,10 ),pEquip->actorid,pEquip->offset,pEquip->kind,pEquip->ability[0],pEquip->ability[1],pEquip->ability[2],pEquip->ability[3],pEquip->value[0],pEquip->value[1],pEquip->value[2],pEquip->value[3]);
+	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`) Values('%s','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip->id,sz64_id,10 ),pEquip->actorid,pEquip->offset,pEquip->kind,pEquip->washid[0],pEquip->washid[1],pEquip->washid[2],pEquip->washid[3]);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -96,11 +92,11 @@ int actor_equip_batch_save_auto( Equip *pEquip, int maxcount, const char *pTab, 
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].ability[0],pEquip[index].ability[1],pEquip[index].ability[2],pEquip[index].ability[3],pEquip[index].value[0],pEquip[index].value[1],pEquip[index].value[2],pEquip[index].value[3]);
+			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`) Values('%s','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3]);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].ability[0],pEquip[index].ability[1],pEquip[index].ability[2],pEquip[index].ability[3],pEquip[index].value[0],pEquip[index].value[1],pEquip[index].value[2],pEquip[index].value[3]);
+			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d')",lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3]);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

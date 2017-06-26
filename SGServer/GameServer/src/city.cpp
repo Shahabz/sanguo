@@ -125,7 +125,7 @@ int city_single_save( City *pCity, FILE *fp )
 	{
 		if ( pCity->hero[tmpi].kind <= 0 )
 			continue;
-		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, HEROEQUIP_MAX, "actor_equip", fp );
+		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
 	}
 	return 0;
 }

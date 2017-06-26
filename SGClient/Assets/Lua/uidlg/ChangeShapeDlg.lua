@@ -97,6 +97,7 @@ function ChangeShapeDlgChangeShape()
 		return;
 	end
 	system_askinfo( ASKINFO_CHANGESHAPE, "", m_SelectShape );
+	ChangeShapeDlgClose();
 end
 
 function ChangeShapeDlgChangeName()

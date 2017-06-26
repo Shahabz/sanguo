@@ -178,7 +178,7 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 	{
 		if ( g_actors[actor_index].hero[tmpi].id <= 0 )
 			continue;
-		actor_equip_batch_save_auto( g_actors[actor_index].hero[tmpi].equip, HEROEQUIP_MAX, "actor_equip", fp );
+		actor_equip_batch_save_auto( g_actors[actor_index].hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
 	}
 
 	// 保存道具栏6
@@ -662,7 +662,9 @@ int actor_entercity( int actor_index )
 
 	// 物品列表
 	item_list( actor_index );
-	item_equip_list( actor_index );
+
+	// 装备列表
+	equip_list( actor_index );
 
 	// 离线奖励-角色ID
 	gift_check( actor_index );

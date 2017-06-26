@@ -9,9 +9,12 @@
 #include "server_structrecv_auto.h"
 #include "global_netsend_auto.h"
 #include "auto_data_item.h"
+#include "auto_data_equip.h"
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
 #include "auto_data_building_upgrade.h"
+#include "auto_data_vip.h"
+#include "auto_data_hero.h"
 #include "auto_data_vip.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
@@ -39,13 +42,10 @@
 /* 装备最大数量*/
 #define MAX_DEFAULT_EQUIPNUM	30
 #define MAX_ACTOR_EQUIPNUM		100
-#define EQUIP_BASEOFFSET		1000	// 穿身上的英雄索引
 
 #define HERO_ACTOR_MAX				128	// 未上英雄
 #define HERO_CITY_MAX				4	// 上阵英雄
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
-
-#define HEROEQUIP_MAX				6		// 装备数量
 #define SHAPE_MAX					64		// 形象
 
 // 推送秘钥长度

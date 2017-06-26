@@ -25,6 +25,7 @@
 #include "actor_notify.h"
 #include "system.h"
 #include "item.h"
+#include "equip.h"
 #include "global.h"
 #include "map.h"
 #include "mapunit.h"
@@ -287,6 +288,24 @@ int process_init( int max_connection )
 	if ( itemkind_init() < 0 )
 	{
 		printf_msg( "ItemKind Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 装备数据初始化
+	if ( equipinfo_init_auto() < 0 )
+	{
+		printf_msg( "equipinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 装备最大ID初始化
+	if ( equip_maxid_init() < 0 )
+	{
+		printf_msg( "equip_maxid_init Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

@@ -185,6 +185,26 @@ function netrecv_changtoken_C( buffer )
 	proc_changtoken_C( recvValue );
 end
 
+function netrecv_equip_C( buffer )
+	local recvValue = struct_NetS_Equip_recv( buffer );
+	proc_equip_C( recvValue );
+end
+
+function netrecv_equiplist_C( buffer )
+	local recvValue = struct_NetS_EquipList_recv( buffer );
+	proc_equiplist_C( recvValue );
+end
+
+function netrecv_equipget_C( buffer )
+	local recvValue = struct_NetS_EquipGet_recv( buffer );
+	proc_equipget_C( recvValue );
+end
+
+function netrecv_equiplost_C( buffer )
+	local recvValue = struct_NetS_EquipLost_recv( buffer );
+	proc_equiplost_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -223,6 +243,10 @@ Proc_Command = {
 	[CMDS_CHANGEFRIENDSHIP]=netrecv_changefriendship_C;
 	[CMDS_CHANGEVIP]=netrecv_changevip_C;
 	[CMDS_CHANGTOKEN]=netrecv_changtoken_C;
+	[CMDS_EQUIP]=netrecv_equip_C;
+	[CMDS_EQUIPLIST]=netrecv_equiplist_C;
+	[CMDS_EQUIPGET]=netrecv_equipget_C;
+	[CMDS_EQUIPLOST]=netrecv_equiplost_C;
 }
 
 function in_proc_command_C( cmd, buffer )

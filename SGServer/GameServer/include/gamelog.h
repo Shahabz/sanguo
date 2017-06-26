@@ -13,6 +13,7 @@
 #define LOGOP_BODY				7	// 体力
 #define LOGOP_VIPEXP			8	// vip经验
 #define LOGOP_BUILDING			9	// 建筑
+#define LOGOP_EQUIPGET			10	// 获得装备
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统

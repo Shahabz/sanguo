@@ -17,24 +17,29 @@
 
 
 /* 物品类型 */
-#define ITEM_TYPE_NORMAL					0	//	普通使用类
-#define ITEM_TYPE_NORMAL_USE				22	// 使用
+#define ITEM_TYPE_NORMAL_USE  1	//点击类道具（主动使用）
+#define ITEM_TYPE_SCRIPT_USE  2	//脚本使用类道具
 
 /* 动态属性 */
 #define ITEM_ABILITY_NONE					0
-#define ITEM_ABILITY_AWARDGROUP				1
+#define ITEM_ABILITY_AWARDGROUP		1	// 掉落包
+#define ITEM_ABILITY_SCRIPTID		2	// 脚本调用ID
+#define ITEM_ABILITY_ADDBODY		3	// 加体力
+#define ITEM_ABILITY_ADDEXP			4	// 加主公经验
+#define ITEM_ABILITY_ADDHEROEXP		5	// 加英雄经验
+#define ITEM_ABILITY_CITYRES_SILVER 11	// 银币数量
+#define ITEM_ABILITY_CITYRES_WOOD	12	// 木材数量
+#define ITEM_ABILITY_CITYRES_FOOD	13	// 粮食数量
+#define ITEM_ABILITY_CITYRES_IRON	14	// 铁数量
 
 /* 道具操作 */ 
 #define ITEM_PROCESS_INFO		1 // 获取道具信息
 #define ITEM_PROCESS_USE		2 // 使用道具
-#define ITEM_PROCESS_EQUIP		3 // 装备穿上
-#define ITEM_PROCESS_UNEQUIP	4 // 装备卸下
-#define ITEM_PROCESS_PUT		5 // 交换道具格子
 #define ITEM_PROCESS_DROP		6 // 丢弃道具
 #define ITEM_PROCESS_SELL		7 // 出售道具
 #define ITEM_PROCESS_SETTLE		8 // 背包整理
 #define ITEM_PROCESS_TOKENUSE	9 // 钻石方式使用道具
-#define ITEM_PROCESS_REFURBISH		12 // 刷新
+#define ITEM_PROCESS_REFURBISH	12 // 刷新
 
 /* 场合 */
 #define ITEM_SITUATION_NOUSEMORE	0x01	// 禁止使用多个
@@ -56,6 +61,7 @@ int item_maxid_init();
 char *item_getname( int itemkind );
 short item_getlevel( int itemkind );
 int item_getprice( int itemkind );
+int item_gettoken( int itemkind );
 short item_gettype( int itemkind );
 unsigned char item_getsituation( int itemkind );
 short item_get_overlap( int itemkind );
@@ -89,22 +95,16 @@ int item_getitemindex( int actor_index, int itemkind );//获取道具的索引
 int item_getitemindex_whihitemid( int actor_index, i64 itemid );//获取道具的索引
 
 // ---------------------------------- 服务器响应道具操作 item_proc.cpp -----------------------------------------------------
-int item_use( int actor_index, short itemindex, short itemnum, int hero_index, int target_index, int ask ); // 服务器响应道具操作-使用
-int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero_index, int target_index, int ask ); // 服务器响应道具操作-直接花钱使用
-int item_equipup( int actor_index, short item_offset ); // 服务器响应道具操作-装备上
-int item_put( int actor_index, short item_resource, short item_target ); // 服务器响应道具操作-交换位置或装备卸下
+int item_use( int actor_index, short itemindex, short itemnum, int herokind, int ask ); // 服务器响应道具操作-使用
+int item_use_withtoken( int actor_index, short itemkind, short itemnum, int herokind, int ask ); // 服务器响应道具操作-直接花钱使用
 int item_drop( int actor_index, short itemindex, short dorpcount ); // 服务器响应道具操作-丢弃
 int item_settle( int actor_index );   // 服务器响应道具操作-整理
-
-//道具兑换逻辑
-int item_exchange_proc( int actor_index, int id, int num );
 
 // ---------------------------------- 服务器发送道具协议 item_send.cpp -----------------------------------------------------
 int item_sendnotuse( int actor_index, short itemindex, int err );
 void item_sendlost( int actor_index, int target_index, short item_index, short item_num, char path );
 void item_sendget( int actor_index, int target_index, short item_index, short item_num, char path );
 int item_list( int actor_index );	// 发送道具列表
-int item_equip_list( int actor_index ); // 发送装备列表
 int item_info( int actor_index, short itemindex ); // 发送道具详细信息
 int item_info_withitem( Item *pItem, int actor_index, short itemindex );// 真正的发送道具信息函数
 int item_tokenbuy_getinfo( int actor_index, int itemkind );

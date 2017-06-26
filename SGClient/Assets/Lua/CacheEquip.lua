@@ -15,7 +15,7 @@ EQUIP_TYPE_EQUIP5					=	5	--	将印
 EQUIP_TYPE_EQUIP6					=	6	--	兵符
 
 -- 动态属性
-EQUIP_ABILITY_NONE			=	0
+EQUIP_ABILITY_NONE				=	0
 EQUIP_ABILITY_A					=	1	-- 攻击
 EQUIP_ABILITY_D					=	2	-- 防御
 EQUIP_ABILITY_S					=	3 -- 兵力

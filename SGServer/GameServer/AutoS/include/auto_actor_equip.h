@@ -7,9 +7,8 @@ struct _actor_equip {
 				i64 id;	//主索引
 				int actorid;	//角色ID
 				int offset;	//装备所在背包位置
-				int kind;	//物品种类
-				short ability[4];	//属性
-				int value[4];	//属性值
+				short kind;	//物品种类
+				short washid[4];	//洗练属性ID
 };
 typedef struct _actor_equip Equip;
 
