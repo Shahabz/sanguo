@@ -9,6 +9,7 @@ struct _equipinfo {
 				short color;	//
 				short ability;	//
 				int value;	//
+				int sec;	//
 				int silver;	//
 				short material_kind[6];	//
 				short material_num[6];	//

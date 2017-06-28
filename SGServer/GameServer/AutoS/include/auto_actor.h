@@ -25,7 +25,7 @@ struct _actor {
 				float charge_dollar;	//总消费多少钱
 				unsigned char itemext;	//扩展的背包栏位数
 				Item item[300];	//角色携带的道具
-				Equip equip[100];	//角色携带的装备
+				Equip equip[150];	//角色携带的装备
 				unsigned char equipext;	//扩展的装备栏位数
 				Hero hero[128];	//未上阵英雄
 				int sflag;	//特定标志位

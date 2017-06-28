@@ -47,7 +47,7 @@ int equipinfo_init_auto()
 	g_equipinfo = (EquipInfo *)malloc( sizeof(EquipInfo)*g_equipinfo_maxnum );
 	memset( g_equipinfo, 0, sizeof(EquipInfo)*g_equipinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`type`,`color`,`ability`,`value`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5` from equip;" );
+	sprintf( szSQL, "select `kind`,`type`,`color`,`ability`,`value`,`sec`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5` from equip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -66,6 +66,7 @@ int equipinfo_init_auto()
 		g_equipinfo[kind].color = atoi(row[offset++]);
 		g_equipinfo[kind].ability = atoi(row[offset++]);
 		g_equipinfo[kind].value = atoi(row[offset++]);
+		g_equipinfo[kind].sec = atoi(row[offset++]);
 		g_equipinfo[kind].silver = atoi(row[offset++]);
 		g_equipinfo[kind].material_kind[0] = atoi(row[offset++]);
 		g_equipinfo[kind].material_kind[1] = atoi(row[offset++]);
@@ -123,6 +124,10 @@ int equipinfo_luatable_auto()
 
 		lua_pushstring( servL, "value" );
 		lua_pushinteger( servL, g_equipinfo[kind].value );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "sec" );
+		lua_pushinteger( servL, g_equipinfo[kind].sec );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "silver" );

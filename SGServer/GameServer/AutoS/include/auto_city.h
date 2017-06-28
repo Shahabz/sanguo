@@ -44,7 +44,7 @@ struct _city {
 				int prestige;	//威望值
 				int friendship;	//友谊积分
 				int function;	//功能是否开启
-				Hero hero[4];	//上阵英雄
+				Hero hero[12];	//上阵英雄
 				Building building[8];	//普通建筑
 				BuildingBarracks building_barracks[4];	//兵营建筑
 				BuildingRes building_res[64];	//资源建筑

@@ -21,13 +21,14 @@ function MainCity.BuildingSelect( transform )
 	
 	local building = nil;	
 	if transform == nil then
-		
+		BuildingOpratorModShow( false, -1, nil );
 		return;
 	else
 
 		building = transform:GetComponent("CityBuilding");
 		MainCity.m_LastSelect = transform;
 		MainCity.m_LastSelect:GetComponent("UITweenColor"):Play(true);
+		BuildingOpratorModShow( true, 0, transform );
 	end
 	
 	
