@@ -39,14 +39,15 @@ public class CityCamera : Camera2D
 	{
         if( _DragGain )
             return;
-        if ( obj == null || obj.tag != "Building" )
-        {
-            city.SelectBuilding( null );
-        }
-        else
-        {
-            city.SelectBuilding( obj.transform );
-        }
+		if (obj == null) {
+			city.SelectBuilding (null);
+		} else if (obj.tag == "Building") {
+			city.SelectBuilding (obj.transform);
+		} else if (obj.tag == "BuildingLand") {
+			city.SelectBuildingLand (obj.transform);
+		} else {
+			city.SelectBuilding (null);
+		}
 	}
     protected override void OnClick( Transform obj )
     {

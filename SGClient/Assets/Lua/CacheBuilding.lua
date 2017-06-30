@@ -1,14 +1,39 @@
+
+
 -- 一个结构
---[[SLK_Building = class("SLK_Building")
-function SLK_Building:ctor()
-	self:empty();
+-- kind 当索引
+G_building = {};
+G_building.m_list = {};
+
+function BuildingAdd( kind, info )
+	G_buildings.m_list[kind] = info;
+	
+	if kind == BUILDING_Main then
+	elseif kind == BUILDING_Wall then
+	elseif kind == BUILDING_StoreHouse then
+	elseif kind == BUILDING_Tech then
+	elseif kind == BUILDING_Craftsman then
+	elseif kind == BUILDING_Cabinet then
+	elseif kind == BUILDING_Infantry then
+	elseif kind == BUILDING_Cavalry then
+	elseif kind == BUILDING_Archer then
+	elseif kind == BUILDING_Militiaman_Infantry then
+	elseif kind == BUILDING_Militiaman_Cavalry then
+	elseif kind == BUILDING_Militiaman_Archer then
+	elseif kind == BUILDING_Silver then
+	elseif kind == BUILDING_Wood then
+	elseif kind == BUILDING_Food then
+	elseif kind == BUILDING_Iron then
+	elseif kind == BUILDING_Smithy then
+	elseif kind == BUILDING_Wash then
+	elseif kind == BUILDING_Fangshi then
+	elseif kind == BUILDING_Shop then
+	elseif kind == BUILDING_Hero then
+	elseif kind == BUILDING_Wishing then
+	elseif kind == BUILDING_Help then
+	end
 end
 
-function SLK_Building:empty()
+function BuildingAddUpgrade( kind,  )
 	
-	-- 固定配置信息
-	self.m_kind  			= 0;-- j种类 决定了物品的名字
-	self.m_level 			= 0;-- 等级
-	
-	return self;
-end--]]
+end

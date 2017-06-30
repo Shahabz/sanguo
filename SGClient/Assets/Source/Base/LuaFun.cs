@@ -168,11 +168,26 @@ public class LuaFun
         get
         {
             if ( _buildingselect == null )
-                _buildingselect = eye.luaManager.GetFunction( "MainCity.BuildingSelect" );
+                _buildingselect = eye.luaManager.GetFunction( "City.BuildingSelect" );
 
             return _buildingselect;
         }
     }
+
+	/// <summary>
+	/// 选择一个建筑地块
+	/// </summary>
+	private static LuaFunction _buildinglandselect = null;
+	public static LuaFunction buildinglandselect
+	{
+		get
+		{
+			if ( _buildinglandselect == null )
+				_buildinglandselect = eye.luaManager.GetFunction( "City.BuildingLandSelect" );
+
+			return _buildinglandselect;
+		}
+	}
 
     /// <summary>
 	/// 加载资源
@@ -237,6 +252,7 @@ public class LuaFun
 
         _allUIClose = null;
         _buildingselect = null;
+		_buildinglandselect = null;
         _fightFrameTurn = null;
     }
 }

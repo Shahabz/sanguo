@@ -67,7 +67,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			
 		elseif nControlID == 30 then
-			ChatDlgOpen();
+			ChatDlgShow();
 		
 		elseif nControlID == 100 then
 			PlayerDlgShow();

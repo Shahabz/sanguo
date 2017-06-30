@@ -7,12 +7,30 @@ public class CityWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(City), typeof(UnityEngine.MonoBehaviour));
+		L.RegFunction("SelectBuildingLand", SelectBuildingLand);
 		L.RegFunction("SelectBuilding", SelectBuilding);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("_buildings", get__buildings, set__buildings);
 		L.RegVar("_camera", get__camera, set__camera);
 		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SelectBuildingLand(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			City obj = (City)ToLua.CheckObject(L, 1, typeof(City));
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.SelectBuildingLand(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

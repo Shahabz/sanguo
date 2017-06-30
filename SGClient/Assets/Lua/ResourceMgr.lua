@@ -39,4 +39,12 @@ function PlayerFaceSprite( shape )
 	return sprite;
 end
 
-
+-- 
+function BuildingSprite( kind )
+	local name = string.format("building_kind%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end

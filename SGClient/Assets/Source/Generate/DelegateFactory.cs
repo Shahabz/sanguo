@@ -37,6 +37,7 @@ public static class DelegateFactory
 		dict.Add(typeof(UIInputFieldSubmit.OnValidateInput), UIInputFieldSubmit_OnValidateInput);
 		dict.Add(typeof(UnityEngine.RectTransform.ReapplyDrivenProperties), UnityEngine_RectTransform_ReapplyDrivenProperties);
 		dict.Add(typeof(UITween.OnFinish), UITween_OnFinish);
+		dict.Add(typeof(YlyDelegateUtil.StringDelegate), YlyDelegateUtil_StringDelegate);
 		dict.Add(typeof(DragonBones.ListenerDelegate<DragonBones.EventObject>), DragonBones_ListenerDelegate_DragonBones_EventObject);
 	}
 
@@ -1116,6 +1117,53 @@ public static class DelegateFactory
 		{
 			UITween_OnFinish_Event target = new UITween_OnFinish_Event(func, self);
 			UITween.OnFinish d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class YlyDelegateUtil_StringDelegate_Event : LuaDelegate
+	{
+		public YlyDelegateUtil_StringDelegate_Event(LuaFunction func) : base(func) { }
+		public YlyDelegateUtil_StringDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(string param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(string param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate YlyDelegateUtil_StringDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			YlyDelegateUtil.StringDelegate fn = delegate(string param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			YlyDelegateUtil_StringDelegate_Event target = new YlyDelegateUtil_StringDelegate_Event(func);
+			YlyDelegateUtil.StringDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			YlyDelegateUtil_StringDelegate_Event target = new YlyDelegateUtil_StringDelegate_Event(func, self);
+			YlyDelegateUtil.StringDelegate d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

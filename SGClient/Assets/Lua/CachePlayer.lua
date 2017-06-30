@@ -33,6 +33,17 @@ function Player:Init()
 	self.m_archer_num		=	0;
 	self.m_mokilllv			=	0;
 	self.m_sflag			=	0;
+	
+	self.m_levynum			=	0;
+	self.m_worker_kind		=	0;
+	self.m_worker_offset	=	0;
+	self.m_worker_sec		=	0;
+	self.m_worker_kind_ex	=	0;
+	self.m_worker_offset_ex	=	0;
+	self.m_worker_sec_ex	=	0;
+	self.m_worker_expire_ex	=	0;
+	self.m_buildings 		=	{};
+	self.m_buildings_res 	=	{};
 end
 
 -- 属性变化
@@ -62,28 +73,30 @@ function Player:Set( recvValue )
 	self.m_archer_num		=	recvValue.m_archer_num;
 	self.m_mokilllv			=	recvValue.m_mokilllv;
 	self.m_sflag			=	recvValue.m_sflag;
-	
-	--self:ChangeToken( recvValue.m_exp, 0 )
-	--self:ChangeExp( recvValue.m_exp, recvValue.m_expmax, 0, 0 )
 end
 
--- 钻石改变
--- EventProtocol.addEventListener( "ChangeToken", function( recvValue ) end )
-function Player:ChangeToken( nValue, nPath )
-	local oldValue = self.m_token;
-	self.m_token = nValue;
-	EventProtocol.dispatchEvent( "ChangeToken", { value=nValue, change=nValue-oldValue, path=nPath } );
+-- 
+function Player:SetBuilding( kind, info )
+	self.m_buildings[kind] = info;
 end
 
--- 经验改变
--- EventProtocol.addEventListener( "ChangeExp", function( recvValue ) end )
-function Player:ChangeExp( nValue, nMaxValue, bIsUp, nPath )
-	local oldValue = self.m_exp;
-	self.m_exp = nValue;
-	if nMaxValue ~= 0 then
-		self.m_expmax = nMaxValue;
-	end
-	EventProtocol.dispatchEvent( "ChangeExp", { value=nValue, maxvalue=self.m_expmax, change=nValue-oldValue, isup=bIsUp, path=nPath } );
+function Player:SetBuildingRes( kind, offset, info )
+	self.m_buildings_res[kind] = {};
+	self.m_buildings_res[kind][offset] = info;
+end
+
+function Player:SetBuildingWorker( recvValue )
+	self.m_worker_kind		=	recvValue.m_worker_kind;
+	self.m_worker_offset	=	recvValue.m_worker_offset;
+	self.m_worker_sec		=	recvValue.m_worker_sec;
+	self.m_worker_kind_ex	=	recvValue.m_worker_kind_ex;
+	self.m_worker_offset_ex	=	recvValue.m_worker_offset_ex;
+	self.m_worker_sec_ex	=	recvValue.m_worker_sec_ex;
+	self.m_worker_expire_ex	=	recvValue.m_worker_expire_ex;
+end
+
+function Player:SetBuildingLevy( levynum )
+	self.m_levynum			=	levynum;
 end
 
 -- 全局

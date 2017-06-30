@@ -231,6 +231,10 @@ public static class CustomSettings
         _GT(typeof(Shake)),
         _GT(typeof(UIHighLightMask)),
 
+		_GT(typeof(YlyAssetIdentify)),
+		_GT(typeof(YlyRichText)),
+		_GT(typeof(YlyDelegateUtil)),
+
         // Gizmo
 		_GT(typeof(GizmoPlane)),
         _GT(typeof(GizmoBezierLine)),
@@ -268,6 +272,7 @@ public static class CustomSettings
         _GT(typeof(City)),
         _GT(typeof(CityCamera)),
         _GT(typeof(CityBuilding)),
+		_GT(typeof(CityLand)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

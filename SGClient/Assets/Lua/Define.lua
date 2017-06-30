@@ -46,6 +46,57 @@ BUILDING_Hero		    =  35	-- ¾ÛÏÍ¹Ý
 BUILDING_Wishing	    =  36	-- ¾Û±¦Åè
 BUILDING_Help		    =  37	-- °ïÖú
 
+BuildingPrefab={
+[BUILDING_Main] = { prefab = "BUILDING_Main", land="BuildingLand0" },
+[BUILDING_Wall] = { prefab = "BUILDING_Wall", land="BuildingLand1" },
+[BUILDING_StoreHouse] = { prefab = "BUILDING_StoreHouse", land="BuildingLand2" },
+[BUILDING_Tech] = { prefab = "BUILDING_Tech", land="BuildingLand3" },
+[BUILDING_Craftsman] = { prefab = "BUILDING_Craftsman", land="BuildingLand4" },
+[BUILDING_Cabinet] = { prefab = "BUILDING_Cabinet", land="BuildingLand5" },
+[BUILDING_Infantry] = { prefab = "BUILDING_Infantry", land="BuildingLand6" },
+[BUILDING_Cavalry] = { prefab = "BUILDING_Cavalry", land="BuildingLand7" },
+[BUILDING_Archer] = { prefab = "BUILDING_Archer", land="BuildingLand8" },
+[BUILDING_Militiaman_Infantry] = { prefab = "BUILDING_Militiaman_Infantry", land="BuildingLand9" },
+[BUILDING_Militiaman_Cavalry] = { prefab = "BUILDING_Militiaman_Cavalry", land="BuildingLand10" },
+[BUILDING_Militiaman_Archer] = { prefab = "BUILDING_Militiaman_Archer", land="BuildingLand11" },
+[BUILDING_Silver] = { prefab = "BUILDING_Silver", land="ResLand" },
+[BUILDING_Wood] = { prefab = "BUILDING_Wood", land="ResLand" },
+[BUILDING_Food] = { prefab = "BUILDING_Food", land="ResLand" },
+[BUILDING_Iron] = { prefab = "BUILDING_Iron", land="ResLand" },
+[BUILDING_Smithy] = { prefab = "BUILDING_Smithy", land="BuildingLand12" },
+[BUILDING_Wash] = { prefab = "BUILDING_Wash", land="BuildingLand13" },
+[BUILDING_Fangshi] = { prefab = "BUILDING_Fangshi", land="BuildingLand14" },
+[BUILDING_Shop] = { prefab = "BUILDING_Shop", land="BuildingLand15" },
+[BUILDING_Hero] = { prefab = "BUILDING_Hero", land="BuildingLand16" },
+[BUILDING_Wishing] = { prefab = "BUILDING_Wishing", land="BuildingLand17" },
+[BUILDING_Help] = { prefab = "BUILDING_Help", land="BuildingLand18" },
+} 
+--[[
+	if kind == BUILDING_Main then
+	elseif kind == BUILDING_Wall then
+	elseif kind == BUILDING_StoreHouse then
+	elseif kind == BUILDING_Tech then
+	elseif kind == BUILDING_Craftsman then
+	elseif kind == BUILDING_Cabinet then
+	elseif kind == BUILDING_Infantry then
+	elseif kind == BUILDING_Cavalry then
+	elseif kind == BUILDING_Archer then
+	elseif kind == BUILDING_Militiaman_Infantry then
+	elseif kind == BUILDING_Militiaman_Cavalry then
+	elseif kind == BUILDING_Militiaman_Archer then
+	elseif kind == BUILDING_Silver then
+	elseif kind == BUILDING_Wood then
+	elseif kind == BUILDING_Food then
+	elseif kind == BUILDING_Iron then
+	elseif kind == BUILDING_Smithy then
+	elseif kind == BUILDING_Wash then
+	elseif kind == BUILDING_Fangshi then
+	elseif kind == BUILDING_Shop then
+	elseif kind == BUILDING_Hero then
+	elseif kind == BUILDING_Wishing then
+	elseif kind == BUILDING_Help then
+	end
+--]]
 -- Í¾¾¶
 PATH_SYSTEM						=	1	-- ÏµÍ³
 PATH_GM							=	2	-- GM

@@ -71,6 +71,7 @@
      <Compile Include="Assets\Source\Camera\FightCamera.cs" />
      <Compile Include="Assets\Source\City\City.cs" />
      <Compile Include="Assets\Source\City\CityBuilding.cs" />
+     <Compile Include="Assets\Source\City\CityLand.cs" />
      <Compile Include="Assets\Source\Effect\Bezier.cs" />
      <Compile Include="Assets\Source\Effect\BezierMove.cs" />
      <Compile Include="Assets\Source\Effect\FXTypeWriter.cs" />
@@ -90,6 +91,7 @@
      <Compile Include="Assets\Source\Generate\Camera2DWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityBuildingWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityCameraWrap.cs" />
+     <Compile Include="Assets\Source\Generate\CityLandWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityWrap.cs" />
      <Compile Include="Assets\Source\Generate\ConstWrap.cs" />
      <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
@@ -262,6 +264,9 @@
      <Compile Include="Assets\Source\Generate\UnityEngine_WWWWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
      <Compile Include="Assets\Source\Generate\UtilsWrap.cs" />
+     <Compile Include="Assets\Source\Generate\YlyAssetIdentifyWrap.cs" />
+     <Compile Include="Assets\Source\Generate\YlyDelegateUtilWrap.cs" />
+     <Compile Include="Assets\Source\Generate\YlyRichTextWrap.cs" />
      <Compile Include="Assets\Source\Generate\eyeWrap.cs" />
      <Compile Include="Assets\Source\Gizmo\GizmoBezierLine.cs" />
      <Compile Include="Assets\Source\Gizmo\GizmoPlane.cs" />
@@ -324,6 +329,7 @@
      <Compile Include="Assets\Source\UI\UISystem.cs" />
      <Compile Include="Assets\Source\UI\UIText.cs" />
      <Compile Include="Assets\Source\UI\UITextAutoOmit.cs" />
+     <Compile Include="Assets\Source\UI\UITextBack.cs" />
      <Compile Include="Assets\Source\UI\UITextFirstUpper.cs" />
      <Compile Include="Assets\Source\UI\UITextNumCountdown.cs" />
      <Compile Include="Assets\Source\UI\UITextTimeCountdown.cs" />
@@ -434,6 +440,10 @@
      <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
+     <Compile Include="Assets\YLYRichText\Scripts\YlyAssetIdentify.cs" />
+     <Compile Include="Assets\YLYRichText\Scripts\YlyDelegateUtil.cs" />
+     <Compile Include="Assets\YLYRichText\Scripts\YlyRichText.cs" />
+     <Compile Include="Assets\YLYRichText\Scripts\YlyRichTextParser.cs" />
      <None Include="Assets\StreamingAssets\Data\localization_language.txt" />
      <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\StreamingAssets\Data\resmap_sprite.txt" />
@@ -458,6 +468,7 @@
      <None Include="Assets\Resources\PackAssets\Shader\ImageMask.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\ScreenBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
+     <None Include="Assets\YLYRichText\Shaders\YlyUISeqFrameAni.shader" />
      <None Include="Assets\Resources\PackAssets\Data\MaskWord.txt" />
      <None Include="Assets\StreamingAssets\Data\en-us\localize.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />

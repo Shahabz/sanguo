@@ -11,6 +11,11 @@ public class City : MonoBehaviour
 		
 	}
 
+	public void SelectBuildingLand( Transform building )
+	{
+		LuaFun.buildinglandselect.Call( building );
+	} 
+
 	public void SelectBuilding( Transform building )
 	{
         LuaFun.buildingselect.Call( building );

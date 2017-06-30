@@ -131,6 +131,39 @@ end
 function proc_buildinglist_C( recvValue )
 	-- process.
 	-- 设置建筑
+	for i=1, recvValue.m_building_count, 1 do
+		GetPlayer():SetBuilding( recvValue.m_building[i].m_kind,
+		{ 
+		m_kind = recvValue.m_building[i].m_kind,
+		m_offset = recvValue.m_building[i].m_offset,
+		m_level = recvValue.m_building[i].m_level,
+		m_sec = recvValue.m_building[i].m_sec,
+		m_quick = recvValue.m_building[i].m_quick,
+		} )
+	end
+	
+	for i=1, recvValue.m_barracks_count, 1 do
+		GetPlayer():SetBuilding( recvValue.m_barracks[i].m_kind, 
+		{ 
+		m_kind = recvValue.m_barracks[i].m_kind,
+		m_offset = recvValue.m_barracks[i].m_offset,
+		m_level = recvValue.m_barracks[i].m_level,
+		m_sec = recvValue.m_barracks[i].m_sec,
+		m_quick = recvValue.m_barracks[i].m_quick,
+		} )
+	end
+	
+	for i=1, recvValue.m_res_count, 1 do
+		GetPlayer():SetBuildingRes( recvValue.res[i].m_kind, recvValue.res[i].m_offset,
+		{ 
+		m_kind = recvValue.res[i].m_kind,
+		m_offset = recvValue.res[i].m_offset,
+		m_level = recvValue.res[i].m_level,
+		} )
+	end
+	
+	GetPlayer():SetBuildingWorker( recvValue )
+	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
 	
 	-- 关闭加载面板
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
@@ -269,6 +302,7 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changelevy_C( recvValue )
 	-- process.
+	GetPlayer():SetBuildingLevy( recvValue.m_total )
 end
 
 -- m_total=0,m_add=0,m_path=0,

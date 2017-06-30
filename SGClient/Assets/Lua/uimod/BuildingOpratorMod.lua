@@ -3,8 +3,12 @@ local m_Mod;
 local m_uiOprator = nil; --UnityEngine.GameObject
 local m_uiUpgrade = nil; --UnityEngine.GameObject
 local m_uiEnter = nil; --UnityEngine.GameObject
+local m_uiTrain = nil; --UnityEngine.GameObject
+local m_uiSpeed = nil; --UnityEngine.GameObject
 
-local m_CurrIndex = 0;
+local m_kind = 0;
+local m_offset = -1;
+
 local m_Closing = false;
 
 function BuildingOpratorModOpen()
@@ -25,11 +29,11 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
     if nType == UI_EVENT_CLICK then
         if nControlID == 1 then
             -- 升级
-            --BuildingInfoDlgOpenByIndex( m_CurrIndex );
-            --BuildingUnSelect();
+			BuildingUpgradeDlgShow( m_kind, m_offset )
+            City.BuildingUnSelect();
         elseif nControlID == 2 then
             -- 升级
-            --BuildingDlgOpenByIndex( m_CurrIndex );
+            --BuildingDlgOpenByIndex( m_offset );
             --BuildingUnSelect();
         end
     elseif nType == UI_EVENT_TWEENFINISH then
@@ -46,9 +50,11 @@ function BuildingOpratorModOnAwake( gameObject )
     m_Mod = gameObject;
     local objs = gameObject:GetComponent( typeof(UIMod) ).relatedGameObject;
 
-		m_uiOprator = objs[0];
-		m_uiUpgrade = objs[1];
-		m_uiEnter = objs[2];
+	m_uiOprator = objs[0];
+	m_uiUpgrade = objs[1];
+	m_uiEnter = objs[2];
+	m_uiTrain = objs[3];
+	m_uiSpeed = objs[4];
    
     BuildingOpratorModClose();
 end
@@ -82,10 +88,11 @@ end
 -- 自定
 ----------------------------------------
 
-function BuildingOpratorModShow( show, index, parent )
+function BuildingOpratorModShow( show, kind, offset, parent )
 
     if show then
-        m_CurrIndex = index;        
+		m_kind = kind;
+        m_offset = offset;        
 		
         -- 打开
         -- 如果已经打开，先关上
@@ -196,6 +203,8 @@ function BuildingOpratorModShow( show, index, parent )
             --m_Tweener[2]:Play( false );
                     BuildingOpratorModClose();
                     m_Closing = false;
+					m_kind = 0;
+					m_offset = -1;  
             -- 延时关闭
             --[[Invoke( function()
                     BuildingOpratorModClose();
@@ -222,7 +231,6 @@ function BuildingOpratorModInit()
     if m_Mod ~= nil then
         return;
     end
-	print( "BuildingOpratorModInit" )
 	local trans = GameManager.MainCity.transform:Find( "BuildingUI/BuildingOpratorMod" ) 
 	trans:SetActive(true);
 	--local trans = GameObject.Instantiate( LoadPrefab( name ) ).transform;
