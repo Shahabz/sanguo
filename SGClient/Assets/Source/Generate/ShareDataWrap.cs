@@ -14,6 +14,7 @@ public class ShareDataWrap
 		L.RegFunction("ClearShareVars", ClearShareVars);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("id", get_id, set_id);
 		L.RegVar("intValue", get_intValue, set_intValue);
 		L.RegVar("floatValue", get_floatValue, set_floatValue);
 		L.RegVar("boolValue", get_boolValue, set_boolValue);
@@ -128,6 +129,25 @@ public class ShareDataWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ShareData obj = (ShareData)o;
+			int ret = obj.id;
+			LuaDLL.lua_pushinteger(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_intValue(IntPtr L)
 	{
 		object o = null;
@@ -219,6 +239,25 @@ public class ShareDataWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index _vars on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ShareData obj = (ShareData)o;
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			obj.id = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
 		}
 	}
 

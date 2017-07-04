@@ -4,7 +4,8 @@ Type			= System.Type
 Object          = UnityEngine.Object
 GameObject 		= UnityEngine.GameObject
 Transform 		= UnityEngine.Transform
-RectTransform   = UnityEngine.Transform
+RectTransform   = UnityEngine.RectTransform
+Rect   			= UnityEngine.Rect
 MonoBehaviour 	= UnityEngine.MonoBehaviour
 Component		= UnityEngine.Component
 Application		= UnityEngine.Application
@@ -62,11 +63,14 @@ require "CachePlayer"
 require "CacheCity"
 require "uimod/LoginMod"
 require "uimod/PopTextMod"
+require "uimod/DialogFrameMod"
 require "uimod/BuildingOpratorMod"
+require "uimod/BuildingTimerMod"
 require "uimod/LevyMod"
 require "uidlg/AlertDlg"
 require "uidlg/BuildingCreateDlg"
 require "uidlg/BuildingUpgradeDlg"
+require "uidlg/BuildingGetDlg"
 require "uidlg/CreateDlg"
 require "uidlg/ChangeShapeDlg"
 require "uidlg/ChatDlg"
@@ -74,7 +78,12 @@ require "uidlg/EquipForgingDlg"
 require "uidlg/EquipWashDlg"
 require "uidlg/HeroDlg"
 require "uidlg/HeroInfoDlg"
+require "uidlg/HeroGetDlg"
 require "uidlg/HeroListDlg"
+require "uidlg/HeroTalkDlg"
+require "uidlg/LevyDlg"
 require "uidlg/MainDlg"
+require "uidlg/NpcTalkDlg"
+require "uidlg/QuestAwardDlg"
 require "uidlg/TrainDlg"
 require "uidlg/PlayerDlg"

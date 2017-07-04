@@ -5,6 +5,7 @@ using UnityEngine;
 public class CityBuilding : MonoBehaviour {
     public short kind = 0;
     public short offset = -1;
+	public Transform BuildingTimerMod=null;
 	// Use this for initialization
 	void Start () {
 		

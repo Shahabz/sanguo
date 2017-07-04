@@ -91,6 +91,7 @@ function struct_NetS_Building_recv( buffer )
 	recvValue.m_offset = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_sec = buffer:ReadInt();
+	recvValue.m_needsec = buffer:ReadInt();
 	recvValue.m_quick = buffer:ReadSByte();
 	return recvValue;
 end
@@ -101,6 +102,7 @@ function struct_NetS_BuildingBarracks_recv( buffer )
 	recvValue.m_offset = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_sec = buffer:ReadInt();
+	recvValue.m_needsec = buffer:ReadInt();
 	recvValue.m_quick = buffer:ReadSByte();
 	return recvValue;
 end
@@ -141,10 +143,12 @@ function struct_NetS_BuildingList_recv( buffer )
 	recvValue.m_worker_offset = buffer:ReadSByte();
 	recvValue.m_worker_op = buffer:ReadSByte();
 	recvValue.m_worker_sec = buffer:ReadInt();
+	recvValue.m_worker_needsec = buffer:ReadInt();
 	recvValue.m_worker_kind_ex = buffer:ReadSByte();
 	recvValue.m_worker_offset_ex = buffer:ReadSByte();
 	recvValue.m_worker_op_ex = buffer:ReadSByte();
 	recvValue.m_worker_sec_ex = buffer:ReadInt();
+	recvValue.m_worker_needsec_ex = buffer:ReadInt();
 	recvValue.m_worker_expire_ex = buffer:ReadInt();
 	recvValue.m_function = buffer:ReadInt();
 	return recvValue;

@@ -1,3 +1,4 @@
+local m_Mod;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -17,7 +18,8 @@ end
 
 -- 载入时调用
 function #NAME#OnAwake( gameObject )
-	
+	m_Mod = gameObject;
+	local objs = gameObject:GetComponent( "UIMod" ).relatedGameObject;
 end
 
 -- 界面初始化时调用
@@ -45,7 +47,9 @@ function #NAME#OnLogic( gameObject )
 	
 end
 
-
+function #NAME#Get()
+	return m_Mod;
+end
 ----------------------------------------
 -- 自定
 ----------------------------------------

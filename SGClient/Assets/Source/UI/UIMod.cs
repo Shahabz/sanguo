@@ -39,6 +39,7 @@ public enum UILayer
 
 public class UIMod : MonoBehaviour 
 {
+	public int id = 0;
 	public bool			enableUpdate = false;
 	public GameObject[] relatedGameObject;
 

@@ -73,6 +73,7 @@ struct _slk_NetS_Building {
 	char m_offset;	//普通建筑-位置
 	char m_level;	//普通建筑-等级
 	int m_sec;	//普通建筑-操作剩余时间
+	int m_needsec;	//
 	char m_quick;	//普通建筑-是否有加速(科技等)
 };
 typedef struct _slk_NetS_Building SLK_NetS_Building;	//普通建筑信息
@@ -82,6 +83,7 @@ struct _slk_NetS_BuildingBarracks {
 	char m_offset;	//兵营建筑-位置
 	char m_level;	//兵营建筑-等级
 	int m_sec;	//兵营建筑-募兵剩余时间
+	int m_needsec;	//
 	char m_quick;	//兵营建筑-是否有加速
 };
 typedef struct _slk_NetS_BuildingBarracks SLK_NetS_BuildingBarracks;	//兵营建筑信息
@@ -105,10 +107,12 @@ struct _slk_NetS_BuildingList {
 	char m_worker_offset;	//服务器发送建筑队列索引
 	char m_worker_op;	//服务器发送-建筑队列建筑操作
 	int m_worker_sec;	//服务器发送-建筑队列剩余时间
+	int m_worker_needsec;	//
 	char m_worker_kind_ex;	//服务器发送-建筑队列种类(商用)
 	char m_worker_offset_ex;	//服务器发送-建筑队列索引(商用)
 	char m_worker_op_ex;	//服务器发送-建筑队列操作(商用)
 	int m_worker_sec_ex;	//服务器发送-建筑队列剩余时间(商用)
+	int m_worker_needsec_ex;	//
 	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
 	int m_function;	//服务器发送-功能是否开启
 };

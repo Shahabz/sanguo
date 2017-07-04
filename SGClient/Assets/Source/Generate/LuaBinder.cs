@@ -51,6 +51,7 @@ public static class LuaBinder
 		UITweenLocalPositionWrap.Register(L);
 		UITweenLocalPositionBetweenWrap.Register(L);
 		UITweenScaleWrap.Register(L);
+		UITweenScale1Wrap.Register(L);
 		UITweenPositionWrap.Register(L);
 		UITweenSizeDeltaWrap.Register(L);
 		UITweenCityBuildingWrap.Register(L);
@@ -121,6 +122,7 @@ public static class LuaBinder
 		UnityEngine_MotionWrap.Register(L);
 		UnityEngine_SpriteWrap.Register(L);
 		UnityEngine_RectTransformWrap.Register(L);
+		UnityEngine_RectWrap.Register(L);
 		UnityEngine_TextGeneratorWrap.Register(L);
 		UnityEngine_UICharInfoWrap.Register(L);
 		UnityEngine_TextGenerationSettingsWrap.Register(L);

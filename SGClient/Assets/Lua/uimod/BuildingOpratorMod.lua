@@ -30,12 +30,14 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
         if nControlID == 1 then
             -- 升级
 			BuildingUpgradeDlgShow( m_kind, m_offset )
-            City.BuildingUnSelect();
+
         elseif nControlID == 2 then
-            -- 升级
-            --BuildingDlgOpenByIndex( m_offset );
-            --BuildingUnSelect();
+            -- 进入
+			if m_kind == BUILDING_Main then
+				LevyDlgShow();
+			end
         end
+		City.BuildingUnSelect();
     elseif nType == UI_EVENT_TWEENFINISH then
         --if value == 1 then
             --m_Mod:SetActive( false );
@@ -106,7 +108,7 @@ function BuildingOpratorModShow( show, kind, offset, parent )
         -- 设置位置
         m_Mod.transform.position = parent.position;
         m_Mod.transform.localPosition = Vector3.New( m_Mod.transform.localPosition.x, m_Mod.transform.localPosition.y, 0 );
-        
+        m_Mod.transform:SetSiblingIndex(100);
        
         -- 先全部隐藏了
         for tmpi = 0, m_uiOprator.transform.childCount - 1, 1 do
@@ -242,4 +244,5 @@ end
 function BuildingOpratorModGetOPUpgrade()
     return m_uiUpgrade:GetComponent( typedef(UIButton) );
 end
+
 

@@ -20,6 +20,7 @@ public class UITextTimeCountdownWrap
 		L.RegVar("formatText", get_formatText, set_formatText);
 		L.RegVar("overText", get_overText, set_overText);
 		L.RegVar("playOnEable", get_playOnEable, set_playOnEable);
+		L.RegVar("iso", get_iso, set_iso);
 		L.RegVar("Direct", get_Direct, set_Direct);
 		L.RegVar("Interval", get_Interval, set_Interval);
 		L.RegVar("Duration", get_Duration, set_Duration);
@@ -242,6 +243,25 @@ public class UITextTimeCountdownWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index playOnEable on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_iso(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UITextTimeCountdown obj = (UITextTimeCountdown)o;
+			bool ret = obj.iso;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index iso on a nil value" : e.Message);
 		}
 	}
 
@@ -470,6 +490,25 @@ public class UITextTimeCountdownWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index playOnEable on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_iso(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UITextTimeCountdown obj = (UITextTimeCountdown)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.iso = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index iso on a nil value" : e.Message);
 		}
 	}
 

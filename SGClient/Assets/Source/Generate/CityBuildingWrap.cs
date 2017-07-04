@@ -11,6 +11,7 @@ public class CityBuildingWrap
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("kind", get_kind, set_kind);
 		L.RegVar("offset", get_offset, set_offset);
+		L.RegVar("BuildingTimerMod", get_BuildingTimerMod, set_BuildingTimerMod);
 		L.EndClass();
 	}
 
@@ -71,6 +72,25 @@ public class CityBuildingWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BuildingTimerMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform ret = obj.BuildingTimerMod;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingTimerMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_kind(IntPtr L)
 	{
 		object o = null;
@@ -105,6 +125,25 @@ public class CityBuildingWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index offset on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_BuildingTimerMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.BuildingTimerMod = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingTimerMod on a nil value" : e.Message);
 		}
 	}
 }

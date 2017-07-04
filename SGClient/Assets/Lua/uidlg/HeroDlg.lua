@@ -1,9 +1,11 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
 
 -- 打开界面
 function HeroDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "武将", 2, HeroDlgClose );
 end
 
 -- 隐藏界面
@@ -11,7 +13,7 @@ function HeroDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "HeroDlg" );
 end
 
@@ -30,6 +32,8 @@ function HeroDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroDlgClose();
+		elseif nControlID == 0 then
+			HeroInfoDlgOpen();
         end
 	end
 end
@@ -69,3 +73,7 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function HeroDlgShow()
+	HeroDlgOpen();
+end
+

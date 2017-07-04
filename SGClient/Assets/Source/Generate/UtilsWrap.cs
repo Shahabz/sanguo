@@ -40,6 +40,7 @@ public class UtilsWrap
 		L.RegFunction("GetCharacterWidth", GetCharacterWidth);
 		L.RegFunction("IsEmojiCharacter", IsEmojiCharacter);
 		L.RegFunction("GetTimeFormat", GetTimeFormat);
+		L.RegFunction("GetTimeFormatISO", GetTimeFormatISO);
 		L.RegFunction("GetMillisecond", GetMillisecond);
 		L.RegFunction("StringFormat", StringFormat);
 		L.RegFunction("ScreenPointToLocalPointInRectangle", ScreenPointToLocalPointInRectangle);
@@ -625,6 +626,23 @@ public class UtilsWrap
 			ToLua.CheckArgsCount(L, 1);
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 1);
 			string o = Utils.GetTimeFormat(arg0);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetTimeFormatISO(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 1);
+			string o = Utils.GetTimeFormatISO(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}

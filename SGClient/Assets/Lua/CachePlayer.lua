@@ -38,9 +38,11 @@ function Player:Init()
 	self.m_worker_kind		=	0;
 	self.m_worker_offset	=	0;
 	self.m_worker_sec		=	0;
+	self.m_worker_needsec   =	0;
 	self.m_worker_kind_ex	=	0;
 	self.m_worker_offset_ex	=	0;
 	self.m_worker_sec_ex	=	0;
+	self.m_worker_needsec_ex=	0;
 	self.m_worker_expire_ex	=	0;
 	self.m_buildings 		=	{};
 	self.m_buildings_res 	=	{};
@@ -76,27 +78,51 @@ function Player:Set( recvValue )
 end
 
 -- 
-function Player:SetBuilding( kind, info )
+function Player:SetBuilding( kind, info, active )
 	self.m_buildings[kind] = info;
+	--
+	local unitObj = City.BuildingAdd( info, active );
+	return unitObj;
 end
 
-function Player:SetBuildingRes( kind, offset, info )
-	self.m_buildings_res[kind] = {};
+function Player:SetBuildingRes( kind, offset, info, active )
+	if self.m_buildings_res[kind] == nil then
+		self.m_buildings_res[kind] = {};
+	end
 	self.m_buildings_res[kind][offset] = info;
+	--
+	local unitObj = City.BuildingAdd( info, active );
+	return unitObj;
 end
 
 function Player:SetBuildingWorker( recvValue )
 	self.m_worker_kind		=	recvValue.m_worker_kind;
 	self.m_worker_offset	=	recvValue.m_worker_offset;
 	self.m_worker_sec		=	recvValue.m_worker_sec;
+	self.m_worker_needsec   =	recvValue.m_worker_needsec;
 	self.m_worker_kind_ex	=	recvValue.m_worker_kind_ex;
 	self.m_worker_offset_ex	=	recvValue.m_worker_offset_ex;
 	self.m_worker_sec_ex	=	recvValue.m_worker_sec_ex;
+	self.m_worker_needsec_ex=	recvValue.m_worker_needsec_ex;
 	self.m_worker_expire_ex	=	recvValue.m_worker_expire_ex;
 end
 
 function Player:SetBuildingLevy( levynum )
+	local old 				= 	self.m_levynum;
 	self.m_levynum			=	levynum;
+	
+	--
+	if old > levynum then
+		local changenum = old - levynum;
+		for i=1, changenum, 1 do
+			City.BuildingSubLevy();
+		end
+	else
+		local changenum = levynum - old;
+		for i=1, changenum, 1 do
+			City.BuildingAddLevy();
+		end
+	end
 end
 
 -- È«¾Ö

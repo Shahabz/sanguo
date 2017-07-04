@@ -98,6 +98,7 @@ function proc_enterinfo_C( recvValue )
 		
 		-- 缓存主城
 		GameManager.MainCity = GameObject.Instantiate( obj );
+		City.Init();
 		
 		-- 打开主界面
 		MainDlgOpen();
@@ -138,8 +139,11 @@ function proc_buildinglist_C( recvValue )
 		m_offset = recvValue.m_building[i].m_offset,
 		m_level = recvValue.m_building[i].m_level,
 		m_sec = recvValue.m_building[i].m_sec,
+		m_needsec = recvValue.m_building[i].m_needsec,
 		m_quick = recvValue.m_building[i].m_quick,
 		} )
+		
+		
 	end
 	
 	for i=1, recvValue.m_barracks_count, 1 do
@@ -149,6 +153,7 @@ function proc_buildinglist_C( recvValue )
 		m_offset = recvValue.m_barracks[i].m_offset,
 		m_level = recvValue.m_barracks[i].m_level,
 		m_sec = recvValue.m_barracks[i].m_sec,
+		m_needsec = recvValue.m_barracks[i].m_needsec,
 		m_quick = recvValue.m_barracks[i].m_quick,
 		} )
 	end
@@ -162,9 +167,40 @@ function proc_buildinglist_C( recvValue )
 		} )
 	end
 	
+	
+	GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0 } )
+	GetPlayer():SetBuilding( 2,{ m_kind = 2,m_offset = 1,m_level = 1,m_sec = 60,m_needsec = 60,m_quick = 0 } )
+	GetPlayer():SetBuilding( 3,{ m_kind = 3,m_offset = 2,m_level = 1,m_sec = 30,m_needsec = 30,m_quick = 0 } )
+	GetPlayer():SetBuilding( 4,{ m_kind = 4,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuilding( 5,{ m_kind = 5,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuilding( 6,{ m_kind = 6,m_offset = 5,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0 } )
+	
+	GetPlayer():SetBuildingRes( 21,0,{ m_kind = 21,m_offset = 0,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 21,1,{ m_kind = 21,m_offset = 1,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 21,2,{ m_kind = 21,m_offset = 2,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 21,3,{ m_kind = 21,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 21,4,{ m_kind = 21,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	
+	GetPlayer():SetBuildingRes( 22,32,{ m_kind = 22,m_offset = 32,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 22,33,{ m_kind = 22,m_offset = 33,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 22,34,{ m_kind = 22,m_offset = 34,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 22,35,{ m_kind = 22,m_offset = 35,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	GetPlayer():SetBuildingRes( 22,36,{ m_kind = 22,m_offset = 36,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
+	recvValue.m_levynum = 3
+	recvValue.m_worker_kind = 21;
+	recvValue.m_worker_offset = 2;
+	recvValue.m_worker_sec = 200;
+	recvValue.m_worker_needsec = 200;
+	recvValue.m_worker_kind_ex = 1;
+	recvValue.m_worker_offset_ex = 0;
+	recvValue.m_worker_sec_ex = 3600;
+	recvValue.m_worker_needsec_ex = 3600;
+	recvValue.m_worker_expire_ex = 3000;
+	
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
-	
+	City.BuildingWorker();
+	MainDlgSetWorker();
 	-- 关闭加载面板
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();

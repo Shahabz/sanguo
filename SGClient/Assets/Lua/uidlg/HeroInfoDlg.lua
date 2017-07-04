@@ -1,9 +1,11 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
 
 -- 打开界面
 function HeroInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroInfoDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "武将", 3, HeroInfoDlgClose );
 end
 
 -- 隐藏界面
@@ -11,7 +13,7 @@ function HeroInfoDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "HeroInfoDlg" );
 end
 

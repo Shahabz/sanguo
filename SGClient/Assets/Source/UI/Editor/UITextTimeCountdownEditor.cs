@@ -28,6 +28,17 @@ public class UITextTimeCountdownEditor : UITextEditor
         bool playOnEable = EditorGUILayout.Toggle("PlayOnEable", txt.playOnEable);
         txt.playOnEable = playOnEable;
 
+		bool iso = EditorGUILayout.Toggle("iso", txt.iso);
+		txt.iso = iso;
+
+
+		UIProgress uiProgress = EditorGUILayout.ObjectField( "UIProgress", txt.uiProgress, typeof(UIProgress), true ) as UIProgress;
+		txt.uiProgress = uiProgress;
+
+		UISlider uiSlider = EditorGUILayout.ObjectField( "UISlider", txt.uiSlider, typeof(UISlider), true ) as UISlider;
+		txt.uiSlider = uiSlider;
+
+
         base.OnInspectorGUI();
     }
 }

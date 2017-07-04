@@ -221,6 +221,7 @@ function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress
 		-- 资源初始化类放在这
 		-- 初始化提示文字对象池
 		PopTextModPoolInit();
+		DialogFrameModPoolInit();
 		netsend_list_C( 0 );
 	end
 end

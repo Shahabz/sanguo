@@ -151,6 +151,7 @@ int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValu
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
 	return 0;
 }
@@ -163,6 +164,7 @@ int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_Buildin
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
 	return 0;
 }
@@ -201,10 +203,12 @@ int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingLis
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind_ex, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset_ex, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
 	return 0;

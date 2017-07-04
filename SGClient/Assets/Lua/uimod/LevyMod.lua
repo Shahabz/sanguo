@@ -5,7 +5,8 @@
 -- 所属按钮点击时调用
 function LevyModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		print( "Button Clicked, nControlID:" .. nControlID );
+		LevyDlgShow();
+		--print( "Button Clicked, nControlID:" .. nControlID );
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
 			--print( "Button Pressed Down, nControlID:" .. nControlID );

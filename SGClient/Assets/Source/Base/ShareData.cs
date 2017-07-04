@@ -5,6 +5,7 @@ using System.Collections.Generic;
 // 扔到对象上 可通过这个类让 C#和lua 通用数据
 public class ShareData : MonoBehaviour
 {
+	public int id;
 	public int[]		intValue;
 	public float[]		floatValue;
 	public bool[]		boolValue;

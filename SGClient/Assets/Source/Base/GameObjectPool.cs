@@ -21,7 +21,7 @@ public class GameObjectPool
     private Transform poolRoot;
     private GameObject poolObjectPrefab;
     private Stack<GameObject> availableObjStack = new Stack<GameObject>();
-
+	private int autoNumber = 0;
     public GameObjectPool(string poolName, GameObject poolObjectPrefab, int initCount, int maxSize, Transform pool)
     {
 		this.poolName = poolName;
@@ -48,7 +48,12 @@ public class GameObjectPool
 
     private GameObject NewObjectInstance()
     {
-        return GameObject.Instantiate(poolObjectPrefab) as GameObject;
+		GameObject obj = GameObject.Instantiate (poolObjectPrefab) as GameObject;
+		UIMod uimod = obj.transform.GetComponent<UIMod> ();
+		if (uimod != null) {
+			uimod.id = autoNumber++;
+		}
+        return obj;
 	}
 
 	public GameObject NextAvailableObject()

@@ -22,7 +22,7 @@ public class System_DelegateWrap
 		L.RegFunction("__add", op_Addition);
 		L.RegFunction("__sub", op_Subtraction);
 		L.RegFunction("__eq", op_Equality);
-		L.RegFunction("__tostring", Lua_ToString);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("Method", get_Method, null);
 		L.RegVar("Target", get_Target, null);
 		L.EndClass();
@@ -282,6 +282,60 @@ public class System_DelegateWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Destroy(IntPtr L)
+	{
+        Delegate arg0 = ToLua.CheckObject(L, 1, typeof(Delegate)) as Delegate;
+        Delegate[] ds = arg0.GetInvocationList();
+
+        for (int i = 0; i < ds.Length; i++)
+        {
+            LuaDelegate ld = ds[i].Target as LuaDelegate;
+
+            if (ld != null)
+            {                
+                ld.Dispose();                
+            }
+        }
+
+        return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetHashCode(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			System.Delegate obj = (System.Delegate)ToLua.CheckObject(L, 1, typeof(System.Delegate));
+			int o = obj.GetHashCode();
+			LuaDLL.lua_pushinteger(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Equals(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			System.Delegate obj = (System.Delegate)ToLua.CheckObject(L, 1, typeof(System.Delegate));
+			object arg0 = ToLua.ToVarObject(L, 2);
+			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int op_Subtraction(IntPtr L)
 	{
         try
@@ -291,16 +345,16 @@ public class System_DelegateWrap
             LuaTypes type = LuaDLL.lua_type(L, 2);
 
             if (type == LuaTypes.LUA_TFUNCTION)
-            {                
-                LuaFunction func = ToLua.ToLuaFunction(L, 2);
+            {
                 LuaState state = LuaState.Get(L);
+                LuaFunction func = ToLua.ToLuaFunction(L, 2);
                 Delegate[] ds = arg0.GetInvocationList();
 
                 for (int i = 0; i < ds.Length; i++)
                 {
                     LuaDelegate ld = ds[i].Target as LuaDelegate;
 
-                    if (ld != null && ld.func == func)
+                    if (ld != null && ld.func == func && ld.self == null)
                     {
                         arg0 = Delegate.Remove(arg0, ds[i]);
                         state.DelayDispose(ld.func);
@@ -314,8 +368,8 @@ public class System_DelegateWrap
             }
             else
             {
-                Delegate arg1 = (Delegate)ToLua.CheckObject(L, 2, typeof(Delegate));                
-                arg0 = DelegateFactory.RemoveDelegate(arg0, arg1);
+                Delegate arg1 = (Delegate)ToLua.CheckObject(L, 2, typeof(Delegate));
+                arg0 = DelegateFactory.RemoveDelegate(arg0, arg1);                
                 ToLua.Push(L, arg0);
                 return 1;
             }
@@ -374,77 +428,6 @@ public class System_DelegateWrap
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Destroy(IntPtr L)
-	{
-        Delegate arg0 = ToLua.CheckObject(L, 1, typeof(Delegate)) as Delegate;
-        Delegate[] ds = arg0.GetInvocationList();
-
-        for (int i = 0; i < ds.Length; i++)
-        {
-            LuaDelegate ld = ds[i].Target as LuaDelegate;
-
-            if (ld != null)
-            {                
-                ld.Dispose();                
-            }
-        }
-
-        return 0;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetHashCode(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			System.Delegate obj = (System.Delegate)ToLua.CheckObject(L, 1, typeof(System.Delegate));
-			int o = obj.GetHashCode();
-			LuaDLL.lua_pushinteger(L, o);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Equals(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			System.Delegate obj = (System.Delegate)ToLua.CheckObject(L, 1, typeof(System.Delegate));
-			object arg0 = ToLua.ToVarObject(L, 2);
-			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
-			LuaDLL.lua_pushboolean(L, o);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr L)
-	{
-		object obj = ToLua.ToObject(L, 1);
-
-		if (obj != null)
-		{
-			LuaDLL.lua_pushstring(L, obj.ToString());
-		}
-		else
-		{
-			LuaDLL.lua_pushnil(L);
-		}
-
-		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -62,9 +62,16 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
             MainDlgClose();
 
 		elseif nControlID == 1 then
-			
+			HeroDlgShow();
 			
 		elseif nControlID == 2 then
+			BuildingGetDlgShow( 21,  math.random( 0, 63 ) );
+		
+		elseif nControlID == 3 then
+			QuestAwardDlgShow();
+		
+		elseif nControlID == 5 then
+			NpcTalk( "主公，大事不妙" )
 			
 		elseif nControlID == 30 then
 			ChatDlgShow();
@@ -80,6 +87,48 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 104 then
 
         end
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 1 then
+			m_uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
+			m_uiWorker.transform:Find("NormalShape").gameObject:SetActive(true);
+			m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 2 then
+			m_uiWorker.transform:Find("BuildingShape").gameObject:SetActive(true);
+			m_uiWorker.transform:Find("NormalShape").gameObject:SetActive(false);
+			m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 3 then
+			m_uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
+			m_uiWorker.transform:Find("BuildingName").gameObject:SetActive(true);
+			m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 4 then
+			m_uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(true);
+			m_uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
+			m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 11 then
+			m_uiWorkerEx.transform:Find("BuildingShape").gameObject:SetActive(false);
+			m_uiWorkerEx.transform:Find("NormalShape").gameObject:SetActive(true);
+			m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 12 then
+			m_uiWorkerEx.transform:Find("BuildingShape").gameObject:SetActive(true);
+			m_uiWorkerEx.transform:Find("NormalShape").gameObject:SetActive(false);
+			m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 13 then
+			m_uiWorkerEx.transform:Find("BuildingTimer").gameObject:SetActive(false);
+			m_uiWorkerEx.transform:Find("BuildingName").gameObject:SetActive(true);
+			m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1"):Play(true);
+		elseif nControlID == 14 then
+			m_uiWorkerEx.transform:Find("BuildingTimer").gameObject:SetActive(true);
+			m_uiWorkerEx.transform:Find("BuildingName").gameObject:SetActive(false);
+			m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale"):Play(true);
+			m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale1"):Play(true);
+		end
 	end
 end
 
@@ -207,3 +256,85 @@ end
 function MainDlgSetVipLevel()
 	m_uiVipLevel:GetComponent( "UIText" ).text = "VIP "..GetPlayer().m_viplevel;
 end
+
+-- 建造队列
+function MainDlgSetWorker()
+
+	MainDlgSetWorkerObject( 0,
+	m_uiWorker, 
+	GetPlayer().m_worker_kind, 
+	GetPlayer().m_worker_offset, 
+	GetPlayer().m_worker_needsec, 
+	GetPlayer().m_worker_sec, 
+	0 );
+	
+	MainDlgSetWorkerObject( 1,
+	m_uiWorkerEx, 
+	GetPlayer().m_worker_kind_ex, 
+	GetPlayer().m_worker_offset_ex, 
+	GetPlayer().m_worker_needsec_ex, 
+	GetPlayer().m_worker_sec_ex,
+	GetPlayer().m_worker_expire_ex );
+end
+
+function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, expire )
+	if uiWorker == nil then
+		return;
+	end
+	if kind <= 0 then
+		-- 缺省文字
+		local NormalText = uiWorker.transform:Find("NormalText");
+		NormalText.gameObject:SetActive(true);
+		if type == 1 and expire <= 0 then
+			NormalText:GetComponent( "UIText" ).text = "未解锁";
+		else
+			NormalText:GetComponent( "UIText" ).text = "空闲";
+		end
+		
+		-- 缺省锤子形象
+		local NormalShape = uiWorker.transform:Find("NormalShape");
+		NormalShape.gameObject:SetActive(true);
+		
+		uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
+		uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
+		uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
+		return;
+	end
+	
+	-- 建筑名
+	local name = T(kind);
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		name = (offset%16+1).."号"..T(kind);		
+	end
+		
+	-- 建筑形象
+	local BuildingShape = uiWorker.transform:Find("BuildingShape");
+	BuildingShape:GetComponent( "Image" ).sprite = BuildingSprite( kind );
+	BuildingShape.gameObject:SetActive(true);
+	
+	-- 建筑名称
+	local BuildingName = uiWorker.transform:Find("BuildingName");
+	BuildingName:GetComponent( "UIText" ).text = name;
+	BuildingName.gameObject:SetActive(false);
+	BuildingName:GetComponent("UITweenScale"):Play(true);
+	
+	-- 建筑计时器
+	local BuildingTimer = uiWorker.transform:Find("BuildingTimer");
+	BuildingTimer.gameObject:SetActive(true);
+	
+	-- 计时器
+	local timer = BuildingTimer:GetComponent( "UITextTimeCountdown" );
+	timer:SetTime( needsec, needsec-sec );
+	
+	-- 缺省锤子形象
+	local NormalShape = uiWorker.transform:Find("NormalShape");
+	NormalShape.gameObject:SetActive(false);
+	NormalShape:GetComponent("UITweenScale"):Play(true);
+	
+	-- 缺省文字
+	uiWorker.transform:Find("NormalText").gameObject:SetActive(false);
+	
+end
+
+
+

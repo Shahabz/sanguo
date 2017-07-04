@@ -9,6 +9,7 @@ public class CityLandWrap
 		L.BeginClass(typeof(CityLand), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("id", get_id, set_id);
 		L.RegVar("buildingkinds", get_buildingkinds, set_buildingkinds);
 		L.RegVar("offset", get_offset, set_offset);
 		L.EndClass();
@@ -29,6 +30,25 @@ public class CityLandWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityLand obj = (CityLand)o;
+			short ret = obj.id;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
 		}
 	}
 
@@ -67,6 +87,25 @@ public class CityLandWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index offset on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityLand obj = (CityLand)o;
+			short arg0 = (short)LuaDLL.luaL_checknumber(L, 2);
+			obj.id = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
 		}
 	}
 

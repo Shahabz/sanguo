@@ -571,6 +571,19 @@ public class Utils : MonoBehaviour
         return builder.ToString();
     }
 
+	/// <summary>
+	/// 获取时间格式串
+	/// </summary>
+	/// <param name="second"></param>
+	/// <returns></returns>
+	public static string GetTimeFormatISO(int second)
+	{
+		int hour = (second / 3600);
+		int min = (second / 60) % 60;
+		int sec = (second % 60);
+		return string.Format("{0}:{1}:{2}", hour.ToString("D2"), min.ToString("D2"), sec.ToString("D2") );
+	}
+
     public static int GetMillisecond()
     {
         return DateTime.Now.Millisecond;

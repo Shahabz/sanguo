@@ -58,7 +58,9 @@
      <Compile Include="Assets\Source\Base\LuaHelper.cs" />
      <Compile Include="Assets\Source\Base\ObjectPool.cs" />
      <Compile Include="Assets\Source\Base\OpenUDID.cs" />
+     <Compile Include="Assets\Source\Base\PrefabInstance.cs" />
      <Compile Include="Assets\Source\Base\ProgressSprite.cs" />
+     <Compile Include="Assets\Source\Base\Reference.cs" />
      <Compile Include="Assets\Source\Base\SequenceActive.cs" />
      <Compile Include="Assets\Source\Base\ShareData.cs" />
      <Compile Include="Assets\Source\Base\ShowFPS.cs" />
@@ -184,6 +186,7 @@
      <Compile Include="Assets\Source\Generate\UITweenMoveWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenPositionWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenRectPositionWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UITweenScale1Wrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenScaleWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenSizeDeltaWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenWrap.cs" />
@@ -226,6 +229,7 @@
      <Compile Include="Assets\Source\Generate\UnityEngine_QualitySettingsWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_QueueModeWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_RectTransformWrap.cs" />
+     <Compile Include="Assets\Source\Generate\UnityEngine_RectWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_RenderSettingsWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_RenderTextureWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_RendererWrap.cs" />
@@ -304,6 +308,7 @@
      <Compile Include="Assets\Source\UI\Tween\UITweenRectPosition.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenRectPositionBetween.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenScale.cs" />
+     <Compile Include="Assets\Source\UI\Tween\UITweenScale1.cs" />
      <Compile Include="Assets\Source\UI\Tween\UITweenSizeDelta.cs" />
      <Compile Include="Assets\Source\UI\UIButton.cs" />
      <Compile Include="Assets\Source\UI\UIButtonAgent.cs" />
@@ -318,7 +323,9 @@
      <Compile Include="Assets\Source\UI\UIInputFieldSubmit.cs" />
      <Compile Include="Assets\Source\UI\UIMod.cs" />
      <Compile Include="Assets\Source\UI\UIPolygon.cs" />
+     <Compile Include="Assets\Source\UI\UIPolygonChart.cs" />
      <Compile Include="Assets\Source\UI\UIPopWindow.cs" />
+     <Compile Include="Assets\Source\UI\UIPrimitiveBase.cs" />
      <Compile Include="Assets\Source\UI\UIProgress.cs" />
      <Compile Include="Assets\Source\UI\UIRaycast.cs" />
      <Compile Include="Assets\Source\UI\UIScrollBase.cs" />

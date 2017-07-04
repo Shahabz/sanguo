@@ -11,6 +11,7 @@ public class UIModWrap
 		L.RegFunction("PushEvent", PushEvent);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
+		L.RegVar("id", get_id, set_id);
 		L.RegVar("enableUpdate", get_enableUpdate, set_enableUpdate);
 		L.RegVar("relatedGameObject", get_relatedGameObject, set_relatedGameObject);
 		L.RegVar("uiName", get_uiName, set_uiName);
@@ -70,6 +71,25 @@ public class UIModWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UIMod obj = (UIMod)o;
+			int ret = obj.id;
+			LuaDLL.lua_pushinteger(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_enableUpdate(IntPtr L)
 	{
 		object o = null;
@@ -123,6 +143,25 @@ public class UIModWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index uiName on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_id(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UIMod obj = (UIMod)o;
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			obj.id = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index id on a nil value" : e.Message);
 		}
 	}
 
