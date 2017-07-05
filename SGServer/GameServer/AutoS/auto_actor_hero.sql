@@ -3,13 +3,13 @@ CREATE TABLE `actor_hero` (
   `actorid` int(11) NOT NULL DEFAULT '0' COMMENT '城池',
   `offset` int(11) NOT NULL DEFAULT '0' COMMENT '索引',
   `kind` smallint(6) NOT NULL DEFAULT '0' COMMENT '英雄种类',
+  `color` tinyint(3) NOT NULL DEFAULT '0' COMMENT '颜色',
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '等级',
   `exp` int(11) NOT NULL DEFAULT '0' COMMENT '经验',
   `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '兵力',
-  `attack` smallint(6) NOT NULL DEFAULT '0' COMMENT '攻击资质',
-  `defense` smallint(6) NOT NULL DEFAULT '0' COMMENT '防御资质',
-  `troops` smallint(6) NOT NULL DEFAULT '0' COMMENT '兵力资质',
-  `growth` smallint(6) NOT NULL DEFAULT '0' COMMENT '总资质',
+  `attack_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓攻击资质',
+  `defense_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓防御资质',
+  `troops_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓兵力资质',
   PRIMARY KEY (`id`)
   KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

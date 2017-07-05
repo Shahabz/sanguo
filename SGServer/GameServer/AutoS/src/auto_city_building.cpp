@@ -17,7 +17,7 @@ int city_building_load_auto( int actorid, int city_index, LPCB_GETBUILDING pCB_G
 	int offset = 0;
 	Building *pBuilding;
 
-	sprintf( szSQL, "select `actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`offset`,`kind`,`level`,`sec`,`value`,`overvalue`,`quicksec` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -38,11 +38,9 @@ int city_building_load_auto( int actorid, int city_index, LPCB_GETBUILDING pCB_G
 		offset++;
 		pBuilding->kind = atoi(row[offset++]);
 		pBuilding->level = atoi(row[offset++]);
-		pBuilding->officialkind = atoi(row[offset++]);
-		pBuilding->officialfree = atoi(row[offset++]);
-		pBuilding->officialsec = atoi(row[offset++]);
-		pBuilding->value = atoi(row[offset++]);
 		pBuilding->sec = atoi(row[offset++]);
+		pBuilding->value = atoi(row[offset++]);
+		pBuilding->overvalue = atoi(row[offset++]);
 		pBuilding->quicksec = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
@@ -56,7 +54,7 @@ int city_building_save_auto( int actorid, int offset, Building *pBuilding, const
 		return -1;
 
 RE_BUILDING_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pBuilding->kind,pBuilding->level,pBuilding->officialkind,pBuilding->officialfree,pBuilding->officialsec,pBuilding->value,pBuilding->sec,pBuilding->quicksec);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`sec`,`value`,`overvalue`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pBuilding->kind,pBuilding->level,pBuilding->sec,pBuilding->value,pBuilding->overvalue,pBuilding->quicksec);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -92,11 +90,11 @@ int city_building_batch_save_auto( int actorid, Building *pBuilding, int maxcoun
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`officialkind`,`officialfree`,`officialsec`,`value`,`sec`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].officialkind,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value,pBuilding[index].sec,pBuilding[index].quicksec);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`kind`,`level`,`sec`,`value`,`overvalue`,`quicksec`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].sec,pBuilding[index].value,pBuilding[index].overvalue,pBuilding[index].quicksec);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].officialkind,pBuilding[index].officialfree,pBuilding[index].officialsec,pBuilding[index].value,pBuilding[index].sec,pBuilding[index].quicksec);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pBuilding[index].kind,pBuilding[index].level,pBuilding[index].sec,pBuilding[index].value,pBuilding[index].overvalue,pBuilding[index].quicksec);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

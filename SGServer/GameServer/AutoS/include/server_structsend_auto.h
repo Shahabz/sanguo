@@ -339,6 +339,35 @@ struct _slk_NetS_EquipLost {
 };
 typedef struct _slk_NetS_EquipLost SLK_NetS_EquipLost;	//丢掉一件装备
 
+struct _slk_NetS_Hero {
+	short m_kind;	//
+	char m_color;	//
+	short m_level;	//
+	char m_corps;	//
+	int m_exp;	//
+	int m_exp_max;	//
+	int m_soldiers;	//
+	char m_state;	//
+	short m_attack_base;	//
+	short m_attack_wash;	//
+	short m_defense_base;	//
+	short m_defense_wash;	//
+	short m_troops_base;	//
+	short m_troops_wash;	//
+	int m_attack;	//
+	int m_defense;	//
+	int m_troops;	//
+	short m_offset;	//
+};
+typedef struct _slk_NetS_Hero SLK_NetS_Hero;	//英雄信息
+
+struct _slk_NetS_HeroList {
+	short m_count;	//英雄发送数量
+	SLK_NetS_Hero m_list[32];	//英雄列表
+	char m_type;	//0上阵英雄1背包英雄
+};
+typedef struct _slk_NetS_HeroList SLK_NetS_HeroList;	//英雄列表
+
 struct _slk_NetS_AwardInfo {
 	int m_kind;	//种类
 	int m_num;	//数量
@@ -479,6 +508,8 @@ int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue );
 int struct_NetS_EquipList_send( char **pptr, int *psize, SLK_NetS_EquipList *pValue );
 int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValue );
 int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pValue );
+int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue );
+int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValue );
 int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pValue );
 int struct_NetS_AwardInfoList_send( char **pptr, int *psize, SLK_NetS_AwardInfoList *pValue );
 int struct_NetS_Experience_send( char **pptr, int *psize, SLK_NetS_Experience *pValue );

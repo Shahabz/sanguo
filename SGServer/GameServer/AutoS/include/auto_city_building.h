@@ -6,11 +6,9 @@ struct _city_building {
 //--Automatically generated
 				char kind;	//建筑种类
 				char level;	//建筑等级
-				char officialkind;	//正在使用官员
-				int officialfree;	//是否使用过免费(按位)
-				int officialsec;	//官员剩余时间
-				int value;	//通用值
 				int sec;	//时间
+				int value;	//通用值
+				int overvalue;	//完成的值
 				short quicksec;	//加速时间
 };
 typedef struct _city_building Building;

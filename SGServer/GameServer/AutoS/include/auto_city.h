@@ -44,6 +44,11 @@ struct _city {
 				int prestige;	//威望值
 				int friendship;	//友谊积分
 				int function;	//功能是否开启
+				char washnum;	//洗练免费次数
+				short washsec;	//下次免费洗练时间
+				short forgingkind;	//打造装备种类
+				int forgingsec;	//打造剩余时间
+				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄
 				Building building[8];	//普通建筑
 				BuildingBarracks building_barracks[4];	//兵营建筑
@@ -52,11 +57,18 @@ struct _city {
 				int worker_sec;	//建造剩余时间(每秒-1)
 				char worker_kind;	//当前升级建筑类型
 				char worker_offset;	//当前升级建筑索引
+				char worker_free;	//是否使用过免费
 				char worker_op_ex;	//建造队列操作(商用)
 				int worker_sec_ex;	//建造剩余时间(每秒-1)(商用)
 				char worker_kind_ex;	//当前升级建筑类型(商用)
 				char worker_offset_ex;	//当前升级建筑索引(商用)
+				char worker_free_ex;	//是否使用过免费
 				int worker_expire_ex;	//商用建造队列到期时间
+				char ofkind;	//建筑官员种类
+				int ofsec;	//建筑官员剩余秒
+				int offree;	//建筑官员免费情况
+				int offquick;	//建筑官员已经使用的加速时间
+				CityAttr attr;	//属性加成
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
 				int army_index[5];	//部队

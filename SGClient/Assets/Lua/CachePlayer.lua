@@ -82,6 +82,8 @@ function Player:SetBuilding( kind, info, active )
 	self.m_buildings[kind] = info;
 	--
 	local unitObj = City.BuildingAdd( info, active );
+	
+	City.BuildingSetOver( kind );
 	return unitObj;
 end
 

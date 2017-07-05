@@ -12,6 +12,8 @@ public class CityBuildingWrap
 		L.RegVar("kind", get_kind, set_kind);
 		L.RegVar("offset", get_offset, set_offset);
 		L.RegVar("BuildingTimerMod", get_BuildingTimerMod, set_BuildingTimerMod);
+		L.RegVar("BuildingFreeMod", get_BuildingFreeMod, set_BuildingFreeMod);
+		L.RegVar("BuildingOverMod", get_BuildingOverMod, set_BuildingOverMod);
 		L.EndClass();
 	}
 
@@ -91,6 +93,44 @@ public class CityBuildingWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BuildingFreeMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform ret = obj.BuildingFreeMod;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingFreeMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BuildingOverMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform ret = obj.BuildingOverMod;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingOverMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_kind(IntPtr L)
 	{
 		object o = null;
@@ -144,6 +184,44 @@ public class CityBuildingWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingTimerMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_BuildingFreeMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.BuildingFreeMod = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingFreeMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_BuildingOverMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.BuildingOverMod = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingOverMod on a nil value" : e.Message);
 		}
 	}
 }

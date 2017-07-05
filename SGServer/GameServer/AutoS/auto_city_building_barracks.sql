@@ -24,6 +24,7 @@ CREATE TABLE `city_building_barracks` (
   `queuesec7` int(11) NOT NULL DEFAULT '0' COMMENT '招募队列',
   `queue` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩容队列数量',
   `trainlong` tinyint(3) NOT NULL DEFAULT '0' COMMENT '募兵加时级别',
+  `overnum` int(11) NOT NULL DEFAULT '0' COMMENT '已经招募完成的数量',
   `quicksec` smallint(6) NOT NULL DEFAULT '0' COMMENT '募兵加速时间秒',
   PRIMARY KEY (`actorid`)
   KEY (`offset`)

@@ -434,6 +434,42 @@ function struct_NetS_EquipLost_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Hero_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_corps = buffer:ReadSByte();
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_exp_max = buffer:ReadInt();
+	recvValue.m_soldiers = buffer:ReadInt();
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_attack_base = buffer:ReadShort();
+	recvValue.m_attack_wash = buffer:ReadShort();
+	recvValue.m_defense_base = buffer:ReadShort();
+	recvValue.m_defense_wash = buffer:ReadShort();
+	recvValue.m_troops_base = buffer:ReadShort();
+	recvValue.m_troops_wash = buffer:ReadShort();
+	recvValue.m_attack = buffer:ReadInt();
+	recvValue.m_defense = buffer:ReadInt();
+	recvValue.m_troops = buffer:ReadInt();
+	recvValue.m_offset = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_HeroList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Hero_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_type = buffer:ReadSByte();
+	return recvValue;
+end
+
 function struct_NetS_AwardInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadInt();

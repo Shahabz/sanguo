@@ -5,6 +5,8 @@ City.m_LastSelect = nil;
 City.m_BuildingRoot = nil
 City.m_BuildingUI = nil
 City.m_BuildingTimerMod = nil;
+City.m_BuildingFreeMod = nil;
+City.m_BuildingOverMod = nil;
 City.m_Buildings = {};
 City.m_Buildings_res = {};
 
@@ -13,9 +15,12 @@ function City.Init()
 	City.m_Camera = GameManager.MainCity.transform:Find("CityCamera"):GetComponent("CityCamera");
 	City.m_CameraMain = GameManager.MainCity.transform:Find("CityCamera"):GetComponent("Camera");
 	City.m_BuildingUI = GameManager.MainCity.transform:Find( "BuildingUI" );
-	City.BuildingTimerMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingTimerMod" );
+	City.m_BuildingTimerMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingTimerMod" );
+	City.m_BuildingFreeMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingFreeMod" );
+	City.m_BuildingOverMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingOverMod" );
 end
 
+--
 function City.BuildingRoot()
 	if City.m_BuildingRoot == nil then
 		City.m_BuildingRoot = GameManager.MainCity.transform:Find( "Content/Buildings" );
@@ -50,6 +55,7 @@ function City.BuildingSelect( transform )
 	
 end
 
+--
 function City.BuildingLandSelect( transform )
 	if City.m_LastSelect ~= nil then
 		-- 点击相同对象直接返回
@@ -71,12 +77,14 @@ function City.BuildingLandSelect( transform )
 	end
 end
 
+--
 function City.BuildingUnSelect()
 	-- 关闭之前渐变动画
 	City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 	City.m_LastSelect = nil;
 end
 
+--
 function City.BuildingAdd( info, active )
 	local kind = info.m_kind;
 	local offset = info.m_offset
@@ -116,6 +124,7 @@ function City.BuildingAdd( info, active )
 	return unitObj;
 end
 
+--
 function City.BuildingDel( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;	
@@ -141,11 +150,13 @@ function City.BuildingDel( info )
 	end
 end
 
+--
 function City.BuildingRefurbish( info ) 
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 end
 
+--
 function City.BuildingSetName( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -163,6 +174,7 @@ function City.BuildingSetName( info )
 	end
 end
 
+--
 function City.BuildingSetTimer( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -177,7 +189,7 @@ function City.BuildingSetTimer( info )
 	end
 	local timerObj = unitObj:GetComponent("CityBuilding").BuildingTimerMod;
 	if timerObj == nil then
-		timerObj = GameObject.Instantiate( City.BuildingTimerMod );
+		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
 		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-80, 0 );
@@ -198,6 +210,7 @@ function City.BuildingSetTimer( info )
     timer:SetTime( info.m_needsec, info.m_needsec-info.m_sec );
 end
 
+--
 function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -208,7 +221,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	
 	local timerObj = unitObj:GetComponent("CityBuilding").BuildingTimerMod;
 	if timerObj == nil then
-		timerObj = GameObject.Instantiate( City.BuildingTimerMod );
+		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
 		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-80, 0 );
@@ -228,6 +241,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
     timer:SetTime( needsec, needsec-sec );
 end
 
+-- 
 function City.BuildingWorker()
 	if GetPlayer().m_worker_kind > 0 then
 		City.BuildingSetUpgradeing( 
@@ -235,6 +249,8 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_offset, 
 		GetPlayer().m_worker_needsec,
 		GetPlayer().m_worker_sec );
+		
+		City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
 	end
 	if GetPlayer().m_worker_kind_ex > 0 then
 		City.BuildingSetUpgradeing( 
@@ -242,9 +258,55 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_offset_ex, 
 		GetPlayer().m_worker_needsec_ex,
 		GetPlayer().m_worker_sec_ex );
+		
+		City.BuildingSetFree( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
 	end
 end
 
+-- 免费头
+function City.BuildingSetFree( kind, offset )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		unitObj = City.m_Buildings_res[kind][offset];
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	local freeObj = unitObj:GetComponent("CityBuilding").BuildingFreeMod;
+	if freeObj == nil then
+		freeObj = GameObject.Instantiate( City.m_BuildingFreeMod );
+		freeObj.transform:SetParent( City.m_BuildingUI );
+		freeObj.transform.position = unitObj.transform.position;
+		freeObj.transform.localPosition = Vector3.New( freeObj.transform.localPosition.x, freeObj.transform.localPosition.y+80, 0 );
+		freeObj.transform.localScale = Vector3.one;
+		unitObj:GetComponent("CityBuilding").BuildingFreeMod = freeObj;
+	end
+	local ShareData = freeObj.transform:GetComponent("ShareData");
+	ShareData.intValue[0] = kind;
+	ShareData.intValue[1] = offset;
+	freeObj.gameObject:SetActive(true);
+end
+
+-- 
+function City.BuildingSetOver( kind )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return;
+	end
+	local unitObj = City.m_Buildings[kind];
+	local overObj = unitObj:GetComponent("CityBuilding").BuildingOverMod;
+	if overObj == nil then
+		overObj = GameObject.Instantiate( City.m_BuildingOverMod );
+		overObj.transform:SetParent( City.m_BuildingUI );
+		overObj.transform.position = unitObj.transform.position;
+		overObj.transform.localPosition = Vector3.New( overObj.transform.localPosition.x, overObj.transform.localPosition.y, 0 );
+		overObj.transform.localScale = Vector3.one;
+		unitObj:GetComponent("CityBuilding").BuildingOverMod = overObj;
+	end
+	local ShareData = overObj.transform:GetComponent("ShareData");
+	ShareData.intValue[0] = kind;
+	overObj.gameObject:SetActive(true);
+end
+
+-- 
 function City.BuildingAddLevy()	
 	for i=21, 24, 1 do
 		if City.m_Buildings_res[i] then

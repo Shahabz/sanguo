@@ -519,6 +519,44 @@ int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pVa
 	return 0;
 }
 
+int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_attack_base, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_attack_wash, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_defense_base, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_defense_wash, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_troops_base, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_troops_wash, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_troops, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	return 0;
+}
+
+int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Hero_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	return 0;
+}
+
 int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pValue )
 {
 	int tmpi = 0;

@@ -43,6 +43,8 @@ int netsend_equip_S( int actor_index, char send_type, SLK_NetS_Equip *pValue );
 int netsend_equiplist_S( int actor_index, char send_type, SLK_NetS_EquipList *pValue );
 int netsend_equipget_S( int actor_index, char send_type, SLK_NetS_EquipGet *pValue );
 int netsend_equiplost_S( int actor_index, char send_type, SLK_NetS_EquipLost *pValue );
+int netsend_hero_S( int actor_index, char send_type, SLK_NetS_Hero *pValue );
+int netsend_herolist_S( int actor_index, char send_type, SLK_NetS_HeroList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

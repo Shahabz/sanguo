@@ -8,14 +8,14 @@ struct _actor_hero {
 				int actorid;	//城池
 				int offset;	//索引
 				short kind;	//英雄种类
+				char color;	//颜色
 				short level;	//等级
 				int exp;	//经验
 				int soldiers;	//兵力
-				short attack;	//攻击资质
-				short defense;	//防御资质
-				short troops;	//兵力资质
-				short growth;	//总资质
+				short attack_wash;	//洗髓攻击资质
 				Equip equip[6];	//装备
+				short defense_wash;	//洗髓防御资质
+				short troops_wash;	//洗髓兵力资质
 };
 typedef struct _actor_hero Hero;
 

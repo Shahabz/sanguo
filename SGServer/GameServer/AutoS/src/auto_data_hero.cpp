@@ -47,7 +47,26 @@ int heroinfo_init_auto()
 	g_heroinfo = (HeroInfo *)malloc( sizeof(HeroInfo)*g_heroinfo_maxnum );
 	memset( g_heroinfo, 0, sizeof(HeroInfo)*g_heroinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`color`,`corps`,`attack_base`,`attack_wash`,`attack_wash_limit`,`defense_base`,`defense_wash`,`defense_wash_limit`,`troops_base`,`troops_wash`,`troops_wash_limit`,`total_wash` from hero;" );
+	sprintf( szSQL, "select kind, max( color ) from hero group by kind;" );
+	if( mysql_query( myData, szSQL ) )
+	{
+		printf( "Query failed (%s)\n", mysql_error(myData) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+	while( ( row = mysql_fetch_row( res ) ) )
+	{
+		int kind = atoi( row[0] );
+		if ( kind < 0 || kind >= g_heroinfo_maxnum  )
+			continue;
+		g_heroinfo[kind].maxnum = atoi( row[1] ) + 1;
+		g_heroinfo[kind].config = (HeroInfoConfig *)malloc( sizeof(HeroInfoConfig)*g_heroinfo[kind].maxnum );
+		memset( g_heroinfo[kind].config, 0, sizeof(HeroInfoConfig)*g_heroinfo[kind].maxnum );
+	}
+	mysql_free_result( res );
+
+	sprintf( szSQL, "select `kind`,`color`,`corps`,`attack_bas0`,`attack_bas1`,`attack_wash`,`attack_wash_limit`,`defense_bas0`,`defense_bas1`,`defense_wash`,`defense_wash_limit`,`troops_bas0`,`troops_bas1`,`troops_wash`,`troops_wash_limit`,`total_wash` from hero;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -61,19 +80,25 @@ int heroinfo_init_auto()
 		int kind = atoi( row[0] );
 		if ( kind < 0 || kind >= g_heroinfo_maxnum  )
 			continue;
-		g_heroinfo[kind].kind = atoi(row[offset++]);
-		g_heroinfo[kind].color = atoi(row[offset++]);
-		g_heroinfo[kind].corps = atoi(row[offset++]);
-		g_heroinfo[kind].attack_base = atoi(row[offset++]);
-		g_heroinfo[kind].attack_wash = atoi(row[offset++]);
-		g_heroinfo[kind].attack_wash_limit = atoi(row[offset++]);
-		g_heroinfo[kind].defense_base = atoi(row[offset++]);
-		g_heroinfo[kind].defense_wash = atoi(row[offset++]);
-		g_heroinfo[kind].defense_wash_limit = atoi(row[offset++]);
-		g_heroinfo[kind].troops_base = atoi(row[offset++]);
-		g_heroinfo[kind].troops_wash = atoi(row[offset++]);
-		g_heroinfo[kind].troops_wash_limit = atoi(row[offset++]);
-		g_heroinfo[kind].total_wash = atoi(row[offset++]);
+		int color = atoi( row[1] );
+		if ( color < 0 || color >= g_heroinfo[kind].maxnum )
+			continue;
+		g_heroinfo[kind].config[color].kind = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].color = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].corps = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack_bas[0] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack_wash = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack_wash_limit = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense_bas[0] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense_wash = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense_wash_limit = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops_bas[0] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops_wash = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops_wash_limit = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].total_wash = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	heroinfo_luatable_auto();
@@ -82,6 +107,14 @@ int heroinfo_init_auto()
 
 int heroinfo_reload_auto()
 {
+	for ( int tmpi = 0; tmpi < g_heroinfo_maxnum; tmpi++ )
+	{
+		if ( g_heroinfo[tmpi].config )
+		{
+			free( g_heroinfo[tmpi].config );
+			g_heroinfo[tmpi].config = NULL;
+		}
+	}
 	if ( g_heroinfo )
 	{
 		free( g_heroinfo );
@@ -95,65 +128,6 @@ int heroinfo_reload_auto()
 int heroinfo_luatable_auto()
 {
 	lua_newtable( servL );
-	for ( int kind = 0; kind < g_heroinfo_maxnum; kind++ )
-	{
-		lua_pushinteger( servL, kind );
-		lua_newtable( servL );
-
-		lua_pushstring( servL, "kind" );
-		lua_pushinteger( servL, g_heroinfo[kind].kind );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "color" );
-		lua_pushinteger( servL, g_heroinfo[kind].color );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "corps" );
-		lua_pushinteger( servL, g_heroinfo[kind].corps );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "attack_base" );
-		lua_pushinteger( servL, g_heroinfo[kind].attack_base );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "attack_wash" );
-		lua_pushinteger( servL, g_heroinfo[kind].attack_wash );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "attack_wash_limit" );
-		lua_pushinteger( servL, g_heroinfo[kind].attack_wash_limit );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "defense_base" );
-		lua_pushinteger( servL, g_heroinfo[kind].defense_base );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "defense_wash" );
-		lua_pushinteger( servL, g_heroinfo[kind].defense_wash );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "defense_wash_limit" );
-		lua_pushinteger( servL, g_heroinfo[kind].defense_wash_limit );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "troops_base" );
-		lua_pushinteger( servL, g_heroinfo[kind].troops_base );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "troops_wash" );
-		lua_pushinteger( servL, g_heroinfo[kind].troops_wash );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "troops_wash_limit" );
-		lua_pushinteger( servL, g_heroinfo[kind].troops_wash_limit );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "total_wash" );
-		lua_pushinteger( servL, g_heroinfo[kind].total_wash );
-		lua_rawset( servL, -3 );
-
-		lua_rawset( servL, 1 );
-	}
 	lua_setglobal( servL, "g_heroinfo" );
 
 	lua_pushinteger( servL, g_heroinfo_maxnum );

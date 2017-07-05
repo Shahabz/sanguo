@@ -13,6 +13,7 @@ struct _city_building_barracks {
 				int queuesec[8];	//招募队列
 				char queue;	//扩容队列数量
 				char trainlong;	//募兵加时级别
+				int overnum;	//已经招募完成的数量
 				short quicksec;	//募兵加速时间秒
 };
 typedef struct _city_building_barracks BuildingBarracks;

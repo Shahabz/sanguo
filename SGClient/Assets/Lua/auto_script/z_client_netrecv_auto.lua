@@ -205,6 +205,16 @@ function netrecv_equiplost_C( buffer )
 	proc_equiplost_C( recvValue );
 end
 
+function netrecv_hero_C( buffer )
+	local recvValue = struct_NetS_Hero_recv( buffer );
+	proc_hero_C( recvValue );
+end
+
+function netrecv_herolist_C( buffer )
+	local recvValue = struct_NetS_HeroList_recv( buffer );
+	proc_herolist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -247,6 +257,8 @@ Proc_Command = {
 	[CMDS_EQUIPLIST]=netrecv_equiplist_C;
 	[CMDS_EQUIPGET]=netrecv_equipget_C;
 	[CMDS_EQUIPLOST]=netrecv_equiplost_C;
+	[CMDS_HERO]=netrecv_hero_C;
+	[CMDS_HEROLIST]=netrecv_herolist_C;
 }
 
 function in_proc_command_C( cmd, buffer )
