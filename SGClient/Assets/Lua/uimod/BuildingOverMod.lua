@@ -7,6 +7,7 @@ local m_Mod;
 function BuildingOverModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
 		print( "Button Clicked, nControlID:" .. nControlID );
+		gameObject:SetActive(false);
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
 			print( "Button Pressed Down, nControlID:" .. nControlID );

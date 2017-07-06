@@ -232,6 +232,7 @@ public static class CustomSettings
         _GT(typeof(Color32)),
         _GT(typeof(Shake)),
         _GT(typeof(UIHighLightMask)),
+		_GT(typeof(Reference)),
 
 		_GT(typeof(YlyAssetIdentify)),
 		_GT(typeof(YlyRichText)),

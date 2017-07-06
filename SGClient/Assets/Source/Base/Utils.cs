@@ -421,6 +421,28 @@ public class Utils : MonoBehaviour
         return (int)(value & i);
     }
 
+	// 十六进制颜色转换
+	public static Color32 HexColor32( UInt32 hexValue )
+	{
+		byte r = (byte)((hexValue & 0xFF000000) >> 24);
+		byte g = (byte)((hexValue & 0x00FF0000) >> 16);
+		byte b = (byte)((hexValue & 0x0000FF00) >> 8);
+		byte a = (byte)((hexValue & 0x000000FF));
+
+		return new Color32 ( r, g, b, a );
+	}
+
+	// 十六进制颜色转换
+	public static Color HexColor( UInt32 hexValue )
+	{
+		float r = ((hexValue & 0xFF000000) >> 24)/255.0f;
+		float g = ((hexValue & 0x00FF0000) >> 16)/255.0f;
+		float b = ((hexValue & 0x0000FF00) >> 8)/255.0f;
+		float a = ((hexValue & 0x000000FF))/255.0f;
+
+		return new Color( r, g, b, a );
+	}
+
     // 获取当前运行平台
     public static int platform
     {

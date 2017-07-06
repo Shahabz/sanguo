@@ -119,6 +119,7 @@ function City.BuildingAdd( info, active )
 	else
 		City.m_Buildings[kind] = unitObj;
 	end
+	unitObj:GetComponent("CityBuilding").offset = offset;
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 	return unitObj;
@@ -250,7 +251,9 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_needsec,
 		GetPlayer().m_worker_sec );
 		
-		City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
+		if GetPlayer().m_worker_free > 0 then
+			City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
+		end
 	end
 	if GetPlayer().m_worker_kind_ex > 0 then
 		City.BuildingSetUpgradeing( 
@@ -259,7 +262,9 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_needsec_ex,
 		GetPlayer().m_worker_sec_ex );
 		
-		City.BuildingSetFree( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
+		if GetPlayer().m_worker_free_ex > 0 then
+			City.BuildingSetFree( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
+		end
 	end
 end
 

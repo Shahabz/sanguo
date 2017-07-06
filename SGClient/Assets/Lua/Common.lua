@@ -320,6 +320,19 @@ function string.formatnumberthousands(num,unformat)
     return formatted
 end
 
+function knum( num )
+    if type(num) ~= "number" then
+        return num;
+    end
+	if num >= 1000000 then
+		num = num / 1000000;
+		return string.format( "%.1f", num ) .. "M";
+	elseif num >= 1000 then
+		num = num / 1000;
+		return string.format( "%.1f", num ) .. "K";
+	end
+end
+
 -- 检查是不是英文or数字
 function string.checkenglish( str )
     local lenInByte = #str

@@ -67,6 +67,7 @@ public static class LuaBinder
 		UIGradientWrap.Register(L);
 		ShakeWrap.Register(L);
 		UIHighLightMaskWrap.Register(L);
+		ReferenceWrap.Register(L);
 		YlyAssetIdentifyWrap.Register(L);
 		YlyRichTextWrap.Register(L);
 		YlyDelegateUtilWrap.Register(L);

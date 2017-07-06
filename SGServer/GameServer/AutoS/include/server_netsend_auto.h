@@ -45,6 +45,19 @@ int netsend_equipget_S( int actor_index, char send_type, SLK_NetS_EquipGet *pVal
 int netsend_equiplost_S( int actor_index, char send_type, SLK_NetS_EquipLost *pValue );
 int netsend_hero_S( int actor_index, char send_type, SLK_NetS_Hero *pValue );
 int netsend_herolist_S( int actor_index, char send_type, SLK_NetS_HeroList *pValue );
+int netsend_heroexp_S( int actor_index, char send_type, SLK_NetS_HeroExp *pValue );
+int netsend_herosoldiers_S( int actor_index, char send_type, SLK_NetS_HeroSoldiers *pValue );
+int netsend_herostate_S( int actor_index, char send_type, SLK_NetS_HeroState *pValue );
+int netsend_heroreplace_S( int actor_index, char send_type, SLK_NetS_HeroReplace *pValue );
+int netsend_buildingupgradeinfo_S( int actor_index, char send_type, SLK_NetS_BuildingUpgradeInfo *pValue );
+int netsend_building_S( int actor_index, char send_type, SLK_NetS_Building *pValue );
+int netsend_buildingbarracks_S( int actor_index, char send_type, SLK_NetS_BuildingBarracks *pValue );
+int netsend_buildingres_S( int actor_index, char send_type, SLK_NetS_BuildingRes *pValue );
+int netsend_worker_S( int actor_index, char send_type, SLK_NetS_Worker *pValue );
+int netsend_heroget_S( int actor_index, char send_type, SLK_NetS_HeroGet *pValue );
+int netsend_buildingget_S( int actor_index, char send_type, SLK_NetS_BuildingGet *pValue );
+int netsend_buildingbarracksget_S( int actor_index, char send_type, SLK_NetS_BuildingBarracksGet *pValue );
+int netsend_buildingresGet_S( int actor_index, char send_type, SLK_NetS_BuildingResGet *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

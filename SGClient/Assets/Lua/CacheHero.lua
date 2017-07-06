@@ -41,6 +41,27 @@ function SLK_Hero:empty()
 	return self;
 end
 
+function SLK_Hero:Set( recvValue )
+	self.m_kind  		= 	recvValue.m_kind;-- 种类
+	self.m_level		=	recvValue.m_level;-- 等级
+	self.m_corps  		= 	recvValue.m_corps;-- 兵种
+	self.m_color		=	recvValue.m_color;-- 颜色
+	self.m_exp			=	recvValue.m_exp;-- 经验
+	self.m_exp_max		=	recvValue.m_exp_max;-- 经验上限
+	self.m_soldiers		=	recvValue.m_soldiers;-- 当前兵力
+	self.m_state		=	recvValue.m_state;-- 当前
+	
+	self.m_attack_base	=	recvValue.m_attack_base;--基础攻击资质
+	self.m_attack_wash	=	recvValue.m_attack_wash;--洗髓攻击资质
+	self.m_defense_base	=	recvValue.m_defense_base;--基础防御资质
+	self.m_defense_wash	=	recvValue.m_defense_wash;--洗髓防御资质
+	self.m_troops_base	=	recvValue.m_troops_base;--基础兵力资质
+	self.m_troops_wash	=	recvValue.m_troops_wash;--洗髓兵力资质
+	
+	self.m_attack		=	recvValue.m_attack;-- 攻击
+	self.m_defense		=	recvValue.m_defense;-- 防御
+	self.m_troops		=	recvValue.m_troops;-- 兵力
+end
 
 -- 英雄部分客户端缓存
 local Hero = class("Hero")
@@ -133,7 +154,7 @@ function Hero:GetIndex( kind )
 end
 
 -- 清空所有的New标示
-function Item:ClearAllNew()
+function Hero:ClearAllNew()
 	for tmpi=0, MAX_HERONUM-1, 1 do
 		self.m_Hero[tmpi].m_bIsNew = false;
 	end

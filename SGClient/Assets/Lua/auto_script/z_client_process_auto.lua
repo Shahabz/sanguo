@@ -133,47 +133,28 @@ function proc_buildinglist_C( recvValue )
 	-- process.
 	-- 设置建筑
 	for i=1, recvValue.m_building_count, 1 do
-		GetPlayer():SetBuilding( recvValue.m_building[i].m_kind,
-		{ 
-		m_kind = recvValue.m_building[i].m_kind,
-		m_offset = recvValue.m_building[i].m_offset,
-		m_level = recvValue.m_building[i].m_level,
-		m_sec = recvValue.m_building[i].m_sec,
-		m_needsec = recvValue.m_building[i].m_needsec,
-		m_quick = recvValue.m_building[i].m_quick,
-		} )
-		
-		
+		proc_building_C( recvValue.m_building[i] );	
 	end
 	
 	for i=1, recvValue.m_barracks_count, 1 do
-		GetPlayer():SetBuilding( recvValue.m_barracks[i].m_kind, 
-		{ 
-		m_kind = recvValue.m_barracks[i].m_kind,
-		m_offset = recvValue.m_barracks[i].m_offset,
-		m_level = recvValue.m_barracks[i].m_level,
-		m_sec = recvValue.m_barracks[i].m_sec,
-		m_needsec = recvValue.m_barracks[i].m_needsec,
-		m_quick = recvValue.m_barracks[i].m_quick,
-		} )
+		proc_buildingbarracks_C( recvValue.m_barracks[i] )
 	end
 	
 	for i=1, recvValue.m_res_count, 1 do
-		GetPlayer():SetBuildingRes( recvValue.res[i].m_kind, recvValue.res[i].m_offset,
-		{ 
-		m_kind = recvValue.res[i].m_kind,
-		m_offset = recvValue.res[i].m_offset,
-		m_level = recvValue.res[i].m_level,
-		} )
+		proc_buildingres_C( recvValue.res[i] )
 	end
 	
 	
-	GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0 } )
-	GetPlayer():SetBuilding( 2,{ m_kind = 2,m_offset = 1,m_level = 1,m_sec = 60,m_needsec = 60,m_quick = 0 } )
-	GetPlayer():SetBuilding( 3,{ m_kind = 3,m_offset = 2,m_level = 1,m_sec = 30,m_needsec = 30,m_quick = 0 } )
-	GetPlayer():SetBuilding( 4,{ m_kind = 4,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuilding( 5,{ m_kind = 5,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuilding( 6,{ m_kind = 6,m_offset = 5,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0 } )
+	GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 2,{ m_kind = 2,m_offset = 1,m_level = 1,m_sec = 60,m_needsec = 60,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 3,{ m_kind = 3,m_offset = 2,m_level = 1,m_sec = 30,m_needsec = 30,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 4,{ m_kind = 4,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 5,{ m_kind = 5,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 6,{ m_kind = 6,m_offset = 5,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
+
+	GetPlayer():SetBuilding( 11,{ m_kind = 11,m_offset = 0,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 12,{ m_kind = 12,m_offset = 1,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	GetPlayer():SetBuilding( 13,{ m_kind = 13,m_offset = 2,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
 	
 	GetPlayer():SetBuildingRes( 21,0,{ m_kind = 21,m_offset = 0,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
 	GetPlayer():SetBuildingRes( 21,1,{ m_kind = 21,m_offset = 1,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
@@ -191,6 +172,7 @@ function proc_buildinglist_C( recvValue )
 	recvValue.m_worker_offset = 2;
 	recvValue.m_worker_sec = 200;
 	recvValue.m_worker_needsec = 200;
+	recvValue.m_worker_free = 1;
 	recvValue.m_worker_kind_ex = 1;
 	recvValue.m_worker_offset_ex = 0;
 	recvValue.m_worker_sec_ex = 3600;
@@ -199,11 +181,53 @@ function proc_buildinglist_C( recvValue )
 	
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
-	City.BuildingWorker();
-	MainDlgSetWorker();
 	-- 关闭加载面板
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();
+end
+
+-- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
+function proc_building_C( recvValue )
+	-- process.
+	GetPlayer():SetBuilding( recvValue.m_kind, { 
+		m_kind = recvValue.m_kind,
+		m_offset = recvValue.m_offset,
+		m_level = recvValue.m_level,
+		m_sec = recvValue.m_sec,
+		m_needsec = recvValue.m_needsec,
+		m_quick = recvValue.m_quick,
+		m_overvalue = recvValue.m_overvalue,
+		} )
+end
+
+-- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
+function proc_buildingbarracks_C( recvValue )
+	-- process.
+	GetPlayer():SetBuilding( recvValue.m_kind, { 
+		m_kind = recvValue.m_kind,
+		m_offset = recvValue.m_offset,
+		m_level = recvValue.m_level,
+		m_sec = recvValue.m_sec,
+		m_needsec = recvValue.m_needsec,
+		m_quick = recvValue.m_quick,
+		m_overvalue = recvValue.m_overvalue,
+		} )
+end
+
+-- m_kind=0,m_offset=0,m_level=0,
+function proc_buildingres_C( recvValue )
+	-- process.
+	GetPlayer():SetBuildingRes( recvValue.m_kind, recvValue.m_offset,{ 
+		m_kind = recvValue.m_kind,
+		m_offset = recvValue.m_offset,
+		m_level = recvValue.m_level,
+		} )
+end
+
+-- m_worker_kind=0,m_worker_offset=0,m_worker_op=0,m_worker_sec=0,m_worker_needsec=0,m_worker_free=0,m_worker_kind_ex=0,m_worker_offset_ex=0,m_worker_op_ex=0,m_worker_sec_ex=0,m_worker_needsec_ex=0,m_worker_free_ex=0,m_worker_expire_ex=0,
+function proc_worker_C( recvValue )
+	-- process.
+	GetPlayer():SetBuildingWorker( recvValue )
 end
 
 -- m_result=0,m_actorid=0,
@@ -428,10 +452,136 @@ end
 -- m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,
 function proc_hero_C( recvValue )
 	-- process.
+	local type, offset = GetHero():GetIndex( recvValue.m_kind );
+	if type == "CityHero" then
+		GetHero().m_CityHero[offset]:Set( recvValue );
+	elseif type == "Hero" then
+		GetHero().m_Hero[offset]:Set( recvValue );
+	end
+	HeroDlgUpdate();
 end
 
 -- m_count=0,m_list={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,[m_count]},m_type=0,
 function proc_herolist_C( recvValue )
 	-- process.
+	if recvValue.m_type == 0 then
+		for i=1, recvValue.m_count, 1 do
+			local pHero = SLK_Hero.new();
+			pHero:Set( recvValue.m_list[i] );
+			GetHero():SetCityHero( recvValue.m_list[i].m_offset, pHero );
+		end
+	else
+		for i=1, recvValue.m_count, 1 do
+			local pHero = SLK_Hero.new();
+			pHero:Set( recvValue.m_list[i] );
+			GetHero():SetHero( recvValue.m_list[i].m_offset, pHero );
+		end
+	end
+end
+
+-- m_kind=0,m_exp=0,m_exp_max=0,m_add=0,m_level,m_isup=0,m_path=0,
+function proc_heroexp_C( recvValue )
+	-- process.
+	local type, offset = GetHero():GetIndex( recvValue.m_kind );
+	if type == "CityHero" then
+		GetHero().m_CityHero[offset].m_exp = recvValue.m_exp;
+		GetHero().m_CityHero[offset].m_exp_max = recvValue.m_exp_max;
+		GetHero().m_CityHero[offset].m_level = recvValue.m_level;
+	elseif type == "Hero" then
+		GetHero().m_Hero[offset].m_exp = recvValue.m_exp;
+		GetHero().m_Hero[offset].m_exp_max = recvValue.m_exp_max;
+		GetHero().m_Hero[offset].m_level = recvValue.m_level;
+	end
+	
+end
+
+-- m_kind=0,m_add=0,m_soldiers=0,m_soldiers_max=0,m_path=0,
+function proc_herosoldiers_C( recvValue )
+	-- process.
+	local type, offset = GetHero():GetIndex( recvValue.m_kind );
+	if type == "CityHero" then
+		GetHero().m_CityHero[offset].m_soldiers = recvValue.m_soldiers;
+	elseif type == "Hero" then
+		GetHero().m_Hero[offset].m_soldiers = recvValue.m_soldiers;
+	end
+	HeroDlgUpdate();
+end
+
+-- m_kind=0,m_state=0,
+function proc_herostate_C( recvValue )
+	-- process.
+	local type, offset = GetHero():GetIndex( recvValue.m_kind );
+	if type == "CityHero" then
+		GetHero().m_CityHero[offset].m_state = recvValue.m_state;
+	elseif type == "Hero" then
+		GetHero().m_Hero[offset].m_state = recvValue.m_state;
+	end
+	HeroDlgUpdate();
+end
+
+-- m_up_kind=0,m_down_kind=0,
+function proc_heroreplace_C( recvValue )
+	-- process.
+	local up_type, up_offset = GetHero():GetIndex( recvValue.m_up_kind );
+	local down_type, down_offset = GetHero():GetIndex( recvValue.m_down_kind );
+	
+	-- 
+	if up_type == down_type and up_type == "CityHero" then
+		GetHero().m_CityHero[up_offset], GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset], GetHero().m_CityHero[up_offset];
+		return;
+	end
+	
+	--
+	if up_type == down_type and up_type == "Hero" then
+		GetHero().m_Hero[up_offset], GetHero().m_Hero[down_offset] = GetHero().m_Hero[down_offset], GetHero().m_Hero[up_offset];
+		return;
+	end
+	
+	--
+	if up_type == "Hero" then
+		GetHero().m_Hero[up_offset], GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset], GetHero().m_Hero[up_offset];
+		return;
+	end
+	
+	--
+	if up_type == "CityHero" then
+		GetHero().m_CityHero[up_offset], GetHero().m_Hero[down_offset] = GetHero().m_Hero[down_offset], GetHero().m_CityHero[up_offset];
+		return;
+	end
+
+end
+
+-- m_kind=0,m_path=0,m_hero={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
+function proc_heroget_C( recvValue )
+	-- process.
+	local pHero = SLK_Hero.new();
+	pHero:Set( recvValue.m_hero );
+	GetHero():SetHero( recvValue.m_hero.m_offset, pHero );
+	HeroGetDlgShow( recvValue );
+end
+
+-- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,
+function proc_buildingupgradeinfo_C( recvValue )
+	-- process.
+	BuildingUpgradeDlgRecv( recvValue );
+end
+
+
+-- m_path=0,m_building={m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,},
+function proc_buildingget_C( recvValue )
+	-- process.
+	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+end
+
+-- m_path=0,m_barracks={m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,},
+function proc_buildingbarracksget_C( recvValue )
+	-- process.
+	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+end
+
+-- m_path=0,m_res={m_kind=0,m_offset=0,m_level=0,},
+function proc_buildingresGet_C( recvValue )
+	-- process.
+	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
 end
 

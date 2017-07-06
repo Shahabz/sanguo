@@ -17,7 +17,7 @@ int city_guard_load_auto( int actorid, int city_index, LPCB_GETCITYGUARD pCB_Get
 	int offset = 0;
 	CityGuard *pCityGuard;
 
-	sprintf( szSQL, "select `actorid`,`offset`,`shape`,`level`,`color`,`corps`,`soldiers`,`soldiers_max` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`offset`,`shape`,`level`,`color`,`monsterid`,`soldiers` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -39,9 +39,8 @@ int city_guard_load_auto( int actorid, int city_index, LPCB_GETCITYGUARD pCB_Get
 		pCityGuard->shape = atoi(row[offset++]);
 		pCityGuard->level = atoi(row[offset++]);
 		pCityGuard->color = atoi(row[offset++]);
-		pCityGuard->corps = atoi(row[offset++]);
+		pCityGuard->monsterid = atoi(row[offset++]);
 		pCityGuard->soldiers = atoi(row[offset++]);
-		pCityGuard->soldiers_max = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -54,7 +53,7 @@ int city_guard_save_auto( int actorid, int offset, CityGuard *pCityGuard, const 
 		return -1;
 
 RE_CITYGUARD_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`shape`,`level`,`color`,`corps`,`soldiers`,`soldiers_max`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pCityGuard->shape,pCityGuard->level,pCityGuard->color,pCityGuard->corps,pCityGuard->soldiers,pCityGuard->soldiers_max);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`shape`,`level`,`color`,`monsterid`,`soldiers`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pCityGuard->shape,pCityGuard->level,pCityGuard->color,pCityGuard->monsterid,pCityGuard->soldiers);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -88,11 +87,11 @@ int city_guard_batch_save_auto( int actorid, CityGuard *pCityGuard, int maxcount
 	{
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`shape`,`level`,`color`,`corps`,`soldiers`,`soldiers_max`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pCityGuard[index].shape,pCityGuard[index].level,pCityGuard[index].color,pCityGuard[index].corps,pCityGuard[index].soldiers,pCityGuard[index].soldiers_max);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`shape`,`level`,`color`,`monsterid`,`soldiers`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pCityGuard[index].shape,pCityGuard[index].level,pCityGuard[index].color,pCityGuard[index].monsterid,pCityGuard[index].soldiers);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pCityGuard[index].shape,pCityGuard[index].level,pCityGuard[index].color,pCityGuard[index].corps,pCityGuard[index].soldiers,pCityGuard[index].soldiers_max);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d')",actorid,index,pCityGuard[index].shape,pCityGuard[index].level,pCityGuard[index].color,pCityGuard[index].monsterid,pCityGuard[index].soldiers);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

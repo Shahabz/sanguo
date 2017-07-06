@@ -1,9 +1,11 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
 
 -- 打开界面
 function EquipWashDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipWashDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "洗炼铺", 7, EquipWashDlgClose );
 end
 
 -- 隐藏界面
@@ -11,7 +13,7 @@ function EquipWashDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "EquipWashDlg" );
 end
 
@@ -69,3 +71,7 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function EquipWashDlgShow()
+	EquipWashDlgOpen();
+end
+

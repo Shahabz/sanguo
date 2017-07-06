@@ -73,8 +73,9 @@ struct _slk_NetS_Building {
 	char m_offset;	//普通建筑-位置
 	char m_level;	//普通建筑-等级
 	int m_sec;	//普通建筑-操作剩余时间
-	int m_needsec;	//
+	int m_needsec;	//普通建筑-操作需要时间
 	char m_quick;	//普通建筑-是否有加速(科技等)
+	int m_overvalue;	//普通建筑-完成后的值
 };
 typedef struct _slk_NetS_Building SLK_NetS_Building;	//普通建筑信息
 
@@ -83,8 +84,9 @@ struct _slk_NetS_BuildingBarracks {
 	char m_offset;	//兵营建筑-位置
 	char m_level;	//兵营建筑-等级
 	int m_sec;	//兵营建筑-募兵剩余时间
-	int m_needsec;	//
+	int m_needsec;	//兵营建筑-募兵需要时间
 	char m_quick;	//兵营建筑-是否有加速
+	int m_overvalue;	//兵营建筑-完成后的总数
 };
 typedef struct _slk_NetS_BuildingBarracks SLK_NetS_BuildingBarracks;	//兵营建筑信息
 
@@ -107,12 +109,14 @@ struct _slk_NetS_BuildingList {
 	char m_worker_offset;	//服务器发送建筑队列索引
 	char m_worker_op;	//服务器发送-建筑队列建筑操作
 	int m_worker_sec;	//服务器发送-建筑队列剩余时间
-	int m_worker_needsec;	//
+	int m_worker_needsec;	//服务器发送-建筑队列需要时间
+	char m_worker_free;	//服务器发送-建筑队列免费时间
 	char m_worker_kind_ex;	//服务器发送-建筑队列种类(商用)
 	char m_worker_offset_ex;	//服务器发送-建筑队列索引(商用)
 	char m_worker_op_ex;	//服务器发送-建筑队列操作(商用)
 	int m_worker_sec_ex;	//服务器发送-建筑队列剩余时间(商用)
-	int m_worker_needsec_ex;	//
+	int m_worker_needsec_ex;	//服务器发送-建筑队列需要时间(商用)
+	char m_worker_free_ex;	//服务器发送-建筑队列免费时间(商用)
 	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
 	int m_function;	//服务器发送-功能是否开启
 };
@@ -368,6 +372,45 @@ struct _slk_NetS_HeroList {
 };
 typedef struct _slk_NetS_HeroList SLK_NetS_HeroList;	//英雄列表
 
+struct _slk_NetS_HeroExp {
+	short m_kind;	//英雄种类
+	int m_exp;	//英雄当前经验
+	int m_exp_max;	//英雄经验上限
+	short m_add;	//英雄获取经验
+	char m_isup;	//是否升级
+	short m_level;	//英雄等级
+	short m_path;	//途径
+};
+typedef struct _slk_NetS_HeroExp SLK_NetS_HeroExp;	//英雄经验改变
+
+struct _slk_NetS_HeroSoldiers {
+	short m_kind;	//英雄种类
+	int m_add;	//添加兵数量
+	int m_soldiers;	//当前兵数
+	int m_soldiers_max;	//兵数上限
+	short m_path;	//途径
+};
+typedef struct _slk_NetS_HeroSoldiers SLK_NetS_HeroSoldiers;	//英雄兵力
+
+struct _slk_NetS_HeroState {
+	short m_kind;	//英雄种类
+	char m_state;	//英雄状态
+};
+typedef struct _slk_NetS_HeroState SLK_NetS_HeroState;	//英雄状态
+
+struct _slk_NetS_HeroReplace {
+	short m_up_kind;	//上阵武将
+	short m_down_kind;	//下阵武将
+};
+typedef struct _slk_NetS_HeroReplace SLK_NetS_HeroReplace;	//英雄上下阵替换
+
+struct _slk_NetS_HeroGet {
+	short m_kind;	//获取的武将
+	short m_path;	//途径
+	SLK_NetS_Hero m_hero;	//获取的英雄信息
+};
+typedef struct _slk_NetS_HeroGet SLK_NetS_HeroGet;	//英雄获取
+
 struct _slk_NetS_AwardInfo {
 	int m_kind;	//种类
 	int m_num;	//数量
@@ -473,6 +516,55 @@ struct _slk_NetS_Token {
 };
 typedef struct _slk_NetS_Token SLK_NetS_Token;	//改变钻石
 
+struct _slk_NetS_BuildingUpgradeInfo {
+	short m_citylevel;	//建筑升级所需官府等级
+	short m_actorlevel;	//建筑升级所需主角等级
+	int m_silver;	//建筑升级所需银币
+	int m_wood;	//所需木材建筑升级
+	int m_food;	//建筑升级所需食物
+	int m_iron;	//建筑升级所需镔铁
+	int m_sec;	//建筑升级所需时间
+	int m_old_value[8];	//建筑升级钱的数值
+	int m_new_value[8];	//建筑升级后的数值
+	char m_maxlevel;	//建筑最大等级
+};
+typedef struct _slk_NetS_BuildingUpgradeInfo SLK_NetS_BuildingUpgradeInfo;	//建筑升级信息
+
+struct _slk_NetS_Worker {
+	char m_worker_kind;	//服务器发送-建筑队列种类
+	char m_worker_offset;	//服务器发送建筑队列索引
+	char m_worker_op;	//服务器发送-建筑队列建筑操作
+	int m_worker_sec;	//服务器发送-建筑队列剩余时间
+	int m_worker_needsec;	//服务器发送-建筑队列需要时间
+	char m_worker_free;	//服务器发送-建筑队列免费时间
+	char m_worker_kind_ex;	//服务器发送-建筑队列种类(商用)
+	char m_worker_offset_ex;	//服务器发送-建筑队列索引(商用)
+	char m_worker_op_ex;	//服务器发送-建筑队列操作(商用)
+	int m_worker_sec_ex;	//服务器发送-建筑队列剩余时间(商用)
+	int m_worker_needsec_ex;	//服务器发送-建筑队列需要时间(商用)
+	char m_worker_free_ex;	//服务器发送-建筑队列免费时间(商用)
+	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
+};
+typedef struct _slk_NetS_Worker SLK_NetS_Worker;	//建筑队列信息
+
+struct _slk_NetS_BuildingGet {
+	short m_path;	//获取建筑
+	SLK_NetS_Building m_building;	//获取建筑
+};
+typedef struct _slk_NetS_BuildingGet SLK_NetS_BuildingGet;	//普通建筑获取
+
+struct _slk_NetS_BuildingBarracksGet {
+	short m_path;	//获取建筑
+	SLK_NetS_BuildingBarracks m_barracks;	//获取建筑
+};
+typedef struct _slk_NetS_BuildingBarracksGet SLK_NetS_BuildingBarracksGet;	//兵营建筑获取
+
+struct _slk_NetS_BuildingResGet {
+	short m_path;	//获取建筑
+	SLK_NetS_BuildingRes m_res;	//获取建筑
+};
+typedef struct _slk_NetS_BuildingResGet SLK_NetS_BuildingResGet;	//资源建筑获取
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -510,6 +602,11 @@ int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValu
 int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pValue );
 int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue );
 int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValue );
+int struct_NetS_HeroExp_send( char **pptr, int *psize, SLK_NetS_HeroExp *pValue );
+int struct_NetS_HeroSoldiers_send( char **pptr, int *psize, SLK_NetS_HeroSoldiers *pValue );
+int struct_NetS_HeroState_send( char **pptr, int *psize, SLK_NetS_HeroState *pValue );
+int struct_NetS_HeroReplace_send( char **pptr, int *psize, SLK_NetS_HeroReplace *pValue );
+int struct_NetS_HeroGet_send( char **pptr, int *psize, SLK_NetS_HeroGet *pValue );
 int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pValue );
 int struct_NetS_AwardInfoList_send( char **pptr, int *psize, SLK_NetS_AwardInfoList *pValue );
 int struct_NetS_Experience_send( char **pptr, int *psize, SLK_NetS_Experience *pValue );
@@ -524,5 +621,10 @@ int struct_NetS_Prestige_send( char **pptr, int *psize, SLK_NetS_Prestige *pValu
 int struct_NetS_Friendship_send( char **pptr, int *psize, SLK_NetS_Friendship *pValue );
 int struct_NetS_Vip_send( char **pptr, int *psize, SLK_NetS_Vip *pValue );
 int struct_NetS_Token_send( char **pptr, int *psize, SLK_NetS_Token *pValue );
+int struct_NetS_BuildingUpgradeInfo_send( char **pptr, int *psize, SLK_NetS_BuildingUpgradeInfo *pValue );
+int struct_NetS_Worker_send( char **pptr, int *psize, SLK_NetS_Worker *pValue );
+int struct_NetS_BuildingGet_send( char **pptr, int *psize, SLK_NetS_BuildingGet *pValue );
+int struct_NetS_BuildingBarracksGet_send( char **pptr, int *psize, SLK_NetS_BuildingBarracksGet *pValue );
+int struct_NetS_BuildingResGet_send( char **pptr, int *psize, SLK_NetS_BuildingResGet *pValue );
 
 #endif

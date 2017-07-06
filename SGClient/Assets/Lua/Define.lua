@@ -120,6 +120,19 @@ end
 function zh( text )
     return text;
 end
+
+function F( nameid, ... )
+	return Utils.StringFormat( GetLocalizeText( nameid ), ... );
+end
+
+function Hex2Color( hex )
+	return Utils.HexColor( hex )
+end
+
+function Hex2Color32( hex )
+	return Utils.HexColor32( hex )
+end
+
 -- 写gamelog
 function gamelog( msg )
 	LogUtil.GetInstance():WriteGame( msg );
@@ -128,13 +141,6 @@ end
 -- 写netlog
 function netlog( msg )
 	LogUtil.GetInstance():WriteNet( msg );
-end
-
--- 清空所有子节点
-function clearChild( object )
-	for i = 0 ,object.transform.childCount - 1 do
-        GameObject.Destroy( object.transform:GetChild(i).gameObject );
-    end
 end
 
 -- 延时执行
@@ -161,5 +167,114 @@ end
 
 function NationEx( nation )
 	return T(nation+110);
+end
+
+-- 获取建筑名称
+function BuildingName( kind, offset )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron and offset ~= nil then
+		return F( 99, offset+1, T( kind ) )
+	else
+		return T(kind);
+	end
+end
+
+-- 获取建筑名称带等级
+function BuildingNameLv( kind, offset, level )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron and offset ~= nil then
+		return "Lv."..level.." "..F( 99, offset+1, T( kind ) )
+	else
+		return "Lv."..level.." "..T(kind);
+	end
+end
+
+-- 获取英雄名称
+function HeroName( kind )
+	return T(kind+1000);
+end
+
+-- 获取英雄名称带等级
+function HeroNameLv( kind, level )
+	return "Lv."..level.." "..T(kind+1000);
+end
+
+-- 英雄状态文字
+function HeroState( state )
+	if state == 0 then
+		return T(141);
+	elseif state == 1 then
+		return T(142);
+	end
+end
+
+-- 获取装备名称
+function EquipName( kind )
+	return T(kind+2000);
+end
+
+-- 清空所有子节点
+function clearChild( object )
+	--for i = 0 ,object.transform.childCount - 1 do
+       -- GameObject.Destroy( object.transform:GetChild(i).gameObject );
+    --end
+	Utils.ClearChild( object.transform );
+end
+
+-- 添加节点
+function addChild( object, prefab )
+	local obj = GameObject.Instantiate( prefab );
+	obj.transform:SetParent( object.transform );
+	obj.transform.localPosition = Vector3.zero;
+	obj.transform.localScale = Vector3.one;
+	obj.gameObject:SetActive( true );
+	return obj;
+end
+
+-- 添加节点
+function addObj( object, prefab )
+	local obj = GameObject.Instantiate( prefab );
+	obj.transform:SetParent( object.transform );
+	obj.transform.position = object.transform.position;
+	obj.transform.localScale = Vector3.one;
+	return obj;
+end
+
+function SetImage( transform, sprite )
+	transform:GetComponent( typeof(Image) ).sprite = sprite;
+end
+
+function SetText( transform, text, color )
+	local uiComponent = transform:GetComponent( typeof(UIText) );
+	uiComponent.text = text;
+	if color ~= nil then
+		uiComponent.color = color;
+	end
+end
+
+function SetLevel( transform, level, color )
+	SetText( transform, "Lv."..level, color )
+end
+
+function SetTextColor( transform, color )
+	transform:GetComponent( typeof(UIText) ).color = color;
+end
+
+function SetRichText( transform, text )
+	transform:GetComponent( typeof(YlyRichText) ).text = text;
+end
+
+function SetControlID( transform, controlID )
+	transform:GetComponent( typeof(UIButton) ).controlID = controlID;
+end
+
+function SetProgress( transform, value )
+	transform:GetComponent( typeof(UIProgress) ):SetValue(value);
+end
+
+function SetTrue( transform )
+	transform.gameObject:SetActive( true )
+end
+
+function SetFalse( transform )
+	transform.gameObject:SetActive( false )
 end
 

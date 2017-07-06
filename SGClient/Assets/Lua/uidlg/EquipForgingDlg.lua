@@ -1,9 +1,20 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
+
+local m_uiUIP_ForgingEquip = nil; --UnityEngine.GameObject
+local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiEquipInfo = nil; --UnityEngine.GameObject
+local m_uiShape = nil; --UnityEngine.GameObject
+local m_uiName = nil; --UnityEngine.GameObject
+local m_uiAbility = nil; --UnityEngine.GameObject
+local m_uiUIP_Material = nil; --UnityEngine.GameObject
+local m_uiMaterialGrid = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function EquipForgingDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipForgingDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "铁匠铺", 6, EquipForgingDlgClose );
 end
 
 -- 隐藏界面
@@ -11,7 +22,7 @@ function EquipForgingDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "EquipForgingDlg" );
 end
 
@@ -37,7 +48,15 @@ end
 -- 载入时调用
 function EquipForgingDlgOnAwake( gameObject )
 	-- 控件赋值	
-	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
+	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
+	m_uiUIP_ForgingEquip = objs[0];
+	m_uiContent = objs[1];
+	m_uiEquipInfo = objs[2];
+	m_uiShape = objs[3];
+	m_uiName = objs[4];
+	m_uiAbility = objs[5];
+	m_uiUIP_Material = objs[6];
+	m_uiMaterialGrid = objs[7];
 end
 
 -- 界面初始化时调用
@@ -69,3 +88,6 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function EquipForgingDlgShow()
+	EquipForgingDlgOpen();
+end

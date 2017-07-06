@@ -153,6 +153,7 @@ int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_overvalue, (*psize) );
 	return 0;
 }
 
@@ -166,6 +167,7 @@ int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_Buildin
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_overvalue, (*psize) );
 	return 0;
 }
 
@@ -204,11 +206,13 @@ int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingLis
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind_ex, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset_ex, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec_ex, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
 	return 0;
@@ -557,6 +561,60 @@ int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValu
 	return 0;
 }
 
+int struct_NetS_HeroExp_send( char **pptr, int *psize, SLK_NetS_HeroExp *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isup, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_HeroSoldiers_send( char **pptr, int *psize, SLK_NetS_HeroSoldiers *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers_max, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_HeroState_send( char **pptr, int *psize, SLK_NetS_HeroState *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	return 0;
+}
+
+int struct_NetS_HeroReplace_send( char **pptr, int *psize, SLK_NetS_HeroReplace *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_up_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_down_kind, (*psize) );
+	return 0;
+}
+
+int struct_NetS_HeroGet_send( char **pptr, int *psize, SLK_NetS_HeroGet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	struct_NetS_Hero_send( pptr, psize, &pValue->m_hero );
+	return 0;
+}
+
 int struct_NetS_AwardInfo_send( char **pptr, int *psize, SLK_NetS_AwardInfo *pValue )
 {
 	int tmpi = 0;
@@ -704,6 +762,70 @@ int struct_NetS_Token_send( char **pptr, int *psize, SLK_NetS_Token *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingUpgradeInfo_send( char **pptr, int *psize, SLK_NetS_BuildingUpgradeInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_citylevel, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_actorlevel, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_iron, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_old_value, 8*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_new_value, 8*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maxlevel, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Worker_send( char **pptr, int *psize, SLK_NetS_Worker *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_kind_ex, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_offset_ex, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_op_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_sec_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec_ex, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingGet_send( char **pptr, int *psize, SLK_NetS_BuildingGet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	struct_NetS_Building_send( pptr, psize, &pValue->m_building );
+	return 0;
+}
+
+int struct_NetS_BuildingBarracksGet_send( char **pptr, int *psize, SLK_NetS_BuildingBarracksGet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	struct_NetS_BuildingBarracks_send( pptr, psize, &pValue->m_barracks );
+	return 0;
+}
+
+int struct_NetS_BuildingResGet_send( char **pptr, int *psize, SLK_NetS_BuildingResGet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	struct_NetS_BuildingRes_send( pptr, psize, &pValue->m_res );
 	return 0;
 }
 

@@ -86,15 +86,23 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroGetDlgShow()
-	--m_uiHeroHead:GetComponent( "Image" ).sprite
-	--m_uiHeroColor:GetComponent( "Image" ).sprite
-	--m_uiHeroCorps:GetComponent( "Image" ).sprite
-	--m_uiHeroName:GetComponent( "UIText" ).text
-	--m_uiGrowth:GetComponent( "UIText" ).text = "总资质"
-	--m_uiAttack:GetComponent( "UIText" ).text = "攻资质"
-	--m_uiDefense:GetComponent( "UIText" ).text = "防资质"
-	--m_uiTroops:GetComponent( "UIText" ).text = "兵资质"
+--{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
+function HeroGetDlgShow( recvValue )
+	HeroGetDlgOpen()
+	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
+	SetImage( m_uiHeroColor,  HeroColorSprite( recvValue.m_color )  );
+	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );
+	SetText( m_uiHeroName, HeroName( recvValue.m_kind ) )
+	
+	local attack = recvValue.m_attack_base + recvValue.m_attack_wash;
+	local defense = recvValue.m_defense_base + recvValue.m_defense_wash;
+	local troops = recvValue.m_troops_base + recvValue.m_troops_wash;
+	local growth = attack + defense + troops;
+
+	SetText( m_uiGrowth, F( 137, growth ) ) -- 总资质
+	SetText( m_uiAttack, F( 138, attack )  ) -- 攻资质
+	SetText( m_uiDefense, F( 139, defense )  ) -- 防资质
+	SetText( m_uiTroops, F( 140, troops )  ) -- 兵资质
 end
 
 

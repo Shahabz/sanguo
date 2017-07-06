@@ -13,6 +13,7 @@ SystemInfo		= UnityEngine.SystemInfo
 Screen			= UnityEngine.Screen
 Camera			= UnityEngine.Camera
 Material 		= UnityEngine.Material
+Image   		= UnityEngine.UI.Image
 --[[Renderer 		= UnityEngine.Renderer
 AsyncOperation	= UnityEngine.AsyncOperation
 CharacterController = UnityEngine.CharacterController
@@ -39,11 +40,11 @@ PlayMode		= UnityEngine.PlayMode
 ParticleAnimator= UnityEngine.ParticleAnimator
 TouchPhase 		= UnityEngine.TouchPhase
 AnimationBlendMode = UnityEngine.AnimationBlendMode
-Image   = UnityEngine.UI.Image
 SpriteRenderer = UnityEngine.SpriteRenderer--]]
 SceneManager = UnityEngine.SceneManagement.SceneManager
 WWW = UnityEngine.WWW
 
+require "Define"
 require "auto_script/z_client_struct_auto"
 require "auto_script/z_client_process_auto"
 require "auto_script/z_client_structrecv_auto"
@@ -56,13 +57,13 @@ require "Game"
 require "Network"
 require "HttpRequest"
 require "HttpResponse"
-require "Define"
 require "Common"
 require "ResourceMgr"
 require "CachePlayer"
 require "CacheCity"
 require "uimod/LoginMod"
 require "uimod/PopTextMod"
+require "uimod/NotifyMod"
 require "uimod/DialogFrameMod"
 require "uimod/BuildingOpratorMod"
 require "uimod/BuildingTimerMod"
@@ -76,6 +77,8 @@ require "uidlg/BuildingGetDlg"
 require "uidlg/CreateDlg"
 require "uidlg/ChangeShapeDlg"
 require "uidlg/ChatDlg"
+require "uidlg/CityGuardDlg"
+require "uidlg/CityTechDlg"
 require "uidlg/EquipForgingDlg"
 require "uidlg/EquipWashDlg"
 require "uidlg/HeroDlg"
@@ -86,6 +89,7 @@ require "uidlg/HeroTalkDlg"
 require "uidlg/LevyDlg"
 require "uidlg/MainDlg"
 require "uidlg/NpcTalkDlg"
+require "uidlg/NpcTalkOneDlg"
 require "uidlg/QuestAwardDlg"
 require "uidlg/TrainDlg"
 require "uidlg/PlayerDlg"

@@ -7,9 +7,8 @@ struct _city_guard {
 				unsigned char shape;	//
 				unsigned char level;	//
 				char color;	//
-				char corps;	//
+				short monsterid;	//
 				int soldiers;	//
-				int soldiers_max;	//
 };
 typedef struct _city_guard CityGuard;
 

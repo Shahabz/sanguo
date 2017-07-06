@@ -44,10 +44,13 @@ struct _city {
 				int prestige;	//威望值
 				int friendship;	//友谊积分
 				int function;	//功能是否开启
-				char washnum;	//洗练免费次数
-				short washsec;	//下次免费洗练时间
+				char equip_washnum;	//装备洗练免费次数
+				short equip_washsec;	//装备下次免费洗练时间
 				short forgingkind;	//打造装备种类
 				int forgingsec;	//打造剩余时间
+				char hero_washnum;	//英雄洗练次数
+				short hero_washsec;	//英雄下次洗练免费时间
+				short guardsec;	//城墙守卫冷却时间
 				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄
 				Building building[8];	//普通建筑

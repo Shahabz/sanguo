@@ -8,7 +8,7 @@ local m_uiMovePanel = nil; --UnityEngine.GameObject
 
 local m_kind = 0;
 local m_offset = -1;
-
+local m_info = {};
 -- 打开界面
 function BuildingGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingGetDlg" );
@@ -82,10 +82,11 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function BuildingGetDlgShow( kind, offset )
+function BuildingGetDlgShow( kind, offset, info )
 	BuildingGetDlgOpen();
 	m_kind = kind;
 	m_offset = offset;
+	m_info = info;
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);
 	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( kind );
@@ -98,9 +99,9 @@ function BuildingGetDlgMove()
 	
 	local unitObj = nil;
 	if m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
-		unitObj = GetPlayer():SetBuildingRes( m_kind, m_offset, { m_kind = m_kind,m_offset = m_offset,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 }, false )
+		unitObj = GetPlayer():SetBuildingRes( m_kind, m_offset, m_info, false )
 	else
-		unitObj = GetPlayer():SetBuilding( m_kind, { m_kind = m_kind,m_offset = m_offset,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 }, false )
+		unitObj = GetPlayer():SetBuilding( m_kind, m_info, false )
 	end
 	
 	City.m_Camera:TweenPosToInBound( unitObj.transform.position, 1 );
@@ -109,7 +110,9 @@ function BuildingGetDlgMove()
 		--m_uiShape:GetComponent( "UITweenScale" ):Play( true );
 		m_uiShape:GetComponent( "UITweenRectPosition" ).from = Vector2( m_uiShape.transform.localPosition.x, m_uiShape.transform.localPosition.y );
 		local screenPos = City.m_CameraMain:WorldToScreenPoint(unitObj.transform.position);
-		m_uiShape:GetComponent( "UITweenRectPosition" ).to = Vector2( math.abs(screenPos.x-Screen.width/2), screenPos.y-Screen.height/2 ); 
+		local x = screenPos.x-Screen.width/2;
+		local y= screenPos.y-Screen.height/2;
+		m_uiShape:GetComponent( "UITweenRectPosition" ).to = Vector2( x, y ); 
 		m_uiShape:GetComponent( "UITweenRectPosition" ):Play( true );
 	end, 1.1 )
 	

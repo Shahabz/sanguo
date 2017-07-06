@@ -39,10 +39,12 @@ function Player:Init()
 	self.m_worker_offset	=	0;
 	self.m_worker_sec		=	0;
 	self.m_worker_needsec   =	0;
+	self.m_worker_free   	=	0;
 	self.m_worker_kind_ex	=	0;
 	self.m_worker_offset_ex	=	0;
 	self.m_worker_sec_ex	=	0;
 	self.m_worker_needsec_ex=	0;
+	self.m_worker_free_ex   =	0;
 	self.m_worker_expire_ex	=	0;
 	self.m_buildings 		=	{};
 	self.m_buildings_res 	=	{};
@@ -83,7 +85,10 @@ function Player:SetBuilding( kind, info, active )
 	--
 	local unitObj = City.BuildingAdd( info, active );
 	
-	City.BuildingSetOver( kind );
+	-- 完成数值状态
+	if info.m_overvalue > 0 then
+		City.BuildingSetOver( kind );
+	end
 	return unitObj;
 end
 
@@ -102,11 +107,16 @@ function Player:SetBuildingWorker( recvValue )
 	self.m_worker_offset	=	recvValue.m_worker_offset;
 	self.m_worker_sec		=	recvValue.m_worker_sec;
 	self.m_worker_needsec   =	recvValue.m_worker_needsec;
+	self.m_worker_free   	=	recvValue.m_worker_free;
 	self.m_worker_kind_ex	=	recvValue.m_worker_kind_ex;
 	self.m_worker_offset_ex	=	recvValue.m_worker_offset_ex;
 	self.m_worker_sec_ex	=	recvValue.m_worker_sec_ex;
 	self.m_worker_needsec_ex=	recvValue.m_worker_needsec_ex;
+	self.m_worker_free_ex   =	recvValue.m_worker_free_ex;
 	self.m_worker_expire_ex	=	recvValue.m_worker_expire_ex;
+	-- 
+	City.BuildingWorker();
+	MainDlgSetWorker();
 end
 
 function Player:SetBuildingLevy( levynum )
@@ -125,6 +135,18 @@ function Player:SetBuildingLevy( levynum )
 			City.BuildingAddLevy();
 		end
 	end
+end
+
+function Player:GetBuilding( kind, offset )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return self.m_buildings_res[kind][offset];
+	else
+		return self.m_buildings[kind];
+	end 
+end
+
+function Player:CityLevel()
+	return self.m_buildings[1].m_level;
 end
 
 -- 全局

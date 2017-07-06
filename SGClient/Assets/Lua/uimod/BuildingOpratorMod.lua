@@ -35,6 +35,16 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
             -- 进入
 			if m_kind == BUILDING_Main then
 				LevyDlgShow();
+			elseif m_kind == BUILDING_Wall then
+				CityGuardDlgShow();
+			elseif m_kind == BUILDING_Tech then
+				CityTechDlgOnShow();
+			elseif m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+				TrainDlgOnShow( m_kind );
+			elseif m_kind == BUILDING_Smithy then
+				EquipForgingDlgShow();
+			elseif m_kind == BUILDING_Wash then
+				EquipWashDlgShow();
 			end
         end
 		City.BuildingUnSelect();

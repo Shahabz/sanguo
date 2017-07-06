@@ -36,6 +36,8 @@ public class UtilsWrap
 		L.RegFunction("set_int_sflag", set_int_sflag);
 		L.RegFunction("byteAndOp", byteAndOp);
 		L.RegFunction("IntAndOp", IntAndOp);
+		L.RegFunction("HexColor32", HexColor32);
+		L.RegFunction("HexColor", HexColor);
 		L.RegFunction("IsPointerOverUIObject", IsPointerOverUIObject);
 		L.RegFunction("GetCharacterWidth", GetCharacterWidth);
 		L.RegFunction("IsEmojiCharacter", IsEmojiCharacter);
@@ -559,6 +561,40 @@ public class UtilsWrap
 			int arg1 = (int)LuaDLL.luaL_checknumber(L, 2);
 			int o = Utils.IntAndOp(arg0, arg1);
 			LuaDLL.lua_pushinteger(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int HexColor32(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 1);
+			UnityEngine.Color32 o = Utils.HexColor32(arg0);
+			ToLua.PushValue(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int HexColor(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 1);
+			UnityEngine.Color o = Utils.HexColor(arg0);
+			ToLua.Push(L, o);
 			return 1;
 		}
 		catch(Exception e)
