@@ -247,6 +247,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_archer_num, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_mokilllv, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sflag, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuild, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuildopen, (*psize) );
 	return 0;
 }
 
@@ -826,6 +828,35 @@ int struct_NetS_BuildingResGet_send( char **pptr, int *psize, SLK_NetS_BuildingR
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	struct_NetS_BuildingRes_send( pptr, psize, &pValue->m_res );
+	return 0;
+}
+
+int struct_NetS_Soldiers_send( char **pptr, int *psize, SLK_NetS_Soldiers *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corpse, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TrainInfo_send( char **pptr, int *psize, SLK_NetS_TrainInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers_max, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_trainnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_trainsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_trainsec_need, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_queuenum, 16*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_queue, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_trainlong, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_confnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_confsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_conffood, (*psize) );
 	return 0;
 }
 

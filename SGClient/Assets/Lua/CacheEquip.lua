@@ -1,6 +1,6 @@
 -- 装备缓存信息
 -- 函数参数名称带有"_"的都是服务器真实的offset，0开始
-MAX_EQUIPNUM	= 100  -- 装备数量
+MAX_EQUIPNUM	= 150  -- 装备数量
 EQUIP_ABILITY_NUM		= 4  -- 道具最多有4个可变属性
 
 EQUIP_PROCESS_EQUIP		    = 1 -- 装备穿上
@@ -18,7 +18,7 @@ EQUIP_TYPE_EQUIP6					=	6	--	兵符
 EQUIP_ABILITY_NONE				=	0
 EQUIP_ABILITY_A					=	1	-- 攻击
 EQUIP_ABILITY_D					=	2	-- 防御
-EQUIP_ABILITY_S					=	3 -- 兵力
+EQUIP_ABILITY_S					=	3 	-- 兵力
 
 -- 获取装备配置信息
 function equip_getinfo( equipkind )
@@ -166,8 +166,6 @@ function SLK_Equip:empty()
 	return self;
 end
 
-
-
 -- 装备部分客户端缓存
 local Equip = class("Equip")
 function Equip:ctor()
@@ -178,7 +176,7 @@ end
 function Equip:ResetAll()
 	-- 装备栏
 	self.m_Equip = {};
-	for i=1,MAX_EQUIPNUM--[[*MAX_TEAMMEMBER--]],1 do
+	for i=1,MAX_EQUIPNUM,1 do
 		local object = SLK_Equip.new();
 		table.insert( self.m_Equip, object );
 	end
@@ -186,116 +184,19 @@ end
 
 -- 设置背包装备
 function Equip:SetEquip( _EquipIndex, pEquip )
-
 	local nEquipIndex = _EquipIndex + 1;
-
-		if pEquip ~= nil then
-			self.m_Equip[nEquipIndex] = clone(pEquip); -- 这个地方是否要用到深拷贝
-
-		else
-			self.m_Equip[nEquipIndex]:empty(); -- 清空这个装备
-		end
-
+	if pEquip ~= nil then
+		self.m_Equip[nEquipIndex] = clone(pEquip); -- 这个地方是否要用到深拷贝
+	else
+		self.m_Equip[nEquipIndex]:empty(); -- 清空这个装备
+	end
 	self:OnEquipChange( _EquipIndex );
 end
 
--- 设置装备 
-function Equip:SetEquip( _EquipIndex, pEquip )
-	local nEquipIndex = _EquipIndex + 1;
-	if _EquipIndex >= EQUIP_OFFSETBASE and _EquipIndex < EQUIP_OFFSETBASE+MAX_EQUIPNUM then
-		if pEquip ~= nil then
-			self.m_Equip[nEquipIndex-EQUIP_OFFSETBASE] = clone(pEquip); -- 这个地方是否要用到深拷贝
-		else
-			self.m_Equip[nEquipIndex-EQUIP_OFFSETBASE]:empty(); -- 清空这个装备
-		end
-	else
-		return -1;
-	end
-	self:OnEquipChange( _EquipIndex  );
-end
-
 -- 改变装备信息
--- EventProtocol.addEventListener( "OnEquipChange", function( recvValue ) end )
 function Equip:OnEquipChange( _EquipIndex )
 	local nEquipIndex = _EquipIndex + 1;
-	
 		
-		local _nEquipIndex = _EquipIndex - EQUIP_OFFSETBASE;
-		local nEquipIndex = nEquipIndex - EQUIP_OFFSETBASE;
-		local member = math.floor( _nEquipIndex/MAX_EQUIPNUM );
-		local equipoffset = math.floor( _nEquipIndex%MAX_EQUIPNUM );
-		
-		
-end
-
--- 服务器返回物品使用了
-function Equip:EquipUsed( _EquipIndex, nEquipNum, nEquipEff )
-	local nEquipIndex = _EquipIndex + 1;
-	if _EquipIndex < 0 or _EquipIndex >= MAX_EQUIPNUM then
-		return;
-	end
-	if self:HasEquip( _EquipIndex ) == false then
-		return;
-	end
-	
-	-- 如果返回的是使用装备,这里的nEquipNum表示的是装备位置
-	--[[if self:IsEquip( _EquipIndex ) == true then
-		local nEquipIndex = nEquipNum;
-		if nEquipIndex == -1 then
-			return;
-		end
-		
-		-- 创建一个临时对象
-		local tmpEquip = SLK_Equip.new();
-		tmpEquip = clone(self.m_Equip[nEquipIndex]);
-
-		-- 交换装备栏和装备栏
-		self:SetEquip( _EquipIndex, self.m_Equip[nEquipIndex+1] );
-		self:SetEquip( nEquipIndex+EQUIP_OFFSETBASE, tmpEquip );
-	
-
-    elseif self:IsTreasure( _EquipIndex ) == true then 
-        local nTreasureIndex = nEquipNum;
-		if nTreasureIndex == -1 then
-			return;
-		end
-		
-		-- 创建一个临时对象
-		local tmpEquip = SLK_Equip.new();
-		tmpEquip = clone(self.m_Equip[nEquipIndex]);
-        local Treasureequip = self.m_Treasure[nTreasureIndex+1];
-        if Treasureequip ~=nil then 
-       -- print("Treasureequip"..Treasureequip.m_kind)
-       -- print("Treasureequip"..Treasureequip.m_num)
-        end
-		-- 交换宝物栏和装备栏
-		self:SetEquip( _EquipIndex, self.m_Treasure[nTreasureIndex+1] );
-       -- print("============================nTreasureIndex+1"..nTreasureIndex+1)
-		self:SetTreasure( nTreasureIndex+HEROEQUIP_OFFSETBASE, tmpEquip );
-	else
-		-- 正数表示的是使用个数，负数表示不能使用
-		if nEquipNum > 0 then
-			self.m_Equip[nEquipIndex].m_num = self.m_Equip[nEquipIndex].m_num - nEquipNum;
-		elseif nEquipNum == -2 then
-		end
-
-        -- 使用消息, 特定不显示
-        local kind = self.m_Equip[nEquipIndex].m_kind;
-        if equip_gettype( kind ) == EQUIP_TYPE_TREASURE1 then 
-             Notify( 221, { equip_getname( kind ) } );
-        elseif kind ~= 113 then
-            Notify( 113, { equip_getname( kind ) .. " x" .. nEquipNum } );
-        end
-		
-		-- 装备使用没了
-		if self.m_Equip[nEquipIndex].m_num <= 0 then
-			self:SetEquip( _EquipIndex, nil );
-			return;
-		end
-		
-		-- 改变装备信息
-		self:OnEquipChange( _EquipIndex );
-	end--]]
 end
 
 -- 得到服务器返回的消息，得到一个物品

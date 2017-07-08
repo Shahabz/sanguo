@@ -61,13 +61,21 @@ end
 function GameManager.Logout( voluntary )
 	-- 1主动 0被动
 	Global.AddValue("ISLOGOUT" , voluntary );
-	--eye.networkManager:Logout();
+	eye.networkManager:Logout();
 end
 
-
--- 主逻辑，1分钟一次
-function GameManager.GameLogic()
+function GameManager.Restart()
+	Const.NetStatus = 0;
+	eye.uiManager:Clear();
+	LoginModDestroy();
+	SceneManager.LoadScene( "launcher" );
+end
 	
+-- 主逻辑秒
+function GameManager.GameLogic()
+	if GetPlayer().m_worker_expire_ex > 0 then
+		m_worker_expire_ex = m_worker_expire_ex - 1;
+	end
 end
 
 -- 请求退出游戏
@@ -83,11 +91,11 @@ function GameManager.OnAskQuit()
         return;
     end
 
-    
-    --[[MsgBoxEx( GetLocalizeText( 507 ), GetLocalizeText( 508 ), nil, GetLocalizeText( 509 ), 
-                function()
-			        		Application.Quit() 
-		        		end )--]]
+    -- 
+    MsgBox( T( 518 ),function()
+		GameManager.Restart()
+		GameManager.Logout( 1 );
+	end )
 end
 
 -- 是否进入后台

@@ -33,6 +33,8 @@ function Player:Init()
 	self.m_archer_num		=	0;
 	self.m_mokilllv			=	0;
 	self.m_sflag			=	0;
+	self.m_autobuild		=	0;
+	self.m_autobuildopen	=	0;
 	
 	self.m_levynum			=	0;
 	self.m_worker_kind		=	0;
@@ -77,6 +79,8 @@ function Player:Set( recvValue )
 	self.m_archer_num		=	recvValue.m_archer_num;
 	self.m_mokilllv			=	recvValue.m_mokilllv;
 	self.m_sflag			=	recvValue.m_sflag;
+	self.m_autobuild		=	recvValue.m_autobuild;
+	self.m_autobuildopen	=	recvValue.m_autobuildopen;
 end
 
 -- 

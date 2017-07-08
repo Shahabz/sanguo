@@ -185,6 +185,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_archer_num = buffer:ReadInt();
 	recvValue.m_mokilllv = buffer:ReadShort();
 	recvValue.m_sflag = buffer:ReadInt();
+	recvValue.m_autobuild = buffer:ReadSByte();
+	recvValue.m_autobuildopen = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -699,6 +701,34 @@ function struct_NetS_BuildingResGet_recv( buffer )
 	local recvValue = {};
 	recvValue.m_path = buffer:ReadShort();
 	recvValue.m_res = struct_NetS_BuildingRes_recv( buffer );
+	return recvValue;
+end
+
+function struct_NetS_Soldiers_recv( buffer )
+	local recvValue = {};
+	recvValue.m_corpse = buffer:ReadSByte();
+	recvValue.m_soldiers = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_TrainInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_soldiers = buffer:ReadInt();
+	recvValue.m_soldiers_max = buffer:ReadInt();
+	recvValue.m_trainnum = buffer:ReadInt();
+	recvValue.m_trainsec = buffer:ReadInt();
+	recvValue.m_trainsec_need = buffer:ReadInt();
+	recvValue.m_queuenum={};
+	for tmpi=1,16,1 do
+		recvValue.m_queuenum[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_queue = buffer:ReadSByte();
+	recvValue.m_trainlong = buffer:ReadSByte();
+	recvValue.m_train_confnum = buffer:ReadInt();
+	recvValue.m_train_confsec = buffer:ReadInt();
+	recvValue.m_train_conffood = buffer:ReadInt();
 	return recvValue;
 end
 

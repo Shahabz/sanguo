@@ -77,8 +77,8 @@ public class GameManager : MonoBehaviour {
             // 游戏开始
             LuaFun.gameStart.Call();
 
-            // 启动游戏主逻辑, 每分钟调用
-            StartCoroutine( GameLogic() );
+            // 启动游戏主逻辑, 每秒调用
+			InvokeRepeating("GameLogic", 0, 1.0f);
         } );
         return true;
     }
@@ -114,13 +114,9 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    IEnumerator GameLogic()
+	private void GameLogic()
     {
-        while( true )
-        {
-            yield return new WaitForSeconds( 60 );
-            LuaFun.gameLogic.Call();
-        }
+     	LuaFun.gameLogic.Call();
     }
 
     void OnApplicationPause( bool paused )

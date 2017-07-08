@@ -96,7 +96,7 @@ function HeroDlgUpdate()
 end
 
 function HeroDlgSetHero( index, pHero )
-	local objs = m_uiUIP_Hero[index]:GetComponent( typeof(Reference) ).relatedGameObject;
+	local objs = m_uiUIP_Hero[index].transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiColor = objs[1];
 	local uiCorps = objs[2];

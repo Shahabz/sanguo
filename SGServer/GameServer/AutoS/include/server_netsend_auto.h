@@ -57,7 +57,9 @@ int netsend_worker_S( int actor_index, char send_type, SLK_NetS_Worker *pValue )
 int netsend_heroget_S( int actor_index, char send_type, SLK_NetS_HeroGet *pValue );
 int netsend_buildingget_S( int actor_index, char send_type, SLK_NetS_BuildingGet *pValue );
 int netsend_buildingbarracksget_S( int actor_index, char send_type, SLK_NetS_BuildingBarracksGet *pValue );
-int netsend_buildingresGet_S( int actor_index, char send_type, SLK_NetS_BuildingResGet *pValue );
+int netsend_buildingresget_S( int actor_index, char send_type, SLK_NetS_BuildingResGet *pValue );
+int netsend_soldiers_S( int actor_index, char send_type, SLK_NetS_Soldiers *pValue );
+int netsend_traininfo_S( int actor_index, char send_type, SLK_NetS_TrainInfo *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

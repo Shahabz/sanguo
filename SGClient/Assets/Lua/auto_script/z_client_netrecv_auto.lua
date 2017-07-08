@@ -275,9 +275,19 @@ function netrecv_buildingbarracksget_C( buffer )
 	proc_buildingbarracksget_C( recvValue );
 end
 
-function netrecv_buildingresGet_C( buffer )
+function netrecv_buildingresget_C( buffer )
 	local recvValue = struct_NetS_BuildingResGet_recv( buffer );
-	proc_buildingresGet_C( recvValue );
+	proc_buildingresget_C( recvValue );
+end
+
+function netrecv_soldiers_C( buffer )
+	local recvValue = struct_NetS_Soldiers_recv( buffer );
+	proc_soldiers_C( recvValue );
+end
+
+function netrecv_traininfo_C( buffer )
+	local recvValue = struct_NetS_TrainInfo_recv( buffer );
+	proc_traininfo_C( recvValue );
 end
 
 Proc_Command = {
@@ -336,7 +346,9 @@ Proc_Command = {
 	[CMDS_HEROGET]=netrecv_heroget_C;
 	[CMDS_BUILDINGGET]=netrecv_buildingget_C;
 	[CMDS_BUILDINGBARRACKSGET]=netrecv_buildingbarracksget_C;
-	[CMDS_BUILDINGRESGET]=netrecv_buildingresGet_C;
+	[CMDS_BUILDINGRESGET]=netrecv_buildingresget_C;
+	[CMDS_SOLDIERS]=netrecv_soldiers_C;
+	[CMDS_TRAININFO]=netrecv_traininfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

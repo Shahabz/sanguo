@@ -1479,7 +1479,7 @@ int netsend_buildingbarracksget_S( int actor_index, char send_type, SLK_NetS_Bui
 	return 0;
 }
 
-int netsend_buildingresGet_S( int actor_index, char send_type, SLK_NetS_BuildingResGet *pValue )
+int netsend_buildingresget_S( int actor_index, char send_type, SLK_NetS_BuildingResGet *pValue )
 {
 	char tmpbuf[2048];
 	int tmpsize;
@@ -1498,6 +1498,60 @@ int netsend_buildingresGet_S( int actor_index, char send_type, SLK_NetS_Building
 	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
 
 	struct_NetS_BuildingResGet_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_soldiers_S( int actor_index, char send_type, SLK_NetS_Soldiers *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_SOLDIERS;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_SOLDIERS; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_Soldiers_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_traininfo_S( int actor_index, char send_type, SLK_NetS_TrainInfo *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_TRAININFO;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_TRAININFO; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_TrainInfo_send( &ptr, &tmpsize, pValue );
 
 	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
 	*(unsigned short *)tmpbuf = tmpsize;

@@ -30,6 +30,23 @@ local m_uiWorker = nil; --UnityEngine.GameObject
 local m_uiWorkerEx = nil; --UnityEngine.GameObject
 local m_uiFood = nil; --UnityEngine.GameObject
 local m_uiFoodNum = nil; --UnityEngine.GameObject
+local m_uiAutoBuild = nil; --UnityEngine.GameObject
+local m_bMorePanel = false;
+
+local m_uiBuildingShape = {nil,nil}
+local m_uiNormalShape = {nil,nil}
+local m_uiBuildingTimer = {nil,nil}
+local m_uiBuildingName = {nil,nil}
+
+local m_uiBuildingShapeUITweenScale = {nil,nil}
+local m_uiNormalShapeUITweenScale = {nil,nil}
+local m_uiBuildingTimerUITweenScale = {nil,nil}
+local m_uiBuildingNameUITweenScale = {nil,nil}
+
+local m_uiBuildingShapeUITweenScale1 = {nil,nil}
+local m_uiNormalShapeUITweenScale1 = {nil,nil}
+local m_uiBuildingTimerUITweenScale1 = {nil,nil}
+local m_uiBuildingNameUITweenScale1 = {nil,nil}
 
 -- 打开界面
 function MainDlgOpen()
@@ -81,9 +98,38 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 	
 		elseif nControlID == 7 then
 			NpcTalkOne( T(10001), T(10002), nil )
+		
+		-- 更多	
+		elseif nControlID == 8 then
+			if m_bMorePanel == true then
+				SetFalse(m_uiMorePanel)
+				m_bMorePanel = false;
+			else
+				SetTrue(m_uiMorePanel)
+				m_bMorePanel = true;
+			end
+		
+		-- 背包
+		elseif nControlID == 11 then
+			BagDlgShow();
+		
+		-- 返回登录
+		elseif nControlID == 18 then
+			MsgBox( T( 518 ),function()
+				GameManager.Restart();
+				GameManager.Logout( 1 );
+			end )
 		elseif nControlID == 30 then
 			ChatDlgShow();
 		
+		-- 点击建造队列
+		elseif nControlID == 50 then
+			City.GoToWorker()
+		
+		-- 点击建造队列商用
+		elseif nControlID == 51 then
+			City.GoToWorkerEx()
+			
 		elseif nControlID == 100 then
 			PlayerDlgShow();
 		elseif nControlID == 101 then
@@ -97,45 +143,62 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
-			m_uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
-			m_uiWorker.transform:Find("NormalShape").gameObject:SetActive(true);
-			m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingShape[1]:SetActive(false);
+			m_uiNormalShape[1]:SetActive(true);
+			m_uiNormalShapeUITweenScale[1]:Play(true);
+			m_uiNormalShapeUITweenScale1[1]:Play(true);
 		elseif nControlID == 2 then
-			m_uiWorker.transform:Find("BuildingShape").gameObject:SetActive(true);
-			m_uiWorker.transform:Find("NormalShape").gameObject:SetActive(false);
-			m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingShape[1]:SetActive(true);
+			m_uiNormalShape[1]:SetActive(false);
+			m_uiBuildingShapeUITweenScale[1]:Play(true);
+			m_uiBuildingShapeUITweenScale1[1]:Play(true);
 		elseif nControlID == 3 then
-			m_uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
-			m_uiWorker.transform:Find("BuildingName").gameObject:SetActive(true);
-			m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingTimer[1]:SetActive(false);
+			m_uiBuildingName[1]:SetActive(true);
+			m_uiBuildingNameUITweenScale[1]:Play(true);
+			m_uiBuildingNameUITweenScale1[1]:Play(true);
 		elseif nControlID == 4 then
-			m_uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(true);
-			m_uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
-			m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingTimer[1]:SetActive(true);
+			m_uiBuildingName[1]:SetActive(false);
+			m_uiBuildingTimerUITweenScale[1]:Play(true);
+			m_uiBuildingTimerUITweenScale1[1]:Play(true);
 		elseif nControlID == 11 then
-			m_uiWorkerEx.transform:Find("BuildingShape").gameObject:SetActive(false);
-			m_uiWorkerEx.transform:Find("NormalShape").gameObject:SetActive(true);
-			m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingShape[2]:SetActive(false);
+			m_uiNormalShape[2]:SetActive(true);
+			m_uiNormalShapeUITweenScale[2]:Play(true);
+			m_uiNormalShapeUITweenScale1[2]:Play(true);
 		elseif nControlID == 12 then
-			m_uiWorkerEx.transform:Find("BuildingShape").gameObject:SetActive(true);
-			m_uiWorkerEx.transform:Find("NormalShape").gameObject:SetActive(false);
-			m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingShape[2]:SetActive(true);
+			m_uiNormalShape[2]:SetActive(false);
+			m_uiBuildingShapeUITweenScale[2]:Play(true);
+			m_uiBuildingShapeUITweenScale1[2]:Play(true);
 		elseif nControlID == 13 then
-			m_uiWorkerEx.transform:Find("BuildingTimer").gameObject:SetActive(false);
-			m_uiWorkerEx.transform:Find("BuildingName").gameObject:SetActive(true);
-			m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingTimer[2]:SetActive(false);
+			m_uiBuildingName[2]:SetActive(true);
+			m_uiBuildingNameUITweenScale[2]:Play(true);
+			m_uiBuildingNameUITweenScale1[2]:Play(true);
 		elseif nControlID == 14 then
-			m_uiWorkerEx.transform:Find("BuildingTimer").gameObject:SetActive(true);
-			m_uiWorkerEx.transform:Find("BuildingName").gameObject:SetActive(false);
-			m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale"):Play(true);
-			m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale1"):Play(true);
+			m_uiBuildingTimer[2]:SetActive(true);
+			m_uiBuildingName[2]:SetActive(false);
+			m_uiBuildingTimerUITweenScale[2]:Play(true);
+			m_uiBuildingTimerUITweenScale1[2]:Play(true);
+		end
+		
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 101 then
+			GetPlayer().m_worker_kind = 0
+			MainDlgWorkerStop( 1 );
+			MainDlgSetWorker()
+		elseif nControlID == 102 then
+			MainDlgWorkerStop( 2 )
+			GetPlayer().m_worker_kind_ex = 0
+			MainDlgSetWorker()
+		end
+	elseif nType == UI_EVENT_TIMECOUNTCHANGED then
+		if nControlID == 101 then
+			GetPlayer().m_worker_sec = value;
+		elseif nControlID == 102 then
+			GetPlayer().m_worker_sec_ex = value;
 		end
 	end
 end
@@ -174,7 +237,9 @@ function MainDlgOnAwake( gameObject )
 	m_uiWorkerEx = objs[27];
 	m_uiFood = objs[28];
 	m_uiFoodNum = objs[29];
-end
+	m_uiAutoBuild = objs[30];
+	
+end 
 
 -- 界面初始化时调用
 function MainDlgOnStart( gameObject )
@@ -283,6 +348,8 @@ function MainDlgSetWorker()
 	GetPlayer().m_worker_needsec_ex, 
 	GetPlayer().m_worker_sec_ex,
 	GetPlayer().m_worker_expire_ex );
+	
+	MainDlgWorkerObjectInit();
 end
 
 function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, expire )
@@ -344,5 +411,48 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 	
 end
 
+-- 停止动画
+function MainDlgWorkerStop( type )
+	m_uiBuildingShapeUITweenScale[type]:Kill(true);
+	m_uiBuildingShapeUITweenScale[type]:Kill(true);
+	m_uiBuildingTimerUITweenScale[type]:Kill(true);
+	m_uiBuildingNameUITweenScale[type]:Kill(true);
+	m_uiBuildingShapeUITweenScale1[type]:Kill(true);
+	m_uiNormalShapeUITweenScale1[type]:Kill(true);
+	m_uiBuildingTimerUITweenScale1[type]:Kill(true);
+	m_uiBuildingNameUITweenScale1[type]:Kill(true);
+end
 
+-- 建造队列动画所需缓存
+function MainDlgWorkerObjectInit()
+	m_uiBuildingShape[1] = m_uiWorker.transform:Find("BuildingShape").gameObject
+	m_uiNormalShape[1] = m_uiWorker.transform:Find("NormalShape").gameObject
+	m_uiBuildingTimer[1] = m_uiWorker.transform:Find("BuildingTimer").gameObject
+	m_uiBuildingName[1] = m_uiWorker.transform:Find("BuildingName").gameObject
+	
+	m_uiBuildingShapeUITweenScale[1] = m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale")
+	m_uiNormalShapeUITweenScale[1] = m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale")
+	m_uiBuildingTimerUITweenScale[1] = m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale")
+	m_uiBuildingNameUITweenScale[1] = m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale")
+
+	m_uiBuildingShapeUITweenScale1[1] = m_uiWorker.transform:Find("BuildingShape"):GetComponent("UITweenScale1")
+	m_uiNormalShapeUITweenScale1[1] = m_uiWorker.transform:Find("NormalShape"):GetComponent("UITweenScale1")
+	m_uiBuildingTimerUITweenScale1[1] = m_uiWorker.transform:Find("BuildingTimer"):GetComponent("UITweenScale1")
+	m_uiBuildingNameUITweenScale1[1] = m_uiWorker.transform:Find("BuildingName"):GetComponent("UITweenScale1")
+	
+	m_uiBuildingShape[2] = m_uiWorkerEx.transform:Find("BuildingShape").gameObject
+	m_uiNormalShape[2] = m_uiWorkerEx.transform:Find("NormalShape").gameObject
+	m_uiBuildingTimer[2] = m_uiWorkerEx.transform:Find("BuildingTimer").gameObject
+	m_uiBuildingName[2] = m_uiWorkerEx.transform:Find("BuildingName").gameObject
+	
+	m_uiBuildingShapeUITweenScale[2] = m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale")
+	m_uiNormalShapeUITweenScale[2] = m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale")
+	m_uiBuildingTimerUITweenScale[2] = m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale")
+	m_uiBuildingNameUITweenScale[2] = m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale")
+
+	m_uiBuildingShapeUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingShape"):GetComponent("UITweenScale1")
+	m_uiNormalShapeUITweenScale1[2] = m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale1")
+	m_uiBuildingTimerUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale1")
+	m_uiBuildingNameUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1")
+end
 

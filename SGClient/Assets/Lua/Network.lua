@@ -204,9 +204,7 @@ function Network.OnException()
 	end--]]
 	if Const.NetStatus > 2 then
 		Alert( zh("与服务器连接出现异常，请重新尝试连接"), zh("重试"), function()
-			eye.uiManager:Clear();
-			LoginModDestroy();
-			SceneManager.LoadScene( "launcher" );
+			GameManager.Restart()
 		end )
 	end
 	
@@ -218,9 +216,7 @@ end
 function Network.OnDisconnect()
 	if Const.NetStatus > 2 then
 		Alert( zh("与服务器断开连接，请重新尝试连接"), zh("重试"), function()
-			eye.uiManager:Clear();
-			LoginModDestroy();
-			SceneManager.LoadScene( "launcher" );
+			GameManager.Restart()
 		end )
 	end
 --[[	if Const.NetStatus > 2 then

@@ -333,6 +333,10 @@ function knum( num )
 	end
 end
 
+function secnum( sec )
+	return Utils.GetTimeFormatISO(sec)
+end
+
 -- 检查是不是英文or数字
 function string.checkenglish( str )
     local lenInByte = #str

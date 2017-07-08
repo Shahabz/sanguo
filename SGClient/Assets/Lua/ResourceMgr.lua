@@ -41,7 +41,7 @@ end
 
 -- 英雄头像
 function HeroHeadSprite( kind )
-	local name = string.format("herohead_%02d", kind );
+	local name = string.format("herohead_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
@@ -51,7 +51,7 @@ end
 
 -- 英雄半身像
 function HeroFaceSprite( kind )
-	local name = string.format("herohead_%02d_face", kind );
+	local name = string.format("herohead_%d_face", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
@@ -89,3 +89,32 @@ function BuildingSprite( kind )
 	return sprite;
 end
 
+-- 道具形象
+function ItemSprite( kind )
+	local name = string.format("item_icon_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 装备形象
+function EquipSprite( kind )
+	local name = string.format("equip_icon_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 道具颜色框
+function ItemColorSprite( color )
+	local name = string.format("ui_icon_itemcolor%d", color );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end

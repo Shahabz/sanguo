@@ -44,6 +44,8 @@ CREATE TABLE `city` (
   `forgingsec` int(11) NOT NULL DEFAULT '0' COMMENT '打造剩余时间',
   `hero_washnum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '英雄洗练次数',
   `hero_washsec` smallint(6) NOT NULL DEFAULT '0' COMMENT '英雄下次洗练免费时间',
+  `autobuild` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造剩余次数',
+  `autobuildopen` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造是否开启',
   `guardsec` smallint(6) NOT NULL DEFAULT '0' COMMENT '城墙守卫冷却时间',
   `worker_op` tinyint(3) NOT NULL DEFAULT '0' COMMENT '建造队列操作',
   `worker_sec` int(11) NOT NULL DEFAULT '0' COMMENT '建造剩余时间(每秒-1)',

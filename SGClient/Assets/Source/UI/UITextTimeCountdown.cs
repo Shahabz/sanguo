@@ -213,12 +213,14 @@ public class UITextTimeCountdown : UIText
             }
         }
 
+		OnChangeEvent (leftTime);
 
-
-        if (mPassTime >= mDuration)
+		if ( mPassTime >= mDuration )
         {
             Stop();
-            OnTimeEnd();
+			if (mDuration > 0) {
+				OnTimeEnd ();
+			}
         }
     }
     /// <summary>
@@ -250,6 +252,15 @@ public class UITextTimeCountdown : UIText
             uiMod.OnEvent(param);
         }
     }
+	// 计时过程
+	protected virtual void OnChangeEvent( int leftTime )
+	{
+		if ( this.uiMod != null && controlID > 100 )
+		{
+			object[] param = { UIEVENT.TIMECOUNTCHANGED, controlID, leftTime };
+			uiMod.OnEvent(param);
+		}
+	}
     /// <summary>
     /// 设置时间
     /// </summary>

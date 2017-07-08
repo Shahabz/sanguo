@@ -9,6 +9,7 @@ struct _city_building_barracks {
 				int soldiers;	//本营兵力
 				int trainnum;	//当前训练士兵数
 				int trainsec;	//当前训练剩余时间(秒)
+				int trainsec_need;	//当前训练需要时间(秒)
 				int queuenum[8];	//招募队列
 				int queuesec[8];	//招募队列
 				char queue;	//扩容队列数量

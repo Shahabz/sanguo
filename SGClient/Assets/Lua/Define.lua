@@ -219,6 +219,7 @@ function clearChild( object )
 	Utils.ClearChild( object.transform );
 end
 
+
 -- Ìí¼Ó½Úµã
 function addChild( object, prefab )
 	local obj = GameObject.Instantiate( prefab );
@@ -266,6 +267,17 @@ function SetControlID( transform, controlID )
 	transform:GetComponent( typeof(UIButton) ).controlID = controlID;
 end
 
+function SetTimer( transform, sec, needsec, controlID )
+	local timer = transform:GetComponent( typeof(UITextTimeCountdown) )
+    timer:SetTime( needsec, needsec-sec );
+	if sec == 0 and needsec == 0 then
+		timer:Stop()
+	end
+	if controlID ~= nil then
+		timer.controlID = controlID;
+	end
+end
+
 function SetProgress( transform, value )
 	transform:GetComponent( typeof(UIProgress) ):SetValue(value);
 end
@@ -276,5 +288,9 @@ end
 
 function SetFalse( transform )
 	transform.gameObject:SetActive( false )
+end
+
+function SetShow( transform, active )
+	transform.gameObject:SetActive( active )
 end
 

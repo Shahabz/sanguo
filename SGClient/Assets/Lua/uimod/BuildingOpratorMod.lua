@@ -39,13 +39,13 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 				CityGuardDlgShow();
 			elseif m_kind == BUILDING_Tech then
 				CityTechDlgOnShow();
-			elseif m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
-				TrainDlgOnShow( m_kind );
 			elseif m_kind == BUILDING_Smithy then
 				EquipForgingDlgShow();
 			elseif m_kind == BUILDING_Wash then
 				EquipWashDlgShow();
 			end
+		elseif nControlID == 3 then
+			TrainDlgOnShow( m_kind );
         end
 		City.BuildingUnSelect();
     elseif nType == UI_EVENT_TWEENFINISH then
@@ -124,9 +124,14 @@ function BuildingOpratorModShow( show, kind, offset, parent )
         for tmpi = 0, m_uiOprator.transform.childCount - 1, 1 do
             local op = m_uiOprator.transform:GetChild(tmpi).gameObject:SetActive(false);
         end
-
-        m_uiUpgrade:SetActive(true);
-        m_uiEnter:SetActive(true);
+		
+		m_uiUpgrade:SetActive(true);
+	
+		if m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+			m_uiTrain:SetActive(true);
+		else
+			m_uiEnter:SetActive(true);
+		end
 
 
         -- 刷新显示位置

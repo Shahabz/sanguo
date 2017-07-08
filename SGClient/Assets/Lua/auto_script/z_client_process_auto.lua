@@ -170,14 +170,14 @@ function proc_buildinglist_C( recvValue )
 	recvValue.m_levynum = 3
 	recvValue.m_worker_kind = 21;
 	recvValue.m_worker_offset = 2;
-	recvValue.m_worker_sec = 200;
-	recvValue.m_worker_needsec = 200;
+	recvValue.m_worker_sec = 60;
+	recvValue.m_worker_needsec = 60;
 	recvValue.m_worker_free = 1;
-	recvValue.m_worker_kind_ex = 1;
+--[[	recvValue.m_worker_kind_ex = 1;
 	recvValue.m_worker_offset_ex = 0;
 	recvValue.m_worker_sec_ex = 3600;
 	recvValue.m_worker_needsec_ex = 3600;
-	recvValue.m_worker_expire_ex = 3000;
+	recvValue.m_worker_expire_ex = 3000;--]]
 	
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
@@ -249,43 +249,71 @@ end
 -- m_itemoffset=0,m_usenum=0,m_effres=0,
 function proc_itemuse_C( recvValue )
 	-- process.
-
+	GetItem():ItemUsed( recvValue.m_itemoffset, recvValue.m_usenum, recvValue.m_effres );
 end
 
 -- m_res_offset=0,m_res_num=0,m_target_offset=0,m_target_num=0,
 function proc_itemput_C( recvValue )
 	-- process.
-
+	--GetItem():ItemPut( recvValue.m_res_offset, recvValue.m_res_num, recvValue.m_target_offset, recvValue.m_target_num );
 end
 
 -- m_itemnum=0,m_itemoffset={}[m_itemnum],
 function proc_itemsettle_C( recvValue )
 	-- process.
-
+	--GetItem():ItemSettle( recvValue.m_itemoffset, recvValue.m_itemnum );
 end
 
 -- m_itemoffset=0,m_itemnum=0,m_targetid=0,m_path=0,
 function proc_lostitem_C( recvValue )
 	-- process.
-
+	GetItem():ItemLost( recvValue.m_itemoffset, recvValue.m_itemnum, recvValue.m_path );
 end
 
 -- m_itemoffset=0,m_kind=0,m_type=0,m_color=0,m_num=0,m_targetid=0,m_path=0,m_situation=0,
 function proc_getitem_C( recvValue )
 	-- process.
-
+	GetItem():ItemGet( recvValue.m_itemoffset, recvValue.m_kind, recvValue.m_type, recvValue.m_num, recvValue.m_color, recvValue.m_situation, recvValue.m_path );
 end
 
 -- m_itemext=0,m_kindnum=0,m_item={m_offset=0,m_kind=0,m_num=0,m_situation=0,m_color_level=0,[m_kindnum]},
 function proc_itemlist_C( recvValue )
 	-- process.
+    for tmpi = 1, recvValue.m_kindnum, 1 do
+		if recvValue.m_item[tmpi].m_offset >= 0 then
+			local tmpItem = SLK_Item.new();
+			tmpItem.m_kind = recvValue.m_item[tmpi].m_kind;
+			tmpItem.m_num = recvValue.m_item[tmpi].m_num;
+			tmpItem.m_situation = recvValue.m_item[tmpi].m_situation;
+            tmpItem.m_color_level = recvValue.m_item[tmpi].m_color_level;
+			
+			-- 类型和颜色级别从配置信息里拿
+			local itemconfig = item_getinfo( tmpItem.m_kind );
+			if itemconfig then
+				tmpItem.m_type = itemconfig.type;
+				--tmpItem.m_color_level = itemconfig.color_level;
+			end
 
+			-- 背包栏
+			if recvValue.m_item[tmpi].m_offset < MAX_ITEMNUM  then			
+				GetItem():SetItem( recvValue.m_item[tmpi].m_offset, tmpItem );
+			end
+		end
+	end
 end
 
 -- m_itemoffset=0,m_itemkind=0,m_type=0,m_level=0,m_color_level=0,m_price=0,m_attr_num=0,m_attr={m_type=0,m_ability=0,m_value=0,m_addvalue=0,[m_attr_num]},
 function proc_iteminfo_C( recvValue )
 	-- process.
-
+    if recvValue.m_itemoffset >= 0 then
+		GetItem():ItemInfo( recvValue, nil );
+		local pItem = GetItem():GetAnyItem( recvValue.m_itemoffset );
+		if pItem == nil then
+			return;
+		end
+		-- 如果物品信息框正在显示，那么就更新到物品显示框
+		BagDlgItemAbilityFormat( pItem );
+	end
 end
 
 -- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_callback_code=0,
@@ -580,8 +608,30 @@ function proc_buildingbarracksget_C( recvValue )
 end
 
 -- m_path=0,m_res={m_kind=0,m_offset=0,m_level=0,},
-function proc_buildingresGet_C( recvValue )
+function proc_buildingresget_C( recvValue )
 	-- process.
 	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+end
+
+-- m_corps=0,m_soldiers=0,m_add=0,m_path=0,
+function proc_soldiers_C( recvValue )
+	-- process.
+	if recvValue.m_corps == 0 then
+		GetPlayer().m_infantry_num = recvValue.m_soldiers;
+		MainDlgSetInfantry();
+	elseif recvValue.m_corps == 1 then
+		GetPlayer().m_cavalry_num = recvValue.m_soldiers;
+		MainDlgSetCavalry();
+	elseif recvValue.m_corps == 2 then
+		GetPlayer().m_archer_num = recvValue.m_soldiers;
+		MainDlgSetArcher();
+	end
+	
+end
+
+-- m_soldiers=0,m_soldiers_max=0,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={[16]},m_queue=0,m_trainlong=0,m_train_confnum=0,m_train_confsec=0,
+function proc_traininfo_C( recvValue )
+	-- process.
+	
 end
 

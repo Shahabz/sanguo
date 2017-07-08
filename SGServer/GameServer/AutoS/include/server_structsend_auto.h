@@ -148,6 +148,8 @@ struct _slk_NetS_ActorInfo {
 	int m_archer_num;	//服务器发送玩家基本信息-弓兵数
 	short m_mokilllv;	//服务器发送玩家基本信息-击杀野怪最高级别
 	int m_sflag;	//服务器发送玩家基本信息-标志位
+	char m_autobuild;	//服务器发送玩家基本信息-自动建造
+	char m_autobuildopen;	//服务器发送玩家基本信息-自动建造
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -565,6 +567,29 @@ struct _slk_NetS_BuildingResGet {
 };
 typedef struct _slk_NetS_BuildingResGet SLK_NetS_BuildingResGet;	//资源建筑获取
 
+struct _slk_NetS_Soldiers {
+	char m_corpse;	//城内兵力改变
+	int m_soldiers;	//城内兵力改变
+	int m_add;	//城内兵力改变
+	short m_path;	//城内兵力改变
+};
+typedef struct _slk_NetS_Soldiers SLK_NetS_Soldiers;	//兵力变化
+
+struct _slk_NetS_TrainInfo {
+	int m_soldiers;	//本营兵力
+	int m_soldiers_max;	//兵营容量
+	int m_trainnum;	//当前训练士兵数
+	int m_trainsec;	//当前训练剩余时间(秒)
+	int m_trainsec_need;	//当前训练需要时间(秒)
+	int m_queuenum[16];	//队列
+	char m_queue;	//扩建
+	char m_trainlong;	//募兵加时
+	int m_train_confnum;	//每五分钟训练士兵数
+	int m_train_confsec;	//招募最大时长时间
+	int m_train_conffood;	//鎷涘嫙鍗曞叺绮
+};
+typedef struct _slk_NetS_TrainInfo SLK_NetS_TrainInfo;	//训练士兵
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -626,5 +651,7 @@ int struct_NetS_Worker_send( char **pptr, int *psize, SLK_NetS_Worker *pValue );
 int struct_NetS_BuildingGet_send( char **pptr, int *psize, SLK_NetS_BuildingGet *pValue );
 int struct_NetS_BuildingBarracksGet_send( char **pptr, int *psize, SLK_NetS_BuildingBarracksGet *pValue );
 int struct_NetS_BuildingResGet_send( char **pptr, int *psize, SLK_NetS_BuildingResGet *pValue );
+int struct_NetS_Soldiers_send( char **pptr, int *psize, SLK_NetS_Soldiers *pValue );
+int struct_NetS_TrainInfo_send( char **pptr, int *psize, SLK_NetS_TrainInfo *pValue );
 
 #endif

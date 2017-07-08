@@ -50,6 +50,8 @@ struct _city {
 				int forgingsec;	//打造剩余时间
 				char hero_washnum;	//英雄洗练次数
 				short hero_washsec;	//英雄下次洗练免费时间
+				char autobuild;	//自动建造剩余次数
+				char autobuildopen;	//自动建造是否开启
 				short guardsec;	//城墙守卫冷却时间
 				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄

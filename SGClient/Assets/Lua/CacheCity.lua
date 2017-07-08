@@ -20,7 +20,7 @@ function City.Init()
 	City.m_BuildingOverMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingOverMod" );
 end
 
---
+-- 所有建筑父节点
 function City.BuildingRoot()
 	if City.m_BuildingRoot == nil then
 		City.m_BuildingRoot = GameManager.MainCity.transform:Find( "Content/Buildings" );
@@ -49,13 +49,19 @@ function City.BuildingSelect( transform )
 		City.m_LastSelect = transform;
 		City.m_LastSelect:GetComponent("UITweenColor"):Play(true);
 		building = transform:GetComponent("CityBuilding");
-		BuildingOpratorModShow( true, building.kind, building.offset, transform );
 		City.m_Camera:TweenPosToInBound( transform.position, 0.2 );
 	end
 	
+	-- 打开加速界面	
+	if GetPlayer().m_worker_kind == building.kind or 
+		GetPlayer().m_worker_kind_ex == building.kind then
+		QuickItemDlgShow();
+	else
+		BuildingOpratorModShow( true, building.kind, building.offset, transform );
+	end
 end
 
---
+-- 点击空地块
 function City.BuildingLandSelect( transform )
 	if City.m_LastSelect ~= nil then
 		-- 点击相同对象直接返回
@@ -77,14 +83,37 @@ function City.BuildingLandSelect( transform )
 	end
 end
 
---
+-- 取消选择
 function City.BuildingUnSelect()
 	-- 关闭之前渐变动画
 	City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 	City.m_LastSelect = nil;
 end
 
---
+-- 获取建筑对象
+function City.GetBuilding( kind, offset )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return City.m_Buildings_res[kind][offset];
+	else
+		return City.m_Buildings[kind];
+	end
+end
+
+-- 移到制定建筑
+function City.Move( kind, offset, select )
+	local unitObj = City.GetBuilding( kind, offset )
+	if unitObj == nil then
+		return;
+	end
+	City.m_Camera:TweenPosToInBound( unitObj.position, 0.2 );
+	if select == true then
+		Invoke( function() 
+			City.BuildingSelect( unitObj )
+		end, 0.3 );
+	end
+end
+
+-- 添加建筑
 function City.BuildingAdd( info, active )
 	local kind = info.m_kind;
 	local offset = info.m_offset
@@ -125,7 +154,7 @@ function City.BuildingAdd( info, active )
 	return unitObj;
 end
 
---
+-- 删除建筑
 function City.BuildingDel( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;	
@@ -151,13 +180,13 @@ function City.BuildingDel( info )
 	end
 end
 
---
+-- 刷新
 function City.BuildingRefurbish( info ) 
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 end
 
---
+-- 建筑名称
 function City.BuildingSetName( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -175,7 +204,7 @@ function City.BuildingSetName( info )
 	end
 end
 
---
+-- 操作计时器
 function City.BuildingSetTimer( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -211,7 +240,7 @@ function City.BuildingSetTimer( info )
     timer:SetTime( info.m_needsec, info.m_needsec-info.m_sec );
 end
 
---
+-- 升级计时器
 function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -242,7 +271,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
     timer:SetTime( needsec, needsec-sec );
 end
 
--- 
+-- 建造队列
 function City.BuildingWorker()
 	if GetPlayer().m_worker_kind > 0 then
 		City.BuildingSetUpgradeing( 
@@ -291,7 +320,7 @@ function City.BuildingSetFree( kind, offset )
 	freeObj.gameObject:SetActive(true);
 end
 
--- 
+-- 完成标记
 function City.BuildingSetOver( kind )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		return;
@@ -311,7 +340,7 @@ function City.BuildingSetOver( kind )
 	overObj.gameObject:SetActive(true);
 end
 
--- 
+-- 征收次数
 function City.BuildingAddLevy()	
 	for i=21, 24, 1 do
 		if City.m_Buildings_res[i] then
@@ -338,4 +367,34 @@ function City.BuildingSubLevy()
 			end
 		end
 	end
+end
+
+-- 点击建造队列
+function City.GoToWorker()
+	-- 移动并选择
+	if GetPlayer().m_worker_kind > 0 then
+		City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, true )
+		return;
+	end
+	
+	-- 找到一个可以升级的
+	
+end
+
+-- 点击建造队列商用
+function City.GoToWorkerEx()
+	-- 移动并选择
+	if GetPlayer().m_worker_kind_ex > 0 then
+		City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
+		return
+	end
+	
+	-- 打开购买商用建造队界面
+	if GetPlayer().m_worker_expire_ex <= 0 then
+		-- 
+		BuyWorkerDlgShow();
+	end
+	
+	-- 找到一个可以升级的
+	
 end
