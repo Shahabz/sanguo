@@ -66,7 +66,7 @@ int monsterinfo_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `monsterid`,`type`,`color`,`corps`,`attack`,`defens0`,`defens1`,`troops`,`attack_growth`,`defense_growth`,`troops_growth`,`attack_increase`,`defense_increase`,`assault`,`line`,`skill` from monster;" );
+	sprintf( szSQL, "select `monsterid`,`type`,`color`,`corps`,`attack`,`defense`,`troops`,`attack_growth`,`defense_growth`,`troops_growth`,`attack_increase`,`defense_increase`,`assault`,`defend`,`line`,`skill` from monster;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -88,8 +88,7 @@ int monsterinfo_init_auto()
 		g_monster[monsterid].config[type].color = atoi(row[offset++]);
 		g_monster[monsterid].config[type].corps = atoi(row[offset++]);
 		g_monster[monsterid].config[type].attack = atoi(row[offset++]);
-		g_monster[monsterid].config[type].defens[0] = atoi(row[offset++]);
-		g_monster[monsterid].config[type].defens[1] = atoi(row[offset++]);
+		g_monster[monsterid].config[type].defense = atoi(row[offset++]);
 		g_monster[monsterid].config[type].troops = atoi(row[offset++]);
 		g_monster[monsterid].config[type].attack_growth = atoi(row[offset++]);
 		g_monster[monsterid].config[type].defense_growth = atoi(row[offset++]);
@@ -97,6 +96,7 @@ int monsterinfo_init_auto()
 		g_monster[monsterid].config[type].attack_increase = atoi(row[offset++]);
 		g_monster[monsterid].config[type].defense_increase = atoi(row[offset++]);
 		g_monster[monsterid].config[type].assault = atoi(row[offset++]);
+		g_monster[monsterid].config[type].defend = atoi(row[offset++]);
 		g_monster[monsterid].config[type].line = atoi(row[offset++]);
 		g_monster[monsterid].config[type].skill = atoi(row[offset++]);
 	}

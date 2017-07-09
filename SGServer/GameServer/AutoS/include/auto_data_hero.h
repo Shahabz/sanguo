@@ -7,16 +7,19 @@ struct _heroinfo_config {
 				short kind;	//
 				short color;	//
 				short corps;	//
-				short attack_bas[2];	//
+				short attack_base;	//
 				short attack_wash;	//
 				short attack_wash_limit;	//
-				short defense_bas[2];	//
+				short defense_base;	//
 				short defense_wash;	//
 				short defense_wash_limit;	//
-				short troops_bas[2];	//
+				short troops_base;	//
 				short troops_wash;	//
 				short troops_wash_limit;	//
 				short total_wash;	//
+				short attack;	//
+				short defense;	//
+				short troops;	//
 };
 typedef struct _heroinfo_config HeroInfoConfig;
 

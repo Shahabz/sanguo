@@ -9,7 +9,7 @@ struct _monsterinfo_config {
 				short color;	//
 				short corps;	//
 				short attack;	//
-				short defens[2];	//
+				short defense;	//
 				short troops;	//
 				short attack_growth;	//
 				short defense_growth;	//
@@ -17,6 +17,7 @@ struct _monsterinfo_config {
 				short attack_increase;	//
 				short defense_increase;	//
 				short assault;	//
+				short defend;	//
 				short line;	//
 				short skill;	//
 };

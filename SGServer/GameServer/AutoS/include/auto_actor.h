@@ -46,7 +46,7 @@ struct _actor {
 };
 typedef struct _actor Actor;
 
-int actor_load_auto( int actorid, Actor *pActor, const char *pTab );
-int actor_save_auto( Actor *pActor, const char *pTab, FILE *fp );
+int actor_load_auto( int actorid, Actor *pActor, char *pTab );
+int actor_save_auto( Actor *pActor, char *pTab, FILE *fp );
 
 #endif

@@ -66,7 +66,7 @@ int heroinfo_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`color`,`corps`,`attack_bas0`,`attack_bas1`,`attack_wash`,`attack_wash_limit`,`defense_bas0`,`defense_bas1`,`defense_wash`,`defense_wash_limit`,`troops_bas0`,`troops_bas1`,`troops_wash`,`troops_wash_limit`,`total_wash` from hero;" );
+	sprintf( szSQL, "select `kind`,`color`,`corps`,`attack_base`,`attack_wash`,`attack_wash_limit`,`defense_base`,`defense_wash`,`defense_wash_limit`,`troops_base`,`troops_wash`,`troops_wash_limit`,`total_wash`,`attack`,`defense`,`troops` from hero;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -86,19 +86,19 @@ int heroinfo_init_auto()
 		g_heroinfo[kind].config[color].kind = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].color = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].corps = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].attack_bas[0] = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].attack_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack_base = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].attack_wash = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].attack_wash_limit = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].defense_bas[0] = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].defense_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense_base = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].defense_wash = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].defense_wash_limit = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].troops_bas[0] = atoi(row[offset++]);
-		g_heroinfo[kind].config[color].troops_bas[1] = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops_base = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].troops_wash = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].troops_wash_limit = atoi(row[offset++]);
 		g_heroinfo[kind].config[color].total_wash = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].attack = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].defense = atoi(row[offset++]);
+		g_heroinfo[kind].config[color].troops = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	heroinfo_luatable_auto();
