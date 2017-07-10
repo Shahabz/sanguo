@@ -16,8 +16,8 @@ struct _actor_item {
 typedef struct _actor_item Item;
 
 typedef Item * (*LPCB_GETITEM)( int actorid, int offset );
-int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem, char *pTab );
-int actor_item_save_auto( Item *pItem, char *pTab, FILE *fp );
-int actor_item_batch_save_auto( Item *pItem, int maxcount,  char *pTab, FILE *fp );
+int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem, const char *pTab );
+int actor_item_save_auto( Item *pItem, const char *pTab, FILE *fp );
+int actor_item_batch_save_auto( Item *pItem, int maxcount,  const char *pTab, FILE *fp );
 
 #endif

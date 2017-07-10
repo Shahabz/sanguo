@@ -2,6 +2,10 @@
 #define _CITY_H_
 #include "define.h"
 
+#define CITY_QUEST_MAX				6	// 任务数量
+#define CITY_TECH_MAX				40	// 城池科技
+#define CITY_DATA_RECORD_MAX		16	// 数据记录
+
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
 #define	CITY_FUNCTION_WASH			1	// 洗炼铺

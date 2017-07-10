@@ -36,6 +36,7 @@ function Player:Init()
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
 	
+	self.m_function			=	0;
 	self.m_levynum			=	0;
 	self.m_worker_kind		=	0;
 	self.m_worker_offset	=	0;

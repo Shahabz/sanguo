@@ -16,11 +16,14 @@
 #include "auto_data_vip.h"
 #include "auto_data_hero.h"
 #include "auto_data_vip.h"
+#include "auto_data_quest.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"
 #include "auto_city_building_barracks.h"
 #include "auto_city_building_res.h"
+#include "auto_city_attr.h"
+#include "auto_city_guard.h"
 #include "auto_city.h"
 #include "actor_send.h"
 #include "award.h"
@@ -34,6 +37,8 @@
 
 // 最小的角色ID值
 #define MINACTORID	3100
+
+#define ACTOR_QUEST_MAX	2048
 
 /* 背包最大数量*/
 #define MAX_DEFAULT_ITEMNUM	200

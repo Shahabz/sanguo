@@ -16,7 +16,7 @@ int actor_load_auto( int actorid, Actor *pActor, const char *pTab )
 	if ( pActor == NULL )
 		return -1;
 
-	sprintf( szSQL, "select `actorid`,`admin`,`lastip`,`createtime`,`forbidtime`,`name`,`nation`,`shape`,`level`,`token`,`total_charge`,`charge_dollar`,`itemext`,`equipext`,`sflag`,`fdate`,`today_char`,`today_int0`,`today_int1`,`today_int2`,`today_int3`,`today_int4`,`today_int5`,`today_int6`,`today_int7`,`cd0`,`cd1`,`cd2`,`cd3`,`cd4`,`cd5`,`cd6`,`cd7`,`config`,`function`,`cdkey1`,`cdkey2`,`cdkey3`,`cdkey4` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`admin`,`lastip`,`createtime`,`forbidtime`,`name`,`nation`,`shape`,`level`,`token`,`total_charge`,`charge_dollar`,`itemext`,`equipext`,`quest_complete`,`sflag`,`fdate`,`today_char`,`today_int0`,`today_int1`,`today_int2`,`today_int3`,`today_int4`,`today_int5`,`today_int6`,`today_int7`,`cd0`,`cd1`,`cd2`,`cd3`,`cd4`,`cd5`,`cd6`,`cd7`,`config`,`function`,`cdkey1`,`cdkey2`,`cdkey3`,`cdkey4` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -44,6 +44,7 @@ int actor_load_auto( int actorid, Actor *pActor, const char *pTab )
 		pActor->charge_dollar = (float)atof(row[offset++]);
 		pActor->itemext = atoi(row[offset++]);
 		pActor->equipext = atoi(row[offset++]);
+		memcpy( pActor->quest_complete, row[offset++], sizeof(char)*2048 );
 		pActor->sflag = atoi(row[offset++]);
 		pActor->fdate = atoi(row[offset++]);
 		memcpy( pActor->today_char, row[offset++], sizeof(char)*128 );
@@ -87,10 +88,11 @@ int actor_save_auto( Actor *pActor, const char *pTab, FILE *fp )
 
 	char szText_lastip[MAX_PATH]={0};
 	char szText_name[MAX_PATH]={0};
+	char szText_quest_complete[sizeof(char)*2048*2+1]={0};
 	char szText_today_char[sizeof(char)*128*2+1]={0};
 	char szText_config[sizeof(char)*8*2+1]={0};
 RE_ACTOR_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`lastip`,`createtime`,`forbidtime`,`name`,`nation`,`shape`,`level`,`token`,`total_charge`,`charge_dollar`,`itemext`,`equipext`,`sflag`,`fdate`,`today_char`,`today_int0`,`today_int1`,`today_int2`,`today_int3`,`today_int4`,`today_int5`,`today_int6`,`today_int7`,`cd0`,`cd1`,`cd2`,`cd3`,`cd4`,`cd5`,`cd6`,`cd7`,`config`,`function`,`cdkey1`,`cdkey2`,`cdkey3`,`cdkey4`) Values('%d','%s','%d','%d','%s','%d','%d','%d','%d','%d','%f','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d')",pTab,pActor->actorid,db_escape((const char *)pActor->lastip,szText_lastip,0),pActor->createtime,pActor->forbidtime,db_escape((const char *)pActor->name,szText_name,0),pActor->nation,pActor->shape,pActor->level,pActor->token,pActor->total_charge,pActor->charge_dollar,pActor->itemext,pActor->equipext,pActor->sflag,pActor->fdate,db_escape((const char *)pActor->today_char,szText_today_char,sizeof(char)*128),pActor->today_int[0],pActor->today_int[1],pActor->today_int[2],pActor->today_int[3],pActor->today_int[4],pActor->today_int[5],pActor->today_int[6],pActor->today_int[7],pActor->cd[0],pActor->cd[1],pActor->cd[2],pActor->cd[3],pActor->cd[4],pActor->cd[5],pActor->cd[6],pActor->cd[7],db_escape((const char *)pActor->config,szText_config,sizeof(char)*8),pActor->function,pActor->cdkey1,pActor->cdkey2,pActor->cdkey3,pActor->cdkey4);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`lastip`,`createtime`,`forbidtime`,`name`,`nation`,`shape`,`level`,`token`,`total_charge`,`charge_dollar`,`itemext`,`equipext`,`quest_complete`,`sflag`,`fdate`,`today_char`,`today_int0`,`today_int1`,`today_int2`,`today_int3`,`today_int4`,`today_int5`,`today_int6`,`today_int7`,`cd0`,`cd1`,`cd2`,`cd3`,`cd4`,`cd5`,`cd6`,`cd7`,`config`,`function`,`cdkey1`,`cdkey2`,`cdkey3`,`cdkey4`) Values('%d','%s','%d','%d','%s','%d','%d','%d','%d','%d','%f','%d','%d','%s','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%s','%d','%d','%d','%d','%d')",pTab,pActor->actorid,db_escape((const char *)pActor->lastip,szText_lastip,0),pActor->createtime,pActor->forbidtime,db_escape((const char *)pActor->name,szText_name,0),pActor->nation,pActor->shape,pActor->level,pActor->token,pActor->total_charge,pActor->charge_dollar,pActor->itemext,pActor->equipext,db_escape((const char *)pActor->quest_complete,szText_quest_complete,sizeof(char)*2048),pActor->sflag,pActor->fdate,db_escape((const char *)pActor->today_char,szText_today_char,sizeof(char)*128),pActor->today_int[0],pActor->today_int[1],pActor->today_int[2],pActor->today_int[3],pActor->today_int[4],pActor->today_int[5],pActor->today_int[6],pActor->today_int[7],pActor->cd[0],pActor->cd[1],pActor->cd[2],pActor->cd[3],pActor->cd[4],pActor->cd[5],pActor->cd[6],pActor->cd[7],db_escape((const char *)pActor->config,szText_config,sizeof(char)*8),pActor->function,pActor->cdkey1,pActor->cdkey2,pActor->cdkey3,pActor->cdkey4);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );

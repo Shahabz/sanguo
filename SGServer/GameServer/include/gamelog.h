@@ -14,6 +14,7 @@
 #define LOGOP_VIPEXP			8	// vip经验
 #define LOGOP_BUILDING			9	// 建筑
 #define LOGOP_EQUIPGET			10	// 获得装备
+#define LOGOP_QUEST				11	// 
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -23,6 +24,7 @@
 #define PATH_TOKENITEMUSE				5	// 钻石直接使用
 #define PATH_SELL						6	// 售卖丢弃
 #define PATH_BUILDING_UPGRADE			7	// 建筑
+#define PATH_QUEST						8	// 任务
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

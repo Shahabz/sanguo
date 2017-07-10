@@ -46,6 +46,14 @@ BUILDING_Hero		    =  35	-- æ€œÕπ›
 BUILDING_Wishing	    =  36	-- æ€±¶≈Ë
 BUILDING_Help		    =  37	-- ∞Ô÷˙
 
+-- π¶ƒ‹»Îø⁄
+CITY_FUNCTION_SMITHY		=0	-- Ã˙Ω≥∆Ã
+CITY_FUNCTION_WASH			=1	-- œ¥¡∂∆Ã
+CITY_FUNCTION_FANGSHI		=2	-- ∑ª –
+CITY_FUNCTION_SHOP			=3	-- …ÃµÍ
+CITY_FUNCTION_HERO			=4	-- æ€œÕπ›
+CITY_FUNCTION_WISHING		=5	-- æ€±¶≈Ë
+
 BuildingPrefab={
 [BUILDING_Main] = { prefab = "BUILDING_Main", land="BuildingLand0" },
 [BUILDING_Wall] = { prefab = "BUILDING_Wall", land="BuildingLand1" },

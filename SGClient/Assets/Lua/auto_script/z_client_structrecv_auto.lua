@@ -732,3 +732,56 @@ function struct_NetS_TrainInfo_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Quest_recv( buffer )
+	local recvValue = {};
+	recvValue.m_questid = buffer:ReadShort();
+	recvValue.m_flag = buffer:ReadSByte();
+	recvValue.m_datatype = buffer:ReadSByte();
+	recvValue.m_datakind = buffer:ReadShort();
+	recvValue.m_dataoffset = buffer:ReadSByte();
+	recvValue.m_value = buffer:ReadInt();
+	recvValue.m_needvalue = buffer:ReadInt();
+	recvValue.m_awardkind={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardkind[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardnum={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
+	end
+	return recvValue;
+end
+
+function struct_NetS_QuestList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Quest_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_QuestAward_recv( buffer )
+	local recvValue = {};
+	recvValue.m_questid = buffer:ReadShort();
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_AwardInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_Function_recv( buffer )
+	local recvValue = {};
+	recvValue.m_function = buffer:ReadInt();
+	recvValue.m_openoffset = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+

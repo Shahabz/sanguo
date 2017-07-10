@@ -17,6 +17,8 @@ struct _city_attr {
 };
 typedef struct _city_attr CityAttr;
 
+typedef CityAttr * (*LPCB_GETCITYATTR)( int actorid );
+typedef int (*LPCB_LOADCITYATTR)( int actorid );
 int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB_LoadCityAttr, const char *pTab );
 int city_attr_save_auto( CityAttr *pCityAttr, const char *pTab, FILE *fp );
 

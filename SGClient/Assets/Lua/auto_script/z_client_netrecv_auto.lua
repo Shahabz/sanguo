@@ -290,6 +290,26 @@ function netrecv_traininfo_C( buffer )
 	proc_traininfo_C( recvValue );
 end
 
+function netrecv_quest_C( buffer )
+	local recvValue = struct_NetS_Quest_recv( buffer );
+	proc_quest_C( recvValue );
+end
+
+function netrecv_questlist_C( buffer )
+	local recvValue = struct_NetS_QuestList_recv( buffer );
+	proc_questlist_C( recvValue );
+end
+
+function netrecv_questaward_C( buffer )
+	local recvValue = struct_NetS_QuestAward_recv( buffer );
+	proc_questaward_C( recvValue );
+end
+
+function netrecv_function_C( buffer )
+	local recvValue = struct_NetS_Function_recv( buffer );
+	proc_function_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -349,6 +369,10 @@ Proc_Command = {
 	[CMDS_BUILDINGRESGET]=netrecv_buildingresget_C;
 	[CMDS_SOLDIERS]=netrecv_soldiers_C;
 	[CMDS_TRAININFO]=netrecv_traininfo_C;
+	[CMDS_QUEST]=netrecv_quest_C;
+	[CMDS_QUESTLIST]=netrecv_questlist_C;
+	[CMDS_QUESTAWARD]=netrecv_questaward_C;
+	[CMDS_FUNCTION]=netrecv_function_C;
 }
 
 function in_proc_command_C( cmd, buffer )

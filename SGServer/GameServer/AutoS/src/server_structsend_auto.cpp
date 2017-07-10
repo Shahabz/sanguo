@@ -860,3 +860,54 @@ int struct_NetS_TrainInfo_send( char **pptr, int *psize, SLK_NetS_TrainInfo *pVa
 	return 0;
 }
 
+int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_questid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_datatype, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_datakind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
+	return 0;
+}
+
+int struct_NetS_QuestList_send( char **pptr, int *psize, SLK_NetS_QuestList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Quest_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_QuestAward_send( char **pptr, int *psize, SLK_NetS_QuestAward *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_questid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_Function_send( char **pptr, int *psize, SLK_NetS_Function *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_openoffset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+

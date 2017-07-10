@@ -52,4 +52,42 @@ struct _city {
 				short hero_washsec;	//英雄下次洗练免费时间
 				char autobuild;	//自动建造剩余次数
 				char autobuildopen;	//自动建造是否开启
+				short questid[6];	//任务ID
+				int questvalue[6];	//任务数值
+				char techlevel[40];	//科技
+				char techprogress[40];	//科技进度
+				int data_record[16];	//数据记录
 				short guardsec;	//城墙守卫冷却时间
+				CityGuard guard[30];	//城墙守卫
+				Hero hero[12];	//上阵英雄
+				Building building[6];	//普通建筑
+				BuildingBarracks building_barracks[4];	//兵营建筑
+				BuildingRes building_res[64];	//资源建筑
+				char worker_op;	//建造队列操作
+				int worker_sec;	//建造剩余时间(每秒-1)
+				char worker_kind;	//当前升级建筑类型
+				char worker_offset;	//当前升级建筑索引
+				char worker_free;	//是否使用过免费
+				char worker_op_ex;	//建造队列操作(商用)
+				int worker_sec_ex;	//建造剩余时间(每秒-1)(商用)
+				char worker_kind_ex;	//当前升级建筑类型(商用)
+				char worker_offset_ex;	//当前升级建筑索引(商用)
+				char worker_free_ex;	//是否使用过免费
+				int worker_expire_ex;	//商用建造队列到期时间
+				char ofkind;	//建筑官员种类
+				int ofsec;	//建筑官员剩余秒
+				int offree;	//建筑官员免费情况
+				int offquick;	//建筑官员已经使用的加速时间
+				CityAttr attr;	//属性加成
+				int actor_index;	//角色索引
+				int unit_index;	//显示索引
+				int army_index[5];	//部队
+};
+typedef struct _city City;
+
+typedef City * (*LPCB_GETCITY)( int index );
+typedef int (*LPCB_LOADCITY)( int index );
+int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, const char *pTab );
+int city_save_auto( City *pCity, const char *pTab, FILE *fp );
+
+#endif

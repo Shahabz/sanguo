@@ -83,9 +83,12 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		elseif nControlID == 2 then
 			local kind = 21;
-			local offset = math.random( 0, 63 )
-			BuildingGetDlgShow( kind,  offset, {m_kind=kind,m_offset=offset,m_level=1} );
-		
+			local offsetlist ={ 49, 50, 51, 52 }
+			for i=1, 1, 1 do
+				local offset = math.random( 0, 63 )
+				--local offset = offsetlist[i]
+				BuildingGetDlgShow( kind,  offset, {m_kind=kind,m_offset=offset,m_level=1} );
+			end
 		elseif nControlID == 3 then
 			QuestAwardDlgShow();
 		

@@ -178,9 +178,40 @@ function proc_buildinglist_C( recvValue )
 	recvValue.m_worker_sec_ex = 3600;
 	recvValue.m_worker_needsec_ex = 3600;
 	recvValue.m_worker_expire_ex = 3000;--]]
+	recvValue.m_function = 127
+	
+	GetPlayer().m_function = recvValue.m_function;
+	-- Ìú½³ÆÌ
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_SMITHY ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end	
+	-- Ï´Á¶ÆÌ
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_WASH ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Wash,{ m_kind = BUILDING_Wash, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
+	-- ·»ÊÐ
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Fangshi,{ m_kind = BUILDING_Fangshi, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	else
+		-- °ïÖú
+		GetPlayer():SetBuilding( BUILDING_Help,{ m_kind = BUILDING_Help, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
+	-- ÉÌµê
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_SHOP ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Shop,{ m_kind = BUILDING_Shop, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
+	-- ¾ÛÏÍ¹Ý
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_HERO ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Hero,{ m_kind = BUILDING_Hero, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
+	-- ¾Û±¦Åè
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_WISHING ) == 1 then
+		GetPlayer():SetBuilding( BUILDING_Wishing,{ m_kind = BUILDING_Wishing, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
 	
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
+	
 	-- ¹Ø±Õ¼ÓÔØÃæ°å
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();
@@ -633,5 +664,39 @@ end
 function proc_traininfo_C( recvValue )
 	-- process.
 	
+end
+
+-- m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},
+function proc_quest_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},[m_count]},
+function proc_questlist_C( recvValue )
+	-- process.
+end
+
+-- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},
+function proc_questaward_C( recvValue )
+	-- process.
+end
+
+-- m_function=0,m_openoffset=0,m_path=0,
+function proc_function_C( recvValue )
+	-- process.
+	GetPlayer().m_function = recvValue.m_function;
+	
+	if recvValue.m_openoffset >= 0 and recvValue.m_openoffset <= 5 then
+		local kindlist = {
+		[0] = BUILDING_Smithy,
+		[1] = BUILDING_Wash,
+		[2] = BUILDING_Fangshi,
+		[3] = BUILDING_Shop,
+		[4] = BUILDING_Hero,
+		[5] = BUILDING_Wishing }
+		local kind = kindlist[ recvValue.m_openoffset ]
+		BuildingGetDlgShow( kind, 0, { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
+	end
+
 end
 

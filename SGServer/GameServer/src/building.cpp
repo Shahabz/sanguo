@@ -10,7 +10,6 @@
 #include "building.h"
 #include "mapunit.h"
 #include "map.h"
-#include "server_netsend_auto.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -59,6 +58,31 @@ BuildingRes* buildingres_getptr( int city_index, int offset )
 	return &g_city[city_index].building_res[offset];
 }
 
+BuildingRes *buildingres_getptr_number( int city_index, int kind, int no )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return NULL;
+	if ( no < 0 || no >= 16 )
+		return NULL;
+	if ( kind == BUILDING_Silver )
+	{
+		return &g_city[city_index].building_res[no];
+	}
+	else if ( kind == BUILDING_Wood )
+	{
+		return &g_city[city_index].building_res[16+no];
+	}
+	else if ( kind == BUILDING_Food )
+	{
+		return &g_city[city_index].building_res[32 + no];
+	}
+	else if ( kind == BUILDING_Iron )
+	{
+		return &g_city[city_index].building_res[48 + no];
+	}
+	return NULL;
+}
+
 // 获取建筑的配置信息
 BuildingUpgradeConfig* building_getconfig( int kind, int level )
 {
@@ -98,8 +122,9 @@ int building_getindex( int city_index, int kind )
 	return index;
 }
 
+
 // 获取建筑等级
-int building_getlevel( int city_index, int kind )
+int building_getlevel( int city_index, int kind, int no )
 {
 	CITY_CHECK_INDEX( city_index );
 	if ( kind < BUILDING_Infantry )
@@ -122,6 +147,58 @@ int building_getlevel( int city_index, int kind )
 			}
 		}
 	}
+	else if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
+	{
+		BuildingRes *pRes = buildingres_getptr_number( city_index, kind, no-1 );
+		if ( pRes )
+			return pRes->level;
+	}
+	return 0;
+}
+
+// 给予一个建筑
+int building_give( int city_index, int kind, int num )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( kind < BUILDING_Infantry )
+	{ // 普通建筑
+		int offset = building_create( city_index, kind, -1 );
+		if ( offset >= 0 )
+		{
+			SLK_NetS_BuildingGet pValue = { 0 };
+			building_makestruct( &g_city[city_index].building[offset], offset, &pValue.m_building );
+			netsend_buildingget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+		}
+	}
+	else if ( kind < BUILDING_Silver )
+	{ // 兵营建筑
+		int offset = building_create( city_index, kind, -1 );
+		if ( offset >= 0 )
+		{
+			SLK_NetS_BuildingBarracksGet pValue = { 0 };
+			building_barracks_makestruct( &g_city[city_index].building_barracks[offset], offset, &pValue.m_barracks );
+			netsend_buildingbarracksget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+		}
+	}
+	else if ( kind < BUILDING_Smithy )
+	{ // 资源建筑
+		num = num <= 0 ? 1 : num;
+		for ( int tmpi = 0; tmpi < num; tmpi++ )
+		{
+			int offset = building_create( city_index, kind, -1 );
+			if ( offset >= 0 )
+			{
+				SLK_NetS_BuildingResGet pValue = { 0 };
+				building_res_makestruct( &g_city[city_index].building_res[offset], offset, &pValue.m_res );
+				netsend_buildingresget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+			}
+		}
+		
+	}
+	else
+	{
+
+	}
 	return 0;
 }
 
@@ -131,7 +208,7 @@ int building_create( int city_index, int kind, int offset )
 	CITY_CHECK_INDEX( city_index );
 	if ( kind < BUILDING_Infantry )
 	{ // 普通建筑
-		int level = building_getlevel( city_index, kind );
+		int level = building_getlevel( city_index, kind, -1 );
 		if ( level > 0 )
 			return -1;
 
@@ -149,6 +226,7 @@ int building_create( int city_index, int kind, int offset )
 				{
 					g_city[city_index].building[tmpi].kind = kind;
 					g_city[city_index].building[tmpi].level = 1;
+					offset = tmpi;
 					break;
 				}
 			}
@@ -156,7 +234,7 @@ int building_create( int city_index, int kind, int offset )
 	}
 	else if ( kind < BUILDING_Silver )
 	{ // 兵营建筑
-		int level = building_getlevel( city_index, kind );
+		int level = building_getlevel( city_index, kind, -1 );
 		if ( level > 0 )
 			return -1;
 
@@ -174,6 +252,7 @@ int building_create( int city_index, int kind, int offset )
 				{
 					g_city[city_index].building_barracks[tmpi].kind = kind;
 					g_city[city_index].building_barracks[tmpi].level = 1;
+					offset = tmpi;
 					break;
 				}
 			}
@@ -189,15 +268,59 @@ int building_create( int city_index, int kind, int offset )
 		}
 		else
 		{ // 没有指定找一个空位
-			for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+			if ( kind == BUILDING_Silver )
 			{
-				if ( g_city[city_index].building_res[tmpi].kind <= 0 )
+				for ( int tmpi = 0; tmpi < 16; tmpi++ )
 				{
-					g_city[city_index].building_res[tmpi].kind = kind;
-					g_city[city_index].building_res[tmpi].level = 1;
-					break;
+					if ( g_city[city_index].building_res[tmpi].kind <= 0 )
+					{
+						g_city[city_index].building_res[tmpi].kind = kind;
+						g_city[city_index].building_res[tmpi].level = 1;
+						offset = tmpi;
+						break;
+					}
 				}
 			}
+			else if ( kind == BUILDING_Wood )
+			{
+				for ( int tmpi = 16; tmpi < 32; tmpi++ )
+				{
+					if ( g_city[city_index].building_res[tmpi].kind <= 0 )
+					{
+						g_city[city_index].building_res[tmpi].kind = kind;
+						g_city[city_index].building_res[tmpi].level = 1;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+			else if ( kind == BUILDING_Food )
+			{
+				for ( int tmpi = 32; tmpi < 48; tmpi++ )
+				{
+					if ( g_city[city_index].building_res[tmpi].kind <= 0 )
+					{
+						g_city[city_index].building_res[tmpi].kind = kind;
+						g_city[city_index].building_res[tmpi].level = 1;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+			else if ( kind == BUILDING_Iron )
+			{
+				for ( int tmpi = 48; tmpi < 64; tmpi++ )
+				{
+					if ( g_city[city_index].building_res[tmpi].kind <= 0 )
+					{
+						g_city[city_index].building_res[tmpi].kind = kind;
+						g_city[city_index].building_res[tmpi].level = 1;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+			
 		}
 	}
 	else
@@ -215,7 +338,7 @@ int building_create( int city_index, int kind, int offset )
 		else if ( kind == BUILDING_Wishing )
 			city_function_open( &g_city[city_index], CITY_FUNCTION_WISHING );
 	}
-	return 0;
+	return offset;
 }
 
 // 建筑升级
@@ -441,6 +564,84 @@ int building_soldiers_total( int city_index, char kind )
 	return total;
 }
 
+void building_makestruct( Building *pBuilding, int offset, SLK_NetS_Building *pValue )
+{
+	pValue->m_kind = pBuilding->kind;
+	pValue->m_offset = offset;
+	pValue->m_level = pBuilding->level;
+	pValue->m_sec = pBuilding->sec;
+	pValue->m_needsec = pBuilding->needsec;
+	pValue->m_overvalue = pBuilding->overvalue;
+	if ( pBuilding->quicksec > 0 )
+		pValue->m_quick = 1;
+}
+
+void building_barracks_makestruct( BuildingBarracks *pBuilding, int offset, SLK_NetS_BuildingBarracks *pValue )
+{
+	pValue->m_kind = pBuilding->kind;
+	pValue->m_offset = offset;
+	pValue->m_level = pBuilding->level;
+	pValue->m_sec = pBuilding->trainsec;
+	pValue->m_needsec = pBuilding->trainsec_need;
+	pValue->m_overvalue = pBuilding->overnum;
+	if ( pBuilding->quicksec > 0 )
+		pValue->m_quick = 1;
+}
+
+void building_res_makestruct( BuildingRes *pBuilding, int offset, SLK_NetS_BuildingRes *pValue )
+{
+	pValue->m_kind = pBuilding->kind;
+	pValue->m_offset = offset;
+	pValue->m_level = pBuilding->level;
+}
+
+int building_sendinfo( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Building pValue = { 0 };
+	int offset = building_getindex( pCity->index, kind );
+	if ( offset >= 0 && offset < BUILDING_MAXNUM )
+	{
+		building_makestruct( &pCity->building[offset], offset, &pValue );
+		netsend_building_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
+int building_sendinfo_barracks( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_BuildingBarracks pValue = { 0 };
+	int offset = building_getindex( pCity->index, kind );
+	if ( offset >= 0 && offset < BUILDING_BARRACKS_MAXNUM )
+	{
+		building_barracks_makestruct( &pCity->building_barracks[offset], offset, &pValue );
+		netsend_buildingbarracks_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
+int building_sendinfo_res( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_BuildingRes pValue = { 0 };
+	if ( offset >= 0 && offset < BUILDING_RES_MAXNUM )
+	{
+		building_res_makestruct( &pCity->building_res[offset], offset, &pValue );
+		netsend_buildingres_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
 int building_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -454,12 +655,7 @@ int building_sendlist( int actor_index )
 	{
 		if ( pCity->building[tmpi].kind <= 0 )
 			continue;
-		pValue.m_building[pValue.m_building_count].m_kind = pCity->building[tmpi].kind;
-		pValue.m_building[pValue.m_building_count].m_offset = tmpi;
-		pValue.m_building[pValue.m_building_count].m_level = pCity->building[tmpi].level;
-		pValue.m_building[pValue.m_building_count].m_sec = pCity->building[tmpi].sec;
-		if ( pCity->building[tmpi].quicksec > 0 )
-			pValue.m_building[pValue.m_building_count].m_quick = 1;
+		building_makestruct( &pCity->building[tmpi], tmpi, &pValue.m_building[pValue.m_building_count] );
 		pValue.m_building_count += 1;
 	}
 
@@ -468,12 +664,7 @@ int building_sendlist( int actor_index )
 	{
 		if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
 			continue;
-		pValue.m_barracks[pValue.m_barracks_count].m_kind = pCity->building_barracks[tmpi].kind;
-		pValue.m_barracks[pValue.m_barracks_count].m_offset = tmpi;
-		pValue.m_barracks[pValue.m_barracks_count].m_level = pCity->building_barracks[tmpi].level;
-		pValue.m_barracks[pValue.m_barracks_count].m_sec = pCity->building_barracks[tmpi].trainsec;
-		if ( pCity->building_barracks[tmpi].quicksec > 0 )
-			pValue.m_barracks[pValue.m_barracks_count].m_quick = 1;
+		building_barracks_makestruct( &pCity->building_barracks[tmpi], tmpi, &pValue.m_barracks[pValue.m_barracks_count] );
 		pValue.m_barracks_count += 1;
 	}
 
@@ -482,9 +673,7 @@ int building_sendlist( int actor_index )
 	{
 		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
 			continue;
-		pValue.m_res[pValue.m_res_count].m_kind = pCity->building_res[tmpi].kind;
-		pValue.m_res[pValue.m_res_count].m_offset = tmpi;
-		pValue.m_res[pValue.m_res_count].m_level = pCity->building_res[tmpi].level;
+		building_res_makestruct( &pCity->building_res[tmpi], tmpi, &pValue.m_res[pValue.m_res_count] );
 		pValue.m_res_count += 1;
 	}
 
@@ -493,10 +682,12 @@ int building_sendlist( int actor_index )
 	pValue.m_worker_offset = pCity->worker_offset;
 	pValue.m_worker_op = pCity->worker_op;
 	pValue.m_worker_sec = pCity->worker_sec;
+	pValue.m_worker_free = pCity->worker_free;
 	pValue.m_worker_kind_ex = pCity->worker_kind_ex;
 	pValue.m_worker_offset_ex = pCity->worker_offset_ex;
 	pValue.m_worker_op_ex = pCity->worker_op_ex;
 	pValue.m_worker_sec_ex = pCity->worker_sec_ex;
+	pValue.m_worker_free_ex = pCity->worker_free_ex;
 	pValue.m_worker_expire_ex = pCity->worker_expire_ex;
 	pValue.m_levynum = pCity->levynum;
 	pValue.m_function= pCity->function;

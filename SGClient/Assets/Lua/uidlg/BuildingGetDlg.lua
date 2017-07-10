@@ -6,9 +6,11 @@ local m_uiDesc = nil; --UnityEngine.GameObject
 local m_uiNormalPanel = nil; --UnityEngine.GameObject
 local m_uiMovePanel = nil; --UnityEngine.GameObject
 
-local m_kind = 0;
-local m_offset = -1;
+local m_ObjectPool = nil;
+local m_kind = {};
+local m_offset = {};
 local m_info = {};
+
 -- 打开界面
 function BuildingGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingGetDlg" );
@@ -19,7 +21,19 @@ function BuildingGetDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	local objs = {};
+	for i = 0 ,m_uiMovePanel.transform.childCount - 1 do
+		table.insert( objs, m_uiMovePanel.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "Shape(Clone)" then
+			m_ObjectPool:Release( "Shape", obj );
+		end
+    end
+	m_kind = {};
+	m_offset = {};
+	m_info = {};
 	eye.uiManager:Close( "BuildingGetDlg" );
 end
 
@@ -51,6 +65,10 @@ function BuildingGetDlgOnAwake( gameObject )
 	m_uiDesc = objs[2];
 	m_uiNormalPanel = objs[3];
 	m_uiMovePanel = objs[4];
+	
+	-- 对象池
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("Shape", 4, 4, m_uiShape);
 end
 
 -- 界面初始化时调用
@@ -84,9 +102,10 @@ end
 ----------------------------------------
 function BuildingGetDlgShow( kind, offset, info )
 	BuildingGetDlgOpen();
-	m_kind = kind;
-	m_offset = offset;
-	m_info = info;
+	table.insert( m_kind, kind );
+	table.insert( m_offset, offset );
+	table.insert( m_info, info );
+	
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);
 	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( kind );
@@ -96,31 +115,52 @@ end
 function BuildingGetDlgMove()
 	m_uiNormalPanel.gameObject:SetActive(false);
 	m_uiMovePanel.gameObject:SetActive(true);
+	m_uiShape.gameObject:SetActive(false);
 	
-	local unitObj = nil;
-	if m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
-		unitObj = GetPlayer():SetBuildingRes( m_kind, m_offset, m_info, false )
-	else
-		unitObj = GetPlayer():SetBuilding( m_kind, m_info, false )
+	local count = 0;
+	for k, v in pairs( m_kind ) do
+		count = count + 1;
 	end
 	
-	City.m_Camera:TweenPosToInBound( unitObj.transform.position, 1 );
-	
-	Invoke( function() 
-		--m_uiShape:GetComponent( "UITweenScale" ):Play( true );
-		m_uiShape:GetComponent( "UITweenRectPosition" ).from = Vector2( m_uiShape.transform.localPosition.x, m_uiShape.transform.localPosition.y );
-		local screenPos = City.m_CameraMain:WorldToScreenPoint(unitObj.transform.position);
-		local x = screenPos.x-Screen.width/2;
-		local y= screenPos.y-Screen.height/2;
-		m_uiShape:GetComponent( "UITweenRectPosition" ).to = Vector2( x, y ); 
-		m_uiShape:GetComponent( "UITweenRectPosition" ):Play( true );
-	end, 1.1 )
-	
-	Invoke( function() 
-		m_uiShape:GetComponent( "UITweenScale" ):ToInit();
-		m_uiShape:GetComponent( "UITweenRectPosition" ):ToInit();
-		BuildingGetDlgClose();
-		unitObj.gameObject:SetActive(true);
-	end, 1.6 )
+	local index = 0;
+	local moveing = false;
+	local unitObj = {};
+	local uiShape = {};
+	for k, v in pairs( m_kind ) do
+		if m_kind[k] >= BUILDING_Silver and m_kind[k] <= BUILDING_Iron then
+			unitObj[k] = GetPlayer():SetBuildingRes( m_kind[k], m_offset[k], m_info[k], false )
+		else
+			unitObj[k] = GetPlayer():SetBuilding( m_kind[k], m_info[k], false )
+		end
+		if moveing == false then
+			City.m_Camera:TweenPosToInBound( unitObj[k].transform.position, 1 );
+			moveing = true;
+		end
+		
+		
+		uiShape[k] = m_ObjectPool:Get( "Shape" );
+		uiShape[k].transform:SetParent( m_uiMovePanel.transform );
+		uiShape[k]:GetComponent( "Image" ).sprite = BuildingSprite( m_kind[k] );
+		
+		Invoke( function() 
+			uiShape[k]:GetComponent( "UITweenRectPosition" ).from = Vector2( uiShape[k].transform.localPosition.x, uiShape[k].transform.localPosition.y );
+			local screenPos = City.m_CameraMain:WorldToScreenPoint(unitObj[k].transform.position);
+			local x = screenPos.x-Screen.width/2;
+			local y= screenPos.y-Screen.height/2;
+			uiShape[k]:GetComponent( "UITweenRectPosition" ).to = Vector2( x, y ); 
+			uiShape[k]:GetComponent( "UITweenRectPosition" ):Play( true );
+		end, 1.1 )
+		
+		Invoke( function() 
+			uiShape[k]:GetComponent( "UITweenScale" ):ToInit();
+			uiShape[k]:GetComponent( "UITweenRectPosition" ):ToInit();
+			unitObj[k].gameObject:SetActive(true);
+			if k == count then
+				BuildingGetDlgClose();
+			end
+		end, 1.6 )
+		
+		
+	end
 end
 

@@ -1,8 +1,9 @@
 #ifndef _BUILDING_H_
 #define _BUILDING_H_
 #include "define.h"
+#include "server_netsend_auto.h"
 
-#define BUILDING_MAXNUM				8 // 普通建筑数量
+#define BUILDING_MAXNUM				6 // 普通建筑数量
 #define BUILDING_BARRACKS_MAXNUM	4 // 兵营建筑数量
 #define BUILDING_RES_MAXNUM			64// 资源建筑数量
 
@@ -47,9 +48,16 @@
 Building* building_getptr( int city_index, int offset );
 BuildingBarracks* buildingbarracks_getptr( int city_index, int offset );
 BuildingRes* buildingres_getptr( int city_index, int offset );
+BuildingRes *buildingres_getptr_number( int city_index, int kind, int no );
 
 // 获取建筑的配置信息
 BuildingUpgradeConfig* building_getconfig( int kind, int level );
+
+// 获取建筑等级
+int building_getlevel( int city_index, int kind, int no );
+
+// 给予一个建筑
+int building_give( int city_index, int kind, int num );
 
 // 创建建筑
 int building_create( int city_index, int kind, int offset );
@@ -65,6 +73,16 @@ int building_finish( int city_index, int op, int kind, int offset );
 
 // 获取士兵数量
 int building_soldiers_total( int city_index, char kind );
+
+// 拼发送结构
+void building_makestruct( Building *pBuilding, int offset, SLK_NetS_Building *pValue );
+void building_barracks_makestruct( BuildingBarracks *pBuilding, int offset, SLK_NetS_BuildingBarracks *pValue );
+void building_res_makestruct( BuildingRes *pBuilding, int offset, SLK_NetS_BuildingRes *pValue );
+
+// 建筑单独信息更新
+int building_sendinfo( int actor_index, int kind );
+int building_sendinfo_barracks( int actor_index, int kind );
+int building_sendinfo_res( int actor_index, int offset );
 
 // 发送所有建筑列表
 int building_sendlist( int city_index );

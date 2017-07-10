@@ -586,9 +586,42 @@ struct _slk_NetS_TrainInfo {
 	char m_trainlong;	//募兵加时
 	int m_train_confnum;	//每五分钟训练士兵数
 	int m_train_confsec;	//招募最大时长时间
-	int m_train_conffood;	//鎷涘嫙鍗曞叺绮
+	int m_train_conffood;	//单兵耗粮
 };
 typedef struct _slk_NetS_TrainInfo SLK_NetS_TrainInfo;	//训练士兵
+
+struct _slk_NetS_Quest {
+	short m_questid;	//编号
+	char m_flag;	//完成标记
+	char m_datatype;	//任务类型
+	short m_datakind;	//任务种类
+	char m_dataoffset;	//任务编号
+	int m_value;	//值
+	int m_needvalue;	//需要值
+	int m_awardkind[5];	//奖励
+	int m_awardnum[5];	//奖励
+};
+typedef struct _slk_NetS_Quest SLK_NetS_Quest;	//任务
+
+struct _slk_NetS_QuestList {
+	short m_count;	//任务列表
+	SLK_NetS_Quest m_list[6];	//任务列表
+};
+typedef struct _slk_NetS_QuestList SLK_NetS_QuestList;	//任务列表
+
+struct _slk_NetS_QuestAward {
+	short m_questid;	//任务编号
+	char m_count;	//奖励数量
+	SLK_NetS_AwardInfo m_list[5];	//任务奖励
+};
+typedef struct _slk_NetS_QuestAward SLK_NetS_QuestAward;	//任务奖励
+
+struct _slk_NetS_Function {
+	int m_function;	//开启的功能列表
+	char m_openoffset;	//开启的功能列表
+	short m_path;	//途径
+};
+typedef struct _slk_NetS_Function SLK_NetS_Function;	//开启的功能列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -653,5 +686,9 @@ int struct_NetS_BuildingBarracksGet_send( char **pptr, int *psize, SLK_NetS_Buil
 int struct_NetS_BuildingResGet_send( char **pptr, int *psize, SLK_NetS_BuildingResGet *pValue );
 int struct_NetS_Soldiers_send( char **pptr, int *psize, SLK_NetS_Soldiers *pValue );
 int struct_NetS_TrainInfo_send( char **pptr, int *psize, SLK_NetS_TrainInfo *pValue );
+int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue );
+int struct_NetS_QuestList_send( char **pptr, int *psize, SLK_NetS_QuestList *pValue );
+int struct_NetS_QuestAward_send( char **pptr, int *psize, SLK_NetS_QuestAward *pValue );
+int struct_NetS_Function_send( char **pptr, int *psize, SLK_NetS_Function *pValue );
 
 #endif

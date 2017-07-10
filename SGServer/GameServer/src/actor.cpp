@@ -32,6 +32,7 @@
 #include "building.h"
 #include "hero.h"
 #include "equip.h"
+#include "quest.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -672,6 +673,9 @@ int actor_entercity( int actor_index )
 	// 离线奖励-用户ID
 	gift_uid_check( actor_index );
 
+	// 任务相关（不发）
+	quest_give( actor_index );
+
 	sc_OnActorIn( actor_index );
 	return 0;
 }
@@ -748,6 +752,9 @@ int actor_load( int actor_index, int actorid )
 	// 读取未上阵英雄的装备
 	actor_equip_load_auto( g_actors[actor_index].actorid, actor_index, actor_equip_getptr, "actor_equip" );
 
+	// 英雄列表
+
+
 	// 道具背包数据
 	item_load( actor_index );
 
@@ -763,7 +770,8 @@ int actor_load( int actor_index, int actorid )
 int actor_new( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	/// 所有的非字符串类型的varbin类型在这里初始化为0
+	// 所有的非字符串类型的varbin类型在这里初始化为0
+	memset( g_actors[actor_index].quest_complete, 0, sizeof( char )*ACTOR_QUEST_MAX );
 	// 上线之后加的varbin字段必须有这一步初始化
 
 	// 初始信息

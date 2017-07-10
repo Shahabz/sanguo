@@ -7,6 +7,7 @@ struct _city_building {
 				char kind;	//建筑种类
 				char level;	//建筑等级
 				int sec;	//时间
+				int needsec;	//需要时间
 				int value;	//通用值
 				int overvalue;	//完成的值
 				short quicksec;	//加速时间

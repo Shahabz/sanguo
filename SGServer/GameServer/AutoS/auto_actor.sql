@@ -15,6 +15,7 @@ CREATE TABLE `actor` (
   `charge_dollar` double NOT NULL DEFAULT '0' COMMENT '总消费多少钱',
   `itemext` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩展的背包栏位数',
   `equipext` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩展的装备栏位数',
+  `quest_complete` varbinary(8192) NOT NULL DEFAULT '' COMMENT '任务完成情况',
   `sflag` int(11) NOT NULL DEFAULT '0' COMMENT '特定标志位',
   `fdate` int(11) NOT NULL DEFAULT '0' COMMENT '刷新的日子是哪天',
   `today_char` varbinary(512) NOT NULL DEFAULT '' COMMENT 'char类型每日次数',

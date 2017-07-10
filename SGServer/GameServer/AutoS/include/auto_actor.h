@@ -28,6 +28,7 @@ struct _actor {
 				Equip equip[150];	//角色携带的装备
 				unsigned char equipext;	//扩展的装备栏位数
 				Hero hero[128];	//未上阵英雄
+				char quest_complete[2048];	//任务完成情况
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数
@@ -46,7 +47,7 @@ struct _actor {
 };
 typedef struct _actor Actor;
 
-int actor_load_auto( int actorid, Actor *pActor, char *pTab );
-int actor_save_auto( Actor *pActor, char *pTab, FILE *fp );
+int actor_load_auto( int actorid, Actor *pActor, const char *pTab );
+int actor_save_auto( Actor *pActor, const char *pTab, FILE *fp );
 
 #endif

@@ -356,7 +356,13 @@ void city_function_open( City *pCity, int offset )
 	if ( pCity == NULL )
 		return;
 	pCity->function |= (1 << offset);
+
+	SLK_NetS_Function pValue = { 0 };
+	pValue.m_function = pCity->function;
+	pValue.m_openoffset = offset;
+	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
+
 int city_function_check( City *pCity, int offset )
 {
 	if ( pCity == NULL )

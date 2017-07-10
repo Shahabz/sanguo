@@ -37,6 +37,7 @@
 #include "script_auto.h"
 #include "global_cmdqueue.h"
 #include "city.h"
+#include "quest.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -342,6 +343,24 @@ int process_init( int max_connection )
 	if ( vipinfo_init_auto() < 0 )
 	{
 		printf_msg( "vipinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 任务
+	if ( questinfo_init_auto() < 0 )
+	{
+		printf_msg( "questinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 任务列表
+	if ( questlist_init() < 0 )
+	{
+		printf_msg( "questlist_init Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

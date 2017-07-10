@@ -16,6 +16,7 @@ int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB
 	char	szSQL[8192] = {0};
 	int offset = 0;
 	CityAttr *pCityAttr;
+	int actorid = 0;
 
 	sprintf( szSQL, "select `actorid`,`silver_per`,`wood_per`,`food_per`,`iron_per`,`protectres_per`,`buildingsec_per`,`infantry_attack`,`cavalry_attack`,`archer_attack` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
@@ -31,6 +32,9 @@ int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
+		pCityAttr = pCB_GetCityAttr( actorid );
+		if( pCityAttr == NULL )
+			continue;
 		pCityAttr->actorid = atoi(row[offset++]);
 		pCityAttr->silver_per = atoi(row[offset++]);
 		pCityAttr->wood_per = atoi(row[offset++]);
@@ -41,8 +45,11 @@ int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB
 		pCityAttr->infantry_attack = atoi(row[offset++]);
 		pCityAttr->cavalry_attack = atoi(row[offset++]);
 		pCityAttr->archer_attack = atoi(row[offset++]);
+		if( pCB_LoadCityAttr )
+			pCB_LoadCityAttr( pCityAttr->actorid );
+		actorid += 1;
 	}
-	g_city_attr_maxindex = ;
+	g_city_attr_maxindex = actorid;
 	mysql_free_result( res );
 	return 0;
 }
