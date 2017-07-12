@@ -119,6 +119,9 @@ struct _slk_NetS_BuildingList {
 	char m_worker_free_ex;	//服务器发送-建筑队列免费时间(商用)
 	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
 	int m_function;	//服务器发送-功能是否开启
+	short m_forgingkind;	//服务器发送-铁匠铺
+	int m_forgingsec;	//服务器发送-铁匠铺
+	int m_forgingsec_need;	//服务器发送-铁匠铺
 };
 typedef struct _slk_NetS_BuildingList SLK_NetS_BuildingList;	//建筑列表
 
@@ -600,6 +603,7 @@ struct _slk_NetS_Quest {
 	int m_needvalue;	//需要值
 	int m_awardkind[5];	//奖励
 	int m_awardnum[5];	//奖励
+	int m_nameid;	//名称ID
 };
 typedef struct _slk_NetS_Quest SLK_NetS_Quest;	//任务
 
@@ -613,6 +617,13 @@ struct _slk_NetS_QuestAward {
 	short m_questid;	//任务编号
 	char m_count;	//奖励数量
 	SLK_NetS_AwardInfo m_list[5];	//任务奖励
+	char m_datatype;	//任务类型
+	short m_datakind;	//任务种类
+	char m_dataoffset;	//任务编号
+	int m_value;	//值
+	int m_needvalue;	//需要值
+	int m_nameid;	//名称ID
+	char m_type;	//类型
 };
 typedef struct _slk_NetS_QuestAward SLK_NetS_QuestAward;	//任务奖励
 
@@ -622,6 +633,49 @@ struct _slk_NetS_Function {
 	short m_path;	//途径
 };
 typedef struct _slk_NetS_Function SLK_NetS_Function;	//开启的功能列表
+
+struct _slk_NetS_CityGuard {
+	char m_corps;	//守卫兵种
+	char m_color;	//守卫颜色
+	char m_shape;	//守卫形象
+	short m_level;	//守卫等级
+	int m_soldiers;	//守卫兵力
+	int m_troops;	//守卫兵力
+	char m_offset;	//守卫索引
+};
+typedef struct _slk_NetS_CityGuard SLK_NetS_CityGuard;	//守卫
+
+struct _slk_NetS_CityGuardList {
+	short m_count;	//守卫数量
+	SLK_NetS_CityGuard m_list[32];	//守卫列表
+	short m_guardsec;	//守卫召唤冷却
+};
+typedef struct _slk_NetS_CityGuardList SLK_NetS_CityGuardList;	//守卫列表
+
+struct _slk_NetS_CityGuardSec {
+	short m_guardsec;	//消除冷却结果
+};
+typedef struct _slk_NetS_CityGuardSec SLK_NetS_CityGuardSec;	//守卫冷却消除
+
+struct _slk_NetS_BuildingSmithy {
+	short m_forgingkind;	//服务器发送-铁匠铺
+	int m_forgingsec;	//服务器发送-铁匠铺
+	int m_forgingsec_need;	//服务器发送-铁匠铺
+};
+typedef struct _slk_NetS_BuildingSmithy SLK_NetS_BuildingSmithy;	//铁匠铺
+
+struct _slk_NetS_ChangeName {
+	short m_name_length;	//修改名称
+	char m_name[32];	//修改名称
+};
+typedef struct _slk_NetS_ChangeName SLK_NetS_ChangeName;	//改名
+
+struct _slk_NetS_BuildingAction {
+	short m_kind;	//建筑种类
+	short m_offset;	//建筑索引
+	short m_action;	//执行动作
+};
+typedef struct _slk_NetS_BuildingAction SLK_NetS_BuildingAction;	//建筑动作
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -690,5 +744,11 @@ int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue );
 int struct_NetS_QuestList_send( char **pptr, int *psize, SLK_NetS_QuestList *pValue );
 int struct_NetS_QuestAward_send( char **pptr, int *psize, SLK_NetS_QuestAward *pValue );
 int struct_NetS_Function_send( char **pptr, int *psize, SLK_NetS_Function *pValue );
+int struct_NetS_CityGuard_send( char **pptr, int *psize, SLK_NetS_CityGuard *pValue );
+int struct_NetS_CityGuardList_send( char **pptr, int *psize, SLK_NetS_CityGuardList *pValue );
+int struct_NetS_CityGuardSec_send( char **pptr, int *psize, SLK_NetS_CityGuardSec *pValue );
+int struct_NetS_BuildingSmithy_send( char **pptr, int *psize, SLK_NetS_BuildingSmithy *pValue );
+int struct_NetS_ChangeName_send( char **pptr, int *psize, SLK_NetS_ChangeName *pValue );
+int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingAction *pValue );
 
 #endif

@@ -69,6 +69,43 @@ int global_init()
 		{
 			global.building_delete_cd = atoi( row[1] );
 		}
+		else if ( id == 7 )
+		{
+			global.equip_wash_max = atoi( row[1] );
+		}
+		else if ( id == 8 )
+		{
+			global.equip_wash_sec = atoi( row[1] );
+		}
+		else if ( id == 9 )
+		{
+			global.hero_wash_max = atoi( row[1] );
+		}
+		else if ( id == 10 )
+		{
+			global.hero_wash_sec = atoi( row[1] );
+		}
+		else if ( id == 11 )
+		{
+			global.buildinglevel_max = atoi( row[1] );
+		}
+		else if ( id == 12 )
+		{
+			global.city_guard_sec = atoi( row[1] );
+		}
+		else if ( id == 13 )
+		{
+			global.city_guard_sec_token = atoi( row[1] );
+		}
+		else if ( id == 14 )
+		{
+			global.city_guard_up_token = atoi( row[1] );
+		}
+		else if ( id == 15 )
+		{
+			global.worker_freetime = atoi( row[1] );
+		}
+		
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

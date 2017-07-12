@@ -10,6 +10,15 @@ typedef struct _global
 	short levy_sec;
 	char levy_max;
 	int building_delete_cd;
+	char equip_wash_max;
+	short equip_wash_sec;
+	char hero_wash_max;
+	short hero_wash_sec;
+	char buildinglevel_max;
+	short city_guard_sec;
+	float city_guard_sec_token;
+	short city_guard_up_token;
+	short worker_freetime;
 }Global;
 int global_init();
 void global_reload();

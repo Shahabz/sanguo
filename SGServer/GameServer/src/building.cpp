@@ -10,6 +10,8 @@
 #include "building.h"
 #include "mapunit.h"
 #include "map.h"
+#include "equip.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -93,6 +95,11 @@ BuildingUpgradeConfig* building_getconfig( int kind, int level )
 	return &g_building_upgrade[kind].config[level];
 }
 
+int building_offset2no( int kind, int offset )
+{
+	return offset%16;
+}
+
 int building_getindex( int city_index, int kind )
  {
 	CITY_CHECK_INDEX( city_index );
@@ -149,7 +156,7 @@ int building_getlevel( int city_index, int kind, int no )
 	}
 	else if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
 	{
-		BuildingRes *pRes = buildingres_getptr_number( city_index, kind, no-1 );
+		BuildingRes *pRes = buildingres_getptr_number( city_index, kind, no );
 		if ( pRes )
 			return pRes->level;
 	}
@@ -197,7 +204,7 @@ int building_give( int city_index, int kind, int num )
 	}
 	else
 	{
-
+		building_create( city_index, kind, -1 );
 	}
 	return 0;
 }
@@ -376,7 +383,12 @@ int building_upgrade( int city_index, int kind, int offset )
 		return -1;
 	}
 
-	BuildingUpgradeConfig *config = building_getconfig( kind, level );
+	if ( level >= g_building_upgrade[kind].maxnum - 1 )
+	{
+		return -1;
+	}
+	
+	BuildingUpgradeConfig *config = building_getconfig( kind, level+1 );
 	if ( !config )
 		return -1;
 
@@ -405,6 +417,8 @@ int building_upgrade( int city_index, int kind, int offset )
 		g_city[city_index].worker_sec = config->sec;
 		g_city[city_index].worker_kind = kind;
 		g_city[city_index].worker_offset = offset;
+		g_city[city_index].worker_free = 1;
+		g_city[city_index].wnsec = config->sec;
 		ok = 1;
 	}
 	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
@@ -413,6 +427,8 @@ int building_upgrade( int city_index, int kind, int offset )
 		g_city[city_index].worker_sec_ex = config->sec;
 		g_city[city_index].worker_kind_ex = kind;
 		g_city[city_index].worker_offset_ex = offset;
+		g_city[city_index].worker_free_ex = 1;
+		g_city[city_index].wnsec_ex = config->sec;
 		ok = 1;
 	}
 	else
@@ -429,6 +445,19 @@ int building_upgrade( int city_index, int kind, int offset )
 		city_changeiron( city_index, -config->iron, PATH_BUILDING_UPGRADE );
 
 		// 通知建筑更新状态
+		if ( kind < BUILDING_Infantry )
+		{
+			building_sendinfo( g_city[city_index].actor_index, kind );
+		}
+		else if ( kind < BUILDING_Silver )
+		{
+			building_sendinfo_barracks( g_city[city_index].actor_index, kind );
+		}
+		else if ( kind < BUILDING_Smithy )
+		{
+			building_sendinfo_res( g_city[city_index].actor_index, offset );
+		}
+		building_sendworker( g_city[city_index].actor_index );
 	}
 	return 0;
 }
@@ -500,6 +529,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 				return -1;
 			level = pBuilding->level;
 			pBuilding->level += 1;
+			building_sendinfo( g_city[city_index].actor_index, kind );
 		}
 		else if ( kind < BUILDING_Silver )
 		{ // 兵营建筑
@@ -508,6 +538,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 				return -1;
 			level = pBuilding->level;
 			pBuilding->level += 1;
+			building_sendinfo_barracks( g_city[city_index].actor_index, kind );
 		}
 		else if ( kind < BUILDING_Smithy )
 		{ // 资源建筑
@@ -516,6 +547,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 				return -1;
 			level = pBuilding->level;
 			pBuilding->level += 1;
+			building_sendinfo_res( g_city[city_index].actor_index, offset );
 		}
 
 		BuildingUpgradeConfig *config = building_getconfig( kind, level );
@@ -524,7 +556,11 @@ int building_finish( int city_index, int op, int kind, int offset )
 			city_actorexp( city_index, config->exp, PATH_BUILDING_UPGRADE );
 		}
 
+		// 任务
+		quest_checkcomplete( &g_city[city_index] );
+
 		// 通知客户端更新状态
+		building_action( g_city[city_index].actor_index, kind, offset, 1 );
 	}
 	else if ( op == BUILDING_OP_DELETE )
 	{
@@ -548,6 +584,57 @@ int building_finish( int city_index, int op, int kind, int offset )
 	return 0;
 }
 
+// 免费加速
+int building_workerfree( int actor_index, int kind, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int freetime = global.worker_freetime;
+	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
+	{
+		if ( pCity->worker_free == 1 )
+		{
+			pCity->worker_free = 0;
+			pCity->worker_sec -= freetime;
+			if ( pCity->worker_sec <= 0 )
+			{
+				pCity->worker_sec = 0;
+				building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
+				pCity->worker_op = 0;
+				pCity->worker_sec = 0;
+				pCity->wnsec = 0;
+				pCity->worker_kind = 0;
+				pCity->worker_offset = -1;
+				building_sendworker( pCity->actor_index );
+			}
+			
+		}
+	}
+	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
+	{
+		if ( pCity->worker_free_ex == 1 )
+		{
+			pCity->worker_free_ex = 0;
+			pCity->worker_sec_ex -= freetime;
+			if ( pCity->worker_sec_ex <= 0 )
+			{
+				pCity->worker_sec_ex = 0;
+				building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
+				pCity->worker_op_ex = 0;
+				pCity->worker_sec_ex = 0;
+				pCity->wnsec_ex = 0;
+				pCity->worker_kind_ex = 0;
+				pCity->worker_offset_ex = -1;
+				building_sendworker( pCity->actor_index );
+			}
+		}
+	}
+	
+	return 0;
+}
+
 // 获取士兵数量
 int building_soldiers_total( int city_index, char kind )
 {
@@ -562,6 +649,18 @@ int building_soldiers_total( int city_index, char kind )
 		}
 	}
 	return total;
+}
+
+// 铁匠铺信息
+int building_smithy_send( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	SLK_NetS_BuildingSmithy pValue = { 0 };
+	pValue.m_forgingkind = g_city[city_index].forgingkind;
+	pValue.m_forgingsec = g_city[city_index].forgingsec;
+	pValue.m_forgingsec_need = equip_forgingtime( city_index, g_city[city_index].forgingkind );
+	netsend_buildingsmithy_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
 }
 
 void building_makestruct( Building *pBuilding, int offset, SLK_NetS_Building *pValue )
@@ -682,15 +781,95 @@ int building_sendlist( int actor_index )
 	pValue.m_worker_offset = pCity->worker_offset;
 	pValue.m_worker_op = pCity->worker_op;
 	pValue.m_worker_sec = pCity->worker_sec;
+	pValue.m_worker_needsec = pCity->wnsec;
 	pValue.m_worker_free = pCity->worker_free;
 	pValue.m_worker_kind_ex = pCity->worker_kind_ex;
 	pValue.m_worker_offset_ex = pCity->worker_offset_ex;
 	pValue.m_worker_op_ex = pCity->worker_op_ex;
 	pValue.m_worker_sec_ex = pCity->worker_sec_ex;
+	pValue.m_worker_needsec_ex = pCity->wnsec_ex;
 	pValue.m_worker_free_ex = pCity->worker_free_ex;
 	pValue.m_worker_expire_ex = pCity->worker_expire_ex;
 	pValue.m_levynum = pCity->levynum;
 	pValue.m_function= pCity->function;
+	pValue.m_forgingkind = pCity->forgingkind;
+	pValue.m_forgingsec = pCity->forgingsec;
+	pValue.m_forgingsec_need = equip_forgingtime( pCity->index, pCity->forgingkind );
 	netsend_buildinglist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 发送建造队列信息
+int building_sendworker( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Worker pValue = { 0 };
+	pValue.m_worker_kind = pCity->worker_kind;
+	pValue.m_worker_offset = pCity->worker_offset;
+	pValue.m_worker_op = pCity->worker_op;
+	pValue.m_worker_sec = pCity->worker_sec;
+	pValue.m_worker_needsec = pCity->wnsec;
+	pValue.m_worker_free = pCity->worker_free;
+	pValue.m_worker_kind_ex = pCity->worker_kind_ex;
+	pValue.m_worker_offset_ex = pCity->worker_offset_ex;
+	pValue.m_worker_op_ex = pCity->worker_op_ex;
+	pValue.m_worker_sec_ex = pCity->worker_sec_ex;
+	pValue.m_worker_needsec_ex = pCity->wnsec_ex;
+	pValue.m_worker_free_ex = pCity->worker_free_ex;
+	pValue.m_worker_expire_ex = pCity->worker_expire_ex;
+	netsend_worker_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 建筑升级信息
+int building_send_upgradeinfo( int actor_index, int kind, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_BuildingUpgradeInfo pValue = { 0 };
+	int level = building_getlevel( pCity->index, kind, building_offset2no( kind, offset ) );
+	if ( level >= g_building_upgrade[kind].maxnum - 1 )
+	{
+		pValue.m_maxlevel = g_building_upgrade[kind].maxnum;
+		netsend_buildingupgradeinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		return 0;
+	}
+	
+	BuildingUpgradeConfig *config = building_getconfig( kind, level+1 );
+	BuildingUpgradeConfig *config_old = building_getconfig( kind, level );
+	if ( config )
+	{
+		pValue.m_actorlevel = config->actorlevel;
+		pValue.m_citylevel = config->citylevel;
+		pValue.m_sec = config->sec;
+		pValue.m_silver = config->silver;
+		pValue.m_food = config->food;
+		pValue.m_wood = config->wood;
+		pValue.m_iron = config->iron;
+		for ( int tmpi = 0; tmpi < 8; tmpi++ )
+		{
+			pValue.m_new_value[tmpi] = config->value[tmpi];
+			pValue.m_old_value[tmpi] = config_old->value[tmpi];
+		}
+	}
+	pValue.m_maxlevel = g_building_upgrade[kind].maxnum;
+	netsend_buildingupgradeinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 建筑动作
+int building_action( int actor_index, short kind, short offset, short action )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_BuildingAction pValue = { 0 };
+	pValue.m_kind = kind;
+	pValue.m_offset = offset;
+	pValue.m_action = action;
+	netsend_buildingaction_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

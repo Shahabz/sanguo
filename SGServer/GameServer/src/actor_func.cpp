@@ -21,6 +21,7 @@
 #include "city.h"
 #include "building.h"
 #include "vip.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -227,19 +228,22 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 }
 
 // 修改名称
-int actor_changename( int actor_index, char *pname )
+int actor_changename( int actor_index, char *pname, int type )
 {
-	//if ( actor_index < 0 || actor_index >= g_maxactornum )
-	//	return -1;
-	//if ( !pname )
-	//	return -1;
-	//MYSQL_RES * res;
-	//MYSQL_ROW	row;
-	//char szSQL[1024];
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( !pname )
+		return -1;
+	MYSQL_RES * res;
+	MYSQL_ROW	row;
+	char szSQL[1024];
 
-	//int namelen = (int)strlen( pname );
-	//if ( namelen <= 0 || namelen >= NAME_SIZE )
-	//	return -1;
+	int namelen = (int)strlen( pname );
+	if ( namelen <= 0 || namelen >= NAME_SIZE )
+		return -1;
+	//if ( type == 1 )
+	//{
+
+	//}
 	//int costtype = 0;
 	//int itemkind = 216;
 	//if ( item_getitemnum( actor_index, itemkind ) <= 0 )
@@ -253,62 +257,45 @@ int actor_changename( int actor_index, char *pname )
 	//	costtype = 1;
 	//}
 
-	//char szText_newname[NAME_SIZE * 2 + 1] = {0};
-	//db_escape( (const char *)pname, szText_newname, 0 );
-	//sprintf( szSQL, "SELECT count(*) FROM actor_list WHERE name='%s'", szText_newname );
-	//if ( mysql_query( myGame, szSQL ) )
-	//{
-	//	printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
-	//	write_gamelog( "%s", szSQL );
-	//	return -1;
-	//}
-	//res = mysql_store_result( myGame );
-	//if ( row = mysql_fetch_row( res ) )
-	//{
-	//	if ( atoi( row[0] ) >= 1 )
-	//	{
-	//		actor_system_message( actor_index, 63 ); // 该名字已经有人使用
-	//		mysql_free_result( res );
-	//		return -1;
-	//	}
-	//}
-	//mysql_free_result( res );
+	char szText_newname[NAME_SIZE * 2 + 1] = {0};
+	db_escape( (const char *)pname, szText_newname, 0 );
+	sprintf( szSQL, "SELECT count(*) FROM actor_list WHERE name='%s'", szText_newname );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	if ( row = mysql_fetch_row( res ) )
+	{
+		if ( atoi( row[0] ) >= 1 )
+		{
+			actor_system_message( actor_index, 63 ); // 该名字已经有人使用
+			mysql_free_result( res );
+			return -1;
+		}
+	}
+	mysql_free_result( res );
 
-	//strncpy( g_actors[actor_index].name, pname, NAME_SIZE );
-	//g_actors[actor_index].name[NAME_SIZE - 1] = 0;
+	strncpy( g_actors[actor_index].name, pname, NAME_SIZE );
+	g_actors[actor_index].name[NAME_SIZE - 1] = 0;
 
-	//City *pCity = city_getptr( actor_index );
-	//if ( !pCity )
-	//	return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 
-	//strncpy( pCity->laird_name, pname, NAME_SIZE );
-	//pCity->laird_name[NAME_SIZE - 1] = 0;
+	strncpy( pCity->name, pname, NAME_SIZE );
+	pCity->name[NAME_SIZE - 1] = 0;
 
-	//sprintf( szSQL, "UPDATE actor_list SET name='%s' WHERE actorid=%d", szText_newname, g_actors[actor_index].actorid );
-	//if ( mysql_query( myGame, szSQL ) )
-	//{
-	//	printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
-	//	write_gamelog( "%s", szSQL );
-	//	return -1;
-	//}
-	//sprintf( szSQL, "UPDATE club_asklist SET name='%s' WHERE cityid=%d", szText_newname, pCity->cityid );
-	//if ( mysql_query( myGame, szSQL ) )
-	//{
-	//	printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
-	//	write_gamelog( "%s", szSQL );
-	//	return -1;
-	//}
-
-	//Club *pClub = club_getptr( actor_index );
-	//if ( pClub )
-	//{
-	//	if ( pClub->m_leaderid == g_actors[actor_index].actorid )
-	//	{
-	//		strncpy( pClub->m_leadername, pname, NAME_SIZE );
-	//		pClub->m_leadername[NAME_SIZE - 1] = 0;
-	//	}
-
-	//}
+	sprintf( szSQL, "UPDATE actor_list SET name='%s' WHERE actorid=%d", szText_newname, g_actors[actor_index].actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	
 	//actor_system_message( actor_index, 64 ); // 更名成功！
 	//if ( costtype == 0 )
 	//{
@@ -318,9 +305,16 @@ int actor_changename( int actor_index, char *pname )
 	//{
 	//	actor_change_token( actor_index, -item_getprice( itemkind ), PATH_ACTOR_BUY, TOKEN_ACTOR_BUY_CHANGENAME );
 	//}
-	//actor_getinfo( actor_index );
-	//// 通知到城外
-	//mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
+	SLK_NetS_ChangeName pValue = { 0 };
+	strcpy( pValue.m_name, g_actors[actor_index].name );
+	pValue.m_name_length = strlen( pValue.m_name );
+	netsend_changename_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATAINDEX_CREATENAME, 0, 0, 1 );
+
+	// 通知到城外
+	mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
 	return 0;
 }
 

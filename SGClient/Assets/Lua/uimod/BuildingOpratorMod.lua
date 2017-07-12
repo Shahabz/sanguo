@@ -5,6 +5,7 @@ local m_uiUpgrade = nil; --UnityEngine.GameObject
 local m_uiEnter = nil; --UnityEngine.GameObject
 local m_uiTrain = nil; --UnityEngine.GameObject
 local m_uiSpeed = nil; --UnityEngine.GameObject
+local m_uiUpgradeCenter = nil; --UnityEngine.GameObject
 
 local m_kind = 0;
 local m_offset = -1;
@@ -67,6 +68,7 @@ function BuildingOpratorModOnAwake( gameObject )
 	m_uiEnter = objs[2];
 	m_uiTrain = objs[3];
 	m_uiSpeed = objs[4];
+	m_uiUpgradeCenter = objs[5];
    
     BuildingOpratorModClose();
 end
@@ -125,11 +127,14 @@ function BuildingOpratorModShow( show, kind, offset, parent )
             local op = m_uiOprator.transform:GetChild(tmpi).gameObject:SetActive(false);
         end
 		
-		m_uiUpgrade:SetActive(true);
-	
 		if m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+			m_uiUpgrade:SetActive(true);
 			m_uiTrain:SetActive(true);
+		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
+			m_uiUpgrade:SetActive(false);
+			m_uiUpgradeCenter:SetActive(true);
 		else
+			m_uiUpgrade:SetActive(true);
 			m_uiEnter:SetActive(true);
 		end
 

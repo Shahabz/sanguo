@@ -64,6 +64,12 @@ int netsend_quest_S( int actor_index, char send_type, SLK_NetS_Quest *pValue );
 int netsend_questlist_S( int actor_index, char send_type, SLK_NetS_QuestList *pValue );
 int netsend_questaward_S( int actor_index, char send_type, SLK_NetS_QuestAward *pValue );
 int netsend_function_S( int actor_index, char send_type, SLK_NetS_Function *pValue );
+int netsend_cityguard_S( int actor_index, char send_type, SLK_NetS_CityGuard *pValue );
+int netsend_cityguardlist_S( int actor_index, char send_type, SLK_NetS_CityGuardList *pValue );
+int netsend_cityguardsec_S( int actor_index, char send_type, SLK_NetS_CityGuardSec *pValue );
+int netsend_buildingsmithy_S( int actor_index, char send_type, SLK_NetS_BuildingSmithy *pValue );
+int netsend_changename_S( int actor_index, char send_type, SLK_NetS_ChangeName *pValue );
+int netsend_buildingaction_S( int actor_index, char send_type, SLK_NetS_BuildingAction *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

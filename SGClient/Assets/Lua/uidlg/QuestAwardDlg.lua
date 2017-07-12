@@ -3,6 +3,8 @@ local m_Dlg = nil;
 local m_uiQuestName = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Award = nil; --UnityEngine.GameObject
+local m_ObjectPool = nil;
+local m_questid = 0;
 
 -- 打开界面
 function QuestAwardDlgOpen()
@@ -14,7 +16,13 @@ function QuestAwardDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		m_ObjectPool:Release( "m_uiUIP_Award", v );
+    end
 	eye.uiManager:Close( "QuestAwardDlg" );
 end
 
@@ -44,6 +52,10 @@ function QuestAwardDlgOnAwake( gameObject )
 	m_uiQuestName = objs[0];
 	m_uiContent = objs[1];
 	m_uiUIP_Award = objs[2];
+	
+	-- 对象池
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("m_uiUIP_Award", 3, 3, m_uiUIP_Award);
 end
 
 -- 界面初始化时调用
@@ -75,15 +87,33 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+-- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,m_type=0;
 function QuestAwardDlgShow( recvValue )
 	QuestAwardDlgOpen()
-	clearChild( m_uiContent );
+	m_questid = recvValue.m_questid;
 	
+	-- 任务名
+	SetText( m_uiQuestName, QuestName( recvValue.m_type, recvValue ) );
+	
+	-- 奖励
+	for i=1, recvValue.m_count, 1 do
+		local sprite, name = AwardInfo( recvValue.m_list[i].m_kind )
+		local uiObj = m_ObjectPool:Get( "m_uiUIP_Award" );
+		uiObj.transform:SetParent( m_uiContent.transform );
+		SetImage( uiObj.transform:Find("Shape"), sprite );
+		SetText( uiObj.transform:Find("Name"), name );
+		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
+	end
 end
 
+-- 领取奖励
 function QuestAwardDlgGet()
-	
+	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
 	QuestAwardDlgClose();
+	QuestAwardDlgNextTalk( m_questid );
 end
 
+-- 是否有NPC说话
+function QuestAwardDlgNextTalk( questid )
 
+end

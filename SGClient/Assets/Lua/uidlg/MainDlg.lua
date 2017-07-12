@@ -31,6 +31,7 @@ local m_uiWorkerEx = nil; --UnityEngine.GameObject
 local m_uiFood = nil; --UnityEngine.GameObject
 local m_uiFoodNum = nil; --UnityEngine.GameObject
 local m_uiAutoBuild = nil; --UnityEngine.GameObject
+local m_uiQuestText = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
 
 local m_uiBuildingShape = {nil,nil}
@@ -84,16 +85,17 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			local kind = 21;
 			local offsetlist ={ 49, 50, 51, 52 }
-			for i=1, 1, 1 do
+			for i=1, 2, 1 do
 				local offset = math.random( 0, 63 )
 				--local offset = offsetlist[i]
-				BuildingGetDlgShow( kind,  offset, {m_kind=kind,m_offset=offset,m_level=1} );
+				BuildingGetDlgShow( {m_kind=kind,m_offset=offset,m_level=1} );
 			end
 		elseif nControlID == 3 then
 			QuestAwardDlgShow();
 		
 		elseif nControlID == 5 then
 			NpcTalk( "主公，大事不妙" )
+			NpcTalkWait( BuildingGetDlgShow, {m_kind=21,m_offset=0,m_level=1} )
 		
 		elseif nControlID == 6 then
 			--{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
@@ -116,15 +118,24 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 11 then
 			BagDlgShow();
 		
+		elseif nControlID == 12 then
+			ChangeNameDlgShow();
+			
 		-- 返回登录
 		elseif nControlID == 18 then
 			MsgBox( T( 518 ),function()
 				GameManager.Restart();
 				GameManager.Logout( 1 );
 			end )
+		
+		-- 聊天
 		elseif nControlID == 30 then
 			ChatDlgShow();
 		
+		-- 任务导航
+		elseif nControlID == 31 then
+			QuestGoto( 1 );
+			
 		-- 点击建造队列
 		elseif nControlID == 50 then
 			City.GoToWorker()
@@ -241,6 +252,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiFood = objs[28];
 	m_uiFoodNum = objs[29];
 	m_uiAutoBuild = objs[30];
+	m_uiQuestText = objs[31];
 	
 end 
 
@@ -333,9 +345,31 @@ function MainDlgSetVipLevel()
 	m_uiVipLevel:GetComponent( "UIText" ).text = "VIP "..GetPlayer().m_viplevel;
 end
 
+-- 任务
+function MainDlgSetQuest()
+	if CacheQuest == nil then
+		return;
+	end
+	if CacheQuest.m_list[1] == nil then
+		return;
+	end
+	SetText( m_uiQuestText, QuestName( -1, CacheQuest.m_list[1] ) )
+	
+	-- 弹出改名写死
+	if CacheQuest.m_list[1].m_questid == 4 then
+		if NpcTalkIsShow() == true then
+			NpcTalkWait( ChangeNameDlgShow, nil )
+		else
+			ChangeNameDlgShow();
+		end
+	end
+end
+
 -- 建造队列
 function MainDlgSetWorker()
-
+	
+	MainDlgWorkerObjectInit();
+		
 	MainDlgSetWorkerObject( 0,
 	m_uiWorker, 
 	GetPlayer().m_worker_kind, 
@@ -351,8 +385,7 @@ function MainDlgSetWorker()
 	GetPlayer().m_worker_needsec_ex, 
 	GetPlayer().m_worker_sec_ex,
 	GetPlayer().m_worker_expire_ex );
-	
-	MainDlgWorkerObjectInit();
+
 end
 
 function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, expire )
@@ -376,6 +409,9 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 		uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
+		
+		-- 停止动画
+		MainDlgWorkerStop( type+1 )
 		return;
 	end
 	

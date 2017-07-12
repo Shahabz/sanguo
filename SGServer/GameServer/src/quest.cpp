@@ -133,10 +133,24 @@ int quest_give( int actor_index )
 			pCity->questid[0] = questid;
 			pCity->questvalue[0] = 0;
 
+			for ( int i = 0; i < 2; i++ )
+			{
+				switch ( questinfo->trigger_type[i] )
+				{
+				case QUEST_TRIGGER_TYPE_NPCTALK: // 触发NPC说一段话	
+					npc_talk( actor_index, questinfo->trigger_kind[i] );
+					break;
+				case QUEST_TRIGGER_TYPE_AWARD: //奖励
+					award_getaward( actor_index, questinfo->trigger_kind[i], questinfo->trigger_value[i], 0, PATH_QUEST, NULL );
+					break;
+				}
+			}
+			
 			if ( questid == 1 )
 			{
 				quest_setcomplete( actor_index, questid, QUEST_COMPLETEFLAG_SUCCESS );
 			}
+
 		}
 		break;
 	}
@@ -173,6 +187,8 @@ int quest_give( int actor_index )
 		if ( has == 0 )
 			break;
 	}
+
+	quest_sendlist( actor_index );
 	return 0;
 }
 
@@ -280,7 +296,7 @@ int quest_check( int actor_index, int questid, int *value )
 		}
 		else if( questinfo->datatype == QUEST_DATAINDEX_BUILDING_LEVEL )
 		{ // 建筑等级
-			int buildinglevel = building_getlevel( g_actors[actor_index].city_index, questinfo->datakind, questinfo->dataoffset );
+			int buildinglevel = building_getlevel( g_actors[actor_index].city_index, questinfo->datakind, questinfo->dataoffset-1 );
 			if ( value )
 				*value = buildinglevel;
 			if ( buildinglevel >= questinfo->needvalue )
@@ -486,6 +502,7 @@ int quest_sendlist( int actor_index )
 			pValue.m_list[pValue.m_count].m_datatype = g_questinfo[questid].datatype;
 			pValue.m_list[pValue.m_count].m_datakind = g_questinfo[questid].datakind;
 			pValue.m_list[pValue.m_count].m_dataoffset = (char)g_questinfo[questid].dataoffset;
+			pValue.m_list[pValue.m_count].m_nameid = g_questinfo[questid].nameid;
 			if ( flag == QUEST_COMPLETEFLAG_SUCCESS )
 			{ 
 				pValue.m_list[pValue.m_count].m_value = g_questinfo[questid].needvalue;
@@ -517,6 +534,12 @@ int quest_sendawardinfo( int actor_index, int questid )
 		return -1;
 	SLK_NetS_QuestAward pValue = { 0 };
 	pValue.m_questid = questid;
+	pValue.m_datatype = g_questinfo[questid].datatype;
+	pValue.m_datakind = g_questinfo[questid].datakind;
+	pValue.m_dataoffset = (char)g_questinfo[questid].dataoffset;
+	pValue.m_nameid = g_questinfo[questid].nameid;
+	pValue.m_value = g_questinfo[questid].needvalue;
+	pValue.m_needvalue = g_questinfo[questid].needvalue;
 	pValue.m_count = 0;
 	for ( int tmpi = 0; tmpi < 5; tmpi++ )
 	{

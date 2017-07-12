@@ -52,6 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224532600988671314}
   - component: {fileID: 114679817107511310}
+  - component: {fileID: 114607057710938384}
   m_Layer: 5
   m_Name: UIP_Guard
   m_TagString: Untagged
@@ -75,7 +76,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1370486116837878
 GameObject:
   m_ObjectHideFlags: 1
@@ -243,7 +244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1693347116331932
 GameObject:
   m_ObjectHideFlags: 1
@@ -353,6 +354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224874864206792404}
   - component: {fileID: 114315691647772208}
+  - component: {fileID: 114707379678676340}
   m_Layer: 5
   m_Name: CityGuardDlg
   m_TagString: UI
@@ -376,7 +378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1985925820718142
 GameObject:
   m_ObjectHideFlags: 1
@@ -393,7 +395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &95079666714974960
 Animator:
   serializedVersion: 3
@@ -460,7 +462,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u57CE\u9632\u519B 4/11"
+  m_Text: "\u57CE\u9632\u519B 0/0"
   localizeID: 0
   rtlAlignment: 0
   rtlReverseSign: 
@@ -637,7 +639,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u6D88\u9664\u540E\u53EF\u7ACB\u5373\u62DB\u52DF"
-  localizeID: 0
+  localizeID: 653
   rtlAlignment: 0
   rtlReverseSign: 
 --- !u!114 &114315691647772208
@@ -787,7 +789,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  controlID: 1
+  controlID: 101
   clickInterval: 0
   uiMod: {fileID: 114315691647772208}
   audioID: 0
@@ -851,9 +853,26 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u7ACB\u5373\u62DB\u52DF"
-  localizeID: 0
+  localizeID: 655
   rtlAlignment: 0
   rtlReverseSign: 
+--- !u!114 &114607057710938384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1191168468719298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d82dfc47d094e50b54e9da1a33aca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relatedGameObject:
+  - {fileID: 1594651143284974}
+  - {fileID: 1370486116837878}
+  - {fileID: 1183557185134936}
+  - {fileID: 1729770766648192}
+  - {fileID: 1925585794119542}
 --- !u!114 &114679817107511310
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -930,6 +949,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114707379678676340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1930446286163172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891e66edf1cba434486bcc4de5e8b27e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114721462856294776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1010,7 +1040,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  controlID: 1
+  controlID: 102
   clickInterval: 0
   uiMod: {fileID: 114315691647772208}
   audioID: 0
@@ -1074,7 +1104,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u6D88\u9664\u65F6\u95F4"
-  localizeID: 0
+  localizeID: 654
   rtlAlignment: 0
   rtlReverseSign: 
 --- !u!114 &114961892026759552

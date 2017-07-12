@@ -141,11 +141,11 @@ function proc_buildinglist_C( recvValue )
 	end
 	
 	for i=1, recvValue.m_res_count, 1 do
-		proc_buildingres_C( recvValue.res[i] )
+		proc_buildingres_C( recvValue.m_res[i] )
 	end
 	
 	
-	GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
+	--[[GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
 	GetPlayer():SetBuilding( 2,{ m_kind = 2,m_offset = 1,m_level = 1,m_sec = 60,m_needsec = 60,m_quick = 0, m_overvalue=0 } )
 	GetPlayer():SetBuilding( 3,{ m_kind = 3,m_offset = 2,m_level = 1,m_sec = 30,m_needsec = 30,m_quick = 0, m_overvalue=0 } )
 	GetPlayer():SetBuilding( 4,{ m_kind = 4,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
@@ -172,13 +172,13 @@ function proc_buildinglist_C( recvValue )
 	recvValue.m_worker_offset = 2;
 	recvValue.m_worker_sec = 60;
 	recvValue.m_worker_needsec = 60;
-	recvValue.m_worker_free = 1;
+	recvValue.m_worker_free = 1;--]]
 --[[	recvValue.m_worker_kind_ex = 1;
 	recvValue.m_worker_offset_ex = 0;
 	recvValue.m_worker_sec_ex = 3600;
 	recvValue.m_worker_needsec_ex = 3600;
 	recvValue.m_worker_expire_ex = 3000;--]]
-	recvValue.m_function = 127
+	--recvValue.m_function = 127
 	
 	GetPlayer().m_function = recvValue.m_function;
 	-- Ìú½³ÆÌ
@@ -629,19 +629,31 @@ end
 -- m_path=0,m_building={m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,},
 function proc_buildingget_C( recvValue )
 	-- process.
-	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+	if NpcTalkIsShow() == true then
+		NpcTalkWait( BuildingGetDlgShow, recvValue.m_building )
+	else
+		BuildingGetDlgShow( recvValue.m_building );
+	end
 end
 
 -- m_path=0,m_barracks={m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,},
 function proc_buildingbarracksget_C( recvValue )
 	-- process.
-	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+	if NpcTalkIsShow() == true then
+		NpcTalkWait( BuildingGetDlgShow, recvValue.m_barracks )
+	else
+		BuildingGetDlgShow( recvValue.m_barracks );
+	end
 end
 
 -- m_path=0,m_res={m_kind=0,m_offset=0,m_level=0,},
 function proc_buildingresget_C( recvValue )
 	-- process.
-	BuildingGetDlgShow( recvValue.m_building.m_kind, recvValue.m_building.m_offset, recvValue.m_building );
+	if NpcTalkIsShow() == true then
+		NpcTalkWait( BuildingGetDlgShow, recvValue.m_res )
+	else
+		BuildingGetDlgShow( recvValue.m_res );
+	end
 end
 
 -- m_corps=0,m_soldiers=0,m_add=0,m_path=0,
@@ -666,19 +678,23 @@ function proc_traininfo_C( recvValue )
 	
 end
 
--- m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},
+-- m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,
 function proc_quest_C( recvValue )
 	-- process.
 end
 
--- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},[m_count]},
+-- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,[m_count]},
 function proc_questlist_C( recvValue )
 	-- process.
+	CacheQuestClear();
+	CacheQuestSet( recvValue );
+	MainDlgSetQuest();
 end
 
--- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},
+-- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,
 function proc_questaward_C( recvValue )
 	-- process.
+	QuestAwardDlgShow( recvValue )
 end
 
 -- m_function=0,m_openoffset=0,m_path=0,
@@ -698,5 +714,44 @@ function proc_function_C( recvValue )
 		BuildingGetDlgShow( kind, 0, { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
 	end
 
+end
+
+
+-- m_corps=0,m_color=0,m_shape=0,m_level=0,m_soldiers=0,m_troops=0,m_offset=0,
+function proc_cityguard_C( recvValue )
+	-- process.
+	CityGuardDlgSet( recvValue );
+end
+
+-- m_count=0,m_list={m_corps=0,m_color=0,m_shape=0,m_level=0,m_soldiers=0,m_troops=0,m_offset=0,[m_count]},m_guardsec=0,
+function proc_cityguardlist_C( recvValue )
+	-- process.
+	CityGuardDlgRecv( recvValue );
+end
+
+-- m_gusrdsec=0,
+function proc_cityguardsec_C( recvValue )
+	-- process.
+	CityGuardDlgChangeSec( recvValue );
+end
+
+-- m_forgingkind=0,m_forgingsec=0,m_forgingsec_need=0,
+function proc_buildingsmithy_C( recvValue )
+	-- process.
+end
+
+-- m_name_length=0,m_name="[m_name_length]",
+function proc_changename_C( recvValue )
+	-- process.
+	GetPlayer().m_name = recvValue.m_name;
+	ChangeNameDlgClose();
+end
+
+-- m_kind=0,m_offset=0,m_action=0,
+function proc_buildingaction_C( recvValue )
+	-- process.
+	if recvValue.m_action == 1 then
+		City.BuildingSetUpgradeing( recvValue.m_kind, recvValue.m_offset, 0, 0 )
+	end
 end
 

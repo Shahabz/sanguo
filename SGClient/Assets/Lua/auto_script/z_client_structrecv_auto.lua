@@ -155,6 +155,9 @@ function struct_NetS_BuildingList_recv( buffer )
 	recvValue.m_worker_free_ex = buffer:ReadSByte();
 	recvValue.m_worker_expire_ex = buffer:ReadInt();
 	recvValue.m_function = buffer:ReadInt();
+	recvValue.m_forgingkind = buffer:ReadShort();
+	recvValue.m_forgingsec = buffer:ReadInt();
+	recvValue.m_forgingsec_need = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -749,6 +752,7 @@ function struct_NetS_Quest_recv( buffer )
 	for tmpi=1,5,1 do
 		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
 	end
+	recvValue.m_nameid = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -774,6 +778,13 @@ function struct_NetS_QuestAward_recv( buffer )
 		tmpValue = struct_NetS_AwardInfo_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_datatype = buffer:ReadSByte();
+	recvValue.m_datakind = buffer:ReadShort();
+	recvValue.m_dataoffset = buffer:ReadSByte();
+	recvValue.m_value = buffer:ReadInt();
+	recvValue.m_needvalue = buffer:ReadInt();
+	recvValue.m_nameid = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -782,6 +793,60 @@ function struct_NetS_Function_recv( buffer )
 	recvValue.m_function = buffer:ReadInt();
 	recvValue.m_openoffset = buffer:ReadSByte();
 	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_CityGuard_recv( buffer )
+	local recvValue = {};
+	recvValue.m_corps = buffer:ReadSByte();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_shape = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_soldiers = buffer:ReadInt();
+	recvValue.m_troops = buffer:ReadInt();
+	recvValue.m_offset = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_CityGuardList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CityGuard_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_guardsec = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_CityGuardSec_recv( buffer )
+	local recvValue = {};
+	recvValue.m_guardsec = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_BuildingSmithy_recv( buffer )
+	local recvValue = {};
+	recvValue.m_forgingkind = buffer:ReadShort();
+	recvValue.m_forgingsec = buffer:ReadInt();
+	recvValue.m_forgingsec_need = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ChangeName_recv( buffer )
+	local recvValue = {};
+	recvValue.m_name_length = buffer:ReadShort();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_length );
+	return recvValue;
+end
+
+function struct_NetS_BuildingAction_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_offset = buffer:ReadShort();
+	recvValue.m_action = buffer:ReadShort();
 	return recvValue;
 end
 

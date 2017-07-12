@@ -15,6 +15,8 @@
 #include "mapunit.h"
 #include "map.h"
 #include "server_netsend_auto.h"
+#include "system.h"
+#include "item.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -30,6 +32,9 @@ extern Map g_map;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
+
+extern CityGuardInfo *g_cityguardinfo;
+extern int g_cityguardinfo_maxnum;
 
 extern int g_city_maxindex;
 City *g_city = NULL;
@@ -68,6 +73,9 @@ int city_loadcb( int city_index )
 
 	// 读取上阵英雄的装备
 	actor_equip_load_auto( g_city[city_index].actorid, city_index, city_equip_getptr, "actor_equip" );
+
+	// 读取城墙守卫
+	city_guard_load_auto( g_city[city_index].actorid, city_index, city_guard_getptr, "city_guard" );
 
 	// 添加到地图显示单元
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
@@ -127,6 +135,10 @@ int city_single_save( City *pCity, FILE *fp )
 			continue;
 		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
 	}
+
+	// 城墙守卫
+	db_delete( pCity->actorid, "city_guard", fp );
+	city_guard_batch_save_auto( pCity->actorid, pCity->guard, CITY_GUARD_MAX, "city_guard", fp );
 	return 0;
 }
 
@@ -237,6 +249,8 @@ void city_logic_sec()
 				g_city[city_index].worker_sec = 0;
 				g_city[city_index].worker_kind = 0;
 				g_city[city_index].worker_offset = -1;
+				g_city[city_index].wnsec = 0;
+				building_sendworker( g_city[city_index].actor_index );
 			}
 		}
 
@@ -251,15 +265,42 @@ void city_logic_sec()
 				g_city[city_index].worker_sec_ex = 0;
 				g_city[city_index].worker_kind_ex = 0;
 				g_city[city_index].worker_offset_ex = -1;
+				g_city[city_index].wnsec_ex = 0;
+				building_sendworker( g_city[city_index].actor_index );
 			}
 		}
 
 		// 普通建筑逻辑
 		for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
 		{
-			if ( g_city[city_index].building[tmpi].kind <= 0 )
+			char kind = g_city[city_index].building[tmpi].kind;
+			if ( kind <= 0 )
 				continue;
-			//g_city[city_index].building[tmpi].sec -= 1;
+			switch ( kind )
+			{
+			case BUILDING_Tech:
+				{
+					if ( g_city[city_index].building[tmpi].sec > 0 )
+					{
+						g_city[city_index].building[tmpi].sec -= 1;
+						if ( g_city[city_index].building[tmpi].sec <= 0 )
+						{
+							g_city[city_index].building[tmpi].sec = 0;
+							g_city[city_index].building[tmpi].needsec = 0;
+							g_city[city_index].building[tmpi].overvalue = g_city[city_index].building[tmpi].value;
+							g_city[city_index].building[tmpi].value = 0;
+							building_sendinfo( g_city[city_index].actor_index, kind );
+						}		
+					}
+				}
+				break;
+			case BUILDING_Craftsman:
+				{
+
+				}
+				break;
+			}
+			
 		}
 
 		// 兵营建筑逻辑
@@ -273,8 +314,9 @@ void city_logic_sec()
 				if ( g_city[city_index].building_barracks[tmpi].trainsec <= 0 )
 				{
 					// 招募完毕
-					g_city[city_index].building_barracks[tmpi].soldiers += g_city[city_index].building_barracks[tmpi].trainnum;
+					g_city[city_index].building_barracks[tmpi].overnum += g_city[city_index].building_barracks[tmpi].trainnum;
 					g_city[city_index].building_barracks[tmpi].trainsec = 0;
+					g_city[city_index].building_barracks[tmpi].trainsec_need = 0;
 					g_city[city_index].building_barracks[tmpi].trainnum = 0;
 					if ( g_city[city_index].building_barracks[tmpi].queue )
 					{
@@ -305,8 +347,45 @@ void city_logic_sec()
 				g_city[city_index].levynum += 1;
 			}
 		}
+
+		// 装备洗炼
+		if ( g_city[city_index].equip_washnum < global.equip_wash_max )
+		{
+			g_city[city_index].equip_washsec -= 1;
+			if ( g_city[city_index].equip_washsec <= 0 )
+			{
+				g_city[city_index].equip_washsec = global.equip_wash_sec;
+				g_city[city_index].equip_washnum += 1;
+			}
+		}
 		
+		// 英雄洗炼
+		if ( g_city[city_index].hero_washnum < global.hero_wash_max )
+		{
+			g_city[city_index].hero_washsec -= 1;
+			if ( g_city[city_index].hero_washsec <= 0 )
+			{
+				g_city[city_index].hero_washsec = global.hero_wash_sec;
+				g_city[city_index].hero_washnum += 1;
+			}
+		}
 		
+		// 守卫冷却
+		if ( g_city[city_index].guardsec > 0 )
+		{
+			g_city[city_index].guardsec -= 1;
+		}
+		
+		// 装备打造
+		if ( g_city[city_index].forgingsec > 0 )
+		{
+			g_city[city_index].forgingsec -= 1;
+			if ( g_city[city_index].forgingsec <= 0 )
+			{
+				// 通知打造完毕
+				building_smithy_send( city_index );
+			}
+		}
 	}
 //#ifdef WIN32
 //	DWORD e = timeGetTime();
@@ -604,5 +683,198 @@ int city_changefriendship( int city_index, int value, short path )
 	pValue.m_total = g_city[city_index].friendship;
 	pValue.m_path = path;
 	netsend_changefriendship_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+CityGuardInfoConfig *city_guard_config( int monsterid, int color )
+{
+	if ( monsterid <= 0 || monsterid >= g_cityguardinfo_maxnum )
+		return NULL;
+	if ( color < 0 || color >= g_cityguardinfo[monsterid].maxnum )
+		return NULL;
+	return &g_cityguardinfo[monsterid].config[color];
+}
+
+CityGuard *city_guard_getptr( int city_index, int offset )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return NULL;
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return NULL;
+	return &g_city[city_index].guard[offset];
+}
+
+// 添加城墙守卫
+int city_guard_call( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].guardsec > 0 )
+		return -1;
+	int count = 0;
+	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+	{
+		if ( g_city[city_index].guard[tmpi].monsterid > 0 )
+			count += 1;
+	}
+	if ( count >= building_getlevel( city_index, BUILDING_Wall, -1 ) )
+	{
+		return -1;
+	}
+	
+	int offset = -1;
+	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+	{
+		if ( g_city[city_index].guard[tmpi].monsterid <= 0 )
+		{
+			offset = tmpi;
+			break;
+		}
+	}
+	if ( offset < 0 )
+	{
+		return -1;
+	}
+	
+	char monsterid = random( 1, g_cityguardinfo_maxnum-1 );
+	char corps = random( 0, 2 );
+	char color = random( 0, 2 );
+	char shape = random( 0, 7 );
+	unsigned char minlevel = g_city[city_index].level - 10;
+	unsigned char maxlevel = g_city[city_index].level + 10;
+	minlevel = minlevel <= 0 ? 1 : minlevel;
+	maxlevel = maxlevel > global.actorlevel_max ? global.actorlevel_max : maxlevel;
+	char level = random( minlevel, maxlevel );
+
+	CityGuardInfoConfig *config = city_guard_config( monsterid, color );
+	if ( config )
+	{
+		g_city[city_index].guard[offset].monsterid = monsterid;
+		g_city[city_index].guard[offset].corps = corps;
+		g_city[city_index].guard[offset].color = color;
+		g_city[city_index].guard[offset].shape = shape;
+		g_city[city_index].guard[offset].level = level;
+		g_city[city_index].guard[offset].soldiers = TROOPS( level, config->troops, config->troops_growth );
+		g_city[city_index].guardsec = global.city_guard_sec;
+	}
+	city_guard_send( g_city[city_index].actor_index, offset );
+	city_guard_sendsec( g_city[city_index].actor_index );
+	return 0;
+}
+
+// 升级城墙守卫
+int city_guard_upgrade( int city_index, int offset )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return -1;
+	char monsterid = g_city[city_index].guard[offset].monsterid;
+	char color = g_city[city_index].guard[offset].color;
+	char level = g_city[city_index].guard[offset].level;
+	if ( color < ITEM_COLOR_LEVEL_GREEN )
+	{
+		if ( rand()%100 < 50  )
+		{
+			color += 1;
+		}	
+	}
+	
+	if ( level < g_city[city_index].level + 10 )
+	{
+		level += 1;
+	}
+	
+	CityGuardInfoConfig *config = city_guard_config( monsterid, color );
+	if ( config )
+	{
+		if ( actor_change_token( g_city[city_index].actor_index, -global.city_guard_up_token, PATH_GUARD_UPGRADE, 0 ) < 0 )
+		{
+			return -1;
+		}	
+		g_city[city_index].guard[offset].color = color;
+		g_city[city_index].guard[offset].level = level;
+		g_city[city_index].guard[offset].soldiers = TROOPS( level, config->troops, config->troops_growth );
+		actor_change_token( g_city[city_index].actor_index, global.city_guard_up_token, PATH_GUARD_UPGRADE, 0 );
+		city_guard_send( g_city[city_index].actor_index, offset );
+	}
+	
+	return 0;
+}
+
+// 消除冷却
+int city_guard_clearcd( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].guardsec <= 0 )
+		return -1;
+	int token = (int)ceil( (g_city[city_index].guardsec / (float)global.city_guard_sec_token) );
+	if ( actor_change_token( g_city[city_index].actor_index, -token, PATH_GUARD_UPGRADE, 0 ) < 0 )
+		return -1;
+	g_city[city_index].guardsec = 0;
+	city_guard_sendsec( g_city[city_index].actor_index );
+	return 0;
+}
+
+void city_guard_makestruct( City *pCity, SLK_NetS_CityGuard *pValue, char offset )
+{
+	if ( !pCity )
+		return;
+	if ( !pValue )
+		return;
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return;
+	pValue->m_offset = offset;
+	pValue->m_corps = pCity->guard[offset].corps;
+	pValue->m_color = pCity->guard[offset].color;
+	pValue->m_level = pCity->guard[offset].level;
+	pValue->m_shape = pCity->guard[offset].shape;
+	pValue->m_soldiers = pCity->guard[offset].soldiers;
+	CityGuardInfoConfig *config = city_guard_config( pCity->guard[offset].monsterid, pCity->guard[offset].color );
+	if ( config )
+	{
+		pValue->m_troops = TROOPS( pCity->guard[offset].level, config->troops, config->troops_growth );
+	}
+}
+
+int city_guard_send( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_CityGuard pValue = { 0 };
+	city_guard_makestruct( pCity, &pValue, offset );
+	netsend_cityguard_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int city_guard_sendsec( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_CityGuardSec pValue = { 0 };
+	pValue.m_guardsec = pCity->guardsec;
+	netsend_cityguardsec_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int city_guard_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_CityGuardList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+	{
+		if ( pCity->guard[tmpi].monsterid <= 0 )
+			continue;
+		city_guard_makestruct( pCity, &pValue.m_list[pValue.m_count], tmpi );
+		pValue.m_count += 1;
+	}
+	netsend_cityguardlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

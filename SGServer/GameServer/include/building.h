@@ -71,8 +71,14 @@ int building_delete( int city_index, int kind, int offset );
 // 建筑升级或拆除操作完成
 int building_finish( int city_index, int op, int kind, int offset );
 
+// 免费加速
+int building_workerfree( int actor_index, int kind, int offset );
+
 // 获取士兵数量
 int building_soldiers_total( int city_index, char kind );
+
+// 铁匠铺信息
+int building_smithy_send( int city_index );
 
 // 拼发送结构
 void building_makestruct( Building *pBuilding, int offset, SLK_NetS_Building *pValue );
@@ -87,4 +93,12 @@ int building_sendinfo_res( int actor_index, int offset );
 // 发送所有建筑列表
 int building_sendlist( int city_index );
 
+// 发送建造队列信息
+int building_sendworker( int actor_index );
+
+// 建筑升级信息
+int building_send_upgradeinfo( int actor_index, int kind, int offset );
+
+// 建筑动作
+int building_action( int actor_index, short kind, short offset, short action );
 #endif

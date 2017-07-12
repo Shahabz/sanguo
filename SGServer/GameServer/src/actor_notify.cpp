@@ -55,3 +55,9 @@ int actor_system_message( int actor_index, int msgid )
 	return 0;
 }
 
+// npc¶Ô»°
+int npc_talk( int actor_index, int textid )
+{
+	actor_notify_value( actor_index, NOTIFY_NPCTALK, 1, &textid, NULL );
+	return 0;
+}

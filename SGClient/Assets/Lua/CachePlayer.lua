@@ -150,6 +150,27 @@ function Player:GetBuilding( kind, offset )
 	end 
 end
 
+function Player:BuildingLevel( kind, offset )
+	local pBuilding = self:GetBuilding( kind, offset );
+	if pBuilding == nil then
+		return 0;
+	end
+	return pBuilding.m_level;
+end
+
+-- 找一个等级最低的资源田
+function Player:BuildingResMinLevel( kind )
+	local minlevel = 99;
+	local offset = -1;
+	for k, v in pairs( self.m_buildings_res[kind] ) do
+		if v.m_level < minlevel then
+			minlevel = v.m_level;
+			offset = k;
+		end
+	end
+	return offset;
+end
+
 function Player:CityLevel()
 	return self.m_buildings[1].m_level;
 end

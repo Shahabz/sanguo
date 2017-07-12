@@ -53,8 +53,8 @@ function City.BuildingSelect( transform )
 	end
 	
 	-- 打开加速界面	
-	if GetPlayer().m_worker_kind == building.kind or 
-		GetPlayer().m_worker_kind_ex == building.kind then
+	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
+		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
 		QuickItemDlgShow();
 	else
 		BuildingOpratorModShow( true, building.kind, building.offset, transform );
@@ -282,8 +282,9 @@ function City.BuildingWorker()
 		
 		if GetPlayer().m_worker_free > 0 then
 			City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
-		end
+		end	
 	end
+	
 	if GetPlayer().m_worker_kind_ex > 0 then
 		City.BuildingSetUpgradeing( 
 		GetPlayer().m_worker_kind_ex, 

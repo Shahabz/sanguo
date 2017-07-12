@@ -130,7 +130,11 @@ function zh( text )
 end
 
 function F( nameid, ... )
-	return Utils.StringFormat( GetLocalizeText( nameid ), ... );
+	return Utils.StringFormat( Localization.text( nameid ), ... );
+end
+
+function FQUEST( nameid, ... )
+	return Utils.StringFormat( Localization.text_quest( nameid ), ... );
 end
 
 function Hex2Color( hex )
@@ -214,9 +218,19 @@ function HeroState( state )
 	end
 end
 
+-- 兵种名称
+function CorpsName( corps )
+	return T(134+corps);
+end
+
 -- 获取装备名称
 function EquipName( kind )
 	return T(kind+2000);
+end
+
+-- 获取任务名称
+function TechName( kind )
+	return T(kind+3000);
 end
 
 -- 清空所有子节点
@@ -302,3 +316,6 @@ function SetShow( transform, active )
 	transform.gameObject:SetActive( active )
 end
 
+function IsActive( transform )
+	return transform.gameObject.activeSelf
+end

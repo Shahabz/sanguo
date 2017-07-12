@@ -1,6 +1,10 @@
 -- 通用短消息发送
-ASKINFO_NORMAL		= 	0;
-ASKINFO_CHANGESHAPE	=	1;-- 修改头像
+ASKINFO_NORMAL		= 	0
+ASKINFO_CHANGESHAPE	=	1 -- 修改头像
+ASKINFO_CHANGENAME	=	2 -- 修改名字
+ASKINFO_CITYGUARD	=	3 -- 城墙守卫
+ASKINFO_QUEST		=	4 -- 任务
+ASKINFO_BUILDING	=	5 -- 建筑
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

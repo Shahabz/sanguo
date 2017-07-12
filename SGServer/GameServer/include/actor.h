@@ -104,17 +104,11 @@ int actor_getlist( int platid, i64 userid, SLK_NetS_List *pValue );
 // 验证一下这个角色id是不是属于登陆的这个用户
 int actor_verifyid( i64 userid, int actorid );
 
-// 角色经验
-int actor_exp( int actor_index, int experience, char path );
-
-// 角色升级
-int actor_upgrade( int actor_index, char path, AwardGetInfo *getinfo );
-
 // 角色钻石
 int actor_change_token( int actor_index, int token, char path, int path_value );
 
 // 修改名称
-int actor_changename( int actor_index, char *pname );
+int actor_changename( int actor_index, char *pname, int type );
 
 // 修改名称
 int actor_changename_gm( int actorid, char *pname );

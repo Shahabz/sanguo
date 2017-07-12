@@ -15,6 +15,7 @@ local m_uiUIP_UpgradeCond = nil; --UnityEngine.GameObject
 local m_kind = 0;
 local m_offset = -1;
 local m_pBuilding = nil;
+local m_bUpgrade = true;
 
 -- 打开界面
 function BuildingUpgradeDlgOpen()
@@ -54,7 +55,7 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 6 then
 		elseif nControlID == 7 then
 		elseif nControlID == 100 then
-			Notify( "木材厂升级完毕" )
+			BuildingUpgradeDlgUpgrade()
         end
 	end
 end
@@ -108,12 +109,13 @@ function BuildingUpgradeDlgShow( kind, offset )
 	m_offset = offset;
 	BuildingUpgradeDlgOpen()
 	clearChild( m_uiCondition )
-	
+
 	-- 请求数据
+	system_askinfo( ASKINFO_BUILDING, "", 0, kind, offset );
 	
 	local m_pBuilding = GetPlayer():GetBuilding( kind, offset )
 	SetImage( m_uiShape, BuildingSprite( kind ) );
-	SetText( m_uiName, BuildingNameLv( kind, (offset%16+1), m_pBuilding.m_level ) );
+	SetText( m_uiName, BuildingNameLv( kind, (offset%16), m_pBuilding.m_level ) );
 	SetLevel( m_uiLevel, m_pBuilding.m_level+1 );
 	
 	-- 空闲建造队是否满足
@@ -131,12 +133,14 @@ end
 function BuildingUpgradeDlgRecv( recvValue )
 	local uiObj = nil;
 	local flag = true;
+	m_bUpgrade = true;
 	-- 官府等级是否满足
 	if recvValue.m_citylevel > 0 then
 		uiObj = addChild( m_uiCondition, m_uiUIP_UpgradeCond );
 		flag = true;
-		if GetPlayer().CityLevel() < recvValue.m_citylevel then
+		if GetPlayer():CityLevel() < recvValue.m_citylevel then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(1).." "..F( 98, recvValue.m_citylevel ), flag, 2 );
 	end
@@ -144,8 +148,9 @@ function BuildingUpgradeDlgRecv( recvValue )
 	if recvValue.m_actorlevel > 0 then
 		uiObj = addChild( m_uiCondition, m_uiUIP_UpgradeCond );
 		flag = true;
-		if GetPlayer().m_level() < recvValue.m_actorlevel then
+		if GetPlayer().m_level < recvValue.m_actorlevel then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(100).." "..F( 98, recvValue.m_actorlevel ), flag, 3 );
 	end
@@ -156,6 +161,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		flag = true;
 		if GetPlayer().m_silver < recvValue.m_silver then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver), flag, 4 );
 	end
@@ -166,6 +172,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		flag = true;
 		if GetPlayer().m_wood < recvValue.m_wood then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood), flag, 5 );
 	end
@@ -176,6 +183,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		flag = true;
 		if GetPlayer().m_food < recvValue.m_food then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food), flag, 6 );
 	end
@@ -186,6 +194,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		flag = true;
 		if GetPlayer().m_iron < recvValue.m_iron then
 			flag = false;
+			m_bUpgrade = false;
 		end
 		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron), flag, 7 );
 	end
@@ -207,7 +216,7 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 	-- 对号错号
 	local uiFlag = uiObj.transform:Find("Flag");
 	if type == 2 or type == 3 then
-		SetImage( uiFlag, flagname );
+		SetImage( uiFlag, LoadSprite(flagname) );
 		SetTrue( uiFlag );
 	else
 		SetFalse( uiFlag );
@@ -231,6 +240,14 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 		end
 	else
 		SetFalse( uiButton );
+	end
+end
+
+-- 领取奖励
+function BuildingUpgradeDlgUpgrade()
+	if m_bUpgrade == true then
+		system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
+		BuildingUpgradeDlgClose();
 	end
 end
 

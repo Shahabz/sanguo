@@ -31,6 +31,11 @@
 #define	QUEST_DATAINDEX_HERO_CALL			20	// 招募N名武将 datatype=20 datakind=0 needvalue=数量
 #define	QUEST_DATAINDEX_WISHING				21	// 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
 #define	QUEST_DATAINDEX_CITYFIGHT			22	// 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
+#define	QUEST_DATAINDEX_CREATENAME			23	// 创建名称
+
+
+#define	QUEST_TRIGGER_TYPE_NPCTALK			1	// 触发NPC说一段话	
+#define	QUEST_TRIGGER_TYPE_AWARD			2	// 奖励
 
 // 任务类型
 enum 
@@ -51,7 +56,7 @@ int questlist_reload();
 int quest_give( int actor_index );
 
 // 设置任务值
-int quest_addvalue( struct _city *pCity, int dataindex, int datakind, int value );
+int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int value );
 
 // 获取任务状态
 int quest_getcomplete( int actor_index, int questid, int *value );

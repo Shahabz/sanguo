@@ -215,6 +215,9 @@ int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingLis
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_forgingkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec_need, (*psize) );
 	return 0;
 }
 
@@ -873,6 +876,7 @@ int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
 	return 0;
 }
 
@@ -898,6 +902,13 @@ int struct_NetS_QuestAward_send( char **pptr, int *psize, SLK_NetS_QuestAward *p
 	{
 		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_datatype, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_datakind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 
@@ -908,6 +919,71 @@ int struct_NetS_Function_send( char **pptr, int *psize, SLK_NetS_Function *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_function, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_openoffset, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityGuard_send( char **pptr, int *psize, SLK_NetS_CityGuard *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_troops, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityGuardList_send( char **pptr, int *psize, SLK_NetS_CityGuardList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CityGuard_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityGuardSec_send( char **pptr, int *psize, SLK_NetS_CityGuardSec *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingSmithy_send( char **pptr, int *psize, SLK_NetS_BuildingSmithy *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_forgingkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec_need, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ChangeName_send( char **pptr, int *psize, SLK_NetS_ChangeName *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_name_length, (*psize) );
+	if( pValue->m_name_length > 0 && pValue->m_name_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_length*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingAction *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_action, (*psize) );
 	return 0;
 }
 

@@ -417,3 +417,10 @@ int equip_sendswap( int actor_index, int src_offset, int dest_offset )
 {
 	return 0;
 }
+
+int equip_forgingtime( int city_index, short kind )
+{
+	CITY_CHECK_INDEX( city_index );
+
+	return 0;
+}

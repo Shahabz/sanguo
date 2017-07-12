@@ -39,4 +39,6 @@ int equip_sendhero( int actor_index, Hero *pHero, int index ); // 更新英雄的装备
 int equip_sendget( int actor_index, int offset, char path );
 int equip_sendlost( int actor_index, short equipkind, int offset, char path );
 int equip_sendswap( int actor_index, int src_offset, int dest_offset );
+
+int equip_forgingtime( int city_index, short kind );
 #endif

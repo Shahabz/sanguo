@@ -16,6 +16,10 @@
 #include "actor_send.h"
 #include "actor_notify.h"
 #include "server_netsend_auto.h"
+#include "city.h"
+#include "equip.h"
+#include "building.h"
+#include "vip.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -407,17 +411,97 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	if ( kind > 0 && kind < AWARDKIND_RESBASE )
+	if ( kind > 0 && kind < AWARDKIND_EQUIPBASE )
 	{ // 道具
 		item_getitem( actor_index, kind, num, color, path );
 	}
-	else if ( kind == AWARDKIND_WOOD )
+	else if ( kind < AWARDKIND_HEROBASE )// 装备（10000+装备编号）
 	{
-		
+		for ( int i = 0; i < num; i++ )
+			equip_getequip( actor_index, (kind - AWARDKIND_EQUIPBASE), path );
+	}
+	else if ( kind < AWARDKIND_BUILDINGBASE ) // 英雄（20000+英雄编号）
+	{
+
+	}
+	else if ( kind < AWARDKIND_FUNCTION )// 建筑（30000+建筑编号）
+	{
+		building_give( g_actors[actor_index].city_index, (kind - AWARDKIND_BUILDINGBASE), num );
+	}
+	else if ( kind < AWARDKIND_VALUEBASE )// 功能（40000+功能编号）
+	{
+
+	}
+	else if ( kind == AWARDKIND_VALUEBASE )// 数值
+	{
+
+	}
+	else if ( kind == AWARDKIND_SILVER )// 银币
+	{
+		city_changesilver( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_WOOD )// 木材
+	{
+		city_changewood( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_FOOD )// 粮食
+	{
+		city_changefood( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_IRON )// 镔铁
+	{
+		city_changeiron( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_TOKEN )// 元宝
+	{
+		actor_change_token(actor_index, num, PATH_QUEST, 0 );
+	}
+	else if ( kind == AWARDKIND_BODY )// 体力
+	{
+		city_changebody( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_INFANTRY )// 步兵
+	{
+
+	}
+	else if ( kind == AWARDKIND_CAVALRY )// 骑兵
+	{ 
+	}
+	else if ( kind == AWARDKIND_ARCHER )// 弓兵
+	{
+
+	}
+	else if ( kind == AWARDKIND_EXP )// 角色经验
+	{
+		city_actorexp( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_VIPEXP )// VIP经验
+	{
+		vip_exp( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_AUTOBUILD )// 自动建造次数
+	{
+
+	}
+	else if ( kind == AWARDKIND_LEVYNUM )// 征收次数
+	{
+		city_changelevy( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_PEOPLE ) // 人口
+	{
+		city_changepeople( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_PRESTIGE )// 威望值
+	{
+		city_changeprestige( g_actors[actor_index].city_index, num, PATH_QUEST );
+	}
+	else if ( kind == AWARDKIND_FRIENDSHIP )// 友谊积分
+	{
+		city_changefriendship( g_actors[actor_index].city_index, num, PATH_QUEST );
 	}
 	else if ( kind < 0 )
 	{ // 道具组
-		//awardgroup_withindex( actor_index, -kind, city_mainlevel( city_getptr( actor_index ) ), path, getinfo );
+		awardgroup_withindex( actor_index, -kind, city_mainlevel( g_actors[actor_index].city_index ), path, getinfo );
 	}
 
 	if ( getinfo && kind > 0 )

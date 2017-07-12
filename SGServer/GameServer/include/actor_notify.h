@@ -8,6 +8,8 @@
 #define	NOTIFY_ITEMNUM		3
 #define	NOTIFY_LOGIN_QUEUE	4
 #define	NOTIFY_CHANGESHAPE	5	// 玩家头像修改
+#define NOTIFY_CHANGENAME	6	// 玩家修改名称
+#define NOTIFY_NPCTALK		7	// NPC对话
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );
@@ -18,4 +20,6 @@ int actor_notify_value( int actor_index, short msgid, char count, const int *dat
 // 发消息提示，通过消息ID
 int actor_system_message( int actor_index, int msgid );
 
+// npc对话
+int npc_talk( int actor_index, int textid );
 #endif

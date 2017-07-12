@@ -17,6 +17,7 @@
 #include "auto_data_hero.h"
 #include "auto_data_vip.h"
 #include "auto_data_quest.h"
+#include "auto_data_city_guard.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"
@@ -59,6 +60,10 @@
 #define ACTOR_CHECK_INDEX(actor_index)		{if( actor_index < 0 || actor_index >= g_maxactornum ) return -1;}
 #define CITY_CHECK_INDEX(city_index)		{if( city_index < 0 || city_index >= g_city_maxcount ) return -1;}
 #define ARMY_CHECK_INDEX(army_index)		{if( army_index < 0 || army_index >= g_army_maxcount ) return -1;}
+
+#define ATTACK( level, attack, attack_growth ) ( attack + (int)((level-1)*(attack_growth/15.0f)) )
+#define DEFENSE( level, defense, defense_growth ) ( defense + (int)((level-1)*(defense_growth/15.0f)) )
+#define TROOPS( level, troops, troops_growth ) ( troops + (int)((level-1)*(troops_growth/15.0f)) )
 
 // »ÚƒÍ
 #define IS_LEAP_YEAR(y)  (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)

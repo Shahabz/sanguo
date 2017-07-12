@@ -63,6 +63,8 @@ CREATE TABLE `city` (
   `worker_offset_ex` tinyint(3) NOT NULL DEFAULT '0' COMMENT '当前升级建筑索引(商用)',
   `worker_free_ex` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否使用过免费',
   `worker_expire_ex` int(11) NOT NULL DEFAULT '0' COMMENT '商用建造队列到期时间',
+  `wnsec` int(11) NOT NULL DEFAULT '0' COMMENT '建造队列所需时间',
+  `wnsec_ex` int(11) NOT NULL DEFAULT '0' COMMENT '建造队列所需时间',
   `ofkind` tinyint(3) NOT NULL DEFAULT '0' COMMENT '建筑官员种类',
   `ofsec` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员剩余秒',
   `offree` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员免费情况',

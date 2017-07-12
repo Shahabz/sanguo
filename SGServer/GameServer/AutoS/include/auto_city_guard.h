@@ -4,10 +4,11 @@
 
 struct _city_guard {
 //--Automatically generated
-				unsigned char shape;	//
-				unsigned char level;	//
+				char monsterid;	//
 				char color;	//
-				short monsterid;	//
+				char corps;	//
+				unsigned char level;	//
+				char shape;	//
 				int soldiers;	//
 };
 typedef struct _city_guard CityGuard;

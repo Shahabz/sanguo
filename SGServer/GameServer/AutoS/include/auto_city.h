@@ -74,6 +74,8 @@ struct _city {
 				char worker_offset_ex;	//当前升级建筑索引(商用)
 				char worker_free_ex;	//是否使用过免费
 				int worker_expire_ex;	//商用建造队列到期时间
+				int wnsec;	//建造队列所需时间
+				int wnsec_ex;	//建造队列所需时间
 				char ofkind;	//建筑官员种类
 				int ofsec;	//建筑官员剩余秒
 				int offree;	//建筑官员免费情况

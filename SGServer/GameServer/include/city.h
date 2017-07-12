@@ -4,6 +4,7 @@
 
 #define CITY_QUEST_MAX				6	// 任务数量
 #define CITY_TECH_MAX				40	// 城池科技
+#define CITY_GUARD_MAX				30	// 城墙守卫
 #define CITY_DATA_RECORD_MAX		16	// 数据记录
 
 // 功能入口
@@ -80,4 +81,13 @@ int city_changeprestige( int city_index, int value, short path );
 // 友谊积分
 int city_changefriendship( int city_index, int value, short path );
 
+// 城墙守卫
+CityGuardInfoConfig *city_guard_config( int monsterid, int color );
+CityGuard *city_guard_getptr( int city_index, int offset );
+int city_guard_call( int city_index );
+int city_guard_upgrade( int city_index, int offset );
+int city_guard_clearcd( int city_index );
+int city_guard_send( int actor_index, int offset );
+int city_guard_sendsec( int actor_index );
+int city_guard_sendlist( int actor_index );
 #endif

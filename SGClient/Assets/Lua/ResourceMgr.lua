@@ -79,6 +79,16 @@ function HeroColorSprite( color )
 	return sprite;
 end
 
+-- 守卫头像
+function GuardSprite( shape )
+	local name = string.format("guardhead_%d", shape );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
 -- 建筑形象
 function BuildingSprite( kind )
 	local name = string.format("building_kind%d", kind );
@@ -118,3 +128,5 @@ function ItemColorSprite( color )
 	end
 	return sprite;
 end
+
+

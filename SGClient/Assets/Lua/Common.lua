@@ -331,6 +331,7 @@ function knum( num )
 		num = num / 1000;
 		return string.format( "%.1f", num ) .. "K";
 	end
+	return num
 end
 
 function secnum( sec )

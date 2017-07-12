@@ -798,7 +798,9 @@ int actor_new( int actor_index )
 	city.nation = g_actors[actor_index].nation;
 	city.shape = g_actors[actor_index].shape;
 	city.level = g_actors[actor_index].level;
-
+	city.body = global.body_max;
+	city.equip_washnum = global.equip_wash_max;
+	city.hero_washnum = global.hero_wash_max;
 	if ( map_getrandcitypos( &city.posx, &city.posy ) < 0 )
 	{ // 没有可用位置了
 		return -1;
@@ -812,6 +814,10 @@ int actor_new( int actor_index )
 		if ( g_actors[actor_index].city_index < 0 )
 			return -1;
 	}
+
+	// 主城
+	building_create( g_actors[actor_index].city_index, BUILDING_Main, -1 );
+	g_city[g_actors[actor_index].city_index].building[0].level = 2;
 
 	g_city[g_actors[actor_index].city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, g_actors[actor_index].city_index );
 	map_addobject( MAPUNIT_TYPE_CITY, city.posx, city.posy, MAPUNIT_TYPE_CITY );

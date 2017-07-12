@@ -100,16 +100,16 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function BuildingGetDlgShow( kind, offset, info )
+function BuildingGetDlgShow( recvValue )
 	BuildingGetDlgOpen();
-	table.insert( m_kind, kind );
-	table.insert( m_offset, offset );
-	table.insert( m_info, info );
+	table.insert( m_kind, recvValue.m_kind );
+	table.insert( m_offset, recvValue.m_offset );
+	table.insert( m_info, recvValue );
 	
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);
-	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( kind );
-	m_uiName:GetComponent( "UIText" ).text = T( kind );
+	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( recvValue.m_kind );
+	m_uiName:GetComponent( "UIText" ).text = T( recvValue.m_kind );
 end
 
 function BuildingGetDlgMove()
@@ -121,6 +121,12 @@ function BuildingGetDlgMove()
 	for k, v in pairs( m_kind ) do
 		count = count + 1;
 	end
+	
+	local bAllMove = true;
+	if count <= 2 then
+		bAllMove = false;
+	end
+	
 	
 	local index = 0;
 	local moveing = false;
@@ -155,12 +161,28 @@ function BuildingGetDlgMove()
 			uiShape[k]:GetComponent( "UITweenScale" ):ToInit();
 			uiShape[k]:GetComponent( "UITweenRectPosition" ):ToInit();
 			unitObj[k].gameObject:SetActive(true);
+			if k == 1 then
+				City.BuildingSelect( unitObj[k].transform );
+			end
 			if k == count then
 				BuildingGetDlgClose();
 			end
+			
+			if bAllMove == false then
+				table.remove( m_info, 1 );
+				local tmp = m_info;
+				BuildingGetDlgClose();
+				for i,info in pairs(tmp) do
+					BuildingGetDlgShow( info );
+				end
+			end
 		end, 1.6 )
 		
+		if bAllMove == false then
+			break;
+		end
 		
 	end
+
 end
 

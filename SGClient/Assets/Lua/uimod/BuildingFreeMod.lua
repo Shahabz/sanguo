@@ -58,6 +58,6 @@ function BuildingFreeModClick( gameObject )
 	local ShareData = gameObject.transform:GetComponent("ShareData");
 	local kind = ShareData.intValue[0];
 	local offset = ShareData.intValue[1];
-	print( kind )
+	system_askinfo( ASKINFO_BUILDING, "", 2, kind, offset );
 	gameObject:SetActive(false);
 end

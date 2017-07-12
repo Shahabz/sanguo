@@ -25,6 +25,7 @@
 #define PATH_SELL						6	// 售卖丢弃
 #define PATH_BUILDING_UPGRADE			7	// 建筑
 #define PATH_QUEST						8	// 任务
+#define PATH_GUARD_UPGRADE				9	// 守卫升级
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

@@ -310,6 +310,36 @@ function netrecv_function_C( buffer )
 	proc_function_C( recvValue );
 end
 
+function netrecv_cityguard_C( buffer )
+	local recvValue = struct_NetS_CityGuard_recv( buffer );
+	proc_cityguard_C( recvValue );
+end
+
+function netrecv_cityguardlist_C( buffer )
+	local recvValue = struct_NetS_CityGuardList_recv( buffer );
+	proc_cityguardlist_C( recvValue );
+end
+
+function netrecv_cityguardsec_C( buffer )
+	local recvValue = struct_NetS_CityGuardSec_recv( buffer );
+	proc_cityguardsec_C( recvValue );
+end
+
+function netrecv_buildingsmithy_C( buffer )
+	local recvValue = struct_NetS_BuildingSmithy_recv( buffer );
+	proc_buildingsmithy_C( recvValue );
+end
+
+function netrecv_changename_C( buffer )
+	local recvValue = struct_NetS_ChangeName_recv( buffer );
+	proc_changename_C( recvValue );
+end
+
+function netrecv_buildingaction_C( buffer )
+	local recvValue = struct_NetS_BuildingAction_recv( buffer );
+	proc_buildingaction_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -373,6 +403,12 @@ Proc_Command = {
 	[CMDS_QUESTLIST]=netrecv_questlist_C;
 	[CMDS_QUESTAWARD]=netrecv_questaward_C;
 	[CMDS_FUNCTION]=netrecv_function_C;
+	[CMDS_CITYGUARD]=netrecv_cityguard_C;
+	[CMDS_CITYGUARDLIST]=netrecv_cityguardlist_C;
+	[CMDS_CITYGUARDSEC]=netrecv_cityguardsec_C;
+	[CMDS_BUILDINGSMITHY]=netrecv_buildingsmithy_C;
+	[CMDS_CHANGENAME]=netrecv_changename_C;
+	[CMDS_BUILDINGACTION]=netrecv_buildingaction_C;
 }
 
 function in_proc_command_C( cmd, buffer )

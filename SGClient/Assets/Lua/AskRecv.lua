@@ -5,6 +5,8 @@ NOTIFY_ITEM			=	2
 NOTIFY_ITEMNUM		=	3
 NOTIFY_LOGIN_QUEUE	=	4
 NOTIFY_CHANGESHAPE	=	5	-- 玩家头像修改
+NOTIFY_CHANGENAME	=	6	-- 玩家修改名称
+NOTIFY_NPCTALK		=	7	-- NPC对话
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -19,5 +21,9 @@ function RecvActorNotify(recvValue)
 		GetPlayer().m_shape = value[2];
 		MainDlgSetHead();
 		PlayerDlgSet();
+	
+	-- NPC对话	
+	elseif msgid == NOTIFY_NPCTALK then
+		NpcTalkID( value[1] )
     end
 end
