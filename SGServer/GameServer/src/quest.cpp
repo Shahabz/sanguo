@@ -296,7 +296,7 @@ int quest_check( int actor_index, int questid, int *value )
 		}
 		else if( questinfo->datatype == QUEST_DATAINDEX_BUILDING_LEVEL )
 		{ // ½¨ÖþµÈ¼¶
-			int buildinglevel = building_getlevel( g_actors[actor_index].city_index, questinfo->datakind, questinfo->dataoffset-1 );
+			int buildinglevel = building_getlevel( g_actors[actor_index].city_index, questinfo->datakind, questinfo->dataoffset );
 			if ( value )
 				*value = buildinglevel;
 			if ( buildinglevel >= questinfo->needvalue )

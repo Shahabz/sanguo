@@ -7,6 +7,7 @@ City.m_BuildingUI = nil
 City.m_BuildingTimerMod = nil;
 City.m_BuildingFreeMod = nil;
 City.m_BuildingOverMod = nil;
+City.m_BuildingQuestMod = nil;
 City.m_Buildings = {};
 City.m_Buildings_res = {};
 
@@ -18,6 +19,7 @@ function City.Init()
 	City.m_BuildingTimerMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingTimerMod" );
 	City.m_BuildingFreeMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingFreeMod" );
 	City.m_BuildingOverMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingOverMod" );
+	City.m_BuildingQuestMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingQuestMod" );
 end
 
 -- 所有建筑父节点
@@ -57,7 +59,24 @@ function City.BuildingSelect( transform )
 		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
 		QuickItemDlgShow();
 	else
-		BuildingOpratorModShow( true, building.kind, building.offset, transform );
+		BuildingOpratorModShow( false, 0, -1, nil );
+		if building.kind == BUILDING_Smithy then -- 铁匠铺
+			EquipForgingDlgShow();
+		elseif building.kind == BUILDING_Wash then -- 洗炼铺
+			EquipWashDlgShow();
+		elseif building.kind == BUILDING_Fangshi then -- 坊市
+			
+		elseif building.kind == BUILDING_Shop then -- 商店
+			
+		elseif building.kind == BUILDING_Hero then -- 聚贤馆
+
+		elseif building.kind == BUILDING_Wishing then -- 聚宝盆
+
+		elseif building.kind == BUILDING_Help then -- 帮助
+		
+		else
+			BuildingOpratorModShow( true, building.kind, building.offset, transform );
+		end
 	end
 end
 
@@ -86,8 +105,10 @@ end
 -- 取消选择
 function City.BuildingUnSelect()
 	-- 关闭之前渐变动画
-	City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
-	City.m_LastSelect = nil;
+	if City.m_LastSelect ~= nil then
+		City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
+		City.m_LastSelect = nil;
+	end
 end
 
 -- 获取建筑对象
@@ -118,37 +139,52 @@ function City.BuildingAdd( info, active )
 	local kind = info.m_kind;
 	local offset = info.m_offset
 	local landname = "";
+	
+	-- 有了就修改
+	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-		landname = BuildingPrefab[kind].land..offset;
-	else
-		landname = BuildingPrefab[kind].land;
-	end
-	
-	local land = City.BuildingRoot().transform:Find( landname );
-	local prefab = LoadPrefab( BuildingPrefab[kind].prefab );
-	local unitObj = GameObject.Instantiate( prefab ).transform;
-	unitObj:SetParent( City.BuildingRoot().transform );
-	unitObj.localScale = Vector3.one;
-	unitObj.position = land.transform.position;
-	unitObj.localPosition = Vector3.New( unitObj.localPosition.x, unitObj.localPosition.y, 0 );
-	
-	if active ~= nil and active == false then
-		unitObj.gameObject:SetActive(false);
-	else
-		unitObj.gameObject:SetActive(true);
-	end
-	
-	land.gameObject:SetActive(false);
-	
-	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-		if City.m_Buildings_res[kind] == nil then
-			City.m_Buildings_res[kind] = {};
+		if City.m_Buildings_res[kind] ~= nil then
+			unitObj = City.m_Buildings_res[kind][offset];
 		end
-		City.m_Buildings_res[kind][offset] = unitObj;	
 	else
-		City.m_Buildings[kind] = unitObj;
+		unitObj = City.m_Buildings[kind];
 	end
-	unitObj:GetComponent("CityBuilding").offset = offset;
+	
+	-- 没有就创建
+	if unitObj == nil then
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			landname = BuildingPrefab[kind].land..offset;
+		else
+			landname = BuildingPrefab[kind].land;
+		end
+		
+		local land = City.BuildingRoot().transform:Find( landname );
+		local prefab = LoadPrefab( BuildingPrefab[kind].prefab );
+		unitObj = GameObject.Instantiate( prefab ).transform;
+		unitObj:SetParent( City.BuildingRoot().transform );
+		unitObj.localScale = Vector3.one;
+		unitObj.position = land.transform.position;
+		unitObj.localPosition = Vector3.New( unitObj.localPosition.x, unitObj.localPosition.y, 0 );
+		
+		if active ~= nil and active == false then
+			unitObj.gameObject:SetActive(false);
+		else
+			unitObj.gameObject:SetActive(true);
+		end
+		
+		land.gameObject:SetActive(false);
+		
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			if City.m_Buildings_res[kind] == nil then
+				City.m_Buildings_res[kind] = {};
+			end
+			City.m_Buildings_res[kind][offset] = unitObj;	
+		else
+			City.m_Buildings[kind] = unitObj;
+		end
+		unitObj:GetComponent("CityBuilding").offset = offset;
+	end
+	
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 	return unitObj;
@@ -260,15 +296,21 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	end
 	if sec <= 0 then
 		timerObj.gameObject:SetActive(false);
+		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
+		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
+		timer.controlID = 0;
+		timer.uiMod = timerObj.transform:GetComponent("UIMod");
+		timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
+		timer:SetTime( 0, 0 );
 	else
 		timerObj.gameObject:SetActive(true);
+		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
+		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
+		timer.controlID = 1;
+		timer.uiMod = timerObj.transform:GetComponent("UIMod");
+		timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
+		timer:SetTime( needsec, needsec-sec );
 	end
-	--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
-	local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
-	timer.controlID = 1;
-	timer.uiMod = timerObj.transform:GetComponent("UIMod");
-	timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
-    timer:SetTime( needsec, needsec-sec );
 end
 
 -- 建造队列
@@ -398,4 +440,11 @@ function City.GoToWorkerEx()
 	
 	-- 找到一个可以升级的
 	
+end
+
+-- 任务图标
+function City.BuildingQuestMod( questid )
+	City.m_BuildingQuestMod.gameObject:SetActive(true);
+	local ShareData = City.m_BuildingQuestMod.transform:GetComponent("ShareData");
+	ShareData.intValue[0] = questid;
 end

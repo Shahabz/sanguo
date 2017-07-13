@@ -105,6 +105,10 @@ int global_init()
 		{
 			global.worker_freetime = atoi( row[1] );
 		}
+		else if ( id == 16 )
+		{
+			global.trainfood = atoi( row[1] );
+		}
 		
 	}
 	lua_setglobal( servL, "global" );

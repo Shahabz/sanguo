@@ -3,6 +3,7 @@ local m_Dlg = nil;
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
 local m_uiTalk = nil; --UnityEngine.GameObject
+local m_herokind = 0;
 
 -- 打开界面
 function HeroTalkDlgOpen()
@@ -33,6 +34,9 @@ function HeroTalkDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroTalkDlgClose();
+			if m_herokind == 1 then
+				NpcTalkID( 10004 );
+			end
         end
 	end
 end
@@ -77,8 +81,16 @@ end
 ----------------------------------------
 function HeroTalk( shape, name, talk )
 	HeroTalkDlgOpen();
+	m_herokind = 0;
 	m_uiShape:GetComponent( "Image" ).sprite = shape;
 	m_uiName:GetComponent( "UIText" ).text = name;
 	m_uiTalk:GetComponent( "UIText" ).text = talk;
 end
 
+function HeroTalkKind( herokind, text )
+	HeroTalkDlgOpen();
+	m_herokind = herokind
+	--m_uiShape:GetComponent( "Image" ).sprite = shape;
+	--m_uiName:GetComponent( "UIText" ).text = name;
+	m_uiTalk:GetComponent( "UIText" ).text = talk;
+end

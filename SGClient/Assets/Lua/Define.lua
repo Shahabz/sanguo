@@ -289,7 +289,7 @@ function SetControlID( transform, controlID )
 	transform:GetComponent( typeof(UIButton) ).controlID = controlID;
 end
 
-function SetTimer( transform, sec, needsec, controlID )
+function SetTimer( transform, sec, needsec, controlID, formatText )
 	local timer = transform:GetComponent( typeof(UITextTimeCountdown) )
     timer:SetTime( needsec, needsec-sec );
 	if sec == 0 and needsec == 0 then
@@ -297,6 +297,9 @@ function SetTimer( transform, sec, needsec, controlID )
 	end
 	if controlID ~= nil then
 		timer.controlID = controlID;
+	end
+	if formatText ~= nil then
+		timer.formatText = formatText;
 	end
 end
 

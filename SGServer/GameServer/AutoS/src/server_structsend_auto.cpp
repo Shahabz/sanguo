@@ -987,3 +987,16 @@ int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingA
 	return 0;
 }
 
+int struct_NetS_LevyInfo_send( char **pptr, int *psize, SLK_NetS_LevyInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_base, 4*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_tech, 4*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_weather, 4*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_activity, 4*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_offical, 4*sizeof(int), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	return 0;
+}
+

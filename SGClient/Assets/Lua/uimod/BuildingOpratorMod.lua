@@ -6,6 +6,7 @@ local m_uiEnter = nil; --UnityEngine.GameObject
 local m_uiTrain = nil; --UnityEngine.GameObject
 local m_uiSpeed = nil; --UnityEngine.GameObject
 local m_uiUpgradeCenter = nil; --UnityEngine.GameObject
+local m_uiEnterCenter = nil;
 
 local m_kind = 0;
 local m_offset = -1;
@@ -69,6 +70,7 @@ function BuildingOpratorModOnAwake( gameObject )
 	m_uiTrain = objs[3];
 	m_uiSpeed = objs[4];
 	m_uiUpgradeCenter = objs[5];
+	m_uiEnterCenter = objs[6];
    
     BuildingOpratorModClose();
 end

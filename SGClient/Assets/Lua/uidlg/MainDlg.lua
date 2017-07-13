@@ -77,8 +77,9 @@ end
 function MainDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-            MainDlgClose();
-
+            --MainDlgClose();
+		
+		-- 英雄
 		elseif nControlID == 1 then
 			HeroDlgShow();
 			
@@ -253,7 +254,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiFoodNum = objs[29];
 	m_uiAutoBuild = objs[30];
 	m_uiQuestText = objs[31];
-	
+	MainDlgWorkerObjectInit();
 end 
 
 -- 界面初始化时调用
@@ -355,19 +356,30 @@ function MainDlgSetQuest()
 	end
 	SetText( m_uiQuestText, QuestName( -1, CacheQuest.m_list[1] ) )
 	
-	-- 弹出改名写死
-	if CacheQuest.m_list[1].m_questid == 4 then
+	-- 引导任务部分
+	local questid = CacheQuest.m_list[1].m_questid;
+	-- 弹出改名
+	if questid == 4 then
 		if NpcTalkIsShow() == true then
 			NpcTalkWait( ChangeNameDlgShow, nil )
 		else
 			ChangeNameDlgShow();
+		end
+	
+	-- 查看停留在木场上的马岱
+	elseif questid == 5 then
+		City.BuildingQuestMod( questid )
+	
+	-- 自动建造
+	elseif questid == 6 then
+		if HeroGetDlgIsShow() == false then
+			HeroTalkKind( 1, T(10003) )
 		end
 	end
 end
 
 -- 建造队列
 function MainDlgSetWorker()
-	
 	MainDlgWorkerObjectInit();
 		
 	MainDlgSetWorkerObject( 0,

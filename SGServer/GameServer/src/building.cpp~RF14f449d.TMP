@@ -51,20 +51,6 @@ BuildingBarracks* buildingbarracks_getptr( int city_index, int offset )
 	return &g_city[city_index].building_barracks[offset];
 }
 
-BuildingBarracks* buildingbarracks_getptr_kind( int city_index, int kind )
-{
-	if ( city_index < 0 || city_index >= g_city_maxcount )
-		return NULL;
-	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
-	{
-		if ( g_city[city_index].building_barracks[tmpi].kind == kind )
-		{
-			return &g_city[city_index].building_barracks[tmpi];
-		}
-	}
-	return NULL;
-}
-
 BuildingRes* buildingres_getptr( int city_index, int offset )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
@@ -200,7 +186,7 @@ int building_give( int city_index, int kind, int num )
 			SLK_NetS_BuildingBarracksGet pValue = { 0 };
 			building_barracks_makestruct( &g_city[city_index].building_barracks[offset], offset, &pValue.m_barracks );
 			netsend_buildingbarracksget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
-			city_building_barracks_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building_barracks[offset], "city_building_barracks", NULL );
+			city_building_barracks_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building[offset], "city_building_barracks", NULL );
 		}
 	}
 	else if ( kind < BUILDING_Smithy )
@@ -214,7 +200,6 @@ int building_give( int city_index, int kind, int num )
 				SLK_NetS_BuildingResGet pValue = { 0 };
 				building_res_makestruct( &g_city[city_index].building_res[offset], offset, &pValue.m_res );
 				netsend_buildingresget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
-				city_building_res_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building_res[offset], "city_building_res", NULL );
 			}
 		}
 		

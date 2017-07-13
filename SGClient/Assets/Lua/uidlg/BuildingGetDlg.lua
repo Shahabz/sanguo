@@ -11,6 +11,9 @@ local m_kind = {};
 local m_offset = {};
 local m_info = {};
 
+local m_WaitCallback = nil;
+local m_WaitValue = nil;
+
 -- 打开界面
 function BuildingGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingGetDlg" );
@@ -34,6 +37,14 @@ function BuildingGetDlgClose()
 	m_kind = {};
 	m_offset = {};
 	m_info = {};
+	
+	-- 回调
+	if m_WaitCallback then
+		m_WaitCallback( m_WaitValue );
+	end
+	m_WaitCallback = nil;
+	m_WaitValue = nil;
+	
 	eye.uiManager:Close( "BuildingGetDlg" );
 end
 
@@ -186,3 +197,15 @@ function BuildingGetDlgMove()
 
 end
 
+function BuildingGetDlgIsShow()
+	if m_Dlg ~= nil then
+		return IsActive( m_Dlg )
+	end
+	return false;
+end
+
+-- 设置等待数据
+function BuildingGetDlgWait( callback, value )
+	m_WaitCallback = callback;
+	m_WaitValue = value;
+end

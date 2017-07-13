@@ -67,8 +67,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_QUEST:
 		if ( pvalue[0] == 1 )
-		{
+		{ // 获取任务奖励
 			quest_getaward( actor_index, pvalue[1], 0 );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 完成特殊类型的任务
+			quest_setcomplete( actor_index, pvalue[1], QUEST_COMPLETEFLAG_SUCCESS );
 		}
 		break;
 	case ASKINFO_BUILDING:
@@ -84,7 +88,56 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 升级免费加速
 			building_workerfree( actor_index, pvalue[1], pvalue[2] );
 		}
-
+		break;
+	case ASKINFO_LEVY:
+		if ( pvalue[0] == 0 )
+		{ // 征收信息
+			city_levy_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 征收
+			city_levy( actor_index );
+		}
+		break;
+	case ASKINFO_TRAIN:
+		if ( pvalue[0] == 0 )
+		{ // 招募信息
+			city_train_sendinfo( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 招募
+			city_train( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 加速
+			city_train_quick( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 取消
+			city_train_cancel( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 收取
+			city_train_get( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 扩建
+			city_train_buyqueue( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 购买时长
+			city_train_buylong( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_EQUIPFORGING:
+		break;
+	case ASKINFO_EQUIPWASH:
+		break;
+	case ASKINFO_EQUIP:
+		break;
+	case  ASKINFO_ITEM:
+		break;
+	case ASKINFO_HERO:
 		break;
 	default:
 		break;

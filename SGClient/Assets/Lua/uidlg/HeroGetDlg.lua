@@ -9,7 +9,7 @@ local m_uiGrowth = nil; --UnityEngine.GameObject
 local m_uiAttack = nil; --UnityEngine.GameObject
 local m_uiDefense = nil; --UnityEngine.GameObject
 local m_uiTroops = nil; --UnityEngine.GameObject
-
+local m_herokind = 0;
 -- 打开界面
 function HeroGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroGetDlg" );
@@ -39,6 +39,10 @@ function HeroGetDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroGetDlgClose();
+			-- 马岱对话
+			if m_herokind == 1 then
+				HeroTalkKind( m_herokind, T(10003) )
+			end
         end
 	end
 end
@@ -89,6 +93,7 @@ end
 --{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
 function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
+	m_herokind = recvValue.m_kind;
 	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
 	SetImage( m_uiHeroColor,  HeroColorSprite( recvValue.m_color )  );
 	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );
@@ -105,4 +110,9 @@ function HeroGetDlgShow( recvValue )
 	SetText( m_uiTroops, F( 140, troops )  ) -- 兵资质
 end
 
-
+function HeroGetDlgIsShow()
+	if m_Dlg ~= nil then
+		return IsActive( m_Dlg )
+	end
+	return false;
+end

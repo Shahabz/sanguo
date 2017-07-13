@@ -14,7 +14,11 @@
 #define LOGOP_VIPEXP			8	// vip经验
 #define LOGOP_BUILDING			9	// 建筑
 #define LOGOP_EQUIPGET			10	// 获得装备
-#define LOGOP_QUEST				11	// 
+#define LOGOP_QUEST				11	// 任务
+#define LOGOP_SILVER			12	// 银币
+#define LOGOP_WOOD				13	// 木材
+#define LOGOP_FOOD				14	// 粮食
+#define LOGOP_IRON				15	// 镔铁
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -26,6 +30,8 @@
 #define PATH_BUILDING_UPGRADE			7	// 建筑
 #define PATH_QUEST						8	// 任务
 #define PATH_GUARD_UPGRADE				9	// 守卫升级
+#define PATH_LEVY						10	// 征收
+#define PATH_TRAIN						11	// 训练
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

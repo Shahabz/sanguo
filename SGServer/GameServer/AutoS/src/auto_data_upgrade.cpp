@@ -47,7 +47,7 @@ int upgradeinfo_init_auto()
 	g_upgradeinfo = (UpgradeInfo *)malloc( sizeof(UpgradeInfo)*g_upgradeinfo_maxnum );
 	memset( g_upgradeinfo, 0, sizeof(UpgradeInfo)*g_upgradeinfo_maxnum );
 
-	sprintf( szSQL, "select `level`,`exp`,`genius_point`,`battlepower`,`awardgroup` from upgrade;" );
+	sprintf( szSQL, "select `level`,`exp`,`heroexp`,`battlepower`,`awardgroup` from upgrade;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,7 +63,7 @@ int upgradeinfo_init_auto()
 			continue;
 		g_upgradeinfo[level].level = atoi(row[offset++]);
 		g_upgradeinfo[level].exp = atoi(row[offset++]);
-		g_upgradeinfo[level].genius_point = atoi(row[offset++]);
+		g_upgradeinfo[level].heroexp = atoi(row[offset++]);
 		g_upgradeinfo[level].battlepower = atoi(row[offset++]);
 		g_upgradeinfo[level].awardgroup = atoi(row[offset++]);
 	}
@@ -100,8 +100,8 @@ int upgradeinfo_luatable_auto()
 		lua_pushinteger( servL, g_upgradeinfo[level].exp );
 		lua_rawset( servL, -3 );
 
-		lua_pushstring( servL, "genius_point" );
-		lua_pushinteger( servL, g_upgradeinfo[level].genius_point );
+		lua_pushstring( servL, "heroexp" );
+		lua_pushinteger( servL, g_upgradeinfo[level].heroexp );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "battlepower" );

@@ -40,6 +40,9 @@ function NpcTalkDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
 			if m_textid == 10006 then
 				NpcTalkID( 10007 )
+			elseif m_textid == 10004 then
+				
+				NpcTalkDlgClose();
 			else
 				NpcTalkDlgClose();
 			end

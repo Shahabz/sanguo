@@ -90,4 +90,17 @@ int city_guard_clearcd( int city_index );
 int city_guard_send( int actor_index, int offset );
 int city_guard_sendsec( int actor_index );
 int city_guard_sendlist( int actor_index );
+
+// Õ÷ÊÕ
+int city_levy( int actor_index );
+int city_levy_sendinfo( int actor_index );
+
+// ÕĞÄ¼
+int city_train( int actor_index, int kind, int trainsec );
+int city_train_cancel( int actor_index, int kind, int queue );
+int city_train_quick( int actor_index, int kind );
+int city_train_get( int actor_index, int kind );
+int city_train_buyqueue( int actor_index, int kind );
+int city_train_buylong( int actor_index, int kind );
+int city_train_sendinfo( int actor_index, int kind );
 #endif

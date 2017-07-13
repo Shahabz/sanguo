@@ -61,7 +61,7 @@ end
 
 -- 英雄兵种icon
 function CorpsSprite( corps )
-	local name = string.format("ui_icon_corps%d", corps );
+	local name = "ui_icon_corps"..corps;
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
@@ -71,7 +71,7 @@ end
 
 -- 英雄颜色框
 function HeroColorSprite( color )
-	local name = string.format("ui_icon_herocolor%d", color );
+	local name = "ui_icon_herocolor"..color;
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );

@@ -19,6 +19,7 @@ typedef struct _global
 	float city_guard_sec_token;
 	short city_guard_up_token;
 	short worker_freetime;
+	int trainfood;
 }Global;
 int global_init();
 void global_reload();

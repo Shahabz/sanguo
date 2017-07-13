@@ -59,7 +59,13 @@ function LevyDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             LevyDlgClose();
+		elseif LevyDlgGet() == 1 then
+			LevyDlgGet();
         end
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 1 then
+			LevyDlgShow();
+		end
 	end
 end
 
@@ -126,6 +132,50 @@ end
 ----------------------------------------
 function LevyDlgShow()
 	LevyDlgOpen();
-
+	system_askinfo( ASKINFO_LEVY, "", 0 )
 end
 
+-- m_base={[4]},m_tech={[4]},m_weather={[4]},m_activity={[4]},m_offical={[4]},
+function LevyDlgRecv( recvValue )
+	-- 基础
+	SetText( m_uiBaseSilver, recvValue.m_base[1] );
+	SetText( m_uiBaseWood, recvValue.m_base[2] );
+	SetText( m_uiBaseFood, recvValue.m_base[3] );
+	SetText( m_uiBaseIron, recvValue.m_base[4] );
+	
+	-- 总计
+	local total = {0,0,0,0}
+	for i=1, 4, 1 do
+		total[i] = recvValue.m_base[i];
+	end
+	SetText( m_uiTotalSilver, total[1] );
+	SetText( m_uiTotalWood, total[2] );
+	SetText( m_uiTotalFood, total[3] );
+	SetText( m_uiTotalIron, total[4] );
+
+	LevyDlgChangeSec( recvValue.m_sec )
+end
+
+function LevyDlgChangeSec( sec )
+	if m_Dlg == nil then
+		return;
+	end
+	if GetPlayer().m_levynum > 0 then
+		SetFalse( m_uiTimerText );
+		SetTrue( m_uiLevyNumText );
+		SetTimer( m_uiTimerText, 0, 0, 0 );
+		SetText( m_uiLevyNumText, GetPlayer().m_levynum.."/12" );
+	else
+		SetFalse( m_uiLevyNumText );
+		SetTrue( m_uiTimerText );
+		SetTimer( m_uiTimerText, sec, sec, 1, T(658) );
+	end
+end
+
+function LevyDlgGet()
+	if GetPlayer().m_levynum <= 0 then
+		AlertMsg(T(657))
+		return
+	end
+	system_askinfo( ASKINFO_LEVY, "", 1 )
+end

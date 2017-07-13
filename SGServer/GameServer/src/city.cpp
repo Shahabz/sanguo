@@ -36,6 +36,9 @@ extern int g_maxactornum;
 extern CityGuardInfo *g_cityguardinfo;
 extern int g_cityguardinfo_maxnum;
 
+extern TrainlongInfo *g_trainlong;
+extern int g_trainlong_maxnum;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -526,7 +529,7 @@ int city_actorupgrade( int city_index, char path, AwardGetInfo *getinfo )
 int city_changebody( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].body > SHRT_MAX - value )
+	if ( value > 0 && g_city[city_index].body > SHRT_MAX - value )
 		g_city[city_index].body = SHRT_MAX;
 	else
 		g_city[city_index].body += value;
@@ -543,7 +546,7 @@ int city_changebody( int city_index, int value, short path )
 int city_changelevy( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].levynum > CHAR_MAX - value )
+	if ( value > 0 && g_city[city_index].levynum > CHAR_MAX - value )
 		g_city[city_index].levynum = CHAR_MAX;
 	else
 		g_city[city_index].levynum += value;
@@ -564,7 +567,7 @@ int city_changesilver( int city_index, int value, short path )
 	if ( value == 0 )
 		return -1;
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].silver > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].silver > INT_MAX - value )
 		g_city[city_index].silver = INT_MAX;
 	else
 		g_city[city_index].silver += value;
@@ -583,7 +586,7 @@ int city_changewood( int city_index, int value, short path )
 	if ( value == 0 )
 		return -1;
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].wood > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].wood > INT_MAX - value )
 		g_city[city_index].wood = INT_MAX;
 	else
 		g_city[city_index].wood += value;
@@ -602,7 +605,7 @@ int city_changefood( int city_index, int value, short path )
 	if ( value == 0 )
 		return -1;
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].food > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].food > INT_MAX - value )
 		g_city[city_index].food = INT_MAX;
 	else
 		g_city[city_index].food += value;
@@ -621,7 +624,7 @@ int city_changeiron( int city_index, int value, short path )
 	if ( value == 0 )
 		return -1;
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].iron > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].iron > INT_MAX - value )
 		g_city[city_index].iron = INT_MAX;
 	else
 		g_city[city_index].iron += value;
@@ -638,7 +641,7 @@ int city_changeiron( int city_index, int value, short path )
 int city_changepeople( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].people > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].people > INT_MAX - value )
 		g_city[city_index].people = INT_MAX;
 	else
 		g_city[city_index].people += value;
@@ -655,7 +658,7 @@ int city_changepeople( int city_index, int value, short path )
 int city_changeprestige( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].prestige > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].prestige > INT_MAX - value )
 		g_city[city_index].prestige = INT_MAX;
 	else
 		g_city[city_index].prestige += value;
@@ -672,7 +675,7 @@ int city_changeprestige( int city_index, int value, short path )
 int city_changefriendship( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( g_city[city_index].friendship > INT_MAX - value )
+	if ( value > 0 && g_city[city_index].friendship > INT_MAX - value )
 		g_city[city_index].friendship = INT_MAX;
 	else
 		g_city[city_index].friendship += value;
@@ -876,5 +879,250 @@ int city_guard_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 	netsend_cityguardlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 获取基础产量
+int city_yield_base( City *pCity, int kind )
+{
+	if ( !pCity )
+		return 0;
+	int yield = 0;
+	for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_res[tmpi].kind == kind )
+		{
+			BuildingUpgradeConfig *config = building_getconfig( pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
+			if ( config )
+			{
+				yield += config->value[1];
+			}
+		}
+	}
+	return yield;
+}
+
+int city_yield_total( City *pCity, int kind )
+{
+	if ( !pCity )
+		return 0;
+	int yield = 0;
+	yield = city_yield_base( pCity, kind );
+	return yield;
+}
+
+// 征收
+int city_levy( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->levynum <= 0 )
+		return -1;
+
+	int silver = city_yield_total( pCity, BUILDING_Silver );
+	if ( silver > 0 )
+		city_changesilver( pCity->index, silver, PATH_LEVY );
+
+	int wood = city_yield_total( pCity, BUILDING_Wood );
+	if ( wood > 0 )
+		city_changesilver( pCity->index, wood, PATH_LEVY );
+
+	int food = city_yield_total( pCity, BUILDING_Food );
+	if ( food > 0 )
+		city_changesilver( pCity->index, food, PATH_LEVY );
+
+	int iron = city_yield_total( pCity, BUILDING_Iron );
+	if ( iron > 0 )
+		city_changesilver( pCity->index, iron, PATH_LEVY );
+
+	city_changelevy( pCity->index, -1, PATH_LEVY );
+	return 0;
+}
+
+int city_levy_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_LevyInfo pValue = { 0 };
+	pValue.m_sec = pCity->levysec;
+	pValue.m_base[0] = city_yield_base( pCity, BUILDING_Silver );
+	pValue.m_base[1] = city_yield_base( pCity, BUILDING_Wood );
+	pValue.m_base[2] = city_yield_base( pCity, BUILDING_Food );
+	pValue.m_base[3] = city_yield_base( pCity, BUILDING_Iron );
+
+		//pValue.m_tech[4]
+		//pValue.m_weather[4]
+		//pValue.m_activity[4]
+		//pValue.m_offical[4]
+	netsend_levyinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 招募每五分钟数
+int city_trainnum( City *pCity, int base )
+{
+	if ( !pCity )
+	{
+		return base;
+	}
+	int total = base;
+	return total;
+}
+
+// 招募所需粮食单兵
+int city_trainfood( City *pCity )
+{
+	if ( !pCity )
+	{
+		return global.trainfood;
+	}
+	int total = global.trainfood;
+	return total;
+}
+
+// 招募
+int city_train( int actor_index, int kind, int trainsec )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
+	if ( !config )
+		return -1;
+	if ( barracks->soldiers >= config->value[1] )
+		return -1;
+
+	int v = trainsec / 300;
+	int trainnum = v * city_trainnum( pCity, config->value[0] );
+	int trainfood = city_trainfood( pCity )*trainnum;
+	if ( pCity->food < trainfood )
+		return -1;
+	city_changefood( pCity->index, -trainfood, PATH_TRAIN );
+	barracks->trainsec = trainsec;
+	barracks->trainsec_need = trainsec;
+	barracks->trainnum = trainnum;
+	city_train_sendinfo( actor_index, kind );
+	building_sendinfo_barracks( actor_index, kind );
+	return 0;
+}
+
+int city_train_cancel( int actor_index, int kind, int queue )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
+	if ( !config )
+		return -1;
+
+	city_train_sendinfo( actor_index, kind );
+	return 0;
+}
+
+int city_train_quick( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+
+	city_train_sendinfo( actor_index, kind );
+	building_sendinfo_barracks( actor_index, kind );
+	return 0;
+}
+
+int city_train_get( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+
+	building_sendinfo_barracks( actor_index, kind );
+	return 0;
+}
+
+int city_train_buyqueue( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+
+	city_train_sendinfo( actor_index, kind );
+	return 0;
+}
+
+int city_train_buylong( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+
+	city_train_sendinfo( actor_index, kind );
+	return 0;
+}
+
+int city_train_sendinfo( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+	if ( !barracks )
+		return -1;
+	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
+	if ( !config )
+		return -1;
+
+	SLK_NetS_TrainInfo pValue = { 0 };
+	pValue.m_soldiers = barracks->soldiers;
+	pValue.m_soldiers_max = config->value[1];
+	pValue.m_trainnum = barracks->trainnum;
+	pValue.m_trainsec = barracks->trainsec;
+	pValue.m_trainsec_need = barracks->trainsec_need;
+	pValue.m_queue = barracks->queue;
+	pValue.m_trainlong = barracks->trainlong;
+	pValue.m_train_confnum = city_trainnum( pCity, config->value[0] );
+	pValue.m_train_confsec = g_trainlong[barracks->trainlong].timelong;
+	pValue.m_train_conffood = city_trainfood( pCity );
+	pValue.m_queuenum[16];	//队列
+	int count = 0;
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		if ( barracks->queuenum[tmpi] > 0 )
+		{
+			pValue.m_queuenum[count] = barracks->queuenum[tmpi];
+			count += 1;
+		}
+	}
+	
+	netsend_traininfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

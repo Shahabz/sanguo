@@ -47,6 +47,7 @@
 // 获取建筑指针
 Building* building_getptr( int city_index, int offset );
 BuildingBarracks* buildingbarracks_getptr( int city_index, int offset );
+BuildingBarracks* buildingbarracks_getptr_kind( int city_index, int kind );
 BuildingRes* buildingres_getptr( int city_index, int offset );
 BuildingRes *buildingres_getptr_number( int city_index, int kind, int no );
 

@@ -6,14 +6,23 @@ SRC = \
 ../AutoS/src/auto_actor_item.cpp \
 ../AutoS/src/auto_army.cpp \
 ../AutoS/src/auto_city.cpp \
+../AutoS/src/auto_city_attr.cpp \
 ../AutoS/src/auto_city_building.cpp \
 ../AutoS/src/auto_city_building_barracks.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
+../AutoS/src/auto_city_guard.cpp \
 ../AutoS/src/auto_data_building_upgrade.cpp \
+../AutoS/src/auto_data_city_guard.cpp \
+../AutoS/src/auto_data_city_tech.cpp \
+../AutoS/src/auto_data_equip.cpp \
+../AutoS/src/auto_data_hero.cpp \
 ../AutoS/src/auto_data_item.cpp \
+../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_paycountry.cpp \
 ../AutoS/src/auto_data_paygoods.cpp \
 ../AutoS/src/auto_data_platinfo.cpp \
+../AutoS/src/auto_data_quest.cpp \
+../AutoS/src/auto_data_trainlong.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_data_vip.cpp \
 ../AutoS/src/global_netrecv_auto.cpp \
@@ -58,6 +67,7 @@ main.cpp \
 map.cpp \
 mapunit.cpp \
 mem_dump.cpp \
+quest.cpp \
 script.cpp \
 script_auto.cpp \
 script_reg_auto.cpp \
@@ -91,21 +101,39 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city.o: ../AutoS/src/auto_city.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_city_attr.o: ../AutoS/src/auto_city_attr.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building.o: ../AutoS/src/auto_city_building.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building_barracks.o: ../AutoS/src/auto_city_building_barracks.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building_res.o: ../AutoS/src/auto_city_building_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_city_guard.o: ../AutoS/src/auto_city_guard.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_building_upgrade.o: ../AutoS/src/auto_data_building_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_city_guard.o: ../AutoS/src/auto_data_city_guard.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_city_tech.o: ../AutoS/src/auto_data_city_tech.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_equip.o: ../AutoS/src/auto_data_equip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paycountry.o: ../AutoS/src/auto_data_paycountry.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paygoods.o: ../AutoS/src/auto_data_paygoods.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_platinfo.o: ../AutoS/src/auto_data_platinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_quest.o: ../AutoS/src/auto_data_quest.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_trainlong.o: ../AutoS/src/auto_data_trainlong.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_upgrade.o: ../AutoS/src/auto_data_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -194,6 +222,8 @@ map.o: map.cpp
 mapunit.o: mapunit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 mem_dump.o: mem_dump.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+quest.o: quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 script.o: script.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

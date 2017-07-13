@@ -18,6 +18,7 @@
 #include "auto_data_vip.h"
 #include "auto_data_quest.h"
 #include "auto_data_city_guard.h"
+#include "auto_data_trainlong.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"
@@ -50,7 +51,7 @@
 #define MAX_ACTOR_EQUIPNUM		100
 
 #define HERO_ACTOR_MAX				128	// 未上英雄
-#define HERO_CITY_MAX				4	// 上阵英雄
+#define HERO_CITY_MAX				12	// 上阵英雄
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
 #define SHAPE_MAX					64		// 形象
 

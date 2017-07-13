@@ -20,6 +20,7 @@
 #include "equip.h"
 #include "building.h"
 #include "vip.h"
+#include "hero.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -422,7 +423,7 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind < AWARDKIND_BUILDINGBASE ) // Ó¢ÐÛ£¨20000+Ó¢ÐÛ±àºÅ£©
 	{
-
+		hero_gethero( actor_index, (kind - AWARDKIND_HEROBASE), path );
 	}
 	else if ( kind < AWARDKIND_FUNCTION )// ½¨Öþ£¨30000+½¨Öþ±àºÅ£©
 	{
@@ -434,7 +435,15 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind == AWARDKIND_VALUEBASE )// ÊýÖµ
 	{
-
+		building_give( g_actors[actor_index].city_index, BUILDING_Wall, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_StoreHouse, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Tech, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Infantry, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Cavalry, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Archer, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Smithy, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Wash, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Hero, 1 );
 	}
 	else if ( kind == AWARDKIND_SILVER )// Òø±Ò
 	{

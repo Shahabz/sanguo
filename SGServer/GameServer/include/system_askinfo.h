@@ -8,6 +8,13 @@
 #define ASKINFO_CITYGUARD		3 // 城墙守卫
 #define ASKINFO_QUEST			4 // 任务
 #define ASKINFO_BUILDING		5 // 建筑
+#define ASKINFO_LEVY			6 // 征收
+#define ASKINFO_TRAIN			7 // 训练
+#define ASKINFO_EQUIPFORGING    8  // 装备打造
+#define ASKINFO_EQUIPWASH       9  // 装备洗炼
+#define ASKINFO_EQUIP			10 // 装备
+#define ASKINFO_ITEM			11 // 道具
+#define ASKINFO_HERO			12 // 英雄
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

@@ -677,6 +677,16 @@ struct _slk_NetS_BuildingAction {
 };
 typedef struct _slk_NetS_BuildingAction SLK_NetS_BuildingAction;	//建筑动作
 
+struct _slk_NetS_LevyInfo {
+	int m_base[4];	//基础
+	int m_tech[4];	//科技加成
+	int m_weather[4];	//天气加成
+	int m_activity[4];	//活动加成
+	int m_offical[4];	//官职加成
+	int m_sec;	//冷却倒计时
+};
+typedef struct _slk_NetS_LevyInfo SLK_NetS_LevyInfo;	//征收信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -750,5 +760,6 @@ int struct_NetS_CityGuardSec_send( char **pptr, int *psize, SLK_NetS_CityGuardSe
 int struct_NetS_BuildingSmithy_send( char **pptr, int *psize, SLK_NetS_BuildingSmithy *pValue );
 int struct_NetS_ChangeName_send( char **pptr, int *psize, SLK_NetS_ChangeName *pValue );
 int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingAction *pValue );
+int struct_NetS_LevyInfo_send( char **pptr, int *psize, SLK_NetS_LevyInfo *pValue );
 
 #endif

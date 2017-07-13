@@ -100,7 +100,7 @@ end
 
 -- 跳转
 function QuestGoto( index )
-	if CacheQuest.m_list[index] == nil then
+	if CacheQuest == nil or CacheQuest.m_list[index] == nil then
 		return
 	end
 
@@ -112,8 +112,17 @@ function QuestGoto( index )
 
 	if datatype == QUEST_DATAINDEX_ACTOR_LEVEL then
 	elseif datatype == QUEST_DATAINDEX_BUILDING_LEVEL then-- 建筑等级 datatype=2 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
-		City.Move( datakind, dataoffset, true )
-		
+		local offset = 0;
+		if datakind == BUILDING_Silver then
+			offset = dataoffset;
+		elseif datakind == BUILDING_Wood then
+			offset = dataoffset+16;
+		elseif datakind == BUILDING_Food then
+			offset = dataoffset+32;
+		elseif datakind == BUILDING_Iron then
+			offset = dataoffset+48;
+		end
+		City.Move( datakind, offset, true )
 		
 	elseif datatype == QUEST_DATAINDEX_BUILDING_SILVER then-- N个民居达到N级 datatype=3 datakind=等级 needvalue=建筑数量
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Silver );

@@ -661,6 +661,9 @@ int actor_entercity( int actor_index )
 	// 角色配置信息
 	actor_configinfo( actor_index );
 
+	// 英雄列表
+	hero_list( actor_index );
+
 	// 物品列表
 	item_list( actor_index );
 
@@ -751,9 +754,6 @@ int actor_load( int actor_index, int actorid )
 
 	// 读取未上阵英雄的装备
 	actor_equip_load_auto( g_actors[actor_index].actorid, actor_index, actor_equip_getptr, "actor_equip" );
-
-	// 英雄列表
-
 
 	// 道具背包数据
 	item_load( actor_index );

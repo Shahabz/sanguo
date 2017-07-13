@@ -1,7 +1,6 @@
 -- 界面
 local m_Dlg = nil;
 local m_DialogFrameMod = nil;
-
 local m_uiUIP_Hero = {nil,nil,nil,nil}; --UnityEngine.GameObject
 
 -- 打开界面
@@ -34,8 +33,8 @@ function HeroDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroDlgClose();
-		elseif nControlID == 0 then
-			HeroInfoDlgOpen();
+		elseif nControlID >= 1 and nControlID <= 4 then
+			HeroDlgSelect( nControlID )
         end
 	end
 end
@@ -145,3 +144,9 @@ function HeroDlgSetHero( index, pHero )
 	SetText( uiState, HeroState( pHero.m_state ) );
 end
 
+function HeroDlgSelect( index )
+	if GetHero().m_CityHero[index] == nil then
+		return;
+	end
+	HeroInfoDlgShow( GetHero().m_CityHero[index] );
+end

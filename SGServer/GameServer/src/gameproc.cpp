@@ -38,6 +38,7 @@
 #include "global_cmdqueue.h"
 #include "city.h"
 #include "quest.h"
+#include "hero.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -303,10 +304,10 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
-	// 装备最大ID初始化
-	if ( equip_maxid_init() < 0 )
+	// 英雄数据初始化
+	if ( heroinfo_init_auto() < 0 )
 	{
-		printf_msg( "equip_maxid_init Module Error!" );
+		printf_msg( "heroinfo_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
@@ -382,6 +383,24 @@ int process_init( int max_connection )
 	//pushwork_init();
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 48 );
+
+	// 装备最大ID初始化
+	if ( equip_maxid_init() < 0 )
+	{
+		printf_msg( "equip_maxid_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 英雄最大ID初始化
+	if ( hero_maxid_init() < 0 )
+	{
+		printf_msg( "hero_maxid_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
 
 	// 世界地图初始化（严格顺序要求，不允许改变）
 	if ( map_init() < 0 )

@@ -233,6 +233,7 @@ public static class CustomSettings
         _GT(typeof(Shake)),
         _GT(typeof(UIHighLightMask)),
 		_GT(typeof(Reference)),
+		_GT(typeof(UIPolygonChart)),
 
 		_GT(typeof(YlyAssetIdentify)),
 		_GT(typeof(YlyRichText)),

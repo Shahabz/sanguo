@@ -70,6 +70,7 @@ int netsend_cityguardsec_S( int actor_index, char send_type, SLK_NetS_CityGuardS
 int netsend_buildingsmithy_S( int actor_index, char send_type, SLK_NetS_BuildingSmithy *pValue );
 int netsend_changename_S( int actor_index, char send_type, SLK_NetS_ChangeName *pValue );
 int netsend_buildingaction_S( int actor_index, char send_type, SLK_NetS_BuildingAction *pValue );
+int netsend_levyinfo_S( int actor_index, char send_type, SLK_NetS_LevyInfo *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

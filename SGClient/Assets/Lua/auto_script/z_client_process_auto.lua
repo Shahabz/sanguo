@@ -422,6 +422,7 @@ end
 function proc_changelevy_C( recvValue )
 	-- process.
 	GetPlayer():SetBuildingLevy( recvValue.m_total )
+	LevyDlgChangeSec( recvValue.m_sec )
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -616,7 +617,7 @@ function proc_heroget_C( recvValue )
 	local pHero = SLK_Hero.new();
 	pHero:Set( recvValue.m_hero );
 	GetHero():SetHero( recvValue.m_hero.m_offset, pHero );
-	HeroGetDlgShow( recvValue );
+	HeroGetDlgShow( recvValue.m_hero );
 end
 
 -- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,
@@ -675,7 +676,7 @@ end
 -- m_soldiers=0,m_soldiers_max=0,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={[16]},m_queue=0,m_trainlong=0,m_train_confnum=0,m_train_confsec=0,
 function proc_traininfo_C( recvValue )
 	-- process.
-	
+	TrainDlgRecv( recvValue )
 end
 
 -- m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,
@@ -711,7 +712,7 @@ function proc_function_C( recvValue )
 		[4] = BUILDING_Hero,
 		[5] = BUILDING_Wishing }
 		local kind = kindlist[ recvValue.m_openoffset ]
-		BuildingGetDlgShow( kind, 0, { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
+		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
 	end
 
 end
@@ -753,5 +754,11 @@ function proc_buildingaction_C( recvValue )
 	if recvValue.m_action == 1 then
 		City.BuildingSetUpgradeing( recvValue.m_kind, recvValue.m_offset, 0, 0 )
 	end
+end
+
+-- m_base={[4]},m_tech={[4]},m_weather={[4]},m_activity={[4]},m_offical={[4]},
+function proc_levyinfo_C( recvValue )
+	-- process.
+	LevyDlgRecv( recvValue )
 end
 

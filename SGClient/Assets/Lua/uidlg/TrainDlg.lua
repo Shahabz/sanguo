@@ -171,13 +171,15 @@ function TrainDlgOnShow( buildingKind )
 	SetImage( m_uiShape, CorpsSprite( m_corps ) );
 	
 	-- 请求信息
-	if m_corps == 0 then
+	system_askinfo( ASKINFO_TRAIN, "", 0 );
+	
+	--[[if m_corps == 0 then
 		TrainDlgRecv( {m_soldiers=1800,m_soldiers_max=2000,m_trainnum=250,m_trainsec=10,m_trainsec_need=300,m_queuenum={250,0,0,0,0,0,0,0},m_queue=1,m_trainlong=0,m_train_confnum=250,m_train_confsec=600,m_train_conffood=30} )
 	elseif m_corps == 1 then
 		TrainDlgRecv( {m_soldiers=2800,m_soldiers_max=2000,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={0,0,0,0,0,0,0,0},m_queue=2,m_trainlong=0,m_train_confnum=250,m_train_confsec=600,m_train_conffood=30} )
 	elseif m_corps == 2 then
 		TrainDlgRecv( {m_soldiers=4000,m_soldiers_max=6000,m_trainnum=250,m_trainsec=10,m_trainsec_need=300,m_queuenum={0,0,0,0,0,0,0,0},m_queue=6,m_trainlong=0,m_train_confnum=250,m_train_confsec=1200,m_train_conffood=30} )
-	end
+	end--]]
 end
 
 -- 信息返回
@@ -329,19 +331,20 @@ function TrainDlgTrain()
 		return
 	end
 	--m_selectsec
+	system_askinfo( ASKINFO_TRAIN, "", 1, m_buildingKind, m_selectsec );
 end
 
--- 扩建
+-- 加速
 function TrainDlgQuick()
-	
+	system_askinfo( ASKINFO_TRAIN, "", 2, m_buildingKind );
 end
 
 -- 扩建
 function TrainDlgQueue()
-	
+	system_askinfo( ASKINFO_TRAIN, "", 5, m_buildingKind );
 end
 
 -- 取消
 function TrainDlgCancel( index )
-	
+	system_askinfo( ASKINFO_TRAIN, "", 3, m_buildingKind, index );
 end

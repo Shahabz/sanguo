@@ -340,6 +340,11 @@ function netrecv_buildingaction_C( buffer )
 	proc_buildingaction_C( recvValue );
 end
 
+function netrecv_levyinfo_C( buffer )
+	local recvValue = struct_NetS_LevyInfo_recv( buffer );
+	proc_levyinfo_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -409,6 +414,7 @@ Proc_Command = {
 	[CMDS_BUILDINGSMITHY]=netrecv_buildingsmithy_C;
 	[CMDS_CHANGENAME]=netrecv_changename_C;
 	[CMDS_BUILDINGACTION]=netrecv_buildingaction_C;
+	[CMDS_LEVYINFO]=netrecv_levyinfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

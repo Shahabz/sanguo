@@ -850,3 +850,29 @@ function struct_NetS_BuildingAction_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_LevyInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_base={};
+	for tmpi=1,4,1 do
+		recvValue.m_base[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_tech={};
+	for tmpi=1,4,1 do
+		recvValue.m_tech[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_weather={};
+	for tmpi=1,4,1 do
+		recvValue.m_weather[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_activity={};
+	for tmpi=1,4,1 do
+		recvValue.m_activity[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_offical={};
+	for tmpi=1,4,1 do
+		recvValue.m_offical[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_sec = buffer:ReadInt();
+	return recvValue;
+end
+

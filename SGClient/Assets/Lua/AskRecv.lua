@@ -24,6 +24,10 @@ function RecvActorNotify(recvValue)
 	
 	-- NPC¶Ô»°	
 	elseif msgid == NOTIFY_NPCTALK then
-		NpcTalkID( value[1] )
+		if BuildingGetDlgIsShow() == true then
+			BuildingGetDlgWait( NpcTalkID, value[1] )
+		else
+			NpcTalkID( value[1] )
+		end
     end
 end

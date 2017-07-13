@@ -5,6 +5,13 @@ ASKINFO_CHANGENAME	=	2 -- 修改名字
 ASKINFO_CITYGUARD	=	3 -- 城墙守卫
 ASKINFO_QUEST		=	4 -- 任务
 ASKINFO_BUILDING	=	5 -- 建筑
+ASKINFO_LEVY		=	6 -- 征收
+ASKINFO_TRAIN		=	7 -- 训练
+ASKINFO_EQUIPFORGING	=	8  -- 装备打造
+ASKINFO_EQUIPWASH		=	9  -- 装备洗炼
+ASKINFO_EQUIP			=	10 -- 装备
+ASKINFO_ITEM			=	11 -- 道具  
+ASKINFO_HERO			=	12 -- 英雄
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议
