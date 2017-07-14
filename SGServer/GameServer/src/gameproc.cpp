@@ -349,6 +349,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 募兵时长
+	if ( trainlonginfo_init_auto() < 0 )
+	{
+		printf_msg( "trainlonginfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 任务
 	if ( questinfo_init_auto() < 0 )
 	{

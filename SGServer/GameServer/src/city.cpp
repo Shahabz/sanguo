@@ -196,7 +196,7 @@ int city_new( City *pCity )
 	if ( pCity == NULL )
 		return -1;
 	int city_index = -1;
-	for ( city_index = 1; city_index < g_city_maxcount; city_index++ )
+	for ( city_index = 0; city_index < g_city_maxcount; city_index++ )
 	{
 		if ( g_city[city_index].actorid <= 0 )
 		{
@@ -927,15 +927,15 @@ int city_levy( int actor_index )
 
 	int wood = city_yield_total( pCity, BUILDING_Wood );
 	if ( wood > 0 )
-		city_changesilver( pCity->index, wood, PATH_LEVY );
+		city_changewood( pCity->index, wood, PATH_LEVY );
 
 	int food = city_yield_total( pCity, BUILDING_Food );
 	if ( food > 0 )
-		city_changesilver( pCity->index, food, PATH_LEVY );
+		city_changefood( pCity->index, food, PATH_LEVY );
 
 	int iron = city_yield_total( pCity, BUILDING_Iron );
 	if ( iron > 0 )
-		city_changesilver( pCity->index, iron, PATH_LEVY );
+		city_changeiron( pCity->index, iron, PATH_LEVY );
 
 	city_changelevy( pCity->index, -1, PATH_LEVY );
 	return 0;
@@ -1110,7 +1110,7 @@ int city_train_sendinfo( int actor_index, int kind )
 	pValue.m_queue = barracks->queue;
 	pValue.m_trainlong = barracks->trainlong;
 	pValue.m_train_confnum = city_trainnum( pCity, config->value[0] );
-	pValue.m_train_confsec = g_trainlong[barracks->trainlong].timelong;
+	pValue.m_train_confsec = g_trainlong[barracks->trainlong].timelong*60;
 	pValue.m_train_conffood = city_trainfood( pCity );
 	pValue.m_queuenum[16];	//╤сап
 	int count = 0;

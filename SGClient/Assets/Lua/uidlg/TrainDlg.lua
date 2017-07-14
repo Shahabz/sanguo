@@ -36,19 +36,7 @@ function TrainDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	local objs = {};
-	for i = 0 ,m_uiContent.transform.childCount - 1 do
-		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
-    end
-	for k, v in pairs(objs) do
-		local obj = v;
-		if obj.name == "UIP_Train(Clone)" then
-			obj.transform:Find("Content/Timer"):GetComponent( typeof(UITextTimeCountdown) ):Stop();
-			m_ObjectPool:Release( "UIP_Train", obj );
-		elseif obj.name == "UIP_TrainQueue(Clone)" then
-			m_ObjectPool:Release( "UIP_TrainQueue", obj );
-		end
-    end
+	TrainDlgReset()
 	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "TrainDlg" );
 end
@@ -171,7 +159,7 @@ function TrainDlgOnShow( buildingKind )
 	SetImage( m_uiShape, CorpsSprite( m_corps ) );
 	
 	-- 请求信息
-	system_askinfo( ASKINFO_TRAIN, "", 0 );
+	system_askinfo( ASKINFO_TRAIN, "", 0, buildingKind );
 	
 	--[[if m_corps == 0 then
 		TrainDlgRecv( {m_soldiers=1800,m_soldiers_max=2000,m_trainnum=250,m_trainsec=10,m_trainsec_need=300,m_queuenum={250,0,0,0,0,0,0,0},m_queue=1,m_trainlong=0,m_train_confnum=250,m_train_confsec=600,m_train_conffood=30} )
@@ -185,6 +173,7 @@ end
 -- 信息返回
 -- m_soldiers=0,m_soldiers_max=0,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={[16]},m_queue=0,m_trainlong=0,m_train_confnum=0,m_train_confsec=0,m_train_conffood=0
 function TrainDlgRecv( recvValue )
+	TrainDlgReset()
 	m_recvValue = recvValue;
 	SetText( m_uiDesc, T(m_corps+619) )
 	SetText( m_uiSoldiers, T(622)..":"..recvValue.m_soldiers )
@@ -326,7 +315,7 @@ function TrainDlgTrain()
 		pop(T(631))
 		return
 	end
-	if m_selectfood < GetPlayer().m_food then
+	if GetPlayer().m_food < m_selectfood then
 		pop(T(644))
 		return
 	end
@@ -336,7 +325,8 @@ end
 
 -- 加速
 function TrainDlgQuick()
-	system_askinfo( ASKINFO_TRAIN, "", 2, m_buildingKind );
+	--system_askinfo( ASKINFO_TRAIN, "", 2, m_buildingKind );
+	QuickItemDlgShow()
 end
 
 -- 扩建
@@ -347,4 +337,20 @@ end
 -- 取消
 function TrainDlgCancel( index )
 	system_askinfo( ASKINFO_TRAIN, "", 3, m_buildingKind, index );
+end
+
+function TrainDlgReset()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_Train(Clone)" then
+			obj.transform:Find("Content/Timer"):GetComponent( typeof(UITextTimeCountdown) ):Stop();
+			m_ObjectPool:Release( "UIP_Train", obj );
+		elseif obj.name == "UIP_TrainQueue(Clone)" then
+			m_ObjectPool:Release( "UIP_TrainQueue", obj );
+		end
+	end
 end
