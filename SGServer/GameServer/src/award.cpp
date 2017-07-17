@@ -431,7 +431,7 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind < AWARDKIND_VALUEBASE )// 功能（40000+功能编号）
 	{
-
+		city_function_open( city_getptr( actor_index ), (kind - AWARDKIND_FUNCTION) );
 	}
 	else if ( kind == AWARDKIND_VALUEBASE )// 数值
 	{

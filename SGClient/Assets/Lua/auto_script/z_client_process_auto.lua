@@ -713,6 +713,19 @@ function proc_function_C( recvValue )
 		[5] = BUILDING_Wishing }
 		local kind = kindlist[ recvValue.m_openoffset ]
 		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
+		
+	else
+		
+--CITY_FUNCTION_NATION		=10	-- 国家
+--CITY_FUNCTION_WORLD			=11	-- 世界
+--CITY_FUNCTION_STORY			=12	-- 副本
+--CITY_FUNCTION_MAIL			=13	-- 邮件
+--CITY_FUNCTION_FRIEND		=14	-- 好友
+--CITY_FUNCTION_NATIONEQUIP	=15	-- 国器
+--CITY_FUNCTION_RANK			=16	-- 排行榜
+--CITY_FUNCTION_AUTOBUILD		=17	-- 自动建造
+--CITY_FUNCTION_CHAT			=18	-- 聊天
+--CITY_FUNCTION_WARKEREX		=19	-- 商业建造队
 	end
 
 end

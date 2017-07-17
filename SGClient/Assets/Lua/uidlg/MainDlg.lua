@@ -32,6 +32,24 @@ local m_uiFood = nil; --UnityEngine.GameObject
 local m_uiFoodNum = nil; --UnityEngine.GameObject
 local m_uiAutoBuild = nil; --UnityEngine.GameObject
 local m_uiQuestText = nil; --UnityEngine.GameObject
+local m_uiButtonHero = nil; --UnityEngine.GameObject
+local m_uiButtonQuest = nil; --UnityEngine.GameObject
+local m_uiButtonNation = nil; --UnityEngine.GameObject
+local m_uiButtonWorld = nil; --UnityEngine.GameObject
+local m_uiButtonCity = nil; --UnityEngine.GameObject
+local m_uiButtonStory = nil; --UnityEngine.GameObject
+local m_uiButtonMail = nil; --UnityEngine.GameObject
+local m_uiButtonMore = nil; --UnityEngine.GameObject
+local m_uiButtonBag = nil; --UnityEngine.GameObject
+local m_uiButtonFriend = nil; --UnityEngine.GameObject
+local m_uiButtonNationEquip = nil; --UnityEngine.GameObject
+local m_uiButtonRank = nil; --UnityEngine.GameObject
+local m_uiButtonNotice = nil; --UnityEngine.GameObject
+local m_uiButtonSetting = nil; --UnityEngine.GameObject
+local m_uiButtonGM = nil; --UnityEngine.GameObject
+local m_uiButtonRelogin = nil; --UnityEngine.GameObject
+local m_uiFunctionPanel = nil; --UnityEngine.GameObject
+local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
 
 local m_uiBuildingShape = {nil,nil}
@@ -254,6 +272,24 @@ function MainDlgOnAwake( gameObject )
 	m_uiFoodNum = objs[29];
 	m_uiAutoBuild = objs[30];
 	m_uiQuestText = objs[31];
+	m_uiButtonHero = objs[32];
+	m_uiButtonQuest = objs[33];
+	m_uiButtonNation = objs[34];
+	m_uiButtonWorld = objs[35];
+	m_uiButtonCity = objs[36];
+	m_uiButtonStory = objs[37];
+	m_uiButtonMail = objs[38];
+	m_uiButtonMore = objs[39];
+	m_uiButtonBag = objs[40];
+	m_uiButtonFriend = objs[41];
+	m_uiButtonNationEquip = objs[42];
+	m_uiButtonRank = objs[43];
+	m_uiButtonNotice = objs[44];
+	m_uiButtonSetting = objs[45];
+	m_uiButtonGM = objs[46];
+	m_uiButtonRelogin = objs[47];
+	m_uiFunctionPanel = objs[48];
+	m_uiMorePanel = objs[49];
 	MainDlgWorkerObjectInit();
 end 
 
@@ -505,5 +541,15 @@ function MainDlgWorkerObjectInit()
 	m_uiNormalShapeUITweenScale1[2] = m_uiWorkerEx.transform:Find("NormalShape"):GetComponent("UITweenScale1")
 	m_uiBuildingTimerUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingTimer"):GetComponent("UITweenScale1")
 	m_uiBuildingNameUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1")
+end
+
+-- 设置获得的功能按钮
+function MainDlgSetButtons( func )
+	
+end
+
+-- 获得功能按钮
+function MainDlgButtonGet( offset )
+	
 end
 

@@ -15,6 +15,17 @@
 #define	CITY_FUNCTION_HERO			4	// 聚贤馆
 #define	CITY_FUNCTION_WISHING		5	// 聚宝盆
 
+#define CITY_FUNCTION_NATION		10	// 国家
+#define CITY_FUNCTION_WORLD			11	// 世界
+#define CITY_FUNCTION_STORY			12	// 副本
+#define CITY_FUNCTION_MAIL			13	// 邮件
+#define CITY_FUNCTION_FRIEND		14	// 好友
+#define CITY_FUNCTION_NATIONEQUIP	15	// 国器
+#define CITY_FUNCTION_RANK			16	// 排行榜
+#define CITY_FUNCTION_AUTOBUILD		17	// 自动建造
+#define CITY_FUNCTION_CHAT			18	// 聊天
+#define CITY_FUNCTION_WARKEREX		19	// 商业建造队
+
 // 城池领主类型
 typedef enum
 {

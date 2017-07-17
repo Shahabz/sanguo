@@ -435,6 +435,7 @@ int actor_getinfo( int actor_index )
 	info.m_shape = g_actors[actor_index].shape;
 	info.m_level = g_actors[actor_index].level;
 	info.m_token = g_actors[actor_index].token;
+	g_actors[actor_index].function;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
@@ -498,3 +499,4 @@ int actor_getconfig( int actor_index, int index )
 		return -1;
 	return g_actors[actor_index].config[index];
 }
+
