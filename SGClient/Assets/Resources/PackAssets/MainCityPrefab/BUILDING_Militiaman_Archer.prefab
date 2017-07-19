@@ -161,11 +161,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.3242445, y: 0.5635171}
-      - {x: -0.9635272, y: 0.14689493}
-      - {x: -0.45060492, y: -0.621953}
-      - {x: 1.0242682, y: -0.36006308}
-      - {x: 0.38986397, y: 0.62079096}
+    - - {x: -0.07651043, y: 0.65199375}
+      - {x: -0.6627073, y: 0.02302742}
+      - {x: -0.9598713, y: -0.49749422}
+      - {x: 0.071406364, y: -0.90507793}
+      - {x: 1.059658, y: -0.41314936}
+      - {x: 0.69160366, y: 0.28382254}
+      - {x: 0.23060703, y: 0.5234661}
 --- !u!114 &114275303345126508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -179,7 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -194,12 +196,12 @@ MonoBehaviour:
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6C11\u5175\u8425"
-  localizeID: 0
+  m_Text: "\u5F13\u5175\u6C11\u5175\u8425"
+  localizeID: 16
   rtlAlignment: 0
   rtlReverseSign: 
 --- !u!114 &114726195195398322
@@ -215,7 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -264,6 +266,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kind: 16
   offset: -1
+  BuildingTimerMod: {fileID: 0}
+  BuildingFreeMod: {fileID: 0}
+  BuildingOverMod: {fileID: 0}
 --- !u!212 &212042443461863650
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -380,16 +385,16 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1476305194754812}
-  m_LocalRotation: {x: -0.3019655, y: 0.05889362, z: -0.425684, w: 0.85096514}
+  m_LocalRotation: {x: -0.40676498, y: 0.20280558, z: -0.16925429, w: 0.8745085}
   m_LocalPosition: {x: 0, y: 0, z: 0.436}
   m_LocalScale: {x: 0.010000005, y: 0.010000007, z: 0.01}
   m_Children:
   - {fileID: 224412425438308656}
   m_Father: {fileID: 4276810881599188}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -27.632002, y: 23.786001, z: -59.081}
+  m_LocalEulerAnglesHint: {x: -40, y: 40, z: -37}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.609, y: -0.293}
+  m_AnchoredPosition: {x: -0.397, y: -0.584}
   m_SizeDelta: {x: 84, y: 23}
   m_Pivot: {x: 0.5, y: 0.5}

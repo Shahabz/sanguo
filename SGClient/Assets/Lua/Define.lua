@@ -75,8 +75,8 @@ BuildingPrefab={
 [BUILDING_Cavalry] = { prefab = "BUILDING_Cavalry", land="BuildingLand7" },
 [BUILDING_Archer] = { prefab = "BUILDING_Archer", land="BuildingLand8" },
 [BUILDING_Militiaman_Infantry] = { prefab = "BUILDING_Militiaman_Infantry", land="BuildingLand9" },
-[BUILDING_Militiaman_Cavalry] = { prefab = "BUILDING_Militiaman_Cavalry", land="BuildingLand10" },
-[BUILDING_Militiaman_Archer] = { prefab = "BUILDING_Militiaman_Archer", land="BuildingLand11" },
+[BUILDING_Militiaman_Cavalry] = { prefab = "BUILDING_Militiaman_Cavalry", land="BuildingLand9" },
+[BUILDING_Militiaman_Archer] = { prefab = "BUILDING_Militiaman_Archer", land="BuildingLand9" },
 [BUILDING_Silver] = { prefab = "BUILDING_Silver", land="ResLand" },
 [BUILDING_Wood] = { prefab = "BUILDING_Wood", land="ResLand" },
 [BUILDING_Food] = { prefab = "BUILDING_Food", land="ResLand" },
@@ -271,6 +271,13 @@ function addObj( object, prefab )
 	return obj;
 end
 
+function SetParent( obj, parent )
+	obj.transform:SetParent( parent.transform );
+	obj.transform.localPosition = Vector3.zero;
+	obj.transform.localScale = Vector3.one;
+	obj.gameObject:SetActive( true )
+end
+
 function SetImage( transform, sprite )
 	transform:GetComponent( typeof(Image) ).sprite = sprite;
 end
@@ -315,6 +322,10 @@ end
 
 function SetProgress( transform, value )
 	transform:GetComponent( typeof(UIProgress) ):SetValue(value);
+end
+
+function SetSlider( transform, value )
+	transform:GetComponent( typeof(UISlider) ).value = value;
 end
 
 function SetTrue( transform )

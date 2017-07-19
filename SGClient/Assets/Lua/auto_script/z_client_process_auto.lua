@@ -143,43 +143,7 @@ function proc_buildinglist_C( recvValue )
 	for i=1, recvValue.m_res_count, 1 do
 		proc_buildingres_C( recvValue.m_res[i] )
 	end
-	
-	
-	--[[GetPlayer():SetBuilding( 1,{ m_kind = 1,m_offset = 0,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 2,{ m_kind = 2,m_offset = 1,m_level = 1,m_sec = 60,m_needsec = 60,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 3,{ m_kind = 3,m_offset = 2,m_level = 1,m_sec = 30,m_needsec = 30,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 4,{ m_kind = 4,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 5,{ m_kind = 5,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 6,{ m_kind = 6,m_offset = 5,m_level = 1,m_sec = 100,m_needsec = 100,m_quick = 0, m_overvalue=0 } )
-
-	GetPlayer():SetBuilding( 11,{ m_kind = 11,m_offset = 0,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 12,{ m_kind = 12,m_offset = 1,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
-	GetPlayer():SetBuilding( 13,{ m_kind = 13,m_offset = 2,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
-	
-	GetPlayer():SetBuildingRes( 21,0,{ m_kind = 21,m_offset = 0,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 21,1,{ m_kind = 21,m_offset = 1,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 21,2,{ m_kind = 21,m_offset = 2,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 21,3,{ m_kind = 21,m_offset = 3,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 21,4,{ m_kind = 21,m_offset = 4,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	
-	GetPlayer():SetBuildingRes( 22,32,{ m_kind = 22,m_offset = 32,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 22,33,{ m_kind = 22,m_offset = 33,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 22,34,{ m_kind = 22,m_offset = 34,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 22,35,{ m_kind = 22,m_offset = 35,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	GetPlayer():SetBuildingRes( 22,36,{ m_kind = 22,m_offset = 36,m_level = 1,m_sec = 0,m_needsec = 0,m_quick = 0 } )
-	recvValue.m_levynum = 3
-	recvValue.m_worker_kind = 21;
-	recvValue.m_worker_offset = 2;
-	recvValue.m_worker_sec = 60;
-	recvValue.m_worker_needsec = 60;
-	recvValue.m_worker_free = 1;--]]
---[[	recvValue.m_worker_kind_ex = 1;
-	recvValue.m_worker_offset_ex = 0;
-	recvValue.m_worker_sec_ex = 3600;
-	recvValue.m_worker_needsec_ex = 3600;
-	recvValue.m_worker_expire_ex = 3000;--]]
-	--recvValue.m_function = 127
-	
+		
 	GetPlayer().m_function = recvValue.m_function;
 	-- 铁匠铺
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_SMITHY ) == 1 then
@@ -208,7 +172,7 @@ function proc_buildinglist_C( recvValue )
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_WISHING ) == 1 then
 		GetPlayer():SetBuilding( BUILDING_Wishing,{ m_kind = BUILDING_Wishing, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
 	end
-	
+	MainDlgSetButtons();
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
 	
@@ -715,19 +679,9 @@ function proc_function_C( recvValue )
 		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
 		
 	else
+		MainDlgSetButtons();
 		
---CITY_FUNCTION_NATION		=10	-- 国家
---CITY_FUNCTION_WORLD			=11	-- 世界
---CITY_FUNCTION_STORY			=12	-- 副本
---CITY_FUNCTION_MAIL			=13	-- 邮件
---CITY_FUNCTION_FRIEND		=14	-- 好友
---CITY_FUNCTION_NATIONEQUIP	=15	-- 国器
---CITY_FUNCTION_RANK			=16	-- 排行榜
---CITY_FUNCTION_AUTOBUILD		=17	-- 自动建造
---CITY_FUNCTION_CHAT			=18	-- 聊天
---CITY_FUNCTION_WARKEREX		=19	-- 商业建造队
 	end
-
 end
 
 

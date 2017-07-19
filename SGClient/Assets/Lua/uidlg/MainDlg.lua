@@ -51,6 +51,8 @@ local m_uiButtonRelogin = nil; --UnityEngine.GameObject
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
+local m_uiButtonBack = {}; --UnityEngine.GameObject
+local m_hasButton = {};
 
 local m_uiBuildingShape = {nil,nil}
 local m_uiNormalShape = {nil,nil}
@@ -290,6 +292,17 @@ function MainDlgOnAwake( gameObject )
 	m_uiButtonRelogin = objs[47];
 	m_uiFunctionPanel = objs[48];
 	m_uiMorePanel = objs[49];
+	m_uiButtonBack[1] = objs[50];
+	m_uiButtonBack[2] = objs[51];
+	m_uiButtonBack[3] = objs[52];
+	m_uiButtonBack[4] = objs[53];
+	m_uiButtonBack[5] = objs[54];
+	m_uiButtonBack[6] = objs[55];
+	m_uiButtonBack[7] = objs[56];
+	for i=1, 14, 1 do
+		m_uiButtonBack[10+i] = objs[56+i];
+	end
+	
 	MainDlgWorkerObjectInit();
 end 
 
@@ -324,62 +337,72 @@ end
 ----------------------------------------
 -- 头像
 function MainDlgSetHead()
-	m_uiHead:GetComponent( "Image" ).sprite = PlayerHeadSprite( GetPlayer().m_shape );
+	SetImage( m_uiHead, PlayerHeadSprite( GetPlayer().m_shape ) );
 end
 
 -- 等级
 function MainDlgSetLevel()
-	m_uiLevel:GetComponent( "UIText" ).text = "Lv."..GetPlayer().m_level;
+	SetLevel( m_uiLevel, GetPlayer().m_level );
 end
 
 -- 银币
 function MainDlgSetSilver()
-	m_uiSilverNum:GetComponent( "UIText" ).text = GetPlayer().m_silver;
+	SetText( m_uiSilverNum, GetPlayer().m_silver );
 end
 
 -- 木材
 function MainDlgSetWood()
-	m_uiWoodNum:GetComponent( "UIText" ).text = GetPlayer().m_wood;
+	SetText( m_uiWoodNum, GetPlayer().m_wood );
 end
 
 -- 粮草
 function MainDlgSetFood()
-	m_uiFoodNum:GetComponent( "UIText" ).text = GetPlayer().m_food;
+	SetText( m_uiFoodNum, GetPlayer().m_food );
 end
 
 -- 镔铁
 function MainDlgSetIron()
-	m_uiIronNum:GetComponent( "UIText" ).text = GetPlayer().m_iron;
+	SetText( m_uiIronNum, GetPlayer().m_iron )
 end
 
 -- 体力
 function MainDlgSetBody()
-	m_uiBodyNum:GetComponent( "UIText" ).text = GetPlayer().m_body;
+	if GetPlayer().m_body >= 100 then
+		SetText( m_uiBodyNum, GetPlayer().m_body.."/100", Color.green );
+	else
+		SetText( m_uiBodyNum, GetPlayer().m_body.."/100", Color.white );
+	end
+	SetSlider( m_uiBodyProgress, GetPlayer().m_body/100 )
 end
 
 -- 步兵
 function MainDlgSetInfantry()
-	m_uiInfantryNum:GetComponent( "UIText" ).text = GetPlayer().m_infantry_num;
+	SetText( m_uiInfantryNum, GetPlayer().m_infantry_num );
 end
 
 -- 骑兵
 function MainDlgSetCavalry()
-	m_uiCavalryNum:GetComponent( "UIText" ).text = GetPlayer().m_cavalry_num;
+	SetText( m_uiCavalryNum, GetPlayer().m_cavalry_num );
 end
 
 -- 弓兵
 function MainDlgSetArcher()
-	m_uiArcherNum:GetComponent( "UIText" ).text = GetPlayer().m_archer_num;
+	SetText( m_uiArcherNum, GetPlayer().m_archer_num );
 end
 
 -- 钻石
 function MainDlgSetToken()
-	m_uiTokenNum:GetComponent( "UIText" ).text = GetPlayer().m_token;
+	SetText( m_uiTokenNum, GetPlayer().m_token );
 end
 
 -- VIP
 function MainDlgSetVipLevel()
-	m_uiVipLevel:GetComponent( "UIText" ).text = "VIP "..GetPlayer().m_viplevel;
+	SetText( m_uiVipLevel, "v"..GetPlayer().m_viplevel );
+end
+
+-- exp
+function MainDlgSetExp()
+	SetSlider( m_uiExpProgress, GetPlayer().m_exp/GetPlayer().m_exp_max )
 end
 
 -- 任务
@@ -543,13 +566,161 @@ function MainDlgWorkerObjectInit()
 	m_uiBuildingNameUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1")
 end
 
--- 设置获得的功能按钮
-function MainDlgSetButtons( func )
-	
+ButtonMap = {
+[CITY_FUNCTION_NATION] = { offset = 3 },
+[CITY_FUNCTION_STORY] = { offset = 5 },
+[CITY_FUNCTION_MAIL] = { offset = 6 },
+[CITY_FUNCTION_FRIEND] = { offset = 12 },
+[CITY_FUNCTION_NATIONEQUIP] = { offset = 13 },
+[CITY_FUNCTION_RANK] = { offset = 14 },
+}
+
+function MainDlgGetEmptyButton()
+	for i=1, 24, 1 do
+		if m_hasButton[i] == false and m_uiButtonBack[i] ~= nil then
+			return i, m_uiButtonBack[i];
+		end
+	end
+	return -1, nil;
 end
 
--- 获得功能按钮
-function MainDlgButtonGet( offset )
+-- 设置获得的功能按钮
+function MainDlgSetButtons()
+	for i=1, 24, 1 do
+		m_hasButton[i] = false;
+	end
+--[[	SetParent( m_uiButtonHero = objs[32];
+	SetParent( m_uiButtonQuest = objs[33];
+	SetParent( m_uiButtonNation = objs[34];
+	SetParent( m_uiButtonWorld = objs[35];
+	SetParent( m_uiButtonCity = objs[36];
+	SetParent( m_uiButtonStory = objs[37];
+	SetParent( m_uiButtonMail = objs[38];
+	SetParent( m_uiButtonMore = objs[39];
+	SetParent( m_uiButtonBag = objs[40];
+	SetParent( m_uiButtonFriend = objs[41];
+	SetParent( m_uiButtonNationEquip = objs[42];
+	SetParent( m_uiButtonRank = objs[43];
+	SetParent( m_uiButtonNotice = objs[44];
+	SetParent( m_uiButtonSetting = objs[45];
+	SetParent( m_uiButtonGM = objs[46];
+	SetParent( m_uiButtonRelogin = objs[47];--]]--]]
+	
+	
+	-- 英雄
+	SetParent( m_uiButtonHero, m_uiButtonBack[1] );
+	m_hasButton[1] = true;
+	
+	-- 任务
+	SetParent( m_uiButtonQuest, m_uiButtonBack[2] );
+	m_hasButton[2] = true;
+	
+	-- 世界
+	SetParent( m_uiButtonWorld, m_uiButtonBack[4] );
+	SetParent( m_uiButtonCity, m_uiButtonBack[4] );
+	SetFalse( m_uiButtonWorld );
+	SetFalse( m_uiButtonCity );
+	m_hasButton[4] = true;
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WORLD ) == 1 then
+		SetTrue( m_uiButtonWorld );
+	end
+	
+	-- 更多
+	SetParent( m_uiButtonMore, m_uiButtonBack[7] );
+	m_hasButton[7] = true;
+	
+	-- 国家
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATION ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonNation, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end
+	
+	-- 副本
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_STORY ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonStory, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end
+		
+	-- 邮件
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_MAIL ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonMail, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end	
+
+	-- 背包
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonBag, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 好友
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FRIEND ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonFriend, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end	
+	
+	-- 国器
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonNationEquip, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end	
+	
+	-- 排行榜
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_RANK ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( m_uiButtonRank, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end	
+	
+	-- 系统公告
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonNotice, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 设置
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonSetting, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 联系客服
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonGM, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 返回登陆
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonRelogin, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+end
+
+-- 获得功能按钮特效
+function MainDlgButtonGetEffect( offset )
 	
 end
 

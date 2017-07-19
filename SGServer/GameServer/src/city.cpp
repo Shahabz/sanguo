@@ -475,7 +475,7 @@ int city_actorexp( int city_index, int exp, char path )
 			// ¿ÉÒÔÉı¼¶
 			if ( city_actorupgrade( city_index, path, &getinfo ) < 0 )
 				break;
-			g_city[city_index].exp -= g_upgradeinfo[g_city[city_index].level].exp;
+			g_city[city_index].exp -= g_upgradeinfo[curlevel].exp;
 			isup = 1;
 		}
 	}
