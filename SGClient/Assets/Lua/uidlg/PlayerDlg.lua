@@ -1,7 +1,7 @@
 -- 界面
 local m_Dlg = nil;
 local m_uiPlayNameText = nil; --UnityEngine.GameObject
-local m_uiNationText = nil; --UnityEngine.GameObject
+local m_uiNationBack = nil; --UnityEngine.GameObject
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiVipText = nil; --UnityEngine.GameObject
 local m_uiExpProgress = nil; --UnityEngine.GameObject
@@ -43,7 +43,23 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             PlayerDlgClose();
         elseif nControlID == 1 then
-        		ChangeShapeDlgShow();
+        	ChangeShapeDlgShow();
+		
+		-- 设置
+		elseif nControlID == 11 then
+		
+		-- 反馈
+		elseif nControlID == 12 then
+		
+		-- vip
+		elseif nControlID == 13 then
+		
+		-- 充值
+		elseif nControlID == 14 then
+		
+		-- 购买体力
+		elseif nControlID == 15 then
+		
         end
 	end
 end
@@ -53,7 +69,7 @@ function PlayerDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
 	m_uiPlayNameText = objs[0];
-	m_uiNationText = objs[1];
+	m_uiNationBack = objs[1];
 	m_uiShape = objs[2];
 	m_uiVipText = objs[3];
 	m_uiExpProgress = objs[4];
@@ -104,28 +120,28 @@ function PlayerDlgSet()
 	if m_Dlg == nil or m_Dlg.gameObject.activeSelf == false then
 		return;
 	end
-	m_uiPlayNameText:GetComponent( "UIText" ).text = GetPlayer().m_name;
-	m_uiNationText:GetComponent( "UIText" ).text = Nation( GetPlayer().m_nation );
-	m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( GetPlayer().m_shape );
-	m_uiVipText:GetComponent( "UIText" ).text = "VIP "..GetPlayer().m_viplevel;
+	SetText( m_uiPlayNameText, GetPlayer().m_name );
+	SetImage( m_uiNationBack, NationSprite( GetPlayer().m_nation ) )
+	SetImage( m_uiShape, PlayerFaceSprite( GetPlayer().m_shape ) );
+	SetText( m_uiVipText, "v"..GetPlayer().m_viplevel );
 	
 	-- 经验
-	m_uiExpProgress:GetComponent( "UIProgress" ):SetValue( GetPlayer().m_exp/GetPlayer().m_exp_max );
-	m_uiExpProgress.transform:Find("Text"):GetComponent( "UIText" ).text = GetPlayer().m_exp.."/"..GetPlayer().m_exp_max;
-	m_uiExpProgress.transform:Find("Level"):GetComponent( "UIText" ).text = "Lv."..GetPlayer().m_level;
+	SetProgress( m_uiExpProgress, GetPlayer().m_exp/GetPlayer().m_exp_max );
+	SetText( m_uiExpProgress.transform:Find("Text"), GetPlayer().m_exp.."/"..GetPlayer().m_exp_max );
+	SetLevel( m_uiExpProgress.transform:Find("Level"), GetPlayer().m_level );
 	
 	-- 体力
-	m_uiBodyProgress:GetComponent( "UIProgress" ):SetValue( GetPlayer().m_body/100 );
-	m_uiBodyProgress.transform:Find("Text"):GetComponent( "UIText" ).text = GetPlayer().m_body.."/100";
+	SetProgress( m_uiBodyProgress, GetPlayer().m_body/100 );
+	SetText( m_uiBodyProgress.transform:Find("Text"), GetPlayer().m_body.."/100" );
 	if GetPlayer().m_body >= 100 then
-		m_uiBodyProgress.transform:Find("Level"):GetComponent( "UIText" ).text = zh("已满");
+		SetText( m_uiBodyProgress.transform:Find("Level"), T(666) );
 	end
 	
 	-- 其它信息
-	m_uiLabelNationText:GetComponent( "UIText" ).text = NationEx( GetPlayer().m_nation );
-	m_uiLabelNameText:GetComponent( "UIText" ).text = GetPlayer().m_name;
-	m_uiLabelPlaceText:GetComponent( "UIText" ).text = "";
-	m_uiLabelServerText:GetComponent( "UIText" ).text = Const.servername;
-	m_uiLabelIDText:GetComponent( "UIText" ).text = GetPlayer().m_actorid;
-	m_uiLabelBattlepowerText:GetComponent( "UIText" ).text = GetPlayer().m_battlepower;
+	SetText( m_uiLabelNationText, NationEx( GetPlayer().m_nation ) );
+	SetText( m_uiLabelNameText, GetPlayer().m_name );
+	SetText( m_uiLabelPlaceText, "" );
+	SetText( m_uiLabelServerText, Const.servername );
+	SetText( m_uiLabelIDText, GetPlayer().m_actorid );
+	SetText( m_uiLabelBattlepowerText, GetPlayer().m_battlepower );
 end

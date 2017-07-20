@@ -128,3 +128,15 @@ int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pVa
 	return 0;
 }
 
+int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_RECV( &pValue->m_msglen, (*pptr), (*psize) );
+	if( pValue->m_msglen < 0 || pValue->m_msglen > (*psize)*(int)sizeof(char) || pValue->m_msglen > 127 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_msg, (*pptr), pValue->m_msglen*sizeof(char), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_channel, (*pptr), (*psize) );
+	return 0;
+}
+

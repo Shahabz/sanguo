@@ -687,6 +687,30 @@ struct _slk_NetS_LevyInfo {
 };
 typedef struct _slk_NetS_LevyInfo SLK_NetS_LevyInfo;	//征收信息
 
+struct _slk_NetS_Chat {
+	int m_actorid;	//聊天信息-角色id
+	char m_shape;	//聊天信息-形象
+	short m_level;	//聊天信息-等级
+	char m_namelen;	//聊天信息-名称
+	char m_name[32];	//聊天信息-名称
+	char m_frame;	//聊天信息-框体
+	char m_zone;	//聊天信息-区域
+	char m_place;	//聊天信息-职位
+	short m_msglen;	//聊天信息-消息
+	char m_msg[128];	//聊天信息-消息
+	int m_optime;	//聊天信息-时间
+	char m_channel;	//聊天信息-频道
+	char m_nation;	//聊天信息-国家
+};
+typedef struct _slk_NetS_Chat SLK_NetS_Chat;	//聊天信息
+
+struct _slk_NetS_ChatList {
+	char m_count;	//聊天列表
+	SLK_NetS_Chat m_list[10];	//聊天列表
+	char m_channel;	//聊天列表
+};
+typedef struct _slk_NetS_ChatList SLK_NetS_ChatList;	//聊天信息列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -761,5 +785,7 @@ int struct_NetS_BuildingSmithy_send( char **pptr, int *psize, SLK_NetS_BuildingS
 int struct_NetS_ChangeName_send( char **pptr, int *psize, SLK_NetS_ChangeName *pValue );
 int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingAction *pValue );
 int struct_NetS_LevyInfo_send( char **pptr, int *psize, SLK_NetS_LevyInfo *pValue );
+int struct_NetS_Chat_send( char **pptr, int *psize, SLK_NetS_Chat *pValue );
+int struct_NetS_ChatList_send( char **pptr, int *psize, SLK_NetS_ChatList *pValue );
 
 #endif

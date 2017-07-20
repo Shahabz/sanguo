@@ -324,7 +324,7 @@ public class ResourceManager : MonoBehaviour
     /// <summary>
     /// 读AssetBundle里的资源
     /// </summary>
-    static private UnityEngine.Object Load( string assetBundleName, string assetName, System.Type type )
+    static public UnityEngine.Object Load( string assetBundleName, string assetName, System.Type type )
     {
         // 先检查缓存里有没有，有就拿缓存，没有读一遍assetbundle
         AssetBundleInfo bundleInfo = GetLoadedAssetBundle( assetBundleName );

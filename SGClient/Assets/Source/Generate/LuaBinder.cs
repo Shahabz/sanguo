@@ -68,6 +68,8 @@ public static class LuaBinder
 		ShakeWrap.Register(L);
 		UIHighLightMaskWrap.Register(L);
 		ReferenceWrap.Register(L);
+		UIPolygonChartWrap.Register(L);
+		UIAutoSizeWrap.Register(L);
 		YlyAssetIdentifyWrap.Register(L);
 		YlyRichTextWrap.Register(L);
 		YlyDelegateUtilWrap.Register(L);
@@ -79,6 +81,7 @@ public static class LuaBinder
 		CityCameraWrap.Register(L);
 		CityBuildingWrap.Register(L);
 		CityLandWrap.Register(L);
+		UIPrimitiveBaseWrap.Register(L);
 		Camera2DWrap.Register(L);
 		L.BeginModule("UnityEngine");
 		UnityEngine_ComponentWrap.Register(L);

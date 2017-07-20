@@ -234,6 +234,7 @@ public static class CustomSettings
         _GT(typeof(UIHighLightMask)),
 		_GT(typeof(Reference)),
 		_GT(typeof(UIPolygonChart)),
+		_GT(typeof(UIAutoSize)),
 
 		_GT(typeof(YlyAssetIdentify)),
 		_GT(typeof(YlyRichText)),

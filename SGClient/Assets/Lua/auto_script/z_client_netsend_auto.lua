@@ -72,3 +72,11 @@ function netsend_entercity_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_msglen=0,m_msg="[m_msglen]",m_channel=0,
+function netsend_chat_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_CHAT );
+	struct_NetC_Chat_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

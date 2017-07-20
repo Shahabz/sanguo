@@ -129,4 +129,12 @@ function ItemColorSprite( color )
 	return sprite;
 end
 
-
+-- 国家图标
+function NationSprite( nation )
+	local name = string.format("ui_icon_nation%d", nation );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end

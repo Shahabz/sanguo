@@ -1,12 +1,5 @@
-
 #ifndef __SYSTEM_H
 #define __SYSTEM_H
-#include "server_netsend_auto.h"
-
-enum TALK_CHANNEL
-{
-	TALK_CHANNEL_ACTOR_WORLD = 0,	// Íõ¹úº°»°
-};
 
 int local_talk( int actor_index, const char *szMsg, int type );
 int system_talk( const char *szMsg, int type );

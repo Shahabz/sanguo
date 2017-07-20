@@ -49,11 +49,19 @@ struct _slk_NetC_EnterCity {
 };
 typedef struct _slk_NetC_EnterCity SLK_NetC_EnterCity;	//请求进入城池所有信息
 
+struct _slk_NetC_Chat {
+	short m_msglen;	//客户端发送聊天-信息
+	char m_msg[127];	//客户端发送聊天-信息
+	char m_channel;	//客户端发送聊天-选择渠道
+};
+typedef struct _slk_NetC_Chat SLK_NetC_Chat;	//聊天
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
 int struct_NetC_Gmcmd_recv( char **pptr, int *psize, SLK_NetC_Gmcmd *pValue );
 int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue );
 int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pValue );
+int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue );
 
 #endif

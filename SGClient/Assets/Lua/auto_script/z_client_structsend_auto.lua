@@ -47,3 +47,9 @@ function struct_NetC_EnterCity_send( buf, sendValue )
 	buf:WriteSByte( sendValue.m_value );
 end
 
+function struct_NetC_Chat_send( buf, sendValue )
+	buf:WriteShort( sendValue.m_msglen );
+	buf:WriteStringWithLength( sendValue.m_msg );
+	buf:WriteSByte( sendValue.m_channel );
+end
+

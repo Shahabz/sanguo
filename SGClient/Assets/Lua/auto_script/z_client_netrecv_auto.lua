@@ -345,6 +345,16 @@ function netrecv_levyinfo_C( buffer )
 	proc_levyinfo_C( recvValue );
 end
 
+function netrecv_chat_C( buffer )
+	local recvValue = struct_NetS_Chat_recv( buffer );
+	proc_chat_C( recvValue );
+end
+
+function netrecv_chatlist_C( buffer )
+	local recvValue = struct_NetS_ChatList_recv( buffer );
+	proc_chatlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -415,6 +425,8 @@ Proc_Command = {
 	[CMDS_CHANGENAME]=netrecv_changename_C;
 	[CMDS_BUILDINGACTION]=netrecv_buildingaction_C;
 	[CMDS_LEVYINFO]=netrecv_levyinfo_C;
+	[CMDS_CHAT]=netrecv_chat_C;
+	[CMDS_CHATLIST]=netrecv_chatlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

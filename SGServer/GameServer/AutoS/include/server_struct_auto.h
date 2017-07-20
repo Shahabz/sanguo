@@ -74,6 +74,8 @@
 #define CMDS_CHANGENAME	(CMDS_BASE+67)
 #define CMDS_BUILDINGACTION	(CMDS_BASE+68)
 #define CMDS_LEVYINFO	(CMDS_BASE+69)
+#define CMDS_CHAT	(CMDS_BASE+70)
+#define CMDS_CHATLIST	(CMDS_BASE+71)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -88,6 +90,7 @@
 #define CMDC_GMCMD	(CMDC_BASE+7)
 #define CMDC_ASKINFO	(CMDC_BASE+9)
 #define CMDC_ENTERCITY	(CMDC_BASE+10)
+#define CMDC_CHAT	(CMDC_BASE+11)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

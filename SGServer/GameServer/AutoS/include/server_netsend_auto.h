@@ -71,6 +71,8 @@ int netsend_buildingsmithy_S( int actor_index, char send_type, SLK_NetS_Building
 int netsend_changename_S( int actor_index, char send_type, SLK_NetS_ChangeName *pValue );
 int netsend_buildingaction_S( int actor_index, char send_type, SLK_NetS_BuildingAction *pValue );
 int netsend_levyinfo_S( int actor_index, char send_type, SLK_NetS_LevyInfo *pValue );
+int netsend_chat_S( int actor_index, char send_type, SLK_NetS_Chat *pValue );
+int netsend_chatlist_S( int actor_index, char send_type, SLK_NetS_ChatList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

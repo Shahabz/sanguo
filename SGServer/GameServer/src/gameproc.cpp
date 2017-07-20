@@ -39,6 +39,7 @@
 #include "city.h"
 #include "quest.h"
 #include "hero.h"
+#include "chat.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -437,6 +438,9 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 107 );
+
+	// 聊天缓存
+	chat_cache_load();
 
 	// 刷地图
 	sc_OnWorldMapBrush();

@@ -19,7 +19,7 @@ int db_delete( int actorid, char *pTab, FILE *fp );
 #define MAX_DBQUEUE_BUFF					4096
 #define DBWORK_CMD_MAIL_INSERT				1
 #define DBWORK_CMD_MAIL_INSERTCOMPLETE		2
-#define DBWORK_CMD_TALK_CACHE				3
+#define DBWORK_CMD_CHAT_CACHE				3
 #define DBWORK_CMD_NORMAL					4
 
 // SQL工作队列

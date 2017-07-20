@@ -15,6 +15,7 @@ int netrecv_heart_S( int client_index, char *data, int size );
 int netrecv_gmcmd_S( int client_index, char *data, int size );
 int netrecv_askinfo_S( int client_index, char *data, int size );
 int netrecv_entercity_S( int client_index, char *data, int size );
+int netrecv_chat_S( int client_index, char *data, int size );
 
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code );
 int netrecv_wqueue_list_S( int client_index, char *data, int size, int exec_code );

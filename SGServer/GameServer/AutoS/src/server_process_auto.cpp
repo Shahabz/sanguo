@@ -6,6 +6,7 @@
 #include "gameproc.h"
 #include "system_askinfo.h"
 #include "actor.h"
+#include "chat.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -116,5 +117,11 @@ void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue )
 {
 	// process.
 	actor_entercity( client_index );
+}
+
+void proc_chat_S( int client_index, SLK_NetC_Chat *pValue )
+{
+	// process.
+	chat_actortalk( client_index, pValue->m_channel, pValue->m_msg );
 }
 

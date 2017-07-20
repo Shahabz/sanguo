@@ -876,3 +876,34 @@ function struct_NetS_LevyInfo_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Chat_recv( buffer )
+	local recvValue = {};
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_shape = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_frame = buffer:ReadSByte();
+	recvValue.m_zone = buffer:ReadSByte();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_msglen = buffer:ReadShort();
+	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_channel = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_ChatList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Chat_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_channel = buffer:ReadSByte();
+	return recvValue;
+end
+
