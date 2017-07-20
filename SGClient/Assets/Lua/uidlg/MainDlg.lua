@@ -53,6 +53,9 @@ local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
 local m_uiButtonBack = {}; --UnityEngine.GameObject
 local m_hasButton = {};
+local m_uiChat = nil; --UnityEngine.GameObject
+local m_uiChatText = nil; --UnityEngine.GameObject
+local m_uiQuest = nil; --UnityEngine.GameObject
 
 local m_uiBuildingShape = {nil,nil}
 local m_uiNormalShape = {nil,nil}
@@ -302,7 +305,9 @@ function MainDlgOnAwake( gameObject )
 	for i=1, 14, 1 do
 		m_uiButtonBack[10+i] = objs[56+i];
 	end
-	
+	m_uiChat = objs[71];
+	m_uiChatText = objs[72];
+	m_uiQuest = objs[73];
 	MainDlgWorkerObjectInit();
 end 
 
@@ -403,6 +408,18 @@ end
 -- exp
 function MainDlgSetExp()
 	SetSlider( m_uiExpProgress, GetPlayer().m_exp/GetPlayer().m_exp_max )
+end
+
+-- 聊天
+function MainDlgSetChat( recvValue )
+	if recvValue.m_channel == 2 then
+	else
+		local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
+		local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
+		local msg = recvValue.m_msg
+		SetRichText( m_uiChatText, nation..name..msg )
+	end
+
 end
 
 -- 任务

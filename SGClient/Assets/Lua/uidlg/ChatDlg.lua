@@ -10,8 +10,13 @@ local m_uiUIP_ChatItemSelf = nil; --UnityEngine.GameObject
 local m_uiInput = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatTime = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatSystalk = nil; --UnityEngine.GameObject
-local m_objectPool = {};
 local m_SelectChannel = 0;
+
+local m_objectPool = {};
+
+local m_ChatCache = {};
+local m_ChatCacheCount = 0;
+local m_LastTime = 0;
 
 -- 打开界面
 function ChatDlgOpen()
@@ -98,9 +103,7 @@ end
 ----------------------------------------
 function ChatDlgShow()
 	ChatDlgOpen();
---[[	for i=1, 10, 1 do
-		ChatDlgAddMsg( 1, math.random(0,5), math.random(1,100), "wwdadwad", 1, "BloodImage继承至RawImage，所以只能接收Texture类型的图片源，他主要负责的就是根据血条的长度对图片进行循环排版" )
-	end--]]
+	ChatDlgScrollToBottom();
 end
 
 -- 添加聊天消息
@@ -114,20 +117,14 @@ function ChatDlgAddMsg( recvValue )
 	
 	local content = uiObj.transform:Find("Content");
 	content.transform:Find("Head/Back"):GetComponent( "Image" ).sprite = PlayerHeadSprite( recvValue.m_shape );
-	content.transform:Find("Name"):GetComponent( "YlyRichText" ).text = "<emote=001><color=00AE01FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=00FFC0FF>青州</color>"
+	content.transform:Find("Name"):GetComponent( "YlyRichText" ).text = "<emote=001><color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>青州</color>"
 	content.transform:Find("Text"):GetComponent( "YlyRichText" ).text = recvValue.m_msg
 	content.transform:Find("Back"):GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:SetParent( m_uiContent.transform );
 	uiObj.transform.localScale = Vector3.one;
-	uiObj.gameObject:SetActive( true );
-	
+	uiObj.gameObject:SetActive( true );	
 	table.insert( m_objectPool, uiObj );
-	m_uiScrollView:GetComponent("ScrollRect"):ResetScroll();
-	m_uiScrollView:GetComponent("ScrollRect"):ScrollToBottom();
-	
-	--recvValue.m_msg = "组件实际文本宽高的获取组件实际文本宽高的获取组件实际文本宽高的获取组件实际文本宽高的获取"
-	--ChatDlgAddSysTalk( recvValue )
 end
 
 -- 添加系统消息
@@ -140,6 +137,20 @@ function ChatDlgAddSysTalk( recvValue )
 	uiObj.transform:SetParent( m_uiContent.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
+end
+
+-- 添加时间
+function ChatDlgAddTime( optime )
+	local uiObj = GameObject.Instantiate( m_uiUIP_ChatTime );
+	uiObj.transform:Find("Content/Text"):GetComponent( "UIText" ).text = os.date( "%m-%d %H:%M", optime )
+	uiObj.transform:SetParent( m_uiContent.transform );
+	uiObj.transform.localScale = Vector3.one;
+	uiObj.gameObject:SetActive( true );
+end
+
+-- 滑动到底部
+function ChatDlgScrollToBottom()
+	m_uiScrollView:GetComponent("ScrollRect"):ResetScroll();
 	m_uiScrollView:GetComponent("ScrollRect"):ScrollToBottom();
 end
 
@@ -147,6 +158,9 @@ end
 function ChatDlgSend()
 	local msg = m_uiInput:GetComponent( "UIInputField" ).text;
 	if msg == "" then
+		return;
+	end
+	if string.len(msg) >= 127 then
 		return;
 	end
 	m_uiInput:GetComponent("UIInputField").text = "";
@@ -172,5 +186,24 @@ end
 -- 接收消息
 -- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
 function ChatDlgRecv( recvValue )
+	-- 缓存
+	if m_ChatCacheCount >= 100 then
+		table.remove( m_ChatCache, 1 );
+	end
+	table.insert( m_ChatCache, recvValue );
+	m_ChatCacheCount = m_ChatCacheCount + 1;
+	
+	if m_Dlg == nil then
+		ChatDlgOpen()
+		ChatDlgClose()
+	end
+	
+	-- 超过10分钟添加时间
+	if recvValue.m_optime - m_LastTime > 600 then
+		ChatDlgAddTime( recvValue.m_optime )
+	end
+	m_LastTime = recvValue.m_optime;
+	
+	-- 创建一条聊天
 	ChatDlgAddMsg( recvValue )
 end

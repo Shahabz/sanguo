@@ -58,5 +58,7 @@ public class UIAutoSize : MonoBehaviour {
 	public void Dirty()
 	{
 		bDirty = true;
+		Update ();
+		bDirty = true;
 	}
 }

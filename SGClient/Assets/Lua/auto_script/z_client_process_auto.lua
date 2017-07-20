@@ -734,14 +734,19 @@ end
 -- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
 function proc_chat_C( recvValue )
 	-- process.
-	ChatDlgRecv( recvValue )
+	ChatDlgRecv( recvValue );
+	MainDlgSetChat( recvValue );
+	ChatDlgScrollToBottom();
 end
 
 -- m_count=0,m_list={m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,[m_count]},m_channel=0,
 function proc_chatlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
-		proc_chat_C( recvValue.m_list[i] );
+		ChatDlgRecv( recvValue.m_list[i] );
+		if i == recvValue.m_count then
+			MainDlgSetChat( recvValue.m_list[i] );
+		end
 	end
 end
 

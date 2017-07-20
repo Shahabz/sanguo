@@ -33,6 +33,7 @@
 #include "hero.h"
 #include "equip.h"
 #include "quest.h"
+#include "chat.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -669,6 +670,9 @@ int actor_entercity( int actor_index )
 
 	// 装备列表
 	equip_list( actor_index );
+
+	// 聊天缓存
+	chat_cache_sendlist( actor_index );
 
 	// 离线奖励-角色ID
 	gift_check( actor_index );

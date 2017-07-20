@@ -163,7 +163,7 @@ int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
 		info.m_place = atoi( row[index++] );
 		strncpy( info.m_name, row[index++], NAME_SIZE );
 		info.m_namelen = strlen( info.m_name );
-		strncpy( info.m_msg, row[4], 127 );
+		strncpy( info.m_msg, row[index++], 127 );
 		info.m_msglen = strlen( info.m_msg );
 		info.m_optime = atoi( row[index++] );
 		chat_cache_queue_add( pCache, &info );
@@ -176,5 +176,29 @@ int chat_cache_load()
 {
 	chat_cache_loaddb( g_ChatCacheZone, CHAT_CHANNEL_ZONE );
 	chat_cache_loaddb( g_ChatCacheNation, CHAT_CHANNEL_NATION );
+	return 0;
+}
+
+int chat_cache_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_ChatList pValue = { 0 };
+	pValue.m_channel = CHAT_CHANNEL_NATION;
+	for ( int tmpi = 0; tmpi < CHAT_CACHE_QUEUE_COUNT; tmpi++ )
+	{
+		if ( g_ChatCacheNation[tmpi].m_actorid <= 0 )
+			continue;
+		memcpy( &pValue.m_list[pValue.m_count], &g_ChatCacheNation[tmpi], sizeof( SLK_NetS_Chat ) );
+		pValue.m_count += 1;
+		if ( pValue.m_count >= 10 )
+		{
+			netsend_chatlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count = 0;
+		}
+		
+	}
+	if ( pValue.m_count > 0 )
+		netsend_chatlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
 	return 0;
 }
