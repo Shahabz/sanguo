@@ -46,6 +46,7 @@ area.cpp \
 army.cpp \
 award.cpp \
 building.cpp \
+chat.cpp \
 city.cpp \
 client.cpp \
 db.cpp \
@@ -180,6 +181,8 @@ army.o: army.cpp
 award.o: award.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 building.o: building.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+chat.o: chat.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 city.o: city.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
