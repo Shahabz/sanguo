@@ -104,7 +104,7 @@ function ItemSprite( kind )
 	local name = string.format("item_icon_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_1" );
 	end
 	return sprite;
 end
@@ -114,17 +114,17 @@ function EquipSprite( kind )
 	local name = string.format("equip_icon_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "equip_icon_1" );
 	end
 	return sprite;
 end
 
 -- 道具颜色框
 function ItemColorSprite( color )
-	local name = string.format("ui_icon_itemcolor%d", color );
+	local name = string.format("ui_color_%d", color );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "ui_color_0" );
 	end
 	return sprite;
 end

@@ -69,8 +69,8 @@ function BagDlgOnAwake( gameObject )
 	m_uiEquipBtn = objs[1];
 	m_uiItemScroll = objs[2];
 	m_uiEquipScroll = objs[3];
-	m_uiContent = objs[4];
-	m_uiContent = objs[5];
+	m_uiItemContent = objs[4];
+	m_uiEquipContent = objs[5];
 	m_uiUIP_ItemRow = objs[6];
 	m_uiUIP_EquipRow = objs[7];
 end
@@ -151,7 +151,7 @@ end
 function BagDlgClearItem()
     if m_uiItemContent ~= nil then
         local childCount = m_uiItemContent.transform.childCount;
-        for i = 1, childCount - 1, 1 do
+        for i = 6, childCount - 1, 1 do
             local child = m_uiItemContent.transform:GetChild(i).gameObject;
             -- 不删除,改为隐藏
             child:SetActive(false);
@@ -164,7 +164,7 @@ end
 function BagDlgClearEquip()
     if m_uiEquipContent ~= nil then
         local childCount = m_uiEquipContent.transform.childCount;
-        for i = 1, childCount - 1, 1 do
+        for i = 6, childCount - 1, 1 do
             local child = m_uiEquipContent.transform:GetChild(i).gameObject;
             -- 不删除,改为隐藏
             child:SetActive(false);
@@ -189,6 +189,7 @@ function BagDlgClearItemRow(row)
 		SetFalse( uiNum )
 		SetFalse( uiColor )
 		SetFalse( uiNew )
+		child:GetComponent("UIButton").controlID = 0;
     end
 end
 -- 清除一行的状态为初始的显示
@@ -203,15 +204,22 @@ function BagDlgClearEquipRow(row)
 		SetFalse( uiShape )
 		SetFalse( uiColor )
 		SetFalse( uiNew )
+		child:GetComponent("UIButton").controlID = 0;
     end
 end
 
 -- 读取缓存道具
 function BagDlgLoadItem()
+	if m_Dlg == nil then
+		return;
+	end
+	if IsActive( m_uiItemScroll ) == false then
+		return;
+	end
     BagDlgClearItem()
     local itemCount = 0;
     local currItemRow = nil;
-    local rowCount = 2;
+    local rowCount = 0;
 
     -- 先放进临时缓存
     for nItemIndex = 1, MAX_ITEMNUM, 1 do
@@ -238,8 +246,8 @@ function BagDlgLoadItem()
                 else
                     currItemRow = m_uiItemContent.transform:GetChild(rowCount).gameObject;
                     currItemRow:SetActive(true);
-                    BagDlgClearItemRow(currItemRow);
                 end
+				BagDlgClearItemRow(currItemRow);
                 rowCount = rowCount + 1;
             end
             local uiItemObj = currItemRow.transform:GetChild(itemIndex);
@@ -256,7 +264,7 @@ function BagDlgLoadItem()
 			SetShow( uiNew, pItem.m_bIsNew )
 			
 			SetImage( uiShape, ItemSprite(pItem.m_kind) )
-			SetNum( uiNum, pItem.m_num )
+			SetText( uiNum, "x"..pItem.m_num )
 			SetImage( uiColor, ItemColorSprite(item_getcolor(pItem.m_kind)) )
 			
 			m_CacheItemList[pItem.m_offset] = uiItemObj;
@@ -268,13 +276,13 @@ function BagDlgLoadEquip()
     BagDlgClearEquip()
     local equipCount = 0;
     local currEquipRow = nil;
-    local rowCount = 2;
+    local rowCount = 0;
 
     -- 先放进临时缓存
     for nEquipIndex = 1, MAX_EQUIPNUM, 1 do
         local pEquip = GetEquip().m_Equip[nEquipIndex];
         if pEquip ~= nil and pEquip.m_kind > 0 then
-            table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_bIsNew = pEquip.m_bIsNew, m_offset = nEquipIndex, m_sort = equip_getsort(pEquip.m_kind) });
+            table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_bIsNew = pEquip.m_bIsNew, m_offset = nEquipIndex, });
         end
     end
 
@@ -295,8 +303,8 @@ function BagDlgLoadEquip()
                 else
                     currEquipRow = m_uiEquipContent.transform:GetChild(rowCount).gameObject;
                     currEquipRow:SetActive(true);
-                    BagDlgClearEquipRow(currEquipRow);
                 end
+				BagDlgClearEquipRow(currEquipRow);
                 rowCount = rowCount + 1;
             end
             local uiEquipObj = currEquipRow.transform:GetChild(equipIndex);

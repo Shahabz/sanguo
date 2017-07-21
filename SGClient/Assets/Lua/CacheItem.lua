@@ -221,6 +221,7 @@ end
 -- EventProtocol.addEventListener( "OnItemChange", function( recvValue ) end )
 function Item:OnItemChange( _ItemIndex )
 	local nItemIndex = _ItemIndex + 1;
+	BagDlgLoadItem();
 	-- 发布事件
 	--EventProtocol.dispatchEvent( "OnItemChange", { itemIndex=_ItemIndex, kind=self.m_Item[nItemIndex].m_kind, num=self.m_Item[nItemIndex].m_num } );
 end
@@ -294,8 +295,9 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, path )
 	if GameManager.inited == false then
 		return;
 	end
+	self:OnItemChange( _ItemIndex );
 	
-  if path == PATH_GM or path == PATH_SYSTEM then
+	if path == PATH_GM or path == PATH_SYSTEM then
      -- 忽略
      return;
 	end

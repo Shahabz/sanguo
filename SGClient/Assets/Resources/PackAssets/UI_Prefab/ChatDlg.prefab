@@ -694,7 +694,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224637749294630600}
   - component: {fileID: 222802190701913988}
-  - component: {fileID: 114455632467712900}
+  - component: {fileID: 114302468918564554}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1618,6 +1618,45 @@ MonoBehaviour:
   offsetx: 0
   offsety: 100
   mode: 1
+--- !u!114 &114302468918564554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1820521522802890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f56cf2ed95eccf46b977ebffde2e3f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Text: 
+  m_FontSize: 20
+  m_LineHeght: 0
+  m_LineSpacing: 0
+  m_OffCharX: 0
+  m_MaxChars: 1000
+  m_IsCustomWidthToNewLine: 0
+  m_CustomWidthToNewLine: 100
+  m_IsNeedOutLine: 0
+  m_OutLineColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_TColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_IsAutoAdaptiveWidthHeight: 0
+  m_HorizontalOverflow: 0
+  m_VerticalOverflow: 0
+  m_Alignment: 0
+  m_EnableRichText: 1
 --- !u!114 &114362572727731276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1665,7 +1704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f3ed502346645d7b7cc47956bc70ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uitext: {fileID: 114455632467712900}
+  uitext: {fileID: 0}
   uylytext: {fileID: 0}
   offsetx: 0
   offsety: 26
@@ -1817,42 +1856,6 @@ MonoBehaviour:
   clickInterval: 0
   uiMod: {fileID: 114247512704861732}
   audioID: 0
---- !u!114 &114455632467712900
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1820521522802890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 980590adaf0712c47b7edac9d3ad2d16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: ab3408f815993ff4daf9296a7b970018, type: 3}
-    m_FontSize: 20
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 0
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
-  localizeID: 0
-  rtlAlignment: 0
-  rtlReverseSign: 
 --- !u!114 &114552805636542054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2312,7 +2315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f3ed502346645d7b7cc47956bc70ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uitext: {fileID: 114455632467712900}
+  uitext: {fileID: 0}
   uylytext: {fileID: 0}
   offsetx: 0
   offsety: 16
