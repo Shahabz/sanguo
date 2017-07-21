@@ -32,5 +32,6 @@ typedef struct _monsterinfo MonsterInfo;
 
 int monsterinfo_init_auto();
 int monsterinfo_reload_auto();
+int monsterinfo_luatable_auto();
 
 #endif

@@ -131,7 +131,7 @@ end
 function ChatDlgAddSysTalk( recvValue )
 	local uiObj = GameObject.Instantiate( m_uiUIP_ChatSystalk );
 	--uiObj.transform:Find("Content/Name"):GetComponent( "UIText" ).text = "<emote=001><color=00AE01FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=00FFC0FF>青州</color>"
-	uiObj.transform:Find("Content/Text"):GetComponent( "UIText" ).text = recvValue.m_msg
+	uiObj.transform:Find("Content/Text"):GetComponent( "YlyRichText" ).text = recvValue.m_msg
 	uiObj.transform:Find("Content/Back"):GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:SetParent( m_uiContent.transform );
@@ -205,5 +205,9 @@ function ChatDlgRecv( recvValue )
 	m_LastTime = recvValue.m_optime;
 	
 	-- 创建一条聊天
-	ChatDlgAddMsg( recvValue )
+	if recvValue.m_actorid > 0 then
+		ChatDlgAddMsg( recvValue );
+	elseif recvValue.m_actorid == -1 then
+		ChatDlgAddSysTalk( recvValue );
+	end
 end

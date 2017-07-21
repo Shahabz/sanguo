@@ -24,5 +24,6 @@ typedef struct _itemkind ItemKind;
 
 int itemkind_init_auto();
 int itemkind_reload_auto();
+int itemkind_luatable_auto();
 
 #endif

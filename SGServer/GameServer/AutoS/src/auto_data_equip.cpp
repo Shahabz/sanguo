@@ -98,3 +98,67 @@ int equipinfo_reload_auto()
 	return 0;
 }
 
+int equipinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	for ( int kind = 0; kind < g_equipinfo_maxnum; kind++ )
+	{
+		lua_pushinteger( servL, kind );
+		lua_newtable( servL );
+
+		lua_pushstring( servL, "kind" );
+		lua_pushinteger( servL, g_equipinfo[kind].kind );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "type" );
+		lua_pushinteger( servL, g_equipinfo[kind].type );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "color" );
+		lua_pushinteger( servL, g_equipinfo[kind].color );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "ability" );
+		lua_pushinteger( servL, g_equipinfo[kind].ability );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "value" );
+		lua_pushinteger( servL, g_equipinfo[kind].value );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "sec" );
+		lua_pushinteger( servL, g_equipinfo[kind].sec );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "silver" );
+		lua_pushinteger( servL, g_equipinfo[kind].silver );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "material_kind" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 6; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_equipinfo[kind].material_kind[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "material_num" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 6; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_equipinfo[kind].material_num[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_rawset( servL, 1 );
+	}
+	lua_setglobal( servL, "g_equipinfo" );
+
+	lua_pushinteger( servL, g_equipinfo_maxnum );
+	lua_setglobal( servL, "g_equipinfo_maxnum" );
+	return 0;
+}

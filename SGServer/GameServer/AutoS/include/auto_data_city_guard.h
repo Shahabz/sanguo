@@ -30,5 +30,6 @@ typedef struct _cityguardinfo CityGuardInfo;
 
 int cityguardinfo_init_auto();
 int cityguardinfo_reload_auto();
+int cityguardinfo_luatable_auto();
 
 #endif

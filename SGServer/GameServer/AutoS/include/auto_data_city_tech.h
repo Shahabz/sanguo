@@ -29,5 +29,6 @@ typedef struct _techinfo TechInfo;
 
 int techinfo_init_auto();
 int techinfo_reload_auto();
+int techinfo_luatable_auto();
 
 #endif

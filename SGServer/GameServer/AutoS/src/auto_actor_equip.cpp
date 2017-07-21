@@ -17,7 +17,7 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 	int offset = 0;
 	Equip *pEquip;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`,`washid4`,`washid5` from %s where id='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`,`washid4`,`washid5` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );

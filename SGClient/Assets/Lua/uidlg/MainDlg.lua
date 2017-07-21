@@ -418,14 +418,20 @@ end
 
 -- 聊天
 function MainDlgSetChat( recvValue )
-	if recvValue.m_channel == 2 then
-	else
-		local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
-		local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
+	if recvValue.m_actorid < 0 then
+		-- 系统
+		local name = "<color=FF0000FF>["..recvValue.m_name.."]：</color>"
 		local msg = recvValue.m_msg
-		SetRichText( m_uiChatText, nation..name..msg )
+		SetRichText( m_uiChatText, name..msg )
+	else
+		if recvValue.m_channel == 2 then
+		else
+			local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
+			local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
+			local msg = recvValue.m_msg
+			SetRichText( m_uiChatText, nation..name..msg )
+		end
 	end
-
 end
 
 -- 任务

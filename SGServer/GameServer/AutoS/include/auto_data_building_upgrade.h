@@ -27,5 +27,6 @@ typedef struct _buildingupgrade BuildingUpgrade;
 
 int buildingupgrade_init_auto();
 int buildingupgrade_reload_auto();
+int buildingupgrade_luatable_auto();
 
 #endif

@@ -26,5 +26,6 @@ typedef struct _paygoods PayGoods;
 
 int paygoods_init_auto();
 int paygoods_reload_auto();
+int paygoods_luatable_auto();
 
 #endif

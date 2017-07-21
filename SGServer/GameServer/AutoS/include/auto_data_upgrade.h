@@ -14,5 +14,6 @@ typedef struct _upgradeinfo UpgradeInfo;
 
 int upgradeinfo_init_auto();
 int upgradeinfo_reload_auto();
+int upgradeinfo_luatable_auto();
 
 #endif

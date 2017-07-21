@@ -26,5 +26,6 @@ typedef struct _questinfo QuestInfo;
 
 int questinfo_init_auto();
 int questinfo_reload_auto();
+int questinfo_luatable_auto();
 
 #endif

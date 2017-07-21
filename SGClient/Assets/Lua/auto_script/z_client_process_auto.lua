@@ -464,14 +464,25 @@ function proc_changtoken_C( recvValue )
 	MainDlgSetToken()
 end
 
--- m_info={m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",},
-function proc_equiplist_C( recvValue )
-	-- process.
-end
-
 -- m_offset=0,m_kind=0,m_washid={[4]},
 function proc_equip_C( recvValue )
 	-- process.
+end
+
+-- m_equipext=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[6]},[m_count]},
+function proc_equiplist_C( recvValue )
+	-- process.
+	for tmpi = 1, recvValue.m_count, 1 do
+		if recvValue.m_list[tmpi].m_offset >= 0 then
+			local tmpEquip = SLK_Equip.new();
+			tmpEquip.m_kind = recvValue.m_list[tmpi].m_kind;
+			for i=1,6,1 do
+				tmpEquip.m_washid[i] = recvValue.m_list[tmpi].m_washid[i];
+			end
+	
+			GetEquip():SetEquip( recvValue.m_list[tmpi].m_offset, tmpEquip );
+		end
+	end
 end
 
 -- m_offset=0,m_kind=0,m_path=0,
@@ -762,13 +773,20 @@ function proc_chatlist_C( recvValue )
 	end
 end
 
--- m_count=0,m_msglist={m_vlen=0,m_v="[m_vlen]",[m_count]},m_textid=0,
+-- m_count=0,m_msglist={m_vlen=0,m_v="[m_vlen]",[m_count]},m_textid=0,m_optime,
 function proc_systalkid_C( recvValue )
 	-- process.
 end
 
--- m_msglen=0,m_msg="[m_msglen]",
+-- m_msglen=0,m_msg="[m_msglen]",m_optime,
 function proc_systalk_C( recvValue )
 	-- process.
+	local info = {}
+	info.m_actorid = -1;
+	info.m_name = T(564);
+	info.m_msg = recvValue.m_msg;
+	info.m_optime = recvValue.m_optime;
+	MainDlgSetChat( info );
+	ChatDlgRecv( info );
 end
 

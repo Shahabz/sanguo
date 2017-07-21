@@ -12,5 +12,6 @@ typedef struct _paycountry PayCountry;
 
 int paycountry_init_auto();
 int paycountry_reload_auto();
+int paycountry_luatable_auto();
 
 #endif

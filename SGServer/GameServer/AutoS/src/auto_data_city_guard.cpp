@@ -123,3 +123,12 @@ int cityguardinfo_reload_auto()
 	return 0;
 }
 
+int cityguardinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	lua_setglobal( servL, "g_cityguardinfo" );
+
+	lua_pushinteger( servL, g_cityguardinfo_maxnum );
+	lua_setglobal( servL, "g_cityguardinfo_maxnum" );
+	return 0;
+}

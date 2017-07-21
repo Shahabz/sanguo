@@ -83,3 +83,35 @@ int platinfo_reload_auto()
 	return 0;
 }
 
+int platinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	for ( int platid = 0; platid < g_platinfo_maxnum; platid++ )
+	{
+		lua_pushinteger( servL, platid );
+		lua_newtable( servL );
+
+		lua_pushstring( servL, "platid" );
+		lua_pushinteger( servL, g_platinfo[platid].platid );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "userhost" );
+		lua_pushstring( servL, g_platinfo[platid].userhost );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "userport" );
+		lua_pushinteger( servL, g_platinfo[platid].userport );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "allow" );
+		lua_pushinteger( servL, g_platinfo[platid].allow );
+		lua_rawset( servL, -3 );
+
+		lua_rawset( servL, 1 );
+	}
+	lua_setglobal( servL, "g_platinfo" );
+
+	lua_pushinteger( servL, g_platinfo_maxnum );
+	lua_setglobal( servL, "g_platinfo_maxnum" );
+	return 0;
+}

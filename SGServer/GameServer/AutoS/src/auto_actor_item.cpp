@@ -17,7 +17,7 @@ int actor_item_load_auto( int actorid, int actor_index, LPCB_GETITEM pCB_GetItem
 	int offset = 0;
 	Item *pItem;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level` from %s where id='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`num`,`ability0`,`ability1`,`ability2`,`ability3`,`value0`,`value1`,`value2`,`value3`,`color_level` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );

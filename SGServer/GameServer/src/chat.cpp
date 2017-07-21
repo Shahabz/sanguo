@@ -208,6 +208,7 @@ int system_talk( const char *szMsg )
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
+	pValue.m_optime = (int)time( NULL );
 	netsend_systalk_S( 0, SENDTYPE_WORLD, &pValue );
 	return 0;
 }
@@ -217,6 +218,7 @@ int system_talkto( int actor_index, const char *szMsg )
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
+	pValue.m_optime = (int)time( NULL );
 	netsend_systalk_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -226,6 +228,7 @@ int system_talktonation( int nation, const char *szMsg )
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
+	pValue.m_optime = (int)time( NULL );
 	netsend_systalk_S( nation, SENDTYPE_NATION, &pValue );
 	return 0;
 }

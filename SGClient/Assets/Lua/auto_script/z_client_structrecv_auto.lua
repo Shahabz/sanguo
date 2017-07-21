@@ -408,7 +408,7 @@ function struct_NetS_Equip_recv( buffer )
 	recvValue.m_offset = buffer:ReadShort();
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_washid={};
-	for tmpi=1,4,1 do
+	for tmpi=1,6,1 do
 		recvValue.m_washid[tmpi] = buffer:ReadShort();
 	end
 	return recvValue;
@@ -924,6 +924,7 @@ function struct_NetS_Systalkid_recv( buffer )
 		table.insert( recvValue.m_msglist, tmpValue );
 	end
 	recvValue.m_textid = buffer:ReadInt();
+	recvValue.m_optime = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -931,6 +932,7 @@ function struct_NetS_Systalk_recv( buffer )
 	local recvValue = {};
 	recvValue.m_msglen = buffer:ReadShort();
 	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	recvValue.m_optime = buffer:ReadInt();
 	return recvValue;
 end
 

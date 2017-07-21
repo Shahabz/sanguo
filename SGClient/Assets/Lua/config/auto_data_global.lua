@@ -1,0 +1,18 @@
+conf_global = {
+[1] = { id=1,value=150.000000,variable="actorlevel_max",desc="玩家最高等级",},
+[2] = { id=2,value=100.000000,variable="body_max",desc="体力最大值",},
+[3] = { id=3,value=360.000000,variable="body_sec",desc="体力回复秒",},
+[4] = { id=4,value=3600.000000,variable="levy_sec",desc="征收时间",},
+[5] = { id=5,value=12.000000,variable="levy_max",desc="征收最大次数",},
+[6] = { id=6,value=3600.000000,variable="building_delete_cd",desc="建筑拆除时间",},
+[7] = { id=7,value=12.000000,variable="equip_wash_max",desc="装备最大免费洗练次数",},
+[8] = { id=8,value=3600.000000,variable="equip_wash_sec",desc="装备洗练回复秒",},
+[9] = { id=9,value=12.000000,variable="hero_wash_max",desc="英雄最大免费洗练次数",},
+[10] = { id=10,value=3600.000000,variable="hero_wash_sec",desc="英雄洗练回复秒",},
+[11] = { id=11,value=30.000000,variable="buildinglevel_max",desc="建筑最大等级",},
+[12] = { id=12,value=1200.000000,variable="city_guard_sec",desc="城墙守卫招募冷却",},
+[14] = { id=14,value=5.000000,variable="city_guard_up_token",desc="城墙守卫升级钻石",},
+[13] = { id=13,value=120.000000,variable="city_guard_sec_token",desc="城墙守卫招募冷却消除参数",},
+[15] = { id=15,value=300.000000,variable="worker_freetime",desc="建筑免费基础时间",},
+[16] = { id=16,value=1.000000,variable="trainfood",desc="训练所需粮食单兵",},
+}

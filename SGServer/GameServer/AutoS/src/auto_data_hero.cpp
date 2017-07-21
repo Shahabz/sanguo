@@ -125,3 +125,12 @@ int heroinfo_reload_auto()
 	return 0;
 }
 
+int heroinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	lua_setglobal( servL, "g_heroinfo" );
+
+	lua_pushinteger( servL, g_heroinfo_maxnum );
+	lua_setglobal( servL, "g_heroinfo_maxnum" );
+	return 0;
+}

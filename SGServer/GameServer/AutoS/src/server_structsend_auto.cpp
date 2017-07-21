@@ -491,7 +491,7 @@ int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue )
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 4*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 6*sizeof(short), (*psize) );
 	return 0;
 }
 
@@ -1055,6 +1055,7 @@ int struct_NetS_Systalkid_send( char **pptr, int *psize, SLK_NetS_Systalkid *pVa
 		struct_NetS_SystalkidValue_send( pptr, psize, &pValue->m_msglist[tmpi] );
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_textid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
 	return 0;
 }
 
@@ -1065,6 +1066,7 @@ int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
 	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
 	return 0;
 }
 

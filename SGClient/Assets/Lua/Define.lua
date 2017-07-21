@@ -211,12 +211,12 @@ end
 
 -- 获取英雄名称
 function HeroName( kind )
-	return T(kind+1000);
+	return Localization.text_item(kind+3000);
 end
 
 -- 获取英雄名称带等级
 function HeroNameLv( kind, level )
-	return "Lv."..level.." "..T(kind+1000);
+	return "Lv."..level.." "..HeroName( kind );
 end
 
 -- 英雄状态文字
@@ -235,12 +235,17 @@ end
 
 -- 获取装备名称
 function EquipName( kind )
-	return T(kind+2000);
+	return Localization.text_item(kind+2000);
 end
 
--- 获取任务名称
+-- 获取科技名称
 function TechName( kind )
-	return T(kind+3000);
+	return Localization.text_item(kind+4000);
+end
+
+-- 获取科技描述
+function TechDesc( kind )
+	return Localization.text_item(kind+4100);
 end
 
 -- 清空所有子节点

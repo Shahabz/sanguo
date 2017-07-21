@@ -323,7 +323,7 @@ typedef struct _slk_NetS_UpdateMapUnit SLK_NetS_UpdateMapUnit;	//¸üĞÂµØÍ¼ÏÔÊ¾µ¥Ô
 struct _slk_NetS_Equip {
 	short m_offset;	//×°±¸Ë÷Òı
 	short m_kind;	//×°±¸ÖÖÀà
-	short m_washid[4];	//Ï´Á·ÊôĞÔ
+	short m_washid[6];	//Ï´Á·ÊôĞÔ
 };
 typedef struct _slk_NetS_Equip SLK_NetS_Equip;	//×°±¸
 
@@ -721,12 +721,14 @@ struct _slk_NetS_Systalkid {
 	char m_count;	//ÏµÍ³ÏûÏ¢
 	SLK_NetS_SystalkidValue m_msglist[8];	//ÏµÍ³ÏûÏ¢
 	int m_textid;	//ÎÄ×Ö±íID
+	int m_optime;	//Ê±¼ä
 };
 typedef struct _slk_NetS_Systalkid SLK_NetS_Systalkid;	//ÎÄ×Ö±íÏµÍ³ÏûÏ¢
 
 struct _slk_NetS_Systalk {
 	short m_msglen;	//Ö±½ÓÎÄ×ÖµÄÏµÍ³ÏûÏ¢
 	char m_msg[1024];	//Ö±½ÓÎÄ×ÖµÄÏµÍ³ÏûÏ¢
+	int m_optime;	//Ê±¼ä
 };
 typedef struct _slk_NetS_Systalk SLK_NetS_Systalk;	//Ö±½ÓÎÄ×ÖÏµÍ³ÏûÏ¢
 

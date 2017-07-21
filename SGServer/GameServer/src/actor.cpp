@@ -756,9 +756,6 @@ int actor_load( int actor_index, int actorid )
 	// 读取未上阵英雄
 	actor_hero_load_auto( g_actors[actor_index].actorid, actor_index, actor_hero_getptr, "actor_hero" );
 
-	// 读取未上阵英雄的装备
-	actor_equip_load_auto( g_actors[actor_index].actorid, actor_index, actor_equip_getptr, "actor_equip" );
-
 	// 道具背包数据
 	item_load( actor_index );
 

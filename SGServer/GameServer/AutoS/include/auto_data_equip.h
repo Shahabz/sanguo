@@ -18,5 +18,6 @@ typedef struct _equipinfo EquipInfo;
 
 int equipinfo_init_auto();
 int equipinfo_reload_auto();
+int equipinfo_luatable_auto();
 
 #endif

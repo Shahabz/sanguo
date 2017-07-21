@@ -14,5 +14,6 @@ typedef struct _vipinfo VipInfo;
 
 int vipinfo_init_auto();
 int vipinfo_reload_auto();
+int vipinfo_luatable_auto();
 
 #endif

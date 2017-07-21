@@ -94,3 +94,51 @@ int vipinfo_reload_auto()
 	return 0;
 }
 
+int vipinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	for ( int level = 0; level < g_vipinfo_maxnum; level++ )
+	{
+		lua_pushinteger( servL, level );
+		lua_newtable( servL );
+
+		lua_pushstring( servL, "level" );
+		lua_pushinteger( servL, g_vipinfo[level].level );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "exp" );
+		lua_pushinteger( servL, g_vipinfo[level].exp );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "ability" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 6; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_vipinfo[level].ability[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "value" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 6; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_vipinfo[level].value[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "goodsid" );
+		lua_pushinteger( servL, g_vipinfo[level].goodsid );
+		lua_rawset( servL, -3 );
+
+		lua_rawset( servL, 1 );
+	}
+	lua_setglobal( servL, "g_vipinfo" );
+
+	lua_pushinteger( servL, g_vipinfo_maxnum );
+	lua_setglobal( servL, "g_vipinfo_maxnum" );
+	return 0;
+}

@@ -17,7 +17,7 @@ int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero
 	int offset = 0;
 	Hero *pHero;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash` from %s where id='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
