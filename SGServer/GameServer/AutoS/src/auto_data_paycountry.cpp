@@ -82,31 +82,3 @@ int paycountry_reload_auto()
 	return 0;
 }
 
-int paycountry_luatable_auto()
-{
-	lua_newtable( servL );
-	for ( int country_code = 0; country_code < g_paycountry_maxnum; country_code++ )
-	{
-		lua_pushinteger( servL, country_code );
-		lua_newtable( servL );
-
-		lua_pushstring( servL, "country_code" );
-		lua_pushinteger( servL, g_paycountry[country_code].country_code );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "country_str" );
-		lua_pushstring( servL, g_paycountry[country_code].country_str );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "offset" );
-		lua_pushinteger( servL, g_paycountry[country_code].offset );
-		lua_rawset( servL, -3 );
-
-		lua_rawset( servL, 1 );
-	}
-	lua_setglobal( servL, "g_paycountry" );
-
-	lua_pushinteger( servL, g_paycountry_maxnum );
-	lua_setglobal( servL, "g_paycountry_maxnum" );
-	return 0;
-}

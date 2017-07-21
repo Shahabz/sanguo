@@ -93,15 +93,15 @@ function proc_enterinfo_C( recvValue )
 	GetPlayer().m_createtime = recvValue.m_createtime;
 	gamelog( "proc_enterinfo_C" )
 	
+	-- 临时调整背景层级
+	GameObject.FindWithTag( "UpdateManager" ).Find("Canvas"):GetComponent( "Canvas" ).sortingOrder = 1000
+	
 	-- 加载主城
 	LoadPrefabAsyn( "MainCity", function( obj )
 		
 		-- 缓存主城
 		GameManager.MainCity = GameObject.Instantiate( obj );
 		City.Init();
-		
-		-- 打开主界面
-		MainDlgOpen();
 		
 		-- 获取进入游戏所需信息
 		local sendValue = {};
@@ -113,9 +113,15 @@ end
 -- m_actorid=0,m_name="[22]",m_nation=0,m_shape=0,m_level=0,m_exp=0,m_exp_max=0,m_token=0,m_viplevel=0,m_vipexp=0,m_vipexp_max=0,m_body=0,m_place=0,m_official=0,m_zone=0,m_battlepower=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_infantry_num=0,m_cavalry_num=0,m_archer_num=0,m_mokilllv=0,m_sflag=0,m_cityid=0,
 function proc_actorinfo_C( recvValue )
 	-- process.
+	-- 打开主界面
+	MainDlgOpen();
+	
 	GetPlayer():Set( recvValue );
 	MainDlgSetHead()
 	MainDlgSetLevel()
+	MainDlgSetNation()
+	MainDlgSetExp()
+	MainDlgSetBody()
 	MainDlgSetSilver()
 	MainDlgSetWood()
 	MainDlgSetFood()
@@ -369,6 +375,11 @@ function proc_experience_C( recvValue )
 	GetPlayer().m_level = recvValue.m_level;
 	GetPlayer().m_exp = recvValue.m_curexp;
 	GetPlayer().m_exp_max = recvValue.m_expmax;
+	MainDlgSetExp();
+	if recvValue.m_isup == 1 then
+		pop( T(150) );
+		MainDlgSetLevel();
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -713,6 +724,7 @@ function proc_changename_C( recvValue )
 	-- process.
 	GetPlayer().m_name = recvValue.m_name;
 	ChangeNameDlgClose();
+	PlayerDlgSet();
 end
 
 -- m_kind=0,m_offset=0,m_action=0,
@@ -748,5 +760,15 @@ function proc_chatlist_C( recvValue )
 			MainDlgSetChat( recvValue.m_list[i] );
 		end
 	end
+end
+
+-- m_count=0,m_msglist={m_vlen=0,m_v="[m_vlen]",[m_count]},m_textid=0,
+function proc_systalkid_C( recvValue )
+	-- process.
+end
+
+-- m_msglen=0,m_msg="[m_msglen]",
+function proc_systalk_C( recvValue )
+	-- process.
 end
 

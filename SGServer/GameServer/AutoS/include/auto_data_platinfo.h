@@ -13,6 +13,5 @@ typedef struct _platinfo PlatInfo;
 
 int platinfo_init_auto();
 int platinfo_reload_auto();
-int platinfo_luatable_auto();
 
 #endif

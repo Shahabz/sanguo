@@ -5,7 +5,27 @@
 #define GMC_BASE				0
 #define GMC_TEST				(GMC_BASE+1)	// 测试
 #define GMC_SC					(GMC_BASE+2)	// 脚本使用
-#define GMC_ACTIVITY			(GMC_BASE+3)	// 
+#define GMC_LUA					(GMC_BASE+3)	// 重载lua
+#define GMC_RELOAD				(GMC_BASE+4)	// 重读数据表
+#define GMC_RESET				(GMC_BASE+5)	// 重置等级数据
+#define GMC_EXP					(GMC_BASE+6)	// 经验
+#define GMC_TOKEN				(GMC_BASE+7)	// 钻石
+#define GMC_ITEM				(GMC_BASE+8)	// 道具
+#define GMC_EQUIP				(GMC_BASE+9)	// 装备
+#define GMC_HERO				(GMC_BASE+10)	// 英雄
+#define GMC_SILVER				(GMC_BASE+11)	// 银币
+#define GMC_WOOD				(GMC_BASE+12)	// 木材
+#define GMC_FOOD				(GMC_BASE+13)	// 粮食
+#define GMC_IRON				(GMC_BASE+14)	// 镔铁
+#define GMC_BODY				(GMC_BASE+15)	// 体力
+#define GMC_LEVY				(GMC_BASE+16)	// 收割次数
+#define GMC_AWARD				(GMC_BASE+17)	// 奖励
+#define GMC_QUEST				(GMC_BASE+18)	// 任务
+#define GMC_ROLLMSG				(GMC_BASE+19)	// 跑马灯
+#define GMC_MAIL				(GMC_BASE+20)	// 邮件
+#define GMC_SYSTALK				(GMC_BASE+21)	// 系统喊话
+#define GMC_VIPEXP				(GMC_BASE+22)	// vip经验
+#define GMC_ACTIVITY			(GMC_BASE+23)	// 活动
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

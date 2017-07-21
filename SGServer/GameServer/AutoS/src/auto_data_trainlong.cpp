@@ -82,31 +82,3 @@ int trainlonginfo_reload_auto()
 	return 0;
 }
 
-int trainlonginfo_luatable_auto()
-{
-	lua_newtable( servL );
-	for ( int level = 0; level < g_trainlong_maxnum; level++ )
-	{
-		lua_pushinteger( servL, level );
-		lua_newtable( servL );
-
-		lua_pushstring( servL, "level" );
-		lua_pushinteger( servL, g_trainlong[level].level );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "timelong" );
-		lua_pushinteger( servL, g_trainlong[level].timelong );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "sliver" );
-		lua_pushinteger( servL, g_trainlong[level].sliver );
-		lua_rawset( servL, -3 );
-
-		lua_rawset( servL, 1 );
-	}
-	lua_setglobal( servL, "g_trainlong" );
-
-	lua_pushinteger( servL, g_trainlong_maxnum );
-	lua_setglobal( servL, "g_trainlong_maxnum" );
-	return 0;
-}

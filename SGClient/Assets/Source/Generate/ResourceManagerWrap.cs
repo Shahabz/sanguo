@@ -12,6 +12,7 @@ public class ResourceManagerWrap
 		L.RegFunction("LoadAssetBundle", LoadAssetBundle);
 		L.RegFunction("LoadAllAssetBundle", LoadAllAssetBundle);
 		L.RegFunction("GetLoadedAssetBundle", GetLoadedAssetBundle);
+		L.RegFunction("Load", Load);
 		L.RegFunction("UnloadAssetBundle", UnloadAssetBundle);
 		L.RegFunction("UnloadAssetBundleImmediately", UnloadAssetBundleImmediately);
 		L.RegFunction("LoadSprite", LoadSprite);
@@ -119,6 +120,25 @@ public class ResourceManagerWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			AssetBundleInfo o = ResourceManager.GetLoadedAssetBundle(arg0);
 			ToLua.PushObject(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Load(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			string arg0 = ToLua.CheckString(L, 1);
+			string arg1 = ToLua.CheckString(L, 2);
+			System.Type arg2 = (System.Type)ToLua.CheckObject(L, 3, typeof(System.Type));
+			UnityEngine.Object o = ResourceManager.Load(arg0, arg1, arg2);
+			ToLua.Push(L, o);
 			return 1;
 		}
 		catch(Exception e)

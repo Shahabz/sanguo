@@ -711,6 +711,25 @@ struct _slk_NetS_ChatList {
 };
 typedef struct _slk_NetS_ChatList SLK_NetS_ChatList;	//聊天信息列表
 
+struct _slk_NetS_SystalkidValue {
+	char m_vlen;	//系统消息拼接串长度
+	char m_v[64];	//系统消息拼接串
+};
+typedef struct _slk_NetS_SystalkidValue SLK_NetS_SystalkidValue;	//文字表系统消息
+
+struct _slk_NetS_Systalkid {
+	char m_count;	//系统消息
+	SLK_NetS_SystalkidValue m_msglist[8];	//系统消息
+	int m_textid;	//文字表ID
+};
+typedef struct _slk_NetS_Systalkid SLK_NetS_Systalkid;	//文字表系统消息
+
+struct _slk_NetS_Systalk {
+	short m_msglen;	//直接文字的系统消息
+	char m_msg[1024];	//直接文字的系统消息
+};
+typedef struct _slk_NetS_Systalk SLK_NetS_Systalk;	//直接文字系统消息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -787,5 +806,8 @@ int struct_NetS_BuildingAction_send( char **pptr, int *psize, SLK_NetS_BuildingA
 int struct_NetS_LevyInfo_send( char **pptr, int *psize, SLK_NetS_LevyInfo *pValue );
 int struct_NetS_Chat_send( char **pptr, int *psize, SLK_NetS_Chat *pValue );
 int struct_NetS_ChatList_send( char **pptr, int *psize, SLK_NetS_ChatList *pValue );
+int struct_NetS_SystalkidValue_send( char **pptr, int *psize, SLK_NetS_SystalkidValue *pValue );
+int struct_NetS_Systalkid_send( char **pptr, int *psize, SLK_NetS_Systalkid *pValue );
+int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue );
 
 #endif

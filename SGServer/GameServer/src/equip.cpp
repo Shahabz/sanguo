@@ -227,6 +227,64 @@ int equip_getequip( int actor_index, int equipkind, char path )
 	return 0;
 }
 
+// 删除一个装备的格子
+int equip_deletebox( int actor_index, int equipoffset )
+{
+	char	szSQL[1024];
+	char bigint[21];
+	Equip *pEquip = NULL;
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+
+	if ( equipoffset >= 0 && equipoffset < MAX_ACTOR_EQUIPNUM )
+		pEquip = &g_actors[actor_index].equip[equipoffset];
+	else
+		return -1;
+
+	if ( pEquip == NULL )
+	{
+		return -1;
+	}
+	// 数据库删除
+	lltoa( pEquip->id, bigint, 10 );
+	sprintf( szSQL, "delete from actor_equip where id='%s'", bigint );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	// 内存删除
+	memset( pEquip, 0, sizeof( Equip ) );
+	return 0;
+}
+
+int equip_lostequip( int actor_index, int equipoffset, char path )
+{
+	Equip *pequip = NULL;
+	int equipkind;
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( equipoffset >= 0 && equipoffset < MAX_ACTOR_EQUIPNUM )
+		pequip = &g_actors[actor_index].equip[equipoffset];
+	else
+		return -1;
+
+	if ( pequip->kind <= 0 )
+		return -1;
+
+	wlog( 0, LOGOP_EQUIPLOST, path, pequip->kind, 1, pequip->id, g_actors[actor_index].actorid, 0 );
+
+	equipkind = pequip->kind;
+	equip_deletebox( actor_index, equipoffset );
+
+	// 发送角色失去物品
+	equip_sendlost( actor_index, equipkind, equipoffset, path );
+	return equipkind;
+}
+
 //-----------------------------------------------------------------------------
 // 函数说明: 装备单件装备并且如果有前一个装备卸载下前一个装备
 // 参数    : actor_index - 
@@ -421,6 +479,22 @@ int equip_sendswap( int actor_index, int src_offset, int dest_offset )
 int equip_forgingtime( int city_index, short kind )
 {
 	CITY_CHECK_INDEX( city_index );
+
+	return 0;
+}
+
+// GM指令使用,删除所有道具
+int equip_clear( int actor_index )
+{
+	int tmpi = 0;
+	int num = 0;
+	for ( tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+	{
+		if ( g_actors[actor_index].equip[tmpi].kind > 0 )
+		{
+			equip_lostequip( actor_index, tmpi, PATH_GM );
+		}
+	}
 
 	return 0;
 }

@@ -177,6 +177,7 @@ public static class CustomSettings
         _GT(typeof(ProgressSprite)),
 
         // UI
+		_GT(typeof(Canvas)),
         _GT(typeof(UIMod)),
         _GT(typeof(UISystem)),
         _GT(typeof(UIManager)),

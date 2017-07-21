@@ -127,12 +127,3 @@ int buildingupgrade_reload_auto()
 	return 0;
 }
 
-int buildingupgrade_luatable_auto()
-{
-	lua_newtable( servL );
-	lua_setglobal( servL, "g_building_upgrade" );
-
-	lua_pushinteger( servL, g_building_upgrade_maxnum );
-	lua_setglobal( servL, "g_building_upgrade_maxnum" );
-	return 0;
-}

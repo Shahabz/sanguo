@@ -355,6 +355,16 @@ function netrecv_chatlist_C( buffer )
 	proc_chatlist_C( recvValue );
 end
 
+function netrecv_systalkid_C( buffer )
+	local recvValue = struct_NetS_Systalkid_recv( buffer );
+	proc_systalkid_C( recvValue );
+end
+
+function netrecv_systalk_C( buffer )
+	local recvValue = struct_NetS_Systalk_recv( buffer );
+	proc_systalk_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -427,6 +437,8 @@ Proc_Command = {
 	[CMDS_LEVYINFO]=netrecv_levyinfo_C;
 	[CMDS_CHAT]=netrecv_chat_C;
 	[CMDS_CHATLIST]=netrecv_chatlist_C;
+	[CMDS_SYSTALKID]=netrecv_systalkid_C;
+	[CMDS_SYSTALK]=netrecv_systalk_C;
 }
 
 function in_proc_command_C( cmd, buffer )

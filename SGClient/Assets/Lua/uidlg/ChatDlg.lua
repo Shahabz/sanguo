@@ -150,7 +150,7 @@ end
 
 -- 滑动到底部
 function ChatDlgScrollToBottom()
-	m_uiScrollView:GetComponent("ScrollRect"):ResetScroll();
+	--m_uiScrollView:GetComponent("ScrollRect"):ResetScroll();
 	m_uiScrollView:GetComponent("ScrollRect"):ScrollToBottom();
 end
 

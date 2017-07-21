@@ -22,6 +22,8 @@ local GMCMD_SERVER = {
 [18]="quest",
 [19]="rollmsg",
 [20]="mail",
+[21]="systalk";
+[22]="vipexp",
 }
  
 -- 发到客户端本地指令

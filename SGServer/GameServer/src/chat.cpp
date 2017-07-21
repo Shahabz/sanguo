@@ -202,3 +202,45 @@ int chat_cache_sendlist( int actor_index )
 
 	return 0;
 }
+
+int system_talk( const char *szMsg )
+{
+	SLK_NetS_Systalk pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_systalk_S( 0, SENDTYPE_WORLD, &pValue );
+	return 0;
+}
+
+int system_talkto( int actor_index, const char *szMsg )
+{
+	SLK_NetS_Systalk pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_systalk_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int system_talktonation( int nation, const char *szMsg )
+{
+	SLK_NetS_Systalk pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_systalk_S( nation, SENDTYPE_NATION, &pValue );
+	return 0;
+}
+
+int system_talk( int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+{
+	return 0;
+}
+
+int system_talkto( int actor_index, int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+{
+	return 0;
+}
+
+int system_talktonation( int nation, int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+{
+	return 0;
+}

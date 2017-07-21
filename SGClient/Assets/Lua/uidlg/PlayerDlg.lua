@@ -135,6 +135,8 @@ function PlayerDlgSet()
 	SetText( m_uiBodyProgress.transform:Find("Text"), GetPlayer().m_body.."/100" );
 	if GetPlayer().m_body >= 100 then
 		SetText( m_uiBodyProgress.transform:Find("Level"), T(666) );
+	else
+		SetText( m_uiBodyProgress.transform:Find("Level"), "" );
 	end
 	
 	-- 其它信息

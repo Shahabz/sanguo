@@ -907,3 +907,30 @@ function struct_NetS_ChatList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_SystalkidValue_recv( buffer )
+	local recvValue = {};
+	recvValue.m_vlen = buffer:ReadSByte();
+	recvValue.m_v = buffer:ReadStringWithLen( recvValue.m_vlen );
+	return recvValue;
+end
+
+function struct_NetS_Systalkid_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_msglist = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_SystalkidValue_recv( buffer );
+		table.insert( recvValue.m_msglist, tmpValue );
+	end
+	recvValue.m_textid = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_Systalk_recv( buffer )
+	local recvValue = {};
+	recvValue.m_msglen = buffer:ReadShort();
+	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	return recvValue;
+end
+

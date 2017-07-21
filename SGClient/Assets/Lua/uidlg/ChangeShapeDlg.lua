@@ -102,4 +102,11 @@ end
 
 function ChangeShapeDlgChangeName()
 	--m_uiNameInput:GetComponent( "UIInputField" ).text;
+	local name = m_uiNameInput:GetComponent( "UIInputField" ).text;
+	local len = string.len( name );
+	if len < 4 or len >= 16 then
+		return
+	end
+	system_askinfo( ASKINFO_CHANGENAME, name, 1 );
+	ChangeShapeDlgClose();
 end

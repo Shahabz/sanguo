@@ -125,12 +125,3 @@ int monsterinfo_reload_auto()
 	return 0;
 }
 
-int monsterinfo_luatable_auto()
-{
-	lua_newtable( servL );
-	lua_setglobal( servL, "g_monster" );
-
-	lua_pushinteger( servL, g_monster_maxnum );
-	lua_setglobal( servL, "g_monster_maxnum" );
-	return 0;
-}

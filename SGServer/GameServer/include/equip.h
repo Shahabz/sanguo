@@ -29,6 +29,7 @@ int equip_gettype( short kind );
 int equip_insert( int actor_index, int offset ); // 创建装备的时候调用，保存刚创建的装备
 int equip_create( int actor_index, short equipkind, EquipOut *pOut ); // 玩家创建装备
 int equip_getequip( int actor_index, int equipkind, char path ); // 玩家获得装备
+int equip_lostequip( int actor_index, int equipoffset, char path );
 
 int equip_up( int actor_index, short herokind, int equip_offset ); // 装备上,带有替换效果
 int equip_down( int actor_index, short herokind, int index ); // 卸身上的装备

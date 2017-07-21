@@ -42,26 +42,19 @@ ITEM_ABILITY_CITYRES_IRON		=	14	-- 铁数量
 
 -- 获取道具配置信息
 function item_getinfo( itemkind )
-	local iteminfo = Data.item[itemkind];
+	local iteminfo = conf_item[itemkind];
 	if iteminfo == nil then
 		return nil;
 	end
 	if itemkind <= 0 then
 		return nil;
 	end
-	return Data.item[itemkind];
+	return conf_item[itemkind];
 end
 
 -- 获取道具配置名称
 function item_getname( itemkind )
 	local name = Localization.text_item( itemkind );
-	if name == "" then
-		-- 这里注意，itemkind>100000可以返回奖励名称
-		if G_AwardKindList[itemkind] == nil then
-			return "";
-		end
-		return GetLocalizeText(G_AwardKindList[itemkind].nameid)
-	end
 	return name;
 end
 
@@ -76,10 +69,10 @@ end
 
 -- 获取道具等级
 function item_getlevel( itemkind )
-  if Data.item[itemkind] == nil then
+  if conf_item[itemkind] == nil then
      return 0;
   end
-	local level = Data.item[itemkind]["level"];
+	local level = conf_item[itemkind].level;
 	if level == nil or level < 0 then
 		return 0;
 	end
@@ -88,10 +81,10 @@ end
 
 -- 获取道具配置颜色
 function item_getcolor( itemkind )
-  if Data.item[itemkind] == nil then
-      return 0;
-  end
-	local color = Data.item[itemkind]["color_level"];
+	if conf_item[itemkind] == nil then
+		return 0;
+	end
+	local color = conf_item[itemkind].color_level;
 	if color == nil or color < 0 then
 		return 0;
 	end
@@ -100,43 +93,43 @@ end
 
 -- 获取道具配置顺序
 function item_getsort( itemkind )
-	local sort = Data.item[itemkind]["sort"];
+	local sort = conf_item[itemkind].sort;
 	if sort == nil or sort < 0 then
 		return 0;
 	end
 	return sort;
 end
 
--- 获取道具价值
+-- 获取道具售价
 function item_getprice( itemkind )
-  if Data.item[itemkind] == nil then
+  if conf_item[itemkind] == nil then
     return 0;
   end
-	local price = Data.item[itemkind].price;
+	local price = conf_item[itemkind].price;
 	if price == nil then
 		return 0;
 	end
 	return price;
 end
 
--- 获取道具配置过滤
-function item_getfilter( itemkind )
-    --if Data.item[itemkind] == nil then
-        --return 1;
-    --end
-	local filter = Data.item[itemkind].filter;
-	if filter == nil or filter == 0 then
-		return 1;
+-- 获取道具钻石使用价格
+function item_gettoken( itemkind )
+  if conf_item[itemkind] == nil then
+    return 0;
+  end
+	local token = conf_item[itemkind].token;
+	if token == nil then
+		return 0;
 	end
-	return filter;
+	return token;
 end
 
 -- 获取道具类型
 function item_gettype( itemkind )
-  if Data.item[itemkind] == nil then 
-      return -1;
-  end
-	local type = Data.item[itemkind].type;
+	if conf_item[itemkind] == nil then 
+		return -1;
+	end
+	local type = conf_item[itemkind].type;
 	if type == 0 then
 		return 0;
 	end
@@ -155,9 +148,9 @@ end
 -- 根据类别获取道具
 function item_getlist_withtype( type )
     local refTable = {};
-    for k, v in pairs(Data.item) do
+    for k, v in pairs(conf_item) do
         if v.type == type then
-					table.insert( refTable, v )
+			table.insert( refTable, v )
         end
     end
     return refTable
@@ -229,7 +222,7 @@ end
 function Item:OnItemChange( _ItemIndex )
 	local nItemIndex = _ItemIndex + 1;
 	-- 发布事件
-	EventProtocol.dispatchEvent( "OnItemChange", { itemIndex=_ItemIndex, kind=self.m_Item[nItemIndex].m_kind, num=self.m_Item[nItemIndex].m_num } );
+	--EventProtocol.dispatchEvent( "OnItemChange", { itemIndex=_ItemIndex, kind=self.m_Item[nItemIndex].m_kind, num=self.m_Item[nItemIndex].m_num } );
 end
 
 -- 服务器返回物品使用了

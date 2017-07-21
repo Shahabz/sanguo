@@ -12,6 +12,5 @@ typedef struct _trainlonginfo TrainlongInfo;
 
 int trainlonginfo_init_auto();
 int trainlonginfo_reload_auto();
-int trainlonginfo_luatable_auto();
 
 #endif

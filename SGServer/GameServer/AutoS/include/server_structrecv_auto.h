@@ -31,7 +31,7 @@ struct _slk_NetC_Gmcmd {
 	short m_cmd;	//客户端发来-GM指令
 	int m_value[4];	//客户端发来-GM指令数值参数
 	short m_msg_length;	//客户端发来-GM指令字符串长度
-	char m_msg[256];	//客户端发来-GM指令字符串参数
+	char m_msg[1024];	//客户端发来-GM指令字符串参数
 };
 typedef struct _slk_NetC_Gmcmd SLK_NetC_Gmcmd;	//GM指令
 

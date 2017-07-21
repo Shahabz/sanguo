@@ -1,12 +1,6 @@
 #ifndef __SYSTEM_H
 #define __SYSTEM_H
 
-int local_talk( int actor_index, const char *szMsg, int type );
-int system_talk( const char *szMsg, int type );
-int system_talkto( int actor_index, char *szMsg );
-int system_rollingmsg( char type, int language, int channeid, const char *msg );
-int system_rollingparam( int textid, char *p1, char *p2, char *p3, int count );
-
 int system_getruntime();
 int system_getopentime();
 

@@ -18,11 +18,11 @@ struct _itemkind {
 				int m_value_min[4];	//
 				int m_value_max[4];	//
 				short m_color_level;	//
+				short m_sort;	//
 };
 typedef struct _itemkind ItemKind;
 
 int itemkind_init_auto();
 int itemkind_reload_auto();
-int itemkind_luatable_auto();
 
 #endif

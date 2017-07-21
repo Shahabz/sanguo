@@ -1035,3 +1035,36 @@ int struct_NetS_ChatList_send( char **pptr, int *psize, SLK_NetS_ChatList *pValu
 	return 0;
 }
 
+int struct_NetS_SystalkidValue_send( char **pptr, int *psize, SLK_NetS_SystalkidValue *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_vlen, (*psize) );
+	if( pValue->m_vlen > 0 && pValue->m_vlen <= 64 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_v, pValue->m_vlen*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_Systalkid_send( char **pptr, int *psize, SLK_NetS_Systalkid *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_SystalkidValue_send( pptr, psize, &pValue->m_msglist[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_textid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
+	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	return 0;
+}
+

@@ -14,11 +14,12 @@
 #define LOGOP_VIPEXP			8	// vip经验
 #define LOGOP_BUILDING			9	// 建筑
 #define LOGOP_EQUIPGET			10	// 获得装备
-#define LOGOP_QUEST				11	// 任务
-#define LOGOP_SILVER			12	// 银币
-#define LOGOP_WOOD				13	// 木材
-#define LOGOP_FOOD				14	// 粮食
-#define LOGOP_IRON				15	// 镔铁
+#define LOGOP_EQUIPLOST			11	// 丢失装备
+#define LOGOP_QUEST				12	// 任务
+#define LOGOP_SILVER			13	// 银币
+#define LOGOP_WOOD				14	// 木材
+#define LOGOP_FOOD				15	// 粮食
+#define LOGOP_IRON				16	// 镔铁
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统

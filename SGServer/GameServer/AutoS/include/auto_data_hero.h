@@ -32,6 +32,5 @@ typedef struct _heroinfo HeroInfo;
 
 int heroinfo_init_auto();
 int heroinfo_reload_auto();
-int heroinfo_luatable_auto();
 
 #endif

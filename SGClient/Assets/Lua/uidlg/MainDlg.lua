@@ -350,24 +350,30 @@ function MainDlgSetLevel()
 	SetLevel( m_uiLevel, GetPlayer().m_level );
 end
 
+-- 国家
+function MainDlgSetNation()
+	SetImage( m_uiNation, NationSprite( GetPlayer().m_nation ) );
+	SetImage( m_uiButtonNation.Find("Back"), NationSprite( GetPlayer().m_nation ) );
+end
+
 -- 银币
 function MainDlgSetSilver()
-	SetText( m_uiSilverNum, GetPlayer().m_silver );
+	SetText( m_uiSilverNum, knum(GetPlayer().m_silver) );
 end
 
 -- 木材
 function MainDlgSetWood()
-	SetText( m_uiWoodNum, GetPlayer().m_wood );
+	SetText( m_uiWoodNum, knum(GetPlayer().m_wood) );
 end
 
 -- 粮草
 function MainDlgSetFood()
-	SetText( m_uiFoodNum, GetPlayer().m_food );
+	SetText( m_uiFoodNum, knum(GetPlayer().m_food) );
 end
 
 -- 镔铁
 function MainDlgSetIron()
-	SetText( m_uiIronNum, GetPlayer().m_iron )
+	SetText( m_uiIronNum, knum(GetPlayer().m_iron) )
 end
 
 -- 体力

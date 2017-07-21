@@ -499,6 +499,7 @@ int city_actorexp( int city_index, int exp, char path )
 		SLK_NetS_Experience Value = {};
 		Value.m_addexp = exp;
 		Value.m_curexp = g_city[city_index].exp;
+		Value.m_expmax = g_upgradeinfo[g_city[city_index].level].exp;
 		Value.m_level = g_city[city_index].level;
 		Value.m_isup = isup;
 		Value.m_path = path;
@@ -529,6 +530,10 @@ int city_actorupgrade( int city_index, char path, AwardGetInfo *getinfo )
 int city_changebody( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].body >= global.body_max && path == PATH_SYSTEM )
+	{
+		return -1;
+	}
 	if ( value > 0 && g_city[city_index].body > SHRT_MAX - value )
 		g_city[city_index].body = SHRT_MAX;
 	else

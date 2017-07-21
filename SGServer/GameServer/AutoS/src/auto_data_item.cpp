@@ -47,7 +47,7 @@ int itemkind_init_auto()
 	g_itemkind = (ItemKind *)malloc( sizeof(ItemKind)*g_itemkind_maxnum );
 	memset( g_itemkind, 0, sizeof(ItemKind)*g_itemkind_maxnum );
 
-	sprintf( szSQL, "select `kind`,`name`,`level`,`price`,`token`,`type`,`situation`,`overlap`,`base_ability0`,`base_ability1`,`base_value0`,`base_value1`,`ability0`,`ability1`,`ability2`,`ability3`,`value_min0`,`value_min1`,`value_min2`,`value_min3`,`value_max0`,`value_max1`,`value_max2`,`value_max3`,`color_level` from item;" );
+	sprintf( szSQL, "select `kind`,`name`,`level`,`price`,`token`,`type`,`situation`,`overlap`,`base_ability0`,`base_ability1`,`base_value0`,`base_value1`,`ability0`,`ability1`,`ability2`,`ability3`,`value_min0`,`value_min1`,`value_min2`,`value_min3`,`value_max0`,`value_max1`,`value_max2`,`value_max3`,`color_level`,`sort` from item;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -86,6 +86,7 @@ int itemkind_init_auto()
 		g_itemkind[kind].m_value_max[2] = atoi(row[offset++]);
 		g_itemkind[kind].m_value_max[3] = atoi(row[offset++]);
 		g_itemkind[kind].m_color_level = atoi(row[offset++]);
+		g_itemkind[kind].m_sort = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	itemkind_luatable_auto();
@@ -104,105 +105,3 @@ int itemkind_reload_auto()
 	return 0;
 }
 
-int itemkind_luatable_auto()
-{
-	lua_newtable( servL );
-	for ( int kind = 0; kind < g_itemkind_maxnum; kind++ )
-	{
-		lua_pushinteger( servL, kind );
-		lua_newtable( servL );
-
-		lua_pushstring( servL, "m_kind" );
-		lua_pushinteger( servL, g_itemkind[kind].m_kind );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_name" );
-		lua_pushstring( servL, g_itemkind[kind].m_name );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_level" );
-		lua_pushinteger( servL, g_itemkind[kind].m_level );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_price" );
-		lua_pushinteger( servL, g_itemkind[kind].m_price );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_token" );
-		lua_pushinteger( servL, g_itemkind[kind].m_token );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_type" );
-		lua_pushinteger( servL, g_itemkind[kind].m_type );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_situation" );
-		lua_pushinteger( servL, g_itemkind[kind].m_situation );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_overlap" );
-		lua_pushinteger( servL, g_itemkind[kind].m_overlap );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_base_ability" );
-		lua_newtable( servL );
-		for ( int i = 0; i < 2; i++ )
-		{
-			lua_pushinteger( servL, i );
-			lua_pushinteger( servL, g_itemkind[kind].m_base_ability[i] );
-			lua_rawset( servL, -3 );
-		}
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_base_value" );
-		lua_newtable( servL );
-		for ( int i = 0; i < 2; i++ )
-		{
-			lua_pushinteger( servL, i );
-			lua_pushinteger( servL, g_itemkind[kind].m_base_value[i] );
-			lua_rawset( servL, -3 );
-		}
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_ability" );
-		lua_newtable( servL );
-		for ( int i = 0; i < 4; i++ )
-		{
-			lua_pushinteger( servL, i );
-			lua_pushinteger( servL, g_itemkind[kind].m_ability[i] );
-			lua_rawset( servL, -3 );
-		}
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_value_min" );
-		lua_newtable( servL );
-		for ( int i = 0; i < 4; i++ )
-		{
-			lua_pushinteger( servL, i );
-			lua_pushinteger( servL, g_itemkind[kind].m_value_min[i] );
-			lua_rawset( servL, -3 );
-		}
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_value_max" );
-		lua_newtable( servL );
-		for ( int i = 0; i < 4; i++ )
-		{
-			lua_pushinteger( servL, i );
-			lua_pushinteger( servL, g_itemkind[kind].m_value_max[i] );
-			lua_rawset( servL, -3 );
-		}
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "m_color_level" );
-		lua_pushinteger( servL, g_itemkind[kind].m_color_level );
-		lua_rawset( servL, -3 );
-
-		lua_rawset( servL, 1 );
-	}
-	lua_setglobal( servL, "g_itemkind" );
-
-	lua_pushinteger( servL, g_itemkind_maxnum );
-	lua_setglobal( servL, "g_itemkind_maxnum" );
-	return 0;
-}
