@@ -19,8 +19,13 @@
 
 
 /* 物品类型 */
-#define ITEM_TYPE_NORMAL_USE  1	//点击类道具（主动使用）
-#define ITEM_TYPE_SCRIPT_USE  2	//脚本使用类道具
+#define ITEM_TYPE_NORMAL_USE		1	// 点击类道具（主动使用）
+#define ITEM_TYPE_SCRIPT_USE		2	// 脚本使用类道具
+#define	ITEM_TYPE_EQUIP_MATERIAL	3	// 装备材料
+#define	ITEM_TYPE_EQUIP_DRAWING		4	// 装备图纸
+#define	ITEM_TYPE_ACTIVITY			5	// 活动类（无点击按钮，被动使用）
+#define	ITEM_TYPE_AUTO				6	// 自动使用类
+#define	ITEM_TYPE_HEROEXP			7	// 武将经验
 
 /* 动态属性 */
 #define ITEM_ABILITY_NONE					0
@@ -33,15 +38,13 @@
 #define ITEM_ABILITY_CITYRES_WOOD	12	// 木材数量
 #define ITEM_ABILITY_CITYRES_FOOD	13	// 粮食数量
 #define ITEM_ABILITY_CITYRES_IRON	14	// 铁数量
+#define ITEM_ABILITY_BUFF			15	// buff
 
 /* 道具操作 */ 
 #define ITEM_PROCESS_INFO		1 // 获取道具信息
 #define ITEM_PROCESS_USE		2 // 使用道具
-#define ITEM_PROCESS_DROP		6 // 丢弃道具
-#define ITEM_PROCESS_SELL		7 // 出售道具
-#define ITEM_PROCESS_SETTLE		8 // 背包整理
-#define ITEM_PROCESS_TOKENUSE	9 // 钻石方式使用道具
-#define ITEM_PROCESS_REFURBISH	12 // 刷新
+#define ITEM_PROCESS_SELL		3 // 出售道具
+#define ITEM_PROCESS_TOKENUSE	4 // 钻石方式使用道具
 
 /* 场合 */
 #define ITEM_SITUATION_NOUSEMORE	0x01	// 禁止使用多个

@@ -16,29 +16,30 @@ ITEM_COLOR_LEVEL_ORANGE = 6 -- 橙色
 
 ITEM_PROCESS_INFO		    = 1 -- 获取道具信息
 ITEM_PROCESS_USE		    = 2 -- 使用道具
-ITEM_PROCESS_DROP		    = 6 -- 丢弃道具
-ITEM_PROCESS_SELL		    = 7 -- 出售道具
-ITEM_PROCESS_SETTLE		    = 8 -- 背包整理
-ITEM_PROCESS_TOKENUSE	    = 9	-- 钻石方式使用
-ITEM_PROCESS_REFURBISH   	= 12 -- 刷新
+ITEM_PROCESS_SELL		    = 3 -- 丢弃道具
+ITEM_PROCESS_TOKENUSE	    = 4	-- 钻石方式使用
 
 -- 道具类型
-ITEM_TYPE_NORMAL_USE				=	1	--	点击类道具（主动使用）
-ITEM_TYPE_SCRIPT_USE				=	2	--	脚本使用类道具
-
+ITEM_TYPE_NORMAL_USE			=	1	--	点击类道具（主动使用）
+ITEM_TYPE_SCRIPT_USE			=	2	--	脚本使用类道具
+ITEM_TYPE_EQUIP_MATERIAL		=	3	-- 装备材料
+ITEM_TYPE_EQUIP_DRAWING			=	4	-- 装备图纸
+ITEM_TYPE_ACTIVITY				=	5	-- 活动类（无点击按钮，被动使用）
+ITEM_TYPE_AUTO					=	6	-- 自动使用类
+ITEM_TYPE_HEROEXP				=	7	-- 武将经验
 
 -- 动态属性
-ITEM_ABILITY_NONE						=	0
+ITEM_ABILITY_NONE				=	0
 ITEM_ABILITY_AWARDGROUP			=	1	-- 掉落包
-ITEM_ABILITY_SCRIPTID				=	2	-- 脚本调用ID
-ITEM_ABILITY_ADDBODY				=	3	-- 加体力
-ITEM_ABILITY_ADDEXP					=	4	-- 加主公经验
+ITEM_ABILITY_SCRIPTID			=	2	-- 脚本调用ID
+ITEM_ABILITY_ADDBODY			=	3	-- 加体力
+ITEM_ABILITY_ADDEXP				=	4	-- 加主公经验
 ITEM_ABILITY_ADDHEROEXP			=	5	-- 加英雄经验
-
-ITEM_ABILITY_CITYRES_SILVER	=	11	-- 银币数量
+ITEM_ABILITY_CITYRES_SILVER		=	11	-- 银币数量
 ITEM_ABILITY_CITYRES_WOOD		=	12	-- 木材数量
 ITEM_ABILITY_CITYRES_FOOD		=	13	-- 粮食数量
 ITEM_ABILITY_CITYRES_IRON		=	14	-- 铁数量
+ITEM_ABILITY_BUFF				=	15	-- buff
 
 -- 获取道具配置信息
 function item_getinfo( itemkind )
@@ -237,26 +238,20 @@ function Item:ItemUsed( _ItemIndex, nItemNum, nItemEff )
 	end
 	
 	
-		-- 正数表示的是使用个数，负数表示不能使用
-		if nItemNum > 0 then
-			self.m_Item[nItemIndex].m_num = self.m_Item[nItemIndex].m_num - nItemNum;
-		elseif nItemNum == -2 then
-		end
-
-    -- 使用消息, 特定不显示
-    --local kind = self.m_Item[nItemIndex].m_kind;
-    --if kind ~= 113 then
-        --Notify( 113, { item_getname( kind ) .. " x" .. nItemNum } );
-    --end
+	-- 正数表示的是使用个数，负数表示不能使用
+	if nItemNum > 0 then
+		self.m_Item[nItemIndex].m_num = self.m_Item[nItemIndex].m_num - nItemNum;
+	elseif nItemNum == -2 then
+	end
 		
-		-- 道具使用没了
-		if self.m_Item[nItemIndex].m_num <= 0 then
-			self:SetItem( _ItemIndex, nil );
-			return;
-		end
-		
-		-- 改变道具信息
+	-- 道具使用没了
+	if self.m_Item[nItemIndex].m_num <= 0 then
+		self:SetItem( _ItemIndex, nil );
 		self:OnItemChange( _ItemIndex );
+	else
+		BagDlgItemChange( _ItemIndex )
+	end
+		
 end
 
 -- 得到服务器返回的消息，得到一个物品
@@ -267,9 +262,11 @@ function Item:ItemGet( _ItemIndex, kind, type, num, color, situation, path )
 	end
 	
 	-- 得到物品
+	local new = false;
 	local pitem = self.m_Item[nItemIndex];
 	if pitem.m_kind ~= kind or pitem.m_num <= 0 then
 		pitem.m_bIsUpdate = false;
+		new = true;
 	end
 	pitem.m_num = pitem.m_num + num;
 	pitem.m_kind = kind;
@@ -278,16 +275,17 @@ function Item:ItemGet( _ItemIndex, kind, type, num, color, situation, path )
 	pitem.m_situation = situation;
 	self:SetItem( _ItemIndex, pitem );
 
-	self:OnGetItem( _ItemIndex, kind, num, path );
+	self:OnGetItem( _ItemIndex, kind, num, new, path );
 end
 
 -- 对得到的这个物品进行其它处理，比如提示等
-function Item:OnGetItem( _ItemIndex, nItemKind, num, path )
+function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 	local nItemIndex = _ItemIndex + 1;
 	local pItem = self:GetAnyItem( _ItemIndex );
 	if pItem == nil then
 		return;
 	end
+	
 	-- 新道具标示
 	pItem.m_bIsNew = true;
 	
@@ -295,7 +293,12 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, path )
 	if GameManager.inited == false then
 		return;
 	end
-	self:OnItemChange( _ItemIndex );
+	
+	if new == true then
+		self:OnItemChange( _ItemIndex );
+	else
+		BagDlgItemChange( _ItemIndex )
+	end
 	
 	if path == PATH_GM or path == PATH_SYSTEM then
      -- 忽略

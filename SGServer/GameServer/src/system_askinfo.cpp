@@ -135,7 +135,23 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_EQUIP:
 		break;
-	case  ASKINFO_ITEM:
+	case ASKINFO_ITEM:
+		if ( pvalue[0] == ITEM_PROCESS_INFO )
+		{
+
+		}
+		else if ( pvalue[0] == ITEM_PROCESS_USE )
+		{
+			item_use( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
+		}
+		else if ( pvalue[0] == ITEM_PROCESS_SELL )
+		{
+			item_drop( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == ITEM_PROCESS_TOKENUSE )
+		{
+			item_use_withtoken( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
+		}
 		break;
 	case ASKINFO_HERO:
 		break;

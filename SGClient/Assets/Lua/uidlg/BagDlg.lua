@@ -11,9 +11,11 @@ local m_uiEquipContent = nil; --UnityEngine.GameObject
 local m_uiUIP_ItemRow = nil; --UnityEngine.GameObject
 local m_uiUIP_EquipRow = nil; --UnityEngine.GameObject
 
+local m_uiUseNum = nil;
 local m_SelectType = 0;
 local m_SelectItemIndex = -1;
 local m_SelectEquipIndex = -1;
+local m_SelectItemNum = 0;
 
 -- 数据缓存
 local m_CacheItemCache = { };
@@ -53,10 +55,44 @@ function BagDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             BagDlgClose();
+		elseif nControlID == -2 then
+			BagDlgSelectItem( -1 );
 		elseif nControlID == 1 then
 			BagDlgSelectType(1);
 		elseif nControlID == 2 then
 			BagDlgSelectType(2);
+		
+		-- 减10
+		elseif nControlID == 11 then
+			BagDlgSelectItemSetNum( -10 )
+			
+		-- 减1
+		elseif nControlID == 12 then
+			BagDlgSelectItemSetNum( -1 )
+		
+		-- 加10
+		elseif nControlID == 13 then
+			BagDlgSelectItemSetNum( 10 )
+			
+		-- 加1
+		elseif nControlID == 14 then
+			BagDlgSelectItemSetNum( 1 )
+		
+		-- 售卖
+		elseif nControlID == 15 then
+			BagDlgItemSell()
+			
+		-- 使用
+		elseif nControlID == 16 then
+			BagDlgItemUse()
+			
+		-- 选择道具
+		elseif nControlID >= 1000 and nControlID < 2000 then
+			BagDlgSelectItem( nControlID-1000 )
+			
+		-- 选择装备
+		elseif nControlID >= 2000 and nControlID < 3000 then
+			BagDlgSelectEquip( nControlID-2000 )
         end
 	end
 end
@@ -73,6 +109,7 @@ function BagDlgOnAwake( gameObject )
 	m_uiEquipContent = objs[5];
 	m_uiUIP_ItemRow = objs[6];
 	m_uiUIP_EquipRow = objs[7];
+	m_uiItemInfo = objs[8];
 end
 
 -- 界面初始化时调用
@@ -122,6 +159,8 @@ function BagDlgSelectType(type)
 		SetTrue( m_uiEquipScroll )
 		BagDlgLoadEquip()
 	end
+	BagDlgSelectItem( -1 )
+	BagDlgSelectEquip( -1 )
 end
 -- 缓存排序
 function BagDlgItemCacheSort(a, b)
@@ -325,5 +364,139 @@ function BagDlgLoadEquip()
 			equipCount = equipCount + 1;
         end
     end
+end
+
+-- 单个道具刷新
+function BagDlgItemChange( offset )
+	-- 获取道具
+    local pItem = GetItem():GetAnyItem( offset );
+    if pItem == nil then
+        return;
+    end
+	-- 道具对象
+	local uiItemObj = m_CacheItemList[offset+1];
+    if uiItemObj == nil then
+        return;
+    end
+	SetText( uiItemObj.transform:Find("Num"), "x"..pItem.m_num );
+end
+
+-- 选择道具
+function BagDlgSelectItem( offset )
+	m_SelectItemIndex = offset;
+	m_SelectItemNum = 1;
+	m_uiUseNum = nil;
+	if offset == -1 then
+		SetFalse( m_uiItemInfo );
+		return
+	end
+	
+	-- 获取道具
+    local pItem = GetItem():GetAnyItem(m_SelectItemIndex - 1);
+    if pItem == nil then
+        return;
+    end
+	
+	-- 道具对象
+	local uiItemObj = m_CacheItemList[m_SelectItemIndex];
+    if uiItemObj == nil then
+        return;
+    end
+    SetFalse( uiItemObj.transform:Find("New") );
+	
+	SetTrue( m_uiItemInfo );
+	local objs = m_uiItemInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local ItemObj = objs[0];
+	local ItemName = objs[1];
+	local ItemDesc = objs[2];
+	local UseNum = objs[3];
+	local SellButton = objs[4];
+	local UseButton = objs[5];
+	local NumSelect = objs[6];
+	m_uiUseNum = UseNum;
+			
+	SetImage( ItemObj.transform:Find("Shape"), ItemSprite(pItem.m_kind) )
+	SetImage( ItemObj.transform:Find("Color"), ItemColorSprite(equip_getcolor(pItem.m_kind)) )
+	SetText( ItemObj.transform:Find("Num"), "x"..pItem.m_num );
+	SetText( ItemName, item_getname( pItem.m_kind ) );
+	SetText( m_uiUseNum, m_SelectItemNum );
+	
+	-- 出售
+	if item_getprice( pItem.m_kind ) > 0 then
+		SetTrue( SellButton );
+	else
+		SetFalse( SellButton );
+	end
+	
+	-- 使用
+	if (pItem.m_type == ITEM_TYPE_NORMAL_USE or
+        pItem.m_type == ITEM_TYPE_SCRIPT_USE or 
+		pItem.m_type == ITEM_TYPE_EQUIP_DRAWING or
+		pItem.m_type == ITEM_TYPE_HEROEXP) then
+		SetTrue( NumSelect );
+		SetTrue( UseButton );
+        -- 检查物品是否可以一起使用多个
+        if Utils.byteAndOp(pItem.m_situation, 1) == 0 then
+           
+        else
+           
+        end
+	else
+		SetFalse( NumSelect );
+		SetFalse( UseButton );
+	end
+end
+
+-- 设置使用道具的数量
+function BagDlgSelectItemSetNum( num )
+	local pItem = GetItem():GetAnyItem(m_SelectItemIndex - 1);
+    if pItem == nil then
+        return;
+    end
+	if num > 0 then
+		m_SelectItemNum = m_SelectItemNum + num
+		if m_SelectItemNum > pItem.m_num then
+			m_SelectItemNum = pItem.m_num;
+		end
+	else
+		m_SelectItemNum = m_SelectItemNum + num
+		if m_SelectItemNum <= 0 then
+			m_SelectItemNum = 1;
+		end
+	end
+	SetText( m_uiUseNum, m_SelectItemNum );
+end
+
+-- 道具售卖
+function BagDlgItemSell()
+	local pItem = GetItem():GetAnyItem(m_SelectItemIndex - 1);
+    if pItem == nil then
+        return;
+    end
+	if m_SelectItemNum <= 0 then
+		return;
+	end
+	MsgBox( F( 686, m_SelectItemNum, item_getname(pItem.m_kind), item_getprice(pItem.m_kind)*m_SelectItemNum ), function()
+		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_SELL, m_SelectItemIndex - 1, m_SelectItemNum );
+		BagDlgSelectItem( -1 )
+	end )
+end
+
+-- 道具使用
+function BagDlgItemUse()
+	local pItem = GetItem():GetAnyItem(m_SelectItemIndex - 1);
+    if pItem == nil then
+        return;
+    end
+	if m_SelectItemNum <= 0 then
+		return;
+	end
+	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, m_SelectItemIndex - 1, m_SelectItemNum, -1, 1 );
+	BagDlgSelectItem( -1 )
+end
+
+-- 选择装备
+function BagDlgSelectEquip( offset )
+	m_SelectEquipIndex = offset;
 end
 

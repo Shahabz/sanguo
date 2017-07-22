@@ -111,6 +111,43 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 				award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], getinfo.color[tmpi], PATH_ITEMUSE, NULL );
 			}
 		}
+		else if ( ability1 == ITEM_ABILITY_SCRIPTID )
+		{ // 脚本调用ID
+
+		}
+		else if ( ability1 == ITEM_ABILITY_ADDBODY )
+		{ // 加体力
+			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_ADDEXP )
+		{ // 加主公经验
+			city_actorexp( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_ADDHEROEXP )
+		{ // 加英雄经验
+
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_SILVER )
+		{ // 银币数量
+			city_changesilver( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_WOOD )
+		{ // 木材数量
+			city_changewood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_FOOD )
+		{ // 粮食数量
+			city_changefood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_IRON )
+		{ // 铁数量
+			city_changeiron( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_BUFF )
+		{ // buff
+
+		}
+
 	}
 	else
 		return item_sendnotuse( actor_index, itemindex, -2 );
@@ -249,8 +286,10 @@ int item_drop( int actor_index, short itemindex, short dropcount )
 		price = 1;
 	price *= dropcount;
 
+	city_changesilver( g_actors[actor_index].city_index, price, PATH_SELL );
+
 	// 记录log
-	wlog( 0, LOGOP_ITEMLOST, PATH_SELL, pitem->m_kind, dropcount, pitem->m_num, g_actors[actor_index].actorid, 0 );
+	wlog( 0, LOGOP_ITEMLOST, PATH_SELL, pitem->m_kind, dropcount, pitem->m_num, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 
 	pitem->m_num -= dropcount;
 	// 如果数量为0，那么就删掉
