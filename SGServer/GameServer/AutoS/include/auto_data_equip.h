@@ -6,6 +6,7 @@ struct _equipinfo {
 //--Automatically generated
 				short kind;	//
 				short type;	//
+				short actorlevel;	//
 				short color;	//
 				short ability;	//
 				int value;	//
@@ -13,6 +14,7 @@ struct _equipinfo {
 				int silver;	//
 				short material_kind[6];	//
 				short material_num[6];	//
+				int prestige;	//
 };
 typedef struct _equipinfo EquipInfo;
 

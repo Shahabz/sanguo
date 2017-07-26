@@ -57,6 +57,9 @@ struct _city {
 				char techlevel[40];	//科技
 				char techprogress[40];	//科技进度
 				int data_record[16];	//数据记录
+				short nequip[6];	//国器等级
+				char nequip_kind;	//正在升级的国器
+				int nequip_sec;	//国器升级时间
 				short guardsec;	//城墙守卫冷却时间
 				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄

@@ -109,6 +109,18 @@ int global_init()
 		{
 			global.trainfood = atoi( row[1] );
 		}
+		else if ( id == 17 )
+		{
+			global.equipext_token = atoi( row[1] );
+		}
+		else if ( id == 18 )
+		{
+			global.nequip_open_silver = atoi( row[1] );
+		}
+		else if ( id == 19 )
+		{
+			global.nequip_open_wood = atoi( row[1] );
+		}
 		
 	}
 	lua_setglobal( servL, "global" );

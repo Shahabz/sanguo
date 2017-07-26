@@ -44,17 +44,17 @@ function HeroHeadSprite( kind )
 	local name = string.format("herohead_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "herohead_1" );
 	end
 	return sprite;
 end
 
 -- 英雄半身像
 function HeroFaceSprite( kind )
-	local name = string.format("herohead_%d_face", kind );
+	local name = string.format("heroface_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "heroface_1" );
 	end
 	return sprite;
 end

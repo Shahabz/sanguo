@@ -1,4 +1,4 @@
-conf_city_tech = {
+g_techinfo = {
 [1] = 
 { 
 	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=1,value=5,},
@@ -313,7 +313,7 @@ conf_city_tech = {
 },
 [15] = 
 { 
-	[1] = { kind=15,level=1,name="秘技：金色以上装备技能满级且相同，可开启秘技",buildinglevel=15,prekind=24,prelevel=1,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=15,value=5,},
+	[1] = { kind=15,level=1,name="秘技：金色以上装备技能满级且相同，可开启秘技",buildinglevel=15,prekind=25,prelevel=1,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=15,value=5,},
 },
 [16] = 
 { 
@@ -350,7 +350,7 @@ conf_city_tech = {
 },
 [20] = 
 { 
-	[1] = { kind=20,level=1,name="自动补兵：开启自动补兵",buildinglevel=10,prekind=25,prelevel=2,progress=2,sec=1830,silver=3660,wood=5490,food=0,iron=0,ability=20,value=5,},
+	[1] = { kind=20,level=1,name="自动补兵：开启自动补兵",buildinglevel=10,prekind=27,prelevel=2,progress=2,sec=1830,silver=3660,wood=5490,food=0,iron=0,ability=20,value=5,},
 },
 [21] = 
 { 
@@ -408,12 +408,18 @@ conf_city_tech = {
 },
 [24] = 
 { 
-	[1] = { kind=24,level=1,name="初级统帅力：增加上阵武将数量1个",buildinglevel=1,prekind=25,prelevel=1,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=104,value=1,},
-	[2] = { kind=24,level=2,name="中级统帅力：增加上阵武将数量2个",buildinglevel=2,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=104,value=2,},
+	[1] = { kind=24,level=1,name="初级统帅力：增加上阵武将数量1个",buildinglevel=1,prekind=26,prelevel=1,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=104,value=1,},
 },
 [25] = 
 { 
-	[1] = { kind=25,level=1,name="初级点兵术：增加武将带兵排数1排",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=105,value=1,},
-	[2] = { kind=25,level=2,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=105,value=2,},
+	[2] = { kind=25,level=2,name="中级统帅力：增加上阵武将数量2个",buildinglevel=2,prekind=20,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=104,value=1,},
+},
+[26] = 
+{ 
+	[1] = { kind=26,level=1,name="初级点兵术：增加武将带兵排数1排",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=105,value=1,},
+},
+[27] = 
+{ 
+	[2] = { kind=27,level=2,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=105,value=1,},
 },
 }

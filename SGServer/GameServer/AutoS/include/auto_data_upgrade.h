@@ -6,7 +6,7 @@ struct _upgradeinfo {
 //--Automatically generated
 				short level;	//
 				int exp;	//
-				int heroexp;	//
+				int heroexp[6];	//
 				int battlepower;	//
 				int awardgroup;	//
 };

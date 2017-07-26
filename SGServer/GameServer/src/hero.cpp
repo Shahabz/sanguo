@@ -11,6 +11,7 @@
 #include "hero.h"
 #include "mapunit.h"
 #include "map.h"
+#include "item.h"
 #include "server_netsend_auto.h"
 
 extern SConfig g_Config;
@@ -85,11 +86,21 @@ Hero* city_hero_getptr( int city_index, int offset )
 		return NULL;
 	if ( offset < HERO_BASEOFFSET )
 		return NULL;
-	short herokind = offset - HERO_BASEOFFSET;
-	int hero_index = city_hero_getindex( city_index, herokind );
+	short hero_index = offset - HERO_BASEOFFSET;
 	if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
 		return NULL;
 	return &g_city[city_index].hero[hero_index];
+}
+
+// 是否有这个武将
+char actor_hashero( int actor_index, int herokind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( actor_hero_getindex( actor_index, herokind ) >= 0 )
+		return 1;
+	if ( city_hero_getindex( g_actors[actor_index].city_index, herokind ) >= 0 )
+		return 1;
+	return 0;
 }
 
 // 缺省颜色
@@ -153,6 +164,11 @@ int hero_gethero( int actor_index, int kind, short path )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( kind <= 0 || kind >= g_heroinfo_maxnum )
 		return -1;
+	// 检查是否已经有这个武将了
+	if ( actor_hashero( actor_index, kind ) == 1 )
+		return -1;
+
+	// 找空余位置
 	int offset = -1;
 	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
 	{
@@ -217,7 +233,7 @@ int hero_up_auto( int actor_index, int offset )
 	
 	memset( &pCity->hero[index], 0, sizeof( Hero ) );
 	memcpy( &pCity->hero[index], &g_actors[actor_index].hero[offset], sizeof( Hero ) );
-	pCity->hero[index].offset = HERO_BASEOFFSET + pCity->hero[index].kind;
+	pCity->hero[index].offset = HERO_BASEOFFSET + index;
 	memset( &g_actors[actor_index].hero[offset], 0, sizeof( Hero ) );
 
 	SLK_NetS_HeroReplace pValue = { 0 };
@@ -260,6 +276,17 @@ int hero_down( int actor_index, int kind )
 		return -1;
 }
 
+int hero_getexp_max( int level, int color )
+{
+	if ( level <= 0 || level >= g_upgradeinfo_maxnum )
+		return -1;
+	if ( level >= global.actorlevel_max )
+		return -1;
+	if ( color < 0 || color >= ITEM_COLOR_LEVEL_MAX )
+		return -1;
+	return g_upgradeinfo[level].heroexp[color];
+}
+
 // 拼属性
 void hero_makestruct( int offset, Hero *pHero, SLK_NetS_Hero *pValue )
 {
@@ -270,10 +297,10 @@ void hero_makestruct( int offset, Hero *pHero, SLK_NetS_Hero *pValue )
 	pValue->m_color = pHero->color;
 	pValue->m_level = pHero->level;
 	pValue->m_exp = pHero->exp;
-	pValue->m_exp_max = g_upgradeinfo[pHero->level].heroexp;
+	pValue->m_exp_max = hero_getexp_max( pHero->level, pHero->color );
 	pValue->m_soldiers = pHero->soldiers;
 	pValue->m_state = 0;
-	pValue->m_corps = config->corps;
+	pValue->m_corps = (char)config->corps;
 	pValue->m_attack_base = config->attack_base;
 	pValue->m_attack_wash = pHero->attack_wash;
 	pValue->m_defense_base = config->defense_base;

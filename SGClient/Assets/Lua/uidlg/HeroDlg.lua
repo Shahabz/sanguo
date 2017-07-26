@@ -148,5 +148,5 @@ function HeroDlgSelect( index )
 	if GetHero().m_CityHero[index] == nil then
 		return;
 	end
-	HeroInfoDlgShow( GetHero().m_CityHero[index] );
+	HeroInfoDlgShow( GetHero().m_CityHero[index], true );
 end

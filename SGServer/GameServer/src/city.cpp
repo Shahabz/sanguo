@@ -389,6 +389,17 @@ void city_logic_sec()
 				building_smithy_send( city_index );
 			}
 		}
+
+		// 国器打造
+		if ( g_city[city_index].nequip_sec > 0 )
+		{
+			g_city[city_index].nequip_sec -= 1;
+			if ( g_city[city_index].nequip_sec <= 0 )
+			{
+				// 通知国器打造完毕
+				
+			}
+		}
 	}
 //#ifdef WIN32
 //	DWORD e = timeGetTime();

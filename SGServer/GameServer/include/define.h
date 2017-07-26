@@ -48,7 +48,7 @@
 
 /* 装备最大数量*/
 #define MAX_DEFAULT_EQUIPNUM	30
-#define MAX_ACTOR_EQUIPNUM		100
+#define MAX_ACTOR_EQUIPNUM		150
 
 #define HERO_ACTOR_MAX				128	// 未上英雄
 #define HERO_CITY_MAX				12	// 上阵英雄

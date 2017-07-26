@@ -31,10 +31,12 @@ function Player:Init()
 	self.m_infantry_num		=	0;
 	self.m_cavalry_num		=	0;
 	self.m_archer_num		=	0;
+	self.m_prestige			=	0;
 	self.m_mokilllv			=	0;
 	self.m_sflag			=	0;
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
+	self.m_equipext			=	0;
 	
 	self.m_function			=	0;
 	self.m_levynum			=	0;

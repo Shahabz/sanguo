@@ -47,7 +47,7 @@ int equipinfo_init_auto()
 	g_equipinfo = (EquipInfo *)malloc( sizeof(EquipInfo)*g_equipinfo_maxnum );
 	memset( g_equipinfo, 0, sizeof(EquipInfo)*g_equipinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`type`,`color`,`ability`,`value`,`sec`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5` from equip;" );
+	sprintf( szSQL, "select `kind`,`type`,`actorlevel`,`color`,`ability`,`value`,`sec`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5`,`prestige` from equip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,7 @@ int equipinfo_init_auto()
 			continue;
 		g_equipinfo[kind].kind = atoi(row[offset++]);
 		g_equipinfo[kind].type = atoi(row[offset++]);
+		g_equipinfo[kind].actorlevel = atoi(row[offset++]);
 		g_equipinfo[kind].color = atoi(row[offset++]);
 		g_equipinfo[kind].ability = atoi(row[offset++]);
 		g_equipinfo[kind].value = atoi(row[offset++]);
@@ -80,6 +81,7 @@ int equipinfo_init_auto()
 		g_equipinfo[kind].material_num[3] = atoi(row[offset++]);
 		g_equipinfo[kind].material_num[4] = atoi(row[offset++]);
 		g_equipinfo[kind].material_num[5] = atoi(row[offset++]);
+		g_equipinfo[kind].prestige = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	equipinfo_luatable_auto();
@@ -112,6 +114,10 @@ int equipinfo_luatable_auto()
 
 		lua_pushstring( servL, "type" );
 		lua_pushinteger( servL, g_equipinfo[kind].type );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "actorlevel" );
+		lua_pushinteger( servL, g_equipinfo[kind].actorlevel );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "color" );
@@ -152,6 +158,10 @@ int equipinfo_luatable_auto()
 			lua_pushinteger( servL, g_equipinfo[kind].material_num[i] );
 			lua_rawset( servL, -3 );
 		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "prestige" );
+		lua_pushinteger( servL, g_equipinfo[kind].prestige );
 		lua_rawset( servL, -3 );
 
 		lua_rawset( servL, 1 );

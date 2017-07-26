@@ -14,6 +14,7 @@
 #include "system.h"
 #include "actor_send.h"
 #include "item.h"
+#include "equip.h"
 #include "global.h"
 #include "activity.h"
 #include "script_auto.h"
@@ -134,6 +135,23 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_EQUIPWASH:
 		break;
 	case ASKINFO_EQUIP:
+		if ( pvalue[0] == 1 )
+		{ // 分解
+			equip_resolve( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 装备
+
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 替换
+
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 购买装备栏
+			equip_buyext( actor_index );
+		}
+		
 		break;
 	case ASKINFO_ITEM:
 		if ( pvalue[0] == ITEM_PROCESS_INFO )

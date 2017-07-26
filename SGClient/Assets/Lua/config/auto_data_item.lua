@@ -1,4 +1,4 @@
-conf_item = {
+g_itemkind = {
 [1] = { kind=1,name="Å£Æ¤",level=0,price=100,token=0,type=3,situation=0,overlap=30000,base_ability0=0,base_value0=0,base_ability1=0,base_value1=0,ability0=0,value_min0=0,value_max0=0,ability1=0,value_min1=0,value_max1=0,ability2=0,value_min2=0,value_max2=0,ability3=0,value_min3=0,value_max3=0,color_level=0,sort=0,used=0,},
 [2] = { kind=2,name="ÀÇÆ¤",level=0,price=500,token=0,type=3,situation=0,overlap=30000,base_ability0=0,base_value0=0,base_ability1=0,base_value1=0,ability0=0,value_min0=0,value_max0=0,ability1=0,value_min1=0,value_max1=0,ability2=0,value_min2=0,value_max2=0,ability3=0,value_min3=0,value_max3=0,color_level=0,sort=0,used=0,},
 [3] = { kind=3,name="»¢Æ¤",level=0,price=1000,token=0,type=3,situation=0,overlap=30000,base_ability0=0,base_value0=0,base_ability1=0,base_value1=0,ability0=0,value_min0=0,value_max0=0,ability1=0,value_min1=0,value_max1=0,ability2=0,value_min2=0,value_max2=0,ability3=0,value_min3=0,value_max3=0,color_level=0,sort=0,used=0,},

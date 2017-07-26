@@ -33,6 +33,8 @@
 #define PATH_GUARD_UPGRADE				9	// 守卫升级
 #define PATH_LEVY						10	// 征收
 #define PATH_TRAIN						11	// 训练
+#define PATH_RESOLVE					12	// 分解
+#define PATH_EQUIPEXT					13	// 购买装备容量
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

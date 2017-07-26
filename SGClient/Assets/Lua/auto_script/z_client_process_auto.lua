@@ -440,6 +440,8 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeprestige_C( recvValue )
 	-- process.
+	pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+	GetPlayer().m_prestige = recvValue.m_total;
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -472,6 +474,7 @@ end
 -- m_equipext=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[6]},[m_count]},
 function proc_equiplist_C( recvValue )
 	-- process.
+	GetPlayer().m_equipext = recvValue.m_equipext;
 	for tmpi = 1, recvValue.m_count, 1 do
 		if recvValue.m_list[tmpi].m_offset >= 0 then
 			local tmpEquip = SLK_Equip.new();
@@ -488,11 +491,13 @@ end
 -- m_offset=0,m_kind=0,m_path=0,
 function proc_equipget_C( recvValue )
 	-- process.
+	GetEquip():EquipGet( recvValue.m_offset, recvValue.m_kind, recvValue.path )
 end
 
 -- m_offset=0,m_kind=0,m_path=0,
 function proc_equiplost_C( recvValue )
 	-- process.
+	GetEquip():EquipLost( recvValue.m_offset, recvValue.m_path );
 end
 
 -- m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,

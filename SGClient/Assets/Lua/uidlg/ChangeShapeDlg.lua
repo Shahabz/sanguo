@@ -35,11 +35,13 @@ function ChangeShapeDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             ChangeShapeDlgClose();
         elseif nControlID >= 0 and nControlID <= 40 then
-        		ChangeShapeDlgSelect( nControlID );
+        	ChangeShapeDlgSelect( nControlID );
        	elseif nControlID == 100 then
-       			ChangeShapeDlgChangeShape();
+       		ChangeShapeDlgChangeShape();
        	elseif nControlID == 101 then
-       			ChangeShapeDlgChangeName();
+       		ChangeShapeDlgChangeName();
+		elseif nControlID == 102 then
+			ChangeShapeDlgRandom();
         end
 	end
 end
@@ -109,4 +111,8 @@ function ChangeShapeDlgChangeName()
 	end
 	system_askinfo( ASKINFO_CHANGENAME, name, 1 );
 	ChangeShapeDlgClose();
+end
+
+function ChangeShapeDlgRandom()
+	m_uiNameInput:GetComponent( "UIInputField" ).text = random_name()
 end

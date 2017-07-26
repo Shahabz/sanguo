@@ -20,6 +20,9 @@ typedef struct _global
 	short city_guard_up_token;
 	short worker_freetime;
 	int trainfood;
+	short equipext_token;
+	int nequip_open_silver;
+	int nequip_open_wood;
 }Global;
 int global_init();
 void global_reload();

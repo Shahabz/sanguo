@@ -1,6 +1,7 @@
 -- 装备缓存信息
 -- 函数参数名称带有"_"的都是服务器真实的offset，0开始
-MAX_EQUIPNUM	= 150  -- 装备数量
+MAX_DEFAULT_EQUIPNUM	= 30   -- 缺省装备数量
+MAX_EQUIPNUM			= 150  -- 装备最大数量
 EQUIP_ABILITY_NUM		= 4  -- 道具最多有4个可变属性
 
 EQUIP_PROCESS_EQUIP		    = 1 -- 装备穿上
@@ -16,20 +17,20 @@ EQUIP_TYPE_EQUIP6					=	6	--	兵符
 
 -- 动态属性
 EQUIP_ABILITY_NONE				=	0
-EQUIP_ABILITY_A					=	1	-- 攻击
-EQUIP_ABILITY_D					=	2	-- 防御
-EQUIP_ABILITY_S					=	3 	-- 兵力
+EQUIP_ABILITY_ATTACK			=	1	-- 攻击
+EQUIP_ABILITY_DEFENSE			=	2	-- 防御
+EQUIP_ABILITY_TROOPS			=	3 	-- 兵力
 
 -- 获取装备配置信息
 function equip_getinfo( equipkind )
-	local equipinfo = conf_equip[equipkind];
+	local equipinfo = g_equipinfo[equipkind];
 	if equipinfo == nil then
 		return nil;
 	end
 	if equipkind <= 0 then
 		return nil;
 	end
-	return conf_equip[equipkind];
+	return g_equipinfo[equipkind];
 end
 
 -- 获取装备配置名称
@@ -40,20 +41,49 @@ end
 
 -- 获取装备配置颜色
 function equip_getcolor( equipkind )
-	if conf_equip[equipkind] == nil then
+	if g_equipinfo[equipkind] == nil then
 		return 0;
 	end
-	local color = conf_equip[equipkind]["color"];
+	local color = g_equipinfo[equipkind]["color"];
 	if color == nil or color < 0 then
 		return 0;
 	end
 	return color;
 end
 
+-- 获取分解威望
+function equip_getprestige( equipkind )
+	if g_equipinfo[equipkind] == nil then
+		return 0;
+	end
+	local prestige = g_equipinfo[equipkind]["prestige"];
+	if prestige == nil or prestige < 0 then
+		return 0;
+	end
+	return prestige;
+end
+
+-- 装备基础属性
+function equip_getabilityname( equipkind )
+	if g_equipinfo[equipkind] == nil then
+		return "";
+	end
+	local ability = g_equipinfo[equipkind]["ability"];
+	local value = g_equipinfo[equipkind]["value"];
+	if ability == EQUIP_ABILITY_ATTACK then
+		name = T(146).."+"..value;
+	elseif ability == EQUIP_ABILITY_DEFENSE then
+		name = T(147).."+"..value;
+	elseif ability == EQUIP_ABILITY_TROOPS then
+		name = T(148).."+"..value;
+	end
+	return name;
+end
+
 -- 根据类别获取装备
 function equip_getlist_withtype( type )
     local refTable = {};
-    for k, v in pairs(conf_equip) do
+    for k, v in pairs(g_equipinfo) do
         if v.type == type then
 			table.insert( refTable, v )
         end
@@ -110,13 +140,13 @@ end
 -- 改变装备信息
 function Equip:OnEquipChange( _EquipIndex )
 	local nEquipIndex = _EquipIndex + 1;
-		
+	BagDlgLoadEquip();	
 end
 
 -- 得到服务器返回的消息，得到一个装备
 function Equip:EquipGet( _EquipIndex, kind, path )
 	local nEquipIndex = _EquipIndex + 1;
-	if kind <= 0 or num <= 0 then
+	if kind <= 0 then
 		return;
 	end
 		
@@ -140,7 +170,8 @@ function Equip:OnGetEquip( _EquipIndex, nEquipKind, path )
 	end
 	-- 新装备标示
 	pEquip.m_bIsNew = true;
-
+	
+	pop( T(120)..": "..equip_getname(nEquipKind) )
 end
 
 -- 得到服务器返回的消息，失去装备
@@ -282,6 +313,18 @@ function Equip:GetEquipsByAreaKind( minkind, maxkind )
 		end
 	end
 	return equips;
+end
+
+-- 获取总装备数量
+function Equip:GetTotal()
+	local count = 0;
+	for tmpi=0, MAX_EQUIPNUM-1, 1 do
+		local pEquip = self:GetAnyEquip( tmpi );
+		if pEquip ~= nil and pEquip.m_kind > 0 then
+			count = count + 1;
+		end
+	end
+	return count;
 end
 
 -- 清空所有的New标示

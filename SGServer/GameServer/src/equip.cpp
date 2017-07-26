@@ -137,8 +137,8 @@ int equip_freeindex( int actor_index )
 		return -1;
 	Actor *pActor = &g_actors[actor_index];
 	int max_equipnum = MAX_DEFAULT_EQUIPNUM + pActor->equipext;
-	if ( max_equipnum > MAX_DEFAULT_EQUIPNUM )
-		max_equipnum = MAX_DEFAULT_EQUIPNUM;
+	if ( max_equipnum > MAX_ACTOR_EQUIPNUM )
+		max_equipnum = MAX_ACTOR_EQUIPNUM;
 
 	int offset = -1;
 	for ( int tmpi = 0; tmpi < max_equipnum; tmpi++ )
@@ -185,7 +185,7 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 		return -1;
 
 	int offset = equip_freeindex( actor_index );
-	if ( offset < 0 || offset >= MAX_DEFAULT_EQUIPNUM )
+	if ( offset < 0 )
 	{
 		// 装备栏已满
 		return -2;
@@ -283,6 +283,58 @@ int equip_lostequip( int actor_index, int equipoffset, char path )
 	// 发送角色失去物品
 	equip_sendlost( actor_index, equipkind, equipoffset, path );
 	return equipkind;
+}
+
+// 分解
+int equip_resolve( int actor_index, int equipoffset )
+{
+	Equip *pequip = NULL;
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( equipoffset >= 0 && equipoffset < MAX_ACTOR_EQUIPNUM )
+		pequip = &g_actors[actor_index].equip[equipoffset];
+	else
+		return -1;
+
+	if ( pequip->kind <= 0 || pequip->kind >= g_equipinfo_maxnum )
+		return -1;
+
+	int value = g_equipinfo[pequip->kind].prestige;
+	if ( equip_lostequip( actor_index, equipoffset, PATH_RESOLVE ) > 0 )
+	{
+		city_changeprestige( g_actors[actor_index].city_index, value, PATH_RESOLVE );
+	}
+	return 0;
+}
+
+// 购买扩展栏
+int equip_buyext( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	Actor *pActor = &g_actors[actor_index];
+	if ( pActor->equipext >= MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
+	{
+		return -1;
+	}
+
+	if ( actor_change_token( actor_index, -global.equipext_token, PATH_EQUIPEXT, 0 ) < 0 )
+	{
+		return -1;
+	}
+
+	pActor->equipext += 10;
+	if ( pActor->equipext > MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
+	{
+		pActor->equipext = MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM;
+	}
+
+	// 发更新
+	int value[2] = { 0 };
+	value[0] = 0;
+	value[1] = pActor->equipext;
+	actor_notify_value( actor_index, NOTIFY_EQUIP, 2, value, NULL );
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -383,6 +435,7 @@ int equip_list( int actor_index )
 	
 	// 装备列表
 	SLK_NetS_EquipList Value = { 0 };
+	Value.m_equipext = g_actors[actor_index].equipext;
 	Value.m_count = 0;
 	for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
 	{

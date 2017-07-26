@@ -43,14 +43,14 @@ ITEM_ABILITY_BUFF				=	15	-- buff
 
 -- 获取道具配置信息
 function item_getinfo( itemkind )
-	local iteminfo = conf_item[itemkind];
+	local iteminfo = g_itemkind[itemkind];
 	if iteminfo == nil then
 		return nil;
 	end
 	if itemkind <= 0 then
 		return nil;
 	end
-	return conf_item[itemkind];
+	return g_itemkind[itemkind];
 end
 
 -- 获取道具配置名称
@@ -70,10 +70,10 @@ end
 
 -- 获取道具等级
 function item_getlevel( itemkind )
-  if conf_item[itemkind] == nil then
+  if g_itemkind[itemkind] == nil then
      return 0;
   end
-	local level = conf_item[itemkind].level;
+	local level = g_itemkind[itemkind].level;
 	if level == nil or level < 0 then
 		return 0;
 	end
@@ -82,10 +82,10 @@ end
 
 -- 获取道具配置颜色
 function item_getcolor( itemkind )
-	if conf_item[itemkind] == nil then
+	if g_itemkind[itemkind] == nil then
 		return 0;
 	end
-	local color = conf_item[itemkind].color_level;
+	local color = g_itemkind[itemkind].color_level;
 	if color == nil or color < 0 then
 		return 0;
 	end
@@ -94,7 +94,7 @@ end
 
 -- 获取道具配置顺序
 function item_getsort( itemkind )
-	local sort = conf_item[itemkind].sort;
+	local sort = g_itemkind[itemkind].sort;
 	if sort == nil or sort < 0 then
 		return 0;
 	end
@@ -103,10 +103,10 @@ end
 
 -- 获取道具售价
 function item_getprice( itemkind )
-  if conf_item[itemkind] == nil then
+  if g_itemkind[itemkind] == nil then
     return 0;
   end
-	local price = conf_item[itemkind].price;
+	local price = g_itemkind[itemkind].price;
 	if price == nil then
 		return 0;
 	end
@@ -115,10 +115,10 @@ end
 
 -- 获取道具钻石使用价格
 function item_gettoken( itemkind )
-  if conf_item[itemkind] == nil then
+  if g_itemkind[itemkind] == nil then
     return 0;
   end
-	local token = conf_item[itemkind].token;
+	local token = g_itemkind[itemkind].token;
 	if token == nil then
 		return 0;
 	end
@@ -127,10 +127,10 @@ end
 
 -- 获取道具类型
 function item_gettype( itemkind )
-	if conf_item[itemkind] == nil then 
+	if g_itemkind[itemkind] == nil then 
 		return -1;
 	end
-	local type = conf_item[itemkind].type;
+	local type = g_itemkind[itemkind].type;
 	if type == 0 then
 		return 0;
 	end
@@ -149,7 +149,7 @@ end
 -- 根据类别获取道具
 function item_getlist_withtype( type )
     local refTable = {};
-    for k, v in pairs(conf_item) do
+    for k, v in pairs(g_itemkind) do
         if v.type == type then
 			table.insert( refTable, v )
         end
@@ -300,11 +300,12 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 		BagDlgItemChange( _ItemIndex )
 	end
 	
-	if path == PATH_GM or path == PATH_SYSTEM then
+	--if path == PATH_GM or path == PATH_SYSTEM then
      -- 忽略
-     return;
-	end
-
+     --return;
+	--end
+	
+	pop( F( 690, item_getname(nItemKind), num ) )
   -- 提示
   --GainDlgAdd( 1, nItemKind, num );
 end

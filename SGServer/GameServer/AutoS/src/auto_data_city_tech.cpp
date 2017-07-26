@@ -98,7 +98,6 @@ int techinfo_init_auto()
 		g_techinfo[kind].config[level].value = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	techinfo_luatable_auto();
 	return 0;
 }
 
@@ -122,12 +121,3 @@ int techinfo_reload_auto()
 	return 0;
 }
 
-int techinfo_luatable_auto()
-{
-	lua_newtable( servL );
-	lua_setglobal( servL, "g_techinfo" );
-
-	lua_pushinteger( servL, g_techinfo_maxnum );
-	lua_setglobal( servL, "g_techinfo_maxnum" );
-	return 0;
-}

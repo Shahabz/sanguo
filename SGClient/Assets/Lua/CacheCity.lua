@@ -34,11 +34,11 @@ end
 function City.BuildingSelect( transform )
 	if City.m_LastSelect ~= nil then
 		-- 点击相同对象直接返回
-		if City.m_LastSelect == transform then
-			return;
-		end
+		--if City.m_LastSelect == transform then
+			--return;
+		--end
 		-- 关闭之前渐变动画
-		City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
+		--City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 		City.m_LastSelect = nil;
 	end
 	
@@ -49,7 +49,7 @@ function City.BuildingSelect( transform )
 	else
 
 		City.m_LastSelect = transform;
-		City.m_LastSelect:GetComponent("UITweenColor"):Play(true);
+		--City.m_LastSelect:GetComponent("UITweenColor"):Play(true);
 		building = transform:GetComponent("CityBuilding");
 		City.m_Camera:TweenPosToInBound( transform.position, 0.2 );
 	end
@@ -69,7 +69,8 @@ function City.BuildingSelect( transform )
 		elseif building.kind == BUILDING_Shop then -- 商店
 			
 		elseif building.kind == BUILDING_Hero then -- 聚贤馆
-
+			HeroListDlgShow();
+			
 		elseif building.kind == BUILDING_Wishing then -- 聚宝盆
 
 		elseif building.kind == BUILDING_Help then -- 帮助

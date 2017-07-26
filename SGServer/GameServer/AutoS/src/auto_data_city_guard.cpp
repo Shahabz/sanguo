@@ -99,7 +99,6 @@ int cityguardinfo_init_auto()
 		g_cityguardinfo[monsterid].config[color].skill = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	cityguardinfo_luatable_auto();
 	return 0;
 }
 
@@ -123,12 +122,3 @@ int cityguardinfo_reload_auto()
 	return 0;
 }
 
-int cityguardinfo_luatable_auto()
-{
-	lua_newtable( servL );
-	lua_setglobal( servL, "g_cityguardinfo" );
-
-	lua_pushinteger( servL, g_cityguardinfo_maxnum );
-	lua_setglobal( servL, "g_cityguardinfo_maxnum" );
-	return 0;
-}

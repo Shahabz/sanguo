@@ -21,6 +21,7 @@
 #include "city.h"
 #include "chat.h"
 #include "vip.h"
+#include "hero.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -159,10 +160,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_EQUIP:// ×°±¸
-		if ( pValue[0] == -1 && actor_index >= 0 )
+		if ( pCity && pValue[0] == -1 && actor_index >= 0 )
 		{
 			int equip_clear( int actorindex );
-			equip_clear( actor_index );
+			equip_clear( pCity->actor_index );
 			break;
 		}
 
@@ -183,7 +184,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_HERO:// Ó¢ÐÛ
 		if ( pCity )
 		{
-
+			hero_gethero( pCity->actor_index, pValue[0], PATH_GM );
 		}
 		break;
 	case GMC_SILVER:// Òø±Ò

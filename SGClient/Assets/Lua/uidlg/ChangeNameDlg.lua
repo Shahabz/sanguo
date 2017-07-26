@@ -85,7 +85,7 @@ function ChangeNameDlgShow()
 end
 
 function ChangeNameDlgRandom()
-	m_uiNameInput:GetComponent( "UIInputField" ).text = math.random(1111, 1000000)
+	m_uiNameInput:GetComponent( "UIInputField" ).text = random_name()
 end
 
 function ChangeNameDlgChange()

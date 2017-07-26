@@ -12,10 +12,9 @@
 #define ITEM_COLOR_LEVEL_GOLD	3 // 金色
 #define ITEM_COLOR_LEVEL_RED	4 // 红色
 #define ITEM_COLOR_LEVEL_PURPLE	5 // 紫色
-#define ITEM_COLOR_LEVEL_ORANGE 6 // 橙色
 
 
-#define ITEM_COLOR_LEVEL_MAX	7 // 最大颜色数量
+#define ITEM_COLOR_LEVEL_MAX	6 // 最大颜色数量
 
 
 /* 物品类型 */

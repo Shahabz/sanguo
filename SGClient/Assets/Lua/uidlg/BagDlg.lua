@@ -10,12 +10,17 @@ local m_uiItemContent = nil; --UnityEngine.GameObject
 local m_uiEquipContent = nil; --UnityEngine.GameObject
 local m_uiUIP_ItemRow = nil; --UnityEngine.GameObject
 local m_uiUIP_EquipRow = nil; --UnityEngine.GameObject
+local m_uiItemInfo = nil; --UnityEngine.GameObject
+local m_uiEquipInfo = nil; --UnityEngine.GameObject
+local m_uiEquipExt = nil; --UnityEngine.GameObject
+local m_uiEquipExtButton = nil; --UnityEngine.GameObject
 
 local m_uiUseNum = nil;
 local m_SelectType = 0;
 local m_SelectItemIndex = -1;
 local m_SelectEquipIndex = -1;
 local m_SelectItemNum = 0;
+local m_SelectHeroKind = 0;
 
 -- 数据缓存
 local m_CacheItemCache = { };
@@ -57,11 +62,16 @@ function BagDlgOnEvent( nType, nControlID, value, gameObject )
             BagDlgClose();
 		elseif nControlID == -2 then
 			BagDlgSelectItem( -1 );
+			BagDlgSelectEquip( -1 );
 		elseif nControlID == 1 then
 			BagDlgSelectType(1);
 		elseif nControlID == 2 then
 			BagDlgSelectType(2);
 		
+		-- 购买容量
+		elseif nControlID == 10 then
+			BagDlgEquipBuyEquipExt()
+			
 		-- 减10
 		elseif nControlID == 11 then
 			BagDlgSelectItemSetNum( -10 )
@@ -85,6 +95,27 @@ function BagDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 使用
 		elseif nControlID == 16 then
 			BagDlgItemUse()
+		
+		-- 分解
+		elseif nControlID == 21 then
+			BagDlgEquipResolve()
+		
+		-- 装备
+		elseif nControlID == 22 then
+			BagDlgEquipUp()
+			
+		-- 替换
+		elseif nControlID == 23 then
+			BagDlgEquipUp()
+			
+		-- 洗炼
+		elseif nControlID == 24 then
+			EquipWashDlgShow()
+			BagDlgClose();
+			
+		-- 已装备
+		elseif nControlID >= 31 and nControlID <= 34 then
+		
 			
 		-- 选择道具
 		elseif nControlID >= 1000 and nControlID < 2000 then
@@ -110,6 +141,9 @@ function BagDlgOnAwake( gameObject )
 	m_uiUIP_ItemRow = objs[6];
 	m_uiUIP_EquipRow = objs[7];
 	m_uiItemInfo = objs[8];
+	m_uiEquipInfo = objs[9];
+	m_uiEquipExt = objs[10];
+	m_uiEquipExtButton = objs[11];
 end
 
 -- 界面初始化时调用
@@ -312,7 +346,14 @@ function BagDlgLoadItem()
     end
 end
 function BagDlgLoadEquip()
+	if m_Dlg == nil then
+		return;
+	end
+	if IsActive( m_uiEquipScroll ) == false then
+		return;
+	end
     BagDlgClearEquip()
+	BagDlgEquipExtSet();
     local equipCount = 0;
     local currEquipRow = nil;
     local rowCount = 0;
@@ -402,6 +443,7 @@ function BagDlgSelectItem( offset )
     if uiItemObj == nil then
         return;
     end
+	pItem.m_bIsNew = false;
     SetFalse( uiItemObj.transform:Find("New") );
 	
 	SetTrue( m_uiItemInfo );
@@ -416,7 +458,7 @@ function BagDlgSelectItem( offset )
 	m_uiUseNum = UseNum;
 			
 	SetImage( ItemObj.transform:Find("Shape"), ItemSprite(pItem.m_kind) )
-	SetImage( ItemObj.transform:Find("Color"), ItemColorSprite(equip_getcolor(pItem.m_kind)) )
+	SetImage( ItemObj.transform:Find("Color"), ItemColorSprite(item_getcolor(pItem.m_kind)) )
 	SetText( ItemObj.transform:Find("Num"), "x"..pItem.m_num );
 	SetText( ItemName, item_getname( pItem.m_kind ) );
 	SetText( m_uiUseNum, m_SelectItemNum );
@@ -498,5 +540,91 @@ end
 -- 选择装备
 function BagDlgSelectEquip( offset )
 	m_SelectEquipIndex = offset;
+	if offset == -1 then
+		SetFalse( m_uiEquipInfo );
+		return
+	end
+	
+	-- 获取装备
+    local pEquip = GetEquip():GetAnyEquip(m_SelectEquipIndex - 1);
+    if pEquip == nil then
+        return;
+    end
+	
+	-- 装备对象
+	local uiEquipObj = m_CacheEquipList[m_SelectEquipIndex];
+    if uiEquipObj == nil then
+        return;
+    end
+	pEquip.m_bIsNew = false;
+    SetFalse( uiEquipObj.transform:Find("New") );
+	
+	SetTrue( m_uiEquipInfo );
+	local objs = m_uiEquipInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local EquipObj = objs[0];
+	local EquipName = objs[1];
+	local EquipDesc = objs[2];
+	local SellButton = objs[3];
+	local UseButton = objs[4];
+	local HeroEquip = {};
+	HeroEquip[1] = objs[5];
+	HeroEquip[2] = objs[6];
+	HeroEquip[3] = objs[7];
+	HeroEquip[4] = objs[8];
+	local ReplaceButton = objs[9];
+	local WashButton = objs[10];
+			
+	SetImage( EquipObj.transform:Find("Shape"), EquipSprite(pEquip.m_kind) )
+	SetImage( EquipObj.transform:Find("Color"), ItemColorSprite(equip_getcolor(pEquip.m_kind)) )
+	SetText( EquipName, equip_getname( pEquip.m_kind ) );
+	SetText( EquipDesc, equip_getabilityname( pEquip.m_kind ) );
+	
+	SetTrue( SellButton ); -- 分解
+	SetFalse( UseButton ); -- 装备
+	SetFalse( ReplaceButton ); -- 替换
+	-- 洗炼
+	if equip_getcolor(pEquip.m_kind) >= ITEM_COLOR_LEVEL_BLUE then
+		SetTrue( WashButton );
+	else
+		SetFalse( WashButton );
+	end
+	
 end
 
+-- 装备分解
+function BagDlgEquipResolve()
+	local pEquip = GetEquip():GetAnyEquip(m_SelectEquipIndex - 1);
+    if pEquip == nil then
+        return;
+    end
+	MsgBox( F( 689, T(152).."x"..equip_getprestige( pEquip.m_kind ) ), function()
+		system_askinfo( ASKINFO_EQUIP, "", 1, m_SelectEquipIndex - 1 );
+		BagDlgSelectEquip( -1 )
+	end )
+end
+
+-- 装备上
+function BagDlgEquipUp()
+	local pEquip = GetEquip():GetAnyEquip(m_SelectEquipIndex - 1);
+    if pEquip == nil then
+        return;
+    end
+	
+end
+
+-- 购买装备容量
+function BagDlgEquipBuyEquipExt()
+	MsgBox( F( 685, global.equipext_token ), function()
+		system_askinfo( ASKINFO_EQUIP, "", 4 );
+	end )
+end
+
+-- 装备容量
+function BagDlgEquipExtSet()	
+	SetText( m_uiEquipExt, T(683) .." ".. GetEquip():GetTotal() .."/" ..(GetPlayer().m_equipext+MAX_DEFAULT_EQUIPNUM) )
+	if GetPlayer().m_equipext >= (MAX_EQUIPNUM-MAX_DEFAULT_EQUIPNUM) then
+		SetFalse( m_uiEquipExtButton );
+	else
+		SetTrue( m_uiEquipExtButton )
+	end
+end

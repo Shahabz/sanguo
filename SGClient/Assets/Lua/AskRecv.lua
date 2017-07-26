@@ -7,6 +7,7 @@ NOTIFY_LOGIN_QUEUE	=	4
 NOTIFY_CHANGESHAPE	=	5	-- 玩家头像修改
 NOTIFY_CHANGENAME	=	6	-- 玩家修改名称
 NOTIFY_NPCTALK		=	7	-- NPC对话
+NOTIFY_EQUIP		=	8	-- 装备
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -28,6 +29,13 @@ function RecvActorNotify(recvValue)
 			BuildingGetDlgWait( NpcTalkID, value[1] )
 		else
 			NpcTalkID( value[1] )
+		end
+	
+	-- 装备	
+	elseif msgid == NOTIFY_EQUIP then
+		if value[1] == 0 then
+			GetPlayer().m_equipext = value[2];
+			BagDlgEquipExtSet();
 		end
     end
 end
