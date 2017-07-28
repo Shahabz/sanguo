@@ -242,7 +242,11 @@ void dbwork_process( int ptr )
 		reconnect_flag = 0;
 RE_MYSQLQUERY:
 		//
-		if ( cmd == DBWORK_CMD_MAIL_INSERT || cmd == DBWORK_CMD_CHAT_CACHE || cmd == DBWORK_CMD_NORMAL )
+		if ( cmd == DBWORK_CMD_MAIL_INSERT || 
+			 cmd == DBWORK_CMD_MAIL_UPDATE || 
+			 cmd == DBWORK_CMD_MAIL_DELETE || 
+			 cmd == DBWORK_CMD_CHAT_CACHE || 
+			 cmd == DBWORK_CMD_NORMAL )
 		{
 			if ( mysql_query( g_pmyGame[index], szSql ) )
 			{

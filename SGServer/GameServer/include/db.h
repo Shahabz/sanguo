@@ -21,6 +21,8 @@ int db_delete( int actorid, char *pTab, FILE *fp );
 #define DBWORK_CMD_MAIL_INSERTCOMPLETE		2
 #define DBWORK_CMD_CHAT_CACHE				3
 #define DBWORK_CMD_NORMAL					4
+#define DBWORK_CMD_MAIL_UPDATE				5
+#define DBWORK_CMD_MAIL_DELETE				6
 
 // SQL工作队列
 struct _sdbqueue
