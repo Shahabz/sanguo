@@ -305,6 +305,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 装备洗练数据初始化
+	if ( equipwashinfo_init_auto() < 0 )
+	{
+		printf_msg( "equipwashinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 英雄数据初始化
 	if ( heroinfo_init_auto() < 0 )
 	{
@@ -336,6 +345,15 @@ int process_init( int max_connection )
 	if ( buildingupgrade_init_auto() < 0 )
 	{
 		printf_msg( "buildingupgrade_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 科技
+	if ( techinfo_init_auto() < 0 )
+	{
+		printf_msg( "techinfo_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

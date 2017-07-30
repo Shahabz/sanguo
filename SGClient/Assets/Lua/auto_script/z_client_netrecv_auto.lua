@@ -365,6 +365,16 @@ function netrecv_systalk_C( buffer )
 	proc_systalk_C( recvValue );
 end
 
+function netrecv_battlepower_C( buffer )
+	local recvValue = struct_NetS_Battlepower_recv( buffer );
+	proc_battlepower_C( recvValue );
+end
+
+function netrecv_techchange_C( buffer )
+	local recvValue = struct_NetS_TechChange_recv( buffer );
+	proc_techchange_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -439,6 +449,8 @@ Proc_Command = {
 	[CMDS_CHATLIST]=netrecv_chatlist_C;
 	[CMDS_SYSTALKID]=netrecv_systalkid_C;
 	[CMDS_SYSTALK]=netrecv_systalk_C;
+	[CMDS_BATTLEPOWER]=netrecv_battlepower_C;
+	[CMDS_TECHCHANGE]=netrecv_techchange_C;
 }
 
 function in_proc_command_C( cmd, buffer )

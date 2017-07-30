@@ -31,6 +31,8 @@ struct _city {
 				char place;	//爵位
 				char zone;	//区域
 				int battlepower;	//战力
+				int battlepower_building;	//建筑提供战力
+				int battlepower_hero;	//英雄提供战力
 				char mokilllv;	//击杀野怪最高级别
 				short body;	//体力
 				short bodysec;	//体力恢复时间(每秒-1)

@@ -154,6 +154,7 @@ int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needsec, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_quick, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_overvalue, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	return 0;
 }
 
@@ -252,6 +253,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sflag, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuild, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuildopen, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_techlevel, 40*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_techprogress, 40*sizeof(short), (*psize) );
 	return 0;
 }
 
@@ -549,6 +552,8 @@ int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_troops, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack_increase, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense_increase, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	return 0;
 }
@@ -1067,6 +1072,25 @@ int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue 
 	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Battlepower_send( char **pptr, int *psize, SLK_NetS_Battlepower *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TechChange_send( char **pptr, int *psize, SLK_NetS_TechChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_progress, (*psize) );
 	return 0;
 }
 

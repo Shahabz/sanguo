@@ -1,5 +1,6 @@
 #ifndef _MAIL_H_ 
 #define _MAIL_H_
+#include "define.h"
 
 #define MAX_MAIL_SAVETIME			86400*7		// 邮件保存时间7天
 #define MAIL_TITLE_MAXSIZE			128			// 邮件标题长度

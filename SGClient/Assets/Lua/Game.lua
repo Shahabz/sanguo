@@ -76,6 +76,12 @@ function GameManager.GameLogic()
 	if GetPlayer().m_worker_expire_ex > 0 then
 		m_worker_expire_ex = m_worker_expire_ex - 1;
 	end
+	
+	-- 太学院
+	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+	if pBuilding and pBuilding.m_sec > 0 then
+		pBuilding.m_sec = pBuilding.m_sec - 1;
+	end
 end
 
 -- 请求退出游戏

@@ -1,6 +1,13 @@
-#include <string.h>
-#include <time.h>
-#include <math.h>
+#ifdef WIN32
+#include <winsock2.h>
+#include <windows.h>
+#endif
+#include <mysql.h>
+#include "db.h"
+#include "netserver.h"
+#ifndef WIN32
+#include <sys/time.h>
+#endif
 #include "db.h"
 #include "gameproc.h"
 #include "actor.h"
@@ -168,8 +175,6 @@ int mail_noread_check( int actor_index )
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	int actorid = g_actors[actor_index].actorid;
-	char bigint[21];
-	lltoa( maxid, bigint, 10 );
 	sprintf( szSQL, "select count(*) from mail where `actorid`='%d' and `read`=0 and deltime>'%d'", g_actors[actor_index].actorid, (int)time( NULL ) );
 	if ( mysql_query( myGame, szSQL ) )
 	{

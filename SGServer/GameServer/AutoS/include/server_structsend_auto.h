@@ -76,6 +76,7 @@ struct _slk_NetS_Building {
 	int m_needsec;	//普通建筑-操作需要时间
 	char m_quick;	//普通建筑-是否有加速(科技等)
 	int m_overvalue;	//普通建筑-完成后的值
+	int m_value;	//普通建筑-未完成值
 };
 typedef struct _slk_NetS_Building SLK_NetS_Building;	//普通建筑信息
 
@@ -153,6 +154,8 @@ struct _slk_NetS_ActorInfo {
 	int m_sflag;	//服务器发送玩家基本信息-标志位
 	char m_autobuild;	//服务器发送玩家基本信息-自动建造
 	char m_autobuildopen;	//服务器发送玩家基本信息-自动建造
+	short m_techlevel[40];	//服务器发送玩家基本信息-科技等级
+	short m_techprogress[40];	//服务器发送玩家基本信息-科技进度
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -366,6 +369,8 @@ struct _slk_NetS_Hero {
 	int m_attack;	//
 	int m_defense;	//
 	int m_troops;	//
+	int m_attack_increase;	//
+	int m_defense_increase;	//
 	short m_offset;	//
 };
 typedef struct _slk_NetS_Hero SLK_NetS_Hero;	//英雄信息
@@ -732,6 +737,19 @@ struct _slk_NetS_Systalk {
 };
 typedef struct _slk_NetS_Systalk SLK_NetS_Systalk;	//直接文字系统消息
 
+struct _slk_NetS_Battlepower {
+	int m_total;	//改变战力
+	short m_path;	//改变战力
+};
+typedef struct _slk_NetS_Battlepower SLK_NetS_Battlepower;	//改变战力
+
+struct _slk_NetS_TechChange {
+	char m_kind;	//科技变化
+	char m_level;	//科技变化
+	char m_progress;	//科技变化
+};
+typedef struct _slk_NetS_TechChange SLK_NetS_TechChange;	//科技变化
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -811,5 +829,7 @@ int struct_NetS_ChatList_send( char **pptr, int *psize, SLK_NetS_ChatList *pValu
 int struct_NetS_SystalkidValue_send( char **pptr, int *psize, SLK_NetS_SystalkidValue *pValue );
 int struct_NetS_Systalkid_send( char **pptr, int *psize, SLK_NetS_Systalkid *pValue );
 int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue );
+int struct_NetS_Battlepower_send( char **pptr, int *psize, SLK_NetS_Battlepower *pValue );
+int struct_NetS_TechChange_send( char **pptr, int *psize, SLK_NetS_TechChange *pValue );
 
 #endif

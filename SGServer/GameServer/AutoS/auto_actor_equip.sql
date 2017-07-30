@@ -7,8 +7,6 @@ CREATE TABLE `actor_equip` (
   `washid1` smallint(6) NOT NULL DEFAULT '0' COMMENT 'œ¥¡∑ Ù–‘ID',
   `washid2` smallint(6) NOT NULL DEFAULT '0' COMMENT 'œ¥¡∑ Ù–‘ID',
   `washid3` smallint(6) NOT NULL DEFAULT '0' COMMENT 'œ¥¡∑ Ù–‘ID',
-  `washid4` smallint(6) NOT NULL DEFAULT '0' COMMENT 'œ¥¡∑ Ù–‘ID',
-  `washid5` smallint(6) NOT NULL DEFAULT '0' COMMENT 'œ¥¡∑ Ù–‘ID',
   PRIMARY KEY (`id`)
   KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

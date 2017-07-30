@@ -6,13 +6,13 @@ local m_Mod;
 -- 所属按钮点击时调用
 function BuildingOverModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		print( "Button Clicked, nControlID:" .. nControlID );
-		gameObject:SetActive(false);
+		--print( "Button Clicked, nControlID:" .. nControlID );
+		BuildingOverModClick( gameObject )
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
-			print( "Button Pressed Down, nControlID:" .. nControlID );
+			--print( "Button Pressed Down, nControlID:" .. nControlID );
 		elseif value == 1 then
-			print( "Button Pressed UP, nControlID:" .. nControlID);
+			--print( "Button Pressed UP, nControlID:" .. nControlID);
 		end
 	end
 end
@@ -54,3 +54,17 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function BuildingOverModClick( gameObject )
+	local ShareData = gameObject.transform:GetComponent("ShareData");
+	local kind = ShareData.intValue[0];
+	if kind == BUILDING_Tech then
+		system_askinfo( ASKINFO_TECH, "", 4 );
+	elseif kind == BUILDING_Infantry then
+	elseif kind == BUILDING_Cavalry then
+	elseif kind == BUILDING_Archer then
+	elseif kind == BUILDING_Militiaman_Infantry then
+	elseif kind == BUILDING_Militiaman_Cavalry then
+	elseif kind == BUILDING_Militiaman_Archer then
+	end
+	gameObject:SetActive(false);
+end

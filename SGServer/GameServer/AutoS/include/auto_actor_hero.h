@@ -11,7 +11,7 @@ struct _actor_hero {
 				char color;	//颜色
 				short level;	//等级
 				int exp;	//经验
-				int soldiers;	//兵力
+				int soldiers;	//当前兵力
 				short attack_wash;	//洗髓攻击资质
 				Equip equip[6];	//装备
 				short defense_wash;	//洗髓防御资质

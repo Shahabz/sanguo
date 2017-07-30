@@ -197,6 +197,7 @@ public static class CustomSettings
         _GT(typeof(UIScrollBase)),
         _GT(typeof(UIScrollRing)),
         _GT(typeof(UIScrollView)),
+		_GT(typeof(UIClippingLoop)),
         _GT(typeof(UIDragSensor)),
         _GT(typeof(Text)),
         _GT(typeof(UIText)),

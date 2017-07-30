@@ -15,6 +15,7 @@
 #define ASKINFO_EQUIP			10 // 装备
 #define ASKINFO_ITEM			11 // 道具
 #define ASKINFO_HERO			12 // 英雄
+#define ASKINFO_TECH			13 // 科技
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

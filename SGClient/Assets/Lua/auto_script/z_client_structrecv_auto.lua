@@ -94,6 +94,7 @@ function struct_NetS_Building_recv( buffer )
 	recvValue.m_needsec = buffer:ReadInt();
 	recvValue.m_quick = buffer:ReadSByte();
 	recvValue.m_overvalue = buffer:ReadInt();
+	recvValue.m_value = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -190,6 +191,14 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_sflag = buffer:ReadInt();
 	recvValue.m_autobuild = buffer:ReadSByte();
 	recvValue.m_autobuildopen = buffer:ReadSByte();
+	recvValue.m_techlevel={};
+	for tmpi=1,40,1 do
+		recvValue.m_techlevel[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_techprogress={};
+	for tmpi=1,40,1 do
+		recvValue.m_techprogress[tmpi] = buffer:ReadShort();
+	end
 	return recvValue;
 end
 
@@ -462,6 +471,8 @@ function struct_NetS_Hero_recv( buffer )
 	recvValue.m_attack = buffer:ReadInt();
 	recvValue.m_defense = buffer:ReadInt();
 	recvValue.m_troops = buffer:ReadInt();
+	recvValue.m_attack_increase = buffer:ReadInt();
+	recvValue.m_defense_increase = buffer:ReadInt();
 	recvValue.m_offset = buffer:ReadShort();
 	return recvValue;
 end
@@ -933,6 +944,21 @@ function struct_NetS_Systalk_recv( buffer )
 	recvValue.m_msglen = buffer:ReadShort();
 	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
 	recvValue.m_optime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_Battlepower_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_TechChange_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_progress = buffer:ReadSByte();
 	return recvValue;
 end
 

@@ -248,6 +248,11 @@ function TechDesc( kind )
 	return Localization.text_item(kind+4100);
 end
 
+-- 获取科技描述
+function TechDescUp( kind )
+	return Localization.text_item(kind+4200);
+end
+
 -- 清空所有子节点
 function clearChild( object )
 	--for i = 0 ,object.transform.childCount - 1 do

@@ -20,6 +20,7 @@
 #define LOGOP_WOOD				14	// 木材
 #define LOGOP_FOOD				15	// 粮食
 #define LOGOP_IRON				16	// 镔铁
+#define LOGOP_TECH				17	// 科技
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -35,6 +36,11 @@
 #define PATH_TRAIN						11	// 训练
 #define PATH_RESOLVE					12	// 分解
 #define PATH_EQUIPEXT					13	// 购买装备容量
+#define PATH_TECH_UPGRADE				14	// 科技升级
+#define PATH_TECH_FINISH				15	// 科技完成
+#define PATH_TECH_GET					16	// 科技领取
+#define PATH_TECH_QUICK					17	// 科技加速
+#define PATH_TECH_FREEQUICK				18	// 科技免费加速
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

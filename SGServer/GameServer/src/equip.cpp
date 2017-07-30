@@ -536,6 +536,11 @@ int equip_forgingtime( int city_index, short kind )
 	return 0;
 }
 
+int equip_forging( int actor_index, short kind )
+{
+	return 0;
+}
+
 // GM指令使用,删除所有道具
 int equip_clear( int actor_index )
 {

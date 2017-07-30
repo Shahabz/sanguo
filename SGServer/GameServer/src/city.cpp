@@ -9,6 +9,8 @@
 #include "global.h"
 #include "actor.h"
 #include "city.h"
+#include "city_attr.h"
+#include "city_tech.h"
 #include "building.h"
 #include "hero.h"
 #include "equip.h"
@@ -17,6 +19,7 @@
 #include "server_netsend_auto.h"
 #include "system.h"
 #include "item.h"
+#include "vip.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -79,6 +82,13 @@ int city_loadcb( int city_index )
 
 	// 读取城墙守卫
 	city_guard_load_auto( g_city[city_index].actorid, city_index, city_guard_getptr, "city_guard" );
+
+	// 计算VIP等级
+	vip_calclevel( city_index );
+	// 计算临时属性
+	city_attr_reset( &g_city[city_index] );
+	// 计算战力
+	city_battlepower_reset( &g_city[city_index] );
 
 	// 添加到地图显示单元
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
@@ -288,11 +298,7 @@ void city_logic_sec()
 						g_city[city_index].building[tmpi].sec -= 1;
 						if ( g_city[city_index].building[tmpi].sec <= 0 )
 						{
-							g_city[city_index].building[tmpi].sec = 0;
-							g_city[city_index].building[tmpi].needsec = 0;
-							g_city[city_index].building[tmpi].overvalue = g_city[city_index].building[tmpi].value;
-							g_city[city_index].building[tmpi].value = 0;
-							building_sendinfo( g_city[city_index].actor_index, kind );
+							city_tech_finish( &g_city[city_index], &g_city[city_index].building[tmpi] );
 						}		
 					}
 				}

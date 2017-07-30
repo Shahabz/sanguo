@@ -23,6 +23,15 @@ typedef struct _global
 	short equipext_token;
 	int nequip_open_silver;
 	int nequip_open_wood;
+	float battlepower_attack;
+	float battlepower_defense;
+	float battlepower_troops;
+	float battlepower_attack_increase;
+	float battlepower_defense_increase;
+	float battlepower_assault;
+	float battlepower_defend;
+	char techtree_level;
+	float techquick_token;
 }Global;
 int global_init();
 void global_reload();

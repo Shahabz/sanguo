@@ -15,6 +15,7 @@ struct _buildingupgrade_config {
 				int sec;	//
 				int value[8];	//
 				int exp;	//
+				int battlepower;	//
 };
 typedef struct _buildingupgrade_config BuildingUpgradeConfig;
 

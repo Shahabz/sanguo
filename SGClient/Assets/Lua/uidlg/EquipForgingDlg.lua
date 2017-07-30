@@ -14,7 +14,7 @@ local m_uiMaterialGrid = nil; --UnityEngine.GameObject
 -- 打开界面
 function EquipForgingDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipForgingDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "铁匠铺", 6, EquipForgingDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Smithy), 6, EquipForgingDlgClose );
 end
 
 -- 隐藏界面

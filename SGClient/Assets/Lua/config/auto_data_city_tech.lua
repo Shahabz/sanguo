@@ -1,7 +1,7 @@
 g_techinfo = {
 [1] = 
 { 
-	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=1,value=5,},
+	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=1,value=5,},
 	[2] = { kind=1,level=2,name="安抚民众：提升银币每小时产量",buildinglevel=2,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=1,value=10,},
 	[3] = { kind=1,level=3,name="安抚民众：提升银币每小时产量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=330,silver=660,wood=990,food=0,iron=0,ability=1,value=15,},
 	[4] = { kind=1,level=4,name="安抚民众：提升银币每小时产量",buildinglevel=4,prekind=0,prelevel=0,progress=1,sec=630,silver=1260,wood=1890,food=0,iron=0,ability=1,value=20,},
@@ -34,7 +34,7 @@ g_techinfo = {
 },
 [2] = 
 { 
-	[1] = { kind=2,level=1,name="砍伐技巧：提升木材每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=2,value=5,},
+	[1] = { kind=2,level=1,name="砍伐技巧：提升木材每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=2,value=5,},
 	[2] = { kind=2,level=2,name="砍伐技巧：提升木材每小时产量",buildinglevel=2,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=2,value=10,},
 	[3] = { kind=2,level=3,name="砍伐技巧：提升木材每小时产量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=330,silver=660,wood=990,food=0,iron=0,ability=2,value=15,},
 	[4] = { kind=2,level=4,name="砍伐技巧：提升木材每小时产量",buildinglevel=4,prekind=0,prelevel=0,progress=1,sec=630,silver=1260,wood=1890,food=0,iron=0,ability=2,value=20,},
@@ -67,7 +67,7 @@ g_techinfo = {
 },
 [3] = 
 { 
-	[1] = { kind=3,level=1,name="种植技巧：提升粮食每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=3,value=5,},
+	[1] = { kind=3,level=1,name="种植技巧：提升粮食每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=3,value=5,},
 	[2] = { kind=3,level=2,name="种植技巧：提升粮食每小时产量",buildinglevel=2,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=3,value=10,},
 	[3] = { kind=3,level=3,name="种植技巧：提升粮食每小时产量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=330,silver=660,wood=990,food=0,iron=0,ability=3,value=15,},
 	[4] = { kind=3,level=4,name="种植技巧：提升粮食每小时产量",buildinglevel=4,prekind=0,prelevel=0,progress=1,sec=630,silver=1260,wood=1890,food=0,iron=0,ability=3,value=20,},
@@ -100,7 +100,7 @@ g_techinfo = {
 },
 [4] = 
 { 
-	[1] = { kind=4,level=1,name="冶炼技巧：提升镔铁每小时产量",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=4,value=5,},
+	[1] = { kind=4,level=1,name="冶炼技巧：提升镔铁每小时产量",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=4,value=5,},
 	[2] = { kind=4,level=2,name="冶炼技巧：提升镔铁每小时产量",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=4,value=10,},
 	[3] = { kind=4,level=3,name="冶炼技巧：提升镔铁每小时产量",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=330,silver=660,wood=990,food=0,iron=0,ability=4,value=15,},
 	[4] = { kind=4,level=4,name="冶炼技巧：提升镔铁每小时产量",buildinglevel=10,prekind=0,prelevel=0,progress=1,sec=630,silver=1260,wood=1890,food=0,iron=0,ability=4,value=20,},
@@ -133,7 +133,7 @@ g_techinfo = {
 },
 [5] = 
 { 
-	[1] = { kind=5,level=1,name="步兵训练：提示步兵每分钟招募数量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=5,silver=10,wood=15,food=0,iron=0,ability=5,value=5,},
+	[1] = { kind=5,level=1,name="步兵训练：提示步兵每分钟招募数量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=5,value=5,},
 	[2] = { kind=5,level=2,name="步兵训练：提示步兵每分钟招募数量",buildinglevel=2,prekind=0,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=5,value=10,},
 	[3] = { kind=5,level=3,name="步兵训练：提示步兵每分钟招募数量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=330,silver=660,wood=990,food=0,iron=0,ability=5,value=15,},
 	[4] = { kind=5,level=4,name="步兵训练：提示步兵每分钟招募数量",buildinglevel=4,prekind=0,prelevel=0,progress=1,sec=630,silver=1260,wood=1890,food=0,iron=0,ability=5,value=20,},
@@ -412,7 +412,7 @@ g_techinfo = {
 },
 [25] = 
 { 
-	[2] = { kind=25,level=2,name="中级统帅力：增加上阵武将数量2个",buildinglevel=2,prekind=20,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=104,value=1,},
+	[1] = { kind=25,level=1,name="中级统帅力：增加上阵武将数量2个",buildinglevel=2,prekind=20,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=104,value=1,},
 },
 [26] = 
 { 
@@ -420,6 +420,10 @@ g_techinfo = {
 },
 [27] = 
 { 
-	[2] = { kind=27,level=2,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=105,value=1,},
+	[1] = { kind=27,level=1,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=0,progress=1,sec=30,silver=60,wood=90,food=0,iron=0,ability=105,value=1,},
+},
+[28] = 
+{ 
+	[1] = { kind=28,level=1,name="初级攻城术",buildinglevel=21,prekind=0,prelevel=0,progress=0,sec=300,silver=400,wood=0,food=0,iron=0,ability=15,value=30,},
 },
 }

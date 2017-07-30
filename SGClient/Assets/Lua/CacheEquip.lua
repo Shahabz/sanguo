@@ -103,7 +103,7 @@ function SLK_Equip:empty()
 	self.m_kind  			= 0;-- 物品种类 决定了物品的名字
 		
 	-- 洗炼信息
-	self.m_washid   		= { 0,0,0,0,0,0 };
+	self.m_washid   		= { 0,0,0,0 };
 	
 	self.m_bIsUpdate = false; -- 是否已经更新
 	self.m_bIsNew = false;

@@ -197,8 +197,13 @@ function proc_building_C( recvValue )
 		m_sec = recvValue.m_sec,
 		m_needsec = recvValue.m_needsec,
 		m_quick = recvValue.m_quick,
+		m_value = recvValue.m_value,
 		m_overvalue = recvValue.m_overvalue,
 		} )
+	
+	if recvValue.m_kind == BUILDING_Tech then
+		CityTechDlgOnSet();
+	end
 end
 
 -- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
@@ -793,5 +798,25 @@ function proc_systalk_C( recvValue )
 	info.m_optime = recvValue.m_optime;
 	MainDlgSetChat( info );
 	ChatDlgRecv( info );
+end
+
+
+-- m_total=0,m_path=0,
+function proc_battlepower_C( recvValue )
+	-- process.
+	GetPlayer().m_battlepower = recvValue.m_total;
+end
+
+-- m_kind=0,m_level=0,m_progress=0,
+function proc_techchange_C( recvValue )
+	-- process.
+	local kind = recvValue.m_kind;
+	GetPlayer().m_techlevel[kind] = recvValue.m_level;
+	GetPlayer().m_techprogress[kind] = recvValue.m_progress;
+	if recvValue.m_progress > 0 then
+		pop( F( 707, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind], recvValue.m_progress ) )
+	else
+		pop( F( 706, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind] ) )
+	end
 end
 

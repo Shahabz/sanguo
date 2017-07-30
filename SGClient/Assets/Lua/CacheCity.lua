@@ -76,7 +76,13 @@ function City.BuildingSelect( transform )
 		elseif building.kind == BUILDING_Help then -- 帮助
 		
 		else
-			BuildingOpratorModShow( true, building.kind, building.offset, transform );
+			-- 科技有完成的，直接领取
+			if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+				City.BuildingHideOver( building.kind )
+				system_askinfo( ASKINFO_TECH, "", 4 );
+			else
+				BuildingOpratorModShow( true, building.kind, building.offset, transform );
+			end
 		end
 	end
 end
@@ -232,8 +238,9 @@ function City.BuildingSetName( info )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+
 	if kind <= BUILDING_Militiaman_Archer then
-		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind).." Lv."..info.m_level;
+		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind).." "..info.m_level;
 	elseif kind <= BUILDING_Iron then
 		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = "Lv."..info.m_level;
 	else
@@ -245,7 +252,7 @@ end
 function City.BuildingSetTimer( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
-	if info.m_sec == nil or info.m_sec <= 0 then
+	if info.m_sec == nil then
 		return;
 	end
 	local unitObj = nil;
@@ -255,7 +262,7 @@ function City.BuildingSetTimer( info )
 		unitObj = City.m_Buildings[kind];
 	end
 	local timerObj = unitObj:GetComponent("CityBuilding").BuildingTimerMod;
-	if timerObj == nil then
+	if timerObj == nil and info.m_sec > 0 then
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
@@ -263,18 +270,21 @@ function City.BuildingSetTimer( info )
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
-	if info.m_sec <= 0 then
-		timerObj.gameObject:SetActive(false);
-	else
-		timerObj.gameObject:SetActive(true);
-	end
+	
+	if timerObj ~= nil then
+		if info.m_sec <= 0 then
+			timerObj.gameObject:SetActive(false);
+		else
+			timerObj.gameObject:SetActive(true);
+		end
 
-	--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
-	local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
-	timer.controlID = 1;
-	timer.uiMod = timerObj.transform:GetComponent("UIMod");
-	timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
-    timer:SetTime( info.m_needsec, info.m_needsec-info.m_sec );
+		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
+		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
+		timer.controlID = 1;
+		timer.uiMod = timerObj.transform:GetComponent("UIMod");
+		timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
+		timer:SetTime( info.m_needsec, info.m_needsec-info.m_sec );
+	end
 end
 
 -- 升级计时器
@@ -382,6 +392,19 @@ function City.BuildingSetOver( kind )
 	local ShareData = overObj.transform:GetComponent("ShareData");
 	ShareData.intValue[0] = kind;
 	overObj.gameObject:SetActive(true);
+end
+
+-- 完成标记隐藏
+function City.BuildingHideOver( kind )
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return;
+	end
+	local unitObj = City.m_Buildings[kind];
+	local overObj = unitObj:GetComponent("CityBuilding").BuildingOverMod;
+	if overObj == nil then
+		return
+	end
+	overObj.gameObject:SetActive(false);
 end
 
 -- 征收次数

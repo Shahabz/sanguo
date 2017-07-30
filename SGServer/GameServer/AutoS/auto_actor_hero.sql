@@ -6,7 +6,7 @@ CREATE TABLE `actor_hero` (
   `color` tinyint(3) NOT NULL DEFAULT '0' COMMENT '颜色',
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '等级',
   `exp` int(11) NOT NULL DEFAULT '0' COMMENT '经验',
-  `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '兵力',
+  `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '当前兵力',
   `attack_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓攻击资质',
   `defense_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓防御资质',
   `troops_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓兵力资质',

@@ -17,7 +17,7 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 	int offset = 0;
 	Equip *pEquip;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`,`washid4`,`washid5` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -42,8 +42,6 @@ int actor_equip_load_auto( int actorid, int actor_index, LPCB_GETEQUIP pCB_GetEq
 		pEquip->washid[1] = atoi(row[offset++]);
 		pEquip->washid[2] = atoi(row[offset++]);
 		pEquip->washid[3] = atoi(row[offset++]);
-		pEquip->washid[4] = atoi(row[offset++]);
-		pEquip->washid[5] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -57,7 +55,7 @@ int actor_equip_save_auto( Equip *pEquip, const char *pTab, FILE *fp )
 
 	char sz64_id[21]={0};
 RE_EQUIP_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`,`washid4`,`washid5`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip->id,sz64_id,10 ),pEquip->actorid,pEquip->offset,pEquip->kind,pEquip->washid[0],pEquip->washid[1],pEquip->washid[2],pEquip->washid[3],pEquip->washid[4],pEquip->washid[5]);
+	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`) Values('%s','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip->id,sz64_id,10 ),pEquip->actorid,pEquip->offset,pEquip->kind,pEquip->washid[0],pEquip->washid[1],pEquip->washid[2],pEquip->washid[3]);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -94,11 +92,11 @@ int actor_equip_batch_save_auto( Equip *pEquip, int maxcount, const char *pTab, 
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`,`washid4`,`washid5`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3],pEquip[index].washid[4],pEquip[index].washid[5]);
+			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`washid0`,`washid1`,`washid2`,`washid3`) Values('%s','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3]);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3],pEquip[index].washid[4],pEquip[index].washid[5]);
+			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d')",lltoa(pEquip[index].id,sz64_id,10 ),pEquip[index].actorid,pEquip[index].offset,pEquip[index].kind,pEquip[index].washid[0],pEquip[index].washid[1],pEquip[index].washid[2],pEquip[index].washid[3]);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

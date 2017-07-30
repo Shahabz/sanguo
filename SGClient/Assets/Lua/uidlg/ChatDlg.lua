@@ -137,6 +137,7 @@ function ChatDlgAddSysTalk( recvValue )
 	uiObj.transform:SetParent( m_uiContent.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
+	ChatDlgScrollToBottom()
 end
 
 -- 添加时间
@@ -150,8 +151,8 @@ end
 
 -- 滑动到底部
 function ChatDlgScrollToBottom()
-	--m_uiScrollView:GetComponent("ScrollRect"):ResetScroll();
-	m_uiScrollView:GetComponent("ScrollRect"):ScrollToBottom();
+	--m_uiScrollView:GetComponent("UIScrollRect"):ResetScroll();
+	m_uiScrollView:GetComponent("UIScrollRect"):ScrollToBottom();
 end
 
 -- 发送消息

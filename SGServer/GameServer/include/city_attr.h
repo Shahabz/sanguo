@@ -1,5 +1,6 @@
 #ifndef _CITY_ATTR_H_
 #define _CITY_ATTR_H_
+#include "define.h"
 
 #define CITY_ATTR_ABILITY_1			1	// 提升银币每小时产量%
 #define CITY_ATTR_ABILITY_2			2	// 提升木材每小时产量%
@@ -21,26 +22,26 @@
 #define CITY_ATTR_ABILITY_100		100	// 提高所以武将攻击力（固定数值）
 #define CITY_ATTR_ABILITY_101		101	// 提高步兵武将攻击力（固定数值）
 #define CITY_ATTR_ABILITY_102		102	// 提高骑兵武将攻击力（固定数值）
-#define CITY_ATTR_ABILITY_103		103	// 提高骑兵武将攻击力（固定数值）
+#define CITY_ATTR_ABILITY_103		103	// 提高弓兵武将攻击力（固定数值）
 
 #define CITY_ATTR_ABILITY_110		110	// 提高所以武将防御力（固定数值）
 #define CITY_ATTR_ABILITY_111		111	// 提高步兵武将防御力（固定数值）
 #define CITY_ATTR_ABILITY_112		112	// 提高骑兵武将防御力（固定数值）
-#define CITY_ATTR_ABILITY_113		113	// 提高骑兵武将防御力（固定数值）
+#define CITY_ATTR_ABILITY_113		113	// 提高弓兵武将防御力（固定数值）
 
 #define CITY_ATTR_ABILITY_120		120	// 提高所以武将兵力（固定数值）
 #define CITY_ATTR_ABILITY_121		121	// 提高步兵武将兵力（固定数值）
 #define CITY_ATTR_ABILITY_122		122	// 提高骑兵武将兵力（固定数值）
-#define CITY_ATTR_ABILITY_123		123	// 提高骑兵武将兵力（固定数值）
+#define CITY_ATTR_ABILITY_123		123	// 提高弓兵武将兵力（固定数值）
 
 #define CITY_ATTR_ABILITY_130		130	// 增加上阵武将数量（固定数值）
 #define CITY_ATTR_ABILITY_131		131	// 增加武将带兵排数（固定数值）
 #define CITY_ATTR_ABILITY_132		132	// 国器暴击：开启国N倍暴击（固定数值）
 #define CITY_ATTR_ABILITY_133		133	// 侦查：可侦查敌国玩家城池信息（固定数值）
 #define CITY_ATTR_ABILITY_134		134	// 立即建造加速秒（固定数值）
-#define CITY_ATTR_ABILITY_135		134	// 体力购买次数上限（固定数值）
+#define CITY_ATTR_ABILITY_135		135	// 体力购买次数上限（固定数值）
 #define CITY_ATTR_ABILITY_136		136	// 自动建造免费购买次数（固定数值）
-#define CITY_ATTR_ABILITY_137		136	// 每日免费行军召回（固定数值）
+#define CITY_ATTR_ABILITY_137		137	// 每日免费行军召回（固定数值）
 
 
 #define CITY_ATTR_ABILITY_201		201	// 秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）
@@ -50,4 +51,24 @@
 #define CITY_ATTR_ABILITY_205		205 // 扫荡副本（开启功能）
 #define CITY_ATTR_ABILITY_206		206 // 跳过战斗（开启功能）
 #define CITY_ATTR_ABILITY_207		207 // 开启皇宫内院（开启功能）
+
+void city_attr_reset( City *pCity );
+void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit );
+
+// 战力变化途径
+#define  BATTLEPOWER_PATH_HERO		1
+#define  BATTLEPOWER_PATH_BUILDING	2
+
+// 重置总战力
+void city_battlepower_reset( City *pCity );
+
+// 总战力计算
+void city_battlepower_calc( City *pCity, char path );
+
+// 英雄提供战力
+void city_battlepower_hero_calc( City *pCity );
+
+// 建筑提供战力
+void city_battlepower_building_calc( City *pCity );
+
 #endif

@@ -10,6 +10,15 @@
 #define EQUIP_TYPE_EQUIP6  6	// 兵符
 #define EQUIP_TYPE_MAX		6
 #define EQUIP_BASEOFFSET		1000	// 穿到英雄身上的装备索引偏移
+#define EQUIP_WASHMAX		4	// 最多4条洗练属性
+
+#define EQUIP_ABILITY_ATTACK			1
+#define EQUIP_ABILITY_DEFENSE			2
+#define EQUIP_ABILITY_TROOPS			3
+#define EQUIP_ABILITY_ATTACK_INCREASE	4
+#define EQUIP_ABILITY_DEFENSE_INCREASE	5
+#define EQUIP_ABILITY_ASSAULT			6
+#define EQUIP_ABILITY_DEFEND			7
 
 // 创建道具成功后返回的结构
 typedef struct _equipout
@@ -44,4 +53,5 @@ int equip_sendlost( int actor_index, short equipkind, int offset, char path );
 int equip_sendswap( int actor_index, int src_offset, int dest_offset );
 
 int equip_forgingtime( int city_index, short kind );
+int equip_forging( int actor_index, short kind );
 #endif

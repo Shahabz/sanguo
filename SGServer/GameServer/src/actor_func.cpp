@@ -458,6 +458,14 @@ int actor_getinfo( int actor_index )
 		info.m_archer_num = building_soldiers_total( pCity->index, BUILDING_Archer );
 		info.m_mokilllv =  pCity->mokilllv;
 		info.m_sflag =  pCity->sflag;
+		info.m_autobuild = pCity->autobuild;
+		info.m_autobuildopen = pCity->autobuildopen;
+		for ( int i = 0; i < CITY_TECH_MAX; i++ )
+		{
+			info.m_techlevel[i] = pCity->techlevel[i];
+			info.m_techprogress[i] = pCity->techprogress[i];
+		}
+
 	}
 	netsend_actorinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 	return 0;

@@ -42,6 +42,18 @@ Building* building_getptr( int city_index, int offset )
 	return &g_city[city_index].building[offset];
 }
 
+Building* building_getptr_kind( int city_index, int kind )
+{
+	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	{
+		if ( g_city[city_index].building[tmpi].kind == kind )
+		{
+			return &g_city[city_index].building[tmpi];
+		}
+	}
+	return NULL;
+}
+
 BuildingBarracks* buildingbarracks_getptr( int city_index, int offset )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
@@ -687,6 +699,7 @@ void building_makestruct( Building *pBuilding, int offset, SLK_NetS_Building *pV
 	pValue->m_level = pBuilding->level;
 	pValue->m_sec = pBuilding->sec;
 	pValue->m_needsec = pBuilding->needsec;
+	pValue->m_value = pBuilding->value;
 	pValue->m_overvalue = pBuilding->overvalue;
 	if ( pBuilding->quicksec > 0 )
 		pValue->m_quick = 1;

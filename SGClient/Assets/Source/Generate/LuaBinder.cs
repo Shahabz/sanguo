@@ -42,6 +42,7 @@ public static class LuaBinder
 		UIScrollBaseWrap.Register(L);
 		UIScrollRingWrap.Register(L);
 		UIScrollViewWrap.Register(L);
+		UIClippingLoopWrap.Register(L);
 		UIDragSensorWrap.Register(L);
 		UITextWrap.Register(L);
 		UITweenWrap.Register(L);

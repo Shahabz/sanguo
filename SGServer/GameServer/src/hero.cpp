@@ -12,6 +12,7 @@
 #include "mapunit.h"
 #include "map.h"
 #include "item.h"
+#include "equip.h"
 #include "server_netsend_auto.h"
 
 extern SConfig g_Config;
@@ -32,6 +33,9 @@ extern int g_city_maxcount;
 
 extern EquipInfo *g_equipinfo;
 extern int g_equipinfo_maxnum;
+
+extern EquipWashInfo *g_equipwash;
+extern int g_equipwash_maxnum;
 
 extern UpgradeInfo *g_upgradeinfo;
 extern int g_upgradeinfo_maxnum;
@@ -201,7 +205,7 @@ int hero_gethero( int actor_index, int kind, short path )
 	SLK_NetS_HeroGet pValue = { 0 };
 	pValue.m_kind = kind;
 	pValue.m_path = path;
-	hero_makestruct( offset, &g_actors[actor_index].hero[offset], &pValue.m_hero );
+	hero_makestruct( city_getptr( actor_index ), offset, &g_actors[actor_index].hero[offset], &pValue.m_hero );
 	netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 上阵
@@ -276,6 +280,145 @@ int hero_down( int actor_index, int kind )
 		return -1;
 }
 
+// 计算装备加成
+int hero_equip_calc( Hero *pHero, int ability )
+{
+	if ( !pHero )
+		return 0;
+	int value = 0;
+	for ( int tmpi = 0; tmpi < EQUIP_TYPE_MAX; tmpi++ )
+	{
+		int kind = pHero->equip[tmpi].kind;
+		if ( kind > 0 && kind < g_equipinfo_maxnum )
+		{
+			// 装备基础属性
+			if ( g_equipinfo[kind].ability == ability )
+			{
+				value += g_equipinfo[kind].value;
+			}
+
+			// 装备洗练属性
+			for ( int i = 0; i < EQUIP_WASHMAX; i++ )
+			{
+				int id = pHero->equip[tmpi].washid[i];
+				if ( id > 0 && id < g_equipwash_maxnum )
+				{
+					if ( g_equipwash[id].ability == ability )
+					{
+						value += g_equipwash[id].value;
+					}
+				}
+			}
+		}
+	}
+	return value;
+}
+
+// 英雄攻击力
+int hero_attack( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return 0;
+	// 基础
+	int base = ATTACK( pHero->level, config->attack, (config->attack_base + pHero->attack_wash) );
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_ATTACK );
+	// 属性
+	int attr = pCity->attr.hero_attack[config->corps];
+	// 总
+	int total = base + equip + attr;
+	return total;
+}
+
+// 英雄防御力
+int hero_defense( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return 0;
+	// 基础
+	int base = DEFENSE( pHero->level, config->defense, (config->defense_base + pHero->defense_wash) );
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_DEFENSE );
+	// 属性
+	int attr = pCity->attr.hero_defense[config->corps];
+	// 总
+	int total = base + equip + attr;
+	return total;
+}
+
+// 英雄兵力
+int hero_troops( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return 0;
+	// 基础
+	int base = TROOPS( pHero->level, config->troops, (config->troops_base + pHero->troops_wash) );
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_TROOPS );
+	// 属性
+	int attr = pCity->attr.hero_troops[config->corps];
+	// 总
+	int total = base + equip + attr;
+	return total;
+}
+
+// 强攻
+int hero_attack_increase( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_ATTACK_INCREASE );
+	// 总
+	int total = equip;
+	return total;
+}
+
+// 强防
+int hero_defense_increase( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_DEFENSE_INCREASE );
+	// 总
+	int total = equip;
+	return total;
+}
+
+// 攻城
+int hero_assault( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_ASSAULT );
+	// 总
+	int total = equip;
+	return total;
+}
+
+// 守城
+int hero_defend( City *pCity, Hero *pHero )
+{
+	if ( !pCity || !pHero )
+		return 0;
+	// 装备
+	int equip = hero_equip_calc( pHero, EQUIP_ABILITY_DEFEND );
+	// 总
+	int total = equip;
+	return total;
+}
+
 int hero_getexp_max( int level, int color )
 {
 	if ( level <= 0 || level >= g_upgradeinfo_maxnum )
@@ -288,7 +431,7 @@ int hero_getexp_max( int level, int color )
 }
 
 // 拼属性
-void hero_makestruct( int offset, Hero *pHero, SLK_NetS_Hero *pValue )
+void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValue )
 {
 	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
 	if ( !config )
@@ -307,9 +450,11 @@ void hero_makestruct( int offset, Hero *pHero, SLK_NetS_Hero *pValue )
 	pValue->m_defense_wash = pHero->defense_wash;
 	pValue->m_troops_base = config->troops_base;
 	pValue->m_troops_wash = pHero->troops_wash;
-	pValue->m_attack = ATTACK( pHero->level, config->attack, (pValue->m_attack_base + pValue->m_attack_wash) );
-	pValue->m_defense = DEFENSE( pHero->level, config->defense, (pValue->m_defense_base + pValue->m_defense_wash) );
-	pValue->m_troops = TROOPS( pHero->level, config->troops, (pValue->m_troops_base + pValue->m_troops_wash) );
+	pValue->m_attack = hero_attack( pCity, pHero );
+	pValue->m_defense = hero_defense( pCity, pHero );
+	pValue->m_troops = hero_troops( pCity, pHero );
+	pValue->m_attack_increase = hero_attack_increase( pCity, pHero );
+	pValue->m_defense_increase = hero_defense_increase( pCity, pHero );
 	pValue->m_offset = offset;
 }
 
@@ -328,7 +473,7 @@ int hero_list( int actor_index )
 		{
 			if ( pCity->hero[tmpi].id <= 0 )
 				continue;
-			hero_makestruct( tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
+			hero_makestruct( pCity, tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
 			pValue.m_count += 1;
 		}
 		netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -342,7 +487,7 @@ int hero_list( int actor_index )
 		{
 			if ( g_actors[actor_index].hero[tmpi].id <= 0 )
 				continue;
-			hero_makestruct( tmpi, &g_actors[actor_index].hero[tmpi], &pValue.m_list[pValue.m_count] );
+			hero_makestruct( pCity, tmpi, &g_actors[actor_index].hero[tmpi], &pValue.m_list[pValue.m_count] );
 			pValue.m_count += 1;
 			if ( pValue.m_count >= 30 )
 			{

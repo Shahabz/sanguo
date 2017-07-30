@@ -24,6 +24,7 @@ local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 
 local m_ObjectPool = nil;
+local m_pCacheHero = nil;
 
 -- 打开界面
 function HeroInfoDlgOpen()
@@ -73,6 +74,7 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 上阵
 		elseif nControlID == 3 then
+			HeroInfoDlgHeroUp();
 		
 		-- 神级突破
 		elseif nControlID == 4 then
@@ -144,6 +146,7 @@ end
 ----------------------------------------
 
 function HeroInfoDlgShow( pHero, up )
+	m_pCacheHero = pHero;
 	if pHero == nil or pHero.m_kind <= 0 then
 		return
 	end
@@ -218,4 +221,11 @@ function HeroInfoDlgShow( pHero, up )
 		SetFalse( m_uiGoldBtn );
 	end
 	
+end
+
+-- 上阵
+function HeroInfoDlgHeroUp()
+	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
+		return
+	end
 end

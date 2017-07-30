@@ -37,6 +37,8 @@ function Player:Init()
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
 	self.m_equipext			=	0;
+	self.m_techlevel		=   {};
+	self.m_techprogress		=	{};
 	
 	self.m_function			=	0;
 	self.m_levynum			=	0;
@@ -84,6 +86,10 @@ function Player:Set( recvValue )
 	self.m_sflag			=	recvValue.m_sflag;
 	self.m_autobuild		=	recvValue.m_autobuild;
 	self.m_autobuildopen	=	recvValue.m_autobuildopen;
+	for kind = 1, 40, 1 do
+		self.m_techlevel[kind-1]	=   recvValue.m_techlevel[kind];
+		self.m_techprogress[kind-1]	=	recvValue.m_techprogress[kind];
+	end
 end
 
 -- 
@@ -158,6 +164,14 @@ function Player:BuildingLevel( kind, offset )
 		return 0;
 	end
 	return pBuilding.m_level;
+end
+
+function Player:BuildingOverValue( kind )
+	local pBuilding = self:GetBuilding( kind, -1 );
+	if pBuilding == nil then
+		return 0;
+	end
+	return pBuilding.m_overvalue;
 end
 
 -- 找一个等级最低的资源田

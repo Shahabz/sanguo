@@ -121,6 +121,24 @@ int global_init()
 		{
 			global.nequip_open_wood = atoi( row[1] );
 		}
+		else if ( id == 20 )
+			global.battlepower_attack = value;
+		else if ( id == 21 )
+			global.battlepower_defense = value;
+		else if ( id == 22 )
+			global.battlepower_troops = value;
+		else if ( id == 23 )
+			global.battlepower_attack_increase = value;
+		else if ( id == 24 )
+			global.battlepower_defense_increase = value;
+		else if ( id == 25 )
+			global.battlepower_assault = value;
+		else if ( id == 26 )
+			global.battlepower_defend = value;
+		else if ( id == 27 )
+			global.techtree_level = atoi( row[1] );
+		else if ( id == 28 )
+			global.techquick_token = value;
 		
 	}
 	lua_setglobal( servL, "global" );

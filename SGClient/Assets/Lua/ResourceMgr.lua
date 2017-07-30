@@ -138,3 +138,13 @@ function NationSprite( nation )
 	end
 	return sprite;
 end
+
+-- 科技形象
+function TechSprite( kind )
+	local name = string.format("tech_icon_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "tech_icon_1" );
+	end
+	return sprite;
+end

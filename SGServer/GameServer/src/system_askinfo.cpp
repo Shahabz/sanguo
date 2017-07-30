@@ -20,6 +20,7 @@
 #include "script_auto.h"
 #include "login.h"
 #include "city.h"
+#include "city_tech.h"
 #include "quest.h"
 #include "building.h"
 
@@ -172,6 +173,25 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		break;
 	case ASKINFO_HERO:
+		break;
+	case ASKINFO_TECH:
+		if ( pvalue[0] == 1 )
+		{ // 升级
+			city_tech_upgrade( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 加速
+			city_tech_quick( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 免费加速
+			city_tech_freequick( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 领取
+			city_tech_get( actor_index );
+		}
+		
 		break;
 	default:
 		break;

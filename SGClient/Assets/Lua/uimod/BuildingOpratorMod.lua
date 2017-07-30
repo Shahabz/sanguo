@@ -50,6 +50,8 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			TrainDlgOnShow( m_kind );
         end
 		City.BuildingUnSelect();
+		BuildingOpratorModShow( false, 0, -1, nil );
+		
     elseif nType == UI_EVENT_TWEENFINISH then
         --if value == 1 then
             --m_Mod:SetActive( false );
