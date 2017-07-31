@@ -35,6 +35,7 @@ function CityTechTreeDlgClose()
 	CityTechTreeDlgClick( -1 );
 	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "CityTechTreeDlg" );
+	CityTechDlgOnShow();
 end
 
 -- 删除界面
@@ -52,6 +53,7 @@ function CityTechTreeDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             CityTechTreeDlgClose();
+			CityTechDlgOnShow();
 		elseif nControlID == -2 then
 			CityTechTreeDlgClick( -1 );
 		elseif nControlID == 1 then
@@ -190,7 +192,7 @@ function CityTechTreeDlgShow()
 		if prekind > 0 then
 			SetTrue( uiLine );
 			local offsetx = g_citytech_tree[kind].x - g_citytech_tree[prekind].x;
-			print(offsetx)
+			uiLine.transform.sizeDelta = Vector2.New( uiLine.transform.sizeDelta.x, 38 + 250*(offsetx-1) );
 		else
 			SetFalse( uiLine );
 		end
@@ -200,6 +202,9 @@ function CityTechTreeDlgShow()
 end
 
 local function TechSelectShow( uiObj, bShow )
+	if uiObj == nil then
+		return
+	end
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiSelect = objs[7];
 	SetShow( uiSelect, bShow )
@@ -307,5 +312,18 @@ function CityTechTreeDlgSelect()
 	if m_kind <= 0 then
 		return;
 	end
+	-- 太学院
+	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+	if pBuilding == nil then
+		return;
+	end
+	
+	-- 有正在升级的
+	if pBuilding.m_value > 0 then
+		pop( T(714) )
+		return
+	end
+	
+	CityTechDlgSetFirst( m_kind )
 	CityTechTreeDlgClose()
 end

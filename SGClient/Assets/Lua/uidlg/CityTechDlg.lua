@@ -12,6 +12,7 @@ local m_uiScroll = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_kind = 0;
 local m_canUpgrade = true;
+local m_firstKind = 0;
 
 -- 打开界面
 function CityTechDlgOpen()
@@ -50,6 +51,7 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 科技树
 		elseif nControlID == 1 then
 			CityTechTreeDlgShow()
+			CityTechDlgClose();
 			
 		-- 加速
 		elseif nControlID == 2 then
@@ -70,6 +72,7 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
 			CityTechDlgClose();
+			CityTechTreeDlgClose()
 		end
 	end
 end
@@ -97,7 +100,7 @@ end
 
 -- 界面显示时调用
 function CityTechDlgOnEnable( gameObject )
-	
+
 end
 
 -- 界面隐藏时调用
@@ -174,6 +177,8 @@ function CityTechDlgOnSet()
 		SetFalse( m_uiTeching )
 	end
 	
+	-- 首选科技
+	local fristTechObj = nil;
 	
 	-- 可研究的科技列表
 	for kind=1, #g_techinfo, 1 do
@@ -182,7 +187,7 @@ function CityTechDlgOnSet()
 		local progress = GetPlayer().m_techprogress[kind];
 		local maxlevel = #g_techinfo[kind];	
 		-- 科技满足出现等级，并且未满级，并且前置任务满足
-		if level < maxlevel and pBuilding.m_level >= g_techinfo[kind][uplevel].buildinglevel then
+		if pBuilding.m_value ~= kind and level < maxlevel and pBuilding.m_level >= g_techinfo[kind][uplevel].buildinglevel then
 			-- 前置科技满足
 			local prekind = g_techinfo[kind][uplevel].prekind;
 			local prelevel = g_techinfo[kind][uplevel].prelevel;
@@ -197,6 +202,7 @@ function CityTechDlgOnSet()
 				local uiViewBtn = objs[4];
 				local uiUpgradeBtn = objs[5];
 				local uiContinueBtn = objs[6];
+				local uiSelect = objs[7];
 				
 				-- 形象
 				SetImage( uiShape, TechSprite( kind ) );
@@ -229,8 +235,21 @@ function CityTechDlgOnSet()
 					SetFalse( uiContinueBtn );
 				end
 				
+				-- 首选科技
+				if m_firstKind > 0 and m_firstKind == kind then
+					SetTrue( uiSelect )
+					fristTechObj = uiObj;
+				else
+					SetFalse( uiSelect )
+				end
+				
 			end
 		end
+	end
+	
+	-- 将首选科技放在前面
+	if fristTechObj ~= nil then
+		fristTechObj.transform:SetSiblingIndex(0);
 	end
 	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
@@ -385,6 +404,7 @@ function CityTechDlgUpgrade()
 	end
 	system_askinfo( ASKINFO_TECH, "", 1, m_kind );
 	CityTechDlgSelect( -1 )
+	m_firstKind = 0;
 end
 
 -- 加速
@@ -414,3 +434,7 @@ function CityTechDlgFreeQuick()
 	system_askinfo( ASKINFO_TECH, "", 3 );
 end
 
+-- 设置优先选择的科技
+function CityTechDlgSetFirst( firstkind )
+	m_firstKind = firstkind;
+end
