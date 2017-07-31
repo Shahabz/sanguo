@@ -4,10 +4,12 @@ local m_DialogFrameMod = nil;
 local m_uiScroll = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_TechRow = nil; --UnityEngine.GameObject
-local m_uiTeching = nil; --UnityEngine.GameObject
+local m_uiTechInfo = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
-
+local m_uiTechObjs = {};
+local m_LastSelectTech = nil;
+local m_kind = 0;
 -- 打开界面
 function CityTechTreeDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CityTechTreeDlg" );
@@ -30,8 +32,7 @@ function CityTechTreeDlgClose()
 			m_ObjectPool:Release( "UIP_TechRow", obj );
 		end
     end
-	SetFalse( m_uiTeching )
-	
+	CityTechTreeDlgClick( -1 );
 	DialogFrameModClose( m_DialogFrameMod );
 	eye.uiManager:Close( "CityTechTreeDlg" );
 end
@@ -51,6 +52,14 @@ function CityTechTreeDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             CityTechTreeDlgClose();
+		elseif nControlID == -2 then
+			CityTechTreeDlgClick( -1 );
+		elseif nControlID == 1 then
+			pop( T(713) )
+		elseif nControlID == 2 then	
+			CityTechTreeDlgSelect()
+		elseif nControlID >= 1000 and nControlID <= 2000 then
+			CityTechTreeDlgClick( nControlID-1000 )
         end
 	end
 end
@@ -62,7 +71,7 @@ function CityTechTreeDlgOnAwake( gameObject )
 	m_uiScroll = objs[0];
 	m_uiContent = objs[1];
 	m_uiUIP_TechRow = objs[2];
-	m_uiTeching = objs[3];
+	m_uiTechInfo = objs[3];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_TechRow", 11, 11, m_uiUIP_TechRow);
@@ -117,14 +126,14 @@ function CityTechTreeDlgShow()
 		uiTechRowContentList[row] = uiTechRowContent;
 	end
 	
-	local uiTechObjs = {};
+	m_uiTechObjs = {};
 	for kind=1, #g_techinfo, 1 do
 		local conf = g_citytech_tree[kind]
 		local x = conf.x;
 		local y = conf.y;
 		local uiRow = uiTechRowContentList[x];
 		local uiObj = uiRow.transform:GetChild(y-1).transform;
-		uiTechObjs[kind] = uiObj;
+		m_uiTechObjs[kind] = uiObj;
 		SetTrue( uiObj.transform:Find("Content") );
 	end
 	
@@ -134,7 +143,7 @@ function CityTechTreeDlgShow()
 		local progress = GetPlayer().m_techprogress[kind];
 		local maxlevel = #g_techinfo[kind];	
 			
-		local uiObj = uiTechObjs[kind];
+		local uiObj = m_uiTechObjs[kind];
 		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiShape = objs[0];
 		local uiName = objs[1];
@@ -143,10 +152,12 @@ function CityTechTreeDlgShow()
 		local uiLine = objs[4];
 		local uiContent = objs[5];
 		local uiLevelBack = objs[6];
+		local uiSelect = objs[7];
 		
-		SetTrue( uiObj );
+		SetControlID( uiObj.transform:Find("Content"), 1000+kind )
 		SetImage( uiShape, TechSprite( kind ) );
 		SetText( uiName, TechName( kind ) );
+		SetFalse( uiSelect );
 		
 		-- 等级
 		local prekind = 0
@@ -166,7 +177,7 @@ function CityTechTreeDlgShow()
 			prelevel = g_techinfo[kind][uplevel].prelevel;
 			
 			-- 是否解锁
-			if pBuilding.m_level >= g_techinfo[kind][uplevel].buildinglevel then
+			if pBuilding.m_level >= g_techinfo[kind][uplevel].buildinglevel and GetPlayer().m_techlevel[prekind] >= prelevel then
 				SetImage( uiIcon, LoadSprite("ui_icon_arrow_up") )
 				SetTrue( uiIcon );
 			else
@@ -185,65 +196,116 @@ function CityTechTreeDlgShow()
 		end
 		
 	end
-	-- 科技列表
-	--[[for kind=1, #g_techinfo, 1 do
-		
-		local level = GetPlayer().m_techlevel[kind];
-		local uplevel = GetPlayer().m_techlevel[kind] + 1;
-		local progress = GetPlayer().m_techprogress[kind];
-		local maxlevel = #g_techinfo[kind];	
-		-- 科技满足出现等级，并且未满级，并且前置任务满足
-		if level < maxlevel and pBuilding.m_level >= g_techinfo[kind][uplevel].buildinglevel then
-			-- 前置科技满足
-			local prekind = g_techinfo[kind][uplevel].prekind;
-			local prelevel = g_techinfo[kind][uplevel].prelevel;
-			if prekind <= 0 or GetPlayer().m_techlevel[prekind] >= prelevel then
-				local uiObj = m_ObjectPool:Get( "UIP_Tech" );
-				uiObj.transform:SetParent( m_uiContent.transform );
-				local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-				local uiShape = objs[0];
-				local uiName = objs[1];
-				local uiDesc = objs[2];
-				local uiProgress = objs[3];
-				local uiViewBtn = objs[4];
-				local uiUpgradeBtn = objs[5];
-				local uiContinueBtn = objs[6];
-				
-				-- 形象
-				SetImage( uiShape, TechSprite( kind ) );
-				-- 名称
-				SetText( uiName, TechName( kind ).." Lv."..uplevel );
-				-- 描述
-				SetText( uiDesc, Utils.StringFormat( TechDesc( kind ), g_techinfo[kind][uplevel].value ) );
-				-- 进度
-				SetText( uiProgress, F(701, progress, g_techinfo[kind][uplevel].progress ) );
-				
-				-- 有正在升级的，显示查看
-				if pBuilding.m_value > 0 then
-					SetControlID( uiViewBtn, 1000+kind )
-					SetTrue( uiViewBtn );
-					SetFalse( uiUpgradeBtn );
-					SetFalse( uiContinueBtn );
-				
-				-- 显示继续研究	
-				elseif progress >= 1 then
-					SetControlID( uiContinueBtn, 1000+kind )
-					SetTrue( uiContinueBtn );
-					SetFalse( uiViewBtn );
-					SetFalse( uiUpgradeBtn );
-					
-				-- 显示研究
-				else
-					SetControlID( uiUpgradeBtn, 1000+kind )
-					SetTrue( uiUpgradeBtn );
-					SetFalse( uiViewBtn );
-					SetFalse( uiContinueBtn );
-				end
-				
-			end
-		end
-	end--]]
-	--m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
 end
 
+local function TechSelectShow( uiObj, bShow )
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiSelect = objs[7];
+	SetShow( uiSelect, bShow )
+end
+
+-- 点击科技
+function CityTechTreeDlgClick( kind )
+	m_kind = kind
+	if kind <= 0 then
+		TechSelectShow( m_LastSelectTech, false )
+		m_LastSelectTech = nil;
+		m_uiTechInfo:SetActive(false);
+		return
+	end
+	
+	if m_LastSelectTech ~= nil then
+		TechSelectShow( m_LastSelectTech, false )
+	end
+
+	m_LastSelectTech = m_uiTechObjs[kind];
+	TechSelectShow( m_LastSelectTech, true )
+	
+	-- 设置位置
+	local siblingIndex = m_LastSelectTech.parent.parent:GetSiblingIndex();
+    if m_uiTechInfo.transform:GetSiblingIndex() < siblingIndex then
+        m_uiTechInfo.transform:SetSiblingIndex(siblingIndex);
+    else
+        m_uiTechInfo.transform:SetSiblingIndex(siblingIndex + 1);
+    end
+    m_uiTechInfo:SetActive(true);
+	
+	 -- 判断弹出菜单是否显示在最下面
+    local uiParent = m_LastSelectTech.parent.parent.transform;
+    local posY = - uiParent.localPosition.y - m_uiContent.transform.offsetMax.y;
+    if posY + 300 > m_uiScroll.transform.rect.height then
+        local siblingIndex = m_uiTechInfo.transform:GetSiblingIndex();
+        m_uiScroll.transform:GetComponent("UIScrollRect"):ScrollToBottom(siblingIndex);
+    end
+	
+	-- 设置信息
+	local level = GetPlayer().m_techlevel[kind];
+	local uplevel = GetPlayer().m_techlevel[kind] + 1;
+	local progress = GetPlayer().m_techprogress[kind];
+	local maxlevel = #g_techinfo[kind];	
+	
+	local objs = m_uiTechInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiName = objs[0];
+	local uiDesc = objs[1];
+	local uiLockDesc = objs[2];
+	local uiUnlockBtn = objs[3];
+	local uiSelectBtn = objs[4];
+	
+	-- 名称
+	SetText( uiName, TechName( kind ) );
+	
+	-- 描述
+	if level >= maxlevel then
+		-- 满级情况
+		SetText( uiDesc, Utils.StringFormat( TechDesc( kind ), g_techinfo[kind][level].value ) );
+		SetText( uiLockDesc, T(712), Hex2Color(0x8E8E8EFF) )
+		SetFalse( uiUnlockBtn );
+		SetFalse( uiSelectBtn );
+	else
+		SetText( uiDesc, Utils.StringFormat( TechDesc( kind ), g_techinfo[kind][uplevel].value ) );
+		
+		-- 如果台学院未达到要求
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+		if pBuilding == nil then
+			return;
+		end
+		if pBuilding.m_level < g_techinfo[kind][uplevel].buildinglevel then
+			SetText( uiLockDesc, T(711)..": "..BuildingName( BUILDING_Tech ).."Lv."..g_techinfo[kind][uplevel].buildinglevel, Hex2Color(0xB99838FF) )
+			SetTrue( uiUnlockBtn );
+			SetFalse( uiSelectBtn );
+		else
+			-- 前置科技
+			local prekind = g_techinfo[kind][uplevel].prekind;
+			local prelevel = g_techinfo[kind][uplevel].prelevel;
+			if prekind > 0 then
+				-- 前置科技未达到要求
+				if GetPlayer().m_techlevel[prekind] < prelevel then
+					SetText( uiLockDesc, T(711)..":"..TechName( prekind ).."Lv."..prelevel, Hex2Color(0xB99838FF) )
+					SetTrue( uiUnlockBtn );
+					SetFalse( uiSelectBtn );
+				else
+					-- 达到要求，直接显示进度
+					SetText( uiLockDesc, F(701, progress, g_techinfo[kind][uplevel].progress ), Hex2Color(0x1EFF00FF) );
+					SetFalse( uiUnlockBtn );
+					SetTrue( uiSelectBtn );
+				end
+			else
+				-- 没前置，直接显示进度
+				SetText( uiLockDesc, F(701, progress, g_techinfo[kind][uplevel].progress ), Hex2Color(0x1EFF00FF) );
+				SetFalse( uiUnlockBtn );
+				SetTrue( uiSelectBtn );
+			end
+		end
+		
+	end
+	
+end
+
+-- 选择科技
+function CityTechTreeDlgSelect()
+	if m_kind <= 0 then
+		return;
+	end
+	CityTechTreeDlgClose()
+end
