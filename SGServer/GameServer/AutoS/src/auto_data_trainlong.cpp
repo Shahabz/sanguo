@@ -66,6 +66,7 @@ int trainlonginfo_init_auto()
 		g_trainlong[level].sliver = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	trainlonginfo_luatable_auto();
 	return 0;
 }
 

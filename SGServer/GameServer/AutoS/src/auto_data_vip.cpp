@@ -78,6 +78,7 @@ int vipinfo_init_auto()
 		g_vipinfo[level].goodsid = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	vipinfo_luatable_auto();
 	return 0;
 }
 

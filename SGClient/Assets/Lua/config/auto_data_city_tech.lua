@@ -1,4 +1,4 @@
-g_techinfo = {
+conf_city_tech = {
 [1] = 
 { 
 	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=50,silver=10,wood=15,food=0,iron=0,ability=1,value=5,},

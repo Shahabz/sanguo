@@ -72,6 +72,7 @@ int officialtech_init_auto()
 		g_official_tech[kind].vip = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	officialtech_luatable_auto();
 	return 0;
 }
 

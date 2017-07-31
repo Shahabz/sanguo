@@ -1,2 +1,2 @@
-g_official_gov = {
+conf_official_gov = {
 }

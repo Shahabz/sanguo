@@ -95,6 +95,7 @@ int nationequipinfo_init_auto()
 		g_nationequip[kind].config[level].value = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	nationequipinfo_luatable_auto();
 	return 0;
 }
 

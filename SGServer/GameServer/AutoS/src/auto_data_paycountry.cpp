@@ -66,6 +66,7 @@ int paycountry_init_auto()
 		g_paycountry[country_code].offset = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	paycountry_luatable_auto();
 	return 0;
 }
 

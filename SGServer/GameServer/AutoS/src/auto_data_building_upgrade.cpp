@@ -104,6 +104,7 @@ int buildingupgrade_init_auto()
 		g_building_upgrade[kind].config[level].battlepower = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	buildingupgrade_luatable_auto();
 	return 0;
 }
 

@@ -72,6 +72,7 @@ int officialgov_init_auto()
 		g_official_gov[kind].token = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	officialgov_luatable_auto();
 	return 0;
 }
 

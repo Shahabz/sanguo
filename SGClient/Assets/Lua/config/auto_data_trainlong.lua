@@ -1,4 +1,4 @@
-g_trainlong = {
+conf_trainlong = {
 [0] = { level=0,timelong=10,sliver=0,},
 [1] = { level=1,timelong=25,sliver=100,},
 [2] = { level=2,timelong=30,sliver=200,},

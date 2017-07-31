@@ -1,4 +1,4 @@
-g_upgradeinfo = {
+conf_upgrade = {
 [1] = { level=1,exp=225,heroexp0=3,heroexp1=0,heroexp2=0,heroexp3=0,heroexp4=0,heroexp5=0,battlepower=201,awardgroup=0,},
 [2] = { level=2,exp=1000,heroexp0=6,heroexp1=0,heroexp2=0,heroexp3=0,heroexp4=0,heroexp5=0,battlepower=251,awardgroup=0,},
 [3] = { level=3,exp=2100,heroexp0=9,heroexp1=0,heroexp2=0,heroexp3=0,heroexp4=0,heroexp5=0,battlepower=310,awardgroup=0,},

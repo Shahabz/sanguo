@@ -71,6 +71,7 @@ int officialforging_init_auto()
 		g_official_forging[kind].token = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	officialforging_luatable_auto();
 	return 0;
 }
 

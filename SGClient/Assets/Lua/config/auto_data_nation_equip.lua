@@ -1,2 +1,2 @@
-g_nation_equip = {
+conf_nation_equip = {
 }

@@ -1,2 +1,2 @@
-g_official_forging = {
+conf_official_forging = {
 }

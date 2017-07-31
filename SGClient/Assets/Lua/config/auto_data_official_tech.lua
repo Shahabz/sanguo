@@ -1,2 +1,2 @@
-g_official_tech = {
+conf_official_tech = {
 }

@@ -99,6 +99,7 @@ int cityguardinfo_init_auto()
 		g_cityguardinfo[monsterid].config[color].skill = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
+	cityguardinfo_luatable_auto();
 	return 0;
 }
 

@@ -1,4 +1,4 @@
-g_equip_wash = {
+conf_equip_wash = {
 [1] = { washid=1,name="¹¥»÷",level=1,ability=1,value=14,},
 [2] = { washid=2,name="¹¥»÷",level=2,ability=1,value=22,},
 [3] = { washid=3,name="¹¥»÷",level=3,ability=1,value=38,},
