@@ -78,7 +78,6 @@ int storyinfo_init_auto()
 		g_storyinfo[id].skip = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	storyinfo_luatable_auto();
 	return 0;
 }
 

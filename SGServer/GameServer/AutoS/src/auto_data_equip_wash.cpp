@@ -67,7 +67,6 @@ int equipwashinfo_init_auto()
 		g_equipwash[washid].value = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	equipwashinfo_luatable_auto();
 	return 0;
 }
 

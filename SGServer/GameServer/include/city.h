@@ -6,6 +6,7 @@
 #define CITY_TECH_MAX				40	// 城池科技
 #define CITY_GUARD_MAX				30	// 城墙守卫
 #define CITY_DATA_RECORD_MAX		16	// 数据记录
+#define CITY_EVENT_MAX				4	// 事件
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
@@ -25,6 +26,18 @@
 #define CITY_FUNCTION_AUTOBUILD		17	// 自动建造
 #define CITY_FUNCTION_CHAT			18	// 聊天
 #define CITY_FUNCTION_WARKEREX		19	// 商业建造队
+
+#define CITY_EVENT_BUILDING			1	// 建筑升级
+#define CITY_EVENT_TRAIN			2	// 募兵
+#define CITY_EVENT_FORGING			3	// 装备打造
+#define CITY_EVENT_TECH				4	// 科技研究
+
+#define CITY_BATTLE_EVENT_SPY				1	// 侦查
+#define CITY_BATTLE_EVENT_BESPY				2	// 被侦查
+#define CITY_BATTLE_EVENT_ASSAULT			3	// 攻城
+#define CITY_BATTLE_EVENT_DEFEND			4	// 守城
+#define CITY_BATTLE_EVENT_NATION_ASSAULT	5	// 国战
+#define CITY_BATTLE_EVENT_NATION_DEFEND		6	// 国战防守
 
 // 城池领主类型
 typedef enum
@@ -68,6 +81,11 @@ int city_get_sflag( City *pCity, int offset );
 // 功能获取
 void city_function_open( City *pCity, int offset );
 int city_function_check( City *pCity, int offset );
+
+// 事件
+int city_event_add( int city_index, char type, short kind, int value );
+int city_battle_event_add( int city_index, char type, char *name, char value );
+int city_event_sendlist( int actor_index );
 
 // 主角经验升级
 int city_actorexp( int city_index, int exp, char path );

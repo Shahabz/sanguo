@@ -91,7 +91,6 @@ int questinfo_init_auto()
 		g_questinfo[questid].trigger_value[1] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	questinfo_luatable_auto();
 	return 0;
 }
 

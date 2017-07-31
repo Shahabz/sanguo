@@ -820,3 +820,8 @@ function proc_techchange_C( recvValue )
 	end
 end
 
+-- m_cevent_count=0,m_cevent_list={m_type=0,m_kind=0,m_value=0,m_optime=0,[m_cevent_count]},m_bevent_count=0,m_bevent_list={m_type=0,m_name="[22]",m_value=0,m_optime=0,[m_bevent_count]},
+function proc_cityeventlist_C( recvValue )
+	-- process.
+end
+

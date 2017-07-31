@@ -548,6 +548,8 @@ int building_finish( int city_index, int op, int kind, int offset )
 	if ( op == BUILDING_OP_BUILD )
 	{
 		building_create( city_index, kind, offset );
+		// 事件
+		city_event_add( city_index, CITY_EVENT_BUILDING, kind, 0 );
 	}
 	else if ( op == BUILDING_OP_UPGRADE )
 	{
@@ -590,6 +592,9 @@ int building_finish( int city_index, int op, int kind, int offset )
 
 		// 通知客户端更新状态
 		building_action( g_city[city_index].actor_index, kind, offset, 1 );
+
+		// 事件
+		city_event_add( city_index, CITY_EVENT_BUILDING, kind, level+1 );
 	}
 	else if ( op == BUILDING_OP_DELETE )
 	{

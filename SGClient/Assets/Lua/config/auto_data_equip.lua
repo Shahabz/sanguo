@@ -1,4 +1,4 @@
-conf_equip = {
+g_equipinfo = {
 [1] = { kind=1,name="Ì«Ò»µ¶",type=0,actorlevel=0,color=0,ability=1,value=170,sec=2,silver=4000,material_kind0=0,material_num0=0,material_kind1=0,material_num1=0,material_kind2=0,material_num2=0,material_kind3=0,material_num3=0,material_kind4=0,material_num4=0,material_kind5=0,material_num5=0,prestige=200,},
 [2] = { kind=2,name="ÑãôáÇ¹",type=0,actorlevel=0,color=1,ability=1,value=270,sec=21600,silver=20000,material_kind0=41,material_num0=1,material_kind1=0,material_num1=0,material_kind2=0,material_num2=0,material_kind3=0,material_num3=0,material_kind4=0,material_num4=0,material_kind5=0,material_num5=0,prestige=200,},
 [3] = { kind=3,name="ÁúÉà¹­",type=0,actorlevel=0,color=2,ability=1,value=345,sec=72000,silver=150000,material_kind0=1,material_num0=3,material_kind1=11,material_num1=3,material_kind2=21,material_num2=3,material_kind3=42,material_num3=1,material_kind4=0,material_num4=0,material_kind5=0,material_num5=0,prestige=200,},

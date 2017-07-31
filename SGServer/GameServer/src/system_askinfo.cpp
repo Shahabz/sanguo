@@ -191,6 +191,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 领取
 			city_tech_get( actor_index );
 		}
+		break;
+	case ASKINFO_GOV:
+		if ( pvalue[0] == 1 )
+		{ // 事件
+			city_event_sendlist( actor_index );
+		}
 		
 		break;
 	default:

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;ENABLE_RUNTIME_GI;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_NETWORK;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_IOS_NATIVE_CRASH_REPORTING;PLAYERCONNECTION_LISTENS_FIXED_PORT;DEBUGGER_LISTENS_FIXED_PORT;PLATFORM_SUPPORTS_ADS_ID;SUPPORT_ENVIRONMENT_VARIABLES;PLATFORM_SUPPORTS_PROFILER;PLATFORM_HAS_NO_SUPPORT_FOR_BUCKET_ALLOCATOR;STRICTCPP_NEW_DELETE_SIGNATURES;HAS_NEON_SKINNIG;UNITY_GFX_USE_PLATFORM_VSYNC;UNITY_INPUT_SIMULATE_EVENTS;PLATFORM_ALWAYS_USES_STDOUT_FOR_LOG;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;UNITY_IOS;UNITY_IPHONE;UNITY_IPHONE_API;SUPPORT_MULTIPLE_DISPLAYS;ENABLE_IL2CPP;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;LaunchLoad;ENABLE_IOS_ON_DEMAND_RESOURCES;ENABLE_IOS_APP_SLICING;UNITY_HAS_GOOGLEVR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -445,22 +445,15 @@
      <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
-     <None Include="Assets\StreamingAssets\Data\localization_language.txt" />
      <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
-     <None Include="Assets\StreamingAssets\Data\resmap_sprite.txt" />
-     <None Include="Assets\StreamingAssets\Data\localization_country.txt" />
-     <None Include="Assets\StreamingAssets\Data\en-us\localize_item.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\UIRenderTexture.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\SunShaftsComposite.shader" />
-     <None Include="Assets\StreamingAssets\resver.txt" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\WaterAnimation.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\Wind.shader" />
-     <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ImageGray.shader" />
-     <None Include="Assets\StreamingAssets\android_files.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_object.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ImageSoftMask.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\UI-Default.shader" />
@@ -471,20 +464,14 @@
      <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
      <None Include="Assets\ThirdPartyPlugin\YLYRichText\Shaders\YlyUISeqFrameAni.shader" />
      <None Include="Assets\Resources\PackAssets\Data\MaskWord.txt" />
-     <None Include="Assets\StreamingAssets\Data\en-us\localize.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive(Soft).shader" />
      <None Include="Assets\Resources\PackAssets\Data\localization_language.txt" />
      <None Include="Assets\Resources\PackAssets\Data\plat.txt" />
-     <None Include="Assets\StreamingAssets\Data\zh-cn\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\DoubleAnimationAdditive.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
-     <None Include="Assets\StreamingAssets\Data\resmap_object.txt" />
-     <None Include="Assets\StreamingAssets\Data\app.txt" />
-     <None Include="Assets\StreamingAssets\Data\plat.txt" />
-     <None Include="Assets\StreamingAssets\Data\en-us\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlurDX11.shader" />
      <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_vipfont.fnt" />
      <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlur.shader" />
@@ -492,7 +479,6 @@
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\ImageAdditive.shader" />
-     <None Include="Assets\StreamingAssets\Data\zh-cn\localize_item.txt" />
      <None Include="Assets\Resources\PackAssets\Data\localization_country.txt" />
      <None Include="Assets\Resources\PackAssets\Data\app.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleMask_Additive.shader" />
@@ -503,19 +489,14 @@
      <None Include="Assets\ToLua\readme.txt" />
      <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteDissolve.shader" />
-     <None Include="Assets\StreamingAssets\Data\MaskWord.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ImageBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteGray.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive_Cull.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\Dissolution3D.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\UVAnimation.shader" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize_item.txt" />
-     <None Include="Assets\StreamingAssets\Data\resmap_prefab.txt" />
- <Reference Include="UnityEngine.UI">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Networking">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
@@ -523,8 +504,11 @@
  <Reference Include="nunit.framework">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/nunit.framework.dll</HintPath>
  </Reference>
- <Reference Include="UnityEngine.Analytics">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
@@ -533,25 +517,25 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="ArabicSupport">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
  </Reference>
  <Reference Include="Debugger">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
  </Reference>
  <Reference Include="ICSharpCode.SharpZipLib">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
  <Reference Include="DOTween">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
  </Reference>
  <Reference Include="DOTween43">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
  </Reference>
  <Reference Include="DOTween46">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
  </Reference>
  <Reference Include="DOTween50">
- <HintPath>/Users/miya/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
+ <HintPath>/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

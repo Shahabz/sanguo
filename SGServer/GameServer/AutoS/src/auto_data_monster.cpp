@@ -76,7 +76,6 @@ int monsterinfo_init_auto()
 		g_monster[monsterid].skill = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
-	monsterinfo_luatable_auto();
 	return 0;
 }
 

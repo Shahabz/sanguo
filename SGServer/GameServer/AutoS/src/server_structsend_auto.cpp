@@ -1100,8 +1100,36 @@ int struct_NetS_CityEvent_send( char **pptr, int *psize, SLK_NetS_CityEvent *pVa
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BattleEvent_send( char **pptr, int *psize, SLK_NetS_BattleEvent *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EventList_send( char **pptr, int *psize, SLK_NetS_EventList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_cevent_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_cevent_count; tmpi++ )
+	{
+		struct_NetS_CityEvent_send( pptr, psize, &pValue->m_cevent_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_bevent_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_bevent_count; tmpi++ )
+	{
+		struct_NetS_BattleEvent_send( pptr, psize, &pValue->m_bevent_list[tmpi] );
+	}
 	return 0;
 }
 

@@ -966,8 +966,36 @@ function struct_NetS_CityEvent_recv( buffer )
 	local recvValue = {};
 	recvValue.m_type = buffer:ReadSByte();
 	recvValue.m_kind = buffer:ReadShort();
-	recvValue.m_value = buffer:ReadShort();
+	recvValue.m_value = buffer:ReadInt();
 	recvValue.m_optime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_BattleEvent_recv( buffer )
+	local recvValue = {};
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( 22 );
+	recvValue.m_value = buffer:ReadSByte();
+	recvValue.m_optime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_EventList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_cevent_count = buffer:ReadShort();
+	recvValue.m_cevent_list = {};
+	for tmpi=1,recvValue.m_cevent_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CityEvent_recv( buffer );
+		table.insert( recvValue.m_cevent_list, tmpValue );
+	end
+	recvValue.m_bevent_count = buffer:ReadShort();
+	recvValue.m_bevent_list = {};
+	for tmpi=1,recvValue.m_bevent_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_BattleEvent_recv( buffer );
+		table.insert( recvValue.m_bevent_list, tmpValue );
+	end
 	return recvValue;
 end
 

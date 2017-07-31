@@ -471,6 +471,52 @@ int city_function_check( City *pCity, int offset )
 	return 0;
 }
 
+// 内政事件
+int city_event_add( int city_index, char type, short kind, int value )
+{
+	CITY_CHECK_INDEX( city_index );
+	memmove( &g_city[city_index].city_event[1], &g_city[city_index].city_event[0], sizeof( SLK_NetS_CityEvent )*(CITY_EVENT_MAX - 1) );
+	g_city[city_index].city_event[0].m_type = type;
+	g_city[city_index].city_event[0].m_kind = kind;
+	g_city[city_index].city_event[0].m_value = value;
+	g_city[city_index].city_event[0].m_optime = (int)time(NULL);
+	return 0;
+}
+
+// 军事事件
+int city_battle_event_add( int city_index, char type, char *name, char value )
+{
+	CITY_CHECK_INDEX( city_index );
+	memmove( &g_city[city_index].battle_event[1], &g_city[city_index].battle_event[0], sizeof( SLK_NetS_BattleEvent )*(CITY_EVENT_MAX - 1) );
+	g_city[city_index].battle_event[0].m_type = type;
+	strncpy( g_city[city_index].battle_event[0].m_name, name, 21 );
+	g_city[city_index].battle_event[0].m_name[21] = 0;
+	g_city[city_index].battle_event[0].m_value = value;
+	g_city[city_index].battle_event[0].m_optime = (int)time( NULL );
+	return 0;
+}
+
+int city_event_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_EventList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < CITY_EVENT_MAX; tmpi++ )
+	{
+		memcpy( &pValue.m_bevent_list[tmpi], &pCity->city_event[tmpi], sizeof( SLK_NetS_CityEvent ) );
+		pValue.m_cevent_count += 1;
+	}
+	for ( int tmpi = 0; tmpi < CITY_EVENT_MAX; tmpi++ )
+	{
+		memcpy( &pValue.m_bevent_list[tmpi], &pCity->battle_event[tmpi], sizeof( SLK_NetS_BattleEvent ) );
+		pValue.m_bevent_count += 1;
+	}
+	netsend_cityeventlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
 // 主角经验获取
 int city_actorexp( int city_index, int exp, char path )
 {

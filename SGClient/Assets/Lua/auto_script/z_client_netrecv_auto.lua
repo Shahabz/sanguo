@@ -375,6 +375,11 @@ function netrecv_techchange_C( buffer )
 	proc_techchange_C( recvValue );
 end
 
+function netrecv_cityeventlist_C( buffer )
+	local recvValue = struct_NetS_EventList_recv( buffer );
+	proc_cityeventlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -451,6 +456,7 @@ Proc_Command = {
 	[CMDS_SYSTALK]=netrecv_systalk_C;
 	[CMDS_BATTLEPOWER]=netrecv_battlepower_C;
 	[CMDS_TECHCHANGE]=netrecv_techchange_C;
+	[CMDS_CITYEVENTLIST]=netrecv_cityeventlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

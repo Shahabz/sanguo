@@ -85,7 +85,8 @@ struct _city {
 				int ofsec[3];	//建筑官员剩余秒
 				int offree[3];	//建筑官员免费情况
 				int offquick[3];	//建筑官员已经使用的加速时间
-				SLK_NetS_CityEvent city_event;	//城内事件
+				SLK_NetS_CityEvent city_event[4];	//城内事件
+				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
