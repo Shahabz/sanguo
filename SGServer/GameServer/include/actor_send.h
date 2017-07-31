@@ -1,6 +1,6 @@
 #ifndef __ACTOR_SEND_H
 #define __ACTOR_SEND_H
-
+#include "define.h"
 
 #define SENDTYPE_ACTOR		0	// 发给单个玩家
 #define SENDTYPE_AREA		1	// 发给当前逻辑区域

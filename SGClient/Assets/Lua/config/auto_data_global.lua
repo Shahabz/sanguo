@@ -26,4 +26,6 @@ global.battlepower_defense_increase = 3 --战力系数（强防）
 global.battlepower_assault = 1 --战力系数（攻城）
 global.battlepower_defend = 1 --战力系数（守城）
 global.techtree_level = 1 --科技树开放等级
-global.techquick_token = 10 --科技加速折算钻石系数
+global.techquick_token = 2 --科技加速折算钻石系数（每60秒）
+global.forgingquick_token = 1 --打造加速折算钻石系数（每60秒）
+global.upgradequick_token = 2 --建筑加速折算钻石系数（每60秒）

@@ -278,6 +278,7 @@ int hero_down( int actor_index, int kind )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( kind <= 0 || kind >= g_heroinfo_maxnum )
 		return -1;
+	return 0;
 }
 
 // 计算装备加成

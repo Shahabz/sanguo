@@ -750,6 +750,14 @@ struct _slk_NetS_TechChange {
 };
 typedef struct _slk_NetS_TechChange SLK_NetS_TechChange;	//科技变化
 
+struct _slk_NetS_CityEvent {
+	char m_type;	//城内事件
+	short m_kind;	//城内事件
+	short m_value;	//城内事件
+	int m_optime;	//城内事件
+};
+typedef struct _slk_NetS_CityEvent SLK_NetS_CityEvent;	//城池事件
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -831,5 +839,6 @@ int struct_NetS_Systalkid_send( char **pptr, int *psize, SLK_NetS_Systalkid *pVa
 int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue );
 int struct_NetS_Battlepower_send( char **pptr, int *psize, SLK_NetS_Battlepower *pValue );
 int struct_NetS_TechChange_send( char **pptr, int *psize, SLK_NetS_TechChange *pValue );
+int struct_NetS_CityEvent_send( char **pptr, int *psize, SLK_NetS_CityEvent *pValue );
 
 #endif

@@ -962,3 +962,12 @@ function struct_NetS_TechChange_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_CityEvent_recv( buffer )
+	local recvValue = {};
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_value = buffer:ReadShort();
+	recvValue.m_optime = buffer:ReadInt();
+	return recvValue;
+end
+

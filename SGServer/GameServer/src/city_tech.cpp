@@ -130,7 +130,7 @@ int city_tech_quick( int actor_index )
 	int kind = pBuilding->value;
 	if ( kind <= 0 || kind >= g_techinfo_maxnum )
 		return -1;
-	int token = (int)ceil(pBuilding->sec / global.techquick_token);
+	int token = (int)ceil((pBuilding->sec/60+1) * global.techquick_token);
 	if ( actor_change_token( actor_index, -token, PATH_TECH_QUICK, 0 ) < 0 )
 		return -1;
 

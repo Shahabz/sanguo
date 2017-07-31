@@ -1094,3 +1094,14 @@ int struct_NetS_TechChange_send( char **pptr, int *psize, SLK_NetS_TechChange *p
 	return 0;
 }
 
+int struct_NetS_CityEvent_send( char **pptr, int *psize, SLK_NetS_CityEvent *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	return 0;
+}
+

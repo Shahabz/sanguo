@@ -32,6 +32,8 @@ typedef struct _global
 	float battlepower_defend;
 	char techtree_level;
 	float techquick_token;
+	float forgingquick_token;
+	float upgradequick_token;
 }Global;
 int global_init();
 void global_reload();

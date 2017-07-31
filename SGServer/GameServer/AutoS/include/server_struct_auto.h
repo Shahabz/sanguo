@@ -1,7 +1,7 @@
 #ifndef __STRUCT_AUTO0_H
 #define __STRUCT_AUTO0_H
 
-#include "define.h"
+
 #define CMDS_BASE	0
 #define CMDC_BASE	0
 

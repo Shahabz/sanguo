@@ -419,7 +419,8 @@ function CityTechDlgQuick()
 		return
 	end
 	-- 加速消耗钻石
-	local token = math.ceil(pBuilding.m_sec/global.techquick_token)
+	local min = math.floor(pBuilding.m_sec/60) + 1
+	local token = math.ceil( min*global.techquick_token)
 	MsgBox( F(709, token ), function() 
 		system_askinfo( ASKINFO_TECH, "", 2 );
 		CityTechDlgClose()

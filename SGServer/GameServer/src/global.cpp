@@ -95,7 +95,7 @@ int global_init()
 		}
 		else if ( id == 13 )
 		{
-			global.city_guard_sec_token = atoi( row[1] );
+			global.city_guard_sec_token = value;
 		}
 		else if ( id == 14 )
 		{
@@ -139,7 +139,10 @@ int global_init()
 			global.techtree_level = atoi( row[1] );
 		else if ( id == 28 )
 			global.techquick_token = value;
-		
+		else if ( id == 29 )
+			global.forgingquick_token = value;
+		else if ( id == 30 )
+			global.upgradequick_token = value;
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

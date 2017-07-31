@@ -1,7 +1,7 @@
 #ifndef __CITY_AUTO_H
 #define __CITY_AUTO_H
 #include "define.h"
-
+#include "server_structsend_auto.h"
 struct _city {
 //--Automatically generated
 				int actorid;	//角色ID
@@ -81,10 +81,11 @@ struct _city {
 				int worker_expire_ex;	//商用建造队列到期时间
 				int wnsec;	//建造队列所需时间
 				int wnsec_ex;	//建造队列所需时间
-				char ofkind;	//建筑官员种类
-				int ofsec;	//建筑官员剩余秒
-				int offree;	//建筑官员免费情况
-				int offquick;	//建筑官员已经使用的加速时间
+				short ofkind[3];	//建筑官员种类
+				int ofsec[3];	//建筑官员剩余秒
+				int offree[3];	//建筑官员免费情况
+				int offquick[3];	//建筑官员已经使用的加速时间
+				SLK_NetS_CityEvent city_event;	//城内事件
 				CityAttr attr;	//属性加成
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
