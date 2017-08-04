@@ -13,6 +13,7 @@ public class UIScrollRectWrap
 		L.RegFunction("ResetScroll", ResetScroll);
 		L.RegFunction("SetContentPosition", SetContentPosition);
 		L.RegFunction("ScrollToBottom", ScrollToBottom);
+		L.RegFunction("ScrollToTop", ScrollToTop);
 		L.RegFunction("ShowLoading", ShowLoading);
 		L.RegFunction("HideLoading", HideLoading);
 		L.RegFunction("IsShowLoading", IsShowLoading);
@@ -132,6 +133,37 @@ public class UIScrollRectWrap
 			else
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UIScrollRect.ScrollToBottom");
+			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ScrollToTop(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 1 && TypeChecker.CheckTypes(L, 1, typeof(UIScrollRect)))
+			{
+				UIScrollRect obj = (UIScrollRect)ToLua.ToObject(L, 1);
+				obj.ScrollToTop();
+				return 0;
+			}
+			else if (count == 2 && TypeChecker.CheckTypes(L, 1, typeof(UIScrollRect), typeof(int)))
+			{
+				UIScrollRect obj = (UIScrollRect)ToLua.ToObject(L, 1);
+				int arg0 = (int)LuaDLL.lua_tonumber(L, 2);
+				obj.ScrollToTop(arg0);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UIScrollRect.ScrollToTop");
 			}
 		}
 		catch(Exception e)

@@ -122,6 +122,55 @@ public class UIScrollRect : ScrollRect
         yield return null;
     }
 
+	public virtual void ScrollToTop()
+	{
+		StartCoroutine(ScrollToTopAsyn());
+	}
+
+	protected virtual IEnumerator ScrollToTopAsyn()
+	{
+		enabled = false;
+		enabled = true;
+		yield return new WaitForEndOfFrame();
+		this.normalizedPosition = new Vector2( 0, 1 );
+		yield return null;
+	}
+	/// <summary>
+	/// 滚动内容里面的某个子对象 到顶部
+	/// </summary>
+	public virtual void ScrollToTop(int contentChildIndex)
+	{
+		StartCoroutine(ScrollToTopAsyn(contentChildIndex));
+	}
+	protected virtual IEnumerator ScrollToTopAsyn(int contentChildIndex)
+	{
+		if (content == null || content.childCount <= contentChildIndex)
+		{
+
+		}
+		else
+		{
+			yield return new WaitForEndOfFrame();
+
+			var childTrans = content.GetChild(contentChildIndex) as RectTransform;
+			float childPosY = -childTrans.localPosition.y - content.offsetMax.y; //子对象在滚动框里面的位置
+			float scrollHeight = (this.transform as RectTransform).rect.height;
+			float posY = childPosY + childTrans.rect.height - scrollHeight;
+			if (posY > 0)
+			{
+				Vector2 preOffset = content.offsetMax;
+				float perY = (posY) / 10;
+				for (int tmpi = 0; tmpi < 10; tmpi++)
+				{
+					preOffset.y = preOffset.y - perY;
+					this.content.offsetMax = preOffset;
+					yield return new WaitForEndOfFrame();
+				}
+			}
+		}
+		yield return null;
+	}
+
     /// <summary>
     /// 显示加载更多
     /// </summary>

@@ -153,7 +153,18 @@ function proc_buildinglist_C( recvValue )
 	GetPlayer().m_function = recvValue.m_function;
 	-- Ìú½³ÆÌ
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_SMITHY ) == 1 then
-		GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+		local equipkind = GetPlayer().m_forgingkind;
+		if equipkind > 0 then
+			local sec = GetPlayer().m_forgingsec;
+			local needsec = g_equipinfo[equipkind].sec;
+			if sec <= 0 then
+				GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0, m_needsec = 0,m_quick = 0, m_overvalue=equipkind } )
+			else
+				GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec=sec, m_needsec=needsec, m_quick = 0, m_overvalue=0 } )
+			end
+		else
+			GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0, m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+		end
 	end	
 	-- Ï´Á¶ÆÌ
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_WASH ) == 1 then
@@ -762,6 +773,21 @@ end
 -- m_forgingkind=0,m_forgingsec=0,m_forgingsec_need=0,
 function proc_buildingsmithy_C( recvValue )
 	-- process.
+	GetPlayer().m_forgingkind = recvValue.m_forgingkind
+	GetPlayer().m_forgingsec = recvValue.m_forgingsec
+	local equipkind = GetPlayer().m_forgingkind;
+	if equipkind > 0 then
+		local sec = GetPlayer().m_forgingsec;
+		local needsec = g_equipinfo[equipkind].sec;
+		if sec <= 0 then
+			GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0, m_needsec = 0,m_quick = 0, m_overvalue=equipkind } )
+		else
+			GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec=sec, m_needsec=needsec, m_quick = 0, m_overvalue=0 } )
+		end
+	else
+		GetPlayer():SetBuilding( BUILDING_Smithy,{ m_kind = BUILDING_Smithy, m_offset = 0,m_level = 0,m_sec = 0, m_needsec = 0,m_quick = 0, m_overvalue=0 } )
+	end
+	EquipForgingDlgTimer()
 end
 
 -- m_name_length=0,m_name="[m_name_length]",
@@ -857,6 +883,7 @@ function proc_officialhirechange_C( recvValue )
 	GetPlayer().m_officialhire[recvValue.m_type] = recvValue.m_info;
 	OfficialHireDlgSet( recvValue.m_type )
 	if recvValue.m_type == 0 then
+		EquipForgingDlgSetOfficial()
 	elseif recvValue.m_type == 1 then
 		LevyDlgSetOfficial();
 	elseif recvValue.m_type == 2 then

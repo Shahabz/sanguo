@@ -1592,7 +1592,37 @@ int city_officialhire( int actor_index, int type, int kind )
 		return -1;
 	if ( type == 0 )
 	{
+		if ( kind <= 0 || kind >= g_official_forging_maxnum )
+			return -1;
+		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Main );
+		if ( !pBuilding )
+			return -1;
+		if ( pBuilding->level < g_official_forging[kind].buildinglevel )
+			return -1;
 
+		if ( g_official_forging[kind].free == 0 || (pCity->offree[type] & (1 << kind)) )
+		{ // 无免费
+			if ( g_official_forging[kind].silver > 0 )
+			{
+				if ( pCity->silver < g_official_forging[kind].silver )
+					return -1;
+				city_changesilver( g_actors[actor_index].city_index, -g_official_forging[kind].silver, PATH_HIRE_FORGING );
+			}
+			else if ( g_official_forging[kind].token > 0 )
+			{
+				if ( actor_change_token( actor_index, -g_official_forging[kind].token, PATH_HIRE_FORGING, 0 ) < 0 )
+					return -1;
+			}
+		}
+		else
+		{
+			pCity->offree[type] |= (1 << kind);
+		}
+
+
+		pCity->ofkind[type] = kind;
+		pCity->ofsec[type] += g_official_gov[kind].duration; // 时间叠加
+		pCity->ofquick[type] = 0;
 	}
 	else if ( type == 1 )
 	{

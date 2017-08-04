@@ -166,6 +166,8 @@ struct _slk_NetS_ActorInfo {
 	short m_techprogress[40];	//服务器发送玩家基本信息-科技进度
 	SLK_NetS_OfficialHire m_officialhire[3];	//服务器发送玩家基本信息-雇佣官
 	int m_ptsec;	//服务器发送玩家基本信息-保护时间
+	short m_forgingkind;	//服务器发送玩家基本信息-打造
+	int m_forgingsec;	//服务器发送玩家基本信息-打造
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

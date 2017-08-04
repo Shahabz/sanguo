@@ -89,6 +89,15 @@ end
 function OfficialHireDlgShow( type )
 	m_type = type;
 	if type == 0 then
+		-- 官府
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );
+		if pBuilding == nil then
+			return;
+		end
+		if pBuilding.m_level < g_official_forging[1].buildinglevel then
+			AlertMsg( F(725, BuildingName(BUILDING_Main), g_official_forging[1].buildinglevel )..T(721) )
+			return
+		end
 		m_DlgName = T(721)..T(720)
 	elseif type == 1 then
 		-- 官府
@@ -244,7 +253,91 @@ end
 
 -- 铁匠
 function OfficialHireDlgSetForging()
+	if m_Dlg == nil then
+		return;
+	end
+	SetText( m_uiText, T(715) )
+	local info = GetPlayer().m_officialhire[0];
+	-- 已雇佣
+	if info.m_ofkind > 0 then
+		local kind = info.m_ofkind;
+		local ptr = g_official_forging[kind];
+		UIP_InfoSet( m_uiUIP_Info[1], kind,
+						OfSprite(ptr.shape), -- shape
+						ItemColorSprite(ptr.color), -- color
+						"Lv."..g_official_forging[kind].level..T(721), -- name
+						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
+						nil,  -- otherDesc
+						"\n\n"..T(771),  -- timerDesc
+						info.m_ofsec, -- sec
+						T(719)..T(721), -- title
+						nil, -- res
+						0, -- silver
+						0, -- token
+						0, -- free
+						0 ) -- getfree
+						
+		
+	else
+		-- 未雇佣
+		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(721), nil, nil, nil, nil, T(719)..T(721), nil, 0, 0, 0, 0 )
+	end
 	
+	-- 可雇佣
+	local index = 2;
+	local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );
+	if pBuilding == nil then
+		return;
+	end
+	
+	-- 找一个可雇佣的
+	local cankind = 1;
+	for kind=#g_official_forging, 1, -1 do
+		local ptr = g_official_forging[kind];
+		if pBuilding.m_level >= ptr.buildinglevel and info.m_ofkind ~= kind then
+			UIP_InfoSet( m_uiUIP_Info[index], kind,
+						OfSprite(ptr.shape), -- shape
+						ItemColorSprite(ptr.color), -- color
+						"Lv."..g_official_forging[kind].level..T(721), -- name
+						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
+						nil,  -- otherDesc
+						nil,  -- timerDesc
+						nil, -- sec
+						T(718)..T(721), -- title
+						nil, -- res
+						g_official_forging[kind].silver, -- silver
+						g_official_forging[kind].token, -- token
+						g_official_forging[kind].free,
+						info.m_offree ) -- token
+			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
+			index = index + 1
+			cankind = kind;
+			break;
+		end
+	end
+	
+	-- 找一个即将雇佣的
+	for kind=cankind+1, #g_official_forging, 1 do
+		local ptr = g_official_forging[kind];
+		if info.m_ofkind ~= kind then
+			UIP_InfoSet( m_uiUIP_Info[index], kind,
+						OfSprite(ptr.shape), -- shape
+						ItemColorSprite(ptr.color), -- color
+						"Lv."..g_official_forging[kind].level..T(721), -- name
+						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
+						nil,  -- otherDesc
+						BuildingNameLv(BUILDING_Main,nil,ptr.buildinglevel).." "..T(724),  -- timerDesc
+						nil, -- sec
+						T(718)..T(721), -- title
+						nil, -- res
+						0, -- silver
+						0, -- token
+						0,
+						info.m_offree ) -- token
+			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
+			break;
+		end
+	end
 end
 
 -- 内政官
@@ -377,7 +470,7 @@ function OfficialHireDlgSetTech()
 	end
 end
 
--- 购买研究员
+-- 购买雇佣
 function OfficialHireDlgBuy( kind )
 	local config = nil
 	if m_type == 0 then
@@ -396,7 +489,7 @@ function OfficialHireDlgBuy( kind )
 		
 	elseif config.silver > 0 then
 		if GetPlayer().m_silver < config.silver then
-			pop("钱不够")
+			JumpRes(1);
 			return
 		end
 		system_askinfo( ASKINFO_OFFICIALHIRE, "", 0, m_type, kind )
@@ -404,7 +497,7 @@ function OfficialHireDlgBuy( kind )
 	elseif config.token > 0 then
 		MsgBox( F(755, config.token ), function()
 			if GetPlayer().m_token < config.token then
-				pop("钻石不够")
+				JumpToken();
 				return
 			end
 			system_askinfo( ASKINFO_OFFICIALHIRE, "", 0, m_type, kind )

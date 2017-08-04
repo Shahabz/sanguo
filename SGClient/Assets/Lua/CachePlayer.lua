@@ -37,6 +37,8 @@ function Player:Init()
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
 	self.m_ptsec			=	0;
+	self.m_forgingkind		=	0;
+	self.m_forgingsec		=	0;
 	self.m_equipext			=	0;
 	self.m_techlevel		=   {};
 	self.m_techprogress		=	{};
@@ -89,6 +91,8 @@ function Player:Set( recvValue )
 	self.m_autobuild		=	recvValue.m_autobuild;
 	self.m_autobuildopen	=	recvValue.m_autobuildopen;
 	self.m_ptsec			=	recvValue.m_ptsec;
+	self.m_forgingkind		=	recvValue.m_forgingkind;
+	self.m_forgingsec		=	recvValue.m_forgingsec;
 	for kind = 1, 40, 1 do
 		self.m_techlevel[kind-1]	=   recvValue.m_techlevel[kind];
 		self.m_techprogress[kind-1]	=	recvValue.m_techprogress[kind];

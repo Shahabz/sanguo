@@ -498,8 +498,12 @@ function CityTechDlgQuick()
 	local min = math.floor(pBuilding.m_sec/60) + 1
 	local token = math.ceil( min*global.techquick_token)
 	MsgBox( F(709, token ), function() 
-		system_askinfo( ASKINFO_TECH, "", 2 );
-		CityTechDlgClose()
+		if GetPlayer().m_token < token then
+			JumpToken();
+		else
+			system_askinfo( ASKINFO_TECH, "", 2 );
+			CityTechDlgClose()
+		end
 	end )
 end
 

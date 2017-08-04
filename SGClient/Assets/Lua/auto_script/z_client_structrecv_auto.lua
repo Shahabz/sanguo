@@ -215,6 +215,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 		table.insert( recvValue.m_officialhire, tmpValue );
 	end
 	recvValue.m_ptsec = buffer:ReadInt();
+	recvValue.m_forgingkind = buffer:ReadShort();
+	recvValue.m_forgingsec = buffer:ReadInt();
 	return recvValue;
 end
 

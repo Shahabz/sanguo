@@ -86,6 +86,11 @@ function City.BuildingSelect( transform )
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
 				
+			-- 打造有完成的，直接领取
+			elseif building.kind == BUILDING_Smithy then
+				City.BuildingHideOver( building.kind )
+				system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
+				
 			else
 				BuildingOpratorModShow( true, building.kind, building.offset, transform );
 			end

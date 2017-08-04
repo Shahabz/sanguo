@@ -63,6 +63,9 @@ function BuildingOverModClick( gameObject )
 	elseif kind >= BUILDING_Infantry and kind <= BUILDING_Militiaman_Archer then
 		system_askinfo( ASKINFO_TRAIN, "", 4, kind );
 	
+	elseif kind == BUILDING_Smithy then
+		system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
+		
 	end
 	gameObject:SetActive(false);
 end

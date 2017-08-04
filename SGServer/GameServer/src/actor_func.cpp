@@ -461,6 +461,8 @@ int actor_getinfo( int actor_index )
 		info.m_autobuild = pCity->autobuild;
 		info.m_autobuildopen = pCity->autobuildopen;
 		info.m_ptsec = pCity->ptsec;
+		info.m_forgingkind = pCity->forgingkind;
+		info.m_forgingsec = pCity->forgingsec;
 		for ( int i = 0; i < CITY_TECH_MAX; i++ )
 		{
 			info.m_techlevel[i] = pCity->techlevel[i];

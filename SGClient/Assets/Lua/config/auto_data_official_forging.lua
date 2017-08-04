@@ -1,5 +1,5 @@
 g_official_forging = {
-[1] = { kind=1,name="白色LV1",level=1,color=0,buildinglevel=4,quick=2,duration=259200,silver=1000,token=0,free=1,shape=0,},
+[1] = { kind=1,name="白色LV1",level=1,color=0,buildinglevel=1,quick=2,duration=259200,silver=1000,token=0,free=1,shape=0,},
 [2] = { kind=2,name="蓝色LV2",level=2,color=1,buildinglevel=5,quick=4,duration=259200,silver=2000,token=0,free=1,shape=0,},
 [3] = { kind=3,name="绿色LV3",level=3,color=2,buildinglevel=7,quick=6,duration=259200,silver=0,token=100,free=1,shape=0,},
 [4] = { kind=4,name="绿色LV4",level=4,color=2,buildinglevel=9,quick=9,duration=259200,silver=0,token=100,free=1,shape=0,},

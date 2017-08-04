@@ -22,6 +22,7 @@
 #define LOGOP_IRON				16	// 镔铁
 #define LOGOP_TECH				17	// 科技
 #define LOGOP_BARRACKS			18	// 兵营操作
+#define LOGOP_FORGING			19	// 打造
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -50,6 +51,9 @@
 #define PATH_TRAIN_LONG					24	// 训练时长
 #define PATH_TRAIN_GET					25	// 训练领取
 #define PATH_TRAIN_CANCEL				26	// 取消招募
+#define PATH_EQUIP_FORGING				27	// 装备打造
+#define PATH_FORGING_QUICK				28	// 打造加速
+#define PATH_FORGING_FREEQUICK			29	// 铁匠加速
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

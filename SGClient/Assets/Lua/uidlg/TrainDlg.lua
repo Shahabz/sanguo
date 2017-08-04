@@ -232,7 +232,7 @@ function TrainDlgRecv( recvValue )
 	end
 	
 	-- 扩建
-	if recvValue.m_queue < 8 then
+	if recvValue.m_queue < 11 then
 		local uiObj = m_ObjectPool:Get( "UIP_TrainQueue" );
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetText( uiObj.transform:Find("Content/Num"), F(627,3000) );
@@ -421,6 +421,10 @@ function TrainDlgQueue()
 		SetFalse( uiArrow )
 		SetFalse( uiBuyBtn )
 		SetFalse( uiDesc )
+		
+		SetRichText( uiBefore.transform:Find("Text1"), T(637)..":"..TrainDlgQueueStar(m_recvValue.m_queue) )
+		SetText( uiBefore.transform:Find("Text2"), T(639)..":<color=#25c9ff>"..(m_recvValue.m_queue+1).."</color>" )
+		SetText( uiBefore.transform:Find("Text3"), T(639)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color>" )
 	else
 		SetTrue( uiAfter )
 		SetTrue( uiArrow )
@@ -476,6 +480,7 @@ function TrainDlgTrainLong()
 		SetFalse( uiAfter )
 		SetFalse( uiArrow )
 		SetFalse( uiBuyBtn )
+		SetText( uiBefore.transform:Find("Text"), F( 634, zhtime( g_trainlong[m_recvValue.m_trainlong].timelong*60 ) ) )
 	else
 		SetTrue( uiAfter )
 		SetTrue( uiArrow )

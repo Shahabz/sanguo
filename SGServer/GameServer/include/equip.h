@@ -54,4 +54,7 @@ int equip_sendswap( int actor_index, int src_offset, int dest_offset );
 
 int equip_forgingtime( int city_index, short kind );
 int equip_forging( int actor_index, short kind );
+int equip_forging_quick( int actor_index );
+int equip_forging_freequick( int actor_index );
+int equip_forging_get( int actor_index );
 #endif

@@ -271,6 +271,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 		struct_NetS_OfficialHire_send( pptr, psize, &pValue->m_officialhire[tmpi] );
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_ptsec, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_forgingkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
 	return 0;
 }
 

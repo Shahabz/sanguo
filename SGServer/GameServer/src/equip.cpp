@@ -20,6 +20,7 @@
 #include "hero.h"
 #include "equip.h"
 #include "city.h"
+#include "building.h"
 
 extern Global global;
 extern MYSQL *myData;
@@ -31,6 +32,9 @@ extern int g_maxactornum;
 extern int g_city_maxindex;
 extern City *g_city;
 extern int g_city_maxcount;
+
+extern OfficialForging *g_official_forging;
+extern int g_official_forging_maxnum;
 
 extern EquipInfo *g_equipinfo;
 extern int g_equipinfo_maxnum;
@@ -529,15 +533,143 @@ int equip_sendswap( int actor_index, int src_offset, int dest_offset )
 	return 0;
 }
 
+// 打造所需时间
 int equip_forgingtime( int city_index, short kind )
 {
 	CITY_CHECK_INDEX( city_index );
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return -1;
+	return g_equipinfo[kind].sec;
+}
 
+// 打造
+int equip_forging( int actor_index, short kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->forgingsec > 0 )
+		return -1;
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return -1;
+
+	// 检查条件
+	if ( pCity->level < g_equipinfo[kind].actorlevel )
+		return -1;
+	if ( pCity->silver < g_equipinfo[kind].silver )
+		return -1;
+	for ( int tmpi = 0; tmpi < 6; tmpi++ )
+	{
+		if ( g_equipinfo[kind].material_kind[tmpi] <= 0 )
+			continue;
+		if ( item_getitemnum( actor_index, g_equipinfo[kind].material_kind[tmpi] ) < g_equipinfo[kind].material_num[tmpi] )
+			return -1;
+	}
+	
+	// 扣除
+	city_changesilver( pCity->index, -g_equipinfo[kind].silver, PATH_EQUIP_FORGING );
+	for ( int tmpi = 0; tmpi < 6; tmpi++ )
+	{
+		if ( g_equipinfo[kind].material_kind[tmpi] <= 0 )
+			continue;
+		item_lost( actor_index, g_equipinfo[kind].material_kind[tmpi], g_equipinfo[kind].material_num[tmpi], PATH_EQUIP_FORGING );
+	}
+
+	pCity->forgingkind = kind;
+	pCity->forgingsec = g_equipinfo[kind].sec;
+	building_smithy_send( pCity->index );
+
+	wlog( 0, LOGOP_FORGING, PATH_EQUIP_FORGING, kind, 0, 0, pCity->actorid, city_mainlevel( pCity->index ) );
 	return 0;
 }
 
-int equip_forging( int actor_index, short kind )
+int equip_forging_quick( int actor_index )
 {
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int sec = pCity->forgingsec;
+	if ( sec <= 0 )
+		return -1;
+	int kind = pCity->forgingkind;
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return -1;
+
+	int token = (int)ceil( (sec / 60 + 1) * global.forgingquick_token );
+	if ( actor_change_token( actor_index, -token, PATH_FORGING_QUICK, 0 ) < 0 )
+		return -1;
+	pCity->forgingsec = 0;
+	building_smithy_send( pCity->index );
+	wlog( 0, LOGOP_FORGING, PATH_FORGING_QUICK, kind, sec, pCity->ofkind[0], pCity->actorid, city_mainlevel( pCity->index ) );
+	return 0;
+}
+
+int equip_forging_freequick( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int sec = pCity->forgingsec;
+	if ( sec <= 0 )
+		return -1;
+	int kind = pCity->forgingkind;
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return -1;
+	int ofkind = pCity->ofkind[0];
+	if ( ofkind <= 0 || ofkind >= g_official_forging_maxnum )
+		return -1;
+
+	// -1 这个打造已经使用过免费加速
+	if ( pCity->ofquick[0] == -1 )
+		return -1;
+	
+	if ( pCity->ofquick[0] == 0 )
+	{ // 正常加速时间
+		pCity->forgingsec -= g_official_forging[ofkind].quick;
+	}
+
+	// 完成
+	if ( pCity->forgingsec <= 0 )
+	{
+		pCity->forgingsec = 0;
+		building_smithy_send( pCity->index );
+	}
+	else
+	{
+		// 更新铁匠信息
+		pCity->ofquick[0] = -1;
+		city_officialhire_sendinfo( pCity, 0 );
+		building_smithy_send( pCity->index );
+	}
+
+	wlog( 0, LOGOP_FORGING, PATH_FORGING_FREEQUICK, kind, sec, pCity->ofkind[0], pCity->actorid, city_mainlevel( pCity->index ) );
+	return 0;
+}
+
+// 装备打造领取
+int equip_forging_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->forgingsec > 0 )
+		return -1;
+	int kind = pCity->forgingkind;
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return -1;
+
+	equip_getequip( actor_index, kind, PATH_EQUIP_FORGING );
+
+	pCity->ofquick[0] = 0;
+	city_officialhire_sendinfo( pCity, 0 );
+
+	pCity->forgingkind = 0;
+	pCity->forgingsec = 0;
+	building_smithy_send( pCity->index );
 	return 0;
 }
 

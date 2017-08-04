@@ -175,6 +175,7 @@ function QuickItemDlgSelect( index )
 		end
 		if GetPlayer().m_token < token then
 			-- 跳转
+			JumpToken();
 			return
 		end
 	else

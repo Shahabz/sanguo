@@ -133,6 +133,23 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		break;
 	case ASKINFO_EQUIPFORGING:
+		if ( pvalue[0] == 0 )
+		{ // 打造装备
+			equip_forging( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 加速打造装备
+			equip_forging_quick( actor_index );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 铁匠加速打造装备
+			equip_forging_freequick( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 领取装备
+			equip_forging_get( actor_index );
+		}
+		
 		break;
 	case ASKINFO_EQUIPWASH:
 		break;
