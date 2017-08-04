@@ -380,6 +380,16 @@ function netrecv_cityeventlist_C( buffer )
 	proc_cityeventlist_C( recvValue );
 end
 
+function netrecv_officialhirechange_C( buffer )
+	local recvValue = struct_NetS_OfficialHireChange_recv( buffer );
+	proc_officialhirechange_C( recvValue );
+end
+
+function netrecv_cityprotect_C( buffer )
+	local recvValue = struct_NetS_CityProtect_recv( buffer );
+	proc_cityprotect_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -457,6 +467,8 @@ Proc_Command = {
 	[CMDS_BATTLEPOWER]=netrecv_battlepower_C;
 	[CMDS_TECHCHANGE]=netrecv_techchange_C;
 	[CMDS_CITYEVENTLIST]=netrecv_cityeventlist_C;
+	[CMDS_OFFICIALHIRECHANGE]=netrecv_officialhirechange_C;
+	[CMDS_CITYPROTECT]=netrecv_cityprotect_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -73,8 +73,14 @@ int building_delete( int city_index, int kind, int offset );
 // 建筑升级或拆除操作完成
 int building_finish( int city_index, int op, int kind, int offset );
 
+// 加速
+int building_workerquick( int actor_index, int kind, int offset, int sec );
+
 // 免费加速
 int building_workerfree( int actor_index, int kind, int offset );
+
+// 购买商用建造队列
+int building_workerbuy( int actor_index, int type );
 
 // 获取士兵数量
 int building_soldiers_total( int city_index, char kind );

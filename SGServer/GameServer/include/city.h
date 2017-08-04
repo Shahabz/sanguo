@@ -7,6 +7,7 @@
 #define CITY_GUARD_MAX				30	// 城墙守卫
 #define CITY_DATA_RECORD_MAX		16	// 数据记录
 #define CITY_EVENT_MAX				4	// 事件
+#define CITY_TRAINQUEUE_MAX			11	// 可扩容的训练队列数量
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
@@ -83,8 +84,10 @@ void city_function_open( City *pCity, int offset );
 int city_function_check( City *pCity, int offset );
 
 // 事件
+int city_event_load( City *pCity );
+int city_event_save( City *pCity, FILE *fp );
 int city_event_add( int city_index, char type, short kind, int value );
-int city_battle_event_add( int city_index, char type, char *name, char value );
+int city_battle_event_add( int city_index, char type, char *name, char value, i64 mailid );
 int city_event_sendlist( int actor_index );
 
 // 主角经验升级
@@ -109,7 +112,10 @@ int city_changepeople( int city_index, int value, short path );
 int city_changeprestige( int city_index, int value, short path );
 // 友谊积分
 int city_changefriendship( int city_index, int value, short path );
-
+// 保护时间
+int city_changeprotect( int city_index, int value, short path );
+// 兵力
+int city_changesoldiers( int city_index, int value, short path );
 // 城墙守卫
 CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );
@@ -127,9 +133,14 @@ int city_levy_sendinfo( int actor_index );
 // 招募
 int city_train( int actor_index, int kind, int trainsec );
 int city_train_cancel( int actor_index, int kind, int queue );
-int city_train_quick( int actor_index, int kind );
+int city_train_quick( int actor_index, int kind, int sec );
+int city_train_finish( City *pCity, BuildingBarracks *barracks );
 int city_train_get( int actor_index, int kind );
 int city_train_buyqueue( int actor_index, int kind );
 int city_train_buylong( int actor_index, int kind );
 int city_train_sendinfo( int actor_index, int kind );
+
+// 雇佣官
+int city_officialhire( int actor_index, int type, int kind );
+int city_officialhire_sendinfo( City *pCity, int type );
 #endif

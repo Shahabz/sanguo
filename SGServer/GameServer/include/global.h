@@ -34,6 +34,10 @@ typedef struct _global
 	float techquick_token;
 	float forgingquick_token;
 	float upgradequick_token;
+	int worker_expire_1;
+	int worker_expire_7;
+	short worker_token_1;
+	short worker_token_7;
 }Global;
 int global_init();
 void global_reload();

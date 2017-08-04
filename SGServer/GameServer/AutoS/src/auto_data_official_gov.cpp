@@ -47,7 +47,7 @@ int officialgov_init_auto()
 	g_official_gov = (OfficialGov *)malloc( sizeof(OfficialGov)*g_official_gov_maxnum );
 	memset( g_official_gov, 0, sizeof(OfficialGov)*g_official_gov_maxnum );
 
-	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`produce`,`haveiron`,`duration`,`silver`,`token` from official_gov;" );
+	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`produce`,`haveiron`,`duration`,`silver`,`token`,`free`,`shape` from official_gov;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -70,6 +70,8 @@ int officialgov_init_auto()
 		g_official_gov[kind].duration = atoi(row[offset++]);
 		g_official_gov[kind].silver = atoi(row[offset++]);
 		g_official_gov[kind].token = atoi(row[offset++]);
+		g_official_gov[kind].free = atoi(row[offset++]);
+		g_official_gov[kind].shape = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

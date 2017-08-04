@@ -1,4 +1,5 @@
 local m_Mod = {};
+local m_uiTokenText = {};
 local m_closefun = {};
 ----------------------------------------
 -- 事件
@@ -81,8 +82,9 @@ function DialogFrameModOpen( Dlg, title, help, closefun )
 	local objs = uimod.relatedGameObject;
 	local uiTitleTex = objs[0];
 	local uiTokenText = objs[1];
-	uiTitleTex.transform:GetComponent( "UIText" ).text = title;
-	uiTokenText.transform:GetComponent( "UIText" ).text = GetPlayer().m_token;
+	SetText( uiTitleTex, title );
+	SetText( uiTokenText, GetPlayer().m_token );
+	m_uiTokenText[id] = uiTokenText;
 	m_closefun[id] = closefun;	
 	return obj;
 end
@@ -91,3 +93,11 @@ function DialogFrameModClose( gameObject )
 	gameObject:SetActive( false );
 	eye.objectPoolManager:Release( "DialogFrameMod", gameObject );
 end
+
+function DialogFrameModChangeToken()
+	for k, v in pairs( m_uiTokenText ) do
+		SetText( v, GetPlayer().m_token );
+	end
+end
+
+

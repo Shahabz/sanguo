@@ -47,7 +47,7 @@ int officialforging_init_auto()
 	g_official_forging = (OfficialForging *)malloc( sizeof(OfficialForging)*g_official_forging_maxnum );
 	memset( g_official_forging, 0, sizeof(OfficialForging)*g_official_forging_maxnum );
 
-	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`quick`,`duration`,`silver`,`token` from official_forging;" );
+	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`quick`,`duration`,`silver`,`token`,`free`,`shape` from official_forging;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -69,6 +69,8 @@ int officialforging_init_auto()
 		g_official_forging[kind].duration = atoi(row[offset++]);
 		g_official_forging[kind].silver = atoi(row[offset++]);
 		g_official_forging[kind].token = atoi(row[offset++]);
+		g_official_forging[kind].free = atoi(row[offset++]);
+		g_official_forging[kind].shape = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

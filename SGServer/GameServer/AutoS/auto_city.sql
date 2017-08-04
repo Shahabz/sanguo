@@ -46,6 +46,7 @@ CREATE TABLE `city` (
   `hero_washsec` smallint(6) NOT NULL DEFAULT '0' COMMENT '英雄下次洗练免费时间',
   `autobuild` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造剩余次数',
   `autobuildopen` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造是否开启',
+  `ptsec` int(11) NOT NULL DEFAULT '0' COMMENT '城池保护状态剩余时间',
   `questid` varbinary(24) NOT NULL DEFAULT '' COMMENT '任务ID',
   `questvalue` varbinary(24) NOT NULL DEFAULT '' COMMENT '任务数值',
   `techlevel` varbinary(160) NOT NULL DEFAULT '' COMMENT '科技',
@@ -77,8 +78,8 @@ CREATE TABLE `city` (
   `offree0` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员免费情况',
   `offree1` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员免费情况',
   `offree2` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员免费情况',
-  `offquick0` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
-  `offquick1` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
-  `offquick2` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
+  `ofquick0` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
+  `ofquick1` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
+  `ofquick2` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

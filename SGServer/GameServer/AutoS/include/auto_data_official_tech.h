@@ -13,6 +13,8 @@ struct _officialtech {
 				int silver;	//
 				int token;	//
 				short vip;	//
+				short free;	//
+				short shape;	//
 };
 typedef struct _officialtech OfficialTech;
 

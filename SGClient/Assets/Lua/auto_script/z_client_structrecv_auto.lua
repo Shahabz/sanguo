@@ -85,6 +85,15 @@ function struct_NetS_Notify_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_OfficialHire_recv( buffer )
+	local recvValue = {};
+	recvValue.m_ofkind = buffer:ReadShort();
+	recvValue.m_ofsec = buffer:ReadInt();
+	recvValue.m_offree = buffer:ReadInt();
+	recvValue.m_ofquick = buffer:ReadInt();
+	return recvValue;
+end
+
 function struct_NetS_Building_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadSByte();
@@ -199,6 +208,13 @@ function struct_NetS_ActorInfo_recv( buffer )
 	for tmpi=1,40,1 do
 		recvValue.m_techprogress[tmpi] = buffer:ReadShort();
 	end
+	recvValue.m_officialhire = {};
+	for tmpi=1,3,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_OfficialHire_recv( buffer );
+		table.insert( recvValue.m_officialhire, tmpValue );
+	end
+	recvValue.m_ptsec = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -720,7 +736,7 @@ end
 
 function struct_NetS_Soldiers_recv( buffer )
 	local recvValue = {};
-	recvValue.m_corpse = buffer:ReadSByte();
+	recvValue.m_corps = buffer:ReadSByte();
 	recvValue.m_soldiers = buffer:ReadInt();
 	recvValue.m_add = buffer:ReadInt();
 	recvValue.m_path = buffer:ReadShort();
@@ -977,6 +993,7 @@ function struct_NetS_BattleEvent_recv( buffer )
 	recvValue.m_name = buffer:ReadStringWithLen( 22 );
 	recvValue.m_value = buffer:ReadSByte();
 	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_mailid = buffer:ReadUInt();
 	return recvValue;
 end
 
@@ -996,6 +1013,21 @@ function struct_NetS_EventList_recv( buffer )
 		tmpValue = struct_NetS_BattleEvent_recv( buffer );
 		table.insert( recvValue.m_bevent_list, tmpValue );
 	end
+	return recvValue;
+end
+
+function struct_NetS_OfficialHireChange_recv( buffer )
+	local recvValue = {};
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_info = struct_NetS_OfficialHire_recv( buffer );
+	return recvValue;
+end
+
+function struct_NetS_CityProtect_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
 	return recvValue;
 end
 

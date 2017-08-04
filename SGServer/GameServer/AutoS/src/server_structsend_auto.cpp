@@ -143,6 +143,17 @@ int struct_NetU_Gmlocalcmd_send( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *p
 	return 0;
 }
 
+int struct_NetS_OfficialHire_send( char **pptr, int *psize, SLK_NetS_OfficialHire *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_ofkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_ofsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_offree, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_ofquick, (*psize) );
+	return 0;
+}
+
 int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValue )
 {
 	int tmpi = 0;
@@ -255,6 +266,11 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuildopen, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_techlevel, 40*sizeof(short), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_techprogress, 40*sizeof(short), (*psize) );
+	for( tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		struct_NetS_OfficialHire_send( pptr, psize, &pValue->m_officialhire[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_ptsec, (*psize) );
 	return 0;
 }
 
@@ -843,7 +859,7 @@ int struct_NetS_Soldiers_send( char **pptr, int *psize, SLK_NetS_Soldiers *pValu
 {
 	int tmpi = 0;
 
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corpse, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
@@ -1113,6 +1129,7 @@ int struct_NetS_BattleEvent_send( char **pptr, int *psize, SLK_NetS_BattleEvent 
 	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mailid, (*psize) );
 	return 0;
 }
 
@@ -1130,6 +1147,25 @@ int struct_NetS_EventList_send( char **pptr, int *psize, SLK_NetS_EventList *pVa
 	{
 		struct_NetS_BattleEvent_send( pptr, psize, &pValue->m_bevent_list[tmpi] );
 	}
+	return 0;
+}
+
+int struct_NetS_OfficialHireChange_send( char **pptr, int *psize, SLK_NetS_OfficialHireChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	struct_NetS_OfficialHire_send( pptr, psize, &pValue->m_info );
+	return 0;
+}
+
+int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	return 0;
 }
 

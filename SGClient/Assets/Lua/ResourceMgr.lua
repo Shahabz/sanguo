@@ -69,6 +69,29 @@ function CorpsSprite( corps )
 	return sprite;
 end
 
+-- 兵种半身像
+function CorpsFaceSprite( corps )
+	local name = string.format("ui_traindlg_corps_%d", corps+1 );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "ui_traindlg_corps_1" );
+	end
+	return sprite;
+end
+
+-- 兵种半身像
+function CorpsFaceSpriteEx( buildingkind )
+	local corps = 0;
+	if buildingkind == BUILDING_Infantry or buildingkind == BUILDING_Militiaman_Infantry then
+		corps = 0
+	elseif buildingkind == BUILDING_Cavalry or buildingkind == BUILDING_Militiaman_Cavalry then
+		corps = 1
+	elseif buildingkind == BUILDING_Archer or buildingkind == BUILDING_Militiaman_Archer then
+		corps = 2
+	end
+	return CorpsFaceSprite( corps );
+end
+
 -- 英雄颜色框
 function HeroColorSprite( color )
 	local name = "ui_icon_herocolor"..color;
@@ -145,6 +168,16 @@ function TechSprite( kind )
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "tech_icon_1" );
+	end
+	return sprite;
+end
+
+-- 官员形象
+function OfSprite( shape )
+	local name = string.format("ofhead_%d", shape );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "herohead_1" );
 	end
 	return sprite;
 end

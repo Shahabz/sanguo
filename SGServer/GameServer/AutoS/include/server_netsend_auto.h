@@ -78,6 +78,8 @@ int netsend_systalk_S( int actor_index, char send_type, SLK_NetS_Systalk *pValue
 int netsend_battlepower_S( int actor_index, char send_type, SLK_NetS_Battlepower *pValue );
 int netsend_techchange_S( int actor_index, char send_type, SLK_NetS_TechChange *pValue );
 int netsend_cityeventlist_S( int actor_index, char send_type, SLK_NetS_EventList *pValue );
+int netsend_officialhirechange_S( int actor_index, char send_type, SLK_NetS_OfficialHireChange *pValue );
+int netsend_cityprotect_S( int actor_index, char send_type, SLK_NetS_CityProtect *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

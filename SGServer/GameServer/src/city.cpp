@@ -42,6 +42,21 @@ extern int g_cityguardinfo_maxnum;
 extern TrainlongInfo *g_trainlong;
 extern int g_trainlong_maxnum;
 
+extern TrainqueueInfo *g_trainqueue;
+extern int g_trainqueue_maxnum;
+
+extern OfficialForging *g_official_forging;
+extern int g_official_forging_maxnum;
+
+extern OfficialGov *g_official_gov;
+extern int g_official_gov_maxnum;
+
+extern OfficialTech *g_official_tech;
+extern int g_official_tech_maxnum;
+
+extern TechInfo *g_techinfo;
+extern int g_techinfo_maxnum;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -83,6 +98,8 @@ int city_loadcb( int city_index )
 	// 读取城墙守卫
 	city_guard_load_auto( g_city[city_index].actorid, city_index, city_guard_getptr, "city_guard" );
 
+	// 城池事件
+	city_event_load( &g_city[city_index] );
 	// 计算VIP等级
 	vip_calclevel( city_index );
 	// 计算临时属性
@@ -152,6 +169,9 @@ int city_single_save( City *pCity, FILE *fp )
 	// 城墙守卫
 	db_delete( pCity->actorid, "city_guard", fp );
 	city_guard_batch_save_auto( pCity->actorid, pCity->guard, CITY_GUARD_MAX, "city_guard", fp );
+
+	// 城池事件
+	city_event_save( pCity, fp );
 	return 0;
 }
 
@@ -315,24 +335,28 @@ void city_logic_sec()
 		// 兵营建筑逻辑
 		for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
 		{
-			if ( g_city[city_index].building_barracks[tmpi].kind <= 0 )
+			BuildingBarracks *barracks = &g_city[city_index].building_barracks[tmpi];
+			if ( barracks->kind <= 0 )
 				continue;
-			if ( g_city[city_index].building_barracks[tmpi].trainsec > 0 )
+			if ( barracks->trainsec > 0 )
 			{
-				g_city[city_index].building_barracks[tmpi].trainsec -= 1;
-				if ( g_city[city_index].building_barracks[tmpi].trainsec <= 0 )
-				{
-					// 招募完毕
-					g_city[city_index].building_barracks[tmpi].overnum += g_city[city_index].building_barracks[tmpi].trainnum;
-					g_city[city_index].building_barracks[tmpi].trainsec = 0;
-					g_city[city_index].building_barracks[tmpi].trainsec_need = 0;
-					g_city[city_index].building_barracks[tmpi].trainnum = 0;
-					if ( g_city[city_index].building_barracks[tmpi].queue )
-					{
-					}
+				barracks->trainsec -= 1;
+				if ( barracks->trainsec <= 0 )
+				{// 招募完毕
+					city_train_finish( &g_city[city_index], barracks );
 				}
 			}
 			
+		}
+
+		// 保护状态
+		if ( g_city[city_index].ptsec > 0 )
+		{
+			g_city[city_index].ptsec -= 1;
+			if ( g_city[city_index].ptsec <= 0 )
+			{
+				city_changeprotect( city_index, 0, PATH_SYSTEM );
+			}
 		}
 
 		// 回复体力
@@ -406,6 +430,24 @@ void city_logic_sec()
 				
 			}
 		}
+
+		// 雇佣官
+		for ( int i = 0; i < 3; i++ )
+		{
+			if ( g_city[city_index].ofsec[i] > 0 )
+			{
+				g_city[city_index].ofsec[i] -= 1;
+				if ( g_city[city_index].ofsec[i] <= 0 )
+				{
+					// 通知玩家
+					g_city[city_index].ofkind[i] = 0;
+					g_city[city_index].ofsec[i] = 0;
+					g_city[city_index].ofquick[i] = 0;
+					if ( g_city[city_index].actor_index >= 0 )
+						city_officialhire_sendinfo( &g_city[city_index], i );
+				}
+			}
+		}
 	}
 //#ifdef WIN32
 //	DWORD e = timeGetTime();
@@ -471,6 +513,105 @@ int city_function_check( City *pCity, int offset )
 	return 0;
 }
 
+int city_event_load( City *pCity )
+{
+	MYSQL_RES	*res;
+	MYSQL_ROW	row;
+	char	szSQL[1024] = { 0 };
+	if ( !pCity )
+		return -1;
+
+	// 内政
+	sprintf( szSQL, "select `offset`,`type`,`kind`,`value`,`optime` from city_event_c where actorid=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int offset = atoi( row[0] );
+		if ( offset < 0 || offset >= CITY_EVENT_MAX )
+		{
+			continue;
+		}
+		pCity->city_event[offset].m_type = atoi( row[1] );
+		pCity->city_event[offset].m_kind = atoi( row[2] );
+		pCity->city_event[offset].m_value = atoi( row[3] );
+		pCity->city_event[offset].m_optime = atoi( row[4] );
+	}
+	mysql_free_result( res );
+
+	// 军事
+	sprintf( szSQL, "select `offset`,`type`,`name`,`value`,`optime` from city_event_b where actorid=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int offset = atoi( row[0] );
+		if ( offset < 0 || offset >= CITY_EVENT_MAX )
+		{
+			continue;
+		}
+		pCity->battle_event[offset].m_type = atoi( row[1] );
+		strncpy( pCity->battle_event[offset].m_name, row[2], 21 );
+		pCity->battle_event[offset].m_value = atoi( row[3] );
+		pCity->battle_event[offset].m_optime = atoi( row[4] );
+	}
+	mysql_free_result( res );
+	return 0;
+}
+
+int city_event_save( City *pCity, FILE *fp )
+{
+	char	szSQL[1024] = { 0 };
+	char reconnect_flag = 0;
+	if ( pCity == NULL )
+		return -1;
+	char szText_name[MAX_PATH] = { 0 };
+	// 内政
+	for ( int offset = 0; offset < CITY_EVENT_MAX; offset++ )
+	{
+		sprintf( szSQL, "REPLACE INTO city_event_c (`actorid`,`offset`,`type`,`kind`,`value`,`optime`) Values('%d','%d','%d','%d','%d','%d')", pCity->actorid, offset, pCity->city_event[offset].m_type, pCity->city_event[offset].m_kind, pCity->city_event[offset].m_value, pCity->city_event[offset].m_optime );
+		if ( fp )
+		{
+			fprintf( fp, "%s;\n", szSQL );
+		}
+		else if ( mysql_query( myGame, szSQL ) )
+		{
+			printf( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+		}
+	}
+
+	// 军事
+	for ( int offset = 0; offset < CITY_EVENT_MAX; offset++ )
+	{
+		sprintf( szSQL, "REPLACE INTO city_event_b (`actorid`,`offset`,`type`,`name`,`value`,`optime`) Values('%d','%d','%d','%s','%d','%d')", pCity->actorid, offset, pCity->battle_event[offset].m_type, db_escape( (const char *)pCity->battle_event[offset].m_name, szText_name, 0 ), pCity->battle_event[offset].m_value, pCity->battle_event[offset].m_optime );
+		if ( fp )
+		{
+			fprintf( fp, "%s;\n", szSQL );
+		}
+		else if ( mysql_query( myGame, szSQL ) )
+		{
+			printf( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+		}
+	}
+	return 0;
+}
+
 // 内政事件
 int city_event_add( int city_index, char type, short kind, int value )
 {
@@ -484,7 +625,7 @@ int city_event_add( int city_index, char type, short kind, int value )
 }
 
 // 军事事件
-int city_battle_event_add( int city_index, char type, char *name, char value )
+int city_battle_event_add( int city_index, char type, char *name, char value, i64 mailid )
 {
 	CITY_CHECK_INDEX( city_index );
 	memmove( &g_city[city_index].battle_event[1], &g_city[city_index].battle_event[0], sizeof( SLK_NetS_BattleEvent )*(CITY_EVENT_MAX - 1) );
@@ -492,6 +633,7 @@ int city_battle_event_add( int city_index, char type, char *name, char value )
 	strncpy( g_city[city_index].battle_event[0].m_name, name, 21 );
 	g_city[city_index].battle_event[0].m_name[21] = 0;
 	g_city[city_index].battle_event[0].m_value = value;
+	g_city[city_index].battle_event[0].m_mailid = (unsigned int )mailid;
 	g_city[city_index].battle_event[0].m_optime = (int)time( NULL );
 	return 0;
 }
@@ -505,7 +647,7 @@ int city_event_sendlist( int actor_index )
 	SLK_NetS_EventList pValue = { 0 };
 	for ( int tmpi = 0; tmpi < CITY_EVENT_MAX; tmpi++ )
 	{
-		memcpy( &pValue.m_bevent_list[tmpi], &pCity->city_event[tmpi], sizeof( SLK_NetS_CityEvent ) );
+		memcpy( &pValue.m_cevent_list[tmpi], &pCity->city_event[tmpi], sizeof( SLK_NetS_CityEvent ) );
 		pValue.m_cevent_count += 1;
 	}
 	for ( int tmpi = 0; tmpi < CITY_EVENT_MAX; tmpi++ )
@@ -756,6 +898,33 @@ int city_changefriendship( int city_index, int value, short path )
 	netsend_changefriendship_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+// 保护时间
+int city_changeprotect( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	int old = g_city[city_index].ptsec;
+	g_city[city_index].ptsec += value;
+	if ( g_city[city_index].ptsec < 0 )
+		g_city[city_index].ptsec = 0;
+
+	SLK_NetS_CityProtect pValue = { 0 };
+	pValue.m_add = value;
+	pValue.m_total = g_city[city_index].ptsec;
+	pValue.m_path = path;
+	netsend_cityprotect_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+
+	if ( old == 0 || value == 0 )
+	{
+		mapunit_update( MAPUNIT_TYPE_CITY, city_index, g_city[city_index].unit_index );
+	}
+	return 0;
+}
+
+// 兵力
+int city_soldiers_send( int city_index, int corps, int value, short path )
+{
+	return 0;
+}
 
 CityGuardInfoConfig *city_guard_config( int monsterid, int color )
 {
@@ -970,12 +1139,61 @@ int city_yield_base( City *pCity, int kind )
 	return yield;
 }
 
-int city_yield_total( City *pCity, int kind )
+// 获取科技加成产量加成
+int city_yield_tech( City *pCity, int kind )
 {
 	if ( !pCity )
 		return 0;
 	int yield = 0;
-	yield = city_yield_base( pCity, kind );
+	for ( int tech_kind = 1; tech_kind < CITY_TECH_MAX; tech_kind++ )
+	{
+		if ( tech_kind >= g_techinfo_maxnum )
+			break;
+		char tech_level = pCity->techlevel[tech_kind];
+		if ( tech_level > 0 && tech_level < g_techinfo[tech_kind].maxnum )
+		{
+			if ( kind == BUILDING_Silver && g_techinfo[tech_kind].config[tech_level].ability == CITY_ATTR_ABILITY_1 )
+			{
+				yield += g_techinfo[tech_kind].config[tech_level].value;
+			}
+			else if ( kind == BUILDING_Wood && g_techinfo[tech_kind].config[tech_level].ability == CITY_ATTR_ABILITY_2 )
+			{
+				yield += g_techinfo[tech_kind].config[tech_level].value;
+			}
+			else if ( kind == BUILDING_Food && g_techinfo[tech_kind].config[tech_level].ability == CITY_ATTR_ABILITY_3 )
+			{
+				yield += g_techinfo[tech_kind].config[tech_level].value;
+			}
+			else if ( kind == BUILDING_Iron && g_techinfo[tech_kind].config[tech_level].ability == CITY_ATTR_ABILITY_4 )
+			{
+				yield += g_techinfo[tech_kind].config[tech_level].value;
+			}
+		}
+	}
+	return yield;
+}
+
+// 内政官加成
+int city_yield_official( City *pCity, int kind )
+{
+	if ( !pCity )
+		return 0;
+	int ofkind = pCity->ofkind[1];
+	if ( ofkind <= 0 || ofkind >= g_official_gov_maxnum )
+		return 0;
+	if ( kind == BUILDING_Iron && g_official_gov[ofkind].haveiron == 0 )
+		return 0;
+	return g_official_gov[ofkind].produce;
+}
+
+int city_yield_total( City *pCity, int kind )
+{
+	if ( !pCity )
+		return 0;
+	int base_yield = city_yield_base( pCity, kind );
+	int tech_yield = (int)ceil( base_yield * (city_yield_tech( pCity, kind ) / 100.0f) );
+	int official_yield = (int)ceil( base_yield * (city_yield_official( pCity, kind )/100.0f) );
+	int yield = base_yield + tech_yield + official_yield;
 	return yield;
 }
 
@@ -1022,22 +1240,43 @@ int city_levy_sendinfo( int actor_index )
 	pValue.m_base[2] = city_yield_base( pCity, BUILDING_Food );
 	pValue.m_base[3] = city_yield_base( pCity, BUILDING_Iron );
 
-		//pValue.m_tech[4]
+	pValue.m_tech[0] = (int)ceil( pValue.m_base[0] * (city_yield_tech( pCity, BUILDING_Silver ) / 100.0f) );
+	pValue.m_tech[1] = (int)ceil( pValue.m_base[1] * (city_yield_tech( pCity, BUILDING_Wood ) / 100.0f) );
+	pValue.m_tech[2] = (int)ceil( pValue.m_base[2] * (city_yield_tech( pCity, BUILDING_Food ) / 100.0f) );
+	pValue.m_tech[3] = (int)ceil( pValue.m_base[3] * (city_yield_tech( pCity, BUILDING_Iron ) / 100.0f) );
+
 		//pValue.m_weather[4]
 		//pValue.m_activity[4]
-		//pValue.m_offical[4]
+
+	pValue.m_offical[0] = (int)ceil( pValue.m_base[0] * (city_yield_official( pCity, BUILDING_Silver ) / 100.0f) );
+	pValue.m_offical[1] = (int)ceil( pValue.m_base[1] * (city_yield_official( pCity, BUILDING_Wood ) / 100.0f) );
+	pValue.m_offical[2] = (int)ceil( pValue.m_base[2] * (city_yield_official( pCity, BUILDING_Food ) / 100.0f) );
+	pValue.m_offical[3] = (int)ceil( pValue.m_base[3] * (city_yield_official( pCity, BUILDING_Iron ) / 100.0f) );
 	netsend_levyinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
 // 招募每五分钟数
-int city_trainnum( City *pCity, int base )
+int city_trainnum( City *pCity, BuildingBarracks *barracks )
 {
 	if ( !pCity )
-	{
-		return base;
-	}
-	int total = base;
+		return 0;
+	if ( !barracks )
+		return 0;
+	BuildingUpgradeConfig *config = building_getconfig( barracks->kind, barracks->level );
+	if ( !config )
+		return 0;
+	int corps = 0;
+	if ( barracks->kind == BUILDING_Infantry || barracks->kind == BUILDING_Militiaman_Infantry )
+		corps = 0;
+	else if ( barracks->kind == BUILDING_Cavalry || barracks->kind == BUILDING_Militiaman_Cavalry )
+		corps = 1;
+	else if ( barracks->kind == BUILDING_Archer || barracks->kind == BUILDING_Militiaman_Archer )
+		corps = 2;
+
+	int base = config->value[0];
+	int tech = (int)ceil(config->value[0] * pCity->attr.train_per[corps]);
+	int total = base + tech;
 	return total;
 }
 
@@ -1052,6 +1291,21 @@ int city_trainfood( City *pCity )
 	return total;
 }
 
+// 兵营容量
+int city_trainsoldiersmax( City *pCity, BuildingBarracks *barracks )
+{
+	if ( !pCity )
+		return 0;
+	if ( !barracks )
+		return 0;
+	BuildingUpgradeConfig *config = building_getconfig( barracks->kind, barracks->level );
+	if ( !config )
+		return 0;
+	int maxnum = config->value[1] + barracks->queue * 3000;
+	return maxnum;
+}
+
+
 // 招募
 int city_train( int actor_index, int kind, int trainsec )
 {
@@ -1065,23 +1319,45 @@ int city_train( int actor_index, int kind, int trainsec )
 	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
 	if ( !config )
 		return -1;
-	if ( barracks->soldiers >= config->value[1] )
+	if ( barracks->soldiers >= city_trainsoldiersmax( pCity, barracks ) )
 		return -1;
 
 	int v = trainsec / 300;
-	int trainnum = v * city_trainnum( pCity, config->value[0] );
+	int trainnum = v * city_trainnum( pCity, barracks );
 	int trainfood = city_trainfood( pCity )*trainnum;
 	if ( pCity->food < trainfood )
 		return -1;
-	city_changefood( pCity->index, -trainfood, PATH_TRAIN );
-	barracks->trainsec = trainsec;
-	barracks->trainsec_need = trainsec;
-	barracks->trainnum = trainnum;
+
+	// 如果当前正在招募，那么用招募队列
+	if ( barracks->trainnum > 0 )
+	{
+		int queue = barracks->queue >= CITY_TRAINQUEUE_MAX ? CITY_TRAINQUEUE_MAX : barracks->queue;
+		for ( int tmpi = 0; tmpi < queue; tmpi++ )
+		{
+			if ( barracks->queuenum[tmpi] <= 0 )
+			{
+				city_changefood( pCity->index, -trainfood, PATH_TRAIN );
+				barracks->queuesec[tmpi] = trainsec;
+				barracks->queuenum[tmpi] = trainnum;
+				break;
+			}
+		}
+	}
+	else
+	{
+		city_changefood( pCity->index, -trainfood, PATH_TRAIN );
+		barracks->trainsec = trainsec;
+		barracks->trainsec_need = trainsec;
+		barracks->trainnum = trainnum;
+	}
+
 	city_train_sendinfo( actor_index, kind );
-	building_sendinfo_barracks( actor_index, kind );
+	building_sendinfo_barracks( actor_index, kind ); 
+	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN, kind, trainnum, 0, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 	return 0;
 }
 
+// 取消招募
 int city_train_cancel( int actor_index, int kind, int queue )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -1094,12 +1370,62 @@ int city_train_cancel( int actor_index, int kind, int queue )
 	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
 	if ( !config )
 		return -1;
-
+	queue = queue - 1;
+	if ( queue < 0 || queue >= CITY_TRAINQUEUE_MAX )
+		return -1;
+	int trainnum = barracks->queuenum[queue];
+	int trainfood = city_trainfood( pCity )*trainnum;
+	city_changefood( pCity->index, trainfood, PATH_TRAIN_CANCEL );
+	barracks->queuesec[queue] = 0;
+	barracks->queuenum[queue] = 0;
+	if ( queue < CITY_TRAINQUEUE_MAX - 1 )
+	{
+		memmove( &barracks->queuesec[queue], &barracks->queuesec[queue + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - 1 - queue) );
+		memmove( &barracks->queuenum[queue], &barracks->queuenum[queue + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - 1 - queue) );
+	}
 	city_train_sendinfo( actor_index, kind );
+	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_CANCEL, kind, trainnum, 0, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 	return 0;
 }
 
-int city_train_quick( int actor_index, int kind )
+// 招募完成
+int city_train_finish( City *pCity, BuildingBarracks *barracks )
+{
+	if ( !pCity || !barracks )
+		return -1;
+	barracks->overnum += barracks->trainnum;
+	barracks->trainsec = 0;
+	barracks->trainsec_need = 0;
+	barracks->trainnum = 0;
+
+	// 招募队列有任务，那么取出任务
+	int queue = barracks->queue >= CITY_TRAINQUEUE_MAX ? CITY_TRAINQUEUE_MAX : barracks->queue;
+	for ( int tmpi = 0; tmpi < queue; tmpi++ )
+	{
+		if ( barracks->queuenum[tmpi] > 0 )
+		{
+			barracks->trainsec = barracks->queuesec[tmpi];
+			barracks->trainsec_need = barracks->queuesec[tmpi];
+			barracks->trainnum = barracks->queuenum[tmpi];
+			barracks->queuesec[tmpi] = 0;
+			barracks->queuenum[tmpi] = 0;
+			if ( tmpi < queue - 1 )
+			{
+				memmove( &barracks->queuesec[tmpi], &barracks->queuesec[tmpi + 1], sizeof( int )*(queue - 1) );
+				memmove( &barracks->queuenum[tmpi], &barracks->queuenum[tmpi + 1], sizeof( int )*(queue - 1) );
+			}
+			wlog( 0, LOGOP_BARRACKS, PATH_TRAIN, barracks->kind, barracks->trainnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
+			break;
+		}
+	}
+	
+	building_sendinfo_barracks( pCity->actor_index, barracks->kind );
+	city_train_sendinfo( pCity->actor_index, barracks->kind );
+	return 0;
+}
+
+// 加速
+int city_train_quick( int actor_index, int kind, int sec )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -1108,12 +1434,22 @@ int city_train_quick( int actor_index, int kind )
 	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
 	if ( !barracks )
 		return -1;
-
-	city_train_sendinfo( actor_index, kind );
-	building_sendinfo_barracks( actor_index, kind );
+	if ( barracks->trainsec <= 0 )
+		return -1;
+	barracks->trainsec -= sec;
+	if ( barracks->trainsec <= 0 )
+	{
+		city_train_finish( pCity, barracks );
+	}
+	else
+	{
+		building_sendinfo_barracks( actor_index, kind );
+		city_train_sendinfo( actor_index, kind );
+	}
 	return 0;
 }
 
+// 领取
 int city_train_get( int actor_index, int kind )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -1123,11 +1459,40 @@ int city_train_get( int actor_index, int kind )
 	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
 	if ( !barracks )
 		return -1;
+	if ( barracks->overnum <= 0 )
+		return -1;
+	int corps = 0;
+	if ( kind == BUILDING_Infantry || kind == BUILDING_Militiaman_Infantry )
+	{
+		corps = 0;	
+	}
+	else if ( kind == BUILDING_Cavalry || kind == BUILDING_Militiaman_Cavalry )
+	{
+		corps = 1;
+	}
+	else if ( kind == BUILDING_Archer || kind == BUILDING_Militiaman_Archer )
+	{
+		corps = 2;
+	}
 
+	int overnum = barracks->overnum;
+	barracks->soldiers += barracks->overnum;
+	barracks->overnum = 0;
+	// 事件
+	city_event_add( pCity->index, CITY_EVENT_TRAIN, corps, overnum );
 	building_sendinfo_barracks( actor_index, kind );
+
+	SLK_NetS_Soldiers pValue = { 0 };
+	pValue.m_corps = corps;
+	pValue.m_add = overnum;
+	pValue.m_soldiers = barracks->soldiers;
+	netsend_soldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+
+	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_GET, kind, overnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
 	return 0;
 }
 
+// 购买队列
 int city_train_buyqueue( int actor_index, int kind )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -1137,11 +1502,26 @@ int city_train_buyqueue( int actor_index, int kind )
 	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
 	if ( !barracks )
 		return -1;
-
+	if ( barracks->queue >= CITY_TRAINQUEUE_MAX )
+		return -1;
+	int newqueue = barracks->queue + 1;
+	if ( newqueue >= g_trainqueue_maxnum )
+		return -1;
+	if ( actor_change_token( actor_index, -g_trainqueue[newqueue].token, PATH_TRAIN_QUEUE, 0 ) < 0 )
+		return -1;
+	barracks->queue += 1;
 	city_train_sendinfo( actor_index, kind );
+
+	if ( kind == BUILDING_Infantry || kind == BUILDING_Militiaman_Infantry )
+		item_getitem( actor_index, 445, 1, -1, PATH_TRAIN_QUEUE );
+	else if ( kind == BUILDING_Cavalry || kind == BUILDING_Militiaman_Cavalry )
+		item_getitem( actor_index, 446, 1, -1, PATH_TRAIN_QUEUE );
+	else if ( kind == BUILDING_Archer || kind == BUILDING_Militiaman_Archer )
+		item_getitem( actor_index, 447, 1, -1, PATH_TRAIN_QUEUE );
 	return 0;
 }
 
+// 购买时长
 int city_train_buylong( int actor_index, int kind )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -1151,7 +1531,13 @@ int city_train_buylong( int actor_index, int kind )
 	BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
 	if ( !barracks )
 		return -1;
-
+	int newlong = barracks->trainlong + 1;
+	if ( newlong >= g_trainlong_maxnum )
+		return -1; 
+	if ( pCity->silver < g_trainlong[newlong].silver )
+		return -1;
+	city_changesilver( pCity->index, -g_trainlong[newlong].silver, PATH_TRAIN_LONG );
+	barracks->trainlong += 1;
 	city_train_sendinfo( actor_index, kind );
 	return 0;
 }
@@ -1171,18 +1557,17 @@ int city_train_sendinfo( int actor_index, int kind )
 
 	SLK_NetS_TrainInfo pValue = { 0 };
 	pValue.m_soldiers = barracks->soldiers;
-	pValue.m_soldiers_max = config->value[1];
+	pValue.m_soldiers_max = city_trainsoldiersmax( pCity, barracks );
 	pValue.m_trainnum = barracks->trainnum;
 	pValue.m_trainsec = barracks->trainsec;
 	pValue.m_trainsec_need = barracks->trainsec_need;
 	pValue.m_queue = barracks->queue;
 	pValue.m_trainlong = barracks->trainlong;
-	pValue.m_train_confnum = city_trainnum( pCity, config->value[0] );
+	pValue.m_train_confnum = city_trainnum( pCity, barracks );
 	pValue.m_train_confsec = g_trainlong[barracks->trainlong].timelong*60;
 	pValue.m_train_conffood = city_trainfood( pCity );
-	pValue.m_queuenum[16];	//队列
 	int count = 0;
-	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	for ( int tmpi = 0; tmpi < CITY_TRAINQUEUE_MAX; tmpi++ )
 	{
 		if ( barracks->queuenum[tmpi] > 0 )
 		{
@@ -1190,7 +1575,122 @@ int city_train_sendinfo( int actor_index, int kind )
 			count += 1;
 		}
 	}
-	
 	netsend_traininfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 雇佣官
+int city_officialhire( int actor_index, int type, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( type < 0 || type > 2 )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->ofkind[type] >= kind )
+		return -1;
+	if ( type == 0 )
+	{
+
+	}
+	else if ( type == 1 )
+	{
+		if ( kind <= 0 || kind >= g_official_gov_maxnum )
+			return -1;
+		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Main );
+		if ( !pBuilding )
+			return -1;
+		if ( pBuilding->level < g_official_gov[kind].buildinglevel )
+			return -1;
+
+		if ( g_official_gov[kind].free == 0 || (pCity->offree[type] & (1 << kind)) )
+		{ // 无免费
+			if ( g_official_gov[kind].silver > 0 )
+			{
+				if ( pCity->silver < g_official_gov[kind].silver )
+					return -1;
+				city_changesilver( g_actors[actor_index].city_index, -g_official_gov[kind].silver, PATH_HIRE_GOV );
+			}
+			else if ( g_official_gov[kind].token > 0 )
+			{
+				if ( actor_change_token( actor_index, -g_official_tech[kind].token, PATH_HIRE_GOV, 0 ) < 0 )
+					return -1;
+			}
+		}
+		else
+		{
+			pCity->offree[type] |= (1 << kind);
+		}
+
+		
+		pCity->ofkind[type] = kind;
+		pCity->ofsec[type] = g_official_gov[kind].duration;
+		pCity->ofquick[type] = 0;
+	}
+	else if ( type == 2 )
+	{
+		if ( kind <= 0 || kind >= g_official_tech_maxnum )
+			return -1; 
+		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Tech );
+		if ( !pBuilding )
+			return -1;
+		if ( pBuilding->level < g_official_tech[kind].buildinglevel )
+			return -1;
+
+		if ( g_official_tech[kind].free == 0 || (pCity->offree[type] & (1 << kind)) )
+		{ // 无免费
+			if ( g_official_tech[kind].silver > 0 )
+			{
+				if ( pCity->silver < g_official_tech[kind].silver )
+					return -1;
+				city_changesilver( g_actors[actor_index].city_index, -g_official_tech[kind].silver, PATH_HIRE_TECH );
+			}
+			else if( g_official_tech[kind].token > 0 )
+			{
+				if ( actor_change_token( actor_index, -g_official_tech[kind].token, PATH_HIRE_TECH, 0 ) < 0 )
+					return -1;
+			}
+		}
+		else
+		{
+			pCity->offree[type] |= (1 << kind);
+		}
+
+		int oldkind = pCity->ofkind[type];
+		pCity->ofkind[type] = kind;
+		if ( oldkind > 0 && oldkind < g_official_tech_maxnum )
+		{
+			if ( g_official_tech[oldkind].token > 0 )
+				pCity->ofsec[type] += g_official_tech[kind].duration;
+			else
+				pCity->ofsec[type] = g_official_tech[kind].duration;
+
+			pCity->ofquick[type] = g_official_tech[kind].quick - g_official_tech[oldkind].quick;
+		}
+		else
+		{
+			pCity->ofsec[type] = g_official_tech[kind].duration;
+			pCity->ofquick[type] = 0;
+		}
+
+	}
+	city_officialhire_sendinfo( pCity, type );
+	return 0;
+}
+
+int city_officialhire_sendinfo( City *pCity, int type )
+{
+	if ( !pCity )
+		return -1;
+	if ( type < 0 || type > 2 )
+		return -1;
+	SLK_NetS_OfficialHireChange pValue = { 0 };
+	pValue.m_type = type;
+	pValue.m_info.m_ofkind = pCity->ofkind[type];
+	pValue.m_info.m_ofsec = pCity->ofsec[type];
+	pValue.m_info.m_offree = pCity->offree[type];
+	pValue.m_info.m_ofquick = pCity->ofquick[type];
+	netsend_officialhirechange_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -19,6 +19,7 @@
 #include "mapunit.h"
 #include "city.h"
 #include "global.h"
+#include "building.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -49,7 +50,10 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 		return -1;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
 	// 检查物品itemkind
 	itemkind = g_actors[actor_index].item[itemindex].m_kind;
 	if ( g_actors[actor_index].item[itemindex].m_kind <= 0 )
@@ -145,7 +149,11 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 		}
 		else if ( ability1 == ITEM_ABILITY_BUFF )
 		{ // buff
-
+			if ( value1 == 1 )
+			{ // 城池保护时间
+				int ptsec = item_get_base_value(itemkind, 1 );
+				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_ITEMUSE );
+			}
 		}
 
 	}
@@ -213,21 +221,52 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 
 	int abilitytype = item_get_base_ability( itemkind, 0 );
 	int token = item_gettoken( itemkind );
-	
-
 	if ( token <= 0 )
 		return -1;
-
 	if ( g_actors[actor_index].token < token * itemnum )
-	{
 		return -1;
-	}
-
+	
+	int true_usenum = itemnum;
 	if ( item_type == ITEM_TYPE_NORMAL_USE )
 	{ // 点击使用类道具
 		int ability1 = item_get_base_ability( itemkind, 0 );
 		int value1 = item_get_base_value( itemkind, 0 );
-		
+		if ( ability1 == ITEM_ABILITY_ADDBODY )
+		{ // 加体力
+			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_ADDEXP )
+		{ // 加主公经验
+			city_actorexp( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_ADDHEROEXP )
+		{ // 加英雄经验
+
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_SILVER )
+		{ // 银币数量
+			city_changesilver( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_WOOD )
+		{ // 木材数量
+			city_changewood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_FOOD )
+		{ // 粮食数量
+			city_changefood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYRES_IRON )
+		{ // 铁数量
+			city_changeiron( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_BUFF )
+		{ // buff
+			if ( value1 == 1 )
+			{ // 城池保护时间
+				int ptsec = item_get_base_value( itemkind, 1 );
+				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_ITEMUSE );
+			}
+		}
 	}
 	else
 	{
@@ -242,13 +281,80 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 
 	// 发送使用道具信息
 	int Value[3] = {0};
+	Value[0] = 0;
 	Value[1] = itemkind;
 	Value[2] = itemnum;
 	actor_notify_value( actor_index, NOTIFY_ITEM, 3, Value, NULL );
 	return 0;
 }
 
+// 道具通用加速
+int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, int buildingoffset )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( itemkind <= 0 )
+		return -1;
+	int itemtype = item_gettype( itemkind );
+	if ( itemtype != ITEM_TYPE_QUICK )
+		return -1;
+	int value1 = item_get_base_value( itemkind, 0 );
+	if ( op == 1 )
+	{ // 升级加速
+		if ( value1 == -1 )
+		{
+			int sec = 0;
+			if ( pCity->worker_kind == buildingkind && pCity->worker_offset == buildingoffset )
+				sec = pCity->worker_sec;
+			else if ( pCity->worker_kind_ex == buildingkind && pCity->worker_offset_ex == buildingoffset )
+				sec = pCity->worker_sec_ex;
+			int token = (int)ceil( (sec / 60 + 1) * global.upgradequick_token );
+			if ( actor_change_token( actor_index, -token, PATH_BUILDING_UPGRADE, 0 ) < 0 )
+				return -1;
+			building_workerquick( actor_index, buildingkind, buildingoffset, sec );
+		}
+		else
+		{
+			if ( item_lost( actor_index, itemkind, 1, PATH_TRAIN ) < 0 )
+				return -1;
+			building_workerquick( actor_index, buildingkind, buildingoffset, value1 );
+		}
+	}
+	else if ( op == 2 )
+	{ // 募兵加速
+		if ( value1 == -1 )
+		{
+			BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, buildingkind );
+			if ( !barracks )
+				return -1;
+			if ( barracks->trainsec <= 0 )
+				return -1;
+			int token = (int)ceil( (barracks->trainsec / 60 + 1) * global.upgradequick_token );
+			if ( actor_change_token( actor_index, -token, PATH_TRAIN, 0 ) < 0 )
+				return -1;
+			city_train_quick( actor_index, buildingkind, barracks->trainsec );
+		}
+		else
+		{
+			if ( item_lost( actor_index, itemkind, 1, PATH_TRAIN ) < 0 )
+				return -1;
+			city_train_quick( actor_index, buildingkind, value1 );
+		}
+	}
+	else
+		return -1;
+	
 
+	// 发送使用加速道具信息
+	int Value[3] = { 0 };
+	Value[0] = 1;
+	Value[1] = value1;
+	actor_notify_value( actor_index, NOTIFY_ITEM, 3, Value, NULL );
+	return 0;
+}
 
 //-----------------------------------------------------------------------------
 // 函数说明: 丢弃道具

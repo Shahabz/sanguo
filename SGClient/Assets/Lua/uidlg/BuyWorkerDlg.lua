@@ -32,10 +32,12 @@ function BuyWorkerDlgOnEvent( nType, nControlID, value, gameObject )
             BuyWorkerDlgClose();
 		elseif nControlID == 1 then
 			MsgBox( T(617), function()
+				system_askinfo( ASKINFO_BUILDING, "", 3, 0 );
 			end )
 			BuyWorkerDlgClose();
 		elseif nControlID == 2 then
 			MsgBox( T(618), function()
+				system_askinfo( ASKINFO_BUILDING, "", 3, 1 );
 			end )
 			BuyWorkerDlgClose();
         end

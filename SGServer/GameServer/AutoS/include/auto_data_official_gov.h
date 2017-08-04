@@ -13,6 +13,8 @@ struct _officialgov {
 				int duration;	//
 				int silver;	//
 				int token;	//
+				short free;	//
+				short shape;	//
 };
 typedef struct _officialgov OfficialGov;
 

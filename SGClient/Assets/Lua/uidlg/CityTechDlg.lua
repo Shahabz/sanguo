@@ -9,6 +9,12 @@ local m_uiTreeBtn = nil; --UnityEngine.GameObject
 local m_uiTechInfo = nil; --UnityEngine.GameObject
 local m_uiScroll = nil; --UnityEngine.GameObject
 
+local m_uiOfficialShape = nil; --UnityEngine.GameObject
+local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
+local m_uiOfficialTime = nil; --UnityEngine.GameObject
+local m_uiOfficialName = nil; --UnityEngine.GameObject
+local m_uiOfficialDesc = nil; --UnityEngine.GameObject
+
 local m_ObjectPool = nil;
 local m_kind = 0;
 local m_canUpgrade = true;
@@ -64,6 +70,10 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 免费加速
 		elseif nControlID == 4 then
 			CityTechDlgFreeQuick();
+		
+		-- 雇佣
+		elseif nControlID == 5 then
+			OfficialHireDlgShow( 2 );
 			
 		-- 点击科技
 		elseif nControlID > 1000 and nControlID < 2000 then
@@ -73,6 +83,8 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 		if nControlID == 1 then
 			CityTechDlgClose();
 			CityTechTreeDlgClose()
+		elseif nControlID == 2 then
+			CityTechDlgSetOfficial()
 		end
 	end
 end
@@ -87,6 +99,11 @@ function CityTechDlgOnAwake( gameObject )
 	m_uiTreeBtn = objs[3];
 	m_uiTechInfo = objs[4];
 	m_uiScroll = objs[5];
+	m_uiOfficialShape = objs[6];
+	m_uiOfficialTimeBack = objs[7];
+	m_uiOfficialTime = objs[8];
+	m_uiOfficialName = objs[9];
+	m_uiOfficialDesc = objs[10];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -171,8 +188,9 @@ function CityTechDlgOnSet()
 		SetText( uiName, TechName( kind ).." Lv."..level.."->Lv."..(level+1) );
 		SetText( uiDesc, Utils.StringFormat( TechDescUp( kind ), value, upvalue ) );
 		SetTimer( uiTimer, pBuilding.m_sec, pBuilding.m_needsec, 1, T(702) )
+		
 		SetFalse( FreeQuickBtn )
-		SetTrue( uiQuickBtn )
+		SetFalse( uiQuickBtn )
 	else
 		SetFalse( m_uiTeching )
 	end
@@ -253,6 +271,64 @@ function CityTechDlgOnSet()
 	end
 	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
+	CityTechDlgSetOfficial();
+end
+
+-- 设置雇佣官
+function CityTechDlgSetOfficial()
+	if m_Dlg == nil then
+		return;
+	end
+	-- 免费按钮
+	local objs = m_uiTeching.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiQuickBtn = objs[4];
+	local FreeQuickBtn = objs[5];
+	
+	local info = GetPlayer().m_officialhire[2];
+	-- 已雇佣
+	if info.m_ofkind > 0 then
+		SetTrue( m_uiOfficialShape )
+		SetTrue( m_uiOfficialTimeBack )
+		SetTrue( m_uiOfficialTime )
+		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
+		SetText( m_uiOfficialName, T(719).."Lv."..g_official_tech[info.m_ofkind].level..T(723) )
+		SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[info.m_ofkind].quick) ) )
+		SetImage( m_uiOfficialShape, OfSprite( g_official_tech[info.m_ofkind].shape ) )
+		
+		if info.m_ofquick >= 0 then
+			SetTrue( FreeQuickBtn )
+			SetFalse( uiQuickBtn )
+		else
+			SetFalse( FreeQuickBtn )
+			SetTrue( uiQuickBtn )
+		end
+	else
+		-- 未雇佣
+		SetFalse( FreeQuickBtn )
+		SetTrue( uiQuickBtn )
+			
+		SetFalse( m_uiOfficialShape )
+		SetFalse( m_uiOfficialTimeBack )
+		SetFalse( m_uiOfficialTime )
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+		if pBuilding == nil then
+			return;
+		end
+		if pBuilding.m_level < g_official_tech[1].buildinglevel then
+			-- 太学院6级解锁Lv.1研究员
+			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Tech), g_official_tech[1].buildinglevel, g_official_tech[1].level, T(723) ) )
+			SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[1].quick) ) )
+		else
+			-- 可雇佣
+			for kind=#g_official_tech, 1, -1 do
+				if pBuilding.m_level >= g_official_tech[kind].buildinglevel then
+					SetText( m_uiOfficialName, T(718).."Lv."..g_official_tech[kind].level..T(723) )
+					SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[kind].quick) ) )
+				end
+			end
+		end
+	end
+
 end
 
 -- 清空
@@ -429,8 +505,13 @@ end
 
 -- 免费加速
 function CityTechDlgFreeQuick()
-	if m_kind <= 0 then
+	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+	if pBuilding == nil then
 		return;
+	end
+	local kind = pBuilding.m_value;
+	if kind <= 0 then
+		return
 	end
 	system_askinfo( ASKINFO_TECH, "", 3 );
 end

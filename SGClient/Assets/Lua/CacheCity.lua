@@ -57,7 +57,7 @@ function City.BuildingSelect( transform )
 	-- 打开加速界面	
 	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
 		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
-		QuickItemDlgShow();
+		QuickItemDlgShow( 1, building.kind, building.offset );
 	else
 		BuildingOpratorModShow( false, 0, -1, nil );
 		if building.kind == BUILDING_Smithy then -- 铁匠铺
@@ -80,6 +80,12 @@ function City.BuildingSelect( transform )
 			if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TECH, "", 4 );
+				
+ 			-- 募兵有完成的，直接领取
+			elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+				City.BuildingHideOver( building.kind )
+				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
+				
 			else
 				BuildingOpratorModShow( true, building.kind, building.offset, transform );
 			end

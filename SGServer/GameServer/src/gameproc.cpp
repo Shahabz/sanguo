@@ -359,6 +359,33 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// πÕ”∂
+	if ( officialforging_init_auto() < 0 )
+	{
+		printf_msg( "officialforging_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// πÕ”∂
+	if ( officialgov_init_auto() < 0 )
+	{
+		printf_msg( "officialgov_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// πÕ”∂
+	if ( officialtech_init_auto() < 0 )
+	{
+		printf_msg( "officialtech_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// VIP
 	if ( vipinfo_init_auto() < 0 )
 	{
@@ -372,6 +399,15 @@ int process_init( int max_connection )
 	if ( trainlonginfo_init_auto() < 0 )
 	{
 		printf_msg( "trainlonginfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// ƒº±¯∂”¡–
+	if ( trainqueueinfo_init_auto() < 0 )
+	{
+		printf_msg( "trainqueueinfo_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

@@ -61,7 +61,7 @@ end
 
 -- 获取道具配置描述
 function item_getdesc( itemkind )
-	local desc = Localization.text_item( itemkind+3000 );
+	local desc = Localization.text_item( itemkind+5000 );
 	if desc == "" then
 		return "";
 	end
@@ -693,16 +693,16 @@ function Item:UseWithCount( nItemKind , count)
 		-- 主城等级
 		if GetCity().BuildingList[1].m_level < -pItem.m_level then
 			--Notify( 59, { -pItem.m_level } )
-			return;
+			--return;
 		end
 	elseif pItem.m_level > 0 then
 		-- 角色等级
 		if GetPlayer().m_level < pItem.m_level then
 			--Notify( 60, { pItem.m_level } )
-			return;
+			--return;
 		end
 	end
-	system_askinfo( ASKINFO_STORAGE, "", ITEM_PROCESS_USE, nItemIndex, count, -1, -1, 1 );
+	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, nItemIndex, count, -1, 1 );
 end
 
 -- 使用某个kind的道具通过钻石
@@ -711,12 +711,12 @@ function Item:UseWithToken( nItemKind, nNum , isCheckToken )
 		return -1;
 	end
 
-	if ( isCheckToken == nil or isCheckToken == true ) and GetPlayer().m_token < item_getprice( nItemKind ) * nNum then
+	if ( isCheckToken == nil or isCheckToken == true ) and GetPlayer().m_token < item_gettoken( nItemKind ) * nNum then
         -- 跳转打开充值界面
         --Jump_Token();
 		return -1;
 	end
-	system_askinfo( ASKINFO_STORAGE, "", ITEM_PROCESS_TOKENUSE, nItemKind, nNum, -1, -1, 1 );
+	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_TOKENUSE, nItemKind, nNum, -1, 1 );
 end
 
 -- 全局

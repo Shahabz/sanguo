@@ -16,7 +16,22 @@ function RecvActorNotify(recvValue)
     local msg = recvValue.m_msg;
     
     if msgid == NOTIFY_NORMAL then
-		
+	
+	-- 购买并使用道具
+	elseif msgid == NOTIFY_ITEM then
+		if value[1] == 0 then
+			pop( T(753)..": "..item_getname(value[2]).."x"..value[3] )
+		elseif value[1] == 1 then
+			-- 道具加速
+			if value[2] > 0 then
+				pop( T(759)..zhtime(value[2]) )
+				QuickItemDlgSet( value[2], 1 )
+			else
+				QuickItemDlgClose();
+				TrainDlgClose();
+			end
+		end
+	
 	-- 头像改变
 	elseif msgid == NOTIFY_CHANGESHAPE then
 		GetPlayer().m_shape = value[2];

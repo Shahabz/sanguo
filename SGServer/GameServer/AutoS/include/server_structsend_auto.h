@@ -68,6 +68,14 @@ struct _slk_NetS_Notify {
 };
 typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//通用短消息
 
+struct _slk_NetS_OfficialHire {
+	short m_ofkind;	//雇佣官
+	int m_ofsec;	//雇佣官
+	int m_offree;	//雇佣官
+	int m_ofquick;	//雇佣官
+};
+typedef struct _slk_NetS_OfficialHire SLK_NetS_OfficialHire;	//雇佣官
+
 struct _slk_NetS_Building {
 	char m_kind;	//普通建筑-种类
 	char m_offset;	//普通建筑-位置
@@ -156,6 +164,8 @@ struct _slk_NetS_ActorInfo {
 	char m_autobuildopen;	//服务器发送玩家基本信息-自动建造
 	short m_techlevel[40];	//服务器发送玩家基本信息-科技等级
 	short m_techprogress[40];	//服务器发送玩家基本信息-科技进度
+	SLK_NetS_OfficialHire m_officialhire[3];	//服务器发送玩家基本信息-雇佣官
+	int m_ptsec;	//服务器发送玩家基本信息-保护时间
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -576,7 +586,7 @@ struct _slk_NetS_BuildingResGet {
 typedef struct _slk_NetS_BuildingResGet SLK_NetS_BuildingResGet;	//资源建筑获取
 
 struct _slk_NetS_Soldiers {
-	char m_corpse;	//城内兵力改变
+	char m_corps;	//城内兵力改变
 	int m_soldiers;	//城内兵力改变
 	int m_add;	//城内兵力改变
 	short m_path;	//城内兵力改变
@@ -763,6 +773,7 @@ struct _slk_NetS_BattleEvent {
 	char m_name[22];	//军事事件
 	char m_value;	//军事事件
 	int m_optime;	//军事事件
+	unsigned int m_mailid;	//军事事件
 };
 typedef struct _slk_NetS_BattleEvent SLK_NetS_BattleEvent;	//军事事件
 
@@ -774,6 +785,19 @@ struct _slk_NetS_EventList {
 };
 typedef struct _slk_NetS_EventList SLK_NetS_EventList;	//城内事件列表
 
+struct _slk_NetS_OfficialHireChange {
+	char m_type;	//雇佣官信息变化
+	SLK_NetS_OfficialHire m_info;	//雇佣官信息变化
+};
+typedef struct _slk_NetS_OfficialHireChange SLK_NetS_OfficialHireChange;	//官员变化
+
+struct _slk_NetS_CityProtect {
+	int m_total;	//改变保护时间
+	int m_add;	//改变保护时间
+	short m_path;	//改变保护时间
+};
+typedef struct _slk_NetS_CityProtect SLK_NetS_CityProtect;	//
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -782,6 +806,7 @@ int struct_NetS_EnterInfo_send( char **pptr, int *psize, SLK_NetS_EnterInfo *pVa
 int struct_NetS_Delete_send( char **pptr, int *psize, SLK_NetS_Delete *pValue );
 int struct_NetS_Heart_send( char **pptr, int *psize, SLK_NetS_Heart *pValue );
 int struct_NetS_Notify_send( char **pptr, int *psize, SLK_NetS_Notify *pValue );
+int struct_NetS_OfficialHire_send( char **pptr, int *psize, SLK_NetS_OfficialHire *pValue );
 int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValue );
 int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_BuildingBarracks *pValue );
 int struct_NetS_BuildingRes_send( char **pptr, int *psize, SLK_NetS_BuildingRes *pValue );
@@ -858,5 +883,7 @@ int struct_NetS_TechChange_send( char **pptr, int *psize, SLK_NetS_TechChange *p
 int struct_NetS_CityEvent_send( char **pptr, int *psize, SLK_NetS_CityEvent *pValue );
 int struct_NetS_BattleEvent_send( char **pptr, int *psize, SLK_NetS_BattleEvent *pValue );
 int struct_NetS_EventList_send( char **pptr, int *psize, SLK_NetS_EventList *pValue );
+int struct_NetS_OfficialHireChange_send( char **pptr, int *psize, SLK_NetS_OfficialHireChange *pValue );
+int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect *pValue );
 
 #endif

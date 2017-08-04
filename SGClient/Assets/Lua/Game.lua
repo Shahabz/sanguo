@@ -73,14 +73,27 @@ end
 	
 -- 主逻辑秒
 function GameManager.GameLogic()
+	-- 商用建造队到期时间
 	if GetPlayer().m_worker_expire_ex > 0 then
-		m_worker_expire_ex = m_worker_expire_ex - 1;
+		GetPlayer().m_worker_expire_ex = GetPlayer().m_worker_expire_ex - 1;
+	end
+	
+	-- 保护时间
+	if GetPlayer().m_ptsec > 0 then
+		GetPlayer().m_ptsec = GetPlayer().m_ptsec - 1
 	end
 	
 	-- 太学院
 	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
 	if pBuilding and pBuilding.m_sec > 0 then
 		pBuilding.m_sec = pBuilding.m_sec - 1;
+	end
+	
+	-- 雇佣官员
+	for i=0, 2, 1 do
+		if GetPlayer().m_officialhire[i] ~= nil and GetPlayer().m_officialhire[i].m_ofsec > 0 then
+			GetPlayer().m_officialhire[i].m_ofsec = GetPlayer().m_officialhire[i].m_ofsec - 1
+		end
 	end
 end
 

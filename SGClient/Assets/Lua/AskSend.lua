@@ -13,6 +13,9 @@ ASKINFO_EQUIP			=	10 -- 装备
 ASKINFO_ITEM			=	11 -- 道具  
 ASKINFO_HERO			=	12 -- 英雄
 ASKINFO_TECH			=	13 -- 科技
+ASKINFO_GOV				=	14 -- 官府 
+ASKINFO_OFFICIALHIRE	=	15 -- 官职雇佣
+ASKINFO_QUICK			=	16 -- 加速
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

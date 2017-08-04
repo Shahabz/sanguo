@@ -11,6 +11,11 @@ local m_uiQueueLevel = nil; --UnityEngine.GameObject
 local m_uiUIP_Train = nil; --UnityEngine.GameObject
 local m_uiUIP_TrainQueue = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiForceBtn = nil; --UnityEngine.GameObject
+local m_uiTrainlongBtn = nil; --UnityEngine.GameObject
+local m_uiTrainlongInfo = nil; --UnityEngine.GameObject
+local m_uiTrainQueueInfo = nil; --UnityEngine.GameObject
+
 local m_ObjectPool = nil;
 local m_pBuilding = nil;
 local m_buildingKind = 0;
@@ -24,7 +29,8 @@ local m_selectsec = 0;
 local m_selectfood = 0;
 local SEC = 300;
 local m_recvValue = {};
-
+local m_uiTimerCache = nil;
+local m_popcd = 0
 -- 打开界面
 function TrainDlgOpen()
 	m_Dlg = eye.uiManager:Open( "TrainDlg" );
@@ -56,6 +62,12 @@ function TrainDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             TrainDlgClose();
+			
+		elseif nControlID == -2 then
+			SetFalse( m_uiTrainlongInfo );
+		
+		elseif nControlID == -3 then
+			SetFalse( m_uiTrainQueueInfo );
 		
 		-- 招募
 		elseif nControlID == 1 then
@@ -74,7 +86,16 @@ function TrainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 募兵加时
 		elseif nControlID == 12 then
+			TrainDlgTrainLong()
+			
+		-- 募兵加时购买
+		elseif nControlID == 13 then
+			TrainDlgTrainLongBuy()
 		
+		-- 扩建兵营购买
+		elseif nControlID == 14 then
+			TrainDlgQueueBuy()
+			
 		-- 取消
 		elseif nControlID > 1000 and nControlID < 1100 then
 			TrainDlgCancel( nControlID - 1000 )
@@ -87,8 +108,9 @@ function TrainDlgOnEvent( nType, nControlID, value, gameObject )
 		if nControlID == 0 then
 			TrainDlgSetSlider( m_slider, value );
 			local space = m_recvValue.m_soldiers_max - m_recvValue.m_soldiers;
-			if m_selectnum > space then
+			if space <= 0 and os.time()-m_popcd > 1 then
 				pop( T(630) )
+				m_popcd = os.time();
 			end
 		end
 	end
@@ -107,6 +129,10 @@ function TrainDlgOnAwake( gameObject )
 	m_uiUIP_Train = objs[6];
 	m_uiUIP_TrainQueue = objs[7];
 	m_uiContent = objs[8];
+	m_uiForceBtn = objs[9];
+	m_uiTrainlongBtn = objs[10];
+	m_uiTrainlongInfo = objs[11];
+	m_uiTrainQueueInfo = objs[12];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -147,6 +173,8 @@ function TrainDlgOnShow( buildingKind )
 	m_buildingKind = buildingKind;
 	m_pBuilding = GetPlayer():GetBuilding( buildingKind );
 	TrainDlgOpen();
+	m_uiForceBtn.transform:SetSiblingIndex(1000);
+	m_uiTrainlongBtn.transform:SetSiblingIndex(1000);
 	
 	if m_buildingKind == BUILDING_Infantry or m_buildingKind == BUILDING_Militiaman_Infantry then
 		m_corps = 0
@@ -156,7 +184,7 @@ function TrainDlgOnShow( buildingKind )
 		m_corps = 2
 	end
 	SetImage( m_uiCorps, CorpsSprite( m_corps ) );
-	SetImage( m_uiShape, CorpsSprite( m_corps ) );
+	SetImage( m_uiShape, CorpsFaceSprite( m_corps ) );
 	
 	-- 请求信息
 	system_askinfo( ASKINFO_TRAIN, "", 0, buildingKind );
@@ -175,10 +203,11 @@ end
 function TrainDlgRecv( recvValue )
 	TrainDlgReset()
 	m_recvValue = recvValue;
+	m_uiTimerCache = nil
 	SetText( m_uiDesc, T(m_corps+619) )
-	SetText( m_uiSoldiers, T(622)..":"..recvValue.m_soldiers )
-	SetText( m_uiSoldiersMax, T(623)..":"..recvValue.m_soldiers_max )
-	SetRichText( m_uiQueueLevel, T(624)..":"..recvValue.m_queue )
+	SetText( m_uiSoldiers, "<color=#927F64FF>"..T(622)..": </color><color=#ABC7D9FF>"..recvValue.m_soldiers.."</color>" )
+	SetText( m_uiSoldiersMax, "<color=#927F64FF>"..T(623)..": </color><color=#ABC7D9FF>"..recvValue.m_soldiers_max.."</color>" )
+	SetRichText( m_uiQueueLevel, "<color=927F64FF>"..T(624)..": </color><emote=002><color=ABC7D9FF>x"..recvValue.m_queue.."</color>" )
 	
 	-- 正在训练的
 	if recvValue.m_trainnum > 0 then
@@ -224,6 +253,9 @@ function TrainDlgSetObject( recvValue, type, index )
 	local uiTrainBtn = objs[7];
 	local uiCancelBtn = objs[8];
 	local uiIdle = objs[9];
+	local uiSecIcon = objs[10];
+	local uiFoodIcon = objs[11];
+	local uiWait = objs[12];
 	SetTimer( uiTimer, 0, 0, 0 )
 	
 	if type == 1 then -- 正在招募中
@@ -231,25 +263,32 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetTrue( uiTimerProgress )
 		SetTrue( uiTimer )
 		SetTrue( uiQuickBtn )
+		SetFalse( uiSecIcon )
+		SetFalse( uiFoodIcon )
 		SetFalse( uiSec )
 		SetFalse( uiFood )
 		SetFalse( uiSlider )
 		SetFalse( uiTrainBtn )
 		SetFalse( uiCancelBtn )
 		SetFalse( uiIdle )	
+		SetFalse( uiWait )	
 		SetText( uiNum, T(625)..":"..recvValue.m_trainnum )
-		SetTimer( uiTimer, recvValue.m_trainsec, recvValue.m_trainsec_need, 1 )
+		SetTimer( uiTimer, recvValue.m_trainsec, recvValue.m_trainsec_need, 1, T(756) )
+		m_uiTimerCache = uiTimer
 	elseif type == 2 then -- 选择招募
 		SetTrue( uiNum )
 		SetFalse( uiTimerProgress )
 		SetFalse( uiTimer )
 		SetFalse( uiQuickBtn )
+		SetTrue( uiSecIcon )
+		SetTrue( uiFoodIcon )
 		SetTrue( uiSec )
 		SetTrue( uiFood )
 		SetTrue( uiSlider )
 		SetTrue( uiTrainBtn )
 		SetFalse( uiCancelBtn )
 		SetFalse( uiIdle )
+		SetFalse( uiWait )
 		local maxv = math.floor(recvValue.m_train_confsec/SEC);
 		m_slider = uiSlider:GetComponent( typeof(UISlider) )
 		m_slider.minValue = 1;
@@ -263,6 +302,8 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetFalse( uiTimerProgress )
 		SetFalse( uiTimer )
 		SetFalse( uiQuickBtn )
+		SetFalse( uiSecIcon )
+		SetFalse( uiFoodIcon )
 		SetFalse( uiSec )
 		SetFalse( uiFood )
 		SetFalse( uiSlider )
@@ -270,18 +311,23 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetFalse( uiCancelBtn )
 		SetTrue( uiIdle )
 		SetText( uiIdle, T(632) )
+		SetFalse( uiWait )
 	elseif type == 4 then -- 等待中
 		SetTrue( uiNum )
-		SetFalse( uiTimerProgress )
+		SetTrue( uiTimerProgress )
+		SetProgress( uiTimerProgress, 0 );
 		SetFalse( uiTimer )
 		SetFalse( uiQuickBtn )
+		SetFalse( uiSecIcon )
+		SetFalse( uiFoodIcon )
 		SetFalse( uiSec )
 		SetFalse( uiFood )
 		SetFalse( uiSlider )
 		SetFalse( uiTrainBtn )
 		SetTrue( uiCancelBtn )
-		SetTrue( uiIdle )
-		SetText( uiIdle, T(643) )
+		SetFalse( uiIdle )
+		SetTrue( uiWait )
+		SetText( uiWait, T(641) );
 		SetText( uiNum, T(625)..":"..recvValue.m_queuenum[index] )
 		SetControlID( uiCancelBtn, 1000+index )
 	end
@@ -293,25 +339,33 @@ function TrainDlgSetSlider( slider, maxv )
 	if m_slider == nil then
 		return;
 	end
-	
---[[	local space = m_recvValue.m_soldiers_max - m_recvValue.m_soldiers;
-	if maxv*m_recvValue.m_train_confnum > space then
-		maxv = 1;
-	end
-	m_slider.value = maxv;--]]
-	
+	local space = m_recvValue.m_soldiers_max - m_recvValue.m_soldiers;
+	m_slider.value = maxv;
 	m_selectnum = maxv*m_recvValue.m_train_confnum;
 	m_selectsec = maxv*SEC;
 	m_selectfood = m_selectnum*m_recvValue.m_train_conffood;
 	
-	SetText( m_sliderNum, m_selectnum );
+	-- 选择数量
+	if space <= 0 then
+		SetText( m_sliderNum, "<color=#e80017>"..m_selectnum.."</color>" );
+	else
+		SetText( m_sliderNum, m_selectnum );
+	end
+	-- 需要时间
 	SetText( m_sliderSec, secnum( m_selectsec ) );
-	SetText( m_sliderFood, m_selectfood )
+	
+	-- 需要粮草
+	if m_selectfood < GetPlayer().m_food then
+		SetText( m_sliderFood, "<color=#03de27>"..knum(m_selectfood).."/"..knum(GetPlayer().m_food).."</color>" )
+	else
+		SetText( m_sliderFood, "<color=#03de27>"..knum(m_selectfood).."</color><color=#e80017>/"..knum(GetPlayer().m_food).."</color>" )
+	end
 end
 
 -- 招募
 function TrainDlgTrain()
-	if m_selectnum < 0 or m_selectnum >= m_recvValue.m_soldiers_max - m_recvValue.m_soldiers then
+	local space = m_recvValue.m_soldiers_max - m_recvValue.m_soldiers;
+	if m_selectnum < 0 or space <= 0 then
 		pop(T(631))
 		return
 	end
@@ -326,17 +380,119 @@ end
 -- 加速
 function TrainDlgQuick()
 	--system_askinfo( ASKINFO_TRAIN, "", 2, m_buildingKind );
-	QuickItemDlgShow()
-end
-
--- 扩建
-function TrainDlgQueue()
-	system_askinfo( ASKINFO_TRAIN, "", 5, m_buildingKind );
+	if m_uiTimerCache ~= nil then
+		QuickItemDlgShow( 2, m_buildingKind, -1, m_uiTimerCache.transform:GetComponent( typeof(UITextTimeCountdown) ).LeftTime )
+	end
 end
 
 -- 取消
 function TrainDlgCancel( index )
 	system_askinfo( ASKINFO_TRAIN, "", 3, m_buildingKind, index );
+end
+
+-- 拼星级
+local function TrainDlgQueueStar( queue )
+	local star = ""
+	for i=1, queue, 1 do
+		star = star.."<emote=002>"
+	end
+	return star
+end
+
+-- 扩建
+function TrainDlgQueue()
+	SetTrue( m_uiTrainQueueInfo );
+	local objs = m_uiTrainQueueInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiBefore = objs[0];
+	local uiAfter = objs[1];
+	local uiArrow = objs[2];
+	local uiBuyBtn = objs[3];
+	local uiBuyBtnText = objs[4];
+	local uiDesc = objs[5];
+	
+	local maxlevel = 0;
+	for k, v in pairs(g_trainqueue) do
+		if k > maxlevel then
+			maxlevel = k
+		end
+	end
+	if m_recvValue.m_queue >= maxlevel then
+		SetFalse( uiAfter )
+		SetFalse( uiArrow )
+		SetFalse( uiBuyBtn )
+		SetFalse( uiDesc )
+	else
+		SetTrue( uiAfter )
+		SetTrue( uiArrow )
+		SetTrue( uiBuyBtn )
+		SetTrue( uiDesc )
+		
+		if m_pBuilding.m_kind == BUILDING_Infantry or m_pBuilding.m_kind == BUILDING_Militiaman_Infantry then
+			SetText( uiDesc, F( 640, item_getname(445), 1 ) )
+		elseif m_pBuilding.m_kind == BUILDING_Cavalry or m_pBuilding.m_kind == BUILDING_Militiaman_Cavalry then
+			SetText( uiDesc, F( 640, item_getname(446), 1 ) )
+		elseif m_pBuilding.m_kind == BUILDING_Archer or m_pBuilding.m_kind == BUILDING_Militiaman_Archer then
+			SetText( uiDesc, F( 640, item_getname(447), 1 ) )
+		end
+		
+		SetRichText( uiBefore.transform:Find("Text1"), T(637)..":"..TrainDlgQueueStar(m_recvValue.m_queue) )
+		SetText( uiBefore.transform:Find("Text2"), T(639)..":<color=#25c9ff>"..(m_recvValue.m_queue+1).."</color>" )
+		SetText( uiBefore.transform:Find("Text3"), T(639)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color>" )
+		
+		SetRichText( uiAfter.transform:Find("Text1"), T(638)..":"..TrainDlgQueueStar(m_recvValue.m_queue+1) )
+		SetText( uiAfter.transform:Find("Text2"), T(639)..":<color=#25c9ff>"..(m_recvValue.m_queue+1).."</color><color=#ecc244>".."+1</color>" )
+		SetText( uiAfter.transform:Find("Text3"), T(639)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color><color=#ecc244>".."+3000</color>" )
+		
+		SetText( uiBuyBtnText, knum(g_trainqueue[m_recvValue.m_queue+1].token) );
+	end
+end
+
+-- 扩建购买
+function TrainDlgQueueBuy()
+	SetFalse( m_uiTrainQueueInfo );
+	MsgBox( F(760, knum(g_trainqueue[m_recvValue.m_queue+1].token) ), function() 
+		system_askinfo( ASKINFO_TRAIN, "", 5, m_buildingKind );
+	end )
+	
+end
+
+-- 募兵时长
+function TrainDlgTrainLong()
+	SetTrue( m_uiTrainlongInfo );
+	local objs = m_uiTrainlongInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiBefore = objs[0];
+	local uiAfter = objs[1];
+	local uiArrow = objs[2];
+	local uiBuyBtn = objs[3];
+	local uiBuyBtnText = objs[4];
+	
+	local maxlevel = 0;
+	for k, v in pairs(g_trainlong) do
+		if k > maxlevel then
+			maxlevel = k
+		end
+	end
+	if m_recvValue.m_trainlong >= maxlevel then
+		SetFalse( uiAfter )
+		SetFalse( uiArrow )
+		SetFalse( uiBuyBtn )
+	else
+		SetTrue( uiAfter )
+		SetTrue( uiArrow )
+		SetTrue( uiBuyBtn )
+		SetText( uiBefore.transform:Find("Text"), F( 634, zhtime( g_trainlong[m_recvValue.m_trainlong].timelong*60 ) ) )
+		SetText( uiAfter.transform:Find("Text"), F( 635, zhtime( g_trainlong[m_recvValue.m_trainlong+1].timelong*60 ) ) )
+		SetText( uiBuyBtnText, knum(g_trainlong[m_recvValue.m_trainlong+1].silver) );
+	end
+end
+
+-- 募兵加时购买
+function TrainDlgTrainLongBuy()
+	SetFalse( m_uiTrainlongInfo );
+	MsgBox( F(757, knum(g_trainlong[m_recvValue.m_trainlong+1].silver) ), function() 
+		system_askinfo( ASKINFO_TRAIN, "", 6, m_buildingKind );
+	end )
+	
 end
 
 function TrainDlgReset()

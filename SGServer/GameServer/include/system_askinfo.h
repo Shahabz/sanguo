@@ -17,6 +17,8 @@
 #define ASKINFO_HERO			12 // 英雄
 #define ASKINFO_TECH			13 // 科技
 #define ASKINFO_GOV				14 // 官府 
+#define ASKINFO_OFFICIALHIRE	15 // 雇佣 
+#define ASKINFO_QUICK			16 // 加速
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

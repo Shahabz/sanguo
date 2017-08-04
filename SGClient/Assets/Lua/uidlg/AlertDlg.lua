@@ -87,7 +87,7 @@ end
 
 -- 弹出确定提示框
 function AlertMsg( szMsg )
-    AlertDlgShow( szMsg, zh("确定"), nil );
+    AlertDlgShow( szMsg, T(602), nil );
 end
 
 function Alert( szMsg, szBtnName, pCallBack )

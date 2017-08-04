@@ -618,20 +618,19 @@ int building_finish( int city_index, int op, int kind, int offset )
 	return 0;
 }
 
-// 免费加速
-int building_workerfree( int actor_index, int kind, int offset )
+// 加速
+int building_workerquick( int actor_index, int kind, int offset, int sec )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	int freetime = global.worker_freetime;
 	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
 	{
 		if ( pCity->worker_free == 1 )
 		{
 			pCity->worker_free = 0;
-			pCity->worker_sec -= freetime;
+			pCity->worker_sec -= sec;
 			if ( pCity->worker_sec <= 0 )
 			{
 				pCity->worker_sec = 0;
@@ -643,7 +642,7 @@ int building_workerfree( int actor_index, int kind, int offset )
 				pCity->worker_offset = -1;
 				building_sendworker( pCity->actor_index );
 			}
-			
+
 		}
 	}
 	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
@@ -651,7 +650,7 @@ int building_workerfree( int actor_index, int kind, int offset )
 		if ( pCity->worker_free_ex == 1 )
 		{
 			pCity->worker_free_ex = 0;
-			pCity->worker_sec_ex -= freetime;
+			pCity->worker_sec_ex -= sec;
 			if ( pCity->worker_sec_ex <= 0 )
 			{
 				pCity->worker_sec_ex = 0;
@@ -665,7 +664,54 @@ int building_workerfree( int actor_index, int kind, int offset )
 			}
 		}
 	}
-	
+	return 0;
+}
+
+// 免费加速
+int building_workerfree( int actor_index, int kind, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int freetime = 0;
+	if ( pCity->attr.free_sec > global.worker_freetime )
+	{
+		freetime = pCity->attr.free_sec;
+	}
+	else
+	{
+		freetime = global.worker_freetime;
+	}
+	building_workerquick( actor_index, kind, offset, freetime );
+	return 0;
+}
+
+// 购买商用建造队列
+int building_workerbuy( int actor_index, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( type == 0 )
+	{ // 1天
+		if ( actor_change_token( actor_index, -global.worker_token_1, PATH_BUILDING_WORKER, 0 ) < 0 )
+		{
+			return -1;
+		}
+		pCity->worker_expire_ex += global.worker_expire_1;
+		
+	}
+	else if ( type == 1 )
+	{ // 7天
+		if ( actor_change_token( actor_index, -global.worker_token_7, PATH_BUILDING_WORKER, 0 ) < 0 )
+		{
+			return -1;
+		}
+		pCity->worker_expire_ex += global.worker_expire_7;
+	}
+	building_sendworker( actor_index );
 	return 0;
 }
 

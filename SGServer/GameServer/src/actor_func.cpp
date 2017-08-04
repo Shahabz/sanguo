@@ -460,12 +460,19 @@ int actor_getinfo( int actor_index )
 		info.m_sflag =  pCity->sflag;
 		info.m_autobuild = pCity->autobuild;
 		info.m_autobuildopen = pCity->autobuildopen;
+		info.m_ptsec = pCity->ptsec;
 		for ( int i = 0; i < CITY_TECH_MAX; i++ )
 		{
 			info.m_techlevel[i] = pCity->techlevel[i];
 			info.m_techprogress[i] = pCity->techprogress[i];
 		}
-
+		for ( int i = 0; i < 3; i++ )
+		{
+			info.m_officialhire[i].m_ofkind = pCity->ofkind[i];
+			info.m_officialhire[i].m_ofsec = pCity->ofsec[i];
+			info.m_officialhire[i].m_offree = pCity->offree[i];
+			info.m_officialhire[i].m_ofquick = pCity->ofquick[i];
+		}
 	}
 	netsend_actorinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 	return 0;

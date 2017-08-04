@@ -203,6 +203,9 @@ function proc_building_C( recvValue )
 	
 	if recvValue.m_kind == BUILDING_Tech then
 		CityTechDlgOnSet();
+		if recvValue.m_sec <= 0 then
+			CityTechDlgClose();
+		end
 	end
 end
 
@@ -234,6 +237,7 @@ end
 function proc_worker_C( recvValue )
 	-- process.
 	GetPlayer():SetBuildingWorker( recvValue )
+	GovInfoDlgSetBuffWorker();
 end
 
 -- m_result=0,m_actorid=0,
@@ -376,7 +380,9 @@ end
 -- m_addexp=0,m_curexp=0,m_isup=0,m_level, m_expmax, m_path=0,
 function proc_experience_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+	if recvValue.m_addexp > 0 then
+		pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+	end
 	GetPlayer().m_level = recvValue.m_level;
 	GetPlayer().m_exp = recvValue.m_curexp;
 	GetPlayer().m_exp_max = recvValue.m_expmax;
@@ -391,7 +397,9 @@ end
 function proc_body_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_SYSTEM then
-		pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+		end
 	end
 	
 	GetPlayer().m_body = recvValue.m_total;
@@ -408,7 +416,9 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changesilver_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_silver = recvValue.m_total;
 	MainDlgSetSilver();
 end
@@ -416,7 +426,9 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changewood_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_wood = recvValue.m_total;
 	MainDlgSetWood();
 end
@@ -424,7 +436,9 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changefood_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_food = recvValue.m_total;
 	MainDlgSetFood();
 end
@@ -432,7 +446,9 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeiron_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_iron = recvValue.m_total;
 	MainDlgSetIron();
 end
@@ -445,7 +461,9 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeprestige_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_prestige = recvValue.m_total;
 end
 
@@ -466,9 +484,12 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changtoken_C( recvValue )
 	-- process.
-	pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+	if recvValue.m_add > 0 then
+		pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+	end
 	GetPlayer().m_token = recvValue.m_total;
 	MainDlgSetToken()
+	DialogFrameModChangeToken()
 end
 
 -- m_offset=0,m_kind=0,m_washid={[4]},
@@ -667,6 +688,9 @@ function proc_soldiers_C( recvValue )
 		MainDlgSetArcher();
 	end
 	
+	if recvValue.m_add > 0 then
+		pop( T(605)..": "..CorpsName(recvValue.m_corps).."x"..recvValue.m_add );
+	end
 end
 
 -- m_soldiers=0,m_soldiers_max=0,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={[16]},m_queue=0,m_trainlong=0,m_train_confnum=0,m_train_confsec=0,
@@ -823,5 +847,27 @@ end
 -- m_cevent_count=0,m_cevent_list={m_type=0,m_kind=0,m_value=0,m_optime=0,[m_cevent_count]},m_bevent_count=0,m_bevent_list={m_type=0,m_name="[22]",m_value=0,m_optime=0,[m_bevent_count]},
 function proc_cityeventlist_C( recvValue )
 	-- process.
+	GovInfoDlgRecv( recvValue );
+end
+
+
+-- m_type=0,m_info={m_ofkind=0,m_ofsec=0,m_offree=0,m_offquick=0,},
+function proc_officialhirechange_C( recvValue )
+	-- process.
+	GetPlayer().m_officialhire[recvValue.m_type] = recvValue.m_info;
+	OfficialHireDlgSet( recvValue.m_type )
+	if recvValue.m_type == 0 then
+	elseif recvValue.m_type == 1 then
+		LevyDlgSetOfficial();
+	elseif recvValue.m_type == 2 then
+		CityTechDlgSetOfficial();
+	end
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_cityprotect_C( recvValue )
+	-- process.
+	GetPlayer().m_ptsec = recvValue.m_total
+	GovInfoDlgSetBuffProtect();
 end
 

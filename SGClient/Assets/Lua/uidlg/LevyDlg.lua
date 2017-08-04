@@ -28,11 +28,17 @@ local m_uiTotalFood = nil; --UnityEngine.GameObject
 local m_uiTotalIron = nil; --UnityEngine.GameObject
 local m_uiTimerText = nil; --UnityEngine.GameObject
 local m_uiLevyNumText = nil; --UnityEngine.GameObject
-
+local m_uiResBuyBtn = nil; --UnityEngine.GameObject
+local m_uiInteriorBtn = nil; --UnityEngine.GameObject
+local m_uiOfficialShape = nil; --UnityEngine.GameObject
+local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
+local m_uiOfficialTime = nil; --UnityEngine.GameObject
+local m_uiOfficialName = nil; --UnityEngine.GameObject
+local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 -- 打开界面
 function LevyDlgOpen()
 	m_Dlg = eye.uiManager:Open( "LevyDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "官府", 1, LevyDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(1), 1, LevyDlgClose );
 end
 
 -- 隐藏界面
@@ -59,8 +65,22 @@ function LevyDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             LevyDlgClose();
-		elseif LevyDlgGet() == 1 then
+		
+		-- 收取
+		elseif nControlID == 1 then
 			LevyDlgGet();
+		
+		-- 购买资源
+		elseif nControlID == 2 then
+		
+		-- 内政总览
+		elseif nControlID == 3 then
+			GovInfoDlgShow()
+		
+		-- 雇佣
+		elseif nControlID == 5 then
+			OfficialHireDlgShow( 1 );
+			
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
@@ -99,6 +119,13 @@ function LevyDlgOnAwake( gameObject )
 	m_uiTotalIron = objs[23];
 	m_uiTimerText = objs[24];	
 	m_uiLevyNumText = objs[25];
+	m_uiResBuyBtn = objs[26];
+	m_uiInteriorBtn = objs[27];
+	m_uiOfficialShape = objs[28];
+	m_uiOfficialTimeBack = objs[29];
+	m_uiOfficialTime = objs[30];
+	m_uiOfficialName = objs[31];
+	m_uiOfficialDesc = objs[32];
 end
 
 -- 界面初始化时调用
@@ -132,21 +159,47 @@ end
 ----------------------------------------
 function LevyDlgShow()
 	LevyDlgOpen();
-	system_askinfo( ASKINFO_LEVY, "", 0 )
+	m_uiResBuyBtn.transform:SetSiblingIndex(1000);
+	m_uiInteriorBtn.transform:SetSiblingIndex(1000);
+	LevyDlgSetOfficial()
+end
+
+local function LevyAdd( value, pre )
+	if value > 0 then
+		if pre ~= nil then
+			return value
+		else
+			return "+"..value
+		end
+	else
+		return "-"
+	end
 end
 
 -- m_base={[4]},m_tech={[4]},m_weather={[4]},m_activity={[4]},m_offical={[4]},
 function LevyDlgRecv( recvValue )
 	-- 基础
-	SetText( m_uiBaseSilver, recvValue.m_base[1] );
-	SetText( m_uiBaseWood, recvValue.m_base[2] );
-	SetText( m_uiBaseFood, recvValue.m_base[3] );
-	SetText( m_uiBaseIron, recvValue.m_base[4] );
+	SetText( m_uiBaseSilver, LevyAdd( recvValue.m_base[1], 0 ) );
+	SetText( m_uiBaseWood, LevyAdd( recvValue.m_base[2], 0 ) );
+	SetText( m_uiBaseFood, LevyAdd( recvValue.m_base[3], 0 ) );
+	SetText( m_uiBaseIron, LevyAdd( recvValue.m_base[4], 0 ) );
+	
+	-- 科技
+	SetText( m_uiTechSilver,LevyAdd( recvValue.m_tech[1] ) );
+	SetText( m_uiTechWood, LevyAdd( recvValue.m_tech[2] ) );
+	SetText( m_uiTechFood, LevyAdd( recvValue.m_tech[3] ) );
+	SetText( m_uiTechIron, LevyAdd( recvValue.m_tech[4] ) );
+	
+	-- 官职
+	SetText( m_uiOfficialSilver, LevyAdd( recvValue.m_offical[1] ) );
+	SetText( m_uiOfficialWood, LevyAdd( recvValue.m_offical[2] ) );
+	SetText( m_uiOfficialFood, LevyAdd( recvValue.m_offical[3] ) );
+	SetText( m_uiOfficialIron, LevyAdd( recvValue.m_offical[4] ) );
 	
 	-- 总计
 	local total = {0,0,0,0}
 	for i=1, 4, 1 do
-		total[i] = recvValue.m_base[i];
+		total[i] = recvValue.m_base[i] + recvValue.m_tech[i] + recvValue.m_offical[i];
 	end
 	SetText( m_uiTotalSilver, total[1] );
 	SetText( m_uiTotalWood, total[2] );
@@ -164,7 +217,7 @@ function LevyDlgChangeSec( sec )
 		SetFalse( m_uiTimerText );
 		SetTrue( m_uiLevyNumText );
 		SetTimer( m_uiTimerText, 0, 0, 0 );
-		SetText( m_uiLevyNumText, GetPlayer().m_levynum.."/12" );
+		SetText( m_uiLevyNumText, GetPlayer().m_levynum.."/"..global.levy_max );
 	else
 		SetFalse( m_uiLevyNumText );
 		SetTrue( m_uiTimerText );
@@ -172,6 +225,50 @@ function LevyDlgChangeSec( sec )
 	end
 end
 
+
+-- 设置内政官
+function LevyDlgSetOfficial()
+	if m_Dlg == nil then
+		return;
+	end
+	system_askinfo( ASKINFO_LEVY, "", 0 )
+	local info = GetPlayer().m_officialhire[1];
+	-- 已雇佣
+	if info.m_ofkind > 0 then
+		SetTrue( m_uiOfficialShape )
+		SetTrue( m_uiOfficialTimeBack )
+		SetTrue( m_uiOfficialTime )
+		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
+		SetText( m_uiOfficialName, T(719).."Lv."..g_official_gov[info.m_ofkind].level..T(722) )
+		SetText( m_uiOfficialDesc, F(732, g_official_gov[info.m_ofkind].produce ) )
+		SetImage( m_uiOfficialShape, OfSprite( g_official_gov[info.m_ofkind].shape ) )
+	else
+		-- 未雇佣		
+		SetFalse( m_uiOfficialShape )
+		SetFalse( m_uiOfficialTimeBack )
+		SetFalse( m_uiOfficialTime )
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );
+		if pBuilding == nil then
+			return;
+		end
+		if pBuilding.m_level < g_official_gov[1].buildinglevel then
+			-- 官府N级解锁Lv.1内政官
+			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Main), g_official_gov[1].buildinglevel, g_official_gov[1].level, T(722) ) )
+			SetText( m_uiOfficialDesc, F(732, g_official_gov[1].produce ) )
+		else
+			-- 可雇佣
+			for kind=#g_official_gov, 1, -1 do
+				if pBuilding.m_level >= g_official_gov[kind].buildinglevel then
+					SetText( m_uiOfficialName, T(718).."Lv."..g_official_gov[kind].level..T(722) )
+					SetText( m_uiOfficialDesc, F(732, g_official_gov[kind].produce ) )
+				end
+			end
+		end
+	end
+
+end
+
+-- 收取
 function LevyDlgGet()
 	if GetPlayer().m_levynum <= 0 then
 		AlertMsg(T(657))

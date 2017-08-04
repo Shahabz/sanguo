@@ -25,6 +25,7 @@
 #define	ITEM_TYPE_ACTIVITY			5	// 活动类（无点击按钮，被动使用）
 #define	ITEM_TYPE_AUTO				6	// 自动使用类
 #define	ITEM_TYPE_HEROEXP			7	// 武将经验
+#define ITEM_TYPE_QUICK				8	// 加速类道具（城内）
 
 /* 动态属性 */
 #define ITEM_ABILITY_NONE					0
@@ -101,6 +102,7 @@ int item_getitemindex_whihitemid( int actor_index, i64 itemid );//获取道具的索引
 // ---------------------------------- 服务器响应道具操作 item_proc.cpp -----------------------------------------------------
 int item_use( int actor_index, short itemindex, short itemnum, int herokind, int ask ); // 服务器响应道具操作-使用
 int item_use_withtoken( int actor_index, short itemkind, short itemnum, int herokind, int ask ); // 服务器响应道具操作-直接花钱使用
+int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, int buildingoffset ); // 服务器响应道具操作-加速道具使用
 int item_drop( int actor_index, short itemindex, short dorpcount ); // 服务器响应道具操作-丢弃
 int item_settle( int actor_index );   // 服务器响应道具操作-整理
 

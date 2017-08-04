@@ -90,6 +90,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 升级免费加速
 			building_workerfree( actor_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // 购买商用建造队列
+			building_workerbuy( actor_index, pvalue[1] );
+		}
+		
 		break;
 	case ASKINFO_LEVY:
 		if ( pvalue[0] == 0 )
@@ -109,10 +114,6 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 1 )
 		{ // 招募
 			city_train( actor_index, pvalue[1], pvalue[2] );
-		}
-		else if ( pvalue[0] == 2 )
-		{ // 加速
-			city_train_quick( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 3 )
 		{ // 取消
@@ -193,11 +194,22 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		break;
 	case ASKINFO_GOV:
-		if ( pvalue[0] == 1 )
+		if ( pvalue[0] == 0 )
 		{ // 事件
 			city_event_sendlist( actor_index );
 		}
-		
+		break;
+	case ASKINFO_OFFICIALHIRE:
+		if ( pvalue[0] == 0 )
+		{
+			city_officialhire( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
+	case ASKINFO_QUICK:
+		if ( pvalue[0] == 0 )
+		{
+			item_use_quick( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[3] );
+		}
 		break;
 	default:
 		break;

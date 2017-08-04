@@ -143,6 +143,14 @@ int global_init()
 			global.forgingquick_token = value;
 		else if ( id == 30 )
 			global.upgradequick_token = value;
+		else if ( id == 31 )
+			global.worker_expire_1 = atoi( row[1] );
+		else if ( id == 32 )
+			global.worker_expire_7 = atoi( row[1] );
+		else if ( id == 33 )
+			global.worker_token_1 = atoi( row[1] );
+		else if ( id == 34 )
+			global.worker_token_7 = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

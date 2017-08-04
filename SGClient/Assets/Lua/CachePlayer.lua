@@ -36,9 +36,11 @@ function Player:Init()
 	self.m_sflag			=	0;
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
+	self.m_ptsec			=	0;
 	self.m_equipext			=	0;
 	self.m_techlevel		=   {};
 	self.m_techprogress		=	{};
+	self.m_officialhire		=	{};
 	
 	self.m_function			=	0;
 	self.m_levynum			=	0;
@@ -86,9 +88,13 @@ function Player:Set( recvValue )
 	self.m_sflag			=	recvValue.m_sflag;
 	self.m_autobuild		=	recvValue.m_autobuild;
 	self.m_autobuildopen	=	recvValue.m_autobuildopen;
+	self.m_ptsec			=	recvValue.m_ptsec;
 	for kind = 1, 40, 1 do
 		self.m_techlevel[kind-1]	=   recvValue.m_techlevel[kind];
 		self.m_techprogress[kind-1]	=	recvValue.m_techprogress[kind];
+	end
+	for i = 1, 3, 1 do
+		self.m_officialhire[i-1] = recvValue.m_officialhire[i]
 	end
 end
 

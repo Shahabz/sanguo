@@ -47,7 +47,7 @@ int trainlonginfo_init_auto()
 	g_trainlong = (TrainlongInfo *)malloc( sizeof(TrainlongInfo)*g_trainlong_maxnum );
 	memset( g_trainlong, 0, sizeof(TrainlongInfo)*g_trainlong_maxnum );
 
-	sprintf( szSQL, "select `level`,`timelong`,`sliver` from trainlong;" );
+	sprintf( szSQL, "select `level`,`timelong`,`silver` from trainlong;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,7 +63,7 @@ int trainlonginfo_init_auto()
 			continue;
 		g_trainlong[level].level = atoi(row[offset++]);
 		g_trainlong[level].timelong = atoi(row[offset++]);
-		g_trainlong[level].sliver = atoi(row[offset++]);
+		g_trainlong[level].silver = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

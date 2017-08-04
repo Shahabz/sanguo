@@ -47,7 +47,7 @@ int officialtech_init_auto()
 	g_official_tech = (OfficialTech *)malloc( sizeof(OfficialTech)*g_official_tech_maxnum );
 	memset( g_official_tech, 0, sizeof(OfficialTech)*g_official_tech_maxnum );
 
-	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`quick`,`duration`,`silver`,`token`,`vip` from official_tech;" );
+	sprintf( szSQL, "select `kind`,`level`,`color`,`buildinglevel`,`quick`,`duration`,`silver`,`token`,`vip`,`free`,`shape` from official_tech;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -70,6 +70,8 @@ int officialtech_init_auto()
 		g_official_tech[kind].silver = atoi(row[offset++]);
 		g_official_tech[kind].token = atoi(row[offset++]);
 		g_official_tech[kind].vip = atoi(row[offset++]);
+		g_official_tech[kind].free = atoi(row[offset++]);
+		g_official_tech[kind].shape = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

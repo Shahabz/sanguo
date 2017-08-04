@@ -12,6 +12,8 @@ struct _officialforging {
 				int duration;	//
 				int silver;	//
 				int token;	//
+				short free;	//
+				short shape;	//
 };
 typedef struct _officialforging OfficialForging;
 

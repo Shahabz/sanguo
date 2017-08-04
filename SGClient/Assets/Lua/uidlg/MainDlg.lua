@@ -497,9 +497,9 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 		local NormalText = uiWorker.transform:Find("NormalText");
 		NormalText.gameObject:SetActive(true);
 		if type == 1 and expire <= 0 then
-			NormalText:GetComponent( "UIText" ).text = "未解锁";
+			NormalText:GetComponent( "UIText" ).text = T(601);
 		else
-			NormalText:GetComponent( "UIText" ).text = "空闲";
+			NormalText:GetComponent( "UIText" ).text = T(600);
 		end
 		
 		-- 缺省锤子形象

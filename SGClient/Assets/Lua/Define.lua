@@ -155,6 +155,46 @@ function Hex2Color32( hex )
 	return Utils.HexColor32( hex )
 end
 
+function zhtime( second )
+	
+	local day = math.floor( second / 86400 );
+	local hour = math.floor(second / 3600) % 24;
+	local min = math.floor(second / 60) % 60;
+	local sec = math.floor(second % 60);
+	local szmsg = "";
+	if day > 0 then
+        szmsg = day..T(156)
+        if hour > 0 then
+            szmsg = szmsg..hour..T(155)
+            if min > 0 then
+                szmsg = szmsg..min..T(154)
+            end
+        end
+		return szmsg
+    end
+	
+	if hour > 0 then
+        szmsg = szmsg..hour..T(155)
+        if min > 0 then
+            szmsg = szmsg..min..T(154)
+        end
+		if sec > 0 then
+            szmsg = szmsg..sec..T(153)
+        end
+		return szmsg
+    end
+	
+	if min > 0 then
+        szmsg = szmsg..min..T(154)
+		if sec > 0 then
+            szmsg = szmsg..sec..T(153)
+        end
+		return szmsg
+    end
+       
+    return sec..T(153)
+end
+
 -- 写gamelog
 function gamelog( msg )
 	LogUtil.GetInstance():WriteGame( msg );
@@ -231,6 +271,19 @@ end
 -- 兵种名称
 function CorpsName( corps )
 	return T(134+corps);
+end
+
+-- 兵种名称
+function CorpsNameEx( buildingkind )
+	local corps = 0;
+	if buildingkind == BUILDING_Infantry or buildingkind == BUILDING_Militiaman_Infantry then
+		corps = 0
+	elseif buildingkind == BUILDING_Cavalry or buildingkind == BUILDING_Militiaman_Cavalry then
+		corps = 1
+	elseif buildingkind == BUILDING_Archer or buildingkind == BUILDING_Militiaman_Archer then
+		corps = 2
+	end
+	return CorpsName( corps );
 end
 
 -- 获取装备名称

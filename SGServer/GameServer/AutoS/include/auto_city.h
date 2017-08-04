@@ -54,6 +54,7 @@ struct _city {
 				short hero_washsec;	//英雄下次洗练免费时间
 				char autobuild;	//自动建造剩余次数
 				char autobuildopen;	//自动建造是否开启
+				int ptsec;	//城池保护状态剩余时间
 				short questid[6];	//任务ID
 				int questvalue[6];	//任务数值
 				char techlevel[40];	//科技
@@ -84,7 +85,7 @@ struct _city {
 				short ofkind[3];	//建筑官员种类
 				int ofsec[3];	//建筑官员剩余秒
 				int offree[3];	//建筑官员免费情况
-				int offquick[3];	//建筑官员已经使用的加速时间
+				int ofquick[3];	//建筑官员已经使用的加速时间
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

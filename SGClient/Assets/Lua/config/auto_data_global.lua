@@ -29,3 +29,7 @@ global.techtree_level = 1 --科技树开放等级
 global.techquick_token = 2 --科技加速折算钻石系数（每60秒）
 global.forgingquick_token = 1 --打造加速折算钻石系数（每60秒）
 global.upgradequick_token = 2 --建筑加速折算钻石系数（每60秒）
+global.worker_expire_1 = 86400 --商用建造队1天
+global.worker_expire_7 = 604800 --商用建造队7天
+global.worker_token_1 = 200 --商用建造队1天钻石
+global.worker_token_7 = 1000 --商用建造队1天钻石

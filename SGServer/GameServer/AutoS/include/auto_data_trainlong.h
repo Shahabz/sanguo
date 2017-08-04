@@ -6,7 +6,7 @@ struct _trainlonginfo {
 //--Automatically generated
 				short level;	//
 				int timelong;	//
-				int sliver;	//
+				int silver;	//
 };
 typedef struct _trainlonginfo TrainlongInfo;
 

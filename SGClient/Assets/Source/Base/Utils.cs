@@ -603,7 +603,14 @@ public class Utils : MonoBehaviour
 		int hour = (second / 3600);
 		int min = (second / 60) % 60;
 		int sec = (second % 60);
-		return string.Format("{0}:{1}:{2}", hour.ToString("D2"), min.ToString("D2"), sec.ToString("D2") );
+		if (hour < 24) {
+			return string.Format ("{0}:{1}:{2}", hour.ToString ("D2"), min.ToString ("D2"), sec.ToString ("D2"));
+		}
+		else{
+			int day = (second / 86400);
+			hour = (second % 86400 ) / 3600;
+			return string.Format("{0}d {1}:{2}:{3}", day, hour.ToString("D2"), min.ToString("D2"), sec.ToString("D2") );
+		}
 	}
 
     public static int GetMillisecond()

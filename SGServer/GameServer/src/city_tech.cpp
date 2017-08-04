@@ -33,6 +33,9 @@ extern int g_city_maxcount;
 extern BuildingUpgrade *g_building_upgrade;
 extern int g_building_upgrade_maxnum;
 
+extern OfficialTech *g_official_tech;
+extern int g_official_tech_maxnum;
+
 extern TechInfo *g_techinfo;
 extern int g_techinfo_maxnum;
 
@@ -108,6 +111,10 @@ int city_tech_upgrade( int actor_index, short kind )
 	if ( config->iron > 0 )
 		city_changeiron( pCity->index, -config->iron, PATH_TECH_UPGRADE );
 
+	// 更新研究员信息
+	pCity->ofquick[2] = 0;
+	city_officialhire_sendinfo( pCity, 2 );
+
 	pBuilding->sec = config->sec;
 	pBuilding->needsec = config->sec;
 	pBuilding->value = kind;
@@ -153,6 +160,35 @@ int city_tech_freequick( int actor_index )
 	if ( kind <= 0 || kind >= g_techinfo_maxnum )
 		return -1;
 
+	int ofkind = pCity->ofkind[2];
+	if ( ofkind <= 0 || ofkind >= g_official_tech_maxnum )
+		return -1;
+
+	// -1 这个科技已经使用过免费加速
+	if ( pCity->ofquick[2] == -1 )
+		return -1;
+	if ( pCity->ofquick[2] > 0 )
+	{ // 之前使用过，后来更换了研究员，时间=更换后-更换前的差值
+		pBuilding->sec -= pCity->ofquick[2];
+	}
+	else if ( pCity->ofquick[2] == 0 )
+	{ // 正常加速时间
+		pBuilding->sec -= g_official_tech[ofkind].quick;
+	}
+
+	// 完成
+	if ( pBuilding->sec <= 0 )
+	{
+		city_tech_finish( pCity, pBuilding );
+	}
+	else
+	{
+		// 更新研究员信息
+		pCity->ofquick[2] = -1;
+		city_officialhire_sendinfo( pCity, 2 );
+		building_sendinfo( pCity->actor_index, pBuilding->kind );
+	}
+
 	wlog( 0, LOGOP_TECH, PATH_TECH_FREEQUICK, kind, pCity->techlevel[kind], pCity->techprogress[kind], pCity->actorid, city_mainlevel( pCity->index ) );
 	return 0;
 }
@@ -162,6 +198,10 @@ int city_tech_finish( City *pCity, Building *pBuilding )
 {
 	if ( !pCity || !pBuilding )
 		return -1;
+	// 更新研究员信息
+	pCity->ofquick[2] = 0;
+	city_officialhire_sendinfo( pCity, 2 );
+
 	int kind = pBuilding->value;
 	if ( kind <= 0 || kind >= g_techinfo_maxnum )
 	{

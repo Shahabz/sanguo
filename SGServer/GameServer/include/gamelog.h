@@ -21,6 +21,7 @@
 #define LOGOP_FOOD				15	// 粮食
 #define LOGOP_IRON				16	// 镔铁
 #define LOGOP_TECH				17	// 科技
+#define LOGOP_BARRACKS			18	// 兵营操作
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -41,6 +42,14 @@
 #define PATH_TECH_GET					16	// 科技领取
 #define PATH_TECH_QUICK					17	// 科技加速
 #define PATH_TECH_FREEQUICK				18	// 科技免费加速
+#define PATH_HIRE_FORGING				19	// 雇佣
+#define PATH_HIRE_GOV					20	// 雇佣
+#define PATH_HIRE_TECH					21	// 雇佣
+#define PATH_BUILDING_WORKER			22	// 商用建造队列
+#define PATH_TRAIN_QUEUE				23	// 招募队列
+#define PATH_TRAIN_LONG					24	// 训练时长
+#define PATH_TRAIN_GET					25	// 训练领取
+#define PATH_TRAIN_CANCEL				26	// 取消招募
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

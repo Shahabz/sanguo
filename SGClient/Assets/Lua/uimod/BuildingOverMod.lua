@@ -59,12 +59,10 @@ function BuildingOverModClick( gameObject )
 	local kind = ShareData.intValue[0];
 	if kind == BUILDING_Tech then
 		system_askinfo( ASKINFO_TECH, "", 4 );
-	elseif kind == BUILDING_Infantry then
-	elseif kind == BUILDING_Cavalry then
-	elseif kind == BUILDING_Archer then
-	elseif kind == BUILDING_Militiaman_Infantry then
-	elseif kind == BUILDING_Militiaman_Cavalry then
-	elseif kind == BUILDING_Militiaman_Archer then
+
+	elseif kind >= BUILDING_Infantry and kind <= BUILDING_Militiaman_Archer then
+		system_askinfo( ASKINFO_TRAIN, "", 4, kind );
+	
 	end
 	gameObject:SetActive(false);
 end
