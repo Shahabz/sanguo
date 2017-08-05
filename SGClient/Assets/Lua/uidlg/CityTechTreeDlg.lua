@@ -34,6 +34,7 @@ function CityTechTreeDlgClose()
     end
 	CityTechTreeDlgClick( -1 );
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "CityTechTreeDlg" );
 	CityTechDlgOnShow();
 end

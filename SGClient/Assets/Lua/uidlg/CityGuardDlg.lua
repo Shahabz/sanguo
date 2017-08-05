@@ -38,6 +38,7 @@ function CityGuardDlgClose()
 	m_dataCache = {};
 	m_uiCache = {};
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "CityGuardDlg" );
 end
 

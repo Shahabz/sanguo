@@ -47,6 +47,7 @@ function LevyDlgClose()
 		return;
 	end
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "LevyDlg" );
 end
 

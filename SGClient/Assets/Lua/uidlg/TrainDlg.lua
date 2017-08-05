@@ -44,6 +44,7 @@ function TrainDlgClose()
 	end
 	TrainDlgReset()
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "TrainDlg" );
 end
 
@@ -454,8 +455,13 @@ end
 -- 扩建购买
 function TrainDlgQueueBuy()
 	SetFalse( m_uiTrainQueueInfo );
-	MsgBox( F(760, knum(g_trainqueue[m_recvValue.m_queue+1].token) ), function() 
-		system_askinfo( ASKINFO_TRAIN, "", 5, m_buildingKind );
+	local token = g_trainqueue[m_recvValue.m_queue+1].token
+	MsgBox( F(760, knum(token) ), function() 
+		if GetPlayer().m_token < token then
+			JumpToken()
+		else
+			system_askinfo( ASKINFO_TRAIN, "", 5, m_buildingKind );
+		end
 	end )
 	
 end
@@ -494,8 +500,13 @@ end
 -- 募兵加时购买
 function TrainDlgTrainLongBuy()
 	SetFalse( m_uiTrainlongInfo );
-	MsgBox( F(757, knum(g_trainlong[m_recvValue.m_trainlong+1].silver) ), function() 
-		system_askinfo( ASKINFO_TRAIN, "", 6, m_buildingKind );
+	local silver = g_trainlong[m_recvValue.m_trainlong+1].silver;
+	MsgBox( F(757, knum(silver) ), function() 
+		if GetPlayer().m_silver < silver then
+			JumpRes( 1 )
+		else
+			system_askinfo( ASKINFO_TRAIN, "", 6, m_buildingKind );
+		end
 	end )
 	
 end

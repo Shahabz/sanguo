@@ -32,12 +32,20 @@ function BuyWorkerDlgOnEvent( nType, nControlID, value, gameObject )
             BuyWorkerDlgClose();
 		elseif nControlID == 1 then
 			MsgBox( T(617), function()
-				system_askinfo( ASKINFO_BUILDING, "", 3, 0 );
+				if GetPlayer().m_token < global.worker_token_1 then
+					JumpToken()
+				else
+					system_askinfo( ASKINFO_BUILDING, "", 3, 0 );
+				end
 			end )
 			BuyWorkerDlgClose();
 		elseif nControlID == 2 then
 			MsgBox( T(618), function()
-				system_askinfo( ASKINFO_BUILDING, "", 3, 1 );
+				if GetPlayer().m_token < global.worker_token_7 then
+					JumpToken()
+				else
+					system_askinfo( ASKINFO_BUILDING, "", 3, 1 );
+				end
 			end )
 			BuyWorkerDlgClose();
         end

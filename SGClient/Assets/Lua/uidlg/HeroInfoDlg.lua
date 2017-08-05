@@ -47,6 +47,7 @@ function HeroInfoDlgClose()
     end
 	m_CacheHeroCache = {};
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "HeroInfoDlg" );
 end
 

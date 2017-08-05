@@ -90,6 +90,9 @@ function DialogFrameModOpen( Dlg, title, help, closefun )
 end
 
 function DialogFrameModClose( gameObject )
+	if gameObject == nil then
+		return;
+	end
 	gameObject:SetActive( false );
 	eye.objectPoolManager:Release( "DialogFrameMod", gameObject );
 end

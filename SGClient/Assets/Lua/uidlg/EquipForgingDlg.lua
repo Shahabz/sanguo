@@ -41,6 +41,7 @@ function EquipForgingDlgClose()
 		return;
 	end
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "EquipForgingDlg" );
 	m_selectkind = 0;
 end
@@ -364,7 +365,7 @@ function EquipForgingDlgSelectMaterial( index )
 	--local uiNum = objs[2];
 	local itemkind = m_material[index+1].kind
 	local itemnum = m_material[index+1].num
-	print( itemkind )
+	
 end
 
 -- 打造中页面

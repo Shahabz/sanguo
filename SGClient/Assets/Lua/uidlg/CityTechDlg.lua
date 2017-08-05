@@ -33,6 +33,7 @@ function CityTechDlgClose()
 	end
 	CityTechDlgClear()
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "CityTechDlg" );
 end
 

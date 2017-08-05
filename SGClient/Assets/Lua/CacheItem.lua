@@ -713,7 +713,7 @@ function Item:UseWithToken( nItemKind, nNum , isCheckToken )
 
 	if ( isCheckToken == nil or isCheckToken == true ) and GetPlayer().m_token < item_gettoken( nItemKind ) * nNum then
         -- 跳转打开充值界面
-        --Jump_Token();
+        JumpToken();
 		return -1;
 	end
 	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_TOKENUSE, nItemKind, nNum, -1, 1 );

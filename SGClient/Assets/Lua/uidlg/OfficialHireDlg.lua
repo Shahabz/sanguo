@@ -19,6 +19,7 @@ function OfficialHireDlgClose()
 		return;
 	end
 	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "OfficialHireDlg" );
 end
 
