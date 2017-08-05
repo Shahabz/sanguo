@@ -233,11 +233,11 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 		int value1 = item_get_base_value( itemkind, 0 );
 		if ( ability1 == ITEM_ABILITY_ADDBODY )
 		{ // 加体力
-			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_ADDEXP )
 		{ // 加主公经验
-			city_actorexp( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_actorexp( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_ADDHEROEXP )
 		{ // 加英雄经验
@@ -245,26 +245,26 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 		}
 		else if ( ability1 == ITEM_ABILITY_CITYRES_SILVER )
 		{ // 银币数量
-			city_changesilver( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_changesilver( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_CITYRES_WOOD )
 		{ // 木材数量
-			city_changewood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_changewood( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_CITYRES_FOOD )
 		{ // 粮食数量
-			city_changefood( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_changefood( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_CITYRES_IRON )
 		{ // 铁数量
-			city_changeiron( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
+			city_changeiron( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_BUFF )
 		{ // buff
 			if ( value1 == 1 )
 			{ // 城池保护时间
 				int ptsec = item_get_base_value( itemkind, 1 );
-				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_ITEMUSE );
+				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_TOKENITEMUSE );
 			}
 		}
 	}
@@ -274,7 +274,7 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 	}
 
 	// 消耗钻石
-	actor_change_token( actor_index, -token * itemnum, PATH_ITEMUSE, itemkind );
+	actor_change_token( actor_index, -token * itemnum, PATH_TOKENITEMUSE, itemkind );
 
 	// 记录物品使用日志
 	wlog( 0, LOGOP_ITEMLOST, PATH_TOKENITEMUSE, itemkind, 1, 0, g_actors[actor_index].actorid, 0 );
@@ -406,6 +406,24 @@ int item_drop( int actor_index, short itemindex, short dropcount )
 	}
 	// 发送角色失去物品
 	item_sendlost( actor_index, -1, itemindex, dropcount, PATH_SELL );
+	return 0;
+}
+
+// 服务器响应道具操作-购买
+int item_buy( int actor_index, short itemkind, short itemnum )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( itemkind <= 0 || itemkind >= g_itemkind_maxnum )
+		return -1;
+	int token = item_gettoken( itemkind );
+	if ( token <= 0 )
+		return -1;
+	token *= itemnum;
+
+	if ( actor_change_token( actor_index, -token, PATH_TOKENITEMUSE, 0 ) < 0 )
+		return -1;
+	item_getitem( actor_index, itemkind, itemnum, -1, PATH_TOKENITEMUSE );
 	return 0;
 }
 

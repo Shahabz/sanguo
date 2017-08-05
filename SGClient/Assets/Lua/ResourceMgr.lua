@@ -181,3 +181,32 @@ function OfSprite( shape )
 	end
 	return sprite;
 end
+
+-- 资源图标通过类型
+function ResIcon( type )
+	local list = { "ui_icon_res_silver", "ui_icon_res_wood", "ui_icon_res_food", "ui_icon_res_iron", "ui_icon_res_token" }
+	local sprite = LoadSprite( list[type] );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 资源图标通过道具kind获取
+function ResKindIcon( kind )
+	local list = { 
+	[120]="ui_icon_res_silver", 
+	[121]="ui_icon_res_wood", 
+	[122]="ui_icon_res_food", 
+	[123]="ui_icon_res_iron", 
+	[124]="ui_icon_res_token" }
+	local name = list[kind]
+	if name == nil then
+		name = "Char_Default"
+	end
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end

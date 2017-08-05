@@ -151,10 +151,10 @@ struct _slk_NetS_ActorInfo {
 	char m_official;	//服务器发送玩家基本信息-官职
 	short m_zone;	//服务器发送玩家基本信息-区域
 	int m_battlepower;	//服务器发送玩家基本信息-战力
-	short m_silver;	//服务器发送玩家基本信息-银币
-	short m_wood;	//服务器发送玩家基本信息-木材
-	short m_food;	//服务器发送玩家基本信息-粮食
-	short m_iron;	//服务器发送玩家基本信息-镔铁
+	int m_silver;	//服务器发送玩家基本信息-银币
+	int m_wood;	//服务器发送玩家基本信息-木材
+	int m_food;	//服务器发送玩家基本信息-粮食
+	int m_iron;	//服务器发送玩家基本信息-镔铁
 	int m_infantry_num;	//服务器发送玩家基本信息-步兵数
 	int m_cavalry_num;	//服务器发送玩家基本信息-骑兵数
 	int m_archer_num;	//服务器发送玩家基本信息-弓兵数

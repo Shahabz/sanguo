@@ -15,6 +15,7 @@ local m_uiUnLockDesc = nil; --UnityEngine.GameObject
 local m_uiColor = nil; --UnityEngine.GameObject
 local m_uiForgingBtn = nil; --UnityEngine.GameObject
 local m_uiForgingInfo = nil; --UnityEngine.GameObject
+local m_uiMaterialInfo = nil; --UnityEngine.GameObject
 
 local m_uiOfficialShape = nil; --UnityEngine.GameObject
 local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
@@ -26,6 +27,7 @@ local m_ObjectPool = nil;
 local m_uiEquipObj = {};
 local m_selectkind = 0;
 local m_material = {};
+local m_selectmaterial = 0;
 local m_isforging = {};
 local m_scrollindex = 0;
 
@@ -61,6 +63,8 @@ function EquipForgingDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             EquipForgingDlgClose();
+		elseif nControlID == -2 then
+			EquipForgingDlgSelectMaterial(-1)
 		
 		elseif nControlID == 1 then
 			m_uiScroll.transform:GetComponent("UIScrollRect"):ScrollToTop();
@@ -72,6 +76,10 @@ function EquipForgingDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			EquipForgingDlgForging()
 		
+		-- 获取材料
+		elseif nControlID == 4 then
+			EquipForgingDlgMaterialGet()
+			
 		-- 雇佣
 		elseif nControlID == 5 then
 			OfficialHireDlgShow( 0 );
@@ -122,6 +130,7 @@ function EquipForgingDlgOnAwake( gameObject )
 	m_uiOfficialTime = objs[15];
 	m_uiOfficialName = objs[16];
 	m_uiOfficialDesc = objs[17];
+	m_uiMaterialInfo = objs[18];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -312,7 +321,7 @@ function EquipForgingDlgSelect( kind )
 	
 	-- 材料
 	m_material ={}
-	table.insert( m_material, {kind=-1, num=g_equipinfo[kind].silver} )
+	table.insert( m_material, {kind=120, num=g_equipinfo[kind].silver} )
 	table.insert( m_material, {kind=g_equipinfo[kind].material_kind0, num=g_equipinfo[kind].material_num0} ) 
 	table.insert( m_material, {kind=g_equipinfo[kind].material_kind1, num=g_equipinfo[kind].material_num1} ) 
 	table.insert( m_material, {kind=g_equipinfo[kind].material_kind2, num=g_equipinfo[kind].material_num2} ) 
@@ -328,11 +337,13 @@ function EquipForgingDlgSelect( kind )
 		local uiNum = objs[2];
 		local itemkind = m_material[i+1].kind
 		local itemnum = m_material[i+1].num
+		
 		SetControlID( materialObj, 2000 + i )
-		if itemkind == -1 then
-			SetTrue( materialObj )
-			SetImage( uiShape, LoadSprite("ui_icon_res_silver") );
-			SetImage( uiColor, ItemColorSprite( 0 ) );
+		SetTrue( materialObj )
+		SetImage( uiShape, ItemSprite(itemkind) );
+		SetImage( uiColor, ItemColorSprite( item_getcolor(itemkind) ) );
+			
+		if itemkind == 120 then
 			if GetPlayer().m_silver < itemnum then
 				SetText( uiNum, knum(itemnum).."<color=#e80017>/"..knum(GetPlayer().m_silver).."</color>" )
 				m_isforging[i] = false;
@@ -340,9 +351,6 @@ function EquipForgingDlgSelect( kind )
 				SetText( uiNum, knum(itemnum).."/"..knum(GetPlayer().m_silver) )
 			end
 		elseif itemkind > 0 then
-			SetTrue( materialObj )
-			SetImage( uiShape, ItemSprite( itemkind ) );
-			SetImage( uiColor, ItemColorSprite( item_getcolor( itemkind ) ) );
 			local has = GetItem():GetCount( itemkind )
 			if has < itemnum then
 				SetText( uiNum, itemnum.."<color=#e80017>/"..GetItem():GetCount( itemkind ).."</color>" )
@@ -356,16 +364,71 @@ function EquipForgingDlgSelect( kind )
     end
 end
 
+-- 更新
+function EquipForgingDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	EquipForgingDlgSelect( m_selectkind )
+end
+
 -- 选择材料
 function EquipForgingDlgSelectMaterial( index )
-	local materialObj = m_uiMaterialGrid.transform:GetChild(index).gameObject
-	--local objs = materialObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	--local uiShape = objs[0];
-	--local uiColor = objs[1];
-	--local uiNum = objs[2];
+	if index < 0 then
+		m_selectmaterial = 0
+		SetFalse( m_uiMaterialInfo )
+		return;
+	end
+	SetTrue( m_uiMaterialInfo )
+	
 	local itemkind = m_material[index+1].kind
 	local itemnum = m_material[index+1].num
+	m_selectmaterial = itemkind;
 	
+	local objs = m_uiMaterialInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiColor = objs[1];
+	local uiName = objs[2];
+	local uiDesc = objs[3];
+	local uiPath = objs[4];
+	local uiNeed = objs[5];
+	local uiGetBtn = objs[6];
+	
+	SetImage( uiShape, ItemSprite(itemkind) );
+	SetImage( uiColor, ItemColorSprite( item_getcolor(itemkind) ) );
+	SetText( uiName, item_getname(itemkind) )
+	SetText( uiDesc, item_getdesc(itemkind) )
+	
+	if itemkind == 120 then
+		SetTrue( uiGetBtn )
+		if GetPlayer().m_silver < itemnum then
+			SetText( uiNeed, T(772)..": <color=#03de27>"..knum(itemnum).."</color><color=#e80017>/"..knum(GetPlayer().m_silver).."</color>" )
+		else
+			SetText( uiNeed, T(772)..": <color=#03de27>"..knum(itemnum).."/"..knum(GetPlayer().m_silver).."</color>" )
+		end
+	elseif itemkind > 0 then
+		local has = GetItem():GetCount( itemkind )
+		if has < itemnum then
+			SetText( uiNeed, T(772)..": <color=#03de27>"..itemnum.."</color><color=#e80017>/"..GetItem():GetCount( itemkind ).."</color>" )
+		else
+			SetText( uiNeed, T(772)..": <color=#03de27>"..itemnum.."/"..GetItem():GetCount( itemkind ).."</color>" )
+		end
+		
+		if item_gettype( itemkind ) == ITEM_TYPE_EQUIP_DRAWING then
+			SetFalse( uiGetBtn )
+		else
+			SetTrue( uiGetBtn )
+		end
+	end
+end
+
+-- 获取材料
+function EquipForgingDlgMaterialGet()
+	if m_selectmaterial <= 0 then
+		return
+	end
+	MaterialGetDlgShow( m_selectmaterial )
+	EquipForgingDlgSelectMaterial( -1 )
 end
 
 -- 打造中页面

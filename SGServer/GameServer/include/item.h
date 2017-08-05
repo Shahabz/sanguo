@@ -45,6 +45,7 @@
 #define ITEM_PROCESS_USE		2 // 使用道具
 #define ITEM_PROCESS_SELL		3 // 出售道具
 #define ITEM_PROCESS_TOKENUSE	4 // 钻石方式使用道具
+#define ITEM_PROCESS_BUY		5 // 购买
 
 /* 场合 */
 #define ITEM_SITUATION_NOUSEMORE	0x01	// 禁止使用多个
@@ -104,6 +105,7 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 int item_use_withtoken( int actor_index, short itemkind, short itemnum, int herokind, int ask ); // 服务器响应道具操作-直接花钱使用
 int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, int buildingoffset ); // 服务器响应道具操作-加速道具使用
 int item_drop( int actor_index, short itemindex, short dorpcount ); // 服务器响应道具操作-丢弃
+int item_buy( int actor_index, short itemkind, short itemnum ); // 服务器响应道具操作-购买
 int item_settle( int actor_index );   // 服务器响应道具操作-整理
 
 // ---------------------------------- 服务器发送道具协议 item_send.cpp -----------------------------------------------------

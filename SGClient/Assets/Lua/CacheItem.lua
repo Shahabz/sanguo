@@ -18,6 +18,7 @@ ITEM_PROCESS_INFO		    = 1 -- 获取道具信息
 ITEM_PROCESS_USE		    = 2 -- 使用道具
 ITEM_PROCESS_SELL		    = 3 -- 丢弃道具
 ITEM_PROCESS_TOKENUSE	    = 4	-- 钻石方式使用
+ITEM_PROCESS_BUY			= 5 -- 购买
 
 -- 道具类型
 ITEM_TYPE_NORMAL_USE			=	1	--	点击类道具（主动使用）
@@ -222,7 +223,10 @@ end
 -- EventProtocol.addEventListener( "OnItemChange", function( recvValue ) end )
 function Item:OnItemChange( _ItemIndex )
 	local nItemIndex = _ItemIndex + 1;
+	-- 背包
 	BagDlgLoadItem();
+	-- 其他系统需要更新的
+	MaterialGetDlgUpdate();	
 	-- 发布事件
 	--EventProtocol.dispatchEvent( "OnItemChange", { itemIndex=_ItemIndex, kind=self.m_Item[nItemIndex].m_kind, num=self.m_Item[nItemIndex].m_num } );
 end
@@ -237,7 +241,6 @@ function Item:ItemUsed( _ItemIndex, nItemNum, nItemEff )
 		return;
 	end
 	
-	
 	-- 正数表示的是使用个数，负数表示不能使用
 	if nItemNum > 0 then
 		self.m_Item[nItemIndex].m_num = self.m_Item[nItemIndex].m_num - nItemNum;
@@ -249,9 +252,12 @@ function Item:ItemUsed( _ItemIndex, nItemNum, nItemEff )
 		self:SetItem( _ItemIndex, nil );
 		self:OnItemChange( _ItemIndex );
 	else
+		-- 背包
 		BagDlgItemChange( _ItemIndex )
+		-- 其他系统需要更新的
+		MaterialGetDlgUpdate();	
 	end
-		
+	
 end
 
 -- 得到服务器返回的消息，得到一个物品
@@ -532,6 +538,17 @@ end
 
 -- 根据道具id获取个数
 function Item:GetCount( nItemKind )
+	if nItemKind == 120 then
+		return GetPlayer().m_silver;
+	elseif nItemKind == 121 then
+		return GetPlayer().m_wood;
+	elseif nItemKind == 122 then
+		return GetPlayer().m_food;
+	elseif nItemKind == 123 then
+		return GetPlayer().m_iron;
+	elseif nItemKind == 124 then
+		return GetPlayer().m_token;
+	end
 	local count = 0;
 	for tmpi=0, MAX_ITEMNUM-1, 1 do
 		local pItem = self:GetAnyItem( tmpi );

@@ -253,10 +253,10 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_official, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_zone, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_wood, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_food, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_iron, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_iron, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_infantry_num, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_cavalry_num, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_archer_num, (*psize) );

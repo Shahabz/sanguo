@@ -189,10 +189,10 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_official = buffer:ReadSByte();
 	recvValue.m_zone = buffer:ReadShort();
 	recvValue.m_battlepower = buffer:ReadInt();
-	recvValue.m_silver = buffer:ReadShort();
-	recvValue.m_wood = buffer:ReadShort();
-	recvValue.m_food = buffer:ReadShort();
-	recvValue.m_iron = buffer:ReadShort();
+	recvValue.m_silver = buffer:ReadInt();
+	recvValue.m_wood = buffer:ReadInt();
+	recvValue.m_food = buffer:ReadInt();
+	recvValue.m_iron = buffer:ReadInt();
 	recvValue.m_infantry_num = buffer:ReadInt();
 	recvValue.m_cavalry_num = buffer:ReadInt();
 	recvValue.m_archer_num = buffer:ReadInt();
