@@ -15,14 +15,21 @@ SRC = \
 ../AutoS/src/auto_data_city_guard.cpp \
 ../AutoS/src/auto_data_city_tech.cpp \
 ../AutoS/src/auto_data_equip.cpp \
+../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_hero.cpp \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_monster.cpp \
+../AutoS/src/auto_data_nation_equip.cpp \
+../AutoS/src/auto_data_official_forging.cpp \
+../AutoS/src/auto_data_official_gov.cpp \
+../AutoS/src/auto_data_official_tech.cpp \
 ../AutoS/src/auto_data_paycountry.cpp \
 ../AutoS/src/auto_data_paygoods.cpp \
 ../AutoS/src/auto_data_platinfo.cpp \
 ../AutoS/src/auto_data_quest.cpp \
+../AutoS/src/auto_data_story.cpp \
 ../AutoS/src/auto_data_trainlong.cpp \
+../AutoS/src/auto_data_trainqueue.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_data_vip.cpp \
 ../AutoS/src/global_netrecv_auto.cpp \
@@ -48,6 +55,8 @@ award.cpp \
 building.cpp \
 chat.cpp \
 city.cpp \
+city_attr.cpp \
+city_tech.cpp \
 client.cpp \
 db.cpp \
 dbredis.cpp \
@@ -64,6 +73,7 @@ item_proc.cpp \
 item_send.cpp \
 login_net.cpp \
 login_user.cpp \
+mail.cpp \
 main.cpp \
 map.cpp \
 mapunit.cpp \
@@ -120,11 +130,21 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip.o: ../AutoS/src/auto_data_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_equip.o: ../AutoS/src/auto_data_nation_equip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_official_forging.o: ../AutoS/src/auto_data_official_forging.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_official_tech.o: ../AutoS/src/auto_data_official_tech.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paycountry.o: ../AutoS/src/auto_data_paycountry.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -134,7 +154,11 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_quest.o: ../AutoS/src/auto_data_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_story.o: ../AutoS/src/auto_data_story.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_trainlong.o: ../AutoS/src/auto_data_trainlong.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_trainqueue.o: ../AutoS/src/auto_data_trainqueue.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_upgrade.o: ../AutoS/src/auto_data_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -186,6 +210,10 @@ chat.o: chat.cpp
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 city.o: city.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+city_attr.o: city_attr.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+city_tech.o: city_tech.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 client.o: client.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 db.o: db.cpp 
@@ -217,6 +245,8 @@ item_send.o: item_send.cpp
 login_net.o: login_net.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 login_user.o: login_user.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+mail.o: mail.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 main.o: main.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

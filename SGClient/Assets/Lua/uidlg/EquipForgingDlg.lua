@@ -25,6 +25,7 @@ local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_uiEquipObj = {};
 local m_selectkind = 0;
+local m_material = {};
 local m_isforging = {};
 local m_scrollindex = 0;
 
@@ -85,6 +86,10 @@ function EquipForgingDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 选择装备
 		elseif nControlID > 1000 and nControlID < 2000 then
 			EquipForgingDlgSelect( nControlID-1000 )
+		
+		-- 选择材料	
+		elseif nControlID >= 2000 and nControlID < 2100 then
+			EquipForgingDlgSelectMaterial( nControlID-2000 )
         end
 		
 	elseif nType == UI_EVENT_TIMECOUNTEND then
@@ -305,13 +310,13 @@ function EquipForgingDlgSelect( kind )
 	SetText( m_uiSec, T(766)..":"..secnum(g_equipinfo[kind].sec) );
 	
 	-- 材料
-	local material ={}
-	table.insert( material, {kind=-1, num=g_equipinfo[kind].silver} )
-	table.insert( material, {kind=g_equipinfo[kind].material_kind0, num=g_equipinfo[kind].material_num0} ) 
-	table.insert( material, {kind=g_equipinfo[kind].material_kind1, num=g_equipinfo[kind].material_num1} ) 
-	table.insert( material, {kind=g_equipinfo[kind].material_kind2, num=g_equipinfo[kind].material_num2} ) 
-	table.insert( material, {kind=g_equipinfo[kind].material_kind3, num=g_equipinfo[kind].material_num3} ) 
-	table.insert( material, {kind=g_equipinfo[kind].material_kind4, num=g_equipinfo[kind].material_num4} ) 
+	m_material ={}
+	table.insert( m_material, {kind=-1, num=g_equipinfo[kind].silver} )
+	table.insert( m_material, {kind=g_equipinfo[kind].material_kind0, num=g_equipinfo[kind].material_num0} ) 
+	table.insert( m_material, {kind=g_equipinfo[kind].material_kind1, num=g_equipinfo[kind].material_num1} ) 
+	table.insert( m_material, {kind=g_equipinfo[kind].material_kind2, num=g_equipinfo[kind].material_num2} ) 
+	table.insert( m_material, {kind=g_equipinfo[kind].material_kind3, num=g_equipinfo[kind].material_num3} ) 
+	table.insert( m_material, {kind=g_equipinfo[kind].material_kind4, num=g_equipinfo[kind].material_num4} ) 
 	
 	m_isforging = {true,true,true,true,true,true};
 	for i = 0, m_uiMaterialGrid.transform.childCount - 1 do
@@ -320,8 +325,9 @@ function EquipForgingDlgSelect( kind )
 		local uiShape = objs[0];
 		local uiColor = objs[1];
 		local uiNum = objs[2];
-		local itemkind = material[i+1].kind
-		local itemnum = material[i+1].num
+		local itemkind = m_material[i+1].kind
+		local itemnum = m_material[i+1].num
+		SetControlID( materialObj, 2000 + i )
 		if itemkind == -1 then
 			SetTrue( materialObj )
 			SetImage( uiShape, LoadSprite("ui_icon_res_silver") );
@@ -347,6 +353,18 @@ function EquipForgingDlgSelect( kind )
 			SetFalse( materialObj )
 		end
     end
+end
+
+-- 选择材料
+function EquipForgingDlgSelectMaterial( index )
+	local materialObj = m_uiMaterialGrid.transform:GetChild(index).gameObject
+	--local objs = materialObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	--local uiShape = objs[0];
+	--local uiColor = objs[1];
+	--local uiNum = objs[2];
+	local itemkind = m_material[index+1].kind
+	local itemnum = m_material[index+1].num
+	print( itemkind )
 end
 
 -- 打造中页面
