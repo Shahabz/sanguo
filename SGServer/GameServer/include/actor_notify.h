@@ -11,6 +11,8 @@
 #define NOTIFY_CHANGENAME	6	// 玩家修改名称
 #define NOTIFY_NPCTALK		7	// NPC对话
 #define NOTIFY_EQUIP		8	// 装备
+#define NOTIFY_ACTOR		9	// 角色
+#define NOTIFY_ACTORSFLAG	10	// 角色标志位
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

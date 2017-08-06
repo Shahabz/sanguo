@@ -177,7 +177,19 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 
 		elseif nControlID == 104 then
-
+		
+		-- 点击资源
+		elseif nControlID == 201 then
+			MaterialGetDlgShow( 120 )
+		elseif nControlID == 202 then
+			MaterialGetDlgShow( 121 )
+		elseif nControlID == 203 then
+			MaterialGetDlgShow( 122 )
+		elseif nControlID == 204 then
+			MaterialGetDlgShow( 123 )
+		-- 点击体力
+		elseif nControlID == 205 then
+			JumpBody()
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then

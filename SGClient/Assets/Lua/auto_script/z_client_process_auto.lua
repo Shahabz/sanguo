@@ -414,6 +414,7 @@ function proc_body_C( recvValue )
 	end
 	
 	GetPlayer().m_body = recvValue.m_total;
+	GetPlayer().m_bodysec = recvValue.m_bodysec;
 	MainDlgSetBody()
 end
 

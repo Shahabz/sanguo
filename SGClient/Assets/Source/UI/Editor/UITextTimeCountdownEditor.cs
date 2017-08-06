@@ -31,6 +31,8 @@ public class UITextTimeCountdownEditor : UITextEditor
 		bool iso = EditorGUILayout.Toggle("iso", txt.iso);
 		txt.iso = iso;
 
+		bool showall = EditorGUILayout.Toggle("showall", txt.showall);
+		txt.showall = showall;
 
 		UIProgress uiProgress = EditorGUILayout.ObjectField( "UIProgress", txt.uiProgress, typeof(UIProgress), true ) as UIProgress;
 		txt.uiProgress = uiProgress;

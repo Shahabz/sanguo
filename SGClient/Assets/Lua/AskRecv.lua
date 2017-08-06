@@ -8,6 +8,8 @@ NOTIFY_CHANGESHAPE	=	5	-- 玩家头像修改
 NOTIFY_CHANGENAME	=	6	-- 玩家修改名称
 NOTIFY_NPCTALK		=	7	-- NPC对话
 NOTIFY_EQUIP		=	8	-- 装备
+NOTIFY_ACTOR		=	9	-- 角色
+NOTIFY_ACTORSFLAG	=	10	-- 角色标志位
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -16,7 +18,8 @@ function RecvActorNotify(recvValue)
     local msg = recvValue.m_msg;
     
     if msgid == NOTIFY_NORMAL then
-	
+		pop(T(value[1]))
+		
 	-- 购买并使用道具
 	elseif msgid == NOTIFY_ITEM then
 		if value[1] == 0 then
@@ -52,5 +55,23 @@ function RecvActorNotify(recvValue)
 			GetPlayer().m_equipext = value[2];
 			BagDlgEquipExtSet();
 		end
+	
+	-- 角色	
+	elseif msgid == NOTIFY_ACTOR then
+		-- 购买体力询问
+		if value[1] == 0 then
+			MsgBox( F( 783, value[2] ), function()
+				system_askinfo( ASKINFO_ACTOR, "", 0, 0 );
+			end )
+		
+		-- 次数用尽
+		elseif value[1] == 1 then
+			AlertMsg( T(784) )
+	
+		end
+	
+	-- 角色标志位	
+	elseif msgid == NOTIFY_ACTORSFLAG then
+		GetPlayer().m_actor_sflag = value[1]
     end
 end

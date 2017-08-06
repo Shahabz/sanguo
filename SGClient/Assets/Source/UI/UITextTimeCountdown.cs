@@ -20,6 +20,7 @@ public class UITextTimeCountdown : UIText
     public String overText = "";
     public bool playOnEable = true;
 	public bool iso = true;
+	public bool showall = true;
     public enum DirectType
     {
         LeftToRight = 0,
@@ -134,15 +135,22 @@ public class UITextTimeCountdown : UIText
     /// <param name="leftTime"></param>
     protected virtual void ShowText(int leftTime)
     {
-		if (iso) 
+		if (iso && showall) {
+			if (formatText != String.Empty) {
+				text = string.Format (formatText, Utils.GetTimeFormatISO (leftTime));
+			} else {
+				text = Utils.GetTimeFormatISO (leftTime);
+			}	
+		} 
+		else if (iso) 
 		{
 			if (formatText != String.Empty)
 			{
-				text = string.Format(formatText, Utils.GetTimeFormatISO(leftTime));
+				text = string.Format(formatText, Utils.GetTimeFormatISOMin(leftTime));
 			}
 			else
 			{
-				text = Utils.GetTimeFormatISO(leftTime);
+				text = Utils.GetTimeFormatISOMin(leftTime);
 			}	
 		}
 		else

@@ -90,5 +90,21 @@ end
 
 function ChangeNameDlgChange()
 	local name = m_uiNameInput:GetComponent( "UIInputField" ).text;
+	
+	-- 非法检查
+	local len = string.len( name );
+	if len < 4 or len > 18 then
+		pop(T(790))
+		return
+	end
+	if string.checksign( name ) == false then
+		pop(T(788))
+		return
+	end
+	if Utils.MaskWordCheck( name ) == false then
+		pop(T(789))
+		return;
+	end
+				
 	system_askinfo( ASKINFO_CHANGENAME, name, 0 );
 end

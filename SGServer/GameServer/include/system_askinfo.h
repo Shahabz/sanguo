@@ -19,6 +19,7 @@
 #define ASKINFO_GOV				14 // 官府 
 #define ASKINFO_OFFICIALHIRE	15 // 雇佣 
 #define ASKINFO_QUICK			16 // 加速
+#define ASKINFO_ACTOR			17 // 角色操作
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

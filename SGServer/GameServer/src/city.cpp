@@ -749,6 +749,7 @@ int city_changebody( int city_index, int value, short path )
 	pValue.m_add = value;
 	pValue.m_total = g_city[city_index].body;
 	pValue.m_path = path;
+	pValue.m_bodysec = g_city[city_index].bodysec;
 	netsend_body_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -22,6 +22,7 @@
 #include "building.h"
 #include "vip.h"
 #include "quest.h"
+#include "actor_times.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -36,6 +37,8 @@ extern int g_world_data[WORLD_DATA_MAX];
 extern UpgradeInfo *g_upgradeinfo;
 extern int g_upgradeinfo_maxnum;
 
+extern BodyTokenInfo *g_bodytoken;
+extern int g_bodytoken_maxnum;
 
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
@@ -240,22 +243,20 @@ int actor_changename( int actor_index, char *pname, int type )
 	int namelen = (int)strlen( pname );
 	if ( namelen <= 0 || namelen >= NAME_SIZE )
 		return -1;
-	//if ( type == 1 )
-	//{
 
-	//}
-	//int costtype = 0;
-	//int itemkind = 216;
-	//if ( item_getitemnum( actor_index, itemkind ) <= 0 )
-	//{
-	//	if ( g_actors[actor_index].token < item_getprice( itemkind ) )
-	//	{			
-	//		int value = 0;
-	//		actor_notify_value( actor_index, NOTIFY_WARNING, 1, &value, NULL ); // 钻石不够
-	//		return -1;
-	//	}
-	//	costtype = 1;
-	//}
+	int costtype = 0;// 使用道具模式
+	int itemkind = 172;
+	if ( type == 1 )
+	{ // 有道具使用道具，无道具使用钻石
+		if ( item_getitemnum( actor_index, itemkind ) <= 0 )
+		{
+			if ( g_actors[actor_index].token < item_gettoken( itemkind ) )
+			{			
+				return -1;
+			}
+			costtype = 1; // 使用钻石模式
+		}
+	}
 
 	char szText_newname[NAME_SIZE * 2 + 1] = {0};
 	db_escape( (const char *)pname, szText_newname, 0 );
@@ -271,7 +272,7 @@ int actor_changename( int actor_index, char *pname, int type )
 	{
 		if ( atoi( row[0] ) >= 1 )
 		{
-			actor_system_message( actor_index, 63 ); // 该名字已经有人使用
+			actor_system_message( actor_index, 787 ); // 该名字已经有人使用
 			mysql_free_result( res );
 			return -1;
 		}
@@ -296,15 +297,17 @@ int actor_changename( int actor_index, char *pname, int type )
 		return -1;
 	}
 	
-	//actor_system_message( actor_index, 64 ); // 更名成功！
-	//if ( costtype == 0 )
-	//{
-	//	item_lost( actor_index, itemkind, 1, PATH_SYSTEM );
-	//}
-	//else
-	//{
-	//	actor_change_token( actor_index, -item_getprice( itemkind ), PATH_ACTOR_BUY, TOKEN_ACTOR_BUY_CHANGENAME );
-	//}
+	if ( type == 1 )
+	{
+		if ( costtype == 0 )
+		{
+			item_lost( actor_index, itemkind, 1, PATH_SYSTEM );
+		}
+		else
+		{
+			actor_change_token( actor_index, -item_gettoken( itemkind ), PATH_CHANGENAME, 0 );
+		}
+	}
 	SLK_NetS_ChangeName pValue = { 0 };
 	strcpy( pValue.m_name, g_actors[actor_index].name );
 	pValue.m_name_length = strlen( pValue.m_name );
@@ -435,7 +438,7 @@ int actor_getinfo( int actor_index )
 	info.m_shape = g_actors[actor_index].shape;
 	info.m_level = g_actors[actor_index].level;
 	info.m_token = g_actors[actor_index].token;
-	g_actors[actor_index].function;
+	info.m_actor_sflag = g_actors[actor_index].sflag;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
@@ -445,6 +448,7 @@ int actor_getinfo( int actor_index )
 		info.m_vipexp =  pCity->vipexp;
 		info.m_vipexp_max = vip_expmax_get( pCity->viplevel );
 		info.m_body =  pCity->body;
+		info.m_bodysec = pCity->bodysec;
 		info.m_place =  pCity->place;
 		info.m_official =  pCity->official;
 		info.m_zone =  pCity->zone;
@@ -517,3 +521,56 @@ int actor_getconfig( int actor_index, int index )
 	return g_actors[actor_index].config[index];
 }
 
+// 购买体力
+int actor_buybody( int actor_index, int ask )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_BODY_FREEBUY ) == 0 )
+	{
+		actor_set_sflag( actor_index, ACTOR_SFLAG_BODY_FREEBUY, 1 );
+		city_changebody( pCity->index, 100, PATH_BODYBUY );
+		return 0;
+	}
+	// 最大购买次数
+	int maxtimes = 1 + pCity->attr.everyday_body_buymax;
+	// 今天购买体力次数
+	int times  = actor_get_today_char_times( actor_index, TODAY_CHAR_BUYBODY );
+	if ( times >= maxtimes )
+	{
+		int value[4] = { 0 };
+		value[0] = 1;
+		value[1] = 0;
+		value[2] = times;
+		value[3] = maxtimes;
+		actor_notify_value( actor_index, NOTIFY_ACTOR, 4, value, NULL );
+		return 0;
+	}
+
+	int _times = times + 1;
+	if ( _times <= 0 )
+		_times = 1;
+	else if ( _times >= g_bodytoken_maxnum )
+		_times = g_bodytoken_maxnum - 1;
+
+	int token = g_bodytoken[_times].token;
+	if ( ask == 1 )
+	{	
+		int value[4] = { 0 };
+		value[0] = 0;
+		value[1] = token;
+		value[2] = times;
+		value[3] = maxtimes;
+		actor_notify_value( actor_index, NOTIFY_ACTOR, 4, value, NULL );
+		return 0;
+	}
+	
+	if ( actor_change_token( actor_index, -token, PATH_BODYBUY, 0 ) < 0 )
+		return -1;
+	city_changebody( pCity->index, 100, PATH_BODYBUY );
+	actor_add_today_char_times( actor_index, TODAY_CHAR_BUYBODY );
+	return 0;
+}

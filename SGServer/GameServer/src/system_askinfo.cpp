@@ -47,7 +47,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		actor_changeshape( actor_index, (char)pvalue[0] );
 		break;
 	case ASKINFO_CHANGENAME:
-		actor_changename( actor_index, pstr, pvalue[1] );
+		actor_changename( actor_index, pstr, pvalue[0] );
 		break;
 	case ASKINFO_CITYGUARD:
 		if ( pvalue[0] == 0 )
@@ -231,6 +231,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		if ( pvalue[0] == 0 )
 		{
 			item_use_quick( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[3] );
+		}
+		break;
+	case ASKINFO_ACTOR:
+		if ( pvalue[0] == 0 )
+		{ // ¹ºÂòÌåÁ¦
+			actor_buybody( actor_index, pvalue[1] );
+		}
+		else if( pvalue[0] == 1 )
+		{ 
+
 		}
 		break;
 	default:

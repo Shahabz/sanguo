@@ -273,6 +273,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_ptsec, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_forgingkind, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actor_sflag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_bodysec, (*psize) );
 	return 0;
 }
 
@@ -685,6 +687,7 @@ int struct_NetS_Body_send( char **pptr, int *psize, SLK_NetS_Body *pValue )
 	LKSET_WORD_SEND( (*pptr), &pValue->m_total, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_add, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_bodysec, (*psize) );
 	return 0;
 }
 

@@ -83,6 +83,11 @@ function GameManager.GameLogic()
 		GetPlayer().m_ptsec = GetPlayer().m_ptsec - 1
 	end
 	
+	-- 体力回复时间
+	if GetPlayer().m_bodysec > 0 then
+		GetPlayer().m_bodysec = GetPlayer().m_bodysec - 1
+	end
+	
 	-- 太学院
 	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
 	if pBuilding and pBuilding.m_sec > 0 then

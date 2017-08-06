@@ -613,6 +613,18 @@ public class Utils : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 获取时间格式串,同上，只精确到分钟
+	/// </summary>
+	/// <param name="second"></param>
+	/// <returns></returns>
+	public static string GetTimeFormatISOMin(int second)
+	{
+		int min = (second / 60);
+		int sec = (second % 60);
+		return string.Format("{0}:{1}", min.ToString("D2"), sec.ToString("D2") );
+	}
+
     public static int GetMillisecond()
     {
         return DateTime.Now.Millisecond;

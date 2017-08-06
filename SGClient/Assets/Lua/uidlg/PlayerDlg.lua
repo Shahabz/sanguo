@@ -59,8 +59,12 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 购买体力
 		elseif nControlID == 15 then
-		
+			JumpBody()
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			PlayerDlgSet();
+		end	
 	end
 end
 
@@ -133,10 +137,17 @@ function PlayerDlgSet()
 	-- 体力
 	SetProgress( m_uiBodyProgress, GetPlayer().m_body/100 );
 	SetText( m_uiBodyProgress.transform:Find("Text"), GetPlayer().m_body.."/100" );
+	
+	local bodydesc = m_uiBodyProgress.transform:Find("Level")
+	local bodytimer = m_uiBodyProgress.transform:Find("Timer")
 	if GetPlayer().m_body >= 100 then
-		SetText( m_uiBodyProgress.transform:Find("Level"), T(666) );
+		SetText( bodydesc, T(666) );
+		SetTrue( bodydesc );
+		SetFalse( bodytimer );
 	else
-		SetText( m_uiBodyProgress.transform:Find("Level"), "" );
+		SetFalse( bodydesc );
+		SetTrue( bodytimer );
+		SetTimer( bodytimer, GetPlayer().m_bodysec, GetPlayer().m_bodysec, 1 )
 	end
 	
 	-- 其它信息

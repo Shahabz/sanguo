@@ -168,6 +168,8 @@ struct _slk_NetS_ActorInfo {
 	int m_ptsec;	//服务器发送玩家基本信息-保护时间
 	short m_forgingkind;	//服务器发送玩家基本信息-打造
 	int m_forgingsec;	//服务器发送玩家基本信息-打造
+	int m_actor_sflag;	//服务器发送玩家基本信息-玩家结构标志
+	short m_bodysec;	//服务器发送玩家基本信息-体力恢复时间
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -460,6 +462,7 @@ struct _slk_NetS_Body {
 	short m_total;	//体力
 	short m_add;	//获取体力
 	short m_path;	//途径
+	short m_bodysec;	//体力回复时间
 };
 typedef struct _slk_NetS_Body SLK_NetS_Body;	//改变体力
 

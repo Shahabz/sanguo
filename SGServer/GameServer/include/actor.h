@@ -124,6 +124,8 @@ int actor_configinfo( int actor_index );
 int actor_setconfig( int actor_index, int index, char value );
 int actor_getconfig( int actor_index, int index );
 
+// ¹ºÂòÌåÁ¦
+int actor_buybody( int actor_index, int ask );
 
 // ------------------------------- actor_gmcmd.c -----------------------------------
 int actor_command( int actor_index, short cmd, int *pValue, char *pMsg );

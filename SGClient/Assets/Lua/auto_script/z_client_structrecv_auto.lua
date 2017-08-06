@@ -217,6 +217,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_ptsec = buffer:ReadInt();
 	recvValue.m_forgingkind = buffer:ReadShort();
 	recvValue.m_forgingsec = buffer:ReadInt();
+	recvValue.m_actor_sflag = buffer:ReadInt();
+	recvValue.m_bodysec = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -588,6 +590,7 @@ function struct_NetS_Body_recv( buffer )
 	recvValue.m_total = buffer:ReadShort();
 	recvValue.m_add = buffer:ReadShort();
 	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_bodysec = buffer:ReadShort();
 	return recvValue;
 end
 

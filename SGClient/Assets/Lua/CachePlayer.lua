@@ -1,3 +1,6 @@
+-- 一次性变量
+ACTOR_SFLAG_BODY_FREEBUY	=	0	-- 首次购买体力免费
+
 --  角色缓存信息
 local Player = class("Player");
 function Player:ctor()
@@ -20,6 +23,7 @@ function Player:Init()
 	self.m_vipexp			=	0;
 	self.m_vipexp_max		=	0;
 	self.m_body				=	0;
+	self.m_bodysec			=	0;
 	self.m_place			=	0;
 	self.m_official			=	0;
 	self.m_zone				=	0;
@@ -33,6 +37,7 @@ function Player:Init()
 	self.m_archer_num		=	0;
 	self.m_prestige			=	0;
 	self.m_mokilllv			=	0;
+	self.m_actor_sflag		=	0;
 	self.m_sflag			=	0;
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
@@ -75,6 +80,7 @@ function Player:Set( recvValue )
 	self.m_vipexp			=	recvValue.m_vipexp;
 	self.m_vipexp_max		=	recvValue.m_vipexp_max;
 	self.m_body				=	recvValue.m_body;
+	self.m_bodysec			=	recvValue.m_bodysec
 	self.m_place			=	recvValue.m_place;
 	self.m_official			=	recvValue.m_official;
 	self.m_zone				=	recvValue.m_zone;
@@ -87,6 +93,7 @@ function Player:Set( recvValue )
 	self.m_cavalry_num		=	recvValue.m_cavalry_num;
 	self.m_archer_num		=	recvValue.m_archer_num;
 	self.m_mokilllv			=	recvValue.m_mokilllv;
+	self.m_actor_sflag		=	recvValue.m_actor_sflag;
 	self.m_sflag			=	recvValue.m_sflag;
 	self.m_autobuild		=	recvValue.m_autobuild;
 	self.m_autobuildopen	=	recvValue.m_autobuildopen;

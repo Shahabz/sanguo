@@ -17,7 +17,7 @@ local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_kind = 0;
-local m_canUpgrade = true;
+local m_canUpgrade = 0;
 local m_firstKind = 0;
 
 -- 打开界面
@@ -358,7 +358,7 @@ function CityTechDlgSelect( kind )
 		return
 	end
 	SetTrue( m_uiTechInfo );
-	m_canUpgrade = true;
+	m_canUpgrade = 0;
 	
 	local objs = m_uiTechInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
@@ -407,7 +407,7 @@ function CityTechDlgSelect( kind )
 			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_silver.."</color>" )
 		else
 			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_silver.."</color>" )
-			m_canUpgrade = false;
+			m_canUpgrade = 1;
 		end
 	else
 		SetFalse( uiSilver );
@@ -420,7 +420,7 @@ function CityTechDlgSelect( kind )
 			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_wood.."</color>" )
 		else
 			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_wood.."</color>" )
-			m_canUpgrade = false;
+			m_canUpgrade = 2;
 		end
 	else
 		SetFalse( uiWood );
@@ -433,7 +433,7 @@ function CityTechDlgSelect( kind )
 			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_food.."</color>" )
 		else
 			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_food.."</color>" )
-			m_canUpgrade = false;
+			m_canUpgrade = 3;
 		end
 	else
 		SetFalse( uiFood );
@@ -446,7 +446,7 @@ function CityTechDlgSelect( kind )
 			SetText( uiIron.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_iron.."</color>" )
 		else
 			SetText( uiIron.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_iron.."</color>" )
-			m_canUpgrade = false;
+			m_canUpgrade = 4;
 		end
 	else
 		SetFalse( uiIron );
@@ -476,7 +476,9 @@ function CityTechDlgUpgrade()
 	if m_kind <= 0 then
 		return;
 	end
-	if m_canUpgrade == false then
+	if m_canUpgrade > 0 then
+		CityTechDlgSelect( -1 )
+		JumpRes( m_canUpgrade )
 		return
 	end
 	system_askinfo( ASKINFO_TECH, "", 1, m_kind );

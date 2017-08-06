@@ -440,6 +440,16 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 购买体力所需钻石
+	if ( bodytokeninfo_init_auto() < 0 )
+	{
+		printf_msg( "bodytokeninfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+
 	activity_init();
 	time_gmcmd_init();
 	db_closedata();
