@@ -56,6 +56,7 @@
 #define PATH_FORGING_FREEQUICK			29	// 铁匠加速
 #define PATH_BODYBUY					30	// 购买体力
 #define PATH_CHANGENAME					31	// 改名
+#define PATH_GUARD_LIFE					32	// 守卫补血
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

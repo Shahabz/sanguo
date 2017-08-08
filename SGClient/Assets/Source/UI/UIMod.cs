@@ -25,7 +25,8 @@ public class UIEVENT
     public const int VOICE                  = 13;       // UIVoice事件
     public const int UIDRAG                 = 14;       // UIDRAG事件            0 开始拖动，1 结束拖动
     public const int UIDROP                 = 15;       // UIDROP事件			dragger ID
-    public const int INPUTSUBMITEX            = 16;		// UIInputField提交		无参
+    public const int INPUTSUBMITEX          = 16;		// UIInputField提交		无参
+	public const int TOGGLEVALUECHANGE		= 17;		// 选中框事件
 	public const int PUSHEVENT		        = 1000;		// UI通用事件，不想定义新事件可用			参数
 }
 

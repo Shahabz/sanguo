@@ -121,6 +121,7 @@ CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );
 int city_guard_call( int city_index );
 int city_guard_upgrade( int city_index, int offset );
+int city_guard_soldiers( int city_index, int offset );
 int city_guard_clearcd( int city_index );
 int city_guard_send( int actor_index, int offset );
 int city_guard_sendsec( int actor_index );

@@ -39,6 +39,8 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 				LevyDlgShow();
 			elseif m_kind == BUILDING_Wall then
 				CityGuardDlgShow();
+			elseif m_kind == BUILDING_StoreHouse then
+				StoreDlgShow()
 			elseif m_kind == BUILDING_Tech then
 				CityTechDlgOnShow();
 			elseif m_kind == BUILDING_Smithy then

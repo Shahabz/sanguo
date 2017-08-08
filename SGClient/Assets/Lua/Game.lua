@@ -98,7 +98,7 @@ function GameManager.GameLogic()
 	if GetPlayer().m_forgingsec > 0 then
 		GetPlayer().m_forgingsec = GetPlayer().m_forgingsec - 1
 	end
-	
+		
 	-- 雇佣官员
 	for i=0, 2, 1 do
 		if GetPlayer().m_officialhire[i] ~= nil and GetPlayer().m_officialhire[i].m_ofsec > 0 then

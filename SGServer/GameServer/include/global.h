@@ -38,6 +38,8 @@ typedef struct _global
 	int worker_expire_7;
 	short worker_token_1;
 	short worker_token_7;
+	short city_guard_level;
+	short city_guard_color_min[6];
 }Global;
 int global_init();
 void global_reload();

@@ -20,6 +20,7 @@
 #include "system.h"
 #include "item.h"
 #include "vip.h"
+#include "actor_notify.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -950,6 +951,14 @@ int city_guard_call( int city_index )
 {
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].guardsec > 0 )
+	{
+		actor_system_message( g_city[city_index].actor_index, 795 );
+		return -1;
+	}
+	Building *pBuilding = building_getptr_kind( city_index, BUILDING_Wall );
+	if ( !pBuilding )
+		return -1;
+	if ( pBuilding->level < global.city_guard_level )
 		return -1;
 	int count = 0;
 	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
@@ -957,7 +966,7 @@ int city_guard_call( int city_index )
 		if ( g_city[city_index].guard[tmpi].monsterid > 0 )
 			count += 1;
 	}
-	if ( count >= building_getlevel( city_index, BUILDING_Wall, -1 ) )
+	if ( count >= pBuilding->level )
 	{
 		return -1;
 	}
@@ -976,15 +985,17 @@ int city_guard_call( int city_index )
 		return -1;
 	}
 	
+	BuildingUpgradeConfig *buildingconfig = building_getconfig( BUILDING_Wall, pBuilding->level );
+	if ( !buildingconfig )
+		return -1;
+
 	char monsterid = random( 1, g_cityguardinfo_maxnum-1 );
+	char color = ITEM_COLOR_LEVEL_BLUE;
 	char corps = random( 0, 2 );
-	char color = random( 0, 2 );
 	char shape = random( 0, 7 );
-	unsigned char minlevel = g_city[city_index].level - 10;
-	unsigned char maxlevel = g_city[city_index].level + 10;
-	minlevel = minlevel <= 0 ? 1 : minlevel;
-	maxlevel = maxlevel > global.actorlevel_max ? global.actorlevel_max : maxlevel;
-	char level = random( minlevel, maxlevel );
+	unsigned char minlevel = buildingconfig->value[0];
+	unsigned char maxlevel = buildingconfig->value[1];
+	unsigned char level = random( minlevel, maxlevel );
 
 	CityGuardInfoConfig *config = city_guard_config( monsterid, color );
 	if ( config )
@@ -1008,36 +1019,83 @@ int city_guard_upgrade( int city_index, int offset )
 	CITY_CHECK_INDEX( city_index );
 	if ( offset < 0 || offset >= CITY_GUARD_MAX )
 		return -1;
+	Building *pBuilding = building_getptr_kind( city_index, BUILDING_Wall );
+	if ( !pBuilding )
+		return -1;
+	BuildingUpgradeConfig *buildingconfig = building_getconfig( BUILDING_Wall, pBuilding->level );
+	if ( !buildingconfig )
+		return -1;
 	char monsterid = g_city[city_index].guard[offset].monsterid;
 	char color = g_city[city_index].guard[offset].color;
 	char level = g_city[city_index].guard[offset].level;
-	if ( color < ITEM_COLOR_LEVEL_GREEN )
+	if ( color < 0 || color >= 6 )
+		return -1;
+	
+	// 等级升级
+	unsigned char maxlevel = buildingconfig->value[1];
+	unsigned char randomlevel = buildingconfig->value[2];
+	if ( randomlevel == 0 )
+		randomlevel = 1;
+	unsigned char addlevel = random( 1, randomlevel );
+	if ( level + addlevel > maxlevel )
+		addlevel = maxlevel - level;
+
+	// 颜色升级
+	// 取出当前等级所能达到的最高颜色
+	char maxcolor = 1;
+	for ( int i = 5; i >= 1; i-- )
 	{
-		if ( rand()%100 < 50  )
+		if ( level >= global.city_guard_color_min[i] )
 		{
-			color += 1;
-		}	
+			maxcolor = i;
+			break;
+		}
 	}
-	
-	if ( level < g_city[city_index].level + 10 )
+
+	char coloradd = 0;
+	char colorodds = buildingconfig->value[3];
+	if ( colorodds <= 0 )
+		colorodds = 1;
+	if ( color < maxcolor && (rand() % 100 <= colorodds) )
 	{
-		level += 1;
+		coloradd = 1;
 	}
 	
+	if ( actor_change_token( g_city[city_index].actor_index, -global.city_guard_up_token, PATH_GUARD_UPGRADE, 0 ) < 0 )
+	{
+		return -1;
+	}
+	g_city[city_index].guard[offset].color += coloradd;
+	g_city[city_index].guard[offset].level += addlevel;
+
+	CityGuardInfoConfig *config = city_guard_config( monsterid, g_city[city_index].guard[offset].color );
+	if ( config )
+	{
+		g_city[city_index].guard[offset].soldiers = TROOPS( g_city[city_index].guard[offset].level, config->troops, config->troops_growth );
+	}
+	city_guard_send( g_city[city_index].actor_index, offset );
+	return 0;
+}
+
+// 城墙守卫补血
+int city_guard_soldiers( int city_index, int offset )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return -1;
+	char monsterid = g_city[city_index].guard[offset].monsterid;
+	char color = g_city[city_index].guard[offset].color;
+	unsigned char level = g_city[city_index].guard[offset].level;
 	CityGuardInfoConfig *config = city_guard_config( monsterid, color );
 	if ( config )
 	{
-		if ( actor_change_token( g_city[city_index].actor_index, -global.city_guard_up_token, PATH_GUARD_UPGRADE, 0 ) < 0 )
+		if ( actor_change_token( g_city[city_index].actor_index, -global.city_guard_up_token, PATH_GUARD_LIFE, 0 ) < 0 )
 		{
 			return -1;
-		}	
-		g_city[city_index].guard[offset].color = color;
-		g_city[city_index].guard[offset].level = level;
+		}
 		g_city[city_index].guard[offset].soldiers = TROOPS( level, config->troops, config->troops_growth );
-		actor_change_token( g_city[city_index].actor_index, global.city_guard_up_token, PATH_GUARD_UPGRADE, 0 );
 		city_guard_send( g_city[city_index].actor_index, offset );
 	}
-	
 	return 0;
 }
 
@@ -1109,6 +1167,7 @@ int city_guard_sendlist( int actor_index )
 	if ( !pCity )
 		return -1;
 	SLK_NetS_CityGuardList pValue = { 0 };
+	pValue.m_guardsec = pCity->guardsec;;
 	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
 	{
 		if ( pCity->guard[tmpi].monsterid <= 0 )

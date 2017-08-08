@@ -66,6 +66,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // Çå³ıÊØÎÀÕĞÄ¼ÀäÈ´
 			city_guard_clearcd( g_actors[actor_index].city_index );
 		}
+		else if ( pvalue[0] == 4 )
+		{ // ²¹Ñª
+			city_guard_soldiers( g_actors[actor_index].city_index, pvalue[1] );
+		}
+		
 		break;
 	case ASKINFO_QUEST:
 		if ( pvalue[0] == 1 )

@@ -201,6 +201,8 @@ public static class CustomSettings
         _GT(typeof(UIDragSensor)),
         _GT(typeof(Text)),
         _GT(typeof(UIText)),
+		_GT(typeof(Toggle)),
+		_GT(typeof(UIToggle)),
         _GT(typeof(GridLayoutGroup)),
         _GT(typeof(LayoutElement)),
         _GT(typeof(UITween)),

@@ -13,6 +13,10 @@ UI_EVENT_RICHTEXTMASKCLICK  = 10;       -- UIRcihText标记点击
 UI_EVENT_INPUTVALUECHANGED  = 11;       -- UIInputField内容修改		当前inputfield内容
 UI_EVENT_TIMECOUNTCHANGED   = 12;       -- 计数修改
 UI_EVENT_VOICE              = 13;       -- UIVoice
+UI_EVENT_UIDRAG             = 14;       -- UIDRAG事件            0 开始拖动，1 结束拖动
+UI_EVENT_UIDROP             = 15;       -- UIDROP事件			dragger ID
+UI_EVENT_INPUTSUBMITEX      = 16;		-- UIInputField提交		无参
+UI_EVENT_TOGGLEVALUECHANGE	= 17;
 UI_EVENT_PUSHEVENT		    = 1000;		-- UI通用事件，不想定义新事件可用			    参数
 
 -- 可升级的普通建筑

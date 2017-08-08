@@ -616,7 +616,11 @@ end
 -- 购买装备容量
 function BagDlgEquipBuyEquipExt()
 	MsgBox( F( 685, global.equipext_token ), function()
-		system_askinfo( ASKINFO_EQUIP, "", 4 );
+		if GetPlayer().m_token < global.equipext_token then
+			JumpToken()
+		else
+			system_askinfo( ASKINFO_EQUIP, "", 4 );
+		end
 	end )
 end
 

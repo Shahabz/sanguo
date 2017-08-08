@@ -107,7 +107,7 @@ function GuardSprite( shape )
 	local name = string.format("guardhead_%d", shape );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "guardhead_1" );
 	end
 	return sprite;
 end

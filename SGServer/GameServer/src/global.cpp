@@ -151,6 +151,18 @@ int global_init()
 			global.worker_token_1 = atoi( row[1] );
 		else if ( id == 34 )
 			global.worker_token_7 = atoi( row[1] );
+		else if ( id == 35 )
+			global.city_guard_level = atoi( row[1] );
+		else if ( id == 36 )
+			global.city_guard_color_min[1] = atoi( row[1] );
+		else if ( id == 37 )
+			global.city_guard_color_min[2] = atoi( row[1] );
+		else if ( id == 38 )
+			global.city_guard_color_min[3] = atoi( row[1] );
+		else if ( id == 39 )
+			global.city_guard_color_min[4] = atoi( row[1] );
+		else if ( id == 40 )
+			global.city_guard_color_min[5] = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );
