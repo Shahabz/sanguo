@@ -3,7 +3,9 @@ local m_Dlg = nil;
 local m_uiWeiTalkPanel = nil; --UnityEngine.GameObject
 local m_uiShuTalkPanel = nil; --UnityEngine.GameObject
 local m_uiWuTalkPanel = nil; --UnityEngine.GameObject
+local m_uiAward = nil; --UnityEngine.GameObject
 
+local m_nation_award = 0;
 local m_SelectNation = 0;
 -- 打开界面
 function CreateDlgOpen()
@@ -48,6 +50,7 @@ function CreateDlgOnAwake( gameObject )
 	m_uiWeiTalkPanel = objs[0];
 	m_uiShuTalkPanel = objs[1];
 	m_uiWuTalkPanel = objs[2];
+	m_uiAward = objs[3];
 end
 
 -- 界面初始化时调用
@@ -79,8 +82,12 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function CreateDlgSelect( nation )
-	--pop( "获得银币×1000" )		
+function CreateDlgShow( nation_award )
+	CreateDlgOpen()
+	m_nation_award = nation_award
+end
+
+function CreateDlgSelect( nation )	
 	m_SelectNation = nation;
 	m_uiWeiTalkPanel:SetActive( false );
 	m_uiShuTalkPanel:SetActive( false );
@@ -91,6 +98,13 @@ function CreateDlgSelect( nation )
 		m_uiShuTalkPanel:SetActive( true );
 	elseif nation == 3 then
 		m_uiWuTalkPanel:SetActive( true );
+	end
+	
+	if nation == m_nation_award then
+		SetTrue( m_uiAward )
+		SetText( m_uiAward.transform:Find("Num"), "x"..global.nation_award_token )
+	else
+		SetFalse( m_uiAward )
 	end
 end
 

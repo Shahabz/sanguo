@@ -57,11 +57,21 @@ function City.BuildingSelect( transform )
 	-- 打开加速界面	
 	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
 		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
-		QuickItemDlgShow( 1, building.kind, building.offset );
+		if GetPlayer().m_worker_kind == building.kind then
+			QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+		else
+			QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+		end
 	else
 		BuildingOpratorModShow( false, 0, -1, nil );
 		if building.kind == BUILDING_Smithy then -- 铁匠铺
-			EquipForgingDlgShow();
+			-- 打造有完成的，直接领取
+			if GetPlayer():BuildingOverValue( building.kind ) > 0 then
+				City.BuildingHideOver( building.kind )
+				system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
+			else
+				EquipForgingDlgShow();
+			end
 		elseif building.kind == BUILDING_Wash then -- 洗炼铺
 			EquipWashDlgShow();
 		elseif building.kind == BUILDING_Fangshi then -- 坊市
@@ -80,17 +90,12 @@ function City.BuildingSelect( transform )
 			if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TECH, "", 4 );
-				
+			
  			-- 募兵有完成的，直接领取
 			elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
-				
-			-- 打造有完成的，直接领取
-			elseif building.kind == BUILDING_Smithy then
-				City.BuildingHideOver( building.kind )
-				system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
-				
+						
 			else
 				BuildingOpratorModShow( true, building.kind, building.offset, transform );
 			end
@@ -205,6 +210,7 @@ function City.BuildingAdd( info, active )
 	
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
+	City.BuildingHideFree( kind, offset )
 	return unitObj;
 end
 
@@ -277,7 +283,7 @@ function City.BuildingSetTimer( info )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-80, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-50, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
@@ -312,7 +318,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-80, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-50, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
@@ -383,6 +389,20 @@ function City.BuildingSetFree( kind, offset )
 	ShareData.intValue[0] = kind;
 	ShareData.intValue[1] = offset;
 	freeObj.gameObject:SetActive(true);
+end
+
+function City.BuildingHideFree( kind, offset )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		unitObj = City.m_Buildings_res[kind][offset];
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	local freeObj = unitObj:GetComponent("CityBuilding").BuildingFreeMod;
+	if freeObj == nil then
+		return
+	end
+	freeObj.gameObject:SetActive(false);
 end
 
 -- 完成标记

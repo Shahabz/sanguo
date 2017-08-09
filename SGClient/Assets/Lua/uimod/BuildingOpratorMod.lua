@@ -5,8 +5,6 @@ local m_uiUpgrade = nil; --UnityEngine.GameObject
 local m_uiEnter = nil; --UnityEngine.GameObject
 local m_uiTrain = nil; --UnityEngine.GameObject
 local m_uiSpeed = nil; --UnityEngine.GameObject
-local m_uiUpgradeCenter = nil; --UnityEngine.GameObject
-local m_uiEnterCenter = nil;
 
 local m_kind = 0;
 local m_offset = -1;
@@ -29,12 +27,12 @@ end
 -- 所属按钮点击时调用
 function BuildingOpratorModOnEvent( nType, nControlID, value )
     if nType == UI_EVENT_CLICK then
+		-- 升级
         if nControlID == 1 then
-            -- 升级
 			BuildingUpgradeDlgShow( m_kind, m_offset )
-
+		
+		-- 进入
         elseif nControlID == 2 then
-            -- 进入
 			if m_kind == BUILDING_Main then
 				LevyDlgShow();
 			elseif m_kind == BUILDING_Wall then
@@ -48,8 +46,19 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			elseif m_kind == BUILDING_Wash then
 				EquipWashDlgShow();
 			end
+			
+		-- 招募
 		elseif nControlID == 3 then
 			TrainDlgOnShow( m_kind );
+			
+		-- 加速
+		elseif nControlID == 4 then
+			if m_kind == BUILDING_Tech then
+				CityTechDlgQuick();
+			elseif m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+				local pBuilding = GetPlayer():GetBuilding( m_kind, -1 );
+				QuickItemDlgShow( 2, m_kind, -1, pBuilding.m_sec )
+			end
         end
 		City.BuildingUnSelect();
 		BuildingOpratorModShow( false, 0, -1, nil );
@@ -73,8 +82,6 @@ function BuildingOpratorModOnAwake( gameObject )
 	m_uiEnter = objs[2];
 	m_uiTrain = objs[3];
 	m_uiSpeed = objs[4];
-	m_uiUpgradeCenter = objs[5];
-	m_uiEnterCenter = objs[6];
    
     BuildingOpratorModClose();
 end
@@ -133,15 +140,55 @@ function BuildingOpratorModShow( show, kind, offset, parent )
             local op = m_uiOprator.transform:GetChild(tmpi).gameObject:SetActive(false);
         end
 		
+		-- 兵营
 		if m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
-			m_uiUpgrade:SetActive(true);
-			m_uiTrain:SetActive(true);
+			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+			-- 招募中
+			if pBuilding.m_sec > 0 then
+				m_uiSpeed:SetActive(true);
+				m_uiTrain:SetActive(true);
+			else
+				if pBuilding.m_level < #g_building_upgrade[m_kind] then
+					m_uiUpgrade:SetActive(true);
+					m_uiTrain:SetActive(true);
+				else
+					m_uiTrain:SetActive(true);
+				end
+			end
+			
+		
+		-- 资源	
 		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
-			m_uiUpgrade:SetActive(false);
-			m_uiUpgradeCenter:SetActive(true);
-		else
 			m_uiUpgrade:SetActive(true);
-			m_uiEnter:SetActive(true);
+		
+		-- 太学院	
+		elseif m_kind == BUILDING_Tech then
+			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+			if pBuilding.m_level < #g_building_upgrade[m_kind] then
+				if pBuilding.m_sec > 0 then
+					m_uiSpeed:SetActive(true);
+					m_uiEnter:SetActive(true);
+				else
+					m_uiUpgrade:SetActive(true);
+					m_uiEnter:SetActive(true);
+				end
+			else
+				if pBuilding.m_sec > 0 then
+					m_uiSpeed:SetActive(true);
+					m_uiEnter:SetActive(true);
+				else
+					m_uiEnter:SetActive(true);
+				end
+			end
+			
+		else
+			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+			if pBuilding.m_level < #g_building_upgrade[m_kind] then
+				m_uiUpgrade:SetActive(true);
+				m_uiEnter:SetActive(true);
+			else
+				m_uiEnter:SetActive(true);
+			end
 		end
 
 

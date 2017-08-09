@@ -119,6 +119,7 @@ function BuildingGetDlgShow( recvValue )
 	
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);
+	m_uiShape.gameObject:SetActive(true);
 	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( recvValue.m_kind );
 	m_uiName:GetComponent( "UIText" ).text = T( recvValue.m_kind );
 end

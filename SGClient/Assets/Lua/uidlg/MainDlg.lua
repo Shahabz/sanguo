@@ -48,6 +48,7 @@ local m_uiButtonNotice = nil; --UnityEngine.GameObject
 local m_uiButtonSetting = nil; --UnityEngine.GameObject
 local m_uiButtonGM = nil; --UnityEngine.GameObject
 local m_uiButtonRelogin = nil; --UnityEngine.GameObject
+local m_uiButtonRestart = nil; --UnityEngine.GameObject
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
@@ -107,19 +108,18 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroDlgShow();
 			
 		elseif nControlID == 2 then
-			local kind = 21;
-			local offsetlist ={ 49, 50, 51, 52 }
-			for i=1, 2, 1 do
-				local offset = math.random( 0, 63 )
-				--local offset = offsetlist[i]
-				BuildingGetDlgShow( {m_kind=kind,m_offset=offset,m_level=1} );
-			end
+			--local kind = 21;
+			--local offsetlist ={ 49, 50, 51, 52 }
+			--for i=1, 2, 1 do
+				--local offset = math.random( 0, 63 )
+				--BuildingGetDlgShow( {m_kind=kind,m_offset=offset,m_level=1} );
+			--end
 		elseif nControlID == 3 then
-			QuestAwardDlgShow();
+			--QuestAwardDlgShow();
 		
 		elseif nControlID == 5 then
-			NpcTalk( "主公，大事不妙" )
-			NpcTalkWait( BuildingGetDlgShow, {m_kind=21,m_offset=0,m_level=1} )
+			--NpcTalk( "主公，大事不妙" )
+			--NpcTalkWait( BuildingGetDlgShow, {m_kind=21,m_offset=0,m_level=1} )
 		
 		elseif nControlID == 6 then
 			--{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
@@ -152,6 +152,13 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 				GameManager.Logout( 1 );
 			end )
 		
+		elseif nControlID == 19 then
+			MsgBox( "重新创建角色吗？",function()
+				system_askinfo( ASKINFO_ACTOR, "", 1 );
+				GameManager.Restart();
+				GameManager.Logout( 1 );
+			end )
+			
 		-- 聊天
 		elseif nControlID == 30 then
 			ChatDlgShow();
@@ -320,6 +327,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiChat = objs[71];
 	m_uiChatText = objs[72];
 	m_uiQuest = objs[73];
+	m_uiButtonRestart = objs[74];
 	MainDlgWorkerObjectInit();
 end 
 
@@ -354,42 +362,66 @@ end
 ----------------------------------------
 -- 头像
 function MainDlgSetHead()
+	if m_Dlg == nil then
+		return;
+	end
 	SetImage( m_uiHead, PlayerHeadSprite( GetPlayer().m_shape ) );
 end
 
 -- 等级
 function MainDlgSetLevel()
+	if m_Dlg == nil then
+		return;
+	end
 	SetLevel( m_uiLevel, GetPlayer().m_level );
 end
 
 -- 国家
 function MainDlgSetNation()
+	if m_Dlg == nil then
+		return;
+	end
 	SetImage( m_uiNation, NationSprite( GetPlayer().m_nation ) );
 	SetImage( m_uiButtonNation.Find("Back"), NationSprite( GetPlayer().m_nation ) );
 end
 
 -- 银币
 function MainDlgSetSilver()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiSilverNum, knum(GetPlayer().m_silver) );
 end
 
 -- 木材
 function MainDlgSetWood()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiWoodNum, knum(GetPlayer().m_wood) );
 end
 
 -- 粮草
 function MainDlgSetFood()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiFoodNum, knum(GetPlayer().m_food) );
 end
 
 -- 镔铁
 function MainDlgSetIron()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiIronNum, knum(GetPlayer().m_iron) )
 end
 
 -- 体力
 function MainDlgSetBody()
+	if m_Dlg == nil then
+		return;
+	end
 	if GetPlayer().m_body >= 100 then
 		SetText( m_uiBodyNum, GetPlayer().m_body.."/100", Color.green );
 	else
@@ -400,31 +432,49 @@ end
 
 -- 步兵
 function MainDlgSetInfantry()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiInfantryNum, GetPlayer().m_infantry_num );
 end
 
 -- 骑兵
 function MainDlgSetCavalry()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiCavalryNum, GetPlayer().m_cavalry_num );
 end
 
 -- 弓兵
 function MainDlgSetArcher()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiArcherNum, GetPlayer().m_archer_num );
 end
 
 -- 钻石
 function MainDlgSetToken()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiTokenNum, GetPlayer().m_token );
 end
 
 -- VIP
 function MainDlgSetVipLevel()
+	if m_Dlg == nil then
+		return;
+	end
 	SetText( m_uiVipLevel, "v"..GetPlayer().m_viplevel );
 end
 
 -- exp
 function MainDlgSetExp()
+	if m_Dlg == nil then
+		return;
+	end
 	SetSlider( m_uiExpProgress, GetPlayer().m_exp/GetPlayer().m_exp_max )
 end
 
@@ -514,16 +564,16 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 			NormalText:GetComponent( "UIText" ).text = T(600);
 		end
 		
-		-- 缺省锤子形象
-		local NormalShape = uiWorker.transform:Find("NormalShape");
-		NormalShape.gameObject:SetActive(true);
+		-- 停止动画
+		MainDlgWorkerStop( type+1 )
 		
+		uiWorker.transform:Find("NormalShape").gameObject:SetActive(true);
+		uiWorker.transform:Find("NormalShape").transform.localScale = Vector3.one;
+		uiWorker.transform:Find("WorkProgress").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
 		
-		-- 停止动画
-		MainDlgWorkerStop( type+1 )
 		return;
 	end
 	
@@ -552,6 +602,9 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 	local timer = BuildingTimer:GetComponent( "UITextTimeCountdown" );
 	timer:SetTime( needsec, needsec-sec );
 	
+	-- 进度条
+	uiWorker.transform:Find("WorkProgress").gameObject:SetActive(true);
+	
 	-- 缺省锤子形象
 	local NormalShape = uiWorker.transform:Find("NormalShape");
 	NormalShape.gameObject:SetActive(false);
@@ -565,13 +618,14 @@ end
 -- 停止动画
 function MainDlgWorkerStop( type )
 	m_uiBuildingShapeUITweenScale[type]:Kill(true);
-	m_uiBuildingShapeUITweenScale[type]:Kill(true);
+	m_uiNormalShapeUITweenScale[type]:Kill(true);
 	m_uiBuildingTimerUITweenScale[type]:Kill(true);
 	m_uiBuildingNameUITweenScale[type]:Kill(true);
-	m_uiBuildingShapeUITweenScale1[type]:Kill(true);
-	m_uiNormalShapeUITweenScale1[type]:Kill(true);
-	m_uiBuildingTimerUITweenScale1[type]:Kill(true);
-	m_uiBuildingNameUITweenScale1[type]:Kill(true);
+	
+	m_uiBuildingShapeUITweenScale1[type]:Kill(false);
+	m_uiNormalShapeUITweenScale1[type]:Kill(false);
+	m_uiBuildingTimerUITweenScale1[type]:Kill(false);
+	m_uiBuildingNameUITweenScale1[type]:Kill(false);
 end
 
 -- 建造队列动画所需缓存
@@ -756,6 +810,13 @@ function MainDlgSetButtons()
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
 		SetParent( m_uiButtonRelogin, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 重新创角
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( m_uiButtonRestart, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 end

@@ -104,6 +104,7 @@ typedef struct _socket_set {
 	char			m_isnew;		// 新帐号标记
 	short			m_country;		// 客户端选择的国家
 	char			m_ipcountry[4];	// IP地址所在国家
+	char			m_nation_award;	// 有奖励的阵营
 	int				m_authid;		// 认证客户与连接的正确性
 	SOCKET_BUF		m_recv_buf;		// 接收缓冲区
 	SOCKET_BUF		m_send_buf;		// 发送缓冲区

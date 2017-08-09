@@ -126,7 +126,7 @@ function QuickItemDlgSet( sec, update )
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
 		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level ).."->" )
 		SetText( m_uiTargetName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level+1 ) );
-		SetTimer( m_uiTimer, pBuilding.m_sec, pBuilding.m_sec, 0, T(702) )
+		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 		
 	-- 募兵加速
 	elseif m_op == 2 then

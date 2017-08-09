@@ -121,6 +121,12 @@ BuildingUpgradeConfig* building_getconfig( int kind, int level )
 	return &g_building_upgrade[kind].config[level];
 }
 
+// 建筑升级所需秒
+int building_sec( City *pCity, BuildingUpgradeConfig *config )
+{
+	return config->sec - (int)(config->sec*pCity->attr.buildingsec_per);
+}
+
 int building_offset2no( int kind, int offset )
 {
 	return offset%16;
@@ -443,21 +449,21 @@ int building_upgrade( int city_index, int kind, int offset )
 	if ( g_city[city_index].worker_sec <= 0 )
 	{ // 普通建造队列
 		g_city[city_index].worker_op = BUILDING_OP_UPGRADE;
-		g_city[city_index].worker_sec = config->sec;
+		g_city[city_index].worker_sec = building_sec( &g_city[city_index], config );
 		g_city[city_index].worker_kind = kind;
 		g_city[city_index].worker_offset = offset;
 		g_city[city_index].worker_free = 1;
-		g_city[city_index].wnsec = config->sec;
+		g_city[city_index].wnsec = g_city[city_index].worker_sec;
 		ok = 1;
 	}
 	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
 	{ // 商用建造队列
 		g_city[city_index].worker_op_ex = BUILDING_OP_UPGRADE;
-		g_city[city_index].worker_sec_ex = config->sec;
+		g_city[city_index].worker_sec_ex = building_sec( &g_city[city_index], config );
 		g_city[city_index].worker_kind_ex = kind;
 		g_city[city_index].worker_offset_ex = offset;
 		g_city[city_index].worker_free_ex = 1;
-		g_city[city_index].wnsec_ex = config->sec;
+		g_city[city_index].wnsec_ex = g_city[city_index].worker_sec_ex;
 		ok = 1;
 	}
 	else
@@ -518,6 +524,7 @@ int building_delete( int city_index, int kind, int offset )
 		g_city[city_index].worker_sec = global.building_delete_cd;
 		g_city[city_index].worker_kind = kind;
 		g_city[city_index].worker_offset = offset;
+		g_city[city_index].wnsec = global.building_delete_cd;
 		ok = 1;
 	}
 	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
@@ -526,6 +533,7 @@ int building_delete( int city_index, int kind, int offset )
 		g_city[city_index].worker_sec_ex = global.building_delete_cd;
 		g_city[city_index].worker_kind_ex = kind;
 		g_city[city_index].worker_offset_ex = offset;
+		g_city[city_index].wnsec_ex = global.building_delete_cd;
 		ok = 1;
 	}
 	else
@@ -922,21 +930,15 @@ int building_send_upgradeinfo( int actor_index, int kind, int offset )
 	}
 	
 	BuildingUpgradeConfig *config = building_getconfig( kind, level+1 );
-	BuildingUpgradeConfig *config_old = building_getconfig( kind, level );
 	if ( config )
 	{
 		pValue.m_actorlevel = config->actorlevel;
 		pValue.m_citylevel = config->citylevel;
-		pValue.m_sec = config->sec;
+		pValue.m_sec = building_sec( pCity, config );
 		pValue.m_silver = config->silver;
 		pValue.m_food = config->food;
 		pValue.m_wood = config->wood;
 		pValue.m_iron = config->iron;
-		for ( int tmpi = 0; tmpi < 8; tmpi++ )
-		{
-			pValue.m_new_value[tmpi] = config->value[tmpi];
-			pValue.m_old_value[tmpi] = config_old->value[tmpi];
-		}
 	}
 	pValue.m_maxlevel = g_building_upgrade[kind].maxnum;
 	netsend_buildingupgradeinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );

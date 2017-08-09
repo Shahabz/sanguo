@@ -163,6 +163,8 @@ int global_init()
 			global.city_guard_color_min[4] = atoi( row[1] );
 		else if ( id == 40 )
 			global.city_guard_color_min[5] = atoi( row[1] );
+		else if ( id == 41 )
+			global.nation_award_token = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

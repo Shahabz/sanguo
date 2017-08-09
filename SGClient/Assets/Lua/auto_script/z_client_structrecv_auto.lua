@@ -33,6 +33,7 @@ function struct_NetS_List_recv( buffer )
 		tmpValue = struct_ListInfo_recv( buffer );
 		table.insert( recvValue.m_listinfo, tmpValue );
 	end
+	recvValue.m_nation_award = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -437,7 +438,7 @@ function struct_NetS_Equip_recv( buffer )
 	recvValue.m_offset = buffer:ReadShort();
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_washid={};
-	for tmpi=1,6,1 do
+	for tmpi=1,4,1 do
 		recvValue.m_washid[tmpi] = buffer:ReadShort();
 	end
 	return recvValue;
@@ -688,14 +689,6 @@ function struct_NetS_BuildingUpgradeInfo_recv( buffer )
 	recvValue.m_food = buffer:ReadInt();
 	recvValue.m_iron = buffer:ReadInt();
 	recvValue.m_sec = buffer:ReadInt();
-	recvValue.m_old_value={};
-	for tmpi=1,8,1 do
-		recvValue.m_old_value[tmpi] = buffer:ReadInt();
-	end
-	recvValue.m_new_value={};
-	for tmpi=1,8,1 do
-		recvValue.m_new_value[tmpi] = buffer:ReadInt();
-	end
 	recvValue.m_maxlevel = buffer:ReadSByte();
 	return recvValue;
 end

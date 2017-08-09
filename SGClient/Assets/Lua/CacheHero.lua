@@ -144,17 +144,57 @@ end
 
 -- 根据kind获取
 function Hero:GetIndex( kind )
-	for tmpi=0, MAX_HERONUM-1, 1 do
-		if self.m_Hero[tmpi].m_kind == kind then
-			return "Hero", tmpi;
+	if kind > 0 then
+		for tmpi=0, MAX_HERONUM-1, 1 do
+			if self.m_Hero[tmpi].m_kind == kind then
+				return "Hero", tmpi;
+			end
 		end
-	end
-	for tmpi=0, MAX_CITYHERONUM-1, 1 do
-		if self.m_CityHero[tmpi].m_kind == kind then
-			return "CityHero", tmpi;
+		for tmpi=0, MAX_CITYHERONUM-1, 1 do
+			if self.m_CityHero[tmpi].m_kind == kind then
+				return "CityHero", tmpi;
+			end
 		end
 	end
 	return "", -1;
+end
+
+-- 根据kind获取
+function Hero:GetPtr( kind )
+	if kind > 0 then
+		for tmpi=0, MAX_HERONUM-1, 1 do
+			if self.m_Hero[tmpi].m_kind == kind then
+				return self.m_Hero[tmpi];
+			end
+		end
+		for tmpi=0, MAX_CITYHERONUM-1, 1 do
+			if self.m_CityHero[tmpi].m_kind == kind then
+				return self.m_CityHero[tmpi];
+			end
+		end
+	end
+	return nil;
+end
+
+-- 设置装备
+function Hero:SetEquip( offset, pEquip )
+	local herokind = math.floor(offset/1000)
+	local equipoffset = math.floor(offset%1000)
+	local type, offset = self:GetIndex( herokind );
+	if type == "Hero" then
+		if pEquip ~= nil then
+			self.m_Hero[offset].m_Equip[equipoffset] = clone(pEquip); -- 这个地方是否要用到深拷贝
+		else
+			self.m_Hero[offset].m_Equip[equipoffset]:empty(); -- 清空这个装备
+		end
+	elseif type == "CityHero" then
+		if pEquip ~= nil then
+			self.m_CityHero[offset].m_Equip[equipoffset] = clone(pEquip); -- 这个地方是否要用到深拷贝
+		else
+			self.m_CityHero[offset].m_Equip[equipoffset]:empty(); -- 清空这个装备
+		end
+	end
+
 end
 
 -- 清空所有的New标示

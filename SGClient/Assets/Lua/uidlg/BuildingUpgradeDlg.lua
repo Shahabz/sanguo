@@ -16,11 +16,12 @@ local m_kind = 0;
 local m_offset = -1;
 local m_pBuilding = nil;
 local m_bUpgrade = true;
+local m_recvValue = nil
 
 -- 打开界面
 function BuildingUpgradeDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingUpgradeDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "主城建设", 8, BuildingUpgradeDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(801), 8, BuildingUpgradeDlgClose );
 end
 
 -- 隐藏界面
@@ -52,9 +53,13 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
 			BuyWorkerDlgShow();
 			BuildingUpgradeDlgClose();
 		elseif nControlID == 4 then
+			MaterialGetDlgShow( 120 )
 		elseif nControlID == 5 then
+			MaterialGetDlgShow( 121 )
 		elseif nControlID == 6 then
+			MaterialGetDlgShow( 122 )
 		elseif nControlID == 7 then
+			MaterialGetDlgShow( 123 )
 		elseif nControlID == 100 then
 			BuildingUpgradeDlgUpgrade()
         end
@@ -118,6 +123,76 @@ function BuildingUpgradeDlgShow( kind, offset )
 	SetImage( m_uiShape, BuildingSprite( kind ) );
 	SetText( m_uiName, BuildingNameLv( kind, (offset%16), m_pBuilding.m_level ) );
 	SetLevel( m_uiLevel, m_pBuilding.m_level+1 );
+	SetText( m_uiSec, "" );
+	
+	-- 描述
+	SetText( m_uiDesc1, "" )
+	SetText( m_uiDesc2, "" )
+	SetText( m_uiDesc3, "" )
+	if kind == BUILDING_Main then
+		SetText( m_uiDesc1, T(803) )
+		
+	elseif kind == BUILDING_Wall then
+		SetText( m_uiDesc1, T(805) )
+		
+	elseif kind == BUILDING_StoreHouse then
+		SetText( m_uiDesc1, T(806) )
+	
+	elseif kind == BUILDING_Tech then
+		SetText( m_uiDesc1, T(807) )
+	
+	elseif kind == BUILDING_Craftsman then
+		SetText( m_uiDesc1, T(809) )
+	
+	elseif kind == BUILDING_Cabinet then
+		if m_pBuilding.m_level == 1 then
+			SetText( m_uiDesc1, T(810) )
+		elseif m_pBuilding.m_level == 2 then
+			SetText( m_uiDesc1, T(811) )
+		end
+		
+	elseif kind == BUILDING_Infantry then
+		SetText( m_uiDesc1, T(812) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Cavalry then
+		SetText( m_uiDesc1, T(813) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Archer then
+		SetText( m_uiDesc1, T(814) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Militiaman_Infantry then
+		SetText( m_uiDesc1, T(815) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Militiaman_Cavalry then
+		SetText( m_uiDesc1, T(815) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Militiaman_Archer then
+		SetText( m_uiDesc1, T(815) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Silver then
+		SetText( m_uiDesc1, T(816) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level].value1) )
+		
+	elseif kind == BUILDING_Wood then
+		SetText( m_uiDesc1, T(817) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level].value1) )
+	
+	elseif kind == BUILDING_Food then
+		SetText( m_uiDesc1, T(818) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Food][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Food][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Food][m_pBuilding.m_level].value1) )
+	
+	elseif kind == BUILDING_Iron then
+		SetText( m_uiDesc1, T(819) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level].value1) )
+		
+	end
+	
 	
 	-- 空闲建造队是否满足
 	local uiObj = addChild( m_uiCondition, m_uiUIP_UpgradeCond );
@@ -132,9 +207,14 @@ end
 
 -- 数据返回
 function BuildingUpgradeDlgRecv( recvValue )
+	m_recvValue = recvValue;
 	local uiObj = nil;
 	local flag = true;
 	m_bUpgrade = true;
+	
+	-- 时间
+	SetText( m_uiSec, secnum( recvValue.m_sec ) );
+	
 	-- 官府等级是否满足
 	if recvValue.m_citylevel > 0 then
 		uiObj = addChild( m_uiCondition, m_uiUIP_UpgradeCond );
@@ -164,7 +244,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver), flag, 4 );
+		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver).."/"..knum(GetPlayer().m_silver), flag, 4 );
 	end
 	
 	-- 木材是否满足
@@ -175,7 +255,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood), flag, 5 );
+		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood).."/"..knum(GetPlayer().m_wood), flag, 5 );
 	end
 	
 	-- 粮草是否满足
@@ -186,7 +266,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food), flag, 6 );
+		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food).."/"..knum(GetPlayer().m_food), flag, 6 );
 	end
 	
 	-- 镔铁是否满足
@@ -197,15 +277,23 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron), flag, 7 );
+		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron).."/"..knum(GetPlayer().m_iron), flag, 7 );
 	end
 end
 
+function BuildingUpgradeDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	clearChild( m_uiCondition )
+	BuildingUpgradeDlgRecv( m_recvValue )
+end
+
 function BuildingUpgradeCondSet( uiObj, text, flag, type )
-	local color = Color.white;
+	local color = Hex2Color( 0xf7f3bbff );
 	local flagname = "ui_cond_yes";
 	if flag == false then
-		color = Color.red;
+		color = Hex2Color( 0xe80017ff );
 		flagname = "ui_cond_no";
 	end
 	
@@ -234,7 +322,7 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 			if type == 1 then
 				SetText( uiButton.transform:Find("Back/Text"), T(609) ); -- 开启
 			else
-				SetText( uiObjText.transform:Find("Back/Text"), T(608) ); -- 获取
+				SetText( uiButton.transform:Find("Back/Text"), T(608) ); -- 获取
 			end
 			SetControlID( uiButton, type )
 			SetTrue( uiButton );
@@ -246,9 +334,11 @@ end
 
 -- 领取奖励
 function BuildingUpgradeDlgUpgrade()
-	if m_bUpgrade == true then
-		system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
-		BuildingUpgradeDlgClose();
-	end
+	if m_bUpgrade == false then
+		pop(T(802))
+		return
+	end	
+	system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
+	BuildingUpgradeDlgClose();
 end
 

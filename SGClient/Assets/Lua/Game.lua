@@ -73,6 +73,17 @@ end
 	
 -- 主逻辑秒
 function GameManager.GameLogic()
+	
+	-- 建造队列
+	if GetPlayer().m_worker_sec > 0 then
+		GetPlayer().m_worker_sec = GetPlayer().m_worker_sec - 1;
+	end
+	
+	-- 商用建造队列
+	if GetPlayer().m_worker_sec_ex > 0 then
+		GetPlayer().m_worker_sec_ex = GetPlayer().m_worker_sec_ex - 1;
+	end
+	
 	-- 商用建造队到期时间
 	if GetPlayer().m_worker_expire_ex > 0 then
 		GetPlayer().m_worker_expire_ex = GetPlayer().m_worker_expire_ex - 1;
@@ -98,7 +109,14 @@ function GameManager.GameLogic()
 	if GetPlayer().m_forgingsec > 0 then
 		GetPlayer().m_forgingsec = GetPlayer().m_forgingsec - 1
 	end
-		
+	
+	-- 兵营
+	for kind = BUILDING_Infantry, BUILDING_Militiaman_Archer, 1 do
+		local pBuilding = GetPlayer():GetBuilding( kind, -1 );
+		if pBuilding and pBuilding.m_sec > 0 then
+			pBuilding.m_sec = pBuilding.m_sec - 1;
+		end
+	end	
 	-- 雇佣官员
 	for i=0, 2, 1 do
 		if GetPlayer().m_officialhire[i] ~= nil and GetPlayer().m_officialhire[i].m_ofsec > 0 then

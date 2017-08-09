@@ -256,6 +256,6 @@ function HeroListDlgSelect( offset )
 	if m_SelectHeroKind <= 0 then
 		return
 	end
-	HeroInfoDlgShow( pHero, up )
+	HeroInfoDlgShow( 1, pHero, up )
 end
 

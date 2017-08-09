@@ -80,6 +80,7 @@ void proc_list_S( int client_index, char *pValue )
 	SLK_NetS_List ListValue = { 0 };
 	actor_getlist( client_getplatid( client_index ), client_getuserid( client_index ), &ListValue );
 	netsend_list_S( client_index, SENDTYPE_ACTOR, &ListValue );
+	client_setnationaward( client_index, ListValue.m_nation_award );
 	write_gamelog( "[Serv_List]_idx:%d", client_index );
 }
 

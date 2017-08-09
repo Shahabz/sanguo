@@ -40,6 +40,7 @@ typedef struct _global
 	short worker_token_7;
 	short city_guard_level;
 	short city_guard_color_min[6];
+	short nation_award_token;
 }Global;
 int global_init();
 void global_reload();

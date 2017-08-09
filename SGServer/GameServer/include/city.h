@@ -115,7 +115,7 @@ int city_changefriendship( int city_index, int value, short path );
 // 保护时间
 int city_changeprotect( int city_index, int value, short path );
 // 兵力
-int city_changesoldiers( int city_index, int value, short path );
+int city_changesoldiers( int city_index, short corps, int value, short path );
 // 城墙守卫
 CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );
@@ -144,4 +144,7 @@ int city_train_sendinfo( int actor_index, int kind );
 // 雇佣官
 int city_officialhire( int actor_index, int type, int kind );
 int city_officialhire_sendinfo( City *pCity, int type );
+
+// 获取士兵数量
+int city_soldiers( int city_index, short corps );
 #endif

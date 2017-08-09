@@ -202,6 +202,9 @@ end
 -- 信息返回
 -- m_soldiers=0,m_soldiers_max=0,m_trainnum=0,m_trainsec=0,m_trainsec_need=0,m_queuenum={[16]},m_queue=0,m_trainlong=0,m_train_confnum=0,m_train_confsec=0,m_train_conffood=0
 function TrainDlgRecv( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	TrainDlgReset()
 	m_recvValue = recvValue;
 	m_uiTimerCache = nil
@@ -512,6 +515,9 @@ function TrainDlgTrainLongBuy()
 end
 
 function TrainDlgReset()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	local objs = {};
 	for i = 0 ,m_uiContent.transform.childCount - 1 do
 		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )

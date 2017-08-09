@@ -60,6 +60,7 @@ int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue )
 	{
 		struct_ListInfo_send( pptr, psize, &pValue->m_listinfo[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation_award, (*psize) );
 	return 0;
 }
 
@@ -514,7 +515,7 @@ int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue )
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 6*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 4*sizeof(short), (*psize) );
 	return 0;
 }
 
@@ -807,8 +808,6 @@ int struct_NetS_BuildingUpgradeInfo_send( char **pptr, int *psize, SLK_NetS_Buil
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_food, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_iron, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_old_value, 8*sizeof(int), (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_new_value, 8*sizeof(int), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maxlevel, (*psize) );
 	return 0;
 }

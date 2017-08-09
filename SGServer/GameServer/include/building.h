@@ -55,6 +55,9 @@ BuildingRes *buildingres_getptr_number( int city_index, int kind, int no );
 // 获取建筑的配置信息
 BuildingUpgradeConfig* building_getconfig( int kind, int level );
 
+// 建筑升级所需秒
+int building_sec( City *pCity, BuildingUpgradeConfig *config );
+
 // 获取建筑等级
 int building_getlevel( int city_index, int kind, int no );
 

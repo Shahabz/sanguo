@@ -162,6 +162,35 @@ short client_getcountry( int client_index )
 	return 0;
 }
 
+void client_setnationaward( int client_index, char nation )
+{
+	if ( client_index >= 0 && client_index < g_max_connection )
+	{
+#ifdef _USEGATE
+		if ( g_bGateMode )
+			g_clientset[client_index].m_nation_award = nation;
+		else
+#else
+		g_sockset[client_index].m_nation_award = nation;
+#endif
+	}
+}
+
+char client_getnationaward( int client_index )
+{
+	if ( client_index >= 0 && client_index < g_max_connection )
+	{
+#ifdef _USEGATE
+		if ( g_bGateMode )
+			return g_clientset[client_index].m_nation_award;
+		else
+#else
+		return g_sockset[client_index].m_nation_award;
+#endif
+	}
+	return 0;
+}
+
 // 0完全不同 1.一个高位相同 2.两个高位相同 3.三个高位相同 4完全相同
 char cleint_ipcomp( int client_index, char *ip )
 {

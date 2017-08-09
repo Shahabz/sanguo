@@ -923,8 +923,62 @@ int city_changeprotect( int city_index, int value, short path )
 }
 
 // 兵力
-int city_soldiers_send( int city_index, int corps, int value, short path )
+int city_changesoldiers( int city_index, short corps, int value, short path )
 {
+	CITY_CHECK_INDEX( city_index );
+	int total;
+	int kind[2] = { 0 };
+	if ( corps == 0 )
+	{
+		kind[0] = BUILDING_Infantry;
+		kind[1] = BUILDING_Militiaman_Infantry;
+	}
+	else if ( corps == 1 )
+	{
+		kind[0] = BUILDING_Cavalry;
+		kind[1] = BUILDING_Militiaman_Cavalry;
+	}
+	else if ( corps == 2 )
+	{
+		kind[0] = BUILDING_Archer;
+		kind[1] = BUILDING_Militiaman_Archer;
+	}
+	
+	if ( value < 0 )
+	{
+		int sub = -value;
+		for ( int tmpi = 0; tmpi < 2; tmpi++ )
+		{
+			BuildingBarracks *barracks = buildingbarracks_getptr_kind( city_index, kind[tmpi] );
+			if ( !barracks )
+				continue;
+			barracks->soldiers -= sub;
+			if ( barracks->soldiers < 0 )
+			{
+				sub = barracks->soldiers;
+				barracks->soldiers = 0;
+			}
+			else
+			{
+				sub = 0;
+				break;
+			}
+		}
+	}
+	else
+	{
+		BuildingBarracks *barracks = buildingbarracks_getptr_kind( city_index, kind[0] );
+		if ( !barracks )
+			return -1;
+		barracks->soldiers += value;
+	}
+
+	SLK_NetS_Soldiers pValue = { 0 };
+	pValue.m_corps = corps;
+	pValue.m_add = value;
+	pValue.m_soldiers = city_soldiers( city_index, corps );
+	pValue.m_path = path;
+	netsend_soldiers_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -1336,7 +1390,8 @@ int city_trainnum( City *pCity, BuildingBarracks *barracks )
 
 	int base = config->value[0];
 	int tech = (int)ceil(config->value[0] * pCity->attr.train_per[corps]);
-	int total = base + tech;
+	int buff = (int)ceil( config->value[0] * pCity->attr.trainspeed_per );
+	int total = base + tech + buff;
 	return total;
 }
 
@@ -1783,4 +1838,20 @@ int city_officialhire_sendinfo( City *pCity, int type )
 	pValue.m_info.m_ofquick = pCity->ofquick[type];
 	netsend_officialhirechange_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
+}
+
+// 获取士兵数量
+int city_soldiers( int city_index, short corps )
+{
+	CITY_CHECK_INDEX( city_index );
+	int kind = 0;
+	if ( corps == 0 )
+		kind = BUILDING_Infantry;
+	else if ( corps == 1 )
+		kind = BUILDING_Cavalry;
+	else
+		kind = BUILDING_Archer;
+
+	int total = building_soldiers_total( city_index, kind );
+	return total;
 }

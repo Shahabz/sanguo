@@ -127,6 +127,33 @@ PATH_ITEMUSE					=	4	-- 道具使用
 PATH_TOKENITEMUSE				=	5	-- 钻石直接使用
 PATH_SELL						=	6	-- 售卖丢弃
 PATH_BUILDING_UPGRADE			=	7	-- 建筑
+PATH_QUEST						=	8	-- 任务
+PATH_GUARD_UPGRADE				=	9	-- 守卫升级
+PATH_LEVY						=	10	-- 征收
+PATH_TRAIN						=	11	-- 训练
+PATH_RESOLVE					=	12	-- 分解
+PATH_EQUIPEXT					=	13	-- 购买装备容量
+PATH_TECH_UPGRADE				=	14	-- 科技升级
+PATH_TECH_FINISH				=	15	-- 科技完成
+PATH_TECH_GET					=	16	-- 科技领取
+PATH_TECH_QUICK					=	17	-- 科技加速
+PATH_TECH_FREEQUICK				=	18	-- 科技免费加速
+PATH_HIRE_FORGING				=	19	-- 雇佣
+PATH_HIRE_GOV					=	20	-- 雇佣
+PATH_HIRE_TECH					=	21	-- 雇佣
+PATH_BUILDING_WORKER			=	22	-- 商用建造队列
+PATH_TRAIN_QUEUE				=	23	-- 招募队列
+PATH_TRAIN_LONG					=	24	-- 训练时长
+PATH_TRAIN_GET					=	25	-- 训练领取
+PATH_TRAIN_CANCEL				=	26	-- 取消招募
+PATH_EQUIP_FORGING				=	27	-- 装备打造
+PATH_FORGING_QUICK				=	28	-- 打造加速
+PATH_FORGING_FREEQUICK			=	29	-- 铁匠加速
+PATH_BODYBUY					=	30	-- 购买体力
+PATH_CHANGENAME					=	31	-- 改名
+PATH_GUARD_LIFE					=	32	-- 守卫补血
+PATH_EQUIP_UP					=	33	-- 装备上
+PATH_EQUIP_DOWN					=	34	-- 装备下
 
 -- 文字表
 -- 获取本地化文字

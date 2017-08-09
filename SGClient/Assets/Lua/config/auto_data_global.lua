@@ -39,3 +39,4 @@ global.city_guard_color2_min = 5 --守卫颜色最低等级
 global.city_guard_color3_min = 10 --守卫颜色最低等级
 global.city_guard_color4_min = 15 --守卫颜色最低等级
 global.city_guard_color5_min = 20 --守卫颜色最低等级
+global.nation_award_token = 200 --选择的阵营奖励

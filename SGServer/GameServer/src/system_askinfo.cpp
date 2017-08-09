@@ -23,6 +23,7 @@
 #include "city_tech.h"
 #include "quest.h"
 #include "building.h"
+#include "hero.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -165,11 +166,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 2 )
 		{ // 装备
-
+			equip_up( actor_index, pvalue[1], pvalue[2] );
 		}
 		else if ( pvalue[0] == 3 )
-		{ // 替换
-
+		{ // 卸下
+			equip_down( actor_index, pvalue[1], pvalue[2] );
 		}
 		else if ( pvalue[0] == 4 )
 		{ // 购买装备栏
@@ -201,6 +202,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		
 		break;
 	case ASKINFO_HERO:
+		if ( pvalue[0] == 1 )
+		{// 补兵
+			hero_addsoldiers( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			
+		}
+		
+		
 		break;
 	case ASKINFO_TECH:
 		if ( pvalue[0] == 1 )
@@ -235,7 +246,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_QUICK:
 		if ( pvalue[0] == 0 )
 		{
-			item_use_quick( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[3] );
+			item_use_quick( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
 		}
 		break;
 	case ASKINFO_ACTOR:
@@ -244,8 +255,8 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			actor_buybody( actor_index, pvalue[1] );
 		}
 		else if( pvalue[0] == 1 )
-		{ 
-
+		{ // 重新开始角色
+			actor_restart( actor_index );
 		}
 		break;
 	default:

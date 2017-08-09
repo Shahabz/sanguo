@@ -48,7 +48,7 @@ function proc_list_C( recvValue )
 	-- process.
 	-- нч╫ги╚
 	if recvValue.m_actor_num <= 0 then
-		CreateDlgOpen();
+		CreateDlgShow( recvValue.m_nation_award );
 	else
 		if recvValue.m_listinfo[1].m_lockstat == 1 then
 			Data.userini:WriteValue( "USERNAME", "" );
@@ -507,35 +507,41 @@ end
 -- m_offset=0,m_kind=0,m_washid={[4]},
 function proc_equip_C( recvValue )
 	-- process.
+	local tmpEquip = SLK_Equip.new();
+	tmpEquip.m_kind = recvValue.m_kind;
+	for i=1,4,1 do
+		tmpEquip.m_washid[i] = recvValue.m_washid[i];
+	end
+	if recvValue.m_offset < 1000 then
+		GetEquip():SetEquip( recvValue.m_offset, tmpEquip );
+	else
+		GetHero():SetEquip( recvValue.m_offset, tmpEquip );
+	end
 end
 
--- m_equipext=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[6]},[m_count]},
+-- m_equipext=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[4]},[m_count]},
 function proc_equiplist_C( recvValue )
 	-- process.
 	GetPlayer().m_equipext = recvValue.m_equipext;
 	for tmpi = 1, recvValue.m_count, 1 do
-		if recvValue.m_list[tmpi].m_offset >= 0 then
-			local tmpEquip = SLK_Equip.new();
-			tmpEquip.m_kind = recvValue.m_list[tmpi].m_kind;
-			for i=1,6,1 do
-				tmpEquip.m_washid[i] = recvValue.m_list[tmpi].m_washid[i];
-			end
-	
-			GetEquip():SetEquip( recvValue.m_list[tmpi].m_offset, tmpEquip );
-		end
+		proc_equip_C( recvValue.m_list[tmpi] )
 	end
 end
 
 -- m_offset=0,m_kind=0,m_path=0,
 function proc_equipget_C( recvValue )
 	-- process.
-	GetEquip():EquipGet( recvValue.m_offset, recvValue.m_kind, recvValue.path )
+	GetEquip():EquipGet( recvValue.m_offset, recvValue.m_kind, recvValue.m_path )
 end
 
 -- m_offset=0,m_kind=0,m_path=0,
 function proc_equiplost_C( recvValue )
 	-- process.
-	GetEquip():EquipLost( recvValue.m_offset, recvValue.m_path );
+	if recvValue.m_offset < 1000 then
+		GetEquip():EquipLost( recvValue.m_offset, recvValue.m_path );
+	else
+		GetHero():SetEquip( recvValue.m_offset, nil );
+	end
 end
 
 -- m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,
@@ -548,6 +554,7 @@ function proc_hero_C( recvValue )
 		GetHero().m_Hero[offset]:Set( recvValue );
 	end
 	HeroDlgUpdate();
+	HeroInfoDlgUpdate( recvValue.m_kind )
 end
 
 -- m_count=0,m_list={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,[m_count]},m_type=0,
@@ -581,7 +588,7 @@ function proc_heroexp_C( recvValue )
 		GetHero().m_Hero[offset].m_exp_max = recvValue.m_exp_max;
 		GetHero().m_Hero[offset].m_level = recvValue.m_level;
 	end
-	
+	HeroInfoDlgUpdate( recvValue.m_kind )
 end
 
 -- m_kind=0,m_add=0,m_soldiers=0,m_soldiers_max=0,m_path=0,
@@ -594,6 +601,7 @@ function proc_herosoldiers_C( recvValue )
 		GetHero().m_Hero[offset].m_soldiers = recvValue.m_soldiers;
 	end
 	HeroDlgUpdate();
+	HeroInfoDlgUpdate( recvValue.m_kind )
 end
 
 -- m_kind=0,m_state=0,
@@ -606,6 +614,7 @@ function proc_herostate_C( recvValue )
 		GetHero().m_Hero[offset].m_state = recvValue.m_state;
 	end
 	HeroDlgUpdate();
+	HeroInfoDlgUpdate( recvValue.m_kind )
 end
 
 -- m_up_kind=0,m_down_kind=0,
@@ -613,28 +622,51 @@ function proc_heroreplace_C( recvValue )
 	-- process.
 	local up_type, up_offset = GetHero():GetIndex( recvValue.m_up_kind );
 	local down_type, down_offset = GetHero():GetIndex( recvValue.m_down_kind );
-	
 	-- 
 	if up_type == down_type and up_type == "CityHero" then
-		GetHero().m_CityHero[up_offset], GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset], GetHero().m_CityHero[up_offset];
+		local tmp = clone( GetHero().m_CityHero[up_offset] )
+		GetHero().m_CityHero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
+		GetHero().m_CityHero[down_offset] = tmp;
 		return;
 	end
 	
 	--
 	if up_type == down_type and up_type == "Hero" then
-		GetHero().m_Hero[up_offset], GetHero().m_Hero[down_offset] = GetHero().m_Hero[down_offset], GetHero().m_Hero[up_offset];
+		local tmp = clone( GetHero().m_Hero[up_offset] )
+		GetHero().m_Hero[up_offset] = clone( GetHero().m_Hero[down_offset] )
+		GetHero().m_Hero[down_offset] = tmp;
 		return;
 	end
 	
 	--
 	if up_type == "Hero" then
-		GetHero().m_Hero[up_offset], GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset], GetHero().m_Hero[up_offset];
+		if recvValue.m_down_kind == 0 then 
+			for i = 0, 3, 1 do
+				if GetHero().m_CityHero[i].m_kind <= 0 then 
+					down_offset = i
+					break;
+				end
+			end
+		end
+		local tmp = clone( GetHero().m_Hero[up_offset] )
+		GetHero().m_Hero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
+		GetHero().m_CityHero[down_offset] = tmp;
 		return;
 	end
 	
 	--
 	if up_type == "CityHero" then
-		GetHero().m_CityHero[up_offset], GetHero().m_Hero[down_offset] = GetHero().m_Hero[down_offset], GetHero().m_CityHero[up_offset];
+		if recvValue.m_down_kind == 0 then 
+			for i = 0, MAX_HERONUM-1, 1 do
+				if GetHero().m_Hero[i].m_kind <= 0 then 
+					down_offset = i
+					break;
+				end
+			end
+		end
+		local tmp = clone( GetHero().m_CityHero[up_offset] )
+		GetHero().m_CityHero[up_offset] = clone( GetHero().m_Hero[down_offset] )
+		GetHero().m_Hero[down_offset] = tmp;
 		return;
 	end
 
@@ -692,12 +724,15 @@ function proc_soldiers_C( recvValue )
 	if recvValue.m_corps == 0 then
 		GetPlayer().m_infantry_num = recvValue.m_soldiers;
 		MainDlgSetInfantry();
+		HeroDlgSetInfantry();
 	elseif recvValue.m_corps == 1 then
 		GetPlayer().m_cavalry_num = recvValue.m_soldiers;
 		MainDlgSetCavalry();
+		HeroDlgSetCavalry();
 	elseif recvValue.m_corps == 2 then
 		GetPlayer().m_archer_num = recvValue.m_soldiers;
 		MainDlgSetArcher();
+		HeroDlgSetArcher();
 	end
 	
 	if recvValue.m_add > 0 then

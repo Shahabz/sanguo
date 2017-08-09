@@ -27,6 +27,7 @@ typedef struct _slk_ListInfo SLK_ListInfo;	//µ¥¸ö½ÇÉ«µÄÁĞ±íĞÅÏ¢
 struct _slk_NetS_List {
 	char m_actor_num;	//·şÎñ¶Ë·µ»Ø-½ÇÉ«¸öÊı
 	SLK_ListInfo m_listinfo[8];	//·şÎñ¶Ë·µ»Ø-½ÇÉ«Êı×é
+	char m_nation_award;	//·şÎñ¶Ë·µ»Ø-ÄÄ¸ö¹ú¼ÒÓĞ½±Àø
 };
 typedef struct _slk_NetS_List SLK_NetS_List;	//·şÎñÆ÷¶Ë·¢ËÍ½ÇÉ«ÁĞ±í
 
@@ -340,7 +341,7 @@ typedef struct _slk_NetS_UpdateMapUnit SLK_NetS_UpdateMapUnit;	//¸üĞÂµØÍ¼ÏÔÊ¾µ¥Ô
 struct _slk_NetS_Equip {
 	short m_offset;	//×°±¸Ë÷Òı
 	short m_kind;	//×°±¸ÖÖÀà
-	short m_washid[6];	//Ï´Á·ÊôĞÔ
+	short m_washid[4];	//Ï´Á·ÊôĞÔ
 };
 typedef struct _slk_NetS_Equip SLK_NetS_Equip;	//×°±¸
 
@@ -549,8 +550,6 @@ struct _slk_NetS_BuildingUpgradeInfo {
 	int m_food;	//½¨ÖşÉı¼¶ËùĞèÊ³Îï
 	int m_iron;	//½¨ÖşÉı¼¶ËùĞèïÙÌú
 	int m_sec;	//½¨ÖşÉı¼¶ËùĞèÊ±¼ä
-	int m_old_value[8];	//½¨ÖşÉı¼¶Ç®µÄÊıÖµ
-	int m_new_value[8];	//½¨ÖşÉı¼¶ºóµÄÊıÖµ
 	char m_maxlevel;	//½¨Öş×î´óµÈ¼¶
 };
 typedef struct _slk_NetS_BuildingUpgradeInfo SLK_NetS_BuildingUpgradeInfo;	//½¨ÖşÉı¼¶ĞÅÏ¢

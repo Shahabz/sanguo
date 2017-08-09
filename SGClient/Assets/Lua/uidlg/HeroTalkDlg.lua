@@ -90,7 +90,7 @@ end
 function HeroTalkKind( herokind, text )
 	HeroTalkDlgOpen();
 	m_herokind = herokind
-	--m_uiShape:GetComponent( "Image" ).sprite = shape;
-	--m_uiName:GetComponent( "UIText" ).text = name;
-	m_uiTalk:GetComponent( "UIText" ).text = talk;
+	m_uiShape:GetComponent( "Image" ).sprite = HeroFaceSprite( herokind );
+	m_uiName:GetComponent( "UIText" ).text = HeroName(herokind);
+	m_uiTalk:GetComponent( "UIText" ).text = text;
 end

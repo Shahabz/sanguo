@@ -179,7 +179,9 @@ function EquipForgingDlgShow()
 	-- 
 	local EquipList = {};
 	for kind, info in pairs(g_equipinfo) do
-		table.insert( EquipList, { m_kind=kind, m_actorlevel=info.actorlevel } )
+		if equip_getcolor( kind ) < 5 then
+			table.insert( EquipList, { m_kind=kind, m_actorlevel=info.actorlevel } )
+		end
 	end
 	table.sort( EquipList, EquipForgingDlgCacheSort )
 	

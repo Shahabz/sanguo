@@ -19,12 +19,19 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_HeroHead = nil; --UnityEngine.GameObject
 local m_uiUpBtn = nil; --UnityEngine.GameObject
 local m_uiGoldBtn = nil; --UnityEngine.GameObject
+local m_uiExpPanel = nil; --UnityEngine.GameObject
+local m_uiSoldierPanel = nil; --UnityEngine.GameObject
+local m_uiName = nil; --UnityEngine.GameObject
+local m_uiEquipInfo = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 
 local m_ObjectPool = nil;
 local m_pCacheHero = nil;
+local m_sys = 0;
+local m_up = false
+local m_MatchEquipList = {};
 
 -- 打开界面
 function HeroInfoDlgOpen()
@@ -37,15 +44,6 @@ function HeroInfoDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	local objs = {};
-	for i = 0 ,m_uiContent.transform.childCount - 1 do
-		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
-    end
-	for k, v in pairs(objs) do
-		local obj = v;
-		m_ObjectPool:Release( "UIP_HeroHead", obj );
-    end
-	m_CacheHeroCache = {};
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "HeroInfoDlg" );
@@ -66,10 +64,13 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroInfoDlgClose();
+		elseif nControlID == -2 then
+			HeroInfoDlgSelectEquip( -1 )
 			
 		-- 快速升级
 		elseif nControlID == 1 then
-		
+			HeroExpDlgShow( m_pCacheHero.m_kind )
+			
 		-- 武将洗髓
 		elseif nControlID == 2 then
 		
@@ -80,6 +81,26 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 神级突破
 		elseif nControlID == 4 then
 		
+		-- 打造装备
+		elseif nControlID == 5 then
+			EquipForgingDlgShow();
+			HeroInfoDlgClose();
+			HeroDlgClose()
+		
+		-- 卸下装备
+		elseif nControlID >= 10 and nControlID < 20 then
+			HeroInfoDlgEquipDown( nControlID-10 )
+		
+		-- 选择英雄
+		elseif nControlID >= 100 and nControlID < 1000 then
+		
+		-- 选择装备
+		elseif nControlID >= 1000 and nControlID < 2000 then
+			HeroInfoDlgSelectEquip( nControlID-1000 )
+		
+		-- 穿上
+		elseif nControlID >= 2000 and nControlID < 3000 then
+			HeroInfoDlgEquipUp( nControlID-2000 )
         end
 	end
 end
@@ -110,6 +131,10 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiUIP_HeroHead = objs[19];
 	m_uiUpBtn = objs[20];
 	m_uiGoldBtn = objs[21];
+	m_uiExpPanel = objs[22];
+	m_uiSoldierPanel = objs[23];
+	m_uiName = objs[24];
+	m_uiEquipInfo = objs[25];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -146,18 +171,42 @@ end
 -- 自定
 ----------------------------------------
 
-function HeroInfoDlgShow( pHero, up )
-	m_pCacheHero = pHero;
+function HeroInfoDlgShow( sys, pHero, up )
 	if pHero == nil or pHero.m_kind <= 0 then
 		return
 	end
 	HeroInfoDlgOpen();
+	HeroInfoDlgSelectEquip( -1 )
+	HeroInfoDlgSet( sys, pHero, up )
+end
+
+function HeroInfoDlgSet( sys, pHero, up )
+	m_pCacheHero = pHero;
+	m_sys = sys;
+	m_up = up
+	HeroInfoDlgClear()
+	
+	-- 能力范围图
 	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
 	uiPolygonChart.VerticesDistances[0] = 0.5
 	uiPolygonChart.VerticesDistances[1] = 0.5
 	uiPolygonChart.VerticesDistances[2] = 0.5
 	
+	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
+	
+	-- 名称
+	SetText( m_uiName, HeroNameLv(pHero.m_kind, pHero.m_level ) )
+	
+	-- 经验
+	SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
+	SetText( m_uiExpPanel.transform:Find("Text"), knum(pHero.m_exp).."/"..knum(pHero.m_exp_max) )
+	
+	-- 兵力
+	SetProgress( m_uiSoldierPanel.transform:Find("Progress"), pHero.m_soldiers/pHero.m_troops )
+	SetText( m_uiSoldierPanel.transform:Find("Text"), knum(pHero.m_soldiers).."/"..knum(pHero.m_troops) )
+	
+	-- 属性
 	SetText( m_uiAttackBase, T(143).." "..pHero.m_attack_base );
 	SetText( m_uiDefenseBase, T(144).." "..pHero.m_defense_base );
 	SetText( m_uiTroopsBase, T(145).." "..pHero.m_troops_base );
@@ -168,6 +217,38 @@ function HeroInfoDlgShow( pHero, up )
 	SetText( m_uiAttack,  T(146)..":"..pHero.m_attack );
 	SetText( m_uiDefense,  T(147)..":"..pHero.m_defense )
 	SetText( m_uiSoldier,  T(148)..":"..pHero.m_troops )
+		
+	-- 装备
+	for i=0,5,1 do
+		local objs = m_uiEquip[i].transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiWashBack = objs[2];
+		local uiWash = objs[3];
+		local uiAdd = objs[4];
+		SetControlID( m_uiEquip[i], 1000+i )
+
+		if pHero.m_Equip[i].m_kind > 0 then
+			SetTrue( uiShape )
+			SetTrue( uiColor )
+			SetTrue( uiWashBack )
+			SetTrue( uiWash )
+			SetFalse( uiAdd )
+			SetImage( uiShape, EquipSprite(pHero.m_Equip[i].m_kind) )
+			SetImage( uiColor, ItemColorSprite(equip_getcolor(pHero.m_Equip[i].m_kind)) )
+		else
+			SetTrue( uiShape )
+			SetFalse( uiColor )
+			SetFalse( uiWashBack )
+			SetFalse( uiWash )
+			if GetEquip():GetCountBuyType( i+1 ) > 0 then
+				SetTrue( uiAdd )
+			else
+				SetFalse( uiAdd )
+			end
+			SetImage( uiShape, LoadSprite("ui_icon_back_3") )
+		end
+	end
 	
 	
 	-- 先放进临时缓存
@@ -178,13 +259,15 @@ function HeroInfoDlgShow( pHero, up )
         end
     end
 	
-	-- 先放进临时缓存			
-    for offset = 0, MAX_HERONUM-1, 1 do
-        local pHero = GetHero().m_Hero[offset];
-        if pHero ~= nil and pHero.m_kind > 0 then
-            table.insert(m_CacheHeroCache, 100+offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 100+offset });
-        end
-    end
+	-- 先放进临时缓存
+	if sys == 1 then --1全放			
+		for offset = 0, MAX_HERONUM-1, 1 do
+			local pHero = GetHero().m_Hero[offset];
+			if pHero ~= nil and pHero.m_kind > 0 then
+				table.insert(m_CacheHeroCache, 100+offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 100+offset });
+			end
+		end
+	end
 	
 	-- 创建对象
 	for i, v in pairs( m_CacheHeroCache ) do
@@ -193,7 +276,7 @@ function HeroInfoDlgShow( pHero, up )
 			local uiHeroObj = m_ObjectPool:Get( "UIP_HeroHead" );
 			uiHeroObj.transform:SetParent( m_uiContent.transform );
 				
-			uiHeroObj:GetComponent("UIButton").controlID = 1000 + pHero.m_offset;
+			uiHeroObj:GetComponent("UIButton").controlID = 100 + pHero.m_offset;
 			local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 
 			local uiShape = objs[0];
@@ -212,16 +295,142 @@ function HeroInfoDlgShow( pHero, up )
 	-- 已经上阵的
 	if up == true then
 		SetTrue( m_uiUpgradeBtn );
-		SetTrue( m_uiWashBtn );
 		SetFalse( m_uiUpBtn );
 		SetFalse( m_uiGoldBtn );
+		if pHero.m_color < 1 then
+			SetFalse( m_uiWashBtn );
+		else
+			SetTrue( m_uiWashBtn );
+		end
 	else
 		SetFalse( m_uiUpgradeBtn );
 		SetFalse( m_uiWashBtn );
 		SetTrue( m_uiUpBtn );
 		SetFalse( m_uiGoldBtn );
 	end
+end
+
+function HeroInfoDlgClear()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		m_ObjectPool:Release( "UIP_HeroHead", obj );
+    end
+	m_CacheHeroCache = {};
+end
+
+-- 选择装备
+function HeroInfoDlgSelectEquip( offset )
+	if offset < 0 then
+		SetFalse( m_uiEquipInfo )
+		return
+	end
+	SetTrue( m_uiEquipInfo );
 	
+	local kind = m_pCacheHero.m_Equip[offset].m_kind;
+	local objs = m_uiEquipInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiColor = objs[1];
+	local uiName = objs[2];
+	local uiAbility = objs[3];
+	local uiDesc = objs[4];
+	local uiDownBtn = objs[5];
+	local uiWashBtn = objs[6];
+	local uiScroll = objs[7];
+	local uiContent = objs[8];
+	local uiUIP_Equip = objs[9];
+	local uiForgingBtn = objs[10];
+	SetControlID( uiDownBtn, 10+offset )
+	
+	-- 已经装备的信息
+	if kind > 0 then
+		SetTrue( uiShape )
+		SetTrue( uiColor )
+		SetTrue( uiName )
+		SetTrue( uiAbility )
+		SetFalse( uiDesc )
+		SetTrue( uiDownBtn )
+		SetTrue( uiWashBtn )
+		
+		SetImage( uiShape, EquipSprite( kind ) )
+		SetImage( uiColor, ItemColorSprite( equip_getcolor( kind ) ) )
+		SetText( uiName, equip_getname( kind ), NameColor( equip_getcolor( kind ) ) );
+		SetText( uiAbility, equip_getabilityname( kind ) );
+	else
+	
+		SetTrue( uiShape )
+		SetFalse( uiColor )
+		SetFalse( uiName )
+		SetFalse( uiAbility )
+		SetTrue( uiDesc )
+		SetFalse( uiDownBtn )
+		SetFalse( uiWashBtn )
+		SetImage( uiShape, LoadSprite("ui_icon_back_3") )
+		SetText( uiDesc, T(823+offset) )
+	end
+	
+	
+	-- 同部位装备列表
+	m_MatchEquipList = GetEquip():GetEquipsByType( offset+1 )
+	
+	--排序
+	
+	-- 加入列表
+	clearChild( uiContent.transform )
+	for i=1, #m_MatchEquipList, 1 do
+		local equipoffset = m_MatchEquipList[i].m_offset;
+		local pEquip = GetEquip():GetAnyEquip( equipoffset );
+		local uiEquip = GameObject.Instantiate( uiUIP_Equip );
+		uiEquip.transform:SetParent( uiContent.transform );
+        uiEquip.transform.localScale = Vector3.one;
+        uiEquip:SetActive(true);
+		
+		local objs = uiEquip.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiShape = objs[0];
+		local uiName = objs[1];
+		local uiAbility = objs[2];
+		local uiUpBtn = objs[3];
+		local uiColor = objs[4];
+		
+		SetControlID( uiUpBtn, 2000+equipoffset )
+		SetImage( uiShape, EquipSprite( pEquip.m_kind ) )
+		SetImage( uiColor, ItemColorSprite( equip_getcolor( pEquip.m_kind ) ) )
+		SetText( uiName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor( pEquip.m_kind ) ) );
+		SetText( uiAbility, equip_getabilityname( pEquip.m_kind ) );
+	end
+	
+    if #m_MatchEquipList == 0 then
+		SetTrue( uiForgingBtn )
+	else
+		SetFalse( uiForgingBtn )
+	end       
+end
+
+-- 穿上
+function HeroInfoDlgEquipUp( offset )
+	if m_pCacheHero.m_kind <= 0 then
+		return
+	end
+	if offset < 0 then
+		return
+	end
+	system_askinfo( ASKINFO_EQUIP, "", 2, m_pCacheHero.m_kind, offset );
+	HeroInfoDlgSelectEquip( -1 )
+end
+
+-- 卸下
+function HeroInfoDlgEquipDown( index )
+	if m_pCacheHero.m_kind <= 0 then
+		return
+	end
+	if index < 0 then
+		return
+	end
+	system_askinfo( ASKINFO_EQUIP, "", 3, m_pCacheHero.m_kind, index );
+	HeroInfoDlgSelectEquip( -1 )
 end
 
 -- 上阵
@@ -229,4 +438,18 @@ function HeroInfoDlgHeroUp()
 	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
 		return
 	end
+end
+
+function HeroInfoDlgUpdate( herokind )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if herokind ~= m_pCacheHero.m_kind then
+		return;
+	end
+	local pHero = GetHero():GetPtr( herokind );
+	if pHero == nil then
+		return;
+	end
+	HeroInfoDlgSet( m_sys, pHero, m_up )
 end

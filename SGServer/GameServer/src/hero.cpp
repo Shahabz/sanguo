@@ -200,7 +200,7 @@ int hero_gethero( int actor_index, int kind, short path )
 	g_actors[actor_index].hero[offset].defense_wash = config->defense_wash;	//洗髓防御资质
 	g_actors[actor_index].hero[offset].troops_wash = config->troops_wash;	//洗髓兵力资质
 	//Equip equip[6];	//装备
-	actor_hero_save_auto( &g_actors[actor_index].hero[offset], "actor_hero", NULL );
+	
 
 	SLK_NetS_HeroGet pValue = { 0 };
 	pValue.m_kind = kind;
@@ -222,9 +222,12 @@ int hero_up_auto( int actor_index, int offset )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	int maxhero = 2 + pCity->attr.hero_up_num;
+	if ( maxhero > 4 )
+		maxhero = 4;
 
 	int index = -1;
-	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
 	{
 		if ( pCity->hero[tmpi].id <= 0 )
 		{
@@ -255,9 +258,11 @@ int hero_up( int actor_index, int offset )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-
+	int maxhero = 2 + pCity->attr.hero_up_num;
+	if ( maxhero > 4 )
+		maxhero = 4;
 	int index = -1;
-	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
 	{
 		if ( pCity->hero[tmpi].id <= 0 )
 		{
@@ -278,6 +283,83 @@ int hero_down( int actor_index, int kind )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( kind <= 0 || kind >= g_heroinfo_maxnum )
 		return -1;
+	return 0;
+}
+
+// 加经验
+int hero_addexp( int actor_index, int herokind, int exp, short path )
+{
+	Hero *pHero = NULL;
+	ACTOR_CHECK_INDEX( actor_index );
+	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) ); 
+	if ( !pHero )
+	{
+		pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
+	}
+	if ( !pHero )
+	{
+		return -1;
+	}
+	char isup = 0;
+	int exp_max = hero_getexp_max( pHero->level, pHero->color );
+
+
+	SLK_NetS_HeroExp pValue = { 0 };
+	pValue.m_kind = herokind;
+	pValue.m_add = exp;
+	pValue.m_exp = pHero->exp;
+	pValue.m_exp_max = exp_max;
+	pValue.m_level = pHero->level;
+	pValue.m_isup = isup;
+	pValue.m_path = path;
+	netsend_heroexp_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 加兵力
+int hero_addsoldiers( int actor_index, int herokind )
+{
+	Hero *pHero = NULL;
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
+	if ( !pHero )
+	{
+		pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
+	}
+	if ( !pHero )
+	{
+		return -1;
+	}
+
+	int troops = hero_troops( pCity, pHero );
+	int add = troops - pHero->soldiers;
+	if ( add <= 0 )
+		return -1;
+
+	HeroInfoConfig *config = hero_getconfig( herokind, pHero->color );
+	if ( !config )
+		return -1;
+
+	int has = city_soldiers( pCity->index, config->corps );
+	if ( has <= 0 )
+		return -1;
+
+	if ( add > has )
+		add = has;
+
+	pHero->soldiers += add;
+	SLK_NetS_HeroSoldiers pValue = { 0 };
+	pValue.m_kind = herokind;
+	pValue.m_add = add;
+	pValue.m_soldiers = pHero->soldiers;
+	pValue.m_soldiers_max = troops;
+	pValue.m_path = PATH_HERO_ADDSOLDIERS;
+	netsend_herosoldiers_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	city_changesoldiers( pCity->index, config->corps, -add, PATH_HERO_ADDSOLDIERS );
 	return 0;
 }
 
@@ -457,6 +539,18 @@ void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValu
 	pValue->m_attack_increase = hero_attack_increase( pCity, pHero );
 	pValue->m_defense_increase = hero_defense_increase( pCity, pHero );
 	pValue->m_offset = offset;
+}
+
+int hero_sendinfo( int actor_index, Hero *pHero )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Hero pValue = { 0 };
+	hero_makestruct( pCity, pHero->offset, pHero, &pValue );
+	netsend_hero_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
 }
 
 int hero_list( int actor_index )

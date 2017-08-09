@@ -229,6 +229,9 @@ function MaterialGetDlgUpdate()
 	
 	-- 刷新打造所需材料界面
 	EquipForgingDlgUpdate()
+	
+	-- 建筑建造界面刷新
+	BuildingUpgradeDlgUpdate()
 end
 
 -- 使用道具

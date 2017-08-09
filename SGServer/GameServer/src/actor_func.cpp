@@ -39,6 +39,7 @@ extern int g_upgradeinfo_maxnum;
 
 extern BodyTokenInfo *g_bodytoken;
 extern int g_bodytoken_maxnum;
+extern int g_nation_actornum[3];
 
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
@@ -88,6 +89,22 @@ int actor_getindex_withid( int actorid )
 	return -1;
 }
 
+// 那个国家人最少
+static char _nation_award()
+{
+	char nation = 1;
+	int num = 10000000;
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		if ( num > g_nation_actornum[tmpi] )
+		{
+			num = g_nation_actornum[tmpi];
+			nation = tmpi + 1;
+		}
+	}
+	return nation;
+}
+
 //-----------------------------------------------------------------------------
 // actor_getlist
 // 函数说明: 返回他的角色列表
@@ -103,6 +120,7 @@ int actor_getlist( int platid, i64 userid, SLK_NetS_List *pValue )
 	char szUserID[21];
 	char num = 0;
 	int index;
+	pValue->m_nation_award = _nation_award();
 	pValue->m_actor_num = 0;
 	lltoa( userid, szUserID, 10 );
 RE_QUERY:

@@ -65,7 +65,7 @@ public abstract class UITween : MonoBehaviour
     public virtual void Kill( bool complete )
     {
         if ( _Tweener != null )
-            _Tweener.Kill( false );
+			_Tweener.Kill( complete );
     }
     public bool IsPlaying()
     {

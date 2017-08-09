@@ -21,6 +21,8 @@ local m_SelectItemIndex = -1;
 local m_SelectEquipIndex = -1;
 local m_SelectItemNum = 0;
 local m_SelectHeroKind = 0;
+local m_equiptype = -1;
+local m_EquipHeroIndex = -1;
 
 -- 数据缓存
 local m_CacheItemCache = { };
@@ -125,6 +127,10 @@ function BagDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 选择装备
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			BagDlgSelectEquip( nControlID-2000 )
+			
+		-- 选择穿着装备
+		elseif nControlID >= 3000 and nControlID < 4000 then
+			BagDlgSelectHeroEquip( nControlID-3000 )
         end
 	end
 end
@@ -188,10 +194,14 @@ function BagDlgSelectType(type)
 	if type == 1 then
 		SetTrue( m_uiItemScroll )
 		SetFalse( m_uiEquipScroll )
+		SetImage( m_uiItemBtn.transform:Find("Back"), LoadSprite("ui_button_page1") )
+		SetImage( m_uiEquipBtn.transform:Find("Back"), LoadSprite("ui_button_page2") )
 		BagDlgLoadItem()
 	elseif type == 2 then
 		SetFalse( m_uiItemScroll )
 		SetTrue( m_uiEquipScroll )
+		SetImage( m_uiEquipBtn.transform:Find("Back"), LoadSprite("ui_button_page1") )
+		SetImage( m_uiItemBtn.transform:Find("Back"), LoadSprite("ui_button_page2") )
 		BagDlgLoadEquip()
 	end
 	BagDlgSelectItem( -1 )
@@ -541,6 +551,7 @@ end
 -- 选择装备
 function BagDlgSelectEquip( offset )
 	m_SelectEquipIndex = offset;
+	m_EquipHeroIndex = -1
 	if offset == -1 then
 		SetFalse( m_uiEquipInfo );
 		return
@@ -567,18 +578,55 @@ function BagDlgSelectEquip( offset )
 	local EquipDesc = objs[2];
 	local SellButton = objs[3];
 	local UseButton = objs[4];
-	local HeroEquip = {};
-	HeroEquip[1] = objs[5];
-	HeroEquip[2] = objs[6];
-	HeroEquip[3] = objs[7];
-	HeroEquip[4] = objs[8];
+	m_HeroEquip = {};
+	m_HeroEquip[1] = objs[5];
+	m_HeroEquip[2] = objs[6];
+	m_HeroEquip[3] = objs[7];
+	m_HeroEquip[4] = objs[8];
 	local ReplaceButton = objs[9];
 	local WashButton = objs[10];
 			
 	SetImage( EquipObj.transform:Find("Shape"), EquipSprite(pEquip.m_kind) )
 	SetImage( EquipObj.transform:Find("Color"), ItemColorSprite(equip_getcolor(pEquip.m_kind)) )
-	SetText( EquipName, equip_getname( pEquip.m_kind ) );
+	SetText( EquipName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor(pEquip.m_kind) ) );
 	SetText( EquipDesc, equip_getabilityname( pEquip.m_kind ) );
+	
+	-- 装备类型1-6 变成0-5
+	m_equiptype = equip_gettype( pEquip.m_kind )-1
+	
+	-- 上阵的英雄分别穿的同部位装备
+	for i=0,3,1 do
+		local objs = m_HeroEquip[i+1].transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiShape = objs[0]
+		local uiColor = objs[1]
+		local uiHeroName = objs[2]
+		local uiSelect = objs[3]
+		local uiTips = objs[4]
+		
+		SetControlID( m_HeroEquip[i+1], 3000 + i )
+		SetFalse( uiSelect )
+		SetFalse( uiTips )
+		
+		if GetHero().m_CityHero[i].m_kind <= 0 then
+			SetFalse( uiShape )
+			SetFalse( uiColor )
+			SetFalse( uiHeroName )
+		else
+			local hEquip = GetHero().m_CityHero[i].m_Equip[m_equiptype]
+			if hEquip.m_kind <= 0 then
+				SetFalse( uiShape )
+				SetFalse( uiColor )
+			else
+				SetTrue( uiShape )
+				SetTrue( uiColor )
+				SetImage( uiShape, EquipSprite( hEquip.m_kind ) )
+				SetImage( uiColor, ItemColorSprite( equip_getcolor( hEquip.m_kind ) ) )
+			end
+			SetTrue( uiHeroName )
+			SetText( uiHeroName, HeroName( GetHero().m_CityHero[i].m_kind ), NameColor( GetHero().m_CityHero[i].m_color ) )
+		end
+		
+	end
 	
 	SetTrue( SellButton ); -- 分解
 	SetFalse( UseButton ); -- 装备
@@ -590,6 +638,62 @@ function BagDlgSelectEquip( offset )
 		SetFalse( WashButton );
 	end
 	
+end
+
+-- 选择穿着装备
+function BagDlgSelectHeroEquip( index )
+	local objs = m_uiEquipInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local SellButton = objs[3];
+	local UseButton = objs[4];
+	local ReplaceButton = objs[9];
+	local WashButton = objs[10];
+	SetFalse( ReplaceButton ); -- 替换
+	SetFalse( UseButton ); -- 装备
+	SetFalse( WashButton ); -- 洗练
+	SetFalse( SellButton ); -- 分解
+	
+	if index == -1 then 
+		BagDlgSelectEquip( m_SelectEquipIndex )
+		m_SelectHeroKind = 0;
+		return;
+	end
+	
+	if m_EquipHeroIndex == index then
+		BagDlgSelectHeroEquip( -1 );
+		return
+	end
+	m_EquipHeroIndex = index;
+	m_SelectHeroKind = GetHero().m_CityHero[index].m_kind;
+	
+	for i=0,3,1 do
+		local objs = m_HeroEquip[i+1].transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[3]
+		local uiTips = objs[4]
+		if index == i then
+			SetTrue( uiSelect )	
+			SetTrue( uiTips )	
+			
+			if GetHero().m_CityHero[i].m_kind <= 0 or GetHero().m_CityHero[i].m_Equip[m_equiptype].m_kind <= 0 then
+				SetText( uiTips.transform:Find( "Name" ), T(822) )
+				SetText( uiTips.transform:Find( "Ability" ) )
+				SetFalse( uiTips.transform:Find( "Wash" ) )
+				SetFalse( ReplaceButton ); -- 替换
+				SetTrue( UseButton ); -- 装备
+			else
+				local hEquip = GetHero().m_CityHero[i].m_Equip[m_equiptype]
+				SetText( uiTips.transform:Find( "Name" ), EquipName( hEquip.m_kind ) )
+				SetText( uiTips.transform:Find( "Ability" ), equip_getabilityname( hEquip.m_kind ) )
+				SetTrue( uiTips.transform:Find( "Wash" ) )
+				SetFalse( UseButton ); -- 装备
+				SetTrue( ReplaceButton ); -- 替换
+			end
+		
+			
+		else
+			SetFalse( uiSelect )
+			SetFalse( uiTips )	
+		end
+	end
 end
 
 -- 装备分解
@@ -610,7 +714,11 @@ function BagDlgEquipUp()
     if pEquip == nil then
         return;
     end
-	
+	if m_SelectHeroKind <= 0 then
+		return
+	end
+	system_askinfo( ASKINFO_EQUIP, "", 2, m_SelectHeroKind, m_SelectEquipIndex - 1 );
+	BagDlgSelectEquip( -1 )
 end
 
 -- 购买装备容量

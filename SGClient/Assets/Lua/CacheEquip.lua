@@ -39,6 +39,15 @@ function equip_getname( equipkind )
 	return name;
 end
 
+-- 获取装备配置类型
+function equip_gettype( equipkind )
+	if g_equipinfo[equipkind] == nil then
+		return 0;
+	end
+	local type = g_equipinfo[equipkind]["type"];
+	return type;
+end
+
 -- 获取装备配置颜色
 function equip_getcolor( equipkind )
 	if g_equipinfo[equipkind] == nil then
@@ -168,6 +177,11 @@ function Equip:OnGetEquip( _EquipIndex, nEquipKind, path )
 	if pEquip == nil then
 		return;
 	end
+	
+	if path == PATH_EQUIP_DOWN then
+		return
+	end
+	
 	-- 新装备标示
 	pEquip.m_bIsNew = true;
 	
@@ -235,7 +249,7 @@ function Equip:GetType( _EquipIndex )
 	if pEquip == nil then
 		return 0;
 	end
-	return pEquip.m_type;
+	return equip_gettype( pEquip.m_kind );
 end
 
 -- 根据索引获取装备颜色
@@ -272,10 +286,10 @@ function Equip:GetEquipsByType( equiptype )
 	local equips = {};
 	for tmpi=0, MAX_EQUIPNUM-1, 1 do
 		local pEquip = self:GetAnyEquip( tmpi );
-		if pEquip ~= nil and pEquip.m_type == equiptype then
+		if pEquip ~= nil and equip_gettype(pEquip.m_kind) == equiptype then
 			table.insert( equips, {
-				m_equipindex = tmpi,
-				m_equipkind = pEquip.m_kind,
+				m_offset = tmpi,
+				m_kind = pEquip.m_kind,
 			} );
 		end
 	end
@@ -287,7 +301,7 @@ function Equip:GetEquipsByTypeWithMinColor( equiptype , mincolor , maxcolor )
 	local equips = {};
 	for tmpi=0, MAX_EQUIPNUM-1, 1 do
 		local pEquip = self:GetAnyEquip( tmpi );
-		if pEquip ~= nil and pEquip.m_type == equiptype and pEquip.m_color_level >= mincolor and pEquip.m_color_level <= maxcolor then
+		if pEquip ~= nil and equip_gettype(pEquip.m_kind) == equiptype and pEquip.m_color_level >= mincolor and pEquip.m_color_level <= maxcolor then
 			table.insert( equips, {
 				m_equipindex = tmpi,
 				m_equipkind = pEquip.m_kind,
@@ -321,6 +335,18 @@ function Equip:GetCount( kind )
 	for tmpi=0, MAX_EQUIPNUM-1, 1 do
 		local pEquip = self:GetAnyEquip( tmpi );
 		if pEquip ~= nil and pEquip.m_kind == kind then
+			count = count + 1;
+		end
+	end
+	return count;
+end
+
+-- 获取总装备数量
+function Equip:GetCountBuyType( equiptype )
+	local count = 0;
+	for tmpi=0, MAX_EQUIPNUM-1, 1 do
+		local pEquip = self:GetAnyEquip( tmpi );
+		if pEquip ~= nil and equip_gettype(pEquip.m_kind) == equiptype then
 			count = count + 1;
 		end
 	end

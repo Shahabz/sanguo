@@ -49,6 +49,7 @@ extern int g_city_maxcount;
 Actor *g_actors = NULL;
 int g_actornum = 0;
 int g_maxactorid = 0;
+int g_nation_actornum[3] = { 0 };
 
 extern UpgradeInfo *g_upgradeinfo;
 extern int g_upgradeinfo_maxnum;
@@ -100,6 +101,29 @@ int actors_init()
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
 		write_gamelog( "%s", szSQL );
+	}
+
+
+	// 各个国家的人数
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		sprintf( szSQL, "select count(*) from actor where nation=%d", tmpi+1 );
+		if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+			continue;
+		}
+		res = mysql_store_result( myGame );
+		if ( !((row = mysql_fetch_row( res ))) )
+		{
+			mysql_free_result( res );
+			return -1;
+		}
+		if ( row[0] )
+			g_nation_actornum[tmpi] = atoi( row[0] );
+		else
+			g_nation_actornum[tmpi] = 0;
 	}
 	return 0;
 }
@@ -184,10 +208,26 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 		actor_equip_batch_save_auto( g_actors[actor_index].hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
 	}
 
-	// 保存道具栏6
+	// 上阵英雄和装备也保存
+	City *pCity = city_getptr( actor_index );
+	if ( pCity )
+	{
+		// 英雄
+		actor_hero_batch_save_auto( pCity->hero, HERO_CITY_MAX, "actor_hero", fp );
+
+		// 装备
+		for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+				continue;
+			actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
+		}
+	}
+
+	// 保存道具
 	item_save( actor_index, fp );
 
-	// 保存装备栏
+	// 保存装备
 	equip_save( actor_index, fp );
 
 	return 0;
@@ -827,6 +867,11 @@ int actor_new( int actor_index )
 	g_city[g_actors[actor_index].city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, g_actors[actor_index].city_index );
 	map_addobject( MAPUNIT_TYPE_CITY, city.posx, city.posy, MAPUNIT_TYPE_CITY );
 
+	// 所选的阵营是否有奖励
+	if ( g_actors[actor_index].nation == client_getnationaward( actor_index ) )
+	{
+		actor_change_token( actor_index, global.nation_award_token, PATH_SYSTEM, 0 );
+	}
 	//item_getitem( actor_index, 2041, 1, -1, PATH_SYSTEM );
 	//item_getitem( actor_index, 2071, 1, -1, PATH_SYSTEM );
 	//item_getitem( actor_index, 745, 1, -1, PATH_SYSTEM );
