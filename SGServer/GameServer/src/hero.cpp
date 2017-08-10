@@ -14,6 +14,7 @@
 #include "item.h"
 #include "equip.h"
 #include "server_netsend_auto.h"
+#include "city_attr.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -324,6 +325,8 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 
 	equip_heroupdate( actor_index, pHero );
 	equip_heroupdate( actor_index, pUpHero );
+
+	city_battlepower_hero_calc( pCity );
 	return 0;
 }
 
@@ -429,6 +432,7 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 		pValue.m_path = path;
 		netsend_heroexp_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+	city_battlepower_hero_calc( pCity );
 	return 0;
 }
 
@@ -476,6 +480,7 @@ int hero_addsoldiers( int actor_index, int herokind )
 	netsend_herosoldiers_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	city_changesoldiers( pCity->index, config->corps, -add, PATH_HERO_ADDSOLDIERS );
+	city_battlepower_hero_calc( pCity );
 	return 0;
 }
 

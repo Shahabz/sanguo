@@ -21,6 +21,7 @@
 #include "equip.h"
 #include "city.h"
 #include "building.h"
+#include "city_attr.h"
 
 extern Global global;
 extern MYSQL *myData;
@@ -416,6 +417,8 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 		}
 	}
 	
+	city_battlepower_hero_calc( pCity );
+
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );
 	return 0;
@@ -480,6 +483,8 @@ int equip_down( int actor_index, short herokind, int index )
 			city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
 		}
 	}
+
+	city_battlepower_hero_calc( pCity );
 
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );

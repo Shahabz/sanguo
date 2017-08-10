@@ -73,7 +73,7 @@ end
 	
 -- 主逻辑秒
 function GameManager.GameLogic()
-	
+	gamelog( "GameLogic:"..os.time() )
 	-- 建造队列
 	if GetPlayer().m_worker_sec > 0 then
 		GetPlayer().m_worker_sec = GetPlayer().m_worker_sec - 1;

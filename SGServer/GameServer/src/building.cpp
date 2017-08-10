@@ -12,6 +12,7 @@
 #include "map.h"
 #include "equip.h"
 #include "quest.h"
+#include "city_attr.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -558,6 +559,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 		building_create( city_index, kind, offset );
 		// 事件
 		city_event_add( city_index, CITY_EVENT_BUILDING, kind, 0 );
+		city_battlepower_building_calc( &g_city[city_index] );
 	}
 	else if ( op == BUILDING_OP_UPGRADE )
 	{
@@ -603,6 +605,8 @@ int building_finish( int city_index, int op, int kind, int offset )
 
 		// 事件
 		city_event_add( city_index, CITY_EVENT_BUILDING, kind, level+1 );
+
+		city_battlepower_building_calc( &g_city[city_index] );
 	}
 	else if ( op == BUILDING_OP_DELETE )
 	{
@@ -622,6 +626,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 		}
 
 		// 通知客户端更新状态
+		city_battlepower_building_calc( &g_city[city_index] );
 	}
 	return 0;
 }
@@ -635,43 +640,45 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 		return -1;
 	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
 	{
-		if ( pCity->worker_free == 1 )
+		pCity->worker_sec -= sec;
+		if ( pCity->worker_sec <= 0 )
 		{
-			pCity->worker_free = 0;
-			pCity->worker_sec -= sec;
-			if ( pCity->worker_sec <= 0 )
-			{
-				pCity->worker_sec = 0;
-				building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
-				pCity->worker_op = 0;
-				pCity->worker_sec = 0;
-				pCity->wnsec = 0;
-				pCity->worker_kind = 0;
-				pCity->worker_offset = -1;
-				building_sendworker( pCity->actor_index );
-			}
-
+			pCity->worker_sec = 0;
+			building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
+			pCity->worker_op = 0;
+			pCity->worker_sec = 0;
+			pCity->wnsec = 0;
+			pCity->worker_kind = 0;
+			pCity->worker_offset = -1;
+			building_sendworker( pCity->actor_index );
+		}
+		else
+		{
+			building_sendinfo( pCity->actor_index, kind );
+			building_sendworker( pCity->actor_index );
 		}
 	}
 	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
 	{
-		if ( pCity->worker_free_ex == 1 )
+		pCity->worker_sec_ex -= sec;
+		if ( pCity->worker_sec_ex <= 0 )
 		{
-			pCity->worker_free_ex = 0;
-			pCity->worker_sec_ex -= sec;
-			if ( pCity->worker_sec_ex <= 0 )
-			{
-				pCity->worker_sec_ex = 0;
-				building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
-				pCity->worker_op_ex = 0;
-				pCity->worker_sec_ex = 0;
-				pCity->wnsec_ex = 0;
-				pCity->worker_kind_ex = 0;
-				pCity->worker_offset_ex = -1;
-				building_sendworker( pCity->actor_index );
-			}
+			pCity->worker_sec_ex = 0;
+			building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
+			pCity->worker_op_ex = 0;
+			pCity->worker_sec_ex = 0;
+			pCity->wnsec_ex = 0;
+			pCity->worker_kind_ex = 0;
+			pCity->worker_offset_ex = -1;
+			building_sendworker( pCity->actor_index );
+		}
+		else
+		{
+			building_sendinfo( pCity->actor_index, kind );
+			building_sendworker( pCity->actor_index );
 		}
 	}
+
 	return 0;
 }
 
@@ -691,7 +698,56 @@ int building_workerfree( int actor_index, int kind, int offset )
 	{
 		freetime = global.worker_freetime;
 	}
-	building_workerquick( actor_index, kind, offset, freetime );
+	
+	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
+	{
+		if ( pCity->worker_free == 1 )
+		{
+			pCity->worker_free = 0;
+			pCity->worker_sec -= freetime;
+			if ( pCity->worker_sec <= 0 )
+			{
+				pCity->worker_sec = 0;
+				building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
+				pCity->worker_op = 0;
+				pCity->worker_sec = 0;
+				pCity->wnsec = 0;
+				pCity->worker_kind = 0;
+				pCity->worker_offset = -1;
+				building_sendworker( pCity->actor_index );
+			}
+			else
+			{
+				building_sendinfo( pCity->actor_index, kind );
+				building_sendworker( pCity->actor_index );
+			}
+
+		}
+	}
+	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
+	{
+		if ( pCity->worker_free_ex == 1 )
+		{
+			pCity->worker_free_ex = 0;
+			pCity->worker_sec_ex -= freetime;
+			if ( pCity->worker_sec_ex <= 0 )
+			{
+				pCity->worker_sec_ex = 0;
+				building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
+				pCity->worker_op_ex = 0;
+				pCity->worker_sec_ex = 0;
+				pCity->wnsec_ex = 0;
+				pCity->worker_kind_ex = 0;
+				pCity->worker_offset_ex = -1;
+				building_sendworker( pCity->actor_index );
+			}
+			else
+			{
+				building_sendinfo( pCity->actor_index, kind );
+				building_sendworker( pCity->actor_index );
+			}
+		}
+	}
 	return 0;
 }
 

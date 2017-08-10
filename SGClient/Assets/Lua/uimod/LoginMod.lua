@@ -319,8 +319,8 @@ end
 function LoginModLogin()
 	LoginModCloseTestLogin();
 	LoginModLoginQueue( true );
-	m_UserName = m_uiAccountEdit.Find("Input"):GetComponent( "UIInputField" ).text;
-	m_PassWord = m_uiPasswordEdit.Find("Input"):GetComponent( "UIInputField" ).text;
+	m_UserName = m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+	m_PassWord = m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
 	GameManager.writeini( "LASTSERVERID", m_selectServerID );
 	GameManager.writeini( "LASTLOGINTYPE", 1 );
 	Network.SDKConnectServer( m_ServerList[m_selectServerID]["h"], m_ServerList[m_selectServerID]["p"] );
