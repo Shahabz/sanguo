@@ -11,6 +11,7 @@ SRC = \
 ../AutoS/src/auto_city_building_barracks.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_city_guard.cpp \
+../AutoS/src/auto_data_bodytoken.cpp \
 ../AutoS/src/auto_data_building_upgrade.cpp \
 ../AutoS/src/auto_data_city_guard.cpp \
 ../AutoS/src/auto_data_city_tech.cpp \
@@ -49,6 +50,7 @@ actor_func.cpp \
 actor_gmcmd.cpp \
 actor_notify.cpp \
 actor_send.cpp \
+actor_times.cpp \
 area.cpp \
 army.cpp \
 award.cpp \
@@ -121,6 +123,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_city_building_res.o: ../AutoS/src/auto_city_building_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_guard.o: ../AutoS/src/auto_city_guard.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_bodytoken.o: ../AutoS/src/auto_data_bodytoken.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_building_upgrade.o: ../AutoS/src/auto_data_building_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -197,6 +201,8 @@ actor_gmcmd.o: actor_gmcmd.cpp
 actor_notify.o: actor_notify.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 actor_send.o: actor_send.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+actor_times.o: actor_times.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 area.o: area.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
