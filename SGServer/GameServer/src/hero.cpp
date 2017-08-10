@@ -114,7 +114,7 @@ char hero_defaultcolor( int kind )
 		return 0;
 	for ( int color = 0; color < g_heroinfo[kind].maxnum; color++ )
 	{
-		if ( g_heroinfo[kind].config[color].kind >= 0 )
+		if ( g_heroinfo[kind].config[color].kind > 0 )
 		{
 			return color;
 		}
@@ -250,30 +250,80 @@ int hero_up_auto( int actor_index, int offset )
 }
 
 // 上阵带替换效果
-int hero_up( int actor_index, int offset )
+int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	if ( offset <= 0 || offset >= HERO_ACTOR_MAX )
-		return -1;
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	int maxhero = 2 + pCity->attr.hero_up_num;
-	if ( maxhero > 4 )
-		maxhero = 4;
-	int index = -1;
-	for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
-	{
-		if ( pCity->hero[tmpi].id <= 0 )
+	Hero *pHero = city_hero_getptr( pCity->index, HERO_BASEOFFSET + city_hero_getindex( pCity->index, selectkind ) );
+	if ( !pHero )
+	{ // 没有需要替换的,找空位
+		int maxhero = 2 + pCity->attr.hero_up_num;
+		if ( maxhero > 4 )
+			maxhero = 4;
+		int index = -1;
+		for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
 		{
-			index = tmpi;
-			break;
+			if ( pCity->hero[tmpi].id <= 0 )
+			{
+				index = tmpi;
+				break;
+			}
+		}
+		if ( index < 0 )
+			return -1;
+		pHero = &pCity->hero[index];
+	}
+	if ( !pHero )
+	{
+		return -1;
+	}
+
+	// 需要上阵的英雄
+	Hero *pUpHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, upkind ) );
+	if ( !pUpHero )
+	{
+		return -1;
+	}
+	
+	int hero_offset = pHero->offset;
+	int up_hero_offset = pUpHero->offset;
+
+	Hero tmp = { 0 };
+	memcpy( &tmp, pHero, sizeof( Hero ) );
+	memcpy( pHero, pUpHero, sizeof( Hero ) );
+	memcpy( pUpHero, &tmp, sizeof( Hero ) );
+	pHero->offset = hero_offset;
+	pUpHero->offset = up_hero_offset;
+
+	if ( replace_equip == 1 )
+	{
+		// 替换就拷贝回去
+		Equip tmp_equip[6] = { 0 };
+		memcpy( &tmp_equip, &pHero->equip, sizeof( Equip ) * 6 );
+		memcpy( &pHero->equip, &pUpHero->equip, sizeof( Equip ) * 6 );
+		memcpy( &pUpHero->equip, &tmp_equip, sizeof( Equip ) * 6 );
+
+		for ( int tmpi = 0; tmpi < 6; tmpi++ )
+		{
+			if ( pHero->equip[tmpi].kind > 0 )
+				pHero->equip[tmpi].offset = pHero->kind * 1000 + tmpi;
+			if ( pUpHero->equip[tmpi].kind > 0 )
+				pUpHero->equip[tmpi].offset = pUpHero->kind * 1000 + tmpi;
 		}
 	}
-	if ( index < 0 )
-		return -1;
+	
+	SLK_NetS_HeroReplace pValue = { 0 };
+	pValue.m_up_kind = upkind;
+	pValue.m_down_kind = selectkind;
+	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
+	hero_sendinfo( actor_index, pHero );
+	hero_sendinfo( actor_index, pUpHero );
 
+	equip_heroupdate( actor_index, pHero );
+	equip_heroupdate( actor_index, pUpHero );
 	return 0;
 }
 
@@ -286,12 +336,16 @@ int hero_down( int actor_index, int kind )
 	return 0;
 }
 
-// 加经验
-int hero_addexp( int actor_index, int herokind, int exp, short path )
+// 使用经验道具
+int hero_useexpitem( int actor_index, int herokind, int itemkind )
 {
 	Hero *pHero = NULL;
 	ACTOR_CHECK_INDEX( actor_index );
-	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) ); 
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
 	if ( !pHero )
 	{
 		pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
@@ -300,19 +354,81 @@ int hero_addexp( int actor_index, int herokind, int exp, short path )
 	{
 		return -1;
 	}
+
+	if ( pHero->level >= g_actors[actor_index].level )
+		return -1;
+
+	// 使用道具模式
+	int costtype = 0;
+
+	// 有道具使用道具，无道具使用钻石
+	if ( item_getitemnum( actor_index, itemkind ) <= 0 )
+	{
+		if ( g_actors[actor_index].token < item_gettoken( itemkind ) )
+		{
+			return -1;
+		}
+		costtype = 1; // 使用钻石模式
+	}
+
+	int exp = item_get_base_value( itemkind, 0 );
+
+	if ( costtype == 0 )
+	{
+		item_lost( actor_index, itemkind, 1, PATH_SYSTEM );
+		hero_addexp( pCity, pHero, exp, PATH_ITEMUSE );
+	}
+	else
+	{
+		actor_change_token( actor_index, -item_gettoken( itemkind ), PATH_HERO_ADDEXP, 0 );
+		hero_addexp( pCity, pHero, exp, PATH_TOKENITEMUSE );
+	}
+	return 0;
+}
+
+static int _hero_upgrade( Hero *pHero, short path )
+{
+	if ( !pHero )
+		return -1;
+	if ( pHero->level >= global.actorlevel_max )
+		return -1;
+	int lastlevel = pHero->level;
+	pHero->level += 1;
+	wlog( 0, LOGOP_HEROUPGRADE, path, pHero->kind, pHero->level, 0, pHero->actorid, 0 );
+	return 0;
+}
+
+// 加经验
+int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
+{
+	if ( !pCity || !pHero )
+		return -1;
+
 	char isup = 0;
-	int exp_max = hero_getexp_max( pHero->level, pHero->color );
+	pHero->exp += exp;
+	// 检查升级
+	while ( pHero->exp >= hero_getexp_max( pHero->level, pHero->color ) )
+	{
+		int curlevel = pHero->level;
+		// 可以升级
+		if ( pHero->level >= pCity->level || _hero_upgrade( pHero, path ) < 0 )
+			break;
+		pHero->exp -= hero_getexp_max( curlevel, pHero->color );
+		isup = 1;
+	}
 
-
-	SLK_NetS_HeroExp pValue = { 0 };
-	pValue.m_kind = herokind;
-	pValue.m_add = exp;
-	pValue.m_exp = pHero->exp;
-	pValue.m_exp_max = exp_max;
-	pValue.m_level = pHero->level;
-	pValue.m_isup = isup;
-	pValue.m_path = path;
-	netsend_heroexp_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	if ( pCity->actor_index >= 0 )
+	{
+		SLK_NetS_HeroExp pValue = { 0 };
+		pValue.m_kind = pHero->kind;
+		pValue.m_add = exp;
+		pValue.m_exp = pHero->exp;
+		pValue.m_exp_max = hero_getexp_max( pHero->level, pHero->color );
+		pValue.m_level = pHero->level;
+		pValue.m_isup = isup;
+		pValue.m_path = path;
+		netsend_heroexp_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	}
 	return 0;
 }
 

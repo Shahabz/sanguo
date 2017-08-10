@@ -166,7 +166,6 @@ function Equip:EquipGet( _EquipIndex, kind, path )
 	end
 	pequip.m_kind = kind;
 	self:SetEquip( _EquipIndex, pequip );
-	
 	self:OnGetEquip( _EquipIndex, kind, path );
 end
 
@@ -198,9 +197,7 @@ function Equip:EquipLost( _EquipIndex, path )
 	if self:HasEquip( _EquipIndex ) == false then
 		return;
 	end
-	
 	self:SetEquip( _EquipIndex, nil );
-	self:OnEquipChange( _EquipIndex );
 end
 
 -- 这个装备格子是否存在装备

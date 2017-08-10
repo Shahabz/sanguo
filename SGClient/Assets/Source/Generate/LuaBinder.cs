@@ -45,6 +45,7 @@ public static class LuaBinder
 		UIClippingLoopWrap.Register(L);
 		UIDragSensorWrap.Register(L);
 		UITextWrap.Register(L);
+		UIToggleWrap.Register(L);
 		UITweenWrap.Register(L);
 		UITweenRectPositionWrap.Register(L);
 		UITweenFadeWrap.Register(L);
@@ -151,6 +152,7 @@ public static class LuaBinder
 		UnityEngine_UI_SliderWrap.Register(L);
 		UnityEngine_UI_ScrollRectWrap.Register(L);
 		UnityEngine_UI_TextWrap.Register(L);
+		UnityEngine_UI_ToggleWrap.Register(L);
 		UnityEngine_UI_GridLayoutGroupWrap.Register(L);
 		UnityEngine_UI_LayoutElementWrap.Register(L);
 		UnityEngine_UI_MaskableGraphicWrap.Register(L);

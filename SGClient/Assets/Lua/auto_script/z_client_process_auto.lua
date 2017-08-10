@@ -555,6 +555,7 @@ function proc_hero_C( recvValue )
 	end
 	HeroDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind )
+	HeroListDlgLoadHero()
 end
 
 -- m_count=0,m_list={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,[m_count]},m_type=0,
@@ -588,7 +589,8 @@ function proc_heroexp_C( recvValue )
 		GetHero().m_Hero[offset].m_exp_max = recvValue.m_exp_max;
 		GetHero().m_Hero[offset].m_level = recvValue.m_level;
 	end
-	HeroInfoDlgUpdate( recvValue.m_kind )
+	HeroInfoDlgUpdate( recvValue.m_kind );
+	HeroExpDlgUpdate();
 end
 
 -- m_kind=0,m_add=0,m_soldiers=0,m_soldiers_max=0,m_path=0,
@@ -933,4 +935,19 @@ function proc_cityprotect_C( recvValue )
 	GetPlayer().m_ptsec = recvValue.m_total
 	GovInfoDlgSetBuffProtect();
 end
+
+-- m_herokind=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[4]},[m_count]},
+function proc_heroequip_C( recvValue )
+	-- process.
+	for tmpi = 1, recvValue.m_count, 1 do
+		local tmpEquip = SLK_Equip.new();
+		tmpEquip.m_kind = recvValue.m_list[tmpi].m_kind;
+		for i=1,4,1 do
+			tmpEquip.m_washid[i] = recvValue.m_list[tmpi].m_washid[i];
+		end
+		GetHero():UpdateEquip( recvValue.m_herokind, tmpi-1, tmpEquip );
+	end
+end
+
+
 

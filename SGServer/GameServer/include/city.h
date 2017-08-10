@@ -92,7 +92,7 @@ int city_event_sendlist( int actor_index );
 
 // 主角经验升级
 int city_actorexp( int city_index, int exp, char path );
-int city_actorupgrade( int city_index, char path, AwardGetInfo *getinfo );
+int city_actorupgrade( int city_index, short path, AwardGetInfo *getinfo );
 
 // 体力
 int city_changebody( int city_index, int value, short path );

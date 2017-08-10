@@ -193,8 +193,26 @@ function Hero:SetEquip( offset, pEquip )
 		else
 			self.m_CityHero[offset].m_Equip[equipoffset]:empty(); -- 清空这个装备
 		end
+		
 	end
+end
 
+function Hero:UpdateEquip( herokind, equipoffset, pEquip )
+	local type, offset = self:GetIndex( herokind );
+	if type == "Hero" then
+		if pEquip ~= nil then
+			self.m_Hero[offset].m_Equip[equipoffset] = clone(pEquip); -- 这个地方是否要用到深拷贝
+		else
+			self.m_Hero[offset].m_Equip[equipoffset]:empty(); -- 清空这个装备
+		end
+	elseif type == "CityHero" then
+		if pEquip ~= nil then
+			self.m_CityHero[offset].m_Equip[equipoffset] = clone(pEquip); -- 这个地方是否要用到深拷贝
+		else
+			self.m_CityHero[offset].m_Equip[equipoffset]:empty(); -- 清空这个装备
+		end
+		
+	end
 end
 
 -- 清空所有的New标示

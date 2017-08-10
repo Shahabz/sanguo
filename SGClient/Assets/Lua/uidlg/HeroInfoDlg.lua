@@ -91,9 +91,6 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 10 and nControlID < 20 then
 			HeroInfoDlgEquipDown( nControlID-10 )
 		
-		-- 选择英雄
-		elseif nControlID >= 100 and nControlID < 1000 then
-		
 		-- 选择装备
 		elseif nControlID >= 1000 and nControlID < 2000 then
 			HeroInfoDlgSelectEquip( nControlID-1000 )
@@ -101,6 +98,10 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 穿上
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			HeroInfoDlgEquipUp( nControlID-2000 )
+			
+		-- 选择英雄
+		elseif nControlID >= 10000 and nControlID < 20000 then
+			HeroInfoDlgSelectHero( nControlID-10000 )
         end
 	end
 end
@@ -255,7 +256,7 @@ function HeroInfoDlgSet( sys, pHero, up )
     for offset = 0, 3, 1 do
         local pHero = GetHero().m_CityHero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-            table.insert(m_CacheHeroCache, offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset });
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset });
         end
     end
 	
@@ -264,26 +265,35 @@ function HeroInfoDlgSet( sys, pHero, up )
 		for offset = 0, MAX_HERONUM-1, 1 do
 			local pHero = GetHero().m_Hero[offset];
 			if pHero ~= nil and pHero.m_kind > 0 then
-				table.insert(m_CacheHeroCache, 100+offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 100+offset });
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 1000+offset });
 			end
 		end
 	end
 	
 	-- 创建对象
-	for i, v in pairs( m_CacheHeroCache ) do
-		local pHero = v;
+	--local tmp = nil
+	for i=1, #m_CacheHeroCache, 1 do
+		local pHero = m_CacheHeroCache[i];
         if pHero ~= nil and pHero.m_kind > 0 then
 			local uiHeroObj = m_ObjectPool:Get( "UIP_HeroHead" );
 			uiHeroObj.transform:SetParent( m_uiContent.transform );
 				
-			uiHeroObj:GetComponent("UIButton").controlID = 100 + pHero.m_offset;
+			uiHeroObj:GetComponent("UIButton").controlID = 10000 + pHero.m_offset;
 			local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 
 			local uiShape = objs[0];
 			local uiColor = objs[1];
 			local uiCorps = objs[2];
 			local uiName = objs[3];
+			local uiSelect = objs[4];
 			
+			if pHero.m_kind == m_pCacheHero.m_kind then
+				SetTrue( uiSelect )
+				--tmp = uiHeroObj;
+			else
+				SetFalse( uiSelect )
+			end
+		
 			SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
 			SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 			SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
@@ -291,6 +301,9 @@ function HeroInfoDlgSet( sys, pHero, up )
 			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
 		end
 	end
+	
+	--local siblingIndex = tmp.transform:GetSiblingIndex();
+    --m_uiHeroScroll.transform:GetComponent("UIScrollRect"):ScrollToBottom(siblingIndex);
 	
 	-- 已经上阵的
 	if up == true then
@@ -320,6 +333,33 @@ function HeroInfoDlgClear()
 		m_ObjectPool:Release( "UIP_HeroHead", obj );
     end
 	m_CacheHeroCache = {};
+end
+
+-- 选择英雄
+function HeroInfoDlgSelectHero( herooffset )
+	local uiHeroObj = m_CacheHeroList[herooffset];
+	if uiHeroObj == nil then
+		return
+	end
+	
+	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiSelect = objs[4];
+	
+	for i=1, #m_CacheHeroCache, 1 do
+		local pHero = m_CacheHeroCache[i];
+		if pHero.m_offset == herooffset then	
+			local pHero = GetHero():GetPtr( pHero.m_kind );
+			if pHero == nil then
+				return;
+			end
+			local up = true;
+			if herooffset >= 1000 then
+				up = false;
+			end
+			HeroInfoDlgSet( m_sys, pHero, up )
+			break;
+		end
+	end
 end
 
 -- 选择装备
@@ -438,6 +478,7 @@ function HeroInfoDlgHeroUp()
 	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
 		return
 	end
+	HeroReplaceDlgShow( m_pCacheHero.m_kind )
 end
 
 function HeroInfoDlgUpdate( herokind )

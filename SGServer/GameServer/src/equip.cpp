@@ -571,6 +571,35 @@ int equip_list( int actor_index )
 	return 0;
 }
 
+// 更新英雄装备列表
+int equip_heroupdate( int actor_index, Hero *pHero )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( !pHero )
+		return -1;
+	// 背包装备列表
+	SLK_NetS_HeroEquip Value = { 0 };
+	Value.m_herokind = pHero->kind;
+	Value.m_count = 0;
+	// 已经装备的-未上阵的
+	for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
+	{
+		Value.m_list[Value.m_count].m_offset = pHero->equip[equipoffset].offset;
+		Value.m_list[Value.m_count].m_kind = pHero->equip[equipoffset].kind;
+		Value.m_list[Value.m_count].m_washid[0] = pHero->equip[equipoffset].washid[0];
+		Value.m_list[Value.m_count].m_washid[1] = pHero->equip[equipoffset].washid[1];
+		Value.m_list[Value.m_count].m_washid[2] = pHero->equip[equipoffset].washid[2];
+		Value.m_list[Value.m_count].m_washid[3] = pHero->equip[equipoffset].washid[3];
+		Value.m_count++;
+	}
+	netsend_heroequip_S( actor_index, SENDTYPE_ACTOR, &Value );
+	return 0;
+}
+
 int equip_sendbag( int actor_index, int offset )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
@@ -637,10 +666,6 @@ int equip_sendlost( int actor_index, short equipkind, int offset, char path )
 	return 0;
 }
 
-int equip_sendswap( int actor_index, int src_offset, int dest_offset )
-{
-	return 0;
-}
 
 // 打造所需时间
 int equip_forgingtime( int city_index, short kind )

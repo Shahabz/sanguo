@@ -207,8 +207,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			hero_addsoldiers( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 2 )
-		{
-			
+		{// 使用经验道具
+			hero_useexpitem( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 3 )
+		{// 上阵
+			hero_up( actor_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
 		
 		

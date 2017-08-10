@@ -13,10 +13,11 @@ HeroInfoConfig *hero_getconfig( int kind, int color );
 
 int hero_gethero( int actor_index, int kind, short path );
 int hero_up_auto( int actor_index, int offset );
-int hero_up( int actor_index, int offset );
+int hero_up( int actor_index, int selectkind, int upkind, int replace_equip );
 int hero_down( int actor_index, int offset );
 
-int hero_addexp( int actor_index, int herokind, int exp, short path );
+int hero_useexpitem( int actor_index, int herokind, int itemkind );
+int hero_addexp( City *pCity, Hero *pHero, int exp, short path );
 int hero_addsoldiers( int actor_index, int herokind );
 
 int hero_attack( City *pCity, Hero *pHero );

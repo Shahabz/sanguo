@@ -552,6 +552,19 @@ int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pVa
 	return 0;
 }
 
+int struct_NetS_HeroEquip_send( char **pptr, int *psize, SLK_NetS_HeroEquip *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Equip_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
 int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 {
 	int tmpi = 0;

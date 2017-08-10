@@ -4,6 +4,7 @@ local m_uiText = nil; --UnityEngine.GameObject
 local m_uiCancelText = nil; --UnityEngine.GameObject
 local m_uiOkText = nil; --UnityEngine.GameObject
 local m_uiToggle = nil; --UnityEngine.GameObject
+local m_uiLabel = nil; --UnityEngine.GameObject
 local m_callback = nil;
 local m_toggle = false;
 
@@ -57,6 +58,7 @@ function MsgBoxExDlgOnAwake( gameObject )
 	m_uiCancelText = objs[1];
 	m_uiOkText = objs[2];	
 	m_uiToggle = objs[3];
+	m_uiLabel = objs[4];
 end
 
 -- 界面初始化时调用
@@ -101,4 +103,14 @@ function MsgBoxEx( text, callback, toggle )
 	MsgBoxExDlgOpen()
 	m_callback = callback
 	SetText( m_uiText, text );
+	SetText( m_uiLabel, T(799) )
+end
+
+function MsgBoxExLabel( text, label, callback )
+	MsgBoxExDlgOpen()
+	m_toggle = true
+	m_uiToggle.transform:GetComponent( "UIToggle" ).isOn = m_toggle
+	m_callback = callback
+	SetText( m_uiText, text );
+	SetText( m_uiLabel, label )
 end

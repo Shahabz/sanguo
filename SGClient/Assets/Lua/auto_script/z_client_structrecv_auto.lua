@@ -473,6 +473,19 @@ function struct_NetS_EquipLost_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_HeroEquip_recv( buffer )
+	local recvValue = {};
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Equip_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
 function struct_NetS_Hero_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadShort();

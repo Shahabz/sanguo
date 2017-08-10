@@ -715,7 +715,7 @@ int city_actorexp( int city_index, int exp, char path )
 }
 
 // Ö÷½ÇÉý¼¶
-int city_actorupgrade( int city_index, char path, AwardGetInfo *getinfo )
+int city_actorupgrade( int city_index, short path, AwardGetInfo *getinfo )
 {
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].level >= global.actorlevel_max )
@@ -974,7 +974,7 @@ int city_changesoldiers( int city_index, short corps, int value, short path )
 	}
 
 	SLK_NetS_Soldiers pValue = { 0 };
-	pValue.m_corps = corps;
+	pValue.m_corps = (char)corps;
 	pValue.m_add = value;
 	pValue.m_soldiers = city_soldiers( city_index, corps );
 	pValue.m_path = path;

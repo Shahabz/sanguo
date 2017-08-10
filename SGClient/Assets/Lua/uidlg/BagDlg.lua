@@ -312,7 +312,13 @@ function BagDlgLoadItem()
             table.insert(m_CacheItemCache, { m_kind = pItem.m_kind, m_num = pItem.m_num,  m_bIsNew = pItem.m_bIsNew, m_offset = nItemIndex, m_sort = item_getsort(pItem.m_kind) });
         end
     end
-
+	
+	-- 一个道具都没有
+	if #m_CacheItemCache == 0 then
+		BagDlgClearItemRow(m_uiItemContent.transform:GetChild(0).gameObject)
+		return;
+	end
+	
     -- 排序
     table.sort(m_CacheItemCache, BagDlgItemCacheSort);
 
@@ -376,7 +382,13 @@ function BagDlgLoadEquip()
             table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_bIsNew = pEquip.m_bIsNew, m_offset = nEquipIndex, });
         end
     end
-
+	
+	-- 一个装备都没有
+	if #m_CacheEquipCache == 0 then
+		BagDlgClearEquipRow(m_uiEquipContent.transform:GetChild(0).gameObject)
+		return;
+	end
+	
     -- 排序
     table.sort(m_CacheEquipCache, BagDlgEquipCacheSort);
 

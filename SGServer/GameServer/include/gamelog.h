@@ -23,6 +23,7 @@
 #define LOGOP_TECH				17	// 科技
 #define LOGOP_BARRACKS			18	// 兵营操作
 #define LOGOP_FORGING			19	// 打造
+#define LOGOP_HEROUPGRADE		20	// 英雄升级
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统

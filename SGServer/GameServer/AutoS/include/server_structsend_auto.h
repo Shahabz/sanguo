@@ -366,6 +366,13 @@ struct _slk_NetS_EquipLost {
 };
 typedef struct _slk_NetS_EquipLost SLK_NetS_EquipLost;	//丢掉一件装备
 
+struct _slk_NetS_HeroEquip {
+	short m_herokind;	//英雄装备
+	short m_count;	//英雄装备
+	SLK_NetS_Equip m_list[6];	//英雄装备
+};
+typedef struct _slk_NetS_HeroEquip SLK_NetS_HeroEquip;	//英雄装备
+
 struct _slk_NetS_Hero {
 	short m_kind;	//
 	char m_color;	//
@@ -838,6 +845,7 @@ int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue );
 int struct_NetS_EquipList_send( char **pptr, int *psize, SLK_NetS_EquipList *pValue );
 int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValue );
 int struct_NetS_EquipLost_send( char **pptr, int *psize, SLK_NetS_EquipLost *pValue );
+int struct_NetS_HeroEquip_send( char **pptr, int *psize, SLK_NetS_HeroEquip *pValue );
 int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue );
 int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValue );
 int struct_NetS_HeroExp_send( char **pptr, int *psize, SLK_NetS_HeroExp *pValue );

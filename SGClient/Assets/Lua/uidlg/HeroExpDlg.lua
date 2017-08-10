@@ -11,6 +11,8 @@ local m_uiItemGrid = nil; --UnityEngine.GameObject
 local m_ItemList = { 161, 162, 163 }
 local m_herokind = 0;
 local m_itemkind = 0;
+local m_pHero = nil
+local m_guardup_toggle = false;
 
 -- 打开界面
 function HeroExpDlgOpen()
@@ -41,6 +43,15 @@ function HeroExpDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroExpDlgClose();
+		
+		-- 使用
+		elseif nControlID == 1 then
+			HeroExpDlgUse()
+			
+		-- 购买并使用
+		elseif nControlID == 2 then
+			HeroExpDlgBuy()
+		
 		elseif nControlID > 1000 and nControlID < 2000 then
 			HeroExpDlgSelectHero( nControlID - 1000 )
 		elseif nControlID > 2000 and nControlID < 3000 then
@@ -93,10 +104,10 @@ end
 ----------------------------------------
 function HeroExpDlgShow( kind )
 	HeroExpDlgOpen()
-	HeroExpDlgSetHero()
-	HeroExpDlgSelectHero( kind );
 	HeroExpDlgSetItem()
 	HeroExpDlgSelectItem( 161 );
+	HeroExpDlgSetHero()
+	HeroExpDlgSelectHero( kind );
 end
 
 -- 英雄
@@ -140,11 +151,14 @@ function HeroExpDlgSelectHero( kind )
 		
 		local pHero = GetHero().m_CityHero[i]
 		if pHero.m_kind > 0 and pHero.m_kind == kind then
+			m_pHero = pHero;
 			SetTrue( uiSelect )
+			SetText( m_uiHeroName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
 		else
 			SetFalse( uiSelect )
 		end
 	end
+	HeroExpDlgUpdateDesc( m_itemkind )
 end
 
 -- 道具
@@ -167,19 +181,77 @@ function HeroExpDlgSelectItem( itemkind )
 		local uiItem = m_uiItemGrid.transform:GetChild(i-1).gameObject;
 		if kind == itemkind then
 			SetTrue( uiItem.transform:Find("Select") )
+	
 			if GetItem():GetCount(kind) > 0 then
 				SetTrue( uiItem.transform:Find("UseBtn") )
 				SetFalse( uiItem.transform:Find("BuyBtn") )
+				SetFalse( uiItem.transform:Find("Token") )
 			else
 				SetTrue( uiItem.transform:Find("BuyBtn") )
 				SetFalse( uiItem.transform:Find("UseBtn") )
+				SetTrue( uiItem.transform:Find("Token") )
+				SetText( uiItem.transform:Find("Token/Num"), "x"..item_gettoken(kind) )
 			end
 		else
 			SetFalse( uiItem.transform:Find("Select") )
 			SetFalse( uiItem.transform:Find("UseBtn") )
 			SetFalse( uiItem.transform:Find("BuyBtn") )
+			SetFalse( uiItem.transform:Find("Token") )
 		end
-		
 	end
+	HeroExpDlgUpdateDesc( m_itemkind )
 end
+
+function HeroExpDlgUpdateDesc( itemkind )
+	if m_pHero == nil then
+		return
+	end
+	SetText( m_uiExpPer, T(128)..": "..math.floor(m_pHero.m_exp*100/m_pHero.m_exp_max).."%" )
+	SetProgress( m_uiProgress1, (m_pHero.m_exp+g_itemkind[m_itemkind].base_value0)/m_pHero.m_exp_max );
+	SetProgress( m_uiProgress2, m_pHero.m_exp/m_pHero.m_exp_max );
+end
+
+function HeroExpDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	HeroExpDlgSetItem()
+	HeroExpDlgSelectItem( m_itemkind );
+	HeroExpDlgSetHero()
+	HeroExpDlgSelectHero( m_herokind );
+end
+
+-- 使用
+function HeroExpDlgUse()
+	if m_herokind <= 0 or m_itemkind <= 0 then
+		return
+	end
+	if m_pHero.m_level >= GetPlayer().m_level then
+		pop(T(834))
+		return
+	end
+	system_askinfo( ASKINFO_HERO, "", 2, m_herokind, m_itemkind );
+end
+
+-- 购买并使用
+function HeroExpDlgBuy()
+	if m_herokind <= 0 or m_itemkind <= 0 then
+		return
+	end
+	if m_pHero.m_level >= GetPlayer().m_level then
+		pop(T(834))
+		return
+	end
+	local heroname = HeroName( m_herokind )
+	local token = item_gettoken( m_itemkind )
+	MsgBoxEx( F( 833, token, heroname ), function( toggle ) 
+		if GetPlayer().m_token < token then
+			JumpToken()
+		else
+			system_askinfo( ASKINFO_HERO, "", 2, m_herokind, m_itemkind );
+		end
+		m_guardup_toggle = toggle;
+	end, m_guardup_toggle ) 
+end
+
 

@@ -40,8 +40,8 @@ function HeroListDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroListDlgClose();
-		elseif nControlID >= 1000 then
-			HeroListDlgSelect(nControlID-1000);
+		elseif nControlID >= 10000 then
+			HeroListDlgSelect(nControlID-10000);
         end
 	end
 end
@@ -138,13 +138,13 @@ function HeroListDlgClearHeroRow( row, up )
 		if up == true then
 			SetTrue( uiBack )
 		end
-		child:GetComponent("UIButton").controlID = -1;
+		child:GetComponent("UIButton").controlID = 0;
     end
 end
 
 -- 读取缓存英雄
 function HeroListDlgLoadHero()
-	if m_Dlg == nil then
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
     HeroListDlgClear()
@@ -156,7 +156,7 @@ function HeroListDlgLoadHero()
     for offset = 0, 3, 1 do
         local pHero = GetHero().m_CityHero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-            table.insert(m_CacheHeroCache, offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset });
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset });
         end
     end
 	
@@ -164,7 +164,7 @@ function HeroListDlgLoadHero()
     for offset = 0, MAX_HERONUM-1, 1 do
         local pHero = GetHero().m_Hero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-            table.insert(m_CacheHeroCache, 100+offset, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 100+offset });
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset });
         end
     end
 
@@ -172,15 +172,15 @@ function HeroListDlgLoadHero()
     table.sort(m_CacheHeroCache, HeroListCacheSort);
 
     -- 创建上阵对象
-	local index = 0;
-    for i, v in pairs( m_CacheHeroCache ) do
-		local pHero = v;
-        if pHero ~= nil and pHero.m_kind > 0 and pHero.m_offset < 100 then
-			local currHeroRow = m_uiContent.transform:GetChild(1).gameObject;
-			HeroListDlgClearHeroRow(currHeroRow,true);
-			local uiHeroObj = currHeroRow.transform:GetChild(index+1);
-            HeroListDlgSetHero( uiHeroObj, pHero )
-			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
+	local upHeroRow = m_uiContent.transform:GetChild(1).gameObject;
+	HeroListDlgClearHeroRow(upHeroRow,true);
+	local index = 1;
+    for i=1, #m_CacheHeroCache, 1 do
+		local pHero = m_CacheHeroCache[i];
+        if pHero.m_offset < 10000 then
+			m_CacheHeroList[pHero.m_offset] = upHeroRow.transform:GetChild(index);
+            HeroListDlgSetHero( m_CacheHeroList[pHero.m_offset], pHero )
+			index = index + 1
 		end
 	end
 	
@@ -188,7 +188,7 @@ function HeroListDlgLoadHero()
 	rowCount = 3
 	for i, v in pairs( m_CacheHeroCache ) do
         local pHero = v;
-        if pHero ~= nil and pHero.m_kind > 0 and pHero.m_offset >= 100 then
+        if pHero.m_offset >= 10000 then
             local _index = heroCount % 4;
             if _index == 0 then
                 if rowCount >= m_uiContent.transform.childCount then
@@ -213,7 +213,7 @@ end
 
 -- 设置单个对象
 function HeroListDlgSetHero( uiHeroObj, pHero )
-	uiHeroObj:GetComponent("UIButton").controlID = 1000 + pHero.m_offset;
+	uiHeroObj:GetComponent("UIButton").controlID = 10000 + pHero.m_offset;
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiBack = objs[0];
 	local uiShape = objs[1];
@@ -239,14 +239,14 @@ end
 function HeroListDlgSelect( offset )
 	local up = true;
 	local pHero = nil;
-	if offset < 100 then
+	if offset < 10000 then
 		-- 上阵
 		up = true;
 		pHero = GetHero().m_CityHero[offset];
 	else
 		-- 空闲
 		up = false
-		pHero = GetHero().m_Hero[offset-100];
+		pHero = GetHero().m_Hero[offset-10000];
 	end
 	if pHero == nil then
 		return;
