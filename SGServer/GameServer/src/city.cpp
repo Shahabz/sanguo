@@ -105,7 +105,16 @@ int city_loadcb( int city_index )
 	vip_calclevel( city_index );
 	// 计算临时属性
 	city_attr_reset( &g_city[city_index] );
-	// 计算战力
+
+	// 计算所有上阵英雄属性
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( g_city[city_index].hero[tmpi].kind <= 0 )
+			continue;
+		hero_attr_calc( &g_city[city_index], &g_city[city_index].hero[tmpi] );
+	}
+
+	// 最后计算战力
 	city_battlepower_reset( &g_city[city_index] );
 
 	// 添加到地图显示单元

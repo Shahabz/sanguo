@@ -15,6 +15,7 @@ struct _actor_hero {
 				short attack_wash;	//洗髓攻击资质
 				short defense_wash;	//洗髓防御资质
 				short troops_wash;	//洗髓兵力资质
+				short colorup;	//良将突破值
 				Equip equip[6];	//装备
 				int attack;	//攻击
 				int defense;	//防御
@@ -23,6 +24,7 @@ struct _actor_hero {
 				short defense_increase;	//防御增强
 				short assault;	//攻城
 				short defend;	//守城
+				char state;	//状态
 };
 typedef struct _actor_hero Hero;
 

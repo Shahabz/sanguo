@@ -2,6 +2,9 @@
 #define _HERO_H_
 #include "define.h"
 
+#define HERO_STATE_NORMAL	0	// ÏÐ
+#define HERO_STATE_FIGHT	1	// Õ½
+
 int actor_hero_getindex( int actor_index, int herokind );
 Hero* actor_hero_getptr( int actor_index, int offset );
 
@@ -22,18 +25,26 @@ int hero_useexpitem( int actor_index, int herokind, int itemkind );
 int hero_addexp( City *pCity, Hero *pHero, int exp, short path );
 int hero_addsoldiers( int actor_index, int herokind );
 
-int hero_attack( City *pCity, Hero *pHero );
-int hero_defense( City *pCity, Hero *pHero );
-int hero_troops( City *pCity, Hero *pHero );
-int hero_attack_increase( City *pCity, Hero *pHero );
-int hero_defense_increase( City *pCity, Hero *pHero );
-int hero_assault( City *pCity, Hero *pHero );
-int hero_defend( City *pCity, Hero *pHero );
+//int hero_attack( City *pCity, Hero *pHero );
+//int hero_defense( City *pCity, Hero *pHero );
+//int hero_troops( City *pCity, Hero *pHero );
+//int hero_attack_increase( City *pCity, Hero *pHero );
+//int hero_defense_increase( City *pCity, Hero *pHero );
+//int hero_assault( City *pCity, Hero *pHero );
+//int hero_defend( City *pCity, Hero *pHero );
+int hero_attr_calc( City *pCity, Hero *pHero );
+
 int hero_getexp_max( int level, int color );
 void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValue );
 int hero_list( int actor_index );
 int hero_sendinfo( int actor_index, Hero *pHero );
+
+// Ó¢ÐÛÏ´Ëè
 int hero_wash_sendinfo( int actor_index );
 int hero_wash_free( int actor_index, int herokind );
 int hero_wash_token( int actor_index, int herokind );
+
+// Á¼½«Í»ÆÆ
+int hero_colorup_sendinfo( int actor_index );
+int hero_colorup( int actor_index, int herokind );
 #endif

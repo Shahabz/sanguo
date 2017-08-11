@@ -270,13 +270,13 @@ void city_battlepower_hero_calc( City *pCity )
 	{
 		if ( pCity->hero[tmpi].kind <= 0 )
 			continue;
-		float attack = hero_attack( pCity, &pCity->hero[tmpi] ) * global.battlepower_attack;
-		float defense = hero_defense( pCity, &pCity->hero[tmpi] ) * global.battlepower_defense;
-		float troops = hero_troops( pCity, &pCity->hero[tmpi] ) * global.battlepower_troops;
-		float attack_increase = hero_attack_increase( pCity, &pCity->hero[tmpi] ) * global.battlepower_attack_increase;
-		float defense_increase = hero_defense_increase( pCity, &pCity->hero[tmpi] ) * global.battlepower_defense_increase;
-		float assault = hero_assault( pCity, &pCity->hero[tmpi] ) * global.battlepower_assault;
-		float defend = hero_defend( pCity, &pCity->hero[tmpi] ) * global.battlepower_defend;
+		float attack =  pCity->hero[tmpi].attack * global.battlepower_attack;
+		float defense = pCity->hero[tmpi].defense * global.battlepower_defense;
+		float troops = pCity->hero[tmpi].troops * global.battlepower_troops;
+		float attack_increase = pCity->hero[tmpi].attack_increase * global.battlepower_attack_increase;
+		float defense_increase = pCity->hero[tmpi].defense_increase * global.battlepower_defense_increase;
+		float assault = pCity->hero[tmpi].assault * global.battlepower_assault;
+		float defend = pCity->hero[tmpi].defend * global.battlepower_defend;
 		battlepower += (int)ceil( attack + defense + troops + attack_increase + defense_increase + assault + defend );
 	}
 	pCity->battlepower_hero = battlepower;

@@ -2,6 +2,9 @@
 MAX_HERONUM			= 128 -- 英雄数量
 MAX_CITYHERONUM		= 12 -- 上阵英雄数量
 
+HERO_STATE_NORMAL	0	-- 闲
+HERO_STATE_FIGHT	1	-- 战
+
 -- 一个英雄结构
 SLK_Hero = class("SLK_Hero")
 function SLK_Hero:ctor()

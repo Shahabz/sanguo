@@ -179,6 +179,10 @@ int global_init()
 			global.hero_wash_token_full_base = atoi( row[1] );
 		else if ( id == 48 )
 			global.hero_wash_token_full_odds = atoi( row[1] );
+		else if ( id == 49 )
+			global.hero_colorup_actorlevel = atoi( row[1] );
+		else if ( id == 50 )
+			global.hero_god_actorlevel = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

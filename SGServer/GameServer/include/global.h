@@ -48,7 +48,8 @@ typedef struct _global
 	short hero_wash_ratio_up;
 	short hero_wash_token_full_base;
 	short hero_wash_token_full_odds;
-
+	short hero_colorup_actorlevel;
+	short hero_god_actorlevel;
 }Global;
 int global_init();
 void global_reload();

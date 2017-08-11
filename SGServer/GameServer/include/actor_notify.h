@@ -2,6 +2,8 @@
 #define __ACTOR_NOTIFY_H
 #include "server_structsend_auto.h"
 
+#define POP( actor_index, msgid ) actor_system_message( actor_index, msgid )
+
 #define NOTIFY_NORMAL		0	// 服务端发文字信息
 #define	NOTIFY_TEXTTABLE	1	// 
 #define	NOTIFY_ITEM			2

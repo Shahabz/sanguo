@@ -47,3 +47,5 @@ global.hero_wash_ratio_down = 70 --洗髓攻防分配比例
 global.hero_wash_ratio_up = 130 --洗髓攻防分配比例
 global.hero_wash_token_full_base = 95 --特殊处理超过95都满,超过多少
 global.hero_wash_token_full_odds = 15 --特殊处理超过95都满,几率全满
+global.hero_colorup_actorlevel = 90 --良将突破玩家等级
+global.hero_god_actorlevel = 100 --神将突破玩家等级

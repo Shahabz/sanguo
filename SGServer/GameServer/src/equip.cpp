@@ -74,7 +74,7 @@ Equip *city_equip_getptr( int city_index, int offset )
 	int equip_offset = offset % EQUIP_BASEOFFSET;
 	int hero_index = city_hero_getindex( city_index, herokind );
 	if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
-	{ // 只读物未上阵的
+	{ // 只读上阵的
 		return &g_city[city_index].hero[hero_index].equip[equip_offset];
 	}
 	return NULL;
@@ -350,7 +350,6 @@ int equip_buyext( int actor_index )
 //-----------------------------------------------------------------------------
 int equip_up( int actor_index, short herokind, int equip_offset )
 {
-	Hero *pHero = NULL;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	if ( equip_offset < 0 || equip_offset >= MAX_ACTOR_EQUIPNUM )
@@ -358,13 +357,12 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
+	Hero *pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
+		return -1;
+	if ( pHero->state != HERO_STATE_NORMAL )
 	{
-		pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
-	}
-	if ( !pHero )
-	{
+		POP( actor_index, 845 );
 		return -1;
 	}
 
@@ -402,11 +400,17 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 	{
 		equip_sendlost( actor_index, tmpEquip.kind, tmpEquip.offset, PATH_EQUIP_UP );
 	}
+
+	// 重算英雄属性
+	hero_attr_calc( pCity, pHero );
+	// 重算英雄战力
+	city_battlepower_hero_calc( pCity );
+	// 通知客户端英雄穿上装备
 	equip_sendhero( actor_index, pHero, index );
 
 	// 脱卸装备产生的兵力损耗会回到兵营
 	int oldsoldiers = pHero->soldiers;
-	int troops = hero_troops( pCity, pHero );
+	int troops = pHero->troops;
 	if ( oldsoldiers > troops )
 	{
 		HeroInfoConfig *config = hero_getconfig( herokind, pHero->color );
@@ -417,8 +421,6 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 		}
 	}
 	
-	city_battlepower_hero_calc( pCity );
-
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );
 	return 0;
@@ -427,7 +429,6 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 // 卸身上的装备
 int equip_down( int actor_index, short herokind, int index )
 {
-	Hero *pHero = NULL;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	if ( index < 0 || index >= EQUIP_TYPE_MAX )
@@ -449,16 +450,17 @@ int equip_down( int actor_index, short herokind, int index )
 	}
 	Equip *pFreeEquip = &g_actors[actor_index].equip[free_offset];
 
-	// 获取英雄装备
-	pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
+	// 获取英雄
+	Hero *pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
+		return -1;
+	if ( pHero->state != HERO_STATE_NORMAL )
 	{
-		pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
-	}
-	if ( !pHero )
-	{
+		POP( actor_index, 845 );
 		return -1;
 	}
+
+	// 获取英雄装备
 	Equip *pHeroEquip = &pHero->equip[index];
 	int oldoffset = pHeroEquip->offset;
 
@@ -471,9 +473,14 @@ int equip_down( int actor_index, short herokind, int index )
 	equip_sendget( actor_index, free_offset, PATH_EQUIP_DOWN );
 	equip_sendlost( actor_index, pFreeEquip->kind, oldoffset, PATH_EQUIP_DOWN );
 
+	// 重算英雄属性
+	hero_attr_calc( pCity, pHero );
+	// 重算英雄战力
+	city_battlepower_hero_calc( pCity );
+
 	// 脱卸装备产生的兵力损耗会回到兵营
 	int oldsoldiers = pHero->soldiers;
-	int troops = hero_troops( pCity, pHero );
+	int troops = pHero->troops;
 	if ( oldsoldiers > troops )
 	{
 		HeroInfoConfig *config = hero_getconfig( herokind, pHero->color );
@@ -483,8 +490,6 @@ int equip_down( int actor_index, short herokind, int index )
 			city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
 		}
 	}
-
-	city_battlepower_hero_calc( pCity );
 
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );

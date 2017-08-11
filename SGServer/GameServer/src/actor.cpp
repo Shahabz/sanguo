@@ -803,8 +803,16 @@ int actor_load( int actor_index, int actorid )
 	// 道具背包数据
 	item_load( actor_index );
 
-	// 装备背包数据
+	// 为上阵英雄装备和装备栏数据
 	equip_load( actor_index );
+
+	// 计未上阵英雄属性
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].kind <= 0 )
+			continue;
+		hero_attr_calc( &g_city[city_index], &g_actors[actor_index].hero[tmpi] );
+	}
 	return 0;
 }
 
