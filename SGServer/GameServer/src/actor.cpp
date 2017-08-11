@@ -595,7 +595,7 @@ int actor_change_index( int old_index, int new_index )
 	g_actors[new_index].isexit = 0;
 
 	// 城池索引关联
-	//g_city[g_actors[old_index].city_index].actor_index = new_index;
+	g_city[g_actors[old_index].city_index].actor_index = new_index;
 
 	// 清空旧角色
 	memset( &(g_actors[old_index]), 0, sizeof(Actor) );
