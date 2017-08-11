@@ -169,6 +169,7 @@ function CityTechTreeDlgShow()
 			SetText( uiLevel, level );
 			SetFalse( uiLevel );
 			SetFalse( uiLevelBack );
+			print( kind.."-"..level )
 			prekind = g_techinfo[kind][level].prekind;
 			prelevel = g_techinfo[kind][level].prelevel;
 			SetFalse( uiIcon );

@@ -617,10 +617,10 @@ end
 
 -- 停止动画
 function MainDlgWorkerStop( type )
-	m_uiBuildingShapeUITweenScale[type]:Kill(true);
-	m_uiNormalShapeUITweenScale[type]:Kill(true);
-	m_uiBuildingTimerUITweenScale[type]:Kill(true);
-	m_uiBuildingNameUITweenScale[type]:Kill(true);
+	m_uiBuildingShapeUITweenScale[type]:Kill(false);
+	m_uiNormalShapeUITweenScale[type]:Kill(false);
+	m_uiBuildingTimerUITweenScale[type]:Kill(false);
+	m_uiBuildingNameUITweenScale[type]:Kill(false);
 	
 	m_uiBuildingShapeUITweenScale1[type]:Kill(false);
 	m_uiNormalShapeUITweenScale1[type]:Kill(false);

@@ -807,7 +807,13 @@ struct _slk_NetS_CityProtect {
 	int m_add;	//改变保护时间
 	short m_path;	//改变保护时间
 };
-typedef struct _slk_NetS_CityProtect SLK_NetS_CityProtect;	//
+typedef struct _slk_NetS_CityProtect SLK_NetS_CityProtect;	//城池保护时间
+
+struct _slk_NetS_HeroWash {
+	char m_hero_washnum;	//洗髓次数
+	int m_hero_washsec;	//洗髓时间
+};
+typedef struct _slk_NetS_HeroWash SLK_NetS_HeroWash;	//武将洗髓
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -897,5 +903,6 @@ int struct_NetS_BattleEvent_send( char **pptr, int *psize, SLK_NetS_BattleEvent 
 int struct_NetS_EventList_send( char **pptr, int *psize, SLK_NetS_EventList *pValue );
 int struct_NetS_OfficialHireChange_send( char **pptr, int *psize, SLK_NetS_OfficialHireChange *pValue );
 int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect *pValue );
+int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValue );
 
 #endif

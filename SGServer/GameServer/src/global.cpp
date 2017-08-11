@@ -165,6 +165,20 @@ int global_init()
 			global.city_guard_color_min[5] = atoi( row[1] );
 		else if ( id == 41 )
 			global.nation_award_token = atoi( row[1] );
+		else if ( id == 42 )
+			global.hero_wash_token = atoi( row[1] );
+		else if ( id == 43 )
+			global.hero_wash_free_rand = atoi( row[1] );
+		else if ( id == 44 )
+			global.hero_wash_token_rand = atoi( row[1] );
+		else if ( id == 45 )
+			global.hero_wash_ratio_down = atoi( row[1] );
+		else if ( id == 46 )
+			global.hero_wash_ratio_up = atoi( row[1] );
+		else if ( id == 47 )
+			global.hero_wash_token_full_base = atoi( row[1] );
+		else if ( id == 48 )
+			global.hero_wash_token_full_odds = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

@@ -36,7 +36,7 @@ local m_MatchEquipList = {};
 -- 打开界面
 function HeroInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroInfoDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, "武将", 3, HeroInfoDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), 3, HeroInfoDlgClose );
 end
 
 -- 隐藏界面
@@ -73,6 +73,7 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 武将洗髓
 		elseif nControlID == 2 then
+			HeroWashDlgShow( m_pCacheHero.m_kind )
 		
 		-- 上阵
 		elseif nControlID == 3 then
@@ -208,9 +209,9 @@ function HeroInfoDlgSet( sys, pHero, up )
 	SetText( m_uiSoldierPanel.transform:Find("Text"), knum(pHero.m_soldiers).."/"..knum(pHero.m_troops) )
 	
 	-- 属性
-	SetText( m_uiAttackBase, T(143).." "..pHero.m_attack_base );
-	SetText( m_uiDefenseBase, T(144).." "..pHero.m_defense_base );
-	SetText( m_uiTroopsBase, T(145).." "..pHero.m_troops_base );
+	SetText( m_uiAttackBase, T(143).." "..(pHero.m_attack_base+pHero.m_attack_wash) );
+	SetText( m_uiDefenseBase, T(144).." "..(pHero.m_defense_base+pHero.m_defense_wash) );
+	SetText( m_uiTroopsBase, T(145).." "..(pHero.m_troops_base+pHero.m_troops_wash) );
 	
 	local total = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
 	local total_wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash;
@@ -310,16 +311,17 @@ function HeroInfoDlgSet( sys, pHero, up )
 		SetTrue( m_uiUpgradeBtn );
 		SetFalse( m_uiUpBtn );
 		SetFalse( m_uiGoldBtn );
-		if pHero.m_color < 1 then
-			SetFalse( m_uiWashBtn );
-		else
-			SetTrue( m_uiWashBtn );
-		end
 	else
 		SetFalse( m_uiUpgradeBtn );
-		SetFalse( m_uiWashBtn );
 		SetTrue( m_uiUpBtn );
 		SetFalse( m_uiGoldBtn );
+	end
+	
+	-- 洗髓
+	if pHero.m_color < 1 then
+		SetFalse( m_uiWashBtn );
+	else
+		SetTrue( m_uiWashBtn );
 	end
 end
 
@@ -333,6 +335,7 @@ function HeroInfoDlgClear()
 		m_ObjectPool:Release( "UIP_HeroHead", obj );
     end
 	m_CacheHeroCache = {};
+	m_CacheHeroList = {};
 end
 
 -- 选择英雄

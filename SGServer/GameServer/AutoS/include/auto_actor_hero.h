@@ -13,9 +13,9 @@ struct _actor_hero {
 				int exp;	//经验
 				int soldiers;	//当前兵力
 				short attack_wash;	//洗髓攻击资质
-				Equip equip[6];	//装备
 				short defense_wash;	//洗髓防御资质
 				short troops_wash;	//洗髓兵力资质
+				Equip equip[6];	//装备
 };
 typedef struct _actor_hero Hero;
 

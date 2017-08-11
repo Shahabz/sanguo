@@ -1042,3 +1042,10 @@ function struct_NetS_CityProtect_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_HeroWash_recv( buffer )
+	local recvValue = {};
+	recvValue.m_hero_washnum = buffer:ReadSByte();
+	recvValue.m_hero_washsec = buffer:ReadInt();
+	return recvValue;
+end
+

@@ -484,6 +484,7 @@ function BagDlgSelectItem( offset )
 	SetImage( ItemObj.transform:Find("Color"), ItemColorSprite(item_getcolor(pItem.m_kind)) )
 	SetText( ItemObj.transform:Find("Num"), "x"..pItem.m_num );
 	SetText( ItemName, item_getname( pItem.m_kind ) );
+	SetText( ItemDesc, item_getdesc( pItem.m_kind ) )
 	SetText( m_uiUseNum, m_SelectItemNum );
 	
 	-- 出售

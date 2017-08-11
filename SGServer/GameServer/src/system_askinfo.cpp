@@ -214,6 +214,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{// 上阵
 			hero_up( actor_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
+		else if ( pvalue[0] == 4 )
+		{ // 打开洗髓界面获取信息
+			hero_wash_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 免费洗髓
+			hero_wash_free( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 至尊洗髓
+			hero_wash_token( actor_index, pvalue[1] );
+		}
+		
+		
 		
 		
 		break;

@@ -77,7 +77,7 @@ public class UpdateManager : MonoBehaviour
         UnityEngine.iOS.Device.SetNoBackupFlag( PathUtil.ConfigPath() );
 #endif
         // 调整安卓分辨率
-        //GameManager.setDesignContentScale();
+        GameManager.setDesignContentScale();
 
         // 禁止黑屏
         Screen.sleepTimeout = SleepTimeout.NeverSleep;

@@ -5,6 +5,7 @@
 #include <mysql.h>
 #include "db.h"
 #include "global.h"
+#include "system.h"
 #include "actor.h"
 #include "city.h"
 #include "building.h"
@@ -95,6 +96,33 @@ Hero* city_hero_getptr( int city_index, int offset )
 	if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
 		return NULL;
 	return &g_city[city_index].hero[hero_index];
+}
+
+Hero *hero_getptr( int actor_index, int herokind )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return NULL;
+	if ( herokind <= 0 )
+		return NULL;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return NULL;
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind == herokind )
+		{
+			return &pCity->hero[tmpi];
+		}
+	}
+
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].kind == herokind )
+		{
+			return &g_actors[actor_index].hero[tmpi];
+		}
+	}
+	return NULL;
 }
 
 // 是否有这个武将
@@ -348,15 +376,9 @@ int hero_useexpitem( int actor_index, int herokind, int itemkind )
 	if ( !pCity )
 		return -1;
 
-	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
+	pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
-	{
-		pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
-	}
-	if ( !pHero )
-	{
 		return -1;
-	}
 
 	if ( pHero->level >= g_actors[actor_index].level )
 		return -1;
@@ -444,15 +466,9 @@ int hero_addsoldiers( int actor_index, int herokind )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	pHero = city_hero_getptr( g_actors[actor_index].city_index, HERO_BASEOFFSET + city_hero_getindex( g_actors[actor_index].city_index, herokind ) );
+	pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
-	{
-		pHero = actor_hero_getptr( actor_index, actor_hero_getindex( actor_index, herokind ) );
-	}
-	if ( !pHero )
-	{
 		return -1;
-	}
 
 	int troops = hero_troops( pCity, pHero );
 	int add = troops - pHero->soldiers;
@@ -714,5 +730,115 @@ int hero_list( int actor_index )
 		}
 		netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+	return 0;
+}
+
+int hero_wash_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_HeroWash pValue = { 0 };
+	pValue.m_hero_washnum = pCity->hero_washnum;
+	pValue.m_hero_washsec = pCity->hero_washsec;
+	netsend_herowash_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 免费洗髓
+int hero_wash_free( int actor_index, int herokind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->hero_washnum <= 0 )
+		return -1;
+
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return -1;
+
+	// 总洗髓资质
+	int total_wash = pHero->attack_wash + pHero->defense_wash + pHero->troops_wash;
+
+	// 总洗髓资质上限
+	int total_wash_limit = config->attack_wash_limit + config->defense_wash_limit + config->troops_wash_limit;
+
+	// 洗髓进度
+	float x = total_wash / (float)total_wash_limit;
+
+	// 每次增加
+	int add = (int)(random( 1, global.hero_wash_free_rand )*(1.0f - x));
+	total_wash += add;
+
+	// 攻防分配比例
+	short attack_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
+	short defense_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
+
+	pHero->attack_wash = (short)((total_wash*config->attack_wash_limit) / (total_wash_limit*attack_ratio / 100.0f));
+	pHero->defense_wash = (short)((total_wash*config->defense_wash_limit) / (total_wash_limit*defense_ratio / 100.0f));
+	pHero->troops_wash = total_wash - pHero->attack_wash - pHero->defense_wash;
+	hero_sendinfo( actor_index, pHero );
+
+	pCity->hero_washnum -= 1;
+	hero_wash_sendinfo( actor_index );
+	return 0;
+}
+
+// 至尊洗髓
+int hero_wash_token( int actor_index, int herokind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return -1;
+
+	if ( actor_change_token( actor_index, -global.hero_wash_token, PATH_HERO_WASH, 0 ) < 0 )
+		return -1;
+
+	// 总洗髓资质
+	int total_wash = pHero->attack_wash + pHero->defense_wash + pHero->troops_wash;
+
+	// 总洗髓资质上限
+	int total_wash_limit = config->attack_wash_limit + config->defense_wash_limit + config->troops_wash_limit;
+
+	// 洗髓进度
+	float x = total_wash / (float)total_wash_limit;
+
+	// 每次增加
+	int add = (int)(random( 1, global.hero_wash_token_rand )*(1.0f - x));
+	total_wash += add;
+
+	// 特殊处理
+	int s = (int)(x * 100);
+	if ( s >= global.hero_wash_token_full_base )
+	{
+		pHero->attack_wash = config->attack_wash_limit;
+		pHero->defense_wash = config->defense_wash_limit;
+	}
+	else
+	{
+		// 攻防分配比例
+		short attack_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
+		short defense_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
+		pHero->attack_wash = (short)((total_wash*config->attack_wash_limit) / (total_wash_limit*attack_ratio / 100.0f));
+		pHero->defense_wash = (short)((total_wash*config->defense_wash_limit) / (total_wash_limit*defense_ratio / 100.0f));
+	}
+	pHero->troops_wash = total_wash - pHero->attack_wash - pHero->defense_wash;
+	hero_sendinfo( actor_index, pHero );
 	return 0;
 }

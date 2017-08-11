@@ -41,6 +41,14 @@ typedef struct _global
 	short city_guard_level;
 	short city_guard_color_min[6];
 	short nation_award_token;
+	short hero_wash_token;
+	short hero_wash_free_rand;
+	short hero_wash_token_rand;
+	short hero_wash_ratio_down;
+	short hero_wash_ratio_up;
+	short hero_wash_token_full_base;
+	short hero_wash_token_full_odds;
+
 }Global;
 int global_init();
 void global_reload();

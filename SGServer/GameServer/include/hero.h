@@ -8,6 +8,8 @@ Hero* actor_hero_getptr( int actor_index, int offset );
 int city_hero_getindex( int city_index, int herokind );
 Hero* city_hero_getptr( int city_index, int offset );
 
+Hero *hero_getptr( int actor_index, int herokind );
+
 int hero_maxid_init();
 HeroInfoConfig *hero_getconfig( int kind, int color );
 
@@ -31,4 +33,7 @@ int hero_getexp_max( int level, int color );
 void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValue );
 int hero_list( int actor_index );
 int hero_sendinfo( int actor_index, Hero *pHero );
+int hero_wash_sendinfo( int actor_index );
+int hero_wash_free( int actor_index, int herokind );
+int hero_wash_token( int actor_index, int herokind );
 #endif

@@ -554,8 +554,9 @@ function proc_hero_C( recvValue )
 		GetHero().m_Hero[offset]:Set( recvValue );
 	end
 	HeroDlgUpdate();
-	HeroInfoDlgUpdate( recvValue.m_kind )
-	HeroListDlgLoadHero()
+	HeroInfoDlgUpdate( recvValue.m_kind );
+	HeroListDlgLoadHero();
+	HeroWashDlgUpdate();
 end
 
 -- m_count=0,m_list={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,[m_count]},m_type=0,
@@ -949,5 +950,9 @@ function proc_heroequip_C( recvValue )
 	end
 end
 
-
+-- m_hero_washnum=0,m_hero_washsec=0,
+function proc_herowash_C( recvValue )
+	-- process.
+	 HeroWashDlgWashInfo( recvValue )
+end
 

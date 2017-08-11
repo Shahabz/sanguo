@@ -1186,3 +1186,12 @@ int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect 
 	return 0;
 }
 
+int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_washnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hero_washsec, (*psize) );
+	return 0;
+}
+
