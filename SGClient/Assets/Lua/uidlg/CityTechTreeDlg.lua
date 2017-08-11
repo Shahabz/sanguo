@@ -169,7 +169,6 @@ function CityTechTreeDlgShow()
 			SetText( uiLevel, level );
 			SetFalse( uiLevel );
 			SetFalse( uiLevelBack );
-			print( kind.."-"..level )
 			prekind = g_techinfo[kind][level].prekind;
 			prelevel = g_techinfo[kind][level].prelevel;
 			SetFalse( uiIcon );
@@ -214,6 +213,16 @@ end
 
 -- 点击科技
 function CityTechTreeDlgClick( kind )
+	-- 此处特殊处理一下线
+	if m_kind ~= kind then
+		if ( m_kind == 18 or m_kind == 23 ) then
+			local uiObj = m_uiTechObjs[27];
+			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiLine = objs[4];
+			uiLine.transform.sizeDelta = Vector2.New( uiLine.transform.sizeDelta.x, 38 + 250*(1) );
+		end
+	end
+	
 	m_kind = kind
 	if kind <= 0 then
 		TechSelectShow( m_LastSelectTech, false )
@@ -245,6 +254,14 @@ function CityTechTreeDlgClick( kind )
         local siblingIndex = m_uiTechInfo.transform:GetSiblingIndex();
         m_uiScroll.transform:GetComponent("UIScrollRect"):ScrollToBottom(siblingIndex);
     end
+	
+	-- 此处特殊处理一下线
+	if kind == 18 or kind == 23 then
+		local uiObj = m_uiTechObjs[27];
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiLine = objs[4];
+		uiLine.transform.sizeDelta = Vector2.New( uiLine.transform.sizeDelta.x, 38 + 250*(1-1) );
+	end
 	
 	-- 设置信息
 	local level = GetPlayer().m_techlevel[kind];
