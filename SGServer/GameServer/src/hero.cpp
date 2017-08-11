@@ -777,7 +777,7 @@ int hero_wash_free( int actor_index, int herokind )
 	int add = (int)(random( 1, global.hero_wash_free_rand )*(1.0f - x));
 	total_wash += add;
 	if ( total_wash > config->total_wash )
-		total_wash = total_wash;
+		total_wash = config->total_wash;
 
 	// 攻防分配比例
 	short attack_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
@@ -825,7 +825,7 @@ int hero_wash_token( int actor_index, int herokind )
 	int add = (int)(random( 1, global.hero_wash_token_rand )*(1.0f - x));
 	total_wash += add;
 	if ( total_wash > config->total_wash )
-		total_wash = total_wash;
+		total_wash = config->total_wash;
 
 	// 特殊处理
 	int s = (int)(x * 100);
