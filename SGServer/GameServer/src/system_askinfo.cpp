@@ -226,9 +226,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 至尊洗髓
 			hero_wash_token( actor_index, pvalue[1] );
 		}
-		
-		
-		
+		else if ( pvalue[0] == 7 )
+		{ // 良将突破信息
+			hero_colorup_sendinfo( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 8 )
+		{ // 良将突破
+			hero_colorup( actor_index, pvalue[1] );
+		}
 		
 		break;
 	case ASKINFO_TECH:

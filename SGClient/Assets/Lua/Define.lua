@@ -339,8 +339,13 @@ end
 
 -- 名称颜色
 function NameColor( color )
-	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xd95df4ff, 0xffde00ff, 0xe80017ff }
+	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff }
 	return Hex2Color( c[color+1] )
+end
+
+-- 颜色名称
+function ColorName( color )
+	return T( 157+color )
 end
 
 -- 清空所有子节点

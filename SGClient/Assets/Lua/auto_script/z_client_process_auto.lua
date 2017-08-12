@@ -956,3 +956,9 @@ function proc_herowash_C( recvValue )
 	 HeroWashDlgWashInfo( recvValue )
 end
 
+-- m_value=0,
+function proc_herocolorup_C( recvValue )
+	-- process.
+	HeroColorupDlgRecv( recvValue );
+end
+

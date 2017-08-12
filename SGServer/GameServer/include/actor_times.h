@@ -26,4 +26,5 @@ int actor_add_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_check_uselimit_cd( int actor_index, char index );
 int actor_clear_uselimit_cd( int actor_index, char index );
 
+void _check_fday( int actor_index );
 #endif

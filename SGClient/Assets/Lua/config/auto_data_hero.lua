@@ -106,6 +106,8 @@ g_heroinfo = {
 [45] = 
 { 
 	[3] = { kind=45,color=3,name="¸ÊÄþ",corps=2,attack_base=95,attack_wash=44,attack_wash_limit=106,defense_base=45,defense_wash=21,defense_wash_limit=50,troops_base=53,troops_wash=25,troops_wash_limit=59,total_wash=163,attack=643,defense=296,troops=1370,},
+	[4] = { kind=45,color=4,name="¸ÊÄþ",corps=2,attack_base=95,attack_wash=44,attack_wash_limit=106,defense_base=45,defense_wash=21,defense_wash_limit=50,troops_base=53,troops_wash=25,troops_wash_limit=59,total_wash=163,attack=643,defense=296,troops=1370,},
+	[5] = { kind=45,color=5,name="¸ÊÄþ",corps=2,attack_base=95,attack_wash=44,attack_wash_limit=106,defense_base=45,defense_wash=21,defense_wash_limit=50,troops_base=53,troops_wash=25,troops_wash_limit=59,total_wash=163,attack=643,defense=296,troops=1370,},
 },
 [46] = 
 { 

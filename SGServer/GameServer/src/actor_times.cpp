@@ -15,6 +15,7 @@
 #include "city.h"
 #include "quest.h"
 #include "global.h"
+#include "hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myData;
@@ -50,7 +51,7 @@ int actor_get_sflag( int actor_index, int offset )
 }
 
 // 检查是否需要刷新
-static void _check_fday( int actor_index )
+void _check_fday( int actor_index )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return;
@@ -60,6 +61,7 @@ static void _check_fday( int actor_index )
 		g_actors[actor_index].fdate = thisday;
 		memset( g_actors[actor_index].today_char, 0, MAX_TODAY_COUNT + 1 );
 		memset( g_actors[actor_index].today_int, 0, sizeof( int )*MAX_TODAY_INTNUM );
+		hero_colorup_reset( actor_index );
 		write_gamelog( "[reset fdate:%d] %d", g_actors[actor_index].fdate, g_actors[actor_index].actorid );
 	}
 }

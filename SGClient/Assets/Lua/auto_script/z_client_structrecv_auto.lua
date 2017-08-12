@@ -1049,3 +1049,10 @@ function struct_NetS_HeroWash_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_HeroColorup_recv( buffer )
+	local recvValue = {};
+	recvValue.m_value = buffer:ReadInt();
+	recvValue.m_isup = buffer:ReadSByte();
+	return recvValue;
+end
+

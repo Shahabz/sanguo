@@ -45,6 +45,7 @@ int hero_wash_free( int actor_index, int herokind );
 int hero_wash_token( int actor_index, int herokind );
 
 // Á¼½«Í»ÆÆ
-int hero_colorup_sendinfo( int actor_index );
+int hero_colorup_sendinfo( int actor_index, int herokind );
+int hero_colorup_reset( int actor_index );
 int hero_colorup( int actor_index, int herokind );
 #endif

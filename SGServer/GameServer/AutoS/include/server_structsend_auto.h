@@ -815,6 +815,12 @@ struct _slk_NetS_HeroWash {
 };
 typedef struct _slk_NetS_HeroWash SLK_NetS_HeroWash;	//Îä½«Ï´Ëè
 
+struct _slk_NetS_HeroColorup {
+	int m_value;	//Í»ÆÆÖµ
+	char m_isup;	//Í»ÆÆ³É¹¦
+};
+typedef struct _slk_NetS_HeroColorup SLK_NetS_HeroColorup;	//Îä½«Í»ÆÆ
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -904,5 +910,6 @@ int struct_NetS_EventList_send( char **pptr, int *psize, SLK_NetS_EventList *pVa
 int struct_NetS_OfficialHireChange_send( char **pptr, int *psize, SLK_NetS_OfficialHireChange *pValue );
 int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect *pValue );
 int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValue );
+int struct_NetS_HeroColorup_send( char **pptr, int *psize, SLK_NetS_HeroColorup *pValue );
 
 #endif

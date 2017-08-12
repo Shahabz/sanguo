@@ -323,6 +323,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 英雄突破数据初始化
+	if ( herocolorupinfo_init_auto() < 0 )
+	{
+		printf_msg( "herocolorupinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 奖励包数据初始化
 	if ( awardgroup_init() < 0 )
 	{

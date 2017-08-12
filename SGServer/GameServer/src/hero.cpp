@@ -17,6 +17,7 @@
 #include "server_netsend_auto.h"
 #include "actor_notify.h"
 #include "city_attr.h"
+#include "actor_times.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1020,6 +1021,46 @@ int hero_colorup_sendinfo( int actor_index, int herokind )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	_check_fday( actor_index );
+
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->state != HERO_STATE_NORMAL )
+	{
+		POP( actor_index, 845 );
+		return -1;
+	}
+
+	SLK_NetS_HeroColorup pValue = { 0 };
+	pValue.m_value = pHero->colorup;
+	pValue.m_isup = 0;
+	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 重置突破值
+int hero_colorup_reset( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		pCity->hero[tmpi].colorup = 0;
+	}
+
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].kind <= 0 )
+			continue;
+		g_actors[actor_index].hero[tmpi].colorup = 0;
+	}
+	return 0;
 }
 
 // 良将突破
@@ -1045,7 +1086,8 @@ int hero_colorup( int actor_index, int herokind )
 
 	if ( pHero->color < ITEM_COLOR_LEVEL_GREEN || pHero->color >= g_hero_colorup_maxnum )
 		return -1;
-	
+	_check_fday( actor_index );
+
 	if ( item_getitemnum( actor_index, g_hero_colorup[pHero->color].itemkind ) < g_hero_colorup[pHero->color].itemnum )
 		return -1;
 	item_lost( actor_index, g_hero_colorup[pHero->color].itemkind, g_hero_colorup[pHero->color].itemnum, PATH_SYSTEM );
@@ -1063,7 +1105,7 @@ int hero_colorup( int actor_index, int herokind )
 	if ( pHero->colorup >= g_hero_colorup[pHero->color].needvalue || isup == 1 )
 	{
 		pHero->colorup = 0;
-		pHero->color = g_hero_colorup[pHero->color].nextcolor;
+		pHero->color = (char)g_hero_colorup[pHero->color].nextcolor;
 		// 重算英雄属性
 		hero_attr_calc( pCity, pHero );
 		// 重算战力
@@ -1073,6 +1115,9 @@ int hero_colorup( int actor_index, int herokind )
 	}
 
 	// 更新客户端
-
+	SLK_NetS_HeroColorup pValue = { 0 };
+	pValue.m_value = pHero->colorup;
+	pValue.m_isup = isup;
+	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

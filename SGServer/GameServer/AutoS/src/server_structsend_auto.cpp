@@ -1195,3 +1195,12 @@ int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValu
 	return 0;
 }
 
+int struct_NetS_HeroColorup_send( char **pptr, int *psize, SLK_NetS_HeroColorup *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isup, (*psize) );
+	return 0;
+}
+

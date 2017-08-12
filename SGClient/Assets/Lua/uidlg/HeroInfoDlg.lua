@@ -79,8 +79,9 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			HeroInfoDlgHeroUp();
 		
-		-- 神级突破
+		-- 武将突破
 		elseif nControlID == 4 then
+			HeroColorupDlgShow( m_pCacheHero )
 		
 		-- 打造装备
 		elseif nControlID == 5 then
@@ -189,10 +190,10 @@ function HeroInfoDlgSet( sys, pHero, up )
 	HeroInfoDlgClear()
 	
 	-- 能力范围图
-	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
+--[[	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
 	uiPolygonChart.VerticesDistances[0] = 0.5
 	uiPolygonChart.VerticesDistances[1] = 0.5
-	uiPolygonChart.VerticesDistances[2] = 0.5
+	uiPolygonChart.VerticesDistances[2] = 0.5--]]
 	
 	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
@@ -310,11 +311,9 @@ function HeroInfoDlgSet( sys, pHero, up )
 	if up == true then
 		SetTrue( m_uiUpgradeBtn );
 		SetFalse( m_uiUpBtn );
-		SetFalse( m_uiGoldBtn );
 	else
 		SetFalse( m_uiUpgradeBtn );
 		SetTrue( m_uiUpBtn );
-		SetFalse( m_uiGoldBtn );
 	end
 	
 	-- 洗髓
@@ -322,6 +321,13 @@ function HeroInfoDlgSet( sys, pHero, up )
 		SetFalse( m_uiWashBtn );
 	else
 		SetTrue( m_uiWashBtn );
+	end
+	
+	-- 武将突破
+	if pHero.m_color < 2 or pHero.m_color > 4 then 
+		SetFalse( m_uiGoldBtn );
+	else
+		SetTrue( m_uiGoldBtn );
 	end
 end
 
