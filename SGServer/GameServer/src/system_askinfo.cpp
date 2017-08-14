@@ -176,7 +176,23 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 购买装备栏
 			equip_buyext( actor_index );
 		}
-		
+		else if ( pvalue[0] == 5 )
+		{ // 装备洗练次数
+			equip_wash_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 装备免费洗练
+			equip_wash_free( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 装备钻石洗练
+			equip_wash_token( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 8 )
+		{ // 装备秘技洗练
+			equip_wash_super( actor_index, pvalue[1] );
+		}
+	
 		break;
 	case ASKINFO_ITEM:
 		if ( pvalue[0] == ITEM_PROCESS_INFO )

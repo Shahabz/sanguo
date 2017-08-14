@@ -244,11 +244,13 @@ function HeroExpDlgBuy()
 	end
 	local heroname = HeroName( m_herokind )
 	local token = item_gettoken( m_itemkind )
-	MsgBoxEx( F( 833, token, heroname ), function( toggle ) 
-		if GetPlayer().m_token < token then
-			JumpToken()
-		else
-			system_askinfo( ASKINFO_HERO, "", 2, m_herokind, m_itemkind );
+	MsgBoxEx( F( 833, token, heroname ), function( sure, toggle ) 
+		if sure == 1 then
+			if GetPlayer().m_token < token then
+				JumpToken()
+			else
+				system_askinfo( ASKINFO_HERO, "", 2, m_herokind, m_itemkind );
+			end
 		end
 		m_guardup_toggle = toggle;
 	end, m_guardup_toggle ) 

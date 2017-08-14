@@ -8,6 +8,7 @@
 #include <math.h>
 #include "db.h"
 #include "city.h"
+#include "city_attr.h"
 #include "actor.h"
 #include "global.h"
 #include "actor_send.h"
@@ -64,6 +65,7 @@ int vip_exp( int city_index, int value, short path )
 	if ( oldlevel > 0 && g_city[city_index].viplevel > oldlevel )
 	{ // Éý¼¶ÁË
 		isup = 1;
+		city_attr_reset( &g_city[city_index] );
 	}
 	wlog( 0, LOGOP_VIPEXP, path, value, g_city[city_index].vipexp, g_city[city_index].viplevel, g_city[city_index].actorid, city_mainlevel( city_index ) );
 

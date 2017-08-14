@@ -29,6 +29,7 @@
 #include "script_auto.h"
 #include "activity.h"
 #include "city.h"
+#include "city_attr.h"
 #include "building.h"
 #include "hero.h"
 #include "equip.h"
@@ -696,6 +697,9 @@ int actor_entercity( int actor_index )
 {
 	// 角色信息
 	actor_getinfo( actor_index );
+
+	// 属性信息
+	city_attr_sendinfo( actor_index );
 
 	// 建筑信息
 	building_sendlist( actor_index );

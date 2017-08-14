@@ -405,6 +405,16 @@ function netrecv_herocolorup_C( buffer )
 	proc_herocolorup_C( recvValue );
 end
 
+function netrecv_cityattr_C( buffer )
+	local recvValue = struct_NetS_CityAttr_recv( buffer );
+	proc_cityattr_C( recvValue );
+end
+
+function netrecv_equipwash_C( buffer )
+	local recvValue = struct_NetS_EquipWash_recv( buffer );
+	proc_equipwash_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -487,6 +497,8 @@ Proc_Command = {
 	[CMDS_HEROEQUIP]=netrecv_heroequip_C;
 	[CMDS_HEROWASH]=netrecv_herowash_C;
 	[CMDS_HEROCOLORUP]=netrecv_herocolorup_C;
+	[CMDS_CITYATTR]=netrecv_cityattr_C;
+	[CMDS_EQUIPWASH]=netrecv_equipwash_C;
 }
 
 function in_proc_command_C( cmd, buffer )

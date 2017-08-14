@@ -8,6 +8,7 @@
 #include "global.h"
 #include "actor.h"
 #include "city.h"
+#include "city_attr.h"
 #include "city_tech.h"
 #include "building.h"
 #include "mapunit.h"
@@ -261,7 +262,49 @@ int city_tech_get( int actor_index )
 		netsend_techchange_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 		building_sendinfo( pCity->actor_index, pBuilding->kind );
 	}
+	// 计算临时属性
+	city_attr_reset( pCity );
 	city_event_add( pCity->index, CITY_EVENT_TECH, kind, pCity->techlevel[kind] * 100 + pCity->techprogress[kind] );
 	wlog( 0, LOGOP_TECH, PATH_TECH_GET, kind, pCity->techlevel[kind], pCity->techprogress[kind], g_actors[actor_index].actorid, city_mainlevel( pCity->index ) );
+	return 0;
+}
+
+//GM
+int city_tech_get_gm( City *pCity, int kind )
+{
+	Building *pBuilding = building_getptr_kind( pCity->index, BUILDING_Tech );
+	if ( !pBuilding )
+		return -1;
+	if ( kind <= 0 || kind >= g_techinfo_maxnum )
+		return -1;
+
+	int level = pCity->techlevel[kind];
+	int uplevel = pCity->techlevel[kind] + 1;
+	if ( uplevel <= 0 || uplevel >= g_techinfo[kind].maxnum )
+		return -1;
+
+	TechInfoConfig *config = &g_techinfo[kind].config[uplevel];
+	if ( !config )
+		return -1;
+
+	pCity->techprogress[kind] += 1;
+	if ( pCity->techprogress[kind] >= config->progress )
+	{
+		pCity->techlevel[kind] += 1;
+		pCity->techprogress[kind] = 0;
+	}
+
+	if ( pCity->actor_index >= 0 )
+	{
+		SLK_NetS_TechChange pValue = { 0 };
+		pValue.m_kind = kind;
+		pValue.m_level = pCity->techlevel[kind];
+		pValue.m_progress = pCity->techprogress[kind];
+		netsend_techchange_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+		building_sendinfo( pCity->actor_index, pBuilding->kind );
+	}
+	// 计算临时属性
+	city_attr_reset( pCity );
+
 	return 0;
 }

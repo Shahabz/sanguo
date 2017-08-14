@@ -285,9 +285,11 @@ function BagDlgClearEquipRow(row)
 		local uiShape = objs[0];
 		local uiColor = objs[1];
 		local uiNew = objs[2];
+		local uiWash = objs[3];
 		SetFalse( uiShape )
 		SetFalse( uiColor )
 		SetFalse( uiNew )
+		SetFalse( uiWash )
 		child:GetComponent("UIButton").controlID = 0;
     end
 end
@@ -379,7 +381,7 @@ function BagDlgLoadEquip()
     for nEquipIndex = 1, MAX_EQUIPNUM, 1 do
         local pEquip = GetEquip().m_Equip[nEquipIndex];
         if pEquip ~= nil and pEquip.m_kind > 0 then
-            table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_bIsNew = pEquip.m_bIsNew, m_offset = nEquipIndex, });
+            table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_bIsNew = pEquip.m_bIsNew, m_offset = nEquipIndex, m_pEquip = pEquip });
         end
     end
 	
@@ -416,13 +418,16 @@ function BagDlgLoadEquip()
 			local uiShape = objs[0];
 			local uiColor = objs[1];
 			local uiNew = objs[2];
+			local uiWash = objs[3];
 			
 			SetTrue( uiShape )
 			SetTrue( uiColor )
 			SetShow( uiNew, pEquip.m_bIsNew )
+			SetTrue( uiWash )
 			
 			SetImage( uiShape, EquipSprite(pEquip.m_kind) )
 			SetImage( uiColor, ItemColorSprite(equip_getcolor(pEquip.m_kind)) )
+			SetEquipWash( uiWash, pEquip.m_pEquip );
 			
 			m_CacheEquipList[pEquip.m_offset] = uiEquipObj;
 			equipCount = equipCount + 1;
@@ -603,6 +608,7 @@ function BagDlgSelectEquip( offset )
 	SetImage( EquipObj.transform:Find("Color"), ItemColorSprite(equip_getcolor(pEquip.m_kind)) )
 	SetText( EquipName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor(pEquip.m_kind) ) );
 	SetText( EquipDesc, equip_getabilityname( pEquip.m_kind ) );
+	SetEquipWash( EquipObj.transform:Find("Wash"), pEquip );
 	
 	-- 装备类型1-6 变成0-5
 	m_equiptype = equip_gettype( pEquip.m_kind )-1
@@ -615,6 +621,7 @@ function BagDlgSelectEquip( offset )
 		local uiHeroName = objs[2]
 		local uiSelect = objs[3]
 		local uiTips = objs[4]
+		local uiWash = objs[5]
 		
 		SetControlID( m_HeroEquip[i+1], 3000 + i )
 		SetFalse( uiSelect )
@@ -624,16 +631,20 @@ function BagDlgSelectEquip( offset )
 			SetFalse( uiShape )
 			SetFalse( uiColor )
 			SetFalse( uiHeroName )
+			SetFalse( uiWash )
 		else
 			local hEquip = GetHero().m_CityHero[i].m_Equip[m_equiptype]
 			if hEquip.m_kind <= 0 then
 				SetFalse( uiShape )
 				SetFalse( uiColor )
+				SetFalse( uiWash )
 			else
 				SetTrue( uiShape )
 				SetTrue( uiColor )
+				SetTrue( uiWash )
 				SetImage( uiShape, EquipSprite( hEquip.m_kind ) )
 				SetImage( uiColor, ItemColorSprite( equip_getcolor( hEquip.m_kind ) ) )
+				SetEquipWash( uiWash, hEquip );
 			end
 			SetTrue( uiHeroName )
 			SetText( uiHeroName, HeroName( GetHero().m_CityHero[i].m_kind ), NameColor( GetHero().m_CityHero[i].m_color ) )

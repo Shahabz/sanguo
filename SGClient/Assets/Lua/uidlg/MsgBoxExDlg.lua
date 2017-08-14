@@ -18,7 +18,6 @@ function MsgBoxExDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
 	eye.uiManager:Close( "MsgBoxExDlg" );
 end
 
@@ -36,12 +35,17 @@ end
 function MsgBoxExDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-            MsgBoxExDlgClose();
+			if m_callback then
+				m_callback( -1, m_toggle );
+			end
+			m_callback = nil;
+			MsgBoxExDlgClose();
 		elseif nControlID == 1 then
 			if m_callback then
-				m_callback( m_toggle );
+				m_callback( 1, m_toggle );
 			end
-			 MsgBoxExDlgClose();
+			m_callback = nil;
+			MsgBoxExDlgClose();
         end
 	elseif nType == UI_EVENT_TOGGLEVALUECHANGE then
 		if nControlID == 1 then
@@ -95,12 +99,14 @@ function MsgBoxExDlgShow()
 end
 function MsgBoxEx( text, callback, toggle )
 	if toggle == true then
-		if m_callback then
-			m_callback( toggle );
+		if callback then
+			callback( 1, toggle );
 		end
 		return
 	end
 	MsgBoxExDlgOpen()
+	m_toggle = toggle
+	m_uiToggle.transform:GetComponent( "UIToggle" ).isOn = toggle
 	m_callback = callback
 	SetText( m_uiText, text );
 	SetText( m_uiLabel, T(799) )

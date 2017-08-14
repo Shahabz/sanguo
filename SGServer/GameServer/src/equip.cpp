@@ -37,6 +37,12 @@ extern int g_city_maxcount;
 extern OfficialForging *g_official_forging;
 extern int g_official_forging_maxnum;
 
+extern EquipWashRule *g_equip_washrule;
+extern int g_equip_washrule_maxnum;
+
+extern EquipWashInfo *g_equipwash;
+extern int g_equipwash_maxnum;
+
 extern EquipInfo *g_equipinfo;
 extern int g_equipinfo_maxnum;
 i64 g_maxequipid;
@@ -55,7 +61,7 @@ Equip *actor_equip_getptr( int actor_index, int offset )
 		int herokind = offset / EQUIP_BASEOFFSET;
 		int equip_offset = offset % EQUIP_BASEOFFSET;
 		int hero_index = actor_hero_getindex( actor_index, herokind );
-		if ( hero_index >= 0 && hero_index < HERO_ACTOR_MAX )
+		if ( hero_index >= 0 && hero_index < HERO_ACTOR_MAX && equip_offset >= 0 && equip_offset < MAX_ACTOR_EQUIPNUM )
 		{ // 只读物未上阵的
 			return &g_actors[actor_index].hero[hero_index].equip[equip_offset];
 		}
@@ -73,9 +79,37 @@ Equip *city_equip_getptr( int city_index, int offset )
 	int herokind = offset / EQUIP_BASEOFFSET;
 	int equip_offset = offset % EQUIP_BASEOFFSET;
 	int hero_index = city_hero_getindex( city_index, herokind );
-	if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
+	if ( hero_index >= 0 && hero_index < HERO_CITY_MAX && equip_offset >= 0 && equip_offset < 6 )
 	{ // 只读上阵的
 		return &g_city[city_index].hero[hero_index].equip[equip_offset];
+	}
+	return NULL;
+}
+
+Equip *equip_getptr( int actor_index, int offset )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return NULL;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return NULL;
+
+	if ( offset < EQUIP_BASEOFFSET )
+	{
+		if ( offset >= 0 && offset < MAX_ACTOR_EQUIPNUM )
+		{ // 装备栏
+			return &g_actors[actor_index].equip[offset];
+		}	
+	}
+	else
+	{
+		int herokind = offset / EQUIP_BASEOFFSET;
+		int equipoffset = offset % EQUIP_BASEOFFSET;
+		Hero *pHero = hero_getptr( actor_index, herokind );
+		if ( pHero && equipoffset >= 0 && equipoffset < 6 )
+		{
+			return &pHero->equip[equipoffset];
+		}
 	}
 	return NULL;
 }
@@ -135,6 +169,13 @@ int equip_gettype( short kind )
 	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
 		return 0;
 	return g_equipinfo[kind].type;
+}
+
+int equip_getcolor( short kind )
+{
+	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
+		return 0;
+	return g_equipinfo[kind].color;
 }
 
 int equip_freeindex( int actor_index )
@@ -830,5 +871,224 @@ int equip_clear( int actor_index )
 		}
 	}
 
+	return 0;
+}
+
+// 洗练信息
+int equip_wash_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_EquipWash pValue = { 0 };
+	pValue.m_equip_washnum = pCity->equip_washnum;
+	pValue.m_equip_washsec = pCity->equip_washsec;
+	netsend_equipwash_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 免费洗练
+int equip_wash_free( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->equip_washnum <= 0 )
+		return -1;
+
+	Hero *pHero = NULL;
+	int herokind = 0;
+	int equipoffset = -1;
+	if ( offset >= HERO_BASEOFFSET )
+	{
+		herokind = offset / EQUIP_BASEOFFSET;
+		equipoffset = offset % EQUIP_BASEOFFSET;
+		pHero = hero_getptr( actor_index, herokind );
+		if ( !pHero )
+			return -1;		
+	}
+	Equip *pEquip = equip_getptr( actor_index, offset );
+	if ( !pEquip )
+		return -1;
+
+	char color = equip_getcolor( pEquip->kind );
+	if ( color < ITEM_COLOR_LEVEL_BLUE || color >= g_equip_washrule_maxnum )
+		return -1;
+
+	// 去掉秘技属性
+	if ( pEquip->washid[3] > 0 )
+		pEquip->washid[3] = 0;
+
+	for ( int tmpi = 0; tmpi < g_equip_washrule[color].valuenum; tmpi++ )
+	{
+		// 原有
+		char washid = pEquip->washid[tmpi] / 10;
+		char washlevel = pEquip->washid[tmpi] % 10;
+		if ( washlevel <= 0 )
+			washlevel = 1;
+
+		// 随机一个属性
+		char randid = random( 1, 7 ) * 10;
+		char newid = randid + washlevel;
+		if ( newid <= 0 || newid >= g_equipwash_maxnum )
+			continue;
+		if ( washlevel < g_equip_washrule[color].levellimit )
+		{
+			if ( rand() % 1000 <= g_equipwash[newid].free_odds )
+				washlevel = washlevel + 1;
+		}
+		newid = randid + washlevel;
+		pEquip->washid[tmpi] = newid;
+	}
+	
+	
+	// 英雄属性变化
+	if ( pHero )
+	{
+		equip_sendhero( actor_index, pHero, equipoffset );
+		hero_attr_calc( pCity, pHero );
+		hero_sendinfo( actor_index, pHero );
+		city_battlepower_hero_calc( pCity );
+	}
+	else
+	{
+		equip_sendbag( actor_index, offset );
+	}
+
+	pCity->equip_washnum -= 1;
+	if ( pCity->equip_washsec <= 0 )
+		pCity->equip_washsec = global.equip_wash_sec;
+	equip_wash_sendinfo( actor_index );
+	return 0;
+}
+
+// 钻石洗练
+int equip_wash_token( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	Hero *pHero = NULL;
+	int herokind = 0;
+	int equipoffset = -1;
+	if ( offset >= HERO_BASEOFFSET )
+	{
+		herokind = offset / EQUIP_BASEOFFSET;
+		equipoffset = offset % EQUIP_BASEOFFSET;
+		pHero = hero_getptr( actor_index, herokind );
+		if ( !pHero )
+			return -1;
+	}
+	Equip *pEquip = equip_getptr( actor_index, offset );
+	if ( !pEquip )
+		return -1;
+
+	char color = equip_getcolor( pEquip->kind );
+	if ( color < ITEM_COLOR_LEVEL_BLUE || color >= g_equip_washrule_maxnum )
+		return -1;
+
+	if ( actor_change_token( actor_index, -g_equip_washrule[color].token, PATH_EQUIP_WASH, 0 ) < 0 )
+		return -1;
+	
+	for ( int tmpi = 0; tmpi < g_equip_washrule[color].valuenum; tmpi++ )
+	{
+		// 原有
+		char washid = pEquip->washid[tmpi] / 10;
+		char washlevel = pEquip->washid[tmpi] % 10;
+		if ( washlevel <= 0 )
+			washlevel = 1;
+
+		// 随机一个属性
+		char randid = random( 1, 7 ) * 10;
+		char newid = randid + washlevel;
+		if ( newid <= 0 || newid >= g_equipwash_maxnum )
+			continue;
+		if ( washlevel < g_equip_washrule[color].levellimit )
+		{
+			if ( rand() % 1000 <= g_equipwash[newid].token_odds )
+				washlevel = washlevel + 1;
+		}
+		newid = randid + washlevel;
+		pEquip->washid[tmpi] = newid;
+	}
+
+
+	// 英雄属性变化
+	if ( pHero )
+	{
+		equip_sendhero( actor_index, pHero, equipoffset );
+		hero_attr_calc( pCity, pHero );
+		hero_sendinfo( actor_index, pHero );
+		city_battlepower_hero_calc( pCity );
+	}
+	else
+	{
+		equip_sendbag( actor_index, offset );
+	}
+	return 0;
+}
+
+// 秘技洗练
+int equip_wash_super( int actor_index, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->attr.ability_open_201 <= 0 )
+		return -1;
+	
+	Hero *pHero = NULL;
+	int herokind = 0;
+	int equipoffset = -1;
+	if ( offset >= HERO_BASEOFFSET )
+	{
+		herokind = offset / EQUIP_BASEOFFSET;
+		equipoffset = offset % EQUIP_BASEOFFSET;
+		pHero = hero_getptr( actor_index, herokind );
+		if ( !pHero )
+			return -1;
+	}
+	Equip *pEquip = equip_getptr( actor_index, offset );
+	if ( !pEquip )
+		return -1;
+
+	char color = equip_getcolor( pEquip->kind );
+	if ( color < ITEM_COLOR_LEVEL_GOLD || color >= g_equip_washrule_maxnum )
+		return -1;
+
+	// 随机一个属性
+	char randid = random( 1, 7 ) * 10;
+	char newid = randid + g_equip_washrule[color].levellimit;
+	if ( newid <= 0 || newid >= g_equipwash_maxnum )
+		return -1;
+
+	if ( actor_change_token( actor_index, -global.equip_wash_super_token, PATH_EQUIP_WASH, 0 ) < 0 )
+		return -1;
+
+	int vnum = g_equip_washrule[color].valuenum + g_equip_washrule[color].superskill;
+	if ( vnum > 4 )
+		vnum = 4;
+	for ( int tmpi = 0; tmpi < vnum; tmpi++ )
+	{
+		pEquip->washid[tmpi] = newid;
+	}
+
+	// 英雄属性变化
+	if ( pHero )
+	{
+		equip_sendhero( actor_index, pHero, equipoffset );
+		hero_attr_calc( pCity, pHero );
+		hero_sendinfo( actor_index, pHero );
+		city_battlepower_hero_calc( pCity );
+	}
+	else
+	{
+		equip_sendbag( actor_index, offset );
+	}
 	return 0;
 }

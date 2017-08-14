@@ -54,6 +54,7 @@
 
 void city_attr_reset( City *pCity );
 void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit );
+void city_attr_sendinfo( int actor_index );
 
 // 战力变化途径
 #define  BATTLEPOWER_PATH_HERO		1

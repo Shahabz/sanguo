@@ -11,6 +11,7 @@
 #include "auto_data_item.h"
 #include "auto_data_equip.h"
 #include "auto_data_equip_wash.h"
+#include "auto_data_equip_washrule.h"
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
 #include "auto_data_building_upgrade.h"

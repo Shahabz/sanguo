@@ -41,6 +41,9 @@ extern int g_itemkindnum;
 extern TechInfo *g_techinfo;
 extern int g_techinfo_maxnum;
 
+extern Actor *g_actors;
+extern int g_maxactornum;
+
 void city_attr_reset( City *pCity )
 {
 	if ( !pCity )
@@ -82,7 +85,7 @@ void city_attr_reset( City *pCity )
 			city_attr_calc( &pCity->attr, g_vipinfo[pCity->viplevel].ability[tmpi], g_vipinfo[pCity->viplevel].value[tmpi], 100.0f );
 		}
 	}
-	//city_attr_sendlist( pCity->actor_index, pCity );
+	city_attr_sendinfo( pCity->actor_index );
 }
 
 void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
@@ -229,6 +232,30 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 	}
 }
 
+void city_attr_sendinfo( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return;
+	SLK_NetS_CityAttr pValue = { 0 };
+	pValue.m_protectres_per = (int)(pCity->attr.protectres_per * 100);
+	pValue.m_buildingsec_per = (int)(pCity->attr.buildingsec_per * 100);
+	pValue.m_materialsec_per = (int)(pCity->attr.materialsec_per * 100);
+	pValue.m_hero_up_num = pCity->attr.hero_up_num;
+	pValue.m_hero_row_num = pCity->attr.hero_up_num;
+	pValue.m_everyday_body_buymax = pCity->attr.everyday_body_buymax;
+	pValue.m_everyday_autobuild_buynum = pCity->attr.everyday_autobuild_buynum;
+	pValue.m_everyday_army_recall = pCity->attr.everyday_army_recall;
+	pValue.m_ability_open_201 = pCity->attr.ability_open_201;
+	pValue.m_ability_open_203 = pCity->attr.ability_open_203;
+	pValue.m_ability_open_204 = pCity->attr.ability_open_204;
+	pValue.m_ability_open_205 = pCity->attr.ability_open_205;
+	pValue.m_ability_open_206 = pCity->attr.ability_open_206;
+	pValue.m_ability_open_207 = pCity->attr.ability_open_207;
+	netsend_cityattr_S( actor_index, SENDTYPE_ACTOR, &pValue );
+}
 
 // 重置总战力
 void city_battlepower_reset( City *pCity )

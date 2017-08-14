@@ -435,7 +435,7 @@ end
 
 function struct_NetS_Equip_recv( buffer )
 	local recvValue = {};
-	recvValue.m_offset = buffer:ReadShort();
+	recvValue.m_offset = buffer:ReadInt();
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_washid={};
 	for tmpi=1,4,1 do
@@ -1053,6 +1053,32 @@ function struct_NetS_HeroColorup_recv( buffer )
 	local recvValue = {};
 	recvValue.m_value = buffer:ReadInt();
 	recvValue.m_isup = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_CityAttr_recv( buffer )
+	local recvValue = {};
+	recvValue.m_protectres_per = buffer:ReadShort();
+	recvValue.m_buildingsec_per = buffer:ReadShort();
+	recvValue.m_materialsec_per = buffer:ReadShort();
+	recvValue.m_hero_up_num = buffer:ReadSByte();
+	recvValue.m_hero_row_num = buffer:ReadSByte();
+	recvValue.m_everyday_body_buymax = buffer:ReadSByte();
+	recvValue.m_everyday_autobuild_buynum = buffer:ReadSByte();
+	recvValue.m_everyday_army_recall = buffer:ReadSByte();
+	recvValue.m_ability_open_201 = buffer:ReadSByte();
+	recvValue.m_ability_open_203 = buffer:ReadSByte();
+	recvValue.m_ability_open_204 = buffer:ReadSByte();
+	recvValue.m_ability_open_205 = buffer:ReadSByte();
+	recvValue.m_ability_open_206 = buffer:ReadSByte();
+	recvValue.m_ability_open_207 = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_EquipWash_recv( buffer )
+	local recvValue = {};
+	recvValue.m_equip_washnum = buffer:ReadSByte();
+	recvValue.m_equip_washsec = buffer:ReadInt();
 	return recvValue;
 end
 

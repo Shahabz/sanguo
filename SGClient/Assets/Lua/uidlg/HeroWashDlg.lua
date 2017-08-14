@@ -286,11 +286,13 @@ end
 
 function HeroWashDlgToken()
 	local token = global.hero_wash_token;
-	MsgBoxEx( F( 844, token ), function( toggle ) 
-		if GetPlayer().m_token < token then
-			JumpToken()
-		else
-			system_askinfo( ASKINFO_HERO, "", 6, m_herokind );
+	MsgBoxEx( F( 844, token ), function( sure, toggle ) 
+		if sure == 1 then
+			if GetPlayer().m_token < token then
+				JumpToken()
+			else
+				system_askinfo( ASKINFO_HERO, "", 6, m_herokind );
+			end
 		end
 		m_wash_toggle = toggle;
 	end, m_wash_toggle ) 

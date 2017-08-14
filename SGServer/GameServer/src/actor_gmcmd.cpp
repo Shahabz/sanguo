@@ -19,6 +19,7 @@
 #include "actor_notify.h"
 #include "gameproc.h"
 #include "city.h"
+#include "city_tech.h"
 #include "chat.h"
 #include "vip.h"
 #include "hero.h"
@@ -245,6 +246,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_ACTIVITY:// »î¶¯
+		break;
+	case GMC_TECH:
+		if ( pCity )
+		{
+			city_tech_get_gm( pCity, pValue[0] );
+		}
 		break;
 	default:
 		break;

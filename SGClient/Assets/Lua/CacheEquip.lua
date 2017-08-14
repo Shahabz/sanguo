@@ -20,6 +20,10 @@ EQUIP_ABILITY_NONE				=	0
 EQUIP_ABILITY_ATTACK			=	1	-- 攻击
 EQUIP_ABILITY_DEFENSE			=	2	-- 防御
 EQUIP_ABILITY_TROOPS			=	3 	-- 兵力
+EQUIP_ABILITY_ATTACK_INCREASE	=	4	-- 强攻
+EQUIP_ABILITY_DEFENSE_INCREASE	=	5	-- 强防
+EQUIP_ABILITY_ASSAULT			=	6	-- 攻城
+EQUIP_ABILITY_DEFEND			=	7	-- 守城
 
 -- 获取装备配置信息
 function equip_getinfo( equipkind )
@@ -85,6 +89,35 @@ function equip_getabilityname( equipkind )
 		name = T(147).."+"..value;
 	elseif ability == EQUIP_ABILITY_TROOPS then
 		name = T(148).."+"..value;
+	elseif ability == EQUIP_ABILITY_ATTACK_INCREASE then
+		name = T(165).."+"..value;
+	elseif ability == EQUIP_ABILITY_DEFENSE_INCREASE then
+		name = T(166).."+"..value;
+	elseif ability == EQUIP_ABILITY_ASSAULT then
+		name = T(167).."+"..value;
+	elseif ability == EQUIP_ABILITY_DEFEND then
+		name = T(168).."+"..value;
+	end
+	return name;
+end
+
+-- 装备基础属性
+function equip_getwashname( ability )
+	local name = ""
+	if ability == EQUIP_ABILITY_ATTACK then
+		name = T(146)
+	elseif ability == EQUIP_ABILITY_DEFENSE then
+		name = T(147)
+	elseif ability == EQUIP_ABILITY_TROOPS then
+		name = T(148)
+	elseif ability == EQUIP_ABILITY_ATTACK_INCREASE then
+		name = T(165)
+	elseif ability == EQUIP_ABILITY_DEFENSE_INCREASE then
+		name = T(166)
+	elseif ability == EQUIP_ABILITY_ASSAULT then
+		name = T(167)
+	elseif ability == EQUIP_ABILITY_DEFEND then
+		name = T(168)
 	end
 	return name;
 end
@@ -110,6 +143,7 @@ function SLK_Equip:empty()
 	
 	-- 固定配置信息
 	self.m_kind  			= 0;-- 物品种类 决定了物品的名字
+	self.m_offset			= -1;
 		
 	-- 洗炼信息
 	self.m_washid   		= { 0,0,0,0 };
@@ -165,6 +199,7 @@ function Equip:EquipGet( _EquipIndex, kind, path )
 		pequip.m_bIsUpdate = false;
 	end
 	pequip.m_kind = kind;
+	pequip.m_offset = _EquipIndex;
 	self:SetEquip( _EquipIndex, pequip );
 	self:OnGetEquip( _EquipIndex, kind, path );
 end
@@ -388,3 +423,23 @@ function GetEquip()
 	end
 	return G_Equip;
 end
+
+-- 设置装备洗练星级
+function SetEquipWash( uiWash, pEquip )
+	for i=1, 4, 1 do
+		local uiStar = uiWash.transform:GetChild(i-1).gameObject;
+		local color = equip_getcolor( pEquip.m_kind );
+		local washid = pEquip.m_washid[i];
+		if washid > 0 then
+			SetTrue( uiStar )
+			if g_equip_wash[washid].level >= g_equip_washrule[color].levellimit then
+				SetImage( uiStar, LoadSprite("ui_icon_star_1") )
+			else
+				SetImage( uiStar, LoadSprite("ui_icon_star_2") )
+			end
+		else	
+			SetFalse( uiStar )
+		end
+	end
+end
+

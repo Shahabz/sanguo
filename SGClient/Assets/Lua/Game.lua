@@ -117,12 +117,16 @@ function GameManager.GameLogic()
 			pBuilding.m_sec = pBuilding.m_sec - 1;
 		end
 	end	
+	
 	-- 雇佣官员
 	for i=0, 2, 1 do
 		if GetPlayer().m_officialhire[i] ~= nil and GetPlayer().m_officialhire[i].m_ofsec > 0 then
 			GetPlayer().m_officialhire[i].m_ofsec = GetPlayer().m_officialhire[i].m_ofsec - 1
 		end
 	end
+	
+	-- 自动洗练
+	EquipWashDlgAuto()
 end
 
 -- 请求退出游戏

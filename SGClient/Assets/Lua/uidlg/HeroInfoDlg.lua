@@ -93,6 +93,10 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 10 and nControlID < 20 then
 			HeroInfoDlgEquipDown( nControlID-10 )
 		
+		-- 洗练装备
+		elseif nControlID >= 100 and nControlID < 110 then
+			HeroInfoDlgEquipWash( nControlID-100 )
+			
 		-- 选择装备
 		elseif nControlID >= 1000 and nControlID < 2000 then
 			HeroInfoDlgSelectEquip( nControlID-1000 )
@@ -226,23 +230,21 @@ function HeroInfoDlgSet( sys, pHero, up )
 		local objs = m_uiEquip[i].transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiShape = objs[0];
 		local uiColor = objs[1];
-		local uiWashBack = objs[2];
-		local uiWash = objs[3];
+		local uiWash = objs[2];
 		local uiAdd = objs[4];
 		SetControlID( m_uiEquip[i], 1000+i )
 
 		if pHero.m_Equip[i].m_kind > 0 then
 			SetTrue( uiShape )
 			SetTrue( uiColor )
-			SetTrue( uiWashBack )
 			SetTrue( uiWash )
 			SetFalse( uiAdd )
 			SetImage( uiShape, EquipSprite(pHero.m_Equip[i].m_kind) )
 			SetImage( uiColor, ItemColorSprite(equip_getcolor(pHero.m_Equip[i].m_kind)) )
+			SetEquipWash( uiWash, pHero.m_Equip[i] );
 		else
 			SetTrue( uiShape )
 			SetFalse( uiColor )
-			SetFalse( uiWashBack )
 			SetFalse( uiWash )
 			if GetEquip():GetCountBuyType( i+1 ) > 0 then
 				SetTrue( uiAdd )
@@ -392,8 +394,9 @@ function HeroInfoDlgSelectEquip( offset )
 	local uiContent = objs[8];
 	local uiUIP_Equip = objs[9];
 	local uiForgingBtn = objs[10];
-	SetControlID( uiDownBtn, 10+offset )
-	
+	local uiWash = objs[11];
+	SetControlID( uiDownBtn, 10 + offset );
+	SetControlID( uiWashBtn, 100 + offset );
 	-- 已经装备的信息
 	if kind > 0 then
 		SetTrue( uiShape )
@@ -408,6 +411,7 @@ function HeroInfoDlgSelectEquip( offset )
 		SetImage( uiColor, ItemColorSprite( equip_getcolor( kind ) ) )
 		SetText( uiName, equip_getname( kind ), NameColor( equip_getcolor( kind ) ) );
 		SetText( uiAbility, equip_getabilityname( kind ) );
+		SetEquipWash( uiWash, m_pCacheHero.m_Equip[offset] );
 	else
 	
 		SetTrue( uiShape )
@@ -426,7 +430,13 @@ function HeroInfoDlgSelectEquip( offset )
 	m_MatchEquipList = GetEquip():GetEquipsByType( offset+1 )
 	
 	--排序
-	
+	table.sort( m_MatchEquipList, function( a, b )
+		if equip_getcolor(a.m_kind) > equip_getcolor(b.m_kind) then
+			return true
+		else
+			return false
+		end
+	end )
 	-- 加入列表
 	clearChild( uiContent.transform )
 	for i=1, #m_MatchEquipList, 1 do
@@ -443,12 +453,14 @@ function HeroInfoDlgSelectEquip( offset )
 		local uiAbility = objs[2];
 		local uiUpBtn = objs[3];
 		local uiColor = objs[4];
+		local uiWash = objs[5];
 		
 		SetControlID( uiUpBtn, 2000+equipoffset )
 		SetImage( uiShape, EquipSprite( pEquip.m_kind ) )
 		SetImage( uiColor, ItemColorSprite( equip_getcolor( pEquip.m_kind ) ) )
 		SetText( uiName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor( pEquip.m_kind ) ) );
 		SetText( uiAbility, equip_getabilityname( pEquip.m_kind ) );
+		SetEquipWash( uiWash, pEquip );
 	end
 	
     if #m_MatchEquipList == 0 then
@@ -480,6 +492,21 @@ function HeroInfoDlgEquipDown( index )
 	end
 	system_askinfo( ASKINFO_EQUIP, "", 3, m_pCacheHero.m_kind, index );
 	HeroInfoDlgSelectEquip( -1 )
+end
+
+-- 洗练
+function HeroInfoDlgEquipWash( index )
+	if m_pCacheHero.m_kind <= 0 then
+		return
+	end
+	if index < 0 then
+		return
+	end
+	EquipWashDlgShow()
+	if m_up == true then
+		EquipWashDlgSelectHero( m_pCacheHero.m_kind )
+		EquipWashDlgSelectItem( m_pCacheHero.m_Equip[index].m_offset )
+	end
 end
 
 -- 上阵

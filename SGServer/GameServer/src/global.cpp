@@ -183,6 +183,8 @@ int global_init()
 			global.hero_colorup_actorlevel = atoi( row[1] );
 		else if ( id == 50 )
 			global.hero_god_actorlevel = atoi( row[1] );
+		else if ( id == 51 )
+			global.equip_wash_super_token = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

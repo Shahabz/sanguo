@@ -513,7 +513,7 @@ int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue )
 {
 	int tmpi = 0;
 
-	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 4*sizeof(short), (*psize) );
 	return 0;
@@ -1201,6 +1201,36 @@ int struct_NetS_HeroColorup_send( char **pptr, int *psize, SLK_NetS_HeroColorup 
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isup, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityAttr_send( char **pptr, int *psize, SLK_NetS_CityAttr *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_protectres_per, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_buildingsec_per, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_materialsec_per, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_up_num, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_row_num, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_everyday_body_buymax, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_everyday_autobuild_buynum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_everyday_army_recall, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_201, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_203, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_204, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_205, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_206, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_207, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EquipWash_send( char **pptr, int *psize, SLK_NetS_EquipWash *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_equip_washnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_equip_washsec, (*psize) );
 	return 0;
 }
 

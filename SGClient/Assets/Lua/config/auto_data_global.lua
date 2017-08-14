@@ -49,3 +49,4 @@ global.hero_wash_token_full_base = 95 --特殊处理超过95都满,超过多少
 global.hero_wash_token_full_odds = 15 --特殊处理超过95都满,几率全满
 global.hero_colorup_actorlevel = 90 --良将突破玩家等级
 global.hero_god_actorlevel = 100 --神将突破玩家等级
+global.equip_wash_super_token = 200 --秘技洗练钻石

@@ -83,6 +83,8 @@ int netsend_cityprotect_S( int actor_index, char send_type, SLK_NetS_CityProtect
 int netsend_heroequip_S( int actor_index, char send_type, SLK_NetS_HeroEquip *pValue );
 int netsend_herowash_S( int actor_index, char send_type, SLK_NetS_HeroWash *pValue );
 int netsend_herocolorup_S( int actor_index, char send_type, SLK_NetS_HeroColorup *pValue );
+int netsend_cityattr_S( int actor_index, char send_type, SLK_NetS_CityAttr *pValue );
+int netsend_equipwash_S( int actor_index, char send_type, SLK_NetS_EquipWash *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

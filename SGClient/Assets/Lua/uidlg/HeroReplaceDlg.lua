@@ -151,13 +151,15 @@ function HeroReplaceDlgReplace()
 	if m_selectkind <= 0 or m_upkind <= 0 then
 		return;
 	end
-	MsgBoxExLabel( F(836, HeroName( m_selectkind )), T(837), function( toggle )
-		local replace_equip = 0;
-		if toggle == true then
-			replace_equip = 1;
+	MsgBoxExLabel( F(836, HeroName( m_selectkind )), T(837), function( sure, toggle )
+		if sure == 1 then
+			local replace_equip = 0;
+			if toggle == true then
+				replace_equip = 1;
+			end
+			system_askinfo( ASKINFO_HERO, "", 3, m_selectkind, m_upkind, replace_equip );
+			HeroReplaceDlgClose();
+			HeroInfoDlgClose();
 		end
-		system_askinfo( ASKINFO_HERO, "", 3, m_selectkind, m_upkind, replace_equip );
-		HeroReplaceDlgClose();
-		HeroInfoDlgClose();
 	end )
 end

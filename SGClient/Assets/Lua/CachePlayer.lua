@@ -64,6 +64,7 @@ function Player:Init()
 	self.m_worker_expire_ex	=	0;
 	self.m_buildings 		=	{};
 	self.m_buildings_res 	=	{};
+	self.m_attr 			= 	{}
 end
 
 --  Ù–‘±‰ªØ
@@ -109,6 +110,10 @@ function Player:Set( recvValue )
 	end
 end
 
+--
+function Player:SetAttr( recvValue )
+	self.m_attr = recvValue;
+end
 -- 
 function Player:SetBuilding( kind, info, active )
 	self.m_buildings[kind] = info;

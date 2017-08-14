@@ -339,7 +339,7 @@ struct _slk_NetS_UpdateMapUnit {
 typedef struct _slk_NetS_UpdateMapUnit SLK_NetS_UpdateMapUnit;	//更新地图显示单元信息
 
 struct _slk_NetS_Equip {
-	short m_offset;	//装备索引
+	int m_offset;	//装备索引
 	short m_kind;	//装备种类
 	short m_washid[4];	//洗练属性
 };
@@ -821,6 +821,30 @@ struct _slk_NetS_HeroColorup {
 };
 typedef struct _slk_NetS_HeroColorup SLK_NetS_HeroColorup;	//武将突破
 
+struct _slk_NetS_CityAttr {
+	short m_protectres_per;	//
+	short m_buildingsec_per;	//
+	short m_materialsec_per;	//
+	char m_hero_up_num;	//
+	char m_hero_row_num;	//
+	char m_everyday_body_buymax;	//
+	char m_everyday_autobuild_buynum;	//
+	char m_everyday_army_recall;	//
+	char m_ability_open_201;	//
+	char m_ability_open_203;	//
+	char m_ability_open_204;	//
+	char m_ability_open_205;	//
+	char m_ability_open_206;	//
+	char m_ability_open_207;	//
+};
+typedef struct _slk_NetS_CityAttr SLK_NetS_CityAttr;	//城池属性
+
+struct _slk_NetS_EquipWash {
+	char m_equip_washnum;	//装备洗练
+	int m_equip_washsec;	//装备洗练
+};
+typedef struct _slk_NetS_EquipWash SLK_NetS_EquipWash;	//装备洗练
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -911,5 +935,7 @@ int struct_NetS_OfficialHireChange_send( char **pptr, int *psize, SLK_NetS_Offic
 int struct_NetS_CityProtect_send( char **pptr, int *psize, SLK_NetS_CityProtect *pValue );
 int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValue );
 int struct_NetS_HeroColorup_send( char **pptr, int *psize, SLK_NetS_HeroColorup *pValue );
+int struct_NetS_CityAttr_send( char **pptr, int *psize, SLK_NetS_CityAttr *pValue );
+int struct_NetS_EquipWash_send( char **pptr, int *psize, SLK_NetS_EquipWash *pValue );
 
 #endif

@@ -8,6 +8,8 @@ struct _equipwashinfo {
 				short level;	//
 				short ability;	//
 				int value;	//
+				int free_odds;	//
+				int token_odds;	//
 };
 typedef struct _equipwashinfo EquipWashInfo;
 

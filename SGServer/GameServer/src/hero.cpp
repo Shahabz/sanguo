@@ -3,6 +3,7 @@
 #include <windows.h>
 #endif
 #include <mysql.h>
+#include <math.h>
 #include "db.h"
 #include "global.h"
 #include "system.h"
@@ -945,6 +946,8 @@ int hero_wash_free( int actor_index, int herokind )
 	hero_sendinfo( actor_index, pHero );
 
 	pCity->hero_washnum -= 1;
+	if ( pCity->hero_washsec <= 0 )
+		pCity->hero_washsec = global.hero_wash_sec;
 	hero_wash_sendinfo( actor_index );
 	return 0;
 }
@@ -1095,7 +1098,8 @@ int hero_colorup( int actor_index, int herokind )
 	// 先计算是否直接突破
 	char isup = 0;
 	int odds = rand() % 1000;
-	if ( odds < g_hero_colorup[pHero->color].odds )
+	int oddsvalue = g_hero_colorup[pHero->color].odds + (int)ceil( g_hero_colorup[pHero->color].odds * pCity->attr.heroluck_per );
+		if ( odds < oddsvalue )
 	{
 		isup = 1;
 	}

@@ -50,6 +50,7 @@ typedef struct _global
 	short hero_wash_token_full_odds;
 	short hero_colorup_actorlevel;
 	short hero_god_actorlevel;
+	short equip_wash_super_token;
 }Global;
 int global_init();
 void global_reload();

@@ -509,6 +509,7 @@ function proc_equip_C( recvValue )
 	-- process.
 	local tmpEquip = SLK_Equip.new();
 	tmpEquip.m_kind = recvValue.m_kind;
+	tmpEquip.m_offset = recvValue.m_offset;
 	for i=1,4,1 do
 		tmpEquip.m_washid[i] = recvValue.m_washid[i];
 	end
@@ -517,6 +518,8 @@ function proc_equip_C( recvValue )
 	else
 		GetHero():SetEquip( recvValue.m_offset, tmpEquip );
 	end
+	EquipWashDlgSetWash( tmpEquip )
+	EquipWashDlgUpdate( tmpEquip )
 end
 
 -- m_equipext=0,m_count=0,m_list={m_offset=0,m_kind=0,m_washid={[4]},[m_count]},
@@ -943,6 +946,7 @@ function proc_heroequip_C( recvValue )
 	for tmpi = 1, recvValue.m_count, 1 do
 		local tmpEquip = SLK_Equip.new();
 		tmpEquip.m_kind = recvValue.m_list[tmpi].m_kind;
+		tmpEquip.m_offset = recvValue.m_list[tmpi].m_offset;
 		for i=1,4,1 do
 			tmpEquip.m_washid[i] = recvValue.m_list[tmpi].m_washid[i];
 		end
@@ -953,12 +957,24 @@ end
 -- m_hero_washnum=0,m_hero_washsec=0,
 function proc_herowash_C( recvValue )
 	-- process.
-	 HeroWashDlgWashInfo( recvValue )
+	HeroWashDlgWashInfo( recvValue )
 end
 
 -- m_value=0,
 function proc_herocolorup_C( recvValue )
 	-- process.
 	HeroColorupDlgRecv( recvValue );
+end
+
+-- m_protectres_per=0,m_buildingsec_per=0,m_materialsec_per=0,m_hero_up_num=0,m_hero_row_num=0,m_everyday_body_buymax=0,m_everyday_autobuild_buynum=0,m_everyday_army_recall=0,m_ability_open_201=0,m_ability_open_203=0,m_ability_open_204=0,m_ability_open_205=0,m_ability_open_206=0,m_ability_open_207=0,
+function proc_cityattr_C( recvValue )
+	-- process.
+	GetPlayer():SetAttr( recvValue )
+end
+
+-- m_equip_washnum=0,m_equip_washsec=0,
+function proc_equipwash_C( recvValue )
+	-- process.
+	EquipWashDlgRecv( recvValue )
 end
 

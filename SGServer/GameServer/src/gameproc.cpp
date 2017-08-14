@@ -314,6 +314,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 装备洗练数据初始化
+	if ( equipwashrule_init_auto() < 0 )
+	{
+		printf_msg( "equipwashrule_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 英雄数据初始化
 	if ( heroinfo_init_auto() < 0 )
 	{

@@ -142,6 +142,16 @@ function EquipSprite( kind )
 	return sprite;
 end
 
+-- 装备洗练图标
+function EquipWashSprite( ability )
+	local name = string.format("ui_icon_wash_ability_%d", ability );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
 -- 道具颜色框
 function ItemColorSprite( color )
 	local name = string.format("ui_color_%d", color );

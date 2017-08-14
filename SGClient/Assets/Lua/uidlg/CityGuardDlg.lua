@@ -319,22 +319,26 @@ function CityGuardDlgSelect( index )
 		if m_dataCache[offset].m_soldiers < m_dataCache[offset].m_troops then
 			-- 补血
 			local token = global.city_guard_up_token;
-			MsgBoxEx( F( 797, token ), function( toggle ) 
-				if GetPlayer().m_token < token then
-					JumpToken()
-				else
-					system_askinfo( ASKINFO_CITYGUARD, "", 4, offset );
+			MsgBoxEx( F( 797, token ), function( sure, toggle ) 
+				if sure == 1 then
+					if GetPlayer().m_token < token then
+						JumpToken()
+					else
+						system_askinfo( ASKINFO_CITYGUARD, "", 4, offset );
+					end
 				end
 				m_guardup_toggle = toggle;
 			end, m_guardup_toggle ) 
 		else
 			-- 升级
 			local token = global.city_guard_up_token;
-			MsgBoxEx( F( 798, token ), function( toggle ) 
-				if GetPlayer().m_token < token then
-					JumpToken()
-				else
-					system_askinfo( ASKINFO_CITYGUARD, "", 2, offset );
+			MsgBoxEx( F( 798, token ), function( sure, toggle ) 
+				if sure == 1 then
+					if GetPlayer().m_token < token then
+						JumpToken()
+					else
+						system_askinfo( ASKINFO_CITYGUARD, "", 2, offset );
+					end
 				end
 				m_guardup_toggle = toggle;
 			end, m_guardup_toggle ) 

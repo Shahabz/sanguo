@@ -30,11 +30,13 @@ typedef struct _equipout
 // 将offset转换成对应的属性结构
 Equip *actor_equip_getptr( int actor_index, int offset );
 Equip *city_equip_getptr( int city_index, int offset );
+Equip *equip_getptr( int actor_index, int offset );
 int equip_load( int actor_index );
 int equip_save( int actor_index, FILE *fp );
 int equip_maxid_init();
 
 int equip_gettype( short kind );
+int equip_getcolor( short kind );
 int equip_insert( int actor_index, int offset ); // 创建装备的时候调用，保存刚创建的装备
 int equip_create( int actor_index, short equipkind, EquipOut *pOut ); // 玩家创建装备
 int equip_getequip( int actor_index, int equipkind, char path ); // 玩家获得装备
@@ -57,4 +59,9 @@ int equip_forging( int actor_index, short kind );
 int equip_forging_quick( int actor_index );
 int equip_forging_freequick( int actor_index );
 int equip_forging_get( int actor_index );
+
+int equip_wash_sendinfo( int actor_index );
+int equip_wash_free( int actor_index, int offset );
+int equip_wash_token( int actor_index, int offset );
+int equip_wash_super( int actor_index, int offset );
 #endif
