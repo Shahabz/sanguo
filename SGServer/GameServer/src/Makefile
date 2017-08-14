@@ -17,7 +17,9 @@ SRC = \
 ../AutoS/src/auto_data_city_tech.cpp \
 ../AutoS/src/auto_data_equip.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
+../AutoS/src/auto_data_equip_washrule.cpp \
 ../AutoS/src/auto_data_hero.cpp \
+../AutoS/src/auto_data_hero_colorup.cpp \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_nation_equip.cpp \
@@ -136,7 +138,11 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_equip_washrule.o: ../AutoS/src/auto_data_equip_washrule.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_hero_colorup.o: ../AutoS/src/auto_data_hero_colorup.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
