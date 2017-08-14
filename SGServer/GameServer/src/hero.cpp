@@ -1099,7 +1099,7 @@ int hero_colorup( int actor_index, int herokind )
 	char isup = 0;
 	int odds = rand() % 1000;
 	int oddsvalue = g_hero_colorup[pHero->color].odds + (int)ceil( g_hero_colorup[pHero->color].odds * pCity->attr.heroluck_per );
-		if ( odds < oddsvalue )
+	if ( odds < oddsvalue )
 	{
 		isup = 1;
 	}
@@ -1108,6 +1108,7 @@ int hero_colorup( int actor_index, int herokind )
 	pHero->colorup += g_hero_colorup[pHero->color].value;
 	if ( pHero->colorup >= g_hero_colorup[pHero->color].needvalue || isup == 1 )
 	{
+		isup = 1;
 		pHero->colorup = 0;
 		pHero->color = (char)g_hero_colorup[pHero->color].nextcolor;
 		// жиЫугЂалЪєад

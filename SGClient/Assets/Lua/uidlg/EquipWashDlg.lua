@@ -310,7 +310,7 @@ function EquipWashDlgSelectHero( kind )
 	end
 	
 	EquipWashDlgSetItem()
-	if m_CacheEquipCache[1] ~= nil then
+	if #m_CacheEquipCache > 0 and m_CacheEquipCache[1] ~= nil then
 		EquipWashDlgSelectItem( m_CacheEquipCache[1].m_pEquip.m_offset )
 	else
 		EquipWashDlgSelectItem( -1 )
@@ -372,8 +372,26 @@ function EquipWashDlgSelectItem( offset )
 	m_equipoffset = offset;
 	if offset == -1 then
 		EquipWashDlgClearItem()
+		SetFalse( m_uiShape )
+		SetFalse( m_uiColor )
+		SetFalse( m_uiName )
+		SetFalse( m_uiAbility )
+		SetFalse( m_uiWash )
+		SetFalse( m_uiButtons )
+		SetFalse(m_uiWashList )
+		SetFalse( m_uiTokenTitle )
 		return;
 	end
+	
+	SetTrue( m_uiShape )
+	SetTrue( m_uiColor )
+	SetTrue( m_uiName )
+	SetTrue( m_uiAbility )
+	SetTrue( m_uiWash )
+	SetTrue( m_uiButtons )
+	SetTrue(m_uiWashList )
+	SetTrue( m_uiTokenTitle )
+		
 	for i=1, #m_CacheEquipCache do
 		local uiObj = m_uiEquipList[i]
 		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -562,6 +580,7 @@ function EquipWashDlgUpdate( updateEquip )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
+	SetEquipWash( m_uiWash, updateEquip );
 	for i=1, #m_CacheEquipCache do
 		local pEquip = m_CacheEquipCache[i].m_pEquip;
 		if pEquip.m_offset == updateEquip.m_offset then
