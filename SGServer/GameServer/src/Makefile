@@ -21,6 +21,7 @@ SRC = \
 ../AutoS/src/auto_data_hero.cpp \
 ../AutoS/src/auto_data_hero_colorup.cpp \
 ../AutoS/src/auto_data_item.cpp \
+../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_nation_equip.cpp \
 ../AutoS/src/auto_data_official_forging.cpp \
@@ -145,6 +146,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_hero_colorup.o: ../AutoS/src/auto_data_hero_colorup.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
