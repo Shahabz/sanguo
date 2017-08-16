@@ -1234,3 +1234,54 @@ int struct_NetS_EquipWash_send( char **pptr, int *psize, SLK_NetS_EquipWash *pVa
 	return 0;
 }
 
+int struct_NetS_MaterialInfo_send( char **pptr, int *psize, SLK_NetS_MaterialInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matkind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_matsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_matsec_need, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MaterialList_send( char **pptr, int *psize, SLK_NetS_MaterialList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_MaterialInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matquenum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nation_people, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_city_people, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_change_nation_people, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_change_city_people, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MaterialWillInfo_send( char **pptr, int *psize, SLK_NetS_MaterialWillInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_matsec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matkind_will, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_matnum_will, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MaterialWillList_send( char **pptr, int *psize, SLK_NetS_MaterialWillList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_MaterialWillInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

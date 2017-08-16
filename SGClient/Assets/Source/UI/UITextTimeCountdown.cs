@@ -16,6 +16,7 @@ public class UITextTimeCountdown : UIText
     public int controlID = 0;
     public UIProgress uiProgress = null;
     public UISlider uiSlider = null;
+	public UITextAgent uiTextAgent = null;
     public String formatText = "";
     public String overText = "";
     public bool playOnEable = true;
@@ -220,6 +221,11 @@ public class UITextTimeCountdown : UIText
                     uiSlider.value = leftTime / (float)mDuration;
             }
         }
+
+		if (uiTextAgent) 
+		{
+			uiTextAgent.setValue (leftTime, mDuration);
+		}
 
 		OnChangeEvent (leftTime);
 

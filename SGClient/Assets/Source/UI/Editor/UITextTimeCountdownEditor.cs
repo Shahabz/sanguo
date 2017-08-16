@@ -40,6 +40,8 @@ public class UITextTimeCountdownEditor : UITextEditor
 		UISlider uiSlider = EditorGUILayout.ObjectField( "UISlider", txt.uiSlider, typeof(UISlider), true ) as UISlider;
 		txt.uiSlider = uiSlider;
 
+		UITextAgent uiTextAgent = EditorGUILayout.ObjectField( "UITextAgent", txt.uiTextAgent, typeof(UITextAgent), true ) as UITextAgent;
+		txt.uiTextAgent = uiTextAgent;
 
         base.OnInspectorGUI();
     }

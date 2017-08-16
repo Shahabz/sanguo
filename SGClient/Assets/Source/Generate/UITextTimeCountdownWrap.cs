@@ -17,6 +17,7 @@ public class UITextTimeCountdownWrap
 		L.RegVar("controlID", get_controlID, set_controlID);
 		L.RegVar("uiProgress", get_uiProgress, set_uiProgress);
 		L.RegVar("uiSlider", get_uiSlider, set_uiSlider);
+		L.RegVar("uiTextAgent", get_uiTextAgent, set_uiTextAgent);
 		L.RegVar("formatText", get_formatText, set_formatText);
 		L.RegVar("overText", get_overText, set_overText);
 		L.RegVar("playOnEable", get_playOnEable, set_playOnEable);
@@ -187,6 +188,25 @@ public class UITextTimeCountdownWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index uiSlider on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_uiTextAgent(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UITextTimeCountdown obj = (UITextTimeCountdown)o;
+			UITextAgent ret = obj.uiTextAgent;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index uiTextAgent on a nil value" : e.Message);
 		}
 	}
 
@@ -453,6 +473,25 @@ public class UITextTimeCountdownWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index uiSlider on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_uiTextAgent(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UITextTimeCountdown obj = (UITextTimeCountdown)o;
+			UITextAgent arg0 = (UITextAgent)ToLua.CheckUnityObject(L, 2, typeof(UITextAgent));
+			obj.uiTextAgent = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index uiTextAgent on a nil value" : e.Message);
 		}
 	}
 

@@ -2235,6 +2235,60 @@ int netsend_equipwash_S( int actor_index, char send_type, SLK_NetS_EquipWash *pV
 	return 0;
 }
 
+int netsend_materiallist_S( int actor_index, char send_type, SLK_NetS_MaterialList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_MATERIALLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_MATERIALLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_MaterialList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_materialwilllist_S( int actor_index, char send_type, SLK_NetS_MaterialWillList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_MATERIALWILLLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_MATERIALWILLLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_MaterialWillList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue )
 {

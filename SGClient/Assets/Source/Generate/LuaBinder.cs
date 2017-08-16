@@ -72,6 +72,7 @@ public static class LuaBinder
 		ReferenceWrap.Register(L);
 		UIPolygonChartWrap.Register(L);
 		UIAutoSizeWrap.Register(L);
+		UITextAgentWrap.Register(L);
 		YlyAssetIdentifyWrap.Register(L);
 		YlyRichTextWrap.Register(L);
 		YlyDelegateUtilWrap.Register(L);

@@ -298,6 +298,32 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			actor_restart( actor_index );
 		}
 		break;
+	case ASKINFO_MATERIALMAKE:
+		if ( pvalue[0] == 0 )
+		{ // 获取信息
+			city_material_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 制造
+			city_material_make( actor_index, pvalue[1], pvalue[2], 0 );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 预定生产信息
+			city_material_will_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 购买队列
+			city_material_buyqueue( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 领取
+			city_material_get( actor_index );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 制造
+			city_material_make( actor_index, pvalue[1], pvalue[2], 1 );
+		}
+		break;
 	default:
 		break;
 	}

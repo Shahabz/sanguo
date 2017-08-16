@@ -312,7 +312,7 @@ function proc_itemlist_C( recvValue )
 			local itemconfig = item_getinfo( tmpItem.m_kind );
 			if itemconfig then
 				tmpItem.m_type = itemconfig.type;
-				--tmpItem.m_color_level = itemconfig.color_level;
+				tmpItem.m_color_level = itemconfig.color_level;
 			end
 
 			-- ±³°üÀ¸
@@ -976,5 +976,18 @@ end
 function proc_equipwash_C( recvValue )
 	-- process.
 	EquipWashDlgRecv( recvValue )
+end
+
+
+-- m_count=0,m_list={m_matkind=0,m_matnum=0,m_matsec=0,m_matsec_need=0,[m_count]},m_matquenum=0,
+function proc_materiallist_C( recvValue )
+	-- process.
+	MaterialMakeDlgRecv( recvValue );
+end
+
+-- m_count=0,m_list={m_matkind=0,m_matsec=0,m_matkind_will=0,m_matnum_will=0,[m_count]},
+function proc_materialwilllist_C( recvValue )
+	-- process.
+	MaterialMakeWillDlgRecv( recvValue )
 end
 

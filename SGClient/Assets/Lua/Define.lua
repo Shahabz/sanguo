@@ -154,6 +154,13 @@ PATH_CHANGENAME					=	31	-- 改名
 PATH_GUARD_LIFE					=	32	-- 守卫补血
 PATH_EQUIP_UP					=	33	-- 装备上
 PATH_EQUIP_DOWN					=	34	-- 装备下
+PATH_HERO_ADDEXP				=	35	-- 加英雄经验
+PATH_HERO_ADDSOLDIERS			=	36	-- 补兵
+PATH_HERO_SOLDIERS_EQUIP		=	37	-- 脱卸装备带来的兵力损失
+PATH_HERO_WASH					=	38	-- 英雄洗髓
+PATH_EQUIP_WASH					=	39	-- 装备洗练
+PATH_MATERIALMAKE_QUEUE			=	40	-- 材料制造队列
+PATH_MATERIALMAKE				=	41	-- 材料制造
 
 -- 文字表
 -- 获取本地化文字

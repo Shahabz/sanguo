@@ -58,6 +58,9 @@ extern int g_official_tech_maxnum;
 extern TechInfo *g_techinfo;
 extern int g_techinfo_maxnum;
 
+extern MaterialMakeInfo *g_material_make;
+extern int g_material_make_maxnum;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -321,6 +324,36 @@ void city_logic_sec()
 				continue;
 			switch ( kind )
 			{
+			case BUILDING_Main:
+				if ( g_city[city_index].building[tmpi].level >= 10 )
+				{
+					BuildingUpgradeConfig *config = building_getconfig( kind, g_city[city_index].building[tmpi].level );
+					if ( !config )
+						break;
+
+					// 人口
+					int min_people = config->value[0]; // 城池人口下限
+					int max_people = config->value[1]; // 城池人口上限
+					int add = config->value[2]; // 每小时增长数
+
+					g_city[city_index].peoplesec -= 1;
+					if ( g_city[city_index].peoplesec <= 0 )
+					{
+						g_city[city_index].peoplesec = global.people_sec;
+
+						if ( g_city[city_index].people < min_people )
+						{ // 低于下限，增长
+							g_city[city_index].people += add;
+						}
+						else if ( g_city[city_index].people > max_people )
+						{ // 高于上限，减少
+							g_city[city_index].people -= add;
+							if ( g_city[city_index].people < 0 )
+								g_city[city_index].people = 0;
+						}
+					}		
+				}
+				break;
 			case BUILDING_Tech:
 				{
 					if ( g_city[city_index].building[tmpi].sec > 0 )
@@ -335,7 +368,17 @@ void city_logic_sec()
 				break;
 			case BUILDING_Craftsman:
 				{
-
+					for ( int tmpi = 0; tmpi < g_city[city_index].matquenum+2; tmpi++ )
+					{
+						if ( g_city[city_index].matkind[tmpi] <= 0 )
+							continue;
+						int needsec = city_material_needsec( &g_city[city_index], g_city[city_index].matkind[tmpi] );
+						g_city[city_index].matsec[tmpi] += 1;
+						if ( g_city[city_index].matsec[tmpi] >= needsec )
+						{
+							city_material_finish( &g_city[city_index], tmpi );
+						}
+					}
 				}
 				break;
 			}
@@ -1700,6 +1743,349 @@ int city_train_sendinfo( int actor_index, int kind )
 		}
 	}
 	netsend_traininfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 材料制造时间
+int city_material_needsec( City *pCity, int itemkind )
+{
+	if ( !pCity )
+		return 0;
+	int itemcolor = item_getcolorlevel( itemkind );
+	int id = itemcolor - 1;
+	if ( id <= 0 || id >= g_material_make_maxnum )
+		id = 3;
+	int count = 0;
+	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
+	{
+		if ( pCity->matkind[tmpi] > 0 )
+			count += 1;
+	}
+	if ( count <= 0 )
+		count = 1;
+	int people = pCity->people / count;
+	int needsec = (int)ceil( max( g_material_make[id].sec * global.material_make_value1, g_material_make[id].sec - global.material_make_value2*people ) );
+	needsec = needsec - (int)ceil( needsec*pCity->attr.materialsec_per );
+	return needsec;
+}
+
+// 材料生产信息
+int city_material_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_MaterialList pValue = { 0 };
+	pValue.m_matquenum = pCity->matquenum;
+	pValue.m_city_people = pCity->people;
+	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
+	{
+		if ( pCity->matkind[tmpi] <= 0 )
+			continue;
+		pValue.m_list[pValue.m_count].m_matkind = pCity->matkind[tmpi];
+		pValue.m_list[pValue.m_count].m_matnum = pCity->matnum[tmpi];
+		pValue.m_list[pValue.m_count].m_matsec = pCity->matsec[tmpi];
+		pValue.m_list[pValue.m_count].m_matsec_need = city_material_needsec( pCity, pCity->matkind[tmpi] );
+		pValue.m_count += 1;
+	}
+	netsend_materiallist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int city_material_will_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	int maxqueue = 2 + pCity->matquenum;
+	if ( maxqueue > CITY_MATERIALMAKE_MAX )
+		maxqueue = CITY_MATERIALMAKE_MAX;
+
+	SLK_NetS_MaterialWillList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < maxqueue; tmpi++ )
+	{
+		pValue.m_list[pValue.m_count].m_matkind = pCity->matkind[tmpi];
+		pValue.m_list[pValue.m_count].m_matsec = city_material_needsec( pCity, pCity->matkind[tmpi] ) - pCity->matsec[tmpi];
+		pValue.m_list[pValue.m_count].m_matkind_will = pCity->matkind_will[tmpi];
+		pValue.m_list[pValue.m_count].m_matnum_will = pCity->matnum_will[tmpi];
+		pValue.m_count += 1;
+	}
+	netsend_materialwilllist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 更新建筑显示信息
+int city_material_updatebuilding( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+
+	Building *pBuilding = building_getptr_kind( pCity->index, BUILDING_Craftsman );
+	if ( !pBuilding )
+		return -1;
+	
+	pBuilding->value = 0;
+	pBuilding->overvalue = 0;
+	pBuilding->sec = 0;
+	pBuilding->needsec = 0;
+
+	// 先检查是否有完成，有就优先显示完成的
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		if ( pCity->matkind_over[tmpi] > 0 )
+		{
+			pBuilding->value = 0;
+			pBuilding->overvalue = pCity->matkind_over[tmpi];
+			pBuilding->sec = 0;
+			pBuilding->needsec = 0;
+			return 0;
+		}
+	}
+	
+	// 没有完成的，显示制造时间最小的
+	int index = -1;
+	int minkind = -1;
+	int minsec = INT_MAX;
+	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
+	{
+		if ( pCity->matkind[tmpi] <= 0 )
+			continue;
+		int needsec = city_material_needsec( pCity, pCity->matkind[tmpi] );
+		int leftsec = needsec - pCity->matsec[tmpi];
+		if ( leftsec < minsec )
+		{
+			minsec = leftsec;
+			index = tmpi;
+		}
+	}
+
+	if ( index >= 0 )
+	{
+		int needsec = city_material_needsec( pCity, pCity->matkind[index] );
+		pBuilding->value = pCity->matkind[index];
+		pBuilding->overvalue = 0;
+		pBuilding->sec = needsec - pCity->matsec[index];
+		pBuilding->needsec = needsec;
+	}
+	return 0;
+}
+
+// 开始生产
+int city_material_make( int actor_index, int id, int itemkind, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	if ( id <= 0 || id >= g_material_make_maxnum )
+		return-1;
+
+	// 检查材料
+	// 检查选择的图纸是否在图纸列表里
+	char has = 0;
+	for ( int tmpi = 0; tmpi < 6; tmpi++ )
+	{
+		if ( g_material_make[id].itemkind[tmpi] == itemkind )
+		{
+			has = 1;
+			break;
+		}
+	}
+	if ( has == 0 )
+		return -1;
+
+	if ( item_getitemnum( actor_index, itemkind ) <= 0 )
+		return -1;
+	if ( pCity->silver < g_material_make[id].silver )
+		return -1;
+	if ( pCity->wood < g_material_make[id].wood )
+		return -1;
+
+	int maxqueue = 2 + pCity->matquenum;
+	if ( maxqueue > CITY_MATERIALMAKE_MAX )
+		maxqueue = CITY_MATERIALMAKE_MAX;
+
+	// 生产
+	if ( type == 0 )
+	{
+		// 找到一个空闲位置
+		int index = -1;
+		for ( int tmpi = 0; tmpi < maxqueue; tmpi++ )
+		{
+			if ( pCity->matkind[tmpi] <= 0 )
+			{
+				index = tmpi;
+				break;
+			}
+		}
+		if ( index < 0 )
+		{
+			return -1;
+		}
+
+		// 扣除材料
+		item_lost( actor_index, itemkind, 1, PATH_MATERIALMAKE );
+		city_changesilver( pCity->index, -g_material_make[id].silver, PATH_MATERIALMAKE );
+		city_changewood( pCity->index, -g_material_make[id].wood, PATH_MATERIALMAKE );
+
+		int randtmpi = rand() % 4;
+		pCity->matkind[index] = (char)g_material_make[id].materialkind[randtmpi];
+		pCity->matnum[index] = random( 1, 5 );
+		pCity->matsec[index] = 0; // 此处与别处不用，这是已经生产时间，不是倒计时
+		city_material_sendinfo( actor_index );
+
+		// 更新建筑信息
+		city_material_updatebuilding( pCity );
+		building_sendinfo( pCity->actor_index, BUILDING_Craftsman );
+	}
+	// 预定生产
+	else
+	{
+		// 找到一个空闲位置
+		int index = -1;
+		for ( int tmpi = 0; tmpi < maxqueue; tmpi++ )
+		{
+			if ( pCity->matkind_will[tmpi] <= 0 )
+			{
+				index = tmpi;
+				break;
+			}
+		}
+		if ( index < 0 )
+		{
+			return -1;
+		}
+
+		// 扣除材料
+		item_lost( actor_index, itemkind, 1, PATH_MATERIALMAKE );
+		city_changesilver( pCity->index, -g_material_make[id].silver, PATH_MATERIALMAKE );
+		city_changewood( pCity->index, -g_material_make[id].wood, PATH_MATERIALMAKE );
+
+		int randtmpi = rand() % 4;
+		pCity->matkind_will[index] = (char)g_material_make[id].materialkind[randtmpi];
+		pCity->matnum_will[index] = random( 1, 5 );
+		city_material_will_sendinfo( actor_index );
+	}
+	return 0;
+}
+
+// 完成
+int city_material_finish( City *pCity, int index )
+{
+	if ( !pCity )
+		return -1;
+	if ( index < 0 || index >= CITY_MATERIALMAKE_MAX )
+		return -1;
+	int kind = pCity->matkind[index];
+	pCity->matsec[index] = 0;
+
+	// 找到相同的已经完成的道具，加上数量
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		if ( pCity->matkind_over[tmpi] == pCity->matkind[index] )
+		{
+			pCity->matnum_over[tmpi] += pCity->matnum[index];
+			pCity->matkind[index] = 0;
+			pCity->matnum[index] = 0;
+			break;
+		}
+	}
+	
+	// 没有相同道具，找空位置
+	if ( pCity->matkind[index] > 0 )
+	{
+		for ( int tmpi = 0; tmpi < 8; tmpi++ )
+		{
+			if ( pCity->matkind_over[tmpi] <= 0 )
+			{
+				pCity->matkind_over[tmpi] = pCity->matkind[index];
+				pCity->matnum_over[tmpi] = pCity->matnum[index];
+				pCity->matkind[index] = 0;
+				pCity->matnum[index] = 0;
+				break;
+			}
+		}
+	}
+
+	// 预定生产队列
+	if ( pCity->matkind_will[index] > 0 )
+	{
+		pCity->matkind[index] = pCity->matkind_will[index];
+		pCity->matnum[index] = pCity->matnum_will[index];
+		pCity->matkind_will[index] = 0;
+		pCity->matnum_will[index] = 0;
+	}
+	city_material_sendinfo( pCity->actor_index );
+
+	// 更新建筑信息
+	city_material_updatebuilding( pCity );
+	building_sendinfo( pCity->actor_index, BUILDING_Craftsman );
+	return 0;
+}
+
+// 领取
+int city_material_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		if ( pCity->matkind_over[tmpi] > 0 )
+		{
+			item_getitem( actor_index, pCity->matkind_over[tmpi], pCity->matnum_over[tmpi], -1, PATH_MATERIALMAKE );
+			pCity->matkind_over[tmpi] = 0;
+			pCity->matnum_over[tmpi] = 0;
+			break; // (一个一个领取)
+		}
+	}
+	// 更新建筑信息
+	city_material_updatebuilding( pCity );
+	building_sendinfo( actor_index, BUILDING_Craftsman );
+	return 0;
+}
+
+// 购买队列
+static int s_material_queue_token[] = { 500, 2000, 10000, 10000, 0, 0, 0, 0, 0 };
+int city_material_buyqueue( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->matquenum < 0 || pCity->matquenum >= CITY_MATERIALMAKE_MAX - 2 )
+		return -1;
+	if ( actor_change_token( actor_index, -s_material_queue_token[pCity->matquenum], PATH_MATERIALMAKE_QUEUE, 0 ) < 0 )
+		return -1;
+	pCity->matquenum += 1;
+	city_material_sendinfo( actor_index );
+	return 0;
+}
+
+int city_material_gm( City *pCity, int sec )
+{
+	if ( !pCity )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
+	{
+		if ( pCity->matkind[tmpi] <= 0 )
+			continue;
+		int needsec = city_material_needsec( pCity, pCity->matkind[tmpi] );
+		pCity->matsec[tmpi] += sec;
+		if ( pCity->matsec[tmpi] >= needsec )
+			pCity->matsec[tmpi] = needsec-5;
+	}
+	city_material_sendinfo( pCity->actor_index );
+
+	// 更新建筑信息
+	city_material_updatebuilding( pCity );
+	building_sendinfo( pCity->actor_index, BUILDING_Craftsman );
 	return 0;
 }
 

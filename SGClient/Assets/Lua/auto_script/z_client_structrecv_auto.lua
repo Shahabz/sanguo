@@ -1082,3 +1082,50 @@ function struct_NetS_EquipWash_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_MaterialInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_matkind = buffer:ReadSByte();
+	recvValue.m_matnum = buffer:ReadSByte();
+	recvValue.m_matsec = buffer:ReadInt();
+	recvValue.m_matsec_need = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_MaterialList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_MaterialInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_matquenum = buffer:ReadSByte();
+	recvValue.m_nation_people = buffer:ReadInt();
+	recvValue.m_city_people = buffer:ReadInt();
+	recvValue.m_change_nation_people = buffer:ReadInt();
+	recvValue.m_change_city_people = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_MaterialWillInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_matkind = buffer:ReadSByte();
+	recvValue.m_matsec = buffer:ReadInt();
+	recvValue.m_matkind_will = buffer:ReadSByte();
+	recvValue.m_matnum_will = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_MaterialWillList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_MaterialWillInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

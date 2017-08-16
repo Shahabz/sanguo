@@ -8,6 +8,7 @@
 #define CITY_DATA_RECORD_MAX		16	// 数据记录
 #define CITY_EVENT_MAX				4	// 事件
 #define CITY_TRAINQUEUE_MAX			11	// 可扩容的训练队列数量
+#define CITY_MATERIALMAKE_MAX		6	// 6个材料生产队列
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
@@ -140,6 +141,17 @@ int city_train_get( int actor_index, int kind );
 int city_train_buyqueue( int actor_index, int kind );
 int city_train_buylong( int actor_index, int kind );
 int city_train_sendinfo( int actor_index, int kind );
+
+// 材料生产
+int city_material_sendinfo( int actor_index );
+int city_material_will_sendinfo( int actor_index );
+int city_material_updatebuilding( City *pCity );
+int city_material_needsec( City *pCity, int itemkind );
+int city_material_make( int actor_index, int id, int itemkind, int willindex );
+int city_material_finish( City *pCity, int index );
+int city_material_get( int actor_index );
+int city_material_buyqueue( int actor_index );
+int city_material_gm( City *pCity, int sec );
 
 // 雇佣官
 int city_officialhire( int actor_index, int type, int kind );

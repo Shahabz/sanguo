@@ -23,6 +23,7 @@
 #include "chat.h"
 #include "vip.h"
 #include "hero.h"
+#include "building.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -148,7 +149,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		else if ( pCity )
 		{
-			if ( item_getitem( pCity->actor_index, pValue[0], tmpi, pValue[2], PATH_GM ) >= 0 )
+			if ( item_getitem( pCity->actor_index, pValue[0], tmpi, -1, PATH_GM ) >= 0 )
 			{
 				if ( actor_index >= 0 )
 					system_talkto( actor_index, "Actor get item." );
@@ -251,6 +252,27 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			city_tech_get_gm( pCity, pValue[0] );
+		}
+		break;
+	case GMC_BUILDING: // 建筑
+		if ( pCity )
+		{
+			if ( pValue[0] > 0 )
+				building_give( pCity->index, pValue[0], 1 );
+			else if ( pValue[0] == -1 )
+				building_gm( pCity );
+		}
+		break;
+	case GMC_PEOPLE: // 人口
+		if ( pCity )
+		{
+			city_changepeople( pCity->index, pValue[0], PATH_GM );
+		}
+		break;
+	case GMC_MAT: // 材料生产
+		if ( pCity )
+		{
+			city_material_gm( pCity, pValue[0] );
 		}
 		break;
 	default:

@@ -25,6 +25,9 @@ local GMCMD_SERVER = {
 [21]="systalk";
 [22]="vipexp",
 [24]="tech",
+[25]="building",
+[26]="people",
+[27]="mat",
 }
  
 -- 发到客户端本地指令

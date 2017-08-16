@@ -452,7 +452,7 @@ int item_create( int actor_index, int itemkind, int itemnum, char color, ItemOut
 			}
 
 			// 颜色 如果颜色信息有意义，以当前为主，否则为0
-			if ( color >= 0 && color < ITEM_COLOR_LEVEL_MAX )
+			if ( color > 0 && color < ITEM_COLOR_LEVEL_MAX )
 			{
 				pitem->m_color_level = color;
 			}

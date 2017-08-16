@@ -562,7 +562,17 @@ function BagDlgItemUse()
 	if m_SelectItemNum <= 0 then
 		return;
 	end
-	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, m_SelectItemIndex - 1, m_SelectItemNum, -1, 1 );
+	
+	if pItem.m_type == ITEM_TYPE_EQUIP_DRAWING then
+		EquipForgingDlgShow()
+		BagDlgClose();
+	elseif pItem.m_type == ITEM_TYPE_HEROEXP then
+		if GetHero().m_CityHero[0] ~= nil then
+			HeroExpDlgShow( GetHero().m_CityHero[0].m_kind )
+		end
+	else
+		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, m_SelectItemIndex - 1, m_SelectItemNum, -1, 1 );
+	end	
 	BagDlgSelectItem( -1 )
 end
 

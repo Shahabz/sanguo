@@ -899,6 +899,10 @@ int building_sendlist( int actor_index )
 	{
 		if ( pCity->building[tmpi].kind <= 0 )
 			continue;
+		if ( pCity->building[tmpi].kind == BUILDING_Craftsman )
+		{
+			city_material_updatebuilding( pCity );
+		}
 		building_makestruct( &pCity->building[tmpi], tmpi, &pValue.m_building[pValue.m_building_count] );
 		pValue.m_building_count += 1;
 	}
@@ -1010,5 +1014,61 @@ int building_action( int actor_index, short kind, short offset, short action )
 	pValue.m_offset = offset;
 	pValue.m_action = action;
 	netsend_buildingaction_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// GM
+int building_gm( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	building_give( pCity->index, BUILDING_Main, 1 );
+	building_give( pCity->index, BUILDING_Wall, 1 );
+	building_give( pCity->index, BUILDING_StoreHouse, 1 );
+	building_give( pCity->index, BUILDING_Tech, 1 );
+	building_give( pCity->index, BUILDING_Craftsman, 1 );
+	building_give( pCity->index, BUILDING_Cabinet, 1 );
+	building_give( pCity->index, BUILDING_Infantry, 1 );
+	building_give( pCity->index, BUILDING_Cavalry, 1 );
+	building_give( pCity->index, BUILDING_Archer, 1 );
+	building_give( pCity->index, BUILDING_Smithy, 1 );
+	building_give( pCity->index, BUILDING_Wash, 1 );
+	building_give( pCity->index, BUILDING_Shop, 1 );
+	building_give( pCity->index, BUILDING_Hero, 1 );
+	building_give( pCity->index, BUILDING_Wishing, 1 );
+	building_give( pCity->index, BUILDING_Silver, 16 );
+	building_give( pCity->index, BUILDING_Wood, 16 );
+	building_give( pCity->index, BUILDING_Food, 16 );
+	building_give( pCity->index, BUILDING_Iron, 16 );
+
+	// 普通建筑
+	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building[tmpi].kind <= 0 )
+			continue;
+		
+		pCity->building[tmpi].level = g_building_upgrade[pCity->building[tmpi].kind].maxnum - 1;
+		building_sendinfo( pCity->actor_index, pCity->building[tmpi].kind );
+	}
+
+	// 兵营建筑
+	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
+			continue;
+		pCity->building_barracks[tmpi].level = g_building_upgrade[pCity->building_barracks[tmpi].kind].maxnum - 1;
+		building_sendinfo_barracks( pCity->actor_index, pCity->building[tmpi].kind );
+	}
+
+	// 资源建筑
+	for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
+			continue;
+		pCity->building_res[tmpi].level = g_building_upgrade[pCity->building_res[tmpi].kind].maxnum - 1;
+		building_sendinfo_res( pCity->actor_index, pCity->building[tmpi].kind );
+	}
+
+
 	return 0;
 }

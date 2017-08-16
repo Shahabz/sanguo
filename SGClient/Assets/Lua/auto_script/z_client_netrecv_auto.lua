@@ -415,6 +415,16 @@ function netrecv_equipwash_C( buffer )
 	proc_equipwash_C( recvValue );
 end
 
+function netrecv_materiallist_C( buffer )
+	local recvValue = struct_NetS_MaterialList_recv( buffer );
+	proc_materiallist_C( recvValue );
+end
+
+function netrecv_materialwilllist_C( buffer )
+	local recvValue = struct_NetS_MaterialWillList_recv( buffer );
+	proc_materialwilllist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -499,6 +509,8 @@ Proc_Command = {
 	[CMDS_HEROCOLORUP]=netrecv_herocolorup_C;
 	[CMDS_CITYATTR]=netrecv_cityattr_C;
 	[CMDS_EQUIPWASH]=netrecv_equipwash_C;
+	[CMDS_MATERIALLIST]=netrecv_materiallist_C;
+	[CMDS_MATERIALWILLLIST]=netrecv_materialwilllist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

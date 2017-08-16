@@ -20,6 +20,7 @@
 #define ASKINFO_OFFICIALHIRE	15 // 雇佣 
 #define ASKINFO_QUICK			16 // 加速
 #define ASKINFO_ACTOR			17 // 角色操作
+#define ASKINFO_MATERIALMAKE	18 // 材料制造
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

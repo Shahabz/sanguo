@@ -91,6 +91,10 @@ function City.BuildingSelect( transform )
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TECH, "", 4 );
 			
+			-- 材料工坊有完成的，直接领取
+			elseif building.kind == BUILDING_Craftsman and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+				system_askinfo( ASKINFO_MATERIALMAKE, "", 4 );
+				
  			-- 募兵有完成的，直接领取
 			elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )

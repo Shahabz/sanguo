@@ -65,6 +65,8 @@
 #define PATH_HERO_SOLDIERS_EQUIP		37	// 脱卸装备带来的兵力损失
 #define PATH_HERO_WASH					38	// 英雄洗髓
 #define PATH_EQUIP_WASH					39	// 装备洗练
+#define PATH_MATERIALMAKE_QUEUE			40	// 材料制造队列
+#define PATH_MATERIALMAKE				41	// 材料制造
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

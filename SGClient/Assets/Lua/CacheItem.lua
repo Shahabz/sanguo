@@ -306,14 +306,11 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 		BagDlgItemChange( _ItemIndex )
 	end
 	
-	--if path == PATH_GM or path == PATH_SYSTEM then
-     -- 忽略
-     --return;
-	--end
-	
-	pop( F( 690, item_getname(nItemKind), num ) )
-  -- 提示
-  --GainDlgAdd( 1, nItemKind, num );
+	if path == PATH_MATERIALMAKE then
+		ItemGetDlgShow( nItemKind, num )
+    else
+		pop( F( 690, item_getname(nItemKind), num ) )
+	end
 end
 
 -- 得到服务器返回的消息，失去道具

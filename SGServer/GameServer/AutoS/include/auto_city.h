@@ -55,11 +55,20 @@ struct _city {
 				char autobuild;	//自动建造剩余次数
 				char autobuildopen;	//自动建造是否开启
 				int ptsec;	//城池保护状态剩余时间
+				short peoplesec;	//城池人口回复时间
 				short questid[6];	//任务ID
 				int questvalue[6];	//任务数值
 				char techlevel[40];	//科技
 				char techprogress[40];	//科技进度
 				int data_record[16];	//数据记录
+				char matkind[8];	//材料生产kind
+				char matnum[8];	//材料生产数量
+				int matsec[8];	//材料已经生产时间
+				char matquenum;	//材料生产队列数量
+				char matkind_will[8];	//材料预定生产kind
+				char matnum_will[8];	//材料预定生产数量
+				char matkind_over[8];	//材料生产完毕
+				char matnum_over[8];	//材料生产完毕
 				short nequip[6];	//国器等级
 				char nequip_kind;	//正在升级的国器
 				int nequip_sec;	//国器升级时间

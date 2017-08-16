@@ -845,6 +845,39 @@ struct _slk_NetS_EquipWash {
 };
 typedef struct _slk_NetS_EquipWash SLK_NetS_EquipWash;	//装备洗练
 
+struct _slk_NetS_MaterialInfo {
+	char m_matkind;	//材料生产
+	char m_matnum;	//材料生产
+	int m_matsec;	//材料生产
+	int m_matsec_need;	//材料生产
+};
+typedef struct _slk_NetS_MaterialInfo SLK_NetS_MaterialInfo;	//材料生产信息
+
+struct _slk_NetS_MaterialList {
+	char m_count;	//材料生产
+	SLK_NetS_MaterialInfo m_list[8];	//材料生产
+	char m_matquenum;	//材料生产
+	int m_nation_people;	//材料生产
+	int m_city_people;	//材料生产
+	int m_change_nation_people;	//材料生产
+	int m_change_city_people;	//材料生产
+};
+typedef struct _slk_NetS_MaterialList SLK_NetS_MaterialList;	//材料生产列表
+
+struct _slk_NetS_MaterialWillInfo {
+	char m_matkind;	//预定生产
+	int m_matsec;	//预定生产
+	char m_matkind_will;	//预定生产
+	char m_matnum_will;	//预定生产
+};
+typedef struct _slk_NetS_MaterialWillInfo SLK_NetS_MaterialWillInfo;	//预定材料生产信息
+
+struct _slk_NetS_MaterialWillList {
+	char m_count;	//预定生产
+	SLK_NetS_MaterialWillInfo m_list[8];	//预定生产
+};
+typedef struct _slk_NetS_MaterialWillList SLK_NetS_MaterialWillList;	//预定材料生产列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -937,5 +970,9 @@ int struct_NetS_HeroWash_send( char **pptr, int *psize, SLK_NetS_HeroWash *pValu
 int struct_NetS_HeroColorup_send( char **pptr, int *psize, SLK_NetS_HeroColorup *pValue );
 int struct_NetS_CityAttr_send( char **pptr, int *psize, SLK_NetS_CityAttr *pValue );
 int struct_NetS_EquipWash_send( char **pptr, int *psize, SLK_NetS_EquipWash *pValue );
+int struct_NetS_MaterialInfo_send( char **pptr, int *psize, SLK_NetS_MaterialInfo *pValue );
+int struct_NetS_MaterialList_send( char **pptr, int *psize, SLK_NetS_MaterialList *pValue );
+int struct_NetS_MaterialWillInfo_send( char **pptr, int *psize, SLK_NetS_MaterialWillInfo *pValue );
+int struct_NetS_MaterialWillList_send( char **pptr, int *psize, SLK_NetS_MaterialWillList *pValue );
 
 #endif

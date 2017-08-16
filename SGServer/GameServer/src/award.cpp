@@ -438,12 +438,15 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 		building_give( g_actors[actor_index].city_index, BUILDING_Wall, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_StoreHouse, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Tech, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Craftsman, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Infantry, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Cavalry, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Archer, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Smithy, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Wash, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Shop, 1 );
 		building_give( g_actors[actor_index].city_index, BUILDING_Hero, 1 );
+		building_give( g_actors[actor_index].city_index, BUILDING_Wishing, 1 );
 	}
 	else if ( kind == AWARDKIND_SILVER )// Òø±Ò
 	{

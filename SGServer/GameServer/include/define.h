@@ -27,6 +27,8 @@
 #include "auto_data_official_forging.h"
 #include "auto_data_official_gov.h"
 #include "auto_data_official_tech.h"
+#include "auto_data_material_make.h"
+#include "auto_data_monster.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"

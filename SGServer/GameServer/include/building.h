@@ -112,4 +112,7 @@ int building_send_upgradeinfo( int actor_index, int kind, int offset );
 
 // ½¨Öþ¶¯×÷
 int building_action( int actor_index, short kind, short offset, short action );
+
+// GM
+int building_gm( City *pCity );
 #endif

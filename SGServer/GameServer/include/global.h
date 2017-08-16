@@ -51,6 +51,9 @@ typedef struct _global
 	short hero_colorup_actorlevel;
 	short hero_god_actorlevel;
 	short equip_wash_super_token;
+	short people_sec;
+	float material_make_value1;
+	short material_make_value2;
 }Global;
 int global_init();
 void global_reload();

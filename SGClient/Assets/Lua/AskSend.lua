@@ -17,6 +17,7 @@ ASKINFO_GOV				=	14 -- 官府
 ASKINFO_OFFICIALHIRE	=	15 -- 官职雇佣
 ASKINFO_QUICK			=	16 -- 加速
 ASKINFO_ACTOR			=	17 -- 角色操作
+ASKINFO_MATERIALMAKE	=	18 -- 材料制造
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

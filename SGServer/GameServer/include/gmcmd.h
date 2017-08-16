@@ -27,6 +27,9 @@
 #define GMC_VIPEXP				(GMC_BASE+22)	// vip经验
 #define GMC_ACTIVITY			(GMC_BASE+23)	// 活动
 #define GMC_TECH				(GMC_BASE+24)	// 科技
+#define GMC_BUILDING			(GMC_BASE+25)	// 建筑
+#define GMC_PEOPLE				(GMC_BASE+26)	// 人口
+#define GMC_MAT					(GMC_BASE+27)	// 材料生产
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功
