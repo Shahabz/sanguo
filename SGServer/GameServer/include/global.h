@@ -54,6 +54,8 @@ typedef struct _global
 	short people_sec;
 	float material_make_value1;
 	short material_make_value2;
+	int people_add_v1;
+	int people_add_v2;
 }Global;
 int global_init();
 void global_reload();

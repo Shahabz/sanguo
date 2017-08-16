@@ -157,7 +157,7 @@ function MaterialMakeDlgRecv( recvValue )
 	
 	-- 城池信息
 	SetTrue( m_uiCityInfo )
-	SetText( m_uiCityInfo.transform:Find("Text"), T(891)..": <color=#f7f3bb>"..F(893, m_pBuilding.m_level, minvalue, maxvalue ).."</color>" )
+	SetText( m_uiCityInfo.transform:Find("Text"), T(891)..": <color=#f7f3bb>"..F(893, pMainBuilding.m_level, minvalue, maxvalue ).."</color>" )
 
 	MaterialMakeDlgClear()
 	

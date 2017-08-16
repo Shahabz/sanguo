@@ -191,6 +191,10 @@ int global_init()
 			global.material_make_value1 = value;
 		else if ( id == 54 )
 			global.material_make_value2 = atoi( row[1] );
+		else if ( id == 55 )
+			global.people_add_v1 = atoi( row[1] );
+		else if ( id == 56 )
+			global.people_add_v2 = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

@@ -334,7 +334,7 @@ void city_logic_sec()
 					// 人口
 					int min_people = config->value[0]; // 城池人口下限
 					int max_people = config->value[1]; // 城池人口上限
-					int add = config->value[2]; // 每小时增长数
+					int add = config->value[2]; // 每小时增长基数数
 
 					g_city[city_index].peoplesec -= 1;
 					if ( g_city[city_index].peoplesec <= 0 )
@@ -343,7 +343,7 @@ void city_logic_sec()
 
 						if ( g_city[city_index].people < min_people )
 						{ // 低于下限，增长
-							g_city[city_index].people += add;
+							g_city[city_index].people += (add + min( global.people_add_v1, (int)(min_people / (float)g_city[city_index].people * global.people_add_v2) ));
 						}
 						else if ( g_city[city_index].people > max_people )
 						{ // 高于上限，减少
