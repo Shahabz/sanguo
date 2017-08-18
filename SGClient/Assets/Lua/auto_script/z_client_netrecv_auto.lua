@@ -425,6 +425,31 @@ function netrecv_materialwilllist_C( buffer )
 	proc_materialwilllist_C( recvValue );
 end
 
+function netrecv_storylist_C( buffer )
+	local recvValue = struct_NetS_StoryList_recv( buffer );
+	proc_storylist_C( recvValue );
+end
+
+function netrecv_storyrank_C( buffer )
+	local recvValue = struct_NetS_StoryRank_recv( buffer );
+	proc_storyrank_C( recvValue );
+end
+
+function netrecv_storystate_C( buffer )
+	local recvValue = struct_NetC_StoryState_recv( buffer );
+	proc_storystate_C( recvValue );
+end
+
+function netrecv_storyranknum_C( buffer )
+	local recvValue = struct_NetC_StoryRanknum_recv( buffer );
+	proc_storyranknum_C( recvValue );
+end
+
+function netrecv_storyranktime_C( buffer )
+	local recvValue = struct_NetC_StoryRanktime_recv( buffer );
+	proc_storyranktime_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -511,6 +536,11 @@ Proc_Command = {
 	[CMDS_EQUIPWASH]=netrecv_equipwash_C;
 	[CMDS_MATERIALLIST]=netrecv_materiallist_C;
 	[CMDS_MATERIALWILLLIST]=netrecv_materialwilllist_C;
+	[CMDS_STORYLIST]=netrecv_storylist_C;
+	[CMDS_STORYRANK]=netrecv_storyrank_C;
+	[CMDS_STORYSTATE]=netrecv_storystate_C;
+	[CMDS_STORYRANKNUM]=netrecv_storyranknum_C;
+	[CMDS_STORYRANKTIME]=netrecv_storyranktime_C;
 }
 
 function in_proc_command_C( cmd, buffer )

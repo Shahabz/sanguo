@@ -195,6 +195,28 @@ int global_init()
 			global.people_add_v1 = atoi( row[1] );
 		else if ( id == 56 )
 			global.people_add_v2 = atoi( row[1] );
+		else if ( id == 57 )
+			global.people_sub_v1 = atoi( row[1] );
+		else if ( id == 58 )
+			global.people_sub_v2 = atoi( row[1] );
+		else if ( id == 59 )
+			global.fight_crit_odds = atoi( row[1] );
+		else if ( id == 60 )
+			global.fight_crit_damage = atoi( row[1] );
+		else if ( id == 61 )
+			global.fight_dodge = atoi( row[1] );
+		else if ( id == 62 )
+			global.fight_control_value = atoi( row[1] );
+		else if ( id == 63 )
+			global.fight_attackmin_value = atoi( row[1] );
+		else if ( id == 64 )
+			global.fight_v1 = atoi( row[1] );
+		else if ( id == 65 )
+			global.fight_v2 = atoi( row[1] );
+		else if ( id == 66 )
+			global.fight_damage_randmin = atoi( row[1] );
+		else if ( id == 67 )
+			global.fight_damage_randmax = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

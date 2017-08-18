@@ -205,6 +205,14 @@ int building_give( int city_index, int kind, int num )
 		int offset = building_create( city_index, kind, -1 );
 		if ( offset >= 0 )
 		{
+			if ( kind == BUILDING_Craftsman )
+			{ // 获得材料作坊时给予基础人口
+				BuildingUpgradeConfig *config = building_getconfig( BUILDING_Main, g_city[city_index].building[0].level );
+				if ( config )
+				{
+					g_city[city_index].people = config->value[0];
+				}
+			}
 			SLK_NetS_BuildingGet pValue = { 0 };
 			building_makestruct( &g_city[city_index].building[offset], offset, &pValue.m_building );
 			netsend_buildingget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );

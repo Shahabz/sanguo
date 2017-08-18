@@ -7,6 +7,7 @@
 #include "system_askinfo.h"
 #include "actor.h"
 #include "chat.h"
+#include "story.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -124,5 +125,11 @@ void proc_chat_S( int client_index, SLK_NetC_Chat *pValue )
 {
 	// process.
 	chat_actortalk( client_index, pValue->m_channel, pValue->m_msg );
+}
+
+void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue )
+{
+	// process.
+	story_battle( client_index, pValue );
 }
 

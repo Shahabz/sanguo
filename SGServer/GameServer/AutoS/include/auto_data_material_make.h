@@ -10,6 +10,7 @@ struct _materialmakeinfo {
 				int wood;	//
 				short itemkind[6];	//
 				short materialkind[4];	//
+				short num_odds[5];	//
 };
 typedef struct _materialmakeinfo MaterialMakeInfo;
 

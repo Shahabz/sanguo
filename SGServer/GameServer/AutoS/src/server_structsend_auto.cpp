@@ -1285,3 +1285,71 @@ int struct_NetS_MaterialWillList_send( char **pptr, int *psize, SLK_NetS_Materia
 	return 0;
 }
 
+int struct_NetS_StoryList_send( char **pptr, int *psize, SLK_NetS_StoryList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_rankstate, 512*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_ranknum, 32*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_ranktime, 32*sizeof(int), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_story_chapter, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_story_rank, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MonsterInfo_send( char **pptr, int *psize, SLK_NetS_MonsterInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_monsterid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	return 0;
+}
+
+int struct_NetS_StoryRank_send( char **pptr, int *psize, SLK_NetS_StoryRank *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_MonsterInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_body, (*psize) );
+	return 0;
+}
+
+int struct_NetC_StoryState_send( char **pptr, int *psize, SLK_NetC_StoryState *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_saveoffset, (*psize) );
+	return 0;
+}
+
+int struct_NetC_StoryRanknum_send( char **pptr, int *psize, SLK_NetC_StoryRanknum *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_num, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_saveoffset, (*psize) );
+	return 0;
+}
+
+int struct_NetC_StoryRanktime_send( char **pptr, int *psize, SLK_NetC_StoryRanktime *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_time, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_saveoffset, (*psize) );
+	return 0;
+}
+

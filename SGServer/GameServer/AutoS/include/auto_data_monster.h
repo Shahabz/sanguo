@@ -5,6 +5,7 @@
 struct _monsterinfo {
 //--Automatically generated
 				int monsterid;	//
+				short shape;	//
 				short level;	//
 				short color;	//
 				short corps;	//

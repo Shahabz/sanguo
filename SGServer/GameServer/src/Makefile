@@ -87,6 +87,7 @@ quest.cpp \
 script.cpp \
 script_auto.cpp \
 script_reg_auto.cpp \
+story.cpp \
 system.cpp \
 system_askinfo.cpp \
 timecalc.cpp \
@@ -278,6 +279,8 @@ script.o: script.cpp
 script_auto.o: script_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 script_reg_auto.o: script_reg_auto.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+story.o: story.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 system.o: system.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

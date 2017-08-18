@@ -346,7 +346,7 @@ end
 
 -- Ãû³ÆÑÕÉ«
 function NameColor( color )
-	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff }
+	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff }
 	return Hex2Color( c[color+1] )
 end
 
@@ -455,3 +455,12 @@ end
 function IsActive( transform )
 	return transform.gameObject.activeSelf
 end
+
+function SetGray( transform, gray )
+	if gray == true then
+		transform:GetComponent( typeof(Image) ).material = ResourceManager.LoadMaterial( "UI_Mat_SpriteGray" );
+	else
+		transform:GetComponent( typeof(Image) ).material = nil;
+	end
+end
+

@@ -80,3 +80,11 @@ function netsend_chat_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_storyid=0,m_herokind={[4]},
+function netsend_storybattle_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_STORYBATTLE );
+	struct_NetC_StoryBattle_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

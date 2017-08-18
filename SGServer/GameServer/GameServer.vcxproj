@@ -112,6 +112,8 @@
     <ClCompile Include="AutoS\src\auto_data_equip_washrule.cpp" />
     <ClCompile Include="AutoS\src\auto_data_hero.cpp" />
     <ClCompile Include="AutoS\src\auto_data_hero_colorup.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_hero_corpsmul.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_hero_skill.cpp" />
     <ClCompile Include="AutoS\src\auto_data_item.cpp" />
     <ClCompile Include="AutoS\src\auto_data_material_make.cpp" />
     <ClCompile Include="AutoS\src\auto_data_monster.cpp" />
@@ -152,6 +154,7 @@
     <ClCompile Include="src\city_tech.cpp" />
     <ClCompile Include="src\dbredis.cpp" />
     <ClCompile Include="src\equip.cpp" />
+    <ClCompile Include="src\fight.cpp" />
     <ClCompile Include="src\global_cmdqueue.cpp" />
     <ClCompile Include="src\hero.cpp" />
     <ClCompile Include="src\mail.cpp" />
@@ -175,6 +178,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mapunit.cpp" />
     <ClCompile Include="src\quest.cpp" />
+    <ClCompile Include="src\story.cpp" />
     <ClCompile Include="src\system.cpp" />
     <ClCompile Include="src\system_askinfo.cpp" />
     <ClCompile Include="src\script.cpp" />
@@ -207,6 +211,8 @@
     <ClInclude Include="AutoS\include\auto_data_equip_washrule.h" />
     <ClInclude Include="AutoS\include\auto_data_hero.h" />
     <ClInclude Include="AutoS\include\auto_data_hero_colorup.h" />
+    <ClInclude Include="AutoS\include\auto_data_hero_corpsmul.h" />
+    <ClInclude Include="AutoS\include\auto_data_hero_skill.h" />
     <ClInclude Include="AutoS\include\auto_data_item.h" />
     <ClInclude Include="AutoS\include\auto_data_material_make.h" />
     <ClInclude Include="AutoS\include\auto_data_monster.h" />
@@ -246,6 +252,7 @@
     <ClInclude Include="include\city_tech.h" />
     <ClInclude Include="include\dbredis.h" />
     <ClInclude Include="include\equip.h" />
+    <ClInclude Include="include\fight.h" />
     <ClInclude Include="include\global_cmdqueue.h" />
     <ClInclude Include="include\hero.h" />
     <ClInclude Include="include\mail.h" />
@@ -265,6 +272,7 @@
     <ClInclude Include="include\item.h" />
     <ClInclude Include="include\mapunit.h" />
     <ClInclude Include="include\quest.h" />
+    <ClInclude Include="include\story.h" />
     <ClInclude Include="include\system.h" />
     <ClInclude Include="include\system_askinfo.h" />
     <ClInclude Include="include\login.h" />

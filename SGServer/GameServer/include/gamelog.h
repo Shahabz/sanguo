@@ -67,6 +67,7 @@
 #define PATH_EQUIP_WASH					39	// 装备洗练
 #define PATH_MATERIALMAKE_QUEUE			40	// 材料制造队列
 #define PATH_MATERIALMAKE				41	// 材料制造
+#define PATH_STORY						42	// 副本
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

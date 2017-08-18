@@ -53,3 +53,10 @@ function struct_NetC_Chat_send( buf, sendValue )
 	buf:WriteSByte( sendValue.m_channel );
 end
 
+function struct_NetC_StoryBattle_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_storyid );
+	for tmpi=1,4,1 do
+		buf:WriteShort( sendValue.m_herokind[tmpi] );
+	end
+end
+

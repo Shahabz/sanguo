@@ -214,6 +214,16 @@ void random_str( char *out, int length )
 	out[length] = '\0';
 }
 
+/* 自定义随机 */
+int random_custom( int min, int max, int *randspeed )
+{
+	int value = (max - min + 1);
+	if ( value <= 0 )
+		value = 1;
+
+	*randspeed = (7 * (*randspeed)) % 65535;
+	return min + ( *randspeed ) % value;
+}
 
 DelayExec g_DelayExec[DELAYEXEC_MAX];
 void delay_exec_add( char cmd, void *p, int value, int cd )

@@ -30,6 +30,7 @@
 #define GMC_BUILDING			(GMC_BASE+25)	// 建筑
 #define GMC_PEOPLE				(GMC_BASE+26)	// 人口
 #define GMC_MAT					(GMC_BASE+27)	// 材料生产
+#define GMC_FUN					(GMC_BASE+28)	// 获取功能
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

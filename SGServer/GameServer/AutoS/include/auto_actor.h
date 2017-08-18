@@ -36,8 +36,15 @@ struct _actor {
 				int cd[8];	//通用CD时间
 				char config[8];	//玩家配置
 				int function;	//功能是否开启
+				short story_chapter;	//副本进度章节
+				char story_rank;	//副本进度关卡
+				char story_state[512];	//副本关卡状态
+				char story_ranknum[32];	//副本关卡有次数的存档
+				int story_ranktime[32];	//副本关卡有时间的存档
 				int view_lastframe;	//上次发送的区域信息时间
 				short subscribe_cmd[8];	//订阅的消息ID
+				int lastpeople_c;	//上次本城人口
+				int lastpeople_n;	//上次国家人口
 				int cdkey1;	//是否领取该批次兑换码
 				int cdkey2;	//是否领取该批次兑换码
 				int cdkey3;	//是否领取该批次兑换码

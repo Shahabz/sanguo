@@ -991,3 +991,30 @@ function proc_materialwilllist_C( recvValue )
 	MaterialMakeWillDlgRecv( recvValue )
 end
 
+-- m_chapter=0,m_count=0,m_ranklist={}[m_count],m_story_chapter=0,m_story_rank=0,
+function proc_storylist_C( recvValue )
+	-- process.
+	StoryDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_monsterid=0,m_shape=0,m_level=0,m_color=0,m_corps=0,[m_count]},m_exp=0,m_body=0,
+function proc_storyrank_C( recvValue )
+	-- process.
+	BattleDlgStoryRecv( recvValue )
+end
+
+-- m_storyid=0,m_state=0,
+function proc_storystate_C( recvValue )
+	-- process.
+end
+
+-- m_storyid=0,m_num=0,m_saveoffset=0,
+function proc_storyranknum_C( recvValue )
+	-- process.
+end
+
+-- m_storyid=0,m_time=0,m_saveoffset=0,
+function proc_storyranktime_C( recvValue )
+	-- process.
+end
+

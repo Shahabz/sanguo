@@ -275,6 +275,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			city_material_gm( pCity, pValue[0] );
 		}
 		break;
+	case GMC_FUN: // 获取功能
+		if ( pCity )
+		{
+			city_function_open( pCity, pValue[0] );
+		}
+		break;
 	default:
 		break;
 	}

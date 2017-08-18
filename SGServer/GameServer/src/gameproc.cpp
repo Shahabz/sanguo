@@ -340,6 +340,33 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
+	
+	// 英雄技能数据初始化
+	if ( heroskillinfo_init_auto() < 0 )
+	{
+		printf_msg( "heroskillinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 英兵种相克数据初始化
+	if ( herocorpsmulinfo_init_auto() < 0 )
+	{
+		printf_msg( "herocorpsmulinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 怪物信息初始化
+	if ( monsterinfo_init_auto() < 0 )
+	{
+		printf_msg( "monsterinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
 
 	// 奖励包数据初始化
 	if ( awardgroup_init() < 0 )
@@ -471,6 +498,15 @@ int process_init( int max_connection )
 	if ( materialmakeinfo_init_auto() < 0 )
 	{
 		printf_msg( "materialmakeinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 副本
+	if ( storyinfo_init_auto() < 0 )
+	{
+		printf_msg( "storyinfo_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

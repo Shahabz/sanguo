@@ -122,8 +122,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			--NpcTalkWait( BuildingGetDlgShow, {m_kind=21,m_offset=0,m_level=1} )
 		
 		elseif nControlID == 6 then
-			--{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
-			HeroGetDlgShow( { m_kind = 1, m_color=0, m_corps=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0 } )
+			StoryDlgShow()
 	
 		elseif nControlID == 7 then
 			NpcTalkOne( T(10001), T(10002), nil )

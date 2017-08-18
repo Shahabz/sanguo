@@ -1129,3 +1129,70 @@ function struct_NetS_MaterialWillList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_StoryList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rankstate={};
+	for tmpi=1,512,1 do
+		recvValue.m_rankstate[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_ranknum={};
+	for tmpi=1,32,1 do
+		recvValue.m_ranknum[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_ranktime={};
+	for tmpi=1,32,1 do
+		recvValue.m_ranktime[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_story_chapter = buffer:ReadShort();
+	recvValue.m_story_rank = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_MonsterInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_monsterid = buffer:ReadInt();
+	recvValue.m_shape = buffer:ReadShort();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_corps = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_StoryRank_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_MonsterInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_body = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetC_StoryState_recv( buffer )
+	local recvValue = {};
+	recvValue.m_storyid = buffer:ReadInt();
+	recvValue.m_state = buffer:ReadShort();
+	recvValue.m_saveoffset = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetC_StoryRanknum_recv( buffer )
+	local recvValue = {};
+	recvValue.m_storyid = buffer:ReadInt();
+	recvValue.m_num = buffer:ReadShort();
+	recvValue.m_saveoffset = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetC_StoryRanktime_recv( buffer )
+	local recvValue = {};
+	recvValue.m_storyid = buffer:ReadInt();
+	recvValue.m_time = buffer:ReadInt();
+	recvValue.m_saveoffset = buffer:ReadShort();
+	return recvValue;
+end
+

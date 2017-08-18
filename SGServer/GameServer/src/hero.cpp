@@ -543,6 +543,14 @@ int hero_addsoldiers( int actor_index, int herokind )
 	return 0;
 }
 
+// 武将带兵排数
+char hero_getline( City *pCity )
+{
+	if ( !pCity )
+		return 2;
+	return 2 + pCity->attr.hero_row_num;
+}
+
 // 计算装备加成
 int hero_equip_calc( Hero *pHero, int ability )
 {

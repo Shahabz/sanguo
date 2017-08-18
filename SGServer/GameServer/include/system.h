@@ -17,6 +17,7 @@ int system_countdownstring( int interval, char *out );
 int random( int min, int max );
 void ruffle( int *list, int count ); 
 void random_str( char *out, int length );
+int random_custom( int min, int max, int *randspeed );
 
 // —”≥Ÿ÷¥––
 #define DELAYEXEC_MAX	2048

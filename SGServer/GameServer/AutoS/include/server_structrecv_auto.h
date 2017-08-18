@@ -56,6 +56,12 @@ struct _slk_NetC_Chat {
 };
 typedef struct _slk_NetC_Chat SLK_NetC_Chat;	//聊天
 
+struct _slk_NetC_StoryBattle {
+	int m_storyid;	//副本id
+	short m_herokind[4];	//副本出战的英雄
+};
+typedef struct _slk_NetC_StoryBattle SLK_NetC_StoryBattle;	//副本战斗
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -63,5 +69,6 @@ int struct_NetC_Gmcmd_recv( char **pptr, int *psize, SLK_NetC_Gmcmd *pValue );
 int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue );
 int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pValue );
 int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue );
+int struct_NetC_StoryBattle_recv( char **pptr, int *psize, SLK_NetC_StoryBattle *pValue );
 
 #endif

@@ -136,7 +136,31 @@ function MaterialMakeDlgRecv( recvValue )
 	local minvalue = g_building_upgrade[BUILDING_Main][pMainBuilding.m_level].value0
 	local maxvalue = g_building_upgrade[BUILDING_Main][pMainBuilding.m_level].value1
 	
-	-- 国家人口	
+	-- 人口变动
+	if recvValue.m_change_city_people ~= 0 or recvValue.m_change_nation_people ~= 0 then
+		local change_city = "";
+		if recvValue.m_change_city_people >= 0 then
+			change_city = "<color=#03de27>+"..recvValue.m_change_city_people.."</color>"
+		elseif recvValue.m_change_city_people < 0 then
+			change_city = "<color=#e80017>-"..recvValue.m_change_city_people.."</color>"
+		end
+		
+		local change_nation = "";
+		if recvValue.m_change_nation_people >= 0 then
+			change_nation = "<color=#03de27>+"..recvValue.m_change_nation_people.."</color>"
+		elseif recvValue.m_change_nation_people < 0 then
+			change_nation = "<color=#e80017>-"..recvValue.m_change_nation_people.."</color>"
+		end
+		local statemsg = T(931)
+		if recvValue.m_change_city_people+recvValue.m_change_nation_people > 0 then
+			statemsg = "<color=#03de27>"..T(930).."</color>"
+		elseif recvValue.m_change_city_people+recvValue.m_change_nation_people < 0 then
+			statemsg = "<color=#e80017>"..T(929).."</color>"
+		end
+		NpcTalk( T(927).."\n"..T(888)..":"..change_city.."\n"..T(887)..":"..change_nation.."\n"..T(928)..":"..statemsg );
+	end
+	
+	-- 国家人口
 	SetTrue( m_uiNationPeople )
 	SetText( m_uiNationPeople.transform:Find("Text"), T(887)..": <color=#f7f3bb>"..recvValue.m_nation_people.."</color><color=#03de27>("..T(889).."+"..T(890)..")</color>" );
 	

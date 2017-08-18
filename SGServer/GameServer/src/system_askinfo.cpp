@@ -24,6 +24,7 @@
 #include "quest.h"
 #include "building.h"
 #include "hero.h"
+#include "story.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -301,7 +302,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_MATERIALMAKE:
 		if ( pvalue[0] == 0 )
 		{ // 获取信息
-			city_material_sendinfo( actor_index );
+			city_material_sendinfo( actor_index, 1 );
 		}
 		else if ( pvalue[0] == 1 )
 		{ // 制造
@@ -323,6 +324,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 制造
 			city_material_make( actor_index, pvalue[1], pvalue[2], 1 );
 		}
+		break;
+	case ASKINFO_STORY:
+		if ( pvalue[0] == 0 )
+		{
+			story_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			story_sendrank( actor_index, pvalue[1] );
+		}		
 		break;
 	default:
 		break;

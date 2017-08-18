@@ -143,7 +143,7 @@ int city_train_buylong( int actor_index, int kind );
 int city_train_sendinfo( int actor_index, int kind );
 
 // ²ÄÁÏÉú²ú
-int city_material_sendinfo( int actor_index );
+int city_material_sendinfo( int actor_index, char sendchange );
 int city_material_will_sendinfo( int actor_index );
 int city_material_updatebuilding( City *pCity );
 int city_material_needsec( City *pCity, int itemkind );

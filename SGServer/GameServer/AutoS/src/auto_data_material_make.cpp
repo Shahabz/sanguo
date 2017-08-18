@@ -47,7 +47,7 @@ int materialmakeinfo_init_auto()
 	g_material_make = (MaterialMakeInfo *)malloc( sizeof(MaterialMakeInfo)*g_material_make_maxnum );
 	memset( g_material_make, 0, sizeof(MaterialMakeInfo)*g_material_make_maxnum );
 
-	sprintf( szSQL, "select `id`,`sec`,`silver`,`wood`,`itemkind0`,`itemkind1`,`itemkind2`,`itemkind3`,`itemkind4`,`itemkind5`,`materialkind0`,`materialkind1`,`materialkind2`,`materialkind3` from material_make;" );
+	sprintf( szSQL, "select `id`,`sec`,`silver`,`wood`,`itemkind0`,`itemkind1`,`itemkind2`,`itemkind3`,`itemkind4`,`itemkind5`,`materialkind0`,`materialkind1`,`materialkind2`,`materialkind3`,`num_odds0`,`num_odds1`,`num_odds2`,`num_odds3`,`num_odds4` from material_make;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -75,6 +75,11 @@ int materialmakeinfo_init_auto()
 		g_material_make[id].materialkind[1] = atoi(row[offset++]);
 		g_material_make[id].materialkind[2] = atoi(row[offset++]);
 		g_material_make[id].materialkind[3] = atoi(row[offset++]);
+		g_material_make[id].num_odds[0] = atoi(row[offset++]);
+		g_material_make[id].num_odds[1] = atoi(row[offset++]);
+		g_material_make[id].num_odds[2] = atoi(row[offset++]);
+		g_material_make[id].num_odds[3] = atoi(row[offset++]);
+		g_material_make[id].num_odds[4] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

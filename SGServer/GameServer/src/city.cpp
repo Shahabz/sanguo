@@ -347,7 +347,7 @@ void city_logic_sec()
 						}
 						else if ( g_city[city_index].people > max_people )
 						{ // 高于上限，减少
-							g_city[city_index].people -= add;
+							g_city[city_index].people -= min( global.people_sub_v1, (int)(g_city[city_index].people / (float)max_people * global.people_sub_v2) );
 							if ( g_city[city_index].people < 0 )
 								g_city[city_index].people = 0;
 						}
@@ -1770,7 +1770,7 @@ int city_material_needsec( City *pCity, int itemkind )
 }
 
 // 材料生产信息
-int city_material_sendinfo( int actor_index )
+int city_material_sendinfo( int actor_index, char sendchange )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -1779,6 +1779,15 @@ int city_material_sendinfo( int actor_index )
 	SLK_NetS_MaterialList pValue = { 0 };
 	pValue.m_matquenum = pCity->matquenum;
 	pValue.m_city_people = pCity->people;
+	pValue.m_nation_people = 0;
+	if ( sendchange == 1 )
+	{
+		pValue.m_change_city_people = pCity->people - g_actors[actor_index].lastpeople_c;
+		pValue.m_change_nation_people = 0 - g_actors[actor_index].lastpeople_n;
+
+		g_actors[actor_index].lastpeople_c = pCity->people;
+		g_actors[actor_index].lastpeople_n = 0;
+	}
 	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
 	{
 		if ( pCity->matkind[tmpi] <= 0 )
@@ -1936,7 +1945,7 @@ int city_material_make( int actor_index, int id, int itemkind, int type )
 		pCity->matkind[index] = (char)g_material_make[id].materialkind[randtmpi];
 		pCity->matnum[index] = random( 1, 5 );
 		pCity->matsec[index] = 0; // 此处与别处不用，这是已经生产时间，不是倒计时
-		city_material_sendinfo( actor_index );
+		city_material_sendinfo( actor_index, 0 );
 
 		// 更新建筑信息
 		city_material_updatebuilding( pCity );
@@ -2019,7 +2028,7 @@ int city_material_finish( City *pCity, int index )
 		pCity->matkind_will[index] = 0;
 		pCity->matnum_will[index] = 0;
 	}
-	city_material_sendinfo( pCity->actor_index );
+	city_material_sendinfo( pCity->actor_index, 0 );
 
 	// 更新建筑信息
 	city_material_updatebuilding( pCity );
@@ -2064,7 +2073,7 @@ int city_material_buyqueue( int actor_index )
 	if ( actor_change_token( actor_index, -s_material_queue_token[pCity->matquenum], PATH_MATERIALMAKE_QUEUE, 0 ) < 0 )
 		return -1;
 	pCity->matquenum += 1;
-	city_material_sendinfo( actor_index );
+	city_material_sendinfo( actor_index, 0 );
 	return 0;
 }
 
@@ -2081,7 +2090,7 @@ int city_material_gm( City *pCity, int sec )
 		if ( pCity->matsec[tmpi] >= needsec )
 			pCity->matsec[tmpi] = needsec-5;
 	}
-	city_material_sendinfo( pCity->actor_index );
+	city_material_sendinfo( pCity->actor_index, 0 );
 
 	// 更新建筑信息
 	city_material_updatebuilding( pCity );

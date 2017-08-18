@@ -56,6 +56,17 @@ typedef struct _global
 	short material_make_value2;
 	int people_add_v1;
 	int people_add_v2;
+	int people_sub_v1;
+	int people_sub_v2;
+	int fight_crit_odds;
+	int fight_crit_damage;
+	int fight_dodge;
+	int fight_control_value;
+	int fight_attackmin_value;
+	int fight_v1;
+	int fight_v2;
+	int fight_damage_randmin;
+	int fight_damage_randmax;
 }Global;
 int global_init();
 void global_reload();

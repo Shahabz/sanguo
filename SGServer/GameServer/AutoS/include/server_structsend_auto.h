@@ -878,6 +878,53 @@ struct _slk_NetS_MaterialWillList {
 };
 typedef struct _slk_NetS_MaterialWillList SLK_NetS_MaterialWillList;	//预定材料生产列表
 
+struct _slk_NetS_StoryList {
+	short m_rankstate[512];	//副本信息-副本状态
+	short m_ranknum[32];	//副本信息-副本次数的信息
+	int m_ranktime[32];	//副本信息-副本时间的信息
+	short m_story_chapter;	//副本信息-玩家进度章节
+	short m_story_rank;	//副本信息-玩家进度关卡
+};
+typedef struct _slk_NetS_StoryList SLK_NetS_StoryList;	//副本信息
+
+struct _slk_NetS_MonsterInfo {
+	int m_monsterid;	//怪物信息
+	short m_shape;	//怪物信息
+	short m_level;	//怪物信息
+	char m_color;	//怪物信息
+	char m_corps;	//怪物信息
+};
+typedef struct _slk_NetS_MonsterInfo SLK_NetS_MonsterInfo;	//怪物信息
+
+struct _slk_NetS_StoryRank {
+	char m_count;	//副本关卡信息
+	SLK_NetS_MonsterInfo m_list[4];	//副本关卡信息
+	int m_exp;	//副本关卡信息
+	char m_body;	//副本关卡信息
+};
+typedef struct _slk_NetS_StoryRank SLK_NetS_StoryRank;	//副本关卡
+
+struct _slk_NetC_StoryState {
+	int m_storyid;	//副本id
+	short m_state;	//副本状态
+	short m_saveoffset;	//存档索引
+};
+typedef struct _slk_NetC_StoryState SLK_NetC_StoryState;	//副本状态更新
+
+struct _slk_NetC_StoryRanknum {
+	int m_storyid;	//副本id
+	short m_num;	//副本次数
+	short m_saveoffset;	//存档索引
+};
+typedef struct _slk_NetC_StoryRanknum SLK_NetC_StoryRanknum;	//副本关卡次数更新
+
+struct _slk_NetC_StoryRanktime {
+	int m_storyid;	//副本id
+	int m_time;	//副本时间
+	short m_saveoffset;	//存档索引
+};
+typedef struct _slk_NetC_StoryRanktime SLK_NetC_StoryRanktime;	//副本关卡时间更新
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -974,5 +1021,11 @@ int struct_NetS_MaterialInfo_send( char **pptr, int *psize, SLK_NetS_MaterialInf
 int struct_NetS_MaterialList_send( char **pptr, int *psize, SLK_NetS_MaterialList *pValue );
 int struct_NetS_MaterialWillInfo_send( char **pptr, int *psize, SLK_NetS_MaterialWillInfo *pValue );
 int struct_NetS_MaterialWillList_send( char **pptr, int *psize, SLK_NetS_MaterialWillList *pValue );
+int struct_NetS_StoryList_send( char **pptr, int *psize, SLK_NetS_StoryList *pValue );
+int struct_NetS_MonsterInfo_send( char **pptr, int *psize, SLK_NetS_MonsterInfo *pValue );
+int struct_NetS_StoryRank_send( char **pptr, int *psize, SLK_NetS_StoryRank *pValue );
+int struct_NetC_StoryState_send( char **pptr, int *psize, SLK_NetC_StoryState *pValue );
+int struct_NetC_StoryRanknum_send( char **pptr, int *psize, SLK_NetC_StoryRanknum *pValue );
+int struct_NetC_StoryRanktime_send( char **pptr, int *psize, SLK_NetC_StoryRanktime *pValue );
 
 #endif
