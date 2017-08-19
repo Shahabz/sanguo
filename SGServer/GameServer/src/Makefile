@@ -20,6 +20,8 @@ SRC = \
 ../AutoS/src/auto_data_equip_washrule.cpp \
 ../AutoS/src/auto_data_hero.cpp \
 ../AutoS/src/auto_data_hero_colorup.cpp \
+../AutoS/src/auto_data_hero_corpsmul.cpp \
+../AutoS/src/auto_data_hero_skill.cpp \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_monster.cpp \
@@ -66,6 +68,7 @@ client.cpp \
 db.cpp \
 dbredis.cpp \
 equip.cpp \
+fight.cpp \
 gamelog.cpp \
 gameproc.cpp \
 global.cpp \
@@ -145,6 +148,10 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero_colorup.o: ../AutoS/src/auto_data_hero_colorup.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_hero_corpsmul.o: ../AutoS/src/auto_data_hero_corpsmul.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_hero_skill.o: ../AutoS/src/auto_data_hero_skill.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -237,6 +244,8 @@ db.o: db.cpp
 dbredis.o: dbredis.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 equip.o: equip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+fight.o: fight.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 gamelog.o: gamelog.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
