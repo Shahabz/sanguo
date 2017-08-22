@@ -1,52 +1,42 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/FileSystem/TableUtil.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Manager/ObjectPoolManager.cs">
     <Files>
-      <File FileName="Assets/Source/UI/UISlider.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIToggle.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UISystem.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIMod.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UISliderEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIToggleEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIModEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIButtonEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UITextUnderlineExEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIText.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIScrollBase.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIInputFieldEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UITextEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UISystemEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIProgressEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UIScrollRectEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UITextFirstUpperEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Editor/UITextTimeCountdownEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIClippingLoop.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Tween/UITween.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Tween/UITweenScale.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIPolygonChart.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/ToLua/Core/LuaDLL.cs" Line="1" Column="1" />
-      <File FileName="Assets/ToLua/Core/LuaStatePtr.cs" Line="1" Column="1" />
-      <File FileName="Assets/ToLua/Core/ToLua.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Gizmo/GizmoPlane.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Gizmo/GizmoRing.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIProgress.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UITextTimeCountdown.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UITextAgent.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIAutoSize.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/Converter.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/Localization.cs" Line="198" Column="44" />
-      <File FileName="Assets/Source/UI/Editor/UITextTimeCountupEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Tween/UITweenRectPosition.cs" Line="27" Column="42" />
-      <File FileName="Assets/Source/UI/Tween/UITweenPosition.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/FileSystem/TableUtil.cs" Line="125" Column="15" />
+      <File FileName="Assets/Source/Map/WorldMap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/MapUnitMove.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/MapBorder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/TiledMap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/TileLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/Layer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/ImportBehaviour.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/Log.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/GPUInstancing.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/CircleObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/GameObjectExtensions.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/TmxObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/TileAnimator.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/SpriteDepthInMap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/RectangleObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/GroupLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Scripts/Runtime/TileObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/Tiled2Unity.cginc" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/shaDefault.shader" Line="1" Column="1" />
+      <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/shaDefault-Instanced.shader" Line="39" Column="45" />
+      <File FileName="Assets/Source/FileSystem/FileUtil.cs" Line="73" Column="14" />
+      <File FileName="Assets/Source/FileSystem/TableUtil.cs" Line="114" Column="26" />
+      <File FileName="Assets/Source/UI/Tween/UITweenFade.cs" Line="34" Column="44" />
+      <File FileName="Assets/Source/Base/ObjectPool.cs" Line="33" Column="27" />
+      <File FileName="Assets/Source/Manager/ObjectPoolManager.cs" Line="77" Column="62" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/miya/sanguo/SGClient/Assets/Source/Base/Utils.cs" line="438" column="1" />
       <Breakpoint file="/Users/miya/sanguo/SGClient/Assets/YLYRichText/Scripts/YlyRichText.cs" line="1443" column="6" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Manager/ObjectPoolManager.cs" line="91" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Manager/ObjectPoolManager.cs" line="56" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

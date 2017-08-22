@@ -344,6 +344,16 @@ function TechDescUp( kind )
 	return Localization.text_item(kind+4200);
 end
 
+-- 获取地图区域名称
+function MapZoneName( id )
+	return Localization.text_item(14000+id);
+end
+
+-- 获取地图城池名称
+function MapTownName( id )
+	return Localization.text_item(14100+id);
+end
+
 -- 名称颜色
 function NameColor( color )
 	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff }

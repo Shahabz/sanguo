@@ -97,17 +97,7 @@ function proc_enterinfo_C( recvValue )
 	GameObject.FindWithTag( "UpdateManager" ).Find("Canvas"):GetComponent( "Canvas" ).sortingOrder = 1000
 	
 	-- 加载主城
-	LoadPrefabAsyn( "MainCity", function( obj )
-		
-		-- 缓存主城
-		GameManager.MainCity = GameObject.Instantiate( obj );
-		City.Init();
-		
-		-- 获取进入游戏所需信息
-		local sendValue = {};
-		sendValue.m_value = 0;
-		netsend_entercity_C( sendValue );
-	end );
+	GameManager.ChangeScence( "city" )
 end
 
 -- m_actorid=0,m_name="[22]",m_nation=0,m_shape=0,m_level=0,m_exp=0,m_exp_max=0,m_token=0,m_viplevel=0,m_vipexp=0,m_vipexp_max=0,m_body=0,m_place=0,m_official=0,m_zone=0,m_battlepower=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_infantry_num=0,m_cavalry_num=0,m_archer_num=0,m_mokilllv=0,m_sflag=0,m_cityid=0,
@@ -366,9 +356,10 @@ function proc_mapunitsingle_C( recvValue )
 	-- process.
 end
 
--- m_map_width=0,m_map_height=0,m_area_width=0,m_area_height=0,m_map_area_xnum=0,m_map_area_ynum=0,m_my_city_posx=0,m_my_city_posy=0,m_my_city_unit_index=0,m_citystate=0,m_target_posx=0,m_target_posy=0,
+-- m_area_width=0,m_area_height=0,m_map_area_xnum=0,m_map_area_ynum=0,m_my_city_posx=0,m_my_city_posy=0,m_my_city_unit_index=0,m_citystate=0,m_target_posx=0,m_target_posy=0,
 function proc_worldmapinfo_C( recvValue )
 	-- process.
+	WorldMap.Recv( recvValue )
 end
 
 -- m_unit_index=0,m_posx=0,m_posy=0,
@@ -1016,5 +1007,12 @@ end
 -- m_storyid=0,m_time=0,m_saveoffset=0,
 function proc_storyranktime_C( recvValue )
 	-- process.
+end
+
+-- m_zoneid=0,m_open=0,
+function proc_mapzonechange_C( recvValue )
+	-- process.
+	local name = MapZoneName( recvValue.m_zoneid )
+	MapZoneTipsModShow( name )
 end
 

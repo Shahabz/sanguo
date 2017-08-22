@@ -226,7 +226,7 @@ public class Packager
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------
         // -------------------------------------- 完毕以后，把StreamingAssetsUpload里的文件拷贝到StreamingAssets，刨去需要过滤的 ------------------------------------------- 
-        if ( target == BuildTarget.Android || target == BuildTarget.StandaloneWindows )
+        if ( true )
         {
             foreach ( string f in files )
             {

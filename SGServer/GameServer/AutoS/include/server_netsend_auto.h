@@ -89,9 +89,10 @@ int netsend_materiallist_S( int actor_index, char send_type, SLK_NetS_MaterialLi
 int netsend_materialwilllist_S( int actor_index, char send_type, SLK_NetS_MaterialWillList *pValue );
 int netsend_storylist_S( int actor_index, char send_type, SLK_NetS_StoryList *pValue );
 int netsend_storyrank_S( int actor_index, char send_type, SLK_NetS_StoryRank *pValue );
-int netsend_storystate_S( int actor_index, char send_type, SLK_NetC_StoryState *pValue );
-int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetC_StoryRanknum *pValue );
-int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetC_StoryRanktime *pValue );
+int netsend_storystate_S( int actor_index, char send_type, SLK_NetS_StoryState *pValue );
+int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetS_StoryRanknum *pValue );
+int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetS_StoryRanktime *pValue );
+int netsend_mapzonechange_S( int actor_index, char send_type, SLK_NetS_MapZoneChange *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

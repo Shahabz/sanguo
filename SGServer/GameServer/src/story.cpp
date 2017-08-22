@@ -156,7 +156,7 @@ int story_sendrankstate( int actor_index, int id )
 		return -1;
 	if ( config->saveoffset < 0 || config->saveoffset >= 512 )
 		return -1;
-	SLK_NetC_StoryState pValue = { 0 };
+	SLK_NetS_StoryState pValue = { 0 };
 	pValue.m_storyid = id;
 	pValue.m_saveoffset = config->saveoffset;
 	pValue.m_state = g_actors[actor_index].story_state[config->saveoffset];
@@ -173,7 +173,7 @@ int story_sendranknum( int actor_index, int id )
 		return -1;
 	if ( config->ranknum_saveoffset < 0 || config->ranknum_saveoffset >= 32 )
 		return -1;
-	SLK_NetC_StoryRanknum pValue = { 0 };
+	SLK_NetS_StoryRanknum pValue = { 0 };
 	pValue.m_storyid = id;
 	pValue.m_saveoffset = config->ranknum_saveoffset;
 	pValue.m_num = g_actors[actor_index].story_ranknum[config->ranknum_saveoffset];
@@ -190,7 +190,7 @@ int story_sendranktime( int actor_index, int id )
 		return -1;
 	if ( config->ranksec_saveoffset < 0 || config->ranksec_saveoffset >= 32 )
 		return -1;
-	SLK_NetC_StoryRanktime pValue = { 0 };
+	SLK_NetS_StoryRanktime pValue = { 0 };
 	pValue.m_storyid = id;
 	pValue.m_saveoffset = config->ranksec_saveoffset;
 	pValue.m_time = g_actors[actor_index].story_ranktime[config->ranksec_saveoffset];

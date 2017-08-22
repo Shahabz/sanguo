@@ -289,8 +289,6 @@ struct _slk_NetS_DelMapUnit {
 typedef struct _slk_NetS_DelMapUnit SLK_NetS_DelMapUnit;	//显示单元离开地图
 
 struct _slk_NetS_WorldMapInfo {
-	short m_map_width;	//世界地图大小（格子数）
-	short m_map_height;	//世界地图大小（格子数）
 	char m_area_width;	//区域大小（一个区域几个地图格子）
 	char m_area_height;	//区域大小（一个区域几个地图格子）
 	short m_map_area_xnum;	//一个地图有多少区域
@@ -904,26 +902,32 @@ struct _slk_NetS_StoryRank {
 };
 typedef struct _slk_NetS_StoryRank SLK_NetS_StoryRank;	//副本关卡
 
-struct _slk_NetC_StoryState {
+struct _slk_NetS_StoryState {
 	int m_storyid;	//副本id
 	short m_state;	//副本状态
 	short m_saveoffset;	//存档索引
 };
-typedef struct _slk_NetC_StoryState SLK_NetC_StoryState;	//副本状态更新
+typedef struct _slk_NetS_StoryState SLK_NetS_StoryState;	//副本状态更新
 
-struct _slk_NetC_StoryRanknum {
+struct _slk_NetS_StoryRanknum {
 	int m_storyid;	//副本id
 	short m_num;	//副本次数
 	short m_saveoffset;	//存档索引
 };
-typedef struct _slk_NetC_StoryRanknum SLK_NetC_StoryRanknum;	//副本关卡次数更新
+typedef struct _slk_NetS_StoryRanknum SLK_NetS_StoryRanknum;	//副本关卡次数更新
 
-struct _slk_NetC_StoryRanktime {
+struct _slk_NetS_StoryRanktime {
 	int m_storyid;	//副本id
 	int m_time;	//副本时间
 	short m_saveoffset;	//存档索引
 };
-typedef struct _slk_NetC_StoryRanktime SLK_NetC_StoryRanktime;	//副本关卡时间更新
+typedef struct _slk_NetS_StoryRanktime SLK_NetS_StoryRanktime;	//副本关卡时间更新
+
+struct _slk_NetS_MapZoneChange {
+	char m_zoneid;	//地区id变换
+	char m_open;	//地区id是否开启
+};
+typedef struct _slk_NetS_MapZoneChange SLK_NetS_MapZoneChange;	//地图地区切换
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1024,8 +1028,9 @@ int struct_NetS_MaterialWillList_send( char **pptr, int *psize, SLK_NetS_Materia
 int struct_NetS_StoryList_send( char **pptr, int *psize, SLK_NetS_StoryList *pValue );
 int struct_NetS_MonsterInfo_send( char **pptr, int *psize, SLK_NetS_MonsterInfo *pValue );
 int struct_NetS_StoryRank_send( char **pptr, int *psize, SLK_NetS_StoryRank *pValue );
-int struct_NetC_StoryState_send( char **pptr, int *psize, SLK_NetC_StoryState *pValue );
-int struct_NetC_StoryRanknum_send( char **pptr, int *psize, SLK_NetC_StoryRanknum *pValue );
-int struct_NetC_StoryRanktime_send( char **pptr, int *psize, SLK_NetC_StoryRanktime *pValue );
+int struct_NetS_StoryState_send( char **pptr, int *psize, SLK_NetS_StoryState *pValue );
+int struct_NetS_StoryRanknum_send( char **pptr, int *psize, SLK_NetS_StoryRanknum *pValue );
+int struct_NetS_StoryRanktime_send( char **pptr, int *psize, SLK_NetS_StoryRanktime *pValue );
+int struct_NetS_MapZoneChange_send( char **pptr, int *psize, SLK_NetS_MapZoneChange *pValue );
 
 #endif

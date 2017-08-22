@@ -3,7 +3,9 @@
 
 #define MAPUNIT_TYPE_CITY			1	// 城池
 #define MAPUNIT_TYPE_ARMY			2	// 部队
-#define MAPUNIT_TYPE_TOWER			3	// 塔楼
+#define MAPUNIT_TYPE_TOWN			3	// 城镇
+#define MAPUNIT_TYPE_ENEMY			4	// 流寇
+#define MAPUNIT_TYPE_RES			5	// 资源
 
 // 世界地图显示单元
 typedef struct _mapunit

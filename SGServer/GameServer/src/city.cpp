@@ -233,6 +233,43 @@ int city_getindex_withactorid( int actorid )
 	return city_index;
 }
 
+// 显示单元属性
+void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return;
+	City *pCity = &g_city[city_index];
+	if ( !pCity )
+		return;
+	if ( !pAttr )
+		return;
+	pAttr->m_state = pCity->state;
+	pAttr->m_posx = pCity->posx;
+	pAttr->m_posy = pCity->posy;
+	strncpy( pAttr->m_name, pCity->name, sizeof( char )*NAME_SIZE );
+	pAttr->m_namelen = strlen( pAttr->m_name );
+
+	// 主城等级
+	pAttr->m_char_value[0] = pCity->building[0].level;
+	// 国家
+	pAttr->m_char_value[1] = pCity->nation;
+	// 城市保护
+	if ( pCity->ptsec > 0 )
+	{
+		pAttr->m_char_value[2] = 1;
+	}
+	pAttr->m_char_value_count = 3;
+}
+
+// 获取位置
+void city_getpos( int city_index, short *posx, short *posy )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return;
+	*posx = g_city[city_index].posx;
+	*posy = g_city[city_index].posy;
+}
+
 // 创建一个新城市
 int city_new( City *pCity )
 {
@@ -1098,7 +1135,7 @@ int city_guard_call( int city_index )
 	char monsterid = random( 1, g_cityguardinfo_maxnum-1 );
 	char color = ITEM_COLOR_LEVEL_BLUE;
 	char corps = random( 0, 2 );
-	char shape = random( 0, 7 );
+	char shape = random( 1, 15 );
 	unsigned char minlevel = buildingconfig->value[0];
 	unsigned char maxlevel = buildingconfig->value[1];
 	unsigned char level = random( minlevel, maxlevel );

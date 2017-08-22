@@ -24,6 +24,7 @@ public class ResourceManagerWrap
 		L.RegFunction("UnloadObject", UnloadObject);
 		L.RegFunction("LoadSpriteAsyn", LoadSpriteAsyn);
 		L.RegFunction("LoadPrefabAsyn", LoadPrefabAsyn);
+		L.RegFunction("dump", dump);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("m_AssetBundleNameList", get_m_AssetBundleNameList, set_m_AssetBundleNameList);
@@ -154,8 +155,9 @@ public class ResourceManagerWrap
 		{
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
-			ResourceManager.UnloadAssetBundle(arg0);
-			return 0;
+			bool o = ResourceManager.UnloadAssetBundle(arg0);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{
@@ -170,8 +172,9 @@ public class ResourceManagerWrap
 		{
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
-			ResourceManager.UnloadAssetBundleImmediately(arg0);
-			return 0;
+			bool o = ResourceManager.UnloadAssetBundleImmediately(arg0);
+			LuaDLL.lua_pushboolean(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{
@@ -380,6 +383,21 @@ public class ResourceManagerWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: ResourceManager.LoadPrefabAsyn");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int dump(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			ResourceManager.dump();
+			return 0;
 		}
 		catch(Exception e)
 		{

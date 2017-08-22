@@ -18,5 +18,7 @@ void proc_askinfo_S( int client_index, SLK_NetC_AskInfo *pValue );
 void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue );
 void proc_chat_S( int client_index, SLK_NetC_Chat *pValue );
 void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue );
+void proc_worldmapask_S( int client_index, SLK_NetC_WorldMapAsk *pValue );
+void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pValue );
 
 #endif

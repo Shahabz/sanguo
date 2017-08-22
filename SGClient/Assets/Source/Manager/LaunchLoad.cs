@@ -14,9 +14,11 @@ public class LaunchLoad : MonoBehaviour {
         Debug.Log( "PackagePath:" + PathUtil.PackagePath() );
         Debug.Log( "LocalPath:" + PathUtil.LocalPath() );
         Debug.Log( "LogPath:" + PathUtil.LogPath() );
+		Debug.Log ("ConfigPath:" + PathUtil.ConfigPath ());
         LogUtil.GetInstance().WriteGame( "StreamingAssetsPath:" + PathUtil.StreamingAssetsPath() );
         LogUtil.GetInstance().WriteGame( "PackagePath:" + PathUtil.PackagePath() );
         LogUtil.GetInstance().WriteGame( "LocalPath:" + PathUtil.LocalPath() );
+		LogUtil.GetInstance().WriteGame( "ConfigPath:" + PathUtil.ConfigPath() );
 
         if ( Const.ResourceMode == "assetbundle" )
         {

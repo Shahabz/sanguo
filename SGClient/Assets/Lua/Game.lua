@@ -4,9 +4,10 @@ g_ipCountryStr = "us";
 GameManager = {};
 GameManager.restart = false; -- 强制重启
 GameManager.userini = nil;
-GameManager.MainCityScence = nil;
-GameManager.FightScence = nil;
-
+GameManager.MainCity = nil;
+GameManager.WorldMap = nil;
+GameManager.currentScence = "city"
+	
 -- 游戏脚本主逻辑入口
 function GameManager.OnStart()
 	gamelog("GameManager.OnStart();begin");
@@ -30,18 +31,6 @@ function GameManager.OnStart()
 		Const.platid = tonumber(platini:ReadValue("PLATID", "1")); 
 	end
 		
-	-- 与服务器通用的全局变量
-	local _tableUtil = TableUtil.New();
-	if _tableUtil:OpenFromData( "global.txt" ) == true then
-		local _tableRecordsNum = _tableUtil:GetRecordsNum()-1;
-		for records = 0, _tableRecordsNum, 1 do
-			local id		 = _tableUtil:GetValue( records, 0 );
-			local value 	 = _tableUtil:GetValue( records, 1 );
-			local variable	 = _tableUtil:GetValue( records, 2 );
-			Global.AddValue( variable, value );
-		end
-	end
-	
 	print( OpenUDIDPhone.OpenUDID.value );
 	
 	-- 打开登陆界面
@@ -73,7 +62,7 @@ end
 	
 -- 主逻辑秒
 function GameManager.GameLogic()
-	gamelog( "GameLogic:"..os.time() )
+	--gamelog( "GameLogic:"..os.time() )
 	-- 建造队列
 	if GetPlayer().m_worker_sec > 0 then
 		GetPlayer().m_worker_sec = GetPlayer().m_worker_sec - 1;
@@ -212,4 +201,55 @@ function GameManager.ini( key, default )
 end
 function GameManager.writeini( key, value )
 	GameManager.userini:WriteValue( key, value );
+end
+
+-- 改变场景
+function GameManager.ChangeScence( scence )
+	
+	if scence == "city" then
+		
+		if GameManager.MainCity == nil then
+			-- 加载主城
+			LoadPrefabAsyn( "MainCity", function( obj )
+				
+				-- 缓存主城
+				GameManager.MainCity = GameObject.Instantiate( obj );
+				City.Init();
+				
+				-- 获取进入游戏所需信息
+				local sendValue = {};
+				sendValue.m_value = 0;
+				netsend_entercity_C( sendValue );
+			end );
+			
+		else
+			GameManager.MainCity.gameObject:SetActive( true )
+
+		end
+		
+		-- 隐藏世界地图
+		if GameManager.WorldMap ~= nil then
+			GameManager.WorldMap.gameObject:SetActive( false )
+		end
+		
+	elseif scence == "worldmap" then
+		if GameManager.WorldMap == nil then
+		-- 加载地图
+			LoadPrefabAsyn( "WorldMapRoot", function( obj )
+			
+				-- 缓存地图
+				GameManager.WorldMap = GameObject.Instantiate( obj );
+			
+			end );
+		
+		else
+			GameManager.WorldMap.gameObject:SetActive( true )
+		end
+		
+		if GameManager.MainCity ~= nil then
+			GameManager.MainCity.gameObject:SetActive( false )
+		end
+	end
+	
+	GameManager.currentScence = scence
 end

@@ -60,3 +60,14 @@ function struct_NetC_StoryBattle_send( buf, sendValue )
 	end
 end
 
+function struct_NetC_WorldMapAsk_send( buf, sendValue )
+	buf:WriteShort( sendValue.m_to_posx );
+	buf:WriteShort( sendValue.m_to_posy );
+end
+
+function struct_NetC_WorldMapAreaIndex_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_areaindex );
+	buf:WriteShort( sendValue.m_posx );
+	buf:WriteShort( sendValue.m_posy );
+end
+

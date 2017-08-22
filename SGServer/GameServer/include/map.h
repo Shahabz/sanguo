@@ -4,8 +4,18 @@
 #include "area.h"
 #define MAP_SIZEOFFSET 4
 
-#define MAP_W	960
-#define MAP_H	960
+#define MAP_W	500
+#define MAP_H	500
+
+// 一个格子数据结构
+typedef struct _tile
+{
+	char unit_type;			// 格子上的显示对象类型
+	int unit_index;			// 格子上的显示对象索引
+	char owner_unit_type;	// 格子的主人
+	int owner_unit_index;	// 格子的主人
+}Tile;
+
 
 // 世界地图
 typedef struct _map
@@ -16,7 +26,7 @@ typedef struct _map
 	short			m_nAreaYNum;
 	int				m_nAreaMaxCount;
 	Area			*m_aArea;
-	unsigned char	**m_aTileData;		// 每个格子的数据
+	Tile			**m_aTileData;		// 每个格子的数据
 }Map;
 
 typedef struct _pos
@@ -28,8 +38,8 @@ typedef struct _pos
 int map_init();
 void map_logic();
 void map_sendinfo( int actor_index, short tposx, short tposy );
-void map_sendinfo_global( int actor_index, short serverid, short tposx, short tposy );
 void map_sendthumbinfo( int actor_index );
+void map_areaenter( int actor_index, int areaindex, short posx, short posy );
 
 // 添加对象
 int map_addobject( int type, short posx, short posy, char unittype );
@@ -48,9 +58,6 @@ int map_getrandpos_withrange( int type, short posx, short posy, int range, short
 
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy );
-
-// 地图沼泽距离
-short map_swamp_distance( short f_posx, short f_posy, short t_posx, short t_posy, short distance );
 
 // dump地图数据
 void map_tile_dump();

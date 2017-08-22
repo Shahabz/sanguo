@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-	public const int	UI_MAXCOUNT = 16;
+	public const int	UI_MAXCOUNT = 8;
 
     Transform			_UIRoot; 
 	Transform[]			_Layers = new Transform[4];
@@ -80,14 +80,21 @@ public class UIManager : MonoBehaviour
             }
         }
 
-		// 读资源
+		// 优先读取关联的assetbundle
+		string abname = "_ab_ui_"+uiName.ToLower(); 
+		if (ResourceManager.LoadAssetBundle (abname) != null) {
+			LogUtil.GetInstance().WriteGame( "UI loadAssetBundle :"+abname );
+		}
+	
+
+		// 读prefab资源
         GameObject obj = ResourceManager.LoadPrefab( uiName );
-        //GameObject obj = res.load(uiName);
         if ( obj == null )
         {
             Debug.LogError( "Can't Find UI:" + uiName );
             return null;
         }
+
         obj.SetActive( false );
 		GameObject go = GameObject.Instantiate<GameObject>( obj );
         obj.SetActive( true );
@@ -335,6 +342,13 @@ public class UIManager : MonoBehaviour
     {
 		_UIList.Remove( ui );
         _UIListByName.Remove( ui.uiName );
+		// 如果这个ui有关联的ab，将ab一并删除
+		string abname = "_ab_ui_"+ui.uiName.ToLower();
+		LogUtil.GetInstance().WriteGame( "UI Unload:"+ui.uiName );
+		if ( ResourceManager.UnloadAssetBundleImmediately(abname) == true )
+		{
+			LogUtil.GetInstance().WriteGame( "UI UnloadAssetBundleImmediately :"+abname );
+		}
     }
 
     // 清空UI

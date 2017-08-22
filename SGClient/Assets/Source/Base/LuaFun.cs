@@ -234,6 +234,96 @@ public class LuaFun
         }
     }
 
+	/// <summary>
+	/// 世界地图初始化
+	/// </summary>
+	private static LuaFunction _worldMapStart = null;
+	public static LuaFunction worldMapStart
+	{
+		get
+		{
+			if ( _worldMapStart == null )
+				_worldMapStart = eye.luaManager.GetFunction( "WorldMap.Start" );
+
+			return _worldMapStart;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图帧逻辑
+	/// </summary>
+	private static LuaFunction _worldMapUpdate = null;
+	public static LuaFunction worldMapUpdate
+	{
+		get
+		{
+			if ( _worldMapUpdate == null )
+				_worldMapUpdate = eye.luaManager.GetFunction( "WorldMap.Update" );
+
+			return _worldMapUpdate;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图
+	/// </summary>
+	private static LuaFunction _worldMapViewChangeSec = null;
+	public static LuaFunction worldMapViewChangeSec
+	{
+		get
+		{
+			if ( _worldMapViewChangeSec == null )
+				_worldMapViewChangeSec = eye.luaManager.GetFunction( "WorldMap.ViewChangeSec" );
+
+			return _worldMapViewChangeSec;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图
+	/// </summary>
+	private static LuaFunction _worldMapViewChangeFrame = null;
+	public static LuaFunction worldMapViewChangeFrame
+	{
+		get
+		{
+			if ( _worldMapViewChangeFrame == null )
+				_worldMapViewChangeFrame = eye.luaManager.GetFunction( "WorldMap.ViewChangeFrame" );
+
+			return _worldMapViewChangeFrame;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图
+	/// </summary>
+	private static LuaFunction _worldMapOnClick = null;
+	public static LuaFunction worldMapOnClick
+	{
+		get
+		{
+			if ( _worldMapOnClick == null )
+				_worldMapOnClick = eye.luaManager.GetFunction( "WorldMap.OnClick" );
+
+			return _worldMapOnClick;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图
+	/// </summary>
+	private static LuaFunction _worldMapOnDrag = null;
+	public static LuaFunction worldMapOnDrag
+	{
+		get
+		{
+			if ( _worldMapOnDrag == null )
+				_worldMapOnDrag = eye.luaManager.GetFunction( "WorldMap.OnDrag" );
+
+			return _worldMapOnDrag;
+		}
+	}
+
     public static void Destroy()
     {
         _numFormat = null;
@@ -254,5 +344,12 @@ public class LuaFun
         _buildingselect = null;
 		_buildinglandselect = null;
         _fightFrameTurn = null;
+
+		_worldMapStart = null;
+		_worldMapUpdate = null;
+		_worldMapViewChangeSec = null;
+		_worldMapViewChangeFrame = null;
+		_worldMapOnClick = null;
+		_worldMapOnDrag = null;
     }
 }

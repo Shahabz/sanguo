@@ -380,8 +380,6 @@ end
 
 function struct_NetS_WorldMapInfo_recv( buffer )
 	local recvValue = {};
-	recvValue.m_map_width = buffer:ReadShort();
-	recvValue.m_map_height = buffer:ReadShort();
 	recvValue.m_area_width = buffer:ReadSByte();
 	recvValue.m_area_height = buffer:ReadSByte();
 	recvValue.m_map_area_xnum = buffer:ReadShort();
@@ -1172,7 +1170,7 @@ function struct_NetS_StoryRank_recv( buffer )
 	return recvValue;
 end
 
-function struct_NetC_StoryState_recv( buffer )
+function struct_NetS_StoryState_recv( buffer )
 	local recvValue = {};
 	recvValue.m_storyid = buffer:ReadInt();
 	recvValue.m_state = buffer:ReadShort();
@@ -1180,7 +1178,7 @@ function struct_NetC_StoryState_recv( buffer )
 	return recvValue;
 end
 
-function struct_NetC_StoryRanknum_recv( buffer )
+function struct_NetS_StoryRanknum_recv( buffer )
 	local recvValue = {};
 	recvValue.m_storyid = buffer:ReadInt();
 	recvValue.m_num = buffer:ReadShort();
@@ -1188,11 +1186,18 @@ function struct_NetC_StoryRanknum_recv( buffer )
 	return recvValue;
 end
 
-function struct_NetC_StoryRanktime_recv( buffer )
+function struct_NetS_StoryRanktime_recv( buffer )
 	local recvValue = {};
 	recvValue.m_storyid = buffer:ReadInt();
 	recvValue.m_time = buffer:ReadInt();
 	recvValue.m_saveoffset = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_MapZoneChange_recv( buffer )
+	local recvValue = {};
+	recvValue.m_zoneid = buffer:ReadSByte();
+	recvValue.m_open = buffer:ReadSByte();
 	return recvValue;
 end
 

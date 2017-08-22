@@ -109,11 +109,13 @@ function StoreDlgShow()
 		SetImage( uiShape, ItemSprite( ResKindList[i] ) )
 		SetText( uiName, item_getname( ResKindList[i] ) )
 		SetProgress( uiProgress, ResNumList[i]/ResProjectList[i] )
-		SetText( uiText, knum(ResNumList[i]).."/"..knum(ResProjectList[i]) )
+		
 		if ResNumList[i] > ResProjectList[i] then
-			SetImage( uiImage, LoadSprite("ui_progress_image_3") )
+			SetImage( uiImage, LoadSprite("ui_progress_image_10") )
+			SetText( uiText, knum(ResNumList[i]).."/"..knum(ResProjectList[i]).."("..T(842)..")" )
 		else
-			SetImage( uiImage, LoadSprite("ui_progress_image_4") )
+			SetImage( uiImage, LoadSprite("ui_progress_image_9") )
+			SetText( uiText, knum(ResNumList[i]).."/"..knum(ResProjectList[i]) )
 		end
 	end
 end

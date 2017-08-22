@@ -54,3 +54,15 @@ int g_army_maxcount = 0;
 int g_army_count = 0;
 extern int g_army_maxindex;
 
+// 显示单元属性
+void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
+{
+
+}
+
+
+// 部队位置
+void army_getpos( int army_index, short *posx, short *posy )
+{
+
+}

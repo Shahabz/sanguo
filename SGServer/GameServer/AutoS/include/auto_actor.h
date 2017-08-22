@@ -14,11 +14,12 @@ struct _actor {
 				int forbidtime;	//禁言时间
 				int savetime;	//上次保存时间
 				unsigned char isexit;	//是否离开游戏中
-				short view_areaindex;	//当前视口的地图区域
+				short view_areaindex;	//当前视口的地图区域（逻辑）
 				char name[22];	//角色名称
 				char nation;	//角色国家
 				unsigned char shape;	//形象
 				short level;	//级别
+				short view_zoneid;	//当前视口的地图区域（游戏）
 				int city_index;	//城池索引
 				int token;	//钻石
 				int total_charge;	//总充值

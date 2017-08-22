@@ -2343,7 +2343,7 @@ int netsend_storyrank_S( int actor_index, char send_type, SLK_NetS_StoryRank *pV
 	return 0;
 }
 
-int netsend_storystate_S( int actor_index, char send_type, SLK_NetC_StoryState *pValue )
+int netsend_storystate_S( int actor_index, char send_type, SLK_NetS_StoryState *pValue )
 {
 	char tmpbuf[2048];
 	int tmpsize;
@@ -2361,7 +2361,7 @@ int netsend_storystate_S( int actor_index, char send_type, SLK_NetC_StoryState *
 	*(short *)ptr = CMDS_STORYSTATE; ptr+=sizeof(short); tmpsize+=sizeof(short);
 	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
 
-	struct_NetC_StoryState_send( &ptr, &tmpsize, pValue );
+	struct_NetS_StoryState_send( &ptr, &tmpsize, pValue );
 
 	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
 	*(unsigned short *)tmpbuf = tmpsize;
@@ -2370,7 +2370,7 @@ int netsend_storystate_S( int actor_index, char send_type, SLK_NetC_StoryState *
 	return 0;
 }
 
-int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetC_StoryRanknum *pValue )
+int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetS_StoryRanknum *pValue )
 {
 	char tmpbuf[2048];
 	int tmpsize;
@@ -2388,7 +2388,7 @@ int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetC_StoryRankn
 	*(short *)ptr = CMDS_STORYRANKNUM; ptr+=sizeof(short); tmpsize+=sizeof(short);
 	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
 
-	struct_NetC_StoryRanknum_send( &ptr, &tmpsize, pValue );
+	struct_NetS_StoryRanknum_send( &ptr, &tmpsize, pValue );
 
 	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
 	*(unsigned short *)tmpbuf = tmpsize;
@@ -2397,7 +2397,7 @@ int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetC_StoryRankn
 	return 0;
 }
 
-int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetC_StoryRanktime *pValue )
+int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetS_StoryRanktime *pValue )
 {
 	char tmpbuf[2048];
 	int tmpsize;
@@ -2415,7 +2415,34 @@ int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetC_StoryRank
 	*(short *)ptr = CMDS_STORYRANKTIME; ptr+=sizeof(short); tmpsize+=sizeof(short);
 	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
 
-	struct_NetC_StoryRanktime_send( &ptr, &tmpsize, pValue );
+	struct_NetS_StoryRanktime_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_mapzonechange_S( int actor_index, char send_type, SLK_NetS_MapZoneChange *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_MAPZONECHANGE;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_MAPZONECHANGE; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_MapZoneChange_send( &ptr, &tmpsize, pValue );
 
 	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
 	*(unsigned short *)tmpbuf = tmpsize;

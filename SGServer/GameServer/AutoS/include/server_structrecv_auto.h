@@ -62,6 +62,19 @@ struct _slk_NetC_StoryBattle {
 };
 typedef struct _slk_NetC_StoryBattle SLK_NetC_StoryBattle;	//副本战斗
 
+struct _slk_NetC_WorldMapAsk {
+	short m_to_posx;	//请求前往世界地图
+	short m_to_posy;	//请求前往世界地图
+};
+typedef struct _slk_NetC_WorldMapAsk SLK_NetC_WorldMapAsk;	//请求前往世界地图
+
+struct _slk_NetC_WorldMapAreaIndex {
+	int m_areaindex;	//逻辑区域索引
+	short m_posx;	//逻辑区域坐标
+	short m_posy;	//逻辑区域坐标
+};
+typedef struct _slk_NetC_WorldMapAreaIndex SLK_NetC_WorldMapAreaIndex;	//世界地图逻辑区域索引
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -70,5 +83,7 @@ int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue 
 int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pValue );
 int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue );
 int struct_NetC_StoryBattle_recv( char **pptr, int *psize, SLK_NetC_StoryBattle *pValue );
+int struct_NetC_WorldMapAsk_recv( char **pptr, int *psize, SLK_NetC_WorldMapAsk *pValue );
+int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldMapAreaIndex *pValue );
 
 #endif

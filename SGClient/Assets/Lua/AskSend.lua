@@ -19,6 +19,7 @@ ASKINFO_QUICK			=	16 -- 加速
 ASKINFO_ACTOR			=	17 -- 角色操作
 ASKINFO_MATERIALMAKE	=	18 -- 材料制造
 ASKINFO_STORY			=	19 -- 副本
+ASKINFO_WORLDMAP		=	20 -- 世界地图
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

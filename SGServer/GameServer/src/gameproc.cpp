@@ -512,6 +512,32 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 世界地图-城镇
+	if ( maptowninfo_init_auto() < 0 )
+	{
+		printf_msg( "maptowninfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 世界地图-流寇
+	if ( mapenemyinfo_init_auto() < 0 )
+	{
+		printf_msg( "mapenemyinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 世界地图-资源点
+	if ( mapresinfo_init_auto() < 0 )
+	{
+		printf_msg( "mapresinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
 
 	activity_init();
 	time_gmcmd_init();

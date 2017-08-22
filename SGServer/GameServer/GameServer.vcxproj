@@ -115,6 +115,10 @@
     <ClCompile Include="AutoS\src\auto_data_hero_corpsmul.cpp" />
     <ClCompile Include="AutoS\src\auto_data_hero_skill.cpp" />
     <ClCompile Include="AutoS\src\auto_data_item.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_map_enemyinfo.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_map_resinfo.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_map_towninfo.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_map_zoneinfo.cpp" />
     <ClCompile Include="AutoS\src\auto_data_material_make.cpp" />
     <ClCompile Include="AutoS\src\auto_data_monster.cpp" />
     <ClCompile Include="AutoS\src\auto_data_nation_equip.cpp" />
@@ -130,6 +134,10 @@
     <ClCompile Include="AutoS\src\auto_data_trainqueue.cpp" />
     <ClCompile Include="AutoS\src\auto_data_upgrade.cpp" />
     <ClCompile Include="AutoS\src\auto_data_vip.cpp" />
+    <ClCompile Include="AutoS\src\auto_map_enemy.cpp" />
+    <ClCompile Include="AutoS\src\auto_map_res.cpp" />
+    <ClCompile Include="AutoS\src\auto_map_town.cpp" />
+    <ClCompile Include="AutoS\src\auto_map_zone.cpp" />
     <ClCompile Include="AutoS\src\global_netrecv_auto.cpp" />
     <ClCompile Include="AutoS\src\global_netsend_auto.cpp" />
     <ClCompile Include="AutoS\src\global_process_auto.cpp" />
@@ -158,6 +166,9 @@
     <ClCompile Include="src\global_cmdqueue.cpp" />
     <ClCompile Include="src\hero.cpp" />
     <ClCompile Include="src\mail.cpp" />
+    <ClCompile Include="src\map_enemy.cpp" />
+    <ClCompile Include="src\map_res.cpp" />
+    <ClCompile Include="src\map_town.cpp" />
     <ClCompile Include="src\mem_dump.cpp" />
     <ClCompile Include="src\actor_send.cpp" />
     <ClCompile Include="src\actor_notify.cpp" />
@@ -177,6 +188,7 @@
     <ClCompile Include="src\login_net.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mapunit.cpp" />
+    <ClCompile Include="src\nation.cpp" />
     <ClCompile Include="src\quest.cpp" />
     <ClCompile Include="src\story.cpp" />
     <ClCompile Include="src\system.cpp" />
@@ -214,6 +226,10 @@
     <ClInclude Include="AutoS\include\auto_data_hero_corpsmul.h" />
     <ClInclude Include="AutoS\include\auto_data_hero_skill.h" />
     <ClInclude Include="AutoS\include\auto_data_item.h" />
+    <ClInclude Include="AutoS\include\auto_data_map_enemyinfo.h" />
+    <ClInclude Include="AutoS\include\auto_data_map_resinfo.h" />
+    <ClInclude Include="AutoS\include\auto_data_map_towninfo.h" />
+    <ClInclude Include="AutoS\include\auto_data_map_zoneinfo.h" />
     <ClInclude Include="AutoS\include\auto_data_material_make.h" />
     <ClInclude Include="AutoS\include\auto_data_monster.h" />
     <ClInclude Include="AutoS\include\auto_data_nation_equip.h" />
@@ -229,6 +245,10 @@
     <ClInclude Include="AutoS\include\auto_data_trainqueue.h" />
     <ClInclude Include="AutoS\include\auto_data_upgrade.h" />
     <ClInclude Include="AutoS\include\auto_data_vip.h" />
+    <ClInclude Include="AutoS\include\auto_map_enemy.h" />
+    <ClInclude Include="AutoS\include\auto_map_res.h" />
+    <ClInclude Include="AutoS\include\auto_map_town.h" />
+    <ClInclude Include="AutoS\include\auto_map_zone.h" />
     <ClInclude Include="AutoS\include\global_netrecv_auto.h" />
     <ClInclude Include="AutoS\include\global_netsend_auto.h" />
     <ClInclude Include="AutoS\include\global_process_auto.h" />
@@ -256,6 +276,9 @@
     <ClInclude Include="include\global_cmdqueue.h" />
     <ClInclude Include="include\hero.h" />
     <ClInclude Include="include\mail.h" />
+    <ClInclude Include="include\map_enemy.h" />
+    <ClInclude Include="include\map_res.h" />
+    <ClInclude Include="include\map_town.h" />
     <ClInclude Include="include\mem_dump.h" />
     <ClInclude Include="include\actor_send.h" />
     <ClInclude Include="include\actor_notify.h" />
@@ -271,6 +294,7 @@
     <ClInclude Include="include\gmcmd.h" />
     <ClInclude Include="include\item.h" />
     <ClInclude Include="include\mapunit.h" />
+    <ClInclude Include="include\nation.h" />
     <ClInclude Include="include\quest.h" />
     <ClInclude Include="include\story.h" />
     <ClInclude Include="include\system.h" />

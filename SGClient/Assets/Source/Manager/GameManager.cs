@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour {
     public static void setDesignContentScale()
     {
 #if UNITY_ANDROID
-        if ( scaleWidth == 0 && scaleHeight == 0 )
+        /*if ( scaleWidth == 0 && scaleHeight == 0 )
         {
             int width = Screen.currentResolution.width;
             int height = Screen.currentResolution.height;
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour {
                 scaleWidth -= 1;
             }
             Screen.SetResolution( scaleWidth, scaleHeight, true );
-        }
+        }*/
 #endif
     }
 

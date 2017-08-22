@@ -17,7 +17,11 @@
 #include "actor_notify.h"
 #include "award.h"
 #include "global.h"
-
+#include "city.h"
+#include "army.h"
+#include "map_town.h"
+#include "map_enemy.h"
+#include "map_res.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -42,7 +46,7 @@ int mapunit_init()
 	g_mapunit_lastfreeindex = -1;
 	if ( g_Config.max_mapunitcount <= 0 )
 	{
-		g_mapunit_maxcount = 800000;
+		g_mapunit_maxcount = 200000;
 	}
 	else
 	{
@@ -67,16 +71,21 @@ int mapunit_getattr( int unit_index, SLK_NetS_AddMapUnit *pAttr )
 	pAttr->m_char_value_count = 0;
 	switch ( pMapUnit->type )
 	{
-	// 城池
-	case MAPUNIT_TYPE_CITY:
-	{		
+	case MAPUNIT_TYPE_CITY:	// 玩家城池
+		city_makeunit( pMapUnit->index, pAttr );
 		break;
-	}
-	//  部队
-	case MAPUNIT_TYPE_ARMY:
-	{
+	case MAPUNIT_TYPE_ARMY:	//  部队
+		army_makeunit( pMapUnit->index, pAttr );
 		break;
-	}
+	case MAPUNIT_TYPE_TOWN://  城镇
+		map_town_makeunit( pMapUnit->index, pAttr );
+		break;
+	case MAPUNIT_TYPE_ENEMY:// 流寇
+		map_enemy_makeunit( pMapUnit->index, pAttr );
+		break;
+	case MAPUNIT_TYPE_RES: // 资源
+		map_res_makeunit( pMapUnit->index, pAttr );
+		break;
 	default:
 		return -1;
 	}
@@ -91,23 +100,21 @@ int mapunit_getpos( int unit_index, short *posx, short *posy )
 	MapUnit *pMapUnit = &g_mapunit[unit_index];
 	switch ( pMapUnit->type )
 	{
-	case MAPUNIT_TYPE_CITY:
-	{
-		//if ( pMapUnit->index < 0 || pMapUnit->index >= g_city_maxcount )
-		//	break;
-		//*posx = g_city[pMapUnit->index].posx;
-		//*posy = g_city[pMapUnit->index].posy;
+	case MAPUNIT_TYPE_CITY:// 玩家城池
+		city_getpos( pMapUnit->index, posx, posy );
 		break;
-	}
-	case MAPUNIT_TYPE_ARMY:
-	{
-		//if ( pMapUnit->index < 0 || pMapUnit->index >= g_army_maxcount )
-		//	break;
-		//*posx = g_army[pMapUnit->index].posx;
-		//*posy = g_army[pMapUnit->index].posy;
+	case MAPUNIT_TYPE_ARMY://  部队
+		army_getpos( pMapUnit->index, posx, posy );
 		break;
-	}
-	
+	case MAPUNIT_TYPE_TOWN://  城镇
+		map_town_getpos( pMapUnit->index, posx, posy );
+		break;
+	case MAPUNIT_TYPE_ENEMY:// 流寇
+		map_enemy_getpos( pMapUnit->index, posx, posy );
+		break;
+	case MAPUNIT_TYPE_RES: // 资源
+		map_res_getpos( pMapUnit->index, posx, posy );
+		break;
 	default:
 		break;
 	}
@@ -431,6 +438,12 @@ int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int 
 			//target_posy = g_army[pMapUnit->index].posy;
 			break;
 			}
+		case MAPUNIT_TYPE_TOWN://  城镇
+			break;
+		case MAPUNIT_TYPE_ENEMY:// 流寇
+			break;
+		case MAPUNIT_TYPE_RES: // 资源
+			break;
 		default:
 			break;
 		}

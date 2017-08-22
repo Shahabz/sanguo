@@ -448,8 +448,6 @@ int struct_NetS_WorldMapInfo_send( char **pptr, int *psize, SLK_NetS_WorldMapInf
 {
 	int tmpi = 0;
 
-	LKSET_WORD_SEND( (*pptr), &pValue->m_map_width, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_map_height, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_area_width, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_area_height, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_map_area_xnum, (*psize) );
@@ -1323,7 +1321,7 @@ int struct_NetS_StoryRank_send( char **pptr, int *psize, SLK_NetS_StoryRank *pVa
 	return 0;
 }
 
-int struct_NetC_StoryState_send( char **pptr, int *psize, SLK_NetC_StoryState *pValue )
+int struct_NetS_StoryState_send( char **pptr, int *psize, SLK_NetS_StoryState *pValue )
 {
 	int tmpi = 0;
 
@@ -1333,7 +1331,7 @@ int struct_NetC_StoryState_send( char **pptr, int *psize, SLK_NetC_StoryState *p
 	return 0;
 }
 
-int struct_NetC_StoryRanknum_send( char **pptr, int *psize, SLK_NetC_StoryRanknum *pValue )
+int struct_NetS_StoryRanknum_send( char **pptr, int *psize, SLK_NetS_StoryRanknum *pValue )
 {
 	int tmpi = 0;
 
@@ -1343,13 +1341,22 @@ int struct_NetC_StoryRanknum_send( char **pptr, int *psize, SLK_NetC_StoryRanknu
 	return 0;
 }
 
-int struct_NetC_StoryRanktime_send( char **pptr, int *psize, SLK_NetC_StoryRanktime *pValue )
+int struct_NetS_StoryRanktime_send( char **pptr, int *psize, SLK_NetS_StoryRanktime *pValue )
 {
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_time, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_saveoffset, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapZoneChange_send( char **pptr, int *psize, SLK_NetS_MapZoneChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
 	return 0;
 }
 

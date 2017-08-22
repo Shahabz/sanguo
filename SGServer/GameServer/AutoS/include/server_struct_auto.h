@@ -94,6 +94,7 @@
 #define CMDS_STORYSTATE	(CMDS_BASE+88)
 #define CMDS_STORYRANKNUM	(CMDS_BASE+89)
 #define CMDS_STORYRANKTIME	(CMDS_BASE+90)
+#define CMDS_MAPZONECHANGE	(CMDS_BASE+91)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -110,6 +111,8 @@
 #define CMDC_ENTERCITY	(CMDC_BASE+10)
 #define CMDC_CHAT	(CMDC_BASE+11)
 #define CMDC_STORYBATTLE	(CMDC_BASE+12)
+#define CMDC_WORLDMAPASK	(CMDC_BASE+13)
+#define CMDC_WORLDMAPAREAINDEX	(CMDC_BASE+14)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

@@ -37,6 +37,7 @@ local GMCMD_CLIENT = {
 [2]="alert",
 [3]="msgbox",
 [4]="notify",
+[5]="dump",
 }
 
 -- ºÏ≤ÈGM÷∏¡Ó
@@ -100,6 +101,8 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 		
 	elseif cmdstr == "notify" then
 		Notify( msg )
-		
+	
+	elseif cmdstr == "dump"	then
+		ResourceManager.dump()
 	end
 end

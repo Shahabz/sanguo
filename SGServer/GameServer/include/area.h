@@ -3,8 +3,8 @@
 
 #define MAX_AREAMSGSIZE	2048
 
-#define AREA_WIDTH		7
-#define AREA_HEIGHT		7
+#define AREA_WIDTH		10
+#define AREA_HEIGHT		10
 
 // 世界地图一个区域结构
 typedef struct _area

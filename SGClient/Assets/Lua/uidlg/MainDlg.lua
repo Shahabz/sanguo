@@ -117,9 +117,12 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			--QuestAwardDlgShow();
 		
-		elseif nControlID == 5 then
-			--NpcTalk( "主公，大事不妙" )
-			--NpcTalkWait( BuildingGetDlgShow, {m_kind=21,m_offset=0,m_level=1} )
+		elseif nControlID == 4 or nControlID == 5 then
+			if GameManager.currentScence == "city" then
+				WorldMap.GotoWorldMap(-1, -1)
+			else
+				WorldMap.ReturnCity()
+			end
 		
 		elseif nControlID == 6 then
 			StoryDlgShow()

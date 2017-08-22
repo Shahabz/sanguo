@@ -16,6 +16,7 @@
 #include "global.h"
 #include "mapunit.h"
 #include "script_auto.h"
+#include "city.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -24,6 +25,12 @@ extern MYSQL *myData;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
+
+extern MapZoneInfo *g_zoneinfo;
+extern int g_zoneinfo_maxnum;
+
+extern MapTownInfo *g_towninfo;
+extern int g_towninfo_maxnum;
 
 Map g_map;
 int g_nUnitQueueNumLimit;		// 单个队列的极限，超过后不再分配
@@ -61,16 +68,15 @@ int map_init()
 	}
 
 	// 坐标格子数据
-	g_map.m_aTileData = (unsigned char **)malloc( sizeof(unsigned char *)* g_map.m_nMaxWidth );
+	g_map.m_aTileData = (Tile **)malloc( sizeof( Tile * )* g_map.m_nMaxWidth );
 	for ( int tmpi = 0; tmpi < g_map.m_nMaxWidth; tmpi++ )
 	{
-		g_map.m_aTileData[tmpi] = (unsigned char *)malloc( sizeof(unsigned char)* g_map.m_nMaxHeight );
-		memset( g_map.m_aTileData[tmpi], 0, sizeof(unsigned char)*(g_map.m_nMaxHeight) );
+		g_map.m_aTileData[tmpi] = (Tile *)malloc( sizeof( Tile )* g_map.m_nMaxHeight );
+		memset( g_map.m_aTileData[tmpi], 0, sizeof( Tile )*(g_map.m_nMaxHeight) );
 	}
 	
 	// 世界地图脚本
 	sc_OnWorldMapInit( g_map.m_nMaxWidth, g_map.m_nMaxHeight );
-
 	return 0; 
 }
 
@@ -87,148 +93,232 @@ void map_logic()
 void map_sendinfo( int actor_index, short tposx, short tposy )
 {
 	SLK_NetS_WorldMapInfo info = { 0 };
-	info.m_map_width = g_map.m_nMaxWidth;
-	info.m_map_height = g_map.m_nMaxHeight;
 	info.m_area_width = AREA_WIDTH;
 	info.m_area_height = AREA_HEIGHT;
 	info.m_map_area_xnum = g_map.m_nAreaXNum;
 	info.m_map_area_ynum = g_map.m_nAreaYNum;
 	info.m_target_posx = tposx;
 	info.m_target_posy = tposy;
-	
+	City *pCity = city_getptr( actor_index );
+	if ( pCity )
+	{
+		info.m_citystate = pCity->state;
+		info.m_my_city_unit_index = pCity->unit_index;
+		info.m_my_city_posx = pCity->posx;
+		info.m_my_city_posy = pCity->posy;
+	}
 	netsend_worldmapinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 }
 
-// 世界地图配置信息-跨服
-void map_sendinfo_global( int actor_index, short serverid, short tposx, short tposy )
+// 获取地区id
+int map_zone_getid( int posx, int posy )
+{
+	int zonex, zoney;
+	if ( posx >= g_map.m_nMaxWidth )
+		posx = g_map.m_nMaxWidth - 1;
+	if ( posy >= g_map.m_nMaxHeight )
+		posy = g_map.m_nMaxHeight - 1;
+	zonex = (posx + 1) / 100;
+	zoney = (posy + 1) / 100;
+	return zoney*(5) + zonex + 1;
+}
+
+//地图地区进入
+void map_zoneenter( int actor_index, short posx, short posy )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return;
+	if ( posx < 0 && posy < 0 )
+	{
+		g_actors[actor_index].view_zoneid = 0;
+		return;
+	}
+	short zoneid = map_zone_getid( posx, posy );
+	if ( g_actors[actor_index].view_zoneid != zoneid )
+	{// 通知客户端进入新的地区
+		g_actors[actor_index].view_zoneid = zoneid;
+		SLK_NetS_MapZoneChange pValue = {0};
+		pValue.m_zoneid = zoneid;
+		pValue.m_open = 1;
+		netsend_mapzonechange_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+}
 
+// 区域信息
+void map_areaenter( int actor_index, int areaindex, short posx, short posy )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return;
+	if ( areaindex >= g_map.m_nAreaMaxCount )
+		return;
+	if ( g_actors[actor_index].view_areaindex != areaindex )
+	{
+		map_zoneenter( actor_index, posx, posy );
+		view_area_change( actor_index, areaindex );
+		if ( areaindex < 0 )
+			g_actors[actor_index].view_areaindex = -1;
+		else
+			g_actors[actor_index].view_areaindex = areaindex;
+	}
+}
+
+// 获取占地格子
+int map_getobject_grid( int type, int index )
+{
+	int grid = 1;
+	switch ( type )
+	{
+	case MAPUNIT_TYPE_CITY:	// 玩家城池
+		grid = 1;
+		break;
+	case MAPUNIT_TYPE_TOWN://  城镇
+	{
+		if ( index <= 0 || index >= g_towninfo_maxnum )
+			return 1;
+		grid = g_towninfo[index].grid;
+	}
+		break;
+	case MAPUNIT_TYPE_ENEMY:// 流寇
+		grid = 1;
+		break;
+	case MAPUNIT_TYPE_RES: // 资源
+		grid = 1;
+		break;
+	default:
+		return 1;
+	}
+	return grid;
 }
 
 // 添加对象
-int map_addobject( int type, short posx, short posy, char unittype )
+int map_addobject( int type, int index, short posx, short posy )
 {
 	if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxHeight )
 	{
 		return -1;
 	}
-
-	switch ( type )
+	int grid = map_getobject_grid( type, index );
+	switch ( grid )
 	{
 	// 占3*3格子
-	case -3:
+	case 3:
 		if ( posx <= 0 || posy <= 0 || posx >= g_map.m_nMaxWidth-1 || posy >= g_map.m_nMaxHeight-1 )
 		{
 			return -1;
 		}
-		if ( unittype > 0 )
-		{
-			g_map.m_aTileData[posx][posy]			= unittype;
-			g_map.m_aTileData[posx - 1][posy]		= unittype;
-			g_map.m_aTileData[posx - 1][posy - 1]	= unittype;
-			g_map.m_aTileData[posx][posy - 1]		= unittype;
-			g_map.m_aTileData[posx + 1][posy - 1]	= unittype;
-			g_map.m_aTileData[posx + 1][posy]		= unittype;
-			g_map.m_aTileData[posx + 1][posy + 1]	= unittype;
-			g_map.m_aTileData[posx][posy + 1]		= unittype;
-			g_map.m_aTileData[posx - 1][posy + 1]	= unittype;
-		}
+		g_map.m_aTileData[posx][posy].unit_type = type;
+		g_map.m_aTileData[posx][posy].unit_index = index;
+		g_map.m_aTileData[posx - 1][posy].unit_type = type;
+		g_map.m_aTileData[posx - 1][posy].unit_index = index;
+		g_map.m_aTileData[posx - 1][posy - 1].unit_type = type;
+		g_map.m_aTileData[posx - 1][posy - 1].unit_index = index;
+		g_map.m_aTileData[posx][posy - 1].unit_type = type;
+		g_map.m_aTileData[posx][posy - 1].unit_index = index;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_type = type;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = index;
+		g_map.m_aTileData[posx + 1][posy].unit_type = type;
+		g_map.m_aTileData[posx + 1][posy].unit_index = index;
+		g_map.m_aTileData[posx + 1][posy + 1].unit_type = type;
+		g_map.m_aTileData[posx + 1][posy + 1].unit_index = index;
+		g_map.m_aTileData[posx][posy + 1].unit_type = type;
+		g_map.m_aTileData[posx][posy + 1].unit_index = index;
+		g_map.m_aTileData[posx - 1][posy + 1].unit_type = type;
+		g_map.m_aTileData[posx - 1][posy + 1].unit_index = index;
 		break;
 	// 占2*2个格子
-	case MAPUNIT_TYPE_CITY:
-	case -2:
+	case 2:
 		if ( posy <= 0 || posx >= g_map.m_nMaxWidth - 1 )
 		{
 			return -1;
 		}
-		if ( g_map.m_aTileData[posx][posy]			> 0 ||
-			g_map.m_aTileData[posx][posy - 1]		> 0 ||
-			g_map.m_aTileData[posx + 1][posy - 1]	> 0 ||
-			g_map.m_aTileData[posx + 1][posy]		> 0 )
+		if ( g_map.m_aTileData[posx][posy].unit_type		> 0 ||
+			g_map.m_aTileData[posx][posy - 1].unit_type		> 0 ||
+			g_map.m_aTileData[posx + 1][posy - 1].unit_type	> 0 ||
+			g_map.m_aTileData[posx + 1][posy].unit_type		> 0 )
 		{
 			return -1;
 		}
-		if ( unittype > 0 )
-		{
-			g_map.m_aTileData[posx][posy]			= unittype;
-			g_map.m_aTileData[posx][posy - 1]		= unittype;
-			g_map.m_aTileData[posx + 1][posy - 1]	= unittype;
-			g_map.m_aTileData[posx + 1][posy]		= unittype;
-		}
+		g_map.m_aTileData[posx][posy].unit_type = type;
+		g_map.m_aTileData[posx][posy].unit_index = index;
+		g_map.m_aTileData[posx][posy - 1].unit_type = type;
+		g_map.m_aTileData[posx][posy - 1].unit_index = index;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_type = type;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = index;
+		g_map.m_aTileData[posx + 1][posy].unit_type = type;
+		g_map.m_aTileData[posx + 1][posy].unit_index = index;
 		break;
 
 	// 占1*1个格子
-	case MAPUNIT_TYPE_ARMY:
-	case -1:
-		if ( g_map.m_aTileData[posx][posy] > 0 )
+	case 1:
+		if ( g_map.m_aTileData[posx][posy].unit_type > 0 )
 		{
 			return -1;
 		}
-		if ( unittype > 0 )
-		{
-			g_map.m_aTileData[posx][posy] = unittype;
-		}
+		g_map.m_aTileData[posx][posy].unit_type = type;
+		g_map.m_aTileData[posx][posy].unit_index = index;
 		break;
 	default:
-		if ( g_map.m_aTileData[posx][posy] > 0 )
-		{
-			return -1;
-		}
-		if ( unittype > 0 )
-		{
-			g_map.m_aTileData[posx][posy] = unittype;
-		}
 		break;
 	}
 	return 0;
 }
 
 // 移除对象
-int map_delobject( int type, short posx, short posy )
+int map_delobject( int type, int index, short posx, short posy )
 {
 	if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxHeight )
 	{
 		return -1;
 	}
-
-	switch ( type )
+	int grid = map_getobject_grid( type, index );
+	switch ( grid )
 	{
 		// 占3*3格子
-	case -3:
+	case 3:
 		if ( posx <= 0 || posy <= 0 || posx >= g_map.m_nMaxWidth - 1 || posy >= g_map.m_nMaxHeight - 1 )
 		{
 			return -1;
 		}
-		g_map.m_aTileData[posx][posy]			= 0;
-		g_map.m_aTileData[posx - 1][posy]		= 0;
-		g_map.m_aTileData[posx - 1][posy - 1]	= 0;
-		g_map.m_aTileData[posx][posy - 1]		= 0;
-		g_map.m_aTileData[posx + 1][posy - 1]	= 0;
-		g_map.m_aTileData[posx + 1][posy]		= 0;
-		g_map.m_aTileData[posx + 1][posy + 1]	= 0;
-		g_map.m_aTileData[posx][posy + 1]		= 0;
-		g_map.m_aTileData[posx - 1][posy + 1]	= 0;
+		g_map.m_aTileData[posx][posy].unit_type = 0;
+		g_map.m_aTileData[posx][posy].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy].unit_type = 0;
+		g_map.m_aTileData[posx - 1][posy].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy - 1].unit_type = 0;
+		g_map.m_aTileData[posx - 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_type = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_type = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_type = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy + 1].unit_type = 0;
+		g_map.m_aTileData[posx + 1][posy + 1].unit_index = 0;
+		g_map.m_aTileData[posx][posy + 1].unit_type = 0;
+		g_map.m_aTileData[posx][posy + 1].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy + 1].unit_type = 0;
+		g_map.m_aTileData[posx - 1][posy + 1].unit_index = 0;
 		break;
 
 	// 占2*2个格子
-	case MAPUNIT_TYPE_CITY: 
-	case -2:
+	case 2: 
 		if ( posy <= 0 || posx >= g_map.m_nMaxWidth - 1 )
 		{
 			return -1;
 		}
-		g_map.m_aTileData[posx][posy]			= 0;
-		g_map.m_aTileData[posx][posy - 1]		= 0;
-		g_map.m_aTileData[posx + 1][posy - 1]	= 0;
-		g_map.m_aTileData[posx + 1][posy]		= 0;
+		g_map.m_aTileData[posx][posy].unit_type = 0;
+		g_map.m_aTileData[posx][posy].unit_index = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_type = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_type = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_type = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_index = 0;
 		break;
 
 	// 占1*1个格子
-	case MAPUNIT_TYPE_ARMY:
-	case -1:
-		g_map.m_aTileData[posx][posy] = 0;
+	case 1:
+		g_map.m_aTileData[posx][posy].unit_type = 0;
+		g_map.m_aTileData[posx][posy].unit_index = 0;
 		break;
 	default:
 		break;
@@ -236,28 +326,16 @@ int map_delobject( int type, short posx, short posy )
 	return 0;
 }
 
-// 圈编号
-int getCircleID( short posx, short posy )
-{
-	int a = posx / 65 + 1;
-	int b = posy / 65 + 1;
-	int circleid = min( min( 16 - a, a ), min( 16 - b, b ) );
-	return circleid;
-}
-
 // 判定这个地点是否能迁城
 int map_canmove( short posX, short posY )
 {
-	if( posX < 0 || posY < 0 || posX >= g_map.m_nMaxWidth || posY >= g_map.m_nMaxWidth || posY - 1 <= 0 || posX + 1 >= g_map.m_nMaxWidth  )
+	if( posX < 0 || posY < 0 || posX >= g_map.m_nMaxWidth || posY >= g_map.m_nMaxWidth )
 	{
 		return 0;
 	}
 
-	// 检查下起点
-	if ( g_map.m_aTileData[posX][posY]			== 0 &&
-		g_map.m_aTileData[posX][posY-1]			== 0 &&
-		g_map.m_aTileData[posX+1][posY-1]		== 0 &&
-		g_map.m_aTileData[posX+1][posY]		== 0 )
+	// 检查下
+	if ( g_map.m_aTileData[posX][posY].unit_type == 0 )
 	{
 		return 1;
 	}
@@ -336,38 +414,38 @@ int map_getcanmovenearest( short *pPosx, short *pPosy )
 }
 
 // 随机一个空白点
-int map_getrandpos( int type, short *pPosx, short *pPosy )
+int map_getrandpos( int grid, short *pPosx, short *pPosy )
 {
 	*pPosx = rand() % (g_map.m_nMaxWidth - MAP_SIZEOFFSET) + 1;
 	*pPosy = rand() % (g_map.m_nMaxHeight - MAP_SIZEOFFSET) + 1;
 
-	switch ( type )
+	switch ( grid )
 	{
 		// 占3*3格子
-	case -3:
-		if ( g_map.m_aTileData[*pPosx][*pPosy]			== 0 &&
-			g_map.m_aTileData[*pPosx - 1][*pPosy]		== 0 &&
-			g_map.m_aTileData[*pPosx - 1][*pPosy - 1]	== 0 &&
-			g_map.m_aTileData[*pPosx][*pPosy - 1]		== 0 &&
-			g_map.m_aTileData[*pPosx + 1][*pPosy - 1]	== 0 &&
-			g_map.m_aTileData[*pPosx + 1][*pPosy]		== 0 &&
-			g_map.m_aTileData[*pPosx + 1][*pPosy + 1]	== 0 &&
-			g_map.m_aTileData[*pPosx][*pPosy + 1]		== 0 &&
-			g_map.m_aTileData[*pPosx - 1][*pPosy + 1]	== 0 )
+	case 3:
+		if ( g_map.m_aTileData[*pPosx][*pPosy].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx - 1][*pPosy].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx - 1][*pPosy - 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx][*pPosy - 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx + 1][*pPosy - 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx + 1][*pPosy].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx + 1][*pPosy + 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx][*pPosy + 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx - 1][*pPosy + 1].unit_type == 0 )
 		{
 			return 0;
 		}
 		else
 		{
-			while ( g_map.m_aTileData[*pPosx][*pPosy]		> 0 ||
-				g_map.m_aTileData[*pPosx - 1][*pPosy]		> 0 ||
-				g_map.m_aTileData[*pPosx - 1][*pPosy - 1]	> 0 ||
-				g_map.m_aTileData[*pPosx][*pPosy - 1]		> 0 ||
-				g_map.m_aTileData[*pPosx + 1][*pPosy - 1]	> 0 ||
-				g_map.m_aTileData[*pPosx + 1][*pPosy]		> 0 ||
-				g_map.m_aTileData[*pPosx + 1][*pPosy + 1]	> 0 ||
-				g_map.m_aTileData[*pPosx][*pPosy + 1]		> 0 ||
-				g_map.m_aTileData[*pPosx - 1][*pPosy + 1]	> 0 )
+			while ( g_map.m_aTileData[*pPosx][*pPosy].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx - 1][*pPosy].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx - 1][*pPosy - 1].unit_type	> 0 ||
+				g_map.m_aTileData[*pPosx][*pPosy - 1].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx + 1][*pPosy - 1].unit_type	> 0 ||
+				g_map.m_aTileData[*pPosx + 1][*pPosy].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx + 1][*pPosy + 1].unit_type	> 0 ||
+				g_map.m_aTileData[*pPosx][*pPosy + 1].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx - 1][*pPosy + 1].unit_type	> 0 )
 			{
 				*pPosx = rand() % (g_map.m_nMaxWidth - MAP_SIZEOFFSET) + 1;
 				*pPosy = rand() % (g_map.m_nMaxHeight - MAP_SIZEOFFSET) + 1;
@@ -375,23 +453,20 @@ int map_getrandpos( int type, short *pPosx, short *pPosy )
 			return 0;
 		}
 	// 占2*2个格子
-	case MAPUNIT_TYPE_CITY:
-	case -2:
-		if ( g_map.m_aTileData[*pPosx][*pPosy]			== 0 &&
-			g_map.m_aTileData[*pPosx][*pPosy - 1]		== 0 &&
-			g_map.m_aTileData[*pPosx + 1][*pPosy - 1]	== 0 &&
-			g_map.m_aTileData[*pPosx + 1][*pPosy]		== 0 && 
-			!(*pPosx >= 455 && *pPosx <= 505 && *pPosy >= 455 && *pPosy <= 505) )
+	case 2:
+		if ( g_map.m_aTileData[*pPosx][*pPosy].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx][*pPosy - 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx + 1][*pPosy - 1].unit_type == 0 &&
+			g_map.m_aTileData[*pPosx + 1][*pPosy].unit_type == 0 )
 		{
 			return 0;
 		}
 		else
 		{
-			while ( g_map.m_aTileData[*pPosx][*pPosy]		> 0 ||
-				g_map.m_aTileData[*pPosx][*pPosy - 1]		> 0 ||
-				g_map.m_aTileData[*pPosx + 1][*pPosy - 1]	> 0 ||
-				g_map.m_aTileData[*pPosx + 1][*pPosy]		> 0 || 
-			(*pPosx >= 455 && *pPosx <= 505 && *pPosy >= 455 && *pPosy <= 505) )
+			while ( g_map.m_aTileData[*pPosx][*pPosy].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx][*pPosy - 1].unit_type		> 0 ||
+				g_map.m_aTileData[*pPosx + 1][*pPosy - 1].unit_type	> 0 ||
+				g_map.m_aTileData[*pPosx + 1][*pPosy].unit_type		> 0 )
 			{
 				*pPosx = rand() % (g_map.m_nMaxWidth - MAP_SIZEOFFSET) + 1;
 				*pPosy = rand() % (g_map.m_nMaxHeight - MAP_SIZEOFFSET) + 1;
@@ -401,17 +476,14 @@ int map_getrandpos( int type, short *pPosx, short *pPosy )
 		break;
 
 	// 占1*1个格子
-	case MAPUNIT_TYPE_ARMY:
-	case -1:
-		if ( g_map.m_aTileData[*pPosx][*pPosy] == 0 &&
-			!(*pPosx >= 477 && *pPosx <= 483 && *pPosy >= 477 && *pPosy <= 483) )
+	case 1:
+		if ( g_map.m_aTileData[*pPosx][*pPosy].unit_type == 0 )
 		{
 			return 0;
 		}
 		else
 		{
-			while ( g_map.m_aTileData[*pPosx][*pPosy] > 0 ||
-				(*pPosx >= 477 && *pPosx <= 483 && *pPosy >= 477 && *pPosy <= 483) )
+			while ( g_map.m_aTileData[*pPosx][*pPosy].unit_type > 0 )
 			{
 				*pPosx = rand() % (g_map.m_nMaxWidth - MAP_SIZEOFFSET) + 1;
 				*pPosy = rand() % (g_map.m_nMaxHeight - MAP_SIZEOFFSET) + 1;
@@ -440,7 +512,7 @@ int map_getrandpos_withrange( int type, short posx, short posy, int range, short
 			short y = posy + tmpj;
 			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
 				continue;
-			if ( g_map.m_aTileData[x][y] > 0 )
+			if ( g_map.m_aTileData[x][y].unit_type > 0 )
 				continue;
 			if ( map_addobject( type, x, y, -1 ) < 0 )
 				continue;
@@ -472,74 +544,7 @@ int map_getrandpos_withrange( int type, short posx, short posy, int range, short
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy )
 {
-	if ( g_last_cityposx <= 0  )
-		g_last_cityposx = world_data_get( 5, NULL );
-	if ( g_last_cityposy <= 0  )
-		g_last_cityposy = world_data_get( 6, NULL );
-	if ( g_last_cityposx <= 0 )
-		g_last_cityposx = 200;
-	if ( g_last_cityposy <= 0 )
-		g_last_cityposy = 200;
-	if ( g_last_cityposx >= MAP_W )
-		g_last_cityposx = 800;
-	if ( g_last_cityposy >= MAP_H )
-		g_last_cityposy = 800;
-	*pPosx = g_last_cityposx;
-	*pPosy = g_last_cityposy;
-	if ( g_map.m_aTileData[*pPosx][*pPosy] == 0 &&
-		g_map.m_aTileData[*pPosx][*pPosy - 1] == 0 &&
-		g_map.m_aTileData[*pPosx + 1][*pPosy - 1] == 0 &&
-		g_map.m_aTileData[*pPosx + 1][*pPosy] == 0 )
-	{
-		return 0;
-	}
-	else
-	{
-		int loops = 0;
-		int loopscount = 0;
-		while ( g_map.m_aTileData[*pPosx][*pPosy] > 0 ||
-			g_map.m_aTileData[*pPosx][*pPosy - 1] > 0 ||
-			g_map.m_aTileData[*pPosx + 1][*pPosy - 1] > 0 ||
-			g_map.m_aTileData[*pPosx + 1][*pPosy] > 0 ||
-			getCircleID( *pPosx, *pPosy ) > 5 || 
-			( *pPosx >= 455 && *pPosx <= 505 && *pPosy >= 455 && *pPosy <= 505 ) )
-		{
-			short roundmin = g_last_cityposx - 32;
-			short roundmax = g_last_cityposx + 32;
-			if ( roundmin < 16 )
-				roundmin = 16;
-			if ( roundmax > g_map.m_nMaxWidth - 16 )
-				roundmax = g_map.m_nMaxWidth - 16;
-			*pPosx = random( roundmin, roundmax );
-
-
-			roundmin = g_last_cityposy - 32;
-			roundmax = g_last_cityposy + 32;
-			if ( roundmin < 16 )
-				roundmin = 16;
-			if ( roundmax > g_map.m_nMaxHeight - 16 )
-				roundmax = g_map.m_nMaxHeight - 16;
-			*pPosy = random( roundmin, roundmax );
-
-			loopscount += 1;
-			if ( loopscount > 921600 )
-			{
-				return -1;
-			}
-			loops += 1;
-			if ( loops > 1024 )
-			{ // 没位置了，那么找一个位置，从新开始
-				g_last_cityposx = random( 200, 400 );
-				g_last_cityposy = random( 700, MAP_H );
-				loops = 0;
-			}
-		}
-		g_last_cityposx = *pPosx;
-		g_last_cityposy = *pPosy;
-		world_data_set( WORLD_DATA_LAST_CITYPOSX, g_last_cityposx, NULL, NULL );
-		world_data_set( WORLD_DATA_LAST_CITYPOSY, g_last_cityposy, NULL, NULL );
-		return 0;
-	}
+	
 	return -1;
 }
 
@@ -563,118 +568,6 @@ bool ptInLine( Pos point, Pos lineStartPoint, Pos lineEndPoint, double fToleranc
 	return bResult;
 }
 
-// 地图沼泽距离
-short map_swamp_distance( short f_posx, short f_posy, short t_posx, short t_posy, short distance )
-{
-	// 出发点和目的点都在沼泽
-	if ( f_posx >= 455 && f_posx <= 505 && f_posy >= 455 && f_posy <= 505 &&
-		t_posx >= 455 && t_posx <= 505 && t_posy >= 455 && t_posy <= 505 )
-	{
-		return distance;
-	}
-
-	Pos line1 = { 0 }; line1.x = 455;
-	Pos line2 = { 0 }; line2.x = 505;
-	Pos line3 = { 0 }; line3.y = 455;
-	Pos line4 = { 0 }; line4.y = 505;
-	Pos pos[4] = { 0 };
-	int count = 0;
-
-	if ( f_posx == t_posx )
-	{
-		line1.y = f_posy;
-		line2.y = f_posy;
-	}
-	else
-	{
-		line1.y = (int)(((t_posy - f_posy) / (float)(t_posx - f_posx))*(line1.x - f_posx)) + f_posy;
-		line2.y = (int)(((t_posy - f_posy) / (float)(t_posx - f_posx))*(line2.x - f_posx)) + f_posy;
-	}
-
-	if ( f_posy == t_posy )
-	{
-		line3.x = f_posx;
-		line4.x = f_posx;
-	}
-	else
-	{
-		line3.x = (int)((line3.y - f_posy)*(t_posx - f_posx) / (float)(t_posy - f_posy)) + f_posx;
-		line4.x = (int)((line4.y - f_posy)*(t_posx - f_posx) / (float)(t_posy - f_posy)) + f_posx;
-	}
-
-	if ( line1.y >= 455 && line1.y <= 505 )
-	{
-		pos[count].x = line1.x;
-		pos[count].y = line1.y;
-		count += 1;
-	}
-	if ( line2.y >= 455 && line2.y <= 505 )
-	{
-		pos[count].x = line2.x;
-		pos[count].y = line2.y;
-		count += 1;
-	}
-	if ( line3.x >= 455 && line3.x <= 505 )
-	{
-		pos[count].x = line3.x;
-		pos[count].y = line3.y;
-		count += 1;
-	}
-	if ( line4.x >= 455 && line4.x <= 505 )
-	{
-		pos[count].x = line4.x;
-		pos[count].y = line4.y;
-		count += 1;
-	}
-
-	if ( count == 2 )
-	{
-		// 如果出发点在沼泽
-		if ( f_posx >= 455 && f_posx <= 505 && f_posy >= 455 && f_posy <= 505 )
-		{ // 那么目的点肯定是外面
-			short dis0 = (short)sqrt( pow( (float)(pos[0].x - f_posx), 2 ) + pow( (float)(pos[0].y - f_posy), 2 ) );
-			short dis1 = (short)sqrt( pow( (float)(pos[0].x - t_posx), 2 ) + pow( (float)(pos[0].y - t_posy), 2 ) );
-			if ( dis0 < distance && dis1 < distance )
-			{
-				return dis0;
-			}
-			else
-			{
-				short len = (short)sqrt( pow( (float)(pos[1].x - f_posx), 2 ) + pow( (float)(pos[1].y - f_posy), 2 ) );
-				return len;
-			}
-		}
-		// 如果目的点在沼泽
-		else if ( t_posx >= 455 && t_posx <= 505 && t_posy >= 455 && t_posy <= 505 )
-		{ // 那么出发点可你当在外面
-			short dis0 = (short)sqrt( pow( (float)(pos[0].x - f_posx), 2 ) + pow( (float)(pos[0].y - f_posy), 2 ) );
-			short dis1 = (short)sqrt( pow( (float)(pos[0].x - t_posx), 2 ) + pow( (float)(pos[0].y - t_posy), 2 ) );
-			if ( dis0 < distance && dis1 < distance )
-			{
-				return dis1;
-			}
-			else
-			{
-				short len = (short)sqrt( pow( (float)(pos[1].x - t_posx), 2 ) + pow( (float)(pos[1].y - t_posy), 2 ) );
-				return len;
-			}
-		}
-		else
-		{ // 都不在沼泽
-			Pos lineStartPoint; lineStartPoint.x = f_posx; lineStartPoint.y = f_posy;
-			Pos lineEndPoint; lineEndPoint.x = t_posx; lineEndPoint.y = t_posy;
-
-			if ( ptInLine( pos[0], lineStartPoint, lineEndPoint, 0 ) )
-			{
-				// 穿过
-				short len = (short)sqrt( pow( (float)(pos[0].x - pos[1].x), 2 ) + pow( (float)(pos[0].y - pos[1].y), 2 ) );
-				return len;
-			}
-		}
-	}
-	return 0;
-}
-
 // dump地图数据
 void map_tile_dump()
 {
@@ -685,7 +578,7 @@ void map_tile_dump()
 	{
 		for ( short posx = 0; posx < g_map.m_nMaxWidth; posx++ )
 		{
-			fprintf( fp, "%d\t", g_map.m_aTileData[posx][posy] );
+			fprintf( fp, "%d\t", g_map.m_aTileData[posx][posy].unit_type );
 		}
 		fprintf( fp, "\n" );
 	}

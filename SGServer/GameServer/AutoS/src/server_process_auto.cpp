@@ -8,6 +8,7 @@
 #include "actor.h"
 #include "chat.h"
 #include "story.h"
+#include "map.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -131,5 +132,17 @@ void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue )
 {
 	// process.
 	story_battle( client_index, pValue );
+}
+
+void proc_worldmapask_S( int client_index, SLK_NetC_WorldMapAsk *pValue )
+{
+	// process.
+	map_sendinfo( client_index, pValue->m_to_posx, pValue->m_to_posy );
+}
+
+void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pValue )
+{
+	// process.
+	map_areaenter( client_index, pValue->m_areaindex, pValue->m_posx, pValue->m_posy );
 }
 

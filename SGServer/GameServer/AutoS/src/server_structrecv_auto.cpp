@@ -149,3 +149,22 @@ int struct_NetC_StoryBattle_recv( char **pptr, int *psize, SLK_NetC_StoryBattle 
 	return 0;
 }
 
+int struct_NetC_WorldMapAsk_recv( char **pptr, int *psize, SLK_NetC_WorldMapAsk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_RECV( &pValue->m_to_posx, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_to_posy, (*pptr), (*psize) );
+	return 0;
+}
+
+int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldMapAreaIndex *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_areaindex, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_posx, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_posy, (*pptr), (*psize) );
+	return 0;
+}
+

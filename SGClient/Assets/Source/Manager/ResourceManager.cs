@@ -244,6 +244,10 @@ public class ResourceManager : MonoBehaviour
 
         for ( int i = 0; i < dependencies.Length; i++ )
         {
+			if (dependencies [i] [0] == '_') {
+				LogUtil.GetInstance().WriteGame( "LoadDependencies:["+assetBundleName+"] skip:[" + dependencies[i] + "]" );
+				continue;
+			}
             LoadAssetBundle( dependencies[i] );
         }
     }
@@ -292,12 +296,22 @@ public class ResourceManager : MonoBehaviour
                 int progress = tmpi + 1;
                 int totalProgress = m_AssetBundleNameList.Length;
 
-                // 加载AssetBundle
-                LoadAssetBundle( assetBundleName );
+				if (assetBundleName [0] == '_') 
+				{
+					// 设置进度
+					object[] param = { "skip:"+assetBundleName, progress, totalProgress };
+					LuaFun.loadAssetBundleProc.Call( param );
+				} 
+				else 
+				{
+					// 加载AssetBundle
+					LoadAssetBundle( assetBundleName );
 
-                // 设置进度
-                object[] param = { assetBundleName, progress, totalProgress };
-                LuaFun.loadAssetBundleProc.Call( param );
+					// 设置进度
+					object[] param = { assetBundleName, progress, totalProgress };
+					LuaFun.loadAssetBundleProc.Call( param );
+				}
+        
             }
         }
         else
@@ -349,31 +363,40 @@ public class ResourceManager : MonoBehaviour
     /// <summary>
     /// 释放AssetBundle
     /// </summary>
-    static public void UnloadAssetBundle( string assetBundleName )
+    static public bool UnloadAssetBundle( string assetBundleName )
     {
-        AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
-        if ( bundle == null )
-            return;
+        //AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
+        //if ( bundle == null )
+            //return;
+
+		// 已经缓存的
+		AssetBundleInfo bundle = null;
+		m_LoadedAssetBundles.TryGetValue( assetBundleName, out bundle );
+		if (bundle == null) {
+			return false;
+		}
 
         if ( --bundle.m_ReferencedCount <= 0 )
         {
             if ( m_LoadRequests.ContainsKey( assetBundleName ) )
             {
-                return;
+				LogUtil.GetInstance().WriteGame( "UnloadAssetBundle:"+assetBundleName+"=LoadRequests" );
+                return false;
             }
             bundle.m_AssetBundle.Unload( false );
             m_LoadedAssetBundles.Remove( assetBundleName );
         }
+		return true;
     }
 
     /// <summary>
     /// 立即释放AssetBundle
     /// </summary>
-    static public void UnloadAssetBundleImmediately( string assetBundleName )
+	static public bool UnloadAssetBundleImmediately( string assetBundleName )
     {
         AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
         if ( bundle == null )
-            return;
+			return false;
 
         while ( true )
         {
@@ -386,6 +409,7 @@ public class ResourceManager : MonoBehaviour
             m_LoadedAssetBundles.Remove( assetBundleName );
             break;
         }
+		return true;
     }
 
     /// <summary>
@@ -817,4 +841,14 @@ public class ResourceManager : MonoBehaviour
             StartCoroutine( OnResourceLoad<GameObject>( m_resmap_prefab[reskeyname][0], null, func ) );
         }
     }
+
+	static public void dump()
+	{
+		LogUtil.GetInstance().WriteGame( "----------------------------------LoadedAssetBundles Dump----------------------------------" );
+		foreach (var item in m_LoadedAssetBundles)
+		{
+			LogUtil.GetInstance ().WriteGame (item.Key+"("+item.Value.m_ReferencedCount+")");
+		}
+		LogUtil.GetInstance().WriteGame( "-------------------------------------------------------------------------------------------" );
+	}
 }

@@ -217,11 +217,13 @@ end
 -- 读取AssetBundle的回调
 function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress )
 	m_uiLoading.transform:GetComponent( "Slider" ).value = progress/totalProgress;
+	gamelog( "LoadAllAssetBundle:"..assetBundleName.."("..progress.."/"..totalProgress..")" )
 	if progress == totalProgress then
 		-- 资源初始化类放在这
 		-- 初始化提示文字对象池
 		PopTextModPoolInit();
 		NotifyModPoolInit();
+		MapZoneTipsModPoolInit();
 		DialogFrameModPoolInit();
 		netsend_list_C( 0 );
 	end

@@ -24,7 +24,7 @@ public class UIManagerWrap
 		L.RegFunction("ShowMask", ShowMask);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegConstant("UI_MAXCOUNT", 16);
+		L.RegConstant("UI_MAXCOUNT", 8);
 		L.EndClass();
 	}
 

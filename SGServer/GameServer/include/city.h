@@ -67,6 +67,12 @@ City *city_getptr_withactorid( int actorid );
 // 根据玩家id找到城池索引
 int city_getindex_withactorid( int actorid );
 
+// 显示单元属性
+void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr );
+
+// 城池位置
+void city_getpos( int city_index, short *posx, short *posy );
+
 // 创建一个新城池
 int city_new( City *pCity );
 

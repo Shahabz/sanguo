@@ -436,18 +436,23 @@ function netrecv_storyrank_C( buffer )
 end
 
 function netrecv_storystate_C( buffer )
-	local recvValue = struct_NetC_StoryState_recv( buffer );
+	local recvValue = struct_NetS_StoryState_recv( buffer );
 	proc_storystate_C( recvValue );
 end
 
 function netrecv_storyranknum_C( buffer )
-	local recvValue = struct_NetC_StoryRanknum_recv( buffer );
+	local recvValue = struct_NetS_StoryRanknum_recv( buffer );
 	proc_storyranknum_C( recvValue );
 end
 
 function netrecv_storyranktime_C( buffer )
-	local recvValue = struct_NetC_StoryRanktime_recv( buffer );
+	local recvValue = struct_NetS_StoryRanktime_recv( buffer );
 	proc_storyranktime_C( recvValue );
+end
+
+function netrecv_mapzonechange_C( buffer )
+	local recvValue = struct_NetS_MapZoneChange_recv( buffer );
+	proc_mapzonechange_C( recvValue );
 end
 
 Proc_Command = {
@@ -541,6 +546,7 @@ Proc_Command = {
 	[CMDS_STORYSTATE]=netrecv_storystate_C;
 	[CMDS_STORYRANKNUM]=netrecv_storyranknum_C;
 	[CMDS_STORYRANKTIME]=netrecv_storyranktime_C;
+	[CMDS_MAPZONECHANGE]=netrecv_mapzonechange_C;
 }
 
 function in_proc_command_C( cmd, buffer )
