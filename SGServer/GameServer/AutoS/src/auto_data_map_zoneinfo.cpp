@@ -47,7 +47,7 @@ int mapzoneinfo_init_auto()
 	g_zoneinfo = (MapZoneInfo *)malloc( sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 	memset( g_zoneinfo, 0, sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`open` from map_zoneinfo;" );
+	sprintf( szSQL, "select `id`,`open`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy` from map_zoneinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,16 @@ int mapzoneinfo_init_auto()
 			continue;
 		g_zoneinfo[id].id = atoi(row[offset++]);
 		g_zoneinfo[id].open = atoi(row[offset++]);
+		g_zoneinfo[id].center_posx = atoi(row[offset++]);
+		g_zoneinfo[id].center_posy = atoi(row[offset++]);
+		g_zoneinfo[id].top_left_posx = atoi(row[offset++]);
+		g_zoneinfo[id].top_left_posy = atoi(row[offset++]);
+		g_zoneinfo[id].top_right_posx = atoi(row[offset++]);
+		g_zoneinfo[id].top_right_posy = atoi(row[offset++]);
+		g_zoneinfo[id].bottom_left_posx = atoi(row[offset++]);
+		g_zoneinfo[id].bottom_left_posy = atoi(row[offset++]);
+		g_zoneinfo[id].bottom_right_posx = atoi(row[offset++]);
+		g_zoneinfo[id].bottom_right_posy = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

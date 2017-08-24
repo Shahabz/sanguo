@@ -23,6 +23,10 @@ SRC = \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
 ../AutoS/src/auto_data_hero_skill.cpp \
 ../AutoS/src/auto_data_item.cpp \
+../AutoS/src/auto_data_map_enemyinfo.cpp \
+../AutoS/src/auto_data_map_resinfo.cpp \
+../AutoS/src/auto_data_map_towninfo.cpp \
+../AutoS/src/auto_data_map_zoneinfo.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_nation_equip.cpp \
@@ -38,6 +42,10 @@ SRC = \
 ../AutoS/src/auto_data_trainqueue.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_data_vip.cpp \
+../AutoS/src/auto_map_enemy.cpp \
+../AutoS/src/auto_map_res.cpp \
+../AutoS/src/auto_map_town.cpp \
+../AutoS/src/auto_map_zone.cpp \
 ../AutoS/src/global_netrecv_auto.cpp \
 ../AutoS/src/global_netsend_auto.cpp \
 ../AutoS/src/global_process_auto.cpp \
@@ -84,8 +92,12 @@ login_user.cpp \
 mail.cpp \
 main.cpp \
 map.cpp \
+map_enemy.cpp \
+map_res.cpp \
+map_town.cpp \
 mapunit.cpp \
 mem_dump.cpp \
+nation.cpp \
 quest.cpp \
 script.cpp \
 script_auto.cpp \
@@ -155,6 +167,14 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_enemyinfo.o: ../AutoS/src/auto_data_map_enemyinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_resinfo.o: ../AutoS/src/auto_data_map_resinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_zoneinfo.o: ../AutoS/src/auto_data_map_zoneinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
@@ -184,6 +204,14 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_upgrade.o: ../AutoS/src/auto_data_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_vip.o: ../AutoS/src/auto_data_vip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_enemy.o: ../AutoS/src/auto_map_enemy.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_res.o: ../AutoS/src/auto_map_res.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_town.o: ../AutoS/src/auto_map_town.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_zone.o: ../AutoS/src/auto_map_zone.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/global_netrecv_auto.o: ../AutoS/src/global_netrecv_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -277,9 +305,17 @@ main.o: main.cpp
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map.o: map.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_enemy.o: map_enemy.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_res.o: map_res.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_town.o: map_town.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 mapunit.o: mapunit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 mem_dump.o: mem_dump.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+nation.o: nation.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 quest.o: quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

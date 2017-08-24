@@ -111,15 +111,15 @@ void map_sendinfo( int actor_index, short tposx, short tposy )
 }
 
 // 获取地区id
-int map_zone_getid( int posx, int posy )
+char map_zone_getid( int posx, int posy )
 {
 	int zonex, zoney;
 	if ( posx >= g_map.m_nMaxWidth )
 		posx = g_map.m_nMaxWidth - 1;
 	if ( posy >= g_map.m_nMaxHeight )
 		posy = g_map.m_nMaxHeight - 1;
-	zonex = (posx + 1) / 100;
-	zoney = (posy + 1) / 100;
+	zonex = (posx) / 100;
+	zoney = (posy) / 100;
 	return zoney*(5) + zonex + 1;
 }
 
@@ -133,13 +133,16 @@ void map_zoneenter( int actor_index, short posx, short posy )
 		g_actors[actor_index].view_zoneid = 0;
 		return;
 	}
-	short zoneid = map_zone_getid( posx, posy );
+	char zoneid = map_zone_getid( posx, posy );
 	if ( g_actors[actor_index].view_zoneid != zoneid )
 	{// 通知客户端进入新的地区
 		g_actors[actor_index].view_zoneid = zoneid;
 		SLK_NetS_MapZoneChange pValue = {0};
 		pValue.m_zoneid = zoneid;
-		pValue.m_open = 1;
+		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
+		{
+			pValue.m_open = (char)g_zoneinfo[zoneid].open;
+		}
 		netsend_mapzonechange_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 }
@@ -498,8 +501,8 @@ int map_getrandpos( int grid, short *pPosx, short *pPosy )
 	return -1;
 }
 
-// 根据指定点的范围获取一个可用坐标点
-int map_getrandpos_withrange( int type, short posx, short posy, int range, short *pPosx, short *pPosy )
+// 根据指定点的范围获取一个可用坐标点1*1的
+int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, short *pPosy )
 {
 	short findlistx[256] = { 0 };
 	short findlisty[256] = { 0 };
@@ -514,8 +517,8 @@ int map_getrandpos_withrange( int type, short posx, short posy, int range, short
 				continue;
 			if ( g_map.m_aTileData[x][y].unit_type > 0 )
 				continue;
-			if ( map_addobject( type, x, y, -1 ) < 0 )
-				continue;
+			//if ( map_addobject( type, x, y ) < 0 )
+			//	continue;
 			// 找到所有的空余点
 			findlistx[offset] = x;
 			findlisty[offset] = y;
@@ -544,6 +547,74 @@ int map_getrandpos_withrange( int type, short posx, short posy, int range, short
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy )
 {
+	short zoneidlist[8] = { 1, 5, 21, 25, 3, 11, 15, 23 };
+	int openday = system_getopentime() / 86400;
+
+	// 先随机一个新手区域，然后在这个区域内随机空位，当随机1万次依然没有位置，那么从这个区域一个一个找，不随机了，还是没找到，那么换下一个区域
+	int step = 0;
+	while ( true )
+	{
+		short zoneid = 0;
+		if ( openday <= 14 )
+		{ // 开服两周内
+			zoneid = zoneidlist[random( 0, 3 )];
+		}
+		else
+		{ // 开服两周后
+			zoneid = zoneidlist[random( 4, 7 )];
+		}
+		if ( zoneid >= g_zoneinfo_maxnum )
+		{
+			continue;
+		}
+
+		short findlistx[256] = { 0 };
+		short findlisty[256] = { 0 };
+		short offset = 0;
+		for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+		{
+			for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+			{
+				short x = tmpi;
+				short y = tmpj;
+				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+					continue;
+				if ( g_map.m_aTileData[x][y].unit_type > 0 )
+					continue;
+				// 找到所有的空余点
+				findlistx[offset] = x;
+				findlisty[offset] = y;
+				offset += 1;
+				if ( offset >= 256 )
+					break;
+			}
+			if ( offset >= 256 )
+				break;
+		}
+
+		if ( offset > 0 )
+		{
+			int index = rand() % offset;
+			*pPosx = findlistx[index];
+			*pPosy = findlisty[index];
+		}
+		else
+		{
+			*pPosx = -1;
+			*pPosy = -1;
+		}
+		if ( *pPosx >= 0 && *pPosy >= 0 )
+		{
+			break;
+		}
+		step += 1;
+		if ( step >= 8 )
+		{// 保险
+			*pPosx = 0;
+			*pPosy = 0;
+			break;
+		}
+	}
 	
 	return -1;
 }

@@ -36,11 +36,11 @@ function MapMarchRoute.add( recvValue )
 	
 	-- 出发点
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_from_posx, recvValue.m_from_posy );
-	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, cameraPosX, cameraPosY );
+	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, recvValue.m_from_index, cameraPosX, cameraPosY );
 	
 	-- 目的点
 	cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_to_posx, recvValue.m_to_posy );
-	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, cameraPosX, cameraPosY );
+	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_index, cameraPosX, cameraPosY );
 
 	-- 计算线的颜色
 	local color = 0;

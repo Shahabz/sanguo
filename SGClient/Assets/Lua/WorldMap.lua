@@ -41,7 +41,7 @@ WorldMap.m_nLastGotoUnitIndex	= -1;	-- 等待跳转的索引
 WorldMap.m_nLastGotoPosX		= -1;	-- 等待跳转的位置
 WorldMap.m_nLastGotoPosY		= -1;	-- 等待跳转的位置
 WorldMap.m_nMode 				= WORLDMAP_MODE_NORMAL;
-
+WorldMap.m_bShow = false;
 local TmxShowThreshold = 24;
 local TmxShowList = { 0, 0, 0, 0 };
 local TmxLastList = { 0, 0, 0, 0 };
@@ -110,6 +110,7 @@ function WorldMap.Recv( recvValue )
 	
 	-- 改变场景
 	GameManager.ChangeScence( "worldmap" )
+	WorldMap.m_bShow = true;
 end
 
 -- 清空
@@ -125,6 +126,7 @@ function WorldMap.Clear()
 	MapUnit.clear();
 	MapTile.clear();
 	MapMarchRoute.clear();
+	WorldMap.m_bShow = false;
 	--MapUnitRoot = nil;
     --MapCamera = nil;
 	WorldMap.SendAreaIndex( WorldMap.m_nLastAreaIndex, -1, -1 )
@@ -217,9 +219,15 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
         if TmxShowList[i] ~= 0 and TmxLastList[i] ~= 0 and TmxLastList[i][1] == TmxShowList[i][1] and TmxLastList[i][2] == TmxShowList[i][2] then
         elseif TmxShowList[i] ~= 0 then
             MapTmx[i]:SetActive( true );
-            MapTmx[i].transform.localPosition = Vector3.New( WorldMap.m_nMaxWidth * MAP_TILEWIDTH / 2 / 100 +
-                MAP_TILEWIDTH * TMX_WIDTH * ( TmxShowList[i][1] - TmxShowList[i][2] - 1 ) / 2 / 100,
-                    - MAP_TILEHEIGHT * TMX_HEIGHT * ( TmxShowList[i][2] + TmxShowList[i][1] ) / 2 / 100, 0 );
+			MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
+			local x = WorldMap.m_nMaxWidth * MAP_TILEWIDTH / 2 / 100 + MAP_TILEWIDTH * TMX_WIDTH * ( TmxShowList[i][1] - TmxShowList[i][2] - 1 ) / 2 / 100
+			local y = - MAP_TILEHEIGHT * TMX_HEIGHT * ( TmxShowList[i][2] + TmxShowList[i][1] ) / 2 / 100;
+			if x >= 511 and x <= 513 and y >= -257 and y <= -255 then
+				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( false ); -- 中间
+			else
+				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
+			end
+            MapTmx[i].transform.localPosition = Vector3.New( x, y, 0 );
 
             changed = true;
         else
@@ -272,7 +280,7 @@ function WorldMap.Start( Prefab )
     	
 	-- 设置摄像机初始位置为我的城池
 	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
-	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
+	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
 		
 	if WorldMap.m_nLastGotoPosX >=0 and WorldMap.m_nLastGotoPosY >= 0 then
 		WorldMap.CameraSetPosition( MAPUNIT_TYPE_CITY, WorldMap.m_nLastGotoPosX, WorldMap.m_nLastGotoPosY );
@@ -281,8 +289,24 @@ function WorldMap.Start( Prefab )
 		MapCamera.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WORLDMAP_ZORDER_CAMERA );
 	end
 	
-	-- 边界
-	--MapUnit.createRange( MAPUNIT_TYPE_CITY, 479, 480, 500, false );
+	-- 地图边界
+	--MapUnit.createMapBorder( 249, 250, 500, false );
+	
+	-- 区域边界
+	for i=1, #g_zoneinfo, 1 do
+		MapUnit.createMapBorder( g_zoneinfo[i].center_posx-1, g_zoneinfo[i].center_posy, 100 );
+	end
+	
+	-- 区域都城名城的范围
+	for k, v in pairs(g_towninfo) do
+		if v.type >= 4 then
+			if v.grid == 2 then
+				MapUnit.createTownRange( v.grid, v.posx-1, v.posy, v.range );
+			elseif v.grid == 3 then
+				MapUnit.createTownRange( 2, v.posx-1, v.posy, v.range );
+			end
+		end
+	end
 	
 	-- 初始化行军路线
 	--MapMarchRoute.init( MapLineRoot );
@@ -298,7 +322,7 @@ function WorldMap.Start( Prefab )
 	
 	-- 创建城镇范围
 	--MapUnit.createTownRange( WorldMap.m_cacheTown );
-	
+
 	-- 返回地图数据给程序一份
 	return WorldMap.m_nMaxWidth, WorldMap.m_nMaxHeight, MAP_TILEWIDTH, MAP_TILEHEIGHT
 end
@@ -448,6 +472,9 @@ function WorldMap.ViewChangeSec()
     --if MainDlgCutSceneIsPlaying() then
         --return;
     --end
+	if WorldMap.m_bShow == false then
+		return;
+	end
 
 	local cameraPosX = MapCamera:GetComponent("Transform").position.x;
 	local cameraPosY = MapCamera:GetComponent("Transform").position.y;
@@ -473,7 +500,9 @@ function WorldMap.ViewChangeFrame()
     if MapCamera == nil then
         return;
     end
-
+	if WorldMap.m_bShow == false then
+		return;
+	end
 	local cameraPosX = MapCamera:GetComponent("Transform").position.x;
 	local cameraPosY = MapCamera:GetComponent("Transform").position.y;
     
@@ -616,13 +645,13 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );
 		-- 转换中心坐标
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
-		cameraPosX, cameraPosY = MapUnit.getGridTrans( MapUnit.typeTotype( recvValue ), cameraPosX, cameraPosY );
+		cameraPosX, cameraPosY = MapUnit.getGridTrans( recvValue.m_type, recvValue.m_grid, cameraPosX, cameraPosY );
 	else
 		-- 设置缩放
 		MapClickEffect.transform.localScale = Vector3.New( 1, 1, 1 );
 		-- 转换中心坐标
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
-		cameraPosX, cameraPosY = MapUnit.getGridTrans( 0, cameraPosX, cameraPosY );
+		cameraPosX, cameraPosY = MapUnit.getGridTrans( 0, 0, cameraPosX, cameraPosY );
 	end
 	
 	-- 记录点击的显示单元索引
@@ -685,7 +714,7 @@ end
 function WorldMap.CameraSetPosition( unittype, gameCoorX, gameCoorY )
 	-- 位置
     local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
-	local posx, posy = MapUnit.getGridTrans( unittype, cameraPosX, cameraPosY );
+	local posx, posy = MapUnit.getGridTrans( unittype, 0, cameraPosX, cameraPosY );
 	if MapCamera then
 		MapCamera.transform.position = Vector3.New( posx, posy, WORLDMAP_ZORDER_CAMERA );
 		WorldMap.m_nLastCameraX 	 = posx;
@@ -704,7 +733,7 @@ end
 function WorldMap.TweenPosition( unittype, gameCoorX, gameCoorY, time )
 	-- 位置
     local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
-	local posx, posy = MapUnit.getGridTrans( unittype, cameraPosX, cameraPosY );
+	local posx, posy = MapUnit.getGridTrans( unittype, 0, cameraPosX, cameraPosY );
 	if MapCamera then
 		MapCamera:GetComponent( "Camera2D" ):TweenPosTo( Vector3.New( posx, posy, WORLDMAP_ZORDER_CAMERA ), time );
 		WorldMap.m_nLastCameraX 	 = posx;
@@ -781,7 +810,7 @@ function WorldMap.StopFollow()
 		
 		-- 摄像机停止跟随
         MapCamera.transform:SetParent( WorldMapPrefab.transform );
-		MapCamera:GetComponent("WorldMapCamera").IsCanMoved = true;
+		--MapCamera:GetComponent("WorldMapCamera").IsCanMoved = true;
 		
 		WorldMap.m_nMode = WORLDMAP_MODE_NORMAL;
     --end

@@ -66,6 +66,8 @@ int mapunit_getattr( int unit_index, SLK_NetS_AddMapUnit *pAttr )
 	MapUnit *pMapUnit = &g_mapunit[unit_index];
 	pAttr->m_unit_index = unit_index;
 	pAttr->m_type = pMapUnit->type;
+	pAttr->m_namelen = 0;
+	pAttr->m_prefixlen = 0;
 	pAttr->m_int_value_count = 0;
 	pAttr->m_short_value_count = 0;
 	pAttr->m_char_value_count = 0;

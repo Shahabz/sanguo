@@ -36,6 +36,10 @@
 #include "quest.h"
 #include "chat.h"
 #include "mail.h"
+#include "army.h"
+#include "map_town.h"
+#include "map_enemy.h"
+#include "map_res.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -175,7 +179,14 @@ void actors_on_core()
 	}
 	// 所有城池保存
 	city_save( fp );
-
+	// 所有部队保存
+	army_save( fp );
+	// 所有城镇保存
+	map_town_save( fp );
+	// 所有流寇保存
+	map_enemy_save( fp );
+	// 所有资源点保存
+	map_res_save( fp );
 	if ( fp )
 	{
 		char szSQL[512] = { 0 };
@@ -877,7 +888,7 @@ int actor_new( int actor_index )
 	g_city[g_actors[actor_index].city_index].building[0].level = 2;
 
 	g_city[g_actors[actor_index].city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, g_actors[actor_index].city_index );
-	map_addobject( MAPUNIT_TYPE_CITY, city.posx, city.posy, MAPUNIT_TYPE_CITY );
+	map_addobject( MAPUNIT_TYPE_CITY, g_city[g_actors[actor_index].city_index].unit_index, city.posx, city.posy );
 
 	// 所选的阵营是否有奖励
 	if ( g_actors[actor_index].nation == client_getnationaward( actor_index ) )

@@ -6,6 +6,16 @@ struct _mapzoneinfo {
 //--Automatically generated
 				short id;	//
 				short open;	//
+				short center_posx;	//
+				short center_posy;	//
+				short top_left_posx;	//
+				short top_left_posy;	//
+				short top_right_posx;	//
+				short top_right_posy;	//
+				short bottom_left_posx;	//
+				short bottom_left_posy;	//
+				short bottom_right_posx;	//
+				short bottom_right_posy;	//
 };
 typedef struct _mapzoneinfo MapZoneInfo;
 

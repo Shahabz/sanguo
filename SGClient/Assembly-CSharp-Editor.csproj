@@ -159,7 +159,7 @@
      <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_vipfont.fnt" />
      <None Include="Assets\Resources\PackAssets\Shader\StandardAssetsShader\CameraMotionBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\UI_Line.shader" />
-     <None Include="Assets\StreamingAssets\osx_files.txt" />
+     <None Include="Assets\StreamingAssets\android_files.txt" />
      <None Include="Assets\Resources\PackAssets\Data\en-us\localize_quest.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ParticleScaler_Additive.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\ImageAdditive.shader" />
@@ -283,10 +283,6 @@
  <Reference Include="UnityEditor.iOS.Extensions.Common">
  <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{B27AE1C6-3D69-624C-ACFA-08F8EF6C961B}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

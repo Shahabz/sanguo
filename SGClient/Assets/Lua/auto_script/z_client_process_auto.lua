@@ -336,19 +336,19 @@ end
 -- m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",
 function proc_addmapunit_C( recvValue )
 	-- process.
-
+	WorldMap.QueueAdd( 1, recvValue );
 end
 
 -- m_unit_index=0,
 function proc_delmapunit_C( recvValue )
 	-- process.
-
+	WorldMap.QueueAdd( 2, recvValue );
 end
 
 -- m_info={m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",},
 function proc_updatemapunit_C( recvValue )
 	-- process.
-
+	WorldMap.QueueAdd( 3, recvValue.m_info );
 end
 
 -- m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",
@@ -365,18 +365,20 @@ end
 -- m_unit_index=0,m_posx=0,m_posy=0,
 function proc_mapunitcorrdinate_C( recvValue )
 	-- process.
+	WorldMap.QueueAdd( 4, recvValue );
 end
 
 -- m_from_type=0,m_from_posx=0,m_from_posy=0,m_to_type=0,m_to_posx=0,m_to_posy=0,m_state=0,m_from_cityid=0,m_from_clubid=0,m_to_cityid=0,m_to_clubid=0,m_army_index=0,m_action=0,
 function proc_addmarchroute_C( recvValue )
 	-- process.
-
+	WorldMap.QueueAdd( 5, recvValue );
 end
 
 
 -- m_army_index=0,
 function proc_delmarchroute_C( recvValue )
 	-- process.
+	WorldMap.QueueAdd( 6, recvValue.m_army_index );
 end
 
 -- m_addexp=0,m_curexp=0,m_isup=0,m_level, m_expmax, m_path=0,
@@ -1013,6 +1015,12 @@ end
 function proc_mapzonechange_C( recvValue )
 	-- process.
 	local name = MapZoneName( recvValue.m_zoneid )
-	MapZoneTipsModShow( name )
+	if recvValue.m_open == 1 then
+		MainDlgSetZoneName( name )
+		MapZoneTipsModShow( name )
+	else
+		MainDlgSetZoneName( name.."("..T(936)..")" )
+		AlertMsg( T(937) )
+	end
 end
 

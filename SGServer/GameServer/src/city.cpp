@@ -120,11 +120,16 @@ int city_loadcb( int city_index )
 	// 最后计算战力
 	city_battlepower_reset( &g_city[city_index] );
 
+	// 重新随机位置
+	if ( g_city[city_index].posx == -1 || g_city[city_index].posy == -1 )
+	{
+		map_getrandcitypos( &g_city[city_index].posx, &g_city[city_index].posy );
+	}
 	// 添加到地图显示单元
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
 
 	// 占地块信息添加到世界地图
-	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].posx, g_city[city_index].posy, MAPUNIT_TYPE_CITY );
+	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, g_city[city_index].posx, g_city[city_index].posy );
 	return 0;
 }
 

@@ -40,6 +40,10 @@
 #include "quest.h"
 #include "hero.h"
 #include "chat.h"
+#include "army.h"
+#include "map_town.h"
+#include "map_enemy.h"
+#include "map_res.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -512,6 +516,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 世界地图-区域
+	if ( mapzoneinfo_init_auto() < 0 )
+	{
+		printf_msg( "mapzoneinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 世界地图-城镇
 	if ( maptowninfo_init_auto() < 0 )
 	{
@@ -592,6 +605,41 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 107 );
 
+	// 加载城镇（严格顺序要求，不允许改变）
+	if ( map_town_load() < 0 )
+	{
+		printf_msg( "map_town_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
+	// 加载流寇（严格顺序要求，不允许改变）
+	if ( map_enemy_load() < 0 )
+	{
+		printf_msg( "map_enemy_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 111 );
+
+	// 加载资源点（严格顺序要求，不允许改变）
+	if ( map_res_load() < 0 )
+	{
+		printf_msg( "map_res_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 112 );
+
+	// 加载所有部队（严格顺序要求，不允许改变）
+	if ( army_load() < 0 )
+	{
+		printf_msg( "army_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 116 );
+
 	// 聊天缓存
 	chat_cache_load();
 
@@ -642,10 +690,21 @@ void process_close()
 	city_save( NULL );
 	printf_msg( "\n" );
 
-	//// 所有联盟保存
-	//club_save( NULL );
-	//printf_msg( "\n" );
+	// 所有部队保存
+	army_save( NULL );
+	printf_msg( "\n" );
 
+	// 所有城镇保存
+	map_town_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有流寇保存
+	map_enemy_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有资源点保存
+	map_res_save( NULL );
+	printf_msg( "\n" );
 
 	// 提交
 	mysql_query( myGame, "COMMIT;" );

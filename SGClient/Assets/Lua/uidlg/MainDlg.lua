@@ -57,6 +57,11 @@ local m_hasButton = {};
 local m_uiChat = nil; --UnityEngine.GameObject
 local m_uiChatText = nil; --UnityEngine.GameObject
 local m_uiQuest = nil; --UnityEngine.GameObject
+local m_uiNationName = nil; --UnityEngine.GameObject
+local m_uiZoneName = nil; --UnityEngine.GameObject
+local m_uiWeatherDay = nil; --UnityEngine.GameObject
+local m_uiWeatherIcon = nil; --UnityEngine.GameObject
+local m_uiWeatherAbility = nil; --UnityEngine.GameObject
 
 local m_uiBuildingShape = {nil,nil}
 local m_uiNormalShape = {nil,nil}
@@ -120,8 +125,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 4 or nControlID == 5 then
 			if GameManager.currentScence == "city" then
 				WorldMap.GotoWorldMap(-1, -1)
+				MainDlgShowMap()
 			else
 				WorldMap.ReturnCity()
+				MainDlgShowCity()
 			end
 		
 		elseif nControlID == 6 then
@@ -330,6 +337,11 @@ function MainDlgOnAwake( gameObject )
 	m_uiChatText = objs[72];
 	m_uiQuest = objs[73];
 	m_uiButtonRestart = objs[74];
+	m_uiNationName = objs[75];
+	m_uiZoneName = objs[76];
+	m_uiWeatherDay = objs[77];
+	m_uiWeatherIcon = objs[78];
+	m_uiWeatherAbility = objs[79];
 	MainDlgWorkerObjectInit();
 end 
 
@@ -828,3 +840,20 @@ function MainDlgButtonGetEffect( offset )
 	
 end
 
+-- 显示内城的控件
+function MainDlgShowCity()
+	SetTrue( m_uiTop_City )
+	SetFalse( m_uiTop_Map )
+end
+
+-- 显示外城的空间
+function MainDlgShowMap()
+	SetTrue( m_uiTop_Map )
+	SetFalse( m_uiTop_City )
+	SetText( m_uiNationName, NationEx( GetPlayer().m_nation ) );
+end
+
+-- 设置区域名称
+function MainDlgSetZoneName( name )
+	SetText( m_uiZoneName, name )
+end

@@ -10,6 +10,7 @@
 // 一个格子数据结构
 typedef struct _tile
 {
+	char nation;			// 格子所属国家
 	char unit_type;			// 格子上的显示对象类型
 	int unit_index;			// 格子上的显示对象索引
 	char owner_unit_type;	// 格子的主人
@@ -42,10 +43,10 @@ void map_sendthumbinfo( int actor_index );
 void map_areaenter( int actor_index, int areaindex, short posx, short posy );
 
 // 添加对象
-int map_addobject( int type, short posx, short posy, char unittype );
+int map_addobject( int type, int index, short posx, short posy );
 
 // 移除对象
-int map_delobject( int type, short posx, short posy );
+int map_delobject( int type, int index, short posx, short posy );
 
 // 获得一个离指定地点最近的可迁城空白点 螺旋查找
 int map_getcanmovenearest( short *pPosx, short *pPosy );
