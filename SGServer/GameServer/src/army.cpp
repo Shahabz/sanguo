@@ -70,7 +70,7 @@ int army_load()
 {
 	g_army_maxcount = g_Config.max_citycount * 4;
 	g_army = (Army*)malloc( sizeof( Army ) * g_army_maxcount );
-	memset( &g_army, 0, sizeof( Army ) * g_army_maxcount );
+	memset( g_army, 0, sizeof( Army ) * g_army_maxcount );
 	printf_msg( "Army  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", g_army_maxcount, (sizeof( Army )*g_army_maxcount) / 1024.0 / 1024.0, sizeof( Army ) / 1024.0 );
 	army_load_auto( army_getptr, army_loadcb, "map_army" );
 	return 0;
