@@ -598,68 +598,6 @@ function MapUnit.createTown( recvValue )
 	return unitObj;
 end
 
--- 创建资源点
-function MapUnit.createRes( recvValue )
-	local state 	= recvValue.m_state;
-	local posx 		= recvValue.m_posx;
-	local posy 		= recvValue.m_posy;
-	local restype	= recvValue.m_char_value[1];
-	local level		= recvValue.m_char_value[2];
-	
-	-- 先搜索缓存，如果缓存有，那么就更新
-	local unitObj = MapUnit.cache[recvValue.m_unit_index];
-	
-	-- 先检查对象缓存池是否有空余的
-	if unitObj == nil then
-		for index, unit in pairs( MapUnit.objectPoolRes ) do
-			if unit and unit.gameObject.activeSelf == false then
-				unitObj = unit;
-				break;
-			end
-		end
-	end
-	
-	-- 没有空余的就新创建一个
-	if unitObj == nil then
-		unitObj = GameObject.Instantiate( MapUnitRes );
-		unitObj.transform:SetParent( MapUnit.unitRoot );
-		table.insert( MapUnit.objectPoolRes, unitObj );
-	end
-	
-	-- 位置
-	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
-	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_RES, 0, cameraPosX, cameraPosY );
-	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
-		
-	-- 形象
-    unitObj.transform:FindChild("Shape"):GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
-	
-	-- 等级
-	unitObj.transform:FindChild("Level"):GetChild(0):GetComponent("CityBoard"):SetNum( level );
-
-	-- 采集状态
-	if state == ARMY_STATE_GATHER then
-		local cityid = recvValue.m_int_value[1];
-		local clubid = recvValue.m_int_value[2];
-		-- 我的
-		if GetCity().m_cityid == cityid then
-			unitObj.transform:FindChild("EffectGather"):GetComponent("SpriteRenderer").sprite = LoadSprite( "UI_signIcon_1" );
-			
-		-- 联盟的
-		elseif GetCity().m_clubid == clubid and clubid > 0 then
-			unitObj.transform:FindChild("EffectGather"):GetComponent("SpriteRenderer").sprite = LoadSprite( "UI_signIcon_3" );
-		
-		-- 敌方的
-		else
-			unitObj.transform:FindChild("EffectGather"):GetComponent("SpriteRenderer").sprite = LoadSprite( "UI_signIcon_2" );
-		end
-		unitObj.transform:FindChild("EffectGather").gameObject:SetActive( true );
-	else
-		unitObj.transform:FindChild("EffectGather").gameObject:SetActive( false );
-	end
-	return unitObj;
-end
-
 -- 刷新下目标怪物
 function MapUnit.RefreshTargetMonster( targetLevel )
     for index, unit in pairs( WorldMap.m_nMapUnitList ) do
@@ -681,21 +619,19 @@ function MapUnit.RefreshTargetMonster( targetLevel )
 end
 
 -- 创建野怪
-function MapUnit.createMonster( recvValue )
+function MapUnit.createEnemy( recvValue )
 	local state 	= recvValue.m_state;
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
-	local action	= recvValue.m_char_value[1];
-	local level		= recvValue.m_char_value[2];
-	local nameid 	= recvValue.m_short_value[1];
-	local shape 	= recvValue.m_short_value[2];
+	local level	= recvValue.m_char_value[1];
+	local kind 	= recvValue.m_short_value[1];
 	
 	-- 先搜索缓存，如果缓存有，那么就更新
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
 	-- 先检查对象缓存池是否有空余的
 	if unitObj == nil then
-		for index, unit in pairs( MapUnit.objectPoolMonster ) do
+		for index, unit in pairs( MapUnit.objectPoolEnemy ) do
 			if unit and unit.gameObject.activeSelf == false then
 				unitObj = unit;
 				break;
@@ -705,29 +641,27 @@ function MapUnit.createMonster( recvValue )
 	
 	-- 没有空余的就新创建一个
 	if unitObj == nil then
-		unitObj = GameObject.Instantiate( MapUnitMonster );
+		unitObj = GameObject.Instantiate( MapUnitEnemy );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
-		table.insert( MapUnit.objectPoolMonster, unitObj );
+		table.insert( MapUnit.objectPoolEnemy, unitObj );
 	end
 	
 	-- 位置
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
-	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_MONSTER, 0, cameraPosX, cameraPosY );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_ENEMY, 0, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy-1 );
 	
 	-- 名字
-	unitObj.transform:FindChild("Info/Name"):GetComponent("UIText").text = GetLocalizeText( nameid );
-	
-	-- 等级
-	unitObj.transform:FindChild("Info/LevelBack/Level"):GetComponent("UIText").text = level;
-	
+	unitObj.transform:Find("Name"):GetComponent("UIText").text = "Lv."..level.." "..T(938);
+	unitObj.transform:Find("Shape"):GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
 	-- 形象
-	local shapeObj = unitObj.transform:FindChild("Shape");
+	
+--[[	local shapeObj = unitObj.transform:FindChild("Shape");
 	local childCount = shapeObj.transform.childCount;
 	for i = 0, childCount - 1, 1 do
 		GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
-	end
-	local charactor = Character.Create( shape );
+	end--]]
+	--[[local charactor = Character.Create( shape );
     charactor.transform:SetParent( unitObj.transform:FindChild("Shape").transform );
 	charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
     charactor.transform.localScale = Vector3.one;
@@ -758,8 +692,57 @@ function MapUnit.createMonster( recvValue )
 	elseif action == MONSTER_ACTION_DEAD then
 		charactor:GetComponent("Character"):Die();
 		
-	end
+	end--]]
 
+	return unitObj;
+end
+
+-- 创建资源点
+function MapUnit.createRes( recvValue )
+	local state 	= recvValue.m_state;
+	local name 		= recvValue.m_name;
+	local posx 		= recvValue.m_posx;
+	local posy 		= recvValue.m_posy;
+	local restype	= recvValue.m_char_value[1];
+	local level		= recvValue.m_char_value[2];
+	local army_index= recvValue.m_int_value[1];
+	
+	-- 先搜索缓存，如果缓存有，那么就更新
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	
+	-- 先检查对象缓存池是否有空余的
+	if unitObj == nil then
+		for index, unit in pairs( MapUnit.objectPoolRes ) do
+			if unit and unit.gameObject.activeSelf == false then
+				unitObj = unit;
+				break;
+			end
+		end
+	end
+	
+	-- 没有空余的就新创建一个
+	if unitObj == nil then
+		unitObj = GameObject.Instantiate( MapUnitRes );
+		unitObj.transform:SetParent( MapUnit.unitRoot );
+		table.insert( MapUnit.objectPoolRes, unitObj );
+	end
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_RES, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
+		
+	-- 形象
+    unitObj.transform:Find("Shape"):GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
+	
+	-- 名字
+	if state == ARMY_STATE_GATHER then
+		unitObj.transform:Find("Name"):GetComponent("UIText").text = name
+		unitObj.transform:Find("EffectGather").gameObject:SetActive( true );
+	else
+		unitObj.transform:Find("Name"):GetComponent("UIText").text = "Lv."..level.." "..T(MapUnitResNameList[restype])
+		unitObj.transform:Find("EffectGather").gameObject:SetActive( false );
+	end
 	return unitObj;
 end
 
@@ -798,7 +781,7 @@ function MapUnit.createTownRange( grid, posx, posy, range )
 
 	-- 范围
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
-    unitObj.transform:GetComponent("MapBorder"):SetColor( Color.New( 255 / 255, 0 / 255, 0 / 255, 128 / 255 ) );
+    unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[0] ) );
 end
 
 -- 获取占地块

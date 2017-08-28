@@ -345,7 +345,8 @@ public class UIManager : MonoBehaviour
 		// 如果这个ui有关联的ab，将ab一并删除
 		string abname = "_ab_ui_"+ui.uiName.ToLower();
 		LogUtil.GetInstance().WriteGame( "UI Unload:"+ui.uiName );
-		if ( ResourceManager.UnloadAssetBundleImmediately(abname) == true )
+		//if ( ResourceManager.UnloadAssetBundleImmediately(abname) == true )
+		if ( ResourceManager.UnloadAssetBundle(abname) == true )
 		{
 			LogUtil.GetInstance().WriteGame( "UI UnloadAssetBundleImmediately :"+abname );
 		}

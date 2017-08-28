@@ -24,6 +24,8 @@ struct _army {
 				short posx;	//当前坐标
 				short posy;	//当前坐标
 				short herokind[4];	//武将
+				int awardkind[8];	//携带的奖励（回城加上）
+				int awardnum[8];	//携带的奖励（回城加上）
 };
 typedef struct _army Army;
 

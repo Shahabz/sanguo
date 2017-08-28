@@ -92,6 +92,10 @@ int area_getindex( int posx, int posy )
 		posy = g_map.m_nMaxHeight - 1;
 	areax = (posx+1)/AREA_WIDTH;
 	areay = (posy+1)/AREA_HEIGHT;
+	if ( areax >= g_map.m_nAreaXNum )
+		areax = g_map.m_nAreaXNum - 1;
+	if ( areay >= g_map.m_nAreaYNum )
+		areay = g_map.m_nAreaYNum - 1;
 	//return area_getindex_fromgrid(areax, areay);
 	return areay*(g_map.m_nAreaXNum) + areax;
 }
@@ -205,7 +209,7 @@ int area_checklist( int areaidx )
 // 将显示单元添加到区域
 int area_addmapunit( int unit_index, int area_index )
 {
-	if ( area_index < 0 )
+	if ( area_index < 0 || area_index >= g_map.m_nAreaMaxCount )
 		return 0;
 	Area *pArea = &g_map.m_aArea[area_index];
 	if ( pArea == NULL || pArea->unit_tail == unit_index )

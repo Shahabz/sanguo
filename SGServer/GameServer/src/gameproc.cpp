@@ -166,13 +166,8 @@ int process_init( int max_connection )
 	init_wqueue();
 
 	// 执行队列初始化
-	if ( exec_queue_init() < 0 )
-	{
-		printf_msg( "ExecQueue Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	serv_setstat( 3 );
+	exec_queue_init();
+	brush_enemy_queue_init();
 
 	// 数据库初始化
 	if ( db_init() >= 0 )
@@ -893,6 +888,9 @@ int process_logic()
 			break;
 	}
 
+	// 刷流寇队列
+	brush_enemy_queue_fetch();
+
 	// 1/10秒才允许一次mysql操作
 	if ( g_speed % 6 == 0 )
 	{
@@ -942,11 +940,8 @@ int process_logic()
 	tick = g_speed % 1800;
 	if ( tick == 0 )
 	{
-		//db_opendata();
-		//upgradeinfo_reload_auto();
-		//itemkind_reload_auto();
-		//db_closedata();
 		wcount(); // 记录人数
+		map_res_logic(); // 资源点闲置删除检查
 		sc_Script_Timer();
 		process_exitlogic();
 		process_oclock_check();
@@ -955,6 +950,7 @@ int process_logic()
 	}
 	else if ( tick == 10 )
 	{
+		
 	}
 	
 	if ( g_speed > 108000 )

@@ -29,7 +29,7 @@ int fetch_wqueue( int *pclient_index, short *pcmd, char *pBuf, int *pwsize, int 
 
 
 // 工作队列所有耗时的操作可以加入这里，每帧执行N个
-#define	EXEC_QUEUE_MAXNUM				800000		// 工作队列最大数
+#define	EXEC_QUEUE_MAXNUM				2048		// 工作队列最大数
 
 // 创建队列防止同一帧做太多事情
 typedef struct _exec_queue
@@ -41,5 +41,21 @@ typedef struct _exec_queue
 int exec_queue_init();
 int exec_queue_add( char type, int value1, int value2 );
 int exec_queue_fetch();
+
+
+
+// 刷流寇队列，每帧执行1个区域
+#define	BRUSH_ENEMY_QUEUE_MAXNUM	64
+
+// 创建队列防止同一帧做太多事情
+typedef struct _brush_enemy_queue
+{
+	char	type;		// 类型
+	char	zoneid;		// 附加值
+}BrushEnemyQueue;
+
+int brush_enemy_queue_init();
+int brush_enemy_queue_add( char zoneid );
+int brush_enemy_queue_fetch();
 
 #endif

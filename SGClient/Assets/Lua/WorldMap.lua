@@ -767,7 +767,7 @@ end
 -- 跳转到位置
 function WorldMap.GotoCoor( gameCoorX, gameCoorY )
 	if GameManager.currentScence == "city" then
-		system_askinfo( ASKINFO_WORLDMAP, "", 13, gameCoorX, gameCoorY );
+		WorldMap.GotoWorldMap( gameCoorX, gameCoorY )
     elseif GameManager.currentScence == "worldmap" then
 		WorldMap.CameraSetPosition( MAPUNIT_TYPE_CITY, gameCoorX, gameCoorY );
 		--WorldMap.ViewChangeSec();
@@ -775,6 +775,11 @@ function WorldMap.GotoCoor( gameCoorX, gameCoorY )
     
     m_LastPosX = nil;
     m_LastPosY = nil;
+end
+
+-- 我的城池
+function WorldMap.GotoMyCity()
+	WorldMap.GotoCoor( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
 end
 
 -- 开启摄像机跟随模式
@@ -874,7 +879,7 @@ end
 function WorldMap.QueueFetch()
 	
 	-- 普通对象
-	for tmpi=1, 3, 1 do
+	for tmpi=1, 6, 1 do
 		local v = Queue.popFirst( procQueue );
 		if v == nil then
 			return;

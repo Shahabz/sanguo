@@ -16,10 +16,15 @@ struct _mapzoneinfo {
 				short bottom_left_posy;	//
 				short bottom_right_posx;	//
 				short bottom_right_posy;	//
+				char enemykind[256];	//
+				char enemynum[512];	//
+				char reskind[256];	//
+				char resnum[512];	//
 };
 typedef struct _mapzoneinfo MapZoneInfo;
 
 int mapzoneinfo_init_auto();
 int mapzoneinfo_reload_auto();
+int mapzoneinfo_luatable_auto();
 
 #endif

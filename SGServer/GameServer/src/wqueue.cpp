@@ -94,7 +94,7 @@ int fetch_wqueue( int *pclient_index, short *pcmd, char *pBuf, int *pwsize, int 
 }
 
 
-// 刷怪队列
+// 执行队列
 ExecQueue *g_exec_queue = NULL;
 int g_nExecQueueHead;
 int g_nExecQueueTail;
@@ -156,3 +156,59 @@ int exec_queue_fetch()
 	return 0;
 }
 
+
+
+
+// 执行队列
+BrushEnemyQueue *g_brushenemy_queue = NULL;
+int g_nBrushEnemyQueueHead;
+int g_nBrushEnemyQueueTail;
+int brush_enemy_queue_init()
+{
+	g_nBrushEnemyQueueHead = 0;
+	g_nBrushEnemyQueueTail = 0;
+	g_brushenemy_queue = (BrushEnemyQueue *)malloc( sizeof( BrushEnemyQueue )*BRUSH_ENEMY_QUEUE_MAXNUM );
+	return 0;
+}
+
+int brush_enemy_queue_add( char zoneid )
+{
+	// 获取尾部
+	int queue_tail = g_nBrushEnemyQueueTail + 1;
+	if ( queue_tail >= EXEC_QUEUE_MAXNUM )
+	{
+		queue_tail = 0;
+	}
+
+	// 当队列已经满了
+	if ( g_nBrushEnemyQueueHead == queue_tail )
+	{
+		return -1;
+	}
+
+	g_brushenemy_queue[g_nBrushEnemyQueueTail].zoneid = zoneid;
+
+	// 尾部步进
+	g_nBrushEnemyQueueTail = queue_tail;
+	return 0;
+}
+
+int brush_enemy_queue_fetch()
+{
+	if ( g_nBrushEnemyQueueTail == g_nBrushEnemyQueueHead )
+	{
+		return -1;
+	}
+
+	// 从队列中取出一项
+	char zoneid = g_brushenemy_queue[g_nBrushEnemyQueueHead].zoneid;
+	sc_Script_Exec( 1, zoneid, 0 );
+
+	// 头部步进
+	g_nBrushEnemyQueueHead++;
+	if ( g_nBrushEnemyQueueHead >= BRUSH_ENEMY_QUEUE_MAXNUM )
+	{
+		g_nBrushEnemyQueueHead = 0;
+	}
+	return 0;
+}

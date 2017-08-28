@@ -21,6 +21,15 @@ extern "C"
 #include "system.h"
 #include "global.h"
 #include "wqueue.h"
+#include "map_enemy.h"
+#include "map_res.h"
+
+extern MapEnemy *g_map_enemy;
+extern int g_map_enemy_maxcount;
+
+extern MapRes *g_map_res;
+extern int g_map_res_maxcount;
+
 extern lua_State* servL;
 
 static int lua_c_item_name( lua_State *servL );
@@ -53,6 +62,18 @@ static int lua_c_actor_get_week_times( lua_State *servL );
 static int lua_c_map_addobject( lua_State *servL );
 static int lua_c_map_delobject( lua_State *servL );
 static int lua_c_map_getrandpos( lua_State *servL );
+static int lua_c_map_canmove( lua_State *servL );
+static int lua_c_map_enemy_maxcount( lua_State *servL );
+static int lua_c_map_enemy_create( lua_State *servL );
+static int lua_c_map_enemy_delete( lua_State *servL );
+static int lua_c_map_enemy_info( lua_State *servL );
+static int lua_c_map_enemy_num( lua_State *servL );
+static int lua_c_map_res_maxcount( lua_State *servL );
+static int lua_c_map_res_create( lua_State *servL );
+static int lua_c_map_res_delete( lua_State *servL );
+static int lua_c_map_res_info( lua_State *servL );
+static int lua_c_map_res_num( lua_State *servL );
+static int lua_c_brush_enemy_queue_add( lua_State *servL );
 static int lua_c_world_data_get( lua_State *servL );
 static int lua_c_world_data_set( lua_State *servL );
 static int lua_c_system_getruntime( lua_State *servL );
@@ -65,45 +86,57 @@ static int lua_c_award_getaward( lua_State *servL );
 
 void lua_func_register()
 {
-	lua_register(servL, "c_item_name", lua_c_item_name);
-	lua_register(servL, "c_item_hasone", lua_c_item_hasone);
-	lua_register(servL, "c_item_emptycount", lua_c_item_emptycount);
-	lua_register(servL, "c_item_lost", lua_c_item_lost);
-	lua_register(servL, "c_item_lostitem", lua_c_item_lostitem);
-	lua_register(servL, "c_item_getitem", lua_c_item_getitem);
-	lua_register(servL, "c_item_get_base_ability", lua_c_item_get_base_ability);
-	lua_register(servL, "c_item_get_base_value", lua_c_item_get_base_value);
-	lua_register(servL, "c_item_get_ability_value", lua_c_item_get_ability_value);
-	lua_register(servL, "c_item_set_abilityvalue_offset", lua_c_item_set_abilityvalue_offset);
-	lua_register(servL, "c_item_get_abilityvalue_offset", lua_c_item_get_abilityvalue_offset);
-	lua_register(servL, "c_item_getinfo", lua_c_item_getinfo);
-	lua_register(servL, "c_actor_info", lua_c_actor_info);
-	lua_register(servL, "c_actor_notify", lua_c_actor_notify);
-	lua_register(servL, "c_actor_notify_value", lua_c_actor_notify_value);
-	lua_register(servL, "c_actor_add_today_char_times", lua_c_actor_add_today_char_times);
-	lua_register(servL, "c_actor_get_today_char_times", lua_c_actor_get_today_char_times);
-	lua_register(servL, "c_actor_set_today_char_times", lua_c_actor_set_today_char_times);
-	lua_register(servL, "c_actor_add_today_int_times", lua_c_actor_add_today_int_times);
-	lua_register(servL, "c_actor_get_today_int_times", lua_c_actor_get_today_int_times);
-	lua_register(servL, "c_actor_set_today_int_times", lua_c_actor_set_today_int_times);
-	lua_register(servL, "c_actor_set_sflag", lua_c_actor_set_sflag);
-	lua_register(servL, "c_actor_get_sflag", lua_c_actor_get_sflag);
-	lua_register(servL, "c_actor_set_uselimit_cd", lua_c_actor_set_uselimit_cd);
-	lua_register(servL, "c_actor_get_uselimit_cd", lua_c_actor_get_uselimit_cd);
-	lua_register(servL, "c_actor_add_week_times", lua_c_actor_add_week_times);
-	lua_register(servL, "c_actor_get_week_times", lua_c_actor_get_week_times);
-	lua_register(servL, "c_map_addobject", lua_c_map_addobject);
-	lua_register(servL, "c_map_delobject", lua_c_map_delobject);
-	lua_register(servL, "c_map_getrandpos", lua_c_map_getrandpos);
-	lua_register(servL, "c_world_data_get", lua_c_world_data_get);
-	lua_register(servL, "c_world_data_set", lua_c_world_data_set);
-	lua_register(servL, "c_system_getruntime", lua_c_system_getruntime);
-	lua_register(servL, "c_system_getopentime", lua_c_system_getopentime);
-	lua_register(servL, "c_system_getfday", lua_c_system_getfday);
-	lua_register(servL, "c_system_gettoday", lua_c_system_gettoday);
-	lua_register(servL, "c_system_getweek", lua_c_system_getweek);
-	lua_register(servL, "c_system_getmonth", lua_c_system_getmonth);
-	lua_register(servL, "c_award_getaward", lua_c_award_getaward);
+	lua_register( servL, "c_item_name", lua_c_item_name );
+	lua_register( servL, "c_item_hasone", lua_c_item_hasone );
+	lua_register( servL, "c_item_emptycount", lua_c_item_emptycount );
+	lua_register( servL, "c_item_lost", lua_c_item_lost );
+	lua_register( servL, "c_item_lostitem", lua_c_item_lostitem );
+	lua_register( servL, "c_item_getitem", lua_c_item_getitem );
+	lua_register( servL, "c_item_get_base_ability", lua_c_item_get_base_ability );
+	lua_register( servL, "c_item_get_base_value", lua_c_item_get_base_value );
+	lua_register( servL, "c_item_get_ability_value", lua_c_item_get_ability_value );
+	lua_register( servL, "c_item_set_abilityvalue_offset", lua_c_item_set_abilityvalue_offset );
+	lua_register( servL, "c_item_get_abilityvalue_offset", lua_c_item_get_abilityvalue_offset );
+	lua_register( servL, "c_item_getinfo", lua_c_item_getinfo );
+	lua_register( servL, "c_actor_info", lua_c_actor_info );
+	lua_register( servL, "c_actor_notify", lua_c_actor_notify );
+	lua_register( servL, "c_actor_notify_value", lua_c_actor_notify_value );
+	lua_register( servL, "c_actor_add_today_char_times", lua_c_actor_add_today_char_times );
+	lua_register( servL, "c_actor_get_today_char_times", lua_c_actor_get_today_char_times );
+	lua_register( servL, "c_actor_set_today_char_times", lua_c_actor_set_today_char_times );
+	lua_register( servL, "c_actor_add_today_int_times", lua_c_actor_add_today_int_times );
+	lua_register( servL, "c_actor_get_today_int_times", lua_c_actor_get_today_int_times );
+	lua_register( servL, "c_actor_set_today_int_times", lua_c_actor_set_today_int_times );
+	lua_register( servL, "c_actor_set_sflag", lua_c_actor_set_sflag );
+	lua_register( servL, "c_actor_get_sflag", lua_c_actor_get_sflag );
+	lua_register( servL, "c_actor_set_uselimit_cd", lua_c_actor_set_uselimit_cd );
+	lua_register( servL, "c_actor_get_uselimit_cd", lua_c_actor_get_uselimit_cd );
+	lua_register( servL, "c_actor_add_week_times", lua_c_actor_add_week_times );
+	lua_register( servL, "c_actor_get_week_times", lua_c_actor_get_week_times );
+	lua_register( servL, "c_map_addobject", lua_c_map_addobject );
+	lua_register( servL, "c_map_delobject", lua_c_map_delobject );
+	lua_register( servL, "c_map_getrandpos", lua_c_map_getrandpos );
+	lua_register( servL, "c_map_canmove", lua_c_map_canmove );
+	lua_register( servL, "c_map_enemy_maxcount", lua_c_map_enemy_maxcount );
+	lua_register( servL, "c_map_enemy_create", lua_c_map_enemy_create );
+	lua_register( servL, "c_map_enemy_delete", lua_c_map_enemy_delete );
+	lua_register( servL, "c_map_enemy_info", lua_c_map_enemy_info );
+	lua_register( servL, "c_map_enemy_num", lua_c_map_enemy_num );
+	lua_register( servL, "c_map_res_maxcount", lua_c_map_res_maxcount );
+	lua_register( servL, "c_map_res_create", lua_c_map_res_create );
+	lua_register( servL, "c_map_res_delete", lua_c_map_res_delete );
+	lua_register( servL, "c_map_res_info", lua_c_map_res_info );
+	lua_register( servL, "c_map_res_num", lua_c_map_res_num );
+	lua_register( servL, "c_brush_enemy_queue_add", lua_c_brush_enemy_queue_add );
+	lua_register( servL, "c_world_data_get", lua_c_world_data_get );
+	lua_register( servL, "c_world_data_set", lua_c_world_data_set );
+	lua_register( servL, "c_system_getruntime", lua_c_system_getruntime );
+	lua_register( servL, "c_system_getopentime", lua_c_system_getopentime );
+	lua_register( servL, "c_system_getfday", lua_c_system_getfday );
+	lua_register( servL, "c_system_gettoday", lua_c_system_gettoday );
+	lua_register( servL, "c_system_getweek", lua_c_system_getweek );
+	lua_register( servL, "c_system_getmonth", lua_c_system_getmonth );
+	lua_register( servL, "c_award_getaward", lua_c_award_getaward );
 }
 
 static int lua_c_item_name( lua_State *servL )
@@ -652,11 +685,12 @@ static int lua_c_map_addobject( lua_State *servL )
 		return 0;
 	}
 	char type = (char )lua_tointeger( servL, 1 );
-	short posx = (short )lua_tointeger( servL, 2 );
-	short posy = (short )lua_tointeger( servL, 3 );
-	char unittype = (char )lua_tointeger( servL, 4 );
+	int index = (int)lua_tointeger( servL, 2 );
+	short posx = (short )lua_tointeger( servL, 3 );
+	short posy = (short )lua_tointeger( servL, 4 );
 	//--Process script
 	int rtn = 0;
+	map_addobject( type, index, posx, posy );
 	lua_pushinteger( servL, rtn );
 	return 1;
 }
@@ -673,9 +707,11 @@ static int lua_c_map_delobject( lua_State *servL )
 		return 0;
 	}
 	char type = (char )lua_tointeger( servL, 1 );
-	short posx = (short )lua_tointeger( servL, 2 );
-	short posy = (short )lua_tointeger( servL, 3 );
+	int index = (int)lua_tointeger( servL, 2 );
+	short posx = (short )lua_tointeger( servL, 3 );
+	short posy = (short )lua_tointeger( servL, 4 );
 	//--Process script
+	map_delobject( type, index, posx, posy );
 	return 0;
 }
 
@@ -714,6 +750,7 @@ static int lua_c_world_data_get( lua_State *servL )
 	//--Process script
 	int value = 0;
 	char *strvalue = 0;
+	value = world_data_get( id, strvalue );
 	lua_pushinteger( servL, value );
 	lua_pushstring( servL, strvalue );
 	return 2;
@@ -734,6 +771,7 @@ static int lua_c_world_data_set( lua_State *servL )
 	int value = (int )lua_tointeger( servL, 2 );
 	char *strvalue = 0; if( num > 2 ) strvalue = (char *)lua_tostring( servL, 3 );
 	//--Process script
+	world_data_set( id, value, strvalue, NULL );
 	return 0;
 }
 
@@ -784,6 +822,7 @@ static int lua_c_system_getfday( lua_State *servL )
 	}
 	//--Process script
 	int value = 0;
+	value = system_getfday();
 	lua_pushinteger( servL, value );
 	return 1;
 }
@@ -801,6 +840,7 @@ static int lua_c_system_gettoday( lua_State *servL )
 	}
 	//--Process script
 	int value = 0;
+	value = system_gettoday();
 	lua_pushinteger( servL, value );
 	return 1;
 }
@@ -818,6 +858,7 @@ static int lua_c_system_getweek( lua_State *servL )
 	}
 	//--Process script
 	int value = 0;
+	value = system_getweek();
 	lua_pushinteger( servL, value );
 	return 1;
 }
@@ -835,6 +876,7 @@ static int lua_c_system_getmonth( lua_State *servL )
 	}
 	//--Process script
 	int value = 0;
+	value = system_getmonth();
 	lua_pushinteger( servL, value );
 	return 1;
 }
@@ -857,5 +899,268 @@ static int lua_c_award_getaward( lua_State *servL )
 	char path = (char )lua_tointeger( servL, 5 );
 	//--Process script
 	return 0;
+}
+
+static int lua_c_map_canmove( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short posx = (short )lua_tointeger( servL, 1 );
+	short posy = (short )lua_tointeger( servL, 2 );
+	//--Process script
+	int rtn = 0;
+	rtn = map_canmove( posx, posy );
+	lua_pushinteger( servL, rtn );
+	return 1;
+}
+
+static int lua_c_map_enemy_maxcount( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int maxcount = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_enemy_maxcount_set( maxcount );
+	return 0;
+}
+
+static int lua_c_map_enemy_create( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 4 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	int deltime = (int )lua_tointeger( servL, 4 );
+	//--Process script
+	map_enemy_create( kind, posx, posy, deltime );
+	return 0;
+}
+
+static int lua_c_map_enemy_delete( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_enemy_delete( index );
+	return 0;
+}
+
+static int lua_c_map_enemy_info( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	char level = 0;
+	short posx = 0;
+	short posy = 0;
+	int deltime = 0;
+	char selected_count = 0;
+	short kind = 0;
+	if ( index >= 0 && index < g_map_enemy_maxcount )
+	{
+		MapEnemyInfo *config = map_enemy_getconfig( g_map_enemy[index].kind );
+		if ( config )
+		{
+			level = (char)config->level;
+			posx = g_map_enemy[index].posx;
+			posy = g_map_enemy[index].posy;
+			deltime = g_map_enemy[index].deltime;
+			selected_count = g_map_enemy[index].selected_count;
+			kind = g_map_enemy[index].kind;
+		}
+	}
+	lua_pushinteger( servL, level );
+	lua_pushinteger( servL, posx );
+	lua_pushinteger( servL, posy );
+	lua_pushinteger( servL, deltime );
+	lua_pushinteger( servL, selected_count );
+	lua_pushinteger( servL, kind );
+	return 6;
+}
+
+static int lua_c_map_res_maxcount( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int maxcount = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_res_maxcount_set( maxcount );
+	return 0;
+}
+
+static int lua_c_map_res_create( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 3 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	//--Process script
+	map_res_create( kind, posx, posy );
+	return 0;
+}
+
+static int lua_c_map_res_delete( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_res_delete( index );
+	return 0;
+}
+
+static int lua_c_map_res_info( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	char level = 0;
+	short posx = 0;
+	short posy = 0;
+	int idlesec = 0;
+	short kind = 0;
+	if ( index >= 0 && index < g_map_res_maxcount )
+	{
+		MapResInfo *config = map_res_getconfig( g_map_res[index].kind );
+		if ( config )
+		{
+			level = (char)config->level;
+			posx = g_map_res[index].posx;
+			posy = g_map_res[index].posy;
+			idlesec = g_map_res[index].idlesec;
+			kind = g_map_res[index].kind;
+		}
+	}
+	lua_pushinteger( servL, level );
+	lua_pushinteger( servL, posx );
+	lua_pushinteger( servL, posy );
+	lua_pushinteger( servL, idlesec );
+	lua_pushinteger( servL, kind );
+	return 5;
+}
+
+static int lua_c_brush_enemy_queue_add( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	char zoneid = (char )lua_tointeger( servL, 1 );
+	//--Process script
+	brush_enemy_queue_add( zoneid );
+	return 0;
+}
+
+static int lua_c_map_enemy_num( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	char zoneid = (char )lua_tointeger( servL, 1 );
+	short kind = (short )lua_tointeger( servL, 2 );
+	//--Process script
+	int count = 0;
+	count = map_enemy_num( zoneid, kind );
+	lua_pushinteger( servL, count );
+	return 1;
+}
+
+static int lua_c_map_res_num( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	char zoneid = (char )lua_tointeger( servL, 1 );
+	short kind = (short )lua_tointeger( servL, 2 );
+	//--Process script
+	int count = 0;
+	count = map_res_num( zoneid, kind );
+	lua_pushinteger( servL, count );
+	return 1;
 }
 

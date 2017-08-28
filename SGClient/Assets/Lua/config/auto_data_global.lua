@@ -66,3 +66,6 @@ global.fight_v1 = 50 --公式系数1*百分之
 global.fight_v2 = 50 --公式系数2*百分之
 global.fight_damage_randmin = 90 --最终伤害浮动*百分之
 global.fight_damage_randmax = 110 --最终伤害浮动*百分之
+global.brush_enemy_minute = 45 --每多长时间刷新流寇（分钟）
+global.brush_res_minute = 1800 --每多长时间刷新资源点（分钟）
+global.map_gather_sec = 300 --采集多少秒一次

@@ -47,7 +47,7 @@ int mapzoneinfo_init_auto()
 	g_zoneinfo = (MapZoneInfo *)malloc( sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 	memset( g_zoneinfo, 0, sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`open`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy` from map_zoneinfo;" );
+	sprintf( szSQL, "select `id`,`open`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy`,`enemykind`,`enemynum`,`reskind`,`resnum` from map_zoneinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -73,8 +73,13 @@ int mapzoneinfo_init_auto()
 		g_zoneinfo[id].bottom_left_posy = atoi(row[offset++]);
 		g_zoneinfo[id].bottom_right_posx = atoi(row[offset++]);
 		g_zoneinfo[id].bottom_right_posy = atoi(row[offset++]);
+		memcpy( g_zoneinfo[id].enemykind, row[offset++], 256 ); g_zoneinfo[id].enemykind[255]=0;
+		memcpy( g_zoneinfo[id].enemynum, row[offset++], 512 ); g_zoneinfo[id].enemynum[511]=0;
+		memcpy( g_zoneinfo[id].reskind, row[offset++], 256 ); g_zoneinfo[id].reskind[255]=0;
+		memcpy( g_zoneinfo[id].resnum, row[offset++], 512 ); g_zoneinfo[id].resnum[511]=0;
 	}
 	mysql_free_result( res );
+	mapzoneinfo_luatable_auto();
 	return 0;
 }
 
@@ -90,3 +95,83 @@ int mapzoneinfo_reload_auto()
 	return 0;
 }
 
+int mapzoneinfo_luatable_auto()
+{
+	lua_newtable( servL );
+	for ( int id = 0; id < g_zoneinfo_maxnum; id++ )
+	{
+		lua_pushinteger( servL, id );
+		lua_newtable( servL );
+
+		lua_pushstring( servL, "id" );
+		lua_pushinteger( servL, g_zoneinfo[id].id );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "open" );
+		lua_pushinteger( servL, g_zoneinfo[id].open );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "center_posx" );
+		lua_pushinteger( servL, g_zoneinfo[id].center_posx );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "center_posy" );
+		lua_pushinteger( servL, g_zoneinfo[id].center_posy );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "top_left_posx" );
+		lua_pushinteger( servL, g_zoneinfo[id].top_left_posx );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "top_left_posy" );
+		lua_pushinteger( servL, g_zoneinfo[id].top_left_posy );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "top_right_posx" );
+		lua_pushinteger( servL, g_zoneinfo[id].top_right_posx );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "top_right_posy" );
+		lua_pushinteger( servL, g_zoneinfo[id].top_right_posy );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "bottom_left_posx" );
+		lua_pushinteger( servL, g_zoneinfo[id].bottom_left_posx );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "bottom_left_posy" );
+		lua_pushinteger( servL, g_zoneinfo[id].bottom_left_posy );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "bottom_right_posx" );
+		lua_pushinteger( servL, g_zoneinfo[id].bottom_right_posx );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "bottom_right_posy" );
+		lua_pushinteger( servL, g_zoneinfo[id].bottom_right_posy );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "enemykind" );
+		lua_pushstring( servL, g_zoneinfo[id].enemykind );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "enemynum" );
+		lua_pushstring( servL, g_zoneinfo[id].enemynum );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "reskind" );
+		lua_pushstring( servL, g_zoneinfo[id].reskind );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "resnum" );
+		lua_pushstring( servL, g_zoneinfo[id].resnum );
+		lua_rawset( servL, -3 );
+
+		lua_rawset( servL, 1 );
+	}
+	lua_setglobal( servL, "g_zoneinfo" );
+
+	lua_pushinteger( servL, g_zoneinfo_maxnum );
+	lua_setglobal( servL, "g_zoneinfo_maxnum" );
+	return 0;
+}

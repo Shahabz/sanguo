@@ -42,6 +42,9 @@ void map_sendinfo( int actor_index, short tposx, short tposy );
 void map_sendthumbinfo( int actor_index );
 void map_areaenter( int actor_index, int areaindex, short posx, short posy );
 
+// 坐标是否在指定地区里
+char map_zone_inrange( int zoneid, short posx, short posy );
+
 // 添加对象
 int map_addobject( int type, int index, short posx, short posy );
 
@@ -55,10 +58,13 @@ int map_getcanmovenearest( short *pPosx, short *pPosy );
 int map_getrandpos( int type, short *pPosx, short *pPosy );
 
 // 根据指定点的范围获取一个可用坐标点
-int map_getrandpos_withrange( int type, short posx, short posy, int range, short *pPosx, short *pPosy );
+int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, short *pPosy );
 
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy );
+
+// 判定这个地点是否能迁城
+int map_canmove( short posX, short posY );
 
 // dump地图数据
 void map_tile_dump();

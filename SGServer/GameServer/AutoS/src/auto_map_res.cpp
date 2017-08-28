@@ -20,7 +20,7 @@ int map_res_load_auto( LPCB_GETMAPRES pCB_GetMapRes, LPCB_LOADMAPRES pCB_LoadMap
 	MapRes *pMapRes;
 	int index = 0;
 
-	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind` from %s ", pTab );
+	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind`,`num`,`idlesec` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -41,6 +41,8 @@ int map_res_load_auto( LPCB_GETMAPRES pCB_GetMapRes, LPCB_LOADMAPRES pCB_LoadMap
 		pMapRes->posx = atoi(row[offset++]);
 		pMapRes->posy = atoi(row[offset++]);
 		pMapRes->kind = atoi(row[offset++]);
+		pMapRes->num = atoi(row[offset++]);
+		pMapRes->idlesec = atoi(row[offset++]);
 		if( pCB_LoadMapRes )
 			pCB_LoadMapRes( pMapRes->index );
 		index += 1;
@@ -57,7 +59,7 @@ int map_res_save_auto( MapRes *pMapRes, const char *pTab, FILE *fp )
 		return -1;
 
 RE_MAPRES_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`) Values('%d','%d','%d','%d')",pTab,pMapRes->index,pMapRes->posx,pMapRes->posy,pMapRes->kind);
+	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`num`,`idlesec`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapRes->index,pMapRes->posx,pMapRes->posy,pMapRes->kind,pMapRes->num,pMapRes->idlesec);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -111,19 +113,19 @@ RE_MAPRES_TRUNCATE:
 	memset( g_batchsql, 0, sizeof(char)*BATCHSQL_MAXSIZE );
 	for ( int index = 0; index < maxcount; index++ )
 	{
-		if ( pMapRes[index].index <= 0 )
+		if ( pMapRes[index].kind <= 0 )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`) Values('%d','%d','%d','%d')",pTab,pMapRes[index].index,pMapRes[index].posx,pMapRes[index].posy,pMapRes[index].kind);
+			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`num`,`idlesec`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapRes[index].index,pMapRes[index].posx,pMapRes[index].posy,pMapRes[index].kind,pMapRes[index].num,pMapRes[index].idlesec);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d')",pMapRes[index].index,pMapRes[index].posx,pMapRes[index].posy,pMapRes[index].kind);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d')",pMapRes[index].index,pMapRes[index].posx,pMapRes[index].posy,pMapRes[index].kind,pMapRes[index].num,pMapRes[index].idlesec);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;
-		if ( count > 1024 )
+		if ( count > 2048 )
 		{
 			count = 0;
 			db_query( fp, g_batchsql );

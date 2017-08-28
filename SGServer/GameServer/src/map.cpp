@@ -110,6 +110,19 @@ void map_sendinfo( int actor_index, short tposx, short tposy )
 	netsend_worldmapinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 }
 
+// 坐标是否在指定地区里
+char map_zone_inrange( int zoneid, short posx, short posy )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return 0;
+	if ( posx >= g_zoneinfo[zoneid].top_left_posx && posx <= g_zoneinfo[zoneid].bottom_right_posx &&
+		 posy >= g_zoneinfo[zoneid].top_left_posy && posx <= g_zoneinfo[zoneid].bottom_right_posy )
+	{
+		return 1;
+	}
+	return 0;
+}
+
 // 获取地区id
 char map_zone_getid( int posx, int posy )
 {
@@ -283,23 +296,23 @@ int map_delobject( int type, int index, short posx, short posy )
 			return -1;
 		}
 		g_map.m_aTileData[posx][posy].unit_type = 0;
-		g_map.m_aTileData[posx][posy].unit_index = 0;
+		g_map.m_aTileData[posx][posy].unit_index = -1;
 		g_map.m_aTileData[posx - 1][posy].unit_type = 0;
-		g_map.m_aTileData[posx - 1][posy].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy].unit_index = -1;
 		g_map.m_aTileData[posx - 1][posy - 1].unit_type = 0;
-		g_map.m_aTileData[posx - 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy - 1].unit_index = -1;
 		g_map.m_aTileData[posx][posy - 1].unit_type = 0;
-		g_map.m_aTileData[posx][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_index = -1;
 		g_map.m_aTileData[posx + 1][posy - 1].unit_type = 0;
-		g_map.m_aTileData[posx + 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = -1;
 		g_map.m_aTileData[posx + 1][posy].unit_type = 0;
-		g_map.m_aTileData[posx + 1][posy].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_index = -1;
 		g_map.m_aTileData[posx + 1][posy + 1].unit_type = 0;
-		g_map.m_aTileData[posx + 1][posy + 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy + 1].unit_index = -1;
 		g_map.m_aTileData[posx][posy + 1].unit_type = 0;
-		g_map.m_aTileData[posx][posy + 1].unit_index = 0;
+		g_map.m_aTileData[posx][posy + 1].unit_index = -1;
 		g_map.m_aTileData[posx - 1][posy + 1].unit_type = 0;
-		g_map.m_aTileData[posx - 1][posy + 1].unit_index = 0;
+		g_map.m_aTileData[posx - 1][posy + 1].unit_index = -1;
 		break;
 
 	// 占2*2个格子
@@ -309,19 +322,19 @@ int map_delobject( int type, int index, short posx, short posy )
 			return -1;
 		}
 		g_map.m_aTileData[posx][posy].unit_type = 0;
-		g_map.m_aTileData[posx][posy].unit_index = 0;
+		g_map.m_aTileData[posx][posy].unit_index = -1;
 		g_map.m_aTileData[posx][posy - 1].unit_type = 0;
-		g_map.m_aTileData[posx][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx][posy - 1].unit_index = -1;
 		g_map.m_aTileData[posx + 1][posy - 1].unit_type = 0;
-		g_map.m_aTileData[posx + 1][posy - 1].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy - 1].unit_index = -1;
 		g_map.m_aTileData[posx + 1][posy].unit_type = 0;
-		g_map.m_aTileData[posx + 1][posy].unit_index = 0;
+		g_map.m_aTileData[posx + 1][posy].unit_index = -1;
 		break;
 
 	// 占1*1个格子
 	case 1:
 		g_map.m_aTileData[posx][posy].unit_type = 0;
-		g_map.m_aTileData[posx][posy].unit_index = 0;
+		g_map.m_aTileData[posx][posy].unit_index = -1;
 		break;
 	default:
 		break;

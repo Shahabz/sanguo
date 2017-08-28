@@ -6,6 +6,9 @@ struct _mapresinfo {
 //--Automatically generated
 				short kind;	//
 				short level;	//
+				short type;	//
+				short herolevel;	//
+				int num;	//
 };
 typedef struct _mapresinfo MapResInfo;
 

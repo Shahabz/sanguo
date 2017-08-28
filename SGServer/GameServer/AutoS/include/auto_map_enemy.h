@@ -7,7 +7,9 @@ struct _map_enemy {
 				int index;	//流寇id
 				short posx;	//位置
 				short posy;	//位置
-				char kind;	//种类
+				short kind;	//种类
+				int deltime;	//删除时间
+				char selected_count;	//被选定的次数
 				int unit_index;	//显示索引
 };
 typedef struct _map_enemy MapEnemy;

@@ -7,7 +7,10 @@ struct _map_res {
 				int index;	//索引
 				short posx;	//位置
 				short posy;	//位置
-				char kind;	//资源种类
+				short kind;	//资源种类
+				int num;	//资源量
+				int idlesec;	//空闲时长
+				int army_index;	//正在采集的部队
 				int unit_index;	//显示索引
 };
 typedef struct _map_res MapRes;

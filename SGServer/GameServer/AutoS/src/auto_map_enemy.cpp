@@ -20,7 +20,7 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 	MapEnemy *pMapEnemy;
 	int index = 0;
 
-	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind` from %s ", pTab );
+	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind`,`deltime` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -41,6 +41,7 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 		pMapEnemy->posx = atoi(row[offset++]);
 		pMapEnemy->posy = atoi(row[offset++]);
 		pMapEnemy->kind = atoi(row[offset++]);
+		pMapEnemy->deltime = atoi(row[offset++]);
 		if( pCB_LoadMapEnemy )
 			pCB_LoadMapEnemy( pMapEnemy->index );
 		index += 1;
@@ -57,7 +58,7 @@ int map_enemy_save_auto( MapEnemy *pMapEnemy, const char *pTab, FILE *fp )
 		return -1;
 
 RE_MAPENEMY_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`) Values('%d','%d','%d','%d')",pTab,pMapEnemy->index,pMapEnemy->posx,pMapEnemy->posy,pMapEnemy->kind);
+	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`) Values('%d','%d','%d','%d','%d')",pTab,pMapEnemy->index,pMapEnemy->posx,pMapEnemy->posy,pMapEnemy->kind,pMapEnemy->deltime);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -111,19 +112,19 @@ RE_MAPENEMY_TRUNCATE:
 	memset( g_batchsql, 0, sizeof(char)*BATCHSQL_MAXSIZE );
 	for ( int index = 0; index < maxcount; index++ )
 	{
-		if ( pMapEnemy[index].index <= 0 )
+		if ( pMapEnemy[index].kind <= 0 )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`) Values('%d','%d','%d','%d')",pTab,pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind);
+			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`) Values('%d','%d','%d','%d','%d')",pTab,pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d')",pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d')",pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;
-		if ( count > 1024 )
+		if ( count > 2048 )
 		{
 			count = 0;
 			db_query( fp, g_batchsql );

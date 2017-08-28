@@ -217,6 +217,22 @@ int global_init()
 			global.fight_damage_randmin = atoi( row[1] );
 		else if ( id == 67 )
 			global.fight_damage_randmax = atoi( row[1] );
+		else if ( id == 68 )
+		{
+			global.brush_enemy_minute = atoi( row[1] );
+			lua_pushstring( servL, "brush_enemy_minute" );
+			lua_pushinteger( servL, global.brush_enemy_minute );
+			lua_rawset( servL, -3 );
+		}
+		else if ( id == 69 )
+		{
+			global.brush_res_minute = atoi( row[1] );
+			lua_pushstring( servL, "brush_res_minute" );
+			lua_pushinteger( servL, global.brush_res_minute );
+			lua_rawset( servL, -3 );
+		}
+		else if ( id == 70 )
+			global.map_gather_sec = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

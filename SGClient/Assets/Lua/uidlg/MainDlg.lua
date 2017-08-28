@@ -206,6 +206,17 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 点击体力
 		elseif nControlID == 205 then
 			JumpBody()
+		
+		-- 区域地图
+		elseif nControlID == 301 then
+		
+		-- 坐标搜索
+		elseif nControlID == 302 then
+			MapPosDlgShow()
+			
+		-- 我的城池
+		elseif nControlID == 303 then
+			WorldMap.GotoMyCity()
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
