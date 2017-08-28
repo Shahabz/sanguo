@@ -33,22 +33,21 @@ end
 
 -- 刷怪服务器启动时候的刷对象，算是补充，刷对象计时重置
 function IN_OnWorldMapBrush()
-	BrushEnemy()
-	BrushRes()
+	WorldMapBrushTimer()
 end
 
 -- 服务器运行中刷对象(1分钟一次)
 function WorldMapBrushTimer()
 	local minute = 0;
 	minute = c_world_data_get( 1 )
-	if minute >= global.brush_enemy_minute then
+	if minute == 0 or minute >= global.brush_enemy_minute then
 		BrushEnemy()
 	else
 		c_world_data_set( 1, minute + 1 );
 	end
 	
 	minute =  c_world_data_get( 2 )
-	if minute >= global.brush_res_minute then
+	if minute == 0 or minute >= global.brush_res_minute then
 		BrushRes()
 	else
 		c_world_data_set( 2, minute + 1 );
@@ -57,7 +56,7 @@ end
 
 -- 刷流寇
 function BrushEnemy()
-	c_world_data_set( 1, 0 );
+	c_world_data_set( 1, 1 );
 	
 	-- 删除所有未选中的流寇
 	local nowtime = os.time();
@@ -125,7 +124,7 @@ end
 
 -- 刷资源点
 function BrushRes()
-	c_world_data_set( 2, 0 );
+	c_world_data_set( 2, 1 );
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
 		if g_zoneinfo[zoneid].open == 1 then

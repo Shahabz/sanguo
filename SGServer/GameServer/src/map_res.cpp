@@ -114,6 +114,8 @@ void map_res_makeunit( int index, SLK_NetS_AddMapUnit *pAttr )
 	if ( g_map_res[index].army_index >= 0 )
 	{
 		pAttr->m_state = ARMY_STATE_GATHER;
+		pAttr->m_char_value[2] = 1;
+		pAttr->m_char_value_count = 3;
 	}
 }
 
