@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?> 
 <project name ="CompileServer" default="start" basedir=".">
 	
 	<!-- 开始编译打包任务 -->
@@ -22,6 +22,9 @@
 		</scp>
 		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/GameServer/src/" port="22022" trust="true">
 		   <fileset dir="../../SGServer/GameServer/src/"/>
+		</scp>
+		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/exec/script/" port="22022" trust="true">
+		   <fileset dir="../../SGServer/exec/script/"/>
 		</scp>
 			
 			
