@@ -18,6 +18,7 @@ SRC = \
 ../AutoS/src/auto_data_equip.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_equip_washrule.cpp \
+../AutoS/src/auto_data_fight.cpp \
 ../AutoS/src/auto_data_hero.cpp \
 ../AutoS/src/auto_data_hero_colorup.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
@@ -156,6 +157,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_washrule.o: ../AutoS/src/auto_data_equip_washrule.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_fight.o: ../AutoS/src/auto_data_fight.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
