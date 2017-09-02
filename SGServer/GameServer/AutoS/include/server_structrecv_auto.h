@@ -75,6 +75,18 @@ struct _slk_NetC_WorldMapAreaIndex {
 };
 typedef struct _slk_NetC_WorldMapAreaIndex SLK_NetC_WorldMapAreaIndex;	//世界地图逻辑区域索引
 
+struct _slk_NetC_MapBattle {
+	char m_to_unit_type;	//出征目标
+	int m_to_unit_index;	//出征目标
+	int m_id;	//出征目标
+	short m_herokind[4];	//出征英雄
+	short m_to_posx;	//出征目的点
+	short m_to_posy;	//出征目的点
+	int m_appdata;	//出征附加数据
+	char m_action;	//出征行为
+};
+typedef struct _slk_NetC_MapBattle SLK_NetC_MapBattle;	//出征
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -85,5 +97,6 @@ int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue );
 int struct_NetC_StoryBattle_recv( char **pptr, int *psize, SLK_NetC_StoryBattle *pValue );
 int struct_NetC_WorldMapAsk_recv( char **pptr, int *psize, SLK_NetC_WorldMapAsk *pValue );
 int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldMapAreaIndex *pValue );
+int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pValue );
 
 #endif

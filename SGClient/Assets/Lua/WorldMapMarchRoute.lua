@@ -33,36 +33,38 @@ end
 
 -- 添加行军路线
 function MapMarchRoute.add( recvValue )
-	
 	-- 出发点
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_from_posx, recvValue.m_from_posy );
-	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, recvValue.m_from_index, cameraPosX, cameraPosY );
+	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, recvValue.m_from_grid, cameraPosX, cameraPosY );
 	
 	-- 目的点
 	cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_to_posx, recvValue.m_to_posy );
-	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_index, cameraPosX, cameraPosY );
+	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_grid, cameraPosX, cameraPosY );
 
 	-- 计算线的颜色
 	local color = 0;
 	if recvValue.m_action == ARMY_ACTION_GROUP_START and recvValue.m_state == ARMY_STATE_GROUP_START then 
-		-- 发起集结中并且还没开始移动
-		if recvValue.m_from_cityid == GetCity().m_cityid then
+		-- 发起集结中并且还没开始移动		
+		if recvValue.m_from_nation == GetPlayer().m_nation then
 			color = 3;
-		elseif recvValue.m_from_clubid > 0 and recvValue.m_from_clubid == GetCity().m_clubid then
+		elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
 			color = 3;
-		elseif recvValue.m_to_cityid == GetCity().m_cityid then
+		elseif recvValue.m_to_actorid == GetPlayer().m_actorid then
 			color = 2;
-		elseif recvValue.m_to_clubid > 0 and recvValue.m_to_clubid == GetCity().m_clubid then
+		elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
 			color = 2;
 		end
+		
 	else
-		if recvValue.m_from_cityid == GetCity().m_cityid then
+		if recvValue.m_from_actorid == GetPlayer().m_actorid then
 			color = 1;
-		elseif recvValue.m_from_clubid > 0 and recvValue.m_from_clubid == GetCity().m_clubid then
-			color = 1;
-		elseif recvValue.m_to_cityid == GetCity().m_cityid and ( recvValue.m_action == ARMY_ACTION_FIGHT or recvValue.m_action == ARMY_ACTION_BESIEGED ) then
+		elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
+			color = 3;
+		elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
 			color = 2;
-		elseif recvValue.m_to_clubid > 0 and recvValue.m_to_clubid == GetCity().m_clubid then
+		elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
+			color = 2;
+		else
 			color = 2;
 		end
 	end
@@ -112,7 +114,7 @@ function MapMarchRoute.draw( obj, from, to, state, color, parent )
 		end
 	
 	end
-	
+
 	local plane = obj:GetComponent( "GizmoPlane" );
 	-- 相反
 	if state == ARMY_STATE_REBACK then

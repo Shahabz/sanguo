@@ -79,7 +79,6 @@ function MapTile.del( recvValue )
 		return;
 	end
 	local info = clone(recvValue);
-	info.m_type = 0;
 	info.m_unit_index = -1;
 	MapTile.add( info )
 end

@@ -8,7 +8,7 @@ MAPUNIT_TYPE_TOWN			=	3	-- 城镇
 MAPUNIT_TYPE_ENEMY			=	4	-- 流寇
 MAPUNIT_TYPE_RES			=	5	-- 资源
 
-g_map_enemy_maxcount		= 30000;	-- 流寇最大数量
+g_map_enemy_maxcount		= 50000;-- 流寇最大数量
 g_map_res_maxcount			= 5000;	-- 资源点最大数量
 
 -- 世界地图初始化
@@ -98,11 +98,20 @@ function BrushEnemyWithZone( zoneid )
 		end
 	end
 	
+	-- 洗牌打乱搜到的空余坐标点
+	-- 因为 table.remove( emptylist, randidx ); -- 效率非常低，所以不随机了，顺序取
+	for  i = 1, #emptylist, 1 do  
+		local index = math.random( 1, #emptylist );
+		emptylist[i], emptylist[index] = emptylist[index],emptylist[i]
+	end
+
+	
 	-- 刷流寇集合
 	local kindgroup = g_zoneinfo[zoneid].enemykind;
 	local numgroup = g_zoneinfo[zoneid].enemynum;
 	local kindlist = string.split( kindgroup, "," );
 	local numlist = string.split( numgroup, "," );
+	local indexcount = 1;
 	
 	-- 刷流寇
 	for i=1, #kindlist, 1 do
@@ -111,14 +120,21 @@ function BrushEnemyWithZone( zoneid )
 		local hasnum = c_map_enemy_num( zoneid, kind );
 		if num ~= nil and num > 0 then
 			for j=1, (num-hasnum), 1 do
-				if #emptylist == 0 then
+				if #emptylist == 0 or indexcount > #emptylist then
 					break;
 				end
-				local randidx = math.random( 1, #emptylist );
-				c_map_enemy_create( kind, emptylist[randidx].m_posx, emptylist[randidx].m_posy, 0 );
-				table.remove( emptylist, randidx );
+				--local randidx = math.random( 1, #emptylist );
+				c_map_enemy_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy, 0 );
+				indexcount = indexcount + 1;
+				--table.remove( emptylist, randidx ); -- 此方法效率非常低
 			end
 		end
+	end
+end
+
+function BrushResClear()
+	for index = 0, g_map_res_maxcount-1, 1 do
+		c_map_res_delete( index );
 	end
 end
 
@@ -151,11 +167,20 @@ function BrushResWithZone( zoneid )
 			end
 		end
 	end
+	
+	-- 洗牌打乱搜到的空余坐标点
+	-- 因为 table.remove( emptylist, randidx ); -- 效率非常低，所以不随机了，顺序取
+	for  i = 1, #emptylist, 1 do  
+		local index = math.random( 1, #emptylist );
+		emptylist[i], emptylist[index] = emptylist[index],emptylist[i]
+	end
+	
 	-- 刷资源点集合
 	local kindgroup = g_zoneinfo[zoneid].reskind;
 	local numgroup = g_zoneinfo[zoneid].resnum;
 	local kindlist = string.split( kindgroup, "," );
 	local numlist = string.split( numgroup, "," );
+	local indexcount = 1;
 	
 	-- 刷资源点
 	for i=1, #kindlist, 1 do
@@ -164,12 +189,13 @@ function BrushResWithZone( zoneid )
 		local hasnum = c_map_res_num( zoneid, kind );
 		if num ~= nil and num > 0 then
 			for j=1, (num-hasnum), 1 do
-				if #emptylist == 0 then
+				if #emptylist == 0 or indexcount > #emptylist then
 					break;
 				end
-				local randidx = math.random( 1, #emptylist );
-				c_map_res_create( kind, emptylist[randidx].m_posx, emptylist[randidx].m_posy );
-				table.remove( emptylist, randidx );
+				--local randidx = math.random( 1, #emptylist );
+				c_map_res_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy );
+				indexcount = indexcount + 1;
+				--table.remove( emptylist, randidx );-- 此方法效率非常低
 			end
 		end
 	end

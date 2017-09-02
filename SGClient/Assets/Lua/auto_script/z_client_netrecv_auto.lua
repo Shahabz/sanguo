@@ -455,6 +455,36 @@ function netrecv_mapzonechange_C( buffer )
 	proc_mapzonechange_C( recvValue );
 end
 
+function netrecv_mapzoneunitlist_C( buffer )
+	local recvValue = struct_NetS_MapZoneUnitList_recv( buffer );
+	proc_mapzoneunitlist_C( recvValue );
+end
+
+function netrecv_mapzoneunit_C( buffer )
+	local recvValue = struct_NetS_ZoneUnit_recv( buffer );
+	proc_mapzoneunit_C( recvValue );
+end
+
+function netrecv_armyspeedupdate_C( buffer )
+	local recvValue = struct_NetS_ArmySpeedUpdate_recv( buffer );
+	proc_armyspeedupdate_C( recvValue );
+end
+
+function netrecv_battlelist_C( buffer )
+	local recvValue = struct_NetS_BattleList_recv( buffer );
+	proc_battlelist_C( recvValue );
+end
+
+function netrecv_battleinfo_C( buffer )
+	local recvValue = struct_NetS_BattleInfo_recv( buffer );
+	proc_battleinfo_C( recvValue );
+end
+
+function netrecv_mapresinfo_C( buffer )
+	local recvValue = struct_NetS_MapResInfo_recv( buffer );
+	proc_mapresinfo_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -547,6 +577,12 @@ Proc_Command = {
 	[CMDS_STORYRANKNUM]=netrecv_storyranknum_C;
 	[CMDS_STORYRANKTIME]=netrecv_storyranktime_C;
 	[CMDS_MAPZONECHANGE]=netrecv_mapzonechange_C;
+	[CMDS_MAPZONEUNITLIST]=netrecv_mapzoneunitlist_C;
+	[CMDS_MAPZONEUNIT]=netrecv_mapzoneunit_C;
+	[CMDS_ARMYSPEEDUPDATE]=netrecv_armyspeedupdate_C;
+	[CMDS_BATTLELIST]=netrecv_battlelist_C;
+	[CMDS_BATTLEINFO]=netrecv_battleinfo_C;
+	[CMDS_MAPRESINFO]=netrecv_mapresinfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -9,15 +9,19 @@
 #define CITY_ATTR_ABILITY_5			5	// 提升步兵每分钟招募数量%
 #define CITY_ATTR_ABILITY_6			6	// 提升骑兵每分钟招募数量%
 #define CITY_ATTR_ABILITY_7			7	// 提升弓兵每分钟招募数量%
-#define CITY_ATTR_ABILITY_8			8	// 提升武将行军速度%
+#define CITY_ATTR_ABILITY_8			8	// 提升武将行军速度%（科技使用）
 #define CITY_ATTR_ABILITY_9			9	// 提升仓库保护资源量%
 #define CITY_ATTR_ABILITY_10		10	// 缩短建筑升级所需时间%
-#define CITY_ATTR_ABILITY_11		11	// 缩短作坊生产耗时%
-#define CITY_ATTR_ABILITY_12		12	// 单位时间采集收获加成%
+#define CITY_ATTR_ABILITY_11		11	// 缩短作坊生产耗时%(科技使用)
+#define CITY_ATTR_ABILITY_12		12	// 单位时间采集收获加成%(科技使用)
 #define CITY_ATTR_ABILITY_13		13	// 增加武将幸运突破概率%
 #define CITY_ATTR_ABILITY_14		14	// 增加武将杀敌获得威望数量%
 #define CITY_ATTR_ABILITY_15		15	// 对城防军伤害%
-#define CITY_ATTR_ABILITY_16		16	// 武官加速募兵
+#define CITY_ATTR_ABILITY_16		16	// 武官加速募兵%
+#define CITY_ATTR_ABILITY_17		17	// 缩短作坊生产耗时%（活动使用）
+#define CITY_ATTR_ABILITY_18		18	// 提升武将行军速度%（军曹使用）
+#define CITY_ATTR_ABILITY_19		19	// 提升武将行军速度%（风令使用）
+#define CITY_ATTR_ABILITY_20		20	// 单位时间采集收获加成%(活动使用)
 
 #define CITY_ATTR_ABILITY_100		100	// 提高所以武将攻击力（固定数值）
 #define CITY_ATTR_ABILITY_101		101	// 提高步兵武将攻击力（固定数值）

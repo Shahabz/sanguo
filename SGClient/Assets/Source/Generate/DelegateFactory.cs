@@ -40,6 +40,7 @@ public static class DelegateFactory
 		dict.Add(typeof(UITween.OnFinish), UITween_OnFinish);
 		dict.Add(typeof(YlyDelegateUtil.StringDelegate), YlyDelegateUtil_StringDelegate);
 		dict.Add(typeof(DragonBones.ListenerDelegate<DragonBones.EventObject>), DragonBones_ListenerDelegate_DragonBones_EventObject);
+		dict.Add(typeof(Character.OnEvent), Character_OnEvent);
 	}
 
     [NoToLuaAttribute]
@@ -1257,6 +1258,53 @@ public static class DelegateFactory
 		{
 			DragonBones_ListenerDelegate_DragonBones_EventObject_Event target = new DragonBones_ListenerDelegate_DragonBones_EventObject_Event(func, self);
 			DragonBones.ListenerDelegate<DragonBones.EventObject> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class Character_OnEvent_Event : LuaDelegate
+	{
+		public Character_OnEvent_Event(LuaFunction func) : base(func) { }
+		public Character_OnEvent_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(Character param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(Character param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate Character_OnEvent(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			Character.OnEvent fn = delegate(Character param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			Character_OnEvent_Event target = new Character_OnEvent_Event(func);
+			Character.OnEvent d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			Character_OnEvent_Event target = new Character_OnEvent_Event(func, self);
+			Character.OnEvent d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

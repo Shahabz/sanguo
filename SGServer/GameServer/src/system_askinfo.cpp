@@ -25,6 +25,9 @@
 #include "building.h"
 #include "hero.h"
 #include "story.h"
+#include "map_enemy.h"
+#include "map_res.h"
+#include "army_march.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -334,6 +337,38 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			story_sendrank( actor_index, pvalue[1] );
 		}		
+		break;
+	case ASKINFO_WORLDMAP:
+		if ( pvalue[0] == 1 )
+		{ // 流寇奖励
+			map_enemy_sendaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 请求出征队列信息
+			city_battlequeue_sendlist( actor_index, -1 );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 已经达到目的点的撤回
+			actor_army_return( actor_index, pvalue[1], -1 );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 行军途中的召回
+			actor_army_callback( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 行军加速
+			actor_army_march_speedup( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 资源点信息
+			map_res_sendinfo( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 8 )
+		{ // 迁城
+			city_move_actor( actor_index, pvalue[1], pvalue[2], pvalue[3] );
+		}
+		
+
 		break;
 	default:
 		break;

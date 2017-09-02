@@ -232,7 +232,30 @@ int global_init()
 			lua_rawset( servL, -3 );
 		}
 		else if ( id == 70 )
-			global.map_gather_sec = atoi( row[1] );
+			global.hero_battle_minhp = atoi( row[1] );
+		else if ( id == 71 )
+			global.army_move = atoi( row[1] );
+		else if ( id == 72 )
+			global.army_march_food_v1 = value;
+		else if ( id == 73 )
+			global.army_march_food_v2 = value;
+		else if ( id == 74 )
+			global.army_march_food_v3 = value;
+		else if ( id == 75 )
+			global.hero_gather_duration[0] = atoi( row[1] );
+		else if ( id == 76 )
+			global.hero_gather_duration[1] = atoi( row[1] );
+		else if ( id == 77 )
+			global.hero_gather_duration[2] = atoi( row[1] );
+		else if ( id == 78 )
+			global.hero_gather_duration[3] = atoi( row[1] );
+		else if ( id == 79 )
+			global.hero_gather_duration[4] = atoi( row[1] );
+		else if ( id == 80 )
+			global.hero_gather_duration[5] = atoi( row[1] );
+		else if ( id == 81 )
+			global.army_move_kingzone = atoi( row[1] );
+		
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

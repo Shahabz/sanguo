@@ -21,7 +21,7 @@ typedef struct _fighthero
 	int		index;				// 类型索引
 	short	offset;				
 
-	short	herokind;			// 英雄种类
+	int		herokind;			// 英雄种类
 	short	level;				// 等级
 	char	color;				// 颜色
 	char	corps;				// 兵种

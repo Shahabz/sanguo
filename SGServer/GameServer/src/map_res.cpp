@@ -34,6 +34,15 @@ extern MYSQL *myGame;
 extern MYSQL *myData;
 extern Global global;
 
+extern Actor *g_actors;
+extern int g_maxactornum;
+
+extern MapUnit *g_mapunit;
+extern int g_mapunit_maxcount;
+
+extern Army *g_army;
+extern int g_army_maxcount;
+
 extern MapResInfo *g_resinfo;
 extern int g_resinfo_maxnum;
 
@@ -113,9 +122,18 @@ void map_res_makeunit( int index, SLK_NetS_AddMapUnit *pAttr )
 	pAttr->m_char_value_count = 2;
 	if ( g_map_res[index].army_index >= 0 )
 	{
-		pAttr->m_state = ARMY_STATE_GATHER;
-		pAttr->m_char_value[2] = 1;
-		pAttr->m_char_value_count = 3;
+		City *pCity = army_getcityptr( g_map_res[index].army_index );
+		if ( pCity )
+		{
+			pAttr->m_state = ARMY_STATE_GATHER;
+			strncpy( pAttr->m_name, pCity->name, NAME_SIZE );
+			pAttr->m_namelen = strlen( pAttr->m_name );
+			pAttr->m_char_value[2] = pCity->nation;
+			pAttr->m_char_value_count = 3;
+
+			pAttr->m_int_value[0] = pCity->actorid;
+			pAttr->m_int_value_count = 1;
+		}
 	}
 }
 
@@ -165,6 +183,9 @@ int map_res_create( short kind, short posx, short posy )
 {
 	if ( kind <= 0 || kind >= g_resinfo_maxnum )
 		return -1;
+	MapResInfo *config = map_res_getconfig( kind );
+	if ( !config )
+		return -1;
 	int index = map_res_getfreeindex();
 	if ( index < 0 )
 		return -1;
@@ -172,6 +193,7 @@ int map_res_create( short kind, short posx, short posy )
 	g_map_res[index].kind = kind;
 	g_map_res[index].posx = posx;
 	g_map_res[index].posy = posy;
+	g_map_res[index].num = config->num;
 	g_map_res[index].army_index = -1;
 	g_map_res[index].unit_index = mapunit_add( MAPUNIT_TYPE_RES, index );
 	map_addobject( MAPUNIT_TYPE_RES, index, posx, posy );
@@ -223,5 +245,81 @@ int map_res_logic()
 			}
 		}
 	}
+	return 0;
+}
+
+// 设置正在采集的部队
+int map_res_setarmy( int index, int army_index )
+{
+	if ( index < 0 || index >= g_map_res_maxcount )
+		return -1;
+	g_map_res[index].army_index = army_index;
+	mapunit_update( MAPUNIT_TYPE_RES, index, g_map_res[index].unit_index );
+	return 0;
+}
+
+// 获取正在采集的部队
+int map_res_getarmy( int index )
+{
+	if ( index < 0 || index >= g_map_res_maxcount )
+		return -1;
+	return g_map_res[index].army_index;
+}
+
+// 获取显示索引
+int map_res_getunit( int index )
+{
+	if ( index < 0 || index >= g_map_res_maxcount )
+		return -1;
+	return g_map_res[index].unit_index;
+}
+
+// 资源点信息
+int map_res_sendinfo( int actor_index, int unit_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+		return -1;
+
+	MapUnit *unit = &g_mapunit[unit_index];
+	if ( !unit )
+		return -1;
+	if ( unit->type != MAPUNIT_TYPE_RES )
+		return -1;
+	if ( unit->index < 0 || unit->index >= g_map_res_maxcount )
+		return -1;
+
+	MapResInfo *config = map_res_getconfig( g_map_res[unit->index].kind );
+	if ( !config )
+		return -1;
+
+	SLK_NetS_MapResInfo pValue = { 0 };
+	pValue.m_kind = g_map_res[unit->index].kind;
+	pValue.m_totalnum = config->num;
+	pValue.m_totalsec = config->sec;
+	pValue.m_spacenum = g_map_res[unit->index].num;
+
+	// 如果有采集的玩家
+	int army_index = map_res_getarmy( unit->index );
+	if ( army_index >= 0 && army_index < g_army_maxcount )
+	{
+		City *pCity = army_getcityptr( army_index );
+		if ( pCity )
+		{
+			pValue.m_spacenum = g_map_res[unit->index].num - (int)round( (config->num / (float)config->sec) * g_army[army_index].statetime * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]) );
+			pValue.m_actorlevel = pCity->level;
+			pValue.m_herokind = g_army[army_index].herokind[0];
+			int hero_index = city_hero_getindex( pCity->index, g_army[army_index].herokind[0] );
+			if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
+			{
+				pValue.m_herolevel = pCity->hero[hero_index].level;
+				pValue.m_herocolor = pCity->hero[hero_index].color;
+				pValue.m_herohp = pCity->hero[hero_index].soldiers;
+			}
+		}
+	}
+
+	netsend_mapresinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

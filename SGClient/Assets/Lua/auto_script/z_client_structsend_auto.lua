@@ -71,3 +71,16 @@ function struct_NetC_WorldMapAreaIndex_send( buf, sendValue )
 	buf:WriteShort( sendValue.m_posy );
 end
 
+function struct_NetC_MapBattle_send( buf, sendValue )
+	buf:WriteSByte( sendValue.m_to_unit_type );
+	buf:WriteInt( sendValue.m_to_unit_index );
+	buf:WriteInt( sendValue.m_id );
+	for tmpi=1,4,1 do
+		buf:WriteShort( sendValue.m_herokind[tmpi] );
+	end
+	buf:WriteShort( sendValue.m_to_posx );
+	buf:WriteShort( sendValue.m_to_posy );
+	buf:WriteInt( sendValue.m_appdata );
+	buf:WriteSByte( sendValue.m_action );
+end
+

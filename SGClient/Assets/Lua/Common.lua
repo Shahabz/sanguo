@@ -385,6 +385,11 @@ function string.checksign( str )
     return true;
 end
 
+function math.round(value)
+    value = tonumber(value) or 0
+    return math.floor(value + 0.5)
+end
+
 --------------------------- 队列 ---------------------------------
 Queue = {}
 function Queue.new()
@@ -398,7 +403,8 @@ function Queue.pushFront(queue, value)
 end
 
 function Queue.pushBack(queue, value)
-    local last = queue.last + 1     queue.last = last
+    local last = queue.last + 1     
+	queue.last = last
     queue[last] = value
 end
 

@@ -47,6 +47,7 @@ function IN_Script_Command( v1, v2, v3, v4, msg, PlayerIdx )
 	-- Ë¢×ÊÔ´µã
 	elseif v1 == 2 then
 		if v2 == 0 then
+			BrushResClear()
 			BrushRes()
 		else
 			BrushResWithZone( v2 )

@@ -63,6 +63,11 @@ local m_uiWeatherDay = nil; --UnityEngine.GameObject
 local m_uiWeatherIcon = nil; --UnityEngine.GameObject
 local m_uiWeatherAbility = nil; --UnityEngine.GameObject
 
+local m_uiMiniMap ={}
+m_uiMiniMap.m_uiMoveLayer = nil; --UnityEngine.GameObject
+m_uiMiniMap.m_uiUIP_MiniTmx = nil; --UnityEngine.GameObject
+m_uiMiniMap.m_uiUIP_ZoneUnit = nil; --UnityEngine.GameObject
+
 local m_uiBuildingShape = {nil,nil}
 local m_uiNormalShape = {nil,nil}
 local m_uiBuildingTimer = {nil,nil}
@@ -209,14 +214,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 区域地图
 		elseif nControlID == 301 then
-		
-		-- 坐标搜索
-		elseif nControlID == 302 then
-			MapPosDlgShow()
-			
-		-- 我的城池
-		elseif nControlID == 303 then
-			WorldMap.GotoMyCity()
+			MapZoneDlgShow();
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
@@ -353,6 +351,10 @@ function MainDlgOnAwake( gameObject )
 	m_uiWeatherDay = objs[77];
 	m_uiWeatherIcon = objs[78];
 	m_uiWeatherAbility = objs[79];
+	m_uiMiniMap.m_uiMoveLayer = objs[80];
+	m_uiMiniMap.m_uiUIP_MiniTmx = objs[81];
+	m_uiMiniMap.m_uiUIP_ZoneUnit = objs[82];
+	MainDlgMiniMapInit();
 	MainDlgWorkerObjectInit();
 end 
 
@@ -407,7 +409,7 @@ function MainDlgSetNation()
 		return;
 	end
 	SetImage( m_uiNation, NationSprite( GetPlayer().m_nation ) );
-	SetImage( m_uiButtonNation.Find("Back"), NationSprite( GetPlayer().m_nation ) );
+	SetImage( m_uiButtonNation.transform:Find("Back"), NationSprite( GetPlayer().m_nation ) );
 end
 
 -- 银币
@@ -855,16 +857,67 @@ end
 function MainDlgShowCity()
 	SetTrue( m_uiTop_City )
 	SetFalse( m_uiTop_Map )
+	SetTrue(m_uiButtonWorld )
+	SetFalse( m_uiButtonCity )
+	MapMainDlgClose()
 end
 
 -- 显示外城的空间
 function MainDlgShowMap()
 	SetTrue( m_uiTop_Map )
 	SetFalse( m_uiTop_City )
+	SetFalse(m_uiButtonWorld )
+	SetTrue( m_uiButtonCity )
+	MapMainDlgShow()
 	SetText( m_uiNationName, NationEx( GetPlayer().m_nation ) );
 end
 
 -- 设置区域名称
 function MainDlgSetZoneName( name )
 	SetText( m_uiZoneName, name )
+end
+
+-- 小地图
+function MainDlgMiniMapInit()
+	for j=1, 5, 1 do
+		for i=1, 5, 1 do
+			local tmx = GameObject.Instantiate( m_uiMiniMap.m_uiUIP_MiniTmx );
+			tmx.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
+			tmx.transform.localScale = Vector3.one;
+			tmx.transform.localPosition = Vector3.New( (WorldMap.m_nMaxWidth*1024)/2/100 + (i-1)*TMX_WIDTH*1024/2/100 - (j-1)*TMX_WIDTH*1024/2/100,
+												   -(i-1)*TMX_HEIGHT*512/2/100 - (j-1)*TMX_HEIGHT*512/2/100, 0 );
+			SetTrue( tmx )
+		end
+	end
+	-- 对象池
+	m_uiMiniMap.m_ObjectPool = m_uiMiniMap.m_uiMoveLayer.transform.parent:GetComponent( typeof(ObjectPoolManager) );
+	m_uiMiniMap.m_ObjectPool:CreatePool("m_uiUIP_ZoneUnit", 100, 100, m_uiMiniMap.m_uiUIP_ZoneUnit);
+end
+function MainDlgMiniMapChangeZone()
+	MainDlgMiniMapClearUnit()
+	--m_uiMoveLayer
+	--m_uiMiniMap.m_uiMoveLayer.transform:Find( "MapBorder" ):GetComponent("MapBorder"):SetSize( 110 );
+end
+function MainDlgMiniMapMove()
+
+end
+function MainDlgMiniMapClearUnit()
+	local objs = {};
+	for i = 0 ,m_uiMiniMap.m_uiMoveLayer.transform.childCount - 1 do
+		table.insert( objs, m_uiMiniMap.m_uiMoveLayer.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "m_uiUIP_ZoneUnit(Clone)" then
+			m_ObjectPool:Release( "m_uiUIP_ZoneUnit", obj );
+		end
+    end
+end
+-- {m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]}
+function MainDlgMiniMapAddUnit( recvValue )
+	--print( recvValue.m_posx..","..recvValue.m_posy )
+	local uiObj = m_uiMiniMap.m_ObjectPool:Get( "m_uiUIP_ZoneUnit" );
+	uiObj.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
+	uiObj.transform.localScale = Vector3.one;
+	uiObj.transform.localPosition = Vector3.New( recvValue.m_posx, recvValue.m_posy )
 end

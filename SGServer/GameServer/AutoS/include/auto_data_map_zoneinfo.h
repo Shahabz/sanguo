@@ -20,6 +20,9 @@ struct _mapzoneinfo {
 				char enemynum[512];	//
 				char reskind[256];	//
 				char resnum[512];	//
+				short actorlevel;	//
+				short killenemy;	//
+				int questid;	//
 };
 typedef struct _mapzoneinfo MapZoneInfo;
 

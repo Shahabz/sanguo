@@ -26,64 +26,124 @@ AWARDKIND_FRIENDSHIP	=	50016 -- 友谊积分
 -- 奖励形象
 function AwardInfo( awardkind )
 	local sprite = nil;
+	local color = nil;
 	local name = "";
 	-- 掉落包
 	if awardkind <= AWARDKIND_ITEMBASE then
 		sprite = LoadSprite( "Char_Default" );
-	
+		color = ItemColorSprite( 0 );
+		name = T(555)
+		
 	-- 道具
 	elseif awardkind <= AWARDKIND_EQUIPBASE then
 		sprite = ItemSprite( awardkind );
+		color = ItemColorSprite( item_getcolor( awardkind ) );
+		name = item_getname( awardkind )
 		
 	-- 装备
 	elseif awardkind <= AWARDKIND_HEROBASE then
-		sprite = EquipSprite( awardkind-AWARDKIND_EQUIPBASE ), T()
+		local kind = awardkind-AWARDKIND_EQUIPBASE
+		sprite = EquipSprite( kind )
+		color = ItemColorSprite( equip_getcolor( kind ) );
+		name = EquipName( awardkind )
 		
 	-- 英雄	
 	elseif awardkind <= AWARDKIND_BUILDINGBASE then
-		sprite = HeroHeadSprite( awardkind-AWARDKIND_HEROBASE )
-	
+		local kind = awardkind-AWARDKIND_HEROBASE;
+		sprite = HeroHeadSprite( kind )
+		color = ItemColorSprite( 0 );
+		name = HeroName( kind )
+		
 	-- 建筑	
 	elseif awardkind <= AWARDKIND_FUNCTION then
+		local kind = awardkind-AWARDKIND_BUILDINGBASE;
 		sprite = BuildingSprite( awardkind-AWARDKIND_BUILDINGBASE )
+		color = ItemColorSprite( 0 );
+		name = BuildingName( kind )
 		
 	elseif awardkind == AWARDKIND_SILVER then -- 银币
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 120 );
+		color = ItemColorSprite( 0 );
+		name = T(121)
+		
 	elseif awardkind == AWARDKIND_WOOD then	-- 木材
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 121 );
+		color = ItemColorSprite( 0 );
+		name = T(122)
+		
 	elseif awardkind == AWARDKIND_FOOD then	-- 粮食
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 122 );
+		color = ItemColorSprite( 0 );
+		name = T(123)
+		
 	elseif awardkind == AWARDKIND_IRON then	-- 镔铁
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 123 );
+		color = ItemColorSprite( 0 );
+		name = T(124)
+		
 	elseif awardkind == AWARDKIND_TOKEN then-- 元宝
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 124 );
+		color = ItemColorSprite( 0 );
+		name = T(125)
+		
 	elseif awardkind == AWARDKIND_BODY then	 -- 体力
-		sprite = LoadSprite( "Char_Default" );
+		sprite = ItemSprite( 126 );
+		color = ItemColorSprite( 0 );
+		name = T(126)
+		
 	elseif awardkind == AWARDKIND_INFANTRY then -- 步兵
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		
 	elseif awardkind == AWARDKIND_CAVALRY then -- 骑兵
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		
 	elseif awardkind == AWARDKIND_ARCHER then -- 弓兵
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		
 	elseif awardkind == AWARDKIND_EXP then	-- 角色经验
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( ItemSprite( 127 ) );
+		color = ItemColorSprite( 0 );
+		name = T(128)
+		
 	elseif awardkind == AWARDKIND_VIPEXP then	-- VIP经验
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(190)
+		
 	elseif awardkind == AWARDKIND_AUTOBUILD	then -- 自动建造次数
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(191)
+		
 	elseif awardkind == AWARDKIND_LEVYNUM then	 -- 征收次数
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		
 	elseif awardkind == AWARDKIND_PEOPLE then	-- 人口
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(127)
+		
 	elseif awardkind == AWARDKIND_PRESTIGE then	-- 威望值
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(152)
+		
 	elseif awardkind == AWARDKIND_FRIENDSHIP then -- 友谊积分
 		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		
 	end
 	
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
 	end
-	return sprite, name;
+	if color == nil then
+		color = LoadSprite( ItemColorSprite( 0 ) );
+	end
+	return sprite, color, name;
 end
 

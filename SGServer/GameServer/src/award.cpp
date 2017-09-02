@@ -114,7 +114,7 @@ int awardgroup_init()
 	mysql_free_result( res );
 
 	// 读取数据
-	sprintf( szSQL, "select awardgroup,kind,minnum,maxnum,color,value,isshow,type,appendnum from award_group" );
+	sprintf( szSQL, "select awardgroup,kind,minnum,maxnum,color,value,isshow,type,appendnum from award_group order by kind desc" );
 	if ( mysql_query( myData, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
@@ -199,8 +199,38 @@ int awardgroup_reload()
 	return 0;
 }
 
+int awardgroup_sendinfo_makestruct( int awardgroup, SLK_NetS_AwardInfoList *list, int limitcount )
+{
+	if ( awardgroup <= 0 || awardgroup >= g_awardgroup_count )
+		return -1;
+	if ( list->m_count >= limitcount )
+		return -1;
+	for ( int tmpi = 0; tmpi < g_awardgroup[awardgroup].allcount; tmpi++ )
+	{
+		if ( g_awardgroup[awardgroup].show[tmpi] == 0 )
+			continue;
+		if ( g_awardgroup[awardgroup].kind[tmpi] == 0 )
+			continue;
+		if ( g_awardgroup[awardgroup].kind[tmpi] < 0 )
+		{
+			awardgroup_sendinfo_makestruct( -g_awardgroup[awardgroup].kind[tmpi], list, limitcount );
+		}
+		else
+		{
+			list->m_list[list->m_count].m_kind = g_awardgroup[awardgroup].kind[tmpi];
+			list->m_list[list->m_count].m_num = g_awardgroup[awardgroup].minnum[tmpi];
+			list->m_count += 1;
+			if ( limitcount > 0 && list->m_count >= limitcount )
+			{
+				break;
+			}
+		}
+	}
+	return 0;
+}
+
 // 发送给客户端显示的奖励组
-int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int unit_index, int limitcount )
+int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int value, int limitcount )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
@@ -208,21 +238,9 @@ int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int
 		return -1;
 	SLK_NetS_AwardInfoList list = { 0 };
 	list.m_callback_code = callback_code;
+	list.m_value = value;
 	list.m_count = 0;
-	for ( int tmpi = 0; tmpi < g_awardgroup[awardgroup].allcount; tmpi++ )
-	{
-		if ( g_awardgroup[awardgroup].show[tmpi] == 0 )
-			continue;
-		list.m_list[list.m_count].m_kind = g_awardgroup[awardgroup].kind[tmpi];
-		/*list.m_list[list.m_count].m_num = g_awardgroup[awardgroup].minnum[tmpi];*/
-		list.m_list[list.m_count].m_num = awardgroup_randnum( awardgroup,  0, tmpi );
-		list.m_count += 1;
-		if ( limitcount > 0 && list.m_count >= limitcount )
-		{
-			break;
-		}
-	}
-
+	awardgroup_sendinfo_makestruct( awardgroup, &list, limitcount );
 	netsend_awardinfolist_S( actor_index, SENDTYPE_ACTOR, &list );
 	return 0;
 }
@@ -245,7 +263,7 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 		{
 			if ( kind < 0 )
 				awardgroup_random( -kind, level, getinfo );
-			else
+			else if( kind > 0 )
 			{
 				char ishave = 0;
 				for ( int tmpj = 0; tmpj < getinfo->count; tmpj++ )
@@ -291,7 +309,7 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 			{
 				if ( kind < 0 )
 					awardgroup_random( -kind, level, getinfo );
-				else
+				else if ( kind > 0 )
 				{
 					char ishave = 0;
 					for ( int tmpj = 0; tmpj < getinfo->count; tmpj++ )

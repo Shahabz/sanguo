@@ -10,6 +10,7 @@ NOTIFY_NPCTALK		=	7	-- NPC对话
 NOTIFY_EQUIP		=	8	-- 装备
 NOTIFY_ACTOR		=	9	-- 角色
 NOTIFY_ACTORSFLAG	=	10	-- 角色标志位
+NOTIFY_WORLDMAP		=	11	-- 世界地图
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -73,5 +74,12 @@ function RecvActorNotify(recvValue)
 	-- 角色标志位	
 	elseif msgid == NOTIFY_ACTORSFLAG then
 		GetPlayer().m_actor_sflag = value[1]
+	
+	-- 世界地图	
+	elseif msgid == NOTIFY_WORLDMAP then
+		 -- 迁城完毕
+        if value[1] == 1 then
+            WorldMap.OnCityMoved(value[2], value[3], value[4]);
+		end
     end
 end

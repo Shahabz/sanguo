@@ -84,6 +84,7 @@ public static class LuaBinder
 		CityCameraWrap.Register(L);
 		CityBuildingWrap.Register(L);
 		CityLandWrap.Register(L);
+		CharacterWrap.Register(L);
 		MapBorderWrap.Register(L);
 		MapUnitMoveWrap.Register(L);
 		WorldMapCameraWrap.Register(L);
@@ -256,6 +257,9 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("YlyDelegateUtil");
 		L.RegFunction("StringDelegate", YlyDelegateUtil_StringDelegate);
+		L.EndModule();
+		L.BeginModule("Character");
+		L.RegFunction("OnEvent", Character_OnEvent);
 		L.EndModule();
 		L.EndModule();
 		L.BeginPreLoad();
@@ -886,6 +890,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(YlyDelegateUtil.StringDelegate), func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Character_OnEvent(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(Character.OnEvent), func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(Character.OnEvent), func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

@@ -9,6 +9,7 @@ struct _mapresinfo {
 				short type;	//
 				short herolevel;	//
 				int num;	//
+				int sec;	//
 };
 typedef struct _mapresinfo MapResInfo;
 

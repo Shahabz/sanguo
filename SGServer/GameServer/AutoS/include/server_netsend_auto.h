@@ -93,6 +93,12 @@ int netsend_storystate_S( int actor_index, char send_type, SLK_NetS_StoryState *
 int netsend_storyranknum_S( int actor_index, char send_type, SLK_NetS_StoryRanknum *pValue );
 int netsend_storyranktime_S( int actor_index, char send_type, SLK_NetS_StoryRanktime *pValue );
 int netsend_mapzonechange_S( int actor_index, char send_type, SLK_NetS_MapZoneChange *pValue );
+int netsend_mapzoneunitlist_S( int actor_index, char send_type, SLK_NetS_MapZoneUnitList *pValue );
+int netsend_mapzoneunit_S( int actor_index, char send_type, SLK_NetS_ZoneUnit *pValue );
+int netsend_armyspeedupdate_S( int actor_index, char send_type, SLK_NetS_ArmySpeedUpdate *pValue );
+int netsend_battlelist_S( int actor_index, char send_type, SLK_NetS_BattleList *pValue );
+int netsend_battleinfo_S( int actor_index, char send_type, SLK_NetS_BattleInfo *pValue );
+int netsend_mapresinfo_S( int actor_index, char send_type, SLK_NetS_MapResInfo *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

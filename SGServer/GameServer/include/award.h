@@ -62,7 +62,7 @@ int awardgroup_init();
 int awardgroup_reload();
 
 // 发送给客户端显示的奖励组
-int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int unit_index, int limitcount );
+int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int value, int limitcount );
 
 // 随机奖励组，不直接给
 int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo );

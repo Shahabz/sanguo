@@ -449,7 +449,7 @@ end
 function MaterialMakeDlgSecNeed( id )
 	local people = math.floor( (m_recvValue.m_city_people+m_recvValue.m_nation_people) / (m_makeing_count+1) );
 	local needsec = math.ceil( math.max( g_material_make[id].sec * global.material_make_value1, g_material_make[id].sec - global.material_make_value2*people ) );
-	needsec = needsec - math.ceil( needsec*GetPlayer().m_attr.m_materialsec_per );
+	needsec = math.ceil( needsec*(1.0-GetPlayer().m_attr.m_materialsec_per[1]/100)*(1.0-GetPlayer().m_attr.m_materialsec_per[2]/100) );
 	return needsec
 end
 

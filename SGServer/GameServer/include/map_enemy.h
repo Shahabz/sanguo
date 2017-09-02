@@ -29,4 +29,7 @@ int map_enemy_range_brush( short kind, short posx, short posy, int range, int de
 // 已经被选定次数,被选定的改周期不删除
 void map_enemy_addselected( int index );
 void map_enemy_subselected( int index );
+
+// 获取野怪奖励
+int map_enemy_sendaward( int actor_index, int kind );
 #endif

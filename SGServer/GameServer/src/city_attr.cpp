@@ -116,7 +116,7 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 		pAttr->train_per[2] += (float)(value / digit);
 		break;
 	case CITY_ATTR_ABILITY_8:// 提升武将行军速度%
-		pAttr->movespeed_per += (float)(value / digit);
+		pAttr->movespeed_per[0] += (float)(value / digit);
 		break;
 	case CITY_ATTR_ABILITY_9:// 提升仓库保护资源量%
 		pAttr->protectres_per += (float)(value / digit);
@@ -125,10 +125,10 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 		pAttr->buildingsec_per += (float)(value / digit);
 		break;
 	case CITY_ATTR_ABILITY_11:// 缩短作坊生产耗时%
-		pAttr->materialsec_per += (float)(value / digit);
+		pAttr->materialsec_per[0] += (float)(value / digit);
 		break;
-	case CITY_ATTR_ABILITY_12://单位时间采集收获加成%
-		pAttr->gather_per += (float)(value / digit);
+	case CITY_ATTR_ABILITY_12://单位时间采集收获加成%(科技)
+		pAttr->gather_per[0] += (float)(value / digit);
 		break;
 	case CITY_ATTR_ABILITY_13:// 增加武将幸运突破概率%
 		pAttr->heroluck_per += (float)(value / digit);
@@ -141,6 +141,18 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 		break;
 	case CITY_ATTR_ABILITY_16:// 武官加速募兵
 		pAttr->trainspeed_per += (float)(value / digit);
+		break;
+	case CITY_ATTR_ABILITY_17:// 缩短作坊生产耗时%（活动使用）
+		pAttr->materialsec_per[1] += (float)(value / digit);
+		break;
+	case CITY_ATTR_ABILITY_18:// 提升武将行军速度%（军曹使用）
+		pAttr->movespeed_per[1] += (float)(value / digit);
+		break;
+	case CITY_ATTR_ABILITY_19://  提升武将行军速度%（风令使用）
+		pAttr->movespeed_per[2] += (float)(value / digit);
+		break;
+	case CITY_ATTR_ABILITY_20://单位时间采集收获加成%(活动)
+		pAttr->gather_per[1] += (float)(value / digit);
 		break;
 	case CITY_ATTR_ABILITY_100:// 提高所以武将攻击力（固定数值）
 		pAttr->hero_attack[0] += value;
@@ -240,9 +252,13 @@ void city_attr_sendinfo( int actor_index )
 	if ( !pCity )
 		return;
 	SLK_NetS_CityAttr pValue = { 0 };
-	pValue.m_protectres_per = (int)(pCity->attr.protectres_per * 100);
-	pValue.m_buildingsec_per = (int)(pCity->attr.buildingsec_per * 100);
-	pValue.m_materialsec_per = (int)(pCity->attr.materialsec_per * 100);
+	pValue.m_protectres_per = (short)(pCity->attr.protectres_per * 100);
+	pValue.m_buildingsec_per = (short)(pCity->attr.buildingsec_per * 100);
+	pValue.m_materialsec_per[0] = (short)(pCity->attr.materialsec_per[0] * 100);
+	pValue.m_materialsec_per[1] = (short)(pCity->attr.materialsec_per[1] * 100);
+	pValue.m_movespeed_per[0] = (short)(pCity->attr.movespeed_per[0] * 100);
+	pValue.m_movespeed_per[1] = (short)(pCity->attr.movespeed_per[1] * 100);
+	pValue.m_movespeed_per[2] = (short)(pCity->attr.movespeed_per[2] * 100);
 	pValue.m_hero_up_num = pCity->attr.hero_up_num;
 	pValue.m_hero_row_num = pCity->attr.hero_up_num;
 	pValue.m_everyday_body_buymax = pCity->attr.everyday_body_buymax;

@@ -104,3 +104,11 @@ function netsend_worldmapareaindex_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_to_unit_type=0,m_to_unit_index=0,m_id=0,m_herokind={[4]},m_to_posx=0,m_to_posy=0,m_appdata=0,m_action=0,
+function netsend_mapbattle_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAPBATTLE );
+	struct_NetC_MapBattle_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

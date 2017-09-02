@@ -283,7 +283,7 @@ int process_init( int max_connection )
 		return -1;
 	}
 	LOGI("%s-%d",__FUNCTION__,__LINE__);
-	global_process_init();
+	//global_process_init();
 	serv_setstat( 15 );
 
 	// 道具数据初始化
@@ -933,7 +933,7 @@ int process_logic()
 	}
 	else if ( tick == 2 )
 	{
-		
+		army_alllogic();
 	}
 	
 	// 1分钟一次逻辑

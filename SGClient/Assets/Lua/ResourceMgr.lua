@@ -220,3 +220,13 @@ function ResKindIcon( kind )
 	end
 	return sprite;
 end
+
+-- 资源图标通过类型
+function ResItemIcon( type )
+	local list = { "item_icon_120", "item_icon_121", "item_icon_122", "item_icon_123", "item_icon_124" }
+	local sprite = LoadSprite( list[type] );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end

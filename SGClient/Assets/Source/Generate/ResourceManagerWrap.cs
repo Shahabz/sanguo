@@ -24,6 +24,7 @@ public class ResourceManagerWrap
 		L.RegFunction("UnloadObject", UnloadObject);
 		L.RegFunction("LoadSpriteAsyn", LoadSpriteAsyn);
 		L.RegFunction("LoadPrefabAsyn", LoadPrefabAsyn);
+		L.RegFunction("LoadCharactorAnime", LoadCharactorAnime);
 		L.RegFunction("dump", dump);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
@@ -383,6 +384,24 @@ public class ResourceManagerWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: ResourceManager.LoadPrefabAsyn");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int LoadCharactorAnime(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			string arg0 = ToLua.CheckString(L, 1);
+			string arg1 = ToLua.CheckString(L, 2);
+			UnityEngine.AnimationClip o = ResourceManager.LoadCharactorAnime(arg0, arg1);
+			ToLua.Push(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{

@@ -229,7 +229,8 @@ function GameManager.ChangeScence( scence )
 		
 		-- 隐藏世界地图
 		if GameManager.WorldMap ~= nil then
-			GameManager.WorldMap.gameObject:SetActive( false )
+			GameObject.Destroy( GameManager.WorldMap.gameObject );
+			GameManager.WorldMap = nil;
 		end
 		
 	elseif scence == "worldmap" then

@@ -10,11 +10,11 @@ struct _city_attr {
 				float food_per;	//粮食产量增加%
 				float iron_per;	//镔铁产量增加%
 				float train_per[3];	//提升每分钟招募数量%
-				float movespeed_per;	//提升武将行军速度%
+				float movespeed_per[3];	//提升武将行军速度%
 				float protectres_per;	//仓库保护增加%
 				float buildingsec_per;	//缩短建筑升级所需时间%
-				float materialsec_per;	//缩短作坊生产耗时%
-				float gather_per;	//采集收获加成%
+				float materialsec_per[2];	//缩短作坊生产耗时%
+				float gather_per[2];	//采集收获加成%
 				float heroluck_per;	//增加武将幸运突破概率%
 				float prestige_per;	//增加武将杀敌获得威望数量%
 				float damageguard_per;	//对城防军伤害%

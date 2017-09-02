@@ -125,7 +125,7 @@ BuildingUpgradeConfig* building_getconfig( int kind, int level )
 // 建筑升级所需秒
 int building_sec( City *pCity, BuildingUpgradeConfig *config )
 {
-	return config->sec - (int)(config->sec*pCity->attr.buildingsec_per);
+	return (int)( config->sec / (float)( 1.0f + pCity->attr.buildingsec_per) );
 }
 
 int building_offset2no( int kind, int offset )

@@ -136,6 +136,48 @@ char map_zone_getid( int posx, int posy )
 	return zoney*(5) + zonex + 1;
 }
 
+// 地区单元列表
+int map_zone_unitlist( int actor_index, int zoneid )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return -1;
+	City *pCity = NULL;
+	SLK_NetS_MapZoneUnitList pValue = {0};
+	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+	{
+		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+		{
+			short x = tmpi;
+			short y = tmpj;
+			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+				continue;
+			if ( g_map.m_aTileData[x][y].unit_type == MAPUNIT_TYPE_CITY )
+			{
+				pCity = city_indexptr( g_map.m_aTileData[x][y].unit_index );
+				if ( pCity )
+				{
+					pValue.m_list[pValue.m_count].m_posx = pCity->posx;
+					pValue.m_list[pValue.m_count].m_posy = pCity->posy;
+					pValue.m_list[pValue.m_count].m_nation = pCity->nation;
+					pValue.m_list[pValue.m_count].m_level = (char)pCity->level;
+				}
+				pValue.m_count += 1;
+				if ( pValue.m_count >= 255 )
+				{
+					netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+					pValue.m_count = 0;
+				}
+			}
+			
+		}
+	}
+	if ( pValue.m_count > 0 )
+	{
+		netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
 //地图地区进入
 void map_zoneenter( int actor_index, short posx, short posy )
 {
@@ -157,6 +199,9 @@ void map_zoneenter( int actor_index, short posx, short posy )
 			pValue.m_open = (char)g_zoneinfo[zoneid].open;
 		}
 		netsend_mapzonechange_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+		// 发送单元列表
+		map_zone_unitlist( actor_index, zoneid );
 	}
 }
 
@@ -629,7 +674,52 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 		}
 	}
 	
-	return -1;
+	return 0;
+}
+
+// 指定地区随机一个空坐标
+int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return -1;
+	int step = 0;
+
+	short findlistx[256] = { 0 };
+	short findlisty[256] = { 0 };
+	short offset = 0;
+	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+	{
+		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+		{
+			short x = tmpi;
+			short y = tmpj;
+			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+				continue;
+			if ( g_map.m_aTileData[x][y].unit_type > 0 )
+				continue;
+			// 找到所有的空余点
+			findlistx[offset] = x;
+			findlisty[offset] = y;
+			offset += 1;
+			if ( offset >= 256 )
+				break;
+		}
+		if ( offset >= 256 )
+			break;
+	}
+
+	if ( offset > 0 )
+	{
+		int index = rand() % offset;
+		*pPosx = findlistx[index];
+		*pPosy = findlisty[index];
+	}
+	else
+	{
+		*pPosx = -1;
+		*pPosy = -1;
+	}
+	return 0;
 }
 
 bool ptInLine( Pos point, Pos lineStartPoint, Pos lineEndPoint, double fTolerance )

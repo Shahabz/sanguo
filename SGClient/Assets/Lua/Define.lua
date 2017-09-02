@@ -344,6 +344,11 @@ function TechDescUp( kind )
 	return Localization.text_item(kind+4200);
 end
 
+-- 获取科技描述
+function ResName( restype )
+	return T(120+restype)
+end
+
 -- 获取地图区域名称
 function MapZoneName( id )
 	return Localization.text_item(14000+id);

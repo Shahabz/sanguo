@@ -41,7 +41,7 @@ WorldMap.m_nLastGotoUnitIndex	= -1;	-- 等待跳转的索引
 WorldMap.m_nLastGotoPosX		= -1;	-- 等待跳转的位置
 WorldMap.m_nLastGotoPosY		= -1;	-- 等待跳转的位置
 WorldMap.m_nMode 				= WORLDMAP_MODE_NORMAL;
-WorldMap.m_bShow = false;
+
 local TmxShowThreshold = 24;
 local TmxShowList = { 0, 0, 0, 0 };
 local TmxLastList = { 0, 0, 0, 0 };
@@ -110,7 +110,6 @@ function WorldMap.Recv( recvValue )
 	
 	-- 改变场景
 	GameManager.ChangeScence( "worldmap" )
-	WorldMap.m_bShow = true;
 end
 
 -- 清空
@@ -126,9 +125,8 @@ function WorldMap.Clear()
 	MapUnit.clear();
 	MapTile.clear();
 	MapMarchRoute.clear();
-	WorldMap.m_bShow = false;
-	--MapUnitRoot = nil;
-    --MapCamera = nil;
+	MapUnitRoot = nil;
+    MapCamera = nil;
 	WorldMap.SendAreaIndex( WorldMap.m_nLastAreaIndex, -1, -1 )
     
     m_LastPosX = nil;
@@ -148,7 +146,7 @@ end
 -- 返回城池
 function WorldMap.ReturnCity()
 	GameManager.ChangeScence( "city" )
-	TmxShowList = { 0, 0, 0, 0 };
+	TmxLastList = { 0, 0, 0, 0 };
 	WorldMap.Clear()
 end
 
@@ -217,6 +215,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
     local changed = false;
     for i = 1, 4, 1 do
         if TmxShowList[i] ~= 0 and TmxLastList[i] ~= 0 and TmxLastList[i][1] == TmxShowList[i][1] and TmxLastList[i][2] == TmxShowList[i][2] then
+			
         elseif TmxShowList[i] ~= 0 then
             MapTmx[i]:SetActive( true );
 			MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
@@ -309,19 +308,10 @@ function WorldMap.Start( Prefab )
 	end
 	
 	-- 初始化行军路线
-	--MapMarchRoute.init( MapLineRoot );
+	MapMarchRoute.init( MapLineRoot );
 	
 	-- 初始化地图格子数据
-	--MapTile.init();
-	
-	-- 请求出征队列
-	--system_askinfo( ASKINFO_WORLDMAP, "", 2 );
-	
-	-- 请求收藏夹内容
-    --GetSavePos():Quary();
-	
-	-- 创建城镇范围
-	--MapUnit.createTownRange( WorldMap.m_cacheTown );
+	MapTile.init();
 
 	-- 返回地图数据给程序一份
 	return WorldMap.m_nMaxWidth, WorldMap.m_nMaxHeight, MAP_TILEWIDTH, MAP_TILEHEIGHT
@@ -357,7 +347,6 @@ end
 
 -- 添加单元
 function WorldMap.AddMapUnit( recvValue )
-
 	-- 添加显示对象
 	MapUnit.add( MapUnitRoot, recvValue );
 	
@@ -376,7 +365,6 @@ end
 
 -- 移除单元
 function WorldMap.DelMapUnit( recvValue )
-	
 	-- 移除显示对象
 	MapUnit.del( recvValue.m_unit_index )
 	
@@ -395,7 +383,6 @@ end
 
 -- 更新单元
 function WorldMap.UpdateMapUnit( recvValue )
-	
 	-- 如果之前是部队，并且是驻扎状态，现在不驻扎了
 	--[[local oldCache = WorldMap.m_nMapUnitList[recvValue.m_unit_index];
 	if oldCache ~= nil and oldCache.m_type == MAPUNIT_TYPE_ARMY then
@@ -425,18 +412,18 @@ function WorldMap.MoveMapUnit( recvValue )
 		return;
 	end
 	-- 移除格子数据
-	--if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
+	if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
 		MapTile.del( WorldMap.m_nMapUnitList[recvValue.m_unit_index] );
-	--end
+	end
     WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_posx = recvValue.m_posx;
     WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_posy = recvValue.m_posy;
 	
 	
-	--if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
+	if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
 		-- 添加格子数据
 		MapTile.add( WorldMap.m_nMapUnitList[recvValue.m_unit_index] );
 		WorldMap.UpdateMapUnit( WorldMap.m_nMapUnitList[recvValue.m_unit_index] ); 
-	--end
+	end
 end
 
 -- 随机获取的单元
@@ -472,9 +459,6 @@ function WorldMap.ViewChangeSec()
     --if MainDlgCutSceneIsPlaying() then
         --return;
     --end
-	if WorldMap.m_bShow == false then
-		return;
-	end
 
 	local cameraPosX = MapCamera:GetComponent("Transform").position.x;
 	local cameraPosY = MapCamera:GetComponent("Transform").position.y;
@@ -500,9 +484,6 @@ function WorldMap.ViewChangeFrame()
     if MapCamera == nil then
         return;
     end
-	if WorldMap.m_bShow == false then
-		return;
-	end
 	local cameraPosX = MapCamera:GetComponent("Transform").position.x;
 	local cameraPosY = MapCamera:GetComponent("Transform").position.y;
     
@@ -519,6 +500,11 @@ function WorldMap.ViewChangeFrame()
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY );
     WorldMap.m_nLastCameraGameX = gameCoorX;
     WorldMap.m_nLastCameraGameY = gameCoorY;
+	
+	-- 有移动行为就关闭
+	if MapClickEffect.gameObject.activeSelf == true or MapClickMod.gameObject.activeSelf == true then
+		WorldMap.OnClickClose();
+	end
 	
 	-- 操作界面更新坐标
 	--MapClickModCoordinate( gameCoorX, gameCoorY );
@@ -641,7 +627,14 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		end--]]
 	
 		-- 设置缩放
-		local grid = MapUnit.getGrid( MapUnit.typeTotype( recvValue ) );
+		local grid = 1;
+		if recvValue.m_type == MAPUNIT_TYPE_TOWN then
+			local townid 	= recvValue.m_short_value[1];
+			local grid 		= g_towninfo[townid].grid
+			grid = MapUnit.getGrid( recvValue.m_type, grid );
+		else
+			grid = MapUnit.getGrid( recvValue.m_type, 0 );
+		end
 		MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );
 		-- 转换中心坐标
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
@@ -667,24 +660,21 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		if recvValue.m_type == MAPUNIT_TYPE_ARMY then
 			WorldMap.m_nLastTouchArmyIndex = recvValue.m_int_value[1];
 		
+		-- 城镇
+		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
+			print( "MAPUNIT_TYPE_TOWN" )
+			return
+			
 		-- 野怪
-		elseif recvValue.m_type == MAPUNIT_TYPE_MONSTER then
-			--MonsterInfoDlgOnClick( recvValue ,false );
+		elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then
+			MapClickEffect.gameObject:SetActive( false );
+			MapEnemyDlgShow( recvValue )
 			return;	
-				
-		-- 活动怪
-		elseif recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then
-			local type = recvValue.m_char_value[4];
-			local activityid = recvValue.m_char_value[6];
-				
-			-- 集结野怪
-			if type == 2 then
-				--DragonInfoDlgOnClick( recvValue );
-				
-			-- 交谈类
-			elseif type == 3 then
-				--SnowDenDlgOnClick( recvValue );
-			end
+		
+		-- 资源点		
+		elseif recvValue.m_type == MAPUNIT_TYPE_RES then
+			MapClickEffect.gameObject:SetActive( false );
+			MapResDlgShow( recvValue )
 			return;	
 		end
 	end
@@ -858,7 +848,7 @@ function WorldMap.QueueAdd( operation, recvValue )
 	end
 	
 	if unittype == MAPUNIT_TYPE_ARMY then
-		Queue.pushBack( procQueueArmy, { op=operation, value = recvValue } );
+		Queue.pushBack( procQueueArmy, { op=operation, value = recvValue } );		
 	else
 		Queue.pushBack( procQueue, { op=operation, value = recvValue } );
 	end
@@ -922,6 +912,39 @@ function WorldMap.QueueFetchArmy()
 		end
 	end
 	
+end
+
+-- 计算行军时间
+function WorldMap.MarchTime(fposx, fposy, tposx, tposy)
+    local distance = math.abs(fposx - tposx) + math.abs(fposy - tposy);
+    local speed = global.army_move;
+    if speed <= 0 then
+        return 0;
+    end
+    local duration = math.floor(distance) * speed;
+    duration = math.ceil(duration*( 1.0-GetPlayer().m_attr.m_movespeed_per[1]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[2]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[3]/100) );
+    duration = math.max(duration, speed);
+    return duration;
+end
+
+-- 迁城完毕
+function WorldMap.OnCityMoved( unit_index, gameCoorX, gameCoorY )
+	if GameManager.currentScence == "worldmap" then
+		WorldMap.m_nMyCityUnitIndex = unit_index;
+		WorldMap.m_nMyCityPosx = gameCoorX;
+		WorldMap.m_nMyCityPosy = gameCoorY;
+		WorldMap.CameraSetPosition( MAPUNIT_TYPE_CITY, gameCoorX, gameCoorY );	
+		WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
+		WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
+		WorldMap.UpdateArrow();
+		GetPlayer().m_posx = gameCoorX;
+		GetPlayer().m_posy = gameCoorY;
+
+        -- 特效
+        --local obj = GameObject.Instantiate( LoadPrefab( "Effect_City_Change_Position_Smoke" ) );
+        --obj.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WorldMap.m_nMyCityCameraY );
+        --GameObject.Destroy( obj, 5 );
+	end
 end
 
 -- 获得摄像机

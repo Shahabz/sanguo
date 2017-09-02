@@ -34,6 +34,9 @@ extern MYSQL *myGame;
 extern MYSQL *myData;
 extern Global global;
 
+extern Actor *g_actors;
+extern int g_maxactornum;
+
 extern MapZoneInfo *g_zoneinfo;
 extern int g_zoneinfo_maxnum;
 
@@ -248,4 +251,14 @@ void map_enemy_subselected( int index )
 		g_map_enemy[index].selected_count -= 1;
 	}
 	return;
+}
+
+// »ñÈ¡Ò°¹Ö½±Àø
+int map_enemy_sendaward( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( kind <= 0 || kind >= g_enemyinfo_maxnum )
+		return -1;
+	awardgroup_sendinfo( actor_index, g_enemyinfo[kind].awardgroup, 1, kind, 4 );
+	return 0;
 }

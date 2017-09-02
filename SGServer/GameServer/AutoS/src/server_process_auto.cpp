@@ -9,6 +9,8 @@
 #include "chat.h"
 #include "story.h"
 #include "map.h"
+#include "army.h"
+#include "city.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -144,5 +146,11 @@ void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pVa
 {
 	// process.
 	map_areaenter( client_index, pValue->m_areaindex, pValue->m_posx, pValue->m_posy );
+}
+
+void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
+{
+	// process.
+	army_battle( city_getptr( client_index ), pValue );
 }
 

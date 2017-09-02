@@ -45,11 +45,17 @@ void map_areaenter( int actor_index, int areaindex, short posx, short posy );
 // 坐标是否在指定地区里
 char map_zone_inrange( int zoneid, short posx, short posy );
 
+// 获取地区id
+char map_zone_getid( int posx, int posy );
+
 // 添加对象
 int map_addobject( int type, int index, short posx, short posy );
 
 // 移除对象
 int map_delobject( int type, int index, short posx, short posy );
+
+// 获取占地格子
+int map_getobject_grid( int type, int index );
 
 // 获得一个离指定地点最近的可迁城空白点 螺旋查找
 int map_getcanmovenearest( short *pPosx, short *pPosy );
@@ -62,6 +68,9 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy );
+
+// 指定地区随机一个空坐标
+int map_zone_randpos( short zoneid, short *pPosx, short *pPosy );
 
 // 判定这个地点是否能迁城
 int map_canmove( short posX, short posY );

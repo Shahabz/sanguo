@@ -228,6 +228,19 @@ int netrecv_worldmapareaindex_S( int client_index, char *data, int size )
 	return 0;
 }
 
+int netrecv_mapbattle_S( int client_index, char *data, int size )
+{
+	SLK_NetC_MapBattle Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetC_MapBattle_recv( &ptr, &tmpsize, &Value );
+
+	proc_mapbattle_S( client_index, &Value );
+
+	return 0;
+}
+
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code )
 {
 	client_setwait( client_index, 1 );
@@ -339,6 +352,9 @@ int proc_command_S( int client_index, short cmd, char *ptr, int tmpsize, int exe
 		break;
 	case CMDC_WORLDMAPAREAINDEX:
 		netrecv_worldmapareaindex_S( client_index, ptr, tmpsize );
+		break;
+	case CMDC_MAPBATTLE:
+		netrecv_mapbattle_S( client_index, ptr, tmpsize );
 		break;
 	default:
 		return -1;

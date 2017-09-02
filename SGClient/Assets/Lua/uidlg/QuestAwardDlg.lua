@@ -97,7 +97,7 @@ function QuestAwardDlgShow( recvValue )
 	
 	-- 奖励
 	for i=1, recvValue.m_count, 1 do
-		local sprite, name = AwardInfo( recvValue.m_list[i].m_kind )
+		local sprite, color, name = AwardInfo( recvValue.m_list[i].m_kind )
 		local uiObj = m_ObjectPool:Get( "m_uiUIP_Award" );
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );

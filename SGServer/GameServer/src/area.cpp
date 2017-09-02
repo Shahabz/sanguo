@@ -8,6 +8,7 @@
 #include "system.h"
 #include "actor_send.h"
 #include "mapunit.h"
+#include "army_march.h"
 
 extern Map g_map;
 extern Actor *g_actors;
@@ -108,7 +109,9 @@ void area_remove_mapunit( int unit_index )
 	Area *pAreaLast;
 	Area *pAreaCur = NULL;
 	short posx = 0, posy = 0;
-	if ( g_mapunit[unit_index].lastadd_areaindex < 0 )
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+		return;
+	if ( g_mapunit[unit_index].lastadd_areaindex < 0 || g_mapunit[unit_index].lastadd_areaindex >= g_map.m_nAreaMaxCount )
 		return;
 
 	// 之前所在区域
@@ -401,15 +404,15 @@ int area_enterleave_marchroute( int actor_index, int old_area_index, int new_are
 		if( g_pTmpLeaveArmy[tmpi] < 0 )
 			continue;
 		// 组织数据包
-		//if( army_leaveinfo( g_pTmpLeaveArmy[tmpi], msg + sizeof(short), &size ) < 0 )
-		//{
-		//	*(unsigned short *)msg = size;
-		//	// 发送给自己
-		//	sendtoclient( actor_index, msg, size + sizeof(short) );
-		//	memset( msg, 0, 2048 );
-		//	size = 0;
-		//	army_leaveinfo( g_pTmpLeaveArmy[tmpi], msg + sizeof(short), &size );
-		//}
+		if( army_leaveinfo( g_pTmpLeaveArmy[tmpi], msg + sizeof(short), &size ) < 0 )
+		{
+			*(unsigned short *)msg = size;
+			// 发送给自己
+			sendtoclient( actor_index, msg, size + sizeof(short) );
+			memset( msg, 0, 2048 );
+			size = 0;
+			army_leaveinfo( g_pTmpLeaveArmy[tmpi], msg + sizeof(short), &size );
+		}
 	}
 
 	// 发送进入的
@@ -419,15 +422,15 @@ int area_enterleave_marchroute( int actor_index, int old_area_index, int new_are
 			continue;
 
 		// 组织数据包
-		//if( army_enterinfo( g_pTmpEnterArmy[tmpi], msg + sizeof(short), &size ) < 0 )
-		//{
-		//	*(unsigned short *)msg = size;
-		//	// 发送给自己
-		//	sendtoclient( actor_index, msg, size + sizeof(short) );
-		//	memset( msg, 0, 2048 );
-		//	size = 0;
-		//	army_enterinfo( g_pTmpEnterArmy[tmpi], msg + sizeof(short), &size );
-		//}
+		if( army_enterinfo( g_pTmpEnterArmy[tmpi], msg + sizeof(short), &size ) < 0 )
+		{
+			*(unsigned short *)msg = size;
+			// 发送给自己
+			sendtoclient( actor_index, msg, size + sizeof(short) );
+			memset( msg, 0, 2048 );
+			size = 0;
+			army_enterinfo( g_pTmpEnterArmy[tmpi], msg + sizeof(short), &size );
+		}
 	}
 
 	if( size > 0 )

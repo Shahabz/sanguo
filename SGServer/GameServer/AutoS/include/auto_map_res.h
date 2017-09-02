@@ -8,7 +8,7 @@ struct _map_res {
 				short posx;	//位置
 				short posy;	//位置
 				short kind;	//资源种类
-				int num;	//资源量
+				int num;	//已经采集资源量
 				int idlesec;	//空闲时长
 				int army_index;	//正在采集的部队
 				int unit_index;	//显示索引

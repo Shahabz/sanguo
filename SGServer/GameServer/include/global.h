@@ -69,7 +69,13 @@ typedef struct _global
 	int fight_damage_randmax;
 	int brush_enemy_minute;
 	int brush_res_minute;
-	int map_gather_sec;
+	int hero_battle_minhp;
+	int army_move;
+	float army_march_food_v1;
+	float army_march_food_v2;
+	float army_march_food_v3;
+	int hero_gather_duration[6];
+	int army_move_kingzone;
 }Global;
 int global_init();
 void global_reload();

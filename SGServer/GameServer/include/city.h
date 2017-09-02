@@ -9,6 +9,9 @@
 #define CITY_EVENT_MAX				4	// 事件
 #define CITY_TRAINQUEUE_MAX			11	// 可扩容的训练队列数量
 #define CITY_MATERIALMAKE_MAX		6	// 6个材料生产队列
+#define CITY_BATTLEQUEUE_MAX		8	// 出征队列
+#define CITY_UNDERFIRE_MAX			16	// 最多受多少支部队攻击
+#define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队协防
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
@@ -165,4 +168,41 @@ int city_officialhire_sendinfo( City *pCity, int type );
 
 // 获取士兵数量
 int city_soldiers( int city_index, short corps );
+
+// 加入出征队列
+int city_battlequeue_add( City *pCity, int army_index );
+
+// 删除出征队列
+int city_battlequeue_del( City *pCity, int army_index );
+
+// 出征队列
+void city_battlequeue_sendlist( int actor_index, int unit_index );
+
+// 城市出征队列
+void city_battlequeue_sendupdate( int army_index );
+
+// 被攻击信息添加
+int city_underfire_add( City *pCity, int army_index );
+
+// 被攻击信息移除
+int city_underfire_del( City *pCity, int army_index );
+
+// 被攻击信息移除
+int city_underfire_del_equal( City *pCity, int equal_army_index );
+
+// 被攻击信息数量
+int city_underfire_getnum( City *pCity );
+
+// 添加协防部队
+int city_helparmy_add( City *pCity, int army_index );
+
+// 删除协防部队
+int city_helparmy_del( City *pCity, int army_index );
+
+// 获取协防部队数量
+int city_helparmy_getnum( City *pCity );
+
+// 迁城
+int city_move_actor( int actor_index, short posx, short posy, int itemkind );
+int city_move( City *pCity, short posx, short posy );
 #endif

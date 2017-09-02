@@ -21,6 +21,8 @@
 #include "item.h"
 #include "vip.h"
 #include "actor_notify.h"
+#include "army.h"
+#include "map_res.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -61,6 +63,12 @@ extern int g_techinfo_maxnum;
 extern MaterialMakeInfo *g_material_make;
 extern int g_material_make_maxnum;
 
+extern MapZoneInfo *g_zoneinfo;
+extern int g_zoneinfo_maxnum;
+
+extern Army *g_army;
+extern int g_army_maxcount;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -75,6 +83,18 @@ int city_reset()
 		g_city[tmpi].index = -1;
 		g_city[tmpi].unit_index = -1;
 		g_city[tmpi].actor_index = -1;
+		for ( int index = 0; index < CITY_BATTLEQUEUE_MAX; index++ )
+		{
+			g_city[tmpi].battle_armyindex[index] = -1;
+		}
+		for ( int index = 0; index < CITY_UNDERFIRE_MAX; index++ )
+		{
+			g_city[tmpi].underfire_armyindex[index] = -1;
+		}
+		for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+		{
+			g_city[tmpi].help_armyindex[index] = -1;
+		}
 	}
 	return 0;
 }
@@ -289,6 +309,18 @@ int city_new( City *pCity )
 			g_city[city_index].index = city_index;
 			g_city[city_index].actor_index = -1;
 			g_city[city_index].unit_index = -1;
+			for ( int index = 0; index < CITY_BATTLEQUEUE_MAX; index++ )
+			{
+				g_city[city_index].battle_armyindex[index] = -1;
+			}
+			for ( int index = 0; index < CITY_UNDERFIRE_MAX; index++ )
+			{
+				g_city[city_index].underfire_armyindex[index] = -1;
+			}
+			for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+			{
+				g_city[city_index].help_armyindex[index] = -1;
+			}
 			break;
 		}
 	}
@@ -1807,7 +1839,7 @@ int city_material_needsec( City *pCity, int itemkind )
 		count = 1;
 	int people = pCity->people / count;
 	int needsec = (int)ceil( max( g_material_make[id].sec * global.material_make_value1, g_material_make[id].sec - global.material_make_value2*people ) );
-	needsec = needsec - (int)ceil( needsec*pCity->attr.materialsec_per );
+	needsec = (int)ceil( needsec * ( 1.0f - pCity->attr.materialsec_per[0] )*(1.0f - pCity->attr.materialsec_per[1]) );
 	return needsec;
 }
 
@@ -2300,4 +2332,418 @@ int city_soldiers( int city_index, short corps )
 
 	int total = building_soldiers_total( city_index, kind );
 	return total;
+}
+
+// 加入出征队列
+int city_battlequeue_add( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		if ( pCity->battle_armyindex[tmpi] < 0 )
+		{
+			pCity->battle_armyindex[tmpi] = army_index;
+			break;
+		}
+	}
+
+	// 是否跳转过去
+	int unit_index = -1;
+	/*if ( g_army[army_index].target_type == MAPUNIT_TYPE_CITY || g_army[army_index].target_type == MAPUNIT_TYPE_ARMY )
+	{
+	unit_index = g_army[army_index].unit_index;
+	}*/
+	city_battlequeue_sendlist( pCity->actor_index, unit_index );
+	return 0;
+}
+
+// 删除出征队列
+int city_battlequeue_del( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		if ( pCity->battle_armyindex[tmpi] == army_index )
+		{
+			pCity->battle_armyindex[tmpi] = -1;
+			break;
+		}
+	}
+	city_battlequeue_sendlist( pCity->actor_index, -1 );
+	return 0;
+}
+
+void city_battlequeue_makestruct( SLK_NetS_BattleInfo *pValue, int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	pValue->m_army_index = army_index;
+	pValue->m_action = g_army[army_index].action;
+	pValue->m_state = g_army[army_index].state;
+	pValue->m_statetime = g_army[army_index].statetime;
+	pValue->m_stateduration = g_army[army_index].stateduration;
+	pValue->m_to_posx = g_army[army_index].to_posx;
+	pValue->m_to_posy = g_army[army_index].to_posy;
+	pValue->m_to_type = g_army[army_index].to_type;
+	pValue->m_unit_index = g_army[army_index].unit_index;
+	for ( int i = 0; i < ARMY_HERO_MAX; i++ )
+	{
+		pValue->m_herokind[i] = g_army[army_index].herokind[i];
+	}
+	if ( g_army[army_index].state == ARMY_STATE_GATHER && g_army[army_index].to_type == MAPUNIT_TYPE_RES )
+	{ // 采集中，使用资源的unit_index
+		pValue->m_unit_index = map_res_getunit( g_army[army_index].to_index );
+	}
+	else if ( g_army[army_index].state == ARMY_STATE_HELP && g_army[army_index].to_type == MAPUNIT_TYPE_CITY )
+	{ // 援助中，使用盟友城池的unit_index
+		City *pTargetCity = army_getcityptr_target( army_index );
+		if ( !pTargetCity )
+			pValue->m_unit_index = -1;
+		else
+			pValue->m_unit_index = pTargetCity->unit_index;
+	}
+	else
+	{
+		pValue->m_unit_index = g_army[army_index].unit_index;
+	}
+}
+
+// 出征队列
+void city_battlequeue_sendlist( int actor_index, int unit_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return;
+	City *pCity = city_getptr( actor_index );
+	if ( pCity == NULL )
+		return;
+	SLK_NetS_BattleList info = { 0 };
+	info.m_unit_index = unit_index;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		int army_index = pCity->battle_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		city_battlequeue_makestruct( &info.m_list[info.m_count], army_index );
+		info.m_count += 1;
+	}
+	netsend_battlelist_S( actor_index, SENDTYPE_ACTOR, &info );
+}
+
+// 城市出征队列
+void city_battlequeue_sendupdate( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	City *pCity = army_getcityptr( army_index );
+	if ( !pCity )
+		return;
+	if ( pCity->actor_index < 0 )
+		return;
+	SLK_NetS_BattleInfo pValue = {};
+	city_battlequeue_makestruct( &pValue, army_index );
+	netsend_battleinfo_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+}
+
+// 空闲的被攻击列表索引
+static int underfire_freeindex( City *pCity )
+{
+	if ( pCity == NULL )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_armyindex[tmpi] < 0 )
+			return tmpi;
+	}
+	return -1;
+}
+
+// 被攻击信息添加
+int city_underfire_add( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	if ( g_army[army_index].state == ARMY_STATE_FIGHT )
+		return -1;
+	int index = underfire_freeindex( pCity );
+	if ( index < 0 )
+		return -1;
+	pCity->underfire_armyindex[index] = army_index;
+	// 通知该玩家
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+		// 军情数量
+		//city_alarm_sendnum( pCity );
+
+		// 通知自己的界面更新
+		//actor_dialogupdate( pCity->actor_index, 4 );
+	}
+	else
+	{
+		// 推送
+		//char ext[64] = { 0 };
+		//city_getprefixname( army_getcityptr( army_index ), ext );
+		//pushwork_addpush( PUSHACTION_MARCH, pCity, ext );
+	}
+	return 0;
+}
+
+// 被攻击信息移除
+int city_underfire_del( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	int tmpi = 0;
+	for ( tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_armyindex[tmpi] == army_index )
+		{
+			pCity->underfire_armyindex[tmpi] = -1;
+			break;
+		}
+	}
+
+	if ( tmpi >= CITY_UNDERFIRE_MAX )
+		return -1;
+
+	// 通知该玩家
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+		// 军情数量
+		//city_alarm_sendnum( pCity );
+
+		// 通知自己的界面更新
+		//actor_dialogupdate( pCity->actor_index, 4 );
+	}
+	return 0;
+}
+
+// 被攻击信息移除
+int city_underfire_del_equal( City *pCity, int equal_army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( equal_army_index < 0 || equal_army_index >= g_army_maxcount )
+		return -1;
+	int change = 0;
+	int tmpi = 0;
+	for ( tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+	{
+		int army_index = pCity->underfire_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( g_army[army_index].to_type == MAPUNIT_TYPE_ARMY )
+		{
+			if ( g_army[army_index].to_index == equal_army_index )
+			{
+				pCity->underfire_armyindex[tmpi] = -1;
+				change = 1;
+			}
+		}
+		else if ( g_army[army_index].to_type == MAPUNIT_TYPE_RES )
+		{
+			if ( map_res_getarmy( g_army[army_index].to_index ) == equal_army_index )
+			{
+				pCity->underfire_armyindex[tmpi] = -1;
+				change = 1;
+			}
+		}
+	}
+
+	if ( change == 0 )
+		return -1;
+
+	// 通知该国王
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+		// 军情数量
+		//city_alarm_sendnum( pCity );
+
+		// 通知自己的界面更新
+		//actor_dialogupdate( pCity->actor_index, 4 );
+	}
+	return 0;
+}
+
+// 被攻击信息数量
+int city_underfire_getnum( City *pCity )
+{
+	if ( pCity == NULL )
+		return 0;
+	int num = 0;
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_armyindex[tmpi] >= 0 )
+		{
+			num += 1;
+		}
+	}
+	return num;
+}
+
+// 添加协防部队
+int city_helparmy_add( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+	{
+		if ( pCity->help_armyindex[index] < 0 )
+		{
+			pCity->help_armyindex[index] = army_index;
+
+			// 给集结 发送援助部队信息
+			//armygroup_send_addinfo( army_index, 1 );
+			// 通知自己的界面更新
+			//actor_dialogupdate( pCity->actor_index, 3 );
+			break;
+		}
+	}
+	return 0;
+}
+
+// 删除协防部队
+int city_helparmy_del( City *pCity, int army_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+	{
+		if ( pCity->help_armyindex[index] == army_index )
+		{
+			pCity->help_armyindex[index] = -1;
+
+			// 给集结 发送援助删除信息
+			//armygroup_send_delinfo( army_index, 1 );
+			// 通知自己的界面更新
+			//actor_dialogupdate( pCity->actor_index, 3 );
+			break;
+		}
+	}
+	return 0;
+}
+
+// 获取协防部队数量
+int city_helparmy_getnum( City *pCity )
+{
+	if ( pCity == NULL )
+		return 0;
+	int num = 0;
+	for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+	{
+		if ( pCity->help_armyindex[index] >= 0 )
+		{
+			num += 1;
+		}
+	}
+	return num;
+}
+
+// 迁城
+int city_move_actor( int actor_index, short posx, short posy, int itemkind )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	// 武将有出征的
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].state > 0 )
+		{
+			actor_system_message( pCity->actor_index, 1001 ); // 召回在外征战的武将
+			return -1;
+		}
+	}
+
+	short move_posx = -1;
+	short move_posy = -1;
+	if ( itemkind == 131 )
+	{ // 已经解锁的地图纯随机
+
+	}
+	else if ( itemkind == 132 )
+	{ // 选择指定解锁地图随机
+		char zoneid = map_zone_getid( posx, posy );
+		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+			return -1;
+		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
+			return -1;
+		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
+			return -1;
+		map_zone_randpos( zoneid, &move_posx, &move_posy );
+		if ( map_canmove( posx, posy ) == 0 )
+			return -1;
+	}
+	else if ( itemkind == 133 )
+	{ // 选择指定解锁地图指定坐标点
+		char zoneid = map_zone_getid( posx, posy );
+		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+			return -1;
+		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
+			return -1;
+		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
+			return -1;
+		if ( map_canmove( posx, posy ) == 0 )
+		{
+			//actor_system_message( pCity->actor_index, 20 ); // 请尝试其它坐标
+			return -1;
+		}
+		move_posx = posx;
+		move_posy = posy;
+	}
+	else
+		return -1;
+
+	if ( item_lost( actor_index, itemkind, 1, PATH_ITEMUSE ) < 0 )
+	{	// 没有道具，那么使用钻石
+		int price = item_gettoken( itemkind );
+		if ( actor_change_token( actor_index, -price, PATH_ITEMUSE, itemkind ) == -2 )
+		{
+			return -1;
+		}
+	}
+	return city_move( pCity, move_posx, move_posy );
+}
+int city_move( City *pCity, short posx, short posy )
+{
+	if ( !pCity )
+		return -1;
+	if ( map_canmove( posx, posy ) == 0 )
+		return -1;
+	short lastposx = pCity->posx;
+	short lastposy = pCity->posy;
+	map_delobject( MAPUNIT_TYPE_CITY, pCity->index, lastposx, lastposy );
+	pCity->posx = posx;
+	pCity->posy = posy;
+
+	// 通知区域
+	if ( pCity->unit_index < 0 )
+	{
+		pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+	}
+	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
+	mapunit_area_change( pCity->unit_index, pCity->posx, pCity->posy, 1 );
+	city_attr_reset( pCity );
+	
+	// 通知客户端更新缓存
+	int value[6] = { 0 };
+	value[0] = 1;
+	value[1] = pCity->unit_index;
+	value[2] = pCity->posx;
+	value[3] = pCity->posy;
+	value[4] = lastposx;
+	value[5] = lastposy;
+	actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 6, value, NULL );
+	return 0;
 }

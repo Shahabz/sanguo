@@ -100,7 +100,9 @@ struct _city {
 				CityAttr attr;	//属性加成
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
-				int army_index[5];	//部队
+				int battle_armyindex[8];	//出征部队
+				int underfire_armyindex[16];	//目标部队
+				int help_armyindex[32];	//协防部队
 };
 typedef struct _city City;
 

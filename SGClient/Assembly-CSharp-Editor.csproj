@@ -46,6 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Editor\Custom\BuildAnimaiton.cs" />
+     <Compile Include="Assets\Editor\Custom\BuildCharAnimaiton.cs" />
      <Compile Include="Assets\Editor\Custom\CustomSettings.cs" />
      <Compile Include="Assets\Editor\Custom\LocalizeReload.cs" />
      <Compile Include="Assets\Editor\Custom\LuaUITemplate.cs" />
@@ -138,6 +140,7 @@
      <None Include="Assets\StreamingAssets\Data\localization_country.txt" />
      <None Include="Assets\StreamingAssets\Data\resmap_prefab.txt" />
      <None Include="Assets\Resources\PackAssets\Effect\MapLine\MapLineFire_Shader.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\shape.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ScreenBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
      <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />

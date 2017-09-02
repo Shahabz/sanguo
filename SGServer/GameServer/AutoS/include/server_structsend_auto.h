@@ -264,6 +264,14 @@ struct _slk_WalkPath {
 };
 typedef struct _slk_WalkPath SLK_WalkPath;	//移动路径
 
+struct _slk_NetS_ZoneUnit {
+	short m_posx;	//区域地图显示单元
+	short m_posy;	//区域地图显示单元
+	char m_nation;	//区域地图显示单元
+	char m_level;	//区域地图显示单元
+};
+typedef struct _slk_NetS_ZoneUnit SLK_NetS_ZoneUnit;	//地区单元
+
 struct _slk_NetS_AddMapUnit {
 	char m_type;	//地图单元-类型
 	char m_state;	//地图单元-状态
@@ -318,11 +326,13 @@ struct _slk_NetS_AddMarchRoute {
 	short m_to_posy;	//行军路线-到达位置
 	char m_state;	//行军路线-状态
 	int m_from_actorid;	//行军路线-城市
-	int m_from_clubid;	//行军路线-联盟
+	char m_from_nation;	//行军路线-国家
 	int m_to_actorid;	//行军路线-目标城市
-	int m_to_clubid;	//行军路线-目标联盟
+	char m_to_nation;	//行军路线-目标国家
 	int m_army_index;	//行军路线-所属部队
 	char m_action;	//行军路线-行为
+	char m_from_grid;	//行军路线-出发占地格数
+	char m_to_grid;	//行军路线-目的占地格数
 };
 typedef struct _slk_NetS_AddMarchRoute SLK_NetS_AddMarchRoute;	//行军路线
 
@@ -335,6 +345,14 @@ struct _slk_NetS_UpdateMapUnit {
 	SLK_NetS_AddMapUnit m_info;	//更新地图显示单元信息
 };
 typedef struct _slk_NetS_UpdateMapUnit SLK_NetS_UpdateMapUnit;	//更新地图显示单元信息
+
+struct _slk_NetS_ArmySpeedUpdate {
+	int m_unit_index;	//更新部队速度
+	char m_state;	//更新部队速度
+	int m_statetime;	//更新部队速度
+	int m_stateduration;	//更新部队速度
+};
+typedef struct _slk_NetS_ArmySpeedUpdate SLK_NetS_ArmySpeedUpdate;	//部队加速
 
 struct _slk_NetS_Equip {
 	int m_offset;	//装备索引
@@ -451,6 +469,7 @@ struct _slk_NetS_AwardInfoList {
 	short m_count;	//奖励数量
 	SLK_NetS_AwardInfo m_list[32];	//奖励列表
 	short m_callback_code;	//哪个系统要显示，回传
+	int m_value;	//额外值
 };
 typedef struct _slk_NetS_AwardInfoList SLK_NetS_AwardInfoList;	//奖励信息列表
 
@@ -822,7 +841,9 @@ typedef struct _slk_NetS_HeroColorup SLK_NetS_HeroColorup;	//武将突破
 struct _slk_NetS_CityAttr {
 	short m_protectres_per;	//
 	short m_buildingsec_per;	//
-	short m_materialsec_per;	//
+	short m_materialsec_per[2];	//
+	short m_movespeed_per[3];	//
+	short m_gather_per[2];	//
 	char m_hero_up_num;	//
 	char m_hero_row_num;	//
 	char m_everyday_body_buymax;	//
@@ -929,6 +950,46 @@ struct _slk_NetS_MapZoneChange {
 };
 typedef struct _slk_NetS_MapZoneChange SLK_NetS_MapZoneChange;	//地图地区切换
 
+struct _slk_NetS_MapZoneUnitList {
+	short m_count;	//地图地区单元数量
+	SLK_NetS_ZoneUnit m_list[256];	//地图地区单元列表
+};
+typedef struct _slk_NetS_MapZoneUnitList SLK_NetS_MapZoneUnitList;	//地图地区单元列表
+
+struct _slk_NetS_BattleInfo {
+	int m_army_index;	//出征队列信息
+	int m_unit_index;	//出征队列信息
+	char m_state;	//出征队列信息
+	int m_statetime;	//出征队列信息
+	int m_stateduration;	//出征队列信息
+	char m_action;	//出征队列信息
+	short m_to_posx;	//出征队列信息
+	short m_to_posy;	//出征队列信息
+	short m_herokind[4];	//出征队列信息
+	char m_to_type;	//出征队列信息
+};
+typedef struct _slk_NetS_BattleInfo SLK_NetS_BattleInfo;	//出征信息
+
+struct _slk_NetS_BattleList {
+	short m_count;	//出征队列列表
+	SLK_NetS_BattleInfo m_list[8];	//出征队列列表
+	int m_unit_index;	//出征队列列表
+};
+typedef struct _slk_NetS_BattleList SLK_NetS_BattleList;	//出征队列列表
+
+struct _slk_NetS_MapResInfo {
+	short m_kind;	//采集目标kind
+	int m_totalnum;	//资源点总量
+	int m_totalsec;	//资源点总采集时间
+	int m_spacenum;	//采集剩余量
+	short m_herokind;	//采集武将
+	short m_herolevel;	//采集武将等级
+	int m_herohp;	//采集武将兵力
+	char m_herocolor;	//采集武将颜色
+	short m_actorlevel;	//采集玩家等级
+};
+typedef struct _slk_NetS_MapResInfo SLK_NetS_MapResInfo;	//资源点详情
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -954,6 +1015,7 @@ int struct_NetS_ItemList_send( char **pptr, int *psize, SLK_NetS_ItemList *pValu
 int struct_ItemAttr_send( char **pptr, int *psize, SLK_ItemAttr *pValue );
 int struct_NetS_ItemInfo_send( char **pptr, int *psize, SLK_NetS_ItemInfo *pValue );
 int struct_WalkPath_send( char **pptr, int *psize, SLK_WalkPath *pValue );
+int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValue );
 int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *pValue );
 int struct_NetS_DelMapUnit_send( char **pptr, int *psize, SLK_NetS_DelMapUnit *pValue );
 int struct_NetS_WorldMapInfo_send( char **pptr, int *psize, SLK_NetS_WorldMapInfo *pValue );
@@ -961,6 +1023,7 @@ int struct_NetS_MapUnitCorrdinate_send( char **pptr, int *psize, SLK_NetS_MapUni
 int struct_NetS_AddMarchRoute_send( char **pptr, int *psize, SLK_NetS_AddMarchRoute *pValue );
 int struct_NetS_DelMarchRoute_send( char **pptr, int *psize, SLK_NetS_DelMarchRoute *pValue );
 int struct_NetS_UpdateMapUnit_send( char **pptr, int *psize, SLK_NetS_UpdateMapUnit *pValue );
+int struct_NetS_ArmySpeedUpdate_send( char **pptr, int *psize, SLK_NetS_ArmySpeedUpdate *pValue );
 int struct_NetS_Equip_send( char **pptr, int *psize, SLK_NetS_Equip *pValue );
 int struct_NetS_EquipList_send( char **pptr, int *psize, SLK_NetS_EquipList *pValue );
 int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValue );
@@ -1032,5 +1095,9 @@ int struct_NetS_StoryState_send( char **pptr, int *psize, SLK_NetS_StoryState *p
 int struct_NetS_StoryRanknum_send( char **pptr, int *psize, SLK_NetS_StoryRanknum *pValue );
 int struct_NetS_StoryRanktime_send( char **pptr, int *psize, SLK_NetS_StoryRanktime *pValue );
 int struct_NetS_MapZoneChange_send( char **pptr, int *psize, SLK_NetS_MapZoneChange *pValue );
+int struct_NetS_MapZoneUnitList_send( char **pptr, int *psize, SLK_NetS_MapZoneUnitList *pValue );
+int struct_NetS_BattleInfo_send( char **pptr, int *psize, SLK_NetS_BattleInfo *pValue );
+int struct_NetS_BattleList_send( char **pptr, int *psize, SLK_NetS_BattleList *pValue );
+int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *pValue );
 
 #endif

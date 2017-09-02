@@ -54,6 +54,12 @@ int mapunit_init()
 	}
 	g_mapunit = (MapUnit *)malloc( sizeof( MapUnit )*g_mapunit_maxcount );
 	memset( g_mapunit, 0, sizeof( MapUnit )*g_mapunit_maxcount );
+	for ( int tmpi = 0; tmpi < g_mapunit_maxcount; tmpi++ )
+	{
+		g_mapunit[tmpi].lastadd_areaindex = -1;
+		g_mapunit[tmpi].pre_index = -1;
+		g_mapunit[tmpi].next_index = -1;
+	}
 	printf_msg( "MapUnit  maxcount=%d  memory=%0.2fMB\n", g_mapunit_maxcount, (sizeof( MapUnit )*g_mapunit_maxcount) / 1024.0 / 1024.0 );
 	return 0;
 }
@@ -416,35 +422,20 @@ int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int 
 		short target_posy = -1;
 		switch ( pMapUnit->type )
 		{
-		case MAPUNIT_TYPE_CITY:
-			{
-			/*if ( pMapUnit->index < 0 || pMapUnit->index >= g_city_maxcount )
-				break;
-			target_posx = g_city[pMapUnit->index].posx;
-			target_posy = g_city[pMapUnit->index].posy;
-			if ( target_posx == posx && target_posy == posy ||
-				 target_posx == posx && target_posy-1 == posy || 
-				 target_posx+1 == posx && target_posy-1 == posy ||
-				 target_posx+1 == posx && target_posy == posy )
-			{
-				return cur_index;
-			}*/
-
+		case MAPUNIT_TYPE_CITY: // 城池
+			city_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
-			}
-		case MAPUNIT_TYPE_ARMY:
-			{
-			//if ( pMapUnit->index < 0 || pMapUnit->index >= g_army_maxcount )
-			//	break;
-			//target_posx = g_army[pMapUnit->index].posx;
-			//target_posy = g_army[pMapUnit->index].posy;
+		case MAPUNIT_TYPE_ARMY:// 部队
+			army_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
-			}
 		case MAPUNIT_TYPE_TOWN://  城镇
+			map_town_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
 		case MAPUNIT_TYPE_ENEMY:// 流寇
+			map_enemy_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
 		case MAPUNIT_TYPE_RES: // 资源
+			map_res_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
 		default:
 			break;

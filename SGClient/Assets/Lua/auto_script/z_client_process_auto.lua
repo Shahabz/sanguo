@@ -327,10 +327,12 @@ function proc_iteminfo_C( recvValue )
 	end
 end
 
--- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_callback_code=0,
+-- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_callback_code=0,m_value
 function proc_awardinfolist_C( recvValue )
 	-- process.
-
+	if recvValue.m_callback_code == 1 then
+		MapEnemyDlgRecvAward( recvValue )
+	end
 end
 
 -- m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",
@@ -601,6 +603,7 @@ function proc_herosoldiers_C( recvValue )
 	end
 	HeroDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind )
+	MapBattleDlgUpdate( recvValue.m_kind, recvValue.m_soldiers );
 end
 
 -- m_kind=0,m_state=0,
@@ -1022,5 +1025,43 @@ function proc_mapzonechange_C( recvValue )
 		MainDlgSetZoneName( name.."("..T(936)..")" )
 		AlertMsg( T(937) )
 	end
+	MainDlgMiniMapChangeZone()
+end
+
+-- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
+function proc_mapzoneunitlist_C( recvValue )
+	-- process.
+	for i=1, recvValue.m_count, 1 do
+		MainDlgMiniMapAddUnit( recvValue.m_list[i] )
+	end
+end
+
+-- m_posx=0,m_posy=0,m_nation=0,m_level=0,
+function proc_mapzoneunit_C( recvValue )
+	-- process.
+end
+
+-- m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,
+function proc_armyspeedupdate_C( recvValue )
+	-- process.
+	MapUnit.armySpeedUpdate( recvValue.m_unit_index, recvValue.m_state, recvValue.m_statetime, recvValue.m_stateduration )
+end
+
+-- m_count=0,m_list={m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_herokind={[4]},[m_count]},m_unit_index=0,
+function proc_battlelist_C( recvValue )
+	-- process.
+	MapMainDlgBattleRecv( recvValue )
+end
+
+-- m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_herokind={[4]},m_to_type=0,
+function proc_battleinfo_C( recvValue )
+	-- process.
+	MapMainDlgBattleUpdate( recvValue )
+end
+
+-- m_kind=0,m_totalnum=0,m_totalsec=0,m_gathertime=0,m_herokind=0,m_herolevel=0,m_herohp=0,m_actorlevel=0,
+function proc_mapresinfo_C( recvValue )
+	-- process.
+	MapResDlgRecv( recvValue )
 end
 

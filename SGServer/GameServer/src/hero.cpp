@@ -543,6 +543,29 @@ int hero_addsoldiers( int actor_index, int herokind )
 	return 0;
 }
 
+// Ó¢ĞÛ×´Ì¬
+int hero_changestate( int city_index, int herokind, char state )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return -1;
+	if ( herokind <= 0 )
+		return -1;
+	int hero_index = city_hero_getindex( city_index, herokind );
+	if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+		return -1;
+	if ( g_city[city_index].hero[hero_index].state == state )
+		return -1;
+	g_city[city_index].hero[hero_index].state = state;
+	if ( g_city[city_index].actor_index >= 0 )
+	{
+		SLK_NetS_HeroState pValue = { 0 };
+		pValue.m_kind = herokind;
+		pValue.m_state = state;
+		netsend_herostate_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
 // Îä½«´ø±øÅÅÊı
 char hero_getline( City *pCity )
 {

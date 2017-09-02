@@ -343,6 +343,15 @@ function struct_WalkPath_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_ZoneUnit_recv( buffer )
+	local recvValue = {};
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadSByte();
+	return recvValue;
+end
+
 function struct_NetS_AddMapUnit_recv( buffer )
 	local recvValue = {};
 	recvValue.m_type = buffer:ReadSByte();
@@ -411,11 +420,13 @@ function struct_NetS_AddMarchRoute_recv( buffer )
 	recvValue.m_to_posy = buffer:ReadShort();
 	recvValue.m_state = buffer:ReadSByte();
 	recvValue.m_from_actorid = buffer:ReadInt();
-	recvValue.m_from_clubid = buffer:ReadInt();
+	recvValue.m_from_nation = buffer:ReadSByte();
 	recvValue.m_to_actorid = buffer:ReadInt();
-	recvValue.m_to_clubid = buffer:ReadInt();
+	recvValue.m_to_nation = buffer:ReadSByte();
 	recvValue.m_army_index = buffer:ReadInt();
 	recvValue.m_action = buffer:ReadSByte();
+	recvValue.m_from_grid = buffer:ReadSByte();
+	recvValue.m_to_grid = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -428,6 +439,15 @@ end
 function struct_NetS_UpdateMapUnit_recv( buffer )
 	local recvValue = {};
 	recvValue.m_info = struct_NetS_AddMapUnit_recv( buffer );
+	return recvValue;
+end
+
+function struct_NetS_ArmySpeedUpdate_recv( buffer )
+	local recvValue = {};
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -583,6 +603,7 @@ function struct_NetS_AwardInfoList_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_callback_code = buffer:ReadShort();
+	recvValue.m_value = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -1058,7 +1079,18 @@ function struct_NetS_CityAttr_recv( buffer )
 	local recvValue = {};
 	recvValue.m_protectres_per = buffer:ReadShort();
 	recvValue.m_buildingsec_per = buffer:ReadShort();
-	recvValue.m_materialsec_per = buffer:ReadShort();
+	recvValue.m_materialsec_per={};
+	for tmpi=1,2,1 do
+		recvValue.m_materialsec_per[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_movespeed_per={};
+	for tmpi=1,3,1 do
+		recvValue.m_movespeed_per[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_gather_per={};
+	for tmpi=1,2,1 do
+		recvValue.m_gather_per[tmpi] = buffer:ReadShort();
+	end
 	recvValue.m_hero_up_num = buffer:ReadSByte();
 	recvValue.m_hero_row_num = buffer:ReadSByte();
 	recvValue.m_everyday_body_buymax = buffer:ReadSByte();
@@ -1198,6 +1230,63 @@ function struct_NetS_MapZoneChange_recv( buffer )
 	local recvValue = {};
 	recvValue.m_zoneid = buffer:ReadSByte();
 	recvValue.m_open = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_MapZoneUnitList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ZoneUnit_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_BattleInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_army_index = buffer:ReadInt();
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	recvValue.m_action = buffer:ReadSByte();
+	recvValue.m_to_posx = buffer:ReadShort();
+	recvValue.m_to_posy = buffer:ReadShort();
+	recvValue.m_herokind={};
+	for tmpi=1,4,1 do
+		recvValue.m_herokind[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_to_type = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BattleList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_BattleInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_unit_index = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_MapResInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_totalnum = buffer:ReadInt();
+	recvValue.m_totalsec = buffer:ReadInt();
+	recvValue.m_spacenum = buffer:ReadInt();
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_herolevel = buffer:ReadShort();
+	recvValue.m_herohp = buffer:ReadInt();
+	recvValue.m_herocolor = buffer:ReadSByte();
+	recvValue.m_actorlevel = buffer:ReadShort();
 	return recvValue;
 end
 

@@ -26,4 +26,15 @@ int map_res_num( int zoneid, int kind );
 // 每分钟
 int map_res_logic();
 
+// 设置正在采集的部队
+int map_res_setarmy( int index, int army_index );
+
+// 获取正在采集的部队
+int map_res_getarmy( int index );
+
+// 获取显示索引
+int map_res_getunit( int index );
+
+// 资源点信息
+int map_res_sendinfo( int actor_index, int unit_index );
 #endif

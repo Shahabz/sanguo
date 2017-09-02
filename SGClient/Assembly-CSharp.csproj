@@ -83,6 +83,7 @@
      <Compile Include="Assets\Source\Base\SequenceActive.cs" />
      <Compile Include="Assets\Source\Base\ShareData.cs" />
      <Compile Include="Assets\Source\Base\ShowFPS.cs" />
+     <Compile Include="Assets\Source\Base\SpriteGroup.cs" />
      <Compile Include="Assets\Source\Base\Utils.cs" />
      <Compile Include="Assets\Source\Camera\Camera2D.cs" />
      <Compile Include="Assets\Source\Camera\Camera2dDragable.cs" />
@@ -90,6 +91,10 @@
      <Compile Include="Assets\Source\Camera\Camera3dDragable.cs" />
      <Compile Include="Assets\Source\Camera\CityCamera.cs" />
      <Compile Include="Assets\Source\Camera\FightCamera.cs" />
+     <Compile Include="Assets\Source\Character\CameraController.cs" />
+     <Compile Include="Assets\Source\Character\CharController.cs" />
+     <Compile Include="Assets\Source\Character\Character.cs" />
+     <Compile Include="Assets\Source\Character\CharacterAnimator.cs" />
      <Compile Include="Assets\Source\City\City.cs" />
      <Compile Include="Assets\Source\City\CityBuilding.cs" />
      <Compile Include="Assets\Source\City\CityLand.cs" />
@@ -110,6 +115,7 @@
      <Compile Include="Assets\Source\Generate\BezierWrap.cs" />
      <Compile Include="Assets\Source\Generate\ByteBufferWrap.cs" />
      <Compile Include="Assets\Source\Generate\Camera2DWrap.cs" />
+     <Compile Include="Assets\Source\Generate\CharacterWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityBuildingWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityCameraWrap.cs" />
      <Compile Include="Assets\Source\Generate\CityLandWrap.cs" />
@@ -508,6 +514,7 @@
      <None Include="Assets\StreamingAssets\Data\localization_country.txt" />
      <None Include="Assets\StreamingAssets\Data\resmap_prefab.txt" />
      <None Include="Assets\Resources\PackAssets\Effect\MapLine\MapLineFire_Shader.shader" />
+     <None Include="Assets\Resources\PackAssets\Data\shape.txt" />
      <None Include="Assets\Resources\PackAssets\Shader\ScreenBlur.shader" />
      <None Include="Assets\Resources\PackAssets\Shader\SpriteAdd.shader" />
      <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />

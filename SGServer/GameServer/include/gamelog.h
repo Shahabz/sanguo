@@ -68,6 +68,9 @@
 #define PATH_MATERIALMAKE_QUEUE			40	// 材料制造队列
 #define PATH_MATERIALMAKE				41	// 材料制造
 #define PATH_STORY						42	// 副本
+#define PATH_GATHER						43	// 采集
+#define PATH_FIGHT						44	// 战斗
+#define PATH_MARCH						45	// 行军
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

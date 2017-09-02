@@ -168,3 +168,18 @@ int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldM
 	return 0;
 }
 
+int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_RECV( &pValue->m_to_unit_type, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_to_unit_index, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_id, (*pptr), (*psize) );
+	LKSET_MEM_RECV( pValue->m_herokind, (*pptr), 4*sizeof(short), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_to_posx, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_to_posy, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_appdata, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_action, (*pptr), (*psize) );
+	return 0;
+}
+

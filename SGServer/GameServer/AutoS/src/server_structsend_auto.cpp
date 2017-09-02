@@ -409,6 +409,17 @@ int struct_WalkPath_send( char **pptr, int *psize, SLK_WalkPath *pValue )
 	return 0;
 }
 
+int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	return 0;
+}
+
 int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *pValue )
 {
 	int tmpi = 0;
@@ -483,11 +494,13 @@ int struct_NetS_AddMarchRoute_send( char **pptr, int *psize, SLK_NetS_AddMarchRo
 	LKSET_WORD_SEND( (*pptr), &pValue->m_to_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_from_actorid, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_from_clubid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_from_nation, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_to_actorid, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_to_clubid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_to_nation, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_army_index, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_from_grid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_to_grid, (*psize) );
 	return 0;
 }
 
@@ -504,6 +517,17 @@ int struct_NetS_UpdateMapUnit_send( char **pptr, int *psize, SLK_NetS_UpdateMapU
 	int tmpi = 0;
 
 	struct_NetS_AddMapUnit_send( pptr, psize, &pValue->m_info );
+	return 0;
+}
+
+int struct_NetS_ArmySpeedUpdate_send( char **pptr, int *psize, SLK_NetS_ArmySpeedUpdate *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
 	return 0;
 }
 
@@ -676,6 +700,7 @@ int struct_NetS_AwardInfoList_send( char **pptr, int *psize, SLK_NetS_AwardInfoL
 		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_WORD_SEND( (*pptr), &pValue->m_callback_code, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	return 0;
 }
 
@@ -1208,7 +1233,9 @@ int struct_NetS_CityAttr_send( char **pptr, int *psize, SLK_NetS_CityAttr *pValu
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_protectres_per, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_buildingsec_per, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_materialsec_per, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_materialsec_per, 2*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_movespeed_per, 3*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_gather_per, 2*sizeof(short), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_up_num, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_row_num, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_everyday_body_buymax, (*psize) );
@@ -1357,6 +1384,64 @@ int struct_NetS_MapZoneChange_send( char **pptr, int *psize, SLK_NetS_MapZoneCha
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapZoneUnitList_send( char **pptr, int *psize, SLK_NetS_MapZoneUnitList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ZoneUnit_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_BattleInfo_send( char **pptr, int *psize, SLK_NetS_BattleInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_army_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_to_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_to_posy, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_herokind, 4*sizeof(short), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_to_type, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BattleList_send( char **pptr, int *psize, SLK_NetS_BattleList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_BattleInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_totalnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_totalsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_spacenum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herolevel, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_herohp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_herocolor, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_actorlevel, (*psize) );
 	return 0;
 }
 

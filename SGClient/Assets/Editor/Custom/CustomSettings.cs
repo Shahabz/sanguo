@@ -283,6 +283,7 @@ public static class CustomSettings
         _GT(typeof(CityCamera)),
         _GT(typeof(CityBuilding)),
 		_GT(typeof(CityLand)),
+		_GT(typeof(Character)),
 		_GT(typeof(MapBorder)),
 		_GT(typeof(MapUnitMove)),
 		_GT(typeof(WorldMapCamera)),
