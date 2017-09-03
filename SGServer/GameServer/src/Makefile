@@ -67,6 +67,7 @@ actor_send.cpp \
 actor_times.cpp \
 area.cpp \
 army.cpp \
+army_march.cpp \
 award.cpp \
 building.cpp \
 chat.cpp \
@@ -255,6 +256,8 @@ actor_times.o: actor_times.cpp
 area.o: area.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 army.o: army.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+army_march.o: army_march.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 award.o: award.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
