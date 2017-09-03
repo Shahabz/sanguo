@@ -171,7 +171,7 @@ g_towninfo = {
 [213] = { id=213,name="ÐìÖÝ³Ç",type=1,zoneid=17,posx=150,posy=350,grid=2,range=4,},
 [223] = { id=223,name="Ë®×Ö¿¤",type=1,zoneid=19,posx=370,posy=330,grid=1,range=3,},
 [224] = { id=224,name="µØ×Ö¿¤",type=1,zoneid=19,posx=330,posy=350,grid=1,range=3,},
-[225] = { id=225,name="Ìì×Ö¿¤",type=1,zoneid=19,posx=350,posy=350,grid=1,range=3,},
+[225] = { id=225,name="Ìì×Ö¿¤",type=1,zoneid=19,posx=350,posy=370,grid=1,range=3,},
 [226] = { id=226,name="»ð×Ö¿¤",type=1,zoneid=19,posx=330,posy=370,grid=1,range=3,},
 [227] = { id=227,name="À××Ö¿¤",type=1,zoneid=19,posx=350,posy=370,grid=1,range=3,},
 [228] = { id=228,name="Ôó×Ö¿¤",type=1,zoneid=19,posx=370,posy=370,grid=1,range=3,},

@@ -26,6 +26,7 @@ public abstract class Camera2D : MonoBehaviour
     // 锁定横竖移动
     public bool horizontalLock = false;
     public bool verticalLock = false;
+	public bool taglock = true;
 	// 缩放限制
     public bool zoomLock = false;
 	public float zoomInLimit = 4f;
@@ -177,7 +178,7 @@ public abstract class Camera2D : MonoBehaviour
                 {
                     for( int i = 0; i < results.Count; i++ )
                     {
-                        if( results[i].gameObject.tag == "UI" )
+						if( taglock == true && results[i].gameObject.tag == "UI" )
                         {
                             _Lock = true;
                             break;

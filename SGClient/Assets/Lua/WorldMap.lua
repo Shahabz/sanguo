@@ -40,6 +40,7 @@ WorldMap.m_nLastTouchArmyIndex	= -1; 	-- 上次点击部队
 WorldMap.m_nLastGotoUnitIndex	= -1;	-- 等待跳转的索引
 WorldMap.m_nLastGotoPosX		= -1;	-- 等待跳转的位置
 WorldMap.m_nLastGotoPosY		= -1;	-- 等待跳转的位置
+WorldMap.m_nZoneID				= 0;	-- 当前地图
 WorldMap.m_nMode 				= WORLDMAP_MODE_NORMAL;
 
 local TmxShowThreshold = 24;

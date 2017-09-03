@@ -88,6 +88,7 @@ public static class LuaBinder
 		MapBorderWrap.Register(L);
 		MapUnitMoveWrap.Register(L);
 		WorldMapCameraWrap.Register(L);
+		WorldMapThumbCameraWrap.Register(L);
 		UIPrimitiveBaseWrap.Register(L);
 		Camera2DWrap.Register(L);
 		L.BeginModule("UnityEngine");

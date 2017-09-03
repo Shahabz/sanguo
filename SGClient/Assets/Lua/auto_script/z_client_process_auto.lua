@@ -1025,6 +1025,7 @@ function proc_mapzonechange_C( recvValue )
 		MainDlgSetZoneName( name.."("..T(936)..")" )
 		AlertMsg( T(937) )
 	end
+	WorldMap.m_nZoneID = recvValue.m_zoneid;
 	MainDlgMiniMapChangeZone()
 end
 

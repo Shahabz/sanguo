@@ -17,6 +17,7 @@ UI_EVENT_UIDRAG             = 14;       -- UIDRAGÊÂ¼þ            0 ¿ªÊ¼ÍÏ¶¯£¬1 ½
 UI_EVENT_UIDROP             = 15;       -- UIDROPÊÂ¼þ			dragger ID
 UI_EVENT_INPUTSUBMITEX      = 16;		-- UIInputFieldÌá½»		ÎÞ²Î
 UI_EVENT_TOGGLEVALUECHANGE	= 17;
+UI_EVENT_CLICKPOS			= 18;		-- µã»÷Î»ÖÃÊÂ¼þ
 UI_EVENT_PUSHEVENT		    = 1000;		-- UIÍ¨ÓÃÊÂ¼þ£¬²»Ïë¶¨ÒåÐÂÊÂ¼þ¿ÉÓÃ			    ²ÎÊý
 
 -- ¿ÉÉý¼¶µÄÆÕÍ¨½¨Öþ

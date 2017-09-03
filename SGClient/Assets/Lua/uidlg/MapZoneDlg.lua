@@ -2,6 +2,11 @@
 local m_Dlg = nil;
 local m_DialogFrameMod = nil;
 
+local m_uiZoneName = nil; --UnityEngine.GameObject
+local m_uiNation = nil; --UnityEngine.GameObject
+local m_uiShowBtn = nil; --UnityEngine.GameObject
+local m_uiHideBtn = nil; --UnityEngine.GameObject
+
 -- 打开界面
 function MapZoneDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MapZoneDlg" );
@@ -13,6 +18,8 @@ function MapZoneDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	-- 删除缩略图
+	WorldMapThumb.Delete();
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "MapZoneDlg" );
@@ -36,8 +43,15 @@ function MapZoneDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 世界地图
 		elseif nControlID == 1 then
-			 MapGlobalDlgShow()
+			MapZoneDlgClose()
+			MapGlobalDlgShow()
         end
+		
+	elseif nType == UI_EVENT_CLICKPOS then
+		if nControlID == 1 then
+			-- 点击地图位置
+			MapZoneDlgOnClick( value )
+		end
 	end
 end
 
@@ -45,6 +59,10 @@ end
 function MapZoneDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
+	m_uiZoneName = objs[0];
+	m_uiNation = objs[1];
+	m_uiShowBtn = objs[2];
+	m_uiHideBtn = objs[3];
 end
 
 -- 界面初始化时调用
@@ -76,6 +94,13 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function MapZoneDlgShow()
+function MapZoneDlgShow( zoneid )
 	MapZoneDlgOpen()
+	if zoneid == nil then
+		zoneid = WorldMap.m_nZoneID;
+	end
+	local name = MapZoneName( zoneid )
+	SetText( m_uiZoneName.transform:Find("Text"), name )
+	-- 显示缩略图
+	WorldMapThumb.Create( zoneid );
 end

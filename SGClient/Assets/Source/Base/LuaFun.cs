@@ -324,6 +324,52 @@ public class LuaFun
 		}
 	}
 
+	/// <summary>
+	/// 世界地图缩略图
+	/// </summary>
+	private static LuaFunction _worldMapThumbStart = null;
+	public static LuaFunction worldMapThumbStart
+	{
+		get
+		{
+			if ( _worldMapThumbStart == null )
+				_worldMapThumbStart = eye.luaManager.GetFunction( "WorldMapThumb.Start" );
+
+			return _worldMapThumbStart;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图缩略图
+	/// </summary>
+	private static LuaFunction _worldMapThumbOnClick = null;
+	public static LuaFunction worldMapThumbOnClick
+	{
+		get
+		{
+			if ( _worldMapThumbOnClick == null )
+				_worldMapThumbOnClick = eye.luaManager.GetFunction( "WorldMapThumb.OnClick" );
+
+			return _worldMapThumbOnClick;
+		}
+	}
+
+	/// <summary>
+	/// 世界地图缩略图
+	/// </summary>
+	private static LuaFunction _worldMapThumbOnDrag = null;
+	public static LuaFunction worldMapThumbOnDrag
+	{
+		get
+		{
+			if ( _worldMapThumbOnDrag == null )
+				_worldMapThumbOnDrag = eye.luaManager.GetFunction( "WorldMapThumb.OnDrag" );
+
+			return _worldMapThumbOnDrag;
+		}
+	}
+
+
     public static void Destroy()
     {
         _numFormat = null;
@@ -351,5 +397,8 @@ public class LuaFun
 		_worldMapViewChangeFrame = null;
 		_worldMapOnClick = null;
 		_worldMapOnDrag = null;
+		_worldMapThumbStart = null;
+		_worldMapThumbOnClick = null;
+		_worldMapThumbOnDrag = null;
     }
 }

@@ -30,6 +30,8 @@ function MapGlobalDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MapGlobalDlgClose();
+		elseif nControlID >= 1 and nControlID <= 30 then
+			MapGlobalDlgSelect( nControlID )
         end
 	end
 end
@@ -71,4 +73,14 @@ end
 ----------------------------------------
 function MapGlobalDlgShow()
 	MapGlobalDlgOpen()
+end
+
+-- 选择区域
+function MapGlobalDlgSelect( zoneid )
+	if g_zoneinfo[zoneid] == nil then
+		return
+	end
+	 MapZoneDlgShow( zoneid )
+	--WorldMap.GotoCoor( g_zoneinfo[zoneid].center_posx, g_zoneinfo[zoneid].center_posy )
+	MapGlobalDlgClose();
 end
