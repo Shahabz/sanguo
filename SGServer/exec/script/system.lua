@@ -59,6 +59,8 @@ end
 function IN_Script_Exec( id, value1, value2 )
 	if id == 1 then
 		BrushEnemyWithZone( value1 )
+	elseif id == 10 then
+		BrushEventWithCity( value1, value2 )
 	end
 end
 

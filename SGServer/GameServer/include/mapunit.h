@@ -6,12 +6,14 @@
 #define MAPUNIT_TYPE_TOWN			3	// 城镇
 #define MAPUNIT_TYPE_ENEMY			4	// 流寇
 #define MAPUNIT_TYPE_RES			5	// 资源
+#define MAPUNIT_TYPE_EVENT			6	// 事件
 
 // 世界地图显示单元
 typedef struct _mapunit
 {
 	char type;					// 类型1=City 2=ARMY 3...
 	int index;					// 类型对应索引
+	int actorid;				// 类型属于某个玩家
 	int pre_index;				// 前一个单元的索引
 	int next_index;				// 下一个单元的索引
 	int lastadd_areaindex;		// 上次进入的区域编号
@@ -29,7 +31,7 @@ int mapunit_getattr( int unit_index, SLK_NetS_AddMapUnit *pAttr );
 int mapunit_getpos( int unit_index, short *posx, short *posy );
 
 // 将需要显示的城池或军队添加到显示单元
-int mapunit_add( char type, int index );
+int mapunit_add( char type, int index, int actorid = 0 );
 
 // 将已经关联的地图单元删除掉
 int mapunit_del( char type, int index, int unit_index );

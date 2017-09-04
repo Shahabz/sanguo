@@ -677,6 +677,12 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			MapClickEffect.gameObject:SetActive( false );
 			MapResDlgShow( recvValue )
 			return;	
+		
+		-- Ëæ»úÊÂ¼þ	
+		elseif recvValue.m_type == MAPUNIT_TYPE_EVENT then
+			MapClickEffect.gameObject:SetActive( false );
+			MapEventDlgShow( recvValue )
+			return
 		end
 	end
 	

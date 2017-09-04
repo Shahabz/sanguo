@@ -183,7 +183,7 @@ void army_reback( int army_index )
 			if ( pUnitCity && pActorCity && pUnitCity->actorid == pActorCity->actorid )
 			{
 				// 通知：部队已经返回城内
-				actor_system_message( pActorCity->actor_index, 68 );
+				//actor_system_message( pActorCity->actor_index, 68 );
 
 				// 如果是集结发起者,其他部队解散
 				if ( g_army[army_index].action == ARMY_ACTION_GROUP_START )

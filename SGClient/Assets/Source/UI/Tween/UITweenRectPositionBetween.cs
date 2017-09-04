@@ -8,8 +8,8 @@ public class UITweenRectPositionBetween : UITween
     public float x = 0.0f;
     public float y = 0.0f;
 
-    Vector2 	from;
-	Vector2 	to;
+	public Vector2 	from = Vector2.zero;
+	public Vector2 	to;
 
 	RectTransform 	_RectTransform;
 
@@ -32,7 +32,7 @@ public class UITweenRectPositionBetween : UITween
 
 	public override void Play( bool forward )
 	{		
-        from = _RectTransform.anchoredPosition;
+        //from = _RectTransform.anchoredPosition;
         to = new Vector2( from.x + x, from.y + y );
 
 		_RectTransform.anchoredPosition = forward ? from : to;

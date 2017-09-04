@@ -56,6 +56,7 @@ struct _city {
 				char autobuildopen;	//自动建造是否开启
 				int ptsec;	//城池保护状态剩余时间
 				short peoplesec;	//城池人口回复时间
+				int eventsec;	//事件倒计时
 				short questid[6];	//任务ID
 				int questvalue[6];	//任务数值
 				char techlevel[40];	//科技
@@ -103,6 +104,7 @@ struct _city {
 				int battle_armyindex[8];	//出征部队
 				int underfire_armyindex[16];	//目标部队
 				int help_armyindex[32];	//协防部队
+				int mapevent_index[6];	//地图事件
 };
 typedef struct _city City;
 

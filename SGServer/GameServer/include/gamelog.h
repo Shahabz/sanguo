@@ -71,6 +71,7 @@
 #define PATH_GATHER						43	// 采集
 #define PATH_FIGHT						44	// 战斗
 #define PATH_MARCH						45	// 行军
+#define PATH_MAPEVENT					46	// 地图随机事件
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

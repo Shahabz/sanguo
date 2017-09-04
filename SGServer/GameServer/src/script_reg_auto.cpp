@@ -15,20 +15,32 @@ extern "C"
 #include "thread.h"
 #include "utils.h"
 #include "item.h"
+#include "actor.h"
 #include "actor_notify.h"
 #include "auto_actor.h"
+#include "city.h"
 #include "map.h"
 #include "system.h"
 #include "global.h"
 #include "wqueue.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_event.h"
+
+extern Actor *g_actors;
+extern int g_maxactornum;
+
+extern City * g_city;
+extern int g_city_maxcount;
 
 extern MapEnemy *g_map_enemy;
 extern int g_map_enemy_maxcount;
 
 extern MapRes *g_map_res;
 extern int g_map_res_maxcount;
+
+extern MapEvent *g_map_event;
+extern int g_map_event_maxcount;
 
 extern lua_State* servL;
 
@@ -73,7 +85,15 @@ static int lua_c_map_res_create( lua_State *servL );
 static int lua_c_map_res_delete( lua_State *servL );
 static int lua_c_map_res_info( lua_State *servL );
 static int lua_c_map_res_num( lua_State *servL );
+static int lua_c_map_event_maxcount( lua_State *servL );
+static int lua_c_map_event_create( lua_State *servL );
+static int lua_c_map_event_delete( lua_State *servL );
+static int lua_c_map_event_info( lua_State *servL );
+static int lua_c_map_event_num( lua_State *servL );
+static int lua_c_map_event_range_brush( lua_State *servL );
+static int lua_c_map_event_delete_actor( lua_State *servL );
 static int lua_c_brush_enemy_queue_add( lua_State *servL );
+static int lua_c_city_baseinfo( lua_State *servL );
 static int lua_c_world_data_get( lua_State *servL );
 static int lua_c_world_data_set( lua_State *servL );
 static int lua_c_system_getruntime( lua_State *servL );
@@ -127,7 +147,15 @@ void lua_func_register()
 	lua_register( servL, "c_map_res_delete", lua_c_map_res_delete );
 	lua_register( servL, "c_map_res_info", lua_c_map_res_info );
 	lua_register( servL, "c_map_res_num", lua_c_map_res_num );
+	lua_register( servL, "c_map_event_maxcount", lua_c_map_event_maxcount );
+	lua_register( servL, "c_map_event_create", lua_c_map_event_create );
+	lua_register( servL, "c_map_event_delete", lua_c_map_event_delete );
+	lua_register( servL, "c_map_event_info", lua_c_map_event_info );
+	lua_register( servL, "c_map_event_num", lua_c_map_event_num );
+	lua_register( servL, "c_map_event_range_brush", lua_c_map_event_range_brush );
+	lua_register( servL, "c_map_event_delete_actor", lua_c_map_event_delete_actor );
 	lua_register( servL, "c_brush_enemy_queue_add", lua_c_brush_enemy_queue_add );
+	lua_register( servL, "c_city_baseinfo", lua_c_city_baseinfo );
 	lua_register( servL, "c_world_data_get", lua_c_world_data_get );
 	lua_register( servL, "c_world_data_set", lua_c_world_data_set );
 	lua_register( servL, "c_system_getruntime", lua_c_system_getruntime );
@@ -1162,5 +1190,181 @@ static int lua_c_map_res_num( lua_State *servL )
 	count = map_res_num( zoneid, kind );
 	lua_pushinteger( servL, count );
 	return 1;
+}
+
+static int lua_c_map_event_maxcount( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int maxcount = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_event_maxcount_set( maxcount );
+	return 0;
+}
+
+static int lua_c_map_event_create( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 4 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	int city_index = (int )lua_tointeger( servL, 4 );
+	//--Process script
+	map_event_create( kind, posx, posy, city_index );
+	return 0;
+}
+
+static int lua_c_map_event_delete( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_event_delete( index, -1 );
+	return 0;
+}
+
+static int lua_c_map_event_info( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	short kind = 0;
+	short posx = 0;
+	short posy = 0;
+	int waitsec = 0;
+	int state = 0;
+	int actorid = 0;
+	lua_pushinteger( servL, kind );
+	lua_pushinteger( servL, posx );
+	lua_pushinteger( servL, posy );
+	lua_pushinteger( servL, waitsec );
+	lua_pushinteger( servL, state );
+	lua_pushinteger( servL, actorid );
+	return 6;
+}
+
+static int lua_c_map_event_num( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int actorid = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	int count = map_event_num( actorid );
+	lua_pushinteger( servL, count );
+	return 1;
+}
+
+static int lua_c_map_event_range_brush( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 5 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	short range = (short )lua_tointeger( servL, 4 );
+	int city_index = (int )lua_tointeger( servL, 5 );
+	//--Process script
+	map_event_range_brush( kind, posx, posy, range, city_index );
+	return 0;
+}
+
+static int lua_c_map_event_delete_actor( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int actorid = (int )lua_tointeger( servL, 1 );
+	int city_index = (int)lua_tointeger( servL, 2 );
+	//--Process script
+	map_event_delete_actor( actorid, city_index );
+	return 0;
+}
+
+static int lua_c_city_baseinfo( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int city_index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	int actorid = 0;
+	short posx = 0;
+	short posy = 0;
+	short level = 0;
+	char nation = 0;
+	char zone = 0;
+	if ( city_index >= 0 && city_index < g_city_maxcount )
+	{
+		actorid = g_city[city_index].actorid;
+		posx = g_city[city_index].posx;
+		posy = g_city[city_index].posy;
+		level = g_city[city_index].level;
+		nation = g_city[city_index].nation;
+		zone = g_city[city_index].zone;
+	}
+	lua_pushinteger( servL, actorid );
+	lua_pushinteger( servL, posx );
+	lua_pushinteger( servL, posy );
+	lua_pushinteger( servL, level );
+	lua_pushinteger( servL, nation );
+	lua_pushinteger( servL, zone );
+	return 6;
 }
 

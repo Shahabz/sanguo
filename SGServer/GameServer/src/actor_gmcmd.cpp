@@ -99,6 +99,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		break;
 	case GMC_LUA:// ÖØÔØlua
 		tmpi = lua_reload( -1 );
+		mapzoneinfo_luatable_auto();
 		sprintf( szMsg, "ThisTimer:%d", tmpi );
 		if ( actor_index >= 0 )
 			system_talkto( actor_index, szMsg );

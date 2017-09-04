@@ -35,6 +35,7 @@
 #include "auto_data_map_towninfo.h"
 #include "auto_data_map_enemyinfo.h"
 #include "auto_data_map_resinfo.h"
+#include "auto_data_map_eventinfo.h"
 #include "auto_data_story.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
@@ -49,6 +50,7 @@
 #include "auto_map_town.h"
 #include "auto_map_enemy.h"
 #include "auto_map_res.h"
+#include "auto_map_event.h"
 #include "actor_send.h"
 #include "award.h"
 

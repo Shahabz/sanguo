@@ -12,6 +12,8 @@
 #define CITY_BATTLEQUEUE_MAX		8	// 出征队列
 #define CITY_UNDERFIRE_MAX			16	// 最多受多少支部队攻击
 #define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队协防
+#define CITY_MAPEVENT_MAX			6	// 地图事件最大数量
+#define CITY_MAPEVENT_ING_MAX		2	// 地图事件正在进行数量
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺

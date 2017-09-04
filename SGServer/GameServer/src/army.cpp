@@ -600,7 +600,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		if ( info->m_action != ARMY_ACTION_OCCUPY )
 		{
 			write_gamelog( "[BATTLE_INVALID]_actorid:%d_action:%d_info->unit_index:%d", pCity->actorid, info->m_action, info->m_to_unit_index );
-			actor_system_message( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
+			//actor_system_message( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
 			return -1;
 		}
 		to_type = 0;
@@ -1478,51 +1478,57 @@ void army_fight( int army_index )
 			}
 			else
 			{
+				if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
+				{
+					map_enemy_delete( g_army[army_index].to_index );
+				}
 				army_setstate( army_index, ARMY_STATE_REBACK );
 			}
 			write_gamelog( "[FIGHT_START_ERROR]_to_type:%d", g_army[army_index].to_type );
 			return;
 		}
 
-		//// 攻击方战场部队还原到army里
-		//if ( g_army[army_index].group_index >= 0 && g_army[army_index].group_index < g_armygroup_maxcount )
-		//{
-		//	army_fightresult_toarmy_withgroup( army_index );
-		//}
-		//else
-		//{
-		//	army_fightresult_toarmy( army_index, 1 );
-		//}
+		// 攻击方战场部队还原到army里
+		/*if ( g_army[army_index].group_index >= 0 && g_army[army_index].group_index < g_armygroup_maxcount )
+		{
+			army_fightresult_toarmy_withgroup( army_index );
+		}
+		else
+		{
+			army_fightresult_toarmy( army_index, 1 );
+		}*/
 
-		//// 攻击方是城池的部队
-		//if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
-		//{
-		//	// 防御方是城池
-		//	if ( g_army[army_index].target_type == MAPUNIT_TYPE_CITY )
-		//	{
-		//		army_vs_city( army_index, army_getcityptr_target( army_index ) );
-		//	}
-		//	// 防御方是驻扎的部队
-		//	else if ( g_army[army_index].target_type == MAPUNIT_TYPE_ARMY )
-		//	{
-		//		army_vs_army( army_index, g_army[army_index].target_index );
-		//	}
-		//	// 防御方是资源点
-		//	else if ( g_army[army_index].target_type == MAPUNIT_TYPE_RES )
-		//	{
-		//		army_vs_res( army_index );
-		//	}
-		//	// 防御方是怪物
-		//	else if ( g_army[army_index].target_type == MAPUNIT_TYPE_MONSTER )
-		//	{
-		//		army_vs_monster( army_index );
-		//	}
-		//	// 防御方是城镇
-		//	else if ( g_army[army_index].target_type == MAPUNIT_TYPE_TOWN )
-		//	{
-		//		army_vs_town( army_index, g_army[army_index].target_index );
-		//	}
-		//	
+		// 攻击方是城池的部队
+		if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
+		{
+			// 防御方是城池
+			if ( g_army[army_index].to_type == MAPUNIT_TYPE_CITY )
+			{
+				//army_vs_city( army_index, army_getcityptr_target( army_index ) );
+			}
+			// 防御方是驻扎的部队
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ARMY )
+			{
+				//army_vs_army( army_index, g_army[army_index].target_index );
+			}
+			// 防御方是城镇
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
+			{
+				//army_vs_town( army_index, g_army[army_index].target_index );
+			}
+			// 防御方是怪物
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
+			{
+				//army_vs_monster( army_index );
+				// 被选择次数减少
+				map_enemy_delete( g_army[army_index].to_index );
+			}
+			// 防御方是资源点
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_RES )
+			{
+				//army_vs_res( army_index );
+			}
+			
 
 
 		//	// 通知：战斗结果
@@ -1601,7 +1607,7 @@ void army_fight( int army_index )
 		//{ // 援助，全死光了，直接秒回
 		//	army_delete( army_index );
 		//	return;
-		//}
+		}
 		army_setstate( army_index, ARMY_STATE_REBACK );
 	}
 }

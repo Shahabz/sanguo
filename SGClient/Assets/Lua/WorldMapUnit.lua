@@ -6,6 +6,7 @@ MAPUNIT_TYPE_ARMY		=	2	-- 部队
 MAPUNIT_TYPE_TOWN		=	3	-- 城镇
 MAPUNIT_TYPE_ENEMY		=	4	-- 流寇
 MAPUNIT_TYPE_RES		=	5	-- 资源点
+MAPUNIT_TYPE_EVENT		=	6	-- 随机事件
 
 
 -- 城池状态
@@ -54,6 +55,7 @@ local MapUnitArmy 		= nil;
 local MapUnitTown 		= nil;
 local MapUnitEnemy 		= nil;
 local MapUnitRes 		= nil;
+local MapUnitEvent 		= nil;
 local MapBorder			= nil;
 local MapTownRange		= nil;
 local MapUnitInited		= false;
@@ -93,15 +95,6 @@ MapUnitCityShapeList = {
 [30] = "mapunit_city_level4",
 }
 
--- 资源点形象
-MapUnitResShapeList = {
-[1] = "mapunit_res_silver",
-[2] = "mapunit_res_wood",
-[3] = "mapunit_res_food",
-[4] = "mapunit_res_iron",
-[5] = "mapunit_res_token",
-}
-
 -- 城镇形象
 MapUnitTownShapeList = {
 [1] = "mapunit_type1",
@@ -112,6 +105,24 @@ MapUnitTownShapeList = {
 [6] = "mapunit_type6",
 }
 
+-- 资源点形象
+MapUnitResShapeList = {
+[1] = "mapunit_res_silver",
+[2] = "mapunit_res_wood",
+[3] = "mapunit_res_food",
+[4] = "mapunit_res_iron",
+[5] = "mapunit_res_token",
+}
+
+-- 事件形象
+MapUnitEventShapeList = {
+[1] = "mapunit_event_1",
+[2] = "mapunit_event_2",
+[3] = "mapunit_event_3",
+[4] = "mapunit_event_4",
+[5] = "mapunit_event_5",
+}
+
 -- 资源点名称
 MapUnitResNameList = {
 [1] = 171,
@@ -119,6 +130,15 @@ MapUnitResNameList = {
 [3] = 173,
 [4] = 174,
 [5] = 175,
+}
+
+-- 事件名称
+MapUnitEventNameList = {
+[1] = 1010,
+[2] = 1011,
+[3] = 1012,
+[4] = 1013,
+[5] = 1014,
 }
 
 -- 范围颜色
@@ -159,6 +179,7 @@ MapUnit.objectPoolArmy 			= {}; 	-- 部队
 MapUnit.objectPoolTown 			= {}; 	-- 城镇
 MapUnit.objectPoolEnemy 		= {}; 	-- 流寇
 MapUnit.objectPoolRes 			= {}; 	-- 资源田
+MapUnit.objectPoolEvent 		= {}; 	-- 事件
 
 -- 初始化
 function MapUnit.init()
@@ -169,6 +190,7 @@ function MapUnit.init()
 		MapUnitTown 		= LoadPrefab("MapUnitTown");
 		MapUnitEnemy 		= LoadPrefab("MapUnitEnemy");
 		MapUnitRes 			= LoadPrefab("MapUnitRes");
+		MapUnitEvent		= LoadPrefab("MapUnitEvent");
 		MapBorder			= LoadPrefab("MapBorder");
 		MapTownRange		= LoadPrefab("MapTownRange");
 		MapUnitInited 	= true;
@@ -182,6 +204,7 @@ function MapUnit.clear()
 	MapUnitTown 		= nil;
 	MapUnitEnemy 		= nil;
 	MapUnitRes 			= nil;
+	MapUnitEvent 		= nil;
 	
 	MapUnitInited		= false;
 	MapUnit.unitRoot 	= nil;
@@ -191,6 +214,7 @@ function MapUnit.clear()
 	MapUnit.objectPoolTown 		= {};
 	MapUnit.objectPoolEnemy 	= {};
 	MapUnit.objectPoolRes 		= {};
+	MapUnit.objectPoolEvent 	= {};
 
 	MapUnit.cache 				= {};
 end
@@ -219,7 +243,10 @@ function MapUnit.add( unitRoot, recvValue )
 	-- 资源
 	elseif recvValue.m_type == MAPUNIT_TYPE_RES then
 		unit = MapUnit.createRes( recvValue );
-						
+	
+	-- 随机事件
+	elseif recvValue.m_type == MAPUNIT_TYPE_EVENT then
+		unit = MapUnit.createEvent( recvValue );				
 	end
 	
 	-- 缓存起来，以便删除
@@ -661,6 +688,89 @@ function MapUnit.createRes( recvValue )
 	return unitObj;
 end
 
+-- 创建随机事件
+function MapUnit.createEvent( recvValue )
+	local state 	= recvValue.m_state;
+	local name 		= recvValue.m_name;
+	local posx 		= recvValue.m_posx;
+	local posy 		= recvValue.m_posy;
+	local type		= recvValue.m_char_value[1];
+	local kind		= recvValue.m_short_value[1];
+	local actorid	= recvValue.m_int_value[1];
+	local waitsec	= recvValue.m_int_value[2];
+
+	local info 		= g_mapeventinfo[kind]
+	if info == nil then
+		return
+	end
+	-- 先搜索缓存，如果缓存有，那么就更新
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	
+	-- 先检查对象缓存池是否有空余的
+	if unitObj == nil then
+		for index, unit in pairs( MapUnit.objectPoolEvent ) do
+			if unit and unit.gameObject.activeSelf == false then
+				unitObj = unit;
+				break;
+			end
+		end
+	end
+	
+	-- 没有空余的就新创建一个
+	if unitObj == nil then
+		unitObj = GameObject.Instantiate( MapUnitEvent );
+		unitObj.transform:SetParent( MapUnit.unitRoot );
+		table.insert( MapUnit.objectPoolEvent, unitObj );
+	end
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_EVENT, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
+	
+	-- 获取引用
+	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiName = objs[1];
+	local uiEffect = objs[2];
+	local uiIcon = objs[3];
+	local uiTimer = objs[4];
+	
+	-- 形象
+    uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitEventShapeList[type] );
+	
+	-- 名字
+	if type == 3 and info.costtype > 0 then --采集运输车
+		if info.costnum > 100000 then
+			uiName:GetComponent("UIText").text = knum(info.costnum)--[[ResName( info.costtype )==]]
+		else
+			uiName:GetComponent("UIText").text = info.costnum
+		end
+		SetImage( uiIcon, ResIcon( info.costtype ) )
+		SetTrue( uiIcon )
+	else
+		uiName:GetComponent("UIText").text = T(MapUnitEventNameList[type])
+		SetFalse( uiIcon )
+	end
+	
+	-- 完成状态
+	if state == 1 then
+		SetTrue( uiEffect )
+		waitsec = 0;
+	else
+		SetFalse( uiEffect )
+	end
+	
+	-- 倒计时
+	if waitsec > 0 then
+		SetTrue( uiTimer )
+		SetTimer( uiTimer.transform:Find("Text"), waitsec, info.waitsec );
+	else
+		SetFalse( uiTimer )
+	end
+	return unitObj;
+end
+
 -- 地图区域边界线
 function MapUnit.createMapBorder( posx, posy, range )
 	if MapUnitRoot == nil then
@@ -715,6 +825,9 @@ function MapUnit.getGrid( unittype, unitgrid )
 		return 1;
 	-- 资源
 	elseif unittype == MAPUNIT_TYPE_RES then
+		return 1;
+	-- 随机事件
+	elseif unittype == MAPUNIT_TYPE_EVENT then
 		return 1;
 	end	
 	return 1;

@@ -25,6 +25,7 @@ SRC = \
 ../AutoS/src/auto_data_hero_skill.cpp \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_map_enemyinfo.cpp \
+../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_map_resinfo.cpp \
 ../AutoS/src/auto_data_map_towninfo.cpp \
 ../AutoS/src/auto_data_map_zoneinfo.cpp \
@@ -44,6 +45,7 @@ SRC = \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_data_vip.cpp \
 ../AutoS/src/auto_map_enemy.cpp \
+../AutoS/src/auto_map_event.cpp \
 ../AutoS/src/auto_map_res.cpp \
 ../AutoS/src/auto_map_town.cpp \
 ../AutoS/src/auto_map_zone.cpp \
@@ -95,6 +97,7 @@ mail.cpp \
 main.cpp \
 map.cpp \
 map_enemy.cpp \
+map_event.cpp \
 map_res.cpp \
 map_town.cpp \
 mapunit.cpp \
@@ -173,6 +176,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_enemyinfo.o: ../AutoS/src/auto_data_map_enemyinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_eventinfo.o: ../AutoS/src/auto_data_map_eventinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_resinfo.o: ../AutoS/src/auto_data_map_resinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
@@ -210,6 +215,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_vip.o: ../AutoS/src/auto_data_vip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_enemy.o: ../AutoS/src/auto_map_enemy.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_event.o: ../AutoS/src/auto_map_event.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_res.o: ../AutoS/src/auto_map_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -312,6 +319,8 @@ main.o: main.cpp
 map.o: map.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_enemy.o: map_enemy.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_event.o: map_event.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_res.o: map_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

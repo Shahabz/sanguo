@@ -20,6 +20,8 @@ struct _mapzoneinfo {
 				char enemynum[512];	//
 				char reskind[256];	//
 				char resnum[512];	//
+				char eventkind[256];	//
+				short eventnum;	//
 				short actorlevel;	//
 				short killenemy;	//
 				int questid;	//

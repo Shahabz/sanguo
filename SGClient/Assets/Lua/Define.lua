@@ -345,7 +345,7 @@ function TechDescUp( kind )
 	return Localization.text_item(kind+4200);
 end
 
--- 获取科技描述
+-- 获取资源名称
 function ResName( restype )
 	return T(120+restype)
 end

@@ -76,6 +76,7 @@ typedef struct _global
 	float army_march_food_v3;
 	int hero_gather_duration[6];
 	int army_move_kingzone;
+	int mapevent_sec;
 }Global;
 int global_init();
 void global_reload();

@@ -44,6 +44,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_event.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -547,6 +548,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 世界地图-随机事件
+	if ( mapeventinfo_init_auto() < 0 )
+	{
+		printf_msg( "mapeventinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	activity_init();
 	time_gmcmd_init();
 	db_closedata();
@@ -635,6 +645,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 116 );
 
+	// 加载所有地图事件（严格顺序要求，不允许改变）
+	if ( map_event_load() < 0 )
+	{
+		printf_msg( "map_event_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 116 );
+
 	// 聊天缓存
 	chat_cache_load();
 
@@ -699,6 +718,10 @@ void process_close()
 
 	// 所有资源点保存
 	map_res_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有随机事件点保存
+	map_event_save( NULL );
 	printf_msg( "\n" );
 
 	// 提交
@@ -931,7 +954,7 @@ int process_logic()
 	{
 		city_logic_sec();
 	}
-	else if ( tick == 2 )
+	else if ( tick == 5 )
 	{
 		army_alllogic();
 	}

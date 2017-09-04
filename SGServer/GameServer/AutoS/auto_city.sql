@@ -48,6 +48,7 @@ CREATE TABLE `city` (
   `autobuildopen` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造是否开启',
   `ptsec` int(11) NOT NULL DEFAULT '0' COMMENT '城池保护状态剩余时间',
   `peoplesec` smallint(6) NOT NULL DEFAULT '0' COMMENT '城池人口回复时间',
+  `eventsec` int(11) NOT NULL DEFAULT '0' COMMENT '事件倒计时',
   `questid` varbinary(24) NOT NULL DEFAULT '' COMMENT '任务ID',
   `questvalue` varbinary(24) NOT NULL DEFAULT '' COMMENT '任务数值',
   `techlevel` varbinary(160) NOT NULL DEFAULT '' COMMENT '科技',

@@ -255,6 +255,8 @@ int global_init()
 			global.hero_gather_duration[5] = atoi( row[1] );
 		else if ( id == 81 )
 			global.army_move_kingzone = atoi( row[1] );
+		else if ( id == 82 )
+			global.mapevent_sec = atoi( row[1] );
 		
 	}
 	lua_setglobal( servL, "global" );

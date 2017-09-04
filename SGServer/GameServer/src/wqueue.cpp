@@ -142,10 +142,10 @@ int exec_queue_fetch()
 	int value1 = g_exec_queue[g_nExecQueueHead].value[0];
 	int value2 = g_exec_queue[g_nExecQueueHead].value[1];
 
-	//if ( type == EXEC_QUEUE_TYPE_CREATERES )
-	//{
-	//	sc_Script_Exec( EXEC_QUEUE_TYPE_CREATERES, value1, value2 );
-	//}
+	if ( type == EXEC_QUEUE_TYPE_MAPEVENT_CREATE )
+	{
+		sc_Script_Exec( 10, value1, value2 );
+	}
 
 	// 头部步进
 	g_nExecQueueHead++;

@@ -300,7 +300,7 @@ public abstract class Camera2D : MonoBehaviour
 				            {
 					            for( int j = 0; j < results.Count; j++ )
 					            {
-						            if( results[j].gameObject.tag == "UI" )
+									if( taglock == true && results[j].gameObject.tag == "UI" )
 						            {
 							            _Lock = true;
 							            return;

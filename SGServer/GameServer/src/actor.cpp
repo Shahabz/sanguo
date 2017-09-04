@@ -40,6 +40,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_event.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -187,6 +188,8 @@ void actors_on_core()
 	map_enemy_save( fp );
 	// 所有资源点保存
 	map_res_save( fp );
+	// 所有随机事件点保存
+	map_event_save( fp );
 	if ( fp )
 	{
 		char szSQL[512] = { 0 };
@@ -883,18 +886,24 @@ int actor_new( int actor_index )
 			return -1;
 	}
 
+	int city_index = g_actors[actor_index].city_index;
 	// 主城
-	building_create( g_actors[actor_index].city_index, BUILDING_Main, -1 );
-	g_city[g_actors[actor_index].city_index].building[0].level = 2;
+	building_create( city_index, BUILDING_Main, -1 );
+	g_city[city_index].building[0].level = 2;
 
-	g_city[g_actors[actor_index].city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, g_actors[actor_index].city_index );
-	map_addobject( MAPUNIT_TYPE_CITY, g_city[g_actors[actor_index].city_index].unit_index, city.posx, city.posy );
+	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
+	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, city.posx, city.posy );
+	g_city[city_index].zone = map_zone_getid( city.posx, city.posy );
 
 	// 所选的阵营是否有奖励
 	if ( g_actors[actor_index].nation == client_getnationaward( actor_index ) )
 	{
 		actor_change_token( actor_index, global.nation_award_token, PATH_SYSTEM, 0 );
 	}
+
+	// 刷事件
+	g_city[city_index].eventsec = global.mapevent_sec;
+	exec_queue_add( EXEC_QUEUE_TYPE_MAPEVENT_CREATE, city_index, g_city[city_index].zone );
 	//item_getitem( actor_index, 2041, 1, -1, PATH_SYSTEM );
 	//item_getitem( actor_index, 2071, 1, -1, PATH_SYSTEM );
 	//item_getitem( actor_index, 745, 1, -1, PATH_SYSTEM );

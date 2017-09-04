@@ -29,7 +29,8 @@ int fetch_wqueue( int *pclient_index, short *pcmd, char *pBuf, int *pwsize, int 
 
 
 // 工作队列所有耗时的操作可以加入这里，每帧执行N个
-#define	EXEC_QUEUE_MAXNUM				2048		// 工作队列最大数
+#define	EXEC_QUEUE_MAXNUM				20480		// 工作队列最大数
+#define	EXEC_QUEUE_TYPE_MAPEVENT_CREATE		1		// 随机事件创建
 
 // 创建队列防止同一帧做太多事情
 typedef struct _exec_queue

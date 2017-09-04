@@ -23,6 +23,7 @@
 #define ASKINFO_MATERIALMAKE	18 // 材料制造
 #define ASKINFO_STORY			19 // 副本
 #define ASKINFO_WORLDMAP		20 // 世界地图操作
+#define ASKINFO_MAP_EVENT		21 // 世界地图随机事件
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

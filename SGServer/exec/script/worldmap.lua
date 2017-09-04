@@ -10,6 +10,7 @@ MAPUNIT_TYPE_RES			=	5	-- 资源
 
 g_map_enemy_maxcount		= 50000;-- 流寇最大数量
 g_map_res_maxcount			= 5000;	-- 资源点最大数量
+g_map_event_maxcount		= 100000;-- 地图事件最大数量
 
 -- 世界地图初始化
 function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
@@ -19,6 +20,9 @@ function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
 	
 	-- 资源点最大数量
 	c_map_res_maxcount( g_map_res_maxcount );
+	
+	-- 地图事件最大数量
+	c_map_event_maxcount( g_map_event_maxcount );
 	
 end
 
@@ -199,4 +203,30 @@ function BrushResWithZone( zoneid )
 			end
 		end
 	end
+end
+
+-- 刷地图事件
+function BrushEventWithCity( city_index, zoneid )
+	if zoneid <= 0 or zoneid >= g_zoneinfo_maxnum then
+		return
+	end
+	
+	-- 这个城池信息
+	local actorid, posx, posy, level = c_city_baseinfo( city_index );
+	if actorid <= 0 then
+		return
+	end
+	
+	-- 删除这个玩家的所有事件
+	c_map_event_delete_actor( actorid, city_index );
+	
+	-- 重新刷事件
+	local eventgroup = g_zoneinfo[zoneid].eventkind;
+	local num = g_zoneinfo[zoneid].eventnum;
+	local kindlist = string.split( eventgroup, "," );
+	for i=1, num, 1 do
+		local idx = math.random( 1, #kindlist );
+		c_map_event_range_brush( kindlist[idx], posx, posy, 2, city_index );
+	end
+	
 end

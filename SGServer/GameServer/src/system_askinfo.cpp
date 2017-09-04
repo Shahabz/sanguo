@@ -27,6 +27,7 @@
 #include "story.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_event.h"
 #include "army_march.h"
 
 extern Actor *g_actors;
@@ -367,8 +368,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 迁城
 			city_move_actor( actor_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
-		
-
+		break;
+	case ASKINFO_MAP_EVENT:
+		if ( pvalue[0] == 1 )
+		{ // 采集事件
+			map_event_gather( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 领取事件
+			map_event_getaward( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

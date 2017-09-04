@@ -129,7 +129,7 @@ function MapResDlgShow( recvValue )
 	SetFalse( m_uiCost );
 	SetFalse( m_uiGatherInfo );
 	
-	m_unit_index = unit_index
+	m_unit_index 	= recvValue.unit_index
 	m_recvValue 	= recvValue;
 	local state 	= recvValue.m_state;
 	local posx 		= recvValue.m_posx;

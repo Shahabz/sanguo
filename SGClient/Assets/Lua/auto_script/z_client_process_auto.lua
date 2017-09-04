@@ -338,6 +338,11 @@ end
 -- m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",
 function proc_addmapunit_C( recvValue )
 	-- process.
+	if recvValue.m_type == MAPUNIT_TYPE_EVENT then
+		if recvValue.m_int_value[1] ~= GetPlayer().m_actorid then
+			return
+		end
+	end
 	WorldMap.QueueAdd( 1, recvValue );
 end
 
@@ -350,6 +355,11 @@ end
 -- m_info={m_type=0,m_state=0,m_posx=0,m_unit_index=0,m_posy=0,m_namelen=0,m_name="[m_namelen]",m_char_value_count=0,m_char_value={}[m_char_value_count],m_short_value_count=0,m_short_value={}[m_short_value_count],m_int_value_count=0,m_int_value={}[m_int_value_count],m_prefixlen=0,m_prefix="[m_prefixlen]",},
 function proc_updatemapunit_C( recvValue )
 	-- process.
+	if recvValue.m_info.m_type == MAPUNIT_TYPE_EVENT then
+		if recvValue.m_info.m_int_value[1] ~= GetPlayer().m_actorid then
+			return
+		end
+	end
 	WorldMap.QueueAdd( 3, recvValue.m_info );
 end
 

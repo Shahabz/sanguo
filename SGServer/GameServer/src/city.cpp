@@ -7,6 +7,7 @@
 #include <limits.h>
 #include "db.h"
 #include "global.h"
+#include "wqueue.h"
 #include "actor.h"
 #include "city.h"
 #include "city_attr.h"
@@ -23,6 +24,7 @@
 #include "actor_notify.h"
 #include "army.h"
 #include "map_res.h"
+#include "map_event.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -95,6 +97,10 @@ int city_reset()
 		{
 			g_city[tmpi].help_armyindex[index] = -1;
 		}
+		for ( int index = 0; index < CITY_MAPEVENT_MAX; index++ )
+		{
+			g_city[tmpi].mapevent_index[index] = -1;
+		}
 	}
 	return 0;
 }
@@ -150,6 +156,7 @@ int city_loadcb( int city_index )
 
 	// 占地块信息添加到世界地图
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, g_city[city_index].posx, g_city[city_index].posy );
+	g_city[city_index].zone = map_zone_getid( g_city[city_index].posx, g_city[city_index].posx );
 	return 0;
 }
 
@@ -320,6 +327,10 @@ int city_new( City *pCity )
 			for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
 			{
 				g_city[city_index].help_armyindex[index] = -1;
+			}
+			for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
+			{
+				g_city[city_index].mapevent_index[tmpi] = -1;
 			}
 			break;
 		}
@@ -573,6 +584,18 @@ void city_logic_sec()
 					if ( g_city[city_index].actor_index >= 0 )
 						city_officialhire_sendinfo( &g_city[city_index], i );
 				}
+			}
+		}
+
+		map_event_citylogic( city_index );
+		// 事件倒计时
+		if ( g_city[city_index].eventsec >= 0 )
+		{
+			g_city[city_index].eventsec -= 1;
+			if ( g_city[city_index].eventsec <= 0 )
+			{
+				g_city[city_index].eventsec = global.mapevent_sec;
+				exec_queue_add( EXEC_QUEUE_TYPE_MAPEVENT_CREATE, city_index, g_city[city_index].zone );
 			}
 		}
 	}
@@ -2733,6 +2756,8 @@ int city_move( City *pCity, short posx, short posy )
 		pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
 	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
+	pCity->zone = map_zone_getid( pCity->posx, pCity->posy );
+
 	mapunit_area_change( pCity->unit_index, pCity->posx, pCity->posy, 1 );
 	city_attr_reset( pCity );
 	

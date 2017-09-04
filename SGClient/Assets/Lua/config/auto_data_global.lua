@@ -80,3 +80,4 @@ global.hero_gather_duration3 = 14400 --武将采集时长
 global.hero_gather_duration4 = 18000 --武将采集时长
 global.hero_gather_duration5 = 21600 --武将采集时长
 global.army_move_kingzone = 300 --皇城区域向非皇城行军
+global.mapevent_sec = 300 --地图事件倒计时
