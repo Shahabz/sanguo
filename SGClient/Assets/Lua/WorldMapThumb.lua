@@ -31,8 +31,9 @@ end
 function WorldMapThumb.Create( zoneid )
 	WorldMapThumb.m_nZoneID = zoneid
 	WorldMapThumbObject = GameObject.Instantiate( LoadPrefab("WorldMapThumb") );
-	--fruit.scenceManager.worldMapScence.gameObject:SetActive( false );
-
+	if GameManager.WorldMap ~= nil then
+		GameManager.WorldMap.gameObject:SetActive( false );
+	end
     --MainDlgClose();
     --fruit.audioManager:Play(71);
 	-- 注释掉，防止去缩略图后返回大地图部队显示不正确
@@ -48,9 +49,11 @@ function WorldMapThumb.Delete()
 	ThumbMaskPrefab		= nil;	
 	ThumbDisplayPrefab	= nil;
 	ThumbCamera			= nil;
-	--fruit.scenceManager.worldMapScence.gameObject:SetActive( true );
 	ThumbInfoCache = nil;
 	WorldMapThumb.clickEffectObj = nil;
+	if GameManager.WorldMap ~= nil then
+		GameManager.WorldMap.gameObject:SetActive( true );
+	end
     --fruit.audioManager:Play(72);
     --MainDlgPlayBGM(true);
     --MainDlgOpen();
@@ -93,7 +96,7 @@ function WorldMapThumb.ConvertThumbToZone( thumbX, thumbY )
 	
 	gameCoorX = math.floor(gameCoorX/5) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx;
 	gameCoorY = math.floor(gameCoorY/5) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy;
-	print( gameCoorX ..","..gameCoorY )
+	--print( gameCoorX ..","..gameCoorY )
 	return gameCoorX, gameCoorY;
 end
 

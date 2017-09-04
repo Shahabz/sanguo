@@ -26,6 +26,8 @@
 #define AWARDKIND_FRIENDSHIP	50016 // 友谊积分
 #define AWARDKIND_TRAIN_QUICK	50017 // 募兵加速
 #define AWARDKIND_BUILD_QUICK	50018 // 建造加速
+#define AWARDKIND_HERO_WASH		50019 // 免费洗髓次数
+#define AWARDKIND_EQUIP_WASH	50020 // 免费洗练次数
 
 // 离线情况下的给予属性
 #define AWARDKIND_OTHERBASE	100000

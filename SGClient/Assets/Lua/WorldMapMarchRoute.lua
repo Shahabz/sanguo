@@ -1,8 +1,8 @@
 -- 世界地图行军路线
 
 -- 行军路线资源图片信息
-local MarchRouteSpriteWidth = 0.28/2;
-local MarchRouteSpriteHeight = 0.66/2;
+local MarchRouteSpriteWidth = 0.18;
+local MarchRouteSpriteHeight = 0.14;
 
 -- 路线集合
 MapMarchRoute = {};

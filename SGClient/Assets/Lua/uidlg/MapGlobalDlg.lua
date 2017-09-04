@@ -4,6 +4,9 @@ local m_Dlg = nil;
 -- 打开界面
 function MapGlobalDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MapGlobalDlg" );
+	if GameManager.WorldMap ~= nil then
+		GameManager.WorldMap.gameObject:SetActive( false );
+	end
 end
 
 -- 隐藏界面
@@ -11,7 +14,9 @@ function MapGlobalDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	if GameManager.WorldMap ~= nil then
+		GameManager.WorldMap.gameObject:SetActive( true );
+	end
 	eye.uiManager:Close( "MapGlobalDlg" );
 end
 
@@ -80,7 +85,7 @@ function MapGlobalDlgSelect( zoneid )
 	if g_zoneinfo[zoneid] == nil then
 		return
 	end
-	 MapZoneDlgShow( zoneid )
-	--WorldMap.GotoCoor( g_zoneinfo[zoneid].center_posx, g_zoneinfo[zoneid].center_posy )
 	MapGlobalDlgClose();
+	MapZoneDlgShow( zoneid )
+	--WorldMap.GotoCoor( g_zoneinfo[zoneid].center_posx, g_zoneinfo[zoneid].center_posy )
 end

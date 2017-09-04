@@ -64,6 +64,14 @@ function Area.GetIndex( posx, posy )
 	end
 	areax = math.modf( (posx+1)/WorldMap.m_nAreaWidth );
 	areay = math.modf( (posy+1)/WorldMap.m_nAreaHeight );
+	
+	if areax >= WorldMap.m_nAreaXNum then
+		areax = WorldMap.m_nAreaXNum - 1;
+	end
+	if areay >= WorldMap.m_nAreaYNum then
+		areay = WorldMap.m_nAreaYNum - 1;
+	end
+		
 	return math.modf( areay*(WorldMap.m_nAreaXNum) + areax );
 end
 
