@@ -282,6 +282,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			city_function_open( pCity, pValue[0] );
 		}
 		break;
+	case GMC_EVENT: // µØÍ¼ÊÂ¼ş
+		if ( pCity )
+		{
+			pCity->eventsec = 1;
+		}
+		break;
 	default:
 		break;
 	}

@@ -44,6 +44,7 @@ SRC = \
 ../AutoS/src/auto_data_trainqueue.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_data_vip.cpp \
+../AutoS/src/auto_data_weather.cpp \
 ../AutoS/src/auto_map_enemy.cpp \
 ../AutoS/src/auto_map_event.cpp \
 ../AutoS/src/auto_map_res.cpp \
@@ -213,6 +214,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_upgrade.o: ../AutoS/src/auto_data_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_vip.o: ../AutoS/src/auto_data_vip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_weather.o: ../AutoS/src/auto_data_weather.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_enemy.o: ../AutoS/src/auto_map_enemy.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

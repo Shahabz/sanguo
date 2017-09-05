@@ -31,6 +31,7 @@
 #define GMC_PEOPLE				(GMC_BASE+26)	// 人口
 #define GMC_MAT					(GMC_BASE+27)	// 材料生产
 #define GMC_FUN					(GMC_BASE+28)	// 获取功能
+#define GMC_EVENT				(GMC_BASE+29)	// 地图事件刷新
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

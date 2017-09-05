@@ -29,6 +29,7 @@ local GMCMD_SERVER = {
 [26]="people",
 [27]="mat",
 [28]="fun",
+[29]="event",
 }
  
 -- 发到客户端本地指令

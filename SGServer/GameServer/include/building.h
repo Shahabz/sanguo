@@ -82,6 +82,12 @@ int building_workerquick( int actor_index, int kind, int offset, int sec );
 // 免费加速
 int building_workerfree( int actor_index, int kind, int offset );
 
+// 奖励的加速
+int building_awardquick( int city_index, int sec );
+
+// 奖励的加速领取
+int building_awardquick_get( int actor_index, int kind, int offset );
+
 // 购买商用建造队列
 int building_workerbuy( int actor_index, int type );
 

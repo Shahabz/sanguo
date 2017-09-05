@@ -463,6 +463,7 @@ int building_upgrade( int city_index, int kind, int offset )
 		g_city[city_index].worker_offset = offset;
 		g_city[city_index].worker_free = 1;
 		g_city[city_index].wnsec = g_city[city_index].worker_sec;
+		g_city[city_index].wnquick = 0;
 		ok = 1;
 	}
 	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
@@ -473,6 +474,7 @@ int building_upgrade( int city_index, int kind, int offset )
 		g_city[city_index].worker_offset_ex = offset;
 		g_city[city_index].worker_free_ex = 1;
 		g_city[city_index].wnsec_ex = g_city[city_index].worker_sec_ex;
+		g_city[city_index].wnquick_ex = 0;
 		ok = 1;
 	}
 	else
@@ -534,6 +536,7 @@ int building_delete( int city_index, int kind, int offset )
 		g_city[city_index].worker_kind = kind;
 		g_city[city_index].worker_offset = offset;
 		g_city[city_index].wnsec = global.building_delete_cd;
+		g_city[city_index].wnquick = 0;
 		ok = 1;
 	}
 	else if ( g_city[city_index].worker_expire_ex > 0 && g_city[city_index].worker_sec_ex <= 0 )
@@ -542,7 +545,8 @@ int building_delete( int city_index, int kind, int offset )
 		g_city[city_index].worker_sec_ex = global.building_delete_cd;
 		g_city[city_index].worker_kind_ex = kind;
 		g_city[city_index].worker_offset_ex = offset;
-		g_city[city_index].wnsec_ex = global.building_delete_cd;
+		g_city[city_index].wnsec_ex = global.building_delete_cd; 
+		g_city[city_index].wnquick_ex = 0;
 		ok = 1;
 	}
 	else
@@ -656,6 +660,7 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 			pCity->worker_op = 0;
 			pCity->worker_sec = 0;
 			pCity->wnsec = 0;
+			pCity->wnquick = 0;
 			pCity->worker_kind = 0;
 			pCity->worker_offset = -1;
 			building_sendworker( pCity->actor_index );
@@ -676,6 +681,7 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 			pCity->worker_op_ex = 0;
 			pCity->worker_sec_ex = 0;
 			pCity->wnsec_ex = 0;
+			pCity->wnquick_ex = 0;
 			pCity->worker_kind_ex = 0;
 			pCity->worker_offset_ex = -1;
 			building_sendworker( pCity->actor_index );
@@ -720,6 +726,7 @@ int building_workerfree( int actor_index, int kind, int offset )
 				pCity->worker_op = 0;
 				pCity->worker_sec = 0;
 				pCity->wnsec = 0;
+				pCity->wnquick = 0;
 				pCity->worker_kind = 0;
 				pCity->worker_offset = -1;
 				building_sendworker( pCity->actor_index );
@@ -745,6 +752,7 @@ int building_workerfree( int actor_index, int kind, int offset )
 				pCity->worker_op_ex = 0;
 				pCity->worker_sec_ex = 0;
 				pCity->wnsec_ex = 0;
+				pCity->wnquick_ex = 0;
 				pCity->worker_kind_ex = 0;
 				pCity->worker_offset_ex = -1;
 				building_sendworker( pCity->actor_index );
@@ -755,6 +763,67 @@ int building_workerfree( int actor_index, int kind, int offset )
 				building_sendworker( pCity->actor_index );
 			}
 		}
+	}
+	return 0;
+}
+
+// 奖励的加速
+int building_awardquick( int city_index, int sec )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].worker_sec > 0 && g_city[city_index].worker_sec_ex > 0 )
+	{
+		if ( g_city[city_index].wnquick > 0 && g_city[city_index].wnquick_ex <= 0 )
+		{
+			g_city[city_index].wnquick_ex = sec;
+		}
+		else if ( g_city[city_index].wnquick_ex > 0 && g_city[city_index].wnquick <= 0 )
+		{
+			g_city[city_index].wnquick = sec;
+		}
+		else
+		{
+			if ( rand() % 2 == 0 )
+			{
+				g_city[city_index].wnquick = sec;
+			}
+			else
+			{
+				g_city[city_index].wnquick_ex = sec;
+			}
+		}
+		building_sendworker( g_city[city_index].actor_index );
+	}
+	else if( g_city[city_index].worker_sec > 0 )
+	{
+		g_city[city_index].wnquick = sec;
+		building_sendworker( g_city[city_index].actor_index );
+	}
+	else if ( g_city[city_index].worker_sec_ex > 0 )
+	{
+		g_city[city_index].wnquick_ex = sec;
+		building_sendworker( g_city[city_index].actor_index );
+	}
+	return 0;
+}
+
+// 奖励的加速
+int building_awardquick_get( int actor_index, int kind, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int quicksec = 0;
+	if ( pCity->worker_kind == kind && pCity->worker_offset == offset && pCity->wnquick > 0 )
+	{
+		building_workerquick( actor_index, kind, offset, pCity->wnquick );
+		pCity->wnquick = 0;
+	}
+	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset && pCity->wnquick_ex > 0 )
+	{
+		building_workerquick( actor_index, kind, offset, pCity->wnquick_ex );
+		pCity->wnquick_ex = 0;
 	}
 	return 0;
 }
@@ -947,6 +1016,8 @@ int building_sendlist( int actor_index )
 	pValue.m_worker_needsec_ex = pCity->wnsec_ex;
 	pValue.m_worker_free_ex = pCity->worker_free_ex;
 	pValue.m_worker_expire_ex = pCity->worker_expire_ex;
+	pValue.m_wnquick = pCity->wnquick;
+	pValue.m_wnquick_ex = pCity->wnquick_ex;
 	pValue.m_levynum = pCity->levynum;
 	pValue.m_function= pCity->function;
 	pValue.m_forgingkind = pCity->forgingkind;
@@ -977,6 +1048,8 @@ int building_sendworker( int actor_index )
 	pValue.m_worker_needsec_ex = pCity->wnsec_ex;
 	pValue.m_worker_free_ex = pCity->worker_free_ex;
 	pValue.m_worker_expire_ex = pCity->worker_expire_ex;
+	pValue.m_wnquick = pCity->wnquick;
+	pValue.m_wnquick_ex = pCity->wnquick_ex;
 	netsend_worker_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

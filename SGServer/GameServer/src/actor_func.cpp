@@ -41,6 +41,8 @@ extern BodyTokenInfo *g_bodytoken;
 extern int g_bodytoken_maxnum;
 extern int g_nation_actornum[3];
 
+extern char g_game_day;
+extern char g_game_weather;
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
 // 函数说明: 根据索引获取用户id
@@ -457,6 +459,8 @@ int actor_getinfo( int actor_index )
 	info.m_level = g_actors[actor_index].level;
 	info.m_token = g_actors[actor_index].token;
 	info.m_actor_sflag = g_actors[actor_index].sflag;
+	info.m_game_day = g_game_day;
+	info.m_game_weather = g_game_weather;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{

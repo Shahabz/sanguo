@@ -62,6 +62,8 @@ function Player:Init()
 	self.m_worker_needsec_ex=	0;
 	self.m_worker_free_ex   =	0;
 	self.m_worker_expire_ex	=	0;
+	self.m_wnquick			=	0;
+	self.m_wnquick_ex		=	0;
 	self.m_buildings 		=	{};
 	self.m_buildings_res 	=	{};
 	self.m_attr 			= 	{}
@@ -124,6 +126,11 @@ function Player:SetBuilding( kind, info, active )
 	if info.m_overvalue > 0 then
 		City.BuildingSetOver( kind );
 	end
+	
+	-- 加速标记
+	if info.m_quick > 0 then
+		City.BuildingSetQuick( kind );
+	end
 	return unitObj;
 end
 
@@ -149,6 +156,8 @@ function Player:SetBuildingWorker( recvValue )
 	self.m_worker_needsec_ex=	recvValue.m_worker_needsec_ex;
 	self.m_worker_free_ex   =	recvValue.m_worker_free_ex;
 	self.m_worker_expire_ex	=	recvValue.m_worker_expire_ex;
+	self.m_wnquick			=	recvValue.m_wnquick;
+	self.m_wnquick_ex		=	recvValue.m_wnquick_ex;
 	-- 
 	City.BuildingWorker();
 	MainDlgSetWorker();

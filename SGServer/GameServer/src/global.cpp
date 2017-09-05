@@ -307,7 +307,7 @@ int world_data_get( int index, char *strvalue )
 	MYSQL_RES		*res;
 	MYSQL_ROW		row;
 	char	szSQL[128];
-	int nValue = -1;
+	int nValue = 0;
 
 	sprintf( szSQL, "select value,strvalue from world_data where id='%d'", index );
 	if ( mysql_query( myGame, szSQL ) )

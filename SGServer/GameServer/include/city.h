@@ -128,6 +128,13 @@ int city_changefriendship( int city_index, int value, short path );
 int city_changeprotect( int city_index, int value, short path );
 // 兵力
 int city_changesoldiers( int city_index, short corps, int value, short path );
+// 自动建造次数
+int city_change_autobuild( int city_index, int value, short path );
+// 洗髓次数
+int city_change_herowash( int city_index, int value, short path );
+// 洗练次数
+int city_change_equipwash( int city_index, int value, short path );
+
 // 城墙守卫
 CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );
@@ -152,6 +159,8 @@ int city_train_get( int actor_index, int kind );
 int city_train_buyqueue( int actor_index, int kind );
 int city_train_buylong( int actor_index, int kind );
 int city_train_sendinfo( int actor_index, int kind );
+int city_train_awardquick( int city_index, int sec );
+int city_train_awardquick_get( int actor_index, int kind );
 
 // 材料生产
 int city_material_sendinfo( int actor_index, char sendchange );

@@ -122,6 +122,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetArcher()
 	MainDlgSetToken()
 	MainDlgSetVipLevel()
+	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather );
 end
 
 -- m_count=0,m_building={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_barracks={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_res={m_kind=0,m_level=0,m_offset=0,[m_count]},m_levynum=0,m_worker_kind=0,m_worker_offset=0,m_worker_sec=0,m_worker_kind_ex=0,m_worker_offset_ex=0,m_worker_sec_ex=0,m_worker_expire_ex=0,
@@ -1074,5 +1075,10 @@ end
 function proc_mapresinfo_C( recvValue )
 	-- process.
 	MapResDlgRecv( recvValue )
+end
+
+-- m_game_day=0,m_game_weather=0,
+function proc_weatherchange_C( recvValue )
+	-- process.
 end
 

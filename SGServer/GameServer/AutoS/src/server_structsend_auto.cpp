@@ -231,6 +231,8 @@ int struct_NetS_BuildingList_send( char **pptr, int *psize, SLK_NetS_BuildingLis
 	LKSET_WORD_SEND( (*pptr), &pValue->m_forgingkind, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec_need, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wnquick, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wnquick_ex, (*psize) );
 	return 0;
 }
 
@@ -276,6 +278,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_actor_sflag, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_bodysec, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
 	return 0;
 }
 
@@ -865,6 +869,8 @@ int struct_NetS_Worker_send( char **pptr, int *psize, SLK_NetS_Worker *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_needsec_ex, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_worker_free_ex, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_worker_expire_ex, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wnquick, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wnquick_ex, (*psize) );
 	return 0;
 }
 
@@ -1442,6 +1448,15 @@ int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *p
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_herohp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_herocolor, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_actorlevel, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
 	return 0;
 }
 

@@ -116,7 +116,7 @@ char map_zone_inrange( int zoneid, short posx, short posy )
 	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 		return 0;
 	if ( posx >= g_zoneinfo[zoneid].top_left_posx && posx <= g_zoneinfo[zoneid].bottom_right_posx &&
-		 posy >= g_zoneinfo[zoneid].top_left_posy && posx <= g_zoneinfo[zoneid].bottom_right_posy )
+		 posy >= g_zoneinfo[zoneid].top_left_posy && posy <= g_zoneinfo[zoneid].bottom_right_posy )
 	{
 		return 1;
 	}

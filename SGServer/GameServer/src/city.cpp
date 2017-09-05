@@ -381,6 +381,7 @@ void city_logic_sec()
 				g_city[city_index].worker_kind = 0;
 				g_city[city_index].worker_offset = -1;
 				g_city[city_index].wnsec = 0;
+				g_city[city_index].wnquick = 0;
 				building_sendworker( g_city[city_index].actor_index );
 			}
 		}
@@ -397,6 +398,7 @@ void city_logic_sec()
 				g_city[city_index].worker_kind_ex = 0;
 				g_city[city_index].worker_offset_ex = -1;
 				g_city[city_index].wnsec_ex = 0;
+				g_city[city_index].wnquick_ex = 0;
 				building_sendworker( g_city[city_index].actor_index );
 			}
 		}
@@ -1131,6 +1133,49 @@ int city_changesoldiers( int city_index, short corps, int value, short path )
 	return 0;
 }
 
+// 自动建造次数
+int city_change_autobuild( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].autobuild > CHAR_MAX - value )
+		g_city[city_index].autobuild = CHAR_MAX;
+	else
+		g_city[city_index].autobuild += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
+// 洗髓次数
+int city_change_herowash( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].hero_washnum > global.hero_wash_max - value )
+	{
+		g_city[city_index].hero_washnum = global.hero_wash_max;
+		g_city[city_index].hero_washsec = global.hero_wash_sec;
+	}
+	else
+		g_city[city_index].hero_washnum += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
+// 洗练次数
+int city_change_equipwash( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].equip_washnum > global.equip_wash_max - value )
+	{
+		g_city[city_index].equip_washnum = global.equip_wash_max;
+		g_city[city_index].equip_washsec = global.equip_wash_sec;
+	}
+	else
+		g_city[city_index].equip_washnum += value;
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
+
 CityGuardInfoConfig *city_guard_config( int monsterid, int color )
 {
 	if ( monsterid <= 0 || monsterid >= g_cityguardinfo_maxnum )
@@ -1840,6 +1885,61 @@ int city_train_sendinfo( int actor_index, int kind )
 		}
 	}
 	netsend_traininfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 给予招募士兵建筑一个加速
+int city_train_awardquick( int city_index, int sec )
+{
+	CITY_CHECK_INDEX( city_index );
+	for ( int kind = BUILDING_Infantry; kind <= BUILDING_Militiaman_Archer; kind++ )
+	{
+		BuildingBarracks *barracks = buildingbarracks_getptr_kind( city_index, kind );
+		if ( !barracks )
+			continue;
+		if ( barracks->level <= 0 )
+			continue;
+		if ( barracks->trainsec <= 0 )
+			continue;
+		if ( barracks->quicksec > 0 )
+			continue;
+		barracks->quicksec += sec;
+		building_sendinfo_barracks( g_city[city_index].actor_index, kind );
+		break;
+	}
+	return 0;
+}
+
+// 奖励的加速领取
+int city_train_awardquick_get( int actor_index, int kind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( kind >= BUILDING_Infantry && kind <= BUILDING_Militiaman_Archer )
+	{ // 募兵加速
+		BuildingBarracks *barracks = buildingbarracks_getptr_kind( pCity->index, kind );
+		if ( !barracks )
+			return -1;
+		if ( barracks->level <= 0 )
+			return -1;
+		if ( barracks->trainsec <= 0 )
+			return -1;
+		if ( barracks->quicksec <= 0 )
+			return -1;
+		barracks->trainsec -= barracks->quicksec;
+		barracks->quicksec = 0;
+		if ( barracks->trainsec <= 0 )
+		{
+			city_train_finish( pCity, barracks );
+		}
+		else
+		{
+			building_sendinfo_barracks( actor_index, kind );
+			city_train_sendinfo( actor_index, kind );
+		}
+	}
 	return 0;
 }
 

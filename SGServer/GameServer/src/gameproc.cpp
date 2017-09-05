@@ -565,6 +565,9 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 48 );
 
+	// 天气
+	weather_load();
+
 	// 装备最大ID初始化
 	if ( equip_maxid_init() < 0 )
 	{
@@ -968,6 +971,7 @@ int process_logic()
 		sc_Script_Timer();
 		process_exitlogic();
 		process_oclock_check();
+		weather_logic();
 		time_gmcmd_logic();
 		activity_logic();
 	}

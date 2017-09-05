@@ -7,7 +7,11 @@ GameManager.userini = nil;
 GameManager.MainCity = nil;
 GameManager.WorldMap = nil;
 GameManager.currentScence = "city"
-	
+
+-- 全局天气
+g_game_day = 0;
+g_game_weather = 0;
+		
 -- 游戏脚本主逻辑入口
 function GameManager.OnStart()
 	gamelog("GameManager.OnStart();begin");

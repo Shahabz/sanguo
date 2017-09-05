@@ -84,6 +84,8 @@ void global_reload();
 // 单独属于这个服务器的全局数据
 #define WORLD_DATA_BRUSH_ENEMY_TIMER	1		// 刷新流寇计时
 #define WORLD_DATA_BRUSH_RES_TIMER		2		// 刷新资源点计时
+#define WORLD_DATA_GAME_DAY				3		// 游戏虚拟日期
+#define WORLD_DATA_GAME_WEATHER			4		// 游戏虚拟天气
 #define WORLD_DATA_SAVEFLAG				99		// 存档的标记时间
 #define WORLD_DATA_SAVEFILE_FLAG		100		// 崩溃执行完毕的标记时间
 #define WORLD_DATA_MAX					128		

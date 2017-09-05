@@ -485,6 +485,11 @@ function netrecv_mapresinfo_C( buffer )
 	proc_mapresinfo_C( recvValue );
 end
 
+function netrecv_weatherchange_C( buffer )
+	local recvValue = struct_NetS_WeatherChange_recv( buffer );
+	proc_weatherchange_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -583,6 +588,7 @@ Proc_Command = {
 	[CMDS_BATTLELIST]=netrecv_battlelist_C;
 	[CMDS_BATTLEINFO]=netrecv_battleinfo_C;
 	[CMDS_MAPRESINFO]=netrecv_mapresinfo_C;
+	[CMDS_WEATHERCHANGE]=netrecv_weatherchange_C;
 }
 
 function in_proc_command_C( cmd, buffer )

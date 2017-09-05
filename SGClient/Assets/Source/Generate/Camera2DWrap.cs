@@ -27,6 +27,7 @@ public class Camera2DWrap
 		L.RegVar("moveDecay", get_moveDecay, set_moveDecay);
 		L.RegVar("horizontalLock", get_horizontalLock, set_horizontalLock);
 		L.RegVar("verticalLock", get_verticalLock, set_verticalLock);
+		L.RegVar("taglock", get_taglock, set_taglock);
 		L.RegVar("zoomLock", get_zoomLock, set_zoomLock);
 		L.RegVar("zoomInLimit", get_zoomInLimit, set_zoomInLimit);
 		L.RegVar("zoomOutLimit", get_zoomOutLimit, set_zoomOutLimit);
@@ -383,6 +384,25 @@ public class Camera2DWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_taglock(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Camera2D obj = (Camera2D)o;
+			bool ret = obj.taglock;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index taglock on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_zoomLock(IntPtr L)
 	{
 		object o = null;
@@ -721,6 +741,25 @@ public class Camera2DWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index verticalLock on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_taglock(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Camera2D obj = (Camera2D)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.taglock = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index taglock on a nil value" : e.Message);
 		}
 	}
 

@@ -8,6 +8,8 @@ City.m_BuildingTimerMod = nil;
 City.m_BuildingFreeMod = nil;
 City.m_BuildingOverMod = nil;
 City.m_BuildingQuestMod = nil;
+City.m_BuildingQuickMod = nil;
+City.m_BuildingWorkerQuickMod = nil;
 City.m_Buildings = {};
 City.m_Buildings_res = {};
 
@@ -20,6 +22,8 @@ function City.Init()
 	City.m_BuildingFreeMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingFreeMod" );
 	City.m_BuildingOverMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingOverMod" );
 	City.m_BuildingQuestMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingQuestMod" );
+	City.m_BuildingQuickMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingQuickMod" );
+	City.m_BuildingWorkerQuickMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingWorkerQuickMod" );
 end
 
 -- 所有建筑父节点
@@ -215,6 +219,7 @@ function City.BuildingAdd( info, active )
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 	City.BuildingHideFree( kind, offset )
+	City.BuildingHideWorkerQuick( kind, offset )
 	return unitObj;
 end
 
@@ -356,6 +361,8 @@ function City.BuildingWorker()
 		
 		if GetPlayer().m_worker_free > 0 then
 			City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
+		elseif GetPlayer().m_wnquick > 0 then
+			City.BuildingSetWorkerQuick( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
 		end	
 	end
 	
@@ -368,6 +375,8 @@ function City.BuildingWorker()
 		
 		if GetPlayer().m_worker_free_ex > 0 then
 			City.BuildingSetFree( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
+		elseif GetPlayer().m_wnquick_ex > 0 then
+			City.BuildingSetWorkerQuick( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
 		end
 	end
 end
@@ -440,6 +449,79 @@ function City.BuildingHideOver( kind )
 		return
 	end
 	overObj.gameObject:SetActive(false);
+end
+
+
+-- 升级加速头
+function City.BuildingSetWorkerQuick( kind, offset )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		unitObj = City.m_Buildings_res[kind][offset];
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	local freeObj = unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod;
+	if freeObj == nil then
+		freeObj = GameObject.Instantiate( City.m_BuildingWorkerQuickMod );
+		freeObj.transform:SetParent( City.m_BuildingUI );
+		freeObj.transform.position = unitObj.transform.position;
+		freeObj.transform.localPosition = Vector3.New( freeObj.transform.localPosition.x, freeObj.transform.localPosition.y+80, 0 );
+		freeObj.transform.localScale = Vector3.one;
+		unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod = freeObj;
+	end
+	local ShareData = freeObj.transform:GetComponent("ShareData");
+	ShareData.intValue[0] = kind;
+	ShareData.intValue[1] = offset;
+	freeObj.gameObject:SetActive(true);
+end
+
+function City.BuildingHideWorkerQuick( kind, offset )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		unitObj = City.m_Buildings_res[kind][offset];
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	local freeObj = unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod;
+	if freeObj == nil then
+		return
+	end
+	freeObj.gameObject:SetActive(false);
+end
+
+-- 加速头
+function City.BuildingSetQuick( kind )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return
+	end
+	unitObj = City.m_Buildings[kind];
+	local quickObj = unitObj:GetComponent("CityBuilding").BuildingQuickMod;
+	if quickObj == nil then
+		quickObj = GameObject.Instantiate( City.m_BuildingQuickMod );
+		quickObj.transform:SetParent( City.m_BuildingUI );
+		quickObj.transform.position = unitObj.transform.position;
+		quickObj.transform.localPosition = Vector3.New( quickObj.transform.localPosition.x, quickObj.transform.localPosition.y+80, 0 );
+		quickObj.transform.localScale = Vector3.one;
+		unitObj:GetComponent("CityBuilding").BuildingQuickMod = quickObj;
+	end
+	local ShareData = quickObj.transform:GetComponent("ShareData");
+	ShareData.intValue[0] = kind;
+	quickObj.gameObject:SetActive(true);
+end
+
+-- 加速头隐藏
+function City.BuildingHideQuick( kind )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		return
+	end
+	unitObj = City.m_Buildings[kind];
+	local quickObj = unitObj:GetComponent("CityBuilding").BuildingQuickMod;
+	if quickObj == nil then
+		return
+	end
+	quickObj.gameObject:SetActive(false);
 end
 
 -- 征收次数

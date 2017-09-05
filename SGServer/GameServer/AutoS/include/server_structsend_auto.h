@@ -132,6 +132,8 @@ struct _slk_NetS_BuildingList {
 	short m_forgingkind;	//服务器发送-铁匠铺
 	int m_forgingsec;	//服务器发送-铁匠铺
 	int m_forgingsec_need;	//服务器发送-铁匠铺
+	int m_wnquick;	//服务器发送-奖励的额外加速
+	int m_wnquick_ex;	//服务器发送-奖励的额外加速(商用)
 };
 typedef struct _slk_NetS_BuildingList SLK_NetS_BuildingList;	//建筑列表
 
@@ -171,6 +173,8 @@ struct _slk_NetS_ActorInfo {
 	int m_forgingsec;	//服务器发送玩家基本信息-打造
 	int m_actor_sflag;	//服务器发送玩家基本信息-玩家结构标志
 	short m_bodysec;	//服务器发送玩家基本信息-体力恢复时间
+	short m_game_day;	//服务器发送玩家基本信息-游戏虚拟日期
+	short m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -592,6 +596,8 @@ struct _slk_NetS_Worker {
 	int m_worker_needsec_ex;	//服务器发送-建筑队列需要时间(商用)
 	char m_worker_free_ex;	//服务器发送-建筑队列免费时间(商用)
 	int m_worker_expire_ex;	//服务器发送-商用建造队列到期时间
+	int m_wnquick;	//服务器发送-奖励的额外加速
+	int m_wnquick_ex;	//服务器发送-奖励的额外加速(商用)
 };
 typedef struct _slk_NetS_Worker SLK_NetS_Worker;	//建筑队列信息
 
@@ -990,6 +996,12 @@ struct _slk_NetS_MapResInfo {
 };
 typedef struct _slk_NetS_MapResInfo SLK_NetS_MapResInfo;	//资源点详情
 
+struct _slk_NetS_WeatherChange {
+	short m_game_day;	//天气系统
+	short m_game_weather;	//天气系统
+};
+typedef struct _slk_NetS_WeatherChange SLK_NetS_WeatherChange;	//天气改变
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1099,5 +1111,6 @@ int struct_NetS_MapZoneUnitList_send( char **pptr, int *psize, SLK_NetS_MapZoneU
 int struct_NetS_BattleInfo_send( char **pptr, int *psize, SLK_NetS_BattleInfo *pValue );
 int struct_NetS_BattleList_send( char **pptr, int *psize, SLK_NetS_BattleList *pValue );
 int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *pValue );
+int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherChange *pValue );
 
 #endif

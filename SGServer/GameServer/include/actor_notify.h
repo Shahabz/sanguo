@@ -24,7 +24,7 @@ int actor_notify( int actor_index, short msgid, const char *msg );
 int actor_notify_value( int actor_index, short msgid, char count, const int *data, const char *msg );
 
 // 发消息提示，通过消息ID
-int actor_system_message( int actor_index, int msgid );
+int actor_system_message( int actor_index, int msgid, int value1=0, int value2=0, int value3=0, int value4=0 );
 
 // npc对话
 int npc_talk( int actor_index, int textid );

@@ -175,7 +175,7 @@ int brush_enemy_queue_add( char zoneid )
 {
 	// »ñÈ¡Î²²¿
 	int queue_tail = g_nBrushEnemyQueueTail + 1;
-	if ( queue_tail >= EXEC_QUEUE_MAXNUM )
+	if ( queue_tail >= BRUSH_ENEMY_QUEUE_MAXNUM )
 	{
 		queue_tail = 0;
 	}

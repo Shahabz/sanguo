@@ -19,6 +19,12 @@ void ruffle( int *list, int count );
 void random_str( char *out, int length );
 int random_custom( int min, int max, int *randspeed );
 
+// ÌìÆø
+int weather_load();
+void weather_open();
+void weather_logic();
+int weather_change( char day, char weather );
+
 // ÑÓ³ÙÖ´ĞĞ
 #define DELAYEXEC_MAX	2048
 #define DELAYEXEC_CMD_AIHELP	1

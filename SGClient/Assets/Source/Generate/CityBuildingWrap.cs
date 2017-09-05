@@ -14,6 +14,8 @@ public class CityBuildingWrap
 		L.RegVar("BuildingTimerMod", get_BuildingTimerMod, set_BuildingTimerMod);
 		L.RegVar("BuildingFreeMod", get_BuildingFreeMod, set_BuildingFreeMod);
 		L.RegVar("BuildingOverMod", get_BuildingOverMod, set_BuildingOverMod);
+		L.RegVar("BuildingQuickMod", get_BuildingQuickMod, set_BuildingQuickMod);
+		L.RegVar("BuildingWorkerQuickMod", get_BuildingWorkerQuickMod, set_BuildingWorkerQuickMod);
 		L.EndClass();
 	}
 
@@ -131,6 +133,44 @@ public class CityBuildingWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BuildingQuickMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform ret = obj.BuildingQuickMod;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingQuickMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BuildingWorkerQuickMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform ret = obj.BuildingWorkerQuickMod;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingWorkerQuickMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_kind(IntPtr L)
 	{
 		object o = null;
@@ -222,6 +262,44 @@ public class CityBuildingWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingOverMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_BuildingQuickMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.BuildingQuickMod = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingQuickMod on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_BuildingWorkerQuickMod(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			CityBuilding obj = (CityBuilding)o;
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			obj.BuildingWorkerQuickMod = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index BuildingWorkerQuickMod on a nil value" : e.Message);
 		}
 	}
 }

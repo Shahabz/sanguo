@@ -10,6 +10,7 @@
 #include "gameproc.h"
 #include "utils.h"
 #include "db.h"
+#include "global.h"
 #include "gamelog.h"
 #include "server_netsend_auto.h"
 #include "actor_send.h"
@@ -24,6 +25,12 @@ extern SConfig g_Config;
 
 static int s_begin_time = -1;
 static int s_open_time = -1;
+
+char g_game_day = 0;
+char g_game_weather = 0;
+int g_game_weather_fday = 0;
+extern WeatherInfo *g_weather;
+extern int g_weather_maxnum;
 
 // 获取开服流逝的时间 开服时间
 int system_getruntime()
@@ -212,6 +219,51 @@ void random_str( char *out, int length )
 		}
 	}
 	out[length] = '\0';
+}
+
+// 天气
+int weather_load()
+{
+	g_game_day = world_data_get( WORLD_DATA_GAME_DAY, NULL );
+	g_game_weather = world_data_get( WORLD_DATA_GAME_WEATHER, NULL );
+	return 0;
+}
+// 开启天气
+void weather_open()
+{
+	weather_change( 1, rand() % 3 );
+}
+// 每分钟一次
+void weather_logic()
+{
+	if ( g_game_day <= 0 )
+		return;
+	int fday = system_getfday();
+	if ( g_game_weather_fday != fday )
+	{
+		g_game_weather_fday = fday;
+		if ( g_game_day >= g_weather_maxnum )
+			g_game_day = 1;
+
+		weather_change( g_weather[g_game_day].config[0].nextday, rand() % 3 );
+	}
+}
+// 变化天气
+int weather_change( char day, char weather )
+{
+	if ( day <= 0 || day >= g_weather_maxnum )
+		return -1;
+	g_game_day = day;
+	g_game_weather = weather;
+
+	world_data_set( WORLD_DATA_GAME_DAY, g_game_day, NULL, NULL );
+	world_data_set( WORLD_DATA_GAME_WEATHER, g_game_weather, NULL, NULL );
+
+	SLK_NetS_WeatherChange pValue = { 0 };
+	pValue.m_game_day = g_game_day;
+	pValue.m_game_weather = g_game_weather;
+	netsend_weatherchange_S( 0, SENDTYPE_WORLD, &pValue );
+	return 0;
 }
 
 /* 自定义随机 */

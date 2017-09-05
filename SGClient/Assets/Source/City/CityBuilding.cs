@@ -8,6 +8,8 @@ public class CityBuilding : MonoBehaviour {
 	public Transform BuildingTimerMod = null;
 	public Transform BuildingFreeMod = null;
 	public Transform BuildingOverMod = null;
+	public Transform BuildingQuickMod = null;
+	public Transform BuildingWorkerQuickMod = null;
 	// Use this for initialization
 	void Start () {
 		

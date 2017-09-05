@@ -105,6 +105,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 购买商用建造队列
 			building_workerbuy( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 4 )
+		{ // 加速奖励的加速
+			building_awardquick_get( actor_index, pvalue[1], pvalue[2] );
+		}
 		
 		break;
 	case ASKINFO_LEVY:
@@ -142,6 +146,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 购买时长
 			city_train_buylong( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 7 )
+		{ // 奖励加速领取
+			city_train_awardquick_get( actor_index, pvalue[1] );
+		}
+		
 		break;
 	case ASKINFO_EQUIPFORGING:
 		if ( pvalue[0] == 0 )

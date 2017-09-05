@@ -92,6 +92,8 @@ struct _city {
 				int worker_expire_ex;	//商用建造队列到期时间
 				int wnsec;	//建造队列所需时间
 				int wnsec_ex;	//建造队列所需时间
+				int wnquick;	//建造队列奖励的加速
+				int wnquick_ex;	//建造队列奖励的加速
 				short ofkind[3];	//建筑官员种类
 				int ofsec[3];	//建筑官员剩余秒
 				int offree[3];	//建筑官员免费情况

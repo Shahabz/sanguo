@@ -872,6 +872,22 @@ function MainDlgShowMap()
 	SetText( m_uiNationName, NationEx( GetPlayer().m_nation ) );
 end
 
+-- 天气
+function MainDlgSetWeather( game_day, game_weather )
+	g_game_day = game_day;
+	g_game_weather = game_weather;
+	if g_game_day <= 0 then
+		SetText( m_uiWeatherDay, "" )
+		SetFalse( m_uiWeatherIcon )
+		SetText( m_uiWeatherAbility, "" )
+	else
+		SetText( m_uiWeatherDay, T(g_weather[g_game_day][g_game_weather].nameid) )
+		SetTrue( m_uiWeatherIcon )
+		SetImage( m_uiWeatherIcon, LoadSprite( "ui_mapmain_weather_"..(game_weather+1) ) )
+		SetText( m_uiWeatherAbility, T(g_weather[g_game_day][g_game_weather].descid) )
+	end
+end
+
 -- 设置区域名称
 function MainDlgSetZoneName( name )
 	SetText( m_uiZoneName, name )
