@@ -11,6 +11,7 @@
 #include "map.h"
 #include "army.h"
 #include "city.h"
+#include "mail.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -152,5 +153,11 @@ void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
 {
 	// process.
 	army_battle( city_getptr( client_index ), pValue );
+}
+
+void proc_mailask_S( int client_index, SLK_NetC_MailAsk *pValue )
+{
+	// process.
+	mail_getlist( client_index, pValue->m_op, pValue->m_minid, pValue->m_maxid );
 }
 

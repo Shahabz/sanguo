@@ -10,6 +10,8 @@ function Player:Init()
 	self.m_usertype			=	0;	-- 用户类型
 	self.m_createtime		=	0;	-- 创建时间
 	self.m_config		    =   {};  --配置信息
+	self.m_servertime 		= 	0;
+	self.m_clienttime 		= 	0
 	
 	self.m_actorid			=	0;	-- 角色编号
 	self.m_name				=	"";	-- 角色名称
@@ -220,6 +222,19 @@ end
 
 function Player:CityLevel()
 	return self.m_buildings[1].m_level;
+end
+
+-- 服务器发过来的时间戳
+function Player:SetServerTime( servertime )
+	self.m_servertime = servertime;
+	self.m_clienttime = os.time();
+end
+
+-- 服务器时间戳，游戏所有时间均以服务器时间戳为准
+-- 当前时间-客户端收到服务器时间戳的时间为=流逝时间
+-- 流逝时间+服务器时间=当前时间
+function GetServerTime()
+	return GetPlayer().m_servertime + (os.time()-GetPlayer().m_clienttime);
 end
 
 -- 全局

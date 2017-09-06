@@ -1,0 +1,204 @@
+-- 邮件
+TAG_TEXTID = '#$'	  --标记为文字表id
+TAG_ITEMID = '$$'     -- 标记 标记为道具装备ID
+TAG_POS    = '$#';       -- 标记 标记为坐标
+
+local Mail = class("Mail");
+function Mail:ctor()
+    self:Init();
+end
+function Mail:Init()
+	self.m_FileName = ""
+    self.m_Mails = {};
+    self.m_bIsLoad = false;
+    self.m_nRecvCount = 0;
+	self.m_nMinMailID = 0;
+	self.m_nMaxMailID = 0;
+	self.m_nMinMailID = 0;
+	self.m_nMaxMailID = 0;
+	self.m_nServerMaxMailID = 0;
+	self.m_nServerMinMailID = 0;
+	self.m_nLastRecvMinMailID = 0;
+	self.m_bLoadNew = false;
+	self.m_bLoadAll = false;
+end
+
+function Mail:NewIndex()
+    self.m_MailIndex = self.m_MailIndex + 1;
+    return self.m_MailIndex;
+end
+
+-- 读取本地缓存
+function Mail:LoadCache()
+	-- 缓存文件名
+--[[    self.m_FileName = PathUtil.GameCachePath() .. "mail_"..Const.serverid .. '_' .. Const.actorid .. ".cache";
+	-- 读取缓存
+    local _tableUtil = TableUtil.New();
+    local currTime = GetServerTime();
+    if _tableUtil:OpenFromTXT( self.m_FileName ) == true then
+        local fieldsNum = _tableUtil:GetFieldsNum();
+        for records = 0, _tableUtil:GetRecordsNum() -1, 1 do
+            local mailid = tonumber(_tableUtil:GetValue(records, 0));
+            local type = tonumber(_tableUtil:GetValue(records, 1));
+			local title = tostring(_tableUtil:GetValue(records, 2));
+            local content = tostring(_tableUtil:GetValue(records, 3));
+			local attach = tostring(_tableUtil:GetValue(records, 4));
+			local attachget = tostring(_tableUtil:GetValue(records, 5));
+			local recvtime = tonumber(_tableUtil:GetValue(records, 6));
+			local read = tonumber(_tableUtil:GetValue(records, 7));
+			local fightid = tonumber(_tableUtil:GetValue(records, 8));
+			
+            if currTime < recvtime + 7*86400 then
+                content = string.gsub(content, '\\n', '\n');
+                content = string.gsub(content, '\\t', '\t');
+				
+				table.insert( self.m_Mails, {
+                    m_mailid = mailid,
+                    m_type = type,
+                    m_title = title,
+                    m_content = content,
+                    m_attach = attach,
+                    m_attachget = attachget,
+                    m_recvtime = recvtime,
+                    m_read = read,
+                    m_fightid = fightid,
+                } )
+				
+				-- 未读个数
+				if m_read == 0 then
+					self.m_nRecvCount = self.m_nRecvCount + 1;
+				end
+				
+				-- 最大id
+				if mailid > self.m_nMaxMailID then
+					self.m_nMaxMailID = mailid;
+				end
+				
+				-- 最小id
+				if mailid < self.m_nMinMailID or self.m_nMinMailID <= 0 then
+					self.m_nMinMailID = mailid;
+				end
+            end
+			
+        end
+    end
+	
+	-- 排序
+	self:Sort();
+	self.m_bIsLoad = true;--]]
+end
+
+-- 存档本地缓存
+function Mail:SaveCache()
+	--print( PathUtil.GameCachePath() )
+	--[[if not Utils.Exists( PathUtil.GameCachePath() ) then
+        Utils.CreateDirectory( PathUtil.GameCachePath() )
+    end
+	
+	-- 清空文件
+    local fp = io.open( self.m_FileName, "w+" )
+    if fp == nil then
+        return;
+    end
+    fp:close();
+	
+    -- 重新打开文件
+    fp = io.open( self.m_FileName, "a+b" )
+    if fp == nil then
+        return;
+    end
+	
+    fp:write( "mailid" .. "\t" 
+	.. "type" .. "\t" 
+	.. "title" .. "\t" 
+	.. "content" .. "\t" 
+	.. "attach" .. "\t" 
+	.. "attachget" .. "\t" 
+	.. "recvtime" .. "\t" 
+	.. "read" .. "\t"
+	.. "fightid" .. "\r\n")
+	
+	local content = "";
+    local serverTime = GetServerTime();
+    for k, v in pairs(self.m_Mails) do
+        if serverTime < v.m_recvtime + 7*86400 then
+            content = string.gsub(v.m_content, '\n', '\\n');
+            content = string.gsub(content, '\t', '\\t');
+			
+            local text = v.m_mailid .. "\t" 
+			.. v.m_type .. "\t" 
+			.. v.m_title .. "\t" 
+			.. v.m_content .. "\t" 
+			.. v.m_attach .. "\t" 
+			.. v.m_attachget .. "\t" 
+			.. v.m_recvtime .. "\t" 
+			.. v.m_read .. "\t" 
+			.. v.m_fightid .. "\r\n";
+            fp:write(text)
+        end
+    end
+    fp:close();--]]
+end
+
+-- 插入最新数据
+function Mail:Insert( recvValue )
+	table.insert( self.m_Mails, {
+		m_mailid = recvValue.m_mailid,
+		m_type = recvValue.m_type,
+		m_title = recvValue.m_title,
+		m_content = recvValue.m_content,
+		m_attach = recvValue.m_attach,
+		m_attachget = recvValue.m_attachget,
+		m_recvtime = recvValue.m_recvtime,
+		m_read = recvValue.m_read,
+		m_fightid = recvValue.m_fightid,
+	} )
+		
+	-- 最大id
+	if recvValue.m_mailid > self.m_nMaxMailID then
+		self.m_nMaxMailID = recvValue.m_mailid;
+	end
+	
+	-- 最小id
+	if recvValue.m_mailid < self.m_nMinMailID or self.m_nMinMailID <= 0 then
+		self.m_nMinMailID = recvValue.m_mailid;
+	end
+	
+	-- 上次接收的最小id，用这个值去拿未获取到的邮件
+	if recvValue.m_mailid < self.m_nLastRecvMinMailID or self.m_nLastRecvMinMailID == 0 then
+		self.m_nLastRecvMinMailID = recvValue.m_mailid;
+	end
+	
+	-- 排序
+	self:Sort();
+end
+
+-- 排序
+function Mail:Sort()
+	table.sort( self.m_Mails, function( a, b )
+		if a.m_mailid < b.m_mailid then
+			return true;
+		else
+			return false;
+		end
+	end )
+end
+
+-- 判断内容是否包含特殊格式
+function Mail:IsTag(con, tag)
+    local mask = string.sub(con, 1, string.len(tag));
+    if mask == tag then
+        return true;
+    else
+        return false;
+    end
+end
+
+-- 全局
+G_Mail = nil;
+function GetMail()
+    if G_Mail == nil then
+        G_Mail = Mail.new();
+    end
+    return G_Mail;
+end

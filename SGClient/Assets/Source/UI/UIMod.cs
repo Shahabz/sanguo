@@ -28,6 +28,7 @@ public class UIEVENT
     public const int INPUTSUBMITEX          = 16;		// UIInputField提交		无参
 	public const int TOGGLEVALUECHANGE		= 17;		// 选中框事件
 	public const int CLICKPOS				= 18;		// 点击位置事件
+	public const int SCROLLINDEXCALLBACK	= 19;		// 无限滚动层
 	public const int PUSHEVENT		        = 1000;		// UI通用事件，不想定义新事件可用			参数
 }
 

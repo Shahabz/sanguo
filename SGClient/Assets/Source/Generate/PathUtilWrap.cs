@@ -21,6 +21,7 @@ public class PathUtilWrap
 		L.RegFunction("RecPath", RecPath);
 		L.RegFunction("PatchDownloadPath", PatchDownloadPath);
 		L.RegFunction("HeadPath", HeadPath);
+		L.RegFunction("GameCachePath", GameCachePath);
 		L.RegFunction("ImagePath", ImagePath);
 		L.RegFunction("ConfigPath", ConfigPath);
 		L.RegFunction("localLuaExists", localLuaExists);
@@ -277,6 +278,22 @@ public class PathUtilWrap
 		{
 			ToLua.CheckArgsCount(L, 0);
 			string o = PathUtil.HeadPath();
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GameCachePath(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			string o = PathUtil.GameCachePath();
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}

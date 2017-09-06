@@ -49,7 +49,7 @@ int actor_notify_value( int actor_index, short msgid, char count, const int *dat
 }
 
 // 发消息提示，通过消息ID
-int actor_system_message( int actor_index, int msgid, int value1, int value2, int value3, int value4 )
+int actor_system_message( int actor_index, int msgid )
 {
 	actor_notify_value( actor_index, NOTIFY_NORMAL, 1, &msgid, NULL );
 	return 0;

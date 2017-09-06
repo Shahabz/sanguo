@@ -171,6 +171,50 @@ public class UIScrollRect : ScrollRect
 		yield return null;
 	}
 
+	/// <summary>
+	/// 指定一个 item让其定位到ScrollRect中间
+	/// </summary>
+	/// <param name="target">需要定位到的目标</param>
+	public void CenterOnItem(RectTransform target)
+	{
+		// Item is here
+		//var itemCenterPositionInScroll = GetWorldPointInWidget( scrollRect.GetComponent<RectTransform>(), GetWidgetWorldPoint( target));
+		//var itemCenterPositionInScroll = GetWorldPointInWidget( this.GetComponent<RectTransform>(), GetWidgetWorldPoint( target));
+		//Debug .Log( "Item Anchor Pos In Scroll: " + itemCenterPositionInScroll);
+		// But must be here
+		//var targetPositionInScroll = GetWorldPointInWidget( scrollRect.GetComponent <RectTransform>(), GetWidgetWorldPoint( viewPointTransform));
+		//var targetPositionInScroll = GetWorldPointInWidget( this.GetComponent <RectTransform>(), GetWidgetWorldPoint( viewPointTransform));
+		//Debug .Log( "Target Anchor Pos In Scroll: " + targetPositionInScroll);
+		// So it has to move this distance
+		//var difference = targetPositionInScroll - itemCenterPositionInScroll;
+		//difference .z = 0f ;
+
+		//var newNormalizedPosition = new Vector2(difference .x / (contentTransform.rect.width -viewPointTransform.rect.width ), difference .y / (contentTransform.rect .height - viewPointTransform. rect.height ));
+		
+		//newNormalizedPosition = scrollRect.normalizedPosition - newNormalizedPosition;
+
+		//newNormalizedPosition .x = Mathf.Clamp01(newNormalizedPosition.x );
+		//newNormalizedPosition .y = Mathf.Clamp01(newNormalizedPosition.y );
+
+		//DOTween .To(() => scrollRect.normalizedPosition , x=>scrollRect.normalizedPosition = x ,newNormalizedPosition, 3);
+	}
+
+	Vector3 GetWidgetWorldPoint (RectTransform target)
+	{
+		//pivot position + item size has to be included
+		var pivotOffset = new Vector3(
+			(0.5f - target .pivot. x) * target.rect.size.x ,
+			(0.5f - target .pivot. y) * target.rect.size.y ,
+			0f);
+		var localPosition = target.localPosition + pivotOffset ;
+		return target.parent.TransformPoint (localPosition);
+	}
+
+	Vector3 GetWorldPointInWidget (RectTransform target, Vector3 worldPoint)
+	{
+		return target.InverseTransformPoint(worldPoint );
+	}
+
     /// <summary>
     /// 显示加载更多
     /// </summary>
@@ -188,7 +232,7 @@ public class UIScrollRect : ScrollRect
         m_LoadingItem = GameObject.Instantiate( ResourceManager.LoadPrefab("UIP_Loading"));
         m_LoadingItem.transform.SetParent(this.content.transform);
         m_LoadingItem.transform.localScale = Vector3.one;
-        UIText text = m_LoadingItem.GetComponentInChildren<UIText>();
+        //UIText text = m_LoadingItem.GetComponentInChildren<UIText>();
         //text.text = "Loading";
         RectTransform rectTrans = m_LoadingItem.transform.Find("Content").GetComponent<RectTransform>();
         if (isTop == true)

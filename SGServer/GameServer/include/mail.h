@@ -3,24 +3,22 @@
 #include "define.h"
 
 #define MAX_MAIL_SAVETIME			86400*7		// 邮件保存时间7天
-#define MAIL_TITLE_MAXSIZE			128			// 邮件标题长度
-#define MAIL_CONTENT_MAXSIZE		2048		// 邮件信息长度
+#define MAIL_TITLE_MAXSIZE			64			// 邮件标题长度
+#define MAIL_CONTENT_MAXSIZE		1024		// 邮件信息长度
 #define MAIL_ATTACH_MAXSIZE			256			// 邮件附件长度
 #define MAIL_ACTORID				-2			//
 
 // 邮件类型
-#define MAIL_TYPE_SYSTEM	0	// 系统信息邮件
-#define MAIL_TYPE_NOTIFY	1	// 公告邮件，内容外部http服务器获取
-#define MAIL_TYPE_FIGHT		2	// 战斗报告邮件
-#define MAIL_TYPE_SPY		3	// 侦查报告邮件
-#define MAIL_TYPE_GATHER	4	// 采集报告邮件
+#define MAIL_TYPE_SYSTEM		0	// 系统信息邮件
+#define MAIL_TYPE_NOTIFY		1	// 公告邮件，内容外部http服务器获取
+#define MAIL_TYPE_EVERYDAY		5	// 每日登录
+#define MAIL_TYPE_FIGHT_ENEMY	6	// 流寇
+#define MAIL_TYPE_FIGHT_CITY	7	// 城战
+#define MAIL_TYPE_FIGHT_NATION	8	// 国战
 
-// 获取邮件途径
-#define MAIL_PATH_NORMAL		0
-#define MAIL_PATH_EVERYDAY		1	// 每日登录
-#define MAIL_PATH_FIGHT_MONSTER	2	// 流寇
-#define MAIL_PATH_FIGHT_CITY	3	// 城战
-#define MAIL_PATH_FIGHT_NATION	4	// 国战
+#define TAG_TEXTID			"#$"// 标记--标记为文字表id
+#define TAG_ITEMKIND		"$$"// 标记--标记为道具装备专用
+#define TAG_POS				"$#"// 标记--标记为坐标
 
 // {\"textid\":\"10001\", \"vlist\":[]}
 // 
@@ -38,11 +36,14 @@ i64 mail_makcontent( int contentid, char *v1, char *v2, char *v3, char *v4 );
 int mail_read_content( int actor_index, i64 mailid );
 
 // 设置已读状态
-int mail_readed( i64 mailid );
+int mail_readed( int actor_index, i64 mailid );
 
 // 删除邮件
 int mail_delete( i64 mailid );
 
 // 未读邮件数量
 int mail_noread_check( int actor_index );
+
+// 获取邮件
+int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max );
 #endif

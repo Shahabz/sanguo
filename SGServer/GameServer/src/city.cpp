@@ -1158,6 +1158,13 @@ int city_change_herowash( int city_index, int value, short path )
 		g_city[city_index].hero_washnum += value;
 
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+
+	int pValue[4] = { 0 };
+	pValue[0] = 1;
+	pValue[1] = value;
+	pValue[2] = g_city[city_index].hero_washnum;
+	pValue[3] = path;
+	actor_notify_value( g_city[city_index].actor_index, NOTIFY_VALUECHANGE, 4, pValue, NULL );
 	return 0;
 }
 // Ï´Á·´ÎÊý
@@ -1173,6 +1180,12 @@ int city_change_equipwash( int city_index, int value, short path )
 		g_city[city_index].equip_washnum += value;
 
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	int pValue[4] = { 0 };
+	pValue[0] = 2;
+	pValue[1] = value;
+	pValue[2] = g_city[city_index].equip_washnum;
+	pValue[3] = path;
+	actor_notify_value( g_city[city_index].actor_index, NOTIFY_NORMAL, 4, pValue, NULL );
 	return 0;
 }
 

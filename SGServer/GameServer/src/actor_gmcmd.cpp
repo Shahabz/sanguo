@@ -23,6 +23,7 @@
 #include "chat.h"
 #include "vip.h"
 #include "hero.h"
+#include "mail.h"
 #include "building.h"
 
 extern Global global;
@@ -237,6 +238,18 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_ROLLMSG:// 跑马灯
 		break;
 	case GMC_MAIL:// 邮件
+		if ( pCity )
+		{
+			char title[64] = { 0 };
+			sprintf( title, "%s%d", TAG_TEXTID, 5001 );
+
+			char content[128] = { 0 };
+			sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, 5501 );
+
+			char attach[256] = { 0 };
+			sprintf( attach, "3,1@5001,1000@5002,2000@50010,10000" );
+			mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+		}
 		break;
 	case GMC_SYSTALK:// 系统喊话
 		system_talk( pMsg );

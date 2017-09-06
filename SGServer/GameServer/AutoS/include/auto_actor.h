@@ -52,6 +52,7 @@ struct _actor {
 				int cdkey4;	//是否领取该批次兑换码
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
+				short mail_notreadnum;	//未读邮件数量
 };
 typedef struct _actor Actor;
 

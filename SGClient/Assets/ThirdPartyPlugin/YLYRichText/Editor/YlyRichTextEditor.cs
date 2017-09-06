@@ -9,6 +9,33 @@ using UnityEngine.UI;
 using UnityEditor;
 using UnityEditor.UI;
 
+public class YlyRichTextMenu
+{
+	[MenuItem("GameObject/UI/YlyRichText", false, 0)]
+	//[MenuItem("UI/YlyRichText", false, 0)]
+	public static void CreateYlyRichTextGo()
+	{
+		UnityEngine.Object[] selObjs = Selection.GetFiltered (typeof(UnityEngine.GameObject), SelectionMode.TopLevel);
+		if (selObjs == null || selObjs.Length == 0) {
+			return;
+		}
+
+		GameObject parentGo = (GameObject)selObjs[0];
+		if(PrefabUtility.GetPrefabType(parentGo) == PrefabType.Prefab || PrefabUtility.GetPrefabType(parentGo) == PrefabType.ModelPrefab){
+			return;
+		}
+
+		GameObject ylyRichTextGo = new GameObject("YlyRichText");
+		ylyRichTextGo.transform.SetParent(parentGo.transform, false);
+
+		YlyRichText ylyRichTextC = ylyRichTextGo.AddComponent<YlyRichText>();
+		RectTransform rt = ylyRichTextGo.GetComponent<RectTransform>();
+		rt.sizeDelta = new Vector2(160f, 60f);
+
+		Selection.activeGameObject = ylyRichTextGo;
+	}
+}
+
 [CustomEditor(typeof(YlyRichText), true)]
 [CanEditMultipleObjects]
 public class QtzRichTextEditor : GraphicEditor

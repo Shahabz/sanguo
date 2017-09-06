@@ -183,3 +183,13 @@ int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pVa
 	return 0;
 }
 
+int struct_NetC_MailAsk_recv( char **pptr, int *psize, SLK_NetC_MailAsk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_minid, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_maxid, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_op, (*pptr), (*psize) );
+	return 0;
+}
+

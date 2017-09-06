@@ -252,6 +252,17 @@ public static class PathUtil
             return Application.dataPath + "/../Head/";
     }
 
+	/// <summary>
+	/// 缓存路径
+	/// </summary>
+	public static string GameCachePath()
+	{
+		if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+			return Application.temporaryCachePath + "/GameCache/";
+		else
+			return Application.dataPath + "/../GameCache/";
+	}
+
     /// <summary>
     /// 临时下载图片路径
     /// </summary>

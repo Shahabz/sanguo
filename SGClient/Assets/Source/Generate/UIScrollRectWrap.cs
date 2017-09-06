@@ -14,6 +14,7 @@ public class UIScrollRectWrap
 		L.RegFunction("SetContentPosition", SetContentPosition);
 		L.RegFunction("ScrollToBottom", ScrollToBottom);
 		L.RegFunction("ScrollToTop", ScrollToTop);
+		L.RegFunction("CenterOnItem", CenterOnItem);
 		L.RegFunction("ShowLoading", ShowLoading);
 		L.RegFunction("HideLoading", HideLoading);
 		L.RegFunction("IsShowLoading", IsShowLoading);
@@ -165,6 +166,23 @@ public class UIScrollRectWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UIScrollRect.ScrollToTop");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CenterOnItem(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UIScrollRect obj = (UIScrollRect)ToLua.CheckObject(L, 1, typeof(UIScrollRect));
+			UnityEngine.RectTransform arg0 = (UnityEngine.RectTransform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.RectTransform));
+			obj.CenterOnItem(arg0);
+			return 0;
 		}
 		catch(Exception e)
 		{

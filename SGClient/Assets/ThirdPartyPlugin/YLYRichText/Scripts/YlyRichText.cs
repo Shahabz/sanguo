@@ -15,6 +15,8 @@ using System.Text;
 using UnityEditor;
 #endif
 
+[AddComponentMenu("UI/YlyRichText", 11)]
+[RequireComponent(typeof(RectTransform))]
 public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
 	private enum CharType{
@@ -72,7 +74,6 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 	[SerializeField, Tooltip("是否启用rich text模式")]
 	bool m_EnableRichText = true;
 
-	YlyRichTextParser m_TxtParser = null;
 	List<LineData> m_Lines = new List<LineData>();
 	Dictionary<string, AssetData> m_AssetDataDict = new Dictionary<string, AssetData>();
 	float m_PreferredHeight = 0f;
@@ -85,17 +86,7 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 	bool m_IsFontTextureDirty = false;
 	bool m_IsPopulateMeshDone = false;
 	bool m_IsDrag = false;
-
-	YlyRichTextParser txtParser {
-		get
-		{
-			if(m_TxtParser == null){
-				m_TxtParser = new YlyRichTextParser();
-			}
-			return m_TxtParser;
-		}
-	}
-
+	
 	public Font font {
 		get
 		{
@@ -683,16 +674,12 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 		useLegacyMeshGeneration = false;
 	}
 
-	protected override void Awake(){
-		base.Awake();
+	protected override void Start(){
+		base.Start();
 
 		if(m_Font == null){
 			m_Font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 		}
-	}
-
-	protected override void Start(){
-		base.Start();
 
 		//Debug.Log ("==========================rich text start");
 		Font.textureRebuilt += FontTextureRebuilt;
@@ -1365,8 +1352,8 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 			tmpText = tmpText.Substring (0, m_MaxChars);
 		}
 
-		m_ParsedText = txtParser.Parse(tmpText, out m_StrMask, out m_ParamDict, out m_PreLoadAssetDic, m_EnableRichText);
-		//Debug.Log(txtParser.GetLog());
+		m_ParsedText = YlyRichTextParser.Parse(tmpText, out m_StrMask, out m_ParamDict, out m_PreLoadAssetDic, m_EnableRichText);
+		//Debug.Log(YlyRichTextParser.GetLog());
 		//Debug.Log ("==============================m_ParsedText="+m_ParsedText);
 
 		PreLoadAsset();

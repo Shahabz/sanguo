@@ -1002,6 +1002,22 @@ struct _slk_NetS_WeatherChange {
 };
 typedef struct _slk_NetS_WeatherChange SLK_NetS_WeatherChange;	//天气改变
 
+struct _slk_NetS_Mail {
+	unsigned int m_mailid;	//邮件-id
+	char m_type;	//邮件-类型
+	short m_title_len;	//邮件
+	char m_title[64];	//邮件标题
+	short m_content_len;	//邮件
+	char m_content[1024];	//邮件-内容
+	short m_attach_len;	//邮件
+	char m_attach[256];	//邮件-附件
+	char m_attachget;	//邮件-附件读取
+	char m_read;	//邮件-是否读取
+	int m_recvtime;	//邮件-接收时间
+	unsigned int m_fightid;	//邮件-关联战斗
+};
+typedef struct _slk_NetS_Mail SLK_NetS_Mail;	//一封邮件
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1112,5 +1128,6 @@ int struct_NetS_BattleInfo_send( char **pptr, int *psize, SLK_NetS_BattleInfo *p
 int struct_NetS_BattleList_send( char **pptr, int *psize, SLK_NetS_BattleList *pValue );
 int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *pValue );
 int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherChange *pValue );
+int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue );
 
 #endif

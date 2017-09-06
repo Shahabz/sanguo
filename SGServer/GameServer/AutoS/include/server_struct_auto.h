@@ -102,6 +102,7 @@
 #define CMDS_BATTLEINFO	(CMDS_BASE+96)
 #define CMDS_MAPRESINFO	(CMDS_BASE+97)
 #define CMDS_WEATHERCHANGE	(CMDS_BASE+98)
+#define CMDS_MAIL	(CMDS_BASE+99)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -121,6 +122,7 @@
 #define CMDC_WORLDMAPASK	(CMDC_BASE+13)
 #define CMDC_WORLDMAPAREAINDEX	(CMDC_BASE+14)
 #define CMDC_MAPBATTLE	(CMDC_BASE+15)
+#define CMDC_MAILASK	(CMDC_BASE+16)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

@@ -359,9 +359,9 @@ function MapResDlgSelectHero( index )
 	local total = m_HeroList[index].m_soldiers;
 	m_cost_food = math.ceil(global.army_march_food_v1*total + global.army_march_food_v2*(m_marchtime*m_marchtime) + global.army_march_food_v3*m_marchtime)
 	if m_cost_food > GetPlayer().m_food then
-		SetRichText( m_uiCost.transform:Find("Text"), "<color=03de27ff>"..T(991)..": "..knum(m_cost_food).."</color><color=e80017ff>/"..knum(GetPlayer().m_food).."</color>" )
+		SetRichText( m_uiCost.transform:Find("Text"), "<color=03de27ff>"..T(991)..": <icon=food>"..knum(m_cost_food).."</color><color=e80017ff>/"..knum(GetPlayer().m_food).."</color>" )
 	else
-		SetRichText( m_uiCost.transform:Find("Text"), "<color=03de27ff>"..T(991)..": "..knum(m_cost_food).."</color><color=03de27ff>/"..knum(GetPlayer().m_food).."</color>" )
+		SetRichText( m_uiCost.transform:Find("Text"), "<color=03de27ff>"..T(991)..": <icon=food>"..knum(m_cost_food).."</color><color=03de27ff>/"..knum(GetPlayer().m_food).."</color>" )
 		--SetRichText( m_uiCost.transform:Find("Text"), "<color=03de27ff>消耗食物</color><icon=food>1000/<color=e80017ff>500</color>" )
 	end
 end

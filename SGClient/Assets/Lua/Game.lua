@@ -14,6 +14,9 @@ g_game_weather = 0;
 		
 -- 游戏脚本主逻辑入口
 function GameManager.OnStart()
+	--local x = int64.new('78962871035984074')
+    --print('int64 is: '..x)
+	
 	gamelog("GameManager.OnStart();begin");
 	
 	-- 读取ini配置文件
@@ -45,7 +48,8 @@ end
 
 -- 游戏销毁
 function GameManager.OnDestroy()	
-
+	-- 存档邮件缓存
+	GetMail():SaveCache();
 end
 
 
@@ -224,6 +228,7 @@ function GameManager.ChangeScence( scence )
 				local sendValue = {};
 				sendValue.m_value = 0;
 				netsend_entercity_C( sendValue );
+						
 			end );
 			
 		else
@@ -258,3 +263,4 @@ function GameManager.ChangeScence( scence )
 	
 	GameManager.currentScence = scence
 end
+

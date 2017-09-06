@@ -21,5 +21,6 @@ void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue );
 void proc_worldmapask_S( int client_index, SLK_NetC_WorldMapAsk *pValue );
 void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pValue );
 void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue );
+void proc_mailask_S( int client_index, SLK_NetC_MailAsk *pValue );
 
 #endif

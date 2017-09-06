@@ -6,12 +6,13 @@ blog：http://www.hiwrz.com
 */
 using UnityEngine;
 using UnityEngine.EventSystems;
+using LuaInterface;
 
 public class YlyDelegateUtil{
 	public delegate void VoidDelegate(GameObject go, PointerEventData eventData = null);
 	public delegate void StringDelegate(string arg);
 
-	/*
+
 	/// <summary>
 	/// the function can use for ylyRichText hyperLink's click callBack function for lua, but need tolua support, 
 	/// here will not introduce tolua, if your project has tolua plugin, remove the comments, and then export the wrap file
@@ -20,7 +21,7 @@ public class YlyDelegateUtil{
 	/// </summary>
 	/// <returns>The delegate.</returns>
 	/// <param name="func">Func.</param>
-	public static YlyDelegateUtil.StringDelegate StringDelegate(LuaFunction func)
+	public static YlyDelegateUtil.StringDelegate stringDelegate( LuaFunction func )
 	{
 		YlyDelegateUtil.StringDelegate action = (arg) =>
 		{
@@ -28,5 +29,5 @@ public class YlyDelegateUtil{
 		};
 		return action;
 	}
-	*/
+
 }

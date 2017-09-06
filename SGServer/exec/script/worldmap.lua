@@ -83,7 +83,6 @@ function BrushEnemy()
 	end
 end
 function BrushEnemyWithZone( zoneid )
-	print( "BrushEnemyWithZone:"..zoneid )
 	if zoneid <= 0 or zoneid >= g_zoneinfo_maxnum then
 		return
 	end

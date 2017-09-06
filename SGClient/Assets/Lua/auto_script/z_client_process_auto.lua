@@ -91,7 +91,11 @@ function proc_enterinfo_C( recvValue )
 	Const.serverid = recvValue.m_serverid;
 	Const.actorid = recvValue.m_actorid;
 	GetPlayer().m_createtime = recvValue.m_createtime;
+	GetPlayer():SetServerTime( recvValue.m_servertime );
 	gamelog( "proc_enterinfo_C" )
+	
+	-- 读取邮件缓存
+	GetMail():LoadCache();
 	
 	-- 临时调整背景层级
 	GameObject.FindWithTag( "UpdateManager" ).Find("Canvas"):GetComponent( "Canvas" ).sortingOrder = 1000
@@ -1080,5 +1084,11 @@ end
 -- m_game_day=0,m_game_weather=0,
 function proc_weatherchange_C( recvValue )
 	-- process.
+end
+
+-- m_mailid=0,m_type=0,m_title_len=0,m_title="[m_title_len]",m_content_len=0,m_content="[m_content_len]",m_attach_len=0,m_attach="[m_attach_len]",m_attachget=0,m_read=0,m_recvtime=0,m_fightid=0,
+function proc_mail_C( recvValue )
+	-- process.
+	GetMail():Insert( recvValue )
 end
 

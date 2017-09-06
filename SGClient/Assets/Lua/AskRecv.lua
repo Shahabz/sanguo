@@ -11,6 +11,8 @@ NOTIFY_EQUIP		=	8	-- 装备
 NOTIFY_ACTOR		=	9	-- 角色
 NOTIFY_ACTORSFLAG	=	10	-- 角色标志位
 NOTIFY_WORLDMAP		=	11	-- 世界地图
+NOTIFY_VALUECHANGE	=	12	-- 值改变
+NOTIFY_MAIL			=	13	-- 邮件
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -80,6 +82,30 @@ function RecvActorNotify(recvValue)
 		 -- 迁城完毕
         if value[1] == 1 then
             WorldMap.OnCityMoved(value[2], value[3], value[4]);
+		end
+	
+	-- 值改变	
+	elseif msgid == NOTIFY_VALUECHANGE then
+		-- 洗髓次数
+		if value[1] == 1 then
+			pop( T(120)..": "..T(1100).."x"..value[2] ) 
+		-- 洗练次数
+		elseif value[1] == 2 then
+			pop( T(120)..": "..T(1101).."x"..value[2] ) 
+		end
+	
+	-- 邮件	
+	elseif msgid == NOTIFY_MAIL then
+		-- 邮件数量
+		if value[1] == 1 then
+			MainDlgSetMailNum( value[2] )
+			GetMail().m_nServerMaxMailID = value[3]
+			GetMail().m_nServerMinMailID = value[4]
+		-- 操作返回
+		elseif value[1] == 2 then
+			if value[2] == 0 or value[2] == 1 then
+				MailDlgMailRecvOver( value[2], value[3] );
+			end
 		end
     end
 end

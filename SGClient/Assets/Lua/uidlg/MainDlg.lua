@@ -140,7 +140,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			StoryDlgShow()
 	
 		elseif nControlID == 7 then
-			NpcTalkOne( T(10001), T(10002), nil )
+			MailDlgShow()
 		
 		-- 更多	
 		elseif nControlID == 8 then
@@ -552,6 +552,21 @@ function MainDlgSetQuest()
 		if HeroGetDlgIsShow() == false then
 			HeroTalkKind( 1, T(10003) )
 		end
+	end
+end
+
+-- 邮件数量
+function MainDlgSetMailNum( num )
+	if m_Dlg == nil then
+		return;
+	end
+	if num <= 0 then
+		SetFalse( m_uiButtonMail.transform:Find("Back/NumBack") )
+		SetFalse( m_uiButtonMail.transform:Find("Back/Num") )
+	else
+		SetTrue( m_uiButtonMail.transform:Find("Back/NumBack") )
+		SetTrue( m_uiButtonMail.transform:Find("Back/Num") )
+		SetText( m_uiButtonMail.transform:Find("Back/Num"), num );
 	end
 end
 

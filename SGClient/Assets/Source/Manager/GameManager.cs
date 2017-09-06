@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     void OnDestroy() 
     {
+		eye.luaManager.GetFunction( "GameManager.OnDestroy" ).Call();
         LuaFun.Destroy();
         LogUtil.GetInstance().WriteGame( "GameManager.OnDestroy" );
 		LogUtil.GetInstance().WriteGame( "------------------ Game Log End ------------------" );

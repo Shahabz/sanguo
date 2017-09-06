@@ -1303,3 +1303,20 @@ function struct_NetS_WeatherChange_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Mail_recv( buffer )
+	local recvValue = {};
+	recvValue.m_mailid = buffer:ReadUInt();
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_title_len = buffer:ReadShort();
+	recvValue.m_title = buffer:ReadStringWithLen( recvValue.m_title_len );
+	recvValue.m_content_len = buffer:ReadShort();
+	recvValue.m_content = buffer:ReadStringWithLen( recvValue.m_content_len );
+	recvValue.m_attach_len = buffer:ReadShort();
+	recvValue.m_attach = buffer:ReadStringWithLen( recvValue.m_attach_len );
+	recvValue.m_attachget = buffer:ReadSByte();
+	recvValue.m_read = buffer:ReadSByte();
+	recvValue.m_recvtime = buffer:ReadInt();
+	recvValue.m_fightid = buffer:ReadUInt();
+	return recvValue;
+end
+

@@ -112,3 +112,11 @@ function netsend_mapbattle_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_minid=0,m_maxid=0,m_op=0,
+function netsend_mailask_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILASK );
+	struct_NetC_MailAsk_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

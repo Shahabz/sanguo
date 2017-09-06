@@ -1460,3 +1460,25 @@ int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherCha
 	return 0;
 }
 
+int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mailid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_title_len, (*psize) );
+	if( pValue->m_title_len > 0 && pValue->m_title_len <= 64 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_title, pValue->m_title_len*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_content_len, (*psize) );
+	if( pValue->m_content_len > 0 && pValue->m_content_len <= 1024 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_content, pValue->m_content_len*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_attach_len, (*psize) );
+	if( pValue->m_attach_len > 0 && pValue->m_attach_len <= 256 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_attach, pValue->m_attach_len*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attachget, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_read, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_recvtime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_fightid, (*psize) );
+	return 0;
+}
+
