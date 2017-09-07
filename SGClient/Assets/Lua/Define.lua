@@ -426,8 +426,12 @@ function SetTextColor( transform, color )
 	transform:GetComponent( typeof(UIText) ).color = color;
 end
 
-function SetRichText( transform, text )
-	transform:GetComponent( typeof(YlyRichText) ).text = text;
+function SetRichText( transform, text, callback )
+	local uiComponent = transform:GetComponent( typeof(YlyRichText) )
+	uiComponent.text = text;
+	if callback ~= nil then
+		uiComponent.onLinkClick = callback
+	end
 end
 
 function SetControlID( transform, controlID )

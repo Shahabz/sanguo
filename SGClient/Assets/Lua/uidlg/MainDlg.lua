@@ -130,7 +130,6 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 4 or nControlID == 5 then
 			if GameManager.currentScence == "city" then
 				WorldMap.GotoWorldMap(-1, -1)
-				MainDlgShowMap()
 			else
 				WorldMap.ReturnCity()
 				MainDlgShowCity()

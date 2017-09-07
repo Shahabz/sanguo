@@ -1,4 +1,11 @@
 -- 邮件
+local json = require "cjson"
+MAIL_TYPE_SYSTEM		=	0	-- 系统信息邮件
+MAIL_TYPE_NOTIFY		=	1	-- 公告邮件，内容外部http服务器获取
+MAIL_TYPE_FIGHT_ENEMY	=	10	-- 流寇
+MAIL_TYPE_FIGHT_CITY	=	11	-- 城战
+MAIL_TYPE_FIGHT_NATION	=	12	-- 国战
+
 TAG_TEXTID = '#$'	  --标记为文字表id
 TAG_ITEMID = '$$'     -- 标记 标记为道具装备ID
 TAG_POS    = '$#';       -- 标记 标记为坐标
@@ -10,15 +17,12 @@ end
 function Mail:Init()
 	self.m_FileName = ""
     self.m_Mails = {};
+	self.m_IncrementID = 0;
     self.m_bIsLoad = false;
     self.m_nRecvCount = 0;
-	self.m_nMinMailID = 0;
-	self.m_nMaxMailID = 0;
-	self.m_nMinMailID = 0;
-	self.m_nMaxMailID = 0;
-	self.m_nServerMaxMailID = 0;
-	self.m_nServerMinMailID = 0;
-	self.m_nLastRecvMinMailID = 0;
+	self.m_nMinMailID = int64.new(0);
+	self.m_nMaxMailID = int64.new(0);
+	self.m_nLastRecvMinMailID = int64.new(0);
 	self.m_bLoadNew = false;
 	self.m_bLoadAll = false;
 end
@@ -142,7 +146,10 @@ end
 
 -- 插入最新数据
 function Mail:Insert( recvValue )
+	local m_content_json = json.decode( recvValue.m_content );
+	self.m_IncrementID = self.m_IncrementID + 1
 	table.insert( self.m_Mails, {
+		m_incrementid = self.m_IncrementID,
 		m_mailid = recvValue.m_mailid,
 		m_type = recvValue.m_type,
 		m_title = recvValue.m_title,
@@ -152,6 +159,7 @@ function Mail:Insert( recvValue )
 		m_recvtime = recvValue.m_recvtime,
 		m_read = recvValue.m_read,
 		m_fightid = recvValue.m_fightid,
+		m_content_json = m_content_json,
 	} )
 		
 	-- 最大id
@@ -160,12 +168,12 @@ function Mail:Insert( recvValue )
 	end
 	
 	-- 最小id
-	if recvValue.m_mailid < self.m_nMinMailID or self.m_nMinMailID <= 0 then
+	if recvValue.m_mailid < self.m_nMinMailID or int64.equals(self.m_nMinMailID, 0) then
 		self.m_nMinMailID = recvValue.m_mailid;
 	end
 	
 	-- 上次接收的最小id，用这个值去拿未获取到的邮件
-	if recvValue.m_mailid < self.m_nLastRecvMinMailID or self.m_nLastRecvMinMailID == 0 then
+	if recvValue.m_mailid < self.m_nLastRecvMinMailID or int64.equals( self.m_nLastRecvMinMailID, 0 ) then
 		self.m_nLastRecvMinMailID = recvValue.m_mailid;
 	end
 	

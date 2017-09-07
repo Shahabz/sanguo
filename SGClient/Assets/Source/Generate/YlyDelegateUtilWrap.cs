@@ -7,6 +7,7 @@ public class YlyDelegateUtilWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(YlyDelegateUtil), typeof(System.Object));
+		L.RegFunction("stringDelegate", stringDelegate);
 		L.RegFunction("New", _CreateYlyDelegateUtil);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
@@ -29,6 +30,23 @@ public class YlyDelegateUtilWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: YlyDelegateUtil.New");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int stringDelegate(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFunction arg0 = ToLua.CheckLuaFunction(L, 1);
+			YlyDelegateUtil.StringDelegate o = YlyDelegateUtil.stringDelegate(arg0);
+			ToLua.Push(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{

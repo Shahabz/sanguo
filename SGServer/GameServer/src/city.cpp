@@ -785,7 +785,7 @@ int city_battle_event_add( int city_index, char type, char *name, char value, i6
 	strncpy( g_city[city_index].battle_event[0].m_name, name, 21 );
 	g_city[city_index].battle_event[0].m_name[21] = 0;
 	g_city[city_index].battle_event[0].m_value = value;
-	g_city[city_index].battle_event[0].m_mailid = (unsigned int )mailid;
+	g_city[city_index].battle_event[0].m_mailid = mailid;
 	g_city[city_index].battle_event[0].m_optime = (int)time( NULL );
 	return 0;
 }

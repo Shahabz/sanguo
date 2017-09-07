@@ -321,7 +321,10 @@ function WorldMap.Start( Prefab )
 	
 	-- 初始化地图格子数据
 	MapTile.init();
-
+	
+	-- 显示世界地图界面
+	MainDlgShowMap();
+	
 	-- 返回地图数据给程序一份
 	return WorldMap.m_nMaxWidth, WorldMap.m_nMaxHeight, MAP_TILEWIDTH, MAP_TILEHEIGHT
 end

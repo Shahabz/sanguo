@@ -11,10 +11,9 @@
 // 邮件类型
 #define MAIL_TYPE_SYSTEM		0	// 系统信息邮件
 #define MAIL_TYPE_NOTIFY		1	// 公告邮件，内容外部http服务器获取
-#define MAIL_TYPE_EVERYDAY		5	// 每日登录
-#define MAIL_TYPE_FIGHT_ENEMY	6	// 流寇
-#define MAIL_TYPE_FIGHT_CITY	7	// 城战
-#define MAIL_TYPE_FIGHT_NATION	8	// 国战
+#define MAIL_TYPE_FIGHT_ENEMY	10	// 流寇
+#define MAIL_TYPE_FIGHT_CITY	11	// 城战
+#define MAIL_TYPE_FIGHT_NATION	12	// 国战
 
 #define TAG_TEXTID			"#$"// 标记--标记为文字表id
 #define TAG_ITEMKIND		"$$"// 标记--标记为道具装备专用
@@ -44,6 +43,9 @@ int mail_delete( i64 mailid );
 // 未读邮件数量
 int mail_noread_check( int actor_index );
 
-// 获取邮件
-int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max );
+// 获取邮件列表
+int mail_getlist( int actor_index, int op, i64 min, i64 max );
+
+// 领取附件
+int mail_attachget( int actor_index, i64 mailid );
 #endif

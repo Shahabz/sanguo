@@ -1,4 +1,5 @@
 -- 角色操作
+PATH_MAIL_ATTACH = 47	-- 附件
 
 -- 角色已经进入
 function IN_OnActorIn( PlayerIdx )

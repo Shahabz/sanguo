@@ -495,6 +495,11 @@ function netrecv_mail_C( buffer )
 	proc_mail_C( recvValue );
 end
 
+function netrecv_mailopresult_C( buffer )
+	local recvValue = struct_NetS_MailOpResult_recv( buffer );
+	proc_mailopresult_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -595,6 +600,7 @@ Proc_Command = {
 	[CMDS_MAPRESINFO]=netrecv_mapresinfo_C;
 	[CMDS_WEATHERCHANGE]=netrecv_weatherchange_C;
 	[CMDS_MAIL]=netrecv_mail_C;
+	[CMDS_MAILOPRESULT]=netrecv_mailopresult_C;
 }
 
 function in_proc_command_C( cmd, buffer )

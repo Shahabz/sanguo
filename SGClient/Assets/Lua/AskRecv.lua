@@ -99,8 +99,6 @@ function RecvActorNotify(recvValue)
 		-- 邮件数量
 		if value[1] == 1 then
 			MainDlgSetMailNum( value[2] )
-			GetMail().m_nServerMaxMailID = value[3]
-			GetMail().m_nServerMinMailID = value[4]
 		-- 操作返回
 		elseif value[1] == 2 then
 			if value[2] == 0 or value[2] == 1 then

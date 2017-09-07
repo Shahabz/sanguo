@@ -224,7 +224,6 @@ int mail_noread_check( int actor_index )
 	i64 maxid = 0;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	int actorid = g_actors[actor_index].actorid;
 
 	// 读取未读数量
 	sprintf( szSQL, "select count(*) from mail where `actorid`='%d' and `read`=0 and deltime>'%d'", g_actors[actor_index].actorid, (int)time( NULL ) );
@@ -243,40 +242,38 @@ int mail_noread_check( int actor_index )
 	}
 	mysql_free_result( res );
 
-	// 读取最大ID和最小ID
-	sprintf( szSQL, "select min(id), max(id) from mail where `actorid`='%d' and deltime>'%d'", g_actors[actor_index].actorid, (int)time( NULL ) );
-	if ( mysql_query( myGame, szSQL ) )
-	{
-		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
-		write_gamelog( "%s", szSQL );
-		if ( mysql_ping( myGame ) != 0 )
-			db_reconnect_game();
-		return -1;
-	}
-	res = mysql_store_result( myGame );
-	if ( (row = mysql_fetch_row( res )) )
-	{
-		minid = atoll( row[0] );
-		maxid = atoll( row[1] );
-	}
+	//// 读取最大ID和最小ID
+	//sprintf( szSQL, "select min(id), max(id) from mail where `actorid`='%d' and deltime>'%d'", g_actors[actor_index].actorid, (int)time( NULL ) );
+	//if ( mysql_query( myGame, szSQL ) )
+	//{
+	//	printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+	//	write_gamelog( "%s", szSQL );
+	//	if ( mysql_ping( myGame ) != 0 )
+	//		db_reconnect_game();
+	//	return -1;
+	//}
+	//res = mysql_store_result( myGame );
+	//if ( (row = mysql_fetch_row( res )) )
+	//{
+	//	minid = atoll( row[0] );
+	//	maxid = atoll( row[1] );
+	//}
 
 	// 发送未读数量，最大和最小的邮件ID
 	g_actors[actor_index].mail_notreadnum = (short)count;
 	if ( g_actors[actor_index].mail_notreadnum > 0 )
 	{
-		int value[5] = { 0 };
+		int value[2] = { 0 };
 		value[0] = 1;
 		value[1] = g_actors[actor_index].mail_notreadnum;
-		value[2] = maxid;
-		value[3] = minid;
-		actor_notify_value( actor_index, NOTIFY_MAIL, 5, value, NULL );
+		actor_notify_value( actor_index, NOTIFY_MAIL, 2, value, NULL );
 	}
-	mysql_free_result( res );
+	//mysql_free_result( res );
 	return 0;
 }
 
 // 获取邮件
-int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
+int mail_getlist( int actor_index, int op, i64 min, i64 max )
 {
 	MYSQL_RES *res;
 	MYSQL_ROW row;
@@ -284,6 +281,9 @@ int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
 	int count = 0;
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
+
+	char bigint[21];
+	lltoa( min, bigint, 10 );
 
 	if ( op == 0 )
 	{
@@ -294,13 +294,13 @@ int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
 		}
 		else
 		{ // 获取小于min的6条
-			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%d' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", min, g_actors[actor_index].actorid, (int)time( NULL ) );
+			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
 		}
 	}
 	// 获取之前的6条
 	else if( op == 1 )
 	{
-		sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%d' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", min, g_actors[actor_index].actorid, (int)time( NULL ) );
+		sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
 	}
 	if ( mysql_query( myGame, szSQL ) )
 	{
@@ -314,7 +314,7 @@ int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
 	while ( (row = mysql_fetch_row( res )) )
 	{
 		SLK_NetS_Mail pValue = { 0 };
-		pValue.m_mailid = (unsigned int)atoll( row[0] );
+		pValue.m_mailid = atoll( row[0] );
 		pValue.m_type = atoi( row[1] );
 
 		strncpy( pValue.m_title, row[2], MAIL_TITLE_MAXSIZE );
@@ -329,7 +329,7 @@ int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
 		pValue.m_attachget = atoi( row[5] );
 		pValue.m_recvtime = atoi( row[6] );
 		pValue.m_read = atoi( row[7] );
-		pValue.m_fightid = (unsigned int)atoll( row[8] );
+		pValue.m_fightid = atoll( row[8] );
 
 		netsend_mail_S( actor_index, SENDTYPE_ACTOR, &pValue );
 		count += 1;
@@ -341,5 +341,59 @@ int mail_getlist( int actor_index, int op, unsigned int min, unsigned int max )
 	value[2] = count;
 	actor_notify_value( actor_index, NOTIFY_MAIL, 3, value, NULL );
 	mysql_free_result( res );
+	return 0;
+}
+
+// 领取附件
+int mail_attachget( int actor_index, i64 mailid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+
+	MYSQL_RES	*res;
+	MYSQL_ROW	row;
+	char	szSQL[1024];
+	char attach[MAIL_ATTACH_MAXSIZE] = { 0 };
+	char bigint[21];
+	lltoa( mailid, bigint, 10 );
+	sprintf( szSQL, "select attach from mail where id='%s' and attachget=0", bigint );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		memcpy( attach, row[0], MAIL_ATTACH_MAXSIZE - 1 );
+	}
+	else
+	{
+		//邮件已经领取
+		SLK_NetS_MailOpResult info = { 0 };
+		info.m_op = 2;
+		info.m_mailid = mailid;
+		netsend_mailopresult_S( actor_index, SENDTYPE_ACTOR, &info );
+		mysql_free_result( res );
+		return -1;
+	}
+	mysql_free_result( res );
+
+	if ( sc_OnMailReadAttach( actor_index, attach ) < 0 )
+	{
+		return -1;
+	}
+	else
+	{
+		// 设为已经领取状态
+		char szSQL[256];
+		char bigint[21];
+		lltoa( mailid, bigint, 10 );
+		sprintf( szSQL, "update `mail` set `attachget`='1' where id='%s'", bigint );
+		dbwork_addsql( szSQL, DBWORK_CMD_MAIL_UPDATE, 0 );
+	}
 	return 0;
 }

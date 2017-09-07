@@ -1092,3 +1092,8 @@ function proc_mail_C( recvValue )
 	GetMail():Insert( recvValue )
 end
 
+-- m_op=0,m_mailid=0,
+function proc_mailopresult_C( recvValue )
+	-- process.
+end
+

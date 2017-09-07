@@ -85,8 +85,13 @@ function struct_NetC_MapBattle_send( buf, sendValue )
 end
 
 function struct_NetC_MailAsk_send( buf, sendValue )
-	buf:WriteUInt( sendValue.m_minid );
-	buf:WriteUInt( sendValue.m_maxid );
+	buf:WriteLong( sendValue.m_minid );
+	buf:WriteLong( sendValue.m_maxid );
 	buf:WriteShort( sendValue.m_op );
+end
+
+function struct_NetC_MailOp_send( buf, sendValue )
+	buf:WriteSByte( sendValue.m_op );
+	buf:WriteLong( sendValue.m_mailid );
 end
 

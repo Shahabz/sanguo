@@ -926,6 +926,7 @@ static int lua_c_award_getaward( lua_State *servL )
 	char color = (char )lua_tointeger( servL, 4 );
 	char path = (char )lua_tointeger( servL, 5 );
 	//--Process script
+	award_getaward( actor_index, kind, count, color, path, NULL );
 	return 0;
 }
 

@@ -120,3 +120,11 @@ function netsend_mailask_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_op=0,m_mailid=0,
+function netsend_mailop_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILOP );
+	struct_NetC_MailOp_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

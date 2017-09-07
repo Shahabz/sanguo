@@ -161,3 +161,16 @@ void proc_mailask_S( int client_index, SLK_NetC_MailAsk *pValue )
 	mail_getlist( client_index, pValue->m_op, pValue->m_minid, pValue->m_maxid );
 }
 
+void proc_mailop_S( int client_index, SLK_NetC_MailOp *pValue )
+{
+	// process.
+	if ( pValue->m_op == 1 )
+	{ // 设置已读状态
+		mail_readed( client_index, pValue->m_mailid );
+	}
+	else if ( pValue->m_op == 2 )
+	{ // 附件领取
+		mail_attachget( client_index, pValue->m_mailid );
+	}
+}
+

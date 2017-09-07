@@ -1029,7 +1029,7 @@ function struct_NetS_BattleEvent_recv( buffer )
 	recvValue.m_name = buffer:ReadStringWithLen( 22 );
 	recvValue.m_value = buffer:ReadSByte();
 	recvValue.m_optime = buffer:ReadInt();
-	recvValue.m_mailid = buffer:ReadUInt();
+	recvValue.m_mailid = buffer:ReadLong();
 	return recvValue;
 end
 
@@ -1305,7 +1305,7 @@ end
 
 function struct_NetS_Mail_recv( buffer )
 	local recvValue = {};
-	recvValue.m_mailid = buffer:ReadUInt();
+	recvValue.m_mailid = buffer:ReadLong();
 	recvValue.m_type = buffer:ReadSByte();
 	recvValue.m_title_len = buffer:ReadShort();
 	recvValue.m_title = buffer:ReadStringWithLen( recvValue.m_title_len );
@@ -1316,7 +1316,14 @@ function struct_NetS_Mail_recv( buffer )
 	recvValue.m_attachget = buffer:ReadSByte();
 	recvValue.m_read = buffer:ReadSByte();
 	recvValue.m_recvtime = buffer:ReadInt();
-	recvValue.m_fightid = buffer:ReadUInt();
+	recvValue.m_fightid = buffer:ReadLong();
+	return recvValue;
+end
+
+function struct_NetS_MailOpResult_recv( buffer )
+	local recvValue = {};
+	recvValue.m_op = buffer:ReadSByte();
+	recvValue.m_mailid = buffer:ReadLong();
 	return recvValue;
 end
 

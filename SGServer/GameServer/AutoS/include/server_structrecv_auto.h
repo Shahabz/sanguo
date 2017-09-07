@@ -88,11 +88,17 @@ struct _slk_NetC_MapBattle {
 typedef struct _slk_NetC_MapBattle SLK_NetC_MapBattle;	//出征
 
 struct _slk_NetC_MailAsk {
-	unsigned int m_minid;	//邮件-缓存最小的id
-	unsigned int m_maxid;	//邮件-缓存最大的id
+	i64 m_minid;	//邮件-缓存最小的id
+	i64 m_maxid;	//邮件-缓存最大的id
 	short m_op;	//邮件-操作
 };
 typedef struct _slk_NetC_MailAsk SLK_NetC_MailAsk;	//请求更多邮件
+
+struct _slk_NetC_MailOp {
+	char m_op;	//邮件操作
+	i64 m_mailid;	//邮件操作
+};
+typedef struct _slk_NetC_MailOp SLK_NetC_MailOp;	//邮件操作
 
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
@@ -106,5 +112,6 @@ int struct_NetC_WorldMapAsk_recv( char **pptr, int *psize, SLK_NetC_WorldMapAsk 
 int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldMapAreaIndex *pValue );
 int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pValue );
 int struct_NetC_MailAsk_recv( char **pptr, int *psize, SLK_NetC_MailAsk *pValue );
+int struct_NetC_MailOp_recv( char **pptr, int *psize, SLK_NetC_MailOp *pValue );
 
 #endif

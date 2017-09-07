@@ -6,12 +6,11 @@ local m_uiListScroll = nil; --UnityEngine.GameObject
 local m_uiListContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Mail = nil; --UnityEngine.GameObject
 
+local m_ObjectPool = nil;
 local m_CurrPage = 0;
 local m_TotalPage = 0;
 local m_PageDirection = 0;
 local m_IsShowLoadingItem = false;
-
-local json = require "cjson"
 
 -- 打开界面
 function MailDlgOpen()
@@ -24,6 +23,7 @@ function MailDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	m_CurrPage = 0;
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "MailDlg" );
@@ -44,6 +44,14 @@ function MailDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MailDlgClose();
+		elseif nControlID >= 1 and nControlID <= 100000 then
+			MailDlgSelect( nControlID )
+			
+		-- 全部删除
+		elseif nControlID == 100001 then
+		
+		-- 全部已读
+		elseif nControlID == 100002 then
         end
 	
 	elseif nType == UI_EVENT_SCROLLDRAG then
@@ -137,7 +145,16 @@ end
 
 -- 界面显示时调用
 function MailDlgOnEnable( gameObject )
-	
+	if m_CurrPage == 0 then
+		return
+	end
+	-- 刷新
+	-- 总页数 1页6条数据
+	m_TotalPage = math.ceil( #GetMail().m_Mails/6 )
+	if m_CurrPage > m_TotalPage then
+		m_CurrPage = m_TotalPage;
+	end
+	MailDlgSetMailPage( m_CurrPage )
 end
 
 -- 界面隐藏时调用
@@ -186,11 +203,7 @@ function MailDlgShow()
 end
 
 -- 设置列表
-function MailDlgSetMailPage( nPage )
-	if nPage == m_CurrPage then
-		return;
-	end
-	
+function MailDlgSetMailPage( nPage )	
 	-- 对象池还原
 	MailDlgMailPageClear();
 	m_CurrPage = nPage;
@@ -244,6 +257,51 @@ function MailDlgSetMail( recvValue )
 	local uiTitle = objs[1];
 	local uiRecvTime = objs[2];
 	local uiContent = objs[3];
+	local uiRead = objs[4];
+	local uiAttach = objs[5];
+	SetControlID( uiObj, recvValue.m_incrementid )
+	
+	-- 邮件类型决定icon和content解析内容
+	-- 解析内容
+	local contentid = 0;
+	local text = recvValue.m_content_json["text"];
+	if GetMail():IsTag( text, TAG_TEXTID ) then
+		contentid = tonumber(string.sub(text, string.len(TAG_TEXTID) + 1));
+	end
+	
+	-- 系统信息邮件
+	if recvValue.m_type == MAIL_TYPE_SYSTEM then
+		SetText( uiContent, T(contentid) )
+		
+	-- 公告邮件，内容外部http服务器获取
+	elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
+		SetText( uiContent, T(contentid) )
+		
+	-- 每日登录
+	elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
+		SetText( uiContent, T(contentid) )
+		
+	-- 流寇
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
+		local win = recvValue.m_content_json["win"];
+		local name = recvValue.m_content_json["name"];
+		local level = recvValue.m_content_json["lv"];
+		local pos = recvValue.m_content_json["pos"];
+		local tpos = recvValue.m_content_json["tpos"];
+		local enemyname = "Lv."..level.." "..T(938);
+		if win == 1 then
+			SetText( uiContent, F(1110, name, enemyname ) )
+		else
+			SetText( uiContent, F(1111, name, enemyname ) )
+		end
+		
+	-- 城战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
+	
+	-- 国战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
+	
+	end
 	
 	-- 解析标题
 	local title = "";
@@ -257,30 +315,26 @@ function MailDlgSetMail( recvValue )
 	end
 	SetText( uiTitle, title )
 	
-	
+
 	-- 接收时间
 	SetText( uiRecvTime, os.date( "%m-%d %H:%M", recvValue.m_recvtime ) )
 	
---[[	local info = json.decode( response );
-	if info == nil then
-		netlog( response );
-		return;
+	-- 读取状态
+	if recvValue.m_read == 1 then
+		SetFalse( uiRead );
+	else
+		SetTrue( uiRead );
 	end
-	local serverid = info["s"];
-	local host = info["h"];
-	local port = info["p"];
-	Const.serverid = serverid;--]]
 	
-	-- 内容
-	SetText( uiContent, recvValue.m_mailid )
-	--recvValue.m_mailid
-	--recvValue.m_type
-
-	--recvValue.m_content
+	-- 附件状态
+	if recvValue.m_attach == "" or recvValue.m_attachget == 1 then
+		SetFalse( uiAttach );
+	else
+		SetTrue( uiAttach );
+	end
+	
 	--recvValue.m_attach
 	--recvValue.m_attachget
-	--recvValue.m_recvtime
-	--recvValue.m_read
 	--recvValue.m_fightid
 	
 end
@@ -330,5 +384,10 @@ function MailDlgMailRecvOver( op, count )
     if isLoading then
         m_uiListScroll:GetComponent("UIScrollRect"):ResetScroll();
     end
+end
+
+-- 选择邮件
+function MailDlgSelect( incrementid )
+	MailInfoDlgByIncrementID( incrementid )
 end
 

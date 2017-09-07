@@ -1,6 +1,7 @@
 #ifndef __STRUCT_AUTO0_H
 #define __STRUCT_AUTO0_H
 
+#include "utils.h"
 #define CMDS_BASE	0
 #define CMDC_BASE	0
 
@@ -103,6 +104,7 @@
 #define CMDS_MAPRESINFO	(CMDS_BASE+97)
 #define CMDS_WEATHERCHANGE	(CMDS_BASE+98)
 #define CMDS_MAIL	(CMDS_BASE+99)
+#define CMDS_MAILOPRESULT	(CMDS_BASE+100)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -123,6 +125,7 @@
 #define CMDC_WORLDMAPAREAINDEX	(CMDC_BASE+14)
 #define CMDC_MAPBATTLE	(CMDC_BASE+15)
 #define CMDC_MAILASK	(CMDC_BASE+16)
+#define CMDC_MAILOP	(CMDC_BASE+17)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

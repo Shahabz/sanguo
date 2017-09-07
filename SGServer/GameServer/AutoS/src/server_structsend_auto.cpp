@@ -1175,7 +1175,7 @@ int struct_NetS_BattleEvent_send( char **pptr, int *psize, SLK_NetS_BattleEvent 
 	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_mailid, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
 	return 0;
 }
 
@@ -1464,7 +1464,7 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
 {
 	int tmpi = 0;
 
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_mailid, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_title_len, (*psize) );
 	if( pValue->m_title_len > 0 && pValue->m_title_len <= 64 )
@@ -1478,7 +1478,16 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attachget, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_read, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_recvtime, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_fightid, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_fightid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MailOpResult_send( char **pptr, int *psize, SLK_NetS_MailOpResult *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
 	return 0;
 }
 

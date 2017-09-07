@@ -23,6 +23,8 @@ AWARDKIND_PRESTIGE		=	50015 -- 威望值
 AWARDKIND_FRIENDSHIP	=	50016 -- 友谊积分
 AWARDKIND_TRAIN_QUICK	=	50017 -- 募兵加速
 AWARDKIND_BUILD_QUICK	=	50018 -- 建造加速
+AWARDKIND_HERO_WASH		=	50019 -- 免费洗髓次数
+AWARDKIND_EQUIP_WASH	=	50020 -- 免费洗练次数
 
 -- 奖励形象
 function AwardInfo( awardkind )
@@ -105,7 +107,7 @@ function AwardInfo( awardkind )
 		color = ItemColorSprite( 0 );
 		
 	elseif awardkind == AWARDKIND_EXP then	-- 角色经验
-		sprite = LoadSprite( ItemSprite( 127 ) );
+		sprite = ItemSprite( 127 );
 		color = ItemColorSprite( 0 );
 		name = T(128)
 		
@@ -136,7 +138,27 @@ function AwardInfo( awardkind )
 	elseif awardkind == AWARDKIND_FRIENDSHIP then -- 友谊积分
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
+		name = ""
 		
+	elseif awardkind == AWARDKIND_TRAIN_QUICK then -- 募兵加速
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(1010)
+		
+	elseif awardkind == AWARDKIND_BUILD_QUICK then-- 建造加速
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(1011)
+		
+	elseif awardkind == AWARDKIND_HERO_WASH	then-- 免费洗髓次数
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(1100)
+		
+	elseif awardkind == AWARDKIND_EQUIP_WASH then-- 免费洗练次数
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 0 );
+		name = T(1101)
 	end
 	
 	if sprite == nil then
