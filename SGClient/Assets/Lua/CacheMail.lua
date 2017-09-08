@@ -19,6 +19,7 @@ function Mail:Init()
     self.m_Mails = {};
 	self.m_IncrementID = 0;
     self.m_bIsLoad = false;
+	self.m_nNoReadCount = 0;
     self.m_nRecvCount = 0;
 	self.m_nMinMailID = int64.new(0);
 	self.m_nMaxMailID = int64.new(0);
@@ -51,6 +52,7 @@ function Mail:LoadCache()
 			local recvtime = tonumber(_tableUtil:GetValue(records, 6));
 			local read = tonumber(_tableUtil:GetValue(records, 7));
 			local fightid = tonumber(_tableUtil:GetValue(records, 8));
+			local lock = tonumber(_tableUtil:GetValue(records, 9));
 			
             if currTime < recvtime + 7*86400 then
                 content = string.gsub(content, '\\n', '\n');
@@ -65,10 +67,11 @@ function Mail:LoadCache()
                     m_attachget = attachget,
                     m_recvtime = recvtime,
                     m_read = read,
+					m_lock = lock,
                     m_fightid = fightid,
                 } )
 				
-				-- 未读个数
+				-- 接收个数
 				if m_read == 0 then
 					self.m_nRecvCount = self.m_nRecvCount + 1;
 				end
@@ -120,6 +123,7 @@ function Mail:SaveCache()
 	.. "attachget" .. "\t" 
 	.. "recvtime" .. "\t" 
 	.. "read" .. "\t"
+	.. "lock" .. "\t"
 	.. "fightid" .. "\r\n")
 	
 	local content = "";
@@ -137,6 +141,7 @@ function Mail:SaveCache()
 			.. v.m_attachget .. "\t" 
 			.. v.m_recvtime .. "\t" 
 			.. v.m_read .. "\t" 
+			.. v.m_lock .. "\t" 
 			.. v.m_fightid .. "\r\n";
             fp:write(text)
         end
@@ -158,8 +163,10 @@ function Mail:Insert( recvValue )
 		m_attachget = recvValue.m_attachget,
 		m_recvtime = recvValue.m_recvtime,
 		m_read = recvValue.m_read,
+		m_lock = recvValue.m_lock,
 		m_fightid = recvValue.m_fightid,
 		m_content_json = m_content_json,
+		m_delete_toggle = 0,
 	} )
 		
 	-- 最大id

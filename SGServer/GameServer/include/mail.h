@@ -24,6 +24,11 @@
 
 // 发送邮件
 i64 mail( int actor_index, int actorid, char type, char *title, char *content, char *attach, i64 fightid );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup );
+//i64 mail_2( int actor_index, int actorid, char type, int titleid, int contentid, AwardGetInfo *getinfo );
+//i64 mail_3( int actor_index, int actorid, char type, int titleid, int contentid, AwardGetInfo *getinfo );
 
 // 拼标题
 i64 mail_maktitle( int titleid, char *v1, char *v2, char *v3, char *v4 );
@@ -37,11 +42,29 @@ int mail_read_content( int actor_index, i64 mailid );
 // 设置已读状态
 int mail_readed( int actor_index, i64 mailid );
 
+// 设置全部已读状态
+int mail_readed_all( int actor_index );
+
 // 删除邮件
 int mail_delete( i64 mailid );
 
-// 未读邮件数量
+// 删除邮件
+int mail_delete_actor( int actor_index, i64 mailid );
+
+// 批量删除邮件
+int mail_delete_all( int actor_index, SLK_NetC_MailAllDel *pValue );
+
+// 设置锁定状态
+int mail_locked( int actor_index, i64 mailid );
+
+// 设置解除锁定状态
+int mail_unlocked( int actor_index, i64 mailid );
+
+// 获取未读邮件数量
 int mail_noread_check( int actor_index );
+
+// 发送未读邮件数量
+int mail_noread_send( int actor_index );
 
 // 获取邮件列表
 int mail_getlist( int actor_index, int op, i64 min, i64 max );

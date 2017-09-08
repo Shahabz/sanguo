@@ -1015,6 +1015,7 @@ struct _slk_NetS_Mail {
 	char m_read;	//邮件-是否读取
 	int m_recvtime;	//邮件-接收时间
 	i64 m_fightid;	//邮件-关联战斗
+	char m_lock;	//邮件-锁定状态
 };
 typedef struct _slk_NetS_Mail SLK_NetS_Mail;	//一封邮件
 

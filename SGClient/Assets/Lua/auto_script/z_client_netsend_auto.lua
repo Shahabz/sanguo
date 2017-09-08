@@ -128,3 +128,11 @@ function netsend_mailop_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_count=0,m_mailid={}[m_count],
+function netsend_mailalldel_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILALLDEL );
+	struct_NetC_MailAllDel_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

@@ -1317,6 +1317,7 @@ function struct_NetS_Mail_recv( buffer )
 	recvValue.m_read = buffer:ReadSByte();
 	recvValue.m_recvtime = buffer:ReadInt();
 	recvValue.m_fightid = buffer:ReadLong();
+	recvValue.m_lock = buffer:ReadSByte();
 	return recvValue;
 end
 

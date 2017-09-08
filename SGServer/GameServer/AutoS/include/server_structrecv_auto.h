@@ -100,6 +100,12 @@ struct _slk_NetC_MailOp {
 };
 typedef struct _slk_NetC_MailOp SLK_NetC_MailOp;	//邮件操作
 
+struct _slk_NetC_MailAllDel {
+	short m_count;	//批量删除邮件
+	i64 m_mailid[128];	//批量删除邮件
+};
+typedef struct _slk_NetC_MailAllDel SLK_NetC_MailAllDel;	//邮件批量删除
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -113,5 +119,6 @@ int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldM
 int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pValue );
 int struct_NetC_MailAsk_recv( char **pptr, int *psize, SLK_NetC_MailAsk *pValue );
 int struct_NetC_MailOp_recv( char **pptr, int *psize, SLK_NetC_MailOp *pValue );
+int struct_NetC_MailAllDel_recv( char **pptr, int *psize, SLK_NetC_MailAllDel *pValue );
 
 #endif

@@ -126,6 +126,7 @@
 #define CMDC_MAPBATTLE	(CMDC_BASE+15)
 #define CMDC_MAILASK	(CMDC_BASE+16)
 #define CMDC_MAILOP	(CMDC_BASE+17)
+#define CMDC_MAILALLDEL	(CMDC_BASE+18)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

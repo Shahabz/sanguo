@@ -172,5 +172,27 @@ void proc_mailop_S( int client_index, SLK_NetC_MailOp *pValue )
 	{ // 附件领取
 		mail_attachget( client_index, pValue->m_mailid );
 	}
+	else if ( pValue->m_op == 3 )
+	{ // 删除
+		mail_delete_actor( client_index, pValue->m_mailid );
+	}
+	else if ( pValue->m_op == 4 )
+	{ // 全部已读
+		mail_readed_all( client_index );
+	}
+	else if ( pValue->m_op == 5 )
+	{ // 锁定
+		mail_locked( client_index, pValue->m_mailid );
+	}
+	else if ( pValue->m_op == 6 )
+	{ // 解除锁定
+		mail_unlocked( client_index, pValue->m_mailid );
+	}
+}
+
+void proc_mailalldel_S( int client_index, SLK_NetC_MailAllDel *pValue )
+{
+	// process.
+	mail_delete_all( client_index, pValue );
 }
 

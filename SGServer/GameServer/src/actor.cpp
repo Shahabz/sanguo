@@ -15,6 +15,7 @@
 #include "utils.h"
 #include "actor.h"
 #include "actor_send.h"
+#include "actor_times.h"
 #include "wqueue.h"
 #include "define.h"
 #include "client.h"
@@ -745,7 +746,11 @@ int actor_entercity( int actor_index )
 	// 任务相关（不发）
 	quest_give( actor_index );
 
+	// 
 	sc_OnActorIn( actor_index );
+
+	// 登陆奖励
+	actor_loginaward( actor_index );
 	return 0;
 }
 

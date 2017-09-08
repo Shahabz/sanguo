@@ -27,6 +27,7 @@
 #include "system.h"
 #include "army.h"
 #include "army_march.h"
+#include "army_fight.h"
 #include "city.h"
 #include "map_town.h"
 #include "map_enemy.h"
@@ -1519,7 +1520,7 @@ void army_fight( int army_index )
 			// 防御方是怪物
 			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
 			{
-				//army_vs_monster( army_index );
+				army_vs_enemy( army_index );
 				// 被选择次数减少
 				map_enemy_delete( g_army[army_index].to_index );
 			}

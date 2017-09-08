@@ -122,6 +122,7 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 
 		pValue.m_attachget = 0;
 		pValue.m_read = 0;
+		pValue.m_lock = 0;
 		pValue.m_recvtime = (int)time(NULL);
 		pValue.m_fightid = fightid;
 
@@ -129,14 +130,72 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 
 		// 通知未读数量
 		g_actors[actor_index].mail_notreadnum += 1;
-		if ( g_actors[actor_index].mail_notreadnum > 0 )
+		mail_noread_send( actor_index );
+	}
+	return mailid;
+}
+
+// 系统邮件
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach )
+{
+	char title[64] = { 0 };
+	sprintf( title, "%s%d", TAG_TEXTID, titleid );
+
+	char content[128] = { 0 };
+	sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
+
+	i64 mailid;
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	return mailid;
+}
+
+// 系统邮件
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo )
+{
+	char title[64] = { 0 };
+	sprintf( title, "%s%d", TAG_TEXTID, titleid );
+
+	char content[128] = { 0 };
+	sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
+
+	char attach[256] = { 0 };
+	int count = getinfo->count;
+	if ( count > 16 )
+		count = 16; // 暂时控制在16个道具
+	if ( getinfo && getinfo->count > 0 )
+	{
+		for ( int tmpi = 0; tmpi < count; tmpi++ )
 		{
-			int value[2] = { 0 };
-			value[0] = 1;
-			value[1] = g_actors[actor_index].mail_notreadnum;
-			actor_notify_value( actor_index, NOTIFY_MAIL, 2, value, NULL );
+			if ( getinfo->kind[tmpi] <= 0 )
+				continue;
+			char tempitem[32] = { 0 };
+			sprintf( tempitem, "%d,%d@", getinfo->kind[tmpi], getinfo->num[tmpi] );
+			strcat( attach, tempitem );
 		}
 	}
+
+	i64 mailid;
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	return mailid;
+}
+
+// 系统邮件
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup )
+{
+	char title[64] = { 0 };
+	sprintf( title, "%s%d", TAG_TEXTID, titleid );
+
+	char content[128] = { 0 };
+	sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
+
+	char attach[256] = { 0 };
+	if ( awardgroup > 0 && awardgroup < g_awardgroup_count )
+	{
+		awardgroup_mail( awardgroup, 0, attach );
+	}
+
+	i64 mailid;
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
 	return mailid;
 }
 
@@ -189,13 +248,22 @@ int mail_readed( int actor_index, i64 mailid )
 	g_actors[actor_index].mail_notreadnum -= 1;
 	if ( g_actors[actor_index].mail_notreadnum < 0 )
 		g_actors[actor_index].mail_notreadnum = 0;
-	if ( g_actors[actor_index].mail_notreadnum > 0 )
-	{
-		int value[2] = { 0 };
-		value[0] = 1;
-		value[1] = g_actors[actor_index].mail_notreadnum;
-		actor_notify_value( actor_index, NOTIFY_MAIL, 2, value, NULL );
-	}
+	mail_noread_send( actor_index );
+	return 0;
+}
+
+// 设置全部已读状态
+int mail_readed_all( int actor_index )
+{
+	char szSQL[256];
+	char bigint[21];
+	sprintf( szSQL, "update mail set `read`='1' where `actorid`='%d'", g_actors[actor_index].actorid );
+	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_UPDATE, 0 );
+
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	g_actors[actor_index].mail_notreadnum = 0;
+	mail_noread_send( actor_index );
 	return 0;
 }
 
@@ -208,8 +276,58 @@ int mail_delete( i64 mailid )
 	sprintf( szSQL, "DELETE FROM `mail` WHERE id='%s'", bigint );
 	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_DELETE, 0 );
 
-	sprintf( szSQL, "DELETE FROM `mail_fightdetail` WHERE id='%s'", bigint );
+	sprintf( szSQL, "DELETE FROM `mail_fight` WHERE id='%s'", bigint );
 	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_DELETE, 0 );
+	return 0;
+}
+
+// 删除邮件
+int mail_delete_actor( int actor_index, i64 mailid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( mailid <= 0 )
+		return -1;
+	char szSQL[256];
+	char bigint[21];
+	lltoa( mailid, bigint, 10 );
+	sprintf( szSQL, "DELETE FROM `mail` WHERE id='%s' and `actorid`='%d'", bigint, g_actors[actor_index].actorid );
+	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_DELETE, 0 );
+
+	sprintf( szSQL, "DELETE FROM `mail_fight` WHERE id='%s' and `actorid`='%d'", bigint, g_actors[actor_index].actorid );
+	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_DELETE, 0 );
+	return 0;
+}
+
+// 批量删除邮件
+int mail_delete_all( int actor_index, SLK_NetC_MailAllDel *pValue )
+{
+	for ( int tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		mail_delete_actor( actor_index, pValue->m_mailid[tmpi] );
+	}
+	return 0;
+}
+
+// 设置锁定状态
+int mail_locked( int actor_index, i64 mailid )
+{
+	char szSQL[256];
+	char bigint[21];
+	lltoa( mailid, bigint, 10 );
+	sprintf( szSQL, "update mail set `lock`='1' where `id`='%s'", bigint );
+	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_UPDATE, 0 );
+	return 0;
+}
+
+// 设置解除锁定状态
+int mail_unlocked( int actor_index, i64 mailid )
+{
+	char szSQL[256];
+	char bigint[21];
+	lltoa( mailid, bigint, 10 );
+	sprintf( szSQL, "update mail set `lock`='0' where `id`='%s'", bigint );
+	dbwork_addsql( szSQL, DBWORK_CMD_MAIL_UPDATE, 0 );
 	return 0;
 }
 
@@ -261,16 +379,23 @@ int mail_noread_check( int actor_index )
 
 	// 发送未读数量，最大和最小的邮件ID
 	g_actors[actor_index].mail_notreadnum = (short)count;
-	if ( g_actors[actor_index].mail_notreadnum > 0 )
-	{
-		int value[2] = { 0 };
-		value[0] = 1;
-		value[1] = g_actors[actor_index].mail_notreadnum;
-		actor_notify_value( actor_index, NOTIFY_MAIL, 2, value, NULL );
-	}
+	mail_noread_send( actor_index );
 	//mysql_free_result( res );
 	return 0;
 }
+
+// 发送未读邮件数量
+int mail_noread_send( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	int value[2] = { 0 };
+	value[0] = 1;
+	value[1] = g_actors[actor_index].mail_notreadnum;
+	actor_notify_value( actor_index, NOTIFY_MAIL, 2, value, NULL );
+	return 0;
+}
+
 
 // 获取邮件
 int mail_getlist( int actor_index, int op, i64 min, i64 max )
@@ -290,17 +415,17 @@ int mail_getlist( int actor_index, int op, i64 min, i64 max )
 		if ( min == 0 )
 		{
 			// 获取最新的6条
-			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", g_actors[actor_index].actorid, (int)time( NULL ) );
+			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `lock`, `fightid` from `mail` where `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", g_actors[actor_index].actorid, (int)time( NULL ) );
 		}
 		else
 		{ // 获取小于min的6条
-			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
+			sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `lock`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
 		}
 	}
 	// 获取之前的6条
 	else if( op == 1 )
 	{
-		sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
+		sprintf( szSQL, "select `id`, `type`, `title`, `content`, `attach`, `attachget`, `recvtime`, `read`, `lock`, `fightid` from `mail` where `id`<'%s' and `actorid`='%d' and `deltime`>'%d' order by `id` desc limit 6;", bigint, g_actors[actor_index].actorid, (int)time( NULL ) );
 	}
 	if ( mysql_query( myGame, szSQL ) )
 	{
@@ -329,7 +454,8 @@ int mail_getlist( int actor_index, int op, i64 min, i64 max )
 		pValue.m_attachget = atoi( row[5] );
 		pValue.m_recvtime = atoi( row[6] );
 		pValue.m_read = atoi( row[7] );
-		pValue.m_fightid = atoll( row[8] );
+		pValue.m_lock = atoi( row[8] );
+		pValue.m_fightid = atoll( row[9] );
 
 		netsend_mail_S( actor_index, SENDTYPE_ACTOR, &pValue );
 		count += 1;

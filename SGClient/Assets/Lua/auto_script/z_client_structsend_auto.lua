@@ -95,3 +95,10 @@ function struct_NetC_MailOp_send( buf, sendValue )
 	buf:WriteLong( sendValue.m_mailid );
 end
 
+function struct_NetC_MailAllDel_send( buf, sendValue )
+	buf:WriteShort( sendValue.m_count );
+	for tmpi=1,sendValue.m_count,1 do
+		buf:WriteLong( sendValue.m_mailid[tmpi] );
+	end
+end
+

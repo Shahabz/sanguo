@@ -9,6 +9,7 @@ int actor_get_sflag( int actor_index, int offset );
 // char 类型的每日数据（每天更新）
 #define MAX_TODAY_COUNT		127
 #define TODAY_CHAR_BUYBODY		0 // 今天购买体力次数
+#define	TODAY_CHAR_LOGINAWARD	1 // 今天登陆奖励
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );
@@ -27,4 +28,7 @@ int actor_check_uselimit_cd( int actor_index, char index );
 int actor_clear_uselimit_cd( int actor_index, char index );
 
 void _check_fday( int actor_index );
+
+// 每日登陆奖励
+int actor_loginaward( int actor_index );
 #endif

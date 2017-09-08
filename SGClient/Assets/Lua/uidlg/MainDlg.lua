@@ -556,6 +556,7 @@ end
 
 -- 邮件数量
 function MainDlgSetMailNum( num )
+	GetMail().m_nNoReadCount = num;
 	if m_Dlg == nil then
 		return;
 	end

@@ -41,7 +41,19 @@ function MailInfoDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MailInfoDlgClose();
+		
+		-- 点击解锁
+		elseif nControlID == 1 then
+			MailInfoDlgUnLock()
 			
+		-- 点击锁定
+		elseif nControlID == 2 then
+			MailInfoDlgLock()
+		
+		-- 点击删除
+		elseif nControlID == 3 then
+			MailInfoDlgDelete()
+		
 		-- 领取附件
 		elseif nControlID == 10 then
 			MailInfoDlgAttachGet();
@@ -101,7 +113,7 @@ function MailInfoDlgShow()
 	MailInfoDlgAttachClear()
 end
 
-function MailInfoDlgByIncrementID( incrementid )	
+function MailInfoDlgByIncrementID( incrementid )
 	local recvValue = nil;
 	local endIndex = #GetMail().m_Mails;
 	for i = 1, endIndex, 1 do
@@ -133,7 +145,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	SetText( m_uiRecvTime, os.date( "%m-%d %H:%M", recvValue.m_recvtime ) )
 	
 	-- 删除时间
-	local delday = 7-math.ceil( (GetServerTime()-recvValue.m_recvtime)/86400 );
+	local delday = 7-math.floor( (GetServerTime()-recvValue.m_recvtime)/86400 );
 	if delday <= 0 then
 		delday = 1;
 	end
@@ -191,15 +203,16 @@ function MailInfoDlgByRecvValue( recvValue )
 		local AttachList = string.split( recvValue.m_attach, '@' )
 		for i= 1, #AttachList, 1 do
 			local Attach = string.split( AttachList[i], ',' )
-			local kind = tonumber(Attach[1]);
-			local num = tonumber(Attach[2]);
-			local sprite, color, name = AwardInfo( kind )
-			
-			local uiObj = m_ObjectPool:Get( "UIP_Item" );
-			uiObj.transform:SetParent( m_uiMailAttach.transform );
-			SetImage( uiObj.transform:Find("Shape"), sprite )
-			SetImage( uiObj.transform:Find("Color"), color )
-			SetText( uiObj.transform:Find("Name"), name.."x"..num )
+			if #Attach == 2 then
+				local kind = tonumber(Attach[1]);
+				local num = tonumber(Attach[2]);
+				local sprite, color, name = AwardInfo( kind )
+				local uiObj = m_ObjectPool:Get( "UIP_Item" );
+				uiObj.transform:SetParent( m_uiMailAttach.transform );
+				SetImage( uiObj.transform:Find("Shape"), sprite )
+				SetImage( uiObj.transform:Find("Color"), color )
+				SetText( uiObj.transform:Find("Name"), name.."x"..num )
+			end
 		end
 		if recvValue.m_attachget == 1 then
 			SetFalse( m_uiMailAttach.transform:Find("GetAttachBtn") );
@@ -213,6 +226,18 @@ function MailInfoDlgByRecvValue( recvValue )
 		MailInfoDlgRead();
 	end
 	
+	-- 锁定状态
+	if recvValue.m_lock == 0 then
+		SetFalse( m_uiDialogFrameMod.transform:Find("Top/LockBtn") )
+		SetTrue( m_uiDialogFrameMod.transform:Find("Top/UnLockBtn") )
+		SetTrue( m_uiDialogFrameMod.transform:Find("Top/DeleteBtn") )
+		SetFalse( m_uiDialogFrameMod.transform:Find("Top/NoDeleteBtn") )
+	else
+		SetTrue( m_uiDialogFrameMod.transform:Find("Top/LockBtn") )
+		SetFalse( m_uiDialogFrameMod.transform:Find("Top/UnLockBtn") )
+		SetFalse( m_uiDialogFrameMod.transform:Find("Top/DeleteBtn") )
+		SetTrue( m_uiDialogFrameMod.transform:Find("Top/NoDeleteBtn") )
+	end
 	-- 分享邮件，战报
 	--recvValue.m_fightid
 end
@@ -275,14 +300,77 @@ function MailInfoDlgAttachGet()
 	netsend_mailop_C( sendValue )
 end
 
+-- 解锁
+function MailInfoDlgUnLock()
+	if m_recvValue == nil then
+		return
+	end
+	if m_recvValue.m_lock == 0 then
+		return	
+	end
+	
+	m_recvValue.m_lock = 0;
+	
+	SetFalse( m_uiDialogFrameMod.transform:Find("Top/LockBtn") )
+	SetTrue( m_uiDialogFrameMod.transform:Find("Top/UnLockBtn") )
+	SetTrue( m_uiDialogFrameMod.transform:Find("Top/DeleteBtn") )
+	SetFalse( m_uiDialogFrameMod.transform:Find("Top/NoDeleteBtn") )
+	
+	-- m_op=0,m_mailid=0,
+	local sendValue = {};
+	sendValue.m_op = 6;
+	sendValue.m_mailid = m_recvValue.m_mailid;
+	netsend_mailop_C( sendValue )
+end
+
+-- 锁定
+function MailInfoDlgLock()
+	if m_recvValue == nil then
+		return
+	end
+	if m_recvValue.m_lock == 1 then
+		return	
+	end
+	m_recvValue.m_lock = 1;
+	
+	SetTrue( m_uiDialogFrameMod.transform:Find("Top/LockBtn") )
+	SetFalse( m_uiDialogFrameMod.transform:Find("Top/UnLockBtn") )
+	SetFalse( m_uiDialogFrameMod.transform:Find("Top/DeleteBtn") )
+	SetTrue( m_uiDialogFrameMod.transform:Find("Top/NoDeleteBtn") )
+	
+	-- m_op=0,m_mailid=0,
+	local sendValue = {};
+	sendValue.m_op = 5;
+	sendValue.m_mailid = m_recvValue.m_mailid;
+	netsend_mailop_C( sendValue )
+end
+
 -- 删除邮件
 function MailInfoDlgDelete()
 	if m_recvValue == nil then
 		return
 	end
+	if m_recvValue.m_attach ~= "" then
+		if m_recvValue.m_attachget == 0 then
+			AlertMsg( T(1113) )
+			return
+		end
+	end
+	
+	-- 本地删除
+	local endIndex = #GetMail().m_Mails;
+	for i = 1, endIndex, 1 do
+		if int64.equals( GetMail().m_Mails[i].m_mailid, m_recvValue.m_mailid ) then
+			table.remove( GetMail().m_Mails, i );
+			break;
+		end
+	end
+	
 	-- m_op=0,m_mailid=0,
 	local sendValue = {};
 	sendValue.m_op = 3;
 	sendValue.m_mailid = m_recvValue.m_mailid;
 	netsend_mailop_C( sendValue )
+	
+	MailInfoDlgClose()
 end

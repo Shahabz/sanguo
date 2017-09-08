@@ -1,7 +1,7 @@
 #ifndef _FIGHT_H_
 #define _FIGHT_H_
 
-#define FIGHT_HERO_MAX		256	// 战场双方英雄数量总和
+#define FIGHT_UNIT_MAX		256	// 战场双方单元数量
 #define FIGHT_TURNS_MAX		8192
 #define FIGHT_INT			100
 #define FIGHT_FLOAT			100.0f
@@ -12,16 +12,26 @@
 #define FIGHT_ATTACK		1	
 #define FIGHT_DEFENSE		2
 
+#define FIGHT_UNITTYPE_HERO		1 // 玩家英雄
+#define FIGHT_UNITTYPE_GUARD	2 // 玩家城墙守卫
+#define FIGHT_UNITTYPE_MONSTER	3 // 怪物表
+
 #define FIGHTTYPE_STORY		1 // 副本战斗
+#define FIGHTTYPE_CITY		2 // 城战
+#define FIGHTTYPE_NATION	3 // 国战
+#define FIGHTTYPE_ENEMY		4 // 流寇
+#define FIGHTTYPE_RES		5 // 资源点争夺
 
 // 一个战斗单元
-typedef struct _fighthero
+typedef struct _fightunit
 {
-	char	type;				// 英雄所属，1部队，2固定防守对象
-	int		index;				// 类型索引
-	short	offset;				
+	short	offset;
 
-	int		herokind;			// 英雄种类
+	char	type;				// 1玩家英雄，2城墙守卫，3monster
+	int		city_index;			// 类型索引
+	int		index;				// (type=1 kind=英雄索引) (type=2 kind=守卫索引)
+	int		kind;				// (type=1 kind=英雄kind) (type=2 kind=守卫kind) (type=3 kind=monsterid)
+
 	short	level;				// 等级
 	char	color;				// 颜色
 	char	corps;				// 兵种
@@ -40,7 +50,7 @@ typedef struct _fighthero
 	char	line_left;			// 当前剩余排数
 	int		line_hp;			// 当前排剩余兵力
 	int		damage;				// 总伤害
-}FightHero;
+}FightUnit;
 
 // 战斗结构
 typedef struct _fight
@@ -54,14 +64,14 @@ typedef struct _fight
 	char	defense_type;					// 防守方类别，1玩家城池，2部队 ...
 	int		defense_index;					// 防守方索引，防守方类别
 
-	FightHero attack_hero[FIGHT_HERO_MAX];	// 攻击方所有英雄
-	FightHero defense_hero[FIGHT_HERO_MAX];	// 防御方所有英雄
+	FightUnit attack_unit[FIGHT_UNIT_MAX];	// 攻击方单元列表
+	FightUnit defense_unit[FIGHT_UNIT_MAX];	// 防御方单元列表
 
-	short attack_hero_num;					// 攻击方英雄数量
-	short defense_hero_num;					// 防御方英雄数量
+	short attack_unit_num;					// 攻击方单元数量
+	short defense_unit_num;					// 防御方单元数量
 
-	short attack_hero_index;				// 攻击方当前出战英雄
-	short defense_hero_index;				// 防御方当前出战英雄
+	short attack_unit_index;				// 攻击方当前出战单元
+	short defense_unit_index;				// 防御方当前出战单元
 
 	int attack_total_hp;
 	int defense_total_hp;
@@ -71,10 +81,12 @@ typedef struct _fight
 
 	int attack_total_damage;
 	int defense_total_damage;
+
+	char unit_json[8192];	// 单元json字符串
 }Fight;
 
 // 向战场里添加一个英雄
-int fight_add_hero( int pos, char type, int index, short herokind, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
+int fight_add_hero( int pos, char type, int city_index, int index, int kind, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
 
 // 战斗启动
 int fight_start( int attack_armyindex, char defense_type, int defense_index );
@@ -86,16 +98,21 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 int fight_oneturn();
 
 // 使用技能
-int fight_useskill( int pos, FightHero *pHero, FightHero *pTargetHero );
+int fight_useskill( int pos, FightUnit *pUnit, FightUnit *pTargetUnit );
 
 // 普通攻击
-int fight_damage( int pos, FightHero *pHero, FightHero *pTargetHero );
+int fight_damage( int pos, FightUnit *pUnit, FightUnit *pTargetUnit );
 
 // 减血
-int fight_changehp( int pos, FightHero *pTargetHero, int damage );
+int fight_changehp( int pos, FightUnit *pTargetUnit, int damage );
 
 // 下一个英雄
-FightHero *fight_nextptr( int pos );
+FightUnit *fight_nextptr( int pos );
 
+// 获取双方城池指针
+City *fight_getcityptr( int pos );
+
+// 战斗信息
+int fight_unit2json();
 #endif
 

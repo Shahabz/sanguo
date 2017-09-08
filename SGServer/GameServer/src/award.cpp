@@ -343,26 +343,26 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 }
 
 // 发放奖励到邮件 ,通过邮件领取
-int awardgroup_mail( int awardgroup, int level, char * itemContent )
+int awardgroup_mail( int awardgroup, int level, char *itemContent )
 {
 	if ( level <= 0 )
 		level = 1;
 	AwardGetInfo awardinfo = { 0 };
 	awardgroup_random( awardgroup, level, &awardinfo );
-
 	if ( awardinfo.count > 0 )
 	{
 		for ( int tmpi = 0; tmpi < awardinfo.count; tmpi++ )
 		{
 			if ( awardinfo.kind[tmpi] <= 0 )
 				continue;
-			char tempitem[128] = { 0 };
+			char tempitem[64] = { 0 };
 			sprintf( tempitem, "%d,%d@", awardinfo.kind[tmpi], awardinfo.num[tmpi] );
 			strcat( itemContent, tempitem );
 		}
 	}
 	return 0;
 }
+
 // 随机奖励组，通过索引，默认在线情况
 int awardgroup_withindex( int actor_index, int awardgroup, int level, char path, AwardGetInfo *getinfo )
 {

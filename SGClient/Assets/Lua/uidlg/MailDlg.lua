@@ -5,12 +5,18 @@ local m_uiListLayer = nil; --UnityEngine.GameObject
 local m_uiListScroll = nil; --UnityEngine.GameObject
 local m_uiListContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Mail = nil; --UnityEngine.GameObject
+local m_uiAllDelBtn = nil; --UnityEngine.GameObject
+local m_uiAllReadBtn = nil; --UnityEngine.GameObject
+local m_uiCancelBtn = nil; --UnityEngine.GameObject
+local m_uiDelBtn = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_CurrPage = 0;
 local m_TotalPage = 0;
 local m_PageDirection = 0;
 local m_IsShowLoadingItem = false;
+local m_uiCache = {};
+local m_AllDelState = 0;
 
 -- 打开界面
 function MailDlgOpen()
@@ -44,16 +50,32 @@ function MailDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MailDlgClose();
+			
+		-- 选择邮件
 		elseif nControlID >= 1 and nControlID <= 100000 then
 			MailDlgSelect( nControlID )
-			
-		-- 全部删除
-		elseif nControlID == 100001 then
 		
+		-- 选择批量删除的项
+		elseif nControlID > 100000 and nControlID <= 200000 then
+			MailDlgAllDeleteToggle( nControlID-100000 )
+			
+		-- 批量删除
+		elseif nControlID == 300001 then
+			MailDlgAllDeleteState();
+			
 		-- 全部已读
-		elseif nControlID == 100002 then
+		elseif nControlID == 300002 then
+			MailDlgAllRead();
+			
+		-- 取消操作
+		elseif nControlID == 300003 then
+			MailDlgAllDeleteCancel();
+			
+		-- 删除
+		elseif nControlID == 300004 then
+			MailDlgAllDeleteOK();
         end
-	
+		
 	elseif nType == UI_EVENT_SCROLLDRAG then
 	
 		if value == 0 then
@@ -132,6 +154,10 @@ function MailDlgOnAwake( gameObject )
 	m_uiListScroll = objs[1];
 	m_uiListContent = objs[2];
 	m_uiUIP_Mail = objs[3];
+	m_uiAllDelBtn = objs[4];
+	m_uiAllReadBtn = objs[5];
+	m_uiCancelBtn = objs[6];
+	m_uiDelBtn = objs[7];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -149,12 +175,7 @@ function MailDlgOnEnable( gameObject )
 		return
 	end
 	-- 刷新
-	-- 总页数 1页6条数据
-	m_TotalPage = math.ceil( #GetMail().m_Mails/6 )
-	if m_CurrPage > m_TotalPage then
-		m_CurrPage = m_TotalPage;
-	end
-	MailDlgSetMailPage( m_CurrPage )
+	MailDlgMailPageUpdate();
 end
 
 -- 界面隐藏时调用
@@ -178,8 +199,16 @@ end
 ----------------------------------------
 function MailDlgShow()
 	MailDlgOpen()
+	SetTrue( m_uiAllDelBtn );
+	SetTrue( m_uiAllReadBtn );
+	SetFalse( m_uiCancelBtn );
+	SetFalse( m_uiDelBtn );
+
+
 	m_uiListScroll:GetComponent("UIScrollRect"):HideLoading();
     m_IsShowLoadingItem = false;
+	m_AllDelState = 0;
+	m_uiCache = {};
 	
 	-- 当前页
 	m_CurrPage = 0;
@@ -197,7 +226,6 @@ function MailDlgShow()
 	
 	-- 总页数 1页6条数据
 	m_TotalPage = math.ceil( #GetMail().m_Mails/6 )
-		
 	-- 非首次打开
 	MailDlgSetMailPage( 1 )
 end
@@ -248,6 +276,16 @@ function MailDlgMailPagePre()
 	MailDlgSetMailPage( nPage )
 end
 
+-- 刷新 
+function MailDlgMailPageUpdate()
+	-- 总页数 1页6条数据
+	m_TotalPage = math.ceil( #GetMail().m_Mails/6 )
+	if m_CurrPage > m_TotalPage then
+		m_CurrPage = m_TotalPage;
+	end
+	MailDlgSetMailPage( m_CurrPage )
+end
+
 -- 设置一条邮件
 function MailDlgSetMail( recvValue )
 	local uiObj = m_ObjectPool:Get( "UIP_Mail" );
@@ -259,7 +297,10 @@ function MailDlgSetMail( recvValue )
 	local uiContent = objs[3];
 	local uiRead = objs[4];
 	local uiAttach = objs[5];
+	local uiLock = objs[6];
+	local uiToggle = objs[7];
 	SetControlID( uiObj, recvValue.m_incrementid )
+	m_uiCache[recvValue.m_incrementid] = uiObj
 	
 	-- 邮件类型决定icon和content解析内容
 	-- 解析内容
@@ -326,16 +367,44 @@ function MailDlgSetMail( recvValue )
 		SetTrue( uiRead );
 	end
 	
-	-- 附件状态
-	if recvValue.m_attach == "" or recvValue.m_attachget == 1 then
-		SetFalse( uiAttach );
+	-- 锁定状态
+	if recvValue.m_lock == 1 then
+		SetTrue( uiLock );
 	else
-		SetTrue( uiAttach );
+		SetFalse( uiLock );
 	end
 	
-	--recvValue.m_attach
-	--recvValue.m_attachget
-	--recvValue.m_fightid
+	-- 批量删除
+	recvValue.m_delete_toggle = 0
+	if m_AllDelState == 1 then
+		SetFalse( uiAttach );
+		SetTrue( uiToggle );
+		SetControlID( uiToggle, 100000 + recvValue.m_incrementid )
+
+		-- 附件状态
+		if recvValue.m_attach == "" or recvValue.m_attachget == 1 then
+			if recvValue.m_lock == 1 then
+				SetImage( uiToggle.transform:Find("Back"), LoadSprite("ui_button_select3") )
+				recvValue.m_delete_toggle = 0
+			else
+				SetImage( uiToggle.transform:Find("Back"), LoadSprite("ui_button_select4") )
+				recvValue.m_delete_toggle = 1
+			end
+	
+		else
+			SetImage( uiToggle.transform:Find("Back"), LoadSprite("ui_button_select3") )
+			recvValue.m_delete_toggle = 0
+		end
+		
+	else
+		SetFalse( uiToggle );
+		-- 附件状态
+		if recvValue.m_attach == "" or recvValue.m_attachget == 1 then
+			SetFalse( uiAttach );
+		else
+			SetTrue( uiAttach );
+		end
+	end
 	
 end
 
@@ -388,6 +457,123 @@ end
 
 -- 选择邮件
 function MailDlgSelect( incrementid )
+	if m_AllDelState == 1 then
+		return
+	end
 	MailInfoDlgByIncrementID( incrementid )
 end
 
+-- 设置全部已读状态
+function MailDlgAllRead()
+	if GetMail().m_nNoReadCount <= 0 then
+		pop( T(1112) )
+		return
+	end
+	for i = 1, #GetMail().m_Mails, 1 do
+		GetMail().m_Mails[i].m_read = 1;
+	end
+	-- 刷新 
+	MailDlgMailPageUpdate();
+	
+	-- m_op=0,m_mailid=0,
+	local sendValue = {};
+	sendValue.m_op = 4;
+	sendValue.m_mailid = 0;
+	netsend_mailop_C( sendValue )
+end
+
+-- 选择批量删除的项
+function MailDlgAllDeleteToggle( incrementid )
+	local uiObj = m_uiCache[incrementid]	
+	if uiObj == nil then
+		return
+	end
+	uiObj.transform:SetParent( m_uiListContent.transform );
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiToggle = objs[7];
+	
+	
+	local recvValue = nil;
+	local endIndex = #GetMail().m_Mails;
+	for i = 1, endIndex, 1 do
+		if GetMail().m_Mails[i].m_incrementid == incrementid then
+			recvValue = GetMail().m_Mails[i];
+			break;
+		end
+	end
+	
+	-- 附件状态
+	if recvValue.m_attach == "" or recvValue.m_attachget == 1 then
+		if recvValue.m_lock == 1 then
+			pop( T(1116) )
+		else
+			if recvValue.m_delete_toggle == 0 then
+				SetImage( uiToggle.transform:Find("Back"), LoadSprite("ui_button_select4") )
+				recvValue.m_delete_toggle = 1
+			else
+				SetImage( uiToggle.transform:Find("Back"), LoadSprite("ui_button_select3") )
+				recvValue.m_delete_toggle = 0
+			end
+		end
+
+	else
+		pop( T(1113) )
+	end
+end
+
+-- 批量删除
+function MailDlgAllDeleteState()
+	m_AllDelState = 1;
+	SetFalse( m_uiAllDelBtn );
+	SetFalse( m_uiAllReadBtn );
+	SetTrue( m_uiCancelBtn );
+	SetTrue( m_uiDelBtn );
+	MailDlgMailPageUpdate()
+end
+
+-- 批量删除取消
+function MailDlgAllDeleteCancel()
+	m_AllDelState = 0;
+	SetTrue( m_uiAllDelBtn );
+	SetTrue( m_uiAllReadBtn );
+	SetFalse( m_uiCancelBtn );
+	SetFalse( m_uiDelBtn );
+	MailDlgMailPageUpdate()
+end
+
+-- 批量删除确定
+function MailDlgAllDeleteOK()
+	if m_AllDelState == 0 then
+		return
+	end
+	local MailList = {}
+	local i = 1;
+	while i <= #GetMail().m_Mails do
+		if GetMail().m_Mails[i].m_delete_toggle == 1 then
+			table.insert( MailList, GetMail().m_Mails[i].m_mailid );
+			table.remove( GetMail().m_Mails, i )
+		else
+			i = i + 1
+		end
+	end
+	MailDlgShow()
+	
+	print( #MailList )
+	-- m_count=0,m_mailid={}[m_count],
+	local sendValue = {};
+	sendValue.m_count = 0
+	sendValue.m_mailid = {}
+	for i=1, #MailList, 1 do
+		table.insert( sendValue.m_mailid, MailList[i] );
+		sendValue.m_count = sendValue.m_count + 1;
+		
+		if sendValue.m_count >= 127 then
+			netsend_mailalldel_C( sendValue )
+			sendValue.m_count = 0
+			sendValue.m_mailid = {}
+		end
+	end
+	if sendValue.m_count > 0 then
+		netsend_mailalldel_C( sendValue )
+	end
+end

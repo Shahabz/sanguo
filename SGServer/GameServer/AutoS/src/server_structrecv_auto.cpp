@@ -202,3 +202,14 @@ int struct_NetC_MailOp_recv( char **pptr, int *psize, SLK_NetC_MailOp *pValue )
 	return 0;
 }
 
+int struct_NetC_MailAllDel_recv( char **pptr, int *psize, SLK_NetC_MailAllDel *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_RECV( &pValue->m_count, (*pptr), (*psize) );
+	if( pValue->m_count < 0 || pValue->m_count > (*psize)*(int)sizeof(i64) || pValue->m_count > 128 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_mailid, (*pptr), pValue->m_count*sizeof(i64), (*psize) );
+	return 0;
+}
+

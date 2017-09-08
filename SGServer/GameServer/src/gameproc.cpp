@@ -853,16 +853,16 @@ int process_set_exit( int weekday, int hour, int min, int isnotify )
 // 如果小时为-1，表示首次执行，依据情形可略过
 int process_oclock_process( int hour )
 {
-	if ( hour == 2 )
+	if ( hour == 0 )
+	{
+	}
+	else if ( hour == 1 )
+	{
+	}
+	else if ( hour == 2 )
 	{	
 	}
 	else if ( hour == 3 )
-	{
-	}
-	else if ( hour == 4 )
-	{	
-	}
-	else if ( hour == 6 )
 	{
 	}
 	sc_OnClockProcess( hour );

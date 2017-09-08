@@ -1479,6 +1479,7 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_read, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_recvtime, (*psize) );
 	LKSET_LONG_SEND( (*pptr), &pValue->m_fightid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_lock, (*psize) );
 	return 0;
 }
 
