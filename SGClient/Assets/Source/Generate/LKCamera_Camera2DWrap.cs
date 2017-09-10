@@ -2,11 +2,11 @@
 using System;
 using LuaInterface;
 
-public class Camera2DWrap
+public class LKCamera_Camera2DWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(Camera2D), typeof(UnityEngine.MonoBehaviour));
+		L.BeginClass(typeof(LKCamera.Camera2D), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("MoveTo", MoveTo);
 		L.RegFunction("TweenPosTo", TweenPosTo);
 		L.RegFunction("TweenPosBy", TweenPosBy);
@@ -49,7 +49,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			obj.MoveTo(arg0);
 			return 0;
@@ -66,7 +66,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj.TweenPosTo(arg0, arg1);
@@ -84,7 +84,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj.TweenPosBy(arg0, arg1);
@@ -102,7 +102,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj.TweenPosToInBound(arg0, arg1);
@@ -120,7 +120,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			float o = obj.TweenPosToInBoundAtSpeed(arg0, arg1);
@@ -139,7 +139,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			obj.TweenSizeTo(arg0, arg1);
@@ -157,7 +157,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			obj.TweenSizeBack();
 			return 0;
 		}
@@ -173,7 +173,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			obj.TweenAllBack();
 			return 0;
 		}
@@ -189,7 +189,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			obj.TweenStop();
 			return 0;
 		}
@@ -205,7 +205,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 4);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 3);
 			float arg2 = (float)LuaDLL.luaL_checknumber(L, 4);
@@ -224,7 +224,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.Blur(arg0);
 			return 0;
@@ -241,7 +241,7 @@ public class Camera2DWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			Camera2D obj = (Camera2D)ToLua.CheckObject(L, 1, typeof(Camera2D));
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)ToLua.CheckObject(L, 1, typeof(LKCamera.Camera2D));
 			obj.RecoverDefalutSize();
 			return 0;
 		}
@@ -277,7 +277,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Camera ret = obj.subCamera;
 			ToLua.Push(L, ret);
 			return 1;
@@ -296,7 +296,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool ret = obj.enableTouchEffect;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
@@ -315,7 +315,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.pixelsPerUnit;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -334,7 +334,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.moveDecay;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -353,7 +353,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool ret = obj.horizontalLock;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
@@ -372,7 +372,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool ret = obj.verticalLock;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
@@ -391,7 +391,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool ret = obj.taglock;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
@@ -410,7 +410,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool ret = obj.zoomLock;
 			LuaDLL.lua_pushboolean(L, ret);
 			return 1;
@@ -429,7 +429,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.zoomInLimit;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -448,7 +448,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.zoomOutLimit;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -467,7 +467,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.zoomSpeed;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -486,7 +486,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.zoomRestrict;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -505,7 +505,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.zoomOffsetSpeed;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -524,7 +524,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector2 ret = obj.mapSize;
 			ToLua.Push(L, ret);
 			return 1;
@@ -543,7 +543,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector4 ret = obj.mapExpand;
 			ToLua.Push(L, ret);
 			return 1;
@@ -562,7 +562,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float ret = obj.defaultSize;
 			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
@@ -581,7 +581,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector2 ret = obj.defaultPos;
 			ToLua.Push(L, ret);
 			return 1;
@@ -600,7 +600,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Camera ret = obj.camera;
 			ToLua.Push(L, ret);
 			return 1;
@@ -619,7 +619,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector3 ret = obj.position;
 			ToLua.Push(L, ret);
 			return 1;
@@ -638,7 +638,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Camera arg0 = (UnityEngine.Camera)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Camera));
 			obj.subCamera = arg0;
 			return 0;
@@ -657,7 +657,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.enableTouchEffect = arg0;
 			return 0;
@@ -676,7 +676,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.pixelsPerUnit = arg0;
 			return 0;
@@ -695,7 +695,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.moveDecay = arg0;
 			return 0;
@@ -714,7 +714,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.horizontalLock = arg0;
 			return 0;
@@ -733,7 +733,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.verticalLock = arg0;
 			return 0;
@@ -752,7 +752,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.taglock = arg0;
 			return 0;
@@ -771,7 +771,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
 			obj.zoomLock = arg0;
 			return 0;
@@ -790,7 +790,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.zoomInLimit = arg0;
 			return 0;
@@ -809,7 +809,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.zoomOutLimit = arg0;
 			return 0;
@@ -828,7 +828,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.zoomSpeed = arg0;
 			return 0;
@@ -847,7 +847,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.zoomRestrict = arg0;
 			return 0;
@@ -866,7 +866,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.zoomOffsetSpeed = arg0;
 			return 0;
@@ -885,7 +885,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector2 arg0 = ToLua.ToVector2(L, 2);
 			obj.mapSize = arg0;
 			return 0;
@@ -904,7 +904,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector4 arg0 = ToLua.ToVector4(L, 2);
 			obj.mapExpand = arg0;
 			return 0;
@@ -923,7 +923,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
 			obj.defaultSize = arg0;
 			return 0;
@@ -942,7 +942,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector2 arg0 = ToLua.ToVector2(L, 2);
 			obj.defaultPos = arg0;
 			return 0;
@@ -961,7 +961,7 @@ public class Camera2DWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			Camera2D obj = (Camera2D)o;
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
 			UnityEngine.Vector3 arg0 = ToLua.ToVector3(L, 2);
 			obj.position = arg0;
 			return 0;

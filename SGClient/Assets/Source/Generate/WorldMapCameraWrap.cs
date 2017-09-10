@@ -6,7 +6,7 @@ public class WorldMapCameraWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(WorldMapCamera), typeof(Camera2D));
+		L.BeginClass(typeof(WorldMapCamera), typeof(LKCamera.Camera2D));
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("m_pWorldMap", get_m_pWorldMap, set_m_pWorldMap);

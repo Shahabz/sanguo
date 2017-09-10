@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using LuaInterface;
+using LKCamera;
 
 public class CityCamera : Camera2D
 {

@@ -1,7 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Map/MapBorder.cs">
     <Files>
+      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="80" Column="6" />
+      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Character/Character.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Map/WorldMap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Map/MapUnitMove.cs" Line="1" Column="1" />
@@ -22,19 +24,12 @@
       <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/Tiled2Unity.cginc" Line="1" Column="1" />
       <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/shaDefault.shader" Line="1" Column="1" />
       <File FileName="Assets/Resources/PackAssets/Tiled2Unity/Shaders/shaDefault-Instanced.shader" Line="1" Column="1" />
-      <File FileName="Assets/Source/FileSystem/FileUtil.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/FileSystem/TableUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenFade.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ObjectPool.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/ObjectPoolManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Camera/Camera2D.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Gizmo/GizmoPlane.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Manager/GameManager.cs" Line="184" Column="36" />
-      <File FileName="Assets/Source/Base/Const.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/UIManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/ResourceManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Map/MapBorder.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Editor/UISystemEditor.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenRectPosition.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Character/CameraController.cs" Line="1" Column="1" />
@@ -45,10 +40,9 @@
       <File FileName="Assets/Editor/Custom/BuildAnimaiton.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Core/LuaStatePtr.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/LuaManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="699" Column="26" />
-      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="161" Column="60" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyAssetIdentify.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Camera/CityCamera.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIClickEvent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIMod.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
@@ -59,12 +53,11 @@
       <File FileName="Assets/Source/UI/Tween/UITweenRectPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/City/CityBuilding.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIScrollRect.cs" Line="11" Column="43" />
-      <File FileName="Assets/Source/UI/UIScrollView.cs" Line="80" Column="1" />
+      <File FileName="Assets/Source/UI/UIScrollRect.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIScrollView.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollBase.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/FileSystem/PathUtil.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/LuaFun.cs" Line="2" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyDelegateUtil.cs" Line="13" Column="37" />
+      <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyDelegateUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Editor/ToLuaMenu.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Editor/ToLuaExport.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/LoopScrollRect/Scripts/EasyObjectPool/ResourceManager.cs" Line="1" Column="1" />
@@ -83,9 +76,25 @@
       <File FileName="Assets/Source/UI/UIText.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UISlider.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UISystem.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/Converter.cs" Line="45" Column="13" />
-      <File FileName="Assets/Source/Net/ByteBuffer.cs" Line="244" Column="12" />
-      <File FileName="Assets/Source/Base/LuaHelper.cs" Line="24" Column="18" />
+      <File FileName="Assets/Source/Base/Converter.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Net/ByteBuffer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/LuaHelper.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Manager/NetworkManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/FullScreenSprite.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/OpenUDID.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/ProgressSprite.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/Reference.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/SequenceActive.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/Utils.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Net/NetWorkInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/City/City.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Generate/LKCamera_Camera2DWrap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/MapBorder.cs" Line="45" Column="61" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -102,6 +111,11 @@
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/LoopScrollRect/Scripts/LoopScrollRect.cs" line="673" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/LoopScrollRect/Scripts/LoopScrollRect.cs" line="649" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/LoopScrollRect/Scripts/LoopScrollRect.cs" line="681" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="41" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="23" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="36" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="55" column="1" />
+      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="64" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

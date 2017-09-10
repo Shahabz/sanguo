@@ -6,7 +6,7 @@ public class WorldMapThumbCameraWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(WorldMapThumbCamera), typeof(Camera2D));
+		L.BeginClass(typeof(WorldMapThumbCamera), typeof(LKCamera.Camera2D));
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("m_pWorldMapThumb", get_m_pWorldMapThumb, set_m_pWorldMapThumb);

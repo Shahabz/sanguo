@@ -6,7 +6,7 @@ public class CityCameraWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(CityCamera), typeof(Camera2D));
+		L.BeginClass(typeof(CityCamera), typeof(LKCamera.Camera2D));
 		L.RegFunction("OnCityClick", OnCityClick);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);

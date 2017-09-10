@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using LuaInterface;
 using UnityEngine.UI;
+using LKCamera;
 
 /// <summary>
 /// 地图Camara控制脚本

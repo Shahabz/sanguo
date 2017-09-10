@@ -90,7 +90,6 @@ public static class LuaBinder
 		WorldMapCameraWrap.Register(L);
 		WorldMapThumbCameraWrap.Register(L);
 		UIPrimitiveBaseWrap.Register(L);
-		Camera2DWrap.Register(L);
 		L.BeginModule("UnityEngine");
 		UnityEngine_ComponentWrap.Register(L);
 		UnityEngine_TransformWrap.Register(L);
@@ -239,6 +238,9 @@ public static class LuaBinder
 		DragonBones_TimelineState_DragonBones_BoneFrameData_DragonBones_BoneTimelineDataWrap.Register(L);
 		DragonBones_UnityEventDispatcher_DragonBones_EventObjectWrap.Register(L);
 		L.RegFunction("ListenerDelegate_DragonBones_EventObject", DragonBones_ListenerDelegate_DragonBones_EventObject);
+		L.EndModule();
+		L.BeginModule("LKCamera");
+		LKCamera_Camera2DWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("System");
 		L.RegFunction("Action", System_Action);

@@ -96,7 +96,7 @@ public class CityWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			City obj = (City)o;
-			Camera2D ret = obj._camera;
+			LKCamera.Camera2D ret = obj._camera;
 			ToLua.Push(L, ret);
 			return 1;
 		}
@@ -134,7 +134,7 @@ public class CityWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			City obj = (City)o;
-			Camera2D arg0 = (Camera2D)ToLua.CheckUnityObject(L, 2, typeof(Camera2D));
+			LKCamera.Camera2D arg0 = (LKCamera.Camera2D)ToLua.CheckUnityObject(L, 2, typeof(LKCamera.Camera2D));
 			obj._camera = arg0;
 			return 0;
 		}
