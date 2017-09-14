@@ -128,7 +128,7 @@ void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue )
 void proc_chat_S( int client_index, SLK_NetC_Chat *pValue )
 {
 	// process.
-	chat_actortalk( client_index, pValue->m_channel, pValue->m_msg );
+	chat_actortalk( client_index, pValue->m_channel, CHAT_MSGTYPE_ACTORCHAT, pValue->m_msg );
 }
 
 void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue )
@@ -188,11 +188,41 @@ void proc_mailop_S( int client_index, SLK_NetC_MailOp *pValue )
 	{ // 解除锁定
 		mail_unlocked( client_index, pValue->m_mailid );
 	}
+	else if ( pValue->m_op == 7 )
+	{ // 战斗信息
+		mail_fight_read( client_index, pValue->m_mailid );
+	}
+	else if ( pValue->m_op == 8 )
+	{ // 获取分享的邮件内容
+		mail_share_getcontent( client_index, pValue->m_mailid );
+	}
+	else if ( pValue->m_op == 9 )
+	{ // 获取分享他内容的战斗信息
+		mail_share_getfightcontent( client_index, pValue->m_mailid );
+	}
 }
 
 void proc_mailalldel_S( int client_index, SLK_NetC_MailAllDel *pValue )
 {
 	// process.
 	mail_delete_all( client_index, pValue );
+}
+
+void proc_mailshare_S( int client_index, SLK_NetS_MailShare *pValue )
+{
+	// process.
+	mail_share( client_index, pValue );
+}
+
+void proc_mailsend_S( int client_index, SLK_NetC_MailSend *pValue )
+{
+	// process.
+	mail_actor_send( client_index, pValue );
+}
+
+void proc_mailreply_S( int client_index, SLK_NetC_MailReply *pValue )
+{
+	// process.
+	mail_actor_reply( client_index, pValue );
 }
 

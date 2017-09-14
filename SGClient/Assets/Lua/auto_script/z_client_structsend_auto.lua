@@ -102,3 +102,28 @@ function struct_NetC_MailAllDel_send( buf, sendValue )
 	end
 end
 
+function struct_NetS_MailShare_send( buf, sendValue )
+	buf:WriteLong( sendValue.m_mailid );
+	buf:WriteShort( sendValue.m_a_name_len );
+	buf:WriteStringWithLength( sendValue.m_a_name );
+	buf:WriteShort( sendValue.m_d_name_len );
+	buf:WriteStringWithLength( sendValue.m_d_name );
+	buf:WriteSByte( sendValue.m_type );
+end
+
+function struct_NetC_MailSend_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_unit_index );
+	buf:WriteInt( sendValue.m_actorid );
+	buf:WriteShort( sendValue.m_content_length );
+	buf:WriteStringWithLength( sendValue.m_content );
+end
+
+function struct_NetC_MailReply_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_actorid );
+	buf:WriteShort( sendValue.m_content_length );
+	buf:WriteStringWithLength( sendValue.m_content );
+	buf:WriteShort( sendValue.m_reply_length );
+	buf:WriteStringWithLength( sendValue.m_reply );
+	buf:WriteInt( sendValue.m_reply_recvtime );
+end
+

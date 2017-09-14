@@ -82,6 +82,9 @@ function RecvActorNotify(recvValue)
 		 -- 迁城完毕
         if value[1] == 1 then
             WorldMap.OnCityMoved(value[2], value[3], value[4]);
+		-- 更新击杀级别
+		elseif value[1] == 2 then
+			GetPlayer().m_mokilllv = value[2];
 		end
 	
 	-- 值改变	

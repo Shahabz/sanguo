@@ -6,7 +6,7 @@ local m_uiMoveCityBtn = nil; --UnityEngine.GameObject
 local m_uiInfoBtn = nil; --UnityEngine.GameObject
 local m_uiHelpBtn = nil; --UnityEngine.GameObject
 local m_uiFightBtn = nil; --UnityEngine.GameObject
-local m_uiSpyBtn = nil; --UnityEngine.GameObject
+local m_uiEnterBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 
@@ -24,7 +24,17 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		-- 迁城
 		if nControlID == 1 then
 			ItemUseExDlgShow( 1 )
-		else	
+			
+		-- 城池信息
+		elseif nControlID == 2 then
+			MapCityDlgShow( m_LastRecvValue )
+		
+		-- 进入城池
+		elseif nControlID == 5 then
+			if GameManager.currentScence == "worldmap" then
+				WorldMap.ReturnCity()
+				MainDlgShowCity()
+			end
 		end
 
 		if m_Mod then
@@ -46,7 +56,7 @@ function MapClickModOnAwake( gameObject )
 	m_uiInfoBtn = objs[3];
 	m_uiHelpBtn = objs[4];
 	m_uiFightBtn = objs[5];
-	m_uiSpyBtn = objs[6];
+	m_uiEnterBtn = objs[6];
 end
 
 -- 界面初始化时调用
@@ -124,13 +134,9 @@ function MapClickModOpenEmpty( recvValue, gameCoorX, gameCoorY )
 end
 
 -- 点击城市显示的操作界面
-function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
-	SetTrue( m_uiCityInfo )
-	SetTrue( m_uiInfoBtn )
-	SetFalse( m_uiHelpBtn )
-	SetTrue( m_uiFightBtn )
-	SetTrue( m_uiSpyBtn )
-	
+function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )	
+	SetTrue( m_uiCityInfo )	
+	m_LastRecvValue = recvValue;
 	local name 		= recvValue.m_name;
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
@@ -141,8 +147,23 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 	SetText( m_uiCityInfo.transform:Find("Level"), "Lv."..level..T(995) )
 	SetText( m_uiCityInfo.transform:Find("Name"), name )
 	SetImage( m_uiCityInfo.transform:Find("Nation"), NationSprite(nation) )
-	local buttonList = { m_uiInfoBtn, m_uiSpyBtn, m_uiFightBtn };
-    MapClickModButton( buttonList );
+	
+	-- 我自己的城池
+	if recvValue.m_unit_index == WorldMap.m_nMyCityUnitIndex then
+		SetFalse( m_uiInfoBtn )
+		SetFalse( m_uiFightBtn )
+		SetFalse( m_uiHelpBtn )
+		SetTrue( m_uiEnterBtn )
+		local buttonList = { m_uiEnterBtn };
+		MapClickModButton( buttonList );
+	else
+		SetTrue( m_uiInfoBtn )
+		SetTrue( m_uiFightBtn )
+		SetFalse( m_uiHelpBtn )
+		SetFalse( m_uiEnterBtn )
+		local buttonList = { m_uiInfoBtn, m_uiFightBtn };
+		MapClickModButton( buttonList );
+	end
 end
 
 
@@ -183,35 +204,4 @@ function MapClickModAttack()
 		end
 	end
 	TroopDlgOpenWithAction( ARMY_ACTION_FIGHT );
-end
-
--- 点击-侦查
-function MapClickModSpy()
-	
-	-- 通灵眼检查
-	local building = GetCity():GetBuildingByKind( BUILDING_SPY )
-    if building == nil or building.m_level < 1 then
-        return;
-    end
-	
-	local recvValue = WorldMap.m_nMapUnitList[WorldMap.m_nLastTouchUnitIndex];
-	if recvValue == nil then
-		return;
-	end
-	-- 城池
-	if recvValue.m_type == MAPUNIT_TYPE_CITY then
-        SpyDlgOnShow( recvValue.m_name, recvValue.m_prefix );
-		
-	-- 部队
-	elseif recvValue.m_type == MAPUNIT_TYPE_ARMY then
-		if m_LastRecvValue then
-            SpyDlgOnShow( m_LastRecvValue.m_name, m_LastRecvValue.m_prefix );
-		end
-		
-	-- 资源
-	elseif recvValue.m_type == MAPUNIT_TYPE_RES then
-		if m_LastRecvValue then
-            SpyDlgOnShow( m_LastRecvValue.m_name, m_LastRecvValue.m_prefix );
-		end
-	end
 end

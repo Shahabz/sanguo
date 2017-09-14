@@ -26,12 +26,13 @@
 typedef struct _fightunit
 {
 	short	offset;
-
+	int		army_index;			// 所属部队索引
 	char	type;				// 1玩家英雄，2城墙守卫，3monster
 	int		city_index;			// 类型索引
 	int		index;				// (type=1 kind=英雄索引) (type=2 kind=守卫索引)
 	int		kind;				// (type=1 kind=英雄kind) (type=2 kind=守卫kind) (type=3 kind=monsterid)
 
+	short	shape;				// 形象
 	short	level;				// 等级
 	char	color;				// 颜色
 	char	corps;				// 兵种
@@ -61,6 +62,7 @@ typedef struct _fight
 	int		randspeed;						// 随机种子
 
 	int		attack_armyindex;				// 攻击方部队索引，攻击方只能是部队
+	char	attack_type;
 	char	defense_type;					// 防守方类别，1玩家城池，2部队 ...
 	int		defense_index;					// 防守方索引，防守方类别
 
@@ -86,7 +88,7 @@ typedef struct _fight
 }Fight;
 
 // 向战场里添加一个英雄
-int fight_add_hero( int pos, char type, int city_index, int index, int kind, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
+int fight_add_hero( int pos, int army_index, char type, int city_index, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
 
 // 战斗启动
 int fight_start( int attack_armyindex, char defense_type, int defense_index );
@@ -111,6 +113,9 @@ FightUnit *fight_nextptr( int pos );
 
 // 获取双方城池指针
 City *fight_getcityptr( int pos );
+
+// 战斗结算
+int fight_lost_calc();
 
 // 战斗信息
 int fight_unit2json();

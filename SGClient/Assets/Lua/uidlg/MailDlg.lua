@@ -1,4 +1,5 @@
 -- 界面
+local json = require "cjson"
 local m_Dlg = nil;
 local m_DialogFrameMod = nil;
 local m_uiListLayer = nil; --UnityEngine.GameObject
@@ -302,60 +303,99 @@ function MailDlgSetMail( recvValue )
 	SetControlID( uiObj, recvValue.m_incrementid )
 	m_uiCache[recvValue.m_incrementid] = uiObj
 	
-	-- 邮件类型决定icon和content解析内容
 	-- 解析内容
-	local contentid = 0;
-	local text = recvValue.m_content_json["text"];
-	if GetMail():IsTag( text, TAG_TEXTID ) then
-		contentid = tonumber(string.sub(text, string.len(TAG_TEXTID) + 1));
-	end
+	-- 玩家间
+	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
+		local from_actorid = recvValue.m_content_json["fromid"];
+		local msg = recvValue.m_content_json["msg"];
+		SetText( uiContent, msg )
 	
-	-- 系统信息邮件
-	if recvValue.m_type == MAIL_TYPE_SYSTEM then
-		SetText( uiContent, T(contentid) )
+	-- 采集
+	elseif recvValue.m_type == MAIL_TYPE_GATHER then
+		local restype = recvValue.m_content_json["res"];
+		local resnum = recvValue.m_content_json["num"];
+		SetText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
 		
-	-- 公告邮件，内容外部http服务器获取
-	elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
-		SetText( uiContent, T(contentid) )
-		
-	-- 每日登录
-	elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
-		SetText( uiContent, T(contentid) )
-		
-	-- 流寇
-	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
-		local win = recvValue.m_content_json["win"];
-		local name = recvValue.m_content_json["name"];
+	-- 侦察
+	elseif recvValue.m_type == MAIL_TYPE_CITY_SPY then
+		local flag = recvValue.m_content_json["flag"];
+		local nation = recvValue.m_content_json["n"];
 		local level = recvValue.m_content_json["lv"];
+		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
-		local tpos = recvValue.m_content_json["tpos"];
-		local enemyname = "Lv."..level.." "..T(938);
-		if win == 1 then
-			SetText( uiContent, F(1110, name, enemyname ) )
-		else
-			SetText( uiContent, F(1111, name, enemyname ) )
+		SetText( uiContent, F( 5511, Nation(nation), level, name, pos ) );
+	
+	-- 被侦察
+	elseif recvValue.m_type == MAIL_TYPE_CITY_BESPY then
+		local flag = recvValue.m_content_json["flag"];
+		local nation = recvValue.m_content_json["n"];
+		local level = recvValue.m_content_json["lv"];
+		local name = recvValue.m_content_json["na"];
+		local pos = recvValue.m_content_json["pos"];
+		SetText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
+			
+	else
+		-- 解析内容
+		local contentid = 0;
+		local text = recvValue.m_content_json["text"];
+		if GetMail():IsTag( text, TAG_TEXTID ) then
+			contentid = tonumber(string.sub(text, string.len(TAG_TEXTID) + 1));
 		end
 		
-	-- 城战
-	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
-	
-	-- 国战
-	elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
-	
+		-- 系统信息邮件
+		if recvValue.m_type == MAIL_TYPE_SYSTEM then
+			SetText( uiContent, T(contentid) )
+			
+		-- 公告邮件，内容外部http服务器获取
+		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
+			SetText( uiContent, T(contentid) )
+			
+		-- 每日登录
+		elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
+			SetText( uiContent, T(contentid) )
+			
+		-- 流寇
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
+			local win = recvValue.m_content_json["win"];
+			local name = recvValue.m_content_json["name"];
+			local level = recvValue.m_content_json["lv"];
+			local pos = recvValue.m_content_json["pos"];
+			local tpos = recvValue.m_content_json["tpos"];
+			local enemyname = "Lv."..level.." "..T(938);
+			if win == 1 then
+				SetText( uiContent, F(1110, name, enemyname ) )
+			else
+				SetText( uiContent, F(1111, name, enemyname ) )
+			end
+			
+		-- 城战
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
+		
+		-- 国战
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
+		
+		end
 	end
+
 	
 	-- 解析标题
 	local title = "";
-	if GetMail():IsTag( recvValue.m_title, TAG_TEXTID ) then
-		local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
-		if textid ~= nil then
-			title = T(textid)
-		end
+	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
+		local title_json = json.decode( recvValue.m_title );
+		title = F( 5004, Nation( title_json["n"] ), title_json["lv"], title_json["na"] );
+		
 	else
-		title = recvValue.m_title;
+		-- 其它类型解析
+		if GetMail():IsTag( recvValue.m_title, TAG_TEXTID ) then
+			local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
+			if textid ~= nil then
+				title = T(textid)
+			end
+		else
+			title = recvValue.m_title;
+		end
 	end
 	SetText( uiTitle, title )
-	
 
 	-- 接收时间
 	SetText( uiRecvTime, os.date( "%m-%d %H:%M", recvValue.m_recvtime ) )

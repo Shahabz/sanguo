@@ -213,3 +213,50 @@ int struct_NetC_MailAllDel_recv( char **pptr, int *psize, SLK_NetC_MailAllDel *p
 	return 0;
 }
 
+int struct_NetS_MailShare_recv( char **pptr, int *psize, SLK_NetS_MailShare *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_LONG_RECV( &pValue->m_mailid, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_a_name_len, (*pptr), (*psize) );
+	if( pValue->m_a_name_len < 0 || pValue->m_a_name_len > (*psize)*(int)sizeof(char) || pValue->m_a_name_len > 32 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_a_name, (*pptr), pValue->m_a_name_len*sizeof(char), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_d_name_len, (*pptr), (*psize) );
+	if( pValue->m_d_name_len < 0 || pValue->m_d_name_len > (*psize)*(int)sizeof(char) || pValue->m_d_name_len > 32 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_d_name, (*pptr), pValue->m_d_name_len*sizeof(char), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_type, (*pptr), (*psize) );
+	return 0;
+}
+
+int struct_NetC_MailSend_recv( char **pptr, int *psize, SLK_NetC_MailSend *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_unit_index, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_actorid, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_content_length, (*pptr), (*psize) );
+	if( pValue->m_content_length < 0 || pValue->m_content_length > (*psize)*(int)sizeof(char) || pValue->m_content_length > 512 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_content, (*pptr), pValue->m_content_length*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_actorid, (*pptr), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_content_length, (*pptr), (*psize) );
+	if( pValue->m_content_length < 0 || pValue->m_content_length > (*psize)*(int)sizeof(char) || pValue->m_content_length > 512 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_content, (*pptr), pValue->m_content_length*sizeof(char), (*psize) );
+	LKSET_WORD_RECV( &pValue->m_reply_length, (*pptr), (*psize) );
+	if( pValue->m_reply_length < 0 || pValue->m_reply_length > (*psize)*(int)sizeof(char) || pValue->m_reply_length > 512 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_reply, (*pptr), pValue->m_reply_length*sizeof(char), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_reply_recvtime, (*pptr), (*psize) );
+	return 0;
+}
+

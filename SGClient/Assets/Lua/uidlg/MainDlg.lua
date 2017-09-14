@@ -516,8 +516,12 @@ function MainDlgSetChat( recvValue )
 		else
 			local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
 			local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
-			local msg = recvValue.m_msg
-			SetRichText( m_uiChatText, nation..name..msg )
+			local msg = ChatDlgMakeMsg( recvValue )
+			if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
+				SetRichText( m_uiChatText, nation..name..msg, ChatDlgOnLinkClickMail )
+			else
+				SetRichText( m_uiChatText, nation..name..msg, ChatDlgOnLinkClickPos )
+			end
 		end
 	end
 end

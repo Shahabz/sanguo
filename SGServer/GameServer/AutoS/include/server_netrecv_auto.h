@@ -23,6 +23,9 @@ int netrecv_mapbattle_S( int client_index, char *data, int size );
 int netrecv_mailask_S( int client_index, char *data, int size );
 int netrecv_mailop_S( int client_index, char *data, int size );
 int netrecv_mailalldel_S( int client_index, char *data, int size );
+int netrecv_mailshare_S( int client_index, char *data, int size );
+int netrecv_mailsend_S( int client_index, char *data, int size );
+int netrecv_mailreply_S( int client_index, char *data, int size );
 
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code );
 int netrecv_wqueue_list_S( int client_index, char *data, int size, int exec_code );

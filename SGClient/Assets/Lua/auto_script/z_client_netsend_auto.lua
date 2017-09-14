@@ -136,3 +136,27 @@ function netsend_mailalldel_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_mailid=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_d_name_len=0,m_d_name="[m_d_name_len]",m_type=0,
+function netsend_mailshare_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILSHARE );
+	struct_NetS_MailShare_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+
+-- m_unit_index=0,m_actorid=0,m_content_length=0,m_content="[m_content_length]",
+function netsend_mailsend_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILSEND );
+	struct_NetC_MailSend_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+
+-- m_actorid=0,m_content_length=0,m_content="[m_content_length]",m_reply_length=0,m_reply="[m_reply_length]",m_reply_recvtime=0,
+function netsend_mailreply_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_MAILREPLY );
+	struct_NetC_MailReply_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

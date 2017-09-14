@@ -750,6 +750,7 @@ struct _slk_NetS_Chat {
 	int m_optime;	//聊天信息-时间
 	char m_channel;	//聊天信息-频道
 	char m_nation;	//聊天信息-国家
+	char m_msgtype;	//聊天信息-消息类型
 };
 typedef struct _slk_NetS_Chat SLK_NetS_Chat;	//聊天信息
 
@@ -1006,7 +1007,7 @@ struct _slk_NetS_Mail {
 	i64 m_mailid;	//邮件-id
 	char m_type;	//邮件-类型
 	short m_title_len;	//邮件
-	char m_title[64];	//邮件标题
+	char m_title[128];	//邮件标题
 	short m_content_len;	//邮件
 	char m_content[1024];	//邮件-内容
 	short m_attach_len;	//邮件
@@ -1016,6 +1017,8 @@ struct _slk_NetS_Mail {
 	int m_recvtime;	//邮件-接收时间
 	i64 m_fightid;	//邮件-关联战斗
 	char m_lock;	//邮件-锁定状态
+	int m_actorid;	//邮件-所属玩家
+	char m_viewpath;	//邮件-查看途径
 };
 typedef struct _slk_NetS_Mail SLK_NetS_Mail;	//一封邮件
 
@@ -1024,6 +1027,19 @@ struct _slk_NetS_MailOpResult {
 	i64 m_mailid;	//邮件操作返回结果
 };
 typedef struct _slk_NetS_MailOpResult SLK_NetS_MailOpResult;	//邮件操作结果
+
+struct _slk_NetS_MailFight {
+	char m_flag;	//战斗邮件详情
+	short m_content_length;	//战斗邮件详情
+	char m_content[1800];	//战斗邮件详情
+	i64 m_mailid;	//战斗邮件详情
+};
+typedef struct _slk_NetS_MailFight SLK_NetS_MailFight;	//战斗邮件详情
+
+struct _slk_NetS_MailView {
+	SLK_NetS_Mail m_mail;	//邮件查看
+};
+typedef struct _slk_NetS_MailView SLK_NetS_MailView;	//邮件查看
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1137,5 +1153,7 @@ int struct_NetS_MapResInfo_send( char **pptr, int *psize, SLK_NetS_MapResInfo *p
 int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherChange *pValue );
 int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue );
 int struct_NetS_MailOpResult_send( char **pptr, int *psize, SLK_NetS_MailOpResult *pValue );
+int struct_NetS_MailFight_send( char **pptr, int *psize, SLK_NetS_MailFight *pValue );
+int struct_NetS_MailView_send( char **pptr, int *psize, SLK_NetS_MailView *pValue );
 
 #endif

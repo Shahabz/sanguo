@@ -33,10 +33,9 @@ extern int g_city_maxcount;
 extern Actor *g_actors;
 extern int g_maxactornum;
 
-SLK_NetS_Chat g_ChatCacheZone[CHAT_CACHE_QUEUE_COUNT];
 SLK_NetS_Chat g_ChatCacheNation[CHAT_CACHE_QUEUE_COUNT];
 
-int chat_actortalk( int actor_index, char channel, char *msg )
+int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -56,12 +55,9 @@ int chat_actortalk( int actor_index, char channel, char *msg )
 	pValue.m_msglen = strlen( pValue.m_msg );
 	pValue.m_optime = (int)time( NULL );
 	pValue.m_channel = channel;
+	pValue.m_msgtype = msgtype;
 
-	if ( channel == CHAT_CHANNEL_ZONE )
-	{
-		chat_send_zone( &pValue );
-	}
-	else if ( channel == CHAT_CHANNEL_NATION )
+	if ( channel == CHAT_CHANNEL_NATION )
 	{
 		chat_send_nation( &pValue );
 	}
@@ -70,15 +66,6 @@ int chat_actortalk( int actor_index, char channel, char *msg )
 		chat_send_world( &pValue );
 	}
 	
-	return 0;
-}
-
-// 发送到本区域
-int chat_send_zone( SLK_NetS_Chat *pValue )
-{
-	netsend_chat_S( pValue->m_zone, SENDTYPE_ZONE, pValue );
-	chat_cache_queue_add( g_ChatCacheZone, pValue );
-	chat_cache_queue_add_db( pValue );
 	return 0;
 }
 
@@ -95,7 +82,6 @@ int chat_send_nation( SLK_NetS_Chat *pValue )
 int chat_send_world( SLK_NetS_Chat *pValue )
 {
 	netsend_chat_S( 0, SENDTYPE_WORLD, pValue );
-	chat_cache_queue_add( g_ChatCacheZone, pValue );
 	chat_cache_queue_add( g_ChatCacheNation, pValue );
 	chat_cache_queue_add_db( pValue );
 	return 0;
@@ -128,8 +114,8 @@ int chat_cache_queue_add_db( SLK_NetS_Chat *pValue )
 	char szContent[256 * 2 + 1] = { 0 };
 	db_escape( pValue->m_name, szText_name, 0 );
 	db_escape( pValue->m_msg, szContent, 0 );
-	sprintf( szSQL, "INSERT INTO chat ( channel, actorid, shape, level, frame, nation, zone, place, name, msg, optime ) VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%s','%s','%d')",
-		pValue->m_channel, pValue->m_actorid, pValue->m_shape, pValue->m_level, pValue->m_frame, pValue->m_nation, pValue->m_zone, pValue->m_place, szText_name, szContent, pValue->m_optime );
+	sprintf( szSQL, "INSERT INTO chat ( channel, actorid, shape, level, frame, nation, zone, place, name, msg, msgtype, optime ) VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%s','%s','%d','%d')",
+		pValue->m_channel, pValue->m_actorid, pValue->m_shape, pValue->m_level, pValue->m_frame, pValue->m_nation, pValue->m_zone, pValue->m_place, szText_name, szContent, pValue->m_msgtype, pValue->m_optime );
 	dbwork_addsql( szSQL, DBWORK_CMD_CHAT_CACHE, 0 );
 	return 0;
 }
@@ -139,7 +125,7 @@ int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
 	char	szSQL[1024];
-	sprintf( szSQL, "SELECT channel, actorid, shape, level, frame, nation, zone, place, name, msg, optime FROM (SELECT * FROM chat WHERE channel='%d' or channel='%d' ORDER BY optime DESC LIMIT %d ) a ORDER BY optime ASC;", channel, CHAT_CHANNEL_WORLD, CHAT_CACHE_QUEUE_COUNT );
+	sprintf( szSQL, "SELECT channel, actorid, shape, level, frame, nation, zone, place, name, msg, msgtype, optime FROM (SELECT * FROM chat WHERE channel='%d' or channel='%d' ORDER BY optime DESC LIMIT %d ) a ORDER BY optime ASC;", channel, CHAT_CHANNEL_WORLD, CHAT_CACHE_QUEUE_COUNT );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -165,6 +151,7 @@ int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
 		info.m_namelen = strlen( info.m_name );
 		strncpy( info.m_msg, row[index++], 127 );
 		info.m_msglen = strlen( info.m_msg );
+		info.m_msgtype = atoi( row[index++] );
 		info.m_optime = atoi( row[index++] );
 		chat_cache_queue_add( pCache, &info );
 	}
@@ -174,7 +161,6 @@ int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
 
 int chat_cache_load()
 {
-	chat_cache_loaddb( g_ChatCacheZone, CHAT_CHANNEL_ZONE );
 	chat_cache_loaddb( g_ChatCacheNation, CHAT_CHANNEL_NATION );
 	return 0;
 }

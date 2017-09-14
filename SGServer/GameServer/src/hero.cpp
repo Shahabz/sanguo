@@ -543,6 +543,40 @@ int hero_addsoldiers( int actor_index, int herokind )
 	return 0;
 }
 
+int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path )
+{
+	if ( !pCity )
+		return -1;
+	if ( !pHero )
+		return -1;
+	if ( value == 0 )
+		return -1;
+
+	pHero->soldiers += value;
+	if ( pHero->soldiers < 0 )
+	{
+		pHero->soldiers = 0;
+		value = -pHero->soldiers;
+	}
+	else if ( pHero->soldiers > pHero->troops )
+	{
+		value = pHero->troops - pHero->soldiers;
+		pHero->soldiers = pHero->troops;
+	}
+
+	if ( pCity->actor_index >= 0 )
+	{
+		SLK_NetS_HeroSoldiers pValue = { 0 };
+		pValue.m_kind = pHero->kind;
+		pValue.m_add = value;
+		pValue.m_soldiers = pHero->soldiers;
+		pValue.m_soldiers_max = pHero->troops;
+		pValue.m_path = PATH_HERO_ADDSOLDIERS;
+		netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+
 // Ó¢ÐÛ×´Ì¬
 int hero_changestate( int city_index, int herokind, char state )
 {

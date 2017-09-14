@@ -47,7 +47,7 @@ int mapresinfo_init_auto()
 	g_resinfo = (MapResInfo *)malloc( sizeof(MapResInfo)*g_resinfo_maxnum );
 	memset( g_resinfo, 0, sizeof(MapResInfo)*g_resinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`level`,`type`,`herolevel`,`num`,`sec` from map_resinfo;" );
+	sprintf( szSQL, "select `kind`,`level`,`type`,`herolevel`,`num`,`sec`,`exp` from map_resinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -67,6 +67,7 @@ int mapresinfo_init_auto()
 		g_resinfo[kind].herolevel = atoi(row[offset++]);
 		g_resinfo[kind].num = atoi(row[offset++]);
 		g_resinfo[kind].sec = atoi(row[offset++]);
+		g_resinfo[kind].exp = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

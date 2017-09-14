@@ -5,11 +5,15 @@
 #define CHAT_CACHE_QUEUE_COUNT	100
 
 #define CHAT_CHANNEL_NATION	0	// 国家
-#define CHAT_CHANNEL_ZONE	1	// 区域
-#define CHAT_CHANNEL_WORLD	2	// 世界
+#define CHAT_CHANNEL_WORLD	1	// 世界
 
-int chat_actortalk( int actor_index, char channel, char *msg );
-int chat_send_zone( SLK_NetS_Chat *pValue );
+#define CHAT_MSGTYPE_ACTORCHAT			0		// 消息类型-玩家聊天
+#define CHAT_MSGTYPE_VS					1		// 消息类型-对战
+#define CHAT_MSGTYPE_SPY				2		// 消息类型-侦察
+#define CHAT_MSGTYPE_ATTACK_ASKHELP		3		// 消息类型-攻击请求支援
+#define CHAT_MSGTYPE_DEFENSE_ASKHELP	4		// 消息类型-防守请求支援
+
+int chat_actortalk( int actor_index, char channel, char msgtype, char *msg );
 int chat_send_nation( SLK_NetS_Chat *pValue );
 int chat_send_world( SLK_NetS_Chat *pValue );
 int chat_cache_queue_add( SLK_NetS_Chat *pCache, SLK_NetS_Chat *pValue );

@@ -28,6 +28,7 @@
 #include "army.h"
 #include "army_march.h"
 #include "army_fight.h"
+#include "army_mail.h"
 #include "city.h"
 #include "map_town.h"
 #include "map_enemy.h"
@@ -66,6 +67,8 @@ extern int g_map_enemy_maxcount;
 
 extern MapRes *g_map_res;
 extern int g_map_res_maxcount;
+
+extern Fight g_fight;
 
 Army *g_army = NULL;
 int g_army_maxcount = 0;
@@ -219,6 +222,27 @@ Army *army_getptr( int army_index )
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return NULL;
 	return &g_army[army_index];
+}
+
+Army *army_getptr_cityhero( City *pCity, int herokind )
+{
+	if ( !pCity )
+		return NULL;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		int army_index = pCity->battle_armyindex[tmpi];
+		if ( army_index >= 0 && army_index < g_army_maxcount )
+		{
+			for ( int i = 0; i < ARMY_HERO_MAX; i++ )
+			{
+				if ( g_army[army_index].herokind[i] == herokind )
+				{
+					return &g_army[army_index];
+				}
+			}
+		}
+	}
+	return NULL;
 }
 
 // 显示单元属性
@@ -853,7 +877,7 @@ void army_delete( int army_index )
 				}
 			}
 
-			//army_mail_gather( army_index );
+			army_mail_gather( army_index );
 		}
 	}
 	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
@@ -1360,7 +1384,9 @@ int army_gather_calc( int army_index )
 		return -1;
 
 	// 当前已经采集的资源数量=每秒采集量*武将采集时间*(1 + 科技加成%)*(1＋活动加成%)
-	int gathernum = (int)round( (config->num / (float)config->sec) * g_army[army_index].statetime * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]) );
+	int gathernum_buff = (int)round( (config->num / (float)config->sec) * g_army[army_index].gatherbuff * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]) );
+	int gathernum = gathernum_buff + ( int )round( (config->num / (float)config->sec) * (g_army[army_index].statetime - g_army[army_index].gatherbuff) * (1.0f + pCity->attr.gather_per[0]) );
+
 	// 部队采集量
 	switch ( config->type )
 	{
@@ -1418,7 +1444,9 @@ int army_gather( int army_index )
 		return -1;
 
 	// 已经采集时长
+	g_army[army_index].appdata = g_map_res[index].kind;
 	g_army[army_index].statetime += 1;
+	g_army[army_index].gatherbuff += 1;
 	if ( g_army[army_index].statetime >= g_army[army_index].stateduration )
 	{// 采集完毕
 		army_gather_calc( army_index );
@@ -1479,25 +1507,14 @@ void army_fight( int army_index )
 			}
 			else
 			{
-				if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
-				{
-					map_enemy_delete( g_army[army_index].to_index );
-				}
 				army_setstate( army_index, ARMY_STATE_REBACK );
 			}
 			write_gamelog( "[FIGHT_START_ERROR]_to_type:%d", g_army[army_index].to_type );
 			return;
 		}
 
-		// 攻击方战场部队还原到army里
-		/*if ( g_army[army_index].group_index >= 0 && g_army[army_index].group_index < g_armygroup_maxcount )
-		{
-			army_fightresult_toarmy_withgroup( army_index );
-		}
-		else
-		{
-			army_fightresult_toarmy( army_index, 1 );
-		}*/
+		// 战斗结算
+		fight_lost_calc();
 
 		// 攻击方是城池的部队
 		if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
@@ -1520,14 +1537,12 @@ void army_fight( int army_index )
 			// 防御方是怪物
 			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
 			{
-				army_vs_enemy( army_index );
-				// 被选择次数减少
-				map_enemy_delete( g_army[army_index].to_index );
+				army_vs_enemy( army_index, &g_fight );
 			}
 			// 防御方是资源点
 			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_RES )
 			{
-				//army_vs_res( army_index );
+				army_vs_res( army_index, &g_fight );
 			}
 			
 

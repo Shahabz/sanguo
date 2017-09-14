@@ -23,8 +23,10 @@
 #include "vip.h"
 #include "actor_notify.h"
 #include "army.h"
+#include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "mail.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -71,10 +73,15 @@ extern int g_zoneinfo_maxnum;
 extern Army *g_army;
 extern int g_army_maxcount;
 
+extern BuildingUpgrade *g_building_upgrade;
+extern int g_building_upgrade_maxnum;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
 char g_city_allinited = 0;
+char g_szSpyMailjson[8192] = { 0 };
+char g_szSpyMailjsonBak[8192] = { 0 };
 
 // 城池数据重置
 int city_reset()
@@ -2883,5 +2890,275 @@ int city_move( City *pCity, short posx, short posy )
 	value[4] = lastposx;
 	value[5] = lastposy;
 	actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 6, value, NULL );
+	return 0;
+}
+
+// 侦察
+int city_spy( int actor_index, int unit_index, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	MapUnit *unit = &g_mapunit[unit_index];
+	if ( !unit )
+		return -1;
+	if ( unit->type != MAPUNIT_TYPE_CITY )
+		return -1;
+	if ( unit->index < 0 || unit->index >= g_city_maxcount )
+		return -1;
+	City *pTargetCity = &g_city[unit->index];
+	if ( !pTargetCity )
+		return -1;
+
+	// 侦察科技等级
+	int techlevel = pCity->techlevel[19];
+	if ( techlevel <= 0 )
+		return -1;
+
+	// 侦察方主城等级
+	int mainlevel = city_mainlevel( pCity->index );
+	if ( mainlevel <= 0 || mainlevel >= g_building_upgrade[BUILDING_Main].maxnum )
+		return -1;
+	// 被侦察方主城等级
+	int target_mainlevel = city_mainlevel( pTargetCity->index );
+	if ( target_mainlevel <= 0 || target_mainlevel >= g_building_upgrade[BUILDING_Main].maxnum )
+		return -1;
+
+	// 此处注意：侦察类型决定，到底是增加科技等级还是概率，案子上和表现上不同
+	int typeodds = 0;
+	if ( type == 1 )
+	{ // 初级侦察
+		int silver = g_building_upgrade[BUILDING_Main].config[mainlevel].value[3];
+		if ( pCity->silver < silver )
+			return -1;
+		city_changesilver( pCity->index, -silver, PATH_SPY );
+		//techlevel += global.spy_add_techlevel1;
+	}
+	else if ( type == 2 )
+	{ // 中级侦察
+		int silver = g_building_upgrade[BUILDING_Main].config[mainlevel].value[4];
+		if ( pCity->silver < silver )
+			return -1;
+		city_changesilver( pCity->index, -silver, PATH_SPY );
+		//techlevel += global.spy_add_techlevel2;
+		typeodds = 20;
+	}
+	else if ( type == 3 )
+	{ // 高级侦察
+		int token = global.spy_token;
+		if ( actor_change_token( actor_index, -token, PATH_SPY, 0 ) < 0 )
+			return -1;
+		//techlevel += global.spy_add_techlevel3;
+		typeodds = 50;
+	}
+	else
+	{
+		return -1;
+	}
+
+	if ( techlevel >= g_techinfo[19].maxnum )
+	{
+		techlevel = g_techinfo[19].maxnum - 1;
+	}
+
+	char title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+
+	char be_title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char be_content[MAIL_CONTENT_MAXSIZE] = { 0 };
+
+	char res_success = 0;
+	char wall_success = 0;
+	char hero_success = 0;
+
+	// 最终侦查成功概率 = 初始侦查成功概率 + 侦查方式增加概率 + 科技增加概率 + （被侦查方主城等级 - 侦查方主城等级） * 5% 
+	int baseodds = typeodds + g_techinfo[19].config[techlevel].value + (target_mainlevel - mainlevel) * 5;
+	// 1侦察资源情况
+	int odds = global.spy_res_odds + baseodds;
+	if ( rand() % 100 <= odds )
+	{ 
+		res_success = 1;
+	}
+
+	// 2侦察城墙兵力	
+	if ( res_success == 1 )
+	{
+		odds = global.spy_wall_odds + baseodds;
+		if ( rand() % 100 <= odds )
+		{
+			wall_success = 1;
+		}
+	}
+
+	// 3侦察驻守武将
+	if ( wall_success == 1 )
+	{
+		odds = global.spy_hero_odds + baseodds;
+		if ( rand() % 100 <= odds )
+		{
+			hero_success = 1;
+		}
+	}
+
+
+	if ( res_success == 1 )
+	{// 侦察成功
+		sprintf( title, "%s%d", TAG_TEXTID, 5011 );
+		sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":1,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\",\"pp\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d,\"iron\":%d", 
+			pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy, pTargetCity->people, pTargetCity->silver, pTargetCity->wood, pTargetCity->food, pTargetCity->iron );
+
+		if ( wall_success == 1 )
+		{ // 侦察到城池信息
+			char szTmp[256] = { 0 };
+			// 城墙等级
+			Building *pWall = building_getptr_kind( pTargetCity->index, BUILDING_Wall );
+			int walllv = 0;
+			if ( pWall )
+				walllv = pWall->level;
+			// 兵营库存
+			int corps[3] = { 0 };
+			corps[0] = city_soldiers( pTargetCity->index, 0 );
+			corps[1] = city_soldiers( pTargetCity->index, 1 );
+			corps[2] = city_soldiers( pTargetCity->index, 2 );
+			sprintf_s( szTmp, ",\"walllv\":%d,\"bp\":%d,\"cp1\":%d,\"cp2\":%d,\"cp3\":%d,\"hsu\":%d}", walllv, pTargetCity->battlepower, corps[0], corps[1], corps[2], hero_success );
+			strcat( content, szTmp );
+		}
+		else
+		{
+			strcat( content, "}" );
+		}
+
+		// 发送给侦察人
+		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+		if ( hero_success == 1 )
+		{ // 侦察到武将信息
+			g_szSpyMailjson[0] = 0;
+			sprintf( g_szSpyMailjson, "{\"heros\":[" );
+			
+			// 武将
+			for ( int tmpi = 0; tmpi < 4; tmpi++ )
+			{
+				if ( pTargetCity->hero[tmpi].kind <= 0 )
+					continue;
+				Hero *pHero = &pTargetCity->hero[tmpi];
+				HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+				if ( !config )
+					continue;
+				char szTmp[512] = { 0 };
+				char sflag = ',';
+				if ( tmpi == 0 )
+					sflag = ' ';
+
+				Army *pArmy = army_getptr_cityhero( pTargetCity, pHero->kind );
+				if ( pHero->state == 0 || !pArmy )
+				{ // 未出征状态
+					sprintf( szTmp, "%c{\"kd\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d,\"state\":0}",
+						sflag, pHero->kind, pHero->level, config->corps, pHero->color, pHero->soldiers );
+				}
+				else
+				{ // 外出要显示更详细内容
+					char szInfo[256] = { 0 };
+					if ( pArmy->state == ARMY_STATE_MARCH )
+					{ // 行军中，要显示，多久到，和行军目标
+						if ( pArmy->to_type == MAPUNIT_TYPE_CITY )
+						{
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"toname\":\"%s\"", pArmy->state, pArmy->statetime, pArmy->to_type, army_getname_target( pArmy->index ) );
+						}
+						else if ( pArmy->to_type == MAPUNIT_TYPE_TOWN )
+						{
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, pArmy->to_id );
+						}
+						else if ( pArmy->to_type == MAPUNIT_TYPE_ENEMY )
+						{
+							int kind = 0;
+							MapEnemy *enemy = map_enemy_getptr( pArmy->to_index );
+							if ( enemy )
+							{
+								kind = enemy->kind;
+							}
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, kind );
+						}
+						else if ( pArmy->to_type == MAPUNIT_TYPE_RES )
+						{
+							int kind = 0;
+							MapRes *res = map_res_getptr( pArmy->to_index );
+							if ( res )
+							{
+								kind = res->kind;
+							}
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, kind );
+						}
+						else
+						{
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d", pArmy->state, pArmy->statetime, pArmy->to_type );
+						}
+						
+					}
+					else if ( pArmy->state == ARMY_STATE_REBACK )
+					{ // 往返程中，只显示还有多久回城
+						sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d", pArmy->state, pArmy->statetime );
+					}
+					else if( pArmy->state == ARMY_STATE_GATHER )
+					{ // 采集中，显示采集的是多少级的什么资源点
+						int reskind = 0;
+						MapRes *res = map_res_getptr( pArmy->to_index );
+						if ( res )
+						{
+							reskind = res->kind;
+						}
+						sprintf( szInfo, "\"armystate\":%d,\"tokind\":%d", pArmy->state, reskind );
+					}
+					else
+					{ // 未知
+						sprintf( szInfo, "\"armystate\":%d", pArmy->state );
+					}
+
+					sprintf( szTmp, "%c{\"kd\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d,\"state\":1,%s}",
+						sflag, pHero->kind, pHero->level, config->corps, pHero->color, pHero->soldiers, szInfo );
+				}	
+				strcat( g_szSpyMailjson, szTmp );
+			}
+			strcat( g_szSpyMailjson, "]," );
+
+			// 守卫
+			strcat( g_szSpyMailjson, "\"guards\":[" );
+			for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+			{
+				if ( pTargetCity->guard[tmpi].monsterid <= 0 )
+					continue;
+				char szTmp[256] = { 0 };
+				char sflag = ',';
+				if ( tmpi == 0 )
+					sflag = ' ';
+
+				sprintf( szTmp, "%c{\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d}",
+					sflag, pTargetCity->guard[tmpi].shape, pTargetCity->guard[tmpi].level, pTargetCity->guard[tmpi].corps, pTargetCity->guard[tmpi].color, pTargetCity->guard[tmpi].soldiers );
+
+				strcat( g_szSpyMailjson, szTmp );
+			}
+			strcat( g_szSpyMailjson, "]}" );
+
+			mail_fight( mailid, pCity->actorid, g_szSpyMailjson );
+		}
+		
+		// 发给被侦察人
+		sprintf( be_title, "%s%d", TAG_TEXTID, 5013 );
+		sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
+		mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
+	}
+	else
+	{ // 侦察失败
+		sprintf( title, "%s%d", TAG_TEXTID, 5012 );
+		sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
+		mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+
+		//sprintf( be_title, "%s%d", TAG_TEXTID, 5014 );
+		//sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
+		//mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
+	}
+
 	return 0;
 }

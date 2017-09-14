@@ -1086,6 +1086,7 @@ int struct_NetS_Chat_send( char **pptr, int *psize, SLK_NetS_Chat *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_channel, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_msgtype, (*psize) );
 	return 0;
 }
 
@@ -1467,7 +1468,7 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
 	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_title_len, (*psize) );
-	if( pValue->m_title_len > 0 && pValue->m_title_len <= 64 )
+	if( pValue->m_title_len > 0 && pValue->m_title_len <= 128 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_title, pValue->m_title_len*sizeof(char), (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_content_len, (*psize) );
 	if( pValue->m_content_len > 0 && pValue->m_content_len <= 1024 )
@@ -1480,6 +1481,8 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_recvtime, (*psize) );
 	LKSET_LONG_SEND( (*pptr), &pValue->m_fightid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_lock, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_viewpath, (*psize) );
 	return 0;
 }
 
@@ -1489,6 +1492,26 @@ int struct_NetS_MailOpResult_send( char **pptr, int *psize, SLK_NetS_MailOpResul
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MailFight_send( char **pptr, int *psize, SLK_NetS_MailFight *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_content_length, (*psize) );
+	if( pValue->m_content_length > 0 && pValue->m_content_length <= 1800 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_content, pValue->m_content_length*sizeof(char), (*psize) );
+	LKSET_LONG_SEND( (*pptr), &pValue->m_mailid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MailView_send( char **pptr, int *psize, SLK_NetS_MailView *pValue )
+{
+	int tmpi = 0;
+
+	struct_NetS_Mail_send( pptr, psize, &pValue->m_mail );
 	return 0;
 }
 

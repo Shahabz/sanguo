@@ -1,4 +1,5 @@
 -- 界面
+local json = require "cjson"
 local m_Dlg = nil;
 local m_uiScrollView = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
@@ -17,6 +18,12 @@ local m_objectPool = {};
 local m_ChatCache = {};
 local m_ChatCacheCount = 0;
 local m_LastTime = 0;
+
+CHAT_MSGTYPE_ACTORCHAT			=	0		-- 消息类型-玩家聊天
+CHAT_MSGTYPE_VS					=	1		-- 消息类型-对战
+CHAT_MSGTYPE_SPY				=	2		-- 消息类型-侦察
+CHAT_MSGTYPE_ATTACK_ASKHELP		=	3		-- 消息类型-攻击请求支援
+CHAT_MSGTYPE_DEFENSE_ASKHELP	=	4		-- 消息类型-防守请求支援
 
 -- 打开界面
 function ChatDlgOpen()
@@ -106,6 +113,22 @@ function ChatDlgShow()
 	ChatDlgScrollToBottom();
 end
 
+-- 解析内容
+function ChatDlgMakeMsg( recvValue )
+	local msg = ""
+	if recvValue.m_msgtype == CHAT_MSGTYPE_VS then
+		local info = json.decode( recvValue.m_msg );
+		msg = F( 1122, info["aname"], info["dname"], info["mailid"] );
+		
+	elseif recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
+		local info = json.decode( recvValue.m_msg );
+		msg = F( 1123, info["aname"], info["dname"], info["mailid"] );
+	else
+		msg = recvValue.m_msg
+	end
+	return msg;
+end
+
 -- 添加聊天消息
 function ChatDlgAddMsg( recvValue )
 	local uiObj = nil;
@@ -118,7 +141,11 @@ function ChatDlgAddMsg( recvValue )
 	local content = uiObj.transform:Find("Content");
 	content.transform:Find("Head/Back"):GetComponent( "Image" ).sprite = PlayerHeadSprite( recvValue.m_shape );
 	content.transform:Find("Name"):GetComponent( "YlyRichText" ).text = "<emote=001><color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>青州</color>"
-	content.transform:Find("Text"):GetComponent( "YlyRichText" ).text = recvValue.m_msg
+	if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
+		SetRichText( content.transform:Find("Text"), ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickMail );
+	else
+		SetRichText( content.transform:Find("Text"), ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickPos );
+	end
 	content.transform:Find("Back"):GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:SetParent( m_uiContent.transform );
@@ -211,4 +238,20 @@ function ChatDlgRecv( recvValue )
 	elseif recvValue.m_actorid == -1 then
 		ChatDlgAddSysTalk( recvValue );
 	end
+end
+
+-- 点击分享的邮件
+function ChatDlgOnLinkClickMail( str )
+	local sendValue = {};
+	sendValue.m_op = 8;
+	sendValue.m_mailid = int64.new(str);
+	if sendValue.m_mailid == nil then
+		return
+	end
+	netsend_mailop_C( sendValue )
+end
+
+-- 点击坐标
+function ChatDlgOnLinkClickPos( str )
+	
 end

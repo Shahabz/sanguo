@@ -47,7 +47,7 @@ int mapenemyinfo_init_auto()
 	g_enemyinfo = (MapEnemyInfo *)malloc( sizeof(MapEnemyInfo)*g_enemyinfo_maxnum );
 	memset( g_enemyinfo, 0, sizeof(MapEnemyInfo)*g_enemyinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`level`,`awardgroup`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3` from map_enemyinfo;" );
+	sprintf( szSQL, "select `kind`,`level`,`first_awardgroup`,`awardgroup`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3` from map_enemyinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,7 @@ int mapenemyinfo_init_auto()
 			continue;
 		g_enemyinfo[kind].kind = atoi(row[offset++]);
 		g_enemyinfo[kind].level = atoi(row[offset++]);
+		g_enemyinfo[kind].first_awardgroup = atoi(row[offset++]);
 		g_enemyinfo[kind].awardgroup = atoi(row[offset++]);
 		g_enemyinfo[kind].monsterid[0] = atoi(row[offset++]);
 		g_enemyinfo[kind].monsterid[1] = atoi(row[offset++]);

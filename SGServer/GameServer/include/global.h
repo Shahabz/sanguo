@@ -77,6 +77,14 @@ typedef struct _global
 	int hero_gather_duration[6];
 	int army_move_kingzone;
 	int mapevent_sec;
+	int spy_token;
+	int nation_mail_token;
+	int spy_add_techlevel1;
+	int spy_add_techlevel2;
+	int spy_add_techlevel3;
+	short spy_res_odds;
+	short spy_wall_odds;
+	short spy_hero_odds;
 }Global;
 int global_init();
 void global_reload();

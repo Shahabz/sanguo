@@ -192,6 +192,23 @@ function OfSprite( shape )
 	return sprite;
 end
 
+-- 敌军形象
+function EnemyHeadSprite( shape )
+	local name = ""
+	if shape < 1000 then
+		name = string.format("enemyhead_%d", shape ); -- 使用敌人专用头像
+	elseif shape < 2000 then
+		name = string.format("guardhead_%d", shape-1000 ); -- 使用守卫专用头像
+	elseif shape < 3000 then
+		name = string.format("herohead_%d", shape-2000 ); -- 使用英雄专用头像
+	end
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "enemyhead_1" );
+	end
+	return sprite;
+end
+
 -- 资源图标通过类型
 function ResIcon( type )
 	local list = { "ui_icon_res_silver", "ui_icon_res_wood", "ui_icon_res_food", "ui_icon_res_iron", "ui_icon_res_token" }

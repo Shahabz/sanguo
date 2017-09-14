@@ -280,6 +280,45 @@ int netrecv_mailalldel_S( int client_index, char *data, int size )
 	return 0;
 }
 
+int netrecv_mailshare_S( int client_index, char *data, int size )
+{
+	SLK_NetS_MailShare Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetS_MailShare_recv( &ptr, &tmpsize, &Value );
+
+	proc_mailshare_S( client_index, &Value );
+
+	return 0;
+}
+
+int netrecv_mailsend_S( int client_index, char *data, int size )
+{
+	SLK_NetC_MailSend Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetC_MailSend_recv( &ptr, &tmpsize, &Value );
+
+	proc_mailsend_S( client_index, &Value );
+
+	return 0;
+}
+
+int netrecv_mailreply_S( int client_index, char *data, int size )
+{
+	SLK_NetC_MailReply Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetC_MailReply_recv( &ptr, &tmpsize, &Value );
+
+	proc_mailreply_S( client_index, &Value );
+
+	return 0;
+}
+
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code )
 {
 	client_setwait( client_index, 1 );
@@ -403,6 +442,15 @@ int proc_command_S( int client_index, short cmd, char *ptr, int tmpsize, int exe
 		break;
 	case CMDC_MAILALLDEL:
 		netrecv_mailalldel_S( client_index, ptr, tmpsize );
+		break;
+	case CMDC_MAILSHARE:
+		netrecv_mailshare_S( client_index, ptr, tmpsize );
+		break;
+	case CMDC_MAILSEND:
+		netrecv_mailsend_S( client_index, ptr, tmpsize );
+		break;
+	case CMDC_MAILREPLY:
+		netrecv_mailreply_S( client_index, ptr, tmpsize );
 		break;
 	default:
 		return -1;

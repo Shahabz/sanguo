@@ -73,6 +73,8 @@
 #define PATH_MARCH						45	// 行军
 #define PATH_MAPEVENT					46	// 地图随机事件
 #define PATH_MAIL_ATTACH				47	// 附件
+#define PATH_ENEMY						48	// 流寇
+#define PATH_SPY						49	// 侦察
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

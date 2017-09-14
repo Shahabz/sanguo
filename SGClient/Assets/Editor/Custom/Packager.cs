@@ -166,15 +166,19 @@ public class Packager
             string path = Path.GetDirectoryName( newpath );
             if ( !Directory.Exists( path ) )
                 Directory.CreateDirectory( path );
-            File.Copy( f, newpath, true );
-//            if ( target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneOSXUniversal )
-//                File.Copy( f, newpath, true );
-//            else
-//#if UNITY_STANDALONE_WIN
-//                Execute( Application.dataPath + "/../../Public/ghlua.exe", f + " " + newpath, 0 );
-//#else
-//			Execute(Application.dataPath+"/../../Public/ghlua", f + " " + newpath, 0);
-//#endif
+			//EncodeLuaFile (f, newpath);	
+
+			File.Copy( f, newpath, true );
+			if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneOSXUniversal) {
+			}
+            else
+			{
+#if UNITY_STANDALONE_WIN
+				Execute( Application.dataPath + "/../../Public/FileEncrypt.exe",newpath, 0 );
+#else
+				Execute(Application.dataPath+"/../../Public/fileencrypt", newpath, 0);
+#endif
+			}
 
             //Execute(Application.dataPath+"/../../Public/luajit/luajit.exe", " -b " + f + " " + newpath, 0);
             //Execute(Application.dataPath + "/../../Public/luac/Luac.exe", " -o " + newpath + " " + f, 0);
@@ -401,6 +405,41 @@ public class Packager
             UnityEngine.Debug.LogError( e.Message );
         }
     }
+
+	public static void EncodeLuaFile(string srcFile, string outFile) {
+		if (!srcFile.ToLower().EndsWith(".lua")) {
+			File.Copy(srcFile, outFile, true);
+			return;
+		}
+		bool isWin = true; 
+		string luaexe = string.Empty;
+		string args = string.Empty;
+		string exedir = string.Empty;
+		string currDir = Directory.GetCurrentDirectory();
+		if (Application.platform == RuntimePlatform.WindowsEditor) {
+			isWin = true;
+			luaexe = "luajit.exe";
+			args = "-b " + srcFile + " " + outFile;
+			exedir = Application.dataPath.Replace("Assets", "") + "LuaEncoder/luajit/";
+		} else if (Application.platform == RuntimePlatform.OSXEditor) {
+			isWin = false;
+			luaexe = "./luajit";
+			args = "-b " + srcFile + " " + outFile;
+			exedir = Application.dataPath.Replace("Assets", "") + "LuaEncoder/luajit_mac/";
+		}
+		Directory.SetCurrentDirectory(exedir);
+		ProcessStartInfo info = new ProcessStartInfo();
+		info.FileName = luaexe;
+		info.Arguments = args;
+		info.WindowStyle = ProcessWindowStyle.Hidden;
+		info.UseShellExecute = isWin;
+		info.ErrorDialog = true;
+		Utils.Log(info.FileName + " " + info.Arguments);
+
+		Process pro = Process.Start(info);
+		pro.WaitForExit();
+		Directory.SetCurrentDirectory(currDir);
+	}
 
     /// <summary>
     /// 执行程序

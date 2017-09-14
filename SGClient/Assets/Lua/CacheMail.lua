@@ -2,9 +2,14 @@
 local json = require "cjson"
 MAIL_TYPE_SYSTEM		=	0	-- 系统信息邮件
 MAIL_TYPE_NOTIFY		=	1	-- 公告邮件，内容外部http服务器获取
+MAIL_TYPE_ACTOR_SEND	=	2	-- 玩家发送邮件
+MAIL_TYPE_ACTOR_REPLY	=	3	-- 玩家回复邮件
 MAIL_TYPE_FIGHT_ENEMY	=	10	-- 流寇
 MAIL_TYPE_FIGHT_CITY	=	11	-- 城战
 MAIL_TYPE_FIGHT_NATION	=	12	-- 国战
+MAIL_TYPE_CITY_SPY		=	13	-- 侦察
+MAIL_TYPE_CITY_BESPY	=	14	-- 被侦察
+MAIL_TYPE_GATHER		=	20	-- 采集
 
 TAG_TEXTID = '#$'	  --标记为文字表id
 TAG_ITEMID = '$$'     -- 标记 标记为道具装备ID
@@ -156,6 +161,7 @@ function Mail:Insert( recvValue )
 	table.insert( self.m_Mails, {
 		m_incrementid = self.m_IncrementID,
 		m_mailid = recvValue.m_mailid,
+		m_actorid = recvValue.m_actorid,
 		m_type = recvValue.m_type,
 		m_title = recvValue.m_title,
 		m_content = recvValue.m_content,
@@ -165,7 +171,9 @@ function Mail:Insert( recvValue )
 		m_read = recvValue.m_read,
 		m_lock = recvValue.m_lock,
 		m_fightid = recvValue.m_fightid,
+		m_viewpath = recvValue.m_viewpath,
 		m_content_json = m_content_json,
+		m_fight_content = "",
 		m_delete_toggle = 0,
 	} )
 		

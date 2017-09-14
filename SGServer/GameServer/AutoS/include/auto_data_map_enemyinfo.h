@@ -6,7 +6,8 @@ struct _mapenemyinfo {
 //--Automatically generated
 				short kind;	//
 				short level;	//
-				short awardgroup;	//
+				int first_awardgroup;	//
+				int awardgroup;	//
 				short monsterid[4];	//
 };
 typedef struct _mapenemyinfo MapEnemyInfo;

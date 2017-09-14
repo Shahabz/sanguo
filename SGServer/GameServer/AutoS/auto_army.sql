@@ -23,6 +23,8 @@ CREATE TABLE `army` (
   `food` int(11) NOT NULL DEFAULT '0' COMMENT '采集粮草',
   `iron` int(11) NOT NULL DEFAULT '0' COMMENT '采集镔铁',
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '采集元宝',
+  `gatherbuff` int(11) NOT NULL DEFAULT '0' COMMENT '采集受到buff影响时长',
+  `reback` tinyint(3) NOT NULL DEFAULT '0' COMMENT '返程类型',
   `herokind0` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',
   `herokind1` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',
   `herokind2` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',

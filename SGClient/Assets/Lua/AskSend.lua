@@ -21,6 +21,7 @@ ASKINFO_MATERIALMAKE	=	18 -- 材料制造
 ASKINFO_STORY			=	19 -- 副本
 ASKINFO_WORLDMAP		=	20 -- 世界地图
 ASKINFO_MAP_EVENT		=	21 -- 世界地图随机事件
+ASKINFO_SPY_CITY		=	22 -- 侦察城池
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

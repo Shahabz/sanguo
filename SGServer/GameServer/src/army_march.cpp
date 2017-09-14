@@ -702,9 +702,8 @@ int actor_army_return( int actor_index, int army_index, int unit_index )
 	{
 		city_helparmy_del( army_getcityptr_target( army_index ), army_index );
 	}
+	g_army[army_index].reback = ARMY_REBACK_RETURN;
 	army_setstate( army_index, ARMY_STATE_REBACK );
-
-
 	return 0;
 }
 
@@ -757,6 +756,7 @@ int actor_army_callback( int actor_index, int army_index, int itemkind )
 		city_underfire_del( army_getcityptr_target( army_index ), army_index );
 	}
 
+	g_army[army_index].reback = ARMY_REBACK_CALLBACK;
 	if ( instantly == 1 )
 	{
 		army_delete( army_index );
@@ -837,6 +837,7 @@ int actor_helparmy_repatriate( int actor_index, int army_index )
 			continue;
 		if ( help_armyindex == army_index )
 		{
+			g_army[army_index].reback = ARMY_REBACK_REPATRIAT;
 			army_setstate( army_index, ARMY_STATE_REBACK );
 			city_helparmy_del( pCity, army_index );
 			break;

@@ -106,6 +106,34 @@ struct _slk_NetC_MailAllDel {
 };
 typedef struct _slk_NetC_MailAllDel SLK_NetC_MailAllDel;	//邮件批量删除
 
+struct _slk_NetS_MailShare {
+	i64 m_mailid;	//邮件分享
+	short m_a_name_len;	//邮件分享
+	char m_a_name[32];	//邮件分享
+	short m_d_name_len;	//邮件分享
+	char m_d_name[32];	//邮件分享
+	char m_type;	//邮件分享
+};
+typedef struct _slk_NetS_MailShare SLK_NetS_MailShare;	//邮件分享
+
+struct _slk_NetC_MailSend {
+	int m_unit_index;	//邮件发送
+	int m_actorid;	//邮件发送
+	short m_content_length;	//邮件发送
+	char m_content[512];	//邮件发送
+};
+typedef struct _slk_NetC_MailSend SLK_NetC_MailSend;	//邮件发送
+
+struct _slk_NetC_MailReply {
+	int m_actorid;	//邮件回复
+	short m_content_length;	//邮件回复
+	char m_content[512];	//邮件回复
+	short m_reply_length;	//邮件回复
+	char m_reply[512];	//邮件回复
+	int m_reply_recvtime;	//邮件回复
+};
+typedef struct _slk_NetC_MailReply SLK_NetC_MailReply;	//邮件回复
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -120,5 +148,8 @@ int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pVa
 int struct_NetC_MailAsk_recv( char **pptr, int *psize, SLK_NetC_MailAsk *pValue );
 int struct_NetC_MailOp_recv( char **pptr, int *psize, SLK_NetC_MailOp *pValue );
 int struct_NetC_MailAllDel_recv( char **pptr, int *psize, SLK_NetC_MailAllDel *pValue );
+int struct_NetS_MailShare_recv( char **pptr, int *psize, SLK_NetS_MailShare *pValue );
+int struct_NetC_MailSend_recv( char **pptr, int *psize, SLK_NetC_MailSend *pValue );
+int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pValue );
 
 #endif

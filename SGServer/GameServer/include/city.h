@@ -216,4 +216,7 @@ int city_helparmy_getnum( City *pCity );
 // «®≥«
 int city_move_actor( int actor_index, short posx, short posy, int itemkind );
 int city_move( City *pCity, short posx, short posy );
+
+// ’Ï≤Ï
+int city_spy( int actor_index, int unit_index, int type );
 #endif

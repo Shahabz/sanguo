@@ -257,6 +257,22 @@ int global_init()
 			global.army_move_kingzone = atoi( row[1] );
 		else if ( id == 82 )
 			global.mapevent_sec = atoi( row[1] );
+		else if ( id == 83 )
+			global.spy_token = atoi( row[1] );
+		else if ( id == 84 )
+			global.nation_mail_token = atoi( row[1] );
+		else if ( id == 85 )
+			global.spy_add_techlevel1 = atoi( row[1] );
+		else if ( id == 86 )
+			global.spy_add_techlevel2 = atoi( row[1] );
+		else if ( id == 87 )
+			global.spy_add_techlevel3 = atoi( row[1] );
+		else if ( id == 88 )
+			global.spy_res_odds = atoi( row[1] );
+		else if ( id == 89 )
+			global.spy_wall_odds = atoi( row[1] );
+		else if ( id == 90 )
+			global.spy_hero_odds = atoi( row[1] );
 		
 	}
 	lua_setglobal( servL, "global" );

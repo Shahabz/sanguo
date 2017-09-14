@@ -22,10 +22,15 @@
 #define ARMY_ACTION_OCCUPY				2	// 去驻扎
 #define ARMY_ACTION_GATHER				3	// 去采集
 #define ARMY_ACTION_HELP_TROOP			6	// 去士兵援助
-
 #define ARMY_ACTION_GROUP_START			10	// 发起集结中
 #define ARMY_ACTION_GROUP_ING			11	// 去集结中
 
+#define ARMY_REBACK_NORMAL			0	// 返程类型-正常
+#define ARMY_REBACK_RETURN			1	// 返程类型-操作返回
+#define ARMY_REBACK_CALLBACK		2	// 返程类型-操作召回
+#define ARMY_REBACK_FIGHTWIN		3	// 返程类型-战斗胜利返回
+#define ARMY_REBACK_FIGHTLOSE		4	// 返程类型-战斗失败打回
+#define ARMY_REBACK_REPATRIAT		5	// 返程类型-他人遣回
 
 #define ARMY_STATE_FIGHT_TIME		1	// 战斗时长(S)
 #define ARMY_CARRY_ITEMMAX			8	// 部队携带的道具
@@ -34,6 +39,7 @@
 int army_load();
 int army_save( FILE *fp );
 Army *army_getptr( int army_index );
+Army *army_getptr_cityhero( City *pCity, int herokind );
 
 // 显示单元属性
 void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr );

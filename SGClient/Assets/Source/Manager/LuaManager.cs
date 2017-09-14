@@ -22,7 +22,17 @@ public class LuaLoader : LuaFileUtils
     /// <returns></returns>
     public override byte[] ReadFile( string fileName )
     {
-        return base.ReadFile( fileName );
+		byte[] str = base.ReadFile( fileName );
+		if (str[0] == 0x04 && str[1] == 0x41)
+		{
+			for (int i = 2; i < str.Length; i++) {
+				str[i] ^= 0x08;
+				str[i-2] = str[i];
+			}
+			str[str.Length - 1] = 0x0a;
+			str[str.Length - 2] = 0x0a;
+		}
+		return str;
     }
 }
 

@@ -341,7 +341,9 @@ function MapMainDlgReback( army_index )
 		ItemUseDlgShow( 1, army_index )
 	else
 		-- 已达目的点的撤回
-		system_askinfo( ASKINFO_WORLDMAP, "", 3 );
+		MsgBox( T( 1214 ),function()
+			system_askinfo( ASKINFO_WORLDMAP, "", 3 );
+		end )
 	end
 end
 		

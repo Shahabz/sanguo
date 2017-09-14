@@ -388,6 +388,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			map_event_getaward( actor_index, pvalue[1] );
 		}
 		break;
+	case  ASKINFO_SPY_CITY:
+		if ( pvalue[0] == 0 )
+		{ // ’Ï≤Ï
+			city_spy( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
 	default:
 		break;
 	}

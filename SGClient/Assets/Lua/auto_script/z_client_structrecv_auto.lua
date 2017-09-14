@@ -954,6 +954,7 @@ function struct_NetS_Chat_recv( buffer )
 	recvValue.m_optime = buffer:ReadInt();
 	recvValue.m_channel = buffer:ReadSByte();
 	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_msgtype = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1318,6 +1319,8 @@ function struct_NetS_Mail_recv( buffer )
 	recvValue.m_recvtime = buffer:ReadInt();
 	recvValue.m_fightid = buffer:ReadLong();
 	recvValue.m_lock = buffer:ReadSByte();
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_viewpath = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1325,6 +1328,21 @@ function struct_NetS_MailOpResult_recv( buffer )
 	local recvValue = {};
 	recvValue.m_op = buffer:ReadSByte();
 	recvValue.m_mailid = buffer:ReadLong();
+	return recvValue;
+end
+
+function struct_NetS_MailFight_recv( buffer )
+	local recvValue = {};
+	recvValue.m_flag = buffer:ReadSByte();
+	recvValue.m_content_length = buffer:ReadShort();
+	recvValue.m_content = buffer:ReadStringWithLen( recvValue.m_content_length );
+	recvValue.m_mailid = buffer:ReadLong();
+	return recvValue;
+end
+
+function struct_NetS_MailView_recv( buffer )
+	local recvValue = {};
+	recvValue.m_mail = struct_NetS_Mail_recv( buffer );
 	return recvValue;
 end
 

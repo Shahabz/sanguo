@@ -1097,3 +1097,30 @@ function proc_mailopresult_C( recvValue )
 	-- process.
 end
 
+-- m_mailid=0,m_flag=0,m_content_length=0,m_content="[m_content_length]",
+function proc_mailfight_C( recvValue )
+	-- process.
+	if recvValue.m_flag == 0 then -- 准备发送
+		MailFightContent = "";
+		
+	elseif recvValue.m_flag == 1 then -- 发送中
+		MailFightContent = MailFightContent..recvValue.m_content;
+
+		
+	elseif recvValue.m_flag == 2 then -- 发送完毕
+	    MailInfoDlgRecvFight( recvValue.m_mailid, MailFightContent )
+		
+	end
+
+end
+
+-- m_mail={m_mailid=0,m_type=0,m_title_len=0,m_title="[m_title_len]",m_content_len=0,m_content="[m_content_len]",m_attach_len=0,m_attach="[m_attach_len]",m_attachget=0,m_read=0,m_recvtime=0,m_fightid=0,m_lock=0,m_actorid=0,},
+function proc_mailview_C( recvValue )
+	-- process.
+	local json = require "cjson";
+	local m_content_json = json.decode( recvValue.m_mail.m_content );
+	recvValue.m_mail.m_content_json = m_content_json;
+	MailInfoDlgByRecvValue( recvValue.m_mail )
+end
+
+
