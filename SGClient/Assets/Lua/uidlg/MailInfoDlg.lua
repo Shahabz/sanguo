@@ -20,6 +20,7 @@ local m_uiGatherContent = nil; --UnityEngine.GameObject
 local m_uiSpyWallContent = nil; --UnityEngine.GameObject
 local m_uiSpyHeroContent = nil; --UnityEngine.GameObject
 local m_uiUIP_SpyUnit = nil; --UnityEngine.GameObject
+local m_uiSpyWarnContent = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_recvValue = nil
@@ -124,7 +125,8 @@ function MailInfoDlgOnAwake( gameObject )
 	m_uiSpyWallContent = objs[16];
 	m_uiSpyHeroContent = objs[17];
 	m_uiUIP_SpyUnit = objs[18];
-
+	m_uiSpyWarnContent = objs[19];
+	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Item", 6, 6, m_uiUIP_Item);
@@ -167,6 +169,12 @@ function MailInfoDlgShow()
 	MailInfoDlgFightUnitClear()
 	MailInfoDlgSpyUnitClear()
 	SetFalse( m_uiMailFight );
+	SetFalse( m_uiActorContent );
+	SetFalse( m_uiGatherContent );
+	SetFalse( m_uiSpyWallContent );
+	SetFalse( m_uiSpyHeroContent );
+	SetFalse( m_uiSpyWarnContent );
+	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 end
 
 function MailInfoDlgByIncrementID( incrementid )
@@ -181,7 +189,22 @@ function MailInfoDlgByIncrementID( incrementid )
 	MailInfoDlgByRecvValue( recvValue )
 end
 
+function MailInfoDlgByMailID( mailid )
+	local recvValue = nil;
+	local endIndex = #GetMail().m_Mails;
+	for i = 1, endIndex, 1 do
+		if int64.equals( GetMail().m_Mails[i].m_mailid, mailid ) == true then
+			recvValue = GetMail().m_Mails[i];
+			break;
+		end
+	end
+	MailInfoDlgByRecvValue( recvValue )
+end
+
 function MailInfoDlgByRecvValue( recvValue )
+	if recvValue == nil then
+		return
+	end
 	MailInfoDlgShow()
 	m_recvValue = recvValue;
 	m_share_a_name = "";
@@ -222,11 +245,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	-- 解析内容
 	-- 玩家间邮件
 	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
-		SetFalse( m_uiMailContent );
 		SetTrue( m_uiActorContent );
-		SetFalse( m_uiGatherContent );
-		SetFalse( m_uiSpyWallContent );
-		SetFalse( m_uiSpyHeroContent );
 		
 		-- 来信人
 		local title_json = json.decode( recvValue.m_title );
@@ -258,9 +277,6 @@ function MailInfoDlgByRecvValue( recvValue )
 	-- 侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_SPY then
 		SetTrue( m_uiMailContent );
-		SetFalse( m_uiActorContent );
-		SetFalse( m_uiGatherContent );
-		SetFalse( m_uiSpyWallContent );
 		
 		local flag = recvValue.m_content_json["flag"];
 		local nation = recvValue.m_content_json["n"];
@@ -304,11 +320,8 @@ function MailInfoDlgByRecvValue( recvValue )
 				
 				-- 没武将信息
 				if m_spy_hashero == 0 then
-					SetTrue( m_uiSpyHeroContent );
-					SetTrue( m_uiSpyHeroContent.transform:Find("Warn") );
-					SetText( m_uiSpyHeroContent.transform:Find("Warn/Text"), T(5517) );
-				else
-					SetFalse( m_uiSpyHeroContent.transform:Find("Warn") );
+					SetTrue( m_uiSpyWarnContent );
+					SetText( m_uiSpyWarnContent.transform:Find("Text"), T(5517) );
 				end
 			
 			else
@@ -317,7 +330,6 @@ function MailInfoDlgByRecvValue( recvValue )
 				SetFalse( m_uiSpyWallContent.transform:Find("CorpsGrid") );
 				SetTrue( m_uiSpyWallContent.transform:Find("Warn") );
 				SetText( m_uiSpyWallContent.transform:Find("Warn"), T(5516) );
-				SetFalse( m_uiSpyHeroContent );
 			end
 			
 			m_share_a_name = "["..Nation(GetPlayer().m_nation).."]"..GetPlayer().m_name;
@@ -327,10 +339,6 @@ function MailInfoDlgByRecvValue( recvValue )
 	-- 被侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_BESPY then
 		SetTrue( m_uiMailContent );
-		SetFalse( m_uiActorContent );
-		SetFalse( m_uiGatherContent );
-		SetFalse( m_uiSpyWallContent );
-		SetFalse( m_uiSpyHeroContent );
 		
 		local flag = recvValue.m_content_json["flag"];
 		local nation = recvValue.m_content_json["n"];
@@ -342,10 +350,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	-- 采集
 	elseif recvValue.m_type == MAIL_TYPE_GATHER then
 		SetTrue( m_uiMailContent );
-		SetFalse( m_uiActorContent );
 		SetTrue( m_uiGatherContent );
-		SetFalse( m_uiSpyWallContent );
-		SetFalse( m_uiSpyHeroContent );
 		
 		local reback = recvValue.m_content_json["reback"];
 		local pos = recvValue.m_content_json["pos"];
@@ -387,10 +392,6 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 	else
 		SetTrue( m_uiMailContent );
-		SetFalse( m_uiActorContent );
-		SetFalse( m_uiGatherContent );
-		SetFalse( m_uiSpyWallContent );
-		SetFalse( m_uiSpyHeroContent );
 		
 		local contentid = 0;
 		local text = recvValue.m_content_json["text"];
@@ -556,7 +557,6 @@ function MailInfoDlgRecvFight( mailid, content )
 	if m_recvValue.m_type == MAIL_TYPE_CITY_SPY then
 		local info = json.decode( content );
 		SetTrue( m_uiSpyHeroContent );
-		SetFalse( m_uiSpyHeroContent.transform:Find("Warn") );
 		
 		-- 武将
 		if info["heros"] ~= nil then
@@ -567,33 +567,23 @@ function MailInfoDlgRecvFight( mailid, content )
 				SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero["kd"] ) );
 				SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero["cr"] ) );
 				SetImage( uiObj.transform:Find("Corps"), CorpsSprite( pHero["cs"] ) );
-				SetText( uiObj.transform:Find("Name"), HeroName( pHero["kd"] ) );
+				SetText( uiObj.transform:Find("Name"), HeroName( pHero["kd"] )..MailInfoDlgSpyArmyState(pHero) );
 				SetText( uiObj.transform:Find("Level"), "Lv."..pHero["lv"] );
 				SetText( uiObj.transform:Find("Desc"), T(1117).." "..pHero["hp"] );
 			end
 		end
 		-- 守卫
-		for tmpi = 1, #info["heros"], 1 do
-			
+		for tmpi = 1, #info["guards"], 1 do
+			local pHero = info["guards"][tmpi];
+			local uiObj = m_ObjectPool:Get( "UIP_SpyUnit" );
+			uiObj.transform:SetParent( m_uiSpyHeroContent.transform );
+			SetImage( uiObj.transform:Find("Shape"), GuardSprite( pHero["sp"] ) );
+			SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero["cr"] ) );
+			SetImage( uiObj.transform:Find("Corps"), CorpsSprite( pHero["cs"] ) );
+			SetText( uiObj.transform:Find("Name"), T(1119) );
+			SetText( uiObj.transform:Find("Level"), "Lv."..pHero["lv"] );
+			SetText( uiObj.transform:Find("Desc"), T(1117).." "..pHero["hp"] );
 		end
-			-- 玩家英雄	
-	--[[if type == FIGHT_UNITTYPE_HERO then
-		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( kind ) );
-		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( color ) );
-		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
-		SetText( uiObj.transform:Find("Name"), HeroName( kind ) );
-		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp );
-		
-	-- 玩家城墙守卫
-	elseif type == FIGHT_UNITTYPE_GUARD then
-		SetImage( uiObj.transform:Find("Shape"), GuardSprite( shape ) );
-		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( color ) );
-		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
-		SetText( uiObj.transform:Find("Name"), T( 1119 ) );
-		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp );--]]
-		
 		
 	else
 		SetTrue( m_uiMailFight );
@@ -883,5 +873,61 @@ function MailInfoDlgShare()
 	sendValue.m_d_name = m_share_d_name;
 	sendValue.m_d_name_len = string.len( m_share_d_name );
 	netsend_mailshare_C( sendValue )
+end
+
+-- 侦察武将当前状态
+function MailInfoDlgSpyArmyState( pHero )
+	local name = "";
+	if pHero["state"] == 0 then
+		name = T(1182); -- 驻防
+	else
+		if pHero["armystate"] == ARMY_STATE_MARCH then --行军
+			local toname = "";
+			if pHero["totype"] == MAPUNIT_TYPE_CITY then
+				toname = pHero["toname"];
+				
+			elseif pHero["totype"] == MAPUNIT_TYPE_TOWN then
+				local tokind = pHero["tokind"]; 
+				toname = T(1183)
+				
+			elseif pHero["totype"] == MAPUNIT_TYPE_ENEMY then
+				local tokind = pHero["tokind"];
+				local info = g_enemyinfo[tokind];
+				if info == nil then
+					toname = T(1183)
+				else
+					toname = "Lv."..info.level..T(938)
+				end
+			
+			elseif pHero["totype"] == MAPUNIT_TYPE_RES then
+				local tokind = pHero["tokind"];
+				local info = g_resinfo[tokind];
+				if info == nil then
+					toname = T(1183)
+				else
+					toname = "Lv."..info.level..T(MapUnitResNameList[info.type])
+				end
+				
+			end
+			
+			name = F( 1180, math.ceil( pHero["armytime"]/60 ), toname );
+			
+		elseif pHero["armystate"] == ARMY_STATE_REBACK then -- 返程
+			name = F( 1181, math.ceil( pHero["armytime"]/60 ) );
+			
+		elseif pHero["armystate"] == ARMY_STATE_GATHER then -- 采集
+			local tokind = pHero["tokind"];
+			local info = g_resinfo[tokind];
+			if info == nil then
+				name = F( 1179, 0, T(1183) )
+			else
+				name = F( 1179, info.level, T(MapUnitResNameList[info.type]) )
+			end
+			
+		else
+			name = T(1183); -- 未知
+		end
+	end
+	return "("..name..")";
 end
 

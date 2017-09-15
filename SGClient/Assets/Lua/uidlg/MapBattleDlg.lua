@@ -6,6 +6,7 @@ local m_uiMarchTime1 = nil; --UnityEngine.GameObject
 local m_uiMarchTime2 = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiCost = nil; --UnityEngine.GameObject
+local m_uiTitle = nil; --UnityEngine.GameObject
 
 local m_unit_index = -1;
 local m_marchtime = 0;
@@ -85,6 +86,7 @@ function MapBattleDlgOnAwake( gameObject )
 	m_uiMarchTime2 = objs[3];
 	m_uiContent = objs[4];
 	m_uiCost = objs[5];
+	m_uiTitle = objs[6];
 end
 
 -- 界面初始化时调用
@@ -124,11 +126,24 @@ function MapBattleDlgShow( unit_index, recvValue )
 	local posy 		= recvValue.m_posy;
 	
 	if recvValue.m_type == MAPUNIT_TYPE_CITY then-- 城池
+		local state 	= recvValue.m_state;
+		local name 		= recvValue.m_name;
+		local level 	= recvValue.m_char_value[1];
+		local nation	= recvValue.m_char_value[2];
+		-- 标题
+		SetText( m_uiTitle.transform:Find("Text"), T(1222) )
+		-- 形象
+		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
+		-- 名字
+		SetText( m_uiName, F(1228, level, name, posx, posy) )
+		
 	elseif recvValue.m_type == MAPUNIT_TYPE_ARMY then -- 部队
 	elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then -- 城镇
 	elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then -- 流寇
 		local level	= recvValue.m_char_value[1];
 		local kind 	= recvValue.m_short_value[1];
+		-- 标题
+		SetText( m_uiTitle.transform:Find("Text"), T(954) )
 		-- 形象
 		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
 		-- 名字+位置

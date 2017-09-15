@@ -1095,6 +1095,10 @@ end
 -- m_op=0,m_mailid=0,
 function proc_mailopresult_C( recvValue )
 	-- process.
+	if recvValue.m_op == 1 then
+		MapCityDlgClose()
+		MailInfoDlgByMailID( recvValue.m_mailid )
+	end
 end
 
 -- m_mailid=0,m_flag=0,m_content_length=0,m_content="[m_content_length]",

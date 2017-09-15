@@ -17,7 +17,7 @@
 #define NOTIFY_ACTORSFLAG	10	// 角色标志位
 #define NOTIFY_WORLDMAP		11	// 世界地图
 #define NOTIFY_VALUECHANGE	12	// 某些值改变的通用通知
-#define NOTIFY_MAIL			13	// 邮件数量
+#define NOTIFY_MAIL			13	// 邮件
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

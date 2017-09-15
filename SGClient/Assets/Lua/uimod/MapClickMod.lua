@@ -7,6 +7,7 @@ local m_uiInfoBtn = nil; --UnityEngine.GameObject
 local m_uiHelpBtn = nil; --UnityEngine.GameObject
 local m_uiFightBtn = nil; --UnityEngine.GameObject
 local m_uiEnterBtn = nil; --UnityEngine.GameObject
+local m_uiMyFightBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 
@@ -29,12 +30,24 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			MapCityDlgShow( m_LastRecvValue )
 		
+		-- 驻防
+		elseif nControlID == 3 then
+			MapCityHelpDlgShow( m_LastRecvValue )
+			
+		-- 城战
+		elseif nControlID == 4 then
+			MapCityFightDlgShow( m_LastRecvValue )
+			
 		-- 进入城池
 		elseif nControlID == 5 then
 			if GameManager.currentScence == "worldmap" then
 				WorldMap.ReturnCity()
 				MainDlgShowCity()
 			end
+		
+		-- 本城城战
+		elseif nControlID == 6 then
+			
 		end
 
 		if m_Mod then
@@ -57,6 +70,7 @@ function MapClickModOnAwake( gameObject )
 	m_uiHelpBtn = objs[4];
 	m_uiFightBtn = objs[5];
 	m_uiEnterBtn = objs[6];
+	m_uiMyFightBtn = objs[7];
 end
 
 -- 界面初始化时调用
@@ -154,13 +168,27 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 		SetFalse( m_uiFightBtn )
 		SetFalse( m_uiHelpBtn )
 		SetTrue( m_uiEnterBtn )
+		SetFalse( m_uiMyFightBtn )
 		local buttonList = { m_uiEnterBtn };
 		MapClickModButton( buttonList );
+	
+	-- 我国城池
+	elseif nation == GetPlayer().m_nation then
+		SetTrue( m_uiInfoBtn )
+		SetFalse( m_uiFightBtn )
+		SetTrue( m_uiHelpBtn )
+		SetFalse( m_uiEnterBtn )
+		SetTrue( m_uiMyFightBtn )
+		local buttonList = { m_uiInfoBtn, m_uiHelpBtn, m_uiMyFightBtn };
+		MapClickModButton( buttonList );
+		
+	-- 敌国城池
 	else
 		SetTrue( m_uiInfoBtn )
 		SetTrue( m_uiFightBtn )
 		SetFalse( m_uiHelpBtn )
 		SetFalse( m_uiEnterBtn )
+		SetFalse( m_uiMyFightBtn )
 		local buttonList = { m_uiInfoBtn, m_uiFightBtn };
 		MapClickModButton( buttonList );
 	end

@@ -3117,7 +3117,7 @@ int city_spy( int actor_index, int unit_index, int type )
 					}
 
 					sprintf( szTmp, "%c{\"kd\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d,\"state\":1,%s}",
-						sflag, pHero->kind, pHero->level, config->corps, pHero->color, pHero->soldiers, szInfo );
+						sflag, pHero->kind, pHero->level, pHero->color, config->corps, pHero->soldiers, szInfo );
 				}	
 				strcat( g_szSpyMailjson, szTmp );
 			}
@@ -3135,7 +3135,7 @@ int city_spy( int actor_index, int unit_index, int type )
 					sflag = ' ';
 
 				sprintf( szTmp, "%c{\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d}",
-					sflag, pTargetCity->guard[tmpi].shape, pTargetCity->guard[tmpi].level, pTargetCity->guard[tmpi].corps, pTargetCity->guard[tmpi].color, pTargetCity->guard[tmpi].soldiers );
+					sflag, pTargetCity->guard[tmpi].shape, pTargetCity->guard[tmpi].level, pTargetCity->guard[tmpi].color, pTargetCity->guard[tmpi].corps, pTargetCity->guard[tmpi].soldiers );
 
 				strcat( g_szSpyMailjson, szTmp );
 			}
@@ -3144,6 +3144,12 @@ int city_spy( int actor_index, int unit_index, int type )
 			mail_fight( mailid, pCity->actorid, g_szSpyMailjson );
 		}
 		
+		// 通知侦察人显示界面
+		SLK_NetS_MailOpResult info = { 0 };
+		info.m_op = 1;
+		info.m_mailid = mailid;
+		netsend_mailopresult_S( actor_index, SENDTYPE_ACTOR, &info );
+
 		// 发给被侦察人
 		sprintf( be_title, "%s%d", TAG_TEXTID, 5013 );
 		sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
