@@ -377,6 +377,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // Ç¨³Ç
 			city_move_actor( actor_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
+		else if ( pvalue[0] == 9 )
+		{ // Ç²·µ
+			actor_helparmy_repatriate( actor_index, pvalue[1] );
+		}
+		
 		break;
 	case ASKINFO_MAP_EVENT:
 		if ( pvalue[0] == 1 )
@@ -388,10 +393,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			map_event_getaward( actor_index, pvalue[1] );
 		}
 		break;
-	case  ASKINFO_SPY_CITY:
+	case ASKINFO_SPY_CITY:
 		if ( pvalue[0] == 0 )
 		{ // Õì²ì
 			city_spy( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
+	case ASKINFO_CITYHELP:
+		if ( pvalue[0] == 0 )
+		{// ×¤·À
+			city_helparmy_sendlist( actor_index, pvalue[1]);
 		}
 		break;
 	default:

@@ -273,6 +273,34 @@ int global_init()
 			global.spy_wall_odds = atoi( row[1] );
 		else if ( id == 90 )
 			global.spy_hero_odds = atoi( row[1] );
+		else if ( id == 91 )
+			global.cityhelp_level = atoi( row[1] );
+		else if ( id == 92 )
+			global.cityhelp_sec = atoi( row[1] );
+		else if ( id == 93 )
+			global.cityfight_sec_limit[0] = atoi( row[1] );
+		else if ( id == 94 )
+			global.cityfight_sec_limit[1] = atoi( row[1] );
+		else if ( id == 95 )
+			global.cityfight_sec_limit[2] = atoi( row[1] );
+		else if ( id == 96 )
+			global.cityfight_sec_group[0] = atoi( row[1] );
+		else if ( id == 97 )
+			global.cityfight_sec_group[1] = atoi( row[1] );
+		else if ( id == 98 )
+			global.cityfight_sec_group[2] = atoi( row[1] );
+		else if ( id == 99 )
+			global.cityfight_body_cost[0] = atoi( row[1] );
+		else if ( id == 100 )
+			global.cityfight_body_cost[1] = atoi( row[1] );
+		else if ( id == 101 )
+			global.cityfight_body_cost[2] = atoi( row[1] );
+		else if ( id == 102 )
+			global.cityfight_item_cost[0] = atoi( row[1] );
+		else if ( id == 103 )
+			global.cityfight_item_cost[1] = atoi( row[1] );
+		else if ( id == 104 )
+			global.cityfight_item_cost[2] = atoi( row[1] );
 		
 	}
 	lua_setglobal( servL, "global" );

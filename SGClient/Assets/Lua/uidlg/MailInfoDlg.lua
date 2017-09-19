@@ -198,7 +198,11 @@ function MailInfoDlgByMailID( mailid )
 			break;
 		end
 	end
+	if recvValue == nil then
+		return false
+	end
 	MailInfoDlgByRecvValue( recvValue )
+	return true;
 end
 
 function MailInfoDlgByRecvValue( recvValue )

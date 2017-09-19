@@ -342,7 +342,7 @@ function MapMainDlgReback( army_index )
 	else
 		-- 已达目的点的撤回
 		MsgBox( T( 1214 ),function()
-			system_askinfo( ASKINFO_WORLDMAP, "", 3 );
+			system_askinfo( ASKINFO_WORLDMAP, "", 3, army_index );
 		end )
 	end
 end

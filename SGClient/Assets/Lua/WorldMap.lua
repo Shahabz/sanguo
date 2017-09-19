@@ -595,7 +595,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		local recvValue = WorldMap.m_nMapUnitList[unit_index];
 		if recvValue ~= nil then
 			if recvValue.m_type == MAPUNIT_TYPE_ARMY then
-				if recvValue.m_state == ARMY_STATE_GROUP_ING or recvValue.m_state == ARMY_STATE_MARCH or recvValue.m_state == ARMY_STATE_REBACK then
+				if recvValue.m_state == ARMY_STATE_MARCH or recvValue.m_state == ARMY_STATE_REBACK then
                     -- 播放音效
                     
 					-- 记录点击的显示单元索引

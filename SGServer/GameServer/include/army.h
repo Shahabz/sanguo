@@ -4,9 +4,7 @@
 
 // 单支部队状态
 #define ARMY_STATE_IDLE				0	// 空闲
-#define ARMY_STATE_GROUP_START		1	// 发起集结
-#define ARMY_STATE_GROUP_ING		2	// 集结中
-#define ARMY_STATE_GROUP_END		3	// 到达指定集结地点,集结完毕
+#define ARMY_STATE_GROUP_END		3	// 集结完毕
 #define ARMY_STATE_READY			4	// 准备中
 #define ARMY_STATE_MARCH			10	// 行军中
 #define ARMY_STATE_FIGHT			20	// 战斗中
@@ -22,8 +20,8 @@
 #define ARMY_ACTION_OCCUPY				2	// 去驻扎
 #define ARMY_ACTION_GATHER				3	// 去采集
 #define ARMY_ACTION_HELP_TROOP			6	// 去士兵援助
-#define ARMY_ACTION_GROUP_START			10	// 发起集结中
-#define ARMY_ACTION_GROUP_ING			11	// 去集结中
+#define ARMY_ACTION_GROUP_ATTACK		11	// 参与集结(攻击方)
+#define ARMY_ACTION_GROUP_DEFENSE		12	// 参与集结(防御方)
 
 #define ARMY_REBACK_NORMAL			0	// 返程类型-正常
 #define ARMY_REBACK_RETURN			1	// 返程类型-操作返回

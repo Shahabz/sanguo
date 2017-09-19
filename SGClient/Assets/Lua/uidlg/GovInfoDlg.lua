@@ -7,6 +7,8 @@ local m_uiUIP_BattleEvent = {nil,nil,nil,nil}; --UnityEngine.GameObject
 local m_uiUIP_CityEvent = {nil,nil,nil,nil}; --UnityEngine.GameObject
 local m_uiProtectBuy = nil; --UnityEngine.GameObject
 local m_selectProtectKind = 0;
+local m_recvValue = nil;
+
 -- 打开界面
 function GovInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "GovInfoDlg" );
@@ -61,6 +63,10 @@ function GovInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 选择
 		elseif nControlID > 100 and nControlID < 110 then
 			GovInfoDlgProtectBuySelect( nControlID-100 )
+			
+		-- 查看邮件
+		elseif nControlID > 1000 and nControlID <= 1010 then
+			GovInfoDlgMailSelect( nControlID-1000 )
         end
 	end
 end
@@ -177,24 +183,26 @@ local function type2text_c( type, kind, value )
 	end
 end
 
-local function type2text_b( type )
+local function type2text_b( type, name, value )
 	if type == 1 then
-		return 742
+		return F( 742, name, T(1177+value) )
 	elseif type == 2 then
-		return 743
+		return F( 743, name, T(1177+value) )
 	elseif type == 3 then
-		return 744
+		return F( 744, name, T(1177+value) )
 	elseif type == 4 then
-		return 745
+		return F( 745, name, T(1177+value) )
 	elseif type == 5 then
-		return 746
+		return F( 746, name, T(1177+value) )
 	elseif type == 6 then
-		return 747
+		return F( 747, name, T(1177+value) )
 	end
 end
 -- -- m_cevent_count=0,m_cevent_list={m_type=0,m_kind=0,m_value=0,m_optime=0,[m_cevent_count]},m_bevent_count=0,m_bevent_list={m_type=0,m_name="[22]",m_value=0,m_optime=0,[m_bevent_count]},
 function GovInfoDlgRecv( recvValue )
+	m_recvValue = recvValue;
 	for i=1, 4, 1 do
+		-- 内政事件
 		if recvValue.m_cevent_list[i].m_type > 0 then
 			SetTrue( m_uiUIP_CityEvent[i] )
 			local timeText = os.date( "%m-%d %H:%M", recvValue.m_cevent_list[i].m_optime )
@@ -204,8 +212,14 @@ function GovInfoDlgRecv( recvValue )
 			SetFalse( m_uiUIP_CityEvent[i] )
 		end
 		
+		-- 军事事件
 		if recvValue.m_bevent_list[i].m_type > 0 then
 			SetTrue( m_uiUIP_BattleEvent[i] )
+			local timeText = os.date( "%m-%d %H:%M", recvValue.m_bevent_list[i].m_optime )
+			local text = type2text_b( recvValue.m_bevent_list[i].m_type, recvValue.m_bevent_list[i].m_name, recvValue.m_bevent_list[i].m_value )
+			SetText( m_uiUIP_BattleEvent[i].transform:Find("Text"), "["..timeText.."] "..text )
+			
+			SetControlID( m_uiUIP_BattleEvent[i].transform:Find("ViewBtn"), 1000+i );
 		else
 			SetFalse( m_uiUIP_BattleEvent[i] )
 		end
@@ -310,3 +324,22 @@ function GovInfoDlgProtectBuy()
 		GovInfoDlgProtectBuySelect( -1 )
 	end )
 end
+
+-- 查看邮件
+function GovInfoDlgMailSelect( index )
+	local info = m_recvValue.m_bevent_list[index]
+	if info == nil then
+		return
+	end
+	-- 本地没有找服务器的
+	if MailInfoDlgByMailID( info.m_mailid ) == false then
+		local sendValue = {};
+		sendValue.m_op = 8;
+		sendValue.m_mailid = info.m_mailid;
+		if sendValue.m_mailid == nil then
+			return
+		end
+		netsend_mailop_C( sendValue )
+	end
+end
+

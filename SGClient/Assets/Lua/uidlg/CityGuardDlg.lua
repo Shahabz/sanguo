@@ -66,7 +66,19 @@ function CityGuardDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 清除CD
 		elseif nControlID == 102 then
 			CityGuardDlgClearCD()
-		
+			
+		-- 武将防守顺序
+		elseif nControlID == 103 then
+			
+			
+		-- 友军驻防武将
+		elseif nControlID == 104 then
+			if m_level < global.cityhelp_level then
+				pop( F(1247, global.cityhelp_level ) )
+			else
+				CityArmyHelpDlgShow()
+			end
+			
 		-- 选择守卫
 		elseif nControlID >= 1000 and nControlID < 1100 then
 			CityGuardDlgSelect( nControlID-1000 )

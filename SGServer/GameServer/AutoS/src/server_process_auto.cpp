@@ -152,7 +152,26 @@ void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pVa
 void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
 {
 	// process.
-	army_battle( city_getptr( client_index ), pValue );
+	if ( pValue->m_action == ARMY_ACTION_HELP_TROOP )
+	{ // 驻防要拆开单个武将
+		SLK_NetC_MapBattle tmpValue = { 0 };
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			if ( pValue->m_herokind[tmpi] > 0 )
+			{
+				memcpy( &tmpValue, pValue, sizeof( SLK_NetC_MapBattle ) );
+				tmpValue.m_herokind[0] = pValue->m_herokind[tmpi];
+				tmpValue.m_herokind[1] = 0;
+				tmpValue.m_herokind[2] = 0;
+				tmpValue.m_herokind[3] = 0;
+				army_battle( city_getptr( client_index ), &tmpValue );
+			}
+		}
+	}
+	else
+	{
+		army_battle( city_getptr( client_index ), pValue );
+	}
 }
 
 void proc_mailask_S( int client_index, SLK_NetC_MailAsk *pValue )

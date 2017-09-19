@@ -16,9 +16,7 @@ CITY_STATE_FIGHT		=	0x04	-- 战斗中
 
 -- 单只部队状态
 ARMY_STATE_IDLE				=	0	-- 空闲
-ARMY_STATE_GROUP_START		=	1	-- 发起集结
-ARMY_STATE_GROUP_ING		=	2	-- 集结中
-ARMY_STATE_GROUP_END		=	3	-- 到达指定集结地点,集结完毕
+ARMY_STATE_GROUP_END		=	3	-- 集结完毕
 ARMY_STATE_READY            =   4   -- 准备中
 ARMY_STATE_MARCH			=	10	-- 行军中
 ARMY_STATE_FIGHT			=	20	-- 战斗中
@@ -33,8 +31,8 @@ ARMY_ACTION_FIGHT			=	1	-- 去战斗
 ARMY_ACTION_OCCUPY			=	2	-- 去驻扎
 ARMY_ACTION_GATHER			=	3	-- 去采集
 ARMY_ACTION_HELP_TROOP		=	6	-- 去士兵援助
-ARMY_ACTION_GROUP_START		=	10	-- 发起集结中
-ARMY_ACTION_GROUP_ING		=	11	-- 去集结中
+ARMY_ACTION_GROUP_ATTACK	=	11	-- 参与集结(攻击方)
+ARMY_ACTION_GROUP_DEFENSE	=	12	-- 参与集结(防御方)
 
 ARMY_REBACK_NORMAL			=	0	-- 返程类型-正常
 ARMY_REBACK_RETURN			=	1	-- 返程类型-操作返回
@@ -158,9 +156,6 @@ MapUnitRangeColor = {
 
 -- 军队状态名称
 MapUnitArmyStateNameList = {
-[ARMY_STATE_GROUP_START]        = 2729,
-[ARMY_STATE_GROUP_ING]          = 2730,
-[ARMY_STATE_GROUP_END]          = 2731,
 [ARMY_STATE_READY]              = 2779,
 [ARMY_STATE_MARCH]              = 2732,
 [ARMY_STATE_FIGHT]              = 2733,
@@ -352,7 +347,18 @@ function MapUnit.createArmy( recvValue )
 	local state 	= recvValue.m_state;
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
-
+	
+	-- 本国玩家可看见驻防
+	if state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
+		local action	= recvValue.m_short_value[5];
+		local nation	= recvValue.m_char_value[5];
+		if action == ARMY_ACTION_HELP_TROOP then
+			if nation ~= GetPlayer().m_nation then
+				return
+			end
+		end
+	end
+	
 	-- 先搜索缓存，如果缓存有，那么就更新
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
@@ -380,7 +386,7 @@ function MapUnit.createArmy( recvValue )
 	end
 	
 	-- 根据状态设置属性
-	if state == ARMY_STATE_GROUP_ING or state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
+	if state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
 		local from_type 	= recvValue.m_char_value[1];
 		local from_grid 	= recvValue.m_char_value[2];
 		local from_posx 	= recvValue.m_short_value[1];

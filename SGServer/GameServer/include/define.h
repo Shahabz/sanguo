@@ -47,6 +47,7 @@
 #include "auto_city_guard.h"
 #include "auto_city.h"
 #include "auto_army.h"
+#include "auto_army_group.h"
 #include "auto_map_zone.h"
 #include "auto_map_town.h"
 #include "auto_map_enemy.h"

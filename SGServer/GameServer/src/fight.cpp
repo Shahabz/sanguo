@@ -266,7 +266,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
 				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
 		}
-		// 加上协防的部队
+		// 加上驻防的部队
 		for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
 		{
 			int army_index = pCity->help_armyindex[index];

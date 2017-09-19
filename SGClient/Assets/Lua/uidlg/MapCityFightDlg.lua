@@ -11,6 +11,8 @@ local m_uiUIP_Type3 = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil
+local m_canSelect = { 0,0,0 }
+
 -- 打开界面
 function MapCityFightDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MapCityFightDlg" );
@@ -92,6 +94,8 @@ end
 ----------------------------------------
 function MapCityFightDlgShow( recvValue )
 	MapCityFightDlgOpen()
+	m_canSelect = { 0,0,0 }
+	
 	m_recvValue 	= recvValue;
 	local state 	= recvValue.m_state;
 	local name 		= recvValue.m_name;
@@ -112,11 +116,128 @@ function MapCityFightDlgShow( recvValue )
 	m_marchtime = WorldMap.MarchTime( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, posx, posy )
 	SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
 	SetText( m_uiMarchTime2, secnum(m_marchtime) )
+	
+	-- 城战令
+	local itemkind = 486
+	local itemnum = GetItem():GetCount( itemkind )
+	
+	-- 行军时间≤5分钟可使用闪电战
+	if m_marchtime <= global.cityfight_sec_limit1 then
+		SetTrue( m_uiUIP_Type1.transform:Find("MarchTime") )
+		SetFalse( m_uiUIP_Type1.transform:Find("MarchWarn") )
+		SetTrue( m_uiUIP_Type1.transform:Find("BodyIcon") )
+		SetTrue( m_uiUIP_Type1.transform:Find("BodyText") )
+		-- 有城战令
+		if itemnum >= global.cityfight_item_cost1 then
+			SetText( m_uiUIP_Type1.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost1 )
+		else
+			SetText( m_uiUIP_Type1.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost1 )
+		end
+		SetFalse( m_uiUIP_Type1.transform:Find("BodyWarn") )
+		SetText( m_uiUIP_Type1.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime ) )
+		SetButtonTrue( m_uiUIP_Type1.transform:Find("SelectButton") )
+		m_canSelect[1] = 1;
+	else
+		SetFalse( m_uiUIP_Type1.transform:Find("MarchTime") )
+		SetTrue( m_uiUIP_Type1.transform:Find("MarchWarn") )
+		SetFalse( m_uiUIP_Type1.transform:Find("BodyIcon") )
+		SetFalse( m_uiUIP_Type1.transform:Find("BodyText") )
+		SetTrue( m_uiUIP_Type1.transform:Find("BodyWarn") )
+		SetButtonFalse( m_uiUIP_Type1.transform:Find("SelectButton") )
+	end
+	
+	-- 行军时间≤10分钟可使用奔袭战
+	if m_marchtime <= global.cityfight_sec_limit2 then
+		SetTrue( m_uiUIP_Type2.transform:Find("MarchTime") )
+		SetFalse( m_uiUIP_Type2.transform:Find("MarchWarn") )
+		SetTrue( m_uiUIP_Type2.transform:Find("BodyIcon") )
+		SetTrue( m_uiUIP_Type2.transform:Find("BodyText") )
+		-- 有城战令
+		if itemnum >= global.cityfight_item_cost2 then
+			SetText( m_uiUIP_Type2.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost2 )
+		else
+			SetText( m_uiUIP_Type2.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost2 )
+		end
+		SetFalse( m_uiUIP_Type2.transform:Find("BodyWarn") )
+		if m_marchtime < global.cityfight_sec_group2 then
+			SetText( m_uiUIP_Type2.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime + global.cityfight_sec_group2 ) )
+		else
+			SetText( m_uiUIP_Type2.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime ) )
+		end
+		SetButtonTrue( m_uiUIP_Type2.transform:Find("SelectButton") )
+		m_canSelect[2] = 1;
+	else
+		SetFalse( m_uiUIP_Type2.transform:Find("MarchTime") )
+		SetTrue( m_uiUIP_Type2.transform:Find("MarchWarn") )
+		SetFalse( m_uiUIP_Type2.transform:Find("BodyIcon") )
+		SetFalse( m_uiUIP_Type2.transform:Find("BodyText") )
+		SetTrue( m_uiUIP_Type2.transform:Find("BodyWarn") )
+		SetButtonFalse( m_uiUIP_Type2.transform:Find("SelectButton") )
+	end
+	
+	-- 远征军没有时间限制
+	if m_marchtime <= global.cityfight_sec_limit3 then
+		SetTrue( m_uiUIP_Type3.transform:Find("MarchTime") )
+		SetFalse( m_uiUIP_Type3.transform:Find("MarchWarn") )
+		SetTrue( m_uiUIP_Type3.transform:Find("BodyIcon") )
+		SetTrue( m_uiUIP_Type3.transform:Find("BodyText") )
+		-- 有城战令
+		if itemnum >= global.cityfight_item_cost3 then
+			SetText( m_uiUIP_Type3.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost3 )
+		else
+			SetText( m_uiUIP_Type3.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost3 )
+		end
+		SetFalse( m_uiUIP_Type3.transform:Find("BodyWarn") )
+		if m_marchtime < global.cityfight_sec_group3 then
+			SetText( m_uiUIP_Type3.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime + global.cityfight_sec_group3 ) )
+		else
+			SetText( m_uiUIP_Type3.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime ) )
+		end
+		SetButtonTrue( m_uiUIP_Type3.transform:Find("SelectButton") )
+		m_canSelect[3] = 1;
+	else
+		SetFalse( m_uiUIP_Type3.transform:Find("MarchTime") )
+		SetTrue( m_uiUIP_Type3.transform:Find("MarchWarn") )
+		SetFalse( m_uiUIP_Type3.transform:Find("BodyIcon") )
+		SetFalse( m_uiUIP_Type3.transform:Find("BodyText") )
+		SetTrue( m_uiUIP_Type3.transform:Find("BodyWarn") )
+		SetButtonFalse( m_uiUIP_Type3.transform:Find("SelectButton") )
+	end
+	
 end
 
 -- 选择模式
 function MapCityFightDlgSelect( type )
+	if m_canSelect[type] == 0 then
+		return
+	end
+	
+	-- 城战令
+	local itemkind = 486
+	local itemnum = GetItem():GetCount( itemkind )
+	if type == 1 then
+		if itemnum < global.cityfight_item_cost1 then
+			if GetPlayer().m_body < global.cityfight_body_cost1 then
+				return
+			end
+		end
+		
+	elseif type == 2 then
+		if itemnum < global.cityfight_item_cost2 then
+			if GetPlayer().m_body < global.cityfight_body_cost2 then
+				return
+			end
+		end
+		
+	elseif type == 3 then
+		if itemnum < global.cityfight_item_cost3 then
+			if GetPlayer().m_body < global.cityfight_body_cost3 then
+				return
+			end
+		end
+	end
+	
 	MapCityFightDlgClose()
-	MapBattleDlgShow( m_recvValue.m_unit_index, m_recvValue )
+	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT )
 end
 

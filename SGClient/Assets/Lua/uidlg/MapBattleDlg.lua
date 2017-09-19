@@ -8,6 +8,7 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiTitle = nil; --UnityEngine.GameObject
 
+local m_action = 0;
 local m_unit_index = -1;
 local m_marchtime = 0;
 local m_cost_food = 0;
@@ -118,10 +119,11 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function MapBattleDlgShow( unit_index, recvValue )
+function MapBattleDlgShow( recvValue, action )
 	MapBattleDlgOpen()
-	m_unit_index = unit_index
+	m_action = action;
 	m_recvValue 	= recvValue;
+	m_unit_index 	= recvValue.m_unit_index
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
 	
@@ -131,7 +133,11 @@ function MapBattleDlgShow( unit_index, recvValue )
 		local level 	= recvValue.m_char_value[1];
 		local nation	= recvValue.m_char_value[2];
 		-- 标题
-		SetText( m_uiTitle.transform:Find("Text"), T(1222) )
+		if action == ARMY_ACTION_HELP_TROOP then
+			SetText( m_uiTitle.transform:Find("Text"), T(1231) )
+		else
+			SetText( m_uiTitle.transform:Find("Text"), T(1222) )
+		end
 		-- 形象
 		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
 		-- 名字
@@ -336,7 +342,7 @@ function MapBattleDlgSetCost()
 	
 	-- 城池
 	if m_recvValue.m_type == MAPUNIT_TYPE_CITY then
-		m_cost_body = math.ceil(global.army_march_food_v1*total + global.army_march_food_v2*(m_marchtime*m_marchtime) + global.army_march_food_v3*m_marchtime)
+		m_cost_body = 5
 		if m_cost_food > GetPlayer().m_body then
 			SetText( m_uiCost, F(967, total, m_cost_body, GetPlayer().m_body ) )
 		else
@@ -425,8 +431,9 @@ function MapBattleDlgBattle()
 	sendValue.m_to_unit_index = m_unit_index
 	sendValue.m_to_posx = m_recvValue.m_posx;
 	sendValue.m_to_posy = m_recvValue.m_posy;
+	sendValue.m_id = 0;
 	sendValue.m_appdata = 0;
-	sendValue.m_action = 0;
+	sendValue.m_action = m_action;
 	
 	-- 城池
 	if m_recvValue.m_type == MAPUNIT_TYPE_CITY then
@@ -434,11 +441,10 @@ function MapBattleDlgBattle()
 			JumpBody()
 			return
 		end
-		sendValue.m_action = ARMY_ACTION_FIGHT
 		
 	-- 部队
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_ARMY then
-		sendValue.m_action = ARMY_ACTION_FIGHT
+
 		
 	-- 城镇
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_TOWN then
@@ -451,7 +457,7 @@ function MapBattleDlgBattle()
 			return
 		end
 		sendValue.m_id = m_recvValue.m_short_value[1];
-		sendValue.m_action = ARMY_ACTION_FIGHT
+
 		
 	-- 资源点
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_RES then

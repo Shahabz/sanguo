@@ -25,6 +25,7 @@
 #define ASKINFO_WORLDMAP		20 // 世界地图操作
 #define ASKINFO_MAP_EVENT		21 // 世界地图随机事件
 #define ASKINFO_SPY_CITY		22 // 侦察城池
+#define ASKINFO_CITYHELP		23 // 驻防信息
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

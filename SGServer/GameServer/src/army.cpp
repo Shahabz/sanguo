@@ -136,35 +136,30 @@ int army_loadcb( int army_index )
 	
 	// 目标是玩家
 	City *pTargetCity = army_getcityptr_target( army_index );
-	if ( pTargetCity && (g_army[army_index].action == ARMY_ACTION_FIGHT) )
-	{
-		// 被攻击列表
-		city_underfire_add( pTargetCity, army_index );
-	}
-
-	if ( pTargetCity && g_army[army_index].action == ARMY_ACTION_FIGHT )
-	{
-	}
-	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
-	{ // 
-	
-	}
-
-	if ( pTargetCity && g_army[army_index].action == ARMY_ACTION_HELP_TROOP )
-	{ // 协防列表
+	if ( pTargetCity && g_army[army_index].state == ARMY_STATE_HELP )
+	{ // 驻防列表
 		city_helparmy_add( pTargetCity, army_index );
 	}
-	else if ( g_army[army_index].action == ARMY_ACTION_GROUP_START || g_army[army_index].action == ARMY_ACTION_GROUP_ING )
-	{// 如果检查到是集结的状态,直接回城
-		army_delete( army_index );
-	}
 
+	//if ( pTargetCity && (g_army[army_index].action == ARMY_ACTION_FIGHT) )
+	//{
+	//	// 被攻击列表
+	//	city_underfire_add( pTargetCity, army_index );
+	//}
+
+	//if ( pTargetCity && g_army[army_index].action == ARMY_ACTION_FIGHT )
+	//{
+	//}
+	//else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
+	//{
+	//
+	//}
+	
 	// 总距离(不是计算行军时间的距离，这是两点之间的直线距离)
 	g_army[army_index].move_total_distance = (short)sqrt( pow( (float)(g_army[army_index].from_posx - g_army[army_index].to_posx), 2 ) + pow( (float)(g_army[army_index].from_posy - g_army[army_index].to_posy), 2 ) );
 
 	// 添加到显示单元
-	if ( g_army[army_index].state == ARMY_STATE_GROUP_ING ||
-		g_army[army_index].state == ARMY_STATE_MARCH ||
+	if ( g_army[army_index].state == ARMY_STATE_MARCH ||
 		g_army[army_index].state == ARMY_STATE_OCCUPY ||
 		g_army[army_index].state == ARMY_STATE_REBACK )
 	{
@@ -178,8 +173,7 @@ int army_loadcb( int army_index )
 	}
 
 	// 添加行军路线
-	if ( g_army[army_index].state == ARMY_STATE_GROUP_ING ||
-		g_army[army_index].state == ARMY_STATE_MARCH ||
+	if ( g_army[army_index].state == ARMY_STATE_MARCH ||
 		g_army[army_index].state == ARMY_STATE_REBACK )
 	{
 		army_marchroute_add( army_index );
@@ -252,7 +246,6 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 		return;
 	Army *pArmy = &g_army[army_index];
 	if ( pArmy->state == ARMY_STATE_IDLE ||
-		pArmy->state == ARMY_STATE_GROUP_START ||
 		pArmy->state == ARMY_STATE_GROUP_END ||
 		pArmy->state == ARMY_STATE_READY ||
 		pArmy->state == ARMY_STATE_GATHER ||
@@ -266,9 +259,9 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 	pAttr->m_posy = pArmy->posy;
 
 	// 有出发位置和目的位置
-	if ( pArmy->state == ARMY_STATE_GROUP_ING || pArmy->state == ARMY_STATE_MARCH || pArmy->state == ARMY_STATE_REBACK )
+	if ( pArmy->state == ARMY_STATE_MARCH || pArmy->state == ARMY_STATE_REBACK )
 	{
-		if ( pArmy->state == ARMY_STATE_GROUP_ING || pArmy->state == ARMY_STATE_MARCH )
+		if ( pArmy->state == ARMY_STATE_MARCH )
 		{
 			// 出发数据
 			pAttr->m_char_value[0] = pArmy->from_type;
@@ -402,24 +395,18 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 
 	char to_type = 0;
 	int to_id = 0;
-	if ( info->m_action == ARMY_ACTION_GROUP_ING )
+	if ( info->m_action == ARMY_ACTION_GROUP_ATTACK || info->m_action == ARMY_ACTION_GROUP_DEFENSE )
 	{ // 如果是去集结
-		int leader_army_index = info->m_to_unit_index;
-		City *pLeaderCity = army_getcityptr( leader_army_index );
-		if ( !pLeaderCity )
-			return -1;
-		if ( g_army[leader_army_index].state != ARMY_STATE_GROUP_START )
-		{
-			//actor_system_message( pCity->actor_index, 31 ); // 已经行动了
-			return -1;
-		}
+		//int leader_army_index = info->m_to_unit_index;
+		//City *pLeaderCity = army_getcityptr( leader_army_index );
+		//if ( !pLeaderCity )
+		//	return -1;
 
-		// 盟友检查
-		if ( pCity->nation != pLeaderCity->nation )
-		{
-			//actor_system_message( pCity->actor_index, 16 ); // 需要在同一国家
-			return -1;
-		}
+		//// 盟友检查
+		//if ( pCity->nation != pLeaderCity->nation )
+		//{
+		//	return -1;
+		//}
 
 		//// 检查目标的集结队列是否上限
 		//if ( armygroup_number( leader_army_index ) >= ARMYGROUP_MAXCOUNT )
@@ -428,27 +415,22 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		//	return -1;
 		//}
 
-		// 集结目标是城池
-		if ( g_army[leader_army_index].to_type == MAPUNIT_TYPE_CITY )
-		{
-			city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
+		//// 集结目标是城池
+		//if ( g_army[leader_army_index].to_type == MAPUNIT_TYPE_CITY )
+		//{
+		//	city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
 
-		}
-		// 集结目标是城镇
-		else if ( g_army[leader_army_index].to_type == MAPUNIT_TYPE_TOWN )
-		{
-			city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
-		}
-		to_type = MAPUNIT_TYPE_CITY;
-		to_id = pLeaderCity->actorid;
+		//}
+		//// 集结目标是城镇
+		//else if ( g_army[leader_army_index].to_type == MAPUNIT_TYPE_TOWN )
+		//{
+		//	city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
+		//}
+		//to_type = MAPUNIT_TYPE_CITY;
+		//to_id = pLeaderCity->actorid;
 	}
 	else if ( info->m_to_unit_index >= 0 && info->m_to_unit_index < g_mapunit_maxcount )
-	{ // 攻击的是实体	
-		if ( info->m_action == ARMY_ACTION_GROUP_START )
-		{ 
-			
-		}
-
+	{ // 攻击的是实体
 		if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_CITY )
 		{ // 城池
 			int city_index = g_mapunit[info->m_to_unit_index].index;
@@ -460,25 +442,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 
 			if ( info->m_action == ARMY_ACTION_HELP_TROOP )
 			{
-				if ( city_helparmy_getnum( pTargetCity ) >= CITY_HELPDEFENSE_MAX )
+				int num = city_helparmy_getnum( pTargetCity );
+				if ( num >= CITY_HELPDEFENSE_MAX || num >= city_helparmy_maxnum( pTargetCity ) )
 				{
-					//actor_system_message( pCity->actor_index, 27 ); // 可被援助的队列已满
+					actor_system_message( pCity->actor_index, 1241 ); // 可被驻防的队列已满
 					return -1;
-				}
-				
-				for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
-				{
-					int help_armyindex = pTargetCity->help_armyindex[index];
-					if ( help_armyindex < 0 )
-						continue;
-					City *pHelpCity = army_getcityptr( help_armyindex );
-					if ( !pHelpCity )
-						continue;
-					if ( pHelpCity->actorid == pCity->actorid )
-					{
-						//actor_system_message( pCity->actor_index, 33 ); // 您已经有一支部队参与援助这个城池了
-						return -1;
-					}
 				}
 			}
 
@@ -494,14 +462,13 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				// 盟友检查
 				if ( pCity->nation == pTargetCity->nation )
 				{
-					//actor_system_message( pCity->actor_index, 71 );
 					return -1;
 				}
 
 				// 战争守护状态检查
 				if ( pTargetCity->ptsec > 0 )
 				{
-					//actor_system_message( pCity->actor_index, 70 );
+					actor_system_message( pCity->actor_index, 1248 );
 					return -1;
 				}
 				// 援助不破罩子
@@ -539,7 +506,6 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				// 盟友检查
 				if ( pCity->nation == pTargetCity->nation )
 				{
-					//actor_system_message( pCity->actor_index, 71 );
 					return -1;
 				}
 			}
@@ -632,45 +598,8 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		to_id = 0;
 	}
 
-
-	// 创建部队状态
-	char state = ARMY_STATE_MARCH;
-	if ( info->m_action == ARMY_ACTION_GROUP_START )
-		state = ARMY_STATE_GROUP_START;
-	else if ( info->m_action == ARMY_ACTION_GROUP_ING )
-		state = ARMY_STATE_GROUP_ING;
-
 	// 创建部队
-	int army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, state, info );
-
-	//// begin 记录出征日志
-	//wlog( 0, LOGOP_BATTLE, 0, battlequeue_count, g_army[army_index].action, g_army[army_index].target_type, pCity->laird_actorid, pCity->building[0].level );
-	//if ( g_army[army_index].target_type == MAPUNIT_TYPE_CITY )
-	//{
-	//	int target_city_index = g_army[army_index].target_index;
-	//	if ( target_city_index >= 0 && target_city_index < g_city_maxcount )
-	//	{
-	//		if ( g_army[army_index].action == ARMY_ACTION_GROUP_ING )
-	//		{
-	//			int leader_army_index = info->m_to_unit_index;
-	//			City *pLogCity = army_getcityptr_target( leader_army_index );
-	//			if ( pLogCity )
-	//			{
-	//				wlog( 0, LOGOP_BATTLECITY, 0, pLogCity->laird_actorid, city_mainlevel( pLogCity ), pLogCity->robot_ai, pCity->laird_actorid, pCity->building[0].level );
-	//			}
-	//		}
-	//		else
-	//		{
-	//			City *pLogCity = army_getcityptr_target( army_index );
-	//			if ( pLogCity )
-	//			{
-	//				wlog( 0, LOGOP_BATTLECITY, 0, pLogCity->laird_actorid, city_mainlevel( pLogCity ), pLogCity->robot_ai, pCity->laird_actorid, pCity->building[0].level );
-	//			}
-	//		}
-	//	}
-	//}
-	//// end
-
+	int army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_MARCH, info );
 	return army_index;
 }
 
@@ -687,10 +616,12 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 	}
 
 	memset( &g_army[army_index], 0, sizeof( Army ) );
+	g_army[army_index].index = army_index;
 	g_army[army_index].from_index = -1;
 	g_army[army_index].to_index = -1;
 	g_army[army_index].unit_index = -1;
 	g_army[army_index].group_index = -1;
+	g_army[army_index].group_pos = -1;
 	g_army_count += 1;
 
 	// 出发数据
@@ -769,31 +700,14 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 	// 距离(不是计算行军时间的距离，这是两点之间的直线距离)
 	g_army[army_index].move_total_distance = (short)sqrt( pow( (float)(g_army[army_index].from_posx - g_army[army_index].to_posx), 2 ) + pow( (float)(g_army[army_index].from_posy - g_army[army_index].to_posy), 2 ) );
 
-	// 发起集结中
-	if ( g_army[army_index].state == ARMY_STATE_GROUP_START )
-	{
-		//if ( info->m_appdata >= 1 && info->m_appdata <= 4 )
-		//	g_army[army_index].stateduration = s_armygroup_time[info->m_appdata - 1];
-		//else
-		//	g_army[army_index].stateduration = s_armygroup_time[0];
+	// 计算行军时间
+	army_march_time( army_index );
 
-		//armygroup_start( army_index );
+	// 行军路线
+	army_marchroute_add( army_index );
 
-		//// 集结行军路线
-		//army_marchroute_add( army_index );
-	}
-	else
-	{
-		// 计算行军时间
-		army_march_time( army_index );
-
-		// 行军路线
-		army_marchroute_add( army_index );
-
-		// 添加到地图显示单元
-		g_army[army_index].unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
-	}
-
+	// 添加到地图显示单元
+	g_army[army_index].unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
 
 	// 添加到出征队列
 	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
@@ -801,33 +715,12 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 		city_battlequeue_add( army_getcityptr( army_index ), army_index );
 	}
 
-	// 通知对方
-	if ( g_army[army_index].action == ARMY_ACTION_GROUP_ING )
-	{ // 动作是去集结
-		//armygroup_add( g_army[info->m_to_unit_index].group_index, army_index );
-	}
-	else if ( g_army[army_index].action == ARMY_ACTION_HELP_TROOP )
-	{ // 动作是去援助士兵
-		//city_helparmy_add( army_getcityptr_target( army_index ), army_index );
-	}
-	else
+	// 目标是玩家
+	City *pTargetCity = army_getcityptr_target( army_index );
+	if ( pTargetCity )
 	{
-		// 目标是玩家
-		City *pTargetCity = army_getcityptr_target( army_index );
-		if ( pTargetCity )
-		{
-			// 被攻击列表
-			city_underfire_add( pTargetCity, army_index );
-		}
-
-		if ( pTargetCity )
-		{
-
-		}
-		else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
-		{ // 
-			
-		}
+		// 被攻击列表
+		city_underfire_add( pTargetCity, army_index );
 	}
 	return army_index;
 }
@@ -887,12 +780,14 @@ void army_delete( int army_index )
 	}
 	army_del_db( army_index );
 	memset( &g_army[army_index], 0, sizeof( Army ) );
+	g_army[army_index].index = -1;
 	g_army[army_index].from_id = -1;
 	g_army[army_index].from_index = -1;
 	g_army[army_index].to_id = -1;
 	g_army[army_index].to_index = -1;
 	g_army[army_index].unit_index = -1;
 	g_army[army_index].group_index = -1;
+	g_army[army_index].group_pos = -1;
 	g_army_count -= 1;
 }
 
@@ -1000,7 +895,7 @@ void army_setstate( int army_index, char state )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return;
-	if ( state == ARMY_STATE_REBACK && (g_army[army_index].state == ARMY_STATE_GROUP_ING || g_army[army_index].state == ARMY_STATE_MARCH) )
+	if ( state == ARMY_STATE_REBACK && (/*g_army[army_index].state == ARMY_STATE_GROUP_ING ||*/ g_army[army_index].state == ARMY_STATE_MARCH) )
 	{
 		// 半路返回
 		g_army[army_index].statetime = g_army[army_index].stateduration - g_army[army_index].statetime;
@@ -1025,7 +920,7 @@ void army_setstate( int army_index, char state )
 		army_marchroute_del( army_index );
 		break;
 
-	case ARMY_STATE_GROUP_END:			// 到达指定集结地点,集结完毕
+	case ARMY_STATE_GROUP_END:			// 到达指定集结地点
 		mapunit_del( MAPUNIT_TYPE_ARMY, army_index, g_army[army_index].unit_index );
 		g_army[army_index].unit_index = -1;
 		army_marchroute_del( army_index );
@@ -1040,6 +935,7 @@ void army_setstate( int army_index, char state )
 
 	case ARMY_STATE_HELP:				// 援助中
 		mapunit_del( MAPUNIT_TYPE_ARMY, army_index, g_army[army_index].unit_index );
+		g_army[army_index].stateduration = global.cityhelp_sec;
 		g_army[army_index].unit_index = -1;
 		army_marchroute_del( army_index );
 		break;
@@ -1084,14 +980,6 @@ void army_logic( int army_index )
 {
 	switch ( g_army[army_index].state )
 	{
-	case ARMY_STATE_GROUP_START:		// 发起集结
-		//armygroup_start_logic( army_index );
-		break;
-	case ARMY_STATE_GROUP_ING:			// 集结中
-		//armygroup_ing_logic( army_index );
-		break;
-	case ARMY_STATE_GROUP_END:			// 到达指定集结地点,集结完毕
-		break;
 	case ARMY_STATE_MARCH:				// 行军中
 		army_march( army_index );
 		break;
@@ -1463,13 +1351,12 @@ void army_help( int army_index )
 
 	// 已经援助时长
 	g_army[army_index].statetime += 1;
-	if ( g_army[army_index].statetime == 1 )
+	if ( g_army[army_index].statetime >= g_army[army_index].stateduration )
 	{
 		// 如果是士兵援助
 		if ( g_army[army_index].action == ARMY_ACTION_HELP_TROOP )
 		{
-			// 邮件
-			//army_mail_helptroop( army_index );
+			army_setstate( army_index, ARMY_STATE_REBACK );
 		}
 	}
 }

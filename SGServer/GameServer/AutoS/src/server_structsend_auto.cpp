@@ -1515,3 +1515,44 @@ int struct_NetS_MailView_send( char **pptr, int *psize, SLK_NetS_MailView *pValu
 	return 0;
 }
 
+int struct_NetS_CItyHelp_send( char **pptr, int *psize, SLK_NetS_CItyHelp *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_actorname_length, (*psize) );
+	if( pValue->m_actorname_length > 0 && pValue->m_actorname_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_actorname, pValue->m_actorname_length*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_soldiers, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_army_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CItyHelpList_send( char **pptr, int *psize, SLK_NetS_CItyHelpList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CItyHelp_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_walllevel, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapCItyHelpList_send( char **pptr, int *psize, SLK_NetS_MapCItyHelpList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CItyHelp_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_walllevel, (*psize) );
+	return 0;
+}
+

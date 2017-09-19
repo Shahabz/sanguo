@@ -85,6 +85,12 @@ typedef struct _global
 	short spy_res_odds;
 	short spy_wall_odds;
 	short spy_hero_odds;
+	short cityhelp_level;
+	int cityhelp_sec;
+	int cityfight_sec_limit[3];
+	int cityfight_sec_group[3];
+	short cityfight_body_cost[3];
+	short cityfight_item_cost[3];
 }Global;
 int global_init();
 void global_reload();

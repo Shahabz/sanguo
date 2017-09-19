@@ -45,5 +45,7 @@ CREATE TABLE `army` (
   `awardnum5` int(11) NOT NULL DEFAULT '0' COMMENT '携带的奖励（回城加上）',
   `awardnum6` int(11) NOT NULL DEFAULT '0' COMMENT '携带的奖励（回城加上）',
   `awardnum7` int(11) NOT NULL DEFAULT '0' COMMENT '携带的奖励（回城加上）',
+  `group_index` int(11) NOT NULL DEFAULT '0' COMMENT '编队索引',
+  `group_pos` smallint(6) NOT NULL DEFAULT '0' COMMENT '编队队伍中位置',
   PRIMARY KEY (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

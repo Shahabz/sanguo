@@ -11,7 +11,7 @@
 #define CITY_MATERIALMAKE_MAX		6	// 6个材料生产队列
 #define CITY_BATTLEQUEUE_MAX		8	// 出征队列
 #define CITY_UNDERFIRE_MAX			16	// 最多受多少支部队攻击
-#define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队协防
+#define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队驻防
 #define CITY_MAPEVENT_MAX			6	// 地图事件最大数量
 #define CITY_MAPEVENT_ING_MAX		2	// 地图事件正在进行数量
 
@@ -45,6 +45,10 @@
 #define CITY_BATTLE_EVENT_DEFEND			4	// 守城
 #define CITY_BATTLE_EVENT_NATION_ASSAULT	5	// 国战
 #define CITY_BATTLE_EVENT_NATION_DEFEND		6	// 国战防守
+
+#define CITY_STATE_FIRE				0x01	// 着火中
+#define CITY_STATE_KICK				0x02	// 击飞中
+#define CITY_STATE_FIGHT			0x04	// 战斗中
 
 // 城池领主类型
 typedef enum
@@ -204,14 +208,20 @@ int city_underfire_del_equal( City *pCity, int equal_army_index );
 // 被攻击信息数量
 int city_underfire_getnum( City *pCity );
 
-// 添加协防部队
+// 添加驻防部队
 int city_helparmy_add( City *pCity, int army_index );
 
-// 删除协防部队
+// 删除驻防部队
 int city_helparmy_del( City *pCity, int army_index );
 
-// 获取协防部队数量
+// 获取驻防部队数量
 int city_helparmy_getnum( City *pCity );
+
+// 获取驻防部队数量上限
+int city_helparmy_maxnum( City *pCity );
+
+// 获取驻防部信息
+int city_helparmy_sendlist( int actor_index, int unit_index );
 
 // 迁城
 int city_move_actor( int actor_index, short posx, short posy, int itemkind );

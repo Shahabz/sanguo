@@ -1126,5 +1126,20 @@ function proc_mailview_C( recvValue )
 	recvValue.m_mail.m_content_json = m_content_json;
 	MailInfoDlgByRecvValue( recvValue.m_mail )
 end
+-- m_level=0,m_actorname_length=0,m_actorname="[m_actorname_length]",m_herokind=0,m_soldiers=0,m_actorid=0,
+function proc_cityhelp_C( recvValue )
+	-- process.
+end
 
+-- m_count=0,m_list={m_level=0,m_actorname_length=0,m_actorname="[m_actorname_length]",m_herokind=0,m_soldiers=0,m_actorid=0,m_army_index=0,[m_count]},
+function proc_cityhelplist_C( recvValue )
+	-- process.
+	CityArmyHelpDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_level=0,m_actorname_length=0,m_actorname="[m_actorname_length]",m_herokind=0,m_soldiers=0,m_actorid=0,m_army_index=0,[m_count]},
+function proc_mapcityhelplist_C( recvValue )
+	-- process.
+	MapCityHelpDlgRecv( recvValue )
+end
 

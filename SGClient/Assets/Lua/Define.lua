@@ -443,6 +443,14 @@ function SetControlID( transform, controlID )
 	transform:GetComponent( typeof(UIButton) ).controlID = controlID;
 end
 
+function SetButtonTrue( transform )
+	transform:GetComponent( typeof(UIButton) ).interactable = true;
+end
+
+function SetButtonFalse( transform )
+	transform:GetComponent( typeof(UIButton) ).interactable = false;
+end
+
 function SetTimer( transform, sec, needsec, controlID, formatText )
 	local timer = transform:GetComponent( typeof(UITextTimeCountdown) )
     timer:SetTime( needsec, needsec-sec );

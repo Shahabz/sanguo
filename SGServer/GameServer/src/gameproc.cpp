@@ -41,6 +41,7 @@
 #include "hero.h"
 #include "chat.h"
 #include "army.h"
+#include "army_group.h"
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
@@ -648,6 +649,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 116 );
 
+	// 加载所有集结（严格顺序要求，不允许改变）
+	if ( armygroup_load() < 0 )
+	{
+		printf_msg( "armygroup_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 116 );
+
 	// 加载所有地图事件（严格顺序要求，不允许改变）
 	if ( map_event_load() < 0 )
 	{
@@ -709,6 +719,10 @@ void process_close()
 
 	// 所有部队保存
 	army_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有集结保存
+	armygroup_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有城镇保存
@@ -960,6 +974,7 @@ int process_logic()
 	else if ( tick == 5 )
 	{
 		army_alllogic();
+		armygroup_alllogic();
 	}
 	
 	// 1分钟一次逻辑

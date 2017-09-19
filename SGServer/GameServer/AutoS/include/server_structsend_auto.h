@@ -1041,6 +1041,31 @@ struct _slk_NetS_MailView {
 };
 typedef struct _slk_NetS_MailView SLK_NetS_MailView;	//邮件查看
 
+struct _slk_NetS_CItyHelp {
+	short m_level;	//驻防列表-等级
+	char m_actorname_length;	//驻防列表-玩家名
+	char m_actorname[32];	//驻防列表-玩家名
+	short m_herokind;	//驻防列表-武将
+	int m_soldiers;	//驻防列表-兵力
+	int m_actorid;	//驻防列表-角色id
+	int m_army_index;	//驻防列表-部队索引
+};
+typedef struct _slk_NetS_CItyHelp SLK_NetS_CItyHelp;	//驻防
+
+struct _slk_NetS_CItyHelpList {
+	short m_count;	//驻防列表
+	SLK_NetS_CItyHelp m_list[32];	//驻防列表
+	short m_walllevel;	//驻防列表
+};
+typedef struct _slk_NetS_CItyHelpList SLK_NetS_CItyHelpList;	//驻防列表
+
+struct _slk_NetS_MapCItyHelpList {
+	short m_count;	//地图查看驻防列表
+	SLK_NetS_CItyHelp m_list[32];	//地图查看驻防列表
+	short m_walllevel;	//地图查看驻防列表
+};
+typedef struct _slk_NetS_MapCItyHelpList SLK_NetS_MapCItyHelpList;	//地图查看驻防列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1155,5 +1180,8 @@ int struct_NetS_Mail_send( char **pptr, int *psize, SLK_NetS_Mail *pValue );
 int struct_NetS_MailOpResult_send( char **pptr, int *psize, SLK_NetS_MailOpResult *pValue );
 int struct_NetS_MailFight_send( char **pptr, int *psize, SLK_NetS_MailFight *pValue );
 int struct_NetS_MailView_send( char **pptr, int *psize, SLK_NetS_MailView *pValue );
+int struct_NetS_CItyHelp_send( char **pptr, int *psize, SLK_NetS_CItyHelp *pValue );
+int struct_NetS_CItyHelpList_send( char **pptr, int *psize, SLK_NetS_CItyHelpList *pValue );
+int struct_NetS_MapCItyHelpList_send( char **pptr, int *psize, SLK_NetS_MapCItyHelpList *pValue );
 
 #endif

@@ -33,6 +33,12 @@ end
 
 -- 添加行军路线
 function MapMarchRoute.add( recvValue )
+	if recvValue.m_action == ARMY_ACTION_HELP_TROOP then
+		if recvValue.m_from_nation ~= GetPlayer().m_nation then
+			return
+		end
+	end
+		
 	-- 出发点
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_from_posx, recvValue.m_from_posy );
 	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, recvValue.m_from_grid, cameraPosX, cameraPosY );
@@ -43,30 +49,16 @@ function MapMarchRoute.add( recvValue )
 
 	-- 计算线的颜色
 	local color = 0;
-	if recvValue.m_action == ARMY_ACTION_GROUP_START and recvValue.m_state == ARMY_STATE_GROUP_START then 
-		-- 发起集结中并且还没开始移动		
-		if recvValue.m_from_nation == GetPlayer().m_nation then
-			color = 3;
-		elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
-			color = 3;
-		elseif recvValue.m_to_actorid == GetPlayer().m_actorid then
-			color = 2;
-		elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
-			color = 2;
-		end
-		
+	if recvValue.m_from_actorid == GetPlayer().m_actorid then
+		color = 1;
+	elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
+		color = 3;
+	elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
+		color = 2;
+	elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
+		color = 2;
 	else
-		if recvValue.m_from_actorid == GetPlayer().m_actorid then
-			color = 1;
-		elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
-			color = 3;
-		elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
-			color = 2;
-		elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
-			color = 2;
-		else
-			color = 2;
-		end
+		color = 2;
 	end
 	
 	-- 如果缓存里面有，那么就更新

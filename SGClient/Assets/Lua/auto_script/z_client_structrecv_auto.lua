@@ -1346,3 +1346,41 @@ function struct_NetS_MailView_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_CItyHelp_recv( buffer )
+	local recvValue = {};
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_actorname_length = buffer:ReadSByte();
+	recvValue.m_actorname = buffer:ReadStringWithLen( recvValue.m_actorname_length );
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_soldiers = buffer:ReadInt();
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_army_index = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_CItyHelpList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CItyHelp_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_walllevel = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_MapCItyHelpList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CItyHelp_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_walllevel = buffer:ReadShort();
+	return recvValue;
+end
+

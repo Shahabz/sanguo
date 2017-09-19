@@ -155,6 +155,6 @@ end
 
 -- 选择武将界面
 function MapEnemyDlgBattle()
-	MapBattleDlgShow( m_unit_index, m_recvValue )
+	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT )
 	MapEnemyDlgClose();
 end

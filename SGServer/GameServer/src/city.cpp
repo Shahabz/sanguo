@@ -2729,7 +2729,7 @@ int city_underfire_getnum( City *pCity )
 	return num;
 }
 
-// 添加协防部队
+// 添加驻防部队
 int city_helparmy_add( City *pCity, int army_index )
 {
 	if ( pCity == NULL )
@@ -2752,7 +2752,7 @@ int city_helparmy_add( City *pCity, int army_index )
 	return 0;
 }
 
-// 删除协防部队
+// 删除驻防部队
 int city_helparmy_del( City *pCity, int army_index )
 {
 	if ( pCity == NULL )
@@ -2775,10 +2775,10 @@ int city_helparmy_del( City *pCity, int army_index )
 	return 0;
 }
 
-// 获取协防部队数量
+// 获取驻防部队数量
 int city_helparmy_getnum( City *pCity )
 {
-	if ( pCity == NULL )
+	if ( !pCity )
 		return 0;
 	int num = 0;
 	for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
@@ -2789,6 +2789,102 @@ int city_helparmy_getnum( City *pCity )
 		}
 	}
 	return num;
+}
+
+// 获取驻防部队数量上限
+int city_helparmy_maxnum( City *pCity )
+{
+	if ( !pCity )
+		return 0;
+	Building *pBuilding = building_getptr_kind( pCity->index, BUILDING_Wall );
+	if ( !pBuilding )
+		return 0;
+	return pBuilding->level;
+}
+
+void city_helparmy_makestruct( int army_index, SLK_NetS_CItyHelp *pValue )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+
+	City *pCity = army_getcityptr( army_index );
+	if ( !pCity )
+		return;
+	pValue->m_army_index = army_index;
+	pValue->m_actorid = pCity->actorid;
+	pValue->m_level = pCity->level;
+	strncpy( pValue->m_actorname, pCity->name, NAME_SIZE );
+	pValue->m_actorname_length = strlen( pValue->m_actorname );
+	pValue->m_herokind = g_army[army_index].herokind[0];
+	int hero_index = city_hero_getindex( pCity->index, g_army[army_index].herokind[0] );
+	if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
+	{
+		pValue->m_soldiers = pCity->hero[hero_index].soldiers;
+	}
+}
+
+// 获取驻防部信息
+int city_helparmy_sendlist( int actor_index, int unit_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+	{// 发送自己城墙的
+		Building *pBuilding = building_getptr_kind( pCity->index, BUILDING_Wall );
+		if ( !pBuilding )
+			return -1;
+		SLK_NetS_CItyHelpList pValue = { 0 };
+		pValue.m_walllevel = pBuilding->level;
+		for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+		{
+			if ( pCity->help_armyindex[index] >= 0 )
+			{
+				city_helparmy_makestruct( pCity->help_armyindex[index], &pValue.m_list[pValue.m_count] );
+				pValue.m_count += 1;
+				if ( pValue.m_count >= 30 )
+				{
+					netsend_cityhelplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+					pValue.m_count = 0;
+				}
+			}
+		}
+		netsend_cityhelplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	else
+	{ // 别人的
+		MapUnit *unit = &g_mapunit[unit_index];
+		if ( !unit )
+			return -1;
+		if ( unit->type != MAPUNIT_TYPE_CITY )
+			return -1;
+		if ( unit->index < 0 || unit->index >= g_city_maxcount )
+			return -1;
+		City *pTargetCity = &g_city[unit->index];
+		if ( !pTargetCity )
+			return -1;
+		Building *pBuilding = building_getptr_kind( pTargetCity->index, BUILDING_Wall );
+		if ( !pBuilding )
+			return -1;
+		SLK_NetS_MapCItyHelpList pValue = { 0 };
+		pValue.m_walllevel = pBuilding->level;
+		for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+		{
+			if ( pTargetCity->help_armyindex[index] >= 0 )
+			{
+				city_helparmy_makestruct( pTargetCity->help_armyindex[index], &pValue.m_list[pValue.m_count] );
+				pValue.m_count += 1;
+				if ( pValue.m_count >= 30 )
+				{
+					netsend_mapcityhelplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+					pValue.m_count = 0;
+				}
+			}
+		}
+		netsend_mapcityhelplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
 }
 
 // 迁城
@@ -3154,12 +3250,19 @@ int city_spy( int actor_index, int unit_index, int type )
 		sprintf( be_title, "%s%d", TAG_TEXTID, 5013 );
 		sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
 		mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
+
+		// 事件
+		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 1, mailid );
+		city_battle_event_add( pTargetCity->index, CITY_BATTLE_EVENT_BESPY, pCity->name, 1, mailid );
 	}
 	else
 	{ // 侦察失败
 		sprintf( title, "%s%d", TAG_TEXTID, 5012 );
 		sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
-		mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+
+		// 事件
+		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 0, mailid );
 
 		//sprintf( be_title, "%s%d", TAG_TEXTID, 5014 );
 		//sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
