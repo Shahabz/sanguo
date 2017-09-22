@@ -82,6 +82,7 @@ function struct_NetC_MapBattle_send( buf, sendValue )
 	buf:WriteShort( sendValue.m_to_posy );
 	buf:WriteInt( sendValue.m_appdata );
 	buf:WriteSByte( sendValue.m_action );
+	buf:WriteInt( sendValue.m_group_index );
 end
 
 function struct_NetC_MailAsk_send( buf, sendValue )

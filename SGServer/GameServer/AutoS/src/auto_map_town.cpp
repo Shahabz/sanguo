@@ -34,16 +34,19 @@ int map_town_load_auto( LPCB_GETMAPTOWN pCB_GetMapTown, LPCB_LOADMAPTOWN pCB_Loa
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pMapTown = pCB_GetMapTown( townid );
+		pMapTown = pCB_GetMapTown( atoi(row[0]) );
 		if( pMapTown == NULL )
 			continue;
 		pMapTown->townid = atoi(row[offset++]);
 		pMapTown->nation = atoi(row[offset++]);
 		if( pCB_LoadMapTown )
 			pCB_LoadMapTown( pMapTown->townid );
-		townid += 1;
+		townid = pMapTown->townid;
+		if ( townid >= g_map_town_maxindex )
+		{
+			g_map_town_maxindex = townid + 1;
+		}
 	}
-	g_map_town_maxindex = townid;
 	mysql_free_result( res );
 	return 0;
 }

@@ -14,6 +14,7 @@ CREATE TABLE `army_group` (
   `to_index` int(11) NOT NULL DEFAULT '0' COMMENT '目的对象索引',
   `to_posx` smallint(6) NOT NULL DEFAULT '0' COMMENT '目的对象坐标',
   `to_posy` smallint(6) NOT NULL DEFAULT '0' COMMENT '目的对象坐标',
+  `leader_index` int(11) NOT NULL DEFAULT '0' COMMENT '队长索引',
   `attack_armyindex` varbinary(512) NOT NULL DEFAULT '' COMMENT '临时存储攻击方集结部队索引',
   `defense_armyindex` varbinary(512) NOT NULL DEFAULT '' COMMENT '临时存储防御方集结部队索引',
   PRIMARY KEY (`index`)

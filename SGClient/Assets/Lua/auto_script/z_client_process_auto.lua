@@ -388,6 +388,7 @@ end
 -- m_from_type=0,m_from_posx=0,m_from_posy=0,m_to_type=0,m_to_posx=0,m_to_posy=0,m_state=0,m_from_cityid=0,m_from_clubid=0,m_to_cityid=0,m_to_clubid=0,m_army_index=0,m_action=0,
 function proc_addmarchroute_C( recvValue )
 	-- process.
+	print("proc_addmarchroute_C")
 	WorldMap.QueueAdd( 5, recvValue );
 end
 
@@ -1141,5 +1142,53 @@ end
 function proc_mapcityhelplist_C( recvValue )
 	-- process.
 	MapCityHelpDlgRecv( recvValue )
+end
+
+-- m_state=0,m_change=0,
+function proc_citystate_C( recvValue )
+	-- process.
+	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
+		-- 着火
+	end
+	
+	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_ARMYGROUP ) == CITY_STATE_ARMYGROUP then
+		-- 警告条
+	end
+end
+
+
+-- m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_level=0,m_t_level=0,m_name_length=0,m_name="[m_name_length]",m_t_name_length=0,m_t_name="[m_t_name_length]",m_posx=0,m_posy=0,m_t_posx=0,m_t_posy=0,m_actorid=0,m_t_actorid=0,m_total=0,m_t_total=0,
+function proc_cityarmygroup_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_level=0,m_t_level=0,m_name_length=0,m_name="[m_name_length]",m_t_name_length=0,m_t_name="[m_t_name_length]",m_posx=0,m_posy=0,m_t_posx=0,m_t_posy=0,m_actorid=0,m_t_actorid=0,m_total=0,m_t_total=0,[m_count]},
+function proc_cityarmygrouplist_C( recvValue )
+	-- process.
+	-- 开始
+	if recvValue.m_flag == 0 then
+		MapArmyGroupDlgBegin( recvValue.m_nation, recvValue.m_unit_index )
+		
+	-- 过程	
+	elseif recvValue.m_flag == 1 then
+		for i=1, recvValue.m_count, 1 do
+			MapArmyGroupDlgAddRecvValue( recvValue.m_list[i] )
+		end
+		
+	-- 结束
+	else
+		if recvValue.m_totalcount == 0 then
+			MapArmyGroupDlgClose();
+			if recvValue.m_nation == GetPlayer().m_nation then
+				-- 本城没有城战
+				AlertMsg( T(1263) )
+			else
+				MapClickModOpenCityFight( recvValue.m_unit_index );
+			end
+		else
+			-- 添加结束
+			MapArmyGroupDlgOver();
+		end
+	end
 end
 

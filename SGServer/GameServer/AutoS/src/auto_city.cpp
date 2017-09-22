@@ -32,7 +32,7 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, const 
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pCity = pCB_GetCity( index );
+		pCity = pCB_GetCity( atoi(row[1]) );
 		if( pCity == NULL )
 			continue;
 		pCity->actorid = atoi(row[offset++]);
@@ -131,9 +131,12 @@ int city_load_auto( LPCB_GETCITY pCB_GetCity, LPCB_LOADCITY pCB_LoadCity, const 
 		pCity->ofquick[2] = atoi(row[offset++]);
 		if( pCB_LoadCity )
 			pCB_LoadCity( pCity->index );
-		index += 1;
+		index = pCity->index;
+		if ( index >= g_city_maxindex )
+		{
+			g_city_maxindex = index + 1;
+		}
 	}
-	g_city_maxindex = index;
 	mysql_free_result( res );
 	return 0;
 }

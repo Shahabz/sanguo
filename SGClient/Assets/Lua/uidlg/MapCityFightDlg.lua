@@ -218,6 +218,7 @@ function MapCityFightDlgSelect( type )
 	if type == 1 then
 		if itemnum < global.cityfight_item_cost1 then
 			if GetPlayer().m_body < global.cityfight_body_cost1 then
+				JumpBody()
 				return
 			end
 		end
@@ -225,6 +226,7 @@ function MapCityFightDlgSelect( type )
 	elseif type == 2 then
 		if itemnum < global.cityfight_item_cost2 then
 			if GetPlayer().m_body < global.cityfight_body_cost2 then
+				JumpBody()
 				return
 			end
 		end
@@ -232,12 +234,14 @@ function MapCityFightDlgSelect( type )
 	elseif type == 3 then
 		if itemnum < global.cityfight_item_cost3 then
 			if GetPlayer().m_body < global.cityfight_body_cost3 then
+				JumpBody()
 				return
 			end
 		end
 	end
 	
 	MapCityFightDlgClose()
-	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT )
+	MapBattleDlgShow( m_recvValue, ARMY_ACTION_GROUP_CREATE, -1 )
+	MapBattleDlgAppData( type )
 end
 

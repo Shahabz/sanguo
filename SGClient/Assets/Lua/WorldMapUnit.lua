@@ -11,8 +11,7 @@ MAPUNIT_TYPE_EVENT		=	6	-- 随机事件
 
 -- 城池状态
 CITY_STATE_FIRE			=	0x01	-- 着火中
-CITY_STATE_KICK			=	0x02	-- 击飞中
-CITY_STATE_FIGHT		=	0x04	-- 战斗中
+CITY_STATE_ARMYGROUP	=	0x02	-- 被城战中
 
 -- 单只部队状态
 ARMY_STATE_IDLE				=	0	-- 空闲
@@ -31,6 +30,7 @@ ARMY_ACTION_FIGHT			=	1	-- 去战斗
 ARMY_ACTION_OCCUPY			=	2	-- 去驻扎
 ARMY_ACTION_GATHER			=	3	-- 去采集
 ARMY_ACTION_HELP_TROOP		=	6	-- 去士兵援助
+ARMY_ACTION_GROUP_CREATE	=	10	-- 创建集结
 ARMY_ACTION_GROUP_ATTACK	=	11	-- 参与集结(攻击方)
 ARMY_ACTION_GROUP_DEFENSE	=	12	-- 参与集结(防御方)
 
@@ -311,6 +311,7 @@ function MapUnit.createCity( recvValue )
 	local uiName = objs[1];
 	local uiRange = objs[2];
 	local uiEffectProtect = objs[3];
+	local uiArmyGroup = objs[4];
 	
 	-- 形象
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
@@ -329,9 +330,23 @@ function MapUnit.createCity( recvValue )
 	
 	-- 保护BUFF
 	if ptbuff > 0 then
-		--unitObj.transform:FindChild("EffectProtect").gameObject:SetActive( true );
+		--SetTrue( uiEffectProtect )
 	else
-		--unitObj.transform:FindChild("EffectProtect").gameObject:SetActive( false );
+		--SetFalse( uiEffectProtect )
+	end
+	
+	-- 着火
+	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
+	else	
+	end
+	
+	-- 城战
+	if Utils.byteAndOp( state, CITY_STATE_ARMYGROUP ) == CITY_STATE_ARMYGROUP then
+		SetTrue( uiArmyGroup )
+		uiArmyGroup.transform:GetComponent( typeof(UIButton) ).uiMod = CityArmyGroupClickMod;
+		uiArmyGroup.transform:GetComponent( typeof(UIButton) ).controlID = unitindex;
+	else
+		SetFalse( uiArmyGroup )
 	end
 	
 	return unitObj;

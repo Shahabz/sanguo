@@ -385,6 +385,7 @@ function MapResDlgGather()
 	sendValue.m_appdata = 0;
 	sendValue.m_action = ARMY_ACTION_GATHER
 	sendValue.m_id = 0;
+	sendValue.m_group_index = -1;
 		
 	-- 派出武将
 	sendValue.m_herokind = { m_SelectHeroKind, 0,0,0 }
@@ -411,6 +412,7 @@ function MapResDlgBattle()
 	sendValue.m_appdata = 0;
 	sendValue.m_action = ARMY_ACTION_FIGHT
 	sendValue.m_id = 0;
+	sendValue.m_group_index = -1;
 		
 	-- 派出武将
 	sendValue.m_herokind = { m_SelectHeroKind, 0,0,0 }

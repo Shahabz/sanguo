@@ -10,7 +10,8 @@
 #define CITY_TRAINQUEUE_MAX			11	// 可扩容的训练队列数量
 #define CITY_MATERIALMAKE_MAX		6	// 6个材料生产队列
 #define CITY_BATTLEQUEUE_MAX		8	// 出征队列
-#define CITY_UNDERFIRE_MAX			16	// 最多受多少支部队攻击
+#define CITY_UNDERFIRE_MAX			8	// 最多受多少支部队攻击
+#define	CITY_UNDERFIRE_GROUP_MAX	16  // 最多受多少个城战
 #define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队驻防
 #define CITY_MAPEVENT_MAX			6	// 地图事件最大数量
 #define CITY_MAPEVENT_ING_MAX		2	// 地图事件正在进行数量
@@ -47,8 +48,7 @@
 #define CITY_BATTLE_EVENT_NATION_DEFEND		6	// 国战防守
 
 #define CITY_STATE_FIRE				0x01	// 着火中
-#define CITY_STATE_KICK				0x02	// 击飞中
-#define CITY_STATE_FIGHT			0x04	// 战斗中
+#define CITY_STATE_ARMYGROUP		0x02	// 被城战中
 
 // 城池领主类型
 typedef enum
@@ -90,6 +90,12 @@ void city_logic_sec();
 
 // 城市主城等级
 int city_mainlevel( int city_index );
+
+// 设置城市状态
+void city_setstate( City *pCity, char state );
+
+// 移除城市状态
+void city_delstate( City *pCity, char state );
 
 // 32位整数，标志位操作0或1 标示开没开，有没有，做没做（永久存档）
 void city_set_sflag( City *pCity, int offset, char value );
@@ -145,6 +151,7 @@ CityGuard *city_guard_getptr( int city_index, int offset );
 int city_guard_call( int city_index );
 int city_guard_upgrade( int city_index, int offset );
 int city_guard_soldiers( int city_index, int offset );
+int city_guard_subsoldiers( int city_index, int offset, int sub );
 int city_guard_clearcd( int city_index );
 int city_guard_send( int actor_index, int offset );
 int city_guard_sendsec( int actor_index );
@@ -207,6 +214,12 @@ int city_underfire_del_equal( City *pCity, int equal_army_index );
 
 // 被攻击信息数量
 int city_underfire_getnum( City *pCity );
+
+// 被攻击信息添加
+int city_underfire_groupadd( City *pCity, int group_index );
+
+// 被攻击信息移除
+int city_underfire_groupdel( City *pCity, int group_index );
 
 // 添加驻防部队
 int city_helparmy_add( City *pCity, int army_index );

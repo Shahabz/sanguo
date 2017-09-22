@@ -186,6 +186,6 @@ end
 -- 协防
 function MapCityHelpDlgHelp()
 	MapCityHelpDlgClose()
-	MapBattleDlgShow( m_recvValue, ARMY_ACTION_HELP_TROOP )
+	MapBattleDlgShow( m_recvValue, ARMY_ACTION_HELP_TROOP, -1 )
 end
 

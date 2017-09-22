@@ -33,6 +33,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map.h"
+#include "mail.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -72,9 +73,10 @@ extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
 
 extern Map g_map;
+extern Fight g_fight;
 
-//extern Army *g_army;
-//extern int g_army_maxcount;
+extern Army *g_army;
+extern int g_army_maxcount;
 //extern int g_army_count;
 //extern int g_army_maxindex;
 
@@ -89,38 +91,39 @@ int armygroup_loadcb( int group_index )
 	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
 		return -1;
 
-	//// 计算临时变量
-	//if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
-	//{ // 出发是城池
-	//	int city_index = city_getindex_withactorid( g_army[army_index].from_id );
-	//	g_army[army_index].from_index = city_index;
-	//}
-	//else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
-	//{ // 出发是城镇
-	//	g_army[army_index].from_index = g_army[army_index].from_id;
-	//}
+	if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
+	{ // 出发是城池
+		int city_index = city_getindex_withactorid( g_armygroup[group_index].from_id );
+		g_armygroup[group_index].from_index = city_index;
+	}
+	else if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_TOWN )
+	{ // 出发是城镇
+		int index = g_armygroup[group_index].from_id;
+		g_armygroup[group_index].from_index = index;
+	}
 
-	//if ( g_army[army_index].to_type == MAPUNIT_TYPE_CITY )
-	//{ // 目的是城池
-	//	g_army[army_index].to_index = city_getindex_withactorid( g_army[army_index].to_id );
-	//}
-	//else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
-	//{ // 目的是城镇
-	//	g_army[army_index].to_index = g_army[army_index].to_id;
-	//}
+	// 目的数据
+	if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+	{ // 目的是城池
+		int city_index = city_getindex_withactorid( g_armygroup[group_index].to_id );
+		g_armygroup[group_index].to_index = city_index;
+		City *pTargetCity = city_indexptr( city_index );
+		if ( pTargetCity )
+		{
+			// 添加被攻击列表
+			city_underfire_groupadd( pTargetCity, group_index );
+	
+			// 城战状态
+			city_setstate( pTargetCity, CITY_STATE_ARMYGROUP );
+		}
+	}
+	else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
+	{ // 目的是城镇
+		int index = g_armygroup[group_index].to_id;
+		g_armygroup[group_index].to_index = index;
+	}
 
-
-	//// 目标是玩家
-	//City *pTargetCity = army_getcityptr_target( army_index );
-	//if ( pTargetCity )
-	//{
-	//	// 城战状态
-
-	//}
-	//else
-	//{
-
-	//}
+	g_armygroup_count += 1;
 	return 0;
 }
 
@@ -204,6 +207,49 @@ int armygroup_create( char from_type, int from_id, char to_type, int to_id, int 
 	g_armygroup[group_index].state = ARMYGROUP_STATE_ING;
 	g_armygroup[group_index].statetime = 0;
 	g_armygroup[group_index].stateduration = stateduration;
+
+	// 出发数据
+	g_armygroup[group_index].from_type = from_type;
+	g_armygroup[group_index].from_id = from_id;
+	if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
+	{ // 出发是城池
+		int city_index = city_getindex_withactorid( from_id );
+		g_armygroup[group_index].from_index = city_index;
+		city_getpos( city_index, &g_armygroup[group_index].from_posx, &g_armygroup[group_index].from_posy );
+	}
+	else if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_TOWN )
+	{ // 出发是城镇
+		int index = g_armygroup[group_index].from_id;
+		g_armygroup[group_index].from_index = index;
+		map_town_getpos( index, &g_armygroup[group_index].from_posx, &g_armygroup[group_index].from_posy );
+	}
+
+	// 目的数据
+	g_armygroup[group_index].to_type = to_type;
+	g_armygroup[group_index].to_id = to_id;
+	if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+	{ // 目的是城池
+		int city_index = city_getindex_withactorid( g_armygroup[group_index].to_id );
+		g_armygroup[group_index].to_index = city_index;
+		city_getpos( city_index, &g_armygroup[group_index].to_posx, &g_armygroup[group_index].to_posy );
+
+		City *pTargetCity = city_indexptr( city_index );
+		if ( pTargetCity )
+		{
+			// 添加被攻击列表
+			city_underfire_groupadd( pTargetCity, group_index );
+
+			// 城战状态
+			city_setstate( pTargetCity, CITY_STATE_ARMYGROUP );
+		}
+	}
+	else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
+	{ // 目的是城镇
+		int index = g_armygroup[group_index].to_id;
+		g_armygroup[group_index].to_index = index;
+		map_town_getpos( index, &g_armygroup[group_index].to_posx, &g_armygroup[group_index].to_posy );
+	}
+
 	g_armygroup_count += 1;
 	return group_index;
 }
@@ -216,6 +262,28 @@ void armygroup_delete( int group_index )
 	if ( g_armygroup[group_index].id <= 0 )
 		return;
 
+	int city_index = -1;
+	// 目标是玩家
+	if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+	{
+		city_index = g_armygroup[group_index].to_index;
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{ // 删除被攻击列表
+			city_underfire_groupdel( &g_city[city_index], group_index );
+		}
+	}
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		if ( g_armygroup[group_index].attack_armyindex[tmpi] >= 0 )
+		{
+			army_setstate( g_armygroup[group_index].attack_armyindex[tmpi], ARMY_STATE_REBACK );
+		}
+
+		if ( g_armygroup[group_index].defense_armyindex[tmpi] >= 0 )
+		{
+			army_setstate( g_armygroup[group_index].defense_armyindex[tmpi], ARMY_STATE_REBACK );
+		}
+	}
 	armygroup_del_db( group_index );
 	memset( &g_armygroup[group_index], 0, sizeof( ArmyGroup ) );
 	g_armygroup[group_index].index = -1;
@@ -246,7 +314,357 @@ void armygroup_logic( int group_index )
 	g_armygroup[group_index].statetime += 1;
 	if ( g_armygroup[group_index].statetime >= g_armygroup[group_index].stateduration )
 	{ // 战斗开始
+		if ( fight_start_armygroup( group_index ) >= 0 )
+		{
+			if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+			{
+				armygroup_vs_city( group_index, &g_fight );
+			}
+			else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
+			{
+				armygroup_vs_town( group_index, &g_fight );
+			}
+		}
+		armygroup_delete( group_index );
+	}
+}
+
+// 添加部队
+int armygroup_addarmy( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	int group_index = g_army[army_index].group_index;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	if ( g_army[army_index].group_id != g_armygroup[group_index].id )
+		return -1;
+
+	if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			if ( g_armygroup[group_index].attack_armyindex[tmpi] < 0 )
+			{
+				g_armygroup[group_index].attack_armyindex[tmpi] = army_index;
+				g_army[army_index].group_pos = tmpi;
+				return tmpi;
+			}
+		}
+	}
+	else
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			if ( g_armygroup[group_index].defense_armyindex[tmpi] < 0 )
+			{
+				g_armygroup[group_index].defense_armyindex[tmpi] = army_index;
+				g_army[army_index].group_pos = tmpi;
+				return tmpi;
+			}
+		}
+	}
+	
+	return -1;
+}
+
+// 删除部队
+void armygroup_delarmy( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	int group_index = g_army[army_index].group_index;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return;
+	if ( g_army[army_index].group_id != g_armygroup[group_index].id )
+		return;
+
+	if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			if ( g_armygroup[group_index].attack_armyindex[tmpi] == army_index )
+			{
+				g_armygroup[group_index].attack_armyindex[tmpi] = -1;
+				g_army[army_index].group_pos = -1;
+
+				// 数据前移
+				if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
+				{
+					memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+				}
+				break;
+			}
+		}
+	}
+	else
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			if ( g_armygroup[group_index].defense_armyindex[tmpi] == army_index )
+			{
+				g_armygroup[group_index].defense_armyindex[tmpi] = -1;
+				g_army[army_index].group_pos = -1;
+
+				// 数据前移
+				if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
+				{
+					memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+				}
+				break;
+			}
+		}
+	}
+}
+
+// 设置队长
+void armygroup_setleader( int group_index, int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return;
+	g_army[army_index].group_index = group_index;
+	g_army[army_index].group_id = g_armygroup[group_index].id;
+	g_armygroup[group_index].leader_index = army_index;
+}
+
+// 检查是否具备自动解散条件
+int armygroup_dismiss( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	int group_index = g_army[army_index].group_index;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	if ( g_army[army_index].group_id != g_armygroup[group_index].id )
+		return -1;
+	if ( g_armygroup[group_index].from_type != MAPUNIT_TYPE_CITY )
+		return -1;
+
+	City *pArmyCity = army_getcityptr( army_index );
+	if ( !pArmyCity )
+		return -1;
+	
+	City *pCity = city_indexptr( g_armygroup[group_index].from_index );
+	if ( !pCity )
+		return -1;
+
+	// 不是发起者的部队，就不检查了
+	if ( pArmyCity->actorid != pCity->actorid )
+		return -1;
+	
+	// 检查发起者的部队，在这个集结里还存在不了，不存在，解散集结
+	char has = 0;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		int index = pCity->battle_armyindex[tmpi];
+		if ( index < 0 || index >= g_army_maxcount )
+			continue;
+		if ( g_army[index].state == ARMY_STATE_MARCH || g_army[index].state == ARMY_STATE_GROUP_END )
+		{
+			if ( g_army[index].to_type == MAPUNIT_TYPE_CITY && g_army[index].to_id == g_armygroup[group_index].to_id )
+			{
+				has = 1;
+				break;
+			}
+		}
+	}
+
+	if ( has == 0 )
+	{
+		// 给双方发送集结撤退的邮件
 
 		armygroup_delete( group_index );
 	}
+	return 0;
+}
+
+int armygroup_statetime( int group_index )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return 0;
+	return g_armygroup[group_index].statetime;
+}             
+
+int armygroup_stateduration( int group_index )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return 0;
+	return g_armygroup[group_index].stateduration;
+}
+
+// 城战结果
+int armygroup_vs_city( int group_index, Fight *pFight )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+
+	City *pCity = city_indexptr( g_armygroup[group_index].from_index );
+	if ( !pCity )
+		return -1;
+
+	City *pTargetCity = city_indexptr( g_armygroup[group_index].to_index );
+	if ( !pTargetCity )
+		return -1;
+
+	i64 mailid = 0;
+	char title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+
+	if ( pFight->result == FIGHT_WIN )
+	{
+
+	}
+	else
+	{
+
+	}
+
+	return 0;
+}
+
+// 国战战结果
+int armygroup_vs_town( int group_index, Fight *pFight )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+
+	return 0;
+}
+
+// 城战列表
+int armygroup_city_sendlist( int actor_index, int unit_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	MapUnit *unit = &g_mapunit[unit_index];
+	if ( !unit )
+		return -1;
+	if ( unit->type != MAPUNIT_TYPE_CITY )
+		return -1;
+	if ( unit->index < 0 || unit->index >= g_city_maxcount )
+		return -1;
+	City *pTargetCity = &g_city[unit->index];
+	if ( !pTargetCity )
+		return -1;
+
+	SLK_NetS_CityArmyGroupList pValue = { 0 };
+	pValue.m_unit_index = unit_index;
+	pValue.m_nation = pTargetCity->nation;
+	
+	// 发送开始
+	pValue.m_flag = 0;
+	netsend_cityarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	for ( int tmpi = 0; tmpi < g_armygroup_maxcount; tmpi++ )
+	{
+		if ( g_armygroup[tmpi].id <= 0 )
+			continue;
+		if ( g_armygroup[tmpi].from_type != MAPUNIT_TYPE_CITY || g_armygroup[tmpi].to_type != MAPUNIT_TYPE_CITY )
+			continue;
+		// 攻击方玩家
+		City *pAtkCity = city_indexptr( g_armygroup[tmpi].from_index );
+		if ( !pAtkCity )
+			continue;
+
+		// 防御方玩家
+		City *pDefCity = city_indexptr( g_armygroup[tmpi].to_index ); 
+		if ( !pDefCity )
+			continue;
+
+		// 我既不是攻击国也不是防御国
+		if ( pCity->nation != pAtkCity->nation && pCity->nation != pDefCity->nation )
+			continue;
+
+		if ( g_armygroup[tmpi].from_id == pTargetCity->actorid )
+		{ // 我看的人属于攻击方
+
+			City *pDefCity = city_indexptr( g_armygroup[tmpi].to_index );
+			if ( !pDefCity )
+				continue;
+			pValue.m_list[pValue.m_count].m_attack = 1;
+
+			pValue.m_list[pValue.m_count].m_nation = pTargetCity->nation;
+			pValue.m_list[pValue.m_count].m_level = city_mainlevel( pTargetCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_name, pTargetCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_name_length = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_posx = pTargetCity->posx;
+			pValue.m_list[pValue.m_count].m_posy = pTargetCity->posy;
+			pValue.m_list[pValue.m_count].m_actorid = pTargetCity->actorid;
+			pValue.m_list[pValue.m_count].m_total = 0;
+
+			pValue.m_list[pValue.m_count].m_t_nation = pDefCity->nation;
+			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pDefCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_t_name, pDefCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_t_name_length = strlen( pValue.m_list[pValue.m_count].m_t_name );
+			pValue.m_list[pValue.m_count].m_t_posx = pDefCity->posx;
+			pValue.m_list[pValue.m_count].m_t_posy = pDefCity->posy;
+			pValue.m_list[pValue.m_count].m_t_actorid = pDefCity->actorid;
+			pValue.m_list[pValue.m_count].m_t_total = 0;
+		}
+		else if ( g_armygroup[tmpi].to_id == pTargetCity->actorid )
+		{ // 我看的人属于防御方
+			City *pAtkCity = city_indexptr( g_armygroup[tmpi].from_index );
+			if ( !pAtkCity )
+				continue;
+			pValue.m_list[pValue.m_count].m_attack = 2;
+
+			pValue.m_list[pValue.m_count].m_nation = pTargetCity->nation;
+			pValue.m_list[pValue.m_count].m_level = city_mainlevel( pTargetCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_name, pTargetCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_name_length = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_posx = pTargetCity->posx;
+			pValue.m_list[pValue.m_count].m_posy = pTargetCity->posy;
+			pValue.m_list[pValue.m_count].m_actorid = pTargetCity->actorid;
+			pValue.m_list[pValue.m_count].m_total = 0;
+
+			pValue.m_list[pValue.m_count].m_t_nation = pAtkCity->nation;
+			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pAtkCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_t_name, pAtkCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_t_name_length = strlen( pValue.m_list[pValue.m_count].m_t_name );
+			pValue.m_list[pValue.m_count].m_t_posx = pAtkCity->posx;
+			pValue.m_list[pValue.m_count].m_t_posy = pAtkCity->posy;
+			pValue.m_list[pValue.m_count].m_t_actorid = pAtkCity->actorid;
+			pValue.m_list[pValue.m_count].m_t_total = 0;
+		}
+		else
+			continue;
+
+		pValue.m_list[pValue.m_count].m_group_index = tmpi;
+		pValue.m_list[pValue.m_count].m_group_id = g_armygroup[tmpi].id;
+		pValue.m_list[pValue.m_count].m_statetime = g_armygroup[tmpi].statetime;
+		pValue.m_list[pValue.m_count].m_stateduration = g_armygroup[tmpi].stateduration;
+		pValue.m_totalcount += 1;
+		pValue.m_count += 1;
+		if ( pValue.m_count > 10 )
+		{
+			pValue.m_flag = 1;
+			netsend_cityarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count = 0;
+		}
+	}
+
+	if ( pValue.m_count > 0 )
+	{
+		pValue.m_flag = 1;
+		netsend_cityarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		pValue.m_count = 0;
+	}
+
+	pValue.m_flag = 2;
+	netsend_cityarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 国战列表
+int armygroup_town_sendlist( int actor_index, int unit_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	return 0;
 }

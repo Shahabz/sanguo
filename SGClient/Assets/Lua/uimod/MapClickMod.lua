@@ -36,7 +36,7 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 城战
 		elseif nControlID == 4 then
-			MapCityFightDlgShow( m_LastRecvValue )
+			MapArmyGroupDlgShow( m_LastRecvValue.m_unit_index )
 			
 		-- 进入城池
 		elseif nControlID == 5 then
@@ -45,7 +45,7 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 				MainDlgShowCity()
 			end
 		
-		-- 本城城战
+		-- 本城城战(无用)
 		elseif nControlID == 6 then
 			
 		end
@@ -175,11 +175,11 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 	-- 我国城池
 	elseif nation == GetPlayer().m_nation then
 		SetTrue( m_uiInfoBtn )
-		SetFalse( m_uiFightBtn )
+		SetTrue( m_uiFightBtn )
 		SetTrue( m_uiHelpBtn )
 		SetFalse( m_uiEnterBtn )
-		SetTrue( m_uiMyFightBtn )
-		local buttonList = { m_uiInfoBtn, m_uiHelpBtn, m_uiMyFightBtn };
+		SetFalse( m_uiMyFightBtn )
+		local buttonList = { m_uiInfoBtn, m_uiHelpBtn, m_uiFightBtn };
 		MapClickModButton( buttonList );
 		
 	-- 敌国城池
@@ -220,7 +220,7 @@ end
 -- 点击-攻击
 function MapClickModAttack()
 	
-	local cacheValue = WorldMap.m_nMapUnitList[WorldMap.m_nLastTouchUnitIndex];
+	--[[local cacheValue = WorldMap.m_nMapUnitList[WorldMap.m_nLastTouchUnitIndex];
     if cacheValue == nil then
         return;
     end
@@ -231,5 +231,27 @@ function MapClickModAttack()
 			return
 		end
 	end
-	TroopDlgOpenWithAction( ARMY_ACTION_FIGHT );
+	TroopDlgOpenWithAction( ARMY_ACTION_FIGHT );--]]
+end
+
+function MapClickModOpenCityFight( unit_index )
+	if m_LastRecvValue == nil then
+		m_LastRecvValue = WorldMap.m_nMapUnitList[unit_index];
+		if m_LastRecvValue == nil then
+			return
+		end
+		if m_LastRecvValue.m_type ~= MAPUNIT_TYPE_CITY then
+			return
+		end
+	end
+	if m_LastRecvValue.m_unit_index ~= unit_index then
+		m_LastRecvValue = WorldMap.m_nMapUnitList[unit_index];
+		if m_LastRecvValue == nil then
+			return
+		end
+		if m_LastRecvValue.m_type ~= MAPUNIT_TYPE_CITY then
+			return
+		end
+	end
+	MapCityFightDlgShow( m_LastRecvValue )
 end

@@ -315,6 +315,17 @@ function MailDlgSetMail( recvValue )
 		local restype = recvValue.m_content_json["res"];
 		local resnum = recvValue.m_content_json["num"];
 		SetText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
+	
+	-- 采集战斗
+	elseif recvValue.m_type == MAIL_TYPE_GATHER_FIGHT then
+		local win = recvValue.m_content_json["win"];
+		local name = recvValue.m_content_json["na"];
+		local tname = recvValue.m_content_json["tna"];
+		if win == 1 then
+			SetText( uiContent, F(1110, name, tname ) )
+		else
+			SetText( uiContent, F(1111, name, tname ) )
+		end
 		
 	-- 侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_SPY then

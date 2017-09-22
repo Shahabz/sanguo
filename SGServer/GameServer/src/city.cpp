@@ -23,6 +23,7 @@
 #include "vip.h"
 #include "actor_notify.h"
 #include "army.h"
+#include "army_group.h"
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
@@ -76,6 +77,9 @@ extern int g_army_maxcount;
 extern BuildingUpgrade *g_building_upgrade;
 extern int g_building_upgrade_maxnum;
 
+extern ArmyGroup *g_armygroup;
+extern int g_armygroup_maxcount;
+
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -107,6 +111,10 @@ int city_reset()
 		for ( int index = 0; index < CITY_MAPEVENT_MAX; index++ )
 		{
 			g_city[tmpi].mapevent_index[index] = -1;
+		}
+		for ( int index = 0; index < CITY_UNDERFIRE_GROUP_MAX; index++ )
+		{
+			g_city[tmpi].underfire_groupindex[index] = -1;
 		}
 	}
 	return 0;
@@ -338,6 +346,10 @@ int city_new( City *pCity )
 			for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
 			{
 				g_city[city_index].mapevent_index[tmpi] = -1;
+			}
+			for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+			{
+				g_city[city_index].underfire_groupindex[tmpi] = -1;
 			}
 			break;
 		}
@@ -625,6 +637,34 @@ int city_mainlevel( int city_index )
 	if ( city_index < 0 || city_index >= g_city_maxcount )
 		return 0;
 	return g_city[city_index].building[0].level;
+}
+
+// 设置城市状态
+void city_setstate( City *pCity, char state )
+{
+	if ( pCity == NULL )
+		return;
+	pCity->state |= state;
+	mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
+
+	SLK_NetS_CityState pValue = { 0 };
+	pValue.m_state = pCity->state;
+	pValue.m_change = state;
+	netsend_citystate_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+}
+
+// 移除城市状态
+void city_delstate( City *pCity, char state )
+{
+	if ( pCity == NULL )
+		return;
+	pCity->state &= ~state;
+	mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
+
+	SLK_NetS_CityState pValue = { 0 };
+	pValue.m_state = pCity->state;
+	pValue.m_change = state;
+	netsend_citystate_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
 // 标志位
@@ -1363,6 +1403,26 @@ int city_guard_soldiers( int city_index, int offset )
 		}
 		g_city[city_index].guard[offset].soldiers = TROOPS( level, config->troops, config->troops_growth );
 		city_guard_send( g_city[city_index].actor_index, offset );
+	}
+	return 0;
+}
+
+// 城墙守卫血量变化
+int city_guard_subsoldiers( int city_index, int offset, int sub )
+{
+	if ( sub < 0 )
+		return -1;
+	if ( offset < 0 || offset >= CITY_GUARD_MAX )
+		return -1;
+
+	g_city[city_index].guard[offset].soldiers -= sub;
+	if ( g_city[city_index].guard[offset].soldiers <= 0 )
+	{ // 死了
+		memset( &g_city[city_index].guard[offset], 0, sizeof( CityGuard ) );
+		if ( offset < CITY_GUARD_MAX - 1 )
+		{
+			memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1) );
+		}
 	}
 	return 0;
 }
@@ -2547,6 +2607,11 @@ void city_battlequeue_makestruct( SLK_NetS_BattleInfo *pValue, int army_index )
 		else
 			pValue->m_unit_index = pTargetCity->unit_index;
 	}
+	else if ( g_army[army_index].state == ARMY_STATE_GROUP_END )
+	{ // 集结完毕
+		pValue->m_statetime = armygroup_statetime( g_army[army_index].group_index );
+		pValue->m_stateduration = armygroup_stateduration( g_army[army_index].group_index );
+	}
 	else
 	{
 		pValue->m_unit_index = g_army[army_index].unit_index;
@@ -2729,6 +2794,85 @@ int city_underfire_getnum( City *pCity )
 	return num;
 }
 
+// 空闲的被攻击列表索引
+static int underfire_group_freeindex( City *pCity )
+{
+	if ( pCity == NULL )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_groupindex[tmpi] < 0 )
+			return tmpi;
+	}
+	return -1;
+}
+
+// 被攻击信息添加
+int city_underfire_groupadd( City *pCity, int group_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	int index = underfire_group_freeindex( pCity );
+	if ( index < 0 )
+		return -1;
+	pCity->underfire_groupindex[index] = index;
+
+	// 通知该玩家
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+	
+	}
+	else
+	{ // 推送
+	}
+	return 0;
+}
+
+// 被攻击信息移除
+int city_underfire_groupdel( City *pCity, int group_index )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	int tmpi = 0;
+	for ( tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_groupindex[tmpi] == group_index )
+		{
+			pCity->underfire_groupindex[tmpi] = -1;
+			break;
+		}
+	}
+
+	// 城战状态
+	char has = 0;
+	for ( tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		if ( pCity->underfire_groupindex[tmpi] >= 0 )
+		{
+			has = 1;
+			break;
+		}
+	}
+	if ( has == 0 )
+	{
+		city_delstate( pCity, CITY_STATE_ARMYGROUP );
+	}
+
+	if ( tmpi >= CITY_UNDERFIRE_GROUP_MAX )
+		return -1;
+
+
+	// 通知该玩家
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+	}
+	return 0;
+}
+
 // 添加驻防部队
 int city_helparmy_add( City *pCity, int army_index )
 {
@@ -2765,6 +2909,11 @@ int city_helparmy_del( City *pCity, int army_index )
 		{
 			pCity->help_armyindex[index] = -1;
 
+			// 数据前移
+			if ( index < CITY_HELPDEFENSE_MAX - 1 )
+			{
+				memmove( &pCity->help_armyindex[index], &pCity->help_armyindex[index + 1], sizeof( int )*(CITY_HELPDEFENSE_MAX - 1) );
+			}
 			// 给集结 发送援助删除信息
 			//armygroup_send_delinfo( army_index, 1 );
 			// 通知自己的界面更新

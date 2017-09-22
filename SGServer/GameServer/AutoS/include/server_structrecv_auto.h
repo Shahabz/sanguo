@@ -84,6 +84,7 @@ struct _slk_NetC_MapBattle {
 	short m_to_posy;	//出征目的点
 	int m_appdata;	//出征附加数据
 	char m_action;	//出征行为
+	int m_group_index;	//出征集结索引
 };
 typedef struct _slk_NetC_MapBattle SLK_NetC_MapBattle;	//出征
 

@@ -20,6 +20,7 @@
 #define ARMY_ACTION_OCCUPY				2	// 去驻扎
 #define ARMY_ACTION_GATHER				3	// 去采集
 #define ARMY_ACTION_HELP_TROOP			6	// 去士兵援助
+#define ARMY_ACTION_GROUP_CREATE		10	// 创建集结
 #define ARMY_ACTION_GROUP_ATTACK		11	// 参与集结(攻击方)
 #define ARMY_ACTION_GROUP_DEFENSE		12	// 参与集结(防御方)
 

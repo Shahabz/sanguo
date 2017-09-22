@@ -32,7 +32,7 @@ int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pCityAttr = pCB_GetCityAttr( actorid );
+		pCityAttr = pCB_GetCityAttr( atoi(row[0]) );
 		if( pCityAttr == NULL )
 			continue;
 		pCityAttr->actorid = atoi(row[offset++]);
@@ -82,9 +82,12 @@ int city_attr_load_auto( LPCB_GETCITYATTR pCB_GetCityAttr, LPCB_LOADCITYATTR pCB
 		pCityAttr->ability_open_207 = atoi(row[offset++]);
 		if( pCB_LoadCityAttr )
 			pCB_LoadCityAttr( pCityAttr->actorid );
-		actorid += 1;
+		actorid = pCityAttr->actorid;
+		if ( actorid >= g_city_attr_maxindex )
+		{
+			g_city_attr_maxindex = actorid + 1;
+		}
 	}
-	g_city_attr_maxindex = actorid;
 	mysql_free_result( res );
 	return 0;
 }

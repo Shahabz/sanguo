@@ -180,6 +180,7 @@ int struct_NetC_MapBattle_recv( char **pptr, int *psize, SLK_NetC_MapBattle *pVa
 	LKSET_WORD_RECV( &pValue->m_to_posy, (*pptr), (*psize) );
 	LKSET_DWORD_RECV( &pValue->m_appdata, (*pptr), (*psize) );
 	LKSET_SBYTE_RECV( &pValue->m_action, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_group_index, (*pptr), (*psize) );
 	return 0;
 }
 

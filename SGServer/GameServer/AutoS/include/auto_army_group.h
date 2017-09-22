@@ -19,6 +19,7 @@ struct _army_group {
 				int to_index;	//目的对象索引
 				short to_posx;	//目的对象坐标
 				short to_posy;	//目的对象坐标
+				int leader_index;	//队长索引
 				int attack_armyindex[128];	//临时存储攻击方集结部队索引
 				int defense_armyindex[128];	//临时存储防御方集结部队索引
 };

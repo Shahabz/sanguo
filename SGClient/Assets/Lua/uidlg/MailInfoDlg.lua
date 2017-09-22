@@ -389,9 +389,36 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 		-- 如果是被打回来的
 		if reback == ARMY_REBACK_FIGHTLOSE then
-			SetTrue( m_uiGatherContent.transform:Find("FightLose") );
+			--SetTrue( m_uiGatherContent.transform:Find("FightLose") );
+			SetFalse( m_uiGatherContent.transform:Find("FightLose") );
 		else
 			SetFalse( m_uiGatherContent.transform:Find("FightLose") );
+		end
+	
+	-- 采集战斗
+	elseif recvValue.m_type == MAIL_TYPE_GATHER_FIGHT then
+		SetTrue( m_uiMailContent );
+		local my = recvValue.m_content_json["my"];
+		local win = recvValue.m_content_json["win"];
+		
+		local name = recvValue.m_content_json["na"];		
+		local nation = recvValue.m_content_json["n"];
+		local level = recvValue.m_content_json["lv"];
+		local pos = recvValue.m_content_json["pos"];
+		
+		local tname = recvValue.m_content_json["tna"];
+		local tnation = recvValue.m_content_json["tn"];
+		local tlevel = recvValue.m_content_json["tlv"];
+		local tpos = recvValue.m_content_json["tpos"];
+		
+		if my == 1 then -- 我是攻击方
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ), MailOnLinkClick )
+			m_share_a_name = "["..Nation(nation).."]"..name;
+			m_share_d_name = "["..Nation(tnation).."]"..tname;
+		else -- 我是防御方
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ), MailOnLinkClick )
+			m_share_a_name = "["..Nation(tnation).."]"..tname;
+			m_share_d_name = "["..Nation(nation).."]"..name;
 		end
 		
 	else
@@ -498,7 +525,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	end
 	
 	-- 获取战斗信息
-	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or ( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
+	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or recvValue.m_type == MAIL_TYPE_GATHER_FIGHT or ( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
 		-- 没缓存，去服务器拿
 		if recvValue.m_fight_content == nil or recvValue.m_fight_content == "" then
 			-- 自己看自己的邮件
@@ -593,8 +620,29 @@ function MailInfoDlgRecvFight( mailid, content )
 		SetTrue( m_uiMailFight );
 	
 		local info = json.decode( content );
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("AttackMain"), info["a_type"], info["a_name"], info["a_shape"], info["a_nation"], info["a_maxhp"], info["a_hp"] );
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("DefenseMain"), info["d_type"], info["d_name"], info["d_shape"], info["d_nation"], info["d_maxhp"], info["d_hp"] );
+		
+		-- 我是攻击方，攻击方显示左面
+		local my = m_recvValue.m_content_json["my"];
+		if my == nil or my == 1 then	
+			-- 攻击方
+			SetText( m_uiMailFight.transform:Find("AttackBack/Text"), T(1174) );
+			-- 防御方
+			SetText( m_uiMailFight.transform:Find("DefenseBack/Text"), T(1175) );
+			
+			MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("AttackMain"), info["a_type"], info["a_name"], info["a_shape"], info["a_nation"], info["a_maxhp"], info["a_hp"] );
+			MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("DefenseMain"), info["d_type"], info["d_name"], info["d_shape"], info["d_nation"], info["d_maxhp"], info["d_hp"] );
+		
+		-- 我是防御方，防御方显示左面
+		else
+			-- 防御方
+			SetText( m_uiMailFight.transform:Find("AttackBack/Text"), T(1175) );
+			-- 攻击方
+			SetText( m_uiMailFight.transform:Find("DefenseBack/Text"), T(1174) );
+			
+			MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("DefenseMain"), info["a_type"], info["a_name"], info["a_shape"], info["a_nation"], info["a_maxhp"], info["a_hp"] );
+			MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("AttackMain"), info["d_type"], info["d_name"], info["d_shape"], info["d_nation"], info["d_maxhp"], info["d_hp"] );
+		end
+		
 		
 		-- 战斗单元取一个最多的
 		local unitcount = #info["a_unit"];
@@ -603,12 +651,17 @@ function MailInfoDlgRecvFight( mailid, content )
 		end
 		-- 创建战斗单元
 		for i=1, unitcount, 1 do
+			local unit = nil;
 			local uiObj = m_ObjectPool:Get( "UIP_UnitRow" );
 			uiObj.transform:SetParent( m_uiMailFight.transform );
-			
-			-- 攻击方
+
 			local uiAttack = uiObj.transform:Find("Attack");
-			local unit = info["a_unit"][i];
+			-- 我是攻击方，攻击方显示左面
+			if my == nil or my == 1 then
+				unit = info["a_unit"][i];
+			else
+				unit = info["d_unit"][i];
+			end
 			if unit ~= nil then
 				SetTrue( uiAttack )
 				MailInfoDlgSetFightUnit( uiAttack, unit["t"], unit["n"], unit["na"], unit["kd"], unit["sp"], unit["lv"], unit["cr"], unit["cs"], unit["mhp"], unit["hp"], unit["dmg"], unit["vw"] )
@@ -616,30 +669,31 @@ function MailInfoDlgRecvFight( mailid, content )
 				SetFalse( uiAttack )
 			end
 			
-			-- 防御方
 			local uiDefense = uiObj.transform:Find("Defense");
-			unit = info["d_unit"][i];
+			-- 我是防御方，防御方显示左面
+			if my == nil or my == 1 then
+				unit = info["d_unit"][i];
+			else
+				unit = info["a_unit"][i];
+			end
 			if unit ~= nil then
 				SetTrue( uiDefense )
 				MailInfoDlgSetFightUnit( uiDefense, unit["t"], unit["n"], unit["na"], unit["kd"], unit["sp"], unit["lv"], unit["cr"], unit["cs"], unit["mhp"], unit["hp"], unit["dmg"], unit["vw"] )
 			else
 				SetFalse( uiDefense )
-			end
+			end	
 		end
-	end
-				
+		
+	end			
 end
 
 -- 设置双方主角信息
 function MailInfoDlgSetFightMainUnit( uiObj, type, name, shape, nation, maxhp, hp )
-	-- 玩家
-	if type == MAPUNIT_TYPE_CITY then
+	-- 玩家 部队 资源点
+	if type == MAPUNIT_TYPE_CITY or type == MAPUNIT_TYPE_ARMY or type == MAPUNIT_TYPE_RES then
 		SetImage( uiObj.transform:Find("Shape"), PlayerHeadSprite( shape ) );
 		SetText( uiObj.transform:Find("Name"), "["..Nation(nation).."]"..name );
-		
-	-- 玩家部队
-	elseif type == MAPUNIT_TYPE_ARMY then
-	
+			
 	-- 城镇
 	elseif type == MAPUNIT_TYPE_TOWN then
 	
@@ -647,9 +701,6 @@ function MailInfoDlgSetFightMainUnit( uiObj, type, name, shape, nation, maxhp, h
 	elseif type == MAPUNIT_TYPE_ENEMY then
 		SetImage( uiObj.transform:Find("Shape"), EnemyHeadSprite( shape ) );
 		SetText( uiObj.transform:Find("Name"), EnemyName( tonumber(name) ) );
-		
-	-- 资源点
-	elseif type == MAPUNIT_TYPE_RES then
 	end
 	SetText( uiObj.transform:Find("Hp"), T(1117).." "..maxhp );
 	SetText( uiObj.transform:Find("Lost"), T(1118).." "..(maxhp-hp) );
@@ -665,7 +716,7 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
 		SetText( uiObj.transform:Find("Name"), HeroName( kind ) );
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp );
+		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+"..vw );
 		
 	-- 玩家城墙守卫
 	elseif type == FIGHT_UNITTYPE_GUARD then
@@ -738,6 +789,7 @@ function MailOnLinkClick( str )
 		MailInfoDlgClose()
 		MailDlgClose()
 		ChatDlgClose()
+		MapArmyGroupDlgClose()
 		WorldMap.GotoCoor( gameCoorX, gameCoorY )
 	end
 end

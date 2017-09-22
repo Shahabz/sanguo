@@ -104,9 +104,10 @@ struct _city {
 				int actor_index;	//角色索引
 				int unit_index;	//显示索引
 				int battle_armyindex[8];	//出征部队
-				int underfire_armyindex[16];	//目标部队
+				int underfire_armyindex[8];	//目标部队（暂别用）
 				int help_armyindex[32];	//协防部队
 				int mapevent_index[6];	//地图事件
+				int underfire_groupindex[16];	//目标集结索引
 };
 typedef struct _city City;
 

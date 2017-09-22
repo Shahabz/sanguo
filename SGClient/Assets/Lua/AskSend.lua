@@ -23,6 +23,7 @@ ASKINFO_WORLDMAP		=	20 -- 世界地图
 ASKINFO_MAP_EVENT		=	21 -- 世界地图随机事件
 ASKINFO_SPY_CITY		=	22 -- 侦察城池
 ASKINFO_CITYHELP		=	23 -- 驻防信息
+ASKINFO_CITYARMYGROUP	=	24 -- 城战
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

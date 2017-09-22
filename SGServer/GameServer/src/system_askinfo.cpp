@@ -29,6 +29,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "army_march.h"
+#include "army_group.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -402,7 +403,13 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_CITYHELP:
 		if ( pvalue[0] == 0 )
 		{// 驻防
-			city_helparmy_sendlist( actor_index, pvalue[1]);
+			city_helparmy_sendlist( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_CITYARMYGROUP:
+		if ( pvalue[0] == 0 )
+		{ // 城战列表
+			armygroup_city_sendlist( actor_index, pvalue[1] );
 		}
 		break;
 	default:

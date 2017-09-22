@@ -34,7 +34,7 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pMapEnemy = pCB_GetMapEnemy( index );
+		pMapEnemy = pCB_GetMapEnemy( atoi(row[0]) );
 		if( pMapEnemy == NULL )
 			continue;
 		pMapEnemy->index = atoi(row[offset++]);
@@ -44,9 +44,12 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 		pMapEnemy->deltime = atoi(row[offset++]);
 		if( pCB_LoadMapEnemy )
 			pCB_LoadMapEnemy( pMapEnemy->index );
-		index += 1;
+		index = pMapEnemy->index;
+		if ( index >= g_map_enemy_maxindex )
+		{
+			g_map_enemy_maxindex = index + 1;
+		}
 	}
-	g_map_enemy_maxindex = index;
 	mysql_free_result( res );
 	return 0;
 }

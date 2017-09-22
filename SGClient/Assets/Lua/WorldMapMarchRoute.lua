@@ -74,10 +74,9 @@ end
 
 -- 删除行军路线
 function MapMarchRoute.del( army_index )
-	if  MapMarchRoute.cache[army_index] == nil then
+	if MapMarchRoute.cache[army_index] == nil then
 		return;
 	end
-	
 	local obj = MapMarchRoute.cache[army_index];
 	if obj ~= nil then
 		obj.gameObject:SetActive( false );

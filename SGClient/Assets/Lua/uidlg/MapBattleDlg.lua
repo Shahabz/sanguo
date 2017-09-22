@@ -7,6 +7,8 @@ local m_uiMarchTime2 = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiTitle = nil; --UnityEngine.GameObject
+local m_uiBattleButton = nil; --UnityEngine.GameObject
+local m_uiAttackDesc = nil; --UnityEngine.GameObject
 
 local m_action = 0;
 local m_unit_index = -1;
@@ -16,6 +18,9 @@ local m_cost_body = 0;
 local m_HeroList = {};
 local m_recvValue = {};
 local m_uiMoveLayerPlay = { false, false, false, false };
+local m_appdata = 0;
+local m_id = 0;
+local m_group_index = -1;
 
 -- 打开界面
 function MapBattleDlgOpen()
@@ -43,6 +48,8 @@ function MapBattleDlgDestroy()
 	m_HeroList = {};
 	m_recvValue = {};
 	m_uiMoveLayerPlay = { false, false, false, false };
+	m_appdata = 0;
+	m_group_index = -1;
 end
 
 ----------------------------------------
@@ -88,6 +95,8 @@ function MapBattleDlgOnAwake( gameObject )
 	m_uiContent = objs[4];
 	m_uiCost = objs[5];
 	m_uiTitle = objs[6];
+	m_uiBattleButton = objs[7];
+	m_uiAttackDesc = objs[8];
 end
 
 -- 界面初始化时调用
@@ -119,8 +128,11 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function MapBattleDlgShow( recvValue, action )
+function MapBattleDlgShow( recvValue, action, group_index )
 	MapBattleDlgOpen()
+	m_appdata = 0;
+	m_id = 0;
+	m_group_index = group_index;
 	m_action = action;
 	m_recvValue 	= recvValue;
 	m_unit_index 	= recvValue.m_unit_index
@@ -134,17 +146,38 @@ function MapBattleDlgShow( recvValue, action )
 		local nation	= recvValue.m_char_value[2];
 		-- 标题
 		if action == ARMY_ACTION_HELP_TROOP then
+			SetFalse( m_uiAttackDesc )
 			SetText( m_uiTitle.transform:Find("Text"), T(1231) )
-		else
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1229) );
+			
+		elseif action == ARMY_ACTION_GROUP_CREATE then
+			SetTrue( m_uiAttackDesc )
 			SetText( m_uiTitle.transform:Find("Text"), T(1222) )
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1254) );
+		
+		elseif action == ARMY_ACTION_GROUP_ATTACK then
+			SetTrue( m_uiAttackDesc )
+			SetText( m_uiTitle.transform:Find("Text"), T(1252) )
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1252) );
+			
+		elseif action == ARMY_ACTION_GROUP_DEFENSE then
+			SetFalse( m_uiAttackDesc )
+			SetText( m_uiTitle.transform:Find("Text"), T(1253) )
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1253) );
+			
+		else
+			SetText( m_uiTitle.transform:Find("Text"), "" )
 		end
 		-- 形象
 		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
 		-- 名字
 		SetText( m_uiName, F(1228, level, name, posx, posy) )
 		
-	elseif recvValue.m_type == MAPUNIT_TYPE_ARMY then -- 部队
 	elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then -- 城镇
+		if action == ARMY_ACTION_GROUP_CREATE then
+		else	
+		end
+		
 	elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then -- 流寇
 		local level	= recvValue.m_char_value[1];
 		local kind 	= recvValue.m_short_value[1];
@@ -154,8 +187,9 @@ function MapBattleDlgShow( recvValue, action )
 		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
 		-- 名字+位置
 		SetText( m_uiName, F(955, level, posx, posy) )
-		
-	elseif recvValue.m_type == MAPUNIT_TYPE_RES then-- 资源点
+		-- 按钮名称
+		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
+		SetTrue( m_uiAttackDesc )
 	end
 	
 	
@@ -163,6 +197,7 @@ function MapBattleDlgShow( recvValue, action )
 	m_marchtime = WorldMap.MarchTime( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, posx, posy )
 	SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
 	SetText( m_uiMarchTime2, secnum(m_marchtime) )
+	
 	-- 英雄放到缓存
 	m_HeroList = {};
 	-- 未出阵的
@@ -342,16 +377,14 @@ function MapBattleDlgSetCost()
 	
 	-- 城池
 	if m_recvValue.m_type == MAPUNIT_TYPE_CITY then
-		m_cost_body = 5
+		--[[m_cost_body = 5
 		if m_cost_food > GetPlayer().m_body then
 			SetText( m_uiCost, F(967, total, m_cost_body, GetPlayer().m_body ) )
 		else
 			SetText( m_uiCost, F(966, total, m_cost_body, GetPlayer().m_body ) )
-		end
-	
-	-- 部队
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_ARMY then
-	
+		end--]]
+		SetText( m_uiCost, "" )
+		
 	-- 城镇
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_TOWN then
 	
@@ -364,8 +397,6 @@ function MapBattleDlgSetCost()
 			SetText( m_uiCost, F(962, total, knum(m_cost_food), knum(GetPlayer().m_food) ) )
 		end
 	
-	-- 资源点
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_RES then
 	end
 	
 end
@@ -423,6 +454,16 @@ function MapBattleDlgUp( index )
 	MapBattleDlgHeroList()
 end
 
+-- 设置附加数据
+function MapBattleDlgAppData( appdata )
+	m_appdata = appdata
+end
+
+-- 设置附加数据
+function MapBattleDlgID( id )
+	m_id = id
+end
+
 -- 出征
 -- m_to_unit_type=0,m_to_unit_index=0,m_id=0,m_herokind={[4]},m_to_posx=0,m_to_posy=0,m_appdata=0,m_action=0,
 function MapBattleDlgBattle()
@@ -431,21 +472,17 @@ function MapBattleDlgBattle()
 	sendValue.m_to_unit_index = m_unit_index
 	sendValue.m_to_posx = m_recvValue.m_posx;
 	sendValue.m_to_posy = m_recvValue.m_posy;
-	sendValue.m_id = 0;
-	sendValue.m_appdata = 0;
+	sendValue.m_id = m_id;
+	sendValue.m_appdata = m_appdata;
 	sendValue.m_action = m_action;
-	
+	sendValue.m_group_index = m_group_index;
 	-- 城池
 	if m_recvValue.m_type == MAPUNIT_TYPE_CITY then
-		if m_cost_body > GetPlayer().m_body then
+--[[		if m_cost_body > GetPlayer().m_body then
 			JumpBody()
 			return
-		end
-		
-	-- 部队
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_ARMY then
-
-		
+		end--]]
+	
 	-- 城镇
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_TOWN then
 	
@@ -458,10 +495,6 @@ function MapBattleDlgBattle()
 		end
 		sendValue.m_id = m_recvValue.m_short_value[1];
 
-		
-	-- 资源点
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_RES then
-		
 	end
 	
 	-- 派出武将

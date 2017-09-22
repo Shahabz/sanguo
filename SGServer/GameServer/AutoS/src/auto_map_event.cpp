@@ -34,7 +34,7 @@ int map_event_load_auto( LPCB_GETMAPEVENT pCB_GetMapEvent, LPCB_LOADMAPEVENT pCB
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pMapEvent = pCB_GetMapEvent( index );
+		pMapEvent = pCB_GetMapEvent( atoi(row[0]) );
 		if( pMapEvent == NULL )
 			continue;
 		pMapEvent->index = atoi(row[offset++]);
@@ -46,9 +46,12 @@ int map_event_load_auto( LPCB_GETMAPEVENT pCB_GetMapEvent, LPCB_LOADMAPEVENT pCB
 		pMapEvent->state = atoi(row[offset++]);
 		if( pCB_LoadMapEvent )
 			pCB_LoadMapEvent( pMapEvent->index );
-		index += 1;
+		index = pMapEvent->index;
+		if ( index >= g_map_event_maxindex )
+		{
+			g_map_event_maxindex = index + 1;
+		}
 	}
-	g_map_event_maxindex = index;
 	mysql_free_result( res );
 	return 0;
 }

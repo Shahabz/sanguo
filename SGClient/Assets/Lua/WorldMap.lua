@@ -90,6 +90,7 @@ local MapClickEffect	= nil;	-- 点击特效
 local MapClickMod		= nil;	-- 操作界面
 local MapCamera 		= nil;	-- 地图摄像机
 local MapTmx            = {};   -- 地图池，只实例化4个
+CityArmyGroupClickMod	= nil;	-- 
 
 local m_RecvValue = nil;
 
@@ -262,6 +263,7 @@ function WorldMap.Start( Prefab )
 	MapClickEffect			= WorldMapPrefab:GetComponent("Transform"):Find( "MapClickEffect" );
 	MapClickMod				= WorldMapPrefab:GetComponent("Transform"):Find( "MapClickMod" );
 	MapCamera				= WorldMapPrefab:GetComponent("Transform"):Find( "MapCamera" );
+	CityArmyGroupClickMod	= WorldMapPrefab:GetComponent("Transform"):Find( "CityArmyGroupClickMod" ).transform:GetComponent("UIMod");
 	
 	-- 根据地图大小动态加载N*N个Tmx地图
 	local TmxMapPrefab = LoadPrefab( "TmxMap" );

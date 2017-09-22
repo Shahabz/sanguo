@@ -224,6 +224,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_bodysec = buffer:ReadShort();
 	recvValue.m_game_day = buffer:ReadShort();
 	recvValue.m_game_weather = buffer:ReadShort();
+	recvValue.m_state = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1381,6 +1382,55 @@ function struct_NetS_MapCItyHelpList_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_walllevel = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_CityState_recv( buffer )
+	local recvValue = {};
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_change = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_CityArmyGroup_recv( buffer )
+	local recvValue = {};
+	recvValue.m_group_index = buffer:ReadInt();
+	recvValue.m_group_id = buffer:ReadInt();
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_t_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_t_level = buffer:ReadShort();
+	recvValue.m_name_length = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_length );
+	recvValue.m_t_name_length = buffer:ReadSByte();
+	recvValue.m_t_name = buffer:ReadStringWithLen( recvValue.m_t_name_length );
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_t_posx = buffer:ReadShort();
+	recvValue.m_t_posy = buffer:ReadShort();
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_t_actorid = buffer:ReadInt();
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_t_total = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_CityArmyGroupList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CityArmyGroup_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_totalcount = buffer:ReadShort();
+	recvValue.m_flag = buffer:ReadSByte();
 	return recvValue;
 end
 

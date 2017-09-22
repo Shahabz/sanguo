@@ -280,6 +280,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_WORD_SEND( (*pptr), &pValue->m_bodysec, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
 	return 0;
 }
 
@@ -1553,6 +1554,61 @@ int struct_NetS_MapCItyHelpList_send( char **pptr, int *psize, SLK_NetS_MapCItyH
 		struct_NetS_CItyHelp_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_WORD_SEND( (*pptr), &pValue->m_walllevel, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityState_send( char **pptr, int *psize, SLK_NetS_CityState *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_change, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityArmyGroup_send( char **pptr, int *psize, SLK_NetS_CityArmyGroup *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_length, (*psize) );
+	if( pValue->m_name_length > 0 && pValue->m_name_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_length*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_name_length, (*psize) );
+	if( pValue->m_t_name_length > 0 && pValue->m_t_name_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_t_name, pValue->m_t_name_length*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_posy, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_total, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityArmyGroupList_send( char **pptr, int *psize, SLK_NetS_CityArmyGroupList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CityArmyGroup_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_totalcount, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
 	return 0;
 }
 

@@ -34,16 +34,19 @@ int map_zone_load_auto( LPCB_GETMAPZONE pCB_GetMapZone, LPCB_LOADMAPZONE pCB_Loa
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pMapZone = pCB_GetMapZone( zoneid );
+		pMapZone = pCB_GetMapZone( atoi(row[0]) );
 		if( pMapZone == NULL )
 			continue;
 		pMapZone->zoneid = atoi(row[offset++]);
 		pMapZone->allow = atoi(row[offset++]);
 		if( pCB_LoadMapZone )
 			pCB_LoadMapZone( pMapZone->zoneid );
-		zoneid += 1;
+		zoneid = pMapZone->zoneid;
+		if ( zoneid >= g_map_zone_maxindex )
+		{
+			g_map_zone_maxindex = zoneid + 1;
+		}
 	}
-	g_map_zone_maxindex = zoneid;
 	mysql_free_result( res );
 	return 0;
 }

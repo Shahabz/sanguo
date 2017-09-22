@@ -18,7 +18,7 @@ int army_group_load_auto( LPCB_GETARMYGROUP pCB_GetArmyGroup, LPCB_LOADARMYGROUP
 	ArmyGroup *pArmyGroup;
 	int index = 0;
 
-	sprintf( szSQL, "select `index`,`id`,`state`,`statetime`,`stateduration`,`from_type`,`from_id`,`from_index`,`from_posx`,`from_posy`,`to_type`,`to_id`,`to_index`,`to_posx`,`to_posy`,`attack_armyindex`,`defense_armyindex` from %s ", pTab );
+	sprintf( szSQL, "select `index`,`id`,`state`,`statetime`,`stateduration`,`from_type`,`from_id`,`from_index`,`from_posx`,`from_posy`,`to_type`,`to_id`,`to_index`,`to_posx`,`to_posy`,`leader_index`,`attack_armyindex`,`defense_armyindex` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -32,7 +32,7 @@ int army_group_load_auto( LPCB_GETARMYGROUP pCB_GetArmyGroup, LPCB_LOADARMYGROUP
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pArmyGroup = pCB_GetArmyGroup( index );
+		pArmyGroup = pCB_GetArmyGroup( atoi(row[0]) );
 		if( pArmyGroup == NULL )
 			continue;
 		pArmyGroup->index = atoi(row[offset++]);
@@ -50,13 +50,17 @@ int army_group_load_auto( LPCB_GETARMYGROUP pCB_GetArmyGroup, LPCB_LOADARMYGROUP
 		pArmyGroup->to_index = atoi(row[offset++]);
 		pArmyGroup->to_posx = atoi(row[offset++]);
 		pArmyGroup->to_posy = atoi(row[offset++]);
+		pArmyGroup->leader_index = atoi(row[offset++]);
 		memcpy( pArmyGroup->attack_armyindex, row[offset++], sizeof(int)*128 );
 		memcpy( pArmyGroup->defense_armyindex, row[offset++], sizeof(int)*128 );
 		if( pCB_LoadArmyGroup )
 			pCB_LoadArmyGroup( pArmyGroup->index );
-		index += 1;
+		index = pArmyGroup->index;
+		if ( index >= g_army_group_maxindex )
+		{
+			g_army_group_maxindex = index + 1;
+		}
 	}
-	g_army_group_maxindex = index;
 	mysql_free_result( res );
 	return 0;
 }
@@ -70,7 +74,7 @@ int army_group_save_auto( ArmyGroup *pArmyGroup, const char *pTab, FILE *fp )
 	char szText_attack_armyindex[sizeof(int)*128*2+1]={0};
 	char szText_defense_armyindex[sizeof(int)*128*2+1]={0};
 RE_ARMYGROUP_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`index`,`id`,`state`,`statetime`,`stateduration`,`from_type`,`from_id`,`from_index`,`from_posx`,`from_posy`,`to_type`,`to_id`,`to_index`,`to_posx`,`to_posy`,`attack_armyindex`,`defense_armyindex`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%s','%s')",pTab,pArmyGroup->index,pArmyGroup->id,pArmyGroup->state,pArmyGroup->statetime,pArmyGroup->stateduration,pArmyGroup->from_type,pArmyGroup->from_id,pArmyGroup->from_index,pArmyGroup->from_posx,pArmyGroup->from_posy,pArmyGroup->to_type,pArmyGroup->to_id,pArmyGroup->to_index,pArmyGroup->to_posx,pArmyGroup->to_posy,db_escape((const char *)pArmyGroup->attack_armyindex,szText_attack_armyindex,sizeof(int)*128),db_escape((const char *)pArmyGroup->defense_armyindex,szText_defense_armyindex,sizeof(int)*128));
+	sprintf( szSQL, "REPLACE INTO %s (`index`,`id`,`state`,`statetime`,`stateduration`,`from_type`,`from_id`,`from_index`,`from_posx`,`from_posy`,`to_type`,`to_id`,`to_index`,`to_posx`,`to_posy`,`leader_index`,`attack_armyindex`,`defense_armyindex`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%s','%s')",pTab,pArmyGroup->index,pArmyGroup->id,pArmyGroup->state,pArmyGroup->statetime,pArmyGroup->stateduration,pArmyGroup->from_type,pArmyGroup->from_id,pArmyGroup->from_index,pArmyGroup->from_posx,pArmyGroup->from_posy,pArmyGroup->to_type,pArmyGroup->to_id,pArmyGroup->to_index,pArmyGroup->to_posx,pArmyGroup->to_posy,pArmyGroup->leader_index,db_escape((const char *)pArmyGroup->attack_armyindex,szText_attack_armyindex,sizeof(int)*128),db_escape((const char *)pArmyGroup->defense_armyindex,szText_defense_armyindex,sizeof(int)*128));
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );

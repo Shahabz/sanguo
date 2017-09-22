@@ -10,6 +10,7 @@ MAIL_TYPE_FIGHT_NATION	=	12	-- 国战
 MAIL_TYPE_CITY_SPY		=	13	-- 侦察
 MAIL_TYPE_CITY_BESPY	=	14	-- 被侦察
 MAIL_TYPE_GATHER		=	20	-- 采集
+MAIL_TYPE_GATHER_FIGHT	=	21	-- 采集战斗
 
 TAG_TEXTID = '#$'	  --标记为文字表id
 TAG_ITEMID = '$$'     -- 标记 标记为道具装备ID

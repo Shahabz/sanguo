@@ -175,6 +175,7 @@ struct _slk_NetS_ActorInfo {
 	short m_bodysec;	//服务器发送玩家基本信息-体力恢复时间
 	short m_game_day;	//服务器发送玩家基本信息-游戏虚拟日期
 	short m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
+	char m_state;	//服务器发送玩家基本信息-城池状态
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1066,6 +1067,47 @@ struct _slk_NetS_MapCItyHelpList {
 };
 typedef struct _slk_NetS_MapCItyHelpList SLK_NetS_MapCItyHelpList;	//地图查看驻防列表
 
+struct _slk_NetS_CityState {
+	char m_state;	//城池当前状态
+	char m_change;	//城池当前状态
+};
+typedef struct _slk_NetS_CityState SLK_NetS_CityState;	//城池状态
+
+struct _slk_NetS_CityArmyGroup {
+	int m_group_index;	//城战信息-集结索引
+	int m_group_id;	//城战信息-集结id
+	char m_attack;	//城战信息-1攻击2防御
+	int m_statetime;	//城战信息-倒计时
+	int m_stateduration;	//城战信息-倒计时
+	char m_nation;	//城战信息
+	char m_t_nation;	//城战信息
+	short m_level;	//城战信息
+	short m_t_level;	//城战信息
+	char m_name_length;	//城战信息
+	char m_name[32];	//城战信息
+	char m_t_name_length;	//城战信息
+	char m_t_name[32];	//城战信息
+	short m_posx;	//城战信息
+	short m_posy;	//城战信息
+	short m_t_posx;	//城战信息
+	short m_t_posy;	//城战信息
+	int m_actorid;	//城战信息
+	int m_t_actorid;	//城战信息
+	int m_total;	//城战信息
+	int m_t_total;	//城战信息
+};
+typedef struct _slk_NetS_CityArmyGroup SLK_NetS_CityArmyGroup;	//城战信息
+
+struct _slk_NetS_CityArmyGroupList {
+	short m_count;	//城战信息列表
+	SLK_NetS_CityArmyGroup m_list[16];	//城战信息列表
+	char m_nation;	//城战信息列表
+	int m_unit_index;	//城战信息列表
+	short m_totalcount;	//城战信息列表
+	char m_flag;	//城战信息列表
+};
+typedef struct _slk_NetS_CityArmyGroupList SLK_NetS_CityArmyGroupList;	//城战列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1183,5 +1225,8 @@ int struct_NetS_MailView_send( char **pptr, int *psize, SLK_NetS_MailView *pValu
 int struct_NetS_CItyHelp_send( char **pptr, int *psize, SLK_NetS_CItyHelp *pValue );
 int struct_NetS_CItyHelpList_send( char **pptr, int *psize, SLK_NetS_CItyHelpList *pValue );
 int struct_NetS_MapCItyHelpList_send( char **pptr, int *psize, SLK_NetS_MapCItyHelpList *pValue );
+int struct_NetS_CityState_send( char **pptr, int *psize, SLK_NetS_CityState *pValue );
+int struct_NetS_CityArmyGroup_send( char **pptr, int *psize, SLK_NetS_CityArmyGroup *pValue );
+int struct_NetS_CityArmyGroupList_send( char **pptr, int *psize, SLK_NetS_CityArmyGroupList *pValue );
 
 #endif

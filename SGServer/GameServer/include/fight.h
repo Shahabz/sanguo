@@ -51,6 +51,7 @@ typedef struct _fightunit
 	char	line_left;			// 当前剩余排数
 	int		line_hp;			// 当前排剩余兵力
 	int		damage;				// 总伤害
+	int		prestige;			// 威望
 }FightUnit;
 
 // 战斗结构
@@ -92,6 +93,9 @@ int fight_add_hero( int pos, int army_index, char type, int city_index, int inde
 
 // 战斗启动
 int fight_start( int attack_armyindex, char defense_type, int defense_index );
+
+// 战斗启动-团战
+int fight_start_armygroup( int group_index );
 
 // 战斗启动-副本战斗
 int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chapter, int rank );

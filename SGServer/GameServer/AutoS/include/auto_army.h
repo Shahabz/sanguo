@@ -36,6 +36,7 @@ struct _army {
 				int awardnum[8];	//携带的奖励（回城加上）
 				int group_index;	//编队索引
 				short group_pos;	//编队队伍中位置
+				int group_id;	//编队id
 				int move_total_distance;	//目的点距离
 };
 typedef struct _army Army;

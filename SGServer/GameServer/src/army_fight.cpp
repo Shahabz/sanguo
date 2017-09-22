@@ -185,60 +185,72 @@ int army_vs_enemy( int army_index, Fight *pFight )
 // 与采集资源的部队战斗结果
 int army_vs_res( int army_index, Fight *pFight )
 {
-	//if ( army_index < 0 || army_index >= g_army_maxcount )
-	//	return -1;
-	//int gather_army_index = map_res_getarmy( g_army[army_index].target_index );
-	//if ( gather_army_index < 0 || gather_army_index >= g_army_maxcount )
-	//	return -1;
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	int gather_army_index = map_res_getarmy( g_army[army_index].to_index );
+	if ( gather_army_index < 0 || gather_army_index >= g_army_maxcount )
+		return -1;
 
-	//// 防御方战场部队还原到防御方army里
-	//army_fightresult_toarmy( gather_army_index, 0 );
-	//army_mail_fightarmy( army_index, army_getcityptr( army_index ), army_getcityptr( gather_army_index ), &g_fight );
+	City *pCity = army_getcityptr( army_index );
+	if ( !pCity )
+		return -1;
 
-	//// 联盟事件
-	//club_setevent_vsres( army_index, gather_army_index, g_fight.result );
+	City *pTargetCity = army_getcityptr( gather_army_index );
+	if ( !pTargetCity )
+		return -1;
 
-	//if ( g_fight.result == FIGHT_WIN )
-	//{
-	//	City *pCity = army_getcityptr( gather_army_index );
-	//	if ( pCity )
-	//	{
-	//		Hero *pHero = hero_getptr( pCity, g_fight.defense_hero );
-	//		if ( pHero )
-	//			pHero->state = HERO_STATE_DIE;
-	//	}
-	//	// 这里同时删除它自己的被攻击信息，之后删除就找不到索引了
-	//	city_underfire_del_equal( army_getcityptr( gather_army_index ), gather_army_index );
-	//	club_war_del_equal( army_getclubindex( gather_army_index ), gather_army_index );
+	i64 mailid = 0;
+	char title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
 
-	//	// 直接换成胜利者采集了
-	//	map_res_setarmy( g_army[army_index].target_index, army_index );
-	//	army_setstate( army_index, ARMY_STATE_GATHER );
-	//	g_army[army_index].action = ARMY_ACTION_GATHER;
+	if ( pFight->result == FIGHT_WIN )
+	{
+		// 结算完毕，位置不能换
+		army_gather_calc( gather_army_index );
 
-	//	// 检测是否全军覆没
-	//	if ( army_fightresult_checkalldead( gather_army_index ) < 0 )
-	//	{
-	//		army_delete( gather_army_index );
-	//	}
-	//	else
-	//	{
-	//		army_setstate( gather_army_index, ARMY_STATE_REBACK );
-	//	}
-	//}
-	//else
-	//{
-	//	City *pCity = army_getcityptr( army_index );
-	//	if ( pCity )
-	//	{
-	//		Hero *pHero = hero_getptr( pCity, g_fight.attack_hero );
-	//		if ( pHero )
-	//			pHero->state = HERO_STATE_DIE;
-	//	}
+		// 直接换成胜利者采集了
+		map_res_setarmy( g_army[army_index].to_index, army_index );
+		army_setstate( army_index, ARMY_STATE_GATHER );
+		g_army[army_index].action = ARMY_ACTION_GATHER;
 
-	//	// 因为士兵会有变化，所以要重新计算资源携带量
-	//	army_setstate( gather_army_index, ARMY_STATE_GATHER );
-	//}
+		// 失败者返回
+		g_army[gather_army_index].reback = ARMY_REBACK_FIGHTLOSE;
+		army_setstate( gather_army_index, ARMY_STATE_REBACK );
+		
+		// 进攻成功邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5015 );// 攻打采集点胜利
+		sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_army[army_index].to_posx, g_army[army_index].to_posy );
+
+		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_GATHER_FIGHT, title, content, "", 0 );
+		mail_fight( mailid, pCity->actorid, pFight->unit_json );
+
+		// 防守失败邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5018 );// 防守采集点失败
+		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_army[army_index].to_posx, g_army[army_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy );
+
+		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_GATHER_FIGHT, title, content, "", 0 );
+		mail_fight( mailid, pTargetCity->actorid, pFight->unit_json );
+	}
+	else
+	{
+		// 进攻失败邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5016 ); // 攻打采集点失败
+		sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_army[army_index].to_posx, g_army[army_index].to_posy );
+
+		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_GATHER_FIGHT, title, content, "", 0 );
+		mail_fight( mailid, pCity->actorid, pFight->unit_json );
+
+		// 防守成功邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5017 );// 防守采集点胜利
+		sprintf( content, "{\"my\":2,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_army[army_index].to_posx, g_army[army_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy );
+
+		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_GATHER_FIGHT, title, content, "", 0 );
+		mail_fight( mailid, pTargetCity->actorid, pFight->unit_json );
+	}
 	return 0;
 }
 

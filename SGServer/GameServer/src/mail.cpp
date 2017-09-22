@@ -599,7 +599,7 @@ int mail_share( int actor_index, SLK_NetS_MailShare *pValue )
 	char bigint[21];
 	lltoa( pValue->m_mailid, bigint, 10 );
 
-	if ( pValue->m_type == MAIL_TYPE_FIGHT_ENEMY || pValue->m_type == MAIL_TYPE_FIGHT_CITY || pValue->m_type == MAIL_TYPE_FIGHT_NATION )
+	if ( pValue->m_type == MAIL_TYPE_FIGHT_ENEMY || pValue->m_type == MAIL_TYPE_FIGHT_CITY || pValue->m_type == MAIL_TYPE_FIGHT_NATION || pValue->m_type == MAIL_TYPE_GATHER_FIGHT )
 	{
 		sprintf( msg, "{\"mailid\":\"%s\",\"aname\":\"%s\",\"dname\":\"%s\"}", bigint, pValue->m_a_name, pValue->m_d_name );
 		chat_actortalk( actor_index, CHAT_CHANNEL_NATION, CHAT_MSGTYPE_VS, msg );

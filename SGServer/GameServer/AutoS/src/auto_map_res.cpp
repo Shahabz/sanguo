@@ -34,7 +34,7 @@ int map_res_load_auto( LPCB_GETMAPRES pCB_GetMapRes, LPCB_LOADMAPRES pCB_LoadMap
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pMapRes = pCB_GetMapRes( index );
+		pMapRes = pCB_GetMapRes( atoi(row[0]) );
 		if( pMapRes == NULL )
 			continue;
 		pMapRes->index = atoi(row[offset++]);
@@ -45,9 +45,12 @@ int map_res_load_auto( LPCB_GETMAPRES pCB_GetMapRes, LPCB_LOADMAPRES pCB_LoadMap
 		pMapRes->idlesec = atoi(row[offset++]);
 		if( pCB_LoadMapRes )
 			pCB_LoadMapRes( pMapRes->index );
-		index += 1;
+		index = pMapRes->index;
+		if ( index >= g_map_res_maxindex )
+		{
+			g_map_res_maxindex = index + 1;
+		}
 	}
-	g_map_res_maxindex = index;
 	mysql_free_result( res );
 	return 0;
 }

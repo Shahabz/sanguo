@@ -525,6 +525,21 @@ function netrecv_mapcityhelplist_C( buffer )
 	proc_mapcityhelplist_C( recvValue );
 end
 
+function netrecv_citystate_C( buffer )
+	local recvValue = struct_NetS_CityState_recv( buffer );
+	proc_citystate_C( recvValue );
+end
+
+function netrecv_cityarmygroup_C( buffer )
+	local recvValue = struct_NetS_CityArmyGroup_recv( buffer );
+	proc_cityarmygroup_C( recvValue );
+end
+
+function netrecv_cityarmygrouplist_C( buffer )
+	local recvValue = struct_NetS_CityArmyGroupList_recv( buffer );
+	proc_cityarmygrouplist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -631,6 +646,9 @@ Proc_Command = {
 	[CMDS_CITYHELP]=netrecv_cityhelp_C;
 	[CMDS_CITYHELPLIST]=netrecv_cityhelplist_C;
 	[CMDS_MAPCITYHELPLIST]=netrecv_mapcityhelplist_C;
+	[CMDS_CITYSTATE]=netrecv_citystate_C;
+	[CMDS_CITYARMYGROUP]=netrecv_cityarmygroup_C;
+	[CMDS_CITYARMYGROUPLIST]=netrecv_cityarmygrouplist_C;
 }
 
 function in_proc_command_C( cmd, buffer )
