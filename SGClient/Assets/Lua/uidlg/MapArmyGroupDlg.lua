@@ -153,6 +153,7 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 	uiAskHelpBtn = objs[13];
 	uiAddAttackBtn = objs[14];
 	uiAddDefenseBtn = objs[15];
+	uiWarn = objs[16];
 	
 	if recvValue.m_actorid == GetPlayer().m_actorid or recvValue.m_t_actorid == GetPlayer().m_actorid then
 		SetTrue( uiAskHelpBtn )
@@ -177,8 +178,16 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
 			
 			-- 参与按钮
-			SetTrue( uiAddAttackBtn )
-			SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
+			if recvValue.m_type == 1 then -- 闪电战
+				SetFalse( uiAskHelpBtn )
+				SetFalse( uiAddAttackBtn )
+				SetTrue( uiWarn )
+				SetText( uiWarn, T(1267) )
+			else
+				SetTrue( uiAddAttackBtn )
+				SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
+				SetFalse( uiWarn )
+			end
 			SetFalse( uiAddDefenseBtn )
 		
 		else
@@ -192,6 +201,7 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
 			
 			-- 参与按钮
+			SetFalse( uiWarn )
 			SetFalse( uiAddAttackBtn )
 			SetTrue( uiAddDefenseBtn )
 			SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
@@ -226,6 +236,7 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
 			
 			-- 参与按钮
+			SetFalse( uiWarn )
 			SetFalse( uiAddAttackBtn )
 			SetTrue( uiAddDefenseBtn )
 			SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
@@ -241,8 +252,16 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
 			
 			-- 参与按钮
-			SetTrue( uiAddAttackBtn )
-			SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
+			if recvValue.m_type == 1 then -- 闪电战
+				SetFalse( uiAskHelpBtn )
+				SetFalse( uiAddAttackBtn )
+				SetTrue( uiWarn )
+				SetText( uiWarn, T(1267) )
+			else
+				SetTrue( uiAddAttackBtn )
+				SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
+				SetFalse( uiWarn )
+			end
 			SetFalse( uiAddDefenseBtn )
 		end
 		
@@ -286,11 +305,11 @@ end
 
 -- 请求援助
 function MapArmyGroupDlgAskHelp( index )
-	print( index )
 	local recvValue = m_cache[index]
 	if recvValue == nil then
 		return
 	end
+	system_askinfo( ASKINFO_CITYARMYGROUP, "", 1, recvValue.m_group_index, recvValue.m_group_id );
 end
 
 -- 加入攻击方

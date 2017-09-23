@@ -61,3 +61,10 @@ int npc_talk( int actor_index, int textid )
 	actor_notify_value( actor_index, NOTIFY_NPCTALK, 1, &textid, NULL );
 	return 0;
 }
+
+// 弹出确定消息
+int actor_notify_alert( int actor_index, int textid )
+{
+	actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, NULL );
+	return 0;
+}

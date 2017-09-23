@@ -4,6 +4,7 @@ CREATE TABLE `army_group` (
   `state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '集结状态',
   `statetime` int(11) NOT NULL DEFAULT '0' COMMENT '状态时间戳',
   `stateduration` int(11) NOT NULL DEFAULT '0' COMMENT '状态持续多少秒',
+  `type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '集结类型',
   `from_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '发起者的对象类型',
   `from_id` int(11) NOT NULL DEFAULT '0' COMMENT '发起者的对象ID',
   `from_index` int(11) NOT NULL DEFAULT '0' COMMENT '发起者的对象索引',

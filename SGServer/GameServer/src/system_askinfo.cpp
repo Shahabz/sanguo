@@ -411,6 +411,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 城战列表
 			armygroup_city_sendlist( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 1 )
+		{
+			armygroup_askhelp( actor_index, pvalue[1], pvalue[2] );
+		}
+		
 		break;
 	default:
 		break;

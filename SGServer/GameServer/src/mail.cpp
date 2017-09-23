@@ -601,12 +601,12 @@ int mail_share( int actor_index, SLK_NetS_MailShare *pValue )
 
 	if ( pValue->m_type == MAIL_TYPE_FIGHT_ENEMY || pValue->m_type == MAIL_TYPE_FIGHT_CITY || pValue->m_type == MAIL_TYPE_FIGHT_NATION || pValue->m_type == MAIL_TYPE_GATHER_FIGHT )
 	{
-		sprintf( msg, "{\"mailid\":\"%s\",\"aname\":\"%s\",\"dname\":\"%s\"}", bigint, pValue->m_a_name, pValue->m_d_name );
+		snprintf( msg, 127, "{\"mailid\":\"%s\",\"aname\":\"%s\",\"dname\":\"%s\"}", bigint, pValue->m_a_name, pValue->m_d_name );
 		chat_actortalk( actor_index, CHAT_CHANNEL_NATION, CHAT_MSGTYPE_VS, msg );
 	}
 	else if ( pValue->m_type == MAIL_TYPE_CITY_SPY )
 	{
-		sprintf( msg, "{\"mailid\":\"%s\",\"aname\":\"%s\",\"dname\":\"%s\"}", bigint, pValue->m_a_name, pValue->m_d_name );
+		snprintf( msg, 127, "{\"mailid\":\"%s\",\"aname\":\"%s\",\"dname\":\"%s\"}", bigint, pValue->m_a_name, pValue->m_d_name );
 		chat_actortalk( actor_index, CHAT_CHANNEL_NATION, CHAT_MSGTYPE_SPY, msg );
 	}
 	return 0;
@@ -812,7 +812,7 @@ int mail_actor_reply( int actor_index, SLK_NetC_MailReply *pValue )
 	sprintf( title, "{\"n\":%d,\"lv\":%d,\"na\":\"%s\"}", pCity->nation, pCity->level, pCity->name );
 
 	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
-	sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
+	snprintf( content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
 
 	mail( MAIL_ACTORID, actorid, MAIL_TYPE_ACTOR_REPLY, title, content, "", 0 );
 	return 0;

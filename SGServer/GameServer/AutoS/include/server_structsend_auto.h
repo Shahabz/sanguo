@@ -1095,6 +1095,7 @@ struct _slk_NetS_CityArmyGroup {
 	int m_t_actorid;	//城战信息
 	int m_total;	//城战信息
 	int m_t_total;	//城战信息
+	char m_type;	//城战信息
 };
 typedef struct _slk_NetS_CityArmyGroup SLK_NetS_CityArmyGroup;	//城战信息
 

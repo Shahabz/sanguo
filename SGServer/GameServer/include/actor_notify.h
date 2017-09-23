@@ -18,6 +18,7 @@
 #define NOTIFY_WORLDMAP		11	// 世界地图
 #define NOTIFY_VALUECHANGE	12	// 某些值改变的通用通知
 #define NOTIFY_MAIL			13	// 邮件
+#define NOTIFY_ALERT		14	// 弹出确定消息
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );
@@ -30,4 +31,7 @@ int actor_system_message( int actor_index, int msgid );
 
 // npc对话
 int npc_talk( int actor_index, int textid );
+
+// 弹出确定消息
+int actor_notify_alert( int actor_index, int textid );
 #endif

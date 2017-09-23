@@ -9,6 +9,7 @@ struct _army_group {
 				char state;	//集结状态
 				int statetime;	//状态时间戳
 				int stateduration;	//状态持续多少秒
+				char type;	//集结类型
 				char from_type;	//发起者的对象类型
 				int from_id;	//发起者的对象ID
 				int from_index;	//发起者的对象索引

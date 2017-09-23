@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2353180}
   - component: {fileID: 11407930}
   - component: {fileID: 9597700}
+  - component: {fileID: 114940226145857246}
   m_Layer: 0
   m_Name: MarchRoute
   m_TagString: Untagged
@@ -63,7 +64,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 101
 --- !u!33 &3399262
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -121,3 +122,14 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180484}
   m_IsPrefabParent: 1
+--- !u!114 &114940226145857246
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1874989c5e2da094ea00112c6a895694, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

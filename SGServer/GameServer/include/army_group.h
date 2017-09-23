@@ -13,7 +13,7 @@ int armygroup_load();
 int armygroup_save( FILE *fp );
 ArmyGroup *armygroup_getptr( int group_index );
 
-int armygroup_create( char from_type, int from_id, char to_type, int to_id, int stateduration );
+int armygroup_create( char type, char from_type, int from_id, char to_type, int to_id, int stateduration );
 void armygroup_delete( int group_index );
 void armygroup_alllogic();
 void armygroup_logic( int group_index );
@@ -35,4 +35,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index );
 
 // 国战列表
 int armygroup_town_sendlist( int actor_index, int unit_index );
+
+// 请求帮助
+int armygroup_askhelp( int actor_index, int group_index, int group_id );
 #endif

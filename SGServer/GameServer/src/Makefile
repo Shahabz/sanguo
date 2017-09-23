@@ -5,6 +5,7 @@ SRC = \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_actor_item.cpp \
 ../AutoS/src/auto_army.cpp \
+../AutoS/src/auto_army_group.cpp \
 ../AutoS/src/auto_city.cpp \
 ../AutoS/src/auto_city_attr.cpp \
 ../AutoS/src/auto_city_building.cpp \
@@ -70,6 +71,9 @@ actor_send.cpp \
 actor_times.cpp \
 area.cpp \
 army.cpp \
+army_fight.cpp \
+army_group.cpp \
+army_mail.cpp \
 army_march.cpp \
 award.cpp \
 building.cpp \
@@ -136,6 +140,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_actor_item.o: ../AutoS/src/auto_actor_item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_army.o: ../AutoS/src/auto_army.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_army_group.o: ../AutoS/src/auto_army_group.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city.o: ../AutoS/src/auto_city.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -266,6 +272,12 @@ actor_times.o: actor_times.cpp
 area.o: area.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 army.o: army.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+army_fight.o: army_fight.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+army_group.o: army_group.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+army_mail.o: army_mail.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 army_march.o: army_march.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

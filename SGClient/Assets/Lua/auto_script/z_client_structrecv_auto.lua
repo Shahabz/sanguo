@@ -1415,6 +1415,7 @@ function struct_NetS_CityArmyGroup_recv( buffer )
 	recvValue.m_t_actorid = buffer:ReadInt();
 	recvValue.m_total = buffer:ReadInt();
 	recvValue.m_t_total = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 

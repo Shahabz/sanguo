@@ -34,6 +34,7 @@
 #include "map_res.h"
 #include "map.h"
 #include "mail.h"
+#include "chat.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -182,7 +183,7 @@ int armygroup_getfreeindex()
 }
 
 // 创建一个集结
-int armygroup_create( char from_type, int from_id, char to_type, int to_id, int stateduration )
+int armygroup_create( char type, char from_type, int from_id, char to_type, int to_id, int stateduration )
 {
 	int group_index = armygroup_getfreeindex();
 	if ( group_index < 0 )
@@ -207,6 +208,7 @@ int armygroup_create( char from_type, int from_id, char to_type, int to_id, int 
 	g_armygroup[group_index].state = ARMYGROUP_STATE_ING;
 	g_armygroup[group_index].statetime = 0;
 	g_armygroup[group_index].stateduration = stateduration;
+	g_armygroup[group_index].type = type;
 
 	// 出发数据
 	g_armygroup[group_index].from_type = from_type;
@@ -639,6 +641,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 		pValue.m_list[pValue.m_count].m_group_id = g_armygroup[tmpi].id;
 		pValue.m_list[pValue.m_count].m_statetime = g_armygroup[tmpi].statetime;
 		pValue.m_list[pValue.m_count].m_stateduration = g_armygroup[tmpi].stateduration;
+		pValue.m_list[pValue.m_count].m_type = g_armygroup[tmpi].type;
 		pValue.m_totalcount += 1;
 		pValue.m_count += 1;
 		if ( pValue.m_count > 10 )
@@ -666,5 +669,50 @@ int armygroup_town_sendlist( int actor_index, int unit_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 
+	return 0;
+}
+
+// 请求帮助
+int armygroup_askhelp( int actor_index, int group_index, int group_id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	if ( g_armygroup[group_index].id != group_id )
+		return -1;
+
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	char msg[127] = { 0 };
+	if ( pCity->actorid == g_armygroup[group_index].from_id )
+	{// 请求者是攻击方
+		if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+		{
+			// 对方的城池
+			City *pTargetCity = city_indexptr( g_armygroup[group_index].to_index );
+			if ( !pTargetCity )
+				return -1;
+			// 我对{ 0 }的{ 1 }<color = d95df4ff><url = { 2 }>[{2}]< / url>< / color>发起了城战，请求支援！
+			snprintf( msg, 127, "{\"n\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
+			chat_actortalk( actor_index, CHAT_CHANNEL_NATION, CHAT_MSGTYPE_ATTACK_ASKHELP, msg );
+		}
+
+	}
+	else if ( pCity->actorid == g_armygroup[group_index].to_id )
+	{// 请求者是防御方
+		if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
+		{
+			// 对方的城池
+			City *pTargetCity = city_indexptr( g_armygroup[group_index].from_index );
+			if ( !pTargetCity )
+				return -1;
+
+			// 我的城池<color = d95df4ff><url = { 0 }>[{0}]< / url>< / color>被{ 1 }的{ 2 }发起了城战，请求支援！
+			snprintf( msg, 127, "{\"n\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->name, pCity->posx, pCity->posy );
+			chat_actortalk( actor_index, CHAT_CHANNEL_NATION, CHAT_MSGTYPE_DEFENSE_ASKHELP, msg );
+		}
+	}
 	return 0;
 }

@@ -3252,7 +3252,7 @@ int city_spy( int actor_index, int unit_index, int type )
 	if ( res_success == 1 )
 	{// 侦察成功
 		sprintf( title, "%s%d", TAG_TEXTID, 5011 );
-		sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":1,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\",\"pp\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d,\"iron\":%d", 
+		snprintf( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":1,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\",\"pp\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d,\"iron\":%d",
 			pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy, pTargetCity->people, pTargetCity->silver, pTargetCity->wood, pTargetCity->food, pTargetCity->iron );
 
 		if ( wall_success == 1 )
@@ -3268,7 +3268,7 @@ int city_spy( int actor_index, int unit_index, int type )
 			corps[0] = city_soldiers( pTargetCity->index, 0 );
 			corps[1] = city_soldiers( pTargetCity->index, 1 );
 			corps[2] = city_soldiers( pTargetCity->index, 2 );
-			sprintf_s( szTmp, ",\"walllv\":%d,\"bp\":%d,\"cp1\":%d,\"cp2\":%d,\"cp3\":%d,\"hsu\":%d}", walllv, pTargetCity->battlepower, corps[0], corps[1], corps[2], hero_success );
+			snprintf( szTmp, 255, ",\"walllv\":%d,\"bp\":%d,\"cp1\":%d,\"cp2\":%d,\"cp3\":%d,\"hsu\":%d}", walllv, pTargetCity->battlepower, corps[0], corps[1], corps[2], hero_success );
 			strcat( content, szTmp );
 		}
 		else
@@ -3397,7 +3397,7 @@ int city_spy( int actor_index, int unit_index, int type )
 
 		// 发给被侦察人
 		sprintf( be_title, "%s%d", TAG_TEXTID, 5013 );
-		sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
+		snprintf( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
 		mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
 
 		// 事件
@@ -3407,14 +3407,14 @@ int city_spy( int actor_index, int unit_index, int type )
 	else
 	{ // 侦察失败
 		sprintf( title, "%s%d", TAG_TEXTID, 5012 );
-		sprintf_s( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
+		snprintf( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
 		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
 
 		// 事件
 		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 0, mailid );
 
 		//sprintf( be_title, "%s%d", TAG_TEXTID, 5014 );
-		//sprintf_s( be_content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
+		//snprintf( be_content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
 		//mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
 	}
 

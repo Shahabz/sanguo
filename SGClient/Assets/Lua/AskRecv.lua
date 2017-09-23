@@ -13,6 +13,7 @@ NOTIFY_ACTORSFLAG	=	10	-- 角色标志位
 NOTIFY_WORLDMAP		=	11	-- 世界地图
 NOTIFY_VALUECHANGE	=	12	-- 值改变
 NOTIFY_MAIL			=	13	-- 邮件
+NOTIFY_ALERT		=	14	-- 消息确定框
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -108,5 +109,9 @@ function RecvActorNotify(recvValue)
 				MailDlgMailRecvOver( value[2], value[3] );
 			end
 		end
+		
+	-- 消息确定框
+	elseif msgid == NOTIFY_ALERT then
+		AlertMsg( T(value[1]) )
     end
 end

@@ -1593,6 +1593,7 @@ int struct_NetS_CityArmyGroup_send( char **pptr, int *psize, SLK_NetS_CityArmyGr
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_actorid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_total, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 

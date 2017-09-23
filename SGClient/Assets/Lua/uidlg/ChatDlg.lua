@@ -123,6 +123,15 @@ function ChatDlgMakeMsg( recvValue )
 	elseif recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
 		local info = json.decode( recvValue.m_msg );
 		msg = F( 1123, info["aname"], info["dname"], info["mailid"] );
+		
+	elseif recvValue.m_msgtype == CHAT_MSGTYPE_ATTACK_ASKHELP then
+		local info = json.decode( recvValue.m_msg );
+		msg = F( 1124, NationEx(info["n"]), info["na"], info["pos"] );
+		
+	elseif recvValue.m_msgtype == CHAT_MSGTYPE_DEFENSE_ASKHELP then
+		local info = json.decode( recvValue.m_msg );
+		msg = F( 1125, info["pos"], NationEx(info["n"]), info["na"] );
+	
 	else
 		msg = recvValue.m_msg
 	end
@@ -253,5 +262,5 @@ end
 
 -- 点击坐标
 function ChatDlgOnLinkClickPos( str )
-	
+	MailOnLinkClick(str)
 end

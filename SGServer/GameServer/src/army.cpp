@@ -363,7 +363,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	int group_index = -1;
 	// 总兵力
 	int totalsoldiers = 0;
-	// 英雄状态
+	// 英雄状态检查
 	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
 	{
 		int hero_index = city_hero_getindex( pCity->index, info->m_herokind[tmpi] );
@@ -371,7 +371,6 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		{
 			if ( pCity->hero[hero_index].state == HERO_STATE_FIGHT )
 				return -1;
-			hero_changestate( pCity->index, info->m_herokind[tmpi], HERO_STATE_FIGHT );
 			totalsoldiers += pCity->hero[hero_index].soldiers;
 		}
 	}
@@ -484,7 +483,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				}
 
 				// 创建集结战场
-				group_index = armygroup_create( MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_CITY, pTargetCity->actorid, stateduration );
+				group_index = armygroup_create( grouptype, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_CITY, pTargetCity->actorid, stateduration );
 				if ( group_index < 0 )
 					return -1;
 
@@ -509,9 +508,25 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 					return -1;
 				}
 
+				if ( g_armygroup[info->m_group_index].type == 1 )
+				{ 
+					// 闪电战无法参与进攻
+					actor_notify_alert( pCity->actor_index, 1267 );
+					return -1;
+				}
+				if ( marchtime >= (g_armygroup[info->m_group_index].stateduration - g_armygroup[info->m_group_index].statetime) )
+				{
+					// 此番前去将会错过会战时间，还是静观其变吧
+					actor_notify_alert( pCity->actor_index, 1268 );
+					return -1;
+				}
+				group_index = info->m_group_index;
+
 				// 破罩子
 				city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
 
+				// 已经加入城战攻击部队
+				actor_notify_alert( pCity->actor_index, 1269 );
 			}
 			else if ( info->m_action == ARMY_ACTION_GROUP_DEFENSE )
 			{// 参与集结防守
@@ -529,6 +544,17 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				{
 					return -1;
 				}
+
+				if ( marchtime >= (g_armygroup[info->m_group_index].stateduration - g_armygroup[info->m_group_index].statetime) )
+				{
+					// 此番前去将会错过会战时间，还是静观其变吧
+					actor_notify_alert( pCity->actor_index, 1268 );
+					return -1;
+				}
+				group_index = info->m_group_index;
+
+				// 已经加入城战防守部队
+				actor_notify_alert( pCity->actor_index, 1270 );
 			}
 
 			to_type = MAPUNIT_TYPE_CITY;
@@ -656,11 +682,47 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 
 	// 创建部队
 	int army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_MARCH, info );
+	if ( army_index < 0 )
+		return -1;
+
+	// 英雄状态设置
+	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
+	{
+		int hero_index = city_hero_getindex( pCity->index, info->m_herokind[tmpi] );
+		if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
+		{
+			if ( pCity->hero[hero_index].state == HERO_STATE_FIGHT )
+				continue;
+			hero_changestate( pCity->index, info->m_herokind[tmpi], HERO_STATE_FIGHT );
+		}
+	}
 
 	// 发起集结,设置队长
-	if ( info->m_action == ARMY_ACTION_GROUP_CREATE && group_index >= 0 )
+	if ( group_index >= 0 && group_index < g_armygroup_maxcount )
 	{
-		armygroup_setleader( group_index, army_index );
+		if ( info->m_action == ARMY_ACTION_GROUP_CREATE )
+			armygroup_setleader( group_index, army_index );
+		else
+		{
+			g_army[army_index].group_index = group_index;
+			g_army[army_index].group_id = g_armygroup[group_index].id;
+		}
+	}
+
+	// 添加到出征队列
+	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
+	{
+		city_battlequeue_add( army_getcityptr( army_index ), army_index );
+	}
+
+	// 目标是玩家
+	City *pTargetCity = army_getcityptr_target( army_index );
+	if ( pTargetCity )
+	{
+		if ( info->m_action == ARMY_ACTION_FIGHT )
+		{// 被攻击列表
+			city_underfire_add( pTargetCity, army_index );
+		}
 	}
 	return army_index;
 }
@@ -771,21 +833,6 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 	// 添加到地图显示单元
 	g_army[army_index].unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
 
-	// 添加到出征队列
-	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
-	{
-		city_battlequeue_add( army_getcityptr( army_index ), army_index );
-	}
-
-	// 目标是玩家
-	City *pTargetCity = army_getcityptr_target( army_index );
-	if ( pTargetCity )
-	{
-		if ( info->m_action == ARMY_ACTION_FIGHT )
-		{// 被攻击列表
-			city_underfire_add( pTargetCity, army_index );
-		}
-	}
 	return army_index;
 }
 
