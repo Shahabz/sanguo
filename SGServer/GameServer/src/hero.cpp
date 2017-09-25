@@ -1191,3 +1191,37 @@ int hero_colorup( int actor_index, int herokind )
 	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+
+int hero_gm_level( City *pCity, int level )
+{
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		pCity->hero[tmpi].level = level;
+		// 重算英雄属性
+		hero_attr_calc( pCity, &pCity->hero[tmpi] );
+		// 重算战力
+		city_battlepower_hero_calc( pCity );
+		// 更新英雄
+		hero_sendinfo( pCity->actor_index, &pCity->hero[tmpi] );
+	}
+	return 0;
+}
+
+int hero_gm_soldiers( City *pCity )
+{
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		pCity->hero[tmpi].soldiers = pCity->hero[tmpi].troops;
+		// 重算英雄属性
+		hero_attr_calc( pCity, &pCity->hero[tmpi] );
+		// 重算战力
+		city_battlepower_hero_calc( pCity );
+		// 更新英雄
+		hero_sendinfo( pCity->actor_index, &pCity->hero[tmpi] );
+	}
+	return 0;
+}

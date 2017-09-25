@@ -301,6 +301,23 @@ int global_init()
 			global.cityfight_item_cost[1] = atoi( row[1] );
 		else if ( id == 104 )
 			global.cityfight_item_cost[2] = atoi( row[1] );
+
+		if ( id == 105 )
+		{
+			global.cityfight_rob_v1 = value;
+		}
+		else if ( id == 106 )
+		{
+			global.cityfight_rob_v2 = value;
+		}
+		else if ( id == 107 )
+		{
+			global.cityfight_rob_v3 = value;
+		}
+		else if ( id == 108 )
+		{
+			global.cityfight_rob_v4 = value;
+		}
 		
 	}
 	lua_setglobal( servL, "global" );

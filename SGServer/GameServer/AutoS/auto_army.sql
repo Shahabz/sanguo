@@ -25,6 +25,7 @@ CREATE TABLE `army` (
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '采集元宝',
   `gatherbuff` int(11) NOT NULL DEFAULT '0' COMMENT '采集受到buff影响时长',
   `reback` tinyint(3) NOT NULL DEFAULT '0' COMMENT '返程类型',
+  `totals` int(11) NOT NULL DEFAULT '0' COMMENT '总兵力',
   `herokind0` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',
   `herokind1` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',
   `herokind2` smallint(6) NOT NULL DEFAULT '0' COMMENT '武将',

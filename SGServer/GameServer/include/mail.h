@@ -37,6 +37,7 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach );
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo );
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *attach );
 
 // Õ½¶·ÏêÇéÓÊ¼ş
 int mail_fight( i64 mailid, int actorid, char *json );

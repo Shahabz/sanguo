@@ -40,14 +40,15 @@ public class ShowMemorySize : MonoBehaviour {
 		Debug.Log("TEXTURES Memory Impact:" + texturesMemSize.ToString("#,##0"));
 
 		Debug.Log("Total usedHeapSize:" + UnityEngine.Profiling.Profiler.usedHeapSize.ToString("#,##0"));*/
+		UpdateUsed ();
 	}
 
 	//Memory
 	private string sUserMemory;
 	private string s;
-	public bool OnMemoryGUI;
 	private uint MonoUsedM;
 	private uint AllMemory;
+	private uint usedHeapSize;
 	[Range(0, 100)]
 	public int MaxMonoUsedM = 50;
 	[Range(0, 400)]
@@ -55,21 +56,23 @@ public class ShowMemorySize : MonoBehaviour {
 	void UpdateUsed()
 	{
 		sUserMemory = "";
-		MonoUsedM = UnityEngine.Profiling.Profiler.GetMonoUsedSize() / 1000000;
-		AllMemory = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory() / 1000000;
+		MonoUsedM = UnityEngine.Profiling.Profiler.GetMonoUsedSize() / 1024/1024;
+		AllMemory = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory() / 1024/1024;
+		usedHeapSize = UnityEngine.Profiling.Profiler.usedHeapSize / 1024/1024;
+
+		sUserMemory += "MonoUsed:" + MonoUsedM.ToString("f2") + "M" + "\n";
+		sUserMemory += "AllMemory:" + AllMemory.ToString("f2") + "M" + "\n";
+		sUserMemory += "usedHeapSize:" + usedHeapSize.ToString("f2") + "M" + "\n";
+		//sUserMemory += "UnUsedReserved:" + UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory() / 1000000 + "M" + "\n";
 
 
-		sUserMemory += "MonoUsed:" + MonoUsedM + "M" + "\n";
-		sUserMemory += "AllMemory:" + AllMemory + "M" + "\n";
-		sUserMemory += "UnUsedReserved:" + UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory() / 1000000 + "M" + "\n";
-
-
-		s = "";
-		s += " MonoHeap:" + UnityEngine.Profiling.Profiler.GetMonoHeapSize() / 1000 + "k";
-		s += " MonoUsed:" + UnityEngine.Profiling.Profiler.GetMonoUsedSize() / 1000 + "k";
-		s += " Allocated:" + UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory() / 1000 + "k";
-		s += " Reserved:" + UnityEngine.Profiling.Profiler.GetTotalReservedMemory() / 1000 + "k";
-		s += " UnusedReserved:" + UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory() / 1000 + "k";
-		s += " UsedHeap:" + UnityEngine.Profiling.Profiler.usedHeapSize / 1000 + "k";
+		/*s = "";
+		s += " MonoHeap:" + （UnityEngine.Profiling.Profiler.GetMonoHeapSize() / 1024/1024）.ToString("000")+"M\n"
+		s += " MonoUsed:" + UnityEngine.Profiling.Profiler.GetMonoUsedSize() / 1024/1024 + "k"+"\n";
+		s += " Allocated:" + UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory() / 1024/1024 + "k"+"\n";
+		s += " Reserved:" + UnityEngine.Profiling.Profiler.GetTotalReservedMemory() / 1024/1024 + "k"+"\n";
+		s += " UnusedReserved:" + UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory() / 1024/1024 + "k"+"\n";
+		s += " UsedHeap:" + UnityEngine.Profiling.Profiler.usedHeapSize / 1000 + "k"+"\n";*/
+		m_uiText.text = sUserMemory;
 	}
 }

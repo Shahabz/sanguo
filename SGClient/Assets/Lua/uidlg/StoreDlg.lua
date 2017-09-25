@@ -94,9 +94,9 @@ function StoreDlgShow()
 	local ResNumList = { GetPlayer().m_silver, GetPlayer().m_wood, GetPlayer().m_food }
 	-- 保护资源量
 	local ResProjectList = { 
-	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value0, 
-	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value1, 
-	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value2 }
+	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value0 + math.floor(g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value0*GetPlayer().m_attr.m_protectres_per/100), 
+	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value1 + math.floor(g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value1*GetPlayer().m_attr.m_protectres_per/100), 
+	g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value2 + math.floor(g_building_upgrade[BUILDING_StoreHouse][m_pBuilding.m_level].value2*GetPlayer().m_attr.m_protectres_per/100) }
 	
 	for i=1, #ResKindList do
 		local uiRes = m_uiGrid.transform:GetChild(i-1).gameObject;

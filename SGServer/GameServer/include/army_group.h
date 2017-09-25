@@ -25,6 +25,10 @@ int armygroup_dismiss( int army_index );
 int armygroup_statetime( int group_index );
 int armygroup_stateduration( int group_index );
 
+// 攻击双方兵力
+int armygroup_from_totals( int group_index );
+int armygroup_to_totals( int group_index );
+
 // 城战结果
 int armygroup_vs_city( int group_index, Fight *pFight );
 // 国战战结果
@@ -38,4 +42,7 @@ int armygroup_town_sendlist( int actor_index, int unit_index );
 
 // 请求帮助
 int armygroup_askhelp( int actor_index, int group_index, int group_id );
+
+// 集结所有人发送邮件
+int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight );
 #endif

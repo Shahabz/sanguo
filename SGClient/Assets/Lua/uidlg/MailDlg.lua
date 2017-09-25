@@ -344,7 +344,21 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
 		SetText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
-			
+	
+	-- 城战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
+		local win = recvValue.m_content_json["win"];
+		local name = recvValue.m_content_json["na"];
+		local tname = recvValue.m_content_json["tna"];
+		if win == 1 then
+			SetText( uiContent, F(1110, name, tname ) )
+		else
+			SetText( uiContent, F(1111, name, tname ) )
+		end
+		
+	-- 国战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
+		
 	else
 		-- 解析内容
 		local contentid = 0;
@@ -355,7 +369,13 @@ function MailDlgSetMail( recvValue )
 		
 		-- 系统信息邮件
 		if recvValue.m_type == MAIL_TYPE_SYSTEM then
-			SetText( uiContent, T(contentid) )
+			if recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil then
+				SetText( uiContent, F(contentid, recvValue.m_content_json["v1"], recvValue.m_content_json["v2"]) )
+			elseif recvValue.m_content_json["v1"] ~= nil then
+				SetText( uiContent, F(contentid,recvValue.m_content_json["v1"]) )
+			else
+				SetText( uiContent, T(contentid) )
+			end
 			
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
@@ -378,12 +398,6 @@ function MailDlgSetMail( recvValue )
 			else
 				SetText( uiContent, F(1111, name, enemyname ) )
 			end
-			
-		-- 城战
-		elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
-		
-		-- 国战
-		elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
 		
 		end
 	end

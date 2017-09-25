@@ -844,7 +844,19 @@ City *fight_getcityptr( int pos )
 				return NULL;
 			pCity = &g_city[g_fight.attack_armyindex];
 		}
-		else if ( g_fight.type == FIGHTTYPE_CITY || g_fight.type == FIGHTTYPE_NATION || g_fight.type == FIGHTTYPE_ENEMY || g_fight.type == FIGHTTYPE_RES )
+		else if ( g_fight.type == FIGHTTYPE_CITY )
+		{
+			if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_city_maxcount )
+				return NULL;
+			pCity = &g_city[g_fight.attack_armyindex];
+		}
+		else if ( g_fight.type == FIGHTTYPE_NATION )
+		{
+			if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_city_maxcount )
+				return NULL;
+			pCity = &g_city[g_fight.attack_armyindex];
+		}
+		else if ( g_fight.type == FIGHTTYPE_ENEMY || g_fight.type == FIGHTTYPE_RES )
 		{
 			if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_army_maxcount )
 				return NULL;
@@ -950,7 +962,7 @@ int fight_lost_calc()
 	{
 		if ( g_fight.defense_unit[tmpi].offset < 0 )
 			continue;
-		fight_lost_calc_single( &g_fight.attack_unit[tmpi] );
+		fight_lost_calc_single( &g_fight.defense_unit[tmpi] );
 	}
 	return 0;
 }

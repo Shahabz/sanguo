@@ -248,8 +248,8 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
 			
 			-- 守备兵力
-			SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
-			SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
+			SetText( uiTTotal, T(1259).."\n"..recvValue.m_total )
+			SetText( uiTotal, T(1262).."\n"..recvValue.m_t_total )
 			
 			-- 参与按钮
 			if recvValue.m_type == 1 then -- 闪电战

@@ -1098,6 +1098,41 @@ int building_action( int actor_index, short kind, short offset, short action )
 	return 0;
 }
 
+// 仓库保护量
+int building_store_protect( City *pCity, int restype )
+{
+	if ( !pCity )
+		return 0;
+	if ( restype <= 0 || restype > 3 )
+		return 0;
+
+	int level = building_getlevel( pCity->index, BUILDING_StoreHouse, -1 );
+	if ( level <= 0 )
+		return 0;
+
+	BuildingUpgradeConfig *config = building_getconfig( BUILDING_StoreHouse, level );
+	if ( !config )
+		return 0;
+	int protect = config->value[restype - 1] + (int)(config->value[restype - 1] * pCity->attr.protectres_per);
+	return protect;
+}
+
+// 人口上限
+int building_people_max( City *pCity )
+{
+	if ( !pCity )
+		return 0;
+	int level = building_getlevel( pCity->index, BUILDING_Main, -1 );
+	if ( level <= 0 )
+		return 0;
+
+	BuildingUpgradeConfig *config = building_getconfig( BUILDING_Main, level );
+	if ( !config )
+		return 0;
+
+	return config->value[1];
+}
+
 // GM
 int building_gm( City *pCity )
 {

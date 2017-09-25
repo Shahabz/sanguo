@@ -188,7 +188,16 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_HERO:// Ó¢ÐÛ
 		if ( pCity )
 		{
-			hero_gethero( pCity->actor_index, pValue[0], PATH_GM );
+			if ( pValue[0] == -1 )
+			{
+				hero_gm_level( pCity, pValue[1] );
+			}
+			else if( pValue[0] == -2 )
+			{
+				hero_gm_soldiers( pCity );
+			}
+			else
+				hero_gethero( pCity->actor_index, pValue[0], PATH_GM );
 		}
 		break;
 	case GMC_SILVER:// Òø±Ò

@@ -31,6 +31,7 @@ struct _army {
 				int token;	//采集元宝
 				int gatherbuff;	//采集受到buff影响时长
 				char reback;	//返程类型
+				int totals;	//总兵力
 				short herokind[4];	//武将
 				int awardkind[8];	//携带的奖励（回城加上）
 				int awardnum[8];	//携带的奖励（回城加上）

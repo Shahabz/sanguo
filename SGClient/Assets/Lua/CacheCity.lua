@@ -180,9 +180,11 @@ function City.BuildingAdd( info, active )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
-	
 	-- 没有就创建
 	if unitObj == nil then
+		if BuildingPrefab[kind] == nil then
+			return
+		end
 		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 			landname = BuildingPrefab[kind].land..offset;
 		else

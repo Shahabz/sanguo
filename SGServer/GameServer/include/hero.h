@@ -50,4 +50,8 @@ int hero_wash_token( int actor_index, int herokind );
 int hero_colorup_sendinfo( int actor_index, int herokind );
 int hero_colorup_reset( int actor_index );
 int hero_colorup( int actor_index, int herokind );
+
+// 
+int hero_gm_level( City *pCity, int level );
+int hero_gm_soldiers( City *pCity );
 #endif

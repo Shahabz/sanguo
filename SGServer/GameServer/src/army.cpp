@@ -685,6 +685,9 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	if ( army_index < 0 )
 		return -1;
 
+	// ×Ü±øÁ¦
+	g_army[army_index].totals = totalsoldiers;
+
 	// Ó¢ÐÛ×´Ì¬ÉèÖÃ
 	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
 	{

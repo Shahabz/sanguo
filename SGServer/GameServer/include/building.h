@@ -119,6 +119,12 @@ int building_send_upgradeinfo( int actor_index, int kind, int offset );
 // 建筑动作
 int building_action( int actor_index, short kind, short offset, short action );
 
+// 仓库保护量
+int building_store_protect( City *pCity, int restype );
+
+// 人口上限
+int building_people_max( City *pCity );
+
 // GM
 int building_gm( City *pCity );
 #endif

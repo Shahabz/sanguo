@@ -420,7 +420,49 @@ function MailInfoDlgByRecvValue( recvValue )
 			m_share_a_name = "["..Nation(tnation).."]"..tname;
 			m_share_d_name = "["..Nation(nation).."]"..name;
 		end
+	
+	-- 城战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
+		SetTrue( m_uiMailContent );
+		local my = recvValue.m_content_json["my"];
+		local win = recvValue.m_content_json["win"];
 		
+		local name = recvValue.m_content_json["na"];		
+		local nation = recvValue.m_content_json["n"];
+		local level = recvValue.m_content_json["lv"];
+		local pos = recvValue.m_content_json["pos"];
+		
+		local tname = recvValue.m_content_json["tna"];
+		local tnation = recvValue.m_content_json["tn"];
+		local tlevel = recvValue.m_content_json["tlv"];
+		local tpos = recvValue.m_content_json["tpos"];
+		
+		if my == 1 then -- 我是攻击方
+			local award = "";
+			if win == 1 then
+				award = F( 5520, name, 
+									T(121).."x"..knum(recvValue.m_content_json["silver"]),
+									T(122).."x"..knum(recvValue.m_content_json["wood"]),
+									T(123).."x"..knum(recvValue.m_content_json["food"]),
+									T(127).."x"..recvValue.m_content_json["people"] )
+			end
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award, MailOnLinkClick )
+			m_share_a_name = "["..Nation(nation).."]"..name;
+			m_share_d_name = "["..Nation(tnation).."]"..tname;
+		else -- 我是防御方
+			local award = "";
+			if win == 0 then
+				award = F( 5519, name, 
+									T(121).."x"..knum(recvValue.m_content_json["silver"]),
+									T(122).."x"..knum(recvValue.m_content_json["wood"]),
+									T(123).."x"..knum(recvValue.m_content_json["food"]),
+									T(127).."x"..recvValue.m_content_json["people"] )
+			end
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ).."\n"..award, MailOnLinkClick )
+			m_share_a_name = "["..Nation(tnation).."]"..tname;
+			m_share_d_name = "["..Nation(nation).."]"..name;
+		end
+			
 	else
 		SetTrue( m_uiMailContent );
 		
@@ -432,8 +474,14 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 		-- 系统信息邮件
 		if recvValue.m_type == MAIL_TYPE_SYSTEM then
-			SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
-			
+			if recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil then
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, recvValue.m_content_json["v1"], recvValue.m_content_json["v2"]) )
+			elseif recvValue.m_content_json["v1"] ~= nil then
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid,recvValue.m_content_json["v1"]) )
+			else
+				SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
+			end
+
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
 			SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
@@ -469,9 +517,6 @@ function MailInfoDlgByRecvValue( recvValue )
 			end
 			m_share_a_name = name;
 			m_share_d_name = enemyname;
-			
-		-- 城战
-		elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
 		
 		-- 国战
 		elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
@@ -702,8 +747,14 @@ function MailInfoDlgSetFightMainUnit( uiObj, type, name, shape, nation, maxhp, h
 		SetImage( uiObj.transform:Find("Shape"), EnemyHeadSprite( shape ) );
 		SetText( uiObj.transform:Find("Name"), EnemyName( tonumber(name) ) );
 	end
+	
+	-- 血量
+	local lost = maxhp-hp;
+	if lost > maxhp then
+		lost = maxhp
+	end
 	SetText( uiObj.transform:Find("Hp"), T(1117).." "..maxhp );
-	SetText( uiObj.transform:Find("Lost"), T(1118).." "..(maxhp-hp) );
+	SetText( uiObj.transform:Find("Lost"), T(1118).." "..lost );
 end
 
 -- 设置双方战斗单元信息
@@ -714,7 +765,11 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( kind ) );
 		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( color ) );
 		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
-		SetText( uiObj.transform:Find("Name"), HeroName( kind ) );
+		if name and name ~= "" then
+			SetText( uiObj.transform:Find("Name"), "["..name.."]"..HeroName( kind ) );
+		else
+			SetText( uiObj.transform:Find("Name"), HeroName( kind ) );
+		end
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
 		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+"..vw );
 		

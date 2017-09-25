@@ -3070,7 +3070,7 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
 			return -1;
 		map_zone_randpos( zoneid, &move_posx, &move_posy );
-		if ( map_canmove( posx, posy ) == 0 )
+		if ( map_canmove( move_posx, move_posy ) == 0 )
 			return -1;
 	}
 	else if ( itemkind == 133 )

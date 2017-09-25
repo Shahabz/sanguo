@@ -210,6 +210,31 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int a
 	return mailid;
 }
 
+// 系统邮件
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *attach )
+{
+	char title[64] = { 0 };
+	sprintf( title, "%s%d", TAG_TEXTID, titleid );
+
+	char content[128] = { 0 };
+	if ( v1 && v2 )
+	{
+		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\",\"v2\":\"%s\" }", TAG_TEXTID, contentid, v1, v2 );
+	}
+	else if ( v1 )
+	{
+		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\" }", TAG_TEXTID, contentid, v1 );
+	}
+	else
+	{
+		sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
+	}
+
+	i64 mailid;
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	return mailid;
+}
+
 // 战斗详情邮件
 int mail_fight( i64 mailid, int actorid, char *json )
 {

@@ -318,6 +318,9 @@ void armygroup_logic( int group_index )
 	{ // 战斗开始
 		if ( fight_start_armygroup( group_index ) >= 0 )
 		{
+			// 战损
+			fight_lost_calc();
+
 			if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
 			{
 				armygroup_vs_city( group_index, &g_fight );
@@ -496,6 +499,80 @@ int armygroup_stateduration( int group_index )
 	return g_armygroup[group_index].stateduration;
 }
 
+// 攻击方兵力
+int armygroup_from_totals( int group_index )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return 0;
+	int total = 0;
+
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+		if ( army_index < 0 )
+			continue;
+		total += g_army[army_index].totals;
+	}
+
+	return total;
+}
+
+// 防御方兵力
+int armygroup_to_totals( int group_index )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return 0;
+	int total = 0;
+
+	if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_CITY )
+	{
+		City *pCity = city_indexptr( g_armygroup[group_index].to_index );
+		if ( pCity )
+		{
+			// 城墙部队
+			for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+			{
+				int monsterid = pCity->guard[tmpi].monsterid;
+				if ( monsterid <= 0 )
+					continue;
+				total += pCity->guard[tmpi].soldiers;
+			}
+
+			// 玩家主力部队
+			for ( int tmpi = 0; tmpi < 4; tmpi++ )
+			{
+				total += pCity->hero[tmpi].soldiers;
+			}
+
+			// 羽林卫部队
+			for ( int tmpi = 8; tmpi < 12; tmpi++ )
+			{
+				total += pCity->hero[tmpi].soldiers;
+			}
+
+			// 驻防部队
+			for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+			{
+				int army_index = pCity->help_armyindex[index];
+				if ( army_index < 0 )
+					continue;
+				if ( g_army[army_index].state != ARMY_STATE_HELP )
+					continue;
+				total += g_army[army_index].totals;
+			}
+		}
+	}
+	// 协防部队
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+		if ( army_index < 0 )
+			continue;
+		total += g_army[army_index].totals;
+	}
+	return total;
+}
+
 // 城战结果
 int armygroup_vs_city( int group_index, Fight *pFight )
 {
@@ -516,11 +593,135 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 	if ( pFight->result == FIGHT_WIN )
 	{
+		// 掠夺
+		int atk_protect = 0;
+		int def_protect = 0;
+		int lost_silver = 0;
+		int lost_wood = 0;
+		int lost_food = 0;
+		int lost_people = 0;
+		int rob_silver = 0;
+		int rob_wood = 0;
+		int rob_food = 0;
+		int rob_people = 0;
 
+		// 银币
+		atk_protect = building_store_protect( pCity, 1 );
+		def_protect = building_store_protect( pCity, 1 );
+		lost_silver = (int)ceil( abs( pTargetCity->silver - def_protect ) * global.cityfight_rob_v1 );
+		if ( pCity->silver > atk_protect )
+		{
+			rob_silver = (int)ceil( lost_silver * global.cityfight_rob_v2 );
+		}
+		else
+		{
+			rob_silver = lost_silver;
+		}
+
+		// 木材
+		atk_protect = building_store_protect( pCity, 2 );
+		def_protect = building_store_protect( pCity, 2 );
+		lost_wood = (int)ceil( abs( pTargetCity->wood - def_protect ) * global.cityfight_rob_v1 );
+		if ( pCity->wood > atk_protect )
+		{
+			rob_wood = (int)ceil( lost_wood * global.cityfight_rob_v2 );
+		}
+		else
+		{
+			rob_wood = lost_wood;
+		}
+
+		// 粮食
+		atk_protect = building_store_protect( pCity, 3 );
+		def_protect = building_store_protect( pCity, 3 );
+		lost_food = (int)ceil( abs( pTargetCity->food - def_protect ) * global.cityfight_rob_v1 );
+		if ( pCity->food > atk_protect )
+		{
+			rob_food = (int)ceil( lost_food * global.cityfight_rob_v2 );
+		}
+		else
+		{
+			rob_food = lost_food;
+		}
+
+		// 人口
+		lost_people = min( ceil(pTargetCity->people * global.cityfight_rob_v3), building_people_max( pTargetCity ) );
+		rob_people = ceil( lost_people * global.cityfight_rob_v4 );
+
+		// 损失
+		city_changesilver( pTargetCity->index, -lost_silver, PATH_FIGHT );
+		city_changewood( pTargetCity->index, -lost_wood, PATH_FIGHT );
+		city_changefood( pTargetCity->index, -lost_food, PATH_FIGHT );
+		city_changepeople( pTargetCity->index, -lost_people, PATH_FIGHT );
+
+		// 掠夺
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{ // 找到这个城池的部队
+			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+			if ( army_index < 0 )
+				continue;
+			City *pArmyCity = army_getcityptr( army_index );
+			if ( !pArmyCity )
+				continue;
+			if ( pArmyCity->actorid == pCity->actorid )
+			{
+				army_carry_additem( army_index, AWARDKIND_SILVER, rob_silver );
+				army_carry_additem( army_index, AWARDKIND_WOOD, rob_wood );
+				army_carry_additem( army_index, AWARDKIND_FOOD, rob_food );
+				army_carry_additem( army_index, AWARDKIND_PEOPLE, rob_people );
+				break;
+			}
+		}
+
+		// 进攻成功邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5019 );// 城战进攻胜利
+		sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d}",
+			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, rob_silver, rob_wood, rob_food, rob_people );
+
+		// 集结所有人发送邮件
+		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+
+
+		// 防守失败邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5022 );// 城战防守失败
+		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d}",
+			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, lost_silver, lost_wood, lost_food, lost_people );
+
+		// 集结所有人发送邮件
+		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+
+		// 随机迁移城主地图
+		char zoneid = map_zone_getid( pTargetCity->posx, pTargetCity->posy );
+		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
+		{
+			short move_posx, move_posy;
+			map_zone_randpos( zoneid, &move_posx, &move_posy );
+			if ( map_canmove( move_posx, move_posy ) == 1 )
+			{
+				city_move( pTargetCity, move_posx, move_posy );
+
+				// 给城主发送击飞邮件
+				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, "" );
+			}
+		}
 	}
 	else
 	{
+		// 进攻失败邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5020 ); // 城战进攻失败
+		sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy );
 
+		// 集结所有人发送邮件
+		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+
+		// 防守成功邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5021 );// 城战防守胜利
+		sprintf( content, "{\"my\":2,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\"}",
+			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy );
+
+		// 集结所有人发送邮件
+		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
 	}
 
 	return 0;
@@ -598,7 +799,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_posx = pTargetCity->posx;
 			pValue.m_list[pValue.m_count].m_posy = pTargetCity->posy;
 			pValue.m_list[pValue.m_count].m_actorid = pTargetCity->actorid;
-			pValue.m_list[pValue.m_count].m_total = 0;
+			pValue.m_list[pValue.m_count].m_total = armygroup_from_totals( tmpi );
 
 			pValue.m_list[pValue.m_count].m_t_nation = pDefCity->nation;
 			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pDefCity->index );
@@ -607,7 +808,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_t_posx = pDefCity->posx;
 			pValue.m_list[pValue.m_count].m_t_posy = pDefCity->posy;
 			pValue.m_list[pValue.m_count].m_t_actorid = pDefCity->actorid;
-			pValue.m_list[pValue.m_count].m_t_total = 0;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
 		}
 		else if ( g_armygroup[tmpi].to_id == pTargetCity->actorid )
 		{ // 我看的人属于防御方
@@ -623,7 +824,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_posx = pTargetCity->posx;
 			pValue.m_list[pValue.m_count].m_posy = pTargetCity->posy;
 			pValue.m_list[pValue.m_count].m_actorid = pTargetCity->actorid;
-			pValue.m_list[pValue.m_count].m_total = 0;
+			pValue.m_list[pValue.m_count].m_total = armygroup_to_totals( tmpi );
 
 			pValue.m_list[pValue.m_count].m_t_nation = pAtkCity->nation;
 			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pAtkCity->index );
@@ -632,7 +833,7 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_t_posx = pAtkCity->posx;
 			pValue.m_list[pValue.m_count].m_t_posy = pAtkCity->posy;
 			pValue.m_list[pValue.m_count].m_t_actorid = pAtkCity->actorid;
-			pValue.m_list[pValue.m_count].m_t_total = 0;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
 		}
 		else
 			continue;
@@ -716,3 +917,53 @@ int armygroup_askhelp( int actor_index, int group_index, int group_id )
 	}
 	return 0;
 }
+
+// 集结所有人发送邮件
+int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight )
+{
+	if ( attack == 1 )
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+			if ( army_index < 0 )
+				continue;
+			City *pArmyCity = army_getcityptr( army_index );
+			if ( !pArmyCity )
+				continue;
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
+			if ( fight )
+			{
+				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+			}
+		}
+	}
+	else if( attack == 2 )
+	{
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			int army_index = g_armygroup[group_index].defense_armyindex[tmpi];
+			if ( army_index < 0 )
+				continue;
+			City *pArmyCity = army_getcityptr( army_index );
+			if ( !pArmyCity )
+				continue;
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
+			if ( fight )
+			{
+				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+			}
+		}
+
+		if ( defenseCity )
+		{
+			i64 mailid = mail( defenseCity->actor_index, defenseCity->actorid, type, title, content, "", 0 );
+			if ( fight )
+			{
+				mail_fight( mailid, defenseCity->actorid, fight->unit_json );
+			}
+		}
+	}
+	return 0;
+}
+

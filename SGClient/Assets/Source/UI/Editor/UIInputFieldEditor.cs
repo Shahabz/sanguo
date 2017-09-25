@@ -10,11 +10,13 @@ public class UIInputFieldEditor : UnityEditor.UI.InputFieldEditor
     {
         UIInputField txt = target as UIInputField;
         txt.IsAutoClose = EditorGUILayout.Toggle("IsAutoClose", txt.IsAutoClose);
+		txt.IsFilterEmoji = EditorGUILayout.Toggle("IsFilterEmoji", txt.IsFilterEmoji);
         int controlID = EditorGUILayout.IntField("ControlID", txt.controlID);
         if (txt.controlID != controlID)
         {
             txt.controlID = controlID;
         }
+			
         base.OnInspectorGUI();
     }
 }

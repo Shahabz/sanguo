@@ -91,6 +91,10 @@ typedef struct _global
 	int cityfight_sec_group[3];
 	short cityfight_body_cost[3];
 	short cityfight_item_cost[3];
+	float cityfight_rob_v1;
+	float cityfight_rob_v2;
+	float cityfight_rob_v3;
+	float cityfight_rob_v4;
 }Global;
 int global_init();
 void global_reload();
