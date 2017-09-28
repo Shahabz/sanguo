@@ -6,6 +6,18 @@ struct _map_town {
 //--Automatically generated
 				int townid;	//城镇id
 				char nation;	//所属
+				char name[22];	//修改后的名称
+				int protect_sec;	//保护时间
+				short produce_num;	//征收次数
+				int produce_sec;	//生产时间
+				int own_actorid;	//城主角色id
+				int own_sec;	//城主任期倒计时
+				int join_actorid[128];	//参战人员
+				int ask_actorid[128];	//申请人员
+				int soldier[16];	//守卫血量存档
+				int ask_city_index[128];	//竞选者城池索引
+				int underfire_groupindex[3];	//集结索引
+				int own_city_index;	//城主索引
 				int unit_index;	//显示索引
 };
 typedef struct _map_town MapTown;

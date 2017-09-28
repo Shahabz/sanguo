@@ -287,15 +287,7 @@ void army_arrived( int army_index )
 			}
 			else if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK || g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
 			{ // 集结攻击
-				// 加入集结列表
-				if ( armygroup_addarmy( army_index ) < 0 )
-				{
-					army_setstate( army_index, ARMY_STATE_REBACK );
-				}
-				else
-				{
-					army_setstate( army_index, ARMY_STATE_GROUP_END );
-				}
+				army_setstate( army_index, ARMY_STATE_GROUP_END );
 			}
 			else
 			{ // 无行为
@@ -309,10 +301,8 @@ void army_arrived( int army_index )
 			int townid = pUnit->index;
 			if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK || g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
 			{
-				// 集结完毕
+				// 集结完
 				army_setstate( army_index, ARMY_STATE_GROUP_END );
-				// 加入集结列表
-				armygroup_addarmy( army_index );
 			}
 		}
 		else if ( pUnit->type == MAPUNIT_TYPE_ENEMY )
@@ -720,6 +710,11 @@ int actor_army_callback( int actor_index, int army_index, int itemkind )
 	{
 		army_march_time( army_index );
 		army_setstate( army_index, ARMY_STATE_REBACK );
+		// 删除集结列表
+		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK || g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
+		{
+			armygroup_delarmy( army_index );
+		}
 		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
 		{ // 检查集结是否达到解散条件
 			armygroup_dismiss( army_index );

@@ -168,6 +168,7 @@ function MailInfoDlgShow()
 	MailInfoDlgAttachClear()
 	MailInfoDlgFightUnitClear()
 	MailInfoDlgSpyUnitClear()
+	SetFalse( m_uiMailContent );
 	SetFalse( m_uiMailFight );
 	SetFalse( m_uiActorContent );
 	SetFalse( m_uiGatherContent );
@@ -474,10 +475,20 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 		-- 系统信息邮件
 		if recvValue.m_type == MAIL_TYPE_SYSTEM then
-			if recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil then
-				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, recvValue.m_content_json["v1"], recvValue.m_content_json["v2"]) )
+			if recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil and recvValue.m_content_json["v3"] ~= nil then
+				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
+				local v2_str = GetMail():GetString( recvValue.m_content_json["v2"] );
+				local v3_str = GetMail():GetString( recvValue.m_content_json["v3"] );
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, v1_str, v2_str, v3_str) )
+				
+			elseif recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil then
+				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
+				local v2_str = GetMail():GetString( recvValue.m_content_json["v2"] );
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, v1_str, v2_str) )
+				
 			elseif recvValue.m_content_json["v1"] ~= nil then
-				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid,recvValue.m_content_json["v1"]) )
+				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, v1_str) )
 			else
 				SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
 			end

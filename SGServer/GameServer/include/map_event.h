@@ -20,6 +20,11 @@ int map_event_create( short kind, short posx, short posy, int city_index );
 // 删除一个事件
 int map_event_delete( int index, int city_index );
 
+// 改变事件坐标
+int map_event_changepos( int index, short posx, short posy );
+int map_event_changepos_rand( int index );
+int map_event_changepos_randhaspos( int index, short posx, short posy );
+
 // 每个玩家的事件逻辑
 int map_event_citylogic( int city_index );
 

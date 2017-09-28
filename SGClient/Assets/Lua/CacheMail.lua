@@ -12,9 +12,16 @@ MAIL_TYPE_CITY_BESPY	=	14	-- 被侦察
 MAIL_TYPE_GATHER		=	20	-- 采集
 MAIL_TYPE_GATHER_FIGHT	=	21	-- 采集战斗
 
-TAG_TEXTID = '#$'	  --标记为文字表id
-TAG_ITEMID = '$$'     -- 标记 标记为道具装备ID
-TAG_POS    = '$#';       -- 标记 标记为坐标
+TAG_TEXTID 		= "#$"	-- 标记 为文字表id
+TAG_ITEMID 		= "$$"	-- 标记 标记为道具装备ID
+TAG_EQUIPKIND 	= "$%"	-- 标记 标记为装备专用
+TAG_ZONEID		= "$*"	-- 标记 标记为地区专用
+TAG_TOWNID 		= "$&"	-- 标记 标记为城镇专用
+TAG_TIMEDAY		= "$D"	-- 标记 标记为时间天
+TAG_TIMEHOUR	= "$H"	-- 标记 标记为时间小时
+TAG_TIMEMIN		= "$M"	-- 标记 标记为时间分钟
+TAG_TIMESEC		= "$S"	-- 标记 标记为时间秒
+TAG_POS    		= "$#"	-- 标记 标记为坐标
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -217,6 +224,97 @@ function Mail:IsTag(con, tag)
         return false;
     end
 end
+
+function Mail:GetString( v )
+	local str = ""
+	
+	-- 文字表
+    if self:IsTag( v, TAG_TEXTID ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TEXTID) + 1));
+		if textid ~= nil then
+			str = T(textid)
+		else
+			str = v
+		end
+	
+	-- 道具	
+	elseif self:IsTag( v, TAG_ITEMID ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_ITEMID) + 1));
+		if textid ~= nil then
+			str = item_getname( textid )
+		else
+			str = v
+		end
+	
+	-- 装备
+	elseif self:IsTag( v, TAG_EQUIPKIND ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_EQUIPKIND) + 1));
+		if textid ~= nil then
+			str = equip_getname( textid )
+		else
+			str = v
+		end
+		
+	-- 地区	
+	elseif self:IsTag( v, TAG_ZONEID ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_ZONEID) + 1));
+		if textid ~= nil then
+			str = MapZoneName( textid )
+		else
+			str = v
+		end
+		
+	-- 城镇		
+	elseif self:IsTag( v, TAG_TOWNID ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TOWNID) + 1));
+		if textid ~= nil then
+			str = MapTownName( textid )
+		else
+			str = v
+		end
+	
+	-- 时间天		
+	elseif self:IsTag( v, TAG_TIMEDAY ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TIMEDAY) + 1));
+		if textid ~= nil then
+			str = math.floor( textid/86400 ) .. T(156)
+		else
+			str = v
+		end
+	
+	-- 时间小时		
+	elseif self:IsTag( v, TAG_TIMEHOUR ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TIMEHOUR) + 1));
+		if textid ~= nil then
+			str = math.floor( textid/3600 ) .. T(155)
+		else
+			str = v
+		end
+		
+	-- 时间分钟		
+	elseif self:IsTag( v, TAG_TIMEMIN ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TIMEMIN) + 1));
+		if textid ~= nil then
+			str = math.floor( textid/60 ) .. T(154)
+		else
+			str = v
+		end
+		
+	-- 时间秒		
+	elseif self:IsTag( v, TAG_TIMESEC ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_TIMESEC) + 1));
+		if textid ~= nil then
+			str = textid .. T(153)
+		else
+			str = v
+		end	
+		
+	else
+		str = v;
+	end
+	return str
+end
+
 
 -- 全局
 G_Mail = nil;

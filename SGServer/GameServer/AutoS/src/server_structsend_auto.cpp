@@ -1613,3 +1613,19 @@ int struct_NetS_CityArmyGroupList_send( char **pptr, int *psize, SLK_NetS_CityAr
 	return 0;
 }
 
+int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_protect_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_produce_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_own_actorid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_own_namelen, (*psize) );
+	if( pValue->m_own_namelen > 0 && pValue->m_own_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_own_name, pValue->m_own_namelen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_own_sec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
+	return 0;
+}
+

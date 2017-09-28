@@ -224,6 +224,66 @@ int map_event_delete( int index, int city_index )
 	return 0;
 }
 
+// 改变事件坐标
+int map_event_changepos( int index, short posx, short posy )
+{
+	if ( index < 0 || index >= g_map_event_maxcount )
+		return -1;
+	if ( map_canmove( posx, posy ) == 0 )
+		return -1;
+	map_delobject( MAPUNIT_TYPE_EVENT, index, g_map_event[index].posx, g_map_event[index].posy );
+	g_map_event[index].posx = posx;
+	g_map_event[index].posy = posy;
+	map_addobject( MAPUNIT_TYPE_EVENT, index, g_map_event[index].posx, g_map_event[index].posy );
+	mapunit_update( MAPUNIT_TYPE_EVENT, index, g_map_event[index].unit_index );
+	return 0;
+}
+
+// 重新随机一个点
+int map_event_changepos_rand( int index )
+{
+	if ( index < 0 || index >= g_map_event_maxcount )
+		return -1;
+	City *pCity = city_getptr_withactorid( g_map_event[index].actorid );
+	if ( !pCity )
+		return -1;
+	short pPosx = -1;
+	short pPosy = -1;
+	int range = 2;
+	while ( range < 10 )
+	{
+		map_getrandpos_withrange( pCity->posx, pCity->posy, range, &pPosx, &pPosy );
+		if ( pPosx >= 0 && pPosy >= 0 )
+		{
+			map_event_changepos( index, pPosx, pPosy );
+			break;
+		}
+		range += 1;
+	}
+	return 0;
+}
+
+// 重新随机一个点-有中心点
+int map_event_changepos_randhaspos( int index, short posx, short posy )
+{
+	if ( index < 0 || index >= g_map_event_maxcount )
+		return -1;
+	short pPosx = -1;
+	short pPosy = -1;
+	int range = 2;
+	while ( range < 10 )
+	{
+		map_getrandpos_withrange( posx, posy, range, &pPosx, &pPosy );
+		if ( pPosx >= 0 && pPosy >= 0 )
+		{
+			map_event_changepos( index, pPosx, pPosy );
+			break;
+		}
+		range += 1;
+	}
+	return 0;
+}
+
 // 事件数量
 int map_event_num( int actorid )
 {

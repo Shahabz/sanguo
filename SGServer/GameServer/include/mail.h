@@ -23,7 +23,14 @@
 #define MAIL_TYPE_GATHER_FIGHT		21	// 采集战斗
 
 #define TAG_TEXTID			"#$"// 标记--标记为文字表id
-#define TAG_ITEMKIND		"$$"// 标记--标记为道具装备专用
+#define TAG_ITEMKIND		"$$"// 标记--标记为道具专用
+#define TAG_EQUIPKIND		"$%"// 标记--标记为装备专用
+#define TAG_ZONEID			"$*"// 标记--标记为地区专用
+#define TAG_TOWNID			"$&"// 标记--标记为城镇专用
+#define TAG_TIMEDAY			"$D"// 标记--标记为时间天
+#define TAG_TIMEHOUR		"$H"// 标记--标记为时间小时
+#define TAG_TIMEMIN			"$M"// 标记--标记为时间分钟
+#define TAG_TIMESEC			"$S"// 标记--标记为时间秒
 #define TAG_POS				"$#"// 标记--标记为坐标
 
 typedef struct _mailfight_searchcache
@@ -37,7 +44,7 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach );
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo );
 i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup );
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *attach );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach );
 
 // 战斗详情邮件
 int mail_fight( i64 mailid, int actorid, char *json );

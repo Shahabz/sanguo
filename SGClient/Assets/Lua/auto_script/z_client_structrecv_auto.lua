@@ -1435,3 +1435,16 @@ function struct_NetS_CityArmyGroupList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_MapTownInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_protect_sec = buffer:ReadInt();
+	recvValue.m_produce_sec = buffer:ReadInt();
+	recvValue.m_own_actorid = buffer:ReadInt();
+	recvValue.m_own_namelen = buffer:ReadSByte();
+	recvValue.m_own_name = buffer:ReadStringWithLen( recvValue.m_own_namelen );
+	recvValue.m_own_sec = buffer:ReadInt();
+	recvValue.m_hp = buffer:ReadInt();
+	recvValue.m_maxhp = buffer:ReadInt();
+	return recvValue;
+end
+

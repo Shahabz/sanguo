@@ -11,6 +11,22 @@ struct _maptowninfo {
 				short posy;	//
 				short grid;	//
 				short range;	//
+				short level;	//
+				char preid[64];	//
+				int base_award;	//
+				int other_award;	//
+				int produce_maxnum;	//
+				int produce_maxsec;	//
+				int levy_prestige;	//
+				int protect_maxsec;	//
+				int fight_maxsec;	//
+				int own_maxsec;	//
+				int ask_silver;	//
+				int ask_wood;	//
+				int ask_food;	//
+				int ask_iron;	//
+				char monster[128];	//
+				char monster_guard[128];	//
 };
 typedef struct _maptowninfo MapTownInfo;
 

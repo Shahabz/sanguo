@@ -110,6 +110,7 @@ int netsend_mapcityhelplist_S( int actor_index, char send_type, SLK_NetS_MapCIty
 int netsend_citystate_S( int actor_index, char send_type, SLK_NetS_CityState *pValue );
 int netsend_cityarmygroup_S( int actor_index, char send_type, SLK_NetS_CityArmyGroup *pValue );
 int netsend_cityarmygrouplist_S( int actor_index, char send_type, SLK_NetS_CityArmyGroupList *pValue );
+int netsend_maptowninfo_S( int actor_index, char send_type, SLK_NetS_MapTownInfo *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

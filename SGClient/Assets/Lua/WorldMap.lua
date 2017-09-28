@@ -652,7 +652,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );
 		-- 转换中心坐标
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
-		cameraPosX, cameraPosY = MapUnit.getGridTrans( recvValue.m_type, recvValue.m_grid, cameraPosX, cameraPosY );
+		cameraPosX, cameraPosY = MapUnit.getGridTrans( recvValue.m_type, grid, cameraPosX, cameraPosY );
 	else
 		-- 设置缩放
 		MapClickEffect.transform.localScale = Vector3.New( 1, 1, 1 );
@@ -667,7 +667,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 	-- 选择框
 	MapClickEffect.transform.localPosition = Vector3.New( cameraPosX, cameraPosY, WORLDMAP_ZORDER_CLICKMOD );
 	MapClickEffect.gameObject:SetActive( true );
-	
+
 	-- 操作界面
 	local recvValue = WorldMap.m_nMapUnitList[unit_index];
 	if recvValue then
@@ -676,8 +676,15 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		
 		-- 城镇
 		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
-			print( "MAPUNIT_TYPE_TOWN" )
-			return
+			local townid 		= recvValue.m_short_value[1]
+			local type 			= g_towninfo[townid].type
+			if type == 4 then
+				MapClickEffect.gameObject:SetActive( false );
+				return
+			elseif type == 6 then
+				MapClickEffect.gameObject:SetActive( false );
+				return
+			end
 			
 		-- 野怪
 		elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then

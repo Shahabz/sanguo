@@ -263,6 +263,9 @@ end
 
 -- 获取国家名称
 function Nation( nation )
+	if nation == 0 then
+		return T(110)
+	end
 	return T(nation+100);
 end
 

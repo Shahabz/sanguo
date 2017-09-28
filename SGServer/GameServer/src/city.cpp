@@ -3082,9 +3082,16 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			return -1;
 		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
 			return -1;
-		if ( map_canmove( posx, posy ) == 0 )
+		if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxWidth )
+			return 1;
+
+		if ( g_map.m_aTileData[posx][posy].unit_type == MAPUNIT_TYPE_EVENT )
+		{ // 如果坐标点是别人的随机事件，对方随机事件改变位置
+			if ( map_event_changepos_rand( g_map.m_aTileData[posx][posy].unit_index ) < 0 )
+				return -1;
+		}
+		else if ( g_map.m_aTileData[posx][posy].unit_type > 0 )
 		{
-			//actor_system_message( pCity->actor_index, 20 ); // 请尝试其它坐标
 			return -1;
 		}
 		move_posx = posx;
@@ -3126,6 +3133,14 @@ int city_move( City *pCity, short posx, short posy )
 	mapunit_area_change( pCity->unit_index, pCity->posx, pCity->posy, 1 );
 	city_attr_reset( pCity );
 	
+	// 我的随机事件也要更新位置
+	for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
+	{
+		if ( pCity->mapevent_index[tmpi] < 0 )
+			continue;
+		map_event_changepos_randhaspos( pCity->mapevent_index[tmpi], pCity->posx, pCity->posy );
+	}
+
 	// 通知客户端更新缓存
 	int value[6] = { 0 };
 	value[0] = 1;

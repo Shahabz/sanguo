@@ -337,6 +337,8 @@ function proc_awardinfolist_C( recvValue )
 	-- process.
 	if recvValue.m_callback_code == 1 then
 		MapEnemyDlgRecvAward( recvValue )
+	elseif recvValue.m_callback_code == 2 then
+		MapTownDlgRecvAward( recvValue )
 	end
 end
 
@@ -1190,5 +1192,11 @@ function proc_cityarmygrouplist_C( recvValue )
 			MapArmyGroupDlgOver();
 		end
 	end
+end
+
+-- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,
+function proc_maptowninfo_C( recvValue )
+	-- process.
+	MapTownDlgRecvValue( recvValue )
 end
 

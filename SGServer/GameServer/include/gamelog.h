@@ -75,6 +75,7 @@
 #define PATH_MAIL_ATTACH				47	// 附件
 #define PATH_ENEMY						48	// 流寇
 #define PATH_SPY						49	// 侦察
+#define PATH_TOWNASK					50	// 申请据点城主
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

@@ -971,6 +971,10 @@ int process_logic()
 	{
 		city_logic_sec();
 	}
+	else if ( tick == 2 )
+	{
+		map_town_alllogic();
+	}
 	else if ( tick == 5 )
 	{
 		army_alllogic();

@@ -9,6 +9,7 @@ struct _upgradeinfo {
 				int heroexp[6];	//
 				int battlepower;	//
 				int awardgroup;	//
+				int login_award;	//
 };
 typedef struct _upgradeinfo UpgradeInfo;
 

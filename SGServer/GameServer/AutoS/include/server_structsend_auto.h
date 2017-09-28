@@ -1109,6 +1109,18 @@ struct _slk_NetS_CityArmyGroupList {
 };
 typedef struct _slk_NetS_CityArmyGroupList SLK_NetS_CityArmyGroupList;	//城战列表
 
+struct _slk_NetS_MapTownInfo {
+	int m_protect_sec;	//城镇详情
+	int m_produce_sec;	//城镇详情
+	int m_own_actorid;	//城镇详情
+	char m_own_namelen;	//城镇详情
+	char m_own_name[32];	//城镇详情
+	int m_own_sec;	//城镇详情
+	int m_hp;	//城镇详情
+	int m_maxhp;	//城镇详情
+};
+typedef struct _slk_NetS_MapTownInfo SLK_NetS_MapTownInfo;	//城镇详情
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1229,5 +1241,6 @@ int struct_NetS_MapCItyHelpList_send( char **pptr, int *psize, SLK_NetS_MapCItyH
 int struct_NetS_CityState_send( char **pptr, int *psize, SLK_NetS_CityState *pValue );
 int struct_NetS_CityArmyGroup_send( char **pptr, int *psize, SLK_NetS_CityArmyGroup *pValue );
 int struct_NetS_CityArmyGroupList_send( char **pptr, int *psize, SLK_NetS_CityArmyGroupList *pValue );
+int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo *pValue );
 
 #endif

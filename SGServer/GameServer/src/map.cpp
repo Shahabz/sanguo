@@ -124,7 +124,7 @@ char map_zone_inrange( int zoneid, short posx, short posy )
 }
 
 // 获取地区id
-char map_zone_getid( int posx, int posy )
+char map_zone_getid( short posx, short posy )
 {
 	int zonex, zoney;
 	if ( posx >= g_map.m_nMaxWidth )
@@ -134,6 +134,18 @@ char map_zone_getid( int posx, int posy )
 	zonex = (posx) / 100;
 	zoney = (posy) / 100;
 	return zoney*(5) + zonex + 1;
+}
+
+// 检查是不是在同一个区域
+char map_zone_checksame( short posx, short posy, short tposx, short tposy )
+{
+	char n = map_zone_getid( posx, posy );
+	char m = map_zone_getid( tposx, tposy );
+	if ( n == m )
+	{
+		return 1;
+	}
+	return 0;
 }
 
 // 地区单元列表

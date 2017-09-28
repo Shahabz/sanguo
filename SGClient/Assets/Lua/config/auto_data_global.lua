@@ -103,3 +103,7 @@ global.cityfight_body_cost3 = 15 --远征战消耗体力
 global.cityfight_item_cost1 = 1 --闪电战消耗城战令
 global.cityfight_item_cost2 = 2 --奔袭战消耗城战令
 global.cityfight_item_cost3 = 3 --远征战消耗城战令
+global.cityfight_rob_v1 = 0.350000 --城战掠夺用参数（资源）
+global.cityfight_rob_v2 = 0.700000 --城战掠夺用参数（资源）
+global.cityfight_rob_v3 = 0.400000 --城战掠夺用参数（人口）
+global.cityfight_rob_v4 = 0.700000 --城战掠夺用参数（人口）

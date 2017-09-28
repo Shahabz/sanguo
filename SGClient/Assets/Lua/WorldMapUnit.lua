@@ -487,14 +487,22 @@ end
 
 -- 创建城镇
 function MapUnit.createTown( recvValue )
-	local state 	= recvValue.m_state;
-	local posx 		= recvValue.m_posx;
-	local posy 		= recvValue.m_posy;
-	local nation 	= recvValue.m_char_value[1];
-	local townid 	= recvValue.m_short_value[1];
-	local type 		= g_towninfo[townid].type
-	local grid 		= g_towninfo[townid].grid
-	local range 	= g_towninfo[townid].range
+	local state 		= recvValue.m_state;
+	local posx 			= recvValue.m_posx;
+	local posy 			= recvValue.m_posy;
+	local custom_name	= recvValue.m_name;
+	local custom_namelen= recvValue.m_namelen;
+	local nation 		= recvValue.m_char_value[1];
+	local townid 		= recvValue.m_short_value[1];
+	local produce_num	= recvValue.m_short_value[2];
+	local protect_sec	= recvValue.m_int_value[1];
+	local produce_sec	= recvValue.m_int_value[2];
+	
+	local type 			= g_towninfo[townid].type
+	local grid 			= g_towninfo[townid].grid
+	local range 		= g_towninfo[townid].range
+	local produce_maxnum= g_towninfo[townid].produce_maxnum
+	local produce_maxsec= g_towninfo[townid].produce_maxsec
 	
 	-- 先搜索缓存，如果缓存有，那么就更新
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
@@ -543,6 +551,30 @@ function MapUnit.createTown( recvValue )
 	else
 		SetFalse( uiRange )
 	end
+	
+	-- 非群雄状态显示
+	if nation > 0 then
+		-- 材料图标
+		if produce_num > 0 then
+			
+		else
+			
+		end
+	
+		-- 生产倒计时
+		if produce_sec > 0 then
+			
+		else
+			
+		end
+		
+		-- 保护状态
+		if protect_sec > 0 then
+		else
+		end
+	end
+	
+	
 	return unitObj;
 end
 

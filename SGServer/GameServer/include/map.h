@@ -46,7 +46,10 @@ void map_areaenter( int actor_index, int areaindex, short posx, short posy );
 char map_zone_inrange( int zoneid, short posx, short posy );
 
 // 获取地区id
-char map_zone_getid( int posx, int posy );
+char map_zone_getid( short posx, short posy );
+
+// 检查是不是在同一个区域
+char map_zone_checksame( short posx, short posy, short tposx, short tposy );
 
 // 添加对象
 int map_addobject( int type, int index, short posx, short posy );

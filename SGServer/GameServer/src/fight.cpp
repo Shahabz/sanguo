@@ -408,41 +408,6 @@ int fight_start_armygroup( int group_index )
 		if ( !pCity )
 			return -1;
 
-		// 先上城墙部队
-		for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
-		{
-			int monsterid = pCity->guard[tmpi].monsterid;
-			if ( monsterid <= 0 )
-				continue;
-			CityGuardInfoConfig *config = city_guard_config( monsterid, pCity->guard[tmpi].color );
-			if ( !config )
-				continue;
-			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_GUARD, pCity->index, tmpi, monsterid, pCity->guard[tmpi].shape, pCity->guard[tmpi].level, pCity->guard[tmpi].color, (char)pCity->guard[tmpi].corps,
-				config->attack, config->defense, pCity->guard[tmpi].soldiers, config->troops, config->attack_increase, config->defense_increase, config->assault, config->defend, (char)config->line, 0 );
-		}
-
-		// 玩家主力部队
-		for ( int tmpi = 0; tmpi < 4; tmpi++ )
-		{
-			Hero *pHero = &pCity->hero[tmpi];
-			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
-			if ( !config )
-				continue;
-			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
-		}
-
-		// 羽林卫部队
-		for ( int tmpi = 8; tmpi < 12; tmpi++ )
-		{
-			Hero *pHero = &pCity->hero[tmpi];
-			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
-			if ( !config )
-				continue;
-			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
-		}
-
 		// 协防部队
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
@@ -468,6 +433,43 @@ int fight_start_armygroup( int group_index )
 					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
 
 			}
+		}
+
+		// 玩家主力部队
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			Hero *pHero = &pCity->hero[tmpi];
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			if ( pHero->state > 0 )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+		}
+
+		// 羽林卫部队
+		for ( int tmpi = 8; tmpi < 12; tmpi++ )
+		{
+			Hero *pHero = &pCity->hero[tmpi];
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+		}
+
+		// 城墙部队
+		for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+		{
+			int monsterid = pCity->guard[tmpi].monsterid;
+			if ( monsterid <= 0 )
+				continue;
+			CityGuardInfoConfig *config = city_guard_config( monsterid, pCity->guard[tmpi].color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, -1, FIGHT_UNITTYPE_GUARD, pCity->index, tmpi, monsterid, pCity->guard[tmpi].shape, pCity->guard[tmpi].level, pCity->guard[tmpi].color, (char)pCity->guard[tmpi].corps,
+				config->attack, config->defense, pCity->guard[tmpi].soldiers, config->troops, config->attack_increase, config->defense_increase, config->assault, config->defend, (char)config->line, 0 );
 		}
 
 		// 加上驻防的部队

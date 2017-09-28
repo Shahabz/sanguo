@@ -8,6 +8,9 @@ local m_uiHelpBtn = nil; --UnityEngine.GameObject
 local m_uiFightBtn = nil; --UnityEngine.GameObject
 local m_uiEnterBtn = nil; --UnityEngine.GameObject
 local m_uiMyFightBtn = nil; --UnityEngine.GameObject
+local m_uiTownInfo = nil; --UnityEngine.GameObject
+local m_uiNationInfoBtn = nil; --UnityEngine.GameObject
+local m_uiNationFightBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 
@@ -47,7 +50,14 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 本城城战(无用)
 		elseif nControlID == 6 then
-			
+		
+		-- 城镇信息
+		elseif nControlID == 11 then
+			MapTownDlgShow( 0, m_LastRecvValue )
+		
+		-- 国战
+		elseif nControlID == 12 then
+			MapArmyGroupDlgShow( m_LastRecvValue.m_unit_index )
 		end
 
 		if m_Mod then
@@ -71,6 +81,9 @@ function MapClickModOnAwake( gameObject )
 	m_uiFightBtn = objs[5];
 	m_uiEnterBtn = objs[6];
 	m_uiMyFightBtn = objs[7];
+	m_uiTownInfo = objs[8];
+	m_uiNationInfoBtn = objs[9];
+	m_uiNationFightBtn = objs[10];
 end
 
 -- 界面初始化时调用
@@ -103,6 +116,10 @@ function MapClickModOnEnable( gameObject )
 		elseif recvValue.m_type == MAPUNIT_TYPE_CITY then
 			MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 			
+		-- 城镇
+		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
+			MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
+			
 		end
 	end
 end
@@ -111,6 +128,7 @@ end
 function MapClickModOnDisable( gameObject )
 	SetFalse( m_uiEmptyInfo )
 	SetFalse( m_uiCityInfo )
+	SetFalse( m_uiTownInfo )
 end
 
 -- 界面删除时调用
@@ -194,6 +212,45 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 	end
 end
 
+-- 点击城镇显示的操作界面
+function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )	
+	SetTrue( m_uiTownInfo )	
+	m_LastRecvValue = recvValue;
+	local posx 			= recvValue.m_posx;
+	local posy 			= recvValue.m_posy;
+	local custom_name	= recvValue.m_name;
+	local custom_namelen= recvValue.m_namelen;
+	local nation 		= recvValue.m_char_value[1];
+	local townid 		= recvValue.m_short_value[1];
+	local produce_num	= recvValue.m_short_value[2];
+	local protect_sec	= recvValue.m_int_value[1];
+	local produce_sec	= recvValue.m_int_value[2];
+	
+	local type 			= g_towninfo[townid].type
+	local level 		= g_towninfo[townid].level
+	local produce_maxnum= g_towninfo[townid].produce_maxnum
+	local produce_maxsec= g_towninfo[townid].produce_maxsec
+	
+	SetText( m_uiTownInfo.transform:Find("Pos"), "["..posx..","..posy.."]" )
+	SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..level..MapTownName(townid) )
+	SetText( m_uiTownInfo.transform:Find("Name"), NationEx(nation) )
+	SetImage( m_uiTownInfo.transform:Find("Nation"), NationSprite(nation) )
+	
+	-- 我国占领
+	if nation == GetPlayer().m_nation then
+		SetTrue( m_uiNationInfoBtn )
+		SetFalse( m_uiNationFightBtn )
+		local buttonList = { m_uiNationInfoBtn };
+		MapClickModButton( buttonList );
+		
+	-- 敌国占领
+	else
+		SetTrue( m_uiNationInfoBtn )
+		SetTrue( m_uiNationFightBtn )
+		local buttonList = { m_uiNationInfoBtn, m_uiNationFightBtn };
+		MapClickModButton( buttonList );
+	end
+end
 
 -------------------------------
 -- 按钮表现
@@ -234,6 +291,7 @@ function MapClickModAttack()
 	TroopDlgOpenWithAction( ARMY_ACTION_FIGHT );--]]
 end
 
+-- 城战
 function MapClickModOpenCityFight( unit_index )
 	if m_LastRecvValue == nil then
 		m_LastRecvValue = WorldMap.m_nMapUnitList[unit_index];

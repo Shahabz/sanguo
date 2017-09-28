@@ -31,6 +31,7 @@ function AwardInfo( awardkind )
 	local sprite = nil;
 	local color = nil;
 	local name = "";
+	local c = 0;
 	-- µôÂä°ü
 	if awardkind <= AWARDKIND_ITEMBASE then
 		sprite = LoadSprite( "Char_Default" );
@@ -42,6 +43,7 @@ function AwardInfo( awardkind )
 		sprite = ItemSprite( awardkind );
 		color = ItemColorSprite( item_getcolor( awardkind ) );
 		name = item_getname( awardkind )
+		c = item_getcolor( awardkind );
 		
 	-- ×°±¸
 	elseif awardkind <= AWARDKIND_HEROBASE then
@@ -49,6 +51,7 @@ function AwardInfo( awardkind )
 		sprite = EquipSprite( kind )
 		color = ItemColorSprite( equip_getcolor( kind ) );
 		name = EquipName( awardkind )
+		c = equip_getcolor( kind )
 		
 	-- Ó¢ÐÛ	
 	elseif awardkind <= AWARDKIND_BUILDINGBASE then
@@ -167,6 +170,6 @@ function AwardInfo( awardkind )
 	if color == nil then
 		color = LoadSprite( ItemColorSprite( 0 ) );
 	end
-	return sprite, color, name;
+	return sprite, color, name, c;
 end
 

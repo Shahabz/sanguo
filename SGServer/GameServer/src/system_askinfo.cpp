@@ -25,6 +25,7 @@
 #include "building.h"
 #include "hero.h"
 #include "story.h"
+#include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
@@ -382,7 +383,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 遣返
 			actor_helparmy_repatriate( actor_index, pvalue[1] );
 		}
-		
+		else if ( pvalue[0] == 10 )
+		{ // 城镇奖励
+			map_town_sendaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 11 )
+		{ // 城镇详细信息
+			map_town_sendinfo( actor_index, pvalue[1] );
+		}
 		break;
 	case ASKINFO_MAP_EVENT:
 		if ( pvalue[0] == 1 )
@@ -415,7 +423,6 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			armygroup_askhelp( actor_index, pvalue[1], pvalue[2] );
 		}
-		
 		break;
 	default:
 		break;

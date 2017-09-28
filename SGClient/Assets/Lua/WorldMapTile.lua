@@ -23,8 +23,16 @@ function MapTile.add( recvValue )
 	local posx = recvValue.m_posx;
 	local posy = recvValue.m_posy;
 	local unittype = recvValue.m_type;
-	local grid = MapUnit.getGrid( unittype );
-	
+	local grid = 1;
+	if recvValue.m_type == MAPUNIT_TYPE_TOWN then
+		local townid 	= recvValue.m_short_value[1];
+		local grid 		= g_towninfo[townid].grid
+		grid = MapUnit.getGrid( recvValue.m_type, grid );
+		--print( "posx:"..posx..",posy:"..posy.." unittype:"..unittype.." grid:"..grid )
+	else
+		grid = MapUnit.getGrid( recvValue.m_type, 0 );
+	end
+		
 	-- 占1*1格子的情况
 	if grid == 1 then
 		local x = posx;

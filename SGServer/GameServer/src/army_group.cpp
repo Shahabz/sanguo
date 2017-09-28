@@ -124,6 +124,39 @@ int armygroup_loadcb( int group_index )
 		g_armygroup[group_index].to_index = index;
 	}
 
+	// 检查部队合法性，因为有可能部队不存在了
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( g_army[army_index].group_id != g_armygroup[group_index].id )
+		{
+			g_armygroup[group_index].attack_armyindex[tmpi] = -1;
+
+			// 数据前移
+			if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
+			{
+				memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+			}
+		}
+	}
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		int army_index = g_armygroup[group_index].defense_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( g_army[army_index].group_id != g_armygroup[group_index].id )
+		{
+			g_armygroup[group_index].defense_armyindex[tmpi] = -1;
+
+			// 数据前移
+			if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
+			{
+				memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+			}
+		}
+	}
 	g_armygroup_count += 1;
 	return 0;
 }
@@ -357,7 +390,7 @@ int armygroup_addarmy( int army_index )
 			}
 		}
 	}
-	else
+	else if ( g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
 	{
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
@@ -402,7 +435,7 @@ void armygroup_delarmy( int army_index )
 			}
 		}
 	}
-	else
+	else if ( g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
 	{
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
@@ -701,7 +734,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				city_move( pTargetCity, move_posx, move_posy );
 
 				// 给城主发送击飞邮件
-				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, "" );
+				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "" );
 			}
 		}
 	}

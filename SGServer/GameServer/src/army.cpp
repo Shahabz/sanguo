@@ -704,12 +704,16 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	if ( group_index >= 0 && group_index < g_armygroup_maxcount )
 	{
 		if ( info->m_action == ARMY_ACTION_GROUP_CREATE )
+		{
 			armygroup_setleader( group_index, army_index );
+		}
 		else
 		{
 			g_army[army_index].group_index = group_index;
 			g_army[army_index].group_id = g_armygroup[group_index].id;
 		}
+		// 加入集结列表
+		armygroup_addarmy( army_index );
 	}
 
 	// 添加到出征队列

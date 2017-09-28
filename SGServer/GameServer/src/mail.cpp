@@ -211,19 +211,23 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int a
 }
 
 // ÏµÍ³ÓÊ¼þ
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *attach )
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach )
 {
 	char title[64] = { 0 };
 	sprintf( title, "%s%d", TAG_TEXTID, titleid );
 
 	char content[128] = { 0 };
-	if ( v1 && v2 )
+	if ( v1 && v2 && v3 )
 	{
-		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\",\"v2\":\"%s\" }", TAG_TEXTID, contentid, v1, v2 );
+		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\"}", TAG_TEXTID, contentid, v1, v2, v3 );
+	}
+	else if ( v1 && v2 )
+	{
+		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\",\"v2\":\"%s\"}", TAG_TEXTID, contentid, v1, v2 );
 	}
 	else if ( v1 )
 	{
-		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\" }", TAG_TEXTID, contentid, v1 );
+		sprintf( content, "{\"text\":\"%s%d\",\"v1\":\"%s\"}", TAG_TEXTID, contentid, v1 );
 	}
 	else
 	{
