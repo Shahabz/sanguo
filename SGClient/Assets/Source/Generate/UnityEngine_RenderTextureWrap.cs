@@ -23,6 +23,7 @@ public class UnityEngine_RenderTextureWrap
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("width", get_width, set_width);
 		L.RegVar("height", get_height, set_height);
+		L.RegVar("vrUsage", get_vrUsage, set_vrUsage);
 		L.RegVar("depth", get_depth, set_depth);
 		L.RegVar("isPowerOfTwo", get_isPowerOfTwo, set_isPowerOfTwo);
 		L.RegVar("sRGB", get_sRGB, null);
@@ -141,6 +142,19 @@ public class UnityEngine_RenderTextureWrap
 				UnityEngine.RenderTextureReadWrite arg4 = (UnityEngine.RenderTextureReadWrite)ToLua.ToObject(L, 5);
 				int arg5 = (int)LuaDLL.lua_tonumber(L, 6);
 				UnityEngine.RenderTexture o = UnityEngine.RenderTexture.GetTemporary(arg0, arg1, arg2, arg3, arg4, arg5);
+				ToLua.Push(L, o);
+				return 1;
+			}
+			else if (count == 7 && TypeChecker.CheckTypes(L, 1, typeof(int), typeof(int), typeof(int), typeof(UnityEngine.RenderTextureFormat), typeof(UnityEngine.RenderTextureReadWrite), typeof(int), typeof(UnityEngine.VRTextureUsage)))
+			{
+				int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
+				int arg1 = (int)LuaDLL.lua_tonumber(L, 2);
+				int arg2 = (int)LuaDLL.lua_tonumber(L, 3);
+				UnityEngine.RenderTextureFormat arg3 = (UnityEngine.RenderTextureFormat)ToLua.ToObject(L, 4);
+				UnityEngine.RenderTextureReadWrite arg4 = (UnityEngine.RenderTextureReadWrite)ToLua.ToObject(L, 5);
+				int arg5 = (int)LuaDLL.lua_tonumber(L, 6);
+				UnityEngine.VRTextureUsage arg6 = (UnityEngine.VRTextureUsage)ToLua.ToObject(L, 7);
+				UnityEngine.RenderTexture o = UnityEngine.RenderTexture.GetTemporary(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 				ToLua.Push(L, o);
 				return 1;
 			}
@@ -389,6 +403,25 @@ public class UnityEngine_RenderTextureWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index height on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_vrUsage(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
+			UnityEngine.VRTextureUsage ret = obj.vrUsage;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index vrUsage on a nil value" : e.Message);
 		}
 	}
 
@@ -669,6 +702,25 @@ public class UnityEngine_RenderTextureWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index height on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_vrUsage(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UnityEngine.RenderTexture obj = (UnityEngine.RenderTexture)o;
+			UnityEngine.VRTextureUsage arg0 = (UnityEngine.VRTextureUsage)ToLua.CheckObject(L, 2, typeof(UnityEngine.VRTextureUsage));
+			obj.vrUsage = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index vrUsage on a nil value" : e.Message);
 		}
 	}
 

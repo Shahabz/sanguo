@@ -58,6 +58,7 @@ public class UnityEngine_MaterialWrap
 		L.RegVar("shaderKeywords", get_shaderKeywords, set_shaderKeywords);
 		L.RegVar("globalIlluminationFlags", get_globalIlluminationFlags, set_globalIlluminationFlags);
 		L.RegVar("enableInstancing", get_enableInstancing, set_enableInstancing);
+		L.RegVar("doubleSidedGI", get_doubleSidedGI, set_doubleSidedGI);
 		L.EndClass();
 	}
 
@@ -1547,6 +1548,25 @@ public class UnityEngine_MaterialWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_doubleSidedGI(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UnityEngine.Material obj = (UnityEngine.Material)o;
+			bool ret = obj.doubleSidedGI;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index doubleSidedGI on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_shader(IntPtr L)
 	{
 		object o = null;
@@ -1714,6 +1734,25 @@ public class UnityEngine_MaterialWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index enableInstancing on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_doubleSidedGI(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UnityEngine.Material obj = (UnityEngine.Material)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.doubleSidedGI = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index doubleSidedGI on a nil value" : e.Message);
 		}
 	}
 }

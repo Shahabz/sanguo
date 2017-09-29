@@ -260,7 +260,7 @@ GameObject:
   m_Component:
   - component: {fileID: 496924}
   - component: {fileID: 2078006}
-  - component: {fileID: 11478294}
+  - component: {fileID: 114538245803028064}
   m_Layer: 0
   m_Name: ThumbCamera
   m_TagString: MainCamera
@@ -730,7 +730,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 22477994}
-  - component: {fileID: 11464832}
+  - component: {fileID: 114175001860315970}
   m_Layer: 0
   m_Name: WorldMapThumb
   m_TagString: Untagged
@@ -2008,17 +2008,6 @@ MonoBehaviour:
   clickInterval: 0
   uiMod: {fileID: 11428392}
   audioID: 0
---- !u!114 &11464832
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 174750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a36f809bcdd41134b9e446852e6a391f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11464878
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2298,36 +2287,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11478294
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edf8ad2839cfa0f4d8f028580e93b9de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subCamera: {fileID: 0}
-  enableTouchEffect: 0
-  pixelsPerUnit: 100
-  moveDecay: 0.1
-  horizontalLock: 0
-  verticalLock: 1
-  taglock: 0
-  zoomLock: 1
-  zoomInLimit: 5
-  zoomOutLimit: 5
-  zoomSpeed: 0.02
-  zoomRestrict: 0
-  zoomOffsetSpeed: 0.1
-  mapSize: {x: 1580, y: 640}
-  mapExpand: {x: 0, y: 0, z: 0, w: 0}
-  defaultSize: 0
-  defaultPos: {x: 0, y: 0}
-  m_pWorldMapThumb: {fileID: 0}
-  IsCanMoved: 1
 --- !u!114 &11479030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3930,6 +3889,47 @@ PolygonCollider2D:
       - {x: -0.000039979815, y: -4.412727}
       - {x: 7.86736, y: -0.4400416}
       - {x: 0.00009812415, y: 3.522597}
+--- !u!114 &114175001860315970
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 174750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70590f33a865a70489583b8b91dd87cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114538245803028064
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 127700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f52b4875b6b11d84f9ed5848caef4c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subCamera: {fileID: 0}
+  enableTouchEffect: 0
+  pixelsPerUnit: 100
+  moveDecay: 0.1
+  horizontalLock: 0
+  verticalLock: 1
+  taglock: 0
+  zoomLock: 1
+  zoomInLimit: 5
+  zoomOutLimit: 5
+  zoomSpeed: 0.02
+  zoomRestrict: 0
+  zoomOffsetSpeed: 0.1
+  mapSize: {x: 1580, y: 640}
+  mapExpand: {x: 0, y: 0, z: 0, w: 0}
+  defaultSize: 0
+  defaultPos: {x: 0, y: 0}
+  m_pWorldMapThumb: {fileID: 0}
+  IsCanMoved: 1
 --- !u!212 &212025387368066632
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -3970,6 +3970,7 @@ SpriteRenderer:
   m_Size: {x: 7.78, y: 7.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!212 &212349359583702418
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -4010,6 +4011,7 @@ SpriteRenderer:
   m_Size: {x: 7.78, y: 7.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!212 &212511491151476630
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -4050,3 +4052,4 @@ SpriteRenderer:
   m_Size: {x: 1.28, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
