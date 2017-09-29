@@ -15,10 +15,10 @@
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>Android:13</UnityBuildTarget>
-    <UnityVersion>5.6.1f1</UnityVersion>
+    <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
+    <UnityVersion>5.6.3p4</UnityVersion>
     <RootNamespace></RootNamespace>
-    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
+    <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -27,8 +27,8 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,8 +37,8 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -76,20 +76,17 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    <Reference Include="LKCamera">
+      <HintPath>Assets\Plugins\LKCamera.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ArabicSupport">
-      <HintPath>Assets\ThirdPartyPlugin\ArabicSupport.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\ThirdPartyPlugin\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Debugger">
       <HintPath>Assets\ThirdPartyPlugin\Debugger.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Assets\ThirdPartyPlugin\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ArabicSupport">
+      <HintPath>Assets\ThirdPartyPlugin\ArabicSupport.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween.dll</HintPath>
@@ -97,16 +94,37 @@
     <Reference Include="DOTween43">
       <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween43.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween46">
-      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween46.dll</HintPath>
-    </Reference>
     <Reference Include="DOTween50">
       <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween50.dll</HintPath>
     </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween46.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\CircleObject.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\GPUInstancing.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\GameObjectExtensions.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\GroupLayer.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\Layer.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\Log.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\ObjectLayer.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\PolygonObject.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\PolylineObject.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\RectangleObject.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\SpriteDepthInMap.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\TileAnimator.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\TileLayer.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\TileObject.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\TiledMap.cs" />
+    <Compile Include="Assets\Resources\PackAssets\Tiled2Unity\Scripts\Runtime\TmxObject.cs" />
+    <Compile Include="Assets\Source\Base\ActiveDelay.cs" />
     <Compile Include="Assets\Source\Base\Const.cs" />
+    <Compile Include="Assets\Source\Base\ConstMemoryString.cs" />
     <Compile Include="Assets\Source\Base\Converter.cs" />
+    <Compile Include="Assets\Source\Base\DebugUILine.cs" />
     <Compile Include="Assets\Source\Base\DeviceHelper.cs" />
     <Compile Include="Assets\Source\Base\FullScreenSprite.cs" />
     <Compile Include="Assets\Source\Base\GameObjectPool.cs" />
@@ -117,19 +135,23 @@
     <Compile Include="Assets\Source\Base\LuaHelper.cs" />
     <Compile Include="Assets\Source\Base\ObjectPool.cs" />
     <Compile Include="Assets\Source\Base\OpenUDID.cs" />
+    <Compile Include="Assets\Source\Base\PrefabInstance.cs" />
     <Compile Include="Assets\Source\Base\ProgressSprite.cs" />
+    <Compile Include="Assets\Source\Base\Reference.cs" />
     <Compile Include="Assets\Source\Base\SequenceActive.cs" />
     <Compile Include="Assets\Source\Base\ShareData.cs" />
     <Compile Include="Assets\Source\Base\ShowFPS.cs" />
+    <Compile Include="Assets\Source\Base\ShowMemorySize.cs" />
+    <Compile Include="Assets\Source\Base\SpriteGroup.cs" />
     <Compile Include="Assets\Source\Base\Utils.cs" />
-    <Compile Include="Assets\Source\Camera\Camera2D.cs" />
-    <Compile Include="Assets\Source\Camera\Camera2dDragable.cs" />
-    <Compile Include="Assets\Source\Camera\Camera3D.cs" />
-    <Compile Include="Assets\Source\Camera\Camera3dDragable.cs" />
-    <Compile Include="Assets\Source\Camera\CityCamera.cs" />
-    <Compile Include="Assets\Source\Camera\FightCamera.cs" />
+    <Compile Include="Assets\Source\Character\CameraController.cs" />
+    <Compile Include="Assets\Source\Character\CharController.cs" />
+    <Compile Include="Assets\Source\Character\Character.cs" />
+    <Compile Include="Assets\Source\Character\CharacterAnimator.cs" />
     <Compile Include="Assets\Source\City\City.cs" />
     <Compile Include="Assets\Source\City\CityBuilding.cs" />
+    <Compile Include="Assets\Source\City\CityCamera.cs" />
+    <Compile Include="Assets\Source\City\CityLand.cs" />
     <Compile Include="Assets\Source\Effect\Bezier.cs" />
     <Compile Include="Assets\Source\Effect\BezierMove.cs" />
     <Compile Include="Assets\Source\Effect\FXTypeWriter.cs" />
@@ -137,6 +159,8 @@
     <Compile Include="Assets\Source\Effect\Subtitle.cs" />
     <Compile Include="Assets\Source\Effect\TypeWriter.cs" />
     <Compile Include="Assets\Source\Effect\UIGradient.cs" />
+    <Compile Include="Assets\Source\Fight\FightCamera.cs" />
+    <Compile Include="Assets\Source\Fight\FightUnit.cs" />
     <Compile Include="Assets\Source\FileSystem\FileUtil.cs" />
     <Compile Include="Assets\Source\FileSystem\IniUtil.cs" />
     <Compile Include="Assets\Source\FileSystem\LogUtil.cs" />
@@ -146,9 +170,10 @@
     <Compile Include="Assets\Source\Generate\BezierMoveWrap.cs" />
     <Compile Include="Assets\Source\Generate\BezierWrap.cs" />
     <Compile Include="Assets\Source\Generate\ByteBufferWrap.cs" />
-    <Compile Include="Assets\Source\Generate\Camera2DWrap.cs" />
+    <Compile Include="Assets\Source\Generate\CharacterWrap.cs" />
     <Compile Include="Assets\Source\Generate\CityBuildingWrap.cs" />
     <Compile Include="Assets\Source\Generate\CityCameraWrap.cs" />
+    <Compile Include="Assets\Source\Generate\CityLandWrap.cs" />
     <Compile Include="Assets\Source\Generate\CityWrap.cs" />
     <Compile Include="Assets\Source\Generate\ConstWrap.cs" />
     <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
@@ -195,23 +220,29 @@
     <Compile Include="Assets\Source\Generate\GizmoPlaneWrap.cs" />
     <Compile Include="Assets\Source\Generate\GlobalWrap.cs" />
     <Compile Include="Assets\Source\Generate\IniUtilWrap.cs" />
+    <Compile Include="Assets\Source\Generate\LKCamera_Camera2DWrap.cs" />
     <Compile Include="Assets\Source\Generate\LocalizationWrap.cs" />
     <Compile Include="Assets\Source\Generate\LogUtilWrap.cs" />
     <Compile Include="Assets\Source\Generate\LuaBinder.cs" />
     <Compile Include="Assets\Source\Generate\LuaInterface_DebuggerWrap.cs" />
+    <Compile Include="Assets\Source\Generate\MapBorderWrap.cs" />
+    <Compile Include="Assets\Source\Generate\MapUnitMoveWrap.cs" />
     <Compile Include="Assets\Source\Generate\NetworkManagerWrap.cs" />
     <Compile Include="Assets\Source\Generate\ObjectPoolManagerWrap.cs" />
     <Compile Include="Assets\Source\Generate\OpenUDIDPhone_OpenUDIDWrap.cs" />
     <Compile Include="Assets\Source\Generate\PathUtilWrap.cs" />
     <Compile Include="Assets\Source\Generate\ProgressSpriteWrap.cs" />
+    <Compile Include="Assets\Source\Generate\ReferenceWrap.cs" />
     <Compile Include="Assets\Source\Generate\ResourceManagerWrap.cs" />
     <Compile Include="Assets\Source\Generate\ShakeWrap.cs" />
     <Compile Include="Assets\Source\Generate\ShareDataWrap.cs" />
     <Compile Include="Assets\Source\Generate\StringUtilWrap.cs" />
     <Compile Include="Assets\Source\Generate\TableUtilWrap.cs" />
     <Compile Include="Assets\Source\Generate\TypeWriterWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UIAutoSizeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIButtonAgentWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIButtonWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UIClippingLoopWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIDragSensorWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIGradientWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIHighLightMaskWrap.cs" />
@@ -219,7 +250,9 @@
     <Compile Include="Assets\Source\Generate\UIInputFieldWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIManagerWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIModWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UIPolygonChartWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIPopWindowWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UIPrimitiveBaseWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIProgressWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIScrollBaseWrap.cs" />
     <Compile Include="Assets\Source\Generate\UIScrollRectWrap.cs" />
@@ -227,12 +260,14 @@
     <Compile Include="Assets\Source\Generate\UIScrollViewWrap.cs" />
     <Compile Include="Assets\Source\Generate\UISliderWrap.cs" />
     <Compile Include="Assets\Source\Generate\UISystemWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UITextAgentWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextAutoOmitWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextNumCountdownWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextTimeCountdownWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextTimeCountdown_DirectTypeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextUnderlineWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITextWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UIToggleWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenCityBuildingWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenColorWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenFadeWrap.cs" />
@@ -241,6 +276,7 @@
     <Compile Include="Assets\Source\Generate\UITweenMoveWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenPositionWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenRectPositionWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UITweenScale1Wrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenScaleWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenSizeDeltaWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenWrap.cs" />
@@ -260,6 +296,7 @@
     <Compile Include="Assets\Source\Generate\UnityEngine_BoxColliderWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_CameraClearFlagsWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_CameraWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UnityEngine_CanvasWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_CapsuleColliderWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_CharacterControllerWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_ColliderWrap.cs" />
@@ -283,6 +320,7 @@
     <Compile Include="Assets\Source\Generate\UnityEngine_QualitySettingsWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_QueueModeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_RectTransformWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UnityEngine_RectWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_RenderSettingsWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_RenderTextureWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_RendererWrap.cs" />
@@ -318,9 +356,15 @@
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_SelectableWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_SliderWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_TextWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UnityEngine_UI_ToggleWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_WWWWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UtilsWrap.cs" />
+    <Compile Include="Assets\Source\Generate\WorldMapCameraWrap.cs" />
+    <Compile Include="Assets\Source\Generate\WorldMapThumbCameraWrap.cs" />
+    <Compile Include="Assets\Source\Generate\YlyAssetIdentifyWrap.cs" />
+    <Compile Include="Assets\Source\Generate\YlyDelegateUtilWrap.cs" />
+    <Compile Include="Assets\Source\Generate\YlyRichTextWrap.cs" />
     <Compile Include="Assets\Source\Generate\eyeWrap.cs" />
     <Compile Include="Assets\Source\Gizmo\GizmoBezierLine.cs" />
     <Compile Include="Assets\Source\Gizmo\GizmoPlane.cs" />
@@ -335,6 +379,13 @@
     <Compile Include="Assets\Source\Manager\ThreadManager.cs" />
     <Compile Include="Assets\Source\Manager\UIManager.cs" />
     <Compile Include="Assets\Source\Manager\UpdateManager.cs" />
+    <Compile Include="Assets\Source\Map\MapBorder.cs" />
+    <Compile Include="Assets\Source\Map\MapUnitMove.cs" />
+    <Compile Include="Assets\Source\Map\UnitMove.cs" />
+    <Compile Include="Assets\Source\Map\WorldMap.cs" />
+    <Compile Include="Assets\Source\Map\WorldMapCamera.cs" />
+    <Compile Include="Assets\Source\Map\WorldMapThumb.cs" />
+    <Compile Include="Assets\Source\Map\WorldMapThumbCamera.cs" />
     <Compile Include="Assets\Source\Net\ByteBuffer.cs" />
     <Compile Include="Assets\Source\Net\IPv6SupportMidleware.cs" />
     <Compile Include="Assets\Source\Net\NetWorkInfo.cs" />
@@ -343,6 +394,18 @@
     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsBase.cs" />
     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsHelper.cs" />
     <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\SunShafts.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Demo\Scripts\ScrollIndexCallback1.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Demo\Scripts\ScrollIndexCallback2.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Demo\Scripts\ScrollIndexCallback3.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\EasyObjectPool\EasyObjectPool.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\EasyObjectPool\ResourceManager.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\InitOnStart.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\LoopHorizontalScrollRect.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\LoopScrollDataSource.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\LoopScrollPrefabSource.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\LoopScrollRect.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\LoopVerticalScrollRect.cs" />
+    <Compile Include="Assets\Source\UI\LoopScrollRect\Scripts\UIScrollIndexCallback.cs" />
     <Compile Include="Assets\Source\UI\RTL.cs" />
     <Compile Include="Assets\Source\UI\Tween\UITween.cs" />
     <Compile Include="Assets\Source\UI\Tween\UITweenBeat.cs" />
@@ -358,10 +421,13 @@
     <Compile Include="Assets\Source\UI\Tween\UITweenRectPosition.cs" />
     <Compile Include="Assets\Source\UI\Tween\UITweenRectPositionBetween.cs" />
     <Compile Include="Assets\Source\UI\Tween\UITweenScale.cs" />
+    <Compile Include="Assets\Source\UI\Tween\UITweenScale1.cs" />
     <Compile Include="Assets\Source\UI\Tween\UITweenSizeDelta.cs" />
+    <Compile Include="Assets\Source\UI\UIAutoSize.cs" />
     <Compile Include="Assets\Source\UI\UIButton.cs" />
     <Compile Include="Assets\Source\UI\UIButtonAgent.cs" />
     <Compile Include="Assets\Source\UI\UIButtonPolygon.cs" />
+    <Compile Include="Assets\Source\UI\UIClickEvent.cs" />
     <Compile Include="Assets\Source\UI\UIClippingLoop.cs" />
     <Compile Include="Assets\Source\UI\UIDragSensor.cs" />
     <Compile Include="Assets\Source\UI\UIDragger.cs" />
@@ -372,7 +438,9 @@
     <Compile Include="Assets\Source\UI\UIInputFieldSubmit.cs" />
     <Compile Include="Assets\Source\UI\UIMod.cs" />
     <Compile Include="Assets\Source\UI\UIPolygon.cs" />
+    <Compile Include="Assets\Source\UI\UIPolygonChart.cs" />
     <Compile Include="Assets\Source\UI\UIPopWindow.cs" />
+    <Compile Include="Assets\Source\UI\UIPrimitiveBase.cs" />
     <Compile Include="Assets\Source\UI\UIProgress.cs" />
     <Compile Include="Assets\Source\UI\UIRaycast.cs" />
     <Compile Include="Assets\Source\UI\UIScrollBase.cs" />
@@ -382,6 +450,7 @@
     <Compile Include="Assets\Source\UI\UISlider.cs" />
     <Compile Include="Assets\Source\UI\UISystem.cs" />
     <Compile Include="Assets\Source\UI\UIText.cs" />
+    <Compile Include="Assets\Source\UI\UITextAgent.cs" />
     <Compile Include="Assets\Source\UI\UITextAutoOmit.cs" />
     <Compile Include="Assets\Source\UI\UITextFirstUpper.cs" />
     <Compile Include="Assets\Source\UI\UITextNumCountdown.cs" />
@@ -390,8 +459,7 @@
     <Compile Include="Assets\Source\UI\UITextTimeCountup.cs" />
     <Compile Include="Assets\Source\UI\UITextUnderline.cs" />
     <Compile Include="Assets\Source\UI\UITextUnderlineEx.cs" />
-    <Compile Include="Assets\Source\Unit\FightUnit.cs" />
-    <Compile Include="Assets\Source\Unit\UnitMove.cs" />
+    <Compile Include="Assets\Source\UI\UIToggle.cs" />
     <Compile Include="Assets\Source\eye.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\3rdParty\MiniJSON.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\animation\Animation.cs" />
@@ -429,19 +497,10 @@
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnitySlot.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityTextureData.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityUGUIDisplay.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\ChattingInlineSprite.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\ChattingInlineSprite_new.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\InlieSpriteText.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\InlieText.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\InlineSpriteManager.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\InlineSpriteManager_Partial.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\SpriteAsset.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\SpriteGraphic.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\SpriteGraphicManager.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\SpriteGraphic_Partial.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\TestClickInlineSpriteText.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\TestClickInlineText.cs" />
-    <Compile Include="Assets\ThirdPartyPlugin\TextInlineSprite\Script\TextInlineSpriteDemo.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyAssetIdentify.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyDelegateUtil.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyRichText.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyRichTextParser.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_EventObjectWrap.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaFieldWrap.cs" />
@@ -507,9 +566,11 @@
     <None Include="Assets\Resources\PackAssets\Data\resmap_object.txt" />
     <None Include="Assets\Resources\PackAssets\Data\resmap_prefab.txt" />
     <None Include="Assets\Resources\PackAssets\Data\resmap_sprite.txt" />
+    <None Include="Assets\Resources\PackAssets\Data\shape.txt" />
     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize.txt" />
     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_item.txt" />
     <None Include="Assets\Resources\PackAssets\Data\zh-cn\localize_quest.txt" />
+    <None Include="Assets\Resources\PackAssets\Effect\MapLine\MapLineFire_Shader.shader" />
     <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive.shader" />
     <None Include="Assets\Resources\PackAssets\Shader\AnimationAdditive_Cull.shader" />
     <None Include="Assets\Resources\PackAssets\Shader\Dissolution.shader" />
@@ -541,23 +602,28 @@
     <None Include="Assets\Resources\PackAssets\Shader\UVAnimation.shader" />
     <None Include="Assets\Resources\PackAssets\Shader\WaterAnimation.shader" />
     <None Include="Assets\Resources\PackAssets\Shader\Wind.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Imported\_ReadMe.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Imported\worldmap.tiled2unity.xml" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\License.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Materials\_ReadMe.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Meshes\_ReadMe.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Prefabs\_ReadMe.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\Tiled2Unity.cginc" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaColorKey-Instanced.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaColorKey.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDefault-Instanced.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDefault.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDepth-Instanced.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDepth.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDepthColorKey-Instanced.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDepthColorKey.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDiffuseDepth-Instanced.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Shaders\shaDiffuseDepth.shader" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Textures\_ReadMe.txt" />
+    <None Include="Assets\Resources\PackAssets\Tiled2Unity\Tiled2Unity.export.txt" />
     <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
-    <None Include="Assets\StreamingAssets\Data\MaskWord.txt" />
-    <None Include="Assets\StreamingAssets\Data\app.txt" />
-    <None Include="Assets\StreamingAssets\Data\en-us\localize.txt" />
-    <None Include="Assets\StreamingAssets\Data\en-us\localize_item.txt" />
-    <None Include="Assets\StreamingAssets\Data\en-us\localize_quest.txt" />
-    <None Include="Assets\StreamingAssets\Data\localization_country.txt" />
-    <None Include="Assets\StreamingAssets\Data\localization_language.txt" />
-    <None Include="Assets\StreamingAssets\Data\plat.txt" />
-    <None Include="Assets\StreamingAssets\Data\resmap_object.txt" />
-    <None Include="Assets\StreamingAssets\Data\resmap_prefab.txt" />
-    <None Include="Assets\StreamingAssets\Data\resmap_sprite.txt" />
-    <None Include="Assets\StreamingAssets\Data\zh-cn\localize.txt" />
-    <None Include="Assets\StreamingAssets\Data\zh-cn\localize_item.txt" />
-    <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />
-    <None Include="Assets\StreamingAssets\android_files.txt" />
-    <None Include="Assets\StreamingAssets\resver.txt" />
+    <None Include="Assets\Resources\PackAssets\UI_Font\BMFont_vipfont.fnt" />
+    <None Include="Assets\ThirdPartyPlugin\YLYRichText\Shaders\YlyUISeqFrameAni.shader" />
     <None Include="Assets\ToLua\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
