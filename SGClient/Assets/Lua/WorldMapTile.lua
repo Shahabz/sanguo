@@ -26,8 +26,7 @@ function MapTile.add( recvValue )
 	local grid = 1;
 	if recvValue.m_type == MAPUNIT_TYPE_TOWN then
 		local townid 	= recvValue.m_short_value[1];
-		local grid 		= g_towninfo[townid].grid
-		grid = MapUnit.getGrid( recvValue.m_type, grid );
+		grid = MapUnit.getGrid( recvValue.m_type, g_towninfo[townid].grid );
 		--print( "posx:"..posx..",posy:"..posy.." unittype:"..unittype.." grid:"..grid )
 	else
 		grid = MapUnit.getGrid( recvValue.m_type, 0 );
@@ -48,7 +47,6 @@ function MapTile.add( recvValue )
 	
 	-- 占2*2格子的情况
 	elseif grid == 2 then
-		
 		local offset = { { x=0, y=0 },{ x=0, y=-1 },{ x=1, y=-1 },{ x=1, y=0 },}
 		for i=1, 4, 1 do
 			local x = posx + offset[i]["x"];
@@ -61,6 +59,7 @@ function MapTile.add( recvValue )
 			end
 			MapTile.data[x][y]["unit_type"] = recvValue.m_type
 			MapTile.data[x][y]["unit_index"] = recvValue.m_unit_index;
+			--print( "x:"..x..",y:"..y..",recvValue.m_unit_index:"..recvValue.m_unit_index )
 		end
 		
 	-- 占3*3格子的情况

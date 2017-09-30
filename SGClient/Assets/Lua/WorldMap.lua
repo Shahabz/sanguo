@@ -309,11 +309,11 @@ function WorldMap.Start( Prefab )
 	
 	-- 区域都城名城的范围
 	for k, v in pairs(g_towninfo) do
-		if v.type >= 4 then
+		if v.type >= 7 then
 			if v.grid == 2 then
-				MapUnit.createTownRange( v.grid, v.posx-1, v.posy, v.range );
+				MapUnit.createTownRange( v.grid, v.posx-1, v.posy, v.range, 0 );
 			elseif v.grid == 3 then
-				MapUnit.createTownRange( 2, v.posx-1, v.posy, v.range );
+				MapUnit.createTownRange( 2, v.posx-1, v.posy, v.range, 0 );
 			end
 		end
 	end
@@ -644,8 +644,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		local grid = 1;
 		if recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			local townid 	= recvValue.m_short_value[1];
-			local grid 		= g_towninfo[townid].grid
-			grid = MapUnit.getGrid( recvValue.m_type, grid );
+			grid = MapUnit.getGrid( recvValue.m_type, g_towninfo[townid].grid );
 		else
 			grid = MapUnit.getGrid( recvValue.m_type, 0 );
 		end

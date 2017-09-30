@@ -127,7 +127,7 @@ function MapEnemyDlgShow( recvValue )
 	SetText( m_uiMarchTime, F(953, secnum(marchTime) ) )
 	
 	-- 击杀等级限制
-	if level > 1 and level > GetPlayer().m_mokilllv then
+	if level > 1 and level > GetPlayer().m_mokilllv+1 then
 		SetTrue( m_uiLevelWarn )
 		SetText( m_uiLevelWarn, F(952, level-1 ) )
 		SetFalse( m_uiBattleButton )

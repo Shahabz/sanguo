@@ -547,9 +547,9 @@ function MapUnit.createTown( recvValue )
 	uiName:GetComponent("UIText").text = MapTownName( townid )
 	
 	-- 范围框
-	if type < 4 then
+	if type < 7 then
 		uiRange.transform.localScale = Vector3.New( range, range, range );
-		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[0] )
+		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
 		SetTrue( uiRange )
 	else
 		SetFalse( uiRange )
@@ -854,7 +854,7 @@ function MapUnit.createMapBorder( posx, posy, range )
 end
 
 -- 创建城镇范围
-function MapUnit.createTownRange( grid, posx, posy, range )
+function MapUnit.createTownRange( grid, posx, posy, range, nation )
 	if MapUnitRoot == nil then
 		return;
 	end
@@ -869,7 +869,7 @@ function MapUnit.createTownRange( grid, posx, posy, range )
 
 	-- 范围
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
-    unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[0] ) );
+    unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[nation] ) );
 end
 
 -- 获取占地块
