@@ -678,10 +678,10 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			local townid 		= recvValue.m_short_value[1]
 			local type 			= g_towninfo[townid].type
-			if type == 4 then
+			if type == 8 then
 				MapClickEffect.gameObject:SetActive( false );
 				return
-			elseif type == 6 then
+			elseif type == 9 then
 				MapClickEffect.gameObject:SetActive( false );
 				return
 			end

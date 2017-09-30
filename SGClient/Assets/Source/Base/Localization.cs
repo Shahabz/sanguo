@@ -156,7 +156,7 @@ public static class Localization
             if ( localizeDir == "" )
             {
                 //localizeDir = languageDirectory( "en" );
-                localizeDir = languageDirectory( "cn" );
+                localizeDir = languageDirectory( "zh" );
                 if ( localizeDir == "" )
                 {
                     return -3;
@@ -172,7 +172,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "cn" ) + "/";
+            localizeDir = languageDirectory( "zh" ) + "/";
             if ( _localizetxt.OpenFromData( localizeDir + "localize.txt" ) == false )
             {
                 return -4;
@@ -194,7 +194,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "cn" ) + "/";
+            localizeDir = languageDirectory( "zh" ) + "/";
             if ( _localizeItemTxt.OpenFromData( localizeDir + "localize_item.txt" ) == false )
             {
                 return -5;
@@ -216,7 +216,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "cn" ) + "/";
+            localizeDir = languageDirectory( "zh" ) + "/";
             if ( _localizeQuestTxt.OpenFromData( localizeDir + "localize_quest.txt" ) == false )
             {
                 return -6;
@@ -231,46 +231,45 @@ public static class Localization
             localize_quest.Add( key, text );
         }
 
-        //// 容错处理，所有找不到的文字使用英文
-        ////localizeDir = languageDirectory( "en" ) + "/";
-        //localizeDir = languageDirectory( "cn" ) + "/";
+        // 容错处理，所有找不到的文字使用英文
+        //localizeDir = languageDirectory( "en" ) + "/";
+        localizeDir = languageDirectory( "zh" ) + "/";
 
-        //// 读取基础文字表
-        //TableUtil localizetxt_en_us = new TableUtil();
-        //localize_en_us = new Dictionary<int, string>();
-        //localizetxt_en_us.OpenFromData( localizeDir + "localize.txt" );
-        //for ( int row = 0; row < localizetxt_en_us.GetRecordsNum(); row++ )
-        //{
-        //    int key = Convert.ToInt32( localizetxt_en_us.GetValue( row, 0 ) );
-        //    string text = localizetxt_en_us.GetValue( row, 1 );
-        //    text = text.Replace( "\\n", "\n" );
-        //    localize_en_us.Add( key, text );
-        //}
+        // 读取基础文字表
+        TableUtil localizetxt_en_us = new TableUtil();
+        localize_en_us = new Dictionary<int, string>();
+        localizetxt_en_us.OpenFromData( localizeDir + "localize.txt" );
+        for ( int row = 0; row < localizetxt_en_us.GetRecordsNum(); row++ )
+        {
+            int key = Convert.ToInt32( localizetxt_en_us.GetValue( row, 0 ) );
+            string text = localizetxt_en_us.GetValue( row, 1 );
+            text = text.Replace( "\\n", "\n" );
+            localize_en_us.Add( key, text );
+        }
 
-        //// 读取道具文字表
-        //TableUtil localizeitemtxt_en_us = new TableUtil();
-        //localize_item_en_us = new Dictionary<int, string>();
-        //localizeitemtxt_en_us.OpenFromData( localizeDir + "localize_item.txt" );
-        //for ( int row = 0; row < localizeitemtxt_en_us.GetRecordsNum(); row++ )
-        //{
-        //    int key = Convert.ToInt32( localizeitemtxt_en_us.GetValue( row, 0 ) );
-        //    string text = localizeitemtxt_en_us.GetValue( row, 1 );
-        //    text = text.Replace( "\\n", "\n" );
-        //    localize_item_en_us.Add( key, text );
-        //}
+        // 读取道具文字表
+        TableUtil localizeitemtxt_en_us = new TableUtil();
+        localize_item_en_us = new Dictionary<int, string>();
+        localizeitemtxt_en_us.OpenFromData( localizeDir + "localize_item.txt" );
+        for ( int row = 0; row < localizeitemtxt_en_us.GetRecordsNum(); row++ )
+        {
+            int key = Convert.ToInt32( localizeitemtxt_en_us.GetValue( row, 0 ) );
+            string text = localizeitemtxt_en_us.GetValue( row, 1 );
+            text = text.Replace( "\\n", "\n" );
+            localize_item_en_us.Add( key, text );
+        }
 
-        //// 读取任务文字表
-        //TableUtil localizequesttxt_en_us = new TableUtil();
-        //localize_quest_en_us = new Dictionary<int, string>();
-        //localizequesttxt_en_us.OpenFromData( localizeDir + "localize_quest.txt" );
-        //for ( int row = 0; row < localizequesttxt_en_us.GetRecordsNum(); row++ )
-        //{
-        //    int key = Convert.ToInt32( localizequesttxt_en_us.GetValue( row, 0 ) );
-        //    string text = localizequesttxt_en_us.GetValue( row, 1 );
-        //    text = text.Replace( "\\n", "\n" );
-        //    localize_quest_en_us.Add( key, text );
-        //}
-
+        // 读取任务文字表
+        TableUtil localizequesttxt_en_us = new TableUtil();
+        localize_quest_en_us = new Dictionary<int, string>();
+        localizequesttxt_en_us.OpenFromData( localizeDir + "localize_quest.txt" );
+        for ( int row = 0; row < localizequesttxt_en_us.GetRecordsNum(); row++ )
+        {
+            int key = Convert.ToInt32( localizequesttxt_en_us.GetValue( row, 0 ) );
+            string text = localizequesttxt_en_us.GetValue( row, 1 );
+            text = text.Replace( "\\n", "\n" );
+            localize_quest_en_us.Add( key, text );
+        }
         bInited = true;
         return 0;
     }

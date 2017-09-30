@@ -108,6 +108,9 @@ MapUnitTownShapeList = {
 [4] = "mapunit_type4",
 [5] = "mapunit_type5",
 [6] = "mapunit_type6",
+[7] = "mapunit_type7",
+[8] = "mapunit_type8",
+[9] = "mapunit_type9",
 }
 
 -- 资源点形象

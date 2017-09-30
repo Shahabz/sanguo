@@ -495,7 +495,6 @@ int map_town_sendinfo( int actor_index, int townid )
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
 	SLK_NetS_MapTownInfo pValue = { 0 };
-	pValue
 	netsend_maptowninfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
