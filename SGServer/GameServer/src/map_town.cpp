@@ -39,6 +39,10 @@ extern Global global;
 extern Actor *g_actors;
 extern int g_maxactornum;
 
+extern City * g_city;
+extern int g_city_maxcount;
+extern int g_city_maxindex;
+
 extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
 
@@ -51,7 +55,9 @@ int map_town_loadcb( int townid )
 {
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
-	
+	// 获取守卫信息
+
+
 	// 城主
 	if ( g_map_town[townid].own_actorid > 0 )
 	{
@@ -495,6 +501,26 @@ int map_town_sendinfo( int actor_index, int townid )
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
 	SLK_NetS_MapTownInfo pValue = { 0 };
+	pValue.m_protect_sec = g_map_town[townid].protect_sec;
+	pValue.m_produce_sec = g_map_town[townid].produce_sec;
+	pValue.m_own_actorid = g_map_town[townid].own_actorid;
+	if ( g_map_town[townid].own_actorid > 0 )
+	{
+		int city_index = g_map_town[townid].own_city_index;
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+		{
+			city_index = city_getindex_withactorid( g_map_town[townid].own_actorid );
+			g_map_town[townid].own_city_index = city_index;
+		}
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			strncpy( pValue.m_own_name, g_city[city_index].name, NAME_SIZE );
+			pValue.m_own_namelen = strlen( pValue.m_own_name );
+			pValue.m_own_sec = g_map_town[townid].own_sec;
+		}
+	}
+	pValue.m_hp = 0;
+	pValue.m_maxhp = 0;
 	netsend_maptowninfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -20,7 +20,7 @@ int map_town_load_auto( LPCB_GETMAPTOWN pCB_GetMapTown, LPCB_LOADMAPTOWN pCB_Loa
 	MapTown *pMapTown;
 	int townid = 0;
 
-	sprintf( szSQL, "select `townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier` from %s ", pTab );
+	sprintf( szSQL, "select `townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier`,`soldier_update` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -48,6 +48,7 @@ int map_town_load_auto( LPCB_GETMAPTOWN pCB_GetMapTown, LPCB_LOADMAPTOWN pCB_Loa
 		memcpy( pMapTown->join_actorid, row[offset++], sizeof(int)*128 );
 		memcpy( pMapTown->ask_actorid, row[offset++], sizeof(int)*128 );
 		memcpy( pMapTown->soldier, row[offset++], sizeof(int)*16 );
+		pMapTown->soldier_update = atoi(row[offset++]);
 		if( pCB_LoadMapTown )
 			pCB_LoadMapTown( pMapTown->townid );
 		townid = pMapTown->townid;
@@ -71,7 +72,7 @@ int map_town_save_auto( MapTown *pMapTown, const char *pTab, FILE *fp )
 	char szText_ask_actorid[sizeof(int)*128*2+1]={0};
 	char szText_soldier[sizeof(int)*16*2+1]={0};
 RE_MAPTOWN_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier`) Values('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s')",pTab,pMapTown->townid,pMapTown->nation,db_escape((const char *)pMapTown->name,szText_name,0),pMapTown->protect_sec,pMapTown->produce_num,pMapTown->produce_sec,pMapTown->own_actorid,pMapTown->own_sec,db_escape((const char *)pMapTown->join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown->ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown->soldier,szText_soldier,sizeof(int)*16));
+	sprintf( szSQL, "REPLACE INTO %s (`townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier`,`soldier_update`) Values('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s','%d')",pTab,pMapTown->townid,pMapTown->nation,db_escape((const char *)pMapTown->name,szText_name,0),pMapTown->protect_sec,pMapTown->produce_num,pMapTown->produce_sec,pMapTown->own_actorid,pMapTown->own_sec,db_escape((const char *)pMapTown->join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown->ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown->soldier,szText_soldier,sizeof(int)*16),pMapTown->soldier_update);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -133,11 +134,11 @@ RE_MAPTOWN_TRUNCATE:
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier`) Values('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s')",pTab,pMapTown[index].townid,pMapTown[index].nation,db_escape((const char *)pMapTown[index].name,szText_name,0),pMapTown[index].protect_sec,pMapTown[index].produce_num,pMapTown[index].produce_sec,pMapTown[index].own_actorid,pMapTown[index].own_sec,db_escape((const char *)pMapTown[index].join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].soldier,szText_soldier,sizeof(int)*16));
+			sprintf( g_batchsql, "REPLACE INTO %s (`townid`,`nation`,`name`,`protect_sec`,`produce_num`,`produce_sec`,`own_actorid`,`own_sec`,`join_actorid`,`ask_actorid`,`soldier`,`soldier_update`) Values('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s','%d')",pTab,pMapTown[index].townid,pMapTown[index].nation,db_escape((const char *)pMapTown[index].name,szText_name,0),pMapTown[index].protect_sec,pMapTown[index].produce_num,pMapTown[index].produce_sec,pMapTown[index].own_actorid,pMapTown[index].own_sec,db_escape((const char *)pMapTown[index].join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].soldier,szText_soldier,sizeof(int)*16),pMapTown[index].soldier_update);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s')",pMapTown[index].townid,pMapTown[index].nation,db_escape((const char *)pMapTown[index].name,szText_name,0),pMapTown[index].protect_sec,pMapTown[index].produce_num,pMapTown[index].produce_sec,pMapTown[index].own_actorid,pMapTown[index].own_sec,db_escape((const char *)pMapTown[index].join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].soldier,szText_soldier,sizeof(int)*16));
+			sprintf( szSQL, ",('%d','%d','%s','%d','%d','%d','%d','%d','%s','%s','%s','%d')",pMapTown[index].townid,pMapTown[index].nation,db_escape((const char *)pMapTown[index].name,szText_name,0),pMapTown[index].protect_sec,pMapTown[index].produce_num,pMapTown[index].produce_sec,pMapTown[index].own_actorid,pMapTown[index].own_sec,db_escape((const char *)pMapTown[index].join_actorid,szText_join_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].ask_actorid,szText_ask_actorid,sizeof(int)*128),db_escape((const char *)pMapTown[index].soldier,szText_soldier,sizeof(int)*16),pMapTown[index].soldier_update);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

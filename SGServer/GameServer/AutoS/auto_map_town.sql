@@ -10,5 +10,6 @@ CREATE TABLE `map_town` (
   `join_actorid` varbinary(512) NOT NULL DEFAULT '' COMMENT '参战人员',
   `ask_actorid` varbinary(512) NOT NULL DEFAULT '' COMMENT '申请人员',
   `soldier` varbinary(64) NOT NULL DEFAULT '' COMMENT '守卫血量存档',
+  `soldier_update` tinyint(3) NOT NULL DEFAULT '0' COMMENT '守卫血量存档更新',
   PRIMARY KEY (`townid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

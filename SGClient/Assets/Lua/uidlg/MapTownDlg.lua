@@ -154,6 +154,9 @@ function MapTownDlgShow( path, recvValue )
 		MapTownDlgRecvAward( m_awardCache[kind] )
 	end
 	
+	-- 城镇信息
+	system_askinfo( ASKINFO_WORLDMAP, "", 11, m_townid );
+	
 	-- 点击城池
 	if m_path == 0 then
 		SetText( m_uiTitle, T(1274) )

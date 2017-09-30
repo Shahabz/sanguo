@@ -14,7 +14,9 @@ struct _map_town {
 				int own_sec;	//城主任期倒计时
 				int join_actorid[128];	//参战人员
 				int ask_actorid[128];	//申请人员
+				int monster[16];	//守卫
 				int soldier[16];	//守卫血量存档
+				char soldier_update;	//守卫血量存档更新
 				int ask_city_index[128];	//竞选者城池索引
 				int underfire_groupindex[3];	//集结索引
 				int own_city_index;	//城主索引
