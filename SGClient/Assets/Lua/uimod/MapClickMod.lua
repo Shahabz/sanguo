@@ -57,7 +57,8 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 国战
 		elseif nControlID == 12 then
-			MapArmyGroupDlgShow( m_LastRecvValue.m_unit_index )
+			MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
+			
 		end
 
 		if m_Mod then

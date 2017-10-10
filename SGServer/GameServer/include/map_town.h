@@ -28,4 +28,6 @@ int map_town_sendaward( int actor_index, int townid );
 
 // 获取城镇信息
 int map_town_sendinfo( int actor_index, int townid );
+
+
 #endif

@@ -1136,6 +1136,7 @@ int struct_NetS_Systalk_send( char **pptr, int *psize, SLK_NetS_Systalk *pValue 
 	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_roll, (*psize) );
 	return 0;
 }
 
@@ -1626,6 +1627,72 @@ int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_own_sec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownArmyGroup_send( char **pptr, int *psize, SLK_NetS_TownArmyGroup *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_total, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownArmyGroupList_send( char **pptr, int *psize, SLK_NetS_TownArmyGroupList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_TownArmyGroup_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_totalcount, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_SystalkJson_send( char **pptr, int *psize, SLK_NetS_SystalkJson *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
+	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_roll, (*psize) );
+	return 0;
+}
+
+int struct_NetS_RollMsgJson_send( char **pptr, int *psize, SLK_NetS_RollMsgJson *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
+	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
+	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
 	return 0;
 }
 

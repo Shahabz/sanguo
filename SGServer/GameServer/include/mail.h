@@ -32,6 +32,7 @@
 #define TAG_TIMEMIN			"$M"// 标记--标记为时间分钟
 #define TAG_TIMESEC			"$S"// 标记--标记为时间秒
 #define TAG_POS				"$#"// 标记--标记为坐标
+#define TAG_NATION			"$N"// 标记--标记为国家
 
 typedef struct _mailfight_searchcache
 {

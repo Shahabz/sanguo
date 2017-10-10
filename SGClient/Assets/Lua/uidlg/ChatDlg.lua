@@ -167,7 +167,7 @@ end
 function ChatDlgAddSysTalk( recvValue )
 	local uiObj = GameObject.Instantiate( m_uiUIP_ChatSystalk );
 	--uiObj.transform:Find("Content/Name"):GetComponent( "UIText" ).text = "<emote=001><color=00AE01FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=00FFC0FF>青州</color>"
-	uiObj.transform:Find("Content/Text"):GetComponent( "YlyRichText" ).text = recvValue.m_msg
+	SetRichText( uiObj.transform:Find("Content/Text"), recvValue.m_msg, ChatDlgOnLinkClickPos )
 	uiObj.transform:Find("Content/Back"):GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
 	uiObj.transform:SetParent( m_uiContent.transform );

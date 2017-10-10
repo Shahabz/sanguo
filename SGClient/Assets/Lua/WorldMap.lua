@@ -989,3 +989,27 @@ function WorldMap.UIFade( fade )
     --fruit.uiManager:GetLayer( 0 ):GetComponent( "CanvasGroup" ).blocksRaycasts = fade == false;
     -- MainDlgGetClubBtn().gameObject:SetActive( fade == false );
 end
+
+-- 获取地区id
+function map_zone_getid( posx, posy )
+	local zonex, zoney;
+	if posx >= WorldMap.m_nMaxWidth then
+		posx = WorldMap.m_nMaxWidth - 1;
+	end
+	if posy >= WorldMap.m_nMaxHeight then
+		posy = WorldMap.m_nMaxHeight - 1;
+	end
+	zonex = math.floor(posx / 100);
+	zoney = math.floor(posy / 100);
+	return zoney*(5) + zonex + 1;
+end
+
+-- 检查是不是在同一个区域
+function map_zone_checksame( posx, posy, tposx, tposy )
+	local n = map_zone_getid( posx, posy );
+	local m = map_zone_getid( tposx, tposy );
+	if n == m then
+		return 1;
+	end
+	return 0;
+end

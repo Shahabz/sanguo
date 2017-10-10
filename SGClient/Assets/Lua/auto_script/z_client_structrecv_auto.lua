@@ -998,6 +998,7 @@ function struct_NetS_Systalk_recv( buffer )
 	recvValue.m_msglen = buffer:ReadShort();
 	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
 	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_roll = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1445,6 +1446,61 @@ function struct_NetS_MapTownInfo_recv( buffer )
 	recvValue.m_own_sec = buffer:ReadInt();
 	recvValue.m_hp = buffer:ReadInt();
 	recvValue.m_maxhp = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_TownArmyGroup_recv( buffer )
+	local recvValue = {};
+	recvValue.m_group_index = buffer:ReadInt();
+	recvValue.m_group_id = buffer:ReadInt();
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_t_nation = buffer:ReadSByte();
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_t_total = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_TownArmyGroupList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_TownArmyGroup_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_flag = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_totalcount = buffer:ReadShort();
+	recvValue.m_townid = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_SystalkJson_recv( buffer )
+	local recvValue = {};
+	recvValue.m_msglen = buffer:ReadShort();
+	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_roll = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_RollMsgJson_recv( buffer )
+	local recvValue = {};
+	recvValue.m_msglen = buffer:ReadShort();
+	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	return recvValue;
+end
+
+function struct_NetS_RollMsg_recv( buffer )
+	local recvValue = {};
+	recvValue.m_msglen = buffer:ReadShort();
+	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
 	return recvValue;
 end
 

@@ -545,6 +545,31 @@ function netrecv_maptowninfo_C( buffer )
 	proc_maptowninfo_C( recvValue );
 end
 
+function netrecv_townarmygroup_C( buffer )
+	local recvValue = struct_NetS_TownArmyGroup_recv( buffer );
+	proc_townarmygroup_C( recvValue );
+end
+
+function netrecv_townarmygrouplist_C( buffer )
+	local recvValue = struct_NetS_TownArmyGroupList_recv( buffer );
+	proc_townarmygrouplist_C( recvValue );
+end
+
+function netrecv_systalkjson_C( buffer )
+	local recvValue = struct_NetS_SystalkJson_recv( buffer );
+	proc_systalkjson_C( recvValue );
+end
+
+function netrecv_rollmsgjson_C( buffer )
+	local recvValue = struct_NetS_RollMsgJson_recv( buffer );
+	proc_rollmsgjson_C( recvValue );
+end
+
+function netrecv_rollmsg_C( buffer )
+	local recvValue = struct_NetS_RollMsg_recv( buffer );
+	proc_rollmsg_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -655,6 +680,11 @@ Proc_Command = {
 	[CMDS_CITYARMYGROUP]=netrecv_cityarmygroup_C;
 	[CMDS_CITYARMYGROUPLIST]=netrecv_cityarmygrouplist_C;
 	[CMDS_MAPTOWNINFO]=netrecv_maptowninfo_C;
+	[CMDS_TOWNARMYGROUP]=netrecv_townarmygroup_C;
+	[CMDS_TOWNARMYGROUPLIST]=netrecv_townarmygrouplist_C;
+	[CMDS_SYSTALKJSON]=netrecv_systalkjson_C;
+	[CMDS_ROLLMSGJSON]=netrecv_rollmsgjson_C;
+	[CMDS_ROLLMSG]=netrecv_rollmsg_C;
 }
 
 function in_proc_command_C( cmd, buffer )

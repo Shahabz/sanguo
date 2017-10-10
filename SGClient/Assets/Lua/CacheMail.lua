@@ -22,6 +22,7 @@ TAG_TIMEHOUR	= "$H"	-- 标记 标记为时间小时
 TAG_TIMEMIN		= "$M"	-- 标记 标记为时间分钟
 TAG_TIMESEC		= "$S"	-- 标记 标记为时间秒
 TAG_POS    		= "$#"	-- 标记 标记为坐标
+TAG_NATION		= "$N"  -- 标记 标记为国家
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -309,6 +310,15 @@ function Mail:GetString( v )
 			str = v
 		end	
 		
+	-- 国家
+	elseif self:IsTag( v, TAG_NATION ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_NATION) + 1));
+		if textid ~= nil then
+			str = NationEx( textid )
+		else
+			str = v
+		end
+			
 	else
 		str = v;
 	end

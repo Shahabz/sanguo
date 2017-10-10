@@ -24,6 +24,8 @@ local m_path = 0;
 local m_LastRecvValue = nil;
 local m_awardCache = {};
 
+local m_posx = 0;
+local m_posy = 0;
 local m_nation = 0;
 local m_townid = 0;
 local m_produce_maxnum = 0;
@@ -59,6 +61,18 @@ function MapTownDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MapTownDlgClose();
+			
+		-- 征收
+		elseif nControlID == 1 then
+			MapTownDlgLevy()
+			
+		-- 重建
+		elseif nControlID == 2 then
+			MapTownDlgRebuild()
+			
+		-- 国战
+		elseif nControlID == 3 then
+			MapTownDlgNationFight()
         end
 	end
 end
@@ -133,8 +147,8 @@ function MapTownDlgShow( path, recvValue )
 	
 	m_path = path;
 	m_LastRecvValue = recvValue;
-	local posx 			= recvValue.m_posx;
-	local posy 			= recvValue.m_posy;
+	m_posx 				= recvValue.m_posx;
+	m_posy 				= recvValue.m_posy;
 	local custom_name	= recvValue.m_name;
 	local custom_namelen= recvValue.m_namelen;
 	m_nation 			= recvValue.m_char_value[1];
@@ -151,7 +165,7 @@ function MapTownDlgShow( path, recvValue )
 	if m_awardCache[m_townid] == nil then
 		system_askinfo( ASKINFO_WORLDMAP, "", 10, m_townid );
 	else
-		MapTownDlgRecvAward( m_awardCache[kind] )
+		MapTownDlgRecvAward( m_awardCache[m_townid] )
 	end
 	
 	-- 城镇信息
@@ -178,7 +192,7 @@ function MapTownDlgShow( path, recvValue )
 		SetText( m_uiName, MapTownName(m_townid) )
 	end
 	-- 位置
-	SetText( m_uiPos, F(1272, posx, posy) )
+	SetText( m_uiPos, F(1272, m_posx, m_posy) )
 	-- 所属
 	if m_nation == 0 then
 		SetText( m_uiOwn, T(951) );
@@ -260,4 +274,20 @@ function MapTownDlgRecvValue( recvValue )
 		
 		
 	end	
+end
+
+-- 征收
+function MapTownDlgLevy()
+	
+end
+
+-- 重建
+function MapTownDlgRebuild()
+	
+end
+
+-- 国战
+function MapTownDlgNationFight()
+	MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
+	MapTownDlgClose()
 end

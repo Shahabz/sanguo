@@ -171,7 +171,7 @@ int city_loadcb( int city_index )
 
 	// 占地块信息添加到世界地图
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, g_city[city_index].posx, g_city[city_index].posy );
-	g_city[city_index].zone = map_zone_getid( g_city[city_index].posx, g_city[city_index].posx );
+	g_city[city_index].zone = map_zone_getid( g_city[city_index].posx, g_city[city_index].posy );
 	return 0;
 }
 

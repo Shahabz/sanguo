@@ -73,6 +73,9 @@ extern int g_map_res_maxcount;
 extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
 
+extern MapTown *g_map_town;
+extern int g_map_town_maxcount;
+
 extern Map g_map;
 extern Fight g_fight;
 
@@ -902,7 +905,164 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 int armygroup_town_sendlist( int actor_index, int unit_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	MapUnit *unit = &g_mapunit[unit_index];
+	if ( !unit )
+		return -1;
+	if ( unit->type != MAPUNIT_TYPE_TOWN )
+		return -1;
+	int townid = unit->index;
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
 
+	SLK_NetS_TownArmyGroupList pValue = { 0 };
+	pValue.m_unit_index = unit_index;
+	pValue.m_nation = g_map_town[townid].nation;
+	pValue.m_townid = townid;
+
+	// 发送开始
+	pValue.m_flag = 0;
+	netsend_townarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	for ( int tmpi = 0; tmpi < g_armygroup_maxcount; tmpi++ )
+	{
+		if ( g_armygroup[tmpi].id <= 0 )
+			continue;
+		if ( g_armygroup[tmpi].to_type != MAPUNIT_TYPE_TOWN )
+			continue;
+		if ( g_armygroup[tmpi].to_id != townid )
+			continue;
+
+		if ( pCity->nation == g_map_town[townid].nation )
+		{ // 我看的据点属于我的国家
+
+			// 那么我属于防御方
+			pValue.m_list[pValue.m_count].m_attack = 2; 
+			pValue.m_list[pValue.m_count].m_nation = g_map_town[townid].nation;
+			pValue.m_list[pValue.m_count].m_total = armygroup_to_totals( tmpi );
+
+			// 攻击方信息
+			if ( g_armygroup[tmpi].from_type == MAPUNIT_TYPE_CITY )
+			{ // 攻击方是玩家
+				City *pAtkCity = city_indexptr( g_armygroup[tmpi].from_index );
+				if ( !pAtkCity )
+					continue;
+				pValue.m_list[pValue.m_count].m_t_nation = pAtkCity->nation;
+				pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
+			}
+			else if ( g_armygroup[tmpi].from_type == MAPUNIT_TYPE_TOWN )
+			{ // 攻击方是城镇
+				MapTown *pTown = map_town_getptr( g_armygroup[tmpi].from_index );
+				if ( !pTown )
+					continue;
+				pValue.m_list[pValue.m_count].m_t_nation = pTown->nation;
+				pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
+			}
+			else
+				continue;
+		}
+		else
+		{ // 不是我国家的据点
+
+			// 那么我属于攻击方
+			pValue.m_list[pValue.m_count].m_attack = 1;
+			pValue.m_list[pValue.m_count].m_nation = pCity->nation;
+			pValue.m_list[pValue.m_count].m_total = armygroup_from_totals( tmpi );
+
+			// 防御方信息
+			if ( g_armygroup[tmpi].to_type == MAPUNIT_TYPE_CITY )
+			{ // 防御方是玩家
+				City *pDefCity = city_indexptr( g_armygroup[tmpi].to_index );
+				if ( !pDefCity )
+					continue;
+				pValue.m_list[pValue.m_count].m_t_nation = pDefCity->nation;
+				pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
+			}
+			else if ( g_armygroup[tmpi].to_type == MAPUNIT_TYPE_TOWN )
+			{ // 防御方是城镇
+				MapTown *pTown = map_town_getptr( g_armygroup[tmpi].to_index );
+				if ( !pTown )
+					continue;
+				pValue.m_list[pValue.m_count].m_t_nation = pTown->nation;
+				pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
+			}
+			else
+				continue;
+		}
+
+		pValue.m_list[pValue.m_count].m_group_index = tmpi;
+		pValue.m_list[pValue.m_count].m_group_id = g_armygroup[tmpi].id;
+		pValue.m_list[pValue.m_count].m_statetime = g_armygroup[tmpi].statetime;
+		pValue.m_list[pValue.m_count].m_stateduration = g_armygroup[tmpi].stateduration;
+		pValue.m_list[pValue.m_count].m_type = g_armygroup[tmpi].type;
+		pValue.m_totalcount += 1;
+		pValue.m_count += 1;
+		if ( pValue.m_count > 10 )
+		{
+			pValue.m_flag = 1;
+			netsend_townarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count = 0;
+		}
+	}
+
+	if ( pValue.m_count > 0 )
+	{
+		pValue.m_flag = 1;
+		netsend_townarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		pValue.m_count = 0;
+	}
+
+	pValue.m_flag = 2;
+	netsend_townarmygrouplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 国战创建
+int armygroup_nation_askcreate( int actor_index, int townid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+
+	// 创建集结战场
+	int group_index = armygroup_create( 10, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].fight_maxsec );
+	if ( group_index < 0 )
+		return -1;
+
+	// 只有本地区玩家可见
+	int zoneid = map_zone_getid( g_towninfo[townid].posx, g_towninfo[townid].posy );
+	char v1[64] = { 0 };
+	char v2[64] = { 0 };
+	char v3[64] = { 0 };
+	char v4[64] = { 0 };
+	char v5[64] = { 0 };
+
+	// 我国的{0}对{1}{2}{3}发起了国战，养兵千日用在一时，请大家踊跃参与。请各位主公加入<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
+	sprintf( v1, "%s", pCity->name );
+	sprintf( v2, "%s%d", TAG_NATION, g_map_town[townid].nation );
+	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[townid].zoneid );
+	sprintf( v4, "%s%d", TAG_TOWNID, townid );
+	sprintf( v5, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
+	system_talkjson( zoneid, pCity->nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+
+	// 发起人不在该地图情况
+	if ( pCity->zone != zoneid )
+	{
+		system_talkjson_to( actor_index, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+	}
+
+	// {0}{1}对我国的{2}{3}发起了国战。敌国来犯，我城势单力孤，还请诸位同袍伸出援手。<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
+	sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+	sprintf( v2, "%s", pCity->name );
+	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[townid].zoneid );
+	sprintf( v4, "%s%d", TAG_TOWNID, townid );
+	sprintf( v5, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
+	system_talkjson( zoneid, g_map_town[townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
 	return 0;
 }
 

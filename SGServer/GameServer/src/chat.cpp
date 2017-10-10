@@ -72,7 +72,7 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 // 发送到国家
 int chat_send_nation( SLK_NetS_Chat *pValue )
 {
-	netsend_chat_S( pValue->m_nation, SENDTYPE_NATION, pValue );
+	netsend_chat_S( 0, SENDTYPE_NATION + pValue->m_nation, pValue );
 	chat_cache_queue_add( g_ChatCacheNation, pValue );
 	chat_cache_queue_add_db( pValue );
 	return 0;
@@ -189,47 +189,163 @@ int chat_cache_sendlist( int actor_index )
 	return 0;
 }
 
-int system_talk( const char *szMsg )
+int system_talk( const char *szMsg, char roll )
 {
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
 	pValue.m_optime = (int)time( NULL );
+	pValue.m_roll = roll;
 	netsend_systalk_S( 0, SENDTYPE_WORLD, &pValue );
 	return 0;
 }
 
-int system_talkto( int actor_index, const char *szMsg )
+int system_talkto( int actor_index, const char *szMsg, char roll )
 {
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
 	pValue.m_optime = (int)time( NULL );
+	pValue.m_roll = roll;
 	netsend_systalk_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
-int system_talktonation( int nation, const char *szMsg )
+int system_talktonation( int nation, const char *szMsg, char roll )
 {
 	SLK_NetS_Systalk pValue = { 0 };
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
 	pValue.m_optime = (int)time( NULL );
-	netsend_systalk_S( nation, SENDTYPE_NATION, &pValue );
+	pValue.m_roll = roll;
+	netsend_systalk_S( 0, SENDTYPE_NATION + nation, &pValue );
 	return 0;
 }
 
-int system_talk( int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+void system_talkjson_makestruct( SLK_NetS_SystalkJson *pValue, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll )
 {
+	if ( v1 && v2 && v3 && v4 && v5 && v6 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\",\"v5\":\"%s\",\"v6\":\"%s\"}", textid, v1, v2, v3, v4, v5, v6 );
+	}
+	else if ( v1 && v2 && v3 && v4 && v5 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\",\"v5\":\"%s\"}", textid, v1, v2, v3, v4, v5 );
+	}
+	else if ( v1 && v2 && v3 && v4 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\"}", textid, v1, v2, v3, v4 );
+	}
+	else if ( v1 && v2 && v3 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\"}", textid, v1, v2, v3 );
+	}
+	else if ( v1 && v2 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\"}", textid, v1, v2 );
+	}
+	else if ( v1 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\"}", textid, v1 );
+	}
+	else
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d}", textid );
+	}
+	pValue->m_msglen = strlen( pValue->m_msg );
+	pValue->m_optime = (int)time( NULL );
+	pValue->m_roll = roll;
+}
+
+int system_talkjson_to( int actor_index, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll )
+{
+	SLK_NetS_SystalkJson pValue = { 0 };
+	system_talkjson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6, roll );
+	netsend_systalkjson_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
-int system_talkto( int actor_index, int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+int system_talkjson( int zone, int nation, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll )
 {
+	SLK_NetS_SystalkJson pValue = { 0 };
+	system_talkjson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6, roll );
+	netsend_systalkjson_S( zone, SENDTYPE_NATION + nation, &pValue );
 	return 0;
 }
 
-int system_talktonation( int nation, int nameid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char *v7, char *v8 )
+
+int system_roll( const char *szMsg )
 {
+	SLK_NetS_RollMsg pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_rollmsg_S( 0, SENDTYPE_WORLD, &pValue );
+	return 0;
+}
+
+int system_rollto( int actor_index, const char *szMsg )
+{
+	SLK_NetS_RollMsg pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_rollmsg_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int system_rolltonation( int nation, const char *szMsg )
+{
+	SLK_NetS_RollMsg pValue = { 0 };
+	strncpy( pValue.m_msg, szMsg, 1023 );
+	pValue.m_msglen = strlen( pValue.m_msg );
+	netsend_rollmsg_S( 0, SENDTYPE_NATION+nation, &pValue );
+	return 0;
+}
+
+void system_rolljson_makestruct( SLK_NetS_RollMsgJson *pValue, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6 )
+{
+	if ( v1 && v2 && v3 && v4 && v5 && v6 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\",\"v5\":\"%s\",\"v6\":\"%s\"}", textid, v1, v2, v3, v4, v5, v6 );
+	}
+	else if ( v1 && v2 && v3 && v4 && v5 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\",\"v5\":\"%s\"}", textid, v1, v2, v3, v4, v5 );
+	}
+	else if ( v1 && v2 && v3 && v4 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\",\"v4\":\"%s\"}", textid, v1, v2, v3, v4 );
+	}
+	else if ( v1 && v2 && v3 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\",\"v3\":\"%s\"}", textid, v1, v2, v3 );
+	}
+	else if ( v1 && v2 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\",\"v2\":\"%s\"}", textid, v1, v2 );
+	}
+	else if ( v1 )
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d,\"v1\":\"%s\"}", textid, v1 );
+	}
+	else
+	{
+		sprintf( pValue->m_msg, "{\"text\":%d}", textid );
+	}
+	pValue->m_msglen = strlen( pValue->m_msg );
+}
+
+int system_rolljson_to( int actor_index, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6 )
+{
+	SLK_NetS_RollMsgJson pValue = { 0 };
+	system_rolljson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6 );
+	netsend_rollmsgjson_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int system_rolljson( int zone, int nation, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6 )
+{
+	SLK_NetS_RollMsgJson pValue = { 0 };
+	system_rolljson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6 );
+	netsend_rollmsgjson_S( zone, SENDTYPE_NATION + nation, &pValue );
 	return 0;
 }

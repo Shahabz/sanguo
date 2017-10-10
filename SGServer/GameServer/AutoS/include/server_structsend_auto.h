@@ -780,6 +780,7 @@ struct _slk_NetS_Systalk {
 	short m_msglen;	//直接文字的系统消息
 	char m_msg[1024];	//直接文字的系统消息
 	int m_optime;	//时间
+	char m_roll;	//是否有滚动
 };
 typedef struct _slk_NetS_Systalk SLK_NetS_Systalk;	//直接文字系统消息
 
@@ -1121,6 +1122,51 @@ struct _slk_NetS_MapTownInfo {
 };
 typedef struct _slk_NetS_MapTownInfo SLK_NetS_MapTownInfo;	//城镇详情
 
+struct _slk_NetS_TownArmyGroup {
+	int m_group_index;	//国战信息-集结索引
+	int m_group_id;	//国战信息-集结id
+	char m_attack;	//国战信息-1攻击2防御
+	int m_statetime;	//国战信息-倒计时
+	int m_stateduration;	//国战信息-倒计时
+	char m_nation;	//国战信息
+	char m_t_nation;	//国战信息
+	int m_total;	//国战信息
+	int m_t_total;	//国战信息
+	char m_type;	//国战信息
+};
+typedef struct _slk_NetS_TownArmyGroup SLK_NetS_TownArmyGroup;	//国战信息
+
+struct _slk_NetS_TownArmyGroupList {
+	short m_count;	//国战信息列表
+	SLK_NetS_TownArmyGroup m_list[16];	//国战信息列表
+	char m_flag;	//国战信息列表
+	char m_nation;	//国战信息列表
+	int m_unit_index;	//国战信息列表
+	short m_totalcount;	//国战信息列表
+	int m_townid;	//国战信息列表
+};
+typedef struct _slk_NetS_TownArmyGroupList SLK_NetS_TownArmyGroupList;	//国战列表
+
+struct _slk_NetS_SystalkJson {
+	short m_msglen;	//json系统消息
+	char m_msg[1024];	//json系统消息
+	int m_optime;	//json系统消息
+	char m_roll;	//json系统消息
+};
+typedef struct _slk_NetS_SystalkJson SLK_NetS_SystalkJson;	//json系统消息
+
+struct _slk_NetS_RollMsgJson {
+	short m_msglen;	//json滚动消息
+	char m_msg[1024];	//json滚动消息
+};
+typedef struct _slk_NetS_RollMsgJson SLK_NetS_RollMsgJson;	//json滚动消息
+
+struct _slk_NetS_RollMsg {
+	short m_msglen;	//滚动消息
+	char m_msg[1024];	//滚动消息
+};
+typedef struct _slk_NetS_RollMsg SLK_NetS_RollMsg;	//滚动消息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1242,5 +1288,10 @@ int struct_NetS_CityState_send( char **pptr, int *psize, SLK_NetS_CityState *pVa
 int struct_NetS_CityArmyGroup_send( char **pptr, int *psize, SLK_NetS_CityArmyGroup *pValue );
 int struct_NetS_CityArmyGroupList_send( char **pptr, int *psize, SLK_NetS_CityArmyGroupList *pValue );
 int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo *pValue );
+int struct_NetS_TownArmyGroup_send( char **pptr, int *psize, SLK_NetS_TownArmyGroup *pValue );
+int struct_NetS_TownArmyGroupList_send( char **pptr, int *psize, SLK_NetS_TownArmyGroupList *pValue );
+int struct_NetS_SystalkJson_send( char **pptr, int *psize, SLK_NetS_SystalkJson *pValue );
+int struct_NetS_RollMsgJson_send( char **pptr, int *psize, SLK_NetS_RollMsgJson *pValue );
+int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue );
 
 #endif

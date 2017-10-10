@@ -74,7 +74,9 @@ public class UIScrollRect : ScrollRect
         onValueChanged.Invoke(normalizedPosition);
     }
     public virtual void ScrollToBottom()
-    {
+	{
+		if (!IsActive())
+			return;
         StartCoroutine(ScrollToBottomAsyn());
     }
 
@@ -91,6 +93,8 @@ public class UIScrollRect : ScrollRect
     /// </summary>
     public virtual void ScrollToBottom(int contentChildIndex)
     {
+		if (!IsActive())
+			return;
         StartCoroutine(ScrollToBottomAsyn(contentChildIndex));
     }
     protected virtual IEnumerator ScrollToBottomAsyn(int contentChildIndex)
@@ -124,6 +128,8 @@ public class UIScrollRect : ScrollRect
 
 	public virtual void ScrollToTop()
 	{
+		if (!IsActive())
+			return;
 		StartCoroutine(ScrollToTopAsyn());
 	}
 

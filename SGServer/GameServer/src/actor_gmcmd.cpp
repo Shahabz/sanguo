@@ -103,7 +103,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		mapzoneinfo_luatable_auto();
 		sprintf( szMsg, "ThisTimer:%d", tmpi );
 		if ( actor_index >= 0 )
-			system_talkto( actor_index, szMsg );
+			system_talkto( actor_index, szMsg, 0 );
 		break;
 	case GMC_RELOAD:// 重读数据表
 		break;
@@ -146,7 +146,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			if ( item_lost( pCity->actor_index, pValue[0], -tmpi, PATH_GM ) >= 0 )
 			{
 				if ( actor_index >= 0 )
-					system_talkto( actor_index, "Actor lost item." );
+					system_talkto( actor_index, "Actor lost item.", 0 );
 			}
 		}
 		else if ( pCity )
@@ -154,12 +154,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			if ( item_getitem( pCity->actor_index, pValue[0], tmpi, -1, PATH_GM ) >= 0 )
 			{
 				if ( actor_index >= 0 )
-					system_talkto( actor_index, "Actor get item." );
+					system_talkto( actor_index, "Actor get item.", 0 );
 			}
 			else
 			{
 				if ( actor_index >= 0 )
-					system_talkto( actor_index, "Actor not get item." );
+					system_talkto( actor_index, "Actor not get item.", 0 );
 			}
 		}
 		break;
@@ -176,12 +176,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			if ( equip_getequip( pCity->actor_index, pValue[0], PATH_GM ) >= 0 )
 			{
 				if ( actor_index >= 0 )
-					system_talkto( actor_index, "Actor get equip." );
+					system_talkto( actor_index, "Actor get equip.", 0 );
 			}
 			else
 			{
 				if ( actor_index >= 0 )
-					system_talkto( actor_index, "Actor not get equip." );
+					system_talkto( actor_index, "Actor not get equip.", 0 );
 			}
 		}
 		break;
@@ -245,6 +245,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_QUEST:// 任务
 		break;
 	case GMC_ROLLMSG:// 跑马灯
+		system_roll( pMsg );
 		break;
 	case GMC_MAIL:// 邮件
 		if ( pCity )
@@ -261,7 +262,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_SYSTALK:// 系统喊话
-		system_talk( pMsg );
+		system_talk( pMsg, 1 );
 		break;
 	case GMC_VIPEXP:// vip经验
 		if ( pCity )

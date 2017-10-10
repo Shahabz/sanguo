@@ -424,6 +424,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			armygroup_askhelp( actor_index, pvalue[1], pvalue[2] );
 		}
 		break;
+	case ASKINFO_NATIONARMYGROUP:
+		if ( pvalue[0] == 0 )
+		{ // 国战列表
+			armygroup_town_sendlist( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 创建国战
+			armygroup_nation_askcreate( actor_index, pvalue[1] );
+		}
+		break;
 	default:
 		break;
 	}

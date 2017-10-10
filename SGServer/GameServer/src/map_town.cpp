@@ -524,3 +524,4 @@ int map_town_sendinfo( int actor_index, int townid )
 	netsend_maptowninfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+

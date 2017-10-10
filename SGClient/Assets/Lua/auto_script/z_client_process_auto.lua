@@ -904,6 +904,11 @@ function proc_systalk_C( recvValue )
 	info.m_optime = recvValue.m_optime;
 	MainDlgSetChat( info );
 	ChatDlgRecv( info );
+	
+	-- 有滚动消息
+	if recvValue.m_roll == 1 then
+		RollingMsgDlgShowMsg( recvValue.m_msg );
+	end
 end
 
 
@@ -1198,5 +1203,160 @@ end
 function proc_maptowninfo_C( recvValue )
 	-- process.
 	MapTownDlgRecvValue( recvValue )
+end
+
+
+-- m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_total=0,m_t_total=0,m_type=0,
+function proc_townarmygroup_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_total=0,m_t_total=0,m_type=0,[m_count]},m_flag=0,m_nation=0,m_unit_index=0,m_totalcount=0,m_townid=0,
+function proc_townarmygrouplist_C( recvValue )
+	-- process.
+	-- 开始
+	if recvValue.m_flag == 0 then
+		MapNationFightDlgBegin( recvValue.m_nation, recvValue.m_unit_index, recvValue.m_townid )
+		
+	-- 过程	
+	elseif recvValue.m_flag == 1 then
+		for i=1, recvValue.m_count, 1 do
+			MapNationFightDlgAddRecvValue( recvValue.m_list[i] )
+		end
+		
+	-- 结束
+	else
+		if recvValue.m_totalcount == 0 then
+			MapNationFightDlgClose();
+			if recvValue.m_nation == GetPlayer().m_nation then
+				AlertMsg( T(1293) )
+			else
+				MapNationFightDlgCreate( recvValue.m_townid );
+			end
+		else
+			-- 添加结束
+			MapNationFightDlgOver();
+		end
+	end
+end
+
+-- m_msglen=0,m_msg="[m_msglen]",m_optime=0,
+function proc_systalkjson_C( recvValue )
+	-- process.
+	local json = require "cjson"
+	local msgjson = json.decode( recvValue.m_msg );
+	local msg = "";
+	if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil and msgjson["v5"] ~= nil and msgjson["v6"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		local v5_str = GetMail():GetString( msgjson["v5"] );
+		local v6_str = GetMail():GetString( msgjson["v6"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str, v5_str, v6_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil and msgjson["v5"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		local v5_str = GetMail():GetString( msgjson["v5"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str, v5_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		msg = F( msgjson["text"], v1_str, v2_str )
+	
+	elseif msgjson["v1"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		msg = F( msgjson["text"], v1_str )
+		
+	else
+		msg = msgjson["text"]
+	end
+			
+	local info = {}
+	info.m_actorid = -1;
+	info.m_name = T(564);
+	info.m_msg = msg
+	info.m_optime = recvValue.m_optime;
+	MainDlgSetChat( info );
+	ChatDlgRecv( info );
+	
+	-- 有滚动消息
+	if recvValue.m_roll == 1 then
+		RollingMsgDlgShowMsg( msg );
+	end
+end
+
+-- m_msglen=0,m_msg="[m_msglen]",
+function proc_rollmsgjson_C( recvValue )
+	-- process.
+	local json = require "cjson"
+	local msgjson = json.decode( recvValue.m_msg );
+	local msg = "";
+	if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil and msgjson["v5"] ~= nil and msgjson["v6"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		local v5_str = GetMail():GetString( msgjson["v5"] );
+		local v6_str = GetMail():GetString( msgjson["v6"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str, v5_str, v6_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil and msgjson["v5"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		local v5_str = GetMail():GetString( msgjson["v5"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str, v5_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil and msgjson["v4"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		local v4_str = GetMail():GetString( msgjson["v4"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str, v4_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil and msgjson["v3"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		local v3_str = GetMail():GetString( msgjson["v3"] );
+		msg = F( msgjson["text"], v1_str, v2_str, v3_str )
+		
+	elseif msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		local v2_str = GetMail():GetString( msgjson["v2"] );
+		msg = F( msgjson["text"], v1_str, v2_str )
+	
+	elseif msgjson["v1"] ~= nil then
+		local v1_str = GetMail():GetString( msgjson["v1"] );
+		msg = F( msgjson["text"], v1_str )
+		
+	else
+		msg = msgjson["text"]
+	end
+	RollingMsgDlgShowMsg( msg );
+end
+
+-- m_msglen=0,m_msg="[m_msglen]",
+function proc_rollmsg_C( recvValue )
+	-- process.
+	RollingMsgDlgShowMsg( recvValue.m_msg );
 end
 

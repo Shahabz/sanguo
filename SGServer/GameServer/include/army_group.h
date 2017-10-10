@@ -40,6 +40,9 @@ int armygroup_city_sendlist( int actor_index, int unit_index );
 // 国战列表
 int armygroup_town_sendlist( int actor_index, int unit_index );
 
+// 国战创建
+int armygroup_nation_askcreate( int actor_index, int townid );
+
 // 请求帮助
 int armygroup_askhelp( int actor_index, int group_index, int group_id );
 
