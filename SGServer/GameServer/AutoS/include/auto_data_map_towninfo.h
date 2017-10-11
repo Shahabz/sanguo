@@ -27,6 +27,9 @@ struct _maptowninfo {
 				int ask_iron;	//
 				char monster[128];	//
 				char monster_guard[128];	//
+				int fight_silver;	//
+				int fight_wood;	//
+				int fight_food;	//
 };
 typedef struct _maptowninfo MapTownInfo;
 

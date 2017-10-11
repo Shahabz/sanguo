@@ -60,6 +60,12 @@ extern int g_itemkindnum;
 extern MapZoneInfo *g_zoneinfo;
 extern int g_zoneinfo_maxnum;
 
+extern MapTownInfo *g_towninfo;
+extern int g_towninfo_maxnum;
+
+extern MapTown *g_map_town;
+extern int g_map_town_maxcount;
+
 extern MapEnemyInfo *g_enemyinfo;
 extern int g_enemyinfo_maxnum;
 
@@ -602,6 +608,72 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		}
 		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_TOWN )
 		{ // 城镇
+			int townid = g_mapunit[info->m_to_unit_index].index;
+			if ( townid <= 0 || townid >= g_map_town_maxcount )
+				return -1;
+			MapTown *pTown = map_town_getptr( townid );
+			if ( !pTown )
+				return -1;
+
+			if ( info->m_action == ARMY_ACTION_NATION_ATTACK )
+			{ // 参与国战进攻
+				if ( pCity->nation == pTown->nation )
+				{
+					return -1;
+				}
+
+				if ( info->m_group_index < 0 || info->m_group_index >= g_armygroup_maxcount )
+				{
+					return -1;
+				}
+
+				if ( g_armygroup[info->m_group_index].id != info->m_id )
+				{
+					return -1;
+				}
+
+				if ( marchtime >= (g_armygroup[info->m_group_index].stateduration - g_armygroup[info->m_group_index].statetime) )
+				{
+					// 此番前去将会错过会战时间，还是静观其变吧
+					actor_notify_alert( pCity->actor_index, 1268 );
+					return -1;
+				}
+				group_index = info->m_group_index;
+
+				// 破罩子
+				city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
+
+				// 已经加入国战攻击部队
+				actor_notify_alert( pCity->actor_index, 1298 );
+			}
+			else if ( info->m_action == ARMY_ACTION_NATION_DEFENSE )
+			{ // 参与国战防守
+				// 盟友检查
+				if ( pCity->nation != pTown->nation )
+				{
+					return -1;
+				}
+				if ( info->m_group_index < 0 || info->m_group_index >= g_armygroup_maxcount )
+				{
+					return -1;
+				}
+
+				if ( g_armygroup[info->m_group_index].id != info->m_id )
+				{
+					return -1;
+				}
+
+				if ( marchtime >= (g_armygroup[info->m_group_index].stateduration - g_armygroup[info->m_group_index].statetime) )
+				{
+					// 此番前去将会错过会战时间，还是静观其变吧
+					actor_notify_alert( pCity->actor_index, 1268 );
+					return -1;
+				}
+				group_index = info->m_group_index;
+
+				// 已经加入国战防守部队
+				actor_notify_alert( pCity->actor_index, 1299 );
+			}
 			to_type = MAPUNIT_TYPE_TOWN;
 			to_id = g_mapunit[info->m_to_unit_index].index;
 		}

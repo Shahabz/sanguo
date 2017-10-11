@@ -174,9 +174,30 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetText( m_uiName, F(1228, level, name, posx, posy) )
 		
 	elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then -- 城镇
-		if action == ARMY_ACTION_GROUP_CREATE then
-		else	
+		local posx 				= recvValue.m_posx;
+		local posy 				= recvValue.m_posy;
+		local custom_name		= recvValue.m_name;
+		local custom_namelen	= recvValue.m_namelen;
+		local nation 			= recvValue.m_char_value[1];
+		local townid 			= recvValue.m_short_value[1];
+		
+		-- 标题
+		if action == ARMY_ACTION_NATION_ATTACK then
+			SetTrue( m_uiAttackDesc )
+			SetText( m_uiTitle.transform:Find("Text"), T(1296) )
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1296) );
+		elseif action == ARMY_ACTION_NATION_DEFENSE then	
+			SetFalse( m_uiAttackDesc )
+			SetText( m_uiTitle.transform:Find("Text"), T(1297) )
+			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1297) );
 		end
+		
+		-- 形象
+		local type 	= g_towninfo[townid].type
+		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitTownShapeList[type].."_"..nation )
+		
+		-- 名字
+		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )
 		
 	elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then -- 流寇
 		local level	= recvValue.m_char_value[1];
@@ -387,6 +408,7 @@ function MapBattleDlgSetCost()
 		
 	-- 城镇
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_TOWN then
+		SetText( m_uiCost, "" )
 	
 	-- 流寇
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY then

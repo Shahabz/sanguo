@@ -8,8 +8,11 @@ local m_uiCloseButton = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_unit_index = -1
+local m_nation = 0;
 local m_townid = -1
 local m_cache = {};
+
+local UIADD_EVENT_BASE = 1000000
 
 -- 打开界面
 function MapNationFightDlgOpen()
@@ -40,6 +43,10 @@ function MapNationFightDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MapNationFightDlgClose();
+			
+		-- 加入国战
+		elseif nControlID >= UIADD_EVENT_BASE then
+			MapNationFightDlgJoin( nControlID-UIADD_EVENT_BASE )
         end
 	end
 end
@@ -110,7 +117,7 @@ function MapNationFightDlgClear()
     end
 end
 
-function MapNationFightDlgBegin( nation, unit_index, m_townid )
+function MapNationFightDlgBegin( nation, unit_index, townid )
 	m_nation = nation;
 	m_unit_index = unit_index;
 	m_townid = townid
@@ -136,133 +143,48 @@ function MapNationFightDlgAddRecvValue( recvValue )
 	uiTTotal = objs[9];
 	uiNation = objs[10];
 	uiTNation = objs[11];
+	uiAddBtn = objs[12];
+		
+	-- 形象
+	local type 	= g_towninfo[m_townid].type
+	SetImage( uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
 	
-	--[[if recvValue.m_actorid == GetPlayer().m_actorid or recvValue.m_t_actorid == GetPlayer().m_actorid then
-		SetTrue( uiAskHelpBtn )
-		SetControlID( uiAskHelpBtn, UIASKHELPBTN_EVENT_BASE + #m_cache )
-		SetFalse( m_uiCItyFightButton )
+	-- 名称
+	SetText( uiName, MapTownName( m_townid ) )
+	
+	-- 坐标
+	SetRichText( uiPos, F( 1266, g_towninfo[m_townid].posx, g_towninfo[m_townid].posy ), MailOnLinkClick )
+	
+	-- 倒计时
+	SetTimer( uiTimer, recvValue.m_stateduration-recvValue.m_statetime, recvValue.m_stateduration )
+	
+	-- 国旗
+	SetImage( uiNation, NationSprite( recvValue.m_nation ) )
+	SetImage( uiTNation, NationSprite( recvValue.m_t_nation ) )
+	
+	-- 守备兵力
+	SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
+	SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
+				
+	-- 属于攻击方
+	if recvValue.m_attack == 1 then
+		SetTrue( uiArrowAttack )
+		SetFalse( uiArrowDefense )
+		SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
+		SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
+		
+	-- 属于防御方
 	else
-		SetFalse( uiAskHelpBtn )
+	
+		SetFalse( uiArrowAttack )
+		SetTrue( uiArrowDefense )
+		SetText( uiFlagText, T(1265), Hex2Color(0x03de27ff) )
+		SetText( uiTFlagText, T(1264), Hex2Color(0xffde00ff) )
+		
 	end
 	
-	-- 这个人是本国玩家，那么都显示在左面
-	if m_nation == GetPlayer().m_nation then
-		
-		-- 攻击方
-		if recvValue.m_attack == 1 then
-			SetTrue( uiArrowAttack )
-			SetFalse( uiArrowDefense )
-			SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
-			SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
-			
-			-- 守备兵力
-			SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
-			SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
-			
-			-- 参与按钮
-			if recvValue.m_type == 1 then -- 闪电战
-				SetFalse( uiAskHelpBtn )
-				SetFalse( uiAddAttackBtn )
-				SetTrue( uiWarn )
-				SetText( uiWarn, T(1267) )
-			else
-				SetTrue( uiAddAttackBtn )
-				SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
-				SetFalse( uiWarn )
-			end
-			SetFalse( uiAddDefenseBtn )
-		
-		else
-			SetFalse( uiArrowAttack )
-			SetTrue( uiArrowDefense )
-			SetText( uiFlagText, T(1265), Hex2Color(0x03de27ff) )
-			SetText( uiTFlagText, T(1264), Hex2Color(0xffde00ff) )
-			
-			-- 守备兵力
-			SetText( uiTotal, T(1261).."\n"..recvValue.m_total )
-			SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
-			
-			-- 参与按钮
-			SetFalse( uiWarn )
-			SetFalse( uiAddAttackBtn )
-			SetTrue( uiAddDefenseBtn )
-			SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
-		end
-		
-		-- 倒计时
-		SetTimer( uiTimer, recvValue.m_stateduration-recvValue.m_statetime, recvValue.m_stateduration )
-		
-		-- 形象
-		SetImage( uiShape, LoadSprite( MapUnitCityShapeList[recvValue.m_level].."_"..recvValue.m_nation ) )
-		SetImage( uiTShape, LoadSprite( MapUnitCityShapeList[recvValue.m_t_level].."_"..recvValue.m_t_nation ) )
-		
-		-- 名称
-		SetText( uiName, recvValue.m_name )
-		SetText( uiTName, recvValue.m_t_name )
-		
-		-- 坐标
-		SetRichText( uiPos, F( 1266, recvValue.m_posx, recvValue.m_posy ), MailOnLinkClick )
-		SetRichText( uiTPos, F( 1266, recvValue.m_t_posx, recvValue.m_t_posy ), MailOnLinkClick )
-		
-	
-	-- 这个人是敌国玩家，那么都显示在右面
-	else
-		if recvValue.m_attack == 1 then
-			SetFalse( uiArrowAttack )
-			SetTrue( uiArrowDefense )
-			SetText( uiFlagText, T(1265), Hex2Color(0x03de27ff) )
-			SetText( uiTFlagText, T(1264), Hex2Color(0xffde00ff) )
-			
-			-- 守备兵力
-			SetText( uiTotal, T(1261).."\n"..recvValue.m_total )
-			SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
-			
-			-- 参与按钮
-			SetFalse( uiWarn )
-			SetFalse( uiAddAttackBtn )
-			SetTrue( uiAddDefenseBtn )
-			SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
-			
-		else
-			SetTrue( uiArrowAttack )
-			SetFalse( uiArrowDefense )
-			SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
-			SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
-			
-			-- 守备兵力
-			SetText( uiTTotal, T(1259).."\n"..recvValue.m_total )
-			SetText( uiTotal, T(1262).."\n"..recvValue.m_t_total )
-			
-			-- 参与按钮
-			if recvValue.m_type == 1 then -- 闪电战
-				SetFalse( uiAskHelpBtn )
-				SetFalse( uiAddAttackBtn )
-				SetTrue( uiWarn )
-				SetText( uiWarn, T(1267) )
-			else
-				SetTrue( uiAddAttackBtn )
-				SetControlID( uiAddAttackBtn, UIADDATTACKBTN_EVENT_BASE + #m_cache )
-				SetFalse( uiWarn )
-			end
-			SetFalse( uiAddDefenseBtn )
-		end
-		
-		-- 倒计时
-		SetTimer( uiTimer, recvValue.m_stateduration-recvValue.m_statetime, recvValue.m_stateduration )
-		
-		-- 形象
-		SetImage( uiTShape, LoadSprite( MapUnitCityShapeList[recvValue.m_level].."_"..recvValue.m_nation ) )
-		SetImage( uiShape, LoadSprite( MapUnitCityShapeList[recvValue.m_t_level].."_"..recvValue.m_t_nation ) )
-		
-		-- 名称
-		SetText( uiTName, recvValue.m_name )
-		SetText( uiName, recvValue.m_t_name )
-		
-		-- 坐标
-		SetRichText( uiTPos, F( 1266, recvValue.m_posx, recvValue.m_posy ), MailOnLinkClick )
-		SetRichText( uiPos, F( 1266, recvValue.m_t_posx, recvValue.m_t_posy ), MailOnLinkClick )
-		
-	end--]]
+	-- 加入国战按钮	
+	SetControlID( uiAddBtn, UIADD_EVENT_BASE + #m_cache )
 end
 
 
@@ -287,4 +209,28 @@ function MapNationFightDlgCreate( townid )
 		system_askinfo( ASKINFO_NATIONARMYGROUP, "", 1, townid )
 		
 	end )
+end
+
+-- 加入国战
+function MapNationFightDlgJoin( index )
+	local recvValue = m_cache[index]
+	if recvValue == nil then
+		return
+	end
+	
+	local unitRecvValue = WorldMap.m_nMapUnitList[m_unit_index];
+	if unitRecvValue == nil then
+		return
+	end
+	if unitRecvValue.m_type ~= MAPUNIT_TYPE_TOWN then
+		return
+	end
+	
+	if m_nation == GetPlayer().m_nation then
+		MapBattleDlgShow( unitRecvValue, ARMY_ACTION_NATION_DEFENSE, recvValue.m_group_index );
+	else
+		MapBattleDlgShow( unitRecvValue, ARMY_ACTION_NATION_ATTACK, recvValue.m_group_index );
+	end
+	MapBattleDlgID( recvValue.m_group_id )
+	MapNationFightDlgClose()
 end

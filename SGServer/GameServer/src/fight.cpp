@@ -505,6 +505,35 @@ int fight_start_armygroup( int group_index )
 	// 防御方为城镇
 	else if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
 	{
+		// 协防部队
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			int army_index = g_armygroup[group_index].defense_armyindex[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				continue;
+			for ( int tmpi = 0; tmpi < 4; tmpi++ )
+			{
+				short herokind = g_army[army_index].herokind[tmpi];
+				if ( herokind <= 0 )
+					continue;
+				City *pCity = army_getcityptr( army_index );
+				if ( !pCity )
+					continue;
+				int hero_index = city_hero_getindex( pCity->index, herokind );
+				if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+					continue;
+				Hero *pHero = &pCity->hero[hero_index];
+				HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+				if ( !config )
+					continue;
+				fight_add_hero( FIGHT_DEFENSE, army_index, FIGHT_UNITTYPE_HERO, pCity->index, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+
+			}
+		}
+
+		// 守军
+
 		g_fight.type = FIGHTTYPE_NATION;
 	}
 

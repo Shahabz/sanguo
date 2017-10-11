@@ -299,10 +299,15 @@ void army_arrived( int army_index )
 		{ // 目标是城镇
 			int invalid = 0;
 			int townid = pUnit->index;
-			if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK || g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
+			if ( g_army[army_index].action == ARMY_ACTION_NATION_ATTACK || g_army[army_index].action == ARMY_ACTION_NATION_DEFENSE )
 			{
 				// 集结完
 				army_setstate( army_index, ARMY_STATE_GROUP_END );
+			}
+			else
+			{ // 无行为
+				//army_mail_invalid( army_index );
+				army_setstate( army_index, ARMY_STATE_REBACK );
 			}
 		}
 		else if ( pUnit->type == MAPUNIT_TYPE_ENEMY )
@@ -715,6 +720,11 @@ int actor_army_callback( int actor_index, int army_index, int itemkind )
 		{
 			armygroup_delarmy( army_index );
 		}
+		else if ( g_army[army_index].action == ARMY_ACTION_NATION_ATTACK || g_army[army_index].action == ARMY_ACTION_NATION_DEFENSE )
+		{
+			armygroup_delarmy( army_index );
+		}
+
 		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
 		{ // 检查集结是否达到解散条件
 			armygroup_dismiss( army_index );
