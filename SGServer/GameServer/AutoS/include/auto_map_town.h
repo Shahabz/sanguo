@@ -17,8 +17,9 @@ struct _map_town {
 				int monster[16];	//守卫
 				int soldier[16];	//守卫血量存档
 				char soldier_update;	//守卫血量存档更新
+				short pre_townid[8];	//上一级townid列表
 				int ask_city_index[128];	//竞选者城池索引
-				int underfire_groupindex[3];	//集结索引
+				int underfire_groupindex[4];	//集结索引
 				int own_city_index;	//城主索引
 				int unit_index;	//显示索引
 };

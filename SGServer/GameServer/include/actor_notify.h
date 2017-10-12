@@ -34,4 +34,7 @@ int npc_talk( int actor_index, int textid );
 
 // 弹出确定消息
 int actor_notify_alert( int actor_index, int textid );
+
+// 弹出确定消息带参数
+int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 );
 #endif

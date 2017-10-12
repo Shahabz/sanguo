@@ -1446,6 +1446,7 @@ function struct_NetS_MapTownInfo_recv( buffer )
 	recvValue.m_own_sec = buffer:ReadInt();
 	recvValue.m_hp = buffer:ReadInt();
 	recvValue.m_maxhp = buffer:ReadInt();
+	recvValue.m_myask = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1501,6 +1502,27 @@ function struct_NetS_RollMsg_recv( buffer )
 	local recvValue = {};
 	recvValue.m_msglen = buffer:ReadShort();
 	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	return recvValue;
+end
+
+function struct_NetS_TownOwnerAsk_recv( buffer )
+	local recvValue = {};
+	recvValue.m_name_len = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_len );
+	recvValue.m_place = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_TownOwnerAskList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_TownOwnerAsk_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_sec = buffer:ReadInt();
 	return recvValue;
 end
 

@@ -18,18 +18,24 @@ local m_uiCloseButton = nil; --UnityEngine.GameObject
 local m_uiLevyButton = nil; --UnityEngine.GameObject
 local m_uiRebuildButton = nil; --UnityEngine.GameObject
 local m_uiFightButton = nil; --UnityEngine.GameObject
+local m_uiLeaveButton = nil; --UnityEngine.GameObject
+local m_uiRepairButton = nil; --UnityEngine.GameObject
+local m_uiProduceTimer = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_path = 0;
 local m_LastRecvValue = nil;
 local m_awardCache = {};
+local m_towninfo = nil;
 
 local m_posx = 0;
 local m_posy = 0;
 local m_nation = 0;
 local m_townid = 0;
+local m_produce_num = 0;
 local m_produce_maxnum = 0;
 local m_produce_maxsec = 0;
+local m_own_maxsec = 0;
 
 
 -- 打开界面
@@ -73,7 +79,21 @@ function MapTownDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 国战
 		elseif nControlID == 3 then
 			MapTownDlgNationFight()
+			
+		-- 撤离
+		elseif nControlID == 4 then
+			MapTownDlgLeave()
+			
+		-- 补充兵力
+		elseif nControlID == 5 then
+			MapTownDlgRepair()
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			MapTownDlgClose()
+		elseif nControlID == 2 then
+			system_askinfo( ASKINFO_WORLDMAP, "", 11, m_townid );
+		end
 	end
 end
 
@@ -99,7 +119,10 @@ function MapTownDlgOnAwake( gameObject )
 	m_uiLevyButton = objs[15];
 	m_uiRebuildButton = objs[16];
 	m_uiFightButton = objs[17];
-	
+	m_uiLeaveButton = objs[18];
+	m_uiRepairButton = objs[19];
+	m_uiProduceTimer = objs[20];
+
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Award", 5, 5, m_uiUIP_Award);
@@ -144,6 +167,9 @@ function MapTownDlgShow( path, recvValue )
 	SetFalse( m_uiLevyButton )
 	SetFalse( m_uiRebuildButton )
 	SetFalse( m_uiFightButton )
+	SetFalse( m_uiLeaveButton )
+	SetFalse( m_uiRepairButton )
+	SetFalse( m_uiProduceTimer )
 	
 	m_path = path;
 	m_LastRecvValue = recvValue;
@@ -153,14 +179,14 @@ function MapTownDlgShow( path, recvValue )
 	local custom_namelen= recvValue.m_namelen;
 	m_nation 			= recvValue.m_char_value[1];
 	m_townid 			= recvValue.m_short_value[1];
-	local produce_num	= recvValue.m_short_value[2];
+	m_produce_num	= recvValue.m_short_value[2];
 	local protect_sec	= recvValue.m_int_value[1];
 	local produce_sec	= recvValue.m_int_value[2];
 	local type 			= g_towninfo[m_townid].type
 	local level 		= g_towninfo[m_townid].level
 	m_produce_maxnum= g_towninfo[m_townid].produce_maxnum
 	m_produce_maxsec= g_towninfo[m_townid].produce_maxsec
-	
+	m_own_maxsec = g_towninfo[m_townid].own_maxsec
 	-- 获取奖励
 	if m_awardCache[m_townid] == nil then
 		system_askinfo( ASKINFO_WORLDMAP, "", 10, m_townid );
@@ -176,11 +202,13 @@ function MapTownDlgShow( path, recvValue )
 		SetText( m_uiTitle, T(1274) )
 		SetText( m_uiAwardWarn, T(1277) )
 		SetText( m_uiWarn, F(1278, 21, math.floor(g_towninfo[m_townid].own_maxsec/86400) ) )
+		SetTrue( m_uiOwn )
 	-- 点击图纸
 	elseif m_path == 1 then	
 		SetText( m_uiTitle, T(1275) )
 		SetText( m_uiAwardWarn, T(1276) )
 		SetText( m_uiWarn, T(1283) )
+		SetFalse( m_uiOwn )
 	end
 	
 	-- 形象
@@ -233,9 +261,9 @@ function MapTownDlgRecvAward( recvValue )
 end
 
 -- 获取详细信息
--- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0
+-- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,m_myask=0
 function MapTownDlgRecvValue( recvValue )
-	
+	m_towninfo = recvValue;
 	-- 城池详情
 	if m_path == 0 then
 		
@@ -251,10 +279,18 @@ function MapTownDlgRecvValue( recvValue )
 					SetText( m_uiOwn, T(1211)..recvValue.m_own_name );
 					
 					SetTrue( m_uiOwnSec );
-					SetTimer( m_uiOwnSec, (m_produce_maxsec-recvValue.m_own_sec), m_produce_maxsec, 1, T(1280) );
-					
+					SetTimer( m_uiOwnSec, recvValue.m_own_sec, m_own_maxsec, 1, T(1280) );
+
 					SetTrue( m_uiSoldiers );
 					SetText( m_uiSoldiers, F(1281, recvValue.m_hp, recvValue.m_maxhp) );
+					if recvValue.m_hp < recvValue.m_maxhp then
+						SetTrue( m_uiRepairButton )
+					else
+						SetTrue( m_uiLeaveButton );
+						SetFalse( m_uiRepairButton )
+					end
+					
+					SetFalse( m_uiWarn )
 				end
 			end
 			
@@ -270,24 +306,83 @@ function MapTownDlgRecvValue( recvValue )
 	
 	-- 征收	
 	elseif m_path == 1 then
+		SetTrue( m_uiProduceTimer ) 
+		SetFalse( m_uiOwn )
+		if m_produce_num > 0 then
+			-- 生产完成
+			SetTimer( m_uiProduceTimer,0,0 );
+			SetTimerText( m_uiProduceTimer, T(1273) )
+			SetTrue( m_uiLevyButton )
+		else
+			-- 生产中
+			SetTimer( m_uiProduceTimer, recvValue.m_produce_sec, m_produce_maxsec, 2, T(1282) );
+		end
 		
+		-- 征收消耗
+		SetTrue( m_uiLevyCost );
+		if GetPlayer().m_prestige >= g_towninfo[m_townid].levy_prestige then
+			SetText( m_uiLevyCost, F( 1285, T(152).."<color=#03de27>"..knum(g_towninfo[m_townid].levy_prestige).."</color><color=#03de27>/"..knum(GetPlayer().m_prestige).."</color>" ) )
+		else
+			SetText( m_uiLevyCost, F( 1285, T(152).."<color=#03de27>"..knum(g_towninfo[m_townid].levy_prestige).."</color><color=#e80017>/"..knum(GetPlayer().m_prestige).."</color>" ) )
+		end
 		
-		
+		SetTrue( m_uiCloseButton );
 	end	
 end
 
 -- 征收
 function MapTownDlgLevy()
+	local levy_prestige = g_towninfo[m_townid].levy_prestige;
+	-- 强征令双倍
+	if GetItem():GetCount( g_towninfo[m_townid].levy_item ) > 0 then
+		levy_prestige = levy_prestige * 2;
+	end
+	MsgBox( F( 1286, T(152).."<color=#03de27>"..knum(levy_prestige).."</color>", item_getname(g_towninfo[m_townid].levy_item) ), function()
+		if GetPlayer().m_prestige < levy_prestige then
+			pop( T(1318) )
+			return
+		end
+		system_askinfo( ASKINFO_MAPTOWN, "", 4, m_townid )
+	end )
 	
 end
 
 -- 重建
 function MapTownDlgRebuild()
-	
+	TownRebuildDlgShow( m_townid, m_towninfo )
 end
 
 -- 国战
 function MapTownDlgNationFight()
 	MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
 	MapTownDlgClose()
+end
+
+-- 撤离
+function MapTownDlgLeave()
+	MsgBox( T(1315), function() 
+		system_askinfo( ASKINFO_MAPTOWN, "", 2, m_townid )
+		MapTownDlgClose()
+	end )
+end
+
+-- 补兵
+function MapTownDlgRepair()
+	local repairhp = math.min( m_towninfo.m_maxhp-m_towninfo.m_hp, math.floor(m_towninfo.m_maxhp/20) )
+	local cost_silver = math.ceil( repairhp/m_towninfo.m_maxhp * g_towninfo[m_townid].ask_silver );
+	local cost_wood = math.ceil( repairhp/m_towninfo.m_maxhp * g_towninfo[m_townid].ask_wood );
+	MsgBox( F(1316, MapTownName(m_townid), T(121)..knum(cost_silver).." "..T(122)..knum(cost_wood) ), function() 
+		
+		if GetPlayer().m_silver < cost_silver then
+			JumpRes(1)
+			return
+		end
+
+		if GetPlayer().m_wood < cost_wood then
+			JumpRes(2)
+			return
+		end
+		
+		system_askinfo( ASKINFO_MAPTOWN, "", 3, m_townid )
+	end )
 end

@@ -539,6 +539,11 @@ function MapUnit.createTown( recvValue )
 	local uiShape = objs[0];
 	local uiName = objs[1];
 	local uiRange = objs[2];
+	local uiTownProduceMod = objs[3];
+	local uiTimerText = objs[4];
+	local uiTimerOver = objs[5];
+	local uiMatBtn = objs[6];
+	local uiItemShape = objs[7];
 	
 	-- 形象
 	local shapeSprite = ""
@@ -559,24 +564,35 @@ function MapUnit.createTown( recvValue )
 	
 	-- 非群雄状态显示
 	if nation > 0 then
-		-- 材料图标
-		if produce_num > 0 then
-			
-		else
-			
-		end
+		SetTrue( uiTownProduceMod )
 	
-		-- 生产倒计时
-		if produce_sec > 0 then
-			
+		if produce_num > 0 then
+			SetFalse( uiTimerText )
+			SetTrue( uiTimerOver )
+			SetText( uiTimerOver, T(1287) )
 		else
-			
+			-- 生产倒计时
+			if produce_sec > 0 then
+				SetTrue( uiTimerText )
+				SetFalse( uiTimerOver )
+				SetTimer( uiTimerText, produce_sec, produce_maxsec );
+			else
+				SetFalse( uiTimerText )
+				SetTrue( uiTimerOver )
+				SetText( uiTimerOver, T(1287) )
+			end
 		end
 		
 		-- 保护状态
 		if protect_sec > 0 then
 		else
 		end
+		
+		local ShareData = uiTownProduceMod.transform:GetComponent("ShareData");
+		ShareData.intValue[0] = recvValue.m_unit_index;
+	
+	else
+		SetFalse( uiTownProduceMod )
 	end
 	
 	

@@ -1199,7 +1199,7 @@ function proc_cityarmygrouplist_C( recvValue )
 	end
 end
 
--- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,
+-- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,,m_myask=0
 function proc_maptowninfo_C( recvValue )
 	-- process.
 	MapTownDlgRecvValue( recvValue )
@@ -1286,7 +1286,7 @@ function proc_systalkjson_C( recvValue )
 		msg = F( msgjson["text"], v1_str )
 		
 	else
-		msg = msgjson["text"]
+		msg = T( msgjson["text"] )
 	end
 			
 	local info = {}
@@ -1349,7 +1349,7 @@ function proc_rollmsgjson_C( recvValue )
 		msg = F( msgjson["text"], v1_str )
 		
 	else
-		msg = msgjson["text"]
+		msg = T( msgjson["text"] )
 	end
 	RollingMsgDlgShowMsg( msg );
 end
@@ -1358,5 +1358,11 @@ end
 function proc_rollmsg_C( recvValue )
 	-- process.
 	RollingMsgDlgShowMsg( recvValue.m_msg );
+end
+
+-- m_count=0,m_list={m_name_len=0,m_name="[m_name_len]",m_place=0,[m_count]},m_sec=0,
+function proc_townowneraskList_C( recvValue )
+	-- process.
+	TownRebuildDlgAskList( recvValue )
 end
 

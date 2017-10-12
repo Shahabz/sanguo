@@ -26,9 +26,11 @@
 typedef struct _fightunit
 {
 	short	offset;
-	int		army_index;			// 所属部队索引
+
+	char	unit_type;			// 这个战斗单元属于类型 MAPUNIT_TYPE_CITY or MAPUNIT_TYPE_ARMY or MAPUNIT_TYPE_TOWN or MAPUNIT_TYPE_ENEMY ......
+	int		unit_index;			// 这个战斗单元索引 city_index, army_index, townid, enemyid ......
+
 	char	type;				// 1玩家英雄，2城墙守卫，3monster
-	int		city_index;			// 类型索引
 	int		index;				// (type=1 kind=英雄索引) (type=2 kind=守卫索引)
 	int		kind;				// (type=1 kind=英雄kind) (type=2 kind=守卫kind) (type=3 kind=monsterid)
 
@@ -52,6 +54,7 @@ typedef struct _fightunit
 	int		line_hp;			// 当前排剩余兵力
 	int		damage;				// 总伤害
 	int		prestige;			// 威望
+	int		town_damage;		// 对据点守军造成的伤害
 }FightUnit;
 
 // 战斗结构
@@ -85,11 +88,13 @@ typedef struct _fight
 	int attack_total_damage;
 	int defense_total_damage;
 
+	int town_total_maxhp;	// 如果防御方要是据点，据点的总兵力
+
 	char unit_json[8192];	// 单元json字符串
 }Fight;
 
 // 向战场里添加一个英雄
-int fight_add_hero( int pos, int army_index, char type, int city_index, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
+int fight_add_hero( int pos, char unit_type, int unit_index, char type, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
 
 // 战斗启动
 int fight_start( int attack_armyindex, char defense_type, int defense_index );

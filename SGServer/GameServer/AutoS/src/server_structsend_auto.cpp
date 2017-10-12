@@ -1627,6 +1627,7 @@ int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_own_sec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myask, (*psize) );
 	return 0;
 }
 
@@ -1693,6 +1694,30 @@ int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
 	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownOwnerAsk_send( char **pptr, int *psize, SLK_NetS_TownOwnerAsk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_len, (*psize) );
+	if( pValue->m_name_len > 0 && pValue->m_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_len*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownOwnerAskList_send( char **pptr, int *psize, SLK_NetS_TownOwnerAskList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_TownOwnerAsk_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
 	return 0;
 }
 

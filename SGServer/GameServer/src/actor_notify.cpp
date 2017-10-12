@@ -68,3 +68,24 @@ int actor_notify_alert( int actor_index, int textid )
 	actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, NULL );
 	return 0;
 }
+
+// 弹出确定消息带参数
+int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 )
+{
+	char content[128] = { 0 };
+	if ( v1 && v2 )
+	{
+		sprintf( content, "{\"v1\":\"%s\",\"v2\":\"%s\"}", v1, v2 );
+		actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, content );
+	}
+	else if ( v1 )
+	{
+		sprintf( content, "{\"v1\":\"%s\"}", v1 );
+		actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, content );
+	}
+	else
+	{
+		actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, NULL );
+	}
+	return 0;
+}

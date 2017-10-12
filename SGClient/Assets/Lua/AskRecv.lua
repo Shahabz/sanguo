@@ -112,6 +112,25 @@ function RecvActorNotify(recvValue)
 		
 	-- 消息确定框
 	elseif msgid == NOTIFY_ALERT then
-		AlertMsg( T(value[1]) )
+		if recvValue.m_msg_length > 1 then
+			local json = require "cjson"
+			local msgjson = json.decode( recvValue.m_msg );
+			local msg = "";
+			if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				local v2_str = GetMail():GetString( msgjson["v2"] );
+				msg = F( value[1], v1_str, v2_str )
+			
+			elseif msgjson["v1"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				msg = F( value[1], v1_str )
+				
+			else
+				msg = T(value[1])
+			end
+			AlertMsg( msg )
+		else
+			AlertMsg( T(value[1]) )
+		end
     end
 end

@@ -368,6 +368,11 @@ function EnemyName( id )
 	return Localization.text_item(8000+id);
 end
 
+-- 职位名称
+function PlaceName( place )
+	Localization.text( 200+place );
+end
+
 -- 名称颜色
 function NameColor( color )
 	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff }
@@ -466,6 +471,16 @@ function SetTimer( transform, sec, needsec, controlID, formatText )
 	if formatText ~= nil then
 		timer.formatText = formatText;
 	end
+end
+
+function SetTimerOver( transform, text )
+	local timer = transform:GetComponent( typeof(UITextTimeCountdown) )
+	timer.overText = text;
+end
+
+function SetTimerText( transform, text )
+	local timer = transform:GetComponent( typeof(UITextTimeCountdown) )
+	timer.text = text;
 end
 
 function SetProgress( transform, value )

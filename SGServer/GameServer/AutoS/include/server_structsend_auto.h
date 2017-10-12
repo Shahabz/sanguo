@@ -1119,6 +1119,7 @@ struct _slk_NetS_MapTownInfo {
 	int m_own_sec;	//城镇详情
 	int m_hp;	//城镇详情
 	int m_maxhp;	//城镇详情
+	char m_myask;	//城镇详情
 };
 typedef struct _slk_NetS_MapTownInfo SLK_NetS_MapTownInfo;	//城镇详情
 
@@ -1166,6 +1167,20 @@ struct _slk_NetS_RollMsg {
 	char m_msg[1024];	//滚动消息
 };
 typedef struct _slk_NetS_RollMsg SLK_NetS_RollMsg;	//滚动消息
+
+struct _slk_NetS_TownOwnerAsk {
+	char m_name_len;	//城主申请玩家
+	char m_name[32];	//城主申请玩家
+	char m_place;	//城主申请玩家
+};
+typedef struct _slk_NetS_TownOwnerAsk SLK_NetS_TownOwnerAsk;	//城主申请信息
+
+struct _slk_NetS_TownOwnerAskList {
+	char m_count;	//城主申请列表
+	SLK_NetS_TownOwnerAsk m_list[5];	//城主申请列表
+	int m_sec;	//城主申请列表
+};
+typedef struct _slk_NetS_TownOwnerAskList SLK_NetS_TownOwnerAskList;	//城主申请列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1293,5 +1308,7 @@ int struct_NetS_TownArmyGroupList_send( char **pptr, int *psize, SLK_NetS_TownAr
 int struct_NetS_SystalkJson_send( char **pptr, int *psize, SLK_NetS_SystalkJson *pValue );
 int struct_NetS_RollMsgJson_send( char **pptr, int *psize, SLK_NetS_RollMsgJson *pValue );
 int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue );
+int struct_NetS_TownOwnerAsk_send( char **pptr, int *psize, SLK_NetS_TownOwnerAsk *pValue );
+int struct_NetS_TownOwnerAskList_send( char **pptr, int *psize, SLK_NetS_TownOwnerAskList *pValue );
 
 #endif

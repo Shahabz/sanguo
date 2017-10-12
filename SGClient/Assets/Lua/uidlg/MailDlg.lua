@@ -308,13 +308,13 @@ function MailDlgSetMail( recvValue )
 	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
 		local from_actorid = recvValue.m_content_json["fromid"];
 		local msg = recvValue.m_content_json["msg"];
-		SetText( uiContent, msg )
+		SetRichText( uiContent, msg )
 	
 	-- 采集
 	elseif recvValue.m_type == MAIL_TYPE_GATHER then
 		local restype = recvValue.m_content_json["res"];
 		local resnum = recvValue.m_content_json["num"];
-		SetText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
+		SetRichText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
 	
 	-- 采集战斗
 	elseif recvValue.m_type == MAIL_TYPE_GATHER_FIGHT then
@@ -322,9 +322,9 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local tname = recvValue.m_content_json["tna"];
 		if win == 1 then
-			SetText( uiContent, F(1110, name, tname ) )
+			SetRichText( uiContent, F(1110, name, tname ) )
 		else
-			SetText( uiContent, F(1111, name, tname ) )
+			SetRichText( uiContent, F(1111, name, tname ) )
 		end
 		
 	-- 侦察
@@ -334,7 +334,7 @@ function MailDlgSetMail( recvValue )
 		local level = recvValue.m_content_json["lv"];
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
-		SetText( uiContent, F( 5511, Nation(nation), level, name, pos ) );
+		SetRichText( uiContent, F( 5511, Nation(nation), level, name, pos ) );
 	
 	-- 被侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_BESPY then
@@ -343,7 +343,7 @@ function MailDlgSetMail( recvValue )
 		local level = recvValue.m_content_json["lv"];
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
-		SetText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
+		SetRichText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
 	
 	-- 城战
 	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
@@ -351,14 +351,22 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local tname = recvValue.m_content_json["tna"];
 		if win == 1 then
-			SetText( uiContent, F(1110, name, tname ) )
+			SetRichText( uiContent, F(1110, name, tname ) )
 		else
-			SetText( uiContent, F(1111, name, tname ) )
+			SetRichText( uiContent, F(1111, name, tname ) )
 		end
 		
 	-- 国战
 	elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATION then
-		
+		local win = recvValue.m_content_json["win"];
+		local name = recvValue.m_content_json["na"];
+		local townid = recvValue.m_content_json["townid"];
+		local tn = recvValue.m_content_json["tn"];
+		if win == 1 then
+			SetRichText( uiContent, F(1110, name, "["..Nation(tn).."]"..MapTownName(townid) ) )
+		else
+			SetRichText( uiContent, F(1111, name, "["..Nation(tn).."]"..MapTownName(townid) ) )
+		end
 	else
 		-- 解析内容
 		local contentid = 0;
@@ -373,27 +381,27 @@ function MailDlgSetMail( recvValue )
 				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
 				local v2_str = GetMail():GetString( recvValue.m_content_json["v2"] );
 				local v3_str = GetMail():GetString( recvValue.m_content_json["v3"] );
-				SetText( uiContent, F(contentid, v1_str, v2_str, v3_str) )
+				SetRichText( uiContent, F(contentid, v1_str, v2_str, v3_str) )
 				
 			elseif recvValue.m_content_json["v1"] ~= nil and recvValue.m_content_json["v2"] ~= nil then
 				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
 				local v2_str = GetMail():GetString( recvValue.m_content_json["v2"] );
-				SetText( uiContent, F(contentid, v1_str, v2_str) )
+				SetRichText( uiContent, F(contentid, v1_str, v2_str) )
 				
 			elseif recvValue.m_content_json["v1"] ~= nil then
 				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
-				SetText( uiContent, F(contentid, v1_str) )
+				SetRichText( uiContent, F(contentid, v1_str) )
 			else
-				SetText( uiContent, T(contentid) )
+				SetRichText( uiContent, T(contentid) )
 			end
 			
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
-			SetText( uiContent, T(contentid) )
+			SetRichText( uiContent, T(contentid) )
 			
 		-- 每日登录
 		elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
-			SetText( uiContent, T(contentid) )
+			SetRichText( uiContent, T(contentid) )
 			
 		-- 流寇
 		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
@@ -404,9 +412,9 @@ function MailDlgSetMail( recvValue )
 			local tpos = recvValue.m_content_json["tpos"];
 			local enemyname = "Lv."..level.." "..T(938);
 			if win == 1 then
-				SetText( uiContent, F(1110, name, enemyname ) )
+				SetRichText( uiContent, F(1110, name, enemyname ) )
 			else
-				SetText( uiContent, F(1111, name, enemyname ) )
+				SetRichText( uiContent, F(1111, name, enemyname ) )
 			end
 		
 		end

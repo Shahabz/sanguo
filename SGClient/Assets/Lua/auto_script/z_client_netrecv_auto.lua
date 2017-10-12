@@ -570,6 +570,11 @@ function netrecv_rollmsg_C( buffer )
 	proc_rollmsg_C( recvValue );
 end
 
+function netrecv_townowneraskList_C( buffer )
+	local recvValue = struct_NetS_TownOwnerAskList_recv( buffer );
+	proc_townowneraskList_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -685,6 +690,7 @@ Proc_Command = {
 	[CMDS_SYSTALKJSON]=netrecv_systalkjson_C;
 	[CMDS_ROLLMSGJSON]=netrecv_rollmsgjson_C;
 	[CMDS_ROLLMSG]=netrecv_rollmsg_C;
+	[CMDS_TOWNOWNERASKLIST]=netrecv_townowneraskList_C;
 }
 
 function in_proc_command_C( cmd, buffer )

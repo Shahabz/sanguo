@@ -95,6 +95,7 @@ typedef struct _global
 	float cityfight_rob_v2;
 	float cityfight_rob_v3;
 	float cityfight_rob_v4;
+	int town_owner_award;
 }Global;
 int global_init();
 void global_reload();

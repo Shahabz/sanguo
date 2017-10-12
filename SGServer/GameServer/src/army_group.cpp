@@ -598,6 +598,20 @@ int armygroup_to_totals( int group_index )
 			}
 		}
 	}
+	else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
+	{ // 防御方为城镇
+		MapTown *pTown = map_town_getptr( g_armygroup[group_index].to_id );
+		if ( pTown )
+		{
+			for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
+			{
+				int monsterid = pTown->monster[tmpi];
+				if ( monsterid <= 0 )
+					continue;
+				total += pTown->soldier[tmpi];
+			}
+		}
+	}
 	// 协防部队
 	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 	{
@@ -778,6 +792,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 
 	char attackName[64] = { 0 };
 	char attackNation = 0;
+	short posx = 0, posy = 0;
 
 	int rob_silver = 0;
 	int rob_wood = 0;
@@ -796,12 +811,14 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			return -1;
 		strncpy( attackName, pCity->name, NAME_SIZE );
 		attackNation = pCity->nation;
+		posx = pCity->posx;
+		posy = pCity->posy;
 		if ( pFight->result == FIGHT_WIN )
 		{
 			// 进攻成功邮件
 			sprintf( title, "%s%d", TAG_TEXTID, 5027 );// 国战进攻胜利
-			sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
-				attackName, attackNation, pTown->townid, pTown->nation, rob_silver, rob_wood, rob_food );
+			sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
+				attackName, attackNation, posx, posy, pTown->townid, pTown->nation, rob_silver, rob_wood, rob_food );
 
 			// 集结所有人发送邮件
 			armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
@@ -814,6 +831,8 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			return -1;
 		sprintf( attackName, "%s%d", TAG_TOWNID, g_armygroup[group_index].from_id );
 		attackNation = pTown->nation;
+		posx = g_towninfo[townid].posx;
+		posy = g_towninfo[townid].posy;
 		if ( pFight->result == FIGHT_WIN )
 		{
 
@@ -827,8 +846,8 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 	{
 		// 防守失败邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5030 );// 国战防守失败
-		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
-			attackName, attackNation, pTown->townid, pTown->nation, rob_silver, rob_wood, rob_food );
+		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
+			attackName, attackNation, posx, posy, pTown->townid, pTown->nation, rob_silver, rob_wood, rob_food );
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
@@ -837,16 +856,16 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 	{
 		// 进攻失败邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5028 ); // 国战进攻失败
-		sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"townid\":%d,\"tn\":%d}",
-			attackName, attackNation, pTown->townid, pTown->nation );
+		sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d}",
+			attackName, attackNation, posx, posy, pTown->townid, pTown->nation );
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
 
 		// 防守成功邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5029 );// 国战防守胜利
-		sprintf( content, "{\"my\":2,\"win\":1,\"na\":\"%s\",\"n\":%d,\"townid\":%d,\"tn\":%d}",
-			attackName, attackNation, pTown->townid, pTown->nation );
+		sprintf( content, "{\"my\":2,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d}",
+			attackName, attackNation, posx, posy, pTown->townid, pTown->nation );
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
@@ -872,7 +891,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		int joincount = 0;
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
-			int army_index = g_armygroup[group_index].defense_armyindex[tmpi];
+			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
 			if ( army_index < 0 )
 				continue;
 			City *pTmp = army_getcityptr( army_index );
@@ -881,6 +900,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			pTown->join_actorid[joincount++] = pTmp->actorid;
 		}
 
+		map_town_monster_reset( townid );
 		//int monster[16];	//守卫
 		//int soldier[16];	//守卫血量存档
 		//int underfire_groupindex[3];	//集结索引

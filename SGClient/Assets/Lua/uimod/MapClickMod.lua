@@ -130,6 +130,11 @@ function MapClickModOnDisable( gameObject )
 	SetFalse( m_uiEmptyInfo )
 	SetFalse( m_uiCityInfo )
 	SetFalse( m_uiTownInfo )
+	if m_LastRecvValue ~= nil then
+		if m_LastRecvValue.m_type == MAPUNIT_TYPE_TOWN then
+			MapClickModCloseTown( m_LastRecvValue )
+		end
+	end
 end
 
 -- 界面删除时调用
@@ -250,6 +255,28 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 		SetTrue( m_uiNationFightBtn )
 		local buttonList = { m_uiNationInfoBtn, m_uiNationFightBtn };
 		MapClickModButton( buttonList );
+	end
+	
+	-- 隐藏生产信息
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	if unitObj ~= nil then
+		local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiTownProduceMod = objs[3];
+		SetFalse( uiTownProduceMod )
+	end
+end
+
+-- 城镇显示的操作界面关闭后调用
+function MapClickModCloseTown( recvValue )
+	local nation 		= recvValue.m_char_value[1];
+	if nation > 0 then
+		-- 显示生产信息
+		local unitObj = MapUnit.cache[recvValue.m_unit_index];
+		if unitObj ~= nil then
+			local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiTownProduceMod = objs[3];
+			SetTrue( uiTownProduceMod )
+		end
 	end
 end
 

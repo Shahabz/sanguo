@@ -434,6 +434,28 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			armygroup_nation_askcreate( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_MAPTOWN:
+		if ( pvalue[0] == 0 )
+		{ // 申请城主
+			map_town_ask_owner( actor_index, pvalue[1] );
+		}
+		else if( pvalue[0] == 1 )
+		{ // 申请列表
+			map_town_ask_owner_sendlist( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 放弃城主
+			map_town_owner_leave( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 补兵
+			map_town_soldiers_repair( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 征收
+			map_town_levy( actor_index, pvalue[1] );
+		}
+		break;
 	default:
 		break;
 	}

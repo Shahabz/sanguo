@@ -18,6 +18,7 @@ struct _maptowninfo {
 				int produce_maxnum;	//
 				int produce_maxsec;	//
 				int levy_prestige;	//
+				short levy_item;	//
 				int protect_maxsec;	//
 				int fight_maxsec;	//
 				int own_maxsec;	//

@@ -318,6 +318,10 @@ int global_init()
 		{
 			global.cityfight_rob_v4 = value;
 		}
+		else if ( id == 109 )
+		{
+			global.town_owner_award = atoi( row[1] );
+		}
 		
 	}
 	lua_setglobal( servL, "global" );

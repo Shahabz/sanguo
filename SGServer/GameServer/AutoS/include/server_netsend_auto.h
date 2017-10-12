@@ -116,6 +116,7 @@ int netsend_townarmygrouplist_S( int actor_index, char send_type, SLK_NetS_TownA
 int netsend_systalkjson_S( int actor_index, char send_type, SLK_NetS_SystalkJson *pValue );
 int netsend_rollmsgjson_S( int actor_index, char send_type, SLK_NetS_RollMsgJson *pValue );
 int netsend_rollmsg_S( int actor_index, char send_type, SLK_NetS_RollMsg *pValue );
+int netsend_townowneraskList_S( int actor_index, char send_type, SLK_NetS_TownOwnerAskList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

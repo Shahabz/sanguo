@@ -48,6 +48,8 @@ function MapNationFightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= UIADD_EVENT_BASE then
 			MapNationFightDlgJoin( nControlID-UIADD_EVENT_BASE )
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		MapNationFightDlgClose()
 	end
 end
 
