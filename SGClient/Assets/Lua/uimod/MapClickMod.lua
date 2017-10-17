@@ -13,6 +13,7 @@ local m_uiNationInfoBtn = nil; --UnityEngine.GameObject
 local m_uiNationFightBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
+local m_towntype = 0;
 
 -- 移动距离
 local uiButtonOffset = 85;
@@ -53,7 +54,11 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 城镇信息
 		elseif nControlID == 11 then
-			MapTownDlgShow( 0, m_LastRecvValue )
+			if m_towntype == MAPUNIT_TYPE_TOWN_TYPE8 then
+				MapTownExDlgShow( m_LastRecvValue )
+			else
+				MapTownDlgShow( 0, m_LastRecvValue )
+			end
 		
 		-- 国战
 		elseif nControlID == 12 then
@@ -227,6 +232,7 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	local custom_name	= recvValue.m_name;
 	local custom_namelen= recvValue.m_namelen;
 	local nation 		= recvValue.m_char_value[1];
+	local dev_level 	= recvValue.m_char_value[2];
 	local townid 		= recvValue.m_short_value[1];
 	local produce_num	= recvValue.m_short_value[2];
 	local protect_sec	= recvValue.m_int_value[1];
@@ -236,14 +242,19 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	local level 		= g_towninfo[townid].level
 	local produce_maxnum= g_towninfo[townid].produce_maxnum
 	local produce_maxsec= g_towninfo[townid].produce_maxsec
+	m_towntype = type;
 	
 	SetText( m_uiTownInfo.transform:Find("Pos"), "["..posx..","..posy.."]" )
-	SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..level..MapTownName(townid) )
+	if type == MAPUNIT_TYPE_TOWN_TYPE8 then
+		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..(dev_level+1)..MapTownName(townid) )
+	else
+		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..level..MapTownName(townid) )
+	end
 	SetText( m_uiTownInfo.transform:Find("Name"), NationEx(nation) )
 	SetImage( m_uiTownInfo.transform:Find("Nation"), NationSprite(nation) )
 	
 	-- 我国占领
-	if nation == GetPlayer().m_nation then
+	if nation == GetPlayer().m_nation or type == MAPUNIT_TYPE_TOWN_TYPE8 then
 		SetTrue( m_uiNationInfoBtn )
 		SetFalse( m_uiNationFightBtn )
 		local buttonList = { m_uiNationInfoBtn };
@@ -269,7 +280,9 @@ end
 -- 城镇显示的操作界面关闭后调用
 function MapClickModCloseTown( recvValue )
 	local nation 		= recvValue.m_char_value[1];
-	if nation > 0 then
+	local townid 		= recvValue.m_short_value[1];
+	local type 			= g_towninfo[townid].type
+	if nation > 0 and type < MAPUNIT_TYPE_TOWN_TYPE8 then
 		-- 显示生产信息
 		local unitObj = MapUnit.cache[recvValue.m_unit_index];
 		if unitObj ~= nil then

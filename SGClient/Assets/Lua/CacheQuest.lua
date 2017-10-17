@@ -1,29 +1,29 @@
--- ÈÎÎñÀàĞÍ
-QUEST_DATAINDEX_ACTOR_LEVEL			=1	-- Ö÷¹«µÈ¼¶ datatype=1 datakind=0 needvalue=µÈ¼¶
-QUEST_DATAINDEX_BUILDING_LEVEL		=2	-- ½¨ÖşµÈ¼¶ datatype=2 datakind=½¨Öşkind dataoffset=×ÊÔ´½¨Öş±àºÅ needvalue=½¨ÖşµÈ¼¶
-QUEST_DATAINDEX_BUILDING_SILVER		=3	-- N¸öÃñ¾Ó´ïµ½N¼¶ datatype=3 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
-QUEST_DATAINDEX_BUILDING_WOOD		=4	-- N¸öÄ¾³¡´ïµ½N¼¶ datatype=4 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
-QUEST_DATAINDEX_BUILDING_FOOD		=5	-- N¸öÅ©Ìï´ïµ½N¼¶ datatype=5 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
-QUEST_DATAINDEX_BUILDING_IRON		=6	-- N¸ö¿ó³¡´ïµ½N¼¶ datatype=6 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
-QUEST_DATAINDEX_LEVYNUM				=7	-- Õ÷ÊÕ´ÎÊı datatype=7 datakind=0 needvalue=ÊıÁ¿
-QUEST_DATAINDEX_HISTORY				=8	-- ¸±±¾ datatype=8 datakind=¸±±¾±àºÅ needvalue=1
-QUEST_DATAINDEX_KILLMONSTER			=9	-- ´òÁ÷¿ÜN´Î datatype=9 datakind=0 needvalue=ÊıÁ¿
-QUEST_DATAINDEX_KILLMONSTER_LEVEL	=10	-- ´òÁ÷¿ÜN¼¶N´Î datatype=10 datakind=µÈ¼¶ needvalue=ÊıÁ¿
-QUEST_DATAINDEX_EQUIP_FORGING		=11	-- ´òÔìN×°±¸NÊıÁ¿ datatype=11 datakind=×°±¸kind needvalue=ÊıÁ¿
-QUEST_DATAINDEX_EQUIP_WASH			=12	-- ×°±¸Ï´Á¶´ÎÊı datatype=12 datakind=0 needvalue=ÊıÁ¿
-QUEST_DATAINDEX_EQUIP_COLORWASH		=13	-- ½«NÆ·ÖÊ×°±¸µÄÊôĞÔÏ´Á¶ÖÁÂú¼¶ datatype=13 datakind=ÑÕÉ« needvalue=1
-QUEST_DATAINDEX_TRAIN				=14	-- Ä¼±øN±øÖÖNÊıÁ¿ datatype=14 datakind=±øÖÖ£¨1£¬2£¬3£© needvalue=ÊıÁ¿
-QUEST_DATAINDEX_TRAINCOUNT			=15	-- Ä¼±øN´Î datatype=15 datakind=0 needvalue=ÊıÁ¿
-QUEST_DATAINDEX_CITY_TECH			=16	-- ÑĞ¾¿N¿Æ¼¼N¼¶ datatype=16 datakind=¿Æ¼¼ID needvalue=µÈ¼¶
-QUEST_DATAINDEX_CITY_TECHONE		=17	-- ÑĞ¾¿Ò»´ÎN¿Æ¼¼ datatype=17 datakind=¿Æ¼¼ID needvalue=1
-QUEST_DATAINDEX_HERO_WASHCOUNT		=18	-- Îä½«Ï´ËèN´Î datatype=18 datakind=0 needvalue=´ÎÊı
-QUEST_DATAINDEX_HERO_COLORWASH		=19	-- ½«Ò»ÃûNÆ·ÖÊµÄÎä½«ÊôĞÔÏ´Âú datatype=19 datakind=ÑÕÉ« needvalue=1
-QUEST_DATAINDEX_HERO_CALL			=20	-- ÕĞÄ¼NÃûÎä½« datatype=20 datakind=0 needvalue=ÊıÁ¿
-QUEST_DATAINDEX_WISHING				=21	-- ¾Û±¦ÅèN´Î datatype=21 datakind=0 needvalue=´ÎÊı
-QUEST_DATAINDEX_CITYFIGHT			=22	-- ³É¹¦»÷°ÜNÃûµĞ¹úÍæ¼Ò datatype=22 datakind=0 needvalue=´ÎÊı
-QUEST_DATAINDEX_CREATENAME			=50	-- ´´½¨Ãû³Æ
+-- ä»»åŠ¡ç±»å‹
+QUEST_DATAINDEX_ACTOR_LEVEL			=1	-- ä¸»å…¬ç­‰çº§ datatype=1 datakind=0 needvalue=ç­‰çº§
+QUEST_DATAINDEX_BUILDING_LEVEL		=2	-- å»ºç­‘ç­‰çº§ datatype=2 datakind=å»ºç­‘kind dataoffset=èµ„æºå»ºç­‘ç¼–å· needvalue=å»ºç­‘ç­‰çº§
+QUEST_DATAINDEX_BUILDING_SILVER		=3	-- Nä¸ªæ°‘å±…è¾¾åˆ°Nçº§ datatype=3 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
+QUEST_DATAINDEX_BUILDING_WOOD		=4	-- Nä¸ªæœ¨åœºè¾¾åˆ°Nçº§ datatype=4 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
+QUEST_DATAINDEX_BUILDING_FOOD		=5	-- Nä¸ªå†œç”°è¾¾åˆ°Nçº§ datatype=5 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
+QUEST_DATAINDEX_BUILDING_IRON		=6	-- Nä¸ªçŸ¿åœºè¾¾åˆ°Nçº§ datatype=6 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
+QUEST_DATAINDEX_LEVYNUM				=7	-- å¾æ”¶æ¬¡æ•° datatype=7 datakind=0 needvalue=æ•°é‡
+QUEST_DATAINDEX_HISTORY				=8	-- å‰¯æœ¬ datatype=8 datakind=å‰¯æœ¬ç¼–å· needvalue=1
+QUEST_DATAINDEX_KILLMONSTER			=9	-- æ‰“æµå¯‡Næ¬¡ datatype=9 datakind=0 needvalue=æ•°é‡
+QUEST_DATAINDEX_KILLMONSTER_LEVEL	=10	-- æ‰“æµå¯‡Nçº§Næ¬¡ datatype=10 datakind=ç­‰çº§ needvalue=æ•°é‡
+QUEST_DATAINDEX_EQUIP_FORGING		=11	-- æ‰“é€ Nè£…å¤‡Næ•°é‡ datatype=11 datakind=è£…å¤‡kind needvalue=æ•°é‡
+QUEST_DATAINDEX_EQUIP_WASH			=12	-- è£…å¤‡æ´—ç‚¼æ¬¡æ•° datatype=12 datakind=0 needvalue=æ•°é‡
+QUEST_DATAINDEX_EQUIP_COLORWASH		=13	-- å°†Nå“è´¨è£…å¤‡çš„å±æ€§æ´—ç‚¼è‡³æ»¡çº§ datatype=13 datakind=é¢œè‰² needvalue=1
+QUEST_DATAINDEX_TRAIN				=14	-- å‹Ÿå…µNå…µç§Næ•°é‡ datatype=14 datakind=å…µç§ï¼ˆ1ï¼Œ2ï¼Œ3ï¼‰ needvalue=æ•°é‡
+QUEST_DATAINDEX_TRAINCOUNT			=15	-- å‹Ÿå…µNæ¬¡ datatype=15 datakind=0 needvalue=æ•°é‡
+QUEST_DATAINDEX_CITY_TECH			=16	-- ç ”ç©¶Nç§‘æŠ€Nçº§ datatype=16 datakind=ç§‘æŠ€ID needvalue=ç­‰çº§
+QUEST_DATAINDEX_CITY_TECHONE		=17	-- ç ”ç©¶ä¸€æ¬¡Nç§‘æŠ€ datatype=17 datakind=ç§‘æŠ€ID needvalue=1
+QUEST_DATAINDEX_HERO_WASHCOUNT		=18	-- æ­¦å°†æ´—é«“Næ¬¡ datatype=18 datakind=0 needvalue=æ¬¡æ•°
+QUEST_DATAINDEX_HERO_COLORWASH		=19	-- å°†ä¸€åNå“è´¨çš„æ­¦å°†å±æ€§æ´—æ»¡ datatype=19 datakind=é¢œè‰² needvalue=1
+QUEST_DATAINDEX_HERO_CALL			=20	-- æ‹›å‹ŸNåæ­¦å°† datatype=20 datakind=0 needvalue=æ•°é‡
+QUEST_DATAINDEX_WISHING				=21	-- èšå®ç›†Næ¬¡ datatype=21 datakind=0 needvalue=æ¬¡æ•°
+QUEST_DATAINDEX_CITYFIGHT			=22	-- æˆåŠŸå‡»è´¥Nåæ•Œå›½ç©å®¶ datatype=22 datakind=0 needvalue=æ¬¡æ•°
+QUEST_DATAINDEX_CREATENAME			=50	-- åˆ›å»ºåç§°
 
--- ÈÎÎñ»º´æ
+-- ä»»åŠ¡ç¼“å­˜
 CacheQuest = {};
 function CacheQuestClear()
 	CacheQuest = {};
@@ -34,7 +34,7 @@ function CacheQuestSet( recvValue )
 	CacheQuest = recvValue;
 end
 
--- ÈÎÎñÃû³Æ
+-- ä»»åŠ¡åç§°
 function QuestName( type, recvValue )
 	local name = "";
 	if type == 0 then
@@ -48,49 +48,49 @@ function QuestName( type, recvValue )
 	local dataoffset = recvValue.m_dataoffset;
 	local value = recvValue.m_value;
 	local needvalue = recvValue.m_needvalue;
-	if datatype == QUEST_DATAINDEX_ACTOR_LEVEL then-- Ö÷¹«µÈ¼¶ datatype=1 datakind=0 needvalue=µÈ¼¶
+	if datatype == QUEST_DATAINDEX_ACTOR_LEVEL then-- ä¸»å…¬ç­‰çº§ datatype=1 datakind=0 needvalue=ç­‰çº§
 		name = name..FQUEST( 1, value );
-	elseif datatype == QUEST_DATAINDEX_BUILDING_LEVEL then-- ½¨ÖşµÈ¼¶ datatype=2 datakind=½¨Öşkind dataoffset=×ÊÔ´½¨Öş±àºÅ needvalue=½¨ÖşµÈ¼¶
+	elseif datatype == QUEST_DATAINDEX_BUILDING_LEVEL then-- å»ºç­‘ç­‰çº§ datatype=2 datakind=å»ºç­‘kind dataoffset=èµ„æºå»ºç­‘ç¼–å· needvalue=å»ºç­‘ç­‰çº§
 		name = name..FQUEST( 2, F(99, dataoffset+1, BuildingName(datakind) ), needvalue );
-	elseif datatype == QUEST_DATAINDEX_BUILDING_SILVER then-- N¸öÃñ¾Ó´ïµ½N¼¶ datatype=3 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_SILVER then-- Nä¸ªæ°‘å±…è¾¾åˆ°Nçº§ datatype=3 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		name = name..FQUEST( 3, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_BUILDING_WOOD then-- N¸öÄ¾³¡´ïµ½N¼¶ datatype=4 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_WOOD then-- Nä¸ªæœ¨åœºè¾¾åˆ°Nçº§ datatype=4 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		name = name..FQUEST( 4, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_BUILDING_FOOD then-- N¸öÅ©Ìï´ïµ½N¼¶ datatype=5 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_FOOD then-- Nä¸ªå†œç”°è¾¾åˆ°Nçº§ datatype=5 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		name = name..FQUEST( 5, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_BUILDING_IRON then-- N¸ö¿ó³¡´ïµ½N¼¶ datatype=6 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_IRON then-- Nä¸ªçŸ¿åœºè¾¾åˆ°Nçº§ datatype=6 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		name = name..FQUEST( 6, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_LEVYNUM then-- Õ÷ÊÕ´ÎÊı datatype=7 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_LEVYNUM then-- å¾æ”¶æ¬¡æ•° datatype=7 datakind=0 needvalue=æ•°é‡
 		name = name..FQUEST( 7, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_HISTORY then-- ¸±±¾ datatype=8 datakind=¸±±¾±àºÅ needvalue=1
+	elseif datatype == QUEST_DATAINDEX_HISTORY then-- å‰¯æœ¬ datatype=8 datakind=å‰¯æœ¬ç¼–å· needvalue=1
 		name = name..FQUEST( 8, datakind );
-	elseif datatype == QUEST_DATAINDEX_KILLMONSTER then-- ´òÁ÷¿ÜN´Î datatype=9 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_KILLMONSTER then-- æ‰“æµå¯‡Næ¬¡ datatype=9 datakind=0 needvalue=æ•°é‡
 		name = name..FQUEST( 9, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_KILLMONSTER_LEVEL then-- ´òÁ÷¿ÜN¼¶N´Î datatype=10 datakind=µÈ¼¶ needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_KILLMONSTER_LEVEL then-- æ‰“æµå¯‡Nçº§Næ¬¡ datatype=10 datakind=ç­‰çº§ needvalue=æ•°é‡
 		name = name..FQUEST( 10, datakind, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_EQUIP_FORGING then-- ´òÔìN×°±¸NÊıÁ¿ datatype=11 datakind=×°±¸kind needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_EQUIP_FORGING then-- æ‰“é€ Nè£…å¤‡Næ•°é‡ datatype=11 datakind=è£…å¤‡kind needvalue=æ•°é‡
 		name = name..FQUEST( 11, EquipName(datakind), value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_EQUIP_WASH then-- ×°±¸Ï´Á¶´ÎÊı datatype=12 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_EQUIP_WASH then-- è£…å¤‡æ´—ç‚¼æ¬¡æ•° datatype=12 datakind=0 needvalue=æ•°é‡
 		name = name..FQUEST( 12, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_EQUIP_COLORWASH then-- ½«NÆ·ÖÊ×°±¸µÄÊôĞÔÏ´Á¶ÖÁÂú¼¶ datatype=13 datakind=ÑÕÉ« needvalue=1
+	elseif datatype == QUEST_DATAINDEX_EQUIP_COLORWASH then-- å°†Nå“è´¨è£…å¤‡çš„å±æ€§æ´—ç‚¼è‡³æ»¡çº§ datatype=13 datakind=é¢œè‰² needvalue=1
 		name = name..FQUEST( 13, datakind );
-	elseif datatype == QUEST_DATAINDEX_TRAIN then-- Ä¼±øN±øÖÖNÊıÁ¿ datatype=14 datakind=±øÖÖ£¨1£¬2£¬3£© needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_TRAIN then-- å‹Ÿå…µNå…µç§Næ•°é‡ datatype=14 datakind=å…µç§ï¼ˆ1ï¼Œ2ï¼Œ3ï¼‰ needvalue=æ•°é‡
 		name = name..FQUEST( 14, CorpsName(datakind-1), value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_TRAINCOUNT then-- Ä¼±øN´Î datatype=15 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_TRAINCOUNT then-- å‹Ÿå…µNæ¬¡ datatype=15 datakind=0 needvalue=æ•°é‡
 		name = name..FQUEST( 15, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_CITY_TECH then-- ÑĞ¾¿N¿Æ¼¼N¼¶ datatype=16 datakind=¿Æ¼¼ID needvalue=µÈ¼¶
+	elseif datatype == QUEST_DATAINDEX_CITY_TECH then-- ç ”ç©¶Nç§‘æŠ€Nçº§ datatype=16 datakind=ç§‘æŠ€ID needvalue=ç­‰çº§
 		name = name..FQUEST( 16, TechName(datakind), value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_CITY_TECHONE	 then-- ÑĞ¾¿Ò»´ÎN¿Æ¼¼ datatype=17 datakind=¿Æ¼¼ID needvalue=1
+	elseif datatype == QUEST_DATAINDEX_CITY_TECHONE	 then-- ç ”ç©¶ä¸€æ¬¡Nç§‘æŠ€ datatype=17 datakind=ç§‘æŠ€ID needvalue=1
 		name = name..FQUEST( 17, TechName(datakind) );
-	elseif datatype == QUEST_DATAINDEX_HERO_WASHCOUNT then-- Îä½«Ï´ËèN´Î datatype=18 datakind=0 needvalue=´ÎÊı
+	elseif datatype == QUEST_DATAINDEX_HERO_WASHCOUNT then-- æ­¦å°†æ´—é«“Næ¬¡ datatype=18 datakind=0 needvalue=æ¬¡æ•°
 		name = name..FQUEST( 18, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_HERO_COLORWASH then-- ½«Ò»ÃûNÆ·ÖÊµÄÎä½«ÊôĞÔÏ´Âú datatype=19 datakind=ÑÕÉ« needvalue=1
+	elseif datatype == QUEST_DATAINDEX_HERO_COLORWASH then-- å°†ä¸€åNå“è´¨çš„æ­¦å°†å±æ€§æ´—æ»¡ datatype=19 datakind=é¢œè‰² needvalue=1
 		name = name..FQUEST( 19, datakind );
-	elseif datatype == QUEST_DATAINDEX_HERO_CALL then-- ÕĞÄ¼NÃûÎä½« datatype=20 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_HERO_CALL then-- æ‹›å‹ŸNåæ­¦å°† datatype=20 datakind=0 needvalue=æ•°é‡
 		name = name..FQUEST( 20, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_WISHING then	-- ¾Û±¦ÅèN´Î datatype=21 datakind=0 needvalue=´ÎÊı
+	elseif datatype == QUEST_DATAINDEX_WISHING then	-- èšå®ç›†Næ¬¡ datatype=21 datakind=0 needvalue=æ¬¡æ•°
 		name = name..FQUEST( 21, value, needvalue );
-	elseif datatype == QUEST_DATAINDEX_CITYFIGHT then-- ³É¹¦»÷°ÜNÃûµĞ¹úÍæ¼Ò datatype=22 datakind=0 needvalue=´ÎÊı
+	elseif datatype == QUEST_DATAINDEX_CITYFIGHT then-- æˆåŠŸå‡»è´¥Nåæ•Œå›½ç©å®¶ datatype=22 datakind=0 needvalue=æ¬¡æ•°
 		name = name..FQUEST( 22, value, needvalue );
 	else
 		name = Localization.text_quest( recvValue.m_nameid );
@@ -98,7 +98,7 @@ function QuestName( type, recvValue )
 	return name;
 end
 
--- Ìø×ª
+-- è·³è½¬
 function QuestGoto( index )
 	if CacheQuest == nil or CacheQuest.m_list[index] == nil then
 		return
@@ -111,7 +111,7 @@ function QuestGoto( index )
 	local needvalue = CacheQuest.m_list[index].m_needvalue;
 
 	if datatype == QUEST_DATAINDEX_ACTOR_LEVEL then
-	elseif datatype == QUEST_DATAINDEX_BUILDING_LEVEL then-- ½¨ÖşµÈ¼¶ datatype=2 datakind=½¨Öşkind dataoffset=×ÊÔ´½¨Öş±àºÅ needvalue=½¨ÖşµÈ¼¶
+	elseif datatype == QUEST_DATAINDEX_BUILDING_LEVEL then-- å»ºç­‘ç­‰çº§ datatype=2 datakind=å»ºç­‘kind dataoffset=èµ„æºå»ºç­‘ç¼–å· needvalue=å»ºç­‘ç­‰çº§
 		local offset = 0;
 		if datakind == BUILDING_Silver then
 			offset = dataoffset;
@@ -124,31 +124,31 @@ function QuestGoto( index )
 		end
 		City.Move( datakind, offset, true )
 		
-	elseif datatype == QUEST_DATAINDEX_BUILDING_SILVER then-- N¸öÃñ¾Ó´ïµ½N¼¶ datatype=3 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_SILVER then-- Nä¸ªæ°‘å±…è¾¾åˆ°Nçº§ datatype=3 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Silver );
 		if offset >= 0 then
 			City.Move( BUILDING_Silver, offset, true )
 		end
 		
-	elseif datatype == QUEST_DATAINDEX_BUILDING_WOOD then-- N¸öÄ¾³¡´ïµ½N¼¶ datatype=4 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_WOOD then-- Nä¸ªæœ¨åœºè¾¾åˆ°Nçº§ datatype=4 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Wood );
 		if offset >= 0 then
 			City.Move( BUILDING_Wood, dataoffset, true )
 		end
 		
-	elseif datatype == QUEST_DATAINDEX_BUILDING_FOOD then-- N¸öÅ©Ìï´ïµ½N¼¶ datatype=5 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_FOOD then-- Nä¸ªå†œç”°è¾¾åˆ°Nçº§ datatype=5 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Food );
 		if offset >= 0 then
 			City.Move( BUILDING_Food, dataoffset, true )
 		end
 		
-	elseif datatype == QUEST_DATAINDEX_BUILDING_IRON then-- N¸ö¿ó³¡´ïµ½N¼¶ datatype=6 datakind=µÈ¼¶ needvalue=½¨ÖşÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_BUILDING_IRON then-- Nä¸ªçŸ¿åœºè¾¾åˆ°Nçº§ datatype=6 datakind=ç­‰çº§ needvalue=å»ºç­‘æ•°é‡
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Iron );
 		if offset >= 0 then
 			City.Move( BUILDING_Iron, dataoffset, true )
 		end
 		
-	elseif datatype == QUEST_DATAINDEX_LEVYNUM then-- Õ÷ÊÕ´ÎÊı datatype=7 datakind=0 needvalue=ÊıÁ¿
+	elseif datatype == QUEST_DATAINDEX_LEVYNUM then-- å¾æ”¶æ¬¡æ•° datatype=7 datakind=0 needvalue=æ•°é‡
 		
 	end
 end

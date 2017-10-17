@@ -207,9 +207,6 @@
     <ClCompile Include="src\hero.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\equip.cpp">
-      <Filter>头文件</Filter>
-    </ClCompile>
     <ClCompile Include="AutoS\src\auto_actor_hero.cpp">
       <Filter>源文件\Auto</Filter>
     </ClCompile>
@@ -354,15 +351,6 @@
     <ClCompile Include="src\map_event.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_map_event.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_map_eventinfo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_weather.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\army_fight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -372,7 +360,22 @@
     <ClCompile Include="src\army_group.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AutoS\src\auto_nation.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
     <ClCompile Include="AutoS\src\auto_army_group.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_map_eventinfo.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_weather.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_map_event.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\equip.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -548,9 +551,6 @@
     <ClInclude Include="include\hero.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\equip.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="AutoS\include\auto_actor_hero.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
@@ -692,16 +692,7 @@
     <ClInclude Include="include\army_march.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_map_eventinfo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_map_event.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\map_event.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_weather.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\army_fight.h">
@@ -713,7 +704,22 @@
     <ClInclude Include="include\army_group.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AutoS\include\auto_nation.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
     <ClInclude Include="AutoS\include\auto_army_group.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_map_eventinfo.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_weather.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_map_event.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="include\equip.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

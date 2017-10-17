@@ -1,51 +1,51 @@
 --
-AWARDKIND_ITEMBASE		=	0	  -- µÀ¾ß£¨0+µÀ¾ß±àºÅ£©
-AWARDKIND_EQUIPBASE		=	10000 -- ×°±¸£¨10000+×°±¸±àºÅ£©
-AWARDKIND_HEROBASE		=	20000 -- Ó¢ÐÛ£¨20000+Ó¢ÐÛ±àºÅ£©
-AWARDKIND_BUILDINGBASE	=	30000 -- ½¨Öþ£¨30000+½¨Öþ±àºÅ£©
-AWARDKIND_FUNCTION		=	40000 -- ¹¦ÄÜ£¨40000+¹¦ÄÜ±àºÅ£©
-AWARDKIND_VALUEBASE		=	50000 -- ÊýÖµ
-AWARDKIND_SILVER		=	50001 -- Òø±Ò
-AWARDKIND_WOOD			=	50002 -- Ä¾²Ä
-AWARDKIND_FOOD			=	50003 -- Á¸Ê³
-AWARDKIND_IRON			=	50004 -- ïÙÌú
-AWARDKIND_TOKEN			=	50005 -- Ôª±¦
-AWARDKIND_BODY			=	50006 -- ÌåÁ¦
-AWARDKIND_INFANTRY		=	50007 -- ²½±ø
-AWARDKIND_CAVALRY		=	50008 -- Æï±ø
-AWARDKIND_ARCHER		=	50009 -- ¹­±ø
-AWARDKIND_EXP			=	50010 -- ½ÇÉ«¾­Ñé
-AWARDKIND_VIPEXP		=	50011 -- VIP¾­Ñé
-AWARDKIND_AUTOBUILD		=	50012 -- ×Ô¶¯½¨Ôì´ÎÊý
-AWARDKIND_LEVYNUM		=	50013 -- Õ÷ÊÕ´ÎÊý
-AWARDKIND_PEOPLE		=	50014 -- ÈË¿Ú
-AWARDKIND_PRESTIGE		=	50015 -- ÍþÍûÖµ
-AWARDKIND_FRIENDSHIP	=	50016 -- ÓÑÒê»ý·Ö
-AWARDKIND_TRAIN_QUICK	=	50017 -- Ä¼±ø¼ÓËÙ
-AWARDKIND_BUILD_QUICK	=	50018 -- ½¨Ôì¼ÓËÙ
-AWARDKIND_HERO_WASH		=	50019 -- Ãâ·ÑÏ´Ëè´ÎÊý
-AWARDKIND_EQUIP_WASH	=	50020 -- Ãâ·ÑÏ´Á·´ÎÊý
+AWARDKIND_ITEMBASE		=	0	  -- é“å…·ï¼ˆ0+é“å…·ç¼–å·ï¼‰
+AWARDKIND_EQUIPBASE		=	10000 -- è£…å¤‡ï¼ˆ10000+è£…å¤‡ç¼–å·ï¼‰
+AWARDKIND_HEROBASE		=	20000 -- è‹±é›„ï¼ˆ20000+è‹±é›„ç¼–å·ï¼‰
+AWARDKIND_BUILDINGBASE	=	30000 -- å»ºç­‘ï¼ˆ30000+å»ºç­‘ç¼–å·ï¼‰
+AWARDKIND_FUNCTION		=	40000 -- åŠŸèƒ½ï¼ˆ40000+åŠŸèƒ½ç¼–å·ï¼‰
+AWARDKIND_VALUEBASE		=	50000 -- æ•°å€¼
+AWARDKIND_SILVER		=	50001 -- é“¶å¸
+AWARDKIND_WOOD			=	50002 -- æœ¨æ
+AWARDKIND_FOOD			=	50003 -- ç²®é£Ÿ
+AWARDKIND_IRON			=	50004 -- é•”é“
+AWARDKIND_TOKEN			=	50005 -- å…ƒå®
+AWARDKIND_BODY			=	50006 -- ä½“åŠ›
+AWARDKIND_INFANTRY		=	50007 -- æ­¥å…µ
+AWARDKIND_CAVALRY		=	50008 -- éª‘å…µ
+AWARDKIND_ARCHER		=	50009 -- å¼“å…µ
+AWARDKIND_EXP			=	50010 -- è§’è‰²ç»éªŒ
+AWARDKIND_VIPEXP		=	50011 -- VIPç»éªŒ
+AWARDKIND_AUTOBUILD		=	50012 -- è‡ªåŠ¨å»ºé€ æ¬¡æ•°
+AWARDKIND_LEVYNUM		=	50013 -- å¾æ”¶æ¬¡æ•°
+AWARDKIND_PEOPLE		=	50014 -- äººå£
+AWARDKIND_PRESTIGE		=	50015 -- å¨æœ›å€¼
+AWARDKIND_FRIENDSHIP	=	50016 -- å‹è°Šç§¯åˆ†
+AWARDKIND_TRAIN_QUICK	=	50017 -- å‹Ÿå…µåŠ é€Ÿ
+AWARDKIND_BUILD_QUICK	=	50018 -- å»ºé€ åŠ é€Ÿ
+AWARDKIND_HERO_WASH		=	50019 -- å…è´¹æ´—é«“æ¬¡æ•°
+AWARDKIND_EQUIP_WASH	=	50020 -- å…è´¹æ´—ç»ƒæ¬¡æ•°
 
--- ½±ÀøÐÎÏó
+-- å¥–åŠ±å½¢è±¡
 function AwardInfo( awardkind )
 	local sprite = nil;
 	local color = nil;
 	local name = "";
 	local c = 0;
-	-- µôÂä°ü
+	-- æŽ‰è½åŒ…
 	if awardkind <= AWARDKIND_ITEMBASE then
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(555)
 		
-	-- µÀ¾ß
+	-- é“å…·
 	elseif awardkind <= AWARDKIND_EQUIPBASE then
 		sprite = ItemSprite( awardkind );
 		color = ItemColorSprite( item_getcolor( awardkind ) );
 		name = item_getname( awardkind )
 		c = item_getcolor( awardkind );
 		
-	-- ×°±¸
+	-- è£…å¤‡
 	elseif awardkind <= AWARDKIND_HEROBASE then
 		local kind = awardkind-AWARDKIND_EQUIPBASE
 		sprite = EquipSprite( kind )
@@ -53,112 +53,112 @@ function AwardInfo( awardkind )
 		name = EquipName( awardkind )
 		c = equip_getcolor( kind )
 		
-	-- Ó¢ÐÛ	
+	-- è‹±é›„	
 	elseif awardkind <= AWARDKIND_BUILDINGBASE then
 		local kind = awardkind-AWARDKIND_HEROBASE;
 		sprite = HeroHeadSprite( kind )
 		color = ItemColorSprite( 0 );
 		name = HeroName( kind )
 		
-	-- ½¨Öþ	
+	-- å»ºç­‘	
 	elseif awardkind <= AWARDKIND_FUNCTION then
 		local kind = awardkind-AWARDKIND_BUILDINGBASE;
 		sprite = BuildingSprite( awardkind-AWARDKIND_BUILDINGBASE )
 		color = ItemColorSprite( 0 );
 		name = BuildingName( kind )
 		
-	elseif awardkind == AWARDKIND_SILVER then -- Òø±Ò
+	elseif awardkind == AWARDKIND_SILVER then -- é“¶å¸
 		sprite = ItemSprite( 120 );
 		color = ItemColorSprite( 0 );
 		name = T(121)
 		
-	elseif awardkind == AWARDKIND_WOOD then	-- Ä¾²Ä
+	elseif awardkind == AWARDKIND_WOOD then	-- æœ¨æ
 		sprite = ItemSprite( 121 );
 		color = ItemColorSprite( 0 );
 		name = T(122)
 		
-	elseif awardkind == AWARDKIND_FOOD then	-- Á¸Ê³
+	elseif awardkind == AWARDKIND_FOOD then	-- ç²®é£Ÿ
 		sprite = ItemSprite( 122 );
 		color = ItemColorSprite( 0 );
 		name = T(123)
 		
-	elseif awardkind == AWARDKIND_IRON then	-- ïÙÌú
+	elseif awardkind == AWARDKIND_IRON then	-- é•”é“
 		sprite = ItemSprite( 123 );
 		color = ItemColorSprite( 0 );
 		name = T(124)
 		
-	elseif awardkind == AWARDKIND_TOKEN then-- Ôª±¦
+	elseif awardkind == AWARDKIND_TOKEN then-- å…ƒå®
 		sprite = ItemSprite( 124 );
 		color = ItemColorSprite( 0 );
 		name = T(125)
 		
-	elseif awardkind == AWARDKIND_BODY then	 -- ÌåÁ¦
+	elseif awardkind == AWARDKIND_BODY then	 -- ä½“åŠ›
 		sprite = ItemSprite( 126 );
 		color = ItemColorSprite( 0 );
 		name = T(126)
 		
-	elseif awardkind == AWARDKIND_INFANTRY then -- ²½±ø
+	elseif awardkind == AWARDKIND_INFANTRY then -- æ­¥å…µ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		
-	elseif awardkind == AWARDKIND_CAVALRY then -- Æï±ø
+	elseif awardkind == AWARDKIND_CAVALRY then -- éª‘å…µ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		
-	elseif awardkind == AWARDKIND_ARCHER then -- ¹­±ø
+	elseif awardkind == AWARDKIND_ARCHER then -- å¼“å…µ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		
-	elseif awardkind == AWARDKIND_EXP then	-- ½ÇÉ«¾­Ñé
+	elseif awardkind == AWARDKIND_EXP then	-- è§’è‰²ç»éªŒ
 		sprite = ItemSprite( 127 );
 		color = ItemColorSprite( 0 );
 		name = T(128)
 		
-	elseif awardkind == AWARDKIND_VIPEXP then	-- VIP¾­Ñé
+	elseif awardkind == AWARDKIND_VIPEXP then	-- VIPç»éªŒ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(190)
 		
-	elseif awardkind == AWARDKIND_AUTOBUILD	then -- ×Ô¶¯½¨Ôì´ÎÊý
+	elseif awardkind == AWARDKIND_AUTOBUILD	then -- è‡ªåŠ¨å»ºé€ æ¬¡æ•°
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(191)
 		
-	elseif awardkind == AWARDKIND_LEVYNUM then	 -- Õ÷ÊÕ´ÎÊý
+	elseif awardkind == AWARDKIND_LEVYNUM then	 -- å¾æ”¶æ¬¡æ•°
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		
-	elseif awardkind == AWARDKIND_PEOPLE then	-- ÈË¿Ú
+	elseif awardkind == AWARDKIND_PEOPLE then	-- äººå£
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(127)
 		
-	elseif awardkind == AWARDKIND_PRESTIGE then	-- ÍþÍûÖµ
+	elseif awardkind == AWARDKIND_PRESTIGE then	-- å¨æœ›å€¼
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(152)
 		
-	elseif awardkind == AWARDKIND_FRIENDSHIP then -- ÓÑÒê»ý·Ö
+	elseif awardkind == AWARDKIND_FRIENDSHIP then -- å‹è°Šç§¯åˆ†
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = ""
 		
-	elseif awardkind == AWARDKIND_TRAIN_QUICK then -- Ä¼±ø¼ÓËÙ
+	elseif awardkind == AWARDKIND_TRAIN_QUICK then -- å‹Ÿå…µåŠ é€Ÿ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1010)
 		
-	elseif awardkind == AWARDKIND_BUILD_QUICK then-- ½¨Ôì¼ÓËÙ
+	elseif awardkind == AWARDKIND_BUILD_QUICK then-- å»ºé€ åŠ é€Ÿ
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1011)
 		
-	elseif awardkind == AWARDKIND_HERO_WASH	then-- Ãâ·ÑÏ´Ëè´ÎÊý
+	elseif awardkind == AWARDKIND_HERO_WASH	then-- å…è´¹æ´—é«“æ¬¡æ•°
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1100)
 		
-	elseif awardkind == AWARDKIND_EQUIP_WASH then-- Ãâ·ÑÏ´Á·´ÎÊý
+	elseif awardkind == AWARDKIND_EQUIP_WASH then-- å…è´¹æ´—ç»ƒæ¬¡æ•°
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1101)

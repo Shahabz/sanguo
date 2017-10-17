@@ -89,3 +89,11 @@ int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 )
 	}
 	return 0;
 }
+
+// 通知客户端更新ui
+void ui_update( int actor_index, char send_type, char ui )
+{
+	SLK_NetS_DialogUpdate pValue = { 0 };
+	pValue.m_ui = ui;
+	netsend_dialogupdate_S( actor_index, send_type, &pValue );
+}

@@ -1,60 +1,69 @@
--- µØÍ¼ÏÔÊ¾µ¥Ôª
+-- åœ°å›¾æ˜¾ç¤ºå•å…ƒ
 
--- ÏÔÊ¾µ¥ÔªÀàĞÍ
-MAPUNIT_TYPE_CITY		=	1	-- ³Ç³Ø
-MAPUNIT_TYPE_ARMY		=	2	-- ²¿¶Ó
-MAPUNIT_TYPE_TOWN		=	3	-- ³ÇÕò
-MAPUNIT_TYPE_ENEMY		=	4	-- Á÷¿Ü
-MAPUNIT_TYPE_RES		=	5	-- ×ÊÔ´µã
-MAPUNIT_TYPE_EVENT		=	6	-- Ëæ»úÊÂ¼ş
+-- æ˜¾ç¤ºå•å…ƒç±»å‹
+MAPUNIT_TYPE_CITY		=	1	-- åŸæ± 
+MAPUNIT_TYPE_ARMY		=	2	-- éƒ¨é˜Ÿ
+MAPUNIT_TYPE_TOWN		=	3	-- åŸé•‡
+MAPUNIT_TYPE_ENEMY		=	4	-- æµå¯‡
+MAPUNIT_TYPE_RES		=	5	-- èµ„æºç‚¹
+MAPUNIT_TYPE_EVENT		=	6	-- éšæœºäº‹ä»¶
 
+MAPUNIT_TYPE_TOWN_TYPE1	= 1
+MAPUNIT_TYPE_TOWN_TYPE2	= 2
+MAPUNIT_TYPE_TOWN_TYPE3	= 3
+MAPUNIT_TYPE_TOWN_TYPE4	= 4
+MAPUNIT_TYPE_TOWN_TYPE5	= 5
+MAPUNIT_TYPE_TOWN_TYPE6	= 6
+MAPUNIT_TYPE_TOWN_TYPE7	= 7 -- ååŸ
+MAPUNIT_TYPE_TOWN_TYPE8	= 8 -- éƒ½åŸ
+MAPUNIT_TYPE_TOWN_TYPE9	= 9 -- çš‡åŸ
 
--- ³Ç³Ø×´Ì¬
-CITY_STATE_FIRE			=	0x01	-- ×Å»ğÖĞ
-CITY_STATE_ARMYGROUP	=	0x02	-- ±»³ÇÕ½ÖĞ
+-- åŸæ± çŠ¶æ€
+CITY_STATE_FIRE			=	0x01	-- ç€ç«ä¸­
+CITY_STATE_ARMYGROUP	=	0x02	-- è¢«åŸæˆ˜ä¸­
 
--- µ¥Ö»²¿¶Ó×´Ì¬
-ARMY_STATE_IDLE				=	0	-- ¿ÕÏĞ
-ARMY_STATE_GROUP_END		=	3	-- ¼¯½áÍê±Ï
-ARMY_STATE_READY            =   4   -- ×¼±¸ÖĞ
-ARMY_STATE_MARCH			=	10	-- ĞĞ¾üÖĞ
-ARMY_STATE_FIGHT			=	20	-- Õ½¶·ÖĞ
-ARMY_STATE_OCCUPY			=	21	-- ×¤ÔúÖĞ
-ARMY_STATE_GATHER			=	22	-- ²É¼¯ÖĞ
-ARMY_STATE_HELP				=	24	-- Ô®ÖúÖĞ
-ARMY_STATE_REBACK			=	30	-- ·µ³ÌÖĞ
+-- å•åªéƒ¨é˜ŸçŠ¶æ€
+ARMY_STATE_IDLE				=	0	-- ç©ºé—²
+ARMY_STATE_GROUP_END		=	3	-- é›†ç»“å®Œæ¯•
+ARMY_STATE_READY            =   4   -- å‡†å¤‡ä¸­
+ARMY_STATE_MARCH			=	10	-- è¡Œå†›ä¸­
+ARMY_STATE_FIGHT			=	20	-- æˆ˜æ–—ä¸­
+ARMY_STATE_OCCUPY			=	21	-- é©»æ‰ä¸­
+ARMY_STATE_GATHER			=	22	-- é‡‡é›†ä¸­
+ARMY_STATE_HELP				=	24	-- æ´åŠ©ä¸­
+ARMY_STATE_REBACK			=	30	-- è¿”ç¨‹ä¸­
 
--- ĞĞÎª
-ARMY_ACTION_IDLE			=	0	-- ¿ÕÏĞ
-ARMY_ACTION_FIGHT			=	1	-- È¥Õ½¶·
-ARMY_ACTION_OCCUPY			=	2	-- È¥×¤Ôú
-ARMY_ACTION_GATHER			=	3	-- È¥²É¼¯
-ARMY_ACTION_HELP_TROOP		=	6	-- È¥Ê¿±øÔ®Öú
-ARMY_ACTION_GROUP_CREATE	=	10	-- ´´½¨¼¯½á
-ARMY_ACTION_GROUP_ATTACK	=	11	-- ²ÎÓë¼¯½á(¹¥»÷·½)
-ARMY_ACTION_GROUP_DEFENSE	=	12	-- ²ÎÓë¼¯½á(·ÀÓù·½)
-ARMY_ACTION_NATION_ATTACK	=	13	-- ²ÎÓë¹úÕ½(¹¥»÷·½)
-ARMY_ACTION_NATION_DEFENSE	=	14	-- ²ÎÓë¹úÕ½(·ÀÓù·½)
+-- è¡Œä¸º
+ARMY_ACTION_IDLE			=	0	-- ç©ºé—²
+ARMY_ACTION_FIGHT			=	1	-- å»æˆ˜æ–—
+ARMY_ACTION_OCCUPY			=	2	-- å»é©»æ‰
+ARMY_ACTION_GATHER			=	3	-- å»é‡‡é›†
+ARMY_ACTION_HELP_TROOP		=	6	-- å»å£«å…µæ´åŠ©
+ARMY_ACTION_GROUP_CREATE	=	10	-- åˆ›å»ºé›†ç»“
+ARMY_ACTION_GROUP_ATTACK	=	11	-- å‚ä¸é›†ç»“(æ”»å‡»æ–¹)
+ARMY_ACTION_GROUP_DEFENSE	=	12	-- å‚ä¸é›†ç»“(é˜²å¾¡æ–¹)
+ARMY_ACTION_NATION_ATTACK	=	13	-- å‚ä¸å›½æˆ˜(æ”»å‡»æ–¹)
+ARMY_ACTION_NATION_DEFENSE	=	14	-- å‚ä¸å›½æˆ˜(é˜²å¾¡æ–¹)
 
-ARMY_REBACK_NORMAL			=	0	-- ·µ³ÌÀàĞÍ-Õı³£
-ARMY_REBACK_RETURN			=	1	-- ·µ³ÌÀàĞÍ-²Ù×÷·µ»Ø
-ARMY_REBACK_CALLBACK		=	2	-- ·µ³ÌÀàĞÍ-²Ù×÷ÕÙ»Ø
-ARMY_REBACK_FIGHTWIN		=	3	-- ·µ³ÌÀàĞÍ-Õ½¶·Ê¤Àû·µ»Ø
-ARMY_REBACK_FIGHTLOSE		=	4	-- ·µ³ÌÀàĞÍ-Õ½¶·Ê§°Ü´ò»Ø
-ARMY_REBACK_REPATRIAT		=	5	-- ·µ³ÌÀàĞÍ-ËûÈËÇ²»Ø
+ARMY_REBACK_NORMAL			=	0	-- è¿”ç¨‹ç±»å‹-æ­£å¸¸
+ARMY_REBACK_RETURN			=	1	-- è¿”ç¨‹ç±»å‹-æ“ä½œè¿”å›
+ARMY_REBACK_CALLBACK		=	2	-- è¿”ç¨‹ç±»å‹-æ“ä½œå¬å›
+ARMY_REBACK_FIGHTWIN		=	3	-- è¿”ç¨‹ç±»å‹-æˆ˜æ–—èƒœåˆ©è¿”å›
+ARMY_REBACK_FIGHTLOSE		=	4	-- è¿”ç¨‹ç±»å‹-æˆ˜æ–—å¤±è´¥æ‰“å›
+ARMY_REBACK_REPATRIAT		=	5	-- è¿”ç¨‹ç±»å‹-ä»–äººé£å›
 
-ENEMY_ACTION_IDLE			=	0	-- ÎŞ
-ENEMY_ACTION_ATTACK			=	1	-- ¹¥»÷
-ENEMY_ACTION_DEAD			=	2	-- ËÀÍö
+ENEMY_ACTION_IDLE			=	0	-- æ— 
+ENEMY_ACTION_ATTACK			=	1	-- æ”»å‡»
+ENEMY_ACTION_DEAD			=	2	-- æ­»äº¡
 
-MAPTOWN_STATE_PROTECT		=	1	-- ±£»¤×´Ì¬
-MAPTOWN_STATE_NOPROTECT		=	2	-- ÆÆ·À×´Ì¬
-MAPTOWN_STATE_TEMPOCCUPY	=	3	-- ÁÙÊ±Õ¼Áì×´Ì¬
-MAPTOWN_STATE_OCCUPY		=	4	-- Õ¼Áì×´Ì¬
+MAPTOWN_STATE_PROTECT		=	1	-- ä¿æŠ¤çŠ¶æ€
+MAPTOWN_STATE_NOPROTECT		=	2	-- ç ´é˜²çŠ¶æ€
+MAPTOWN_STATE_TEMPOCCUPY	=	3	-- ä¸´æ—¶å é¢†çŠ¶æ€
+MAPTOWN_STATE_OCCUPY		=	4	-- å é¢†çŠ¶æ€
 
-KINGWAR_STATE_NORMAL		=   0	-- Î´¿ªÆô×´Ì¬
-KINGWAR_STATE_START			=   1	-- ¿ªÆô×´Ì¬
-KINGWAR_STATE_OFFICIAL      =   2   -- ·â¹Ù×´Ì¬
+KINGWAR_STATE_NORMAL		=   0	-- æœªå¼€å¯çŠ¶æ€
+KINGWAR_STATE_START			=   1	-- å¼€å¯çŠ¶æ€
+KINGWAR_STATE_OFFICIAL      =   2   -- å°å®˜çŠ¶æ€
 
 -- Prefab
 local MapUnitCity 		= nil;
@@ -67,7 +76,7 @@ local MapBorder			= nil;
 local MapTownRange		= nil;
 local MapUnitInited		= false;
 
--- Íæ¼ÒÃ¿µÈ¼¶µÄ³ÇÊĞÍâ¹Û
+-- ç©å®¶æ¯ç­‰çº§çš„åŸå¸‚å¤–è§‚
 MapUnitCityShapeList = {
 [0] = "mapunit_city_level1",
 [1] = "mapunit_city_level1",
@@ -102,7 +111,7 @@ MapUnitCityShapeList = {
 [30] = "mapunit_city_level4",
 }
 
--- ³ÇÕòĞÎÏó
+-- åŸé•‡å½¢è±¡
 MapUnitTownShapeList = {
 [1] = "mapunit_type1",
 [2] = "mapunit_type2",
@@ -115,7 +124,7 @@ MapUnitTownShapeList = {
 [9] = "mapunit_type9",
 }
 
--- ×ÊÔ´µãĞÎÏó
+-- èµ„æºç‚¹å½¢è±¡
 MapUnitResShapeList = {
 [1] = "mapunit_res_silver",
 [2] = "mapunit_res_wood",
@@ -124,7 +133,7 @@ MapUnitResShapeList = {
 [5] = "mapunit_res_token",
 }
 
--- ÊÂ¼şĞÎÏó
+-- äº‹ä»¶å½¢è±¡
 MapUnitEventShapeList = {
 [1] = "mapunit_event_1",
 [2] = "mapunit_event_2",
@@ -133,7 +142,7 @@ MapUnitEventShapeList = {
 [5] = "mapunit_event_5",
 }
 
--- ×ÊÔ´µãÃû³Æ
+-- èµ„æºç‚¹åç§°
 MapUnitResNameList = {
 [1] = 171,
 [2] = 172,
@@ -142,7 +151,7 @@ MapUnitResNameList = {
 [5] = 175,
 }
 
--- ÊÂ¼şÃû³Æ
+-- äº‹ä»¶åç§°
 MapUnitEventNameList = {
 [1] = 1010,
 [2] = 1011,
@@ -151,7 +160,7 @@ MapUnitEventNameList = {
 [5] = 1014,
 }
 
--- ·¶Î§ÑÕÉ«
+-- èŒƒå›´é¢œè‰²
 MapUnitRangeColor = {
 [0] = 0xecc244ff,
 [1] = 0x25c9ffff,
@@ -159,7 +168,7 @@ MapUnitRangeColor = {
 [3] = 0x03de27ff,
 }
 
--- ¾ü¶Ó×´Ì¬Ãû³Æ
+-- å†›é˜ŸçŠ¶æ€åç§°
 MapUnitArmyStateNameList = {
 [ARMY_STATE_READY]              = 2779,
 [ARMY_STATE_MARCH]              = 2732,
@@ -170,28 +179,28 @@ MapUnitArmyStateNameList = {
 [ARMY_STATE_HELP]               = 2738,
 }
 
--- ÏÔÊ¾µ¥Ôª¼¯ºÏ
+-- æ˜¾ç¤ºå•å…ƒé›†åˆ
 MapUnit = {};
 
--- µØÍ¼¶ÔÏóµÄ¸ù½Úµã
+-- åœ°å›¾å¯¹è±¡çš„æ ¹èŠ‚ç‚¹
 MapUnit.unitRoot = nil;
 
--- µ±Ç°ÏÔÊ¾µÄµ¥Ôª¶ÔÏó»º´æ
+-- å½“å‰æ˜¾ç¤ºçš„å•å…ƒå¯¹è±¡ç¼“å­˜
 MapUnit.cache = {};
 
--- ÏÔÊ¾µ¥Ôª¶ÔÏó»º´æ³Ø
--- ÒÑ¾­´´½¨µÄ£¬É¾³ıÊ±²»É¾£¬Òş²Ø£¬ÏÂ´ÎÎŞĞè´´½¨Ö±½ÓÄÃÀ´ÓÃ
-MapUnit.objectPoolCity 			= {}; 	-- ³Ç³Ø
-MapUnit.objectPoolArmy 			= {}; 	-- ²¿¶Ó
-MapUnit.objectPoolTown 			= {}; 	-- ³ÇÕò
-MapUnit.objectPoolEnemy 		= {}; 	-- Á÷¿Ü
-MapUnit.objectPoolRes 			= {}; 	-- ×ÊÔ´Ìï
-MapUnit.objectPoolEvent 		= {}; 	-- ÊÂ¼ş
+-- æ˜¾ç¤ºå•å…ƒå¯¹è±¡ç¼“å­˜æ± 
+-- å·²ç»åˆ›å»ºçš„ï¼Œåˆ é™¤æ—¶ä¸åˆ ï¼Œéšè—ï¼Œä¸‹æ¬¡æ— éœ€åˆ›å»ºç›´æ¥æ‹¿æ¥ç”¨
+MapUnit.objectPoolCity 			= {}; 	-- åŸæ± 
+MapUnit.objectPoolArmy 			= {}; 	-- éƒ¨é˜Ÿ
+MapUnit.objectPoolTown 			= {}; 	-- åŸé•‡
+MapUnit.objectPoolEnemy 		= {}; 	-- æµå¯‡
+MapUnit.objectPoolRes 			= {}; 	-- èµ„æºç”°
+MapUnit.objectPoolEvent 		= {}; 	-- äº‹ä»¶
 
--- ³õÊ¼»¯
+-- åˆå§‹åŒ–
 function MapUnit.init()
 	if MapUnitInited == false then
-		-- Ô¤ÖÃµÄ³õÊ¼»¯
+		-- é¢„ç½®çš„åˆå§‹åŒ–
 		MapUnitCity 		= LoadPrefab("MapUnitCity");
 		MapUnitArmy 		= LoadPrefab("MapUnitArmy");
 		MapUnitTown 		= LoadPrefab("MapUnitTown");
@@ -204,7 +213,7 @@ function MapUnit.init()
 	end
 end
 
--- Çå³ı
+-- æ¸…é™¤
 function MapUnit.clear()
 	MapUnitCity 		= nil;
 	MapUnitArmy 		= nil;
@@ -226,37 +235,37 @@ function MapUnit.clear()
 	MapUnit.cache 				= {};
 end
 
--- Ìí¼ÓÏÔÊ¾µ¥Ôª
+-- æ·»åŠ æ˜¾ç¤ºå•å…ƒ
 function MapUnit.add( unitRoot, recvValue )
 	local unit = nil;
 	MapUnit.unitRoot = unitRoot;
 
-	-- ³Ç³Ø
+	-- åŸæ± 
 	if recvValue.m_type == MAPUNIT_TYPE_CITY then
 		unit = MapUnit.createCity( recvValue );
 		
-	-- ²¿¶Ó
+	-- éƒ¨é˜Ÿ
 	elseif recvValue.m_type == MAPUNIT_TYPE_ARMY then
 		unit = MapUnit.createArmy( recvValue )
 	
-	-- ³ÇÕò
+	-- åŸé•‡
 	elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
 		unit = MapUnit.createTown( recvValue );
 		
-	-- Á÷¿Ü	
+	-- æµå¯‡	
 	elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then
 		unit = MapUnit.createEnemy( recvValue );
 		
-	-- ×ÊÔ´
+	-- èµ„æº
 	elseif recvValue.m_type == MAPUNIT_TYPE_RES then
 		unit = MapUnit.createRes( recvValue );
 	
-	-- Ëæ»úÊÂ¼ş
+	-- éšæœºäº‹ä»¶
 	elseif recvValue.m_type == MAPUNIT_TYPE_EVENT then
 		unit = MapUnit.createEvent( recvValue );				
 	end
 	
-	-- »º´æÆğÀ´£¬ÒÔ±ãÉ¾³ı
+	-- ç¼“å­˜èµ·æ¥ï¼Œä»¥ä¾¿åˆ é™¤
 	if unit ~= nil then
 		unit.gameObject:SetActive( true );
 		MapUnit.cache[recvValue.m_unit_index] = unit;
@@ -265,7 +274,7 @@ function MapUnit.add( unitRoot, recvValue )
     return unit;
 end
 
--- É¾³ıÏÔÊ¾µ¥Ôª
+-- åˆ é™¤æ˜¾ç¤ºå•å…ƒ
 function MapUnit.del( unit_index )
 	local unit = MapUnit.cache[unit_index];
 	if unit ~= nil then
@@ -274,7 +283,7 @@ function MapUnit.del( unit_index )
 	end
 end
 
--- ´´½¨³Ç³Ø
+-- åˆ›å»ºåŸæ± 
 function MapUnit.createCity( recvValue )
 	local state 	= recvValue.m_state;
 	local name 		= recvValue.m_name;
@@ -285,10 +294,10 @@ function MapUnit.createCity( recvValue )
 	local ptbuff	= recvValue.m_char_value[3];
 	local unitindex = recvValue.m_unit_index;
 		
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolCity ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -298,19 +307,19 @@ function MapUnit.createCity( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitCity );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolCity, unitObj );
 	end
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
 	
-	-- »ñÈ¡ÒıÓÃ
+	-- è·å–å¼•ç”¨
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
@@ -318,13 +327,13 @@ function MapUnit.createCity( recvValue )
 	local uiEffectProtect = objs[3];
 	local uiArmyGroup = objs[4];
 	
-	-- ĞÎÏó
+	-- å½¢è±¡
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
 			
-	-- Ãû×Ö
+	-- åå­—
 	uiName:GetComponent("UIText").text = "Lv."..level.." "..name
 
-	-- ·¶Î§¿ò
+	-- èŒƒå›´æ¡†
 	if recvValue.m_unit_index == WorldMap.m_nMyCityUnitIndex then
 		SetTrue( uiRange )
 		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
@@ -333,19 +342,19 @@ function MapUnit.createCity( recvValue )
 		SetFalse( uiRange )
 	end
 	
-	-- ±£»¤BUFF
+	-- ä¿æŠ¤BUFF
 	if ptbuff > 0 then
 		--SetTrue( uiEffectProtect )
 	else
 		--SetFalse( uiEffectProtect )
 	end
 	
-	-- ×Å»ğ
+	-- ç€ç«
 	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
 	else	
 	end
 	
-	-- ³ÇÕ½
+	-- åŸæˆ˜
 	if Utils.byteAndOp( state, CITY_STATE_ARMYGROUP ) == CITY_STATE_ARMYGROUP then
 		SetTrue( uiArmyGroup )
 		uiArmyGroup.transform:GetComponent( typeof(UIButton) ).uiMod = CityArmyGroupClickMod;
@@ -357,7 +366,7 @@ function MapUnit.createCity( recvValue )
 	return unitObj;
 end
 
--- ´´½¨²¿¶Ó
+-- åˆ›å»ºéƒ¨é˜Ÿ
 function MapUnit.createArmy( recvValue )
 	local oldstate = 0;
 	local cacheValue  = WorldMap.m_nMapUnitList[recvValue.m_unit_index];
@@ -368,7 +377,7 @@ function MapUnit.createArmy( recvValue )
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
 	
-	-- ±¾¹úÍæ¼Ò¿É¿´¼û×¤·À
+	-- æœ¬å›½ç©å®¶å¯çœ‹è§é©»é˜²
 	if state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
 		local action	= recvValue.m_short_value[5];
 		local nation	= recvValue.m_char_value[5];
@@ -379,10 +388,10 @@ function MapUnit.createArmy( recvValue )
 		end
 	end
 	
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolArmy ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -392,20 +401,20 @@ function MapUnit.createArmy( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitArmy );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolArmy, unitObj );
 	end
 	
-	-- ¹ØÁªÊı¾İ
+	-- å…³è”æ•°æ®
 	local ShareData = unitObj:GetComponent("ShareData");
 	if ShareData then
 		ShareData:AddValue( "unit_index", recvValue.m_unit_index );
 	end
 	
-	-- ¸ù¾İ×´Ì¬ÉèÖÃÊôĞÔ
+	-- æ ¹æ®çŠ¶æ€è®¾ç½®å±æ€§
 	if state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
 		local from_type 	= recvValue.m_char_value[1];
 		local from_grid 	= recvValue.m_char_value[2];
@@ -421,7 +430,7 @@ function MapUnit.createArmy( recvValue )
 		local move_time 	= recvValue.m_int_value[2];
 		local move_needtime = recvValue.m_int_value[3];
 
-		-- Îä½«
+		-- æ­¦å°†
 		local heroid = {};
 		if recvValue.m_int_value_count >= 4 then
 			for i=4,recvValue.m_int_value_count,1 do
@@ -429,36 +438,36 @@ function MapUnit.createArmy( recvValue )
 			end
 		end
 		
-		-- ³ö·¢µã
+		-- å‡ºå‘ç‚¹
 		local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( from_posx, from_posy );
 		local fposx, fposy = MapUnit.getGridTrans( from_type, from_grid, cameraPosX, cameraPosY );
 
-		-- Ä¿µÄµã
+		-- ç›®çš„ç‚¹
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( to_posx, to_posy );
 		local tposx, tposy = MapUnit.getGridTrans( to_type, to_grid, cameraPosX, cameraPosY );
 		
-		-- ×Ü¾àÀë(²»ÊÇ¼ÆËãĞĞ¾üÊ±¼äµÄ¾àÀë£¬ÕâÊÇÁ½µãÖ®¼äµÄÖ±Ïß¾àÀë)
+		-- æ€»è·ç¦»(ä¸æ˜¯è®¡ç®—è¡Œå†›æ—¶é—´çš„è·ç¦»ï¼Œè¿™æ˜¯ä¸¤ç‚¹ä¹‹é—´çš„ç›´çº¿è·ç¦»)
 		local distance = math.sqrt( math.pow( ( tposx - fposx ), 2 ) + math.pow( ( tposy - fposy ), 2) );
 
-		-- ¼ÆËã¿Í»§¶ËĞèÒªµÄËÙ¶È
+		-- è®¡ç®—å®¢æˆ·ç«¯éœ€è¦çš„é€Ÿåº¦
 		local speed = distance/move_needtime;
 
-		-- µ±Ç°Î»ÖÃ
+		-- å½“å‰ä½ç½®
 		local movelen = speed * move_time;
         local x = ( ( tposx - fposx ) * movelen ) / distance + fposx;
         local y = ( ( tposy - fposy ) * movelen ) / distance + fposy;
 		unitObj.transform.localPosition = Vector3.New( x, y, WORLDMAP_ZORDER_ARMY );
 		
-		-- µ±Ç°·½Ïò
+		-- å½“å‰æ–¹å‘
 		local direction = Vector3.New( tposx - fposx, tposy - fposy, 0 );
 
-		-- ¿ªÊ¼ÒÆ¶¯
+		-- å¼€å§‹ç§»åŠ¨
 		local moveAttr = unitObj:GetComponent("MapUnitMove");
 		moveAttr.stat = 1;
 		moveAttr.speed = speed;
 		moveAttr.toPosition = Vector3.New( tposx, tposy, WORLDMAP_ZORDER_ARMY );
 		
-		-- Îä½«ĞÎÏó
+		-- æ­¦å°†å½¢è±¡
 		for i=1, 4, 1 do
 			local uiHero = unitObj.transform:GetChild(i-1);
 			if i <= #heroid then
@@ -490,7 +499,7 @@ function MapUnit.createArmy( recvValue )
 	return unitObj;
 end
 
--- ´´½¨³ÇÕò
+-- åˆ›å»ºåŸé•‡
 function MapUnit.createTown( recvValue )
 	local state 		= recvValue.m_state;
 	local posx 			= recvValue.m_posx;
@@ -498,6 +507,7 @@ function MapUnit.createTown( recvValue )
 	local custom_name	= recvValue.m_name;
 	local custom_namelen= recvValue.m_namelen;
 	local nation 		= recvValue.m_char_value[1];
+	local dev_level 	= recvValue.m_char_value[2];
 	local townid 		= recvValue.m_short_value[1];
 	local produce_num	= recvValue.m_short_value[2];
 	local protect_sec	= recvValue.m_int_value[1];
@@ -508,11 +518,12 @@ function MapUnit.createTown( recvValue )
 	local range 		= g_towninfo[townid].range
 	local produce_maxnum= g_towninfo[townid].produce_maxnum
 	local produce_maxsec= g_towninfo[townid].produce_maxsec
+	local level 		= g_towninfo[townid].level
 	
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolTown ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -522,19 +533,19 @@ function MapUnit.createTown( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitTown );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolTown, unitObj );
 	end
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_TOWN, grid, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
 	
-	-- »ñÈ¡ÒıÓÃ
+	-- è·å–å¼•ç”¨
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
@@ -544,17 +555,28 @@ function MapUnit.createTown( recvValue )
 	local uiTimerOver = objs[5];
 	local uiMatBtn = objs[6];
 	local uiItemShape = objs[7];
+	local uiTownFightMod = objs[8];
 	
-	-- ĞÎÏó
+	-- å½¢è±¡
 	local shapeSprite = ""
 	shapeSprite = MapUnitTownShapeList[type].."_"..nation;
 	uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( shapeSprite );
 	
-	-- Ãû×Ö
-	uiName:GetComponent("UIText").text = MapTownName( townid )
+	-- åå­—
+	local townname = ""
+	if custom_namelen > 0 then
+		townname = custom_name;
+	else
+		townname = MapTownName( townid );
+	end
+	if type == MAPUNIT_TYPE_TOWN_TYPE8 then
+		uiName:GetComponent("UIText").text = "Lv."..(dev_level+1).." "..townname
+	else
+		uiName:GetComponent("UIText").text = townname
+	end
 	
-	-- ·¶Î§¿ò
-	if type < 7 then
+	-- èŒƒå›´æ¡†
+	if type < MAPUNIT_TYPE_TOWN_TYPE7 then
 		uiRange.transform.localScale = Vector3.New( range, range, range );
 		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
 		SetTrue( uiRange )
@@ -562,8 +584,8 @@ function MapUnit.createTown( recvValue )
 		SetFalse( uiRange )
 	end
 	
-	-- ·ÇÈºĞÛ×´Ì¬ÏÔÊ¾
-	if nation > 0 then
+	-- éç¾¤é›„çŠ¶æ€æ˜¾ç¤º
+	if nation > 0 and type < MAPUNIT_TYPE_TOWN_TYPE8 then
 		SetTrue( uiTownProduceMod )
 	
 		if produce_num > 0 then
@@ -571,7 +593,7 @@ function MapUnit.createTown( recvValue )
 			SetTrue( uiTimerOver )
 			SetText( uiTimerOver, T(1287) )
 		else
-			-- Éú²úµ¹¼ÆÊ±
+			-- ç”Ÿäº§å€’è®¡æ—¶
 			if produce_sec > 0 then
 				SetTrue( uiTimerText )
 				SetFalse( uiTimerOver )
@@ -583,7 +605,7 @@ function MapUnit.createTown( recvValue )
 			end
 		end
 		
-		-- ±£»¤×´Ì¬
+		-- ä¿æŠ¤çŠ¶æ€
 		if protect_sec > 0 then
 		else
 		end
@@ -595,18 +617,39 @@ function MapUnit.createTown( recvValue )
 		SetFalse( uiTownProduceMod )
 	end
 	
+	-- å›½æˆ˜
+	local has = 0;
+	local show = 0;
+	for i=3, 6, 1 do
+		local from_nation = recvValue.m_char_value[i]
+		if from_nation >= 0 then 
+			has = 1;
+			if from_nation == GetPlayer().m_nation then
+				show = 1;
+				break;
+			end
+		end
+	end
+	
+	if (has == 1 and nation == GetPlayer().m_nation) or show == 1 then
+		SetTrue( uiTownFightMod )
+		local ShareData = uiTownFightMod.transform:GetComponent("ShareData");
+		ShareData.intValue[0] = recvValue.m_unit_index;
+	else
+		SetFalse( uiTownFightMod )
+	end
 	
 	return unitObj;
 end
 
--- Ë¢ĞÂÏÂÄ¿±ê¹ÖÎï
+-- åˆ·æ–°ä¸‹ç›®æ ‡æ€ªç‰©
 function MapUnit.RefreshTargetMonster( targetLevel )
     for index, unit in pairs( WorldMap.m_nMapUnitList ) do
         if unit.m_type == MAPUNIT_TYPE_MONSTER then
             local unitObj = MapUnit.cache[ unit.m_unit_index ];
             if unitObj ~= nil then
                 local level = unit.m_char_value[2];
-                -- ÊÇ·ñÊÇÊ¹ÃüÄ¿±ê¹ÖÎï
+                -- æ˜¯å¦æ˜¯ä½¿å‘½ç›®æ ‡æ€ªç‰©
                 if targetLevel == level then
                     unitObj.transform:FindChild("Mark").gameObject:SetActive( true );
                     --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.red;
@@ -619,7 +662,7 @@ function MapUnit.RefreshTargetMonster( targetLevel )
     end    
 end
 
--- ´´½¨Á÷¿Ü
+-- åˆ›å»ºæµå¯‡
 function MapUnit.createEnemy( recvValue )
 	local state 	= recvValue.m_state;
 	local posx 		= recvValue.m_posx;
@@ -627,10 +670,10 @@ function MapUnit.createEnemy( recvValue )
 	local level	= recvValue.m_char_value[1];
 	local kind 	= recvValue.m_short_value[1];
 	
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolEnemy ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -640,25 +683,25 @@ function MapUnit.createEnemy( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitEnemy );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolEnemy, unitObj );
 	end
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_ENEMY, 0, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy-1 );
 	
-	-- »ñÈ¡ÒıÓÃ
+	-- è·å–å¼•ç”¨
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
 	local uiMark = objs[2];
 	
-	-- Ãû×Ö
+	-- åå­—
 	uiName:GetComponent("UIText").text = "Lv."..level.." "..T(938);
 	
 	if level <= 7 then
@@ -666,7 +709,7 @@ function MapUnit.createEnemy( recvValue )
 	else
 		uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level7");
 	end
-	-- ĞÎÏó
+	-- å½¢è±¡
 	
 --[[	local shapeObj = unitObj.transform:FindChild("Shape");
 	local childCount = shapeObj.transform.childCount;
@@ -682,7 +725,7 @@ function MapUnit.createEnemy( recvValue )
     charactor.defalutDirction = math.random( 0, 1 ) * 2 + 3;
 	charactor:Show(true);
 
-    -- ÊÇ·ñÊÇÊ¹ÃüÄ¿±ê¹ÖÎï
+    -- æ˜¯å¦æ˜¯ä½¿å‘½ç›®æ ‡æ€ªç‰©
     if level == MissionGetTargetMosnterLevel() then
         unitObj.transform:FindChild("Mark").gameObject:SetActive( true );
         --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.red;
@@ -691,16 +734,16 @@ function MapUnit.createEnemy( recvValue )
         --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.white;
     end
 	
-	-- ¶¯×÷
-	-- ´ı»ú
+	-- åŠ¨ä½œ
+	-- å¾…æœº
 	if action == MONSTER_ACTION_IDLE then
 	    charactor:GetComponent("Character"):Idle();
 		
-	-- ¹¥»÷	
+	-- æ”»å‡»	
 	elseif action == MONSTER_ACTION_ATTACK then
 		charactor:GetComponent("Character"):Attack();
 	
-	-- ËÀÍö	
+	-- æ­»äº¡	
 	elseif action == MONSTER_ACTION_DEAD then
 		charactor:GetComponent("Character"):Die();
 		
@@ -709,7 +752,7 @@ function MapUnit.createEnemy( recvValue )
 	return unitObj;
 end
 
--- ´´½¨×ÊÔ´µã
+-- åˆ›å»ºèµ„æºç‚¹
 function MapUnit.createRes( recvValue )
 	local state 	= recvValue.m_state;
 	local name 		= recvValue.m_name;
@@ -718,10 +761,10 @@ function MapUnit.createRes( recvValue )
 	local restype	= recvValue.m_char_value[1];
 	local level		= recvValue.m_char_value[2];
 	
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolRes ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -731,28 +774,28 @@ function MapUnit.createRes( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitRes );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolRes, unitObj );
 	end
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_RES, 0, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
 	
-	-- »ñÈ¡ÒıÓÃ
+	-- è·å–å¼•ç”¨
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
 	local uiEffectGather = objs[2];
 		
-	-- ĞÎÏó
+	-- å½¢è±¡
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
 	
-	-- Ãû×Ö
+	-- åå­—
 	if state == ARMY_STATE_GATHER then
 		local nation	= recvValue.m_char_value[3];
 		local actorid	= recvValue.m_int_value[1];
@@ -769,7 +812,7 @@ function MapUnit.createRes( recvValue )
 	return unitObj;
 end
 
--- ´´½¨Ëæ»úÊÂ¼ş
+-- åˆ›å»ºéšæœºäº‹ä»¶
 function MapUnit.createEvent( recvValue )
 	local state 	= recvValue.m_state;
 	local name 		= recvValue.m_name;
@@ -784,10 +827,10 @@ function MapUnit.createEvent( recvValue )
 	if info == nil then
 		return
 	end
-	-- ÏÈËÑË÷»º´æ£¬Èç¹û»º´æÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å…ˆæœç´¢ç¼“å­˜ï¼Œå¦‚æœç¼“å­˜æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];
 	
-	-- ÏÈ¼ì²é¶ÔÏó»º´æ³ØÊÇ·ñÓĞ¿ÕÓàµÄ
+	-- å…ˆæ£€æŸ¥å¯¹è±¡ç¼“å­˜æ± æ˜¯å¦æœ‰ç©ºä½™çš„
 	if unitObj == nil then
 		for index, unit in pairs( MapUnit.objectPoolEvent ) do
 			if unit and unit.gameObject.activeSelf == false then
@@ -797,19 +840,19 @@ function MapUnit.createEvent( recvValue )
 		end
 	end
 	
-	-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+	-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitEvent );
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolEvent, unitObj );
 	end
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_EVENT, 0, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
 	
-	-- »ñÈ¡ÒıÓÃ
+	-- è·å–å¼•ç”¨
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
@@ -817,11 +860,11 @@ function MapUnit.createEvent( recvValue )
 	local uiIcon = objs[3];
 	local uiTimer = objs[4];
 	
-	-- ĞÎÏó
+	-- å½¢è±¡
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitEventShapeList[type] );
 	
-	-- Ãû×Ö
-	if type == 3 and info.costtype > 0 then --²É¼¯ÔËÊä³µ
+	-- åå­—
+	if type == 3 and info.costtype > 0 then --é‡‡é›†è¿è¾“è½¦
 		if info.costnum > 100000 then
 			uiName:GetComponent("UIText").text = knum(info.costnum)--[[ResName( info.costtype )==]]
 		else
@@ -834,7 +877,7 @@ function MapUnit.createEvent( recvValue )
 		SetFalse( uiIcon )
 	end
 	
-	-- Íê³É×´Ì¬
+	-- å®ŒæˆçŠ¶æ€
 	if state == 1 then
 		SetTrue( uiEffect )
 		waitsec = 0;
@@ -842,7 +885,7 @@ function MapUnit.createEvent( recvValue )
 		SetFalse( uiEffect )
 	end
 	
-	-- µ¹¼ÆÊ±
+	-- å€’è®¡æ—¶
 	if waitsec > 0 then
 		SetTrue( uiTimer )
 		SetTimer( uiTimer.transform:Find("Text"), waitsec, info.waitsec );
@@ -852,7 +895,7 @@ function MapUnit.createEvent( recvValue )
 	return unitObj;
 end
 
--- µØÍ¼ÇøÓò±ß½çÏß
+-- åœ°å›¾åŒºåŸŸè¾¹ç•Œçº¿
 function MapUnit.createMapBorder( posx, posy, range )
 	if MapUnitRoot == nil then
 		return;
@@ -861,17 +904,17 @@ function MapUnit.createMapBorder( posx, posy, range )
 	local unitObj = GameObject.Instantiate( MapBorder );
 	unitObj.transform:SetParent( MapUnitRoot );
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_TOWN, 2, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, 0 );
 
-	-- ·¶Î§
+	-- èŒƒå›´
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
     --unitObj.transform:GetComponent("MapBorder"):SetColor( Color.New( 255 / 255, 0 / 255, 0 / 255, 128 / 255 ) );
 end
 
--- ´´½¨³ÇÕò·¶Î§
+-- åˆ›å»ºåŸé•‡èŒƒå›´
 function MapUnit.createTownRange( grid, posx, posy, range, nation )
 	if MapUnitRoot == nil then
 		return;
@@ -880,41 +923,41 @@ function MapUnit.createTownRange( grid, posx, posy, range, nation )
 	local unitObj = GameObject.Instantiate( MapTownRange );
 	unitObj.transform:SetParent( MapUnitRoot );
 	
-	-- Î»ÖÃ
+	-- ä½ç½®
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_TOWN, grid, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, 0 );
 
-	-- ·¶Î§
+	-- èŒƒå›´
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
     unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[nation] ) );
 end
 
--- »ñÈ¡Õ¼µØ¿é
+-- è·å–å åœ°å—
 function MapUnit.getGrid( unittype, unitgrid )
-	-- ³Ç³Ø
+	-- åŸæ± 
 	if unittype == MAPUNIT_TYPE_CITY then
 		return 1;
-	-- ²¿¶Ó
+	-- éƒ¨é˜Ÿ
 	elseif unittype == MAPUNIT_TYPE_ARMY then
 		return 1;
-	-- ³ÇÕò
+	-- åŸé•‡
 	elseif unittype == MAPUNIT_TYPE_TOWN then
 		return unitgrid;
-	-- µĞÈË
+	-- æ•Œäºº
 	elseif unittype == MAPUNIT_TYPE_ENEMY then
 		return 1;
-	-- ×ÊÔ´
+	-- èµ„æº
 	elseif unittype == MAPUNIT_TYPE_RES then
 		return 1;
-	-- Ëæ»úÊÂ¼ş
+	-- éšæœºäº‹ä»¶
 	elseif unittype == MAPUNIT_TYPE_EVENT then
 		return 1;
 	end	
 	return 1;
 end
 
--- ¸ù¾İÕ¼µØ¿é×ª»»Î»ÖÃ×ø±ê
+-- æ ¹æ®å åœ°å—è½¬æ¢ä½ç½®åæ ‡
 function MapUnit.getGridTrans( unittype, unitgrid, posx, posy )
 	local grid = MapUnit.getGrid( unittype, unitgrid );
 	if grid == 1 then
@@ -927,7 +970,7 @@ function MapUnit.getGridTrans( unittype, unitgrid, posx, posy )
 	return posx, posy;
 end
 
--- ²¿¶Ó¼ÓËÙ
+-- éƒ¨é˜ŸåŠ é€Ÿ
 function MapUnit.armySpeedUpdate( unit_index, state, statetime, stateduration )
 	local recvValue = WorldMap.m_nMapUnitList[unit_index];
 	if recvValue == nil then
@@ -946,27 +989,27 @@ function MapUnit.armySpeedUpdate( unit_index, state, statetime, stateduration )
 	local move_time 	= statetime;
 	local move_needtime = stateduration;
 
-	-- Ä¿µÄµã
+	-- ç›®çš„ç‚¹
 	cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( to_posx, to_posy );
 	local tposx, tposy = MapUnit.getGridTrans( to_type, to_grid, cameraPosX, cameraPosY );
 	
-	-- µ±Ç°µã
+	-- å½“å‰ç‚¹
 	local fposx = unitObj.transform.localPosition.x;
 	local fposy = unitObj.transform.localPosition.y;
 	
-	-- ÊÇ·ñ·µ³Ì
+	-- æ˜¯å¦è¿”ç¨‹
 	if state == ARMY_STATE_REBACK then
 		fposx, tposx = tposx, fposx;
 		fposy, tposy = tposy, fposy;
 	end
 	
-	-- ×Ü¾àÀë
+	-- æ€»è·ç¦»
 	local distance = math.sqrt( math.pow( ( tposx - fposx ), 2 ) + math.pow( ( tposy - fposy ), 2) );
 
-	-- ¼ÆËã¿Í»§¶ËĞèÒªµÄËÙ¶È
+	-- è®¡ç®—å®¢æˆ·ç«¯éœ€è¦çš„é€Ÿåº¦
 	local speed = distance/(move_needtime-move_time);
 
-	-- ¿ªÊ¼ÒÆ¶¯
+	-- å¼€å§‹ç§»åŠ¨
 	local moveAttr = unitObj:GetComponent("MapUnitMove");
 	moveAttr.speed = speed;
 end

@@ -8,11 +8,15 @@
 #define SENDTYPE_ZONE		3	// 发给当前游戏区域
 #define SENDTYPE_WORLD		4	// 发给当前服务器
 
-#define SENDTYPE_NATION		10	// 发给当前国家
+#define SENDTYPE_NATION		10	// 
 #define SENDTYPE_NATION1	11	// 发送给魏国
 #define SENDTYPE_NATION2	12	// 发送给蜀国
 #define SENDTYPE_NATION3	13	// 发送给吴国
 
+#define SENDTYPE_WORLDMAP_NATION	15	// 
+#define SENDTYPE_WORLDMAP_NATION1	16	// 发送给魏国(在野外的玩家)
+#define SENDTYPE_WORLDMAP_NATION2	17	// 发送给蜀国(在野外的玩家)
+#define SENDTYPE_WORLDMAP_NATION3	18	// 发送给吴国(在野外的玩家)
 
 int readtoqueue( int client_index, char *pBuf, int readsize, char stat );
 int actor_senddata( int actor_index, char send_type, char *data, int datasize );

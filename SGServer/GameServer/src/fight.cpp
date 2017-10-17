@@ -540,6 +540,8 @@ int fight_start_armygroup( int group_index )
 					continue;
 				fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_TOWN, pTown->townid, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 					pMonster->attack, pMonster->defense, soldier, soldier, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill );
+
+				g_fight.town_total_maxhp += soldier;
 			}
 		}
 		// 协防部队
@@ -766,6 +768,10 @@ int fight_useskill( int pos, FightUnit *pUnit, FightUnit *pTargetUnit )
 		fight_debug( "[%s](skill) idx:%d,kind:%d,damage:%d(%d),target_idx:%d,target_kind:%d,line_left:%d,line_hp:(%d-%d=%d)", s_fight_posname[pos], pUnit->offset, pUnit->kind, damage, true_damage, pTargetUnit->offset, pTargetUnit->kind, pTargetUnit->line_left, pTargetUnit->line_hp, damage, pTargetUnit->line_hp - damage );
 		pUnit->skillid = 0;
 		pUnit->damage += damage;
+		if ( pTargetUnit->unit_type == MAPUNIT_TYPE_TOWN )
+		{ // 对守军造成伤害
+			pUnit->town_damage += damage;
+		}
 	}
 	return damage;
 }
@@ -811,6 +817,10 @@ int fight_damage( int pos, FightUnit *pUnit, FightUnit *pTargetUnit )
 			fight_debug( "[%s](default) idx:%d,kind:%d,damage:%d(%d),target_idx:%d,target_kind:%d,line_left:%d,line_hp:(%d-%d=%d)", s_fight_posname[pos], pUnit->offset, pUnit->kind, damage, true_damage, pTargetUnit->offset, pTargetUnit->kind, pTargetUnit->line_left, pTargetUnit->line_hp, damage, pTargetUnit->line_hp - damage );
 		}
 		pUnit->damage += damage;
+		if ( pTargetUnit->unit_type == MAPUNIT_TYPE_TOWN )
+		{ // 对守军造成伤害
+			pUnit->town_damage += damage;
+		}
 	}
 	return damage;
 }
@@ -988,6 +998,24 @@ int fight_lost_calc_single( FightUnit *pUnit )
 			if ( pUnit->prestige > 0 )
 			{
 				army_carry_additem( army_index, AWARDKIND_PRESTIGE, pUnit->prestige );
+			}
+
+			// 对守军造成的伤害
+			if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
+			{
+				if ( pUnit->town_damage > 0 )
+				{
+					if ( g_fight.defense_index > 0 && g_fight.defense_index < g_map_town_maxcount )
+					{
+						float v = pUnit->town_damage / (float)g_fight.town_total_maxhp;
+						int silver = (int)ceil( v * g_towninfo[g_fight.defense_index].fight_silver );
+						int wood = (int)ceil( v * g_towninfo[g_fight.defense_index].fight_wood );
+						int food = (int)ceil( v * g_towninfo[g_fight.defense_index].fight_food );
+						g_army[army_index].silver += silver;
+						g_army[army_index].wood += wood;
+						g_army[army_index].food += food;
+					}
+				}
 			}
 		}
 	}

@@ -1,73 +1,73 @@
----------------------- UIÊÂ¼þ ----------------------
-UI_EVENT_CLICK 			    = 0;		-- UIButtonµ¥»÷				ÎÞ²Î
-UI_EVENT_PRESS 			    = 1;		-- UIButton°´ÏÂ				0 °´ÏÂ£¬1 Ì§Æð
-UI_EVENT_INPUTSUBMIT	    = 2;		-- UIInputFieldÌá½»			ÎÞ²Î
-UI_EVENT_TWEENFINISH	    = 3;		-- UITween²¥·ÅÍê±Ï			0 ÕýÏò½áÊø£¬1 ÄæÏò
-UI_EVENT_SCROLLDRAG		    = 4;		-- UIScrollRectÍÏ¶¯			0 ¿ªÊ¼ÍÏ¶¯£¬1 ÍÏ¶¯ÖÐ£¬2 ½áÊøÍÏ¶¯
-UI_EVENT_SLIDERVALUECHANGE  = 5;		-- UISliderÖµ¸Ä±ä			slider valueÖµ
-UI_EVENT_CENTERCHILD	    = 6;		-- UIScrollRing×Ó¾ÓÖÐ		×Óindex
-UI_EVENT_TIMECOUNTEND       = 7;        -- UITextTimeCountdown      ¼ÆÊ±½áÊø
-UI_EVENT_DRAGSENSOR         = 8;        -- UIDragSensorÍÏ×§ÊÂ¼þ
-UI_EVENT_RICHTEXTSETEND     = 9;        -- UIRcihText±ê¼Çµã»÷
-UI_EVENT_RICHTEXTMASKCLICK  = 10;       -- UIRcihText±ê¼Çµã»÷
-UI_EVENT_INPUTVALUECHANGED  = 11;       -- UIInputFieldÄÚÈÝÐÞ¸Ä		µ±Ç°inputfieldÄÚÈÝ
-UI_EVENT_TIMECOUNTCHANGED   = 12;       -- ¼ÆÊýÐÞ¸Ä
+---------------------- UIäº‹ä»¶ ----------------------
+UI_EVENT_CLICK 			    = 0;		-- UIButtonå•å‡»				æ— å‚
+UI_EVENT_PRESS 			    = 1;		-- UIButtonæŒ‰ä¸‹				0 æŒ‰ä¸‹ï¼Œ1 æŠ¬èµ·
+UI_EVENT_INPUTSUBMIT	    = 2;		-- UIInputFieldæäº¤			æ— å‚
+UI_EVENT_TWEENFINISH	    = 3;		-- UITweenæ’­æ”¾å®Œæ¯•			0 æ­£å‘ç»“æŸï¼Œ1 é€†å‘
+UI_EVENT_SCROLLDRAG		    = 4;		-- UIScrollRectæ‹–åŠ¨			0 å¼€å§‹æ‹–åŠ¨ï¼Œ1 æ‹–åŠ¨ä¸­ï¼Œ2 ç»“æŸæ‹–åŠ¨
+UI_EVENT_SLIDERVALUECHANGE  = 5;		-- UISliderå€¼æ”¹å˜			slider valueå€¼
+UI_EVENT_CENTERCHILD	    = 6;		-- UIScrollRingå­å±…ä¸­		å­index
+UI_EVENT_TIMECOUNTEND       = 7;        -- UITextTimeCountdown      è®¡æ—¶ç»“æŸ
+UI_EVENT_DRAGSENSOR         = 8;        -- UIDragSensoræ‹–æ‹½äº‹ä»¶
+UI_EVENT_RICHTEXTSETEND     = 9;        -- UIRcihTextæ ‡è®°ç‚¹å‡»
+UI_EVENT_RICHTEXTMASKCLICK  = 10;       -- UIRcihTextæ ‡è®°ç‚¹å‡»
+UI_EVENT_INPUTVALUECHANGED  = 11;       -- UIInputFieldå†…å®¹ä¿®æ”¹		å½“å‰inputfieldå†…å®¹
+UI_EVENT_TIMECOUNTCHANGED   = 12;       -- è®¡æ•°ä¿®æ”¹
 UI_EVENT_VOICE              = 13;       -- UIVoice
-UI_EVENT_UIDRAG             = 14;       -- UIDRAGÊÂ¼þ            0 ¿ªÊ¼ÍÏ¶¯£¬1 ½áÊøÍÏ¶¯
-UI_EVENT_UIDROP             = 15;       -- UIDROPÊÂ¼þ			dragger ID
-UI_EVENT_INPUTSUBMITEX      = 16;		-- UIInputFieldÌá½»		ÎÞ²Î
+UI_EVENT_UIDRAG             = 14;       -- UIDRAGäº‹ä»¶            0 å¼€å§‹æ‹–åŠ¨ï¼Œ1 ç»“æŸæ‹–åŠ¨
+UI_EVENT_UIDROP             = 15;       -- UIDROPäº‹ä»¶			dragger ID
+UI_EVENT_INPUTSUBMITEX      = 16;		-- UIInputFieldæäº¤		æ— å‚
 UI_EVENT_TOGGLEVALUECHANGE	= 17;
-UI_EVENT_CLICKPOS			= 18;		-- µã»÷Î»ÖÃÊÂ¼þ
-UI_EVENT_PUSHEVENT		    = 1000;		-- UIÍ¨ÓÃÊÂ¼þ£¬²»Ïë¶¨ÒåÐÂÊÂ¼þ¿ÉÓÃ			    ²ÎÊý
+UI_EVENT_CLICKPOS			= 18;		-- ç‚¹å‡»ä½ç½®äº‹ä»¶
+UI_EVENT_PUSHEVENT		    = 1000;		-- UIé€šç”¨äº‹ä»¶ï¼Œä¸æƒ³å®šä¹‰æ–°äº‹ä»¶å¯ç”¨			    å‚æ•°
 
--- ¿ÉÉý¼¶µÄÆÕÍ¨½¨Öþ
-BUILDING_Main           = 1  -- Ö÷³Ç
-BUILDING_Wall           = 2  -- ³ÇÇ½
-BUILDING_StoreHouse     = 3  -- ²Ö¿â
-BUILDING_Tech           = 4  -- Ì«Ñ§Ôº
-BUILDING_Craftsman      = 5  -- ²ÄÁÏ×÷·»
-BUILDING_Cabinet        = 6  -- ÄÚ¸ó
+-- å¯å‡çº§çš„æ™®é€šå»ºç­‘
+BUILDING_Main           = 1  -- ä¸»åŸŽ
+BUILDING_Wall           = 2  -- åŸŽå¢™
+BUILDING_StoreHouse     = 3  -- ä»“åº“
+BUILDING_Tech           = 4  -- å¤ªå­¦é™¢
+BUILDING_Craftsman      = 5  -- ææ–™ä½œåŠ
+BUILDING_Cabinet        = 6  -- å†…é˜
 
--- ±øÓª
-BUILDING_Infantry       		= 11  -- ²½±øÓª
-BUILDING_Cavalry        		= 12  -- Æï±øÓª
-BUILDING_Archer         		= 13  -- ¹­±øÓª
-BUILDING_Militiaman_Infantry	= 14  -- Ãñ±øÓª-²½±ø
-BUILDING_Militiaman_Cavalry		= 15  -- Ãñ±øÓª-Æï±ø
-BUILDING_Militiaman_Archer		= 16  -- Ãñ±øÓª-¹­±ø
+-- å…µè¥
+BUILDING_Infantry       		= 11  -- æ­¥å…µè¥
+BUILDING_Cavalry        		= 12  -- éª‘å…µè¥
+BUILDING_Archer         		= 13  -- å¼“å…µè¥
+BUILDING_Militiaman_Infantry	= 14  -- æ°‘å…µè¥-æ­¥å…µ
+BUILDING_Militiaman_Cavalry		= 15  -- æ°‘å…µè¥-éª‘å…µ
+BUILDING_Militiaman_Archer		= 16  -- æ°‘å…µè¥-å¼“å…µ
 
--- ×ÊÔ´½¨Öþ
-BUILDING_Silver		    =  21	-- Òø±Ò
-BUILDING_Wood		    =  22	-- Ä¾²Ä
-BUILDING_Food		    =  23	-- Ê³Îï
-BUILDING_Iron		    =  24   -- ïÙÌú
+-- èµ„æºå»ºç­‘
+BUILDING_Silver		    =  21	-- é“¶å¸
+BUILDING_Wood		    =  22	-- æœ¨æ
+BUILDING_Food		    =  23	-- é£Ÿç‰©
+BUILDING_Iron		    =  24   -- é•”é“
 
--- ´¿Èë¿Ú½¨Öþ
-BUILDING_Smithy		    =  31	-- Ìú½³ÆÌ
-BUILDING_Wash		    =  32	-- Ï´Á¶ÆÌ
-BUILDING_Fangshi	    =  33	-- ·»ÊÐ
-BUILDING_Shop		    =  34	-- ÉÌµê
-BUILDING_Hero		    =  35	-- ¾ÛÏÍ¹Ý
-BUILDING_Wishing	    =  36	-- ¾Û±¦Åè
-BUILDING_Help		    =  37	-- °ïÖú
+-- çº¯å…¥å£å»ºç­‘
+BUILDING_Smithy		    =  31	-- é“åŒ é“º
+BUILDING_Wash		    =  32	-- æ´—ç‚¼é“º
+BUILDING_Fangshi	    =  33	-- åŠå¸‚
+BUILDING_Shop		    =  34	-- å•†åº—
+BUILDING_Hero		    =  35	-- èšè´¤é¦†
+BUILDING_Wishing	    =  36	-- èšå®ç›†
+BUILDING_Help		    =  37	-- å¸®åŠ©
 
--- ¹¦ÄÜÈë¿Ú
-CITY_FUNCTION_SMITHY		=0	-- Ìú½³ÆÌ
-CITY_FUNCTION_WASH			=1	-- Ï´Á¶ÆÌ
-CITY_FUNCTION_FANGSHI		=2	-- ·»ÊÐ
-CITY_FUNCTION_SHOP			=3	-- ÉÌµê
-CITY_FUNCTION_HERO			=4	-- ¾ÛÏÍ¹Ý
-CITY_FUNCTION_WISHING		=5	-- ¾Û±¦Åè
-CITY_FUNCTION_NATION		=10	-- ¹ú¼Ò
-CITY_FUNCTION_WORLD			=11	-- ÊÀ½ç
-CITY_FUNCTION_STORY			=12	-- ¸±±¾
-CITY_FUNCTION_MAIL			=13	-- ÓÊ¼þ
-CITY_FUNCTION_FRIEND		=14	-- ºÃÓÑ
-CITY_FUNCTION_NATIONEQUIP	=15	-- ¹úÆ÷
-CITY_FUNCTION_RANK			=16	-- ÅÅÐÐ°ñ
-CITY_FUNCTION_AUTOBUILD		=17	-- ×Ô¶¯½¨Ôì
-CITY_FUNCTION_CHAT			=18	-- ÁÄÌì
-CITY_FUNCTION_WARKEREX		=19	-- ÉÌÒµ½¨Ôì¶Ó
+-- åŠŸèƒ½å…¥å£
+CITY_FUNCTION_SMITHY		=0	-- é“åŒ é“º
+CITY_FUNCTION_WASH			=1	-- æ´—ç‚¼é“º
+CITY_FUNCTION_FANGSHI		=2	-- åŠå¸‚
+CITY_FUNCTION_SHOP			=3	-- å•†åº—
+CITY_FUNCTION_HERO			=4	-- èšè´¤é¦†
+CITY_FUNCTION_WISHING		=5	-- èšå®ç›†
+CITY_FUNCTION_NATION		=10	-- å›½å®¶
+CITY_FUNCTION_WORLD			=11	-- ä¸–ç•Œ
+CITY_FUNCTION_STORY			=12	-- å‰¯æœ¬
+CITY_FUNCTION_MAIL			=13	-- é‚®ä»¶
+CITY_FUNCTION_FRIEND		=14	-- å¥½å‹
+CITY_FUNCTION_NATIONEQUIP	=15	-- å›½å™¨
+CITY_FUNCTION_RANK			=16	-- æŽ’è¡Œæ¦œ
+CITY_FUNCTION_AUTOBUILD		=17	-- è‡ªåŠ¨å»ºé€ 
+CITY_FUNCTION_CHAT			=18	-- èŠå¤©
+CITY_FUNCTION_WARKEREX		=19	-- å•†ä¸šå»ºé€ é˜Ÿ
 
 BuildingPrefab={
 [BUILDING_Main] = { prefab = "BUILDING_Main", land="BuildingLand0" },
@@ -120,51 +120,51 @@ BuildingPrefab={
 	elseif kind == BUILDING_Help then
 	end
 --]]
--- Í¾¾¶
-PATH_SYSTEM						=	1	-- ÏµÍ³
+-- é€”å¾„
+PATH_SYSTEM						=	1	-- ç³»ç»Ÿ
 PATH_GM							=	2	-- GM
-PATH_PAY						=	3	-- ³äÖµ
-PATH_ITEMUSE					=	4	-- µÀ¾ßÊ¹ÓÃ
-PATH_TOKENITEMUSE				=	5	-- ×êÊ¯Ö±½ÓÊ¹ÓÃ
-PATH_SELL						=	6	-- ÊÛÂô¶ªÆú
-PATH_BUILDING_UPGRADE			=	7	-- ½¨Öþ
-PATH_QUEST						=	8	-- ÈÎÎñ
-PATH_GUARD_UPGRADE				=	9	-- ÊØÎÀÉý¼¶
-PATH_LEVY						=	10	-- Õ÷ÊÕ
-PATH_TRAIN						=	11	-- ÑµÁ·
-PATH_RESOLVE					=	12	-- ·Ö½â
-PATH_EQUIPEXT					=	13	-- ¹ºÂò×°±¸ÈÝÁ¿
-PATH_TECH_UPGRADE				=	14	-- ¿Æ¼¼Éý¼¶
-PATH_TECH_FINISH				=	15	-- ¿Æ¼¼Íê³É
-PATH_TECH_GET					=	16	-- ¿Æ¼¼ÁìÈ¡
-PATH_TECH_QUICK					=	17	-- ¿Æ¼¼¼ÓËÙ
-PATH_TECH_FREEQUICK				=	18	-- ¿Æ¼¼Ãâ·Ñ¼ÓËÙ
-PATH_HIRE_FORGING				=	19	-- ¹ÍÓ¶
-PATH_HIRE_GOV					=	20	-- ¹ÍÓ¶
-PATH_HIRE_TECH					=	21	-- ¹ÍÓ¶
-PATH_BUILDING_WORKER			=	22	-- ÉÌÓÃ½¨Ôì¶ÓÁÐ
-PATH_TRAIN_QUEUE				=	23	-- ÕÐÄ¼¶ÓÁÐ
-PATH_TRAIN_LONG					=	24	-- ÑµÁ·Ê±³¤
-PATH_TRAIN_GET					=	25	-- ÑµÁ·ÁìÈ¡
-PATH_TRAIN_CANCEL				=	26	-- È¡ÏûÕÐÄ¼
-PATH_EQUIP_FORGING				=	27	-- ×°±¸´òÔì
-PATH_FORGING_QUICK				=	28	-- ´òÔì¼ÓËÙ
-PATH_FORGING_FREEQUICK			=	29	-- Ìú½³¼ÓËÙ
-PATH_BODYBUY					=	30	-- ¹ºÂòÌåÁ¦
-PATH_CHANGENAME					=	31	-- ¸ÄÃû
-PATH_GUARD_LIFE					=	32	-- ÊØÎÀ²¹Ñª
-PATH_EQUIP_UP					=	33	-- ×°±¸ÉÏ
-PATH_EQUIP_DOWN					=	34	-- ×°±¸ÏÂ
-PATH_HERO_ADDEXP				=	35	-- ¼ÓÓ¢ÐÛ¾­Ñé
-PATH_HERO_ADDSOLDIERS			=	36	-- ²¹±ø
-PATH_HERO_SOLDIERS_EQUIP		=	37	-- ÍÑÐ¶×°±¸´øÀ´µÄ±øÁ¦ËðÊ§
-PATH_HERO_WASH					=	38	-- Ó¢ÐÛÏ´Ëè
-PATH_EQUIP_WASH					=	39	-- ×°±¸Ï´Á·
-PATH_MATERIALMAKE_QUEUE			=	40	-- ²ÄÁÏÖÆÔì¶ÓÁÐ
-PATH_MATERIALMAKE				=	41	-- ²ÄÁÏÖÆÔì
+PATH_PAY						=	3	-- å……å€¼
+PATH_ITEMUSE					=	4	-- é“å…·ä½¿ç”¨
+PATH_TOKENITEMUSE				=	5	-- é’»çŸ³ç›´æŽ¥ä½¿ç”¨
+PATH_SELL						=	6	-- å”®å–ä¸¢å¼ƒ
+PATH_BUILDING_UPGRADE			=	7	-- å»ºç­‘
+PATH_QUEST						=	8	-- ä»»åŠ¡
+PATH_GUARD_UPGRADE				=	9	-- å®ˆå«å‡çº§
+PATH_LEVY						=	10	-- å¾æ”¶
+PATH_TRAIN						=	11	-- è®­ç»ƒ
+PATH_RESOLVE					=	12	-- åˆ†è§£
+PATH_EQUIPEXT					=	13	-- è´­ä¹°è£…å¤‡å®¹é‡
+PATH_TECH_UPGRADE				=	14	-- ç§‘æŠ€å‡çº§
+PATH_TECH_FINISH				=	15	-- ç§‘æŠ€å®Œæˆ
+PATH_TECH_GET					=	16	-- ç§‘æŠ€é¢†å–
+PATH_TECH_QUICK					=	17	-- ç§‘æŠ€åŠ é€Ÿ
+PATH_TECH_FREEQUICK				=	18	-- ç§‘æŠ€å…è´¹åŠ é€Ÿ
+PATH_HIRE_FORGING				=	19	-- é›‡ä½£
+PATH_HIRE_GOV					=	20	-- é›‡ä½£
+PATH_HIRE_TECH					=	21	-- é›‡ä½£
+PATH_BUILDING_WORKER			=	22	-- å•†ç”¨å»ºé€ é˜Ÿåˆ—
+PATH_TRAIN_QUEUE				=	23	-- æ‹›å‹Ÿé˜Ÿåˆ—
+PATH_TRAIN_LONG					=	24	-- è®­ç»ƒæ—¶é•¿
+PATH_TRAIN_GET					=	25	-- è®­ç»ƒé¢†å–
+PATH_TRAIN_CANCEL				=	26	-- å–æ¶ˆæ‹›å‹Ÿ
+PATH_EQUIP_FORGING				=	27	-- è£…å¤‡æ‰“é€ 
+PATH_FORGING_QUICK				=	28	-- æ‰“é€ åŠ é€Ÿ
+PATH_FORGING_FREEQUICK			=	29	-- é“åŒ åŠ é€Ÿ
+PATH_BODYBUY					=	30	-- è´­ä¹°ä½“åŠ›
+PATH_CHANGENAME					=	31	-- æ”¹å
+PATH_GUARD_LIFE					=	32	-- å®ˆå«è¡¥è¡€
+PATH_EQUIP_UP					=	33	-- è£…å¤‡ä¸Š
+PATH_EQUIP_DOWN					=	34	-- è£…å¤‡ä¸‹
+PATH_HERO_ADDEXP				=	35	-- åŠ è‹±é›„ç»éªŒ
+PATH_HERO_ADDSOLDIERS			=	36	-- è¡¥å…µ
+PATH_HERO_SOLDIERS_EQUIP		=	37	-- è„±å¸è£…å¤‡å¸¦æ¥çš„å…µåŠ›æŸå¤±
+PATH_HERO_WASH					=	38	-- è‹±é›„æ´—é«“
+PATH_EQUIP_WASH					=	39	-- è£…å¤‡æ´—ç»ƒ
+PATH_MATERIALMAKE_QUEUE			=	40	-- ææ–™åˆ¶é€ é˜Ÿåˆ—
+PATH_MATERIALMAKE				=	41	-- ææ–™åˆ¶é€ 
 
--- ÎÄ×Ö±í
--- »ñÈ¡±¾µØ»¯ÎÄ×Ö
+-- æ–‡å­—è¡¨
+-- èŽ·å–æœ¬åœ°åŒ–æ–‡å­—
 function GetLocalizeText( id )
     if id == nil then
         return "";
@@ -234,17 +234,17 @@ function zhtime( second )
     return sec..T(153)
 end
 
--- Ð´gamelog
+-- å†™gamelog
 function gamelog( msg )
 	LogUtil.GetInstance():WriteGame( msg );
 end
 
--- Ð´netlog
+-- å†™netlog
 function netlog( msg )
 	LogUtil.GetInstance():WriteNet( msg );
 end
 
--- ÑÓÊ±Ö´ÐÐ
+-- å»¶æ—¶æ‰§è¡Œ
 function Invoke(func, delay, param, name)
     if param == nil then
         param = 0;
@@ -256,12 +256,12 @@ function Invoke(func, delay, param, name)
     eye.gameManager:GameInvoke(delay, param, name);
 end
 
--- Í£Ö¹ÑÓÊ±Ö´ÐÐ
+-- åœæ­¢å»¶æ—¶æ‰§è¡Œ
 function InvokeStop(name)
     eye.gameManager:GameInvoke_Stop(name);
 end
 
--- »ñÈ¡¹ú¼ÒÃû³Æ
+-- èŽ·å–å›½å®¶åç§°
 function Nation( nation )
 	if nation == 0 then
 		return T(110)
@@ -273,7 +273,7 @@ function NationEx( nation )
 	return T(nation+110);
 end
 
--- »ñÈ¡½¨ÖþÃû³Æ
+-- èŽ·å–å»ºç­‘åç§°
 function BuildingName( kind, offset )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron and offset ~= nil then
 		return F( 99, offset+1, T( kind ) )
@@ -282,7 +282,7 @@ function BuildingName( kind, offset )
 	end
 end
 
--- »ñÈ¡½¨ÖþÃû³Æ´øµÈ¼¶
+-- èŽ·å–å»ºç­‘åç§°å¸¦ç­‰çº§
 function BuildingNameLv( kind, offset, level )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron and offset ~= nil then
 		return "Lv."..level.." "..F( 99, offset+1, T( kind ) )
@@ -291,17 +291,17 @@ function BuildingNameLv( kind, offset, level )
 	end
 end
 
--- »ñÈ¡Ó¢ÐÛÃû³Æ
+-- èŽ·å–è‹±é›„åç§°
 function HeroName( kind )
 	return Localization.text_item(kind+3000);
 end
 
--- »ñÈ¡Ó¢ÐÛÃû³Æ´øµÈ¼¶
+-- èŽ·å–è‹±é›„åç§°å¸¦ç­‰çº§
 function HeroNameLv( kind, level )
 	return "Lv."..level.." "..HeroName( kind );
 end
 
--- Ó¢ÐÛ×´Ì¬ÎÄ×Ö
+-- è‹±é›„çŠ¶æ€æ–‡å­—
 function HeroState( state )
 	if state == 0 then
 		return T(141);
@@ -310,12 +310,12 @@ function HeroState( state )
 	end
 end
 
--- ±øÖÖÃû³Æ
+-- å…µç§åç§°
 function CorpsName( corps )
 	return T(134+corps);
 end
 
--- ±øÖÖÃû³Æ
+-- å…µç§åç§°
 function CorpsNameEx( buildingkind )
 	local corps = 0;
 	if buildingkind == BUILDING_Infantry or buildingkind == BUILDING_Militiaman_Infantry then
@@ -328,63 +328,63 @@ function CorpsNameEx( buildingkind )
 	return CorpsName( corps );
 end
 
--- »ñÈ¡×°±¸Ãû³Æ
+-- èŽ·å–è£…å¤‡åç§°
 function EquipName( kind )
 	return Localization.text_item(kind+2000);
 end
 
--- »ñÈ¡¿Æ¼¼Ãû³Æ
+-- èŽ·å–ç§‘æŠ€åç§°
 function TechName( kind )
 	return Localization.text_item(kind+4000);
 end
 
--- »ñÈ¡¿Æ¼¼ÃèÊö
+-- èŽ·å–ç§‘æŠ€æè¿°
 function TechDesc( kind )
 	return Localization.text_item(kind+4100);
 end
 
--- »ñÈ¡¿Æ¼¼ÃèÊö
+-- èŽ·å–ç§‘æŠ€æè¿°
 function TechDescUp( kind )
 	return Localization.text_item(kind+4200);
 end
 
--- »ñÈ¡×ÊÔ´Ãû³Æ
+-- èŽ·å–èµ„æºåç§°
 function ResName( restype )
 	return T(120+restype)
 end
 
--- »ñÈ¡µØÍ¼ÇøÓòÃû³Æ
+-- èŽ·å–åœ°å›¾åŒºåŸŸåç§°
 function MapZoneName( id )
 	return Localization.text_item(14000+id);
 end
 
--- »ñÈ¡µØÍ¼³Ç³ØÃû³Æ
+-- èŽ·å–åœ°å›¾åŸŽæ± åç§°
 function MapTownName( id )
 	return Localization.text_item(14100+id);
 end
 
--- »ñÈ¡µÐ¾üÃû³Æ
+-- èŽ·å–æ•Œå†›åç§°
 function EnemyName( id )
 	return Localization.text_item(8000+id);
 end
 
--- Ö°Î»Ãû³Æ
+-- èŒä½åç§°
 function PlaceName( place )
-	Localization.text( 200+place );
+	return Localization.text( 200+place );
 end
 
--- Ãû³ÆÑÕÉ«
+-- åç§°é¢œè‰²
 function NameColor( color )
 	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff }
 	return Hex2Color( c[color+1] )
 end
 
--- ÑÕÉ«Ãû³Æ
+-- é¢œè‰²åç§°
 function ColorName( color )
 	return T( 157+color )
 end
 
--- Çå¿ÕËùÓÐ×Ó½Úµã
+-- æ¸…ç©ºæ‰€æœ‰å­èŠ‚ç‚¹
 function clearChild( object )
 	--for i = 0 ,object.transform.childCount - 1 do
        -- GameObject.Destroy( object.transform:GetChild(i).gameObject );
@@ -393,7 +393,7 @@ function clearChild( object )
 end
 
 
--- Ìí¼Ó½Úµã
+-- æ·»åŠ èŠ‚ç‚¹
 function addChild( object, prefab )
 	local obj = GameObject.Instantiate( prefab );
 	obj.transform:SetParent( object.transform );
@@ -403,7 +403,7 @@ function addChild( object, prefab )
 	return obj;
 end
 
--- Ìí¼Ó½Úµã
+-- æ·»åŠ èŠ‚ç‚¹
 function addObj( object, prefab )
 	local obj = GameObject.Instantiate( prefab );
 	obj.transform:SetParent( object.transform );

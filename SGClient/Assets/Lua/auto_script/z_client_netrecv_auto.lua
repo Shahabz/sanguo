@@ -575,6 +575,21 @@ function netrecv_townowneraskList_C( buffer )
 	proc_townowneraskList_C( recvValue );
 end
 
+function netrecv_townfightlist_C( buffer )
+	local recvValue = struct_NetS_TownFightList_recv( buffer );
+	proc_townfightlist_C( recvValue );
+end
+
+function netrecv_dialogupdate_C( buffer )
+	local recvValue = struct_NetS_DialogUpdate_recv( buffer );
+	proc_dialogupdate_C( recvValue );
+end
+
+function netrecv_maptownexinfo_C( buffer )
+	local recvValue = struct_NetS_MapTownExInfo_recv( buffer );
+	proc_maptownexinfo_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -691,6 +706,9 @@ Proc_Command = {
 	[CMDS_ROLLMSGJSON]=netrecv_rollmsgjson_C;
 	[CMDS_ROLLMSG]=netrecv_rollmsg_C;
 	[CMDS_TOWNOWNERASKLIST]=netrecv_townowneraskList_C;
+	[CMDS_TOWNFIGHTLIST]=netrecv_townfightlist_C;
+	[CMDS_DIALOGUPDATE]=netrecv_dialogupdate_C;
+	[CMDS_MAPTOWNEXINFO]=netrecv_maptownexinfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -383,14 +383,6 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 遣返
 			actor_helparmy_repatriate( actor_index, pvalue[1] );
 		}
-		else if ( pvalue[0] == 10 )
-		{ // 城镇奖励
-			map_town_sendaward( actor_index, pvalue[1] );
-		}
-		else if ( pvalue[0] == 11 )
-		{ // 城镇详细信息
-			map_town_sendinfo( actor_index, pvalue[1] );
-		}
 		break;
 	case ASKINFO_MAP_EVENT:
 		if ( pvalue[0] == 1 )
@@ -433,6 +425,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 创建国战
 			armygroup_nation_askcreate( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 2 )
+		{ // 所有有战争的城镇
+			armygroup_nation_sendlist( actor_index );
+		}
 		break;
 	case ASKINFO_MAPTOWN:
 		if ( pvalue[0] == 0 )
@@ -454,6 +450,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 4 )
 		{ // 征收
 			map_town_levy( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 城镇奖励
+			map_town_sendaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 城镇详细信息
+			map_town_sendinfo( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 城镇详细信息
+			map_town_ex_sendinfo( actor_index, pvalue[1] );
 		}
 		break;
 	default:

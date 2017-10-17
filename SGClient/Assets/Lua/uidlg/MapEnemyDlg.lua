@@ -155,6 +155,13 @@ end
 
 -- 选择武将界面
 function MapEnemyDlgBattle()
+	-- 不在同一区域
+	if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, m_recvValue.m_posx, m_recvValue.m_posy ) == 0 then
+		AlertMsg(T(1322))
+		MapEnemyDlgClose();
+		return
+	end
+		
 	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT, -1 )
 	MapEnemyDlgClose();
 end

@@ -25,6 +25,7 @@
 #include "hero.h"
 #include "mail.h"
 #include "building.h"
+#include "map_town.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -94,6 +95,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	switch ( cmd )
 	{
 	case GMC_TEST:
+		if ( pValue[0] == 1 )
+		{
+			map_town_owner_award();
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );
@@ -309,6 +314,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			pCity->eventsec = 1;
+		}
+		break;
+	case GMC_VW: // ÍþÍû
+		if ( pCity )
+		{
+			city_changeprestige( pCity->index, pValue[0], PATH_GM );
 		}
 		break;
 	default:

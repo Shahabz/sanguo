@@ -1,4 +1,4 @@
--- 文件名不能和表名冲突
+-- 鏂囦欢鍚嶄笉鑳藉拰琛ㄥ悕鍐茬獊
 object			= System.Object
 Type			= System.Type
 Object          = UnityEngine.Object
@@ -119,6 +119,7 @@ require "uimod/GuardCallMod"
 require "uimod/MapClickMod"
 require "uimod/MapThumbMod"
 require "uimod/TownProduceMod"
+require "uimod/TownFightMod"
 require "uidlg/AlertDlg"
 require "uidlg/BagDlg"
 require "uidlg/BuildingCreateDlg"
@@ -165,6 +166,7 @@ require "uidlg/MapCityDlg"
 require "uidlg/MapCityFightDlg"
 require "uidlg/MapCityHelpDlg"
 require "uidlg/MapTownDlg"
+require "uidlg/MapTownExDlg"
 require "uidlg/MapEnemyDlg"
 require "uidlg/MapResDlg"
 require "uidlg/MapEventDlg"

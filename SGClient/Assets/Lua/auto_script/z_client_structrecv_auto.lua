@@ -86,6 +86,12 @@ function struct_NetS_Notify_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_DialogUpdate_recv( buffer )
+	local recvValue = {};
+	recvValue.m_ui = buffer:ReadSByte();
+	return recvValue;
+end
+
 function struct_NetS_OfficialHire_recv( buffer )
 	local recvValue = {};
 	recvValue.m_ofkind = buffer:ReadShort();
@@ -1447,6 +1453,7 @@ function struct_NetS_MapTownInfo_recv( buffer )
 	recvValue.m_hp = buffer:ReadInt();
 	recvValue.m_maxhp = buffer:ReadInt();
 	recvValue.m_myask = buffer:ReadSByte();
+	recvValue.m_produce_num = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -1523,6 +1530,36 @@ function struct_NetS_TownOwnerAskList_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_sec = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_TownFight_recv( buffer )
+	local recvValue = {};
+	recvValue.m_townid = buffer:ReadShort();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_TownFightList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_TownFight_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_MapTownExInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_dev_level = buffer:ReadSByte();
+	recvValue.m_dev_exp = buffer:ReadInt();
+	recvValue.m_dev_expmax = buffer:ReadInt();
+	recvValue.m_mytownid = buffer:ReadShort();
 	return recvValue;
 end
 

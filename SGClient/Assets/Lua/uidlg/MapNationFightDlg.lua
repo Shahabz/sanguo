@@ -101,6 +101,7 @@ function MapNationFightDlgShow( unit_index )
 	MapNationFightDlgClear()
 	SetFalse( m_uiButtons );
 	m_cache = {};
+	m_unit_index = unit_index;
 	system_askinfo( ASKINFO_NATIONARMYGROUP, "", 0, unit_index )
 end
 
@@ -164,9 +165,6 @@ function MapNationFightDlgAddRecvValue( recvValue )
 	SetImage( uiNation, NationSprite( recvValue.m_nation ) )
 	SetImage( uiTNation, NationSprite( recvValue.m_t_nation ) )
 	
-	-- 守备兵力
-	SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
-	SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
 				
 	-- 属于攻击方
 	if recvValue.m_attack == 1 then
@@ -174,24 +172,45 @@ function MapNationFightDlgAddRecvValue( recvValue )
 		SetFalse( uiArrowDefense )
 		SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
 		SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
-		
+		-- 守备兵力
+		SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
+		SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
+	
 	-- 属于防御方
-	else
+	elseif recvValue.m_attack == 2 then
 	
 		SetFalse( uiArrowAttack )
 		SetTrue( uiArrowDefense )
 		SetText( uiFlagText, T(1265), Hex2Color(0x03de27ff) )
 		SetText( uiTFlagText, T(1264), Hex2Color(0xffde00ff) )
 		
+		-- 守备兵力
+		SetText( uiTotal, T(1261).."\n"..recvValue.m_total )
+		SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
+	
+	-- 第三方	
+	elseif recvValue.m_attack == 3 then
+		SetTrue( uiArrowAttack )
+		SetFalse( uiArrowDefense )
+		SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
+		SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
+		SetFalse( uiAddBtn )
 	end
 	
 	-- 加入国战按钮	
 	SetControlID( uiAddBtn, UIADD_EVENT_BASE + #m_cache )
 end
 
-
 function MapNationFightDlgOver()
 	
+end
+
+-- 更新
+function MapNationFightDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	MapNationFightDlgShow( m_unit_index )
 end
 
 -- 创建国战

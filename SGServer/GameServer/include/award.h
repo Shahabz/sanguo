@@ -71,6 +71,9 @@ int awardgroup_sendinfo( int actor_index, int awardgroup, int callback_code, int
 // 随机奖励组，不直接给
 int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo );
 
+// 奖励结构序列化字符串
+int awardgroup_makestr( AwardGetInfo *awardInfo, char *awardContent );
+
 // 奖励组 发放到邮件内容里面
 int awardgroup_mail( int awardgroup, int level, char * itemContent );
 

@@ -1,21 +1,21 @@
--- Í¨ÓÃ¶ÌÏûÏ¢½ÓÊÕ
-NOTIFY_NORMAL 		= 	0	-- È±Ê¡ÎÄ×ÖÌáÊ¾£¬·şÎñ¶Ë·¢ÎÄ×Ö
+-- é€šç”¨çŸ­æ¶ˆæ¯æ¥æ”¶
+NOTIFY_NORMAL 		= 	0	-- ç¼ºçœæ–‡å­—æç¤ºï¼ŒæœåŠ¡ç«¯å‘æ–‡å­—
 NOTIFY_TEXTTABLE	=	1	-- 
 NOTIFY_ITEM			=	2
 NOTIFY_ITEMNUM		=	3
 NOTIFY_LOGIN_QUEUE	=	4
-NOTIFY_CHANGESHAPE	=	5	-- Íæ¼ÒÍ·ÏñĞŞ¸Ä
-NOTIFY_CHANGENAME	=	6	-- Íæ¼ÒĞŞ¸ÄÃû³Æ
-NOTIFY_NPCTALK		=	7	-- NPC¶Ô»°
-NOTIFY_EQUIP		=	8	-- ×°±¸
-NOTIFY_ACTOR		=	9	-- ½ÇÉ«
-NOTIFY_ACTORSFLAG	=	10	-- ½ÇÉ«±êÖ¾Î»
-NOTIFY_WORLDMAP		=	11	-- ÊÀ½çµØÍ¼
-NOTIFY_VALUECHANGE	=	12	-- Öµ¸Ä±ä
-NOTIFY_MAIL			=	13	-- ÓÊ¼ş
-NOTIFY_ALERT		=	14	-- ÏûÏ¢È·¶¨¿ò
+NOTIFY_CHANGESHAPE	=	5	-- ç©å®¶å¤´åƒä¿®æ”¹
+NOTIFY_CHANGENAME	=	6	-- ç©å®¶ä¿®æ”¹åç§°
+NOTIFY_NPCTALK		=	7	-- NPCå¯¹è¯
+NOTIFY_EQUIP		=	8	-- è£…å¤‡
+NOTIFY_ACTOR		=	9	-- è§’è‰²
+NOTIFY_ACTORSFLAG	=	10	-- è§’è‰²æ ‡å¿—ä½
+NOTIFY_WORLDMAP		=	11	-- ä¸–ç•Œåœ°å›¾
+NOTIFY_VALUECHANGE	=	12	-- å€¼æ”¹å˜
+NOTIFY_MAIL			=	13	-- é‚®ä»¶
+NOTIFY_ALERT		=	14	-- æ¶ˆæ¯ç¡®å®šæ¡†
 
--- ´¦Àí½ÓÊÕµ½µÄÏûÏ¢
+-- å¤„ç†æ¥æ”¶åˆ°çš„æ¶ˆæ¯
 function RecvActorNotify(recvValue)
     local msgid = recvValue.m_msgid;
     local value = recvValue.m_value;
@@ -24,12 +24,12 @@ function RecvActorNotify(recvValue)
     if msgid == NOTIFY_NORMAL then
 		pop(T(value[1]))
 		
-	-- ¹ºÂò²¢Ê¹ÓÃµÀ¾ß
+	-- è´­ä¹°å¹¶ä½¿ç”¨é“å…·
 	elseif msgid == NOTIFY_ITEM then
 		if value[1] == 0 then
 			pop( T(753)..": "..item_getname(value[2]).."x"..value[3] )
 		elseif value[1] == 1 then
-			-- µÀ¾ß¼ÓËÙ
+			-- é“å…·åŠ é€Ÿ
 			if value[2] > 0 then
 				pop( T(759)..zhtime(value[2]) )
 				QuickItemDlgSet( value[2], 1 )
@@ -39,13 +39,13 @@ function RecvActorNotify(recvValue)
 			end
 		end
 	
-	-- Í·Ïñ¸Ä±ä
+	-- å¤´åƒæ”¹å˜
 	elseif msgid == NOTIFY_CHANGESHAPE then
 		GetPlayer().m_shape = value[2];
 		MainDlgSetHead();
 		PlayerDlgSet();
 	
-	-- NPC¶Ô»°	
+	-- NPCå¯¹è¯	
 	elseif msgid == NOTIFY_NPCTALK then
 		if BuildingGetDlgIsShow() == true then
 			BuildingGetDlgWait( NpcTalkID, value[1] )
@@ -53,64 +53,64 @@ function RecvActorNotify(recvValue)
 			NpcTalkID( value[1] )
 		end
 	
-	-- ×°±¸	
+	-- è£…å¤‡	
 	elseif msgid == NOTIFY_EQUIP then
 		if value[1] == 0 then
 			GetPlayer().m_equipext = value[2];
 			BagDlgEquipExtSet();
 		end
 	
-	-- ½ÇÉ«	
+	-- è§’è‰²	
 	elseif msgid == NOTIFY_ACTOR then
-		-- ¹ºÂòÌåÁ¦Ñ¯ÎÊ
+		-- è´­ä¹°ä½“åŠ›è¯¢é—®
 		if value[1] == 0 then
 			MsgBox( F( 783, value[2] ), function()
 				system_askinfo( ASKINFO_ACTOR, "", 0, 0 );
 			end )
 		
-		-- ´ÎÊıÓÃ¾¡
+		-- æ¬¡æ•°ç”¨å°½
 		elseif value[1] == 1 then
 			AlertMsg( T(784) )
 	
 		end
 	
-	-- ½ÇÉ«±êÖ¾Î»	
+	-- è§’è‰²æ ‡å¿—ä½	
 	elseif msgid == NOTIFY_ACTORSFLAG then
 		GetPlayer().m_actor_sflag = value[1]
 	
-	-- ÊÀ½çµØÍ¼	
+	-- ä¸–ç•Œåœ°å›¾	
 	elseif msgid == NOTIFY_WORLDMAP then
-		 -- Ç¨³ÇÍê±Ï
+		 -- è¿åŸå®Œæ¯•
         if value[1] == 1 then
             WorldMap.OnCityMoved(value[2], value[3], value[4]);
-		-- ¸üĞÂ»÷É±¼¶±ğ
+		-- æ›´æ–°å‡»æ€çº§åˆ«
 		elseif value[1] == 2 then
 			GetPlayer().m_mokilllv = value[2];
 		end
 	
-	-- Öµ¸Ä±ä	
+	-- å€¼æ”¹å˜	
 	elseif msgid == NOTIFY_VALUECHANGE then
-		-- Ï´Ëè´ÎÊı
+		-- æ´—é«“æ¬¡æ•°
 		if value[1] == 1 then
 			pop( T(120)..": "..T(1100).."x"..value[2] ) 
-		-- Ï´Á·´ÎÊı
+		-- æ´—ç»ƒæ¬¡æ•°
 		elseif value[1] == 2 then
 			pop( T(120)..": "..T(1101).."x"..value[2] ) 
 		end
 	
-	-- ÓÊ¼ş	
+	-- é‚®ä»¶	
 	elseif msgid == NOTIFY_MAIL then
-		-- ÓÊ¼şÊıÁ¿
+		-- é‚®ä»¶æ•°é‡
 		if value[1] == 1 then
 			MainDlgSetMailNum( value[2] )
-		-- ²Ù×÷·µ»Ø
+		-- æ“ä½œè¿”å›
 		elseif value[1] == 2 then
 			if value[2] == 0 or value[2] == 1 then
 				MailDlgMailRecvOver( value[2], value[3] );
 			end
 		end
 		
-	-- ÏûÏ¢È·¶¨¿ò
+	-- æ¶ˆæ¯ç¡®å®šæ¡†
 	elseif msgid == NOTIFY_ALERT then
 		if recvValue.m_msg_length > 1 then
 			local json = require "cjson"
@@ -133,4 +133,18 @@ function RecvActorNotify(recvValue)
 			AlertMsg( T(value[1]) )
 		end
     end
+end
+
+
+-- UIæ›´æ–°
+UI_UPDATE_NATIONFIGHT = 1 -- å›½æˆ˜ç›¸å…³
+UI_UPDATE_FIGHTINFO	  = 2 -- æˆ˜æ–—ä¿¡æ¯å˜åŒ–
+function dialogupdate_recv( ui )
+	if ui == UI_UPDATE_NATIONFIGHT then
+		MapMainDlgNationLayerUpdate()
+		MapNationFightDlgUpdate()
+	elseif ui == UI_UPDATE_FIGHTINFO then
+		MapNationFightDlgUpdate()
+	else
+	end
 end

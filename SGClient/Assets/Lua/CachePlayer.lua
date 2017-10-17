@@ -1,20 +1,20 @@
--- Ò»´ÎĞÔ±äÁ¿
-ACTOR_SFLAG_BODY_FREEBUY	=	0	-- Ê×´Î¹ºÂòÌåÁ¦Ãâ·Ñ
+-- ä¸€æ¬¡æ€§å˜é‡
+ACTOR_SFLAG_BODY_FREEBUY	=	0	-- é¦–æ¬¡è´­ä¹°ä½“åŠ›å…è´¹
 
---  ½ÇÉ«»º´æĞÅÏ¢
+--  è§’è‰²ç¼“å­˜ä¿¡æ¯
 local Player = class("Player");
 function Player:ctor()
 	self:Init();
 end
 function Player:Init()
-	self.m_usertype			=	0;	-- ÓÃ»§ÀàĞÍ
-	self.m_createtime		=	0;	-- ´´½¨Ê±¼ä
-	self.m_config		    =   {};  --ÅäÖÃĞÅÏ¢
+	self.m_usertype			=	0;	-- ç”¨æˆ·ç±»å‹
+	self.m_createtime		=	0;	-- åˆ›å»ºæ—¶é—´
+	self.m_config		    =   {};  --é…ç½®ä¿¡æ¯
 	self.m_servertime 		= 	0;
 	self.m_clienttime 		= 	0
 	
-	self.m_actorid			=	0;	-- ½ÇÉ«±àºÅ
-	self.m_name				=	"";	-- ½ÇÉ«Ãû³Æ
+	self.m_actorid			=	0;	-- è§’è‰²ç¼–å·
+	self.m_name				=	"";	-- è§’è‰²åç§°
 	self.m_nation			=	0;
 	self.m_shape			=	0;
 	self.m_level			=	0;
@@ -71,7 +71,7 @@ function Player:Init()
 	self.m_attr 			= 	{}
 end
 
--- ÊôĞÔ±ä»¯
+-- å±æ€§å˜åŒ–
 function Player:Set( recvValue )
 	self.m_actorid			=	recvValue.m_actorid;
 	self.m_name				=	recvValue.m_name;
@@ -124,12 +124,12 @@ function Player:SetBuilding( kind, info, active )
 	--
 	local unitObj = City.BuildingAdd( info, active );
 	
-	-- Íê³ÉÊıÖµ×´Ì¬
+	-- å®Œæˆæ•°å€¼çŠ¶æ€
 	if info.m_overvalue > 0 then
 		City.BuildingSetOver( kind );
 	end
 	
-	-- ¼ÓËÙ±ê¼Ç
+	-- åŠ é€Ÿæ ‡è®°
 	if info.m_quick > 0 then
 		City.BuildingSetQuick( kind );
 	end
@@ -207,7 +207,7 @@ function Player:BuildingOverValue( kind )
 	return pBuilding.m_overvalue;
 end
 
--- ÕÒÒ»¸öµÈ¼¶×îµÍµÄ×ÊÔ´Ìï
+-- æ‰¾ä¸€ä¸ªç­‰çº§æœ€ä½çš„èµ„æºç”°
 function Player:BuildingResMinLevel( kind )
 	local minlevel = 99;
 	local offset = -1;
@@ -224,20 +224,20 @@ function Player:CityLevel()
 	return self.m_buildings[1].m_level;
 end
 
--- ·şÎñÆ÷·¢¹ıÀ´µÄÊ±¼ä´Á
+-- æœåŠ¡å™¨å‘è¿‡æ¥çš„æ—¶é—´æˆ³
 function Player:SetServerTime( servertime )
 	self.m_servertime = servertime;
 	self.m_clienttime = os.time();
 end
 
--- ·şÎñÆ÷Ê±¼ä´Á£¬ÓÎÏ·ËùÓĞÊ±¼ä¾ùÒÔ·şÎñÆ÷Ê±¼ä´ÁÎª×¼
--- µ±Ç°Ê±¼ä-¿Í»§¶ËÊÕµ½·şÎñÆ÷Ê±¼ä´ÁµÄÊ±¼äÎª=Á÷ÊÅÊ±¼ä
--- Á÷ÊÅÊ±¼ä+·şÎñÆ÷Ê±¼ä=µ±Ç°Ê±¼ä
+-- æœåŠ¡å™¨æ—¶é—´æˆ³ï¼Œæ¸¸æˆæ‰€æœ‰æ—¶é—´å‡ä»¥æœåŠ¡å™¨æ—¶é—´æˆ³ä¸ºå‡†
+-- å½“å‰æ—¶é—´-å®¢æˆ·ç«¯æ”¶åˆ°æœåŠ¡å™¨æ—¶é—´æˆ³çš„æ—¶é—´ä¸º=æµé€æ—¶é—´
+-- æµé€æ—¶é—´+æœåŠ¡å™¨æ—¶é—´=å½“å‰æ—¶é—´
 function GetServerTime()
 	return GetPlayer().m_servertime + (os.time()-GetPlayer().m_clienttime);
 end
 
--- È«¾Ö
+-- å…¨å±€
 G_Player = nil;
 function GetPlayer()
 	if G_Player == nil then

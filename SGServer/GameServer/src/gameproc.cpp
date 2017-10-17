@@ -46,6 +46,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "nation.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -61,6 +62,7 @@
 
 extern MYSQL *myGame;
 SConfig g_Config;
+extern Global global;
 
 int g_speed = 0;
 int g_sec = 0;	// 秒针
@@ -622,6 +624,14 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
+	// 加载国家（严格顺序要求，不允许改变）
+	if ( nation_load() < 0 )
+	{
+		printf_msg( "nation_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
 	// 加载流寇（严格顺序要求，不允许改变）
 	if ( map_enemy_load() < 0 )
 	{
@@ -715,6 +725,10 @@ void process_close()
 
 	// 所有城池保存
 	city_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有国家保存
+	nation_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有部队保存
@@ -878,6 +892,11 @@ int process_oclock_process( int hour )
 	}
 	else if ( hour == 3 )
 	{
+	}
+
+	if ( hour == global.town_owner_award )
+	{ // 城主奖励
+		map_town_owner_award();
 	}
 	sc_OnClockProcess( hour );
 	return 0;

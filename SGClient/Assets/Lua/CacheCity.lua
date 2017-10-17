@@ -13,7 +13,7 @@ City.m_BuildingWorkerQuickMod = nil;
 City.m_Buildings = {};
 City.m_Buildings_res = {};
 
--- ³õÊ¼»¯
+-- åˆå§‹åŒ–
 function City.Init()
 	City.m_Camera = GameManager.MainCity.transform:Find("CityCamera"):GetComponent("CityCamera");
 	City.m_CameraMain = GameManager.MainCity.transform:Find("CityCamera"):GetComponent("Camera");
@@ -26,7 +26,7 @@ function City.Init()
 	City.m_BuildingWorkerQuickMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingWorkerQuickMod" );
 end
 
--- ËùÓĞ½¨Öş¸¸½Úµã
+-- æ‰€æœ‰å»ºç­‘çˆ¶èŠ‚ç‚¹
 function City.BuildingRoot()
 	if City.m_BuildingRoot == nil then
 		City.m_BuildingRoot = GameManager.MainCity.transform:Find( "Content/Buildings" );
@@ -34,14 +34,14 @@ function City.BuildingRoot()
 	return City.m_BuildingRoot;
 end
 
--- Ñ¡Ôñ½¨Öş
+-- é€‰æ‹©å»ºç­‘
 function City.BuildingSelect( transform )
 	if City.m_LastSelect ~= nil then
-		-- µã»÷ÏàÍ¬¶ÔÏóÖ±½Ó·µ»Ø
+		-- ç‚¹å‡»ç›¸åŒå¯¹è±¡ç›´æ¥è¿”å›
 		--if City.m_LastSelect == transform then
 			--return;
 		--end
-		-- ¹Ø±ÕÖ®Ç°½¥±ä¶¯»­
+		-- å…³é—­ä¹‹å‰æ¸å˜åŠ¨ç”»
 		--City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 		City.m_LastSelect = nil;
 	end
@@ -58,7 +58,7 @@ function City.BuildingSelect( transform )
 		City.m_Camera:TweenPosToInBound( transform.position, 0.2 );
 	end
 	
-	-- ´ò¿ª¼ÓËÙ½çÃæ	
+	-- æ‰“å¼€åŠ é€Ÿç•Œé¢	
 	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
 		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
 		if GetPlayer().m_worker_kind == building.kind then
@@ -68,38 +68,38 @@ function City.BuildingSelect( transform )
 		end
 	else
 		BuildingOpratorModShow( false, 0, -1, nil );
-		if building.kind == BUILDING_Smithy then -- Ìú½³ÆÌ
-			-- ´òÔìÓĞÍê³ÉµÄ£¬Ö±½ÓÁìÈ¡
+		if building.kind == BUILDING_Smithy then -- é“åŒ é“º
+			-- æ‰“é€ æœ‰å®Œæˆçš„ï¼Œç›´æ¥é¢†å–
 			if GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
 			else
 				EquipForgingDlgShow();
 			end
-		elseif building.kind == BUILDING_Wash then -- Ï´Á¶ÆÌ
+		elseif building.kind == BUILDING_Wash then -- æ´—ç‚¼é“º
 			EquipWashDlgShow();
-		elseif building.kind == BUILDING_Fangshi then -- ·»ÊĞ
+		elseif building.kind == BUILDING_Fangshi then -- åŠå¸‚
 			
-		elseif building.kind == BUILDING_Shop then -- ÉÌµê
+		elseif building.kind == BUILDING_Shop then -- å•†åº—
 			
-		elseif building.kind == BUILDING_Hero then -- ¾ÛÏÍ¹İ
+		elseif building.kind == BUILDING_Hero then -- èšè´¤é¦†
 			HeroListDlgShow();
 			
-		elseif building.kind == BUILDING_Wishing then -- ¾Û±¦Åè
+		elseif building.kind == BUILDING_Wishing then -- èšå®ç›†
 
-		elseif building.kind == BUILDING_Help then -- °ïÖú
+		elseif building.kind == BUILDING_Help then -- å¸®åŠ©
 		
 		else
-			-- ¿Æ¼¼ÓĞÍê³ÉµÄ£¬Ö±½ÓÁìÈ¡
+			-- ç§‘æŠ€æœ‰å®Œæˆçš„ï¼Œç›´æ¥é¢†å–
 			if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TECH, "", 4 );
 			
-			-- ²ÄÁÏ¹¤·»ÓĞÍê³ÉµÄ£¬Ö±½ÓÁìÈ¡
+			-- ææ–™å·¥åŠæœ‰å®Œæˆçš„ï¼Œç›´æ¥é¢†å–
 			elseif building.kind == BUILDING_Craftsman and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				system_askinfo( ASKINFO_MATERIALMAKE, "", 4 );
 				
- 			-- Ä¼±øÓĞÍê³ÉµÄ£¬Ö±½ÓÁìÈ¡
+ 			-- å‹Ÿå…µæœ‰å®Œæˆçš„ï¼Œç›´æ¥é¢†å–
 			elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 				City.BuildingHideOver( building.kind )
 				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
@@ -111,14 +111,14 @@ function City.BuildingSelect( transform )
 	end
 end
 
--- µã»÷¿ÕµØ¿é
+-- ç‚¹å‡»ç©ºåœ°å—
 function City.BuildingLandSelect( transform )
 	if City.m_LastSelect ~= nil then
-		-- µã»÷ÏàÍ¬¶ÔÏóÖ±½Ó·µ»Ø
+		-- ç‚¹å‡»ç›¸åŒå¯¹è±¡ç›´æ¥è¿”å›
 		if City.m_LastSelect == transform then
 			return;
 		end
-		-- ¹Ø±ÕÖ®Ç°½¥±ä¶¯»­
+		-- å…³é—­ä¹‹å‰æ¸å˜åŠ¨ç”»
 		City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 		City.m_LastSelect = nil;
 	end
@@ -133,16 +133,16 @@ function City.BuildingLandSelect( transform )
 	end
 end
 
--- È¡ÏûÑ¡Ôñ
+-- å–æ¶ˆé€‰æ‹©
 function City.BuildingUnSelect()
-	-- ¹Ø±ÕÖ®Ç°½¥±ä¶¯»­
+	-- å…³é—­ä¹‹å‰æ¸å˜åŠ¨ç”»
 	if City.m_LastSelect ~= nil then
 		City.m_LastSelect:GetComponent("UITweenColor"):Kill(true);
 		City.m_LastSelect = nil;
 	end
 end
 
--- »ñÈ¡½¨Öş¶ÔÏó
+-- è·å–å»ºç­‘å¯¹è±¡
 function City.GetBuilding( kind, offset )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		return City.m_Buildings_res[kind][offset];
@@ -151,7 +151,7 @@ function City.GetBuilding( kind, offset )
 	end
 end
 
--- ÒÆµ½ÖÆ¶¨½¨Öş
+-- ç§»åˆ°åˆ¶å®šå»ºç­‘
 function City.Move( kind, offset, select )
 	local unitObj = City.GetBuilding( kind, offset )
 	if unitObj == nil then
@@ -165,13 +165,13 @@ function City.Move( kind, offset, select )
 	end
 end
 
--- Ìí¼Ó½¨Öş
+-- æ·»åŠ å»ºç­‘
 function City.BuildingAdd( info, active )
 	local kind = info.m_kind;
 	local offset = info.m_offset
 	local landname = "";
 	
-	-- ÓĞÁË¾ÍĞŞ¸Ä
+	-- æœ‰äº†å°±ä¿®æ”¹
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		if City.m_Buildings_res[kind] ~= nil then
@@ -180,7 +180,7 @@ function City.BuildingAdd( info, active )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
-	-- Ã»ÓĞ¾Í´´½¨
+	-- æ²¡æœ‰å°±åˆ›å»º
 	if unitObj == nil then
 		if BuildingPrefab[kind] == nil then
 			return
@@ -225,7 +225,7 @@ function City.BuildingAdd( info, active )
 	return unitObj;
 end
 
--- É¾³ı½¨Öş
+-- åˆ é™¤å»ºç­‘
 function City.BuildingDel( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;	
@@ -251,13 +251,13 @@ function City.BuildingDel( info )
 	end
 end
 
--- Ë¢ĞÂ
+-- åˆ·æ–°
 function City.BuildingRefurbish( info ) 
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 end
 
--- ½¨ÖşÃû³Æ
+-- å»ºç­‘åç§°
 function City.BuildingSetName( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -276,7 +276,7 @@ function City.BuildingSetName( info )
 	end
 end
 
--- ²Ù×÷¼ÆÊ±Æ÷
+-- æ“ä½œè®¡æ—¶å™¨
 function City.BuildingSetTimer( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
@@ -315,7 +315,7 @@ function City.BuildingSetTimer( info )
 	end
 end
 
--- Éı¼¶¼ÆÊ±Æ÷
+-- å‡çº§è®¡æ—¶å™¨
 function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -352,7 +352,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 	end
 end
 
--- ½¨Ôì¶ÓÁĞ
+-- å»ºé€ é˜Ÿåˆ—
 function City.BuildingWorker()
 	if GetPlayer().m_worker_kind > 0 then
 		City.BuildingSetUpgradeing( 
@@ -383,7 +383,7 @@ function City.BuildingWorker()
 	end
 end
 
--- Ãâ·ÑÍ·
+-- å…è´¹å¤´
 function City.BuildingSetFree( kind, offset )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -420,7 +420,7 @@ function City.BuildingHideFree( kind, offset )
 	freeObj.gameObject:SetActive(false);
 end
 
--- Íê³É±ê¼Ç
+-- å®Œæˆæ ‡è®°
 function City.BuildingSetOver( kind )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		return;
@@ -440,7 +440,7 @@ function City.BuildingSetOver( kind )
 	overObj.gameObject:SetActive(true);
 end
 
--- Íê³É±ê¼ÇÒş²Ø
+-- å®Œæˆæ ‡è®°éšè—
 function City.BuildingHideOver( kind )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		return;
@@ -454,7 +454,7 @@ function City.BuildingHideOver( kind )
 end
 
 
--- Éı¼¶¼ÓËÙÍ·
+-- å‡çº§åŠ é€Ÿå¤´
 function City.BuildingSetWorkerQuick( kind, offset )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -491,7 +491,7 @@ function City.BuildingHideWorkerQuick( kind, offset )
 	freeObj.gameObject:SetActive(false);
 end
 
--- ¼ÓËÙÍ·
+-- åŠ é€Ÿå¤´
 function City.BuildingSetQuick( kind )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -512,7 +512,7 @@ function City.BuildingSetQuick( kind )
 	quickObj.gameObject:SetActive(true);
 end
 
--- ¼ÓËÙÍ·Òş²Ø
+-- åŠ é€Ÿå¤´éšè—
 function City.BuildingHideQuick( kind )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
@@ -526,7 +526,7 @@ function City.BuildingHideQuick( kind )
 	quickObj.gameObject:SetActive(false);
 end
 
--- Õ÷ÊÕ´ÎÊı
+-- å¾æ”¶æ¬¡æ•°
 function City.BuildingAddLevy()	
 	for i=21, 24, 1 do
 		if City.m_Buildings_res[i] then
@@ -555,37 +555,37 @@ function City.BuildingSubLevy()
 	end
 end
 
--- µã»÷½¨Ôì¶ÓÁĞ
+-- ç‚¹å‡»å»ºé€ é˜Ÿåˆ—
 function City.GoToWorker()
-	-- ÒÆ¶¯²¢Ñ¡Ôñ
+	-- ç§»åŠ¨å¹¶é€‰æ‹©
 	if GetPlayer().m_worker_kind > 0 then
 		City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, true )
 		return;
 	end
 	
-	-- ÕÒµ½Ò»¸ö¿ÉÒÔÉı¼¶µÄ
+	-- æ‰¾åˆ°ä¸€ä¸ªå¯ä»¥å‡çº§çš„
 	
 end
 
--- µã»÷½¨Ôì¶ÓÁĞÉÌÓÃ
+-- ç‚¹å‡»å»ºé€ é˜Ÿåˆ—å•†ç”¨
 function City.GoToWorkerEx()
-	-- ÒÆ¶¯²¢Ñ¡Ôñ
+	-- ç§»åŠ¨å¹¶é€‰æ‹©
 	if GetPlayer().m_worker_kind_ex > 0 then
 		City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
 		return
 	end
 	
-	-- ´ò¿ª¹ºÂòÉÌÓÃ½¨Ôì¶Ó½çÃæ
+	-- æ‰“å¼€è´­ä¹°å•†ç”¨å»ºé€ é˜Ÿç•Œé¢
 	if GetPlayer().m_worker_expire_ex <= 0 then
 		-- 
 		BuyWorkerDlgShow();
 	end
 	
-	-- ÕÒµ½Ò»¸ö¿ÉÒÔÉı¼¶µÄ
+	-- æ‰¾åˆ°ä¸€ä¸ªå¯ä»¥å‡çº§çš„
 	
 end
 
--- ÈÎÎñÍ¼±ê
+-- ä»»åŠ¡å›¾æ ‡
 function City.BuildingQuestMod( questid )
 	City.m_BuildingQuestMod.gameObject:SetActive(true);
 	local ShareData = City.m_BuildingQuestMod.transform:GetComponent("ShareData");

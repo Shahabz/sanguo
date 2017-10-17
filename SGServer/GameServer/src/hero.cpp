@@ -82,6 +82,8 @@ int city_hero_getindex( int city_index, int herokind )
 {
 	CITY_CHECK_INDEX( city_index );
 	int index = -1;
+	if ( herokind == 0 )
+		return index;
 	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
 	{
 		if ( g_city[city_index].hero[tmpi].kind == herokind )
@@ -320,6 +322,7 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 		if ( index < 0 )
 			return -1;
 		pHero = &pCity->hero[index];
+		pHero->offset = HERO_BASEOFFSET + index;
 	}
 	if ( !pHero )
 	{

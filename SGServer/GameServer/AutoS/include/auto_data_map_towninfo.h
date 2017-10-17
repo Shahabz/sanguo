@@ -31,6 +31,8 @@ struct _maptowninfo {
 				int fight_silver;	//
 				int fight_wood;	//
 				int fight_food;	//
+				int people;	//
+				short range_gather;	//
 };
 typedef struct _maptowninfo MapTownInfo;
 

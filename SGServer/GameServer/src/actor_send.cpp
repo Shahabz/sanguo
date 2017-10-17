@@ -29,6 +29,7 @@ int zone_sendmsg( int zone, int datasize, char *databuf )
 	return 0;
 }
 
+// 指定区域的国家
 int nation_sendmsg( int zone, int nation, int datasize, char *databuf )
 {
 	if ( datasize > 0 )
@@ -37,6 +38,38 @@ int nation_sendmsg( int zone, int nation, int datasize, char *databuf )
 		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
 		{
 			if ( g_actors[tmpi].actorid <= 0 )
+				continue;
+			City *pCity = city_getptr( tmpi );
+			if ( !pCity )
+				continue;
+
+			if ( zone > 0 )
+			{// 指定区域了
+				if ( pCity->zone == zone && pCity->nation == nation )
+				{
+					sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+				}
+			}
+			else if ( pCity->nation == nation )
+			{
+				sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+			}
+		}
+	}
+	return 0;
+}
+
+// 功能同上，过略掉城内的，只发在野外的玩家
+int nation_worldmap_sendmsg( int zone, int nation, int datasize, char *databuf )
+{
+	if ( datasize > 0 )
+	{
+		nation = nation - SENDTYPE_WORLDMAP_NATION;
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid <= 0 )
+				continue;
+			if ( g_actors[tmpi].view_areaindex < 0 )
 				continue;
 			City *pCity = city_getptr( tmpi );
 			if ( !pCity )
@@ -91,12 +124,15 @@ int actor_senddata( int actor_index, char send_type, char *data, int datasize )
 	case SENDTYPE_WORLD:
 		world_sendmsg( datasize, data );
 		break;
-	case SENDTYPE_NATION:
-		break;
 	case SENDTYPE_NATION1:
 	case SENDTYPE_NATION2:
 	case SENDTYPE_NATION3:
 		nation_sendmsg( actor_index, send_type, datasize, data );
+		break;
+	case SENDTYPE_WORLDMAP_NATION1:
+	case SENDTYPE_WORLDMAP_NATION2:
+	case SENDTYPE_WORLDMAP_NATION3:
+		nation_worldmap_sendmsg( actor_index, send_type, datasize, data );
 		break;
 	}
 	return 0;

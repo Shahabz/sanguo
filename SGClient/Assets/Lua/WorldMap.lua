@@ -1,46 +1,46 @@
--- ÊÀ½çµØÍ¼
-MAP_TILEWIDTH 		= 256;	-- Ò»¿é¸ñ×ÓÓĞ¶àÉÙÏñËØ	
-MAP_TILEHEIGHT 		= 128;	-- Ò»¿é¸ñ×ÓÓĞ¶àÉÙÏñËØ
+-- ä¸–ç•Œåœ°å›¾
+MAP_TILEWIDTH 		= 256;	-- ä¸€å—æ ¼å­æœ‰å¤šå°‘åƒç´ 	
+MAP_TILEHEIGHT 		= 128;	-- ä¸€å—æ ¼å­æœ‰å¤šå°‘åƒç´ 
 
-TMX_WIDTH 			= 100;  -- Ò»¿étmxµØÍ¼´óĞ¡
-TMX_HEIGHT 			= 100;  -- Ò»¿étmxµØÍ¼´óĞ¡
+TMX_WIDTH 			= 100;  -- ä¸€å—tmxåœ°å›¾å¤§å°
+TMX_HEIGHT 			= 100;  -- ä¸€å—tmxåœ°å›¾å¤§å°
 
-WORLDMAP_ZORDER_CLICKMOD	=	-1000; 	-- µã»÷µØÍ¼Ñ¡Ôñ¿ò²ã¼¶
-WORLDMAP_ZORDER_MARCHROUTE	=	-2000;	-- ĞĞ¾üÂ·Ïß²ã¼¶
-WORLDMAP_ZORDER_ARMY		=	-2001;	-- ²¿¶Ó²ã¼¶
-WORLDMAP_ZORDER_CAMERA		=	-10000;	-- ÉãÏñ»ú²ã¼¶
+WORLDMAP_ZORDER_CLICKMOD	=	-1000; 	-- ç‚¹å‡»åœ°å›¾é€‰æ‹©æ¡†å±‚çº§
+WORLDMAP_ZORDER_MARCHROUTE	=	-2000;	-- è¡Œå†›è·¯çº¿å±‚çº§
+WORLDMAP_ZORDER_ARMY		=	-2001;	-- éƒ¨é˜Ÿå±‚çº§
+WORLDMAP_ZORDER_CAMERA		=	-10000;	-- æ‘„åƒæœºå±‚çº§
 
-WORLDMAP_MODE_NORMAL	=	0; -- È±Ê¡Ä£Ê½
-WORLDMAP_MODE_FOLLOW	=	1; -- ¸úËæÄ£Ê½
+WORLDMAP_MODE_NORMAL	=	0; -- ç¼ºçœæ¨¡å¼
+WORLDMAP_MODE_FOLLOW	=	1; -- è·Ÿéšæ¨¡å¼
 
--- ÊÀ½çµØÍ¼
+-- ä¸–ç•Œåœ°å›¾
 WorldMap = {}
-WorldMap.m_nMaxWidth 			= 500;    -- ÊÀ½çµØÍ¼´óĞ¡£¨¸ñ×ÓÊı£©
-WorldMap.m_nMaxHeight 			= 500;    -- ÊÀ½çµØÍ¼´óĞ¡£¨¸ñ×ÓÊı£©
-WorldMap.m_nAreaWidth 			= 0;    -- ÇøÓò´óĞ¡£¨Ò»¸öÇøÓò¼¸¸öµØÍ¼¸ñ×Ó£©
-WorldMap.m_nAreaHeight 			= 0;    -- ÇøÓò´óĞ¡£¨Ò»¸öÇøÓò¼¸¸öµØÍ¼¸ñ×Ó£©
-WorldMap.m_nAreaXNum 			= 0;    -- Ò»¸öµØÍ¼ÓĞ¶àÉÙÇøÓò
-WorldMap.m_nAreaYNum 			= 0;    -- Ò»¸öµØÍ¼ÓĞ¶àÉÙÇøÓò
-WorldMap.m_nLastAreaIndex		= -1;   -- ÉÏÒ»´Î·¢ËÍÇøÓò
-WorldMap.m_nMapUnitList			= {};   -- ÏÔÊ¾¶ÔÏó»º´æÁ´±í
-WorldMap.m_nMyCityPosx			= 0;    -- Íæ¼ÒÖ÷³ÇÎ»ÖÃ£¨¸ñ×Ó£©
-WorldMap.m_nMyCityPosy			= 0;    -- Íæ¼ÒÖ÷³ÇÎ»ÖÃ£¨¸ñ×Ó£©
-WorldMap.m_nMyCityCameraX 		= 0;    -- Íæ¼ÒÖ÷³ÇÎ»ÖÃ£¨ÆÁÄ»×ø±ê£©
-WorldMap.m_nMyCityCameraY		= 0;    -- Íæ¼ÒÖ÷³ÇÎ»ÖÃ£¨ÆÁÄ»×ø±ê£©
-WorldMap.m_nMyCityUnitIndex 	= -1;   -- Íæ¼ÒÖ÷³ÇµÄÏÔÊ¾Ë÷Òı
-WorldMap.m_nMyCityState			= 0;	-- Íæ¼ÒÖ÷³Ç×´Ì¬
-WorldMap.m_nLastCameraX 		= 0; 	-- ÉÏ´ÎÉãÏñ»úÎ»ÖÃ£¨ÆÁÄ»×ø±ê£©
-WorldMap.m_nLastCameraY			= 0; 	-- ÉÏ´ÎÉãÏñ»úÎ»ÖÃ£¨ÆÁÄ»×ø±ê£©
-WorldMap.m_nLastCameraGameX 	= -1; 	-- ÉÏ´ÎÉãÏñ»úÎ»ÖÃ£¨¸ñ×Ó×ø±ê£©
-WorldMap.m_nLastCameraGameY 	= -1; 	-- ÉÏ´ÎÉãÏñ»úÎ»ÖÃ£¨¸ñ×Ó×ø±ê£©
-WorldMap.m_nLastTouchGameCoorX 	= 0; 	-- ÉÏ´Îµã»÷Î»ÖÃ£¨¸ñ×Ó£©
-WorldMap.m_nLastTouchGameCoorY	= 0; 	-- ÉÏ´Îµã»÷Î»ÖÃ£¨¸ñ×Ó£©
-WorldMap.m_nLastTouchUnitIndex	= -1; 	-- ÉÏ´Îµã»÷µ¥Î»
-WorldMap.m_nLastTouchArmyIndex	= -1; 	-- ÉÏ´Îµã»÷²¿¶Ó
-WorldMap.m_nLastGotoUnitIndex	= -1;	-- µÈ´ıÌø×ªµÄË÷Òı
-WorldMap.m_nLastGotoPosX		= -1;	-- µÈ´ıÌø×ªµÄÎ»ÖÃ
-WorldMap.m_nLastGotoPosY		= -1;	-- µÈ´ıÌø×ªµÄÎ»ÖÃ
-WorldMap.m_nZoneID				= 0;	-- µ±Ç°µØÍ¼
+WorldMap.m_nMaxWidth 			= 500;    -- ä¸–ç•Œåœ°å›¾å¤§å°ï¼ˆæ ¼å­æ•°ï¼‰
+WorldMap.m_nMaxHeight 			= 500;    -- ä¸–ç•Œåœ°å›¾å¤§å°ï¼ˆæ ¼å­æ•°ï¼‰
+WorldMap.m_nAreaWidth 			= 0;    -- åŒºåŸŸå¤§å°ï¼ˆä¸€ä¸ªåŒºåŸŸå‡ ä¸ªåœ°å›¾æ ¼å­ï¼‰
+WorldMap.m_nAreaHeight 			= 0;    -- åŒºåŸŸå¤§å°ï¼ˆä¸€ä¸ªåŒºåŸŸå‡ ä¸ªåœ°å›¾æ ¼å­ï¼‰
+WorldMap.m_nAreaXNum 			= 0;    -- ä¸€ä¸ªåœ°å›¾æœ‰å¤šå°‘åŒºåŸŸ
+WorldMap.m_nAreaYNum 			= 0;    -- ä¸€ä¸ªåœ°å›¾æœ‰å¤šå°‘åŒºåŸŸ
+WorldMap.m_nLastAreaIndex		= -1;   -- ä¸Šä¸€æ¬¡å‘é€åŒºåŸŸ
+WorldMap.m_nMapUnitList			= {};   -- æ˜¾ç¤ºå¯¹è±¡ç¼“å­˜é“¾è¡¨
+WorldMap.m_nMyCityPosx			= 0;    -- ç©å®¶ä¸»åŸä½ç½®ï¼ˆæ ¼å­ï¼‰
+WorldMap.m_nMyCityPosy			= 0;    -- ç©å®¶ä¸»åŸä½ç½®ï¼ˆæ ¼å­ï¼‰
+WorldMap.m_nMyCityCameraX 		= 0;    -- ç©å®¶ä¸»åŸä½ç½®ï¼ˆå±å¹•åæ ‡ï¼‰
+WorldMap.m_nMyCityCameraY		= 0;    -- ç©å®¶ä¸»åŸä½ç½®ï¼ˆå±å¹•åæ ‡ï¼‰
+WorldMap.m_nMyCityUnitIndex 	= -1;   -- ç©å®¶ä¸»åŸçš„æ˜¾ç¤ºç´¢å¼•
+WorldMap.m_nMyCityState			= 0;	-- ç©å®¶ä¸»åŸçŠ¶æ€
+WorldMap.m_nLastCameraX 		= 0; 	-- ä¸Šæ¬¡æ‘„åƒæœºä½ç½®ï¼ˆå±å¹•åæ ‡ï¼‰
+WorldMap.m_nLastCameraY			= 0; 	-- ä¸Šæ¬¡æ‘„åƒæœºä½ç½®ï¼ˆå±å¹•åæ ‡ï¼‰
+WorldMap.m_nLastCameraGameX 	= -1; 	-- ä¸Šæ¬¡æ‘„åƒæœºä½ç½®ï¼ˆæ ¼å­åæ ‡ï¼‰
+WorldMap.m_nLastCameraGameY 	= -1; 	-- ä¸Šæ¬¡æ‘„åƒæœºä½ç½®ï¼ˆæ ¼å­åæ ‡ï¼‰
+WorldMap.m_nLastTouchGameCoorX 	= 0; 	-- ä¸Šæ¬¡ç‚¹å‡»ä½ç½®ï¼ˆæ ¼å­ï¼‰
+WorldMap.m_nLastTouchGameCoorY	= 0; 	-- ä¸Šæ¬¡ç‚¹å‡»ä½ç½®ï¼ˆæ ¼å­ï¼‰
+WorldMap.m_nLastTouchUnitIndex	= -1; 	-- ä¸Šæ¬¡ç‚¹å‡»å•ä½
+WorldMap.m_nLastTouchArmyIndex	= -1; 	-- ä¸Šæ¬¡ç‚¹å‡»éƒ¨é˜Ÿ
+WorldMap.m_nLastGotoUnitIndex	= -1;	-- ç­‰å¾…è·³è½¬çš„ç´¢å¼•
+WorldMap.m_nLastGotoPosX		= -1;	-- ç­‰å¾…è·³è½¬çš„ä½ç½®
+WorldMap.m_nLastGotoPosY		= -1;	-- ç­‰å¾…è·³è½¬çš„ä½ç½®
+WorldMap.m_nZoneID				= 0;	-- å½“å‰åœ°å›¾
 WorldMap.m_nMode 				= WORLDMAP_MODE_NORMAL;
 
 local TmxShowThreshold = 24;
@@ -51,9 +51,9 @@ local m_LastPosY;
 local m_Faded = false;
 local m_FadeStopCount = 0;
  
--- µØÍ¼ÇøÓò
+-- åœ°å›¾åŒºåŸŸ
 Area = {}
--- ¸ù¾İÊÀ½ç×ø±ê»ñÈ¡ÇøÓò±àºÅ
+-- æ ¹æ®ä¸–ç•Œåæ ‡è·å–åŒºåŸŸç¼–å·
 function Area.GetIndex( posx, posy )
 	local areax, areay;
 	if posx >= WorldMap.m_nMaxWidth then
@@ -75,26 +75,26 @@ function Area.GetIndex( posx, posy )
 	return math.modf( areay*(WorldMap.m_nAreaXNum) + areax );
 end
 
--- ÏÔÊ¾µ¥Ôª´´½¨¶ÓÁĞ
+-- æ˜¾ç¤ºå•å…ƒåˆ›å»ºé˜Ÿåˆ—
 local procQueue = Queue.new();
--- ²¿¶Óµ¥ÄÃ³öÀ´Ò»¸ö¶ÓÁĞ
+-- éƒ¨é˜Ÿå•æ‹¿å‡ºæ¥ä¸€ä¸ªé˜Ÿåˆ—
 local procQueueArmy = Queue.new();
 local m_updateWaitFrame = 0;
 
--- µØÍ¼¶ÔÏó×é¼ş
-local WorldMapPrefab	= nil;	-- µØÍ¼¸ù
-local MapTmxRoot		= nil;	-- tmxµØÍ¼¸ù½Úµã
-MapUnitRoot				= nil;	-- ËùÓĞÏÔÊ¾¶ÔÏóµÄ¸ù½Úµã
-local MapLineRoot		= nil;	-- ËùÓĞÏß¸ù½Úµã
-local MapClickEffect	= nil;	-- µã»÷ÌØĞ§
-local MapClickMod		= nil;	-- ²Ù×÷½çÃæ
-local MapCamera 		= nil;	-- µØÍ¼ÉãÏñ»ú
-local MapTmx            = {};   -- µØÍ¼³Ø£¬Ö»ÊµÀı»¯4¸ö
+-- åœ°å›¾å¯¹è±¡ç»„ä»¶
+local WorldMapPrefab	= nil;	-- åœ°å›¾æ ¹
+local MapTmxRoot		= nil;	-- tmxåœ°å›¾æ ¹èŠ‚ç‚¹
+MapUnitRoot				= nil;	-- æ‰€æœ‰æ˜¾ç¤ºå¯¹è±¡çš„æ ¹èŠ‚ç‚¹
+local MapLineRoot		= nil;	-- æ‰€æœ‰çº¿æ ¹èŠ‚ç‚¹
+local MapClickEffect	= nil;	-- ç‚¹å‡»ç‰¹æ•ˆ
+local MapClickMod		= nil;	-- æ“ä½œç•Œé¢
+local MapCamera 		= nil;	-- åœ°å›¾æ‘„åƒæœº
+local MapTmx            = {};   -- åœ°å›¾æ± ï¼Œåªå®ä¾‹åŒ–4ä¸ª
 CityArmyGroupClickMod	= nil;	-- 
 
 local m_RecvValue = nil;
 
--- ÊÀ½çµØÍ¼ĞÅÏ¢
+-- ä¸–ç•Œåœ°å›¾ä¿¡æ¯
 function WorldMap.Recv( recvValue )
     m_RecvValue = recvValue;
 	if GameManager.currentScence == "worldmap" then
@@ -118,11 +118,11 @@ function WorldMap.Recv( recvValue )
 	WorldMap.m_nMapUnitList			= {};
 	MapUnit.init();
 	
-	-- ¸Ä±ä³¡¾°
+	-- æ”¹å˜åœºæ™¯
 	GameManager.ChangeScence( "worldmap" )
 end
 
--- Çå¿Õ
+-- æ¸…ç©º
 function WorldMap.Clear()
 	WorldMap.m_nLastAreaIndex = -1;
 	WorldMap.m_nLastTouchArmyIndex = -1;
@@ -144,7 +144,7 @@ function WorldMap.Clear()
 	--collectgarbage("collect");
 end
 
--- Ç°ÍùÊÀ½çµØÍ¼
+-- å‰å¾€ä¸–ç•Œåœ°å›¾
 function WorldMap.GotoWorldMap( posx, posy )
 	-- m_to_posx=0,m_to_posy=0,
 	local sendValue = {};
@@ -153,14 +153,14 @@ function WorldMap.GotoWorldMap( posx, posy )
 	netsend_worldmapask_C( sendValue )
 end
 
--- ·µ»Ø³Ç³Ø
+-- è¿”å›åŸæ± 
 function WorldMap.ReturnCity()
 	GameManager.ChangeScence( "city" )
 	TmxLastList = { 0, 0, 0, 0 };
 	WorldMap.Clear()
 end
 
--- ·¢ËÍ¿Í»§¶Ëµ±Ç°ÇøÓòË÷Òı
+-- å‘é€å®¢æˆ·ç«¯å½“å‰åŒºåŸŸç´¢å¼•
 function WorldMap.SendAreaIndex( areaindex, posx, posy )
 	-- m_areaindex=0,
 	local sendValue = {};
@@ -170,22 +170,22 @@ function WorldMap.SendAreaIndex( areaindex, posx, posy )
 	netsend_worldmapareaindex_C( sendValue );
 end
 
--- È·¶¨ÄÄ¸öÍ¼ÏÔÊ¾
+-- ç¡®å®šå“ªä¸ªå›¾æ˜¾ç¤º
 function WorldMap.RefreshShow( gamePosX, gamePosY )
     TmxShowList = { 0, 0, 0, 0 };
 
-    -- Ğ¡¸ñ×ø±ê
+    -- å°æ ¼åæ ‡
 	local localPosX = math.floor( math.mod( gamePosX, TMX_WIDTH ) );
 	local localPosY = math.floor( math.mod( gamePosY, TMX_HEIGHT ) );
 
-    -- ÄÄ¸ñµØÍ¼
+    -- å“ªæ ¼åœ°å›¾
     local mapX = math.floor( gamePosX / TMX_WIDTH );
     local mapY = math.floor( gamePosY / TMX_HEIGHT );
     TmxShowList[1] = { mapX, mapY };
 
     local index = 2;
-    -- ÅĞ¶ÏĞ¡¸ñµØÍ¼±ßÔµ
-    -- XÖá
+    -- åˆ¤æ–­å°æ ¼åœ°å›¾è¾¹ç¼˜
+    -- Xè½´
     if localPosX < TmxShowThreshold then
         TmxShowList[index] = { mapX - 1, mapY };
         index = index + 1;
@@ -194,7 +194,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
         index = index + 1;
     end
     
-    -- YÖá
+    -- Yè½´
     if localPosY < TmxShowThreshold then
         TmxShowList[index] = { mapX, mapY - 1 };
         index = index + 1;
@@ -203,7 +203,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
         index = index + 1;
     end
     
-    -- XYÖáÉÏÏÂ
+    -- XYè½´ä¸Šä¸‹
     if localPosX < TmxShowThreshold and localPosY < TmxShowThreshold then
         TmxShowList[index] = { mapX - 1, mapY - 1 };
         index = index + 1;
@@ -212,7 +212,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
         index = index + 1;
     end    
 
-    -- XYÖá×óÓÒ
+    -- XYè½´å·¦å³
     if localPosX < TmxShowThreshold and localPosY > TMX_HEIGHT - TmxShowThreshold then
         TmxShowList[index] = { mapX - 1, mapY + 1 };
         index = index + 1;
@@ -221,7 +221,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
         index = index + 1;
     end
 
-    -- Ë¢ĞÂµØÍ¼Î»ÖÃ
+    -- åˆ·æ–°åœ°å›¾ä½ç½®
     local changed = false;
     for i = 1, 4, 1 do
         if TmxShowList[i] ~= 0 and TmxLastList[i] ~= 0 and TmxLastList[i][1] == TmxShowList[i][1] and TmxLastList[i][2] == TmxShowList[i][2] then
@@ -232,7 +232,7 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
 			local x = WorldMap.m_nMaxWidth * MAP_TILEWIDTH / 2 / 100 + MAP_TILEWIDTH * TMX_WIDTH * ( TmxShowList[i][1] - TmxShowList[i][2] - 1 ) / 2 / 100
 			local y = - MAP_TILEHEIGHT * TMX_HEIGHT * ( TmxShowList[i][2] + TmxShowList[i][1] ) / 2 / 100;
 			if x >= 511 and x <= 513 and y >= -257 and y <= -255 then
-				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( false ); -- ÖĞ¼ä
+				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( false ); -- ä¸­é—´
 			else
 				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
 			end
@@ -250,13 +250,13 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
     end
 end
 	
--- ÊÀ½çµØÍ¼Æô¶¯
+-- ä¸–ç•Œåœ°å›¾å¯åŠ¨
 function WorldMap.Start( Prefab )
-	-- ³õÊ¼»¯¸ù½Úµã
+	-- åˆå§‹åŒ–æ ¹èŠ‚ç‚¹
 	WorldMapPrefab	= Prefab;
     MapUnit.unitRoot = Prefab.transform:Find("MapUnitRoot");
 
-	-- »ñÈ¡×é¼ş
+	-- è·å–ç»„ä»¶
 	MapTmxRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapTmxRoot" );
 	MapUnitRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapUnitRoot" );
 	MapLineRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapLineRoot" );
@@ -265,7 +265,7 @@ function WorldMap.Start( Prefab )
 	MapCamera				= WorldMapPrefab:GetComponent("Transform"):Find( "MapCamera" );
 	CityArmyGroupClickMod	= WorldMapPrefab:GetComponent("Transform"):Find( "CityArmyGroupClickMod" ).transform:GetComponent("UIMod");
 	
-	-- ¸ù¾İµØÍ¼´óĞ¡¶¯Ì¬¼ÓÔØN*N¸öTmxµØÍ¼
+	-- æ ¹æ®åœ°å›¾å¤§å°åŠ¨æ€åŠ è½½N*Nä¸ªTmxåœ°å›¾
 	local TmxMapPrefab = LoadPrefab( "TmxMap" );
 --	local rownum = math.floor( WorldMap.m_nMaxWidth/TMX_WIDTH );
 --	local colnum = math.floor( WorldMap.m_nMaxHeight/TMX_HEIGHT );
@@ -280,7 +280,7 @@ function WorldMap.Start( Prefab )
 --		end
 --	end
 
-    -- Ö»ÊµÀı»¯4¸ö
+    -- åªå®ä¾‹åŒ–4ä¸ª
     for i = 1, 4, 1 do
         MapTmx[i] = GameObject.Instantiate( TmxMapPrefab );
 		MapTmx[i].transform:SetParent( MapTmxRoot );
@@ -288,28 +288,28 @@ function WorldMap.Start( Prefab )
         MapTmx[i].gameObject:SetActive( false );
     end
     	
-	-- ÉèÖÃÉãÏñ»ú³õÊ¼Î»ÖÃÎªÎÒµÄ³Ç³Ø
+	-- è®¾ç½®æ‘„åƒæœºåˆå§‹ä½ç½®ä¸ºæˆ‘çš„åŸæ± 
 	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
 	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
 		
 	if WorldMap.m_nLastGotoPosX >=0 and WorldMap.m_nLastGotoPosY >= 0 then
 		WorldMap.CameraSetPosition( MAPUNIT_TYPE_CITY, WorldMap.m_nLastGotoPosX, WorldMap.m_nLastGotoPosY );
 	else
-		-- Ìø×ªµ½Íæ¼Ò³Ç
+		-- è·³è½¬åˆ°ç©å®¶åŸ
 		MapCamera.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WORLDMAP_ZORDER_CAMERA );
 	end
 	
-	-- µØÍ¼±ß½ç
+	-- åœ°å›¾è¾¹ç•Œ
 	--MapUnit.createMapBorder( 249, 250, 500, false );
 	
-	-- ÇøÓò±ß½ç
+	-- åŒºåŸŸè¾¹ç•Œ
 	for i=1, #g_zoneinfo, 1 do
 		MapUnit.createMapBorder( g_zoneinfo[i].center_posx-1, g_zoneinfo[i].center_posy, 100 );
 	end
 	
-	-- ÇøÓò¶¼³ÇÃû³ÇµÄ·¶Î§
+	-- åŒºåŸŸéƒ½åŸååŸçš„èŒƒå›´
 	for k, v in pairs(g_towninfo) do
-		if v.type >= 7 then
+		if v.type >= MAPUNIT_TYPE_TOWN_TYPE7 then
 			if v.grid == 2 then
 				MapUnit.createTownRange( v.grid, v.posx-1, v.posy, v.range, 0 );
 			elseif v.grid == 3 then
@@ -318,21 +318,21 @@ function WorldMap.Start( Prefab )
 		end
 	end
 	
-	-- ³õÊ¼»¯ĞĞ¾üÂ·Ïß
+	-- åˆå§‹åŒ–è¡Œå†›è·¯çº¿
 	MapMarchRoute.init( MapLineRoot );
 	
-	-- ³õÊ¼»¯µØÍ¼¸ñ×ÓÊı¾İ
+	-- åˆå§‹åŒ–åœ°å›¾æ ¼å­æ•°æ®
 	MapTile.init();
 	
-	-- ÏÔÊ¾ÊÀ½çµØÍ¼½çÃæ
+	-- æ˜¾ç¤ºä¸–ç•Œåœ°å›¾ç•Œé¢
 	MainDlgShowMap();
 	
-	-- ·µ»ØµØÍ¼Êı¾İ¸ø³ÌĞòÒ»·İ
+	-- è¿”å›åœ°å›¾æ•°æ®ç»™ç¨‹åºä¸€ä»½
 	return WorldMap.m_nMaxWidth, WorldMap.m_nMaxHeight, MAP_TILEWIDTH, MAP_TILEHEIGHT
 end
 
 
--- ÉãÏñ»ú×ø±ê=¡·ÓÎÏ·×ø±ê(ÁâĞÎ¸ñ)
+-- æ‘„åƒæœºåæ ‡=ã€‹æ¸¸æˆåæ ‡(è±å½¢æ ¼)
 function WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY )
 	local screen_x = math.modf(cameraPosX * 100) - WorldMap.m_nMaxWidth/2 * MAP_TILEWIDTH;
 	local screen_y = math.modf(cameraPosY * 100) + WorldMap.m_nMaxHeight/2 * MAP_TILEHEIGHT;
@@ -349,7 +349,7 @@ function WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY )
 	return gameCoorX, gameCoorY 
 end
 
--- ÓÎÏ·×ø±ê(ÁâĞÎ¸ñ)=¡·ÉãÏñ»ú×ø±ê
+-- æ¸¸æˆåæ ‡(è±å½¢æ ¼)=ã€‹æ‘„åƒæœºåæ ‡
 function WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY )
     if gameCoorX == nil then
         return;
@@ -359,57 +359,57 @@ function WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY )
 	return px + WorldMap.m_nMaxWidth*MAP_TILEWIDTH/2/100, py
 end
 
--- Ìí¼Óµ¥Ôª
+-- æ·»åŠ å•å…ƒ
 function WorldMap.AddMapUnit( recvValue )
-	-- Ìí¼ÓÏÔÊ¾¶ÔÏó
+	-- æ·»åŠ æ˜¾ç¤ºå¯¹è±¡
 	MapUnit.add( MapUnitRoot, recvValue );
 	
-	-- Ìí¼Ó¸ñ×ÓÊı¾İ
+	-- æ·»åŠ æ ¼å­æ•°æ®
 	MapTile.add( recvValue );
 	
-	-- ½ÓÊÕµ½µÄÍêÕûÊı¾İ²åÈë»º´æ
+	-- æ¥æ”¶åˆ°çš„å®Œæ•´æ•°æ®æ’å…¥ç¼“å­˜
 	WorldMap.m_nMapUnitList[recvValue.m_unit_index] = recvValue;
 	
-	-- ĞèÒªÌø×ª
+	-- éœ€è¦è·³è½¬
 	if WorldMap.m_nLastGotoUnitIndex == recvValue.m_unit_index then
 		WorldMap.OnSelect( MapUnit.cache[recvValue.m_unit_index], recvValue.m_posx, recvValue.m_posy, recvValue.m_unit_index );
 		WorldMap.m_nLastGotoUnitIndex = -1;
 	end
 end
 
--- ÒÆ³ıµ¥Ôª
+-- ç§»é™¤å•å…ƒ
 function WorldMap.DelMapUnit( recvValue )
-	-- ÒÆ³ıÏÔÊ¾¶ÔÏó
+	-- ç§»é™¤æ˜¾ç¤ºå¯¹è±¡
 	MapUnit.del( recvValue.m_unit_index )
 	
-	-- ÒÆ³ı¸ñ×ÓÊı¾İ
+	-- ç§»é™¤æ ¼å­æ•°æ®
 	MapTile.del( WorldMap.m_nMapUnitList[recvValue.m_unit_index] )
 	
-	-- ÒÆ³ı½ÓÊÕµ½µÄ»º´æÊı¾İ
+	-- ç§»é™¤æ¥æ”¶åˆ°çš„ç¼“å­˜æ•°æ®
 	WorldMap.m_nMapUnitList[recvValue.m_unit_index] = nil;
 	
-	-- Èç¹ûÕıÔÚÏÔÊ¾²Ù×÷½çÃæ
+	-- å¦‚æœæ­£åœ¨æ˜¾ç¤ºæ“ä½œç•Œé¢
 	if recvValue.m_unit_index == WorldMap.m_nLastTouchUnitIndex then
 		WorldMap.OnClickClose();
 		WorldMap.m_nLastTouchUnitIndex = -1;
 	end
 end
 
--- ¸üĞÂµ¥Ôª
+-- æ›´æ–°å•å…ƒ
 function WorldMap.UpdateMapUnit( recvValue )
-	-- Èç¹ûÖ®Ç°ÊÇ²¿¶Ó£¬²¢ÇÒÊÇ×¤Ôú×´Ì¬£¬ÏÖÔÚ²»×¤ÔúÁË
+	-- å¦‚æœä¹‹å‰æ˜¯éƒ¨é˜Ÿï¼Œå¹¶ä¸”æ˜¯é©»æ‰çŠ¶æ€ï¼Œç°åœ¨ä¸é©»æ‰äº†
 	--[[local oldCache = WorldMap.m_nMapUnitList[recvValue.m_unit_index];
 	if oldCache ~= nil and oldCache.m_type == MAPUNIT_TYPE_ARMY then
 		if oldCache.m_state == ARMY_STATE_OCCUPY and recvValue.m_state ~= ARMY_STATE_OCCUPY then
-			-- ÒÆ³ı¸ñ×ÓÊı¾İ
+			-- ç§»é™¤æ ¼å­æ•°æ®
 			MapTile.del( WorldMap.m_nMapUnitList[recvValue.m_unit_index] )
 		end
 	end--]]
 
-	-- Ìí¼Ó
+	-- æ·»åŠ 
 	WorldMap.AddMapUnit( recvValue );
 	
-	-- Èç¹ûÕıÔÚÏÔÊ¾²Ù×÷½çÃæ
+	-- å¦‚æœæ­£åœ¨æ˜¾ç¤ºæ“ä½œç•Œé¢
 	--[[if recvValue.m_unit_index == WorldMap.m_nLastTouchUnitIndex then
 		WorldMap.OnClickClose();
 		GatherInfoDlgClose();
@@ -420,12 +420,12 @@ function WorldMap.UpdateMapUnit( recvValue )
 	end--]]
 end
 
--- ÒÆ¶¯µ¥Ôª
+-- ç§»åŠ¨å•å…ƒ
 function WorldMap.MoveMapUnit( recvValue )
 	if WorldMap.m_nMapUnitList[recvValue.m_unit_index] == nil then
 		return;
 	end
-	-- ÒÆ³ı¸ñ×ÓÊı¾İ
+	-- ç§»é™¤æ ¼å­æ•°æ®
 	if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
 		MapTile.del( WorldMap.m_nMapUnitList[recvValue.m_unit_index] );
 	end
@@ -434,15 +434,15 @@ function WorldMap.MoveMapUnit( recvValue )
 	
 	
 	if WorldMap.m_nMapUnitList[recvValue.m_unit_index].m_type ~= MAPUNIT_TYPE_ARMY then
-		-- Ìí¼Ó¸ñ×ÓÊı¾İ
+		-- æ·»åŠ æ ¼å­æ•°æ®
 		MapTile.add( WorldMap.m_nMapUnitList[recvValue.m_unit_index] );
 		WorldMap.UpdateMapUnit( WorldMap.m_nMapUnitList[recvValue.m_unit_index] ); 
 	end
 end
 
--- Ëæ»ú»ñÈ¡µÄµ¥Ôª
+-- éšæœºè·å–çš„å•å…ƒ
 function WorldMap.RandMapUnit( recvValue )
-	-- ½ÓÊÕµ½µÄÍêÕûÊı¾İ²åÈë»º´æ
+	-- æ¥æ”¶åˆ°çš„å®Œæ•´æ•°æ®æ’å…¥ç¼“å­˜
 	WorldMap.m_nMapUnitList[recvValue.m_unit_index] = recvValue;
 	WorldMap.m_nLastTouchUnitIndex = recvValue.m_unit_index;
 	if recvValue.m_type == MAPUNIT_TYPE_MONSTER then
@@ -452,7 +452,7 @@ function WorldMap.RandMapUnit( recvValue )
 	end
 end
 
--- Ö¡Âß¼­
+-- å¸§é€»è¾‘
 function WorldMap.Update()
 	WorldMap.QueueFetchArmy();
 	
@@ -464,11 +464,11 @@ function WorldMap.Update()
 		end
 	end
 
-	-- Ò»Ö¡´´½¨Ò»¸ö¶ÔÏó
+	-- ä¸€å¸§åˆ›å»ºä¸€ä¸ªå¯¹è±¡
 	WorldMap.QueueFetch();
 end
 
---  Ã¿ÃëÍ¨Öª2´ÎÎ»ÖÃ±ä»¯ÁË-¸ºÔğÇøÓò¼ÆËã
+--  æ¯ç§’é€šçŸ¥2æ¬¡ä½ç½®å˜åŒ–äº†-è´Ÿè´£åŒºåŸŸè®¡ç®—
 function WorldMap.ViewChangeSec()
     --if MainDlgCutSceneIsPlaying() then
         --return;
@@ -478,7 +478,7 @@ function WorldMap.ViewChangeSec()
 	local cameraPosY = MapCamera:GetComponent("Transform").position.y;
 
 
-	-- ×ø±ê¼ÆËãÇøÓòË÷Òı
+	-- åæ ‡è®¡ç®—åŒºåŸŸç´¢å¼•
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY );
     WorldMap.RefreshShow( gameCoorX, gameCoorY );
 
@@ -493,7 +493,7 @@ function WorldMap.ViewChangeSec()
 	m_updateWaitFrame = 0;
 end
 
---  Ã¿ÃëÍ¨Öª30´ÎÎ»ÖÃ±ä»¯ÁË-¸ºÔğ¾àÀëºÍ·½Î»
+--  æ¯ç§’é€šçŸ¥30æ¬¡ä½ç½®å˜åŒ–äº†-è´Ÿè´£è·ç¦»å’Œæ–¹ä½
 function WorldMap.ViewChangeFrame()
     if MapCamera == nil then
         return;
@@ -504,46 +504,46 @@ function WorldMap.ViewChangeFrame()
     m_LastPosX = cameraPosX;
     m_LastPosY = cameraPosY;
 	
-	-- Î»ÖÃÃ»±ä»¯¾Í²»¼ÆËãÁË
+	-- ä½ç½®æ²¡å˜åŒ–å°±ä¸è®¡ç®—äº†
 	if cameraPosX == WorldMap.m_nLastCameraX and cameraPosY == WorldMap.m_nLastCameraY then
 		return;
 	end
 	WorldMap.m_nLastCameraX = cameraPosX;
 	WorldMap.m_nLastCameraY	= cameraPosY;
-    -- Ö÷³Ç×ø±ê
+    -- ä¸»åŸåæ ‡
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY );
     WorldMap.m_nLastCameraGameX = gameCoorX;
     WorldMap.m_nLastCameraGameY = gameCoorY;
 	
-	-- ÓĞÒÆ¶¯ĞĞÎª¾Í¹Ø±Õ
+	-- æœ‰ç§»åŠ¨è¡Œä¸ºå°±å…³é—­
 	if MapClickEffect.gameObject.activeSelf == true or MapClickMod.gameObject.activeSelf == true then
 		WorldMap.OnClickClose();
 	end
 	
-	-- ²Ù×÷½çÃæ¸üĞÂ×ø±ê
+	-- æ“ä½œç•Œé¢æ›´æ–°åæ ‡
 	--MapClickModCoordinate( gameCoorX, gameCoorY );
 	
-	-- ¸üĞÂ¼ıÍ·³¯Ïò
+	-- æ›´æ–°ç®­å¤´æœå‘
     --WorldMap.UpdateArrow();
 end
 
--- ¸üĞÂ¼ıÍ·³¯Ïò
+-- æ›´æ–°ç®­å¤´æœå‘
 function WorldMap.UpdateArrow()
 
-    -- ¼ıÍ·Î»ÖÃ
+    -- ç®­å¤´ä½ç½®
 	--[[local arrowPos = WorldMapDlgArrowPosition();
-	-- ¼ÆËã×Ô¼ºÖ÷³ÇÓëµ±Ç°ÊÓ¿ÚÖĞĞÄµÄ·½Î»ºÍ¾àÀë
+	-- è®¡ç®—è‡ªå·±ä¸»åŸä¸å½“å‰è§†å£ä¸­å¿ƒçš„æ–¹ä½å’Œè·ç¦»
 	local cityPos = cc.p( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
 	local cameraPos = cc.p( WorldMap.m_nLastCameraX, WorldMap.m_nLastCameraY );
 	
-	-- ×ª»»³ÉÓÎÏ·×ø±ê
+	-- è½¬æ¢æˆæ¸¸æˆåæ ‡
 	local cityGameCoorX, cityGameCoorY = WorldMap.ConvertCameraToGame( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY );
 	local cameraGameCoorX, cameraGameCoorY = WorldMap.ConvertCameraToGame( WorldMap.m_nLastCameraX, WorldMap.m_nLastCameraY );
 	
-	-- ¾àÀë
+	-- è·ç¦»
 	local distance = math.sqrt( ( cameraGameCoorX - cityGameCoorX )*( cameraGameCoorX - cityGameCoorX ) + ( cameraGameCoorY - cityGameCoorY )*( cameraGameCoorY - cityGameCoorY ) );
 	
-	-- ½Ç¶È
+	-- è§’åº¦
 	local o = cameraPos.x + arrowPos.x - cityPos.x;
 	local a = cameraPos.y + arrowPos.y - cityPos.y;
 	local angle = math.deg( math.atan( o/a ) );
@@ -558,14 +558,14 @@ function WorldMap.UpdateArrow()
 	WorldMapDlgOnDirectionArrow( distance, 180-angle, cc.p( WorldMap.m_nLastCameraGameX, WorldMap.m_nLastCameraGameY ) );--]]
 end
 
--- ´¥·¢µã»÷µØÍ¼
+-- è§¦å‘ç‚¹å‡»åœ°å›¾
 function WorldMap.OnClick( obj, touchpos, unit_index )
 	if MapClickEffect.gameObject.activeSelf == true or MapClickMod.gameObject.activeSelf == true then
 		WorldMap.OnClickClose();
 		return;
 	end
 	
-	-- ÆÁÄ»×ø±ê×ª»»µ½ÊÀ½ç×ø±ê
+	-- å±å¹•åæ ‡è½¬æ¢åˆ°ä¸–ç•Œåæ ‡
 	local touchpos = Camera.main:ScreenToWorldPoint( touchpos );
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( touchpos.x, touchpos.y );
     if gameCoorX < 0 or gameCoorX >= WorldMap.m_nMaxWidth or
@@ -573,17 +573,17 @@ function WorldMap.OnClick( obj, touchpos, unit_index )
        return;
     end
 
-    -- Èç¹ûÔÚÇ¨³Ç×´Ì¬ÔòÈ¡ÏûÇ¨³Ç
+    -- å¦‚æœåœ¨è¿åŸçŠ¶æ€åˆ™å–æ¶ˆè¿åŸ
     --[[if MapCityMove.enable and unit_index == -1 then
         MapCityMove.close();
         return;
     end--]]
 	
-	-- Ñ¡Ôñ
+	-- é€‰æ‹©
 	WorldMap.OnSelect( obj, gameCoorX, gameCoorY, unit_index );
 end
 
--- Ñ¡Ôñµ¥Ôª
+-- é€‰æ‹©å•å…ƒ
 function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 	--if WorldMap.m_nMode == WORLDMAP_MODE_MOVECITY then
 		--return;
@@ -592,19 +592,19 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		WorldMap.OnClickClose();
 	end
 
-	-- Ö»ÓĞarmy¶ÔÏóÓĞ´¥·¢Æ÷,²¢ÇÒÖ»ÓĞÒÆ¶¯ÖĞµÄ²ÅÅĞ¶¨ÓĞĞ§
+	-- åªæœ‰armyå¯¹è±¡æœ‰è§¦å‘å™¨,å¹¶ä¸”åªæœ‰ç§»åŠ¨ä¸­çš„æ‰åˆ¤å®šæœ‰æ•ˆ
 	--[[if unit_index >= 0 then
 		local recvValue = WorldMap.m_nMapUnitList[unit_index];
 		if recvValue ~= nil then
 			if recvValue.m_type == MAPUNIT_TYPE_ARMY then
 				if recvValue.m_state == ARMY_STATE_MARCH or recvValue.m_state == ARMY_STATE_REBACK then
-                    -- ²¥·ÅÒôĞ§
+                    -- æ’­æ”¾éŸ³æ•ˆ
                     
-					-- ¼ÇÂ¼µã»÷µÄÏÔÊ¾µ¥ÔªË÷Òı
+					-- è®°å½•ç‚¹å‡»çš„æ˜¾ç¤ºå•å…ƒç´¢å¼•
 					WorldMap.m_nLastTouchUnitIndex = unit_index;
-					-- ¼ÇÂ¼µã»÷µÄ²¿¶Óµ¥ÔªË÷Òı
+					-- è®°å½•ç‚¹å‡»çš„éƒ¨é˜Ÿå•å…ƒç´¢å¼•
 					WorldMap.m_nLastTouchArmyIndex = recvValue.m_int_value[1];
-					-- 	Æô¶¯¸úËæ
+					-- 	å¯åŠ¨è·Ÿéš
 					WorldMap.StartFollow( unit_index );
 					return;
 				end
@@ -612,26 +612,26 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		end
 	end--]]
 	
-	-- ¼ÇÂ¼Ò»ÏÂµã»÷µÄ×ø±ê¸ñ×Ó
+	-- è®°å½•ä¸€ä¸‹ç‚¹å‡»çš„åæ ‡æ ¼å­
 	WorldMap.m_nLastTouchGameCoorX = gameCoorX;
 	WorldMap.m_nLastTouchGameCoorY = gameCoorY;
 	
-	-- ÓÎÏ·¸ñ×Ó×ø±ê×ª»»³ÉÉãÏñ»ú×ø±ê
+	-- æ¸¸æˆæ ¼å­åæ ‡è½¬æ¢æˆæ‘„åƒæœºåæ ‡
 	local cameraPosX = 0;
 	local cameraPosY = 0;
 	
-	-- µã»÷µÄ¸ñ×ÓÊÇ·ñÓĞ»º´æÊı¾İ
+	-- ç‚¹å‡»çš„æ ¼å­æ˜¯å¦æœ‰ç¼“å­˜æ•°æ®
 	unit_index = MapTile.get( gameCoorX, gameCoorY );  
 
-    -- ÆäËû
+    -- å…¶ä»–
 	if unit_index >= 0 then
-		-- ½ÓÊÕÊı¾İ
+		-- æ¥æ”¶æ•°æ®
 		local recvValue = WorldMap.m_nMapUnitList[unit_index];
 		if recvValue == nil then
 			return;
 		end
 		
-		-- ¼ì²é×ÊÔ´µã²É¼¯µÈ¼¶,µã»÷¾ÍÌáÊ¾
+		-- æ£€æŸ¥èµ„æºç‚¹é‡‡é›†ç­‰çº§,ç‚¹å‡»å°±æç¤º
 		--[[if recvValue.m_type == MAPUNIT_TYPE_RES then
 			local limitlevel = recvValue.m_char_value[3];
 			if GetCity().BuildingList[1].m_level < -limitlevel then
@@ -640,7 +640,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			end
 		end--]]
 	
-		-- ÉèÖÃËõ·Å
+		-- è®¾ç½®ç¼©æ”¾
 		local grid = 1;
 		if recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			local townid 	= recvValue.m_short_value[1];
@@ -649,55 +649,52 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			grid = MapUnit.getGrid( recvValue.m_type, 0 );
 		end
 		MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );
-		-- ×ª»»ÖĞĞÄ×ø±ê
+		-- è½¬æ¢ä¸­å¿ƒåæ ‡
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
 		cameraPosX, cameraPosY = MapUnit.getGridTrans( recvValue.m_type, grid, cameraPosX, cameraPosY );
 	else
-		-- ÉèÖÃËõ·Å
+		-- è®¾ç½®ç¼©æ”¾
 		MapClickEffect.transform.localScale = Vector3.New( 1, 1, 1 );
-		-- ×ª»»ÖĞĞÄ×ø±ê
+		-- è½¬æ¢ä¸­å¿ƒåæ ‡
 		cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
 		cameraPosX, cameraPosY = MapUnit.getGridTrans( 0, 0, cameraPosX, cameraPosY );
 	end
 	
-	-- ¼ÇÂ¼µã»÷µÄÏÔÊ¾µ¥ÔªË÷Òı
+	-- è®°å½•ç‚¹å‡»çš„æ˜¾ç¤ºå•å…ƒç´¢å¼•
 	WorldMap.m_nLastTouchUnitIndex = unit_index;
 	WorldMap.m_nLastTouchArmyIndex = -1;
-	-- Ñ¡Ôñ¿ò
+	-- é€‰æ‹©æ¡†
 	MapClickEffect.transform.localPosition = Vector3.New( cameraPosX, cameraPosY, WORLDMAP_ZORDER_CLICKMOD );
 	MapClickEffect.gameObject:SetActive( true );
 
-	-- ²Ù×÷½çÃæ
+	-- æ“ä½œç•Œé¢
 	local recvValue = WorldMap.m_nMapUnitList[unit_index];
 	if recvValue then
 		if recvValue.m_type == MAPUNIT_TYPE_ARMY then
 			WorldMap.m_nLastTouchArmyIndex = recvValue.m_int_value[1];
 		
-		-- ³ÇÕò
+		-- åŸé•‡
 		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			local townid 		= recvValue.m_short_value[1]
 			local type 			= g_towninfo[townid].type
-			if type == 8 then
-				MapClickEffect.gameObject:SetActive( false );
-				return
-			elseif type == 9 then
+			if type == MAPUNIT_TYPE_TOWN_TYPE9 then
 				MapClickEffect.gameObject:SetActive( false );
 				return
 			end
 			
-		-- Ò°¹Ö
+		-- é‡æ€ª
 		elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then
 			MapClickEffect.gameObject:SetActive( false );
 			MapEnemyDlgShow( recvValue )
 			return;	
 		
-		-- ×ÊÔ´µã		
+		-- èµ„æºç‚¹		
 		elseif recvValue.m_type == MAPUNIT_TYPE_RES then
 			MapClickEffect.gameObject:SetActive( false );
 			MapResDlgShow( recvValue )
 			return;	
 		
-		-- Ëæ»úÊÂ¼ş	
+		-- éšæœºäº‹ä»¶	
 		elseif recvValue.m_type == MAPUNIT_TYPE_EVENT then
 			MapClickEffect.gameObject:SetActive( false );
 			MapEventDlgShow( recvValue )
@@ -705,12 +702,12 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		end
 	end
 	
-	-- ²Ù×÷¿ò
+	-- æ“ä½œæ¡†
 	MapClickMod.transform.localPosition = Vector3.New( cameraPosX, cameraPosY, WORLDMAP_ZORDER_CLICKMOD );
 	MapClickMod.gameObject:SetActive( true );
 end
 
--- ¹Ø±Õ²Ù×÷½çÃæ
+-- å…³é—­æ“ä½œç•Œé¢
 function WorldMap.OnClickClose()
 	if MapClickEffect ~= nil and MapClickEffect.gameObject ~= nil then
 		MapClickEffect.gameObject:SetActive( false );
@@ -721,14 +718,14 @@ function WorldMap.OnClickClose()
 	WorldMap.StopFollow();
 end
 
--- ´¥·¢ÍÏ×§¶ÔÏó
+-- è§¦å‘æ‹–æ‹½å¯¹è±¡
 function WorldMap.OnDrag( touchpos )
 	--MapCityMove.OnDrag( touchpos )
 end
 
--- ÉèÖÃÉãÏñ»úÎ»ÖÃ
+-- è®¾ç½®æ‘„åƒæœºä½ç½®
 function WorldMap.CameraSetPosition( unittype, gameCoorX, gameCoorY )
-	-- Î»ÖÃ
+	-- ä½ç½®
     local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
 	local posx, posy = MapUnit.getGridTrans( unittype, 0, cameraPosX, cameraPosY );
 	if MapCamera then
@@ -745,9 +742,9 @@ function WorldMap.CameraSetPosition( unittype, gameCoorX, gameCoorY )
     m_LastPosY = nil;
 end
 
--- ÉãÏñ»ú»¬¶¯ÖÁ
+-- æ‘„åƒæœºæ»‘åŠ¨è‡³
 function WorldMap.TweenPosition( unittype, gameCoorX, gameCoorY, time )
-	-- Î»ÖÃ
+	-- ä½ç½®
     local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
 	local posx, posy = MapUnit.getGridTrans( unittype, 0, cameraPosX, cameraPosY );
 	if MapCamera then
@@ -759,7 +756,7 @@ function WorldMap.TweenPosition( unittype, gameCoorX, gameCoorY, time )
 	end
 end
 
--- Ìø×ªµ½unitÎ»ÖÃ
+-- è·³è½¬åˆ°unitä½ç½®
 function WorldMap.GotoUnit( unit_index )
 	local recvValue = WorldMap.m_nMapUnitList[unit_index];
 	if recvValue == nil then
@@ -773,14 +770,14 @@ function WorldMap.GotoUnit( unit_index )
     m_LastPosY = nil;
 end
 
--- ·şÎñÆ÷·¢»ØµÄµ½unitÎ»ÖÃ
+-- æœåŠ¡å™¨å‘å›çš„åˆ°unitä½ç½®
 function WorldMap.GotoUnitAsyn( recvValue )
 	WorldMap.m_nLastGotoUnitIndex = recvValue.m_unit_index;
 	WorldMap.CameraSetPosition( recvValue.m_type, recvValue.m_posx, recvValue.m_posy );
 	--WorldMap.ViewChangeSec();
 end
 
--- Ìø×ªµ½Î»ÖÃ
+-- è·³è½¬åˆ°ä½ç½®
 function WorldMap.GotoCoor( gameCoorX, gameCoorY )
 	if GameManager.currentScence == "city" then
 		WorldMap.GotoWorldMap( gameCoorX, gameCoorY )
@@ -793,12 +790,12 @@ function WorldMap.GotoCoor( gameCoorX, gameCoorY )
     m_LastPosY = nil;
 end
 
--- ÎÒµÄ³Ç³Ø
+-- æˆ‘çš„åŸæ± 
 function WorldMap.GotoMyCity()
 	WorldMap.GotoCoor( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
 end
 
--- ¿ªÆôÉãÏñ»ú¸úËæÄ£Ê½
+-- å¼€å¯æ‘„åƒæœºè·Ÿéšæ¨¡å¼
 function WorldMap.StartFollow( unit_index )
     if WorldMap.m_nMode == WORLDMAP_MODE_NORMAL then
 		local unit = MapUnit.cache[unit_index];
@@ -806,13 +803,13 @@ function WorldMap.StartFollow( unit_index )
 			return;
 		end
 		
-		-- ²Ù×÷½çÃæ¸úËæ
+		-- æ“ä½œç•Œé¢è·Ÿéš
 		MapClickMod.gameObject:SetActive( true );	
         MapClickMod.transform:SetParent( unit.transform );
 		MapClickMod.transform.localPosition = Vector3.New( 0, 0, WORLDMAP_ZORDER_CLICKMOD );
         MapClickMod.transform.localScale = Vector3.New( 0.01, 0.01, 1 );
 		
-		-- ÉãÏñ»ú¸úËæ
+		-- æ‘„åƒæœºè·Ÿéš
         local unitPos = unit.transform.position;
         MapCamera.transform.position= Vector3.New( unitPos.x, unitPos.y, WORLDMAP_ZORDER_CAMERA );
         MapCamera.transform:SetParent( unit.transform );
@@ -822,14 +819,14 @@ function WorldMap.StartFollow( unit_index )
     end
 end
 
--- ¹Ø±Õ¸úËæÄ£Ê½
+-- å…³é—­è·Ÿéšæ¨¡å¼
 function WorldMap.StopFollow()
     --if WorldMap.m_nMode == WORLDMAP_MODE_FOLLOW then
-		-- ²Ù×÷½çÃæÍ£Ö¹¸úËæ
+		-- æ“ä½œç•Œé¢åœæ­¢è·Ÿéš
         MapClickMod.transform:SetParent( WorldMapPrefab.transform );
 		MapClickMod.transform.localPosition = Vector3.New( 0, 0, WORLDMAP_ZORDER_CLICKMOD );
 		
-		-- ÉãÏñ»úÍ£Ö¹¸úËæ
+		-- æ‘„åƒæœºåœæ­¢è·Ÿéš
         MapCamera.transform:SetParent( WorldMapPrefab.transform );
 		--MapCamera:GetComponent("WorldMapCamera").IsCanMoved = true;
 		
@@ -837,7 +834,7 @@ function WorldMap.StopFollow()
     --end
 end
 
--- ·µ»ØÑ¡ÔñÌØĞ§
+-- è¿”å›é€‰æ‹©ç‰¹æ•ˆ
 function WorldMap.ClickEffect()
 	return MapClickEffect
 end
@@ -845,7 +842,7 @@ function WorldMap.MapClickMod()
 	return MapClickMod;
 end
 
--- Ìí¼Óµ½´´½¨¶ÓÁĞ
+-- æ·»åŠ åˆ°åˆ›å»ºé˜Ÿåˆ—
 function WorldMap.QueueAdd( operation, recvValue )
 	
 	local unittype = 0;
@@ -885,16 +882,16 @@ function WorldMap.QueueAdd( operation, recvValue )
 	end
 end
 
--- Çå¿Õ´´½¨¶ÓÁĞ
+-- æ¸…ç©ºåˆ›å»ºé˜Ÿåˆ—
 function WorldMap.QueueClear()
 	Queue.clear( procQueue );
 	Queue.clear( procQueueArmy );
 end
 
--- ´´½¨¶ÓÁĞÈ¡³öÒ»Ïî
+-- åˆ›å»ºé˜Ÿåˆ—å–å‡ºä¸€é¡¹
 function WorldMap.QueueFetch()
 	
-	-- ÆÕÍ¨¶ÔÏó
+	-- æ™®é€šå¯¹è±¡
 	for tmpi=1, 6, 1 do
 		local v = Queue.popFirst( procQueue );
 		if v == nil then
@@ -918,10 +915,10 @@ function WorldMap.QueueFetch()
 	
 end
 
--- ´´½¨¶ÓÁĞÈ¡³öÒ»Ïî
+-- åˆ›å»ºé˜Ÿåˆ—å–å‡ºä¸€é¡¹
 function WorldMap.QueueFetchArmy()
 	
-	-- ²¿¶Ó¶ÔÏó
+	-- éƒ¨é˜Ÿå¯¹è±¡
 	for tmpi=1, 3, 1 do
 		local v = Queue.popFirst( procQueueArmy );
 		if v == nil then
@@ -940,7 +937,7 @@ function WorldMap.QueueFetchArmy()
 	
 end
 
--- ¼ÆËãĞĞ¾üÊ±¼ä
+-- è®¡ç®—è¡Œå†›æ—¶é—´
 function WorldMap.MarchTime(fposx, fposy, tposx, tposy)
     local distance = math.abs(fposx - tposx) + math.abs(fposy - tposy);
     local speed = global.army_move;
@@ -953,7 +950,7 @@ function WorldMap.MarchTime(fposx, fposy, tposx, tposy)
     return duration;
 end
 
--- Ç¨³ÇÍê±Ï
+-- è¿åŸå®Œæ¯•
 function WorldMap.OnCityMoved( unit_index, gameCoorX, gameCoorY )
 	if GameManager.currentScence == "worldmap" then
 		WorldMap.m_nMyCityUnitIndex = unit_index;
@@ -966,19 +963,19 @@ function WorldMap.OnCityMoved( unit_index, gameCoorX, gameCoorY )
 		GetPlayer().m_posx = gameCoorX;
 		GetPlayer().m_posy = gameCoorY;
 
-        -- ÌØĞ§
+        -- ç‰¹æ•ˆ
         --local obj = GameObject.Instantiate( LoadPrefab( "Effect_City_Change_Position_Smoke" ) );
         --obj.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WorldMap.m_nMyCityCameraY );
         --GameObject.Destroy( obj, 5 );
 	end
 end
 
--- »ñµÃÉãÏñ»ú
+-- è·å¾—æ‘„åƒæœº
 function WorldMap.GetCamera()
     return MapCamera;
 end
 
--- Òş²ØUI
+-- éšè—UI
 function WorldMap.UIFade( fade )
     --if m_Faded == fade then
         --return;
@@ -990,7 +987,7 @@ function WorldMap.UIFade( fade )
     -- MainDlgGetClubBtn().gameObject:SetActive( fade == false );
 end
 
--- »ñÈ¡µØÇøid
+-- è·å–åœ°åŒºid
 function map_zone_getid( posx, posy )
 	local zonex, zoney;
 	if posx >= WorldMap.m_nMaxWidth then
@@ -1004,7 +1001,7 @@ function map_zone_getid( posx, posy )
 	return zoney*(5) + zonex + 1;
 end
 
--- ¼ì²éÊÇ²»ÊÇÔÚÍ¬Ò»¸öÇøÓò
+-- æ£€æŸ¥æ˜¯ä¸æ˜¯åœ¨åŒä¸€ä¸ªåŒºåŸŸ
 function map_zone_checksame( posx, posy, tposx, tposy )
 	local n = map_zone_getid( posx, posy );
 	local m = map_zone_getid( tposx, tposy );

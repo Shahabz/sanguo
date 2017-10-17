@@ -205,11 +205,14 @@ end
 -- 申请城主的列表
 -- m_count=0,m_list={m_name_len=0,m_name="[m_name_len]",m_place=0,[m_count]},m_sec=0,
 function TownRebuildDlgAskList( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		TownRebuildDlgShow( m_townid, m_towninfo )
+	end
 	SetFalse( m_uiDesc2 )
 	SetFalse( m_uiButtons )
 	SetTrue( m_uiList )
 	SetTrue( m_uiAskTimer )
-	SetTimer( m_uiAskTimer, 1, recvValue.m_sec );
+	SetTimer( m_uiAskTimer, recvValue.m_sec, recvValue.m_sec, 1, T(1310) );
 	
 	for tmpi=1, 5, 1 do
 		local uiActor = m_uiGrid.transform:GetChild(tmpi-1).gameObject;

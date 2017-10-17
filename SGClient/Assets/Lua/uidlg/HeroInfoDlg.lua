@@ -514,6 +514,18 @@ function HeroInfoDlgHeroUp()
 	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
 		return
 	end
+	-- 检查是否有空位
+	local heromax = 2 + GetPlayer().m_attr.m_hero_up_num;
+	for i=0,heromax-1,1 do
+		local pHero = GetHero().m_CityHero[i]
+		if pHero and pHero.m_kind <= 0 then
+			system_askinfo( ASKINFO_HERO, "", 3, 0, m_pCacheHero.m_kind, 0 );
+			HeroInfoDlgClose();
+			return
+		end
+	end
+
+	-- 没空位打开替换界面
 	HeroReplaceDlgShow( m_pCacheHero.m_kind )
 end
 

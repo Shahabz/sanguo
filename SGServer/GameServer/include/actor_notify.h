@@ -37,4 +37,9 @@ int actor_notify_alert( int actor_index, int textid );
 
 // 弹出确定消息带参数
 int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 );
+
+// 通知UI更新
+#define UI_UPDATE_NATIONFIGHT		1 // 国战城镇有变化
+#define UI_UPDATE_FIGHTINFO			2 // 战斗信息变化
+void ui_update( int actor_index, char send_type, char ui );
 #endif

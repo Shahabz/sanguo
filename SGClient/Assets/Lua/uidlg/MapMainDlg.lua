@@ -7,10 +7,18 @@ local m_uiLeftButton = nil; --UnityEngine.GameObject
 local m_uiHeroLayer = nil; --UnityEngine.GameObject
 local m_uiNationLayer = nil; --UnityEngine.GameObject
 local m_uiHeroLayerGrid = nil; --UnityEngine.GameObject
+local m_uiNationLayerScroll = nil; --UnityEngine.GameObject
+local m_uiNationLayerContent = nil; --UnityEngine.GameObject
+local m_uiUIP_TownInfo = nil; --UnityEngine.GameObject
+
+local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
 local CONTROLOFFSET_QUICK = 20000000
 local CONTROLOFFSET_GPS = 30000000
+local CONTROLOFFSET_TOWNID = 40000000
 local m_recvValue = {}
+local m_bHeroLayerShow = false;
+local m_bNationLayerShow = false;
 
 -- 打开界面
 function MapMainDlgOpen()
@@ -22,6 +30,14 @@ function MapMainDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	
+	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):ToInit();
+	m_uiHeroLayer.transform:GetComponent( "UITweenRectPosition" ):ToInit();
+	m_bHeroLayerShow = false;
+	
+	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):ToInit();
+	m_uiNationLayer.transform:GetComponent( "UITweenRectPosition" ):ToInit();
+	m_bNationLayerShow = false
 	
 	eye.uiManager:Close( "MapMainDlg" );
 end
@@ -44,7 +60,8 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 国战
 		elseif nControlID == 1 then
-		
+			MapMainDlgNationLayerShow();
+			
 		-- 武将状态
 		elseif nControlID == 2 then
 			MapMainDlgHeroLayerShow();
@@ -64,6 +81,10 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 6 then
 			WorldMap.GotoMyCity()
 		
+		-- 国战状态信息收起
+		elseif nControlID == 7 then
+			MapMainDlgNationLayerHide();
+			
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
 			MapMainDlgReback( nControlID-CONTROLOFFSET_REBACK )
@@ -73,10 +94,17 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 			MapMainDlgQuick( nControlID-CONTROLOFFSET_QUICK )
 			
 		-- 定位
-		elseif nControlID >= CONTROLOFFSET_GPS then
+		elseif nControlID >= CONTROLOFFSET_GPS and nControlID < CONTROLOFFSET_TOWNID then
 			MapMainDlgGps( nControlID-CONTROLOFFSET_GPS )
-			
+		
+		-- 城镇id
+		elseif nControlID >= CONTROLOFFSET_TOWNID then
+			MapMainDlgNationGoto( nControlID-CONTROLOFFSET_TOWNID )
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			
+		end
 	end
 end
 
@@ -91,6 +119,12 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiHeroLayer = objs[4];
 	m_uiNationLayer = objs[5];
 	m_uiHeroLayerGrid = objs[6];
+	m_uiNationLayerScroll = objs[7];
+	m_uiNationLayerContent = objs[8];
+	m_uiUIP_TownInfo = objs[9];
+	-- 对象池
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("UIP_TownInfo", 4, 4, m_uiUIP_TownInfo);
 end
 
 -- 界面初始化时调用
@@ -319,12 +353,104 @@ end
 function MapMainDlgHeroLayerShow()
 	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( true );
 	m_uiHeroLayer.transform:GetComponent( "UITweenRectPosition" ):Play( true );
+	m_bHeroLayerShow = true;
 end
 
--- 显示武将层
+-- 隐藏武将层
 function MapMainDlgHeroLayerHide()
 	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( false );
 	m_uiHeroLayer.transform:GetComponent( "UITweenRectPosition" ):Play( false );
+	m_bHeroLayerShow = false;
+end
+
+-- 显示国战层
+function MapMainDlgNationLayerShow()
+	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( true );
+	m_uiNationLayer.transform:GetComponent( "UITweenRectPosition" ):Play( true );
+	m_bNationLayerShow = true
+	-- 国战信息
+	MapMainDlgNationLayerClear()
+	system_askinfo( ASKINFO_NATIONARMYGROUP, "", 2 );
+end
+
+-- 隐藏国战层
+function MapMainDlgNationLayerHide()
+	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( false );
+	m_uiNationLayer.transform:GetComponent( "UITweenRectPosition" ):Play( false );
+	m_bNationLayerShow = false
+end
+
+-- 清空
+function MapMainDlgNationLayerClear()
+	local objs = {};
+	for i = 0 ,m_uiNationLayerContent.transform.childCount - 1 do
+		table.insert( objs, m_uiNationLayerContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_TownInfo(Clone)" then
+			m_ObjectPool:Release( "UIP_TownInfo", obj );
+		end
+    end
+end
+
+-- 排序
+function MapMainDlgNationLayerSort( a, b )
+	if a.m_statetime > b.m_statetime then
+		return true
+	else
+		return false
+	end
+end
+
+-- 设置国战信息
+-- m_count=0,m_list={m_townid=0,m_statetime=0,m_attack=0,m_nation,[m_count]},
+function MapMainDlgNationLayerRecv( recvValue )
+	if recvValue.m_count == 0 then
+		return
+	end
+	local tmpCache = {}
+	for i=1, recvValue.m_count, 1 do
+		table.insert( tmpCache, { m_townid=recvValue.m_list[i].m_townid, m_statetime=recvValue.m_list[i].m_statetime, m_attack=recvValue.m_list[i].m_attack, m_nation=recvValue.m_list[i].m_nation } )
+	end
+	table.sort( tmpCache, MapMainDlgNationLayerSort )
+	
+	for i=1, #tmpCache, 1 do
+		local uiObj = m_ObjectPool:Get( "UIP_TownInfo" );
+		uiObj.transform:SetParent( m_uiNationLayerContent.transform );
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiState = objs[0];
+		local uiShape = objs[1];
+		local uiName = objs[2];
+		local uiTimer = objs[3];
+		local townid = tmpCache[i].m_townid;
+		local nation = 	tmpCache[i].m_nation;
+		SetControlID( uiObj, CONTROLOFFSET_TOWNID+townid )
+		-- 形象
+		local type 	= g_towninfo[townid].type
+		SetImage( uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..nation ) )	
+		-- 名称
+		SetText( uiName, MapTownName( townid ), Hex2Color(MapUnitRangeColor[nation]) )
+		-- 倒计时
+		SetTimer( uiTimer, tmpCache[i].m_statetime, tmpCache[i].m_statetime, 1 )
+		-- 攻守
+		if tmpCache[i].m_attack == 1 then
+			SetText( uiState, T(1264), Hex2Color(0xffde00ff) )
+		elseif tmpCache[i].m_attack == 2 then
+			SetText( uiState, T(1265), Hex2Color(0x03de27ff) )
+		end
+	end
+end
+
+-- 更新
+function MapMainDlgNationLayerUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if m_bNationLayerShow == true then
+		MapMainDlgNationLayerClear()
+		system_askinfo( ASKINFO_NATIONARMYGROUP, "", 2 );
+	end
 end
 
 -- 撤回
@@ -362,4 +488,14 @@ function MapMainDlgGps( army_index )
 			WorldMap.GotoCoor( m_recvValue.m_list[i].m_to_posx, m_recvValue.m_list[i].m_to_posy )
 		end
 	end
+end
+
+-- 城镇定位
+function MapMainDlgNationGoto( townid )
+	if g_towninfo[townid] == nil then
+		return
+	end
+	local posx 	= g_towninfo[townid].posx
+	local posy 	= g_towninfo[townid].posy
+	WorldMap.GotoCoor( posx, posy )
 end

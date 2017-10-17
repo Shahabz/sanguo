@@ -342,6 +342,23 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 	return 0;
 }
 
+// 奖励结构序列化字符串
+int awardgroup_makestr( AwardGetInfo *awardInfo, char *awardContent )
+{
+	if ( awardInfo->count > 0 )
+	{
+		for ( int tmpi = 0; tmpi < awardInfo->count; tmpi++ )
+		{
+			if ( awardInfo->kind[tmpi] <= 0 )
+				continue;
+			char tempitem[64] = { 0 };
+			sprintf( tempitem, "%d,%d@", awardInfo->kind[tmpi], awardInfo->num[tmpi] );
+			strcat( awardContent, tempitem );
+		}
+	}
+	return 0;
+}
+
 // 发放奖励到邮件 ,通过邮件领取
 int awardgroup_mail( int awardgroup, int level, char *itemContent )
 {

@@ -43,6 +43,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "nation.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -182,6 +183,8 @@ void actors_on_core()
 	}
 	// 所有城池保存
 	city_save( fp );
+	// 所有国家保存
+	nation_save( fp );	
 	// 所有部队保存
 	army_save( fp );
 	// 所有集结保存

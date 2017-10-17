@@ -11,5 +11,8 @@ CREATE TABLE `map_town` (
   `ask_actorid` varbinary(512) NOT NULL DEFAULT '' COMMENT '申请人员',
   `soldier` varbinary(64) NOT NULL DEFAULT '' COMMENT '守卫血量存档',
   `soldier_update` tinyint(3) NOT NULL DEFAULT '0' COMMENT '守卫血量存档更新',
+  `dev_level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '都城开发等级',
+  `dev_exp` int(11) NOT NULL DEFAULT '0' COMMENT '都城开发经验',
+  `attackcd` int(11) NOT NULL DEFAULT '0' COMMENT '攻击倒计时',
   PRIMARY KEY (`townid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

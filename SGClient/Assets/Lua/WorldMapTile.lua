@@ -1,19 +1,19 @@
--- ÊÀ½çµØÍ¼¸ñ×ÓÊı¾İ
+-- ä¸–ç•Œåœ°å›¾æ ¼å­æ•°æ®
 
--- ¸ñ×Ó¼¯ºÏ
+-- æ ¼å­é›†åˆ
 MapTile = {};
 
--- ¸ñ×ÓÊı¾İ
+-- æ ¼å­æ•°æ®
 MapTile.data = {};
 
--- ³õÊ¼»¯
+-- åˆå§‹åŒ–
 function MapTile.init()
 	
 end
 
--- Ïò¸ñ×ÓÀïÌí¼ÓÊı¾İ
+-- å‘æ ¼å­é‡Œæ·»åŠ æ•°æ®
 function MapTile.add( recvValue )
-	-- Ö»ÓĞ×¤ÔúµÄ²¿¶Ó²ÅÌí¼Ó
+	-- åªæœ‰é©»æ‰çš„éƒ¨é˜Ÿæ‰æ·»åŠ 
 	if recvValue.m_type == MAPUNIT_TYPE_ARMY then
 		if recvValue.m_state ~= ARMY_STATE_OCCUPY then
 			return;
@@ -32,7 +32,7 @@ function MapTile.add( recvValue )
 		grid = MapUnit.getGrid( recvValue.m_type, 0 );
 	end
 		
-	-- Õ¼1*1¸ñ×ÓµÄÇé¿ö
+	-- å 1*1æ ¼å­çš„æƒ…å†µ
 	if grid == 1 then
 		local x = posx;
 		local y = posy;
@@ -45,7 +45,7 @@ function MapTile.add( recvValue )
 		MapTile.data[x][y]["unit_type"] = recvValue.m_type
 		MapTile.data[x][y]["unit_index"] = recvValue.m_unit_index;
 	
-	-- Õ¼2*2¸ñ×ÓµÄÇé¿ö
+	-- å 2*2æ ¼å­çš„æƒ…å†µ
 	elseif grid == 2 then
 		local offset = { { x=0, y=0 },{ x=0, y=-1 },{ x=1, y=-1 },{ x=1, y=0 },}
 		for i=1, 4, 1 do
@@ -62,7 +62,7 @@ function MapTile.add( recvValue )
 			--print( "x:"..x..",y:"..y..",recvValue.m_unit_index:"..recvValue.m_unit_index )
 		end
 		
-	-- Õ¼3*3¸ñ×ÓµÄÇé¿ö
+	-- å 3*3æ ¼å­çš„æƒ…å†µ
 	elseif grid == 3 then
 		local offset = { { x=0, y=0 },{ x=-1, y=0 },{ x=-1, y=-1 },{ x=0, y=-1 },{ x=1, y=-1 },{ x=1, y=0 },{ x=1, y=1 },{ x=0, y=1 },{ x=-1, y=1 },}
 		for i=1, 9, 1 do
@@ -80,7 +80,7 @@ function MapTile.add( recvValue )
 	end
 end
 
--- É¾³ı¸ñ×ÓÊı¾İ
+-- åˆ é™¤æ ¼å­æ•°æ®
 function MapTile.del( recvValue )
 	if recvValue == nil then
 		return;
@@ -90,15 +90,15 @@ function MapTile.del( recvValue )
 	MapTile.add( info )
 end
 
--- Çå¿ÕÊı¾İ
+-- æ¸…ç©ºæ•°æ®
 function MapTile.clear()
 	MapTile.data = {};
 end
 
--- »ñÈ¡µã»÷µÄ¸ñ×ÓÊı¾İ
+-- è·å–ç‚¹å‡»çš„æ ¼å­æ•°æ®
 function MapTile.get( posx, posy )
 	
-	-- ÓÅÏÈÑ¡Ôñ¶ÔÏó¸ñ×Ó£¬Èç¹ûÃ»ÓĞ¶ÔÏó¸ñ×Ó£¬¼ì²éµØÍ¼×èµ²¸ñ×Ó
+	-- ä¼˜å…ˆé€‰æ‹©å¯¹è±¡æ ¼å­ï¼Œå¦‚æœæ²¡æœ‰å¯¹è±¡æ ¼å­ï¼Œæ£€æŸ¥åœ°å›¾é˜»æŒ¡æ ¼å­
 	if MapTile.data[posx] == nil or MapTile.data[posx][posy] == nil then
 		if MapTile.block( posx, posy ) < 0 then
 			return -2;
@@ -109,9 +109,9 @@ function MapTile.get( posx, posy )
 	return MapTile.data[posx][posy]["unit_index"];
 end
 
--- µØÍ¼×èµ²
+-- åœ°å›¾é˜»æŒ¡
 function MapTile.block( posx, posy )    
-    -- ·¶Î§
+    -- èŒƒå›´
 	if posx < 0 or posy < 0 or posx >= 500 or posy >= 500 then
 		return -1;
 	end

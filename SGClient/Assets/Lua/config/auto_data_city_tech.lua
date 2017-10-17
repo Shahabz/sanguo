@@ -350,7 +350,7 @@ g_techinfo = {
 },
 [20] = 
 { 
-	[1] = { kind=20,level=1,name="自动补兵：开启自动补兵",buildinglevel=10,prekind=27,prelevel=2,progress=2,sec=1830,silver=3660,wood=5490,food=0,iron=0,ability=204,value=1,},
+	[1] = { kind=20,level=1,name="自动补兵：开启自动补兵",buildinglevel=10,prekind=27,prelevel=1,progress=2,sec=1830,silver=3660,wood=5490,food=0,iron=0,ability=204,value=1,},
 },
 [21] = 
 { 

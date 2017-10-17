@@ -322,7 +322,22 @@ int global_init()
 		{
 			global.town_owner_award = atoi( row[1] );
 		}
-		
+		else if ( id == 110 )
+		{
+			global.town_dev_expmax[0] = atoi( row[1] );
+		}
+		else if ( id == 111 )
+		{
+			global.town_dev_expmax[1] = atoi( row[1] );
+		}
+		else if ( id == 112 )
+		{
+			global.town_dev_expmax[2] = atoi( row[1] );
+		}
+		else if ( id == 113 )
+		{
+			global.town_attackcd = atoi( row[1] );
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

@@ -11,10 +11,9 @@
 typedef struct _tile
 {
 	char nation;			// 格子所属国家
+	short townid;			// 哪个城镇的辐射范围
 	char unit_type;			// 格子上的显示对象类型
 	int unit_index;			// 格子上的显示对象索引
-	char owner_unit_type;	// 格子的主人
-	int owner_unit_index;	// 格子的主人
 }Tile;
 
 
@@ -59,6 +58,11 @@ int map_delobject( int type, int index, short posx, short posy );
 
 // 获取占地格子
 int map_getobject_grid( int type, int index );
+
+// 设置格子所属国家
+int map_tile_setnation( short posx, short posy, int range, short townid, char nation );
+char map_tile_getnation( short posx, short posy );
+short map_tile_gettownid( short posx, short posy );
 
 // 获得一个离指定地点最近的可迁城空白点 螺旋查找
 int map_getcanmovenearest( short *pPosx, short *pPosy );

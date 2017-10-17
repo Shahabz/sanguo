@@ -28,6 +28,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "mail.h"
+#include "nation.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -278,6 +279,14 @@ int city_getindex_withactorid( int actorid )
 		}
 	}
 	return city_index;
+}
+
+// 获取国家
+char city_getnation( int city_index )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return 0;
+	return g_city[city_index].nation;
 }
 
 // 显示单元属性
@@ -2040,7 +2049,7 @@ int city_material_needsec( City *pCity, int itemkind )
 	}
 	if ( count <= 0 )
 		count = 1;
-	int people = pCity->people / count;
+	int people = (pCity->people+nation_people_get(pCity->nation)) / count;
 	int needsec = (int)ceil( max( g_material_make[id].sec * global.material_make_value1, g_material_make[id].sec - global.material_make_value2*people ) );
 	needsec = (int)ceil( needsec * ( 1.0f - pCity->attr.materialsec_per[0] )*(1.0f - pCity->attr.materialsec_per[1]) );
 	return needsec;
@@ -2056,14 +2065,14 @@ int city_material_sendinfo( int actor_index, char sendchange )
 	SLK_NetS_MaterialList pValue = { 0 };
 	pValue.m_matquenum = pCity->matquenum;
 	pValue.m_city_people = pCity->people;
-	pValue.m_nation_people = 0;
+	pValue.m_nation_people = nation_people_get( pCity->nation );
 	if ( sendchange == 1 )
 	{
 		pValue.m_change_city_people = pCity->people - g_actors[actor_index].lastpeople_c;
-		pValue.m_change_nation_people = 0 - g_actors[actor_index].lastpeople_n;
+		pValue.m_change_nation_people = pValue.m_nation_people - g_actors[actor_index].lastpeople_n;
 
 		g_actors[actor_index].lastpeople_c = pCity->people;
-		g_actors[actor_index].lastpeople_n = 0;
+		g_actors[actor_index].lastpeople_n = pValue.m_nation_people;
 	}
 	for ( int tmpi = 0; tmpi < CITY_MATERIALMAKE_MAX; tmpi++ )
 	{
@@ -2817,7 +2826,10 @@ int city_underfire_groupadd( City *pCity, int group_index )
 	int index = underfire_group_freeindex( pCity );
 	if ( index < 0 )
 		return -1;
-	pCity->underfire_groupindex[index] = index;
+	pCity->underfire_groupindex[index] = group_index;
+
+	// 通知这个玩家的国家
+	nation_city_war_add( pCity->nation, group_index );
 
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
@@ -2849,9 +2861,9 @@ int city_underfire_groupdel( City *pCity, int group_index )
 
 	// 城战状态
 	char has = 0;
-	for ( tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	for ( int i = 0; i < CITY_UNDERFIRE_GROUP_MAX; i++ )
 	{
-		if ( pCity->underfire_groupindex[tmpi] >= 0 )
+		if ( pCity->underfire_groupindex[i] >= 0 )
 		{
 			has = 1;
 			break;
@@ -2865,6 +2877,8 @@ int city_underfire_groupdel( City *pCity, int group_index )
 	if ( tmpi >= CITY_UNDERFIRE_GROUP_MAX )
 		return -1;
 
+	// 通知这个玩家的国家
+	nation_city_war_del( pCity->nation, group_index );
 
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )

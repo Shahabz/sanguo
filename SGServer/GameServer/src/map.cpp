@@ -75,6 +75,15 @@ int map_init()
 		memset( g_map.m_aTileData[tmpi], 0, sizeof( Tile )*(g_map.m_nMaxHeight) );
 	}
 	
+	for ( int tmpi = 0; tmpi < g_map.m_nMaxWidth; tmpi++ )
+	{
+		for ( int tmpj = 0; tmpj < g_map.m_nMaxHeight; tmpj++ )
+		{
+			g_map.m_aTileData[tmpi][tmpj].nation = -1;
+			g_map.m_aTileData[tmpi][tmpj].unit_index = -1;
+		}
+	}
+
 	// 世界地图脚本
 	sc_OnWorldMapInit( g_map.m_nMaxWidth, g_map.m_nMaxHeight );
 	return 0; 
@@ -400,6 +409,70 @@ int map_delobject( int type, int index, short posx, short posy )
 		break;
 	}
 	return 0;
+}
+
+// 设置格子所属国家
+int map_tile_setnation( short posx, short posy, int range, short townid, char nation )
+{
+	if ( range == 3 )
+	{
+		for ( int tmpi = -1; tmpi <= 1; tmpi++ )
+		{
+			for ( int tmpj = -1; tmpj <= 1; tmpj++ )
+			{
+				short x = posx + tmpi;
+				short y = posy + tmpj;
+				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+					continue;
+				g_map.m_aTileData[x][y].nation = nation;
+				g_map.m_aTileData[x][y].townid = townid;
+			}
+		}
+	}
+	else if ( range == 4 )
+	{
+		for ( int tmpi = -1; tmpi <= 2; tmpi++ )
+		{
+			for ( int tmpj = -2; tmpj <= 1; tmpj++ )
+			{
+				short x = posx + tmpi;
+				short y = posy + tmpj;
+				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+					continue;
+				g_map.m_aTileData[x][y].nation = nation;
+				g_map.m_aTileData[x][y].townid = townid;
+			}
+		}
+	}
+	else if ( range == 20 )
+	{
+		for ( int tmpi = -10; tmpi <= 9; tmpi++ )
+		{
+			for ( int tmpj = -10; tmpj <= 9; tmpj++ )
+			{
+				short x = posx + tmpi;
+				short y = posy + tmpj;
+				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+					continue;
+				g_map.m_aTileData[x][y].nation = nation;
+				g_map.m_aTileData[x][y].townid = townid;
+			}
+		}
+	}
+	return 0;
+}
+char map_tile_getnation( short posx, short posy )
+{
+	if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxHeight )
+		return -1;
+	return g_map.m_aTileData[posx][posy].nation;
+}
+
+short map_tile_gettownid( short posx, short posy )
+{
+	if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxHeight )
+		return -1;
+	return g_map.m_aTileData[posx][posy].townid;
 }
 
 // 判定这个地点是否能迁城

@@ -96,6 +96,8 @@ typedef struct _global
 	float cityfight_rob_v3;
 	float cityfight_rob_v4;
 	int town_owner_award;
+	int town_dev_expmax[3];
+	int town_attackcd;
 }Global;
 int global_init();
 void global_reload();

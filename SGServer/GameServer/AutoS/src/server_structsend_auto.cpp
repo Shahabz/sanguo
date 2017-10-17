@@ -144,6 +144,14 @@ int struct_NetU_Gmlocalcmd_send( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *p
 	return 0;
 }
 
+int struct_NetS_DialogUpdate_send( char **pptr, int *psize, SLK_NetS_DialogUpdate *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ui, (*psize) );
+	return 0;
+}
+
 int struct_NetS_OfficialHire_send( char **pptr, int *psize, SLK_NetS_OfficialHire *pValue )
 {
 	int tmpi = 0;
@@ -1628,6 +1636,7 @@ int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myask, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_produce_num, (*psize) );
 	return 0;
 }
 
@@ -1718,6 +1727,40 @@ int struct_NetS_TownOwnerAskList_send( char **pptr, int *psize, SLK_NetS_TownOwn
 		struct_NetS_TownOwnerAsk_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_sec, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownFight_send( char **pptr, int *psize, SLK_NetS_TownFight *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TownFightList_send( char **pptr, int *psize, SLK_NetS_TownFightList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_TownFight_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_MapTownExInfo_send( char **pptr, int *psize, SLK_NetS_MapTownExInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dev_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_expmax, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_mytownid, (*psize) );
 	return 0;
 }
 

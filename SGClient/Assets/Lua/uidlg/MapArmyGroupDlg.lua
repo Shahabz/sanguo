@@ -116,6 +116,7 @@ function MapArmyGroupDlgShow( unit_index )
 	MapArmyGroupDlgClear()
 	SetFalse( m_uiButtons );
 	m_cache = {};
+	m_unit_index = unit_index;
 	system_askinfo( ASKINFO_CITYARMYGROUP, "", 0, unit_index )
 end
 
@@ -283,9 +284,16 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 	end
 end
 
-
 function MapArmyGroupDlgOver()
 	
+end
+
+-- 更新
+function MapArmyGroupDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	MapArmyGroupDlgShow( m_unit_index )
 end
 
 -- 清空

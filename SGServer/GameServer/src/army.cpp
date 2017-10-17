@@ -614,6 +614,14 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			MapTown *pTown = map_town_getptr( townid );
 			if ( !pTown )
 				return -1;
+			if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+			{
+				if ( pTown->nation > 0 )
+				{// 一国之都，不可轻犯
+					actor_notify_alert( pCity->actor_index, 1333 );
+					return -1;
+				}
+			}
 
 			if ( info->m_action == ARMY_ACTION_NATION_ATTACK )
 			{ // 参与国战进攻
@@ -687,7 +695,6 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				return -1;
 			if ( config->level > pCity->mokilllv + 1 )
 				return -1;
-
 			// 消耗粮食
 			if ( cost_food > pCity->food )
 				return -1;
@@ -707,7 +714,20 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			MapResInfo *config = map_res_getconfig( res->kind );
 			if ( !config )
 				return -1;
-
+			short tile_townid = map_tile_gettownid( res->posx, res->posy );
+			if ( tile_townid > 0 && tile_townid < g_map_town_maxcount )
+			{
+				if ( g_towninfo[tile_townid].range_gather == 1 )
+				{
+					char tile_nation = map_tile_getnation( res->posx, res->posy );
+					if ( tile_nation >= 0 && tile_nation != pCity->nation )
+					{ // 非本国占领区域，不可贸然前往
+						actor_notify_alert( pCity->actor_index, 1323 );
+						return -1;
+					}
+				}
+			}
+			
 			// 武将等级检查
 			int hero_index = city_hero_getindex( pCity->index, info->m_herokind[0] );
 			if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )

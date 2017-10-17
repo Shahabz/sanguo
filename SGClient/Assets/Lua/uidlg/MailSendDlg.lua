@@ -93,6 +93,20 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
+function MailSendDlgShow( actorid, name, nation )
+	MailSendDlgOpen()
+	m_unit_index 	= -1;
+	m_actorid = actorid;
+	SetText( m_uiRecvName, T(1196)..":["..Nation(nation).."]"..name )
+	if nation == GetPlayer().m_nation then
+		SetFalse( m_uiCost )
+	else
+		SetTrue( m_uiCost )
+		SetText( m_uiCost.transform:Find("Text"), global.nation_mail_token )
+	end
+	SetControlID( m_uiSendButton, 1 );
+end
+
 function MailSendDlgSend( recvValue )
 	MailSendDlgOpen()
 	m_unit_index 	= recvValue.m_unit_index;

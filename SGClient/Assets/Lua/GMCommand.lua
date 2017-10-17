@@ -1,6 +1,6 @@
----------------------- GMÖ¸Áî ----------------------
+---------------------- GMæŒ‡ä»¤ ----------------------
 
--- ·¢µ½·şÎñ¶ËÖ¸Áî
+-- å‘åˆ°æœåŠ¡ç«¯æŒ‡ä»¤
 local GMCMD_SERVER = { 
 [1]="test",
 [2]="sc",
@@ -30,9 +30,10 @@ local GMCMD_SERVER = {
 [27]="mat",
 [28]="fun",
 [29]="event",
+[30]="vw"
 }
  
--- ·¢µ½¿Í»§¶Ë±¾µØÖ¸Áî
+-- å‘åˆ°å®¢æˆ·ç«¯æœ¬åœ°æŒ‡ä»¤
 local GMCMD_CLIENT = { 
 [1]="pop",
 [2]="alert",
@@ -41,19 +42,19 @@ local GMCMD_CLIENT = {
 [5]="dump",
 }
 
--- ¼ì²éGMÖ¸Áî
+-- æ£€æŸ¥GMæŒ‡ä»¤
 function GMCommandCheck( strarray )
 	if strarray == nil then
 		return false;
 	end
 	
-	-- Ö¸Áî
+	-- æŒ‡ä»¤
 	local cmdstr = strarray[1];
 	
-	-- ¼ì²éÊÇ·ñÊÇ·¢ËÍµ½·şÎñ¶ËµÄÖ¸Áî
+	-- æ£€æŸ¥æ˜¯å¦æ˜¯å‘é€åˆ°æœåŠ¡ç«¯çš„æŒ‡ä»¤
 	for k, v in pairs(GMCMD_SERVER) do
 		if v == cmdstr then
-	        -- 4¸öÊıÖµ²ÎÊı + 1¸ö×Ö·û´®²ÎÊı
+	        -- 4ä¸ªæ•°å€¼å‚æ•° + 1ä¸ªå­—ç¬¦ä¸²å‚æ•°
 	        local cmdvalue = {0,0,0,0,""};
 	        for i=2, #strarray, 1 do
 		        cmdvalue[i-1] = strarray[i];
@@ -73,10 +74,10 @@ function GMCommandCheck( strarray )
 		end
 	end
 	
-	-- ¼ì²éÊÇ·ñÊÇ·¢ËÍµ½¿Í»§¶Ë±¾µØÖ¸Áî
+	-- æ£€æŸ¥æ˜¯å¦æ˜¯å‘é€åˆ°å®¢æˆ·ç«¯æœ¬åœ°æŒ‡ä»¤
 	for k, v in pairs(GMCMD_CLIENT) do
 		if v == cmdstr then
-            -- 9¸öÊıÖµ²ÎÊı + 1¸ö×Ö·û´®²ÎÊı
+            -- 9ä¸ªæ•°å€¼å‚æ•° + 1ä¸ªå­—ç¬¦ä¸²å‚æ•°
 	        local cmdvalue = {0,0,0,0,0,0,0,0,0,""};
 	        for i=2, #strarray, 1 do
 		        cmdvalue[i-1] = strarray[i];
@@ -90,12 +91,12 @@ function GMCommandCheck( strarray )
 	return false;
 end
 
--- ¿Í»§¶Ë±¾µØÖ¸Áî´¦Àí
+-- å®¢æˆ·ç«¯æœ¬åœ°æŒ‡ä»¤å¤„ç†
 function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, value6, value7, value8, value9, msg )
 	if cmdstr == "cc" then
 		pop( msg )
 	elseif cmdstr == "alert" then
-		Alert( msg, "È·¶¨", function() end )
+		Alert( msg, "ç¡®å®š", function() end )
 	
 	elseif cmdstr == "msgbox" then
 		MsgBox( msg, function() end )

@@ -47,7 +47,7 @@ int maptowninfo_init_auto()
 	g_towninfo = (MapTownInfo *)malloc( sizeof(MapTownInfo)*g_towninfo_maxnum );
 	memset( g_towninfo, 0, sizeof(MapTownInfo)*g_towninfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`type`,`zoneid`,`posx`,`posy`,`grid`,`range`,`level`,`preid`,`base_award`,`other_award`,`produce_maxnum`,`produce_maxsec`,`levy_prestige`,`levy_item`,`protect_maxsec`,`fight_maxsec`,`own_maxsec`,`ask_silver`,`ask_wood`,`ask_food`,`ask_iron`,`monster`,`monster_guard`,`fight_silver`,`fight_wood`,`fight_food` from map_towninfo;" );
+	sprintf( szSQL, "select `id`,`type`,`zoneid`,`posx`,`posy`,`grid`,`range`,`level`,`preid`,`base_award`,`other_award`,`produce_maxnum`,`produce_maxsec`,`levy_prestige`,`levy_item`,`protect_maxsec`,`fight_maxsec`,`own_maxsec`,`ask_silver`,`ask_wood`,`ask_food`,`ask_iron`,`monster`,`monster_guard`,`fight_silver`,`fight_wood`,`fight_food`,`people`,`range_gather` from map_towninfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -88,6 +88,8 @@ int maptowninfo_init_auto()
 		g_towninfo[id].fight_silver = atoi(row[offset++]);
 		g_towninfo[id].fight_wood = atoi(row[offset++]);
 		g_towninfo[id].fight_food = atoi(row[offset++]);
+		g_towninfo[id].people = atoi(row[offset++]);
+		g_towninfo[id].range_gather = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

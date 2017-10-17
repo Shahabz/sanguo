@@ -1,34 +1,34 @@
--- Í¨ÓÃ¶ÌÏûÏ¢·¢ËÍ
+-- é€šç”¨çŸ­æ¶ˆæ¯å‘é€
 ASKINFO_NORMAL		= 	0
-ASKINFO_CHANGESHAPE	=	1 -- ÐÞ¸ÄÍ·Ïñ
-ASKINFO_CHANGENAME	=	2 -- ÐÞ¸ÄÃû×Ö
-ASKINFO_CITYGUARD	=	3 -- ³ÇÇ½ÊØÎÀ
-ASKINFO_QUEST		=	4 -- ÈÎÎñ
-ASKINFO_BUILDING	=	5 -- ½¨Öþ
-ASKINFO_LEVY		=	6 -- Õ÷ÊÕ
-ASKINFO_TRAIN		=	7 -- ÑµÁ·
-ASKINFO_EQUIPFORGING	=	8  -- ×°±¸´òÔì
-ASKINFO_EQUIPWASH		=	9  -- ×°±¸Ï´Á¶
-ASKINFO_EQUIP			=	10 -- ×°±¸
-ASKINFO_ITEM			=	11 -- µÀ¾ß  
-ASKINFO_HERO			=	12 -- Ó¢ÐÛ
-ASKINFO_TECH			=	13 -- ¿Æ¼¼
-ASKINFO_GOV				=	14 -- ¹Ù¸® 
-ASKINFO_OFFICIALHIRE	=	15 -- ¹ÙÖ°¹ÍÓ¶
-ASKINFO_QUICK			=	16 -- ¼ÓËÙ
-ASKINFO_ACTOR			=	17 -- ½ÇÉ«²Ù×÷
-ASKINFO_MATERIALMAKE	=	18 -- ²ÄÁÏÖÆÔì
-ASKINFO_STORY			=	19 -- ¸±±¾
-ASKINFO_WORLDMAP		=	20 -- ÊÀ½çµØÍ¼
-ASKINFO_MAP_EVENT		=	21 -- ÊÀ½çµØÍ¼Ëæ»úÊÂ¼þ
-ASKINFO_SPY_CITY		=	22 -- Õì²ì³Ç³Ø
-ASKINFO_CITYHELP		=	23 -- ×¤·ÀÐÅÏ¢
-ASKINFO_CITYARMYGROUP	=	24 -- ³ÇÕ½
-ASKINFO_NATIONARMYGROUP	=	25 -- ¹úÕ½
-ASKINFO_MAPTOWN			=	26 -- ³ÇÕò
+ASKINFO_CHANGESHAPE	=	1 -- ä¿®æ”¹å¤´åƒ
+ASKINFO_CHANGENAME	=	2 -- ä¿®æ”¹åå­—
+ASKINFO_CITYGUARD	=	3 -- åŸŽå¢™å®ˆå«
+ASKINFO_QUEST		=	4 -- ä»»åŠ¡
+ASKINFO_BUILDING	=	5 -- å»ºç­‘
+ASKINFO_LEVY		=	6 -- å¾æ”¶
+ASKINFO_TRAIN		=	7 -- è®­ç»ƒ
+ASKINFO_EQUIPFORGING	=	8  -- è£…å¤‡æ‰“é€ 
+ASKINFO_EQUIPWASH		=	9  -- è£…å¤‡æ´—ç‚¼
+ASKINFO_EQUIP			=	10 -- è£…å¤‡
+ASKINFO_ITEM			=	11 -- é“å…·  
+ASKINFO_HERO			=	12 -- è‹±é›„
+ASKINFO_TECH			=	13 -- ç§‘æŠ€
+ASKINFO_GOV				=	14 -- å®˜åºœ 
+ASKINFO_OFFICIALHIRE	=	15 -- å®˜èŒé›‡ä½£
+ASKINFO_QUICK			=	16 -- åŠ é€Ÿ
+ASKINFO_ACTOR			=	17 -- è§’è‰²æ“ä½œ
+ASKINFO_MATERIALMAKE	=	18 -- ææ–™åˆ¶é€ 
+ASKINFO_STORY			=	19 -- å‰¯æœ¬
+ASKINFO_WORLDMAP		=	20 -- ä¸–ç•Œåœ°å›¾
+ASKINFO_MAP_EVENT		=	21 -- ä¸–ç•Œåœ°å›¾éšæœºäº‹ä»¶
+ASKINFO_SPY_CITY		=	22 -- ä¾¦å¯ŸåŸŽæ± 
+ASKINFO_CITYHELP		=	23 -- é©»é˜²ä¿¡æ¯
+ASKINFO_CITYARMYGROUP	=	24 -- åŸŽæˆ˜
+ASKINFO_NATIONARMYGROUP	=	25 -- å›½æˆ˜
+ASKINFO_MAPTOWN			=	26 -- åŸŽé•‡
 
 function system_askinfo( msgid, msg, ... )
-	-- Î´½øÈëÓÎÏ·²»ÔÊÐí·¢ËÍÍ¨ÓÃ¶ÌÐ­Òé
+	-- æœªè¿›å…¥æ¸¸æˆä¸å…è®¸å‘é€é€šç”¨çŸ­åè®®
 	if Const.NetStatus < 3 then
 		return
 	end
@@ -48,13 +48,13 @@ end
 
 
 
--- ¶©ÔÄÐ­ÒéÀàÐÍ
--- ¶©ÔÄÒ»¸öÏûÏ¢£¬·þÎñÆ÷Ö»¸ø¶©ÔÄµÄÓÃ»§·¢ËÍÏûÏ¢
+-- è®¢é˜…åè®®ç±»åž‹
+-- è®¢é˜…ä¸€ä¸ªæ¶ˆæ¯ï¼ŒæœåŠ¡å™¨åªç»™è®¢é˜…çš„ç”¨æˆ·å‘é€æ¶ˆæ¯
 function SubscribeCmd( cmd )
 	system_askinfo( ASKINFO_SUBSCRIBE, "", 1, cmd );
 end
 
--- È¡Ïû¶©ÔÄÒ»¸öÏûÏ¢
+-- å–æ¶ˆè®¢é˜…ä¸€ä¸ªæ¶ˆæ¯
 function SubscribeCmdCancel( cmd )
 	system_askinfo( ASKINFO_SUBSCRIBE, "", 2, cmd );
 end

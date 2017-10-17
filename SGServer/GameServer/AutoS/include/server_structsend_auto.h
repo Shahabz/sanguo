@@ -69,6 +69,11 @@ struct _slk_NetS_Notify {
 };
 typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//通用短消息
 
+struct _slk_NetS_DialogUpdate {
+	char m_ui;	//服务器发送-有ui需要更新
+};
+typedef struct _slk_NetS_DialogUpdate SLK_NetS_DialogUpdate;	//有ui需要更新
+
 struct _slk_NetS_OfficialHire {
 	short m_ofkind;	//雇佣官
 	int m_ofsec;	//雇佣官
@@ -1120,6 +1125,7 @@ struct _slk_NetS_MapTownInfo {
 	int m_hp;	//城镇详情
 	int m_maxhp;	//城镇详情
 	char m_myask;	//城镇详情
+	short m_produce_num;	//城镇详情
 };
 typedef struct _slk_NetS_MapTownInfo SLK_NetS_MapTownInfo;	//城镇详情
 
@@ -1182,6 +1188,28 @@ struct _slk_NetS_TownOwnerAskList {
 };
 typedef struct _slk_NetS_TownOwnerAskList SLK_NetS_TownOwnerAskList;	//城主申请列表
 
+struct _slk_NetS_TownFight {
+	short m_townid;	//国家战争城镇id
+	int m_statetime;	//国家战争倒计时
+	char m_attack;	//国家战争攻击还是防守
+	char m_nation;	//国家战争城镇国家
+};
+typedef struct _slk_NetS_TownFight SLK_NetS_TownFight;	//国战信息
+
+struct _slk_NetS_TownFightList {
+	short m_count;	//国家战争列表
+	SLK_NetS_TownFight m_list[200];	//国家战争列表
+};
+typedef struct _slk_NetS_TownFightList SLK_NetS_TownFightList;	//国战列表
+
+struct _slk_NetS_MapTownExInfo {
+	char m_dev_level;	//都城开发等级
+	int m_dev_exp;	//都城开发经验
+	int m_dev_expmax;	//都城开发经验
+	short m_mytownid;	//我的都城
+};
+typedef struct _slk_NetS_MapTownExInfo SLK_NetS_MapTownExInfo;	//国都信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1190,6 +1218,7 @@ int struct_NetS_EnterInfo_send( char **pptr, int *psize, SLK_NetS_EnterInfo *pVa
 int struct_NetS_Delete_send( char **pptr, int *psize, SLK_NetS_Delete *pValue );
 int struct_NetS_Heart_send( char **pptr, int *psize, SLK_NetS_Heart *pValue );
 int struct_NetS_Notify_send( char **pptr, int *psize, SLK_NetS_Notify *pValue );
+int struct_NetS_DialogUpdate_send( char **pptr, int *psize, SLK_NetS_DialogUpdate *pValue );
 int struct_NetS_OfficialHire_send( char **pptr, int *psize, SLK_NetS_OfficialHire *pValue );
 int struct_NetS_Building_send( char **pptr, int *psize, SLK_NetS_Building *pValue );
 int struct_NetS_BuildingBarracks_send( char **pptr, int *psize, SLK_NetS_BuildingBarracks *pValue );
@@ -1310,5 +1339,8 @@ int struct_NetS_RollMsgJson_send( char **pptr, int *psize, SLK_NetS_RollMsgJson 
 int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue );
 int struct_NetS_TownOwnerAsk_send( char **pptr, int *psize, SLK_NetS_TownOwnerAsk *pValue );
 int struct_NetS_TownOwnerAskList_send( char **pptr, int *psize, SLK_NetS_TownOwnerAskList *pValue );
+int struct_NetS_TownFight_send( char **pptr, int *psize, SLK_NetS_TownFight *pValue );
+int struct_NetS_TownFightList_send( char **pptr, int *psize, SLK_NetS_TownFightList *pValue );
+int struct_NetS_MapTownExInfo_send( char **pptr, int *psize, SLK_NetS_MapTownExInfo *pValue );
 
 #endif

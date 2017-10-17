@@ -1,28 +1,29 @@
--- ÓÊ¼ş
+-- é‚®ä»¶
 local json = require "cjson"
-MAIL_TYPE_SYSTEM		=	0	-- ÏµÍ³ĞÅÏ¢ÓÊ¼ş
-MAIL_TYPE_NOTIFY		=	1	-- ¹«¸æÓÊ¼ş£¬ÄÚÈİÍâ²¿http·şÎñÆ÷»ñÈ¡
-MAIL_TYPE_ACTOR_SEND	=	2	-- Íæ¼Ò·¢ËÍÓÊ¼ş
-MAIL_TYPE_ACTOR_REPLY	=	3	-- Íæ¼Ò»Ø¸´ÓÊ¼ş
-MAIL_TYPE_FIGHT_ENEMY	=	10	-- Á÷¿Ü
-MAIL_TYPE_FIGHT_CITY	=	11	-- ³ÇÕ½
-MAIL_TYPE_FIGHT_NATION	=	12	-- ¹úÕ½
-MAIL_TYPE_CITY_SPY		=	13	-- Õì²ì
-MAIL_TYPE_CITY_BESPY	=	14	-- ±»Õì²ì
-MAIL_TYPE_GATHER		=	20	-- ²É¼¯
-MAIL_TYPE_GATHER_FIGHT	=	21	-- ²É¼¯Õ½¶·
+MAIL_TYPE_SYSTEM		=	0	-- ç³»ç»Ÿä¿¡æ¯é‚®ä»¶
+MAIL_TYPE_NOTIFY		=	1	-- å…¬å‘Šé‚®ä»¶ï¼Œå†…å®¹å¤–éƒ¨httpæœåŠ¡å™¨è·å–
+MAIL_TYPE_ACTOR_SEND	=	2	-- ç©å®¶å‘é€é‚®ä»¶
+MAIL_TYPE_ACTOR_REPLY	=	3	-- ç©å®¶å›å¤é‚®ä»¶
+MAIL_TYPE_FIGHT_ENEMY	=	10	-- æµå¯‡
+MAIL_TYPE_FIGHT_CITY	=	11	-- åŸæˆ˜
+MAIL_TYPE_FIGHT_NATION	=	12	-- å›½æˆ˜
+MAIL_TYPE_CITY_SPY		=	13	-- ä¾¦å¯Ÿ
+MAIL_TYPE_CITY_BESPY	=	14	-- è¢«ä¾¦å¯Ÿ
+MAIL_TYPE_GATHER		=	20	-- é‡‡é›†
+MAIL_TYPE_GATHER_FIGHT	=	21	-- é‡‡é›†æˆ˜æ–—
 
-TAG_TEXTID 		= "#$"	-- ±ê¼Ç ÎªÎÄ×Ö±íid
-TAG_ITEMID 		= "$$"	-- ±ê¼Ç ±ê¼ÇÎªµÀ¾ß×°±¸ID
-TAG_EQUIPKIND 	= "$%"	-- ±ê¼Ç ±ê¼ÇÎª×°±¸×¨ÓÃ
-TAG_ZONEID		= "$*"	-- ±ê¼Ç ±ê¼ÇÎªµØÇø×¨ÓÃ
-TAG_TOWNID 		= "$&"	-- ±ê¼Ç ±ê¼ÇÎª³ÇÕò×¨ÓÃ
-TAG_TIMEDAY		= "$D"	-- ±ê¼Ç ±ê¼ÇÎªÊ±¼äÌì
-TAG_TIMEHOUR	= "$H"	-- ±ê¼Ç ±ê¼ÇÎªÊ±¼äĞ¡Ê±
-TAG_TIMEMIN		= "$M"	-- ±ê¼Ç ±ê¼ÇÎªÊ±¼ä·ÖÖÓ
-TAG_TIMESEC		= "$S"	-- ±ê¼Ç ±ê¼ÇÎªÊ±¼äÃë
-TAG_POS    		= "$#"	-- ±ê¼Ç ±ê¼ÇÎª×ø±ê
-TAG_NATION		= "$N"  -- ±ê¼Ç ±ê¼ÇÎª¹ú¼Ò
+TAG_TEXTID 		= "#$"	-- æ ‡è®° ä¸ºæ–‡å­—è¡¨id
+TAG_ITEMID 		= "$$"	-- æ ‡è®° æ ‡è®°ä¸ºé“å…·è£…å¤‡ID
+TAG_EQUIPKIND 	= "$%"	-- æ ‡è®° æ ‡è®°ä¸ºè£…å¤‡ä¸“ç”¨
+TAG_ZONEID		= "$*"	-- æ ‡è®° æ ‡è®°ä¸ºåœ°åŒºä¸“ç”¨
+TAG_TOWNID 		= "$&"	-- æ ‡è®° æ ‡è®°ä¸ºåŸé•‡ä¸“ç”¨
+TAG_TIMEDAY		= "$D"	-- æ ‡è®° æ ‡è®°ä¸ºæ—¶é—´å¤©
+TAG_TIMEHOUR	= "$H"	-- æ ‡è®° æ ‡è®°ä¸ºæ—¶é—´å°æ—¶
+TAG_TIMEMIN		= "$M"	-- æ ‡è®° æ ‡è®°ä¸ºæ—¶é—´åˆ†é’Ÿ
+TAG_TIMESEC		= "$S"	-- æ ‡è®° æ ‡è®°ä¸ºæ—¶é—´ç§’
+TAG_POS    		= "$#"	-- æ ‡è®° æ ‡è®°ä¸ºåæ ‡
+TAG_NATION		= "$N"  -- æ ‡è®° æ ‡è®°ä¸ºå›½å®¶
+TAG_AWARD		= "$A"  -- æ ‡è®° æ ‡è®°ä¸ºå¥–åŠ±
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -47,11 +48,11 @@ function Mail:NewIndex()
     return self.m_MailIndex;
 end
 
--- ¶ÁÈ¡±¾µØ»º´æ
+-- è¯»å–æœ¬åœ°ç¼“å­˜
 function Mail:LoadCache()
-	-- »º´æÎÄ¼şÃû
+	-- ç¼“å­˜æ–‡ä»¶å
 --[[    self.m_FileName = PathUtil.GameCachePath() .. "mail_"..Const.serverid .. '_' .. Const.actorid .. ".cache";
-	-- ¶ÁÈ¡»º´æ
+	-- è¯»å–ç¼“å­˜
     local _tableUtil = TableUtil.New();
     local currTime = GetServerTime();
     if _tableUtil:OpenFromTXT( self.m_FileName ) == true then
@@ -85,17 +86,17 @@ function Mail:LoadCache()
                     m_fightid = fightid,
                 } )
 				
-				-- ½ÓÊÕ¸öÊı
+				-- æ¥æ”¶ä¸ªæ•°
 				if m_read == 0 then
 					self.m_nRecvCount = self.m_nRecvCount + 1;
 				end
 				
-				-- ×î´óid
+				-- æœ€å¤§id
 				if mailid > self.m_nMaxMailID then
 					self.m_nMaxMailID = mailid;
 				end
 				
-				-- ×îĞ¡id
+				-- æœ€å°id
 				if mailid < self.m_nMinMailID or self.m_nMinMailID <= 0 then
 					self.m_nMinMailID = mailid;
 				end
@@ -104,26 +105,26 @@ function Mail:LoadCache()
         end
     end
 	
-	-- ÅÅĞò
+	-- æ’åº
 	self:Sort();
 	self.m_bIsLoad = true;--]]
 end
 
--- ´æµµ±¾µØ»º´æ
+-- å­˜æ¡£æœ¬åœ°ç¼“å­˜
 function Mail:SaveCache()
 	--print( PathUtil.GameCachePath() )
 	--[[if not Utils.Exists( PathUtil.GameCachePath() ) then
         Utils.CreateDirectory( PathUtil.GameCachePath() )
     end
 	
-	-- Çå¿ÕÎÄ¼ş
+	-- æ¸…ç©ºæ–‡ä»¶
     local fp = io.open( self.m_FileName, "w+" )
     if fp == nil then
         return;
     end
     fp:close();
 	
-    -- ÖØĞÂ´ò¿ªÎÄ¼ş
+    -- é‡æ–°æ‰“å¼€æ–‡ä»¶
     fp = io.open( self.m_FileName, "a+b" )
     if fp == nil then
         return;
@@ -163,7 +164,7 @@ function Mail:SaveCache()
     fp:close();--]]
 end
 
--- ²åÈë×îĞÂÊı¾İ
+-- æ’å…¥æœ€æ–°æ•°æ®
 function Mail:Insert( recvValue )
 	local m_content_json = json.decode( recvValue.m_content );
 	self.m_IncrementID = self.m_IncrementID + 1
@@ -186,26 +187,26 @@ function Mail:Insert( recvValue )
 		m_delete_toggle = 0,
 	} )
 		
-	-- ×î´óid
+	-- æœ€å¤§id
 	if recvValue.m_mailid > self.m_nMaxMailID then
 		self.m_nMaxMailID = recvValue.m_mailid;
 	end
 	
-	-- ×îĞ¡id
+	-- æœ€å°id
 	if recvValue.m_mailid < self.m_nMinMailID or int64.equals(self.m_nMinMailID, 0) then
 		self.m_nMinMailID = recvValue.m_mailid;
 	end
 	
-	-- ÉÏ´Î½ÓÊÕµÄ×îĞ¡id£¬ÓÃÕâ¸öÖµÈ¥ÄÃÎ´»ñÈ¡µ½µÄÓÊ¼ş
+	-- ä¸Šæ¬¡æ¥æ”¶çš„æœ€å°idï¼Œç”¨è¿™ä¸ªå€¼å»æ‹¿æœªè·å–åˆ°çš„é‚®ä»¶
 	if recvValue.m_mailid < self.m_nLastRecvMinMailID or int64.equals( self.m_nLastRecvMinMailID, 0 ) then
 		self.m_nLastRecvMinMailID = recvValue.m_mailid;
 	end
 	
-	-- ÅÅĞò
+	-- æ’åº
 	self:Sort();
 end
 
--- ÅÅĞò
+-- æ’åº
 function Mail:Sort()
 	table.sort( self.m_Mails, function( a, b )
 		if a.m_mailid < b.m_mailid then
@@ -216,7 +217,7 @@ function Mail:Sort()
 	end )
 end
 
--- ÅĞ¶ÏÄÚÈİÊÇ·ñ°üº¬ÌØÊâ¸ñÊ½
+-- åˆ¤æ–­å†…å®¹æ˜¯å¦åŒ…å«ç‰¹æ®Šæ ¼å¼
 function Mail:IsTag(con, tag)
     local mask = string.sub(con, 1, string.len(tag));
     if mask == tag then
@@ -229,7 +230,7 @@ end
 function Mail:GetString( v )
 	local str = ""
 	
-	-- ÎÄ×Ö±í
+	-- æ–‡å­—è¡¨
     if self:IsTag( v, TAG_TEXTID ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TEXTID) + 1));
 		if textid ~= nil then
@@ -238,7 +239,7 @@ function Mail:GetString( v )
 			str = v
 		end
 	
-	-- µÀ¾ß	
+	-- é“å…·	
 	elseif self:IsTag( v, TAG_ITEMID ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_ITEMID) + 1));
 		if textid ~= nil then
@@ -247,7 +248,7 @@ function Mail:GetString( v )
 			str = v
 		end
 	
-	-- ×°±¸
+	-- è£…å¤‡
 	elseif self:IsTag( v, TAG_EQUIPKIND ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_EQUIPKIND) + 1));
 		if textid ~= nil then
@@ -256,7 +257,7 @@ function Mail:GetString( v )
 			str = v
 		end
 		
-	-- µØÇø	
+	-- åœ°åŒº	
 	elseif self:IsTag( v, TAG_ZONEID ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_ZONEID) + 1));
 		if textid ~= nil then
@@ -265,7 +266,7 @@ function Mail:GetString( v )
 			str = v
 		end
 		
-	-- ³ÇÕò		
+	-- åŸé•‡		
 	elseif self:IsTag( v, TAG_TOWNID ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TOWNID) + 1));
 		if textid ~= nil then
@@ -274,7 +275,7 @@ function Mail:GetString( v )
 			str = v
 		end
 	
-	-- Ê±¼äÌì		
+	-- æ—¶é—´å¤©		
 	elseif self:IsTag( v, TAG_TIMEDAY ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TIMEDAY) + 1));
 		if textid ~= nil then
@@ -283,7 +284,7 @@ function Mail:GetString( v )
 			str = v
 		end
 	
-	-- Ê±¼äĞ¡Ê±		
+	-- æ—¶é—´å°æ—¶		
 	elseif self:IsTag( v, TAG_TIMEHOUR ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TIMEHOUR) + 1));
 		if textid ~= nil then
@@ -292,7 +293,7 @@ function Mail:GetString( v )
 			str = v
 		end
 		
-	-- Ê±¼ä·ÖÖÓ		
+	-- æ—¶é—´åˆ†é’Ÿ		
 	elseif self:IsTag( v, TAG_TIMEMIN ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TIMEMIN) + 1));
 		if textid ~= nil then
@@ -301,7 +302,7 @@ function Mail:GetString( v )
 			str = v
 		end
 		
-	-- Ê±¼äÃë		
+	-- æ—¶é—´ç§’		
 	elseif self:IsTag( v, TAG_TIMESEC ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TIMESEC) + 1));
 		if textid ~= nil then
@@ -310,7 +311,7 @@ function Mail:GetString( v )
 			str = v
 		end	
 		
-	-- ¹ú¼Ò
+	-- å›½å®¶
 	elseif self:IsTag( v, TAG_NATION ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_NATION) + 1));
 		if textid ~= nil then
@@ -318,7 +319,24 @@ function Mail:GetString( v )
 		else
 			str = v
 		end
-			
+	
+	-- å¥–åŠ±
+	elseif self:IsTag( v, TAG_AWARD ) then
+		local award = string.sub(v, string.len(TAG_AWARD) + 1);
+		if award ~= nil then
+			local awardList = string.split( award, '@' )
+			for i= 1, #awardList, 1 do
+				local awardinfo = string.split( awardList[i], ',' )
+				if #awardinfo == 2 then
+					local kind = tonumber(awardinfo[1]);
+					local num = tonumber(awardinfo[2]);
+					local sprite, color, name = AwardInfo( kind )
+					str = str .. name.."x"..num.." "
+				end
+			end
+		else
+			str = v
+		end		
 	else
 		str = v;
 	end
@@ -326,7 +344,7 @@ function Mail:GetString( v )
 end
 
 
--- È«¾Ö
+-- å…¨å±€
 G_Mail = nil;
 function GetMail()
     if G_Mail == nil then

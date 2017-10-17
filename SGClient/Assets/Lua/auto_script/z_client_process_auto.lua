@@ -1366,3 +1366,21 @@ function proc_townowneraskList_C( recvValue )
 	TownRebuildDlgAskList( recvValue )
 end
 
+-- m_count=0,m_list={m_townid=0,m_statetime=0,m_attack=0,m_nation,[m_count]},
+function proc_townfightlist_C( recvValue )
+	-- process.
+	MapMainDlgNationLayerRecv( recvValue )
+end
+
+-- m_ui=0,
+function proc_dialogupdate_C( recvValue )
+	-- process.
+	dialogupdate_recv( recvValue.m_ui )
+end
+
+-- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,
+function proc_maptownexinfo_C( recvValue )
+	-- process.
+	MapTownExDlgRecvValue( recvValue )
+end
+

@@ -1,37 +1,37 @@
--- ÊÀ½çµØÍ¼ĞĞ¾üÂ·Ïß
+-- ä¸–ç•Œåœ°å›¾è¡Œå†›è·¯çº¿
 
--- ĞĞ¾üÂ·Ïß×ÊÔ´Í¼Æ¬ĞÅÏ¢
+-- è¡Œå†›è·¯çº¿èµ„æºå›¾ç‰‡ä¿¡æ¯
 local MarchRouteSpriteWidth = 0.18;
 local MarchRouteSpriteHeight = 0.14;
 
--- Â·Ïß¼¯ºÏ
+-- è·¯çº¿é›†åˆ
 MapMarchRoute = {};
 
--- »º´æ
+-- ç¼“å­˜
 MapMarchRoute.cache = {};
 
--- ĞĞ¾üÂ·ÏßPrefab
+-- è¡Œå†›è·¯çº¿Prefab
 MapMarchRoute.prefab = nil;
 
--- ¸ù½Úµã
+-- æ ¹èŠ‚ç‚¹
 MapMarchRoute.root = nil;
 
--- Â·Ïß¶ÔÏó³Ø
+-- è·¯çº¿å¯¹è±¡æ± 
 MapMarchRoute.objectPool = {};
 
--- ³õÊ¼»¯
+-- åˆå§‹åŒ–
 function MapMarchRoute.init( MapLineRoot )
 	MapMarchRoute.root = MapLineRoot;
 	MapMarchRoute.prefab = LoadPrefab( "MarchRoute" );
 end
 
--- Çå¿Õ
+-- æ¸…ç©º
 function MapMarchRoute.clear()
 	MapMarchRoute.cache = {};
 	MapMarchRoute.objectPool = {};
 end
 
--- Ìí¼ÓĞĞ¾üÂ·Ïß
+-- æ·»åŠ è¡Œå†›è·¯çº¿
 function MapMarchRoute.add( recvValue )
 	if recvValue.m_action == ARMY_ACTION_HELP_TROOP then
 		if recvValue.m_from_nation ~= GetPlayer().m_nation then
@@ -39,15 +39,15 @@ function MapMarchRoute.add( recvValue )
 		end
 	end
 		
-	-- ³ö·¢µã
+	-- å‡ºå‘ç‚¹
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_from_posx, recvValue.m_from_posy );
 	local fposx, fposy = MapUnit.getGridTrans( recvValue.m_from_type, recvValue.m_from_grid, cameraPosX, cameraPosY );
 	
-	-- Ä¿µÄµã
+	-- ç›®çš„ç‚¹
 	cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_to_posx, recvValue.m_to_posy );
 	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_grid, cameraPosX, cameraPosY );
 
-	-- ¼ÆËãÏßµÄÑÕÉ«
+	-- è®¡ç®—çº¿çš„é¢œè‰²
 	local color = 0;
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
 		color = 1;
@@ -61,18 +61,18 @@ function MapMarchRoute.add( recvValue )
 		color = 2;
 	end
 	
-	-- Èç¹û»º´æÀïÃæÓĞ£¬ÄÇÃ´¾Í¸üĞÂ
+	-- å¦‚æœç¼“å­˜é‡Œé¢æœ‰ï¼Œé‚£ä¹ˆå°±æ›´æ–°
 	local obj = MapMarchRoute.draw( MapMarchRoute.cache[recvValue.m_army_index], Vector3.New( fposx, fposy, 0 ), Vector3.New( tposx, tposy, 0 ), recvValue.m_state, color, MapMarchRoute.root )
 	
-	-- ²åÈë»º´æ
-	-- »º´æÆğÀ´£¬ÒÔ±ãÉ¾³ı
+	-- æ’å…¥ç¼“å­˜
+	-- ç¼“å­˜èµ·æ¥ï¼Œä»¥ä¾¿åˆ é™¤
 	if obj ~= nil then
 		obj.gameObject:SetActive( true );
 		MapMarchRoute.cache[recvValue.m_army_index] = obj;
 	end
 end
 
--- É¾³ıĞĞ¾üÂ·Ïß
+-- åˆ é™¤è¡Œå†›è·¯çº¿
 function MapMarchRoute.del( army_index )
 	if MapMarchRoute.cache[army_index] == nil then
 		return;
@@ -85,11 +85,11 @@ function MapMarchRoute.del( army_index )
 	
 end
 
--- »æÖÆĞĞ¾üÂ·Ïß
+-- ç»˜åˆ¶è¡Œå†›è·¯çº¿
 function MapMarchRoute.draw( obj, from, to, state, color, parent )
 	if obj == nil then
 		
-		-- ÔÚ»º´æ³ØÀïÕÒÒ»¸öÒÑ¾­´´½¨ºÃµÄ£¬¸´ÓÃ¾ÍOK
+		-- åœ¨ç¼“å­˜æ± é‡Œæ‰¾ä¸€ä¸ªå·²ç»åˆ›å»ºå¥½çš„ï¼Œå¤ç”¨å°±OK
 		for index, unit in pairs( MapMarchRoute.objectPool ) do
 			if unit and unit.gameObject.activeSelf == false then
 				obj = unit;
@@ -97,7 +97,7 @@ function MapMarchRoute.draw( obj, from, to, state, color, parent )
 			end
 		end
 		
-		-- Ã»ÓĞ¿ÕÓàµÄ¾ÍĞÂ´´½¨Ò»¸ö
+		-- æ²¡æœ‰ç©ºä½™çš„å°±æ–°åˆ›å»ºä¸€ä¸ª
 		if obj == nil then
 			obj = GameObject.Instantiate( MapMarchRoute.prefab );
 			obj.transform:SetParent( MapMarchRoute.root );
@@ -107,7 +107,7 @@ function MapMarchRoute.draw( obj, from, to, state, color, parent )
 	end
 
 	local plane = obj:GetComponent( "GizmoPlane" );
-	-- Ïà·´
+	-- ç›¸å
 	if state == ARMY_STATE_REBACK then
 		from, to = to, from;
 	end

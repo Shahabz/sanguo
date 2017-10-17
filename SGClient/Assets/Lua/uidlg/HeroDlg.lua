@@ -124,10 +124,10 @@ function HeroDlgSetHero( index, pHero )
 	local uiUnLockText = objs[9];
 	local uiStateBack = objs[10];
 	local uiAdd = objs[11];
+	local uiShapeBack1 = objs[12];
 	SetControlID( m_uiUIP_Hero[index], index )
 	
 	if pHero == nil or pHero.m_kind <= 0 then
-		SetTrue( uiUnLockText )
 		SetFalse( uiShape )
 		SetFalse( uiColor )
 		SetFalse( uiCorps )
@@ -140,9 +140,24 @@ function HeroDlgSetHero( index, pHero )
 		SetFalse( uiStateBack )
 		SetFalse( uiAdd )
 		if index == 3 then
-			SetText( uiUnLockText, T(610) )
+			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
+				SetTrue( uiUnLockText )
+				SetText( uiUnLockText, T(610) )
+				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_2") )
+			else
+				SetFalse( uiUnLockText )
+				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_4") )
+			end
+
 		elseif index == 4 then
-			SetText( uiUnLockText, T(611) )
+			if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
+				SetTrue( uiUnLockText )
+				SetText( uiUnLockText, T(611) )
+				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_2") )
+			else
+				SetFalse( uiUnLockText )
+				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_4") )
+			end
 		end
 		return;
 	end
@@ -200,7 +215,20 @@ end
 
 -- 选择英雄
 function HeroDlgSelect( index )
-	if GetHero().m_CityHero[index-1] == nil then
+	if GetHero().m_CityHero[index-1] == nil or GetHero().m_CityHero[index-1].m_kind <= 0 then
+		if index == 3 then
+			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
+			else
+				HeroListDlgShow()
+				HeroDlgClose()
+			end
+		elseif index == 4 then
+			if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
+			else
+				HeroListDlgShow()
+				HeroDlgClose()
+			end
+		end
 		return;
 	end
 	HeroInfoDlgShow( 0, GetHero().m_CityHero[index-1], true );

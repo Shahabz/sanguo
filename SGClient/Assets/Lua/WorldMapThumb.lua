@@ -1,4 +1,4 @@
--- ÊÀ½çµØÍ¼ËõÂÔÍ¼
+-- ä¸–ç•Œåœ°å›¾ç¼©ç•¥å›¾
 
 WorldMapThumb = {};
 WorldMapThumb.m_nMaxWidth 	= 1280;
@@ -6,28 +6,28 @@ WorldMapThumb.m_nMaxHeight 	= 640;
 WorldMapThumb.m_nZoneID = 0;
 WorldMapThumb.m_nLastClickGameCoorX = -1;
 WorldMapThumb.m_nLastClickGameCoorY = -1;
--- µã»÷±êÊ¾
+-- ç‚¹å‡»æ ‡ç¤º
 WorldMapThumb.clickEffectObj = nil;
 
--- µØÍ¼ËõÂÔÍ¼
+-- åœ°å›¾ç¼©ç•¥å›¾
 local WorldMapThumbObject = nil;
 
--- µØÍ¼ËõÂÔÍ¼¶ÔÏó×é¼þ
-local WorldMapThumbPrefab	= nil;	-- µØÍ¼¸ù
-local ThumbDisplayPrefab	= nil;	-- µØÍ¼ÏÔÊ¾²ã
-local ThumbCamera			= nil;	-- µØÍ¼ÉãÏñ»ú
+-- åœ°å›¾ç¼©ç•¥å›¾å¯¹è±¡ç»„ä»¶
+local WorldMapThumbPrefab	= nil;	-- åœ°å›¾æ ¹
+local ThumbDisplayPrefab	= nil;	-- åœ°å›¾æ˜¾ç¤ºå±‚
+local ThumbCamera			= nil;	-- åœ°å›¾æ‘„åƒæœº
 local ThumbDisplayTownPrefab= nil;
 
 local ThumbInfoCache = nil;
 
--- Ö»ÊÇÏÔÊ¾Òþ²Ø 
+-- åªæ˜¯æ˜¾ç¤ºéšè— 
 function WorldMapThumb.Show( bShow )
 	if WorldMapThumbObject ~= nil then
 		WorldMapThumbObject:SetActive( bShow );
 	end
 end
 
--- ´´½¨
+-- åˆ›å»º
 function WorldMapThumb.Create( zoneid )
 	WorldMapThumb.m_nZoneID = zoneid
 	WorldMapThumbObject = GameObject.Instantiate( LoadPrefab("WorldMapThumb") );
@@ -36,11 +36,11 @@ function WorldMapThumb.Create( zoneid )
 	end
     --MainDlgClose();
     --fruit.audioManager:Play(71);
-	-- ×¢ÊÍµô£¬·ÀÖ¹È¥ËõÂÔÍ¼ºó·µ»Ø´óµØÍ¼²¿¶ÓÏÔÊ¾²»ÕýÈ·
+	-- æ³¨é‡ŠæŽ‰ï¼Œé˜²æ­¢åŽ»ç¼©ç•¥å›¾åŽè¿”å›žå¤§åœ°å›¾éƒ¨é˜Ÿæ˜¾ç¤ºä¸æ­£ç¡®
     --WorldMapDlgClose(); 
 end
 
--- Ïú»Ù
+-- é”€æ¯
 function WorldMapThumb.Delete()
 	if WorldMapThumbObject ~= nil then
 		GameObject.Destroy( WorldMapThumbObject );
@@ -60,9 +60,9 @@ function WorldMapThumb.Delete()
     --WorldMapDlgOpen();
 end
 
--- ÊÀ½çµØÍ¼ËõÂÔÍ¼Æô¶¯
+-- ä¸–ç•Œåœ°å›¾ç¼©ç•¥å›¾å¯åŠ¨
 function WorldMapThumb.Start( Prefab )
-	-- ³õÊ¼»¯¸ù½Úµã
+	-- åˆå§‹åŒ–æ ¹èŠ‚ç‚¹
 	WorldMapThumbPrefab	= Prefab;
 	ThumbDisplayPrefab	= WorldMapThumbPrefab:GetComponent("Transform"):Find( "Display" );
 	ThumbCamera			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "ThumbCamera" );
@@ -72,21 +72,21 @@ function WorldMapThumb.Start( Prefab )
 		WorldMapThumb.clickEffectObj.transform:SetParent( ThumbDisplayPrefab );
 	end
 	
-	-- ÏÔÊ¾ÎÒ×Ô¼ºµÄÎ»ÖÃ
+	-- æ˜¾ç¤ºæˆ‘è‡ªå·±çš„ä½ç½®
 	--WorldMapThumb.SetMyPos();
 	
-	-- ÏÔÊ¾µ±Ç°Î»ÖÃ
+	-- æ˜¾ç¤ºå½“å‰ä½ç½®
 	--local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nLastCameraGameX, WorldMap.m_nLastCameraGameY )
 	--WorldMapThumb.SetCurPos( thumbX, thumbY );
 	
-	-- »ñÈ¡ÁªÃËÐÅÏ¢
+	-- èŽ·å–è”ç›Ÿä¿¡æ¯
 	--system_askinfo( ASKINFO_WORLDMAP, "", 10 );
 	
-	-- Í¨¹ý»º´æÉèÖÃ³ÇÕòÐÅÏ¢
+	-- é€šè¿‡ç¼“å­˜è®¾ç½®åŸŽé•‡ä¿¡æ¯
 	--WorldMapThumb.SetTownPos( WorldMap.m_cacheTown );
 end
 
--- ËõÂÔÍ¼×ø±ê£¨ÉãÏñ»ú£©=¡·µØÇøµØÍ¼×ø±ê(ÁâÐÎ¸ñ)
+-- ç¼©ç•¥å›¾åæ ‡ï¼ˆæ‘„åƒæœºï¼‰=ã€‹åœ°åŒºåœ°å›¾åæ ‡(è±å½¢æ ¼)
 function WorldMapThumb.ConvertThumbToZone( thumbX, thumbY )
 	local worldCameraX = thumbX * (WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth;
 	local worldCameraY = thumbY * (WorldMap.m_nMaxHeight * MAP_TILEHEIGHT) / WorldMapThumb.m_nMaxHeight;
@@ -100,7 +100,7 @@ function WorldMapThumb.ConvertThumbToZone( thumbX, thumbY )
 	return gameCoorX, gameCoorY;
 end
 
--- ´óµØÍ¼×ø±ê(ÁâÐÎ¸ñ)=¡·ËõÂÔÍ¼×ø±ê£¨ÉãÏñ»ú£©
+-- å¤§åœ°å›¾åæ ‡(è±å½¢æ ¼)=ã€‹ç¼©ç•¥å›¾åæ ‡ï¼ˆæ‘„åƒæœºï¼‰
 function WorldMapThumb.ConvertMapToThumb( gameCoorX, gameCoorY )
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
 	local thumbX = cameraPosX/ ((WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth) - WorldMapThumb.m_nMaxWidth/2/100;
@@ -108,7 +108,7 @@ function WorldMapThumb.ConvertMapToThumb( gameCoorX, gameCoorY )
 	return thumbX, thumbY;
 end
 
--- ´¥·¢µã»÷µØÍ¼
+-- è§¦å‘ç‚¹å‡»åœ°å›¾
 function WorldMapThumb.OnClick( obj, touchpos )
 	if obj == nil then
 		print("obj == nil")
@@ -120,27 +120,27 @@ function WorldMapThumb.OnClick( obj, touchpos )
 	if shareData and ThumbInfoCache then
 		local posType = tonumber( shareData:GetValue( "PosType" ) );
 		local posIndex = tonumber( shareData:GetValue( "PosIndex" ) );
-		-- µã»÷µÄÊÇÎÒ×Ô¼ºÎ»ÖÃ
+		-- ç‚¹å‡»çš„æ˜¯æˆ‘è‡ªå·±ä½ç½®
 		if posType == 1 then
 			gameCoorX = WorldMap.m_nMyCityPosx;
 			gameCoorY = WorldMap.m_nMyCityPosy;
 
-		-- µã»÷µÄÊÇÃËÖ÷Î»ÖÃ
+		-- ç‚¹å‡»çš„æ˜¯ç›Ÿä¸»ä½ç½®
 		elseif posType == 2 then
 			gameCoorX = ThumbInfoCache.m_leader_pos.m_posx;
 			gameCoorY = ThumbInfoCache.m_leader_pos.m_posy;
 			
-		-- µã»÷µÄÊÇÁªÃË³ÉÔ±Î»ÖÃ		
+		-- ç‚¹å‡»çš„æ˜¯è”ç›Ÿæˆå‘˜ä½ç½®		
 		elseif posType == 3 then
 			gameCoorX = ThumbInfoCache.m_member_pos[posIndex].m_posx;
 			gameCoorY = ThumbInfoCache.m_member_pos[posIndex].m_posy;
 		
-		-- µã»÷µÄÊÇÁªÃË½¨ÖþÎ»ÖÃ		
+		-- ç‚¹å‡»çš„æ˜¯è”ç›Ÿå»ºç­‘ä½ç½®		
 		elseif posType == 4 then
 			gameCoorX = ThumbInfoCache.m_building_pos[posIndex].m_posx;
 			gameCoorY = ThumbInfoCache.m_building_pos[posIndex].m_posy;
 		
-		-- µã»÷µÄÊÇ³ÇÕòÎ»ÖÃ		
+		-- ç‚¹å‡»çš„æ˜¯åŸŽé•‡ä½ç½®		
 		elseif posType == 5 then
 			if WorldMap.m_cacheTown then
 				gameCoorX = WorldMap.m_cacheTown.m_list[posIndex].m_posx;
@@ -155,10 +155,10 @@ function WorldMapThumb.OnClick( obj, touchpos )
 		
 	else
 		
-		-- ÆÁÄ»×ø±ê×ª»»µ½ÊÀ½ç×ø±ê
+		-- å±å¹•åæ ‡è½¬æ¢åˆ°ä¸–ç•Œåæ ‡
 		touchpos = ThumbCamera:GetComponent("Camera"):ScreenToWorldPoint( touchpos );
 		touchpos = obj.transform:InverseTransformPoint( touchpos );
-		-- ËõÂÔÍ¼×ª´óµØÍ¼×ø±ê
+		-- ç¼©ç•¥å›¾è½¬å¤§åœ°å›¾åæ ‡
 		gameCoorX, gameCoorY = WorldMapThumb.ConvertThumbToZone( touchpos.x, touchpos.y );
 	end
 	
@@ -167,42 +167,42 @@ function WorldMapThumb.OnClick( obj, touchpos )
 		return;
 	end	
 	
-	-- Ë«»÷Î»ÖÃ
+	-- åŒå‡»ä½ç½®
 	if gameCoorX >= WorldMapThumb.m_nLastClickGameCoorX - 2 and gameCoorX <= WorldMapThumb.m_nLastClickGameCoorX + 2 and
 		gameCoorY >= WorldMapThumb.m_nLastClickGameCoorY - 2 and gameCoorY <= WorldMapThumb.m_nLastClickGameCoorY + 2 then
-		-- ¹Ø±Õ½çÃæ
+		-- å…³é—­ç•Œé¢
 		MapZoneDlgClose();
-		-- Ìø×ªµ½Î»ÖÃ
+		-- è·³è½¬åˆ°ä½ç½®
 		WorldMap.GotoCoor( WorldMapThumb.m_nLastClickGameCoorX, WorldMapThumb.m_nLastClickGameCoorY )
 	else
 		WorldMapThumb.m_nLastClickGameCoorX = gameCoorX;
 		WorldMapThumb.m_nLastClickGameCoorY = gameCoorY;
-		-- µã»÷±êÊ¾
+		-- ç‚¹å‡»æ ‡ç¤º
 		WorldMapThumb.SetCurPos( touchpos.x, touchpos.y );
 	end
 		
 	
 	
-	-- ÉãÏñ»úÒÆ¶¯
+	-- æ‘„åƒæœºç§»åŠ¨
 	--ThumbCamera:GetComponent("WorldMapThumbCamera"):TweenPosTo( Vector3.New( touchpos.x, touchpos.y, 0 ), 0.5 );
 	--ThumbCamera:GetComponent("WorldMapThumbCamera"):TweenSizeTo( 1, 0.5 );
 	--Invoke( WorldMapThumb.Goto, 0.5, Vector3.New( gameCoorX, gameCoorY, 0 ) );
 	
 end
 
--- ´¥·¢ÍÏ×§¶ÔÏó
+-- è§¦å‘æ‹–æ‹½å¯¹è±¡
 function WorldMapThumb.OnDrag( touchpos )
 end
 
--- Ìø×ª
+-- è·³è½¬
 function WorldMapThumb.Goto( gameCoor )
 	WorldMapThumb.Delete();
 	WorldMap.CameraSetPosition( 0, gameCoor.x, gameCoor.y );
 end
 
--- ÏÔÊ¾µ±Ç°Î»ÖÃ
+-- æ˜¾ç¤ºå½“å‰ä½ç½®
 function WorldMapThumb.SetCurPos( x, y )
-	-- µã»÷±êÊ¾
+	-- ç‚¹å‡»æ ‡ç¤º
 	if WorldMapThumb.clickEffectObj == nil then
 		WorldMapThumb.clickEffectObj = GameObject.Instantiate( LoadPrefab("ThumbClickEffect") );
 		WorldMapThumb.clickEffectObj.transform:SetParent( ThumbDisplayPrefab );
@@ -210,7 +210,7 @@ function WorldMapThumb.SetCurPos( x, y )
 	WorldMapThumb.clickEffectObj.transform.localPosition = Vector3.New( x, y, -1 );
 end
 
--- ÉèÖÃÎÒ×Ô¼ºµÄÎ»ÖÃ
+-- è®¾ç½®æˆ‘è‡ªå·±çš„ä½ç½®
 function WorldMapThumb.SetMyPos()
 	local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
 	local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayMy") );
@@ -225,7 +225,7 @@ function WorldMapThumb.SetMyPos()
 	end, 0.1 )
 end
 
--- ÉèÖÃÆäËûÎ»ÖÃÐÅÏ¢
+-- è®¾ç½®å…¶ä»–ä½ç½®ä¿¡æ¯
 function WorldMapThumb.SetOtherPos( recvValue )
 	ThumbInfoCache = recvValue;
 	WorldMapThumb.SetClubLeaderPos( recvValue );
@@ -233,7 +233,7 @@ function WorldMapThumb.SetOtherPos( recvValue )
 	WorldMapThumb.SetClubBuildingPos( recvValue );
 end
 
--- ÉèÖÃÃËÖ÷µÄÎ»ÖÃ
+-- è®¾ç½®ç›Ÿä¸»çš„ä½ç½®
 function WorldMapThumb.SetClubLeaderPos( recvValue )
 	if ThumbDisplayPrefab == nil then
 		return;
@@ -248,7 +248,7 @@ function WorldMapThumb.SetClubLeaderPos( recvValue )
 	thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 2 );
 end
 
--- ÉèÖÃÃË³ÉÔ±µÄÎ»ÖÃ
+-- è®¾ç½®ç›Ÿæˆå‘˜çš„ä½ç½®
 function WorldMapThumb.SetClubMemberPos( recvValue )
 	if ThumbDisplayPrefab == nil then
 		return;
@@ -265,7 +265,7 @@ function WorldMapThumb.SetClubMemberPos( recvValue )
 	end
 end
 
--- ÉèÖÃÁªÃË½¨ÖþµÄÎ»ÖÃ
+-- è®¾ç½®è”ç›Ÿå»ºç­‘çš„ä½ç½®
 function WorldMapThumb.SetClubBuildingPos( recvValue )
 	if ThumbDisplayPrefab == nil then
 		return;
@@ -280,7 +280,7 @@ function WorldMapThumb.SetClubBuildingPos( recvValue )
 	end
 end
 
--- ÉèÖÃ³ÇÕòµÄÎ»ÖÃ
+-- è®¾ç½®åŸŽé•‡çš„ä½ç½®
 function WorldMapThumb.SetTownPos( recvValue )
 	if recvValue == nil then
 		system_askinfo( ASKINFO_WORLDMAP, "", 14 );
@@ -290,11 +290,11 @@ function WorldMapThumb.SetTownPos( recvValue )
 		return;
 	end
 	for tmpi=1, recvValue.m_count, 1 do
-		-- ÔÝÊ±ÒªÈû²»ÏÔÊ¾
+		-- æš‚æ—¶è¦å¡žä¸æ˜¾ç¤º
 		if recvValue.m_list[tmpi].m_townid < 8 then
 			local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( recvValue.m_list[tmpi].m_posx, recvValue.m_list[tmpi].m_posy );
 
-            -- Íõ³Ç/ÆäËû
+            -- çŽ‹åŸŽ/å…¶ä»–
             if recvValue.m_list[tmpi].m_townid == 1 then
                 ThumbDisplayPrefab:FindChild( "ThumbDisplayMain" ):GetComponent("ShareData"):AddValue( "PosType", 5 );
                 ThumbDisplayPrefab:FindChild( "ThumbDisplayMain" ):GetComponent("ShareData"):AddValue( "PosIndex", tmpi );
@@ -319,7 +319,7 @@ function WorldMapThumb.SetTownPos( recvValue )
 	end
 end
 
--- ÏÔÊ¾¹Ø±ÕÃÉ°æ
+-- æ˜¾ç¤ºå…³é—­è’™ç‰ˆ
 function WorldMapThumb.MaskVisible( visible )
 	if ThumbMaskPrefab then
 		ThumbMaskPrefab.gameObject:SetActive( visible );

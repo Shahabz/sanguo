@@ -108,3 +108,7 @@ global.cityfight_rob_v2 = 0.700000 --城战掠夺用参数（资源）
 global.cityfight_rob_v3 = 0.400000 --城战掠夺用参数（人口）
 global.cityfight_rob_v4 = 0.700000 --城战掠夺用参数（人口）
 global.town_owner_award = 21 --城镇奖励城主时间21点
+global.town_dev_expmax1 = 100 --都城开发所需经验
+global.town_dev_expmax2 = 500 --都城开发所需经验
+global.town_dev_expmax3 = 1000 --都城开发所需经验
+global.town_attackcd = 14400 --都城禁卫出击倒计时
