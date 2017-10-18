@@ -112,3 +112,4 @@ global.town_dev_expmax1 = 100 --都城开发所需经验
 global.town_dev_expmax2 = 500 --都城开发所需经验
 global.town_dev_expmax3 = 1000 --都城开发所需经验
 global.town_attackcd = 14400 --都城禁卫出击倒计时
+global.town_devcd = 1800 --都城开发冷却

@@ -763,7 +763,12 @@ int map_town_levy( int actor_index, int townid )
 		return -1;
 	if ( g_map_town[townid].produce_num <= 0 )
 		return -1;
-
+	// 主公不可跨区域收取图纸
+	if ( map_zone_checksame( g_towninfo[townid].posx, g_towninfo[townid].posy, pCity->posx, pCity->posy ) == 0 )
+	{
+		actor_notify_alert( actor_index, 1337 );
+		return -1;
+	}
 	// 消耗威望
 	int dd = 1;
 	int prestige = g_towninfo[townid].levy_prestige;
@@ -911,6 +916,17 @@ int map_town_dev_expmax( int townid )
 	return global.town_dev_expmax[devlevel];
 }
 
+// 都城开发
+int map_town_dev( int actor_index, int townid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+
+	map_town_ex_sendinfo( actor_index, townid );
+	return 0;
+}
+
 // 获取野怪奖励
 int map_town_sendaward( int actor_index, int townid )
 {
@@ -1015,6 +1031,7 @@ int map_town_ex_sendinfo( int actor_index, int townid )
 	pValue.m_dev_level = g_map_town[townid].dev_level;
 	pValue.m_dev_exp = g_map_town[townid].dev_exp;
 	pValue.m_dev_expmax = map_town_dev_expmax( townid );
+	pValue.m_dev_cd = actor_check_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV );
 	netsend_maptownexinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

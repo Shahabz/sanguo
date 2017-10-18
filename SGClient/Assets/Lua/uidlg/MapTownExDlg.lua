@@ -12,8 +12,10 @@ local m_uiLayer2 = nil; --UnityEngine.GameObject
 local m_uiButtons = nil; --UnityEngine.GameObject
 local m_uiFightButton = nil; --UnityEngine.GameObject
 local m_uiUpgradeButton = nil; --UnityEngine.GameObject
+local m_uiTimerButton = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil;
+local m_recvValue = nil;
 local m_posx = 0;
 local m_posy = 0;
 local m_nation = 0;
@@ -55,11 +57,21 @@ function MapTownExDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 开发
 		elseif nControlID == 2 then
-		
+			MapTownExDlgDev()
+			
 		-- 改名
 		elseif nControlID == 10 then	
 			
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			if m_recvValue ~= nil and m_recvValue.m_dev_cd ~= nil then
+				m_recvValue.m_dev_cd = 0;
+				MapTownExDlgRecvValue( m_recvValue )
+			else
+				MapTownExDlgClose()
+			end
+		end
 	end
 end
 
@@ -79,6 +91,7 @@ function MapTownExDlgOnAwake( gameObject )
 	m_uiButtons = objs[9];
 	m_uiFightButton = objs[10];
 	m_uiUpgradeButton = objs[11];
+	m_uiTimerButton = objs[12];
 end
 
 -- 界面初始化时调用
@@ -115,6 +128,7 @@ function MapTownExDlgShow( recvValue )
 	SetFalse( m_uiChangeNameBtn )
 	SetFalse( m_uiFightButton )
 	SetFalse( m_uiUpgradeButton )
+	SetFalse( m_uiTimerButton )
 	SetFalse( m_uiLayer2.transform:Find("Warn3") )
 	
 	m_LastRecvValue = recvValue
@@ -153,8 +167,9 @@ function MapTownExDlgShow( recvValue )
 	SetImage( m_uiNation, NationSprite(m_nation) )
 end
 
--- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,
+-- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,m_dev_cd=0
 function MapTownExDlgRecvValue( recvValue )
+	m_recvValue = recvValue
 	MapTownExDlgSetLayer2( recvValue );
 	if m_nation == 0 then
 		-- 群雄占领
@@ -175,7 +190,14 @@ function MapTownExDlgRecvValue( recvValue )
 		-- 玩家占领
 		if recvValue.m_mytownid == m_townid then
 			-- 我的国家占领
-			SetTrue( m_uiUpgradeButton )
+			if recvValue.m_dev_cd > 0 then
+				SetFalse( m_uiUpgradeButton )
+				SetTrue( m_uiTimerButton );
+				SetTimer( m_uiTimerButton.transform:Find("Back/Timer"), recvValue.m_dev_cd, recvValue.m_dev_cd, 1 )
+			else
+				SetFalse( m_uiTimerButton )
+				SetTrue( m_uiUpgradeButton )
+			end
 			SetTrue( m_uiChangeNameBtn )
 		else
 			-- 他国占领
@@ -199,4 +221,13 @@ end
 function MapTownExDlgNationFight()
 	MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
 	MapTownExDlgClose()
+end
+
+-- 开发
+function MapTownExDlgDev()
+	if m_recvValue.m_dev_cd > 0 then
+		return
+	end
+	
+	system_askinfo( ASKINFO_MAPTOWN, "", 8, m_townid );
 end

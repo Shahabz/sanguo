@@ -80,6 +80,8 @@ int map_init()
 		for ( int tmpj = 0; tmpj < g_map.m_nMaxHeight; tmpj++ )
 		{
 			g_map.m_aTileData[tmpi][tmpj].nation = -1;
+			g_map.m_aTileData[tmpi][tmpj].townid = 0;
+			g_map.m_aTileData[tmpi][tmpj].unit_type = 0;
 			g_map.m_aTileData[tmpi][tmpj].unit_index = -1;
 		}
 	}

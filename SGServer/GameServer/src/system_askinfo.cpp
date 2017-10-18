@@ -463,6 +463,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 城镇详细信息
 			map_town_ex_sendinfo( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 8 )
+		{ // 都城开发
+			map_town_dev( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

@@ -56,8 +56,11 @@ int map_town_owner_award();
 // 都城出动禁卫军
 int map_town_attack( int townid );
 
-// 开发所需经验
+// 都城开发所需经验
 int map_town_dev_expmax( int townid );
+
+// 都城开发
+int map_town_dev( int actor_index, int townid );
 
 // 获取城镇奖励
 int map_town_sendaward( int actor_index, int townid );

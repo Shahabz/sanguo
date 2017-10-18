@@ -1761,6 +1761,7 @@ int struct_NetS_MapTownExInfo_send( char **pptr, int *psize, SLK_NetS_MapTownExI
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_exp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_expmax, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_mytownid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_cd, (*psize) );
 	return 0;
 }
 

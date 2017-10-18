@@ -169,6 +169,7 @@ int actor_check_uselimit_cd( int actor_index, char index )
 	if ( g_actors[actor_index].cd[index] <= thistime )
 	{
 		g_actors[actor_index].cd[index] = 0;
+		return 0;
 	}
 	return g_actors[actor_index].cd[index] - thistime;
 }

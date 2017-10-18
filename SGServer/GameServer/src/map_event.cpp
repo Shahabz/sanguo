@@ -235,7 +235,7 @@ int map_event_changepos( int index, short posx, short posy )
 	g_map_event[index].posx = posx;
 	g_map_event[index].posy = posy;
 	map_addobject( MAPUNIT_TYPE_EVENT, index, g_map_event[index].posx, g_map_event[index].posy );
-	mapunit_update( MAPUNIT_TYPE_EVENT, index, g_map_event[index].unit_index );
+	mapunit_area_change( g_map_event[index].unit_index, g_map_event[index].posx, g_map_event[index].posy, 1 );
 	return 0;
 }
 

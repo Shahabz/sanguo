@@ -1378,7 +1378,7 @@ function proc_dialogupdate_C( recvValue )
 	dialogupdate_recv( recvValue.m_ui )
 end
 
--- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,
+-- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,m_dev_cd=0
 function proc_maptownexinfo_C( recvValue )
 	-- process.
 	MapTownExDlgRecvValue( recvValue )
