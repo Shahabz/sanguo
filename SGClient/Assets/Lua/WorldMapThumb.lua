@@ -15,6 +15,7 @@ local WorldMapThumbObject = nil;
 -- 地图缩略图对象组件
 local WorldMapThumbPrefab	= nil;	-- 地图根
 local ThumbDisplayPrefab	= nil;	-- 地图显示层
+local ThumbCityRoot			= nil;	-- 地图显示层
 local ThumbCamera			= nil;	-- 地图摄像机
 local ThumbDisplayTownPrefab= nil;
 
@@ -46,6 +47,7 @@ function WorldMapThumb.Delete()
 	end
 	ThumbMaskPrefab		= nil;	
 	ThumbDisplayPrefab	= nil;
+	ThumbCityRoot		= nil;
 	ThumbCamera			= nil;
 	WorldMapThumb.clickEffectObj = nil;
 	if GameManager.WorldMap ~= nil then
@@ -62,6 +64,7 @@ function WorldMapThumb.Start( Prefab )
 	-- 初始化根节点
 	WorldMapThumbPrefab	= Prefab;
 	ThumbDisplayPrefab	= WorldMapThumbPrefab:GetComponent("Transform"):Find( "Display" );
+	ThumbCityRoot		= WorldMapThumbPrefab:GetComponent("Transform"):Find( "CityRoot" );
 	ThumbCamera			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "ThumbCamera" );
 	
 	-- 点击特效
@@ -231,7 +234,7 @@ end
 -- 设置玩家的位置
 -- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
 function WorldMapThumb.SetCityInfo( recvValue )
-	if ThumbDisplayPrefab == nil then
+	if ThumbCityRoot == nil then
 		return;
 	end
 	for tmpi=1, recvValue.m_count, 1 do
@@ -242,7 +245,7 @@ function WorldMapThumb.SetCityInfo( recvValue )
 
 		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
 		local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayCity") );
-		thumbObj.transform:SetParent( ThumbDisplayPrefab );
+		thumbObj.transform:SetParent( ThumbCityRoot );
 		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
 		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
 	end
@@ -273,12 +276,27 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
 		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 3 );
 		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosIndex", townid );
+		-- 名称
 		thumbObj.transform:Find( "Name" ):GetComponent( "UIText" ).text = MapTownName( townid )
+		-- 形象
 		if type == MAPUNIT_TYPE_TOWN_TYPE3 or type == MAPUNIT_TYPE_TOWN_TYPE6 or type == MAPUNIT_TYPE_TOWN_TYPE9 then
 			thumbObj.transform:Find( "Shape" ):GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_worldmap_nation_"..nation )
 			MapZoneDlgSetNation( nation )
 		else
 			thumbObj.transform:Find( "Shape" ):GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_worldmap_nation_small_"..nation )
+		end
+		-- 进攻箭头
+		local index = 0;
+		for i=1, 3, 1 do
+			local from_nation = recvValue.m_list[tmpi].m_from_nation[i]
+			local uiArrow = thumbObj.transform:Find( "Arrow" ):GetChild( index );
+			if from_nation >= 0 then
+				SetTrue( uiArrow )
+				uiArrow:GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_mapzone_arrow_"..from_nation )
+			else
+				SetFalse( uiArrow )
+			end
+			index = index + 1
 		end
 	end
 end

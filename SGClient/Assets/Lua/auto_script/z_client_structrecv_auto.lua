@@ -1571,7 +1571,10 @@ function struct_NetS_MapZoneTown_recv( buffer )
 	recvValue.m_townid = buffer:ReadShort();
 	recvValue.m_nation = buffer:ReadSByte();
 	recvValue.m_protect_sec = buffer:ReadInt();
-	recvValue.m_from_nation = buffer:ReadStringWithLen( 4 );
+	recvValue.m_from_nation={};
+	for tmpi=1,4,1 do
+		recvValue.m_from_nation[tmpi] = buffer:ReadShort();
+	end
 	return recvValue;
 end
 

@@ -1217,7 +1217,7 @@ struct _slk_NetS_MapZoneTown {
 	short m_townid;	//地区城镇列表
 	char m_nation;	//地区城镇列表
 	int m_protect_sec;	//地区城镇列表
-	char m_from_nation[4];	//地区城镇列表
+	short m_from_nation[4];	//地区城镇列表
 };
 typedef struct _slk_NetS_MapZoneTown SLK_NetS_MapZoneTown;	//地区城镇信息
 

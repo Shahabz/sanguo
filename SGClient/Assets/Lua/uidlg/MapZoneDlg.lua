@@ -45,6 +45,12 @@ function MapZoneDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 1 then
 			MapZoneDlgClose()
 			MapGlobalDlgShow()
+			
+		-- 显示玩家
+		elseif nControlID == 10 then
+		
+		-- 隐藏玩家
+		elseif nControlID == 11 then
         end
 		
 	elseif nType == UI_EVENT_CLICKPOS then
@@ -104,10 +110,10 @@ function MapZoneDlgShow( zoneid )
 	-- 显示缩略图
 	WorldMapThumb.Create( zoneid );
 end
-
+-- 设置所属国家
 function MapZoneDlgSetNation( nation )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return
 	end
-	SetImage( m_uiNation, NationSprite(nation) )
+	SetImage( m_uiNation.transform:Find("Icon"), NationSprite(nation) )
 end

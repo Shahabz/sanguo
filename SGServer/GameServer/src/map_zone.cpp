@@ -18,6 +18,8 @@
 #include "script_auto.h"
 #include "city.h"
 #include "map_zone.h"
+#include "map_town.h"
+#include "army_group.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -35,6 +37,9 @@ extern int g_towninfo_maxnum;
 
 extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
+
+extern ArmyGroup *g_armygroup;
+extern int g_armygroup_maxcount;
 
 extern Map g_map;
 
@@ -268,6 +273,23 @@ int map_zone_townlist( int actor_index, int zoneid )
 		pValue.m_list[pValue.m_count].m_townid = townid;
 		pValue.m_list[pValue.m_count].m_nation = g_map_town[townid].nation;
 		pValue.m_list[pValue.m_count].m_protect_sec = g_map_town[townid].protect_sec;
+		for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )
+		{
+			int group_index = g_map_town[townid].underfire_groupindex[tmpi];
+			if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			{
+				pValue.m_list[pValue.m_count].m_from_nation[tmpi] = -1;
+				continue;
+			}
+			if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
+			{
+				pValue.m_list[pValue.m_count].m_from_nation[tmpi] = g_armygroup[group_index].from_nation;
+			}
+			else
+			{
+				pValue.m_list[pValue.m_count].m_from_nation[tmpi] = 0;
+			}
+		}
 		pValue.m_count += 1;
 		if ( pValue.m_count >= 32 )
 		{

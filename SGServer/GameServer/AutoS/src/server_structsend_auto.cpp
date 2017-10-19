@@ -1774,7 +1774,7 @@ int struct_NetS_MapZoneTown_send( char **pptr, int *psize, SLK_NetS_MapZoneTown 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_protect_sec, (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_from_nation, 4*sizeof(char), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_from_nation, 4*sizeof(short), (*psize) );
 	return 0;
 }
 
