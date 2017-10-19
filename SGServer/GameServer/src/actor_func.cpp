@@ -321,7 +321,7 @@ int actor_changename( int actor_index, char *pname, int type )
 	{
 		if ( costtype == 0 )
 		{
-			item_lost( actor_index, itemkind, 1, PATH_SYSTEM );
+			item_lost( actor_index, itemkind, 1, PATH_CHANGENAME );
 		}
 		else
 		{

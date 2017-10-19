@@ -18,8 +18,6 @@ local ThumbDisplayPrefab	= nil;	-- 地图显示层
 local ThumbCamera			= nil;	-- 地图摄像机
 local ThumbDisplayTownPrefab= nil;
 
-local ThumbInfoCache = nil;
-
 -- 只是显示隐藏 
 function WorldMapThumb.Show( bShow )
 	if WorldMapThumbObject ~= nil then
@@ -49,7 +47,6 @@ function WorldMapThumb.Delete()
 	ThumbMaskPrefab		= nil;	
 	ThumbDisplayPrefab	= nil;
 	ThumbCamera			= nil;
-	ThumbInfoCache = nil;
 	WorldMapThumb.clickEffectObj = nil;
 	if GameManager.WorldMap ~= nil then
 		GameManager.WorldMap.gameObject:SetActive( true );
@@ -66,24 +63,32 @@ function WorldMapThumb.Start( Prefab )
 	WorldMapThumbPrefab	= Prefab;
 	ThumbDisplayPrefab	= WorldMapThumbPrefab:GetComponent("Transform"):Find( "Display" );
 	ThumbCamera			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "ThumbCamera" );
-
+	
+	-- 点击特效
 	if WorldMapThumb.clickEffectObj == nil then
 		WorldMapThumb.clickEffectObj = GameObject.Instantiate( LoadPrefab("ThumbClickEffect") );
 		WorldMapThumb.clickEffectObj.transform:SetParent( ThumbDisplayPrefab );
 	end
 	
-	-- 显示我自己的位置
-	--WorldMapThumb.SetMyPos();
+	-- 是我所在的地图，显示我的位置
+	local myzoneid =  map_zone_getid( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
+	if myzoneid == WorldMapThumb.m_nZoneID then
+		WorldMapThumb.SetMyPos();
+		
+		-- 显示当前位置
+		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nLastCameraGameX, WorldMap.m_nLastCameraGameY )
+		WorldMapThumb.SetCurPos( thumbX, thumbY );
 	
-	-- 显示当前位置
-	--local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nLastCameraGameX, WorldMap.m_nLastCameraGameY )
-	--WorldMapThumb.SetCurPos( thumbX, thumbY );
+	else
+		-- 显示当前位置
+		WorldMapThumb.SetCurPos( 0, 0 );
+	end
 	
-	-- 获取联盟信息
-	--system_askinfo( ASKINFO_WORLDMAP, "", 10 );
+	-- 获取玩家信息
+	system_askinfo( ASKINFO_MAPZONE, "", 0, WorldMapThumb.m_nZoneID );
 	
-	-- 通过缓存设置城镇信息
-	--WorldMapThumb.SetTownPos( WorldMap.m_cacheTown );
+	-- 获取城镇信息
+	system_askinfo( ASKINFO_MAPZONE, "", 1, WorldMapThumb.m_nZoneID );
 end
 
 -- 缩略图坐标（摄像机）=》地区地图坐标(菱形格)
@@ -102,10 +107,24 @@ end
 
 -- 大地图坐标(菱形格)=》缩略图坐标（摄像机）
 function WorldMapThumb.ConvertMapToThumb( gameCoorX, gameCoorY )
-	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
-	local thumbX = cameraPosX/ ((WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth) - WorldMapThumb.m_nMaxWidth/2/100;
-	local thumbY = cameraPosY/ ((WorldMap.m_nMaxHeight * MAP_TILEHEIGHT) / WorldMapThumb.m_nMaxHeight) + WorldMapThumb.m_nMaxHeight/2/100;
-	return thumbX, thumbY;
+	gameCoorX = math.floor( (gameCoorX - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx) / 10 );
+	gameCoorY = math.floor( (gameCoorY - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy) / 10 );
+	
+	--gameCoorX = math.floor( gameCoorX * ((WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth) )
+	--gameCoorY = math.floor( gameCoorY * ((WorldMap.m_nMaxHeight * MAP_TILEHEIGHT) / WorldMapThumb.m_nMaxHeight) )
+	
+	--print( gameCoorX ..","..gameCoorY )
+	local px  = ( 128/2/100 ) * ( gameCoorX - gameCoorY );
+    local py  = 0 -( 64/2/100 ) * ( gameCoorX + gameCoorY ) + ( 64/2/10 );
+	
+	return px, py
+	
+	--local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );--]]
+	
+--[[	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
+	local thumbX = cameraPosX / ((WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth) - WorldMapThumb.m_nMaxWidth/2/100;
+	local thumbY = cameraPosY / ((WorldMap.m_nMaxHeight * MAP_TILEHEIGHT) / WorldMapThumb.m_nMaxHeight) + WorldMapThumb.m_nMaxHeight/2/100;--]]
+	--return gameCoorX, gameCoorY;
 end
 
 -- 触发点击地图
@@ -117,39 +136,23 @@ function WorldMapThumb.OnClick( obj, touchpos )
 	local gameCoorX = -1; 
 	local gameCoorY = -1;
 	local shareData = obj:GetComponent("ShareData");
-	if shareData and ThumbInfoCache then
+	if shareData then
 		local posType = tonumber( shareData:GetValue( "PosType" ) );
 		local posIndex = tonumber( shareData:GetValue( "PosIndex" ) );
 		-- 点击的是我自己位置
 		if posType == 1 then
 			gameCoorX = WorldMap.m_nMyCityPosx;
 			gameCoorY = WorldMap.m_nMyCityPosy;
-
-		-- 点击的是盟主位置
-		elseif posType == 2 then
-			gameCoorX = ThumbInfoCache.m_leader_pos.m_posx;
-			gameCoorY = ThumbInfoCache.m_leader_pos.m_posy;
-			
-		-- 点击的是联盟成员位置		
-		elseif posType == 3 then
-			gameCoorX = ThumbInfoCache.m_member_pos[posIndex].m_posx;
-			gameCoorY = ThumbInfoCache.m_member_pos[posIndex].m_posy;
-		
-		-- 点击的是联盟建筑位置		
-		elseif posType == 4 then
-			gameCoorX = ThumbInfoCache.m_building_pos[posIndex].m_posx;
-			gameCoorY = ThumbInfoCache.m_building_pos[posIndex].m_posy;
 		
 		-- 点击的是城镇位置		
-		elseif posType == 5 then
-			if WorldMap.m_cacheTown then
-				gameCoorX = WorldMap.m_cacheTown.m_list[posIndex].m_posx;
-				gameCoorY = WorldMap.m_cacheTown.m_list[posIndex].m_posy;
-			end
+		elseif posType == 3 then
+			local townid = posIndex
+			gameCoorX = g_towninfo[townid].posx
+			gameCoorY = g_towninfo[townid].posy
 		end	
 		if gameCoorX < 0 or gameCoorY < 0 then
-			gameCoorX = 480;
-			gameCoorY = 480;
+			gameCoorX = WorldMap.m_nMyCityPosx;
+			gameCoorY = WorldMap.m_nMyCityPosy;
 		end
 		touchpos.x, touchpos.y = WorldMapThumb.ConvertMapToThumb( gameCoorX, gameCoorY );
 		
@@ -218,103 +221,64 @@ function WorldMapThumb.SetMyPos()
 	thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
 	thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 1 );
 		
-	Invoke( function()
+--[[	Invoke( function()
         if ThumbCamera ~= nil then
 		    ThumbCamera:GetComponent("WorldMapThumbCamera"):TweenPosToInBound( Vector3.New( thumbX, thumbY, 0 ), 0.5 );
         end
-	end, 0.1 )
+	end, 0.1 )--]]
 end
 
--- 设置其他位置信息
-function WorldMapThumb.SetOtherPos( recvValue )
-	ThumbInfoCache = recvValue;
-	WorldMapThumb.SetClubLeaderPos( recvValue );
-	WorldMapThumb.SetClubMemberPos( recvValue );
-	WorldMapThumb.SetClubBuildingPos( recvValue );
-end
-
--- 设置盟主的位置
-function WorldMapThumb.SetClubLeaderPos( recvValue )
-	if ThumbDisplayPrefab == nil then
-		return;
-	end
-	if recvValue.m_leader_pos.m_posx <= 0 and recvValue.m_leader_pos.m_posy <= 0 then
-		return;
-	end
-	local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( recvValue.m_leader_pos.m_posx, recvValue.m_leader_pos.m_posy );
-	local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayClubLeader") );
-	thumbObj.transform:SetParent( ThumbDisplayPrefab );
-	thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
-	thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 2 );
-end
-
--- 设置盟成员的位置
-function WorldMapThumb.SetClubMemberPos( recvValue )
-	if ThumbDisplayPrefab == nil then
-		return;
-	end
-	for tmpi=1, recvValue.m_member_count, 1 do
-		if recvValue.m_member_pos[tmpi].m_posx >= 0 and recvValue.m_member_pos[tmpi].m_posy >= 0 then
-			local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( recvValue.m_member_pos[tmpi].m_posx, recvValue.m_member_pos[tmpi].m_posy );
-			local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayClubMember") );
-			thumbObj.transform:SetParent( ThumbDisplayPrefab );
-			thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
-			thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 3 );
-			thumbObj.transform:GetComponent("ShareData"):AddValue( "PosIndex", tmpi );
-		end
-	end
-end
-
--- 设置联盟建筑的位置
-function WorldMapThumb.SetClubBuildingPos( recvValue )
-	if ThumbDisplayPrefab == nil then
-		return;
-	end
-	for tmpi=1, recvValue.m_building_count, 1 do
-		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( recvValue.m_building_pos[tmpi].m_posx, recvValue.m_building_pos[tmpi].m_posy );
-		local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayClubBuilding") );
-		thumbObj.transform:SetParent( ThumbDisplayPrefab );
-		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
-		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 4 );
-		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosIndex", tmpi );
-	end
-end
-
--- 设置城镇的位置
-function WorldMapThumb.SetTownPos( recvValue )
-	if recvValue == nil then
-		system_askinfo( ASKINFO_WORLDMAP, "", 14 );
-		return;
-	end
+-- 设置玩家的位置
+-- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
+function WorldMapThumb.SetCityInfo( recvValue )
 	if ThumbDisplayPrefab == nil then
 		return;
 	end
 	for tmpi=1, recvValue.m_count, 1 do
-		-- 暂时要塞不显示
-		if recvValue.m_list[tmpi].m_townid < 8 then
-			local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( recvValue.m_list[tmpi].m_posx, recvValue.m_list[tmpi].m_posy );
+		local posx = recvValue.m_list[tmpi].m_posx
+		local posy = recvValue.m_list[tmpi].m_posy
+		local nation = recvValue.m_list[tmpi].m_nation
+		local level = recvValue.m_list[tmpi].level
 
-            -- 王城/其他
-            if recvValue.m_list[tmpi].m_townid == 1 then
-                ThumbDisplayPrefab:FindChild( "ThumbDisplayMain" ):GetComponent("ShareData"):AddValue( "PosType", 5 );
-                ThumbDisplayPrefab:FindChild( "ThumbDisplayMain" ):GetComponent("ShareData"):AddValue( "PosIndex", tmpi );
-            else
+		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
+		local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayCity") );
+		thumbObj.transform:SetParent( ThumbDisplayPrefab );
+		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
+		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
+	end
+end
 
---			    if ThumbDisplayTownPrefab == nil then
---				    ThumbDisplayTownPrefab = LoadPrefab("ThumbDisplayTown");
---			    end
---			    local thumbObj = GameObject.Instantiate( ThumbDisplayTownPrefab );
---			    thumbObj.transform:SetParent( ThumbDisplayPrefab );
---			    thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
---			    thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 5 );
---			    thumbObj.transform:GetComponent("ShareData"):AddValue( "PosIndex", tmpi );
-
---                if recvValue.m_list[tmpi].m_townid  < 8 then
---                    thumbObj.transform:FindChild( "Icon" ):GetComponent( "SpriteRenderer" ).sprite = GetResSpriteByType( 3 );
---                else
---                    thumbObj.transform:FindChild( "Icon" ):GetComponent( "SpriteRenderer" ).sprite = GetResSpriteByType( 2 );
---                end
-            end
+-- 设置城镇的位置
+-- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
+function WorldMapThumb.SetTownInfo( recvValue )
+	if ThumbDisplayPrefab == nil then
+		return;
+	end
+	if recvValue == nil then
+		system_askinfo( ASKINFO_MAPZONE, "", 1 );
+		return;
+	end
+	for tmpi=1, recvValue.m_count, 1 do
+		local townid = recvValue.m_list[tmpi].m_townid;
+		local nation = recvValue.m_list[tmpi].m_nation;
+		local type = g_towninfo[townid].type
+		local posx = g_towninfo[townid].posx
+		local posy = g_towninfo[townid].posy
+		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy ); 
+		if ThumbDisplayTownPrefab == nil then
+		   ThumbDisplayTownPrefab = LoadPrefab("ThumbDisplayTown");
+		end
+		local thumbObj = GameObject.Instantiate( ThumbDisplayTownPrefab );
+		thumbObj.transform:SetParent( ThumbDisplayPrefab );
+		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
+		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 3 );
+		thumbObj.transform:GetComponent("ShareData"):AddValue( "PosIndex", townid );
+		thumbObj.transform:Find( "Name" ):GetComponent( "UIText" ).text = MapTownName( townid )
+		if type == MAPUNIT_TYPE_TOWN_TYPE3 or type == MAPUNIT_TYPE_TOWN_TYPE6 or type == MAPUNIT_TYPE_TOWN_TYPE9 then
+			thumbObj.transform:Find( "Shape" ):GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_worldmap_nation_"..nation )
+			MapZoneDlgSetNation( nation )
+		else
+			thumbObj.transform:Find( "Shape" ):GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_worldmap_nation_small_"..nation )
 		end
 	end
 end

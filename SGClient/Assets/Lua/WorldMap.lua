@@ -307,16 +307,8 @@ function WorldMap.Start( Prefab )
 		MapUnit.createMapBorder( g_zoneinfo[i].center_posx-1, g_zoneinfo[i].center_posy, 100 );
 	end
 	
-	-- 区域都城名城的范围
-	for k, v in pairs(g_towninfo) do
-		if v.type >= MAPUNIT_TYPE_TOWN_TYPE7 then
-			if v.grid == 2 then
-				MapUnit.createTownRange( v.grid, v.posx-1, v.posy, v.range, 0 );
-			elseif v.grid == 3 then
-				MapUnit.createTownRange( 2, v.posx-1, v.posy, v.range, 0 );
-			end
-		end
-	end
+	-- 发皇城地区的范围归属
+	system_askinfo( ASKINFO_WORLDMAP, "", 10 );
 	
 	-- 初始化行军路线
 	MapMarchRoute.init( MapLineRoot );

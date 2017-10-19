@@ -38,17 +38,7 @@ typedef struct _pos
 int map_init();
 void map_logic();
 void map_sendinfo( int actor_index, short tposx, short tposy );
-void map_sendthumbinfo( int actor_index );
 void map_areaenter( int actor_index, int areaindex, short posx, short posy );
-
-// 坐标是否在指定地区里
-char map_zone_inrange( int zoneid, short posx, short posy );
-
-// 获取地区id
-char map_zone_getid( short posx, short posy );
-
-// 检查是不是在同一个区域
-char map_zone_checksame( short posx, short posy, short tposx, short tposy );
 
 // 添加对象
 int map_addobject( int type, int index, short posx, short posy );
@@ -75,9 +65,6 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy );
-
-// 指定地区随机一个空坐标
-int map_zone_randpos( short zoneid, short *pPosx, short *pPosy );
 
 // 判定这个地点是否能迁城
 int map_canmove( short posX, short posY );

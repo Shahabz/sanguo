@@ -42,6 +42,7 @@
 #include "chat.h"
 #include "army.h"
 #include "army_group.h"
+#include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
@@ -616,6 +617,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 107 );
 
+	// 加地图地区（严格顺序要求，不允许改变）
+	if ( map_zone_load() < 0 )
+	{
+		printf_msg( "MapZone Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 107 );
+
 	// 加载城镇（严格顺序要求，不允许改变）
 	if ( map_town_load() < 0 )
 	{
@@ -737,6 +747,10 @@ void process_close()
 
 	// 所有集结保存
 	armygroup_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有地区保存
+	map_zone_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有城镇保存

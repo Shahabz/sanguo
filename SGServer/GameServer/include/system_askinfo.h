@@ -29,6 +29,7 @@
 #define ASKINFO_CITYARMYGROUP	24 // 城战
 #define ASKINFO_NATIONARMYGROUP	25 // 国战
 #define ASKINFO_MAPTOWN			26 // 城镇
+#define ASKINFO_MAPZONE			27 // 地区
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

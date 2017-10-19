@@ -27,6 +27,7 @@ struct _map_town {
 				int underfire_groupindex[4];	//集结索引
 				int own_city_index;	//城主索引
 				int unit_index;	//显示索引
+				char zoneid;	//所属地区
 };
 typedef struct _map_town MapTown;
 

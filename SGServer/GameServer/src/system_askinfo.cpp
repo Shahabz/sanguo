@@ -25,6 +25,7 @@
 #include "building.h"
 #include "hero.h"
 #include "story.h"
+#include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
@@ -383,6 +384,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 遣返
 			actor_helparmy_repatriate( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 10 )
+		{ // 发皇城地区的范围归属
+			map_zone_center_townlist( actor_index );
+		}
 		break;
 	case ASKINFO_MAP_EVENT:
 		if ( pvalue[0] == 1 )
@@ -466,6 +471,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 8 )
 		{ // 都城开发
 			map_town_dev( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 9 )
+		{ // 都城开发冷却消除
+			map_town_dev_delcd( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 10 )
+		{ // 修改名称
+			map_town_changename( actor_index, pvalue[1], pstr );
+		}
+		break;
+	case ASKINFO_MAPZONE:
+		if ( pvalue[0] == 0 )
+		{// 玩家列表
+			map_zone_citylist( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{// 城镇列表
+			map_zone_townlist( actor_index, pvalue[1] );
 		}
 		break;
 	default:

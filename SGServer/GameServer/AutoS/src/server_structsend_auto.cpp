@@ -1401,6 +1401,7 @@ int struct_NetS_MapZoneChange_send( char **pptr, int *psize, SLK_NetS_MapZoneCha
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	return 0;
 }
 
@@ -1413,6 +1414,7 @@ int struct_NetS_MapZoneUnitList_send( char **pptr, int *psize, SLK_NetS_MapZoneU
 	{
 		struct_NetS_ZoneUnit_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
 	return 0;
 }
 
@@ -1762,6 +1764,51 @@ int struct_NetS_MapTownExInfo_send( char **pptr, int *psize, SLK_NetS_MapTownExI
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_expmax, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_mytownid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_dev_cd, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapZoneTown_send( char **pptr, int *psize, SLK_NetS_MapZoneTown *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_protect_sec, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_from_nation, 4*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapZoneTownList_send( char **pptr, int *psize, SLK_NetS_MapZoneTownList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_MapZoneTown_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapCenterTown_send( char **pptr, int *psize, SLK_NetS_MapCenterTown *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapCenterTownList_send( char **pptr, int *psize, SLK_NetS_MapCenterTownList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_MapCenterTown_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
 	return 0;
 }
 

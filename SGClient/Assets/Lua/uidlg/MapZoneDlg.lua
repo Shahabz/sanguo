@@ -104,3 +104,10 @@ function MapZoneDlgShow( zoneid )
 	-- 显示缩略图
 	WorldMapThumb.Create( zoneid );
 end
+
+function MapZoneDlgSetNation( nation )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return
+	end
+	SetImage( m_uiNation, NationSprite(nation) )
+end

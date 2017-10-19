@@ -98,6 +98,13 @@ typedef struct _global
 	int town_owner_award;
 	int town_dev_expmax[3];
 	int town_attackcd;
+	int town_devcd;
+	int town_dev_killenemy;
+	int town_dev_gather;
+	int town_dev_occupytown;
+	int town_dev_contribute;
+	int town_dev_silver;
+	int town_dev_wood;
 }Global;
 int global_init();
 void global_reload();

@@ -275,10 +275,10 @@ struct _slk_WalkPath {
 typedef struct _slk_WalkPath SLK_WalkPath;	//ÒÆ¶¯Â·¾¶
 
 struct _slk_NetS_ZoneUnit {
-	short m_posx;	//ÇøÓòµØÍ¼ÏÔÊ¾µ¥Ôª
-	short m_posy;	//ÇøÓòµØÍ¼ÏÔÊ¾µ¥Ôª
-	char m_nation;	//ÇøÓòµØÍ¼ÏÔÊ¾µ¥Ôª
-	char m_level;	//ÇøÓòµØÍ¼ÏÔÊ¾µ¥Ôª
+	short m_posx;	//µØÍ¼µØÇøÏÔÊ¾µ¥Ôª
+	short m_posy;	//µØÍ¼µØÇøÏÔÊ¾µ¥Ôª
+	char m_nation;	//µØÍ¼µØÇøÏÔÊ¾µ¥Ôª
+	char m_level;	//µØÍ¼µØÇøÏÔÊ¾µ¥Ôª
 };
 typedef struct _slk_NetS_ZoneUnit SLK_NetS_ZoneUnit;	//µØÇøµ¥Ôª
 
@@ -961,12 +961,14 @@ typedef struct _slk_NetS_StoryRanktime SLK_NetS_StoryRanktime;	//¸±±¾¹Ø¿¨Ê±¼ä¸üĞ
 struct _slk_NetS_MapZoneChange {
 	char m_zoneid;	//µØÇøid±ä»»
 	char m_open;	//µØÇøidÊÇ·ñ¿ªÆô
+	char m_nation;	//µØÇøËùÊô
 };
 typedef struct _slk_NetS_MapZoneChange SLK_NetS_MapZoneChange;	//µØÍ¼µØÇøÇĞ»»
 
 struct _slk_NetS_MapZoneUnitList {
 	short m_count;	//µØÍ¼µØÇøµ¥ÔªÊıÁ¿
 	SLK_NetS_ZoneUnit m_list[256];	//µØÍ¼µØÇøµ¥ÔªÁĞ±í
+	char m_zoneid;	//µØÍ¼µØÇøid
 };
 typedef struct _slk_NetS_MapZoneUnitList SLK_NetS_MapZoneUnitList;	//µØÍ¼µØÇøµ¥ÔªÁĞ±í
 
@@ -1211,6 +1213,33 @@ struct _slk_NetS_MapTownExInfo {
 };
 typedef struct _slk_NetS_MapTownExInfo SLK_NetS_MapTownExInfo;	//¹ú¶¼ĞÅÏ¢
 
+struct _slk_NetS_MapZoneTown {
+	short m_townid;	//µØÇø³ÇÕòÁĞ±í
+	char m_nation;	//µØÇø³ÇÕòÁĞ±í
+	int m_protect_sec;	//µØÇø³ÇÕòÁĞ±í
+	char m_from_nation[4];	//µØÇø³ÇÕòÁĞ±í
+};
+typedef struct _slk_NetS_MapZoneTown SLK_NetS_MapZoneTown;	//µØÇø³ÇÕòĞÅÏ¢
+
+struct _slk_NetS_MapZoneTownList {
+	short m_count;	//µØÇø³ÇÕòÁĞ±í
+	SLK_NetS_MapZoneTown m_list[32];	//µØÇø³ÇÕòÁĞ±í
+	char m_zoneid;	//µØÇø³ÇÕòÁĞ±í
+};
+typedef struct _slk_NetS_MapZoneTownList SLK_NetS_MapZoneTownList;	//µØÇø³ÇÕòĞÅÏ¢ÁĞ±í
+
+struct _slk_NetS_MapCenterTown {
+	short m_townid;	//»Ê³ÇÇøÓò³ÇÕòÁĞ±í
+	char m_nation;	//»Ê³ÇÇøÓò³ÇÕòÁĞ±í
+};
+typedef struct _slk_NetS_MapCenterTown SLK_NetS_MapCenterTown;	//»Ê³ÇµØÇø³ÇÕòĞÅÏ¢
+
+struct _slk_NetS_MapCenterTownList {
+	char m_count;	//»Ê³ÇÇøÓò³ÇÕòÁĞ±í
+	SLK_NetS_MapCenterTown m_list[32];	//»Ê³ÇÇøÓò³ÇÕòÁĞ±í
+};
+typedef struct _slk_NetS_MapCenterTownList SLK_NetS_MapCenterTownList;	//»Ê³ÇµØÇø³ÇÕòÁĞ±í
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1343,5 +1372,9 @@ int struct_NetS_TownOwnerAskList_send( char **pptr, int *psize, SLK_NetS_TownOwn
 int struct_NetS_TownFight_send( char **pptr, int *psize, SLK_NetS_TownFight *pValue );
 int struct_NetS_TownFightList_send( char **pptr, int *psize, SLK_NetS_TownFightList *pValue );
 int struct_NetS_MapTownExInfo_send( char **pptr, int *psize, SLK_NetS_MapTownExInfo *pValue );
+int struct_NetS_MapZoneTown_send( char **pptr, int *psize, SLK_NetS_MapZoneTown *pValue );
+int struct_NetS_MapZoneTownList_send( char **pptr, int *psize, SLK_NetS_MapZoneTownList *pValue );
+int struct_NetS_MapCenterTown_send( char **pptr, int *psize, SLK_NetS_MapCenterTown *pValue );
+int struct_NetS_MapCenterTownList_send( char **pptr, int *psize, SLK_NetS_MapCenterTownList *pValue );
 
 #endif

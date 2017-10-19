@@ -27,6 +27,7 @@
 #include "system.h"
 #include "army.h"
 #include "map.h"
+#include "map_zone.h"
 #include "map_town.h"
 #include "mail.h"
 #include "city.h"
@@ -84,6 +85,12 @@ int map_town_loadcb( int townid )
 
 	// 城镇辐射圈归属
 	map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, g_map_town[townid].nation );
+
+	// 核心建筑决定地区归属
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+	{
+		map_zone_setnation( g_map_town[townid].zoneid, g_map_town[townid].nation );
+	}
 	return 0;
 }
 
@@ -124,11 +131,20 @@ int map_town_load()
 		// 添加到地图显示单元
 		g_map_town[townid].unit_index = mapunit_add( MAPUNIT_TYPE_TOWN, townid );
 
+		// 所属地区
+		g_map_town[townid].zoneid = map_zone_getid( g_towninfo[townid].posx, g_towninfo[townid].posy );
+
 		// 占地块信息添加到世界地图
 		map_addobject( MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].posx, g_towninfo[townid].posy );
 
 		// 城镇辐射圈归属
 		map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, g_map_town[townid].nation );
+
+		// 核心建筑决定地区归属
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+		{
+			map_zone_setnation( g_map_town[townid].zoneid, g_map_town[townid].nation );
+		}
 
 		// 重置守军
 		map_town_monster_reset( townid, 0 );
@@ -194,11 +210,7 @@ void map_town_makeunit( int index, SLK_NetS_AddMapUnit *pAttr )
 			continue;
 		if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
 		{
-			City *fromCity = city_indexptr( g_armygroup[tmpi].from_index );
-			if ( fromCity )
-			{
-				pAttr->m_char_value[count++] = fromCity->nation;
-			}
+			pAttr->m_char_value[count++] = g_armygroup[group_index].from_nation;
 		}
 		else
 		{
@@ -913,17 +925,166 @@ int map_town_dev_expmax( int townid )
 			break;
 		}
 	}
-	return global.town_dev_expmax[devlevel];
+
+	int maxexp = 0;
+	if ( devlevel >= 2 )
+		maxexp = global.town_dev_expmax[2];
+	else
+		maxexp = global.town_dev_expmax[devlevel+1];
+
+	return maxexp;
+}
+
+// 添加都城开发经验
+int map_town_dev_addexp( int townid, int exp )
+{
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+	g_map_town[townid].dev_exp += exp;
+	
+	int devlevel = 0;
+	for ( int lv = 2; lv >= 0; lv-- )
+	{
+		if ( g_map_town[townid].dev_exp >= global.town_dev_expmax[lv] )
+		{
+			devlevel = lv;
+			break;
+		}
+	}
+
+	int maxexp = 0;
+	if ( devlevel >= 2 )
+		maxexp = global.town_dev_expmax[2];
+	else
+		maxexp = global.town_dev_expmax[devlevel + 1];
+
+	if ( g_map_town[townid].dev_exp > maxexp )
+	{
+		g_map_town[townid].dev_exp = maxexp;
+	}
+	if ( g_map_town[townid].dev_level != devlevel )
+	{
+		g_map_town[townid].dev_level = devlevel;
+		mapunit_update( MAPUNIT_TYPE_TOWN, townid, g_map_town[townid].unit_index );
+	}
+	nation_people_capital_set( g_map_town[townid].nation, g_map_town[townid].dev_exp );
+ 	return 0;
 }
 
 // 都城开发
 int map_town_dev( int actor_index, int townid )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
-
+	if ( actor_check_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV ) > 0 )
+		return -1;
+	if ( pCity->silver < global.town_dev_silver )
+		return -1;
+	if ( pCity->wood < global.town_dev_wood )
+		return -1;
+	city_changesilver( pCity->index, -global.town_dev_silver, PATH_TOWNDEV_CONTRIBUTE );
+	city_changewood( pCity->index, -global.town_dev_wood, PATH_TOWNDEV_CONTRIBUTE );
+	map_town_dev_addexp( townid, global.town_dev_contribute );
+	actor_set_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV, global.town_devcd );
 	map_town_ex_sendinfo( actor_index, townid );
+	return 0;
+}
+
+// 都城开发消除cd
+int map_town_dev_delcd( int actor_index, int townid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+	int sec = actor_check_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV );
+	if ( sec <= 0 )
+	{
+		map_town_ex_sendinfo( actor_index, townid );
+		return -1;
+	}
+
+	int token = (int)ceil( (sec / 60 + 1) * global.upgradequick_token );
+	if ( actor_change_token( actor_index, -token, PATH_TOWNDEV_CONTRIBUTE, 0 ) < 0 )
+		return -1;
+
+	actor_clear_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV );
+	map_town_ex_sendinfo( actor_index, townid );
+	return 0;
+}
+
+// 修改名称
+int map_town_changename( int actor_index, int townid, char *pname )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+	if ( !pname )
+		return -1;
+	
+	// 权限不足
+
+
+	int namelen = (int)strlen( pname );
+	if ( namelen <= 0 || namelen >= NAME_SIZE )
+		return -1;
+
+	int costtype = 0;// 使用道具模式
+	int itemkind = 172;
+	int itemnum = item_getitemnum( actor_index, itemkind );
+	int token = item_gettoken( itemkind );
+
+	// 有道具使用道具，无道具使用钻石
+	if ( itemnum == 0 )
+	{
+		if ( g_actors[actor_index].token < token * 2 )
+		{
+			return -1;
+		}
+		costtype = 1; // 使用钻石模式
+	}
+	else if ( itemnum == 1 )
+	{
+		if ( g_actors[actor_index].token < token )
+		{
+			return -1;
+		}
+		costtype = 2; // 使用钻石+1个道具模式
+	}
+	else
+	{
+		costtype = 3; // 使用道具模式
+	}
+
+	// 改名
+	strncpy( g_map_town[townid].name, pname, NAME_SIZE );
+	g_map_town[townid].name[NAME_SIZE - 1] = 0;
+
+	if ( costtype == 1 )
+	{
+		actor_change_token( actor_index, -token * 2, PATH_CHANGENAME, 0 );
+	}
+	if ( costtype == 2 )
+	{
+		item_lost( actor_index, itemkind, 1, PATH_CHANGENAME );
+		actor_change_token( actor_index, -token, PATH_CHANGENAME, 0 );
+	}
+	else
+	{
+		item_lost( actor_index, itemkind, 2, PATH_CHANGENAME );
+	}
+
+	// 通知到城外
+	mapunit_update( MAPUNIT_TYPE_TOWN, townid, g_map_town[townid].unit_index );
 	return 0;
 }
 

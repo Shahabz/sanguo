@@ -196,6 +196,7 @@ MapUnit.objectPoolTown 			= {}; 	-- 城镇
 MapUnit.objectPoolEnemy 		= {}; 	-- 流寇
 MapUnit.objectPoolRes 			= {}; 	-- 资源田
 MapUnit.objectPoolEvent 		= {}; 	-- 事件
+MapUnit.objectCenterTownRange 	= {}; 	-- 皇城区域范围
 
 -- 初始化
 function MapUnit.init()
@@ -231,8 +232,9 @@ function MapUnit.clear()
 	MapUnit.objectPoolEnemy 	= {};
 	MapUnit.objectPoolRes 		= {};
 	MapUnit.objectPoolEvent 	= {};
-
+	
 	MapUnit.cache 				= {};
+	MapUnit.objectCenterTownRange = {};
 end
 
 -- 添加显示单元
@@ -702,7 +704,11 @@ function MapUnit.createEnemy( recvValue )
 	local uiMark = objs[2];
 	
 	-- 名字
-	uiName:GetComponent("UIText").text = "Lv."..level.." "..T(938);
+	if level > GetPlayer().m_mokilllv+1 then
+		SetText( uiName, "Lv."..level.." "..T(938), Color.red )
+	else
+		SetText( uiName, "Lv."..level.." "..T(938), Color.white )
+	end
 	
 	if level <= 7 then
 		uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
@@ -914,14 +920,16 @@ function MapUnit.createMapBorder( posx, posy, range )
     --unitObj.transform:GetComponent("MapBorder"):SetColor( Color.New( 255 / 255, 0 / 255, 0 / 255, 128 / 255 ) );
 end
 
--- 创建城镇范围
-function MapUnit.createTownRange( grid, posx, posy, range, nation )
+-- 创建皇城区域名称和都城范围
+function MapUnit.createTownRange( unitObj, grid, posx, posy, range, nation )
 	if MapUnitRoot == nil then
 		return;
 	end
-
-	local unitObj = GameObject.Instantiate( MapTownRange );
-	unitObj.transform:SetParent( MapUnitRoot );
+	
+	if unitObj == nil then
+		unitObj = GameObject.Instantiate( MapTownRange );
+		unitObj.transform:SetParent( MapUnitRoot );
+	end
 	
 	-- 位置
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
@@ -931,6 +939,22 @@ function MapUnit.createTownRange( grid, posx, posy, range, nation )
 	-- 范围
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
     unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[nation] ) );
+	return unitObj;
+end
+
+-- 区域都城名城的范围
+-- m_count=0,m_list={m_townid=0,m_nation=0,[m_count]}
+function MapUnit.createCenterTownRange( recvValue )
+	local townid = recvValue.m_townid;
+	local nation = recvValue.m_nation;
+	local v = g_towninfo[townid];
+	if v.type >= MAPUNIT_TYPE_TOWN_TYPE7 then
+		if v.grid == 2 then
+			MapUnit.objectCenterTownRange[townid] = MapUnit.createTownRange( MapUnit.objectCenterTownRange[townid], 2, v.posx-1, v.posy, v.range, nation );
+		elseif v.grid == 3 then
+			MapUnit.objectCenterTownRange[townid] = MapUnit.createTownRange( MapUnit.objectCenterTownRange[townid], 2, v.posx-1, v.posy, v.range, nation );
+		end
+	end
 end
 
 -- 获取占地块

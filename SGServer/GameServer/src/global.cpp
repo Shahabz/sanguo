@@ -338,6 +338,34 @@ int global_init()
 		{
 			global.town_attackcd = atoi( row[1] );
 		}
+		else if ( id == 114 )
+		{
+			global.town_devcd = atoi( row[1] );
+		}
+		else if ( id == 115 )
+		{
+			global.town_dev_killenemy = atoi( row[1] );
+		}
+		else if ( id == 116 )
+		{
+			global.town_dev_gather = atoi( row[1] );
+		}
+		else if ( id == 117 )
+		{
+			global.town_dev_occupytown = atoi( row[1] );
+		}
+		else if ( id == 118 )
+		{
+			global.town_dev_contribute = atoi( row[1] );
+		}
+		else if ( id == 119 )
+		{
+			global.town_dev_silver = atoi( row[1] );
+		}
+		else if ( id == 120 )
+		{
+			global.town_dev_wood = atoi( row[1] );
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

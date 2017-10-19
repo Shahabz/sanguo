@@ -29,10 +29,11 @@
 #include "army_group.h"
 #include "army_march.h"
 #include "city.h"
+#include "map.h"
+#include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
-#include "map.h"
 #include "mail.h"
 #include "chat.h"
 #include "nation.h"
@@ -975,6 +976,26 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				notify = 1;
 				attackNation = 0;
 			}
+
+			// 如果是都城直属名城
+			int capid = 0;
+			for ( int tmpid = 301; tmpid <= 304; tmpid++ )
+			{
+				for ( int tmpi = 0; tmpi < 8; tmpi++ )
+				{
+					if ( townid == g_map_town[tmpid].pre_townid[tmpi] )
+					{
+						capid = tmpid;
+						break;;
+					}
+				}
+				if ( capid > 0 )
+					break;
+			}
+			if ( capid > 0 )
+			{
+				map_town_dev_addexp( capid, global.town_dev_occupytown );
+			}
 		}
 		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
 		{ // 如果是都城
@@ -1022,6 +1043,13 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 
 		// 城镇辐射圈归属
 		map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, pTown->nation );
+
+		// 核心建筑决定地区归属
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+		{
+			map_zone_setnation( map_zone_getid( g_towninfo[townid].posx, g_towninfo[townid].posy ), pTown->nation );
+			map_zone_center_townchange( townid );
+		}
 
 		// 其它国家在路上的自动返回
 		for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )

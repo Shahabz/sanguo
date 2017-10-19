@@ -27,6 +27,7 @@
 #include "system.h"
 #include "army.h"
 #include "map.h"
+#include "map_zone.h"
 #include "map_enemy.h"
 
 extern SConfig g_Config;

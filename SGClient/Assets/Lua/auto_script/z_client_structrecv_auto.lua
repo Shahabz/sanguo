@@ -1245,6 +1245,7 @@ function struct_NetS_MapZoneChange_recv( buffer )
 	local recvValue = {};
 	recvValue.m_zoneid = buffer:ReadSByte();
 	recvValue.m_open = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1257,6 +1258,7 @@ function struct_NetS_MapZoneUnitList_recv( buffer )
 		tmpValue = struct_NetS_ZoneUnit_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_zoneid = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1561,6 +1563,47 @@ function struct_NetS_MapTownExInfo_recv( buffer )
 	recvValue.m_dev_expmax = buffer:ReadInt();
 	recvValue.m_mytownid = buffer:ReadShort();
 	recvValue.m_dev_cd = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_MapZoneTown_recv( buffer )
+	local recvValue = {};
+	recvValue.m_townid = buffer:ReadShort();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_protect_sec = buffer:ReadInt();
+	recvValue.m_from_nation = buffer:ReadStringWithLen( 4 );
+	return recvValue;
+end
+
+function struct_NetS_MapZoneTownList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_MapZoneTown_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_zoneid = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_MapCenterTown_recv( buffer )
+	local recvValue = {};
+	recvValue.m_townid = buffer:ReadShort();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_MapCenterTownList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_MapCenterTown_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
 	return recvValue;
 end
 

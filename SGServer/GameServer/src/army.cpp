@@ -1514,6 +1514,17 @@ int army_gather_calc( int army_index )
 	g_map_res[index].num -= gathernum;
 	if ( g_map_res[index].num <= 0 )
 	{ // 没了，删除资源点
+
+		// 如果是都城范围,添加开发经验
+		short range_townid = map_tile_gettownid( g_map_res[index].posx, g_map_res[index].posy );
+		if ( range_townid > 0 && range_townid < g_towninfo_maxnum )
+		{
+			if ( g_towninfo[range_townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+			{
+				map_town_dev_addexp( range_townid, global.town_dev_gather );
+			}
+		}
+
 		map_res_delete( index );
 	}
 	else

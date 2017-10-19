@@ -9,8 +9,28 @@ extern Actor *g_actors;
 extern int g_actornum;
 extern int g_maxactornum;
 
+// 发送给世界地图的玩家
+int worldmap_sendmsg( int datasize, char *databuf )
+{
+	if ( datasize > 0 )
+	{
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid <= 0 )
+				continue;
+			if ( g_actors[tmpi].view_areaindex < 0 )
+				continue;
+			sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+		}
+	}
+	return 0;
+}
+
+// 当前地区
 int zone_sendmsg( int zone, int datasize, char *databuf )
 {
+	if ( zone <= 0 )
+		return -1;
 	if ( datasize > 0 )
 	{
 		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
@@ -21,6 +41,26 @@ int zone_sendmsg( int zone, int datasize, char *databuf )
 			if ( !pCity )
 				continue;
 			if ( pCity->zone == zone )
+			{
+				sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+			}
+		}
+	}
+	return 0;
+}
+
+// 在当前地区
+int in_zone_sendmsg( int zone, int datasize, char *databuf )
+{
+	if ( zone <= 0 )
+		return -1;
+	if ( datasize > 0 )
+	{
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid <= 0 )
+				continue;
+			if ( g_actors[tmpi].view_zoneid == zone )
 			{
 				sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
 			}
@@ -118,11 +158,17 @@ int actor_senddata( int actor_index, char send_type, char *data, int datasize )
 			//area_clearmsg( actor_index );
 		}
 		break;
+	case SENDTYPE_WORLDMAP:
+		worldmap_sendmsg( datasize, data );
+		break;
 	case SENDTYPE_ZONE:
 		zone_sendmsg( actor_index, datasize, data );
 		break;
 	case SENDTYPE_WORLD:
 		world_sendmsg( datasize, data );
+		break;
+	case SENDTYPE_INZONE:
+		in_zone_sendmsg( actor_index, datasize, data );
 		break;
 	case SENDTYPE_NATION1:
 	case SENDTYPE_NATION2:

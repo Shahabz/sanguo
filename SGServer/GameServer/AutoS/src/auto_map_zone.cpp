@@ -20,7 +20,7 @@ int map_zone_load_auto( LPCB_GETMAPZONE pCB_GetMapZone, LPCB_LOADMAPZONE pCB_Loa
 	MapZone *pMapZone;
 	int zoneid = 0;
 
-	sprintf( szSQL, "select `zoneid`,`allow` from %s ", pTab );
+	sprintf( szSQL, "select `zoneid`,`allow`,`nation` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -39,6 +39,7 @@ int map_zone_load_auto( LPCB_GETMAPZONE pCB_GetMapZone, LPCB_LOADMAPZONE pCB_Loa
 			continue;
 		pMapZone->zoneid = atoi(row[offset++]);
 		pMapZone->allow = atoi(row[offset++]);
+		pMapZone->nation = atoi(row[offset++]);
 		if( pCB_LoadMapZone )
 			pCB_LoadMapZone( pMapZone->zoneid );
 		zoneid = pMapZone->zoneid;
@@ -58,7 +59,7 @@ int map_zone_save_auto( MapZone *pMapZone, const char *pTab, FILE *fp )
 		return -1;
 
 RE_MAPZONE_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`zoneid`,`allow`) Values('%d','%d')",pTab,pMapZone->zoneid,pMapZone->allow);
+	sprintf( szSQL, "REPLACE INTO %s (`zoneid`,`allow`,`nation`) Values('%d','%d','%d')",pTab,pMapZone->zoneid,pMapZone->allow,pMapZone->nation);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -116,11 +117,11 @@ RE_MAPZONE_TRUNCATE:
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`zoneid`,`allow`) Values('%d','%d')",pTab,pMapZone[index].zoneid,pMapZone[index].allow);
+			sprintf( g_batchsql, "REPLACE INTO %s (`zoneid`,`allow`,`nation`) Values('%d','%d','%d')",pTab,pMapZone[index].zoneid,pMapZone[index].allow,pMapZone[index].nation);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d')",pMapZone[index].zoneid,pMapZone[index].allow);
+			sprintf( szSQL, ",('%d','%d','%d')",pMapZone[index].zoneid,pMapZone[index].allow,pMapZone[index].nation);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

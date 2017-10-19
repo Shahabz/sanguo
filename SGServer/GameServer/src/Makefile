@@ -68,6 +68,7 @@ fight.cpp \
 global_cmdqueue.cpp \
 vip.cpp \
 actor_gmcmd.cpp \
+map_zone.cpp \
 client.cpp \
 story.cpp \
 system_askinfo.cpp \
@@ -267,6 +268,8 @@ global_cmdqueue.o: global_cmdqueue.cpp
 vip.o: vip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 actor_gmcmd.o: actor_gmcmd.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_zone.o: map_zone.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 client.o: client.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

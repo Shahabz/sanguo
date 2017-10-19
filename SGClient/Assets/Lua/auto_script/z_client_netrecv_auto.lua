@@ -590,6 +590,26 @@ function netrecv_maptownexinfo_C( buffer )
 	proc_maptownexinfo_C( recvValue );
 end
 
+function netrecv_mapzonetown_C( buffer )
+	local recvValue = struct_NetS_MapZoneTown_recv( buffer );
+	proc_mapzonetown_C( recvValue );
+end
+
+function netrecv_mapzonetownlist_C( buffer )
+	local recvValue = struct_NetS_MapZoneTownList_recv( buffer );
+	proc_mapzonetownlist_C( recvValue );
+end
+
+function netrecv_mapcentertown_C( buffer )
+	local recvValue = struct_NetS_MapCenterTown_recv( buffer );
+	proc_mapcentertown_C( recvValue );
+end
+
+function netrecv_mapcentertownlist_C( buffer )
+	local recvValue = struct_NetS_MapCenterTownList_recv( buffer );
+	proc_mapcentertownlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -709,6 +729,10 @@ Proc_Command = {
 	[CMDS_TOWNFIGHTLIST]=netrecv_townfightlist_C;
 	[CMDS_DIALOGUPDATE]=netrecv_dialogupdate_C;
 	[CMDS_MAPTOWNEXINFO]=netrecv_maptownexinfo_C;
+	[CMDS_MAPZONETOWN]=netrecv_mapzonetown_C;
+	[CMDS_MAPZONETOWNLIST]=netrecv_mapzonetownlist_C;
+	[CMDS_MAPCENTERTOWN]=netrecv_mapcentertown_C;
+	[CMDS_MAPCENTERTOWNLIST]=netrecv_mapcentertownlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

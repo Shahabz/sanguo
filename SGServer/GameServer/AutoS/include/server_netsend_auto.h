@@ -120,6 +120,10 @@ int netsend_townowneraskList_S( int actor_index, char send_type, SLK_NetS_TownOw
 int netsend_townfightlist_S( int actor_index, char send_type, SLK_NetS_TownFightList *pValue );
 int netsend_dialogupdate_S( int actor_index, char send_type, SLK_NetS_DialogUpdate *pValue );
 int netsend_maptownexinfo_S( int actor_index, char send_type, SLK_NetS_MapTownExInfo *pValue );
+int netsend_mapzonetown_S( int actor_index, char send_type, SLK_NetS_MapZoneTown *pValue );
+int netsend_mapzonetownlist_S( int actor_index, char send_type, SLK_NetS_MapZoneTownList *pValue );
+int netsend_mapcentertown_S( int actor_index, char send_type, SLK_NetS_MapCenterTown *pValue );
+int netsend_mapcentertownlist_S( int actor_index, char send_type, SLK_NetS_MapCenterTownList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

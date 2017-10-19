@@ -20,6 +20,7 @@ local m_posx = 0;
 local m_posy = 0;
 local m_nation = 0;
 local m_townid = 0;
+local m_custom_name = "";
 
 -- 打开界面
 function MapTownExDlgOpen()
@@ -61,10 +62,14 @@ function MapTownExDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 改名
 		elseif nControlID == 10 then	
-			
+			TownChangeNameDlgShow( m_townid, m_custom_name )
         end
+	elseif nType == UI_EVENT_TIMECOUNTCHANGED then
+		if nControlID == 101 then
+			SetText( m_uiTimerButton.transform:Find("Back/Token"), MapTownExDlgDevTokenCalc() ) 
+		end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
-		if nControlID == 1 then
+		if nControlID == 101 then
 			if m_recvValue ~= nil and m_recvValue.m_dev_cd ~= nil then
 				m_recvValue.m_dev_cd = 0;
 				MapTownExDlgRecvValue( m_recvValue )
@@ -134,7 +139,7 @@ function MapTownExDlgShow( recvValue )
 	m_LastRecvValue = recvValue
 	m_posx 				= recvValue.m_posx;
 	m_posy 				= recvValue.m_posy;
-	local custom_name	= recvValue.m_name;
+	m_custom_name		= recvValue.m_name;
 	local custom_namelen= recvValue.m_namelen;
 	m_nation 			= recvValue.m_char_value[1];
 	local dev_level 	= recvValue.m_char_value[2];
@@ -151,7 +156,7 @@ function MapTownExDlgShow( recvValue )
 	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
 	-- 名字
 	if custom_namelen > 0 then
-		SetText( m_uiName, "Lv."..(dev_level+1).." "..custom_name )
+		SetText( m_uiName, "Lv."..(dev_level+1).." "..m_custom_name )
 	else
 		SetText( m_uiName, "Lv."..(dev_level+1).." "..MapTownName(m_townid) )
 	end
@@ -193,7 +198,8 @@ function MapTownExDlgRecvValue( recvValue )
 			if recvValue.m_dev_cd > 0 then
 				SetFalse( m_uiUpgradeButton )
 				SetTrue( m_uiTimerButton );
-				SetTimer( m_uiTimerButton.transform:Find("Back/Timer"), recvValue.m_dev_cd, recvValue.m_dev_cd, 1 )
+				SetTimer( m_uiTimerButton.transform:Find("Back/Timer"), recvValue.m_dev_cd, recvValue.m_dev_cd, 101 )
+				SetText( m_uiTimerButton.transform:Find("Back/Token"), MapTownExDlgDevTokenCalc() ) 
 			else
 				SetFalse( m_uiTimerButton )
 				SetTrue( m_uiUpgradeButton )
@@ -226,8 +232,41 @@ end
 -- 开发
 function MapTownExDlgDev()
 	if m_recvValue.m_dev_cd > 0 then
+		local cost_token = MapTownExDlgDevTokenCalc()
+		MsgBox( F(1339, cost_token ), function() 
+			if GetPlayer().m_token < cost_token then
+				JumpToken()
+				return
+			end	
+			system_askinfo( ASKINFO_MAPTOWN, "", 9, m_townid );
+		end )
 		return
 	end
 	
-	system_askinfo( ASKINFO_MAPTOWN, "", 8, m_townid );
+	local cost_silver = global.town_dev_silver
+	local cost_wood = global.town_dev_wood
+	MsgBox( F(1338, T(121)..knum(cost_silver).." "..T(122)..knum(cost_wood) ), function() 
+		if GetPlayer().m_silver < cost_silver then
+			JumpRes(1)
+			return
+		end
+		if GetPlayer().m_wood < cost_wood then
+			JumpRes(2)
+			return
+		end	
+		system_askinfo( ASKINFO_MAPTOWN, "", 8, m_townid );
+	end )
 end
+
+-- 计算钻石加速
+function MapTownExDlgDevTokenCalc()
+	local uiTimer = m_uiTimerButton.transform:Find("Back/Timer")
+	if uiTimer == nil then
+		return 0;
+	end
+	local left = uiTimer.transform:GetComponent( typeof(UITextTimeCountdown) ).LeftTime
+	local min = math.floor(left/60) + 1
+	local token = math.ceil( min*global.upgradequick_token)
+	return token
+end
+

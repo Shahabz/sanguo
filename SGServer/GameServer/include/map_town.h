@@ -59,8 +59,17 @@ int map_town_attack( int townid );
 // 都城开发所需经验
 int map_town_dev_expmax( int townid );
 
+// 添加都城开发经验
+int map_town_dev_addexp( int townid, int exp );
+
 // 都城开发
 int map_town_dev( int actor_index, int townid );
+
+// 都城开发消除cd
+int map_town_dev_delcd( int actor_index, int townid );
+
+// 修改名称
+int map_town_changename( int actor_index, int townid, char *pname );
 
 // 获取城镇奖励
 int map_town_sendaward( int actor_index, int townid );

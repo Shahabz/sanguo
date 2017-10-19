@@ -4,9 +4,10 @@
 
 #define SENDTYPE_ACTOR		0	// 发给单个玩家
 #define SENDTYPE_AREA		1	// 发给当前逻辑区域
-#define SENDTYPE_MAP		2	// 发给当前地图
-#define SENDTYPE_ZONE		3	// 发给当前游戏区域
+#define SENDTYPE_WORLDMAP	2	// 发给当前野外地图
+#define SENDTYPE_ZONE		3	// 发给当前游戏地区
 #define SENDTYPE_WORLD		4	// 发给当前服务器
+#define SENDTYPE_INZONE		5	// 发给当前游戏地区(当前视图在这个区域)
 
 #define SENDTYPE_NATION		10	// 
 #define SENDTYPE_NATION1	11	// 发送给魏国

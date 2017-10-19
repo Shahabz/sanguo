@@ -65,10 +65,13 @@ function MapZoneTipsModPoolInit()
 	eye.objectPoolManager:CreatePool("UIF_MapZoneTips", 1, 1, LoadPrefab("UIF_MapZoneTips"));
 end
 
-function MapZoneTipsModShow( text )
+function MapZoneTipsModShow( name, nation )
 	local obj = eye.objectPoolManager:Get( "UIF_MapZoneTips" );
 	obj.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform );
 	obj.transform.localScale = Vector3( 1, 1, 1 );
 	obj.transform.localPosition = Vector3( 0, 0, 0 );
-	obj.transform:Find("Text"):GetComponent( "UIText" ).text = text
+	
+	local color = Hex2Color(MapUnitRangeColor[nation]);
+	SetText( obj.transform:Find("Name"), name, color )
+	SetText( obj.transform:Find("Nation"), NationEx( nation )..T(115), color )
 end

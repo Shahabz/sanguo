@@ -6,6 +6,7 @@ struct _map_zone {
 //--Automatically generated
 				int zoneid;	//地区id
 				char allow;	//是否允许
+				char nation;	//所属国家
 };
 typedef struct _map_zone MapZone;
 

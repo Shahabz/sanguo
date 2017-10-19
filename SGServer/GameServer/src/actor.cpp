@@ -39,6 +39,7 @@
 #include "mail.h"
 #include "army.h"
 #include "army_group.h"
+#include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
@@ -189,6 +190,8 @@ void actors_on_core()
 	army_save( fp );
 	// 所有集结保存
 	armygroup_save( fp );
+	// 所有地区保存
+	map_zone_save( fp );
 	// 所有城镇保存
 	map_town_save( fp );
 	// 所有流寇保存

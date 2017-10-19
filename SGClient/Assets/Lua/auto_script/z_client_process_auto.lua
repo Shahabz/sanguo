@@ -1037,13 +1037,13 @@ function proc_storyranktime_C( recvValue )
 	-- process.
 end
 
--- m_zoneid=0,m_open=0,
+-- m_zoneid=0,m_open=0,m_nation=0
 function proc_mapzonechange_C( recvValue )
 	-- process.
 	local name = MapZoneName( recvValue.m_zoneid )
 	if recvValue.m_open == 1 then
 		MainDlgSetZoneName( name )
-		MapZoneTipsModShow( name )
+		MapZoneTipsModShow( name, recvValue.m_nation )
 	else
 		MainDlgSetZoneName( name.."("..T(936)..")" )
 		AlertMsg( T(937) )
@@ -1058,6 +1058,7 @@ function proc_mapzoneunitlist_C( recvValue )
 	for i=1, recvValue.m_count, 1 do
 		MainDlgMiniMapAddUnit( recvValue.m_list[i] )
 	end
+	WorldMapThumb.SetCityInfo( recvValue )
 end
 
 -- m_posx=0,m_posy=0,m_nation=0,m_level=0,
@@ -1382,5 +1383,30 @@ end
 function proc_maptownexinfo_C( recvValue )
 	-- process.
 	MapTownExDlgRecvValue( recvValue )
+end
+
+-- m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",
+function proc_mapzonetown_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
+function proc_mapzonetownlist_C( recvValue )
+	-- process.
+	WorldMapThumb.SetTownInfo( recvValue )
+end
+
+-- m_townid=0,m_nation=0,
+function proc_mapcentertown_C( recvValue )
+	-- process.
+	MapUnit.createCenterTownRange( recvValue )
+end
+
+-- m_count=0,m_list={m_townid=0,m_nation=0,[m_count]},
+function proc_mapcentertownlist_C( recvValue )
+	-- process.
+	for i=1, recvValue.m_count, 1 do
+		MapUnit.createCenterTownRange( recvValue.m_list[i] )
+	end
 end
 

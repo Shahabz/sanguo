@@ -17,6 +17,7 @@
 #include "equip.h"
 #include "mapunit.h"
 #include "map.h"
+#include "map_zone.h"
 #include "server_netsend_auto.h"
 #include "system.h"
 #include "item.h"

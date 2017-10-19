@@ -154,6 +154,15 @@ int army_vs_enemy( int army_index, Fight *pFight )
 		//quest_addvalue( pCity, QUEST_DATAINDEX_KILLMONSTER, 0, 1 );
 		//quest_addvalue( pCity, QUEST_DATAINDEX_KILLMONSTER_LEVEL, config->level, 1 );
 
+		// 如果是都城范围,添加开发经验
+		short range_townid = map_tile_gettownid( enemy->posx, enemy->posy );
+		if ( range_townid > 0 && range_townid < g_towninfo_maxnum )
+		{
+			if ( g_towninfo[range_townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+			{
+				map_town_dev_addexp( range_townid, global.town_dev_killenemy );
+			}
+		}
 		// 删除流寇
 		map_enemy_delete( g_army[army_index].to_index );
 	}

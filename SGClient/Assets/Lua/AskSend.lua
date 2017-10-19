@@ -26,6 +26,7 @@ ASKINFO_CITYHELP		=	23 -- 驻防信息
 ASKINFO_CITYARMYGROUP	=	24 -- 城战
 ASKINFO_NATIONARMYGROUP	=	25 -- 国战
 ASKINFO_MAPTOWN			=	26 -- 城镇
+ASKINFO_MAPZONE			=	27 -- 地区
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

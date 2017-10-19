@@ -13,6 +13,7 @@
 #include "server_netsend_auto.h"
 #include "actor_send.h"
 #include "map.h"
+#include "map_zone.h"
 #include "global.h"
 #include "mapunit.h"
 #include "script_auto.h"
@@ -36,9 +37,6 @@ Map g_map;
 int g_nUnitQueueNumLimit;		// 单个队列的极限，超过后不再分配
 int *g_pTmpEnterArmy;
 int *g_pTmpLeaveArmy;
-
-short g_last_cityposx = 0;
-short g_last_cityposy = 0;
 
 //-----------------------------------------------------------------------------
 // map_init
@@ -121,113 +119,6 @@ void map_sendinfo( int actor_index, short tposx, short tposy )
 	netsend_worldmapinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 }
 
-// 坐标是否在指定地区里
-char map_zone_inrange( int zoneid, short posx, short posy )
-{
-	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
-		return 0;
-	if ( posx >= g_zoneinfo[zoneid].top_left_posx && posx <= g_zoneinfo[zoneid].bottom_right_posx &&
-		 posy >= g_zoneinfo[zoneid].top_left_posy && posy <= g_zoneinfo[zoneid].bottom_right_posy )
-	{
-		return 1;
-	}
-	return 0;
-}
-
-// 获取地区id
-char map_zone_getid( short posx, short posy )
-{
-	int zonex, zoney;
-	if ( posx >= g_map.m_nMaxWidth )
-		posx = g_map.m_nMaxWidth - 1;
-	if ( posy >= g_map.m_nMaxHeight )
-		posy = g_map.m_nMaxHeight - 1;
-	zonex = (posx) / 100;
-	zoney = (posy) / 100;
-	return zoney*(5) + zonex + 1;
-}
-
-// 检查是不是在同一个区域
-char map_zone_checksame( short posx, short posy, short tposx, short tposy )
-{
-	char n = map_zone_getid( posx, posy );
-	char m = map_zone_getid( tposx, tposy );
-	if ( n == m )
-	{
-		return 1;
-	}
-	return 0;
-}
-
-// 地区单元列表
-int map_zone_unitlist( int actor_index, int zoneid )
-{
-	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
-		return -1;
-	City *pCity = NULL;
-	SLK_NetS_MapZoneUnitList pValue = {0};
-	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
-	{
-		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
-		{
-			short x = tmpi;
-			short y = tmpj;
-			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
-				continue;
-			if ( g_map.m_aTileData[x][y].unit_type == MAPUNIT_TYPE_CITY )
-			{
-				pCity = city_indexptr( g_map.m_aTileData[x][y].unit_index );
-				if ( pCity )
-				{
-					pValue.m_list[pValue.m_count].m_posx = pCity->posx;
-					pValue.m_list[pValue.m_count].m_posy = pCity->posy;
-					pValue.m_list[pValue.m_count].m_nation = pCity->nation;
-					pValue.m_list[pValue.m_count].m_level = (char)pCity->level;
-				}
-				pValue.m_count += 1;
-				if ( pValue.m_count >= 255 )
-				{
-					netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
-					pValue.m_count = 0;
-				}
-			}
-			
-		}
-	}
-	if ( pValue.m_count > 0 )
-	{
-		netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
-	}
-	return 0;
-}
-
-//地图地区进入
-void map_zoneenter( int actor_index, short posx, short posy )
-{
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return;
-	if ( posx < 0 && posy < 0 )
-	{
-		g_actors[actor_index].view_zoneid = 0;
-		return;
-	}
-	char zoneid = map_zone_getid( posx, posy );
-	if ( g_actors[actor_index].view_zoneid != zoneid )
-	{// 通知客户端进入新的地区
-		g_actors[actor_index].view_zoneid = zoneid;
-		SLK_NetS_MapZoneChange pValue = {0};
-		pValue.m_zoneid = zoneid;
-		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
-		{
-			pValue.m_open = (char)g_zoneinfo[zoneid].open;
-		}
-		netsend_mapzonechange_S( actor_index, SENDTYPE_ACTOR, &pValue );
-
-		// 发送单元列表
-		map_zone_unitlist( actor_index, zoneid );
-	}
-}
-
 // 区域信息
 void map_areaenter( int actor_index, int areaindex, short posx, short posy )
 {
@@ -237,7 +128,7 @@ void map_areaenter( int actor_index, int areaindex, short posx, short posy )
 		return;
 	if ( g_actors[actor_index].view_areaindex != areaindex )
 	{
-		map_zoneenter( actor_index, posx, posy );
+		map_zone_change( actor_index, posx, posy );
 		view_area_change( actor_index, areaindex );
 		if ( areaindex < 0 )
 			g_actors[actor_index].view_areaindex = -1;
@@ -764,51 +655,6 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 		}
 	}
 	
-	return 0;
-}
-
-// 指定地区随机一个空坐标
-int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
-{
-	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
-		return -1;
-	int step = 0;
-
-	short findlistx[256] = { 0 };
-	short findlisty[256] = { 0 };
-	short offset = 0;
-	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
-	{
-		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
-		{
-			short x = tmpi;
-			short y = tmpj;
-			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
-				continue;
-			if ( g_map.m_aTileData[x][y].unit_type > 0 )
-				continue;
-			// 找到所有的空余点
-			findlistx[offset] = x;
-			findlisty[offset] = y;
-			offset += 1;
-			if ( offset >= 256 )
-				break;
-		}
-		if ( offset >= 256 )
-			break;
-	}
-
-	if ( offset > 0 )
-	{
-		int index = rand() % offset;
-		*pPosx = findlistx[index];
-		*pPosy = findlisty[index];
-	}
-	else
-	{
-		*pPosx = -1;
-		*pPosy = -1;
-	}
 	return 0;
 }
 
