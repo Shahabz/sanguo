@@ -81,7 +81,7 @@ extern int g_armygroup_maxcount;
 Fight g_fight;
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 char g_gm_isout = 0;
-
+extern int g_map_town_attackmonster[3][8];
 static char *s_fight_posname[] = { "", "attack", "defense" };
 
 // 调试输出
@@ -388,28 +388,50 @@ int fight_start_armygroup( int group_index )
 		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
 		if ( army_index < 0 || army_index >= g_army_maxcount )
 			continue;
-		City *pCity = army_getcityptr( army_index );
-		if ( pCity )
+		if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
 		{ // 攻击方为玩家
-			for ( int tmpi = 0; tmpi < 4; tmpi++ )
+			City *pCity = army_getcityptr( army_index );
+			if ( pCity )
 			{
-				short herokind = g_army[army_index].herokind[tmpi];
-				if ( herokind <= 0 )
-					continue;
-				int hero_index = city_hero_getindex( pCity->index, herokind );
-				if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
-					continue;
-				Hero *pHero = &pCity->hero[hero_index];
-				HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
-				if ( !config )
-					continue;
-				fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+				for ( int tmpi = 0; tmpi < 4; tmpi++ )
+				{
+					short herokind = g_army[army_index].herokind[tmpi];
+					if ( herokind <= 0 )
+						continue;
+					int hero_index = city_hero_getindex( pCity->index, herokind );
+					if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+						continue;
+					Hero *pHero = &pCity->hero[hero_index];
+					HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+					if ( !config )
+						continue;
+					fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+						pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+				}
 			}
 		}
-		else
+		else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
 		{ // 攻击方为城镇
-
+			MapTown *pTown = map_town_getptr( g_armygroup[group_index].from_id );
+			if ( pTown )
+			{
+				int level = pTown->dev_level;
+				if ( level < 0 )
+					level = 0;
+				else if ( level > 2 )
+					level = 2;
+				for ( int tmpi = 0; tmpi < 8; tmpi++ )
+				{
+					int monsterid = g_map_town_attackmonster[level][tmpi];
+					if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+						continue;
+					MonsterInfo *pMonster = &g_monster[monsterid];
+					if ( !pMonster )
+						continue;
+					fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_TOWN, pTown->townid, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
+						pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill );
+				}
+			}
 		}
 	}
 
@@ -927,9 +949,12 @@ City *fight_getcityptr( int pos )
 		}
 		else if ( g_fight.type == FIGHTTYPE_NATION )
 		{
-			if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_city_maxcount )
-				return NULL;
-			pCity = &g_city[g_fight.attack_armyindex];
+			if ( g_fight.attack_type == MAPUNIT_TYPE_CITY )
+			{
+				if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_city_maxcount )
+					return NULL;
+				pCity = &g_city[g_fight.attack_armyindex];
+			}
 		}
 		else if ( g_fight.type == FIGHTTYPE_ENEMY || g_fight.type == FIGHTTYPE_RES )
 		{

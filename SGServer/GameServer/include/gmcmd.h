@@ -33,6 +33,7 @@
 #define GMC_FUN					(GMC_BASE+28)	// 获取功能
 #define GMC_EVENT				(GMC_BASE+29)	// 地图事件刷新
 #define GMC_VW					(GMC_BASE+30)	// 威望
+#define GMC_TOWNATTACK			(GMC_BASE+31)	// 都城攻击
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

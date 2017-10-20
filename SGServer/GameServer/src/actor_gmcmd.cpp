@@ -322,6 +322,9 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			city_changeprestige( pCity->index, pValue[0], PATH_GM );
 		}
 		break;
+	case GMC_TOWNATTACK: // ¶¼³Ç¹¥»÷
+		map_town_attack( pValue[0] );
+		break;
 	default:
 		break;
 	}

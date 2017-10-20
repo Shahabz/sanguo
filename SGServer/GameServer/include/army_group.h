@@ -40,8 +40,11 @@ int armygroup_city_sendlist( int actor_index, int unit_index );
 // 国战列表
 int armygroup_town_sendlist( int actor_index, int unit_index );
 
-// 国战创建
+// 国战创建-玩家创建
 int armygroup_nation_askcreate( int actor_index, int townid );
+
+// 国战创建-AI城镇创建
+int armygroup_nation_askcreate_ai( int from_townid, int to_townid );
 
 // 所有国战信息
 int armygroup_nation_sendlist( int actor_index );

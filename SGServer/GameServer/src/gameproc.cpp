@@ -559,6 +559,22 @@ int process_init( int max_connection )
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
+	// 世界boss
+	if ( worldbossinfo_init_auto() < 0 )
+	{
+		printf_msg( "worldbossinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
+	// 世界任务
+	if ( worldquestinfo_init_auto() < 0 )
+	{
+		printf_msg( "worldquestinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
 	activity_init();

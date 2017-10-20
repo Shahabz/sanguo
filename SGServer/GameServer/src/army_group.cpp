@@ -862,30 +862,6 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		attackNation = pCity->nation;
 		posx = pCity->posx;
 		posy = pCity->posy;
-		if ( pFight->result == FIGHT_WIN )
-		{
-			// 进攻成功邮件
-			sprintf( title, "%s%d", TAG_TEXTID, 5027 );// 国战进攻胜利
-
-			// 集结所有人发送邮件
-			//armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
-			for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
-			{
-				int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
-				if ( army_index < 0 || army_index >= g_army_maxcount )
-					continue;
-				City *pArmyCity = army_getcityptr( army_index );
-				if ( !pArmyCity )
-					continue;
-
-				// 单独拼奖励
-				sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
-					attackName, attackNation, posx, posy, pTown->townid, pTown->nation, g_army[army_index].silver, g_army[army_index].wood, g_army[army_index].food );
-
-				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
-				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
-			}
-		}
 	}
 	else if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_TOWN )
 	{ // 国战发起者是城镇
@@ -896,10 +872,6 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		attackNation = pTown->nation;
 		posx = g_towninfo[townid].posx;
 		posy = g_towninfo[townid].posy;
-		if ( pFight->result == FIGHT_WIN )
-		{
-
-		}
 	}
 	else
 		return -1;
@@ -907,6 +879,28 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 
 	if ( pFight->result == FIGHT_WIN )
 	{
+		// 进攻成功邮件
+		sprintf( title, "%s%d", TAG_TEXTID, 5027 );// 国战进攻胜利
+
+		// 集结所有人发送邮件
+		//armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				continue;
+			City *pArmyCity = army_getcityptr( army_index );
+			if ( !pArmyCity )
+				continue;
+
+			// 单独拼奖励
+			sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
+				attackName, attackNation, posx, posy, pTown->townid, pTown->nation, g_army[army_index].silver, g_army[army_index].wood, g_army[army_index].food );
+
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
+			mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
+		}
+
 		// 防守失败邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5030 );// 国战防守失败
 		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
@@ -1048,8 +1042,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
 		{
 			map_zone_setnation( map_zone_getid( g_towninfo[townid].posx, g_towninfo[townid].posy ), pTown->nation );
-			map_zone_center_townchange( townid );
 		}
+		// 地区皇城区域都城和名城更新
+		map_zone_center_townchange( townid );
 
 		// 其它国家在路上的自动返回
 		for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )
@@ -1227,15 +1222,6 @@ int armygroup_town_sendlist( int actor_index, int unit_index )
 			continue;
 		if ( g_armygroup[tmpi].to_id != townid )
 			continue;
-		char from_nation = 0;
-		if ( g_armygroup[tmpi].from_type == MAPUNIT_TYPE_CITY )
-		{
-			City *fromCity = city_indexptr( g_armygroup[tmpi].from_index );
-			if ( fromCity )
-			{
-				from_nation = fromCity->nation;
-			}
-		}
 
 		if ( pCity->nation == g_map_town[townid].nation )
 		{ // 我看的据点属于我的国家
@@ -1246,26 +1232,10 @@ int armygroup_town_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_total = armygroup_to_totals( tmpi );
 
 			// 攻击方信息
-			if ( g_armygroup[tmpi].from_type == MAPUNIT_TYPE_CITY )
-			{ // 攻击方是玩家
-				City *pAtkCity = city_indexptr( g_armygroup[tmpi].from_index );
-				if ( !pAtkCity )
-					continue;
-				pValue.m_list[pValue.m_count].m_t_nation = pAtkCity->nation;
-				pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
-			}
-			else if ( g_armygroup[tmpi].from_type == MAPUNIT_TYPE_TOWN )
-			{ // 攻击方是城镇
-				MapTown *pTown = map_town_getptr( g_armygroup[tmpi].from_index );
-				if ( !pTown )
-					continue;
-				pValue.m_list[pValue.m_count].m_t_nation = pTown->nation;
-				pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
-			}
-			else
-				continue;
+			pValue.m_list[pValue.m_count].m_t_nation = g_armygroup[tmpi].from_nation;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
 		}
-		else if ( pCity->nation == from_nation )
+		else if ( pCity->nation == g_armygroup[tmpi].from_nation )
 		{ // 不是我国家的据点, 看看我是不是攻击方的
 
 			// 那么我属于攻击方
@@ -1273,25 +1243,8 @@ int armygroup_town_sendlist( int actor_index, int unit_index )
 			pValue.m_list[pValue.m_count].m_nation = pCity->nation;
 			pValue.m_list[pValue.m_count].m_total = armygroup_from_totals( tmpi );
 
-			// 防御方信息
-			if ( g_armygroup[tmpi].to_type == MAPUNIT_TYPE_CITY )
-			{ // 防御方是玩家
-				City *pDefCity = city_indexptr( g_armygroup[tmpi].to_index );
-				if ( !pDefCity )
-					continue;
-				pValue.m_list[pValue.m_count].m_t_nation = pDefCity->nation;
-				pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
-			}
-			else if ( g_armygroup[tmpi].to_type == MAPUNIT_TYPE_TOWN )
-			{ // 防御方是城镇
-				MapTown *pTown = map_town_getptr( g_armygroup[tmpi].to_index );
-				if ( !pTown )
-					continue;
-				pValue.m_list[pValue.m_count].m_t_nation = pTown->nation;
-				pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
-			}
-			else
-				continue;
+			pValue.m_list[pValue.m_count].m_t_nation = g_armygroup[tmpi].to_nation;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
 		}
 		else
 		{ // 第三方
@@ -1356,6 +1309,24 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 		return -1;
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
+	if ( pCity->level < global.nationfight_actorlevel )
+	{
+		char v1[32] = { 0 };
+		sprintf( v1, "%d", global.nationfight_actorlevel );
+		actor_notify_alert_v( actor_index, 1343, v1, NULL );
+		return -1;
+	}
+	// 检查这个目标是否已经有与我国的国战
+	for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		int group_index = g_map_town[townid].underfire_groupindex[tmpi];
+		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			continue;
+		if ( g_armygroup[group_index].from_nation == pCity->nation )
+		{
+			return -1;
+		}
+	}
 
 	// 创建集结战场
 #ifdef _WIN32
@@ -1396,6 +1367,60 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 	sprintf( v5, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 	system_talkjson( zoneid, g_map_town[townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
 	return 0;
+}
+
+// 国战创建-AI城镇创建
+int armygroup_nation_askcreate_ai( int from_townid, int to_townid )
+{
+	if ( from_townid <= 0 || from_townid >= g_map_town_maxcount )
+		return -1;
+	if ( to_townid <= 0 || to_townid >= g_map_town_maxcount )
+		return -1;
+	// 检查这个目标是否已经有与我国的国战
+	for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		int group_index = g_map_town[to_townid].underfire_groupindex[tmpi];
+		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			continue;
+		if ( g_armygroup[group_index].from_nation == g_map_town[from_townid].nation )
+		{
+			return -1;
+		}
+	}
+
+	// 创建集结战场
+#ifdef _WIN32
+	int group_index = armygroup_create( 20, MAPUNIT_TYPE_TOWN, from_townid, MAPUNIT_TYPE_TOWN, to_townid, g_towninfo[to_townid].fight_maxsec / 5 );
+#else
+	int group_index = armygroup_create( 20, MAPUNIT_TYPE_TOWN, from_townid, MAPUNIT_TYPE_TOWN, to_townid, g_towninfo[to_townid].fight_maxsec );
+#endif // !_WIN32
+	if ( group_index < 0 )
+		return -1;
+
+	// 只有本地区玩家可见
+	int zoneid = map_zone_getid( g_towninfo[to_townid].posx, g_towninfo[to_townid].posy );
+	char v1[64] = { 0 };
+	char v2[64] = { 0 };
+	char v3[64] = { 0 };
+	char v4[64] = { 0 };
+	char v5[64] = { 0 };
+
+	// 我国的{0}对{1}{2}{3}发起了国战，养兵千日用在一时，请大家踊跃参与。请各位主公加入<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
+	sprintf( v1, "%s%d", TAG_TOWNID, from_townid );
+	sprintf( v2, "%s%d", TAG_NATION, g_map_town[to_townid].nation );
+	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[to_townid].zoneid );
+	sprintf( v4, "%s%d", TAG_TOWNID, to_townid );
+	sprintf( v5, "%d,%d", g_towninfo[to_townid].posx, g_towninfo[to_townid].posy );
+	system_talkjson( zoneid, g_map_town[from_townid].nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+
+	// {0}{1}对我国的{2}{3}发起了国战。敌国来犯，我城势单力孤，还请诸位同袍伸出援手。<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
+	sprintf( v1, "%s%d", TAG_NATION, g_map_town[from_townid].nation );
+	sprintf( v2, "%s%d", TAG_TOWNID, from_townid );
+	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[to_townid].zoneid );
+	sprintf( v4, "%s%d", TAG_TOWNID, to_townid );
+	sprintf( v5, "%d,%d", g_towninfo[to_townid].posx, g_towninfo[to_townid].posy );
+	system_talkjson( zoneid, g_map_town[to_townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
+	return group_index;
 }
 
 // 所有国战信息

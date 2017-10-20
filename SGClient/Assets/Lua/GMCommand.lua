@@ -30,7 +30,8 @@ local GMCMD_SERVER = {
 [27]="mat",
 [28]="fun",
 [29]="event",
-[30]="vw"
+[30]="vw",
+[31]="townattack"
 }
  
 -- 发到客户端本地指令

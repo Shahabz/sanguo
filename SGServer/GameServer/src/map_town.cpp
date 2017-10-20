@@ -33,6 +33,7 @@
 #include "city.h"
 #include "nation.h"
 #include "chat.h"
+#include "army_group.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -46,6 +47,9 @@ extern City * g_city;
 extern int g_city_maxcount;
 extern int g_city_maxindex;
 
+extern Army *g_army;
+extern int g_army_maxcount;
+
 extern MonsterInfo *g_monster;
 extern int g_monster_maxnum;
 
@@ -58,6 +62,7 @@ extern int g_towninfo_maxnum;
 MapTown *g_map_town = NULL;
 int g_map_town_maxcount = 0;
 extern int g_map_town_maxindex;
+int g_map_town_attackmonster[3][8] = { { 1884, 1885, 1886, 1887, 0, 0, 0, 0 }, { 1884, 1885, 1886, 1887, 0, 0, 0, 0 }, { 1884, 1885, 1886, 1887, 0, 0, 0, 0 } };
 
 // 读档完毕的回调
 int map_town_loadcb( int townid )
@@ -208,14 +213,7 @@ void map_town_makeunit( int index, SLK_NetS_AddMapUnit *pAttr )
 		int group_index = g_map_town[index].underfire_groupindex[tmpi];
 		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
 			continue;
-		if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
-		{
-			pAttr->m_char_value[count++] = g_armygroup[group_index].from_nation;
-		}
-		else
-		{
-			pAttr->m_char_value[count++] = 0;
-		}
+		pAttr->m_char_value[count++] = g_armygroup[group_index].from_nation;
 	}
 }
 
@@ -347,6 +345,16 @@ void map_town_logic( int townid )
 		}
 	}
 	
+	// 主动出击
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 && g_map_town[townid].attackcd > 0 )
+	{
+		g_map_town[townid].attackcd -= 1;
+		if ( g_map_town[townid].attackcd <= 0 )
+		{
+			map_town_attack( townid );
+			g_map_town[townid].attackcd = global.town_attackcd;
+		}
+	}
 }
 
 // 所有城镇每秒逻辑
@@ -907,6 +915,114 @@ int map_town_owner_award()
 		if ( g_map_town[townid].own_actorid <= 0 )
 			continue;
 		map_town_owner_award_actor( townid );
+	}
+	return 0;
+}
+
+// 都城出动禁卫军
+int map_town_attack( int townid )
+{
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return -1;
+	if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_TYPE8 )
+		return -1;
+	int to_townid = 0;
+
+	// 优先选取
+	int townlist[128] = { 0 };
+	int towncount = 0;
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		int id = g_map_town[townid].pre_townid[tmpi];
+		if ( id <= 0 || id >= g_map_town_maxcount )
+			continue;
+		if ( g_map_town[townid].nation != g_map_town[id].nation )
+		{
+			townlist[towncount] = id;
+			towncount += 1;
+		}
+	}
+	if ( towncount > 0 )
+	{
+		int randint = rand() % towncount;
+		to_townid = townlist[randint];
+	}
+
+	// 优先列表没有，那么随机选取
+	if ( to_townid <= 0 )
+	{
+		for ( int id = 1; id < g_map_town_maxcount; id++ )
+		{
+			if ( g_towninfo[id].id <= 0 )
+				continue;
+			if ( g_towninfo[id].type != MAPUNIT_TYPE_TOWN_TYPE7 )
+				continue;
+			if ( g_map_town[id].nation == g_map_town[townid].nation )
+				continue;
+			townlist[towncount] = id;
+			towncount += 1;
+		}
+	}
+	if ( towncount > 0 )
+	{
+		int randint = rand() % towncount;
+		to_townid = townlist[randint];
+	}
+	if ( to_townid <= 0 )
+	{
+		return -1;
+	}
+
+	// 创建国战
+	int group_index = armygroup_nation_askcreate_ai( townid, to_townid );
+	if ( group_index < 0 )
+		return -1; 
+
+	int level = g_map_town[townid].dev_level;
+	if ( level < 0 )
+		level = 0;
+	else if ( level > 2 )
+		level = 2;
+
+	int totalsoldiers = 0;
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		int monsterid = g_map_town_attackmonster[level][tmpi];
+		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+			continue;
+		MonsterInfo *pMonster = &g_monster[monsterid];
+		if ( !pMonster )
+			continue;
+		totalsoldiers += pMonster->troops;
+	}
+
+	// 出征信息
+	SLK_NetC_MapBattle info = { 0 };
+	info.m_to_unit_type = MAPUNIT_TYPE_TOWN;
+	info.m_to_unit_index = -1;
+	info.m_id = g_armygroup[group_index].id;
+	info.m_herokind[0] = 1000;
+	info.m_to_posx = g_armygroup[group_index].to_posx;
+	info.m_to_posy = g_armygroup[group_index].to_posy;
+	//info.m_appdata
+	info.m_action = ARMY_ACTION_NATION_ATTACK;
+	info.m_group_index = group_index;
+
+	// 创建部队
+	int army_index = army_create( MAPUNIT_TYPE_TOWN, townid, MAPUNIT_TYPE_TOWN, to_townid, ARMY_STATE_MARCH, &info );
+	if ( army_index < 0 )
+		return -1;
+
+	// 总兵力
+	g_army[army_index].totals = totalsoldiers;
+
+	// 发起集结,设置队长
+	if ( group_index >= 0 && group_index < g_armygroup_maxcount )
+	{
+		g_army[army_index].group_index = group_index;
+		g_army[army_index].group_id = g_armygroup[group_index].id;
+		// 加入集结列表
+		armygroup_addarmy( army_index );
 	}
 	return 0;
 }

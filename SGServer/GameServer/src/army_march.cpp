@@ -380,6 +380,16 @@ int army_marchroute_makeinfo( int army_index, SLK_NetS_AddMarchRoute *pValue )
 		pValue->m_from_nation = army_getnation( army_index );
 		pValue->m_from_grid = 1;
 	}
+	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
+	{ // 出发是城镇
+		int townid = g_army[army_index].from_index;
+		MapTown *town = map_town_getptr( townid );
+		if ( town )
+		{
+			pValue->m_from_nation = town->nation;
+			pValue->m_from_grid = map_getobject_grid( MAPUNIT_TYPE_TOWN, townid );
+		}
+	}
 
 	// 目的数据
 	if ( g_army[army_index].to_type == MAPUNIT_TYPE_CITY )

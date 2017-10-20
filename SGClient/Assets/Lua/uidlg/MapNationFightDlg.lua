@@ -97,6 +97,10 @@ end
 -- 自定
 ----------------------------------------
 function MapNationFightDlgShow( unit_index )
+	if GetPlayer().m_level < global.nationfight_actorlevel then
+		AlertMsg( F( 1343, global.nationfight_actorlevel ) )
+		return
+	end
 	MapNationFightDlgOpen()
 	MapNationFightDlgClear()
 	SetFalse( m_uiButtons );
@@ -234,6 +238,10 @@ end
 
 -- 加入国战
 function MapNationFightDlgJoin( index )
+	if GetPlayer().m_level < global.nationfight_actorlevel then
+		AlertMsg( F( 1344, global.nationfight_actorlevel ) )
+		return
+	end
 	local recvValue = m_cache[index]
 	if recvValue == nil then
 		return

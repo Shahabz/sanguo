@@ -85,4 +85,8 @@ int quest_sendawardinfo( int actor_index, int questid );
 // 发送任务提示
 //int quest_sendnotify( int actor_index );
 
+
+// 世界任务
+
+
 #endif

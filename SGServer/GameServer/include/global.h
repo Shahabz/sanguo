@@ -105,6 +105,7 @@ typedef struct _global
 	int town_dev_contribute;
 	int town_dev_silver;
 	int town_dev_wood;
+	short nationfight_actorlevel;
 }Global;
 int global_init();
 void global_reload();

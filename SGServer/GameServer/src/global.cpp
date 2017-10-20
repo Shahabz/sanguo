@@ -366,6 +366,10 @@ int global_init()
 		{
 			global.town_dev_wood = atoi( row[1] );
 		}
+		else if ( id == 121 )
+		{
+			global.nationfight_actorlevel = atoi( row[1] );
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

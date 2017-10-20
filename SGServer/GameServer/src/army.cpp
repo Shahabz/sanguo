@@ -625,6 +625,13 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 
 			if ( info->m_action == ARMY_ACTION_NATION_ATTACK )
 			{ // 参与国战进攻
+				if ( pCity->level < global.nationfight_actorlevel )
+				{
+					char v1[32] = { 0 };
+					sprintf( v1, "%d", global.nationfight_actorlevel );
+					actor_notify_alert_v( pCity->actor_index, 1344, v1, NULL );
+					return -1;
+				}
 				if ( pCity->nation == pTown->nation )
 				{
 					return -1;
@@ -656,6 +663,13 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			}
 			else if ( info->m_action == ARMY_ACTION_NATION_DEFENSE )
 			{ // 参与国战防守
+				if ( pCity->level < global.nationfight_actorlevel )
+				{
+					char v1[32] = { 0 };
+					sprintf( v1, "%d", global.nationfight_actorlevel );
+					actor_notify_alert_v( pCity->actor_index, 1344, v1, NULL );
+					return -1;
+				}
 				// 盟友检查
 				if ( pCity->nation != pTown->nation )
 				{
@@ -1352,10 +1366,22 @@ int army_getnation( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return 0;
-	City *pCity = army_getcityptr( army_index );
-	if ( pCity )
+	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
 	{
-		return pCity->nation;
+		City *pCity = army_getcityptr( army_index );
+		if ( pCity )
+		{
+			return pCity->nation;
+		}
+	}
+	else if( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
+	{
+		MapTown *pTown = map_town_getptr( g_army[army_index].from_id );
+		if ( pTown )
+		{
+			return pTown->nation;
+		}
+
 	}
 	return 0;
 }
@@ -1382,6 +1408,17 @@ int army_getnation_target( int army_index )
 	if ( pCity )
 	{
 		return pCity->nation;
+	}
+	else
+	{
+		if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
+		{
+			MapTown *pTown = map_town_getptr( g_army[army_index].to_id );
+			if ( pTown )
+			{
+				return pTown->nation;
+			}
+		}
 	}
 	return 0;
 }

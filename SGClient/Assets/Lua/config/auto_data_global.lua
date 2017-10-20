@@ -119,3 +119,4 @@ global.town_dev_occupytown = 500 --都城开发-占领附近据点
 global.town_dev_contribute = 10 --都城开发-捐献
 global.town_dev_silver = 200000 --都城开发捐献银币
 global.town_dev_wood = 130000 --都城开发捐献木材
+global.nationfight_actorlevel = 45 --国战玩家等级限制

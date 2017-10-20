@@ -474,14 +474,21 @@ function MapUnit.createArmy( recvValue )
 			local uiHero = unitObj.transform:GetChild(i-1);
 			if i <= #heroid then
 				SetTrue(uiHero)
-				SetText( uiHero.transform:Find("Name"), HeroName( heroid[i] ) )			
+				if from_type == MAPUNIT_TYPE_TOWN then
+					SetText( uiHero.transform:Find("Name"), T(1330) )
+				else
+					SetText( uiHero.transform:Find("Name"), HeroName( heroid[i] ) )
+				end	
 				local shapeObj = uiHero.transform:Find("Shape");
 				local childCount = shapeObj.transform.childCount;
 				for i = 0, childCount - 1, 1 do
 					GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
 				end
-				
-				local charactor = Character.Create( nation );
+				local shape = nation;
+				if shape == 0 then
+					shape = 4;
+				end
+				local charactor = Character.Create( shape );
 				charactor.transform:SetParent( shapeObj.transform );
 				charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
 				charactor.transform.localScale = Vector3.one;

@@ -475,6 +475,13 @@ function MailInfoDlgByRecvValue( recvValue )
 		local pos = recvValue.m_content_json["pos"];
 		local townid = recvValue.m_content_json["townid"];
 		local tnation = recvValue.m_content_json["tn"];
+		-- 解析一下名称
+		if GetMail():IsTag( name, TAG_TOWNID ) then
+			local textid = tonumber(string.sub(name, string.len(TAG_TOWNID) + 1));
+			if textid ~= nil then
+				name = MapTownName( textid )
+			end
+		end
 		
 		local tname = MapTownName( townid )
 		local tpos = g_towninfo[townid].posx..","..g_towninfo[townid].posy
