@@ -16,12 +16,14 @@ struct _army_group {
 				short from_posx;	//发起者的对象坐标
 				short from_posy;	//发起者的对象坐标
 				char from_nation;	//发起者的国家
+				char from_helpnum;	//发起者请求剩余次数
 				char to_type;	//目的对象类型
 				int to_id;	//目的对象ID
 				int to_index;	//目的对象索引
 				short to_posx;	//目的对象坐标
 				short to_posy;	//目的对象坐标
 				char to_nation;	//目的国家
+				char to_helpnum;	//目的请求剩余次数
 				int leader_index;	//队长索引
 				int attack_armyindex[128];	//临时存储攻击方集结部队索引
 				int defense_armyindex[128];	//临时存储防御方集结部队索引

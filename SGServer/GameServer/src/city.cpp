@@ -2835,7 +2835,9 @@ int city_underfire_groupadd( City *pCity, int group_index )
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-	
+		SLK_NetS_CityWarInfo pValue = { 0 };
+		city_underfire_makestruct( group_index, &pValue );
+		netsend_citywarinfo_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 	else
 	{ // 推送
@@ -2884,7 +2886,51 @@ int city_underfire_groupdel( City *pCity, int group_index )
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
+		SLK_NetS_CityWarDel pValue = { 0 };
+		pValue.m_group_index = group_index;
+		netsend_citywardel_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+	return 0;
+}
+
+// 军情列表
+void city_underfire_makestruct( int group_index, SLK_NetS_CityWarInfo *pValue )
+{
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return;
+	pValue->m_group_index = group_index;
+	pValue->m_group_id = g_armygroup[group_index].id;
+	pValue->m_statetime = g_armygroup[group_index].statetime;
+	pValue->m_stateduration = g_armygroup[group_index].stateduration;
+	pValue->m_from_nation = g_armygroup[group_index].from_nation;
+	pValue->m_from_posx = g_armygroup[group_index].from_posx;
+	pValue->m_from_posy = g_armygroup[group_index].from_posy;
+	if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )
+	{
+		City *pTmpCity = city_indexptr( g_armygroup[group_index].from_index );
+		if ( pTmpCity )
+		{
+			strncpy( pValue->m_name, pTmpCity->name, NAME_SIZE );
+			pValue->m_namelen = strlen( pValue->m_name );
+		}
+	}
+}
+int city_underfire_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_CityWarList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		int group_index = pCity->underfire_groupindex[tmpi];
+		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			continue;
+		city_underfire_makestruct( group_index, &pValue.m_list[pValue.m_count] );
+		pValue.m_count += 1;
+	}
+	netsend_citywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

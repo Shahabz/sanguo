@@ -224,6 +224,10 @@ int city_underfire_groupadd( City *pCity, int group_index );
 // 被攻击信息移除
 int city_underfire_groupdel( City *pCity, int group_index );
 
+// 军情列表
+void city_underfire_makestruct( int group_index, SLK_NetS_CityWarInfo *pValue );
+int city_underfire_sendlist( int actor_index );
+
 // 添加驻防部队
 int city_helparmy_add( City *pCity, int army_index );
 

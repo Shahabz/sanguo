@@ -1812,3 +1812,40 @@ int struct_NetS_MapCenterTownList_send( char **pptr, int *psize, SLK_NetS_MapCen
 	return 0;
 }
 
+int struct_NetS_CityWarInfo_send( char **pptr, int *psize, SLK_NetS_CityWarInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_from_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_from_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_from_posy, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityWarList_send( char **pptr, int *psize, SLK_NetS_CityWarList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CityWarInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	return 0;
+}
+

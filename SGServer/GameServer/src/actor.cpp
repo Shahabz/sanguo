@@ -746,6 +746,9 @@ int actor_entercity( int actor_index )
 	// 邮件
 	mail_noread_check( actor_index );
 
+	// 军情
+	city_underfire_sendlist( actor_index );
+
 	// 离线奖励-角色ID
 	gift_check( actor_index );
 

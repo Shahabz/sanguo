@@ -63,10 +63,14 @@ local m_uiWeatherDay = nil; --UnityEngine.GameObject
 local m_uiWeatherIcon = nil; --UnityEngine.GameObject
 local m_uiWeatherAbility = nil; --UnityEngine.GameObject
 
-local m_uiMiniMap ={}
-m_uiMiniMap.m_uiMoveLayer = nil; --UnityEngine.GameObject
-m_uiMiniMap.m_uiUIP_MiniTmx = nil; --UnityEngine.GameObject
-m_uiMiniMap.m_uiUIP_ZoneUnit = nil; --UnityEngine.GameObject
+local m_uiWarTable ={}
+m_uiWarTable.m_uiWar = nil; --UnityEngine.GameObject
+m_uiWarTable.m_uiWarScroll = nil;
+m_uiWarTable.m_uiWarContent = nil
+m_uiWarTable.m_uiUIP_WarText = nil; --UnityEngine.GameObject
+m_uiWarTable.m_uiWarWarning = nil; --UnityEngine.GameObject
+m_uiWarTable.m_cache = {}
+m_uiWarTable.m_cacheObj = {}
 
 local m_uiBuildingShape = {nil,nil}
 local m_uiNormalShape = {nil,nil}
@@ -82,6 +86,8 @@ local m_uiBuildingShapeUITweenScale1 = {nil,nil}
 local m_uiNormalShapeUITweenScale1 = {nil,nil}
 local m_uiBuildingTimerUITweenScale1 = {nil,nil}
 local m_uiBuildingNameUITweenScale1 = {nil,nil}
+
+local m_ObjectPool = nil;
 
 -- 打开界面
 function MainDlgOpen()
@@ -350,10 +356,15 @@ function MainDlgOnAwake( gameObject )
 	m_uiWeatherDay = objs[77];
 	m_uiWeatherIcon = objs[78];
 	m_uiWeatherAbility = objs[79];
-	m_uiMiniMap.m_uiMoveLayer = objs[80];
-	m_uiMiniMap.m_uiUIP_MiniTmx = objs[81];
-	m_uiMiniMap.m_uiUIP_ZoneUnit = objs[82];
-	MainDlgMiniMapInit();
+	m_uiWarTable.m_uiWar = objs[80];
+	m_uiWarTable.m_uiWarScroll = m_uiWarTable.m_uiWar.transform:Find("Scroll");
+	m_uiWarTable.m_uiWarContent =  m_uiWarTable.m_uiWar.transform:Find("Scroll/Viewport/Content");
+	m_uiWarTable.m_uiUIP_WarText = objs[81];
+	m_uiWarTable.m_uiWarWarning = objs[82];
+	
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
+
 	MainDlgWorkerObjectInit();
 end 
 
@@ -912,47 +923,101 @@ function MainDlgSetZoneName( name )
 	SetText( m_uiZoneName, name )
 end
 
--- 小地图
-function MainDlgMiniMapInit()
-	for j=1, 5, 1 do
-		for i=1, 5, 1 do
-			local tmx = GameObject.Instantiate( m_uiMiniMap.m_uiUIP_MiniTmx );
-			tmx.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
-			tmx.transform.localScale = Vector3.one;
-			tmx.transform.localPosition = Vector3.New( (WorldMap.m_nMaxWidth*1024)/2/100 + (i-1)*TMX_WIDTH*1024/2/100 - (j-1)*TMX_WIDTH*1024/2/100,
-												   -(i-1)*TMX_HEIGHT*512/2/100 - (j-1)*TMX_HEIGHT*512/2/100, 0 );
-			SetTrue( tmx )
+-- 军情列表
+function MainDlgSetWarCache( recvValue )
+	MainDlgClearWarObj();
+	for i=1, recvValue.m_count, 1 do
+		table.insert( m_uiWarTable.m_cache, recvValue.m_list[i] );
+		table.insert( m_uiWarTable.m_cacheObj, MainDlgCreateWarObj( recvValue.m_list[i] ) );
+	end
+	
+	if #m_uiWarTable.m_cache == 0 then
+		SetFalse( m_uiWarTable.m_uiWar )
+		SetFalse( m_uiWarTable.m_uiWarWarning )
+	else
+		SetTrue( m_uiWarTable.m_uiWar )
+		SetTrue( m_uiWarTable.m_uiWarWarning )
+	end
+end
+
+-- 添加军情
+-- m_group_index=0,m_group_id=0,m_from_nation=0,m_from_posx=0,m_from_posy=0,m_namelen=0,m_name="[m_namelen]",m_statetime=0,m_stateduration=0,
+function MainDlgAddWar( recvValue )
+	local update = 0;
+	for i=1, #m_uiWarTable.m_cache, 1 do
+		local info = m_uiWarTable.m_cache[i];
+		if info ~= nil and info.m_group_index == recvValue.m_group_index and info.m_group_id == recvValue.m_group_id then
+			m_uiWarTable.m_cache[i] = recvValue;
+			MainDlgUpdateWarObj( m_uiWarTable.m_cacheObj[i], recvValue )
+			update = 1;
 		end
 	end
-	-- 对象池
-	m_uiMiniMap.m_ObjectPool = m_uiMiniMap.m_uiMoveLayer.transform.parent:GetComponent( typeof(ObjectPoolManager) );
-	m_uiMiniMap.m_ObjectPool:CreatePool("m_uiUIP_ZoneUnit", 100, 100, m_uiMiniMap.m_uiUIP_ZoneUnit);
+	if update == 0 then
+		table.insert( m_uiWarTable.m_cache, recvValue );
+		MainDlgCreateWarObj( recvValue )
+	end
+	SetTrue( m_uiWarTable.m_uiWar )
+	SetTrue( m_uiWarTable.m_uiWarWarning )
 end
-function MainDlgMiniMapChangeZone()
-	MainDlgMiniMapClearUnit()
-	--m_uiMoveLayer
-	--m_uiMiniMap.m_uiMoveLayer.transform:Find( "MapBorder" ):GetComponent("MapBorder"):SetSize( 110 );
-end
-function MainDlgMiniMapMove()
 
+-- 删除军情
+-- m_group_index=0,
+function MainDlgAddDel( recvValue )
+	for i=1, #m_uiWarTable.m_cache, 1 do
+		local info = m_uiWarTable.m_cache[i];
+		if info ~= nil and info.m_group_index == recvValue.m_group_index then
+			table.remove(  m_uiWarTable.m_cache, i );
+			m_ObjectPool:Release( "UIP_WarText", m_uiWarTable.m_cacheObj[i] );
+			table.remove(  m_uiWarTable.m_cacheObj, i );
+			break
+		end
+	end
+	if #m_uiWarTable.m_cache == 0 then
+		SetFalse( m_uiWarTable.m_uiWar )
+		SetFalse( m_uiWarTable.m_uiWarWarning )
+	else
+		SetTrue( m_uiWarTable.m_uiWar )
+		SetTrue( m_uiWarTable.m_uiWarWarning )
+	end
 end
-function MainDlgMiniMapClearUnit()
+
+-- 设置军情
+function MainDlgCreateWarObj( info )	
+	local uiObj = m_ObjectPool:Get( "UIP_WarText" );
+	uiObj.transform:SetParent( m_uiWarTable.m_uiWarContent.transform );
+	local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
+	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	
+--[[	local tween = uiObj:GetComponent("UITweenRectPosition");
+	tween.from = Vector3.New( 0, 0, 0 );
+	tween.to = Vector3.New( 0, 0, 0 );
+	tween.duration = ( 50 + m_StartPosX ) / 10;
+	tween.delay = 0;
+	tween:Play(true);--]]
+			
+	return uiObj
+end
+
+-- 更新军情
+function MainDlgUpdateWarObj( uiObj, info )	
+	if uiObj == nil then
+		return
+	end
+	uiObj.transform:SetParent( m_uiWarTable.m_uiWarContent.transform );
+	local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
+	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+end
+	
+function MainDlgClearWarObj()
 	local objs = {};
-	for i = 0 ,m_uiMiniMap.m_uiMoveLayer.transform.childCount - 1 do
-		table.insert( objs, m_uiMiniMap.m_uiMoveLayer.transform:GetChild(i).gameObject )
+	for i = 0 ,m_uiWarTable.m_uiWarContent.transform.childCount - 1 do
+		table.insert( objs, m_uiWarTable.m_uiWarContent.transform:GetChild(i).gameObject )
     end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "m_uiUIP_ZoneUnit(Clone)" then
-			m_ObjectPool:Release( "m_uiUIP_ZoneUnit", obj );
+		if obj.name == "UIP_WarText(Clone)" then
+			m_ObjectPool:Release( "UIP_WarText", obj );
 		end
     end
 end
--- {m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]}
-function MainDlgMiniMapAddUnit( recvValue )
-	--print( recvValue.m_posx..","..recvValue.m_posy )
-	local uiObj = m_uiMiniMap.m_ObjectPool:Get( "m_uiUIP_ZoneUnit" );
-	uiObj.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
-	uiObj.transform.localScale = Vector3.one;
-	uiObj.transform.localPosition = Vector3.New( recvValue.m_posx, recvValue.m_posy )
-end
+

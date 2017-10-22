@@ -499,3 +499,49 @@ function MapMainDlgNationGoto( townid )
 	local posy 	= g_towninfo[townid].posy
 	WorldMap.GotoCoor( posx, posy )
 end
+
+
+-- 小地图
+function MainDlgMiniMapInit()
+	for j=1, 5, 1 do
+		for i=1, 5, 1 do
+			local tmx = GameObject.Instantiate( m_uiMiniMap.m_uiUIP_MiniTmx );
+			tmx.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
+			tmx.transform.localScale = Vector3.one;
+			tmx.transform.localPosition = Vector3.New( (WorldMap.m_nMaxWidth*1024)/2/100 + (i-1)*TMX_WIDTH*1024/2/100 - (j-1)*TMX_WIDTH*1024/2/100,
+												   -(i-1)*TMX_HEIGHT*512/2/100 - (j-1)*TMX_HEIGHT*512/2/100, 0 );
+			SetTrue( tmx )
+		end
+	end
+	-- 对象池
+	m_uiMiniMap.m_ObjectPool = m_uiMiniMap.m_uiMoveLayer.transform.parent:GetComponent( typeof(ObjectPoolManager) );
+	m_uiMiniMap.m_ObjectPool:CreatePool("m_uiUIP_ZoneUnit", 100, 100, m_uiMiniMap.m_uiUIP_ZoneUnit);
+end
+function MapMainDlgMiniMapChangeZone()
+	--MainDlgMiniMapClearUnit()
+	--m_uiMoveLayer
+	--m_uiMiniMap.m_uiMoveLayer.transform:Find( "MapBorder" ):GetComponent("MapBorder"):SetSize( 110 );
+end
+function MapMainDlgMiniMapMove()
+
+end
+function MapMainDlgMiniMapClearUnit()
+	local objs = {};
+	for i = 0 ,m_uiMiniMap.m_uiMoveLayer.transform.childCount - 1 do
+		table.insert( objs, m_uiMiniMap.m_uiMoveLayer.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "m_uiUIP_ZoneUnit(Clone)" then
+			m_ObjectPool:Release( "m_uiUIP_ZoneUnit", obj );
+		end
+    end
+end
+-- {m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]}
+function MapMainDlgMiniMapAddUnit( recvValue )
+	--print( recvValue.m_posx..","..recvValue.m_posy )
+	--local uiObj = m_uiMiniMap.m_ObjectPool:Get( "m_uiUIP_ZoneUnit" );
+	--uiObj.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
+	--uiObj.transform.localScale = Vector3.one;
+	--uiObj.transform.localPosition = Vector3.New( recvValue.m_posx, recvValue.m_posy )
+end

@@ -1049,14 +1049,14 @@ function proc_mapzonechange_C( recvValue )
 		AlertMsg( T(937) )
 	end
 	WorldMap.m_nZoneID = recvValue.m_zoneid;
-	MainDlgMiniMapChangeZone()
+	MapMainDlgMiniMapChangeZone()
 end
 
 -- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
 function proc_mapzoneunitlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
-		MainDlgMiniMapAddUnit( recvValue.m_list[i] )
+		MapMainDlgMiniMapAddUnit( recvValue )
 	end
 	WorldMapThumb.SetCityInfo( recvValue )
 end
@@ -1408,5 +1408,24 @@ function proc_mapcentertownlist_C( recvValue )
 	for i=1, recvValue.m_count, 1 do
 		MapUnit.createCenterTownRange( recvValue.m_list[i] )
 	end
+end
+
+
+-- m_group_index=0,m_group_id=0,m_from_nation=0,m_from_posx=0,m_from_posy=0,m_namelen=0,m_name="[m_namelen]",m_statetime=0,m_stateduration=0,
+function proc_citywarinfo_C( recvValue )
+	-- process.
+	MainDlgAddWar( recvValue )
+end
+
+-- m_count=0,m_list={m_group_index=0,m_group_id=0,m_from_nation=0,m_from_posx=0,m_from_posy=0,m_namelen=0,m_name="[m_namelen]",m_statetime=0,m_stateduration=0,[m_count]},
+function proc_citywarlist_C( recvValue )
+	-- process.
+	MainDlgSetWarCache( recvValue )
+end
+
+-- m_group_index=0,
+function proc_citywardel_C( recvValue )
+	-- process.
+	MainDlgAddDel( recvValue )
 end
 

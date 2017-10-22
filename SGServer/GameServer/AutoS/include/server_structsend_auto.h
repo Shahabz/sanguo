@@ -1240,6 +1240,30 @@ struct _slk_NetS_MapCenterTownList {
 };
 typedef struct _slk_NetS_MapCenterTownList SLK_NetS_MapCenterTownList;	//皇城地区城镇列表
 
+struct _slk_NetS_CityWarInfo {
+	int m_group_index;	//军情信息-团战索引
+	int m_group_id;	//军情信息-团战id
+	char m_from_nation;	//军情信息-发起人国家
+	short m_from_posx;	//军情信息-发起人坐标
+	short m_from_posy;	//军情信息-发起人坐标
+	char m_namelen;	//军情信息-发起人名称
+	char m_name[32];	//军情信息-发起人名称
+	int m_statetime;	//军情信息-时间
+	int m_stateduration;	//军情信息-时间
+};
+typedef struct _slk_NetS_CityWarInfo SLK_NetS_CityWarInfo;	//城战警告
+
+struct _slk_NetS_CityWarList {
+	char m_count;	//军情列表
+	SLK_NetS_CityWarInfo m_list[16];	//军情列表
+};
+typedef struct _slk_NetS_CityWarList SLK_NetS_CityWarList;	//城战警告列表
+
+struct _slk_NetS_CityWarDel {
+	int m_group_index;	//删除军情
+};
+typedef struct _slk_NetS_CityWarDel SLK_NetS_CityWarDel;	//城战警告删除
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1376,5 +1400,8 @@ int struct_NetS_MapZoneTown_send( char **pptr, int *psize, SLK_NetS_MapZoneTown 
 int struct_NetS_MapZoneTownList_send( char **pptr, int *psize, SLK_NetS_MapZoneTownList *pValue );
 int struct_NetS_MapCenterTown_send( char **pptr, int *psize, SLK_NetS_MapCenterTown *pValue );
 int struct_NetS_MapCenterTownList_send( char **pptr, int *psize, SLK_NetS_MapCenterTownList *pValue );
+int struct_NetS_CityWarInfo_send( char **pptr, int *psize, SLK_NetS_CityWarInfo *pValue );
+int struct_NetS_CityWarList_send( char **pptr, int *psize, SLK_NetS_CityWarList *pValue );
+int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *pValue );
 
 #endif

@@ -160,6 +160,7 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 		SetTrue( uiAskHelpBtn )
 		SetControlID( uiAskHelpBtn, UIASKHELPBTN_EVENT_BASE + #m_cache )
 		SetFalse( m_uiCItyFightButton )
+		SetFalse( uiAddDefenseBtn )
 	else
 		SetFalse( uiAskHelpBtn )
 	end
@@ -204,8 +205,13 @@ function MapArmyGroupDlgAddRecvValue( recvValue )
 			-- 参与按钮
 			SetFalse( uiWarn )
 			SetFalse( uiAddAttackBtn )
-			SetTrue( uiAddDefenseBtn )
-			SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
+			
+			if recvValue.m_actorid == GetPlayer().m_actorid or recvValue.m_t_actorid == GetPlayer().m_actorid then
+				SetFalse( uiAddDefenseBtn )
+			else
+				SetTrue( uiAddDefenseBtn )
+				SetControlID( uiAddDefenseBtn, UIADDDEFENSEBTN_EVENT_BASE + #m_cache )
+			end
 		end
 		
 		-- 倒计时

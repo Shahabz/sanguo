@@ -52,7 +52,7 @@ function MapMarchRoute.add( recvValue )
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
 		color = 1;
 	elseif recvValue.m_from_actorid > 0 and recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
-		color = 3;
+		color = 1;
 	elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
 		color = 1;
 	elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
@@ -60,7 +60,7 @@ function MapMarchRoute.add( recvValue )
 	elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
 		color = 2;
 	else
-		color = 2;
+		color = 3;
 	end
 	
 	-- 如果缓存里面有，那么就更新
