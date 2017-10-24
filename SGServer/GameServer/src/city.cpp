@@ -16,6 +16,7 @@
 #include "hero.h"
 #include "equip.h"
 #include "mapunit.h"
+#include "zoneunit.h"
 #include "map.h"
 #include "map_zone.h"
 #include "server_netsend_auto.h"
@@ -170,6 +171,7 @@ int city_loadcb( int city_index )
 	}
 	// 添加到地图显示单元
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
+	g_city[city_index].zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, city_index );
 
 	// 占地块信息添加到世界地图
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, g_city[city_index].posx, g_city[city_index].posy );
@@ -316,6 +318,21 @@ void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr )
 		pAttr->m_char_value[2] = 1;
 	}
 	pAttr->m_char_value_count = 3;
+}
+
+void city_makezoneunit( int city_index, SLK_NetS_ZoneUnit *pAttr )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return;
+	City *pCity = &g_city[city_index];
+	if ( !pCity )
+		return;
+	if ( !pAttr )
+		return;
+	pAttr->m_posx = pCity->posx;
+	pAttr->m_posy = pCity->posy;
+	pAttr->m_level = (char)pCity->level;
+	pAttr->m_nation = pCity->nation;
 }
 
 // 获取位置
@@ -3180,6 +3197,7 @@ int city_move( City *pCity, short posx, short posy )
 	short lastposx = pCity->posx;
 	short lastposy = pCity->posy;
 	map_delobject( MAPUNIT_TYPE_CITY, pCity->index, lastposx, lastposy );
+	zoneunit_del( MAPUNIT_TYPE_CITY, pCity->index, pCity->zoneunit_index );
 	pCity->posx = posx;
 	pCity->posy = posy;
 
@@ -3187,6 +3205,10 @@ int city_move( City *pCity, short posx, short posy )
 	if ( pCity->unit_index < 0 )
 	{
 		pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+	}
+	if ( pCity->zoneunit_index < 0 )
+	{
+		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
 	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
 	pCity->zone = map_zone_getid( pCity->posx, pCity->posy );

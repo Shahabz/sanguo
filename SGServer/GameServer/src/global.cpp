@@ -445,6 +445,15 @@ int world_data_get( int index, char *strvalue )
 	return nValue;
 }
 
+int world_data_getcache( int index )
+{
+	if ( index >= 0 && index < WORLD_DATA_MAX )
+	{
+		return g_world_data[index];
+	}
+	return -1;
+}
+
 int world_data_set( int index, int value, char *strvalue, FILE *fp )
 {
 	char szSQL[1024];

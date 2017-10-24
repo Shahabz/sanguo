@@ -23,6 +23,7 @@
 #include "award.h"
 #include "global.h"
 #include "quest.h"
+#include "world_quest.h"
 #include "activity.h"
 #include "system.h"
 #include "army.h"
@@ -150,9 +151,13 @@ int army_vs_enemy( int army_index, Fight *pFight )
 
 		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_FIGHT_ENEMY, title, content, "", 0 );
 
-		//// 任务数值
+		// 任务数值
 		//quest_addvalue( pCity, QUEST_DATAINDEX_KILLMONSTER, 0, 1 );
 		//quest_addvalue( pCity, QUEST_DATAINDEX_KILLMONSTER_LEVEL, config->level, 1 );
+
+		// 数据统计
+		data_record_addvalue( pCity, DATA_RECORD_KILLENEMY, 1 );
+		worldquest_checkcomplete( pCity->actor_index, 0 );
 
 		// 如果是都城范围,添加开发经验
 		short range_townid = map_tile_gettownid( enemy->posx, enemy->posy );

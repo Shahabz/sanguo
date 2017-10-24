@@ -85,8 +85,11 @@ int quest_sendawardinfo( int actor_index, int questid );
 // 发送任务提示
 //int quest_sendnotify( int actor_index );
 
-
-// 世界任务
-
+// 数据记录
+#define DATA_RECORD_MAXNUM						16
+#define DATA_RECORD_KILLENEMY					0	// 杀流寇数量
+int data_record_addvalue( struct _city *pCity, int offset, int value );
+int data_record_setvalue( struct _city *pCity, int offset, int value );
+int data_record_getvalue( struct _city *pCity, int offset );
 
 #endif

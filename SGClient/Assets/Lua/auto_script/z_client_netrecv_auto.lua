@@ -625,6 +625,11 @@ function netrecv_citywardel_C( buffer )
 	proc_citywardel_C( recvValue );
 end
 
+function netrecv_worldquest_C( buffer )
+	local recvValue = struct_NetS_WorldQuest_recv( buffer );
+	proc_worldquest_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -751,6 +756,7 @@ Proc_Command = {
 	[CMDS_CITYWARINFO]=netrecv_citywarinfo_C;
 	[CMDS_CITYWARLIST]=netrecv_citywarlist_C;
 	[CMDS_CITYWARDEL]=netrecv_citywardel_C;
+	[CMDS_WORLDQUEST]=netrecv_worldquest_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -81,6 +81,7 @@ char city_getnation( int city_index );
 
 // 显示单元属性
 void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr );
+void city_makezoneunit( int city_index, SLK_NetS_ZoneUnit *pAttr );
 
 // 城池位置
 void city_getpos( int city_index, short *posx, short *posy );

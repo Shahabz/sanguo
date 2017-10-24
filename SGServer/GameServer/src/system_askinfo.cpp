@@ -22,6 +22,7 @@
 #include "city.h"
 #include "city_tech.h"
 #include "quest.h"
+#include "world_quest.h"
 #include "building.h"
 #include "hero.h"
 #include "story.h"
@@ -89,6 +90,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 2 )
 		{ // 完成特殊类型的任务
 			quest_setcomplete( actor_index, pvalue[1], QUEST_COMPLETEFLAG_SUCCESS );
+		}
+		else if ( pvalue[0] == 10 )
+		{ // 世界任务
+			worldquest_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 11 )
+		{ // 世界任务奖励
+			worldquest_sendaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 12 )
+		{ // 世界任务领取奖励
+			worldquest_getaward( actor_index, pvalue[1] );
 		}
 		break;
 	case ASKINFO_BUILDING:

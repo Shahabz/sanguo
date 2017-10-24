@@ -57,7 +57,7 @@ local m_hasButton = {};
 local m_uiChat = nil; --UnityEngine.GameObject
 local m_uiChatText = nil; --UnityEngine.GameObject
 local m_uiQuest = nil; --UnityEngine.GameObject
-local m_uiNationName = nil; --UnityEngine.GameObject
+local m_uiTopLeft = nil; --UnityEngine.GameObject
 local m_uiZoneName = nil; --UnityEngine.GameObject
 local m_uiWeatherDay = nil; --UnityEngine.GameObject
 local m_uiWeatherIcon = nil; --UnityEngine.GameObject
@@ -351,7 +351,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiChatText = objs[72];
 	m_uiQuest = objs[73];
 	m_uiButtonRestart = objs[74];
-	m_uiNationName = objs[75];
+	m_uiTopLeft = objs[75];
 	m_uiZoneName = objs[76];
 	m_uiWeatherDay = objs[77];
 	m_uiWeatherIcon = objs[78];
@@ -899,7 +899,8 @@ function MainDlgShowMap()
 	SetFalse(m_uiButtonWorld )
 	SetTrue( m_uiButtonCity )
 	MapMainDlgShow()
-	SetText( m_uiNationName, NationEx( GetPlayer().m_nation ) );
+	SetText( m_uiTopLeft.transform:Find( "Name" ), NationEx( GetPlayer().m_nation ) );
+	SetImage( m_uiTopLeft.transform:Find( "Icon" ), LoadSprite( "ui_worldmap_nation_"..GetPlayer().m_nation ) )
 end
 
 -- 天气

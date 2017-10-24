@@ -373,6 +373,11 @@ function PlaceName( place )
 	return Localization.text( 200+place );
 end
 
+-- 职位名称
+function WorldQuestName( questid )
+	return Localization.text_quest( 2000+questid );
+end
+
 -- 名称颜色
 function NameColor( color )
 	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff }

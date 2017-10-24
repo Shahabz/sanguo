@@ -30,6 +30,8 @@ struct _actor {
 				unsigned char equipext;	//扩展的装备栏位数
 				Hero hero[128];	//未上阵英雄
 				char quest_complete[2048];	//任务完成情况
+				int worldquest_complete;	//世界任务领取情况
+				short worldquestid;	//世界任务
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数

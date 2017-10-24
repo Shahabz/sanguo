@@ -108,6 +108,8 @@ struct _city {
 				int help_armyindex[32];	//协防部队
 				int mapevent_index[6];	//地图事件
 				int underfire_groupindex[16];	//目标集结索引
+				int zoneunit_index;	//地区显示索引
+				short own_townid;	//哪个城的城主
 };
 typedef struct _city City;
 

@@ -110,8 +110,10 @@ end
 
 -- 大地图坐标(菱形格)=》缩略图坐标（摄像机）
 function WorldMapThumb.ConvertMapToThumb( gameCoorX, gameCoorY )
-	gameCoorX = math.floor( (gameCoorX - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx) / 10 );
-	gameCoorY = math.floor( (gameCoorY - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy) / 10 );
+	gameCoorX = (gameCoorX - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx) / 10;
+	gameCoorY = (gameCoorY - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy) / 10;
+	--gameCoorX = math.floor( (gameCoorX - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx) / 10 );
+	--gameCoorY = math.floor( (gameCoorY - g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy) / 10 );
 	
 	--gameCoorX = math.floor( gameCoorX * ((WorldMap.m_nMaxWidth * MAP_TILEWIDTH) / WorldMapThumb.m_nMaxWidth) )
 	--gameCoorY = math.floor( gameCoorY * ((WorldMap.m_nMaxHeight * MAP_TILEHEIGHT) / WorldMapThumb.m_nMaxHeight) )
@@ -237,6 +239,7 @@ function WorldMapThumb.SetCityInfo( recvValue )
 	if ThumbCityRoot == nil then
 		return;
 	end
+
 	for tmpi=1, recvValue.m_count, 1 do
 		local posx = recvValue.m_list[tmpi].m_posx
 		local posy = recvValue.m_list[tmpi].m_posy
@@ -244,6 +247,7 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		local level = recvValue.m_list[tmpi].level
 
 		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
+		print( thumbX..","..thumbY..","..nation )
 		local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayCity") );
 		thumbObj.transform:SetParent( ThumbCityRoot );
 		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );

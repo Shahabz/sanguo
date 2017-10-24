@@ -18,6 +18,7 @@
 #include "mapunit.h"
 #include "script_auto.h"
 #include "city.h"
+#include "world_quest.h"
 
 extern Global global;
 extern SConfig g_Config;

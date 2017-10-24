@@ -620,3 +620,40 @@ int quest_sendawardinfo( int actor_index, int questid )
 //	netsend_questnotify_S( actor_index, SENDTYPE_ACTOR, &info );
 //	return 0;
 //}
+
+int data_record_addvalue( struct _city *pCity, int offset, int value )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( offset < 0 || offset >= DATA_RECORD_MAXNUM )
+		return -1;
+	if ( pCity->data_record[offset] > INT_MAX - value )
+		pCity->data_record[offset] = INT_MAX;
+	else
+		pCity->data_record[offset] += value;
+
+	return 0;
+}
+
+int data_record_setvalue( struct _city *pCity, int offset, int value )
+{
+	if ( pCity == NULL )
+		return -1;
+	if ( offset < 0 || offset >= DATA_RECORD_MAXNUM )
+		return -1;
+	if ( value >= INT_MAX )
+	{
+		value = INT_MAX;
+	}
+	pCity->data_record[offset] = value;
+	return 0;
+}
+
+int data_record_getvalue( struct _city *pCity, int offset )
+{
+	if ( pCity == NULL )
+		return 0;
+	if ( offset < 0 || offset >= DATA_RECORD_MAXNUM )
+		return 0;
+	return pCity->data_record[offset];
+}

@@ -6,11 +6,11 @@ struct _worldquestinfo {
 //--Automatically generated
 				int questid;	//
 				short type;	//
-				short nameid;	//
+				short saveindex;	//
+				int sort;	//
 				int preid;	//
 				int value;	//
-				int awardkind[5];	//
-				int awardnum[5];	//
+				int awardgroup;	//
 };
 typedef struct _worldquestinfo WorldQuestInfo;
 

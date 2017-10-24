@@ -77,6 +77,16 @@ int map_town_loadcb( int townid )
 	if ( g_map_town[townid].own_actorid > 0 )
 	{
 		g_map_town[townid].own_city_index = city_getindex_withactorid( g_map_town[townid].own_actorid );
+		if ( g_map_town[townid].own_city_index >= 0 && g_map_town[townid].own_city_index < g_city_maxcount )
+		{
+			g_city[g_map_town[townid].own_city_index].own_townid = townid;
+		}
+		else
+		{
+			g_map_town[townid].own_actorid = 0;
+			g_map_town[townid].own_city_index = -1;
+			g_map_town[townid].own_sec = 0;
+		}
 	}
 	else
 	{ // 竞选者
@@ -324,6 +334,10 @@ void map_town_logic( int townid )
 			mail_system( -1, g_map_town[townid].own_actorid, 5024, 5522, v1, v2, NULL, "" );
 
 			// 重置
+			if ( g_map_town[townid].own_city_index >= 0 && g_map_town[townid].own_city_index < g_city_maxcount )
+			{
+				g_city[g_map_town[townid].own_city_index].own_townid = 0;
+			}
 			g_map_town[townid].own_actorid = 0;
 			g_map_town[townid].own_city_index = -1;
 			mapunit_update( MAPUNIT_TYPE_TOWN, townid, g_map_town[townid].unit_index );
@@ -424,7 +438,11 @@ int map_town_ask_owner( int actor_index, int townid )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-
+	if ( pCity->own_townid > 0 )
+	{
+		actor_notify_alert( actor_index, 1353 );
+		return -1;
+	}
 	int type = 0;
 	int free_index = -1;
 	// 如果已经过了保护期
@@ -537,7 +555,7 @@ int map_town_ask_owner( int actor_index, int townid )
 		g_map_town[townid].own_actorid = pCity->actorid;
 		g_map_town[townid].own_city_index = pCity->index;
 		g_map_town[townid].own_sec = g_towninfo[townid].own_maxsec;
-
+		pCity->own_townid = townid;
 		// 您成为了{ 0 }<url = { 1 }>[{1}]< / url>的城主。任期{ 2 }天
 		char v1[64] = { 0 };
 		char v2[64] = { 0 };
@@ -592,7 +610,8 @@ int map_town_alloc_owner( int townid )
 		City *pAsk = city_indexptr( g_map_town[townid].ask_city_index[tmpi] );
 		if ( !pAsk )
 			continue;
-
+		if ( pAsk->own_townid > 0 )
+			continue;
 		if ( (!pCity) || (pAsk->place > place) || (pAsk->place == place && pAsk->battlepower > battlepower) )
 		{
 			pCity = pAsk;
@@ -608,6 +627,7 @@ int map_town_alloc_owner( int townid )
 	g_map_town[townid].own_actorid = pCity->actorid;
 	g_map_town[townid].own_city_index = pCity->index;
 	g_map_town[townid].own_sec = g_towninfo[townid].own_maxsec;
+	pCity->own_townid = townid;
 
 	// 您成为了{ 0 }<url = { 1 }>[{1}]< / url>的城主。任期{ 2 }天
 	char v1[64] = { 0 };
@@ -682,6 +702,11 @@ int map_town_owner_leave( int actor_index, int townid )
 		return -1;
 	if ( g_map_town[townid].own_actorid != pCity->actorid )
 		return -1;
+
+	if ( g_map_town[townid].own_city_index >= 0 && g_map_town[townid].own_city_index < g_city_maxcount )
+	{
+		g_city[g_map_town[townid].own_city_index].own_townid = 0;
+	}
 
 	g_map_town[townid].own_actorid = 0;
 	g_map_town[townid].own_city_index = -1;

@@ -22,6 +22,7 @@
 #include "account.h"
 #include "item.h"
 #include "mapunit.h"
+#include "zoneunit.h"
 #include "system.h"
 #include "global.h"
 #include "actor_notify.h"
@@ -35,6 +36,7 @@
 #include "hero.h"
 #include "equip.h"
 #include "quest.h"
+#include "world_quest.h"
 #include "chat.h"
 #include "mail.h"
 #include "army.h"
@@ -757,6 +759,7 @@ int actor_entercity( int actor_index )
 
 	// 任务相关（不发）
 	quest_give( actor_index );
+	worldquest_give( actor_index );
 
 	// 
 	sc_OnActorIn( actor_index );
@@ -909,6 +912,7 @@ int actor_new( int actor_index )
 	g_city[city_index].building[0].level = 2;
 
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
+	g_city[city_index].zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, city_index );
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, city.posx, city.posy );
 	g_city[city_index].zone = map_zone_getid( city.posx, city.posy );
 

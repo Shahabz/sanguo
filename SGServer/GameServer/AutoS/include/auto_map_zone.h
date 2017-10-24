@@ -7,6 +7,8 @@ struct _map_zone {
 				int zoneid;	//地区id
 				char allow;	//是否允许
 				char nation;	//所属国家
+				int unit_head;	//遍历地区城池使用
+				int unit_tail;	//遍历地区城池使用
 };
 typedef struct _map_zone MapZone;
 

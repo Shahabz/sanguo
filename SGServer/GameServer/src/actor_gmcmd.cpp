@@ -26,6 +26,8 @@
 #include "mail.h"
 #include "building.h"
 #include "map_town.h"
+#include "quest.h"
+#include "world_quest.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -98,6 +100,14 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pValue[0] == 1 )
 		{
 			map_town_owner_award();
+		}
+		else if ( pValue[0] == 2 )
+		{
+			if ( pCity )
+			{
+				data_record_addvalue( pCity, DATA_RECORD_KILLENEMY, 1 );
+				worldquest_checkcomplete( pCity->actor_index, 0 );
+			}
 		}
 		break;
 	case GMC_SC:

@@ -15,6 +15,7 @@
 #include "map.h"
 #include "global.h"
 #include "mapunit.h"
+#include "zoneunit.h"
 #include "script_auto.h"
 #include "city.h"
 #include "map_zone.h"
@@ -43,6 +44,9 @@ extern int g_armygroup_maxcount;
 
 extern Map g_map;
 
+extern ZoneUnit *g_zoneunit;
+extern int g_zoneunit_maxcount;
+
 MapZone *g_map_zone = NULL;
 int g_map_zone_maxcount = 0;
 
@@ -65,6 +69,8 @@ int map_zone_load()
 		if ( g_zoneinfo[zoneid].id <= 0 )
 			continue;
 		g_map_zone[zoneid].zoneid = zoneid;
+		g_map_zone[zoneid].unit_head = -1;
+		g_map_zone[zoneid].unit_tail = -1;
 		if ( g_zoneinfo[zoneid].open == 1 )
 		{
 			g_map_zone[zoneid].allow = 1;
@@ -111,6 +117,151 @@ char map_zone_getid( short posx, short posy )
 	zonex = (posx) / 100;
 	zoney = (posy) / 100;
 	return zoney*(5) + zonex + 1;
+}
+
+// 检查区域链表，这个区域的单元坐标位置是否真的属于这个区域，有可能区域发生变化吗
+int map_zone_checklist( int zoneid )
+{
+	int tmpid;
+	int head, tail;
+	MapZone *pZone;
+	short posx = 0, posy = 0;
+	if ( zoneid < 0 || zoneid >= g_map_zone_maxcount )
+		return 0;
+	pZone = &g_map_zone[zoneid];
+	if ( pZone->unit_head < 0 && pZone->unit_tail < 0 )
+		return 0;
+
+	head = pZone->unit_head;
+	tail = pZone->unit_tail;
+
+	if ( head >= 0 )
+	{
+		zoneunit_getpos( head, &posx, &posy );
+		tmpid = map_zone_getid( posx, posy );
+		if ( tmpid != zoneid )
+		{
+			pZone->unit_head = -1;
+			pZone->unit_tail = -1;
+			write_gamelog( "ZoneAreaHeadError: Area[%d] Head[%d(%d)]", zoneid, tmpid, tail );
+			return -1;
+		}
+	}
+	if ( tail >= 0 )
+	{
+		mapunit_getpos( tail, &posx, &posy );
+		tmpid = map_zone_getid( posx, posy );
+		if ( tmpid != zoneid )
+		{
+			pZone->unit_head = -1;
+			pZone->unit_tail = -1;
+			write_gamelog( "ZoneAreaTailError: Area[%d] Tail[%d(%d)]", zoneid, tmpid, tail );
+			return -1;
+		}
+	}
+	return 0;
+}
+
+// 将显示单元添加到地区
+int map_zone_addunit( int unit_index, int zoneid )
+{
+	if ( zoneid < 0 || zoneid >= g_zoneinfo_maxnum )
+		return 0;
+	MapZone *pZone = &g_map_zone[zoneid];
+	if ( pZone == NULL || pZone->unit_tail == unit_index )
+		return 0;
+	// 如果之前有地区信息，先从之前地区中移除
+	map_zone_delunit( unit_index );
+	// 检查地区链表和地区编号
+	map_zone_checklist( zoneid );
+
+	if ( pZone->unit_head < 0 || pZone->unit_tail < 0 )
+	{
+		g_zoneunit[unit_index].pre_index = -1;
+		g_zoneunit[unit_index].next_index = -1;
+		pZone->unit_head = pZone->unit_tail = unit_index;
+		g_zoneunit[unit_index].lastadd_zoneid = zoneid;
+		return 0;
+	}
+
+	g_zoneunit[unit_index].pre_index = pZone->unit_tail;
+	g_zoneunit[pZone->unit_tail].next_index = unit_index;
+	if ( g_zoneunit[pZone->unit_tail].next_index == pZone->unit_tail )
+	{
+		write_gamelog( "ZOneActorListError:[%d-%d]", unit_index, pZone->unit_tail );
+		g_zoneunit[pZone->unit_tail].next_index = -1;
+	}
+	pZone->unit_tail = unit_index;
+	g_zoneunit[unit_index].lastadd_zoneid = zoneid;
+	return 0;
+}
+
+// 将显示单元移除出地区
+int map_zone_delunit( int unit_index )
+{
+	int tmpi;
+	int zone_id_cur;
+	short lastadd_zoneid;
+	MapZone *pZoneLast;
+	MapZone *pZoneCur = NULL;
+	short posx = 0, posy = 0;
+	if ( unit_index < 0 || unit_index >= g_zoneunit_maxcount )
+		return -1;
+	lastadd_zoneid = g_zoneunit[unit_index].lastadd_zoneid;
+	if ( lastadd_zoneid < 0 || lastadd_zoneid >= g_zoneunit_maxcount )
+		return -1;
+
+	// 之前所在区域
+	pZoneLast = &g_map_zone[lastadd_zoneid];
+	if ( pZoneLast == NULL )
+		return -1;
+
+	// 获取当前所在的区域
+	zoneunit_getpos( unit_index, &posx, &posy );
+	zone_id_cur = map_zone_getid( posx, posy );
+	if ( zone_id_cur >= 0 && zone_id_cur < g_zoneunit_maxcount )
+		pZoneCur = &g_map_zone[zone_id_cur];
+
+	// 将它前面的单元和它后面的单元连上
+	if ( g_zoneunit[unit_index].pre_index >= 0 )
+	{
+		tmpi = g_zoneunit[unit_index].pre_index;
+		g_zoneunit[tmpi].next_index = g_zoneunit[unit_index].next_index;
+		if ( g_zoneunit[tmpi].next_index == tmpi )
+		{
+			write_gamelog( "ActorListError:%d-%d", unit_index, tmpi );
+			g_zoneunit[tmpi].next_index = -1;
+		}
+	}
+	if ( g_zoneunit[unit_index].next_index >= 0 )
+	{
+		tmpi = g_zoneunit[unit_index].next_index;
+		g_zoneunit[tmpi].pre_index = g_zoneunit[unit_index].pre_index;
+	}
+
+	// 如果这个索引是链表头，就将链表头指向它的下一个位置
+	if ( pZoneLast->unit_head == unit_index )
+		pZoneLast->unit_head = g_zoneunit[unit_index].next_index;
+	if ( pZoneCur && pZoneCur->unit_head == unit_index )
+	{
+		pZoneCur->unit_head = g_zoneunit[unit_index].next_index;
+		write_gamelog( "WARNNING: ZoneArea1" );
+	}
+
+	// 如果这个索引是链表尾，就将链表尾指向它的前一个位置
+	if ( pZoneLast->unit_tail == unit_index )
+		pZoneLast->unit_tail = g_zoneunit[unit_index].pre_index;
+	if ( pZoneCur && pZoneCur->unit_tail == unit_index )
+	{
+		pZoneCur->unit_tail = g_zoneunit[unit_index].pre_index;
+		write_gamelog( "WARNNING: ZoneArea2" );
+	}
+
+	// 把自己的链表信息清空
+	g_zoneunit[unit_index].pre_index = -1;
+	g_zoneunit[unit_index].next_index = -1;
+	g_zoneunit[unit_index].lastadd_zoneid = -1;
+	return 0;
 }
 
 // 检查是不是在同一个区域
@@ -222,7 +373,7 @@ int map_zone_citylist( int actor_index, int zoneid )
 	City *pCity = NULL;
 	SLK_NetS_MapZoneUnitList pValue = { 0 };
 	pValue.m_zoneid = zoneid;
-	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+	/*for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
 	{
 		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
 		{
@@ -249,6 +400,49 @@ int map_zone_citylist( int actor_index, int zoneid )
 			}
 
 		}
+	}*/
+	int loopnum = 0;
+	MapZone *pZone = &g_map_zone[zoneid];
+	if ( pZone->unit_head < 0 && pZone->unit_tail < 0 )
+		return -1;
+	int head = pZone->unit_head;
+	int tail = pZone->unit_tail;
+	int cur_index = pZone->unit_head;
+	while ( cur_index >= 0 )
+	{
+		loopnum += 1;
+		if ( loopnum >= 10000 )
+		{// 防止死循环
+			break;
+		}
+		int next_index = g_zoneunit[cur_index].next_index;
+		if ( cur_index < 0 )
+		{
+			cur_index = next_index;
+			continue;
+		}
+		ZoneUnit *pZoneUnit = &g_zoneunit[cur_index];
+		short target_posx = -1;
+		short target_posy = -1;
+		if ( pZoneUnit->type == MAPUNIT_TYPE_CITY )
+		{
+			pCity = city_indexptr( pZoneUnit->index );
+			if ( pCity )
+			{
+				pValue.m_list[pValue.m_count].m_zoneunit_index = cur_index;
+				pValue.m_list[pValue.m_count].m_posx = pCity->posx;
+				pValue.m_list[pValue.m_count].m_posy = pCity->posy;
+				pValue.m_list[pValue.m_count].m_nation = pCity->nation;
+				pValue.m_list[pValue.m_count].m_level = (char)pCity->level;
+			}
+			pValue.m_count += 1;
+			if ( pValue.m_count >= 128 )
+			{
+				netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+				pValue.m_count = 0;
+			}
+		}
+		cur_index = next_index;
 	}
 	if ( pValue.m_count > 0 )
 	{

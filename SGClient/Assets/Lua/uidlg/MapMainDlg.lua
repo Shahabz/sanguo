@@ -10,6 +10,7 @@ local m_uiHeroLayerGrid = nil; --UnityEngine.GameObject
 local m_uiNationLayerScroll = nil; --UnityEngine.GameObject
 local m_uiNationLayerContent = nil; --UnityEngine.GameObject
 local m_uiUIP_TownInfo = nil; --UnityEngine.GameObject
+local m_uiWorldQuest = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
@@ -17,6 +18,7 @@ local CONTROLOFFSET_QUICK = 20000000
 local CONTROLOFFSET_GPS = 30000000
 local CONTROLOFFSET_TOWNID = 40000000
 local m_recvValue = {}
+local m_WorldQuestCache = {}
 local m_bHeroLayerShow = false;
 local m_bNationLayerShow = false;
 
@@ -84,6 +86,10 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 国战状态信息收起
 		elseif nControlID == 7 then
 			MapMainDlgNationLayerHide();
+		
+		-- 世界任务
+		elseif nControlID == 10 then
+			MapMainDlgClickWorldMap()
 			
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
@@ -122,6 +128,8 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiNationLayerScroll = objs[7];
 	m_uiNationLayerContent = objs[8];
 	m_uiUIP_TownInfo = objs[9];
+	m_uiWorldQuest = objs[10];
+	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_TownInfo", 4, 4, m_uiUIP_TownInfo);
@@ -164,6 +172,8 @@ function MapMainDlgShow()
 	end
 	-- 请求出征队列
 	system_askinfo( ASKINFO_WORLDMAP, "", 2 );
+	-- 请求世界任务
+	system_askinfo( ASKINFO_QUEST, "", 10 );
 end
 
 -- 接收出征队列信息
@@ -500,6 +510,56 @@ function MapMainDlgNationGoto( townid )
 	WorldMap.GotoCoor( posx, posy )
 end
 
+-- 设置世界任务
+local g_worldmapinfo = { 
+[1] = { pic="ui_mapmain_quest_1" },
+[2] = { pic="ui_mapmain_quest_1" },
+[3] = { pic="ui_mapmain_quest_1" },
+[4] = { pic="ui_mapmain_quest_4" },
+[5] = { pic="ui_mapmain_quest_4" },
+[6] = { pic="ui_mapmain_quest_4" },
+[7] = { pic="ui_mapmain_quest_7" },
+[8] = { pic="ui_mapmain_quest_8" },
+[9] = { pic="ui_mapmain_quest_8" },
+[10] = { pic="ui_mapmain_quest_10" },
+}
+-- m_questid=0,m_value=0,m_maxvalue=0,m_complete=0,
+function MapMainDlgSetWorldQuest( recvValue )
+	m_WorldQuestCache = recvValue;
+	local questid = recvValue.m_questid
+	if questid == 0 then
+		SetFalse( m_uiWorldQuest );
+		return;
+	end
+	
+	SetTrue( m_uiWorldQuest );
+	-- 任务图
+	SetImage( m_uiWorldQuest.transform:Find("Back/Pic"), LoadSprite(g_worldmapinfo[questid].pic) ); 
+	-- 任务标题
+	SetText( m_uiWorldQuest.transform:Find("Back/Title"), WorldQuestName(questid) ); 
+	-- 任务进度或描述
+	local str = "";
+	if recvValue.m_complete == 1 then
+		str = T(1348).."("..T(1349)..")";
+	else
+		if questid == 1 or questid == 2 or questid == 3 then
+			str = T(1348)..recvValue.m_value.."/"..recvValue.m_maxvalue
+		elseif questid == 4 or questid == 5 or questid == 6 or questid == 8 or questid == 9 then
+			str = T(1348)..recvValue.m_value.."/1"
+		end
+	end 
+	SetText( m_uiWorldQuest.transform:Find("Back/Progress"), str );
+end
+
+-- 世界任务
+function MapMainDlgClickWorldMap()
+	local questid = m_WorldQuestCache.m_questid
+	if questid == 7 or questid == 10 then
+		-- boss战
+	else
+		WorldQuestInfoDlgShow( m_WorldQuestCache )
+	end
+end
 
 -- 小地图
 function MainDlgMiniMapInit()

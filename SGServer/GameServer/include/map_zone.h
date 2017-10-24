@@ -12,6 +12,12 @@ char map_zone_inrange( int zoneid, short posx, short posy );
 // 获取地区id
 char map_zone_getid( short posx, short posy );
 
+// 将显示单元添加到地区
+int map_zone_addunit( int unit_index, int zoneid );
+
+// 将显示单元移除出地区
+int map_zone_delunit( int unit_index );
+
 // 检查是不是在同一个地区
 char map_zone_checksame( short posx, short posy, short tposx, short tposy );
 

@@ -183,7 +183,7 @@ int mapunit_add( char type, int index, int actorid )
 	int unit_index = mapunit_getfreeindex();
 	if ( unit_index < 0 )
 		return -1;
-	memset( &g_mapunit[unit_index], 0, sizeof( MapUnit ) );
+	//memset( &g_mapunit[unit_index], 0, sizeof( MapUnit ) );
 	g_mapunit[unit_index].type = type;
 	g_mapunit[unit_index].index = index;
 	g_mapunit[unit_index].actorid = actorid;
@@ -217,6 +217,9 @@ int mapunit_del( char type, int index, int unit_index )
 
 	area_delmapunit( unit_index, area_index );
 	memset( &g_mapunit[unit_index], 0, sizeof( MapUnit ) );
+	g_mapunit[unit_index].lastadd_areaindex = -1;
+	g_mapunit[unit_index].pre_index = -1;
+	g_mapunit[unit_index].next_index = -1;
 	return 0;
 }
 

@@ -25,6 +25,7 @@ struct _mapzoneinfo {
 				short actorlevel;	//
 				short killenemy;	//
 				int questid;	//
+				short move_zoneid[2];	//
 };
 typedef struct _mapzoneinfo MapZoneInfo;
 

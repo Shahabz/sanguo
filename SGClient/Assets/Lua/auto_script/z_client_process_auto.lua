@@ -339,6 +339,8 @@ function proc_awardinfolist_C( recvValue )
 		MapEnemyDlgRecvAward( recvValue )
 	elseif recvValue.m_callback_code == 2 then
 		MapTownDlgRecvAward( recvValue )
+	elseif recvValue.m_callback_code == 3 then
+		WorldQuestInfoDlgRecvAward( recvValue )
 	end
 end
 
@@ -1427,5 +1429,12 @@ end
 function proc_citywardel_C( recvValue )
 	-- process.
 	MainDlgAddDel( recvValue )
+end
+
+
+-- m_questid=0,m_value=0,m_maxvalue=0,m_complete=0,
+function proc_worldquest_C( recvValue )
+	-- process.
+	MapMainDlgSetWorldQuest( recvValue )
 end
 

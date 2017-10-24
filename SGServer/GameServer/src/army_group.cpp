@@ -23,6 +23,7 @@
 #include "award.h"
 #include "global.h"
 #include "quest.h"
+#include "world_quest.h"
 #include "activity.h"
 #include "system.h"
 #include "army.h"
@@ -962,7 +963,27 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		sprintf( v5, "%s%d", TAG_NATION, g_map_town[townid].nation );
 		system_talkjson( 0, pTown->nation, 6001, v1, v2, v3, v5, v4, NULL, 1 );
 
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE1 )
+		{
+			worldquest_setvalue( WORLDQUEST_ID4, attackNation );
+		}
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE2 )
+		{
+			worldquest_setvalue( WORLDQUEST_ID5, attackNation );
+		}
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 )
+		{
+			worldquest_setvalue( WORLDQUEST_ID6, attackNation );
+		}
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE5 )
+		{
+			worldquest_setvalue( WORLDQUEST_ID8, attackNation );
+		}
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 )
+		{
+			worldquest_setvalue( WORLDQUEST_ID9, attackNation );
+		}
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 )
 		{// 如果是名城池，那么一个国家只能有7个
 			if ( nation_town_num( attackNation, MAPUNIT_TYPE_TOWN_TYPE7 ) >= 7 )
 			{

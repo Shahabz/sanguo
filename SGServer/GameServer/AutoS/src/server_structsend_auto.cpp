@@ -430,6 +430,7 @@ int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValu
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_zoneunit_index, (*psize) );
 	return 0;
 }
 
@@ -1846,6 +1847,18 @@ int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *p
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WorldQuest_send( char **pptr, int *psize, SLK_NetS_WorldQuest *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_questid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_maxvalue, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_complete, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dd, (*psize) );
 	return 0;
 }
 

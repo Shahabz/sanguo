@@ -29,6 +29,7 @@
 #include "global.h"
 #include "map.h"
 #include "mapunit.h"
+#include "zoneunit.h"
 #include "gmcmd.h"
 #include "award.h"
 #include "global_netprocess.h"
@@ -38,6 +39,7 @@
 #include "global_cmdqueue.h"
 #include "city.h"
 #include "quest.h"
+#include "world_quest.h"
 #include "hero.h"
 #include "chat.h"
 #include "army.h"
@@ -577,6 +579,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 世界任务列表
+	if ( worldquest_init() < 0 )
+	{
+		printf_msg( "worldquest_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	activity_init();
 	time_gmcmd_init();
 	db_closedata();
@@ -615,6 +626,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 101 );
 
+	// 加地图地区（严格顺序要求，不允许改变）
+	if ( map_zone_load() < 0 )
+	{
+		printf_msg( "MapZone Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 107 );
+
 	// 加载所有地图显示单元结构，在城池和出征军队之前初始化（严格顺序要求，不允许改变）
 	if ( mapunit_init() < 0 )
 	{
@@ -624,19 +644,19 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 102 );
 
+	// 加载所有地图地区的显示单元结构，在城池和出征军队之前初始化（严格顺序要求，不允许改变）
+	if ( zoneunit_init() < 0 )
+	{
+		printf_msg( "ZoneUnit Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 102 );
+
 	// 加载所有城市（严格顺序要求，不允许改变）
 	if ( city_load() < 0 )
 	{
 		printf_msg( "CityLoad Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	serv_setstat( 107 );
-
-	// 加地图地区（严格顺序要求，不允许改变）
-	if ( map_zone_load() < 0 )
-	{
-		printf_msg( "MapZone Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

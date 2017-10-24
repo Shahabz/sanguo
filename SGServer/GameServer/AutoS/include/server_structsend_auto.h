@@ -279,6 +279,7 @@ struct _slk_NetS_ZoneUnit {
 	short m_posy;	//地图地区显示单元
 	char m_nation;	//地图地区显示单元
 	char m_level;	//地图地区显示单元
+	int m_zoneunit_index;	//添加地图地区显示单元
 };
 typedef struct _slk_NetS_ZoneUnit SLK_NetS_ZoneUnit;	//地区单元
 
@@ -1264,6 +1265,15 @@ struct _slk_NetS_CityWarDel {
 };
 typedef struct _slk_NetS_CityWarDel SLK_NetS_CityWarDel;	//城战警告删除
 
+struct _slk_NetS_WorldQuest {
+	short m_questid;	//世界任务
+	short m_value;	//世界任务
+	short m_maxvalue;	//世界任务
+	char m_complete;	//世界任务
+	char m_dd;	//是否双倍
+};
+typedef struct _slk_NetS_WorldQuest SLK_NetS_WorldQuest;	//世界任务
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1403,5 +1413,6 @@ int struct_NetS_MapCenterTownList_send( char **pptr, int *psize, SLK_NetS_MapCen
 int struct_NetS_CityWarInfo_send( char **pptr, int *psize, SLK_NetS_CityWarInfo *pValue );
 int struct_NetS_CityWarList_send( char **pptr, int *psize, SLK_NetS_CityWarList *pValue );
 int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *pValue );
+int struct_NetS_WorldQuest_send( char **pptr, int *psize, SLK_NetS_WorldQuest *pValue );
 
 #endif

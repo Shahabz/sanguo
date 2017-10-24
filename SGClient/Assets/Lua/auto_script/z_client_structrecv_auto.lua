@@ -360,6 +360,7 @@ function struct_NetS_ZoneUnit_recv( buffer )
 	recvValue.m_posy = buffer:ReadShort();
 	recvValue.m_nation = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_zoneunit_index = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -1639,6 +1640,16 @@ end
 function struct_NetS_CityWarDel_recv( buffer )
 	local recvValue = {};
 	recvValue.m_group_index = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_WorldQuest_recv( buffer )
+	local recvValue = {};
+	recvValue.m_questid = buffer:ReadShort();
+	recvValue.m_value = buffer:ReadShort();
+	recvValue.m_maxvalue = buffer:ReadShort();
+	recvValue.m_complete = buffer:ReadSByte();
+	recvValue.m_dd = buffer:ReadSByte();
 	return recvValue;
 end
 
