@@ -3,10 +3,23 @@ local m_Dlg = nil;
 local m_uiTitleText = nil; --UnityEngine.GameObject
 local m_uiCancelBtn = nil; --UnityEngine.GameObject
 local m_uiFightBtn = nil; --UnityEngine.GameObject
+local m_uiFastBtn = nil; --UnityEngine.GameObject
+local m_uiArmyIcon = nil; --UnityEngine.GameObject
+local m_uiCountDown = nil; --UnityEngine.GameObject
+local m_uiLeftName = nil; --UnityEngine.GameObject
+local m_uiRightName = nil; --UnityEngine.GameObject
+local m_uiLeftScroll = nil; --UnityEngine.GameObject
+local m_uiLeftContent = nil; --UnityEngine.GameObject
+local m_uiRightScroll = nil; --UnityEngine.GameObject
+local m_uiRightContent = nil; --UnityEngine.GameObject
+local m_uiUIP_Unit = nil; --UnityEngine.GameObject
 
+local m_ObjectPool = nil;
 local m_battleType = 0;
 local m_storyid = 0;
-local m_storyHeroKind = {};
+local m_bossid = 0;
+local m_HeroList = {};
+
 -- 打开界面
 function BattleDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BattleDlg" );
@@ -36,8 +49,18 @@ function BattleDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             BattleDlgClose();
+		
+		-- 战斗
 		elseif nControlID == 1 then
-			BattleDlgStoryFight();
+			BattleDlgFight();
+		
+		-- 快速开始
+		elseif nControlID == 2 then
+			BattleDlgFast();
+			
+		-- 上移
+		elseif nControlID >= 201 and nControlID <= 204 then
+			BattleDlgHeroUp( nControlID-200 )
         end
 	end
 end
@@ -49,6 +72,19 @@ function BattleDlgOnAwake( gameObject )
 	m_uiTitleText = objs[0];
 	m_uiCancelBtn = objs[1];
 	m_uiFightBtn = objs[2];
+	m_uiFastBtn = objs[3];
+	m_uiArmyIcon = objs[4];
+	m_uiCountDown = objs[5];
+	m_uiLeftName = objs[6];
+	m_uiRightName = objs[7];
+	m_uiLeftScroll = objs[8];
+	m_uiLeftContent = objs[9];
+	m_uiRightScroll = objs[10];
+	m_uiRightContent = objs[11];
+	m_uiUIP_Unit = objs[12];
+
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("UIP_Unit", 8, 8, m_uiUIP_Unit);
 end
 
 -- 界面初始化时调用
@@ -85,36 +121,246 @@ function BattleDlgShow()
 end
 
 -- 副本使用
-function BattleDlgShowByStory( id )
+function BattleDlgShowByStory( storyid )
+	BattleDlgOpen()
+	m_battleType = 0;
+	m_storyid = storyid;
+	SetTrue( m_uiTitleText )
+	SetText( m_uiTitleText, StoryChapterName( math.floor(storyid/10) ) )
+	SetTrue( m_uiCancelBtn )
+	SetTrue( m_uiFightBtn )
+	SetFalse( m_uiFastBtn )
+	
+	-- 英雄放到缓存
+	m_HeroList = {};
+	for i=0,3,1 do
+		if GetHero().m_CityHero[i].m_kind > 0 then
+			table.insert( m_HeroList, clone(GetHero().m_CityHero[i]) )
+		end
+	end
+	BattleDlgClearRightUnit()
+	system_askinfo( ASKINFO_STORY, "", 1, storyid );
+	BattleDlgHeroList()
+end
+
+-- 世界boss使用
+function BattleDlgShowByWorldBoss( bossid )
 	BattleDlgOpen()
 	m_battleType = 1;
-	m_storyid = id;
+	m_bossid = bossid;
 	SetTrue( m_uiTitleText )
-	SetText( m_uiTitleText, StoryChapterName( math.floor(id/10) ) )
-	system_askinfo( ASKINFO_STORY, "", 1, id );
+	SetText( m_uiTitleText, T(1359) )
+	SetTrue( m_uiCancelBtn )
+	SetTrue( m_uiFightBtn )
+	SetFalse( m_uiFastBtn )
 	
-	-- 默认英雄
-	m_storyHeroKind = {};
-	for offset = 0, 3, 1 do
-        local pHero = GetHero().m_CityHero[offset];
-		m_storyHeroKind[offset] = pHero.m_kind;
+	-- 英雄放到缓存
+	m_HeroList = {};
+	for i=0,3,1 do
+		if GetHero().m_CityHero[i].m_kind > 0 then
+			table.insert( m_HeroList, clone(GetHero().m_CityHero[i]) )
+		end
+	end
+	BattleDlgClearRightUnit()
+	system_askinfo( ASKINFO_QUEST, "", 14, bossid );
+	BattleDlgHeroList()
+end
+
+-- 副本和世界boss接收使用
+-- m_count=0,m_list={m_monsterid=0,m_shape=0,m_level=0,m_color=0,m_corps=0,m_hp,[m_count]},m_exp=0,m_body=0,m_type=0
+function BattleDlgStoryRecv( recvValue )
+	
+	-- 副本
+	if recvValue.m_type == 0 then
+		
+	-- 世界boss
+	elseif recvValue.m_type == 1 then
+		
+	end
+	
+	for i=1, recvValue.m_count, 1 do
+		local unit = recvValue.m_list[i]
+		BattleDlgUnit( i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, nil )
 	end
 end
 
--- 副本使用
-function BattleDlgStoryRecv( recvValue )
+-- 英雄列表
+function BattleDlgHeroList()
+	BattleDlgClearLeftUnit()
+	for i=1,#m_HeroList,1 do
+		BattleDlgHero( i, m_HeroList[i] );
+	end
+	BattleDlgSetHeroSort();
+end
+
+-- 设置一个英雄信息
+function BattleDlgHero( index, pHero )
+	local uiObj = m_ObjectPool:Get( "UIP_Unit" );
+	uiObj.transform:SetParent( m_uiLeftContent.transform );
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiColor = objs[1];
+	local uiCorps = objs[2];
+	local uiName = objs[3];
+	local uiHp = objs[4];
+	local uiSort = objs[5];	
+	local uiUpButton = objs[6];	
+	local uiFristButton = objs[7];	
+	
+	SetTrue( uiUpButton )
+	SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
+	SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
+	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
+	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
+	SetText( uiHp, pHero.m_troops );
+	SetText( uiSort, index );
+end
+
+-- 设置英雄出战顺序
+function BattleDlgSetHeroSort()
+	local sort = 1;
+	for i=1,4,1 do
+		local pHero = m_HeroList[i];
+		local uiObj = m_uiLeftContent.transform:GetChild(i-1).gameObject
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		if pHero == nil or pHero.m_kind <= 0 then
+			return;
+		end
+		local uiSort = objs[5];	
+		local uiUpButton = objs[6];
+		local uiFristButton = objs[7];
+		SetFalse( uiSort )
+
+		if sort == 1 then 
+			SetTrue( uiFristButton )
+			SetFalse( uiUpButton )
+			SetControlID( uiFristButton, 0 )
+			SetControlID( uiUpButton, 0 )
+		else
+			SetFalse( uiFristButton )
+			SetTrue( uiUpButton )
+			SetControlID( uiUpButton, 200 + i )
+		end
+		sort = sort + 1;
+	end
 	
 end
 
--- 副本使用
-function BattleDlgStoryFight()
-	-- m_storyid=0,m_herokind={[4]},
-	local sendValue={}
-	sendValue.m_storyid = m_storyid;
-	sendValue.m_herokind = {}
-	for i=0, 3, 1 do
-		table.insert( sendValue.m_herokind, m_storyHeroKind[i] )
-	end 
-	netsend_storybattle_C( sendValue )
+-- 交换
+function BattleDlgHeroUp( index )
+	if index == 1 then
+		return;
+	end
+	m_HeroList[index-1], m_HeroList[index] = m_HeroList[index], m_HeroList[index-1]
+	BattleDlgHeroList()
 end
 
+-- 设置一个unit信息
+function BattleDlgUnit( index, unittype, kind, name, shape, color, corps, level, hp )
+	local uiObj = m_ObjectPool:Get( "UIP_Unit" );
+	uiObj.transform:SetParent( m_uiRightContent.transform );
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiColor = objs[1];
+	local uiCorps = objs[2];
+	local uiName = objs[3];
+	local uiHp = objs[4];
+	local uiSort = objs[5];	
+	local uiUpButton = objs[6];
+	local uiFristButton = objs[7];	
+	
+	SetFalse( uiUpButton )
+	if hp == nil then
+		SetFalse( uiHp )
+	else
+		SetTrue( uiHp )
+	end
+	-- 玩家英雄
+	if unittype == FIGHT_UNITTYPE_HERO then
+		SetImage( uiShape, HeroHeadSprite( kind ) );
+		SetImage( uiColor, ItemColorSprite( color ) );
+		SetImage( uiCorps, CorpsSprite( corps ) );
+		if name and name ~= "" then
+			SetText( uiName, "["..name.."]".."Lv."..level.." "..HeroName( kind ) );
+		else
+			SetText( uiName, "Lv."..level.." "..HeroName( kind ) );
+		end
+		
+	-- 玩家城墙守卫
+	elseif unittype == FIGHT_UNITTYPE_GUARD then
+		SetImage( uiShape, GuardSprite( shape ) );
+		SetImage( uiColor, ItemColorSprite( color ) );
+		SetImage( uiCorps, CorpsSprite( corps ) );
+		SetText( uiName, "Lv."..level.." "..T( 1119 ) );
+		
+	-- 怪物表
+	elseif unittype == FIGHT_UNITTYPE_MONSTER then
+		SetImage( uiShape, EnemyHeadSprite( shape ) );
+		SetImage( uiColor, ItemColorSprite( color ) );
+		SetImage( uiCorps, CorpsSprite( corps ) );
+		SetText( uiName, EnemyName( kind ) );
+	end
+	SetText( uiSort, index );
+end
+
+-- 清空
+function BattleDlgClearLeftUnit()
+	local objs = {};
+	for i = 0 ,m_uiLeftContent.transform.childCount - 1 do
+		table.insert( objs, m_uiLeftContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_Unit(Clone)" then
+			m_ObjectPool:Release( "UIP_Unit", obj );
+		end
+    end
+end
+
+-- 清空
+function BattleDlgClearRightUnit()
+	local objs = {};
+	for i = 0 ,m_uiRightContent.transform.childCount - 1 do
+		table.insert( objs, m_uiRightContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_Unit(Clone)" then
+			m_ObjectPool:Release( "UIP_Unit", obj );
+		end
+    end
+end
+
+-- 战斗
+function BattleDlgFight()
+	if m_battleType == 0 then
+		-- m_storyid=0,m_herokind={[4]},
+		local sendValue={}
+		sendValue.m_storyid = m_storyid;
+		sendValue.m_herokind = {0,0,0,0}
+		for i=1, #m_HeroList, 1 do
+			sendValue.m_herokind[i] = m_HeroList[i].m_kind
+		end 
+		netsend_storybattle_C( sendValue )
+		BattleDlgClose()
+		
+	elseif m_battleType == 1 then
+		-- m_bossid=0,m_herokind={[4]},
+		local sendValue={}
+		sendValue.m_bossid = m_bossid;
+		sendValue.m_herokind = {0,0,0,0}
+		for i=1, #m_HeroList, 1 do
+			sendValue.m_herokind[i] = m_HeroList[i].m_kind
+		end 
+		netsend_worldbossbattle_C( sendValue )
+		BattleDlgClose()
+		
+	end
+	
+	BattleDlgClose()
+end
+
+-- 快速开始
+function BattleDlgFast()
+	
+end

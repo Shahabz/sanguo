@@ -1,6 +1,7 @@
 #ifndef _MAP_ZONE_H_
 #define _MAP_ZONE_H_
 #include "define.h"
+#define MAPZONE_CENTERID	13
 
 int map_zone_load();
 int map_zone_save( FILE *fp );
@@ -26,6 +27,9 @@ int map_zone_setnation( int zoneid, char nation );
 
 // 指定地区随机一个空坐标
 int map_zone_randpos( short zoneid, short *pPosx, short *pPosy );
+
+// 指定地区和国家领土随机一个空坐标
+int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy );
 
 // 地区切换
 void map_zone_change( int actor_index, short posx, short posy );

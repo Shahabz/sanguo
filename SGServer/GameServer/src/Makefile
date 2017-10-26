@@ -6,6 +6,7 @@ SRC = \
 ../AutoS/src/global_structsend_auto.cpp \
 ../AutoS/src/auto_actor_equip.cpp \
 ../AutoS/src/auto_data_platinfo.cpp \
+../AutoS/src/auto_data_world_bossinfo.cpp \
 ../AutoS/src/auto_data_map_zoneinfo.cpp \
 ../AutoS/src/server_netrecv_auto.cpp \
 ../AutoS/src/auto_city_building.cpp \
@@ -37,6 +38,7 @@ SRC = \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_city_tech.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
+../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_army_group.cpp \
@@ -52,6 +54,7 @@ SRC = \
 ../AutoS/src/auto_city_building_barracks.cpp \
 ../AutoS/src/auto_data_weather.cpp \
 ../AutoS/src/auto_data_map_towninfo.cpp \
+../AutoS/src/auto_world_boss.cpp \
 ../AutoS/src/global_netsend_auto.cpp \
 ../AutoS/src/auto_data_map_resinfo.cpp \
 ../AutoS/src/global_structrecv_auto.cpp \
@@ -68,6 +71,7 @@ fight.cpp \
 global_cmdqueue.cpp \
 vip.cpp \
 actor_gmcmd.cpp \
+world_quest.cpp \
 map_zone.cpp \
 client.cpp \
 story.cpp \
@@ -102,7 +106,9 @@ wqueue.cpp \
 actor_times.cpp \
 army.cpp \
 account.cpp \
+zoneunit.cpp \
 map_res.cpp \
+world_boss.cpp \
 script_reg_auto.cpp \
 equip.cpp \
 city_attr.cpp \
@@ -144,6 +150,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_actor_equip.o: ../AutoS/src/auto_actor_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_platinfo.o: ../AutoS/src/auto_data_platinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_world_bossinfo.o: ../AutoS/src/auto_data_world_bossinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_zoneinfo.o: ../AutoS/src/auto_data_map_zoneinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -207,6 +215,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building_res.o: ../AutoS/src/auto_city_building_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_world_questinfo.o: ../AutoS/src/auto_data_world_questinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor_hero.o: ../AutoS/src/auto_actor_hero.cpp 
@@ -236,6 +246,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_weather.o: ../AutoS/src/auto_data_weather.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_world_boss.o: ../AutoS/src/auto_world_boss.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/global_netsend_auto.o: ../AutoS/src/global_netsend_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -268,6 +280,8 @@ global_cmdqueue.o: global_cmdqueue.cpp
 vip.o: vip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 actor_gmcmd.o: actor_gmcmd.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+world_quest.o: world_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_zone.o: map_zone.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
@@ -337,7 +351,11 @@ army.o: army.cpp
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 account.o: account.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+zoneunit.o: zoneunit.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_res.o: map_res.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+world_boss.o: world_boss.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 script_reg_auto.o: script_reg_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

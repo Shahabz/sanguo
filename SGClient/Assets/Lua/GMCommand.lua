@@ -31,7 +31,8 @@ local GMCMD_SERVER = {
 [28]="fun",
 [29]="event",
 [30]="vw",
-[31]="townattack"
+[31]="townattack",
+[32]="worldboss"
 }
  
 -- 发到客户端本地指令

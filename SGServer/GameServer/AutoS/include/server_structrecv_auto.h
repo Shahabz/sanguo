@@ -135,6 +135,12 @@ struct _slk_NetC_MailReply {
 };
 typedef struct _slk_NetC_MailReply SLK_NetC_MailReply;	//邮件回复
 
+struct _slk_NetC_WorldBossBattle {
+	int m_bossid;	//世界bossid
+	short m_herokind[4];	//世界boss出战的英雄
+};
+typedef struct _slk_NetC_WorldBossBattle SLK_NetC_WorldBossBattle;	//世界boss战斗
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -152,5 +158,6 @@ int struct_NetC_MailAllDel_recv( char **pptr, int *psize, SLK_NetC_MailAllDel *p
 int struct_NetS_MailShare_recv( char **pptr, int *psize, SLK_NetS_MailShare *pValue );
 int struct_NetC_MailSend_recv( char **pptr, int *psize, SLK_NetC_MailSend *pValue );
 int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pValue );
+int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBossBattle *pValue );
 
 #endif

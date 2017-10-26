@@ -525,13 +525,17 @@ local g_worldmapinfo = {
 }
 -- m_questid=0,m_value=0,m_maxvalue=0,m_complete=0,
 function MapMainDlgSetWorldQuest( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	m_WorldQuestCache = recvValue;
 	local questid = recvValue.m_questid
 	if questid == 0 then
 		SetFalse( m_uiWorldQuest );
+		-- 请求皇城血战
+		
 		return;
 	end
-	
 	SetTrue( m_uiWorldQuest );
 	-- 任务图
 	SetImage( m_uiWorldQuest.transform:Find("Back/Pic"), LoadSprite(g_worldmapinfo[questid].pic) ); 
@@ -546,6 +550,8 @@ function MapMainDlgSetWorldQuest( recvValue )
 			str = T(1348)..recvValue.m_value.."/"..recvValue.m_maxvalue
 		elseif questid == 4 or questid == 5 or questid == 6 or questid == 8 or questid == 9 then
 			str = T(1348)..recvValue.m_value.."/1"
+		else
+			str = Localization.text_quest( 2050+questid )
 		end
 	end 
 	SetText( m_uiWorldQuest.transform:Find("Back/Progress"), str );
@@ -554,8 +560,10 @@ end
 -- 世界任务
 function MapMainDlgClickWorldMap()
 	local questid = m_WorldQuestCache.m_questid
-	if questid == 7 or questid == 10 then
-		-- boss战
+	if questid == 7 then
+		WorldBossDlgShow( 1, questid )
+	elseif questid == 10 then
+		WorldBossDlgShow( 2, questid )
 	else
 		WorldQuestInfoDlgShow( m_WorldQuestCache )
 	end

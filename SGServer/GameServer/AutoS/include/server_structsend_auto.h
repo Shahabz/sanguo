@@ -927,14 +927,16 @@ struct _slk_NetS_MonsterInfo {
 	short m_level;	//怪物信息
 	char m_color;	//怪物信息
 	char m_corps;	//怪物信息
+	int m_hp;	//怪物信息
 };
 typedef struct _slk_NetS_MonsterInfo SLK_NetS_MonsterInfo;	//怪物信息
 
 struct _slk_NetS_StoryRank {
 	char m_count;	//副本关卡信息
-	SLK_NetS_MonsterInfo m_list[4];	//副本关卡信息
+	SLK_NetS_MonsterInfo m_list[16];	//副本关卡信息
 	int m_exp;	//副本关卡信息
 	char m_body;	//副本关卡信息
+	char m_type;	//副本关卡信息
 };
 typedef struct _slk_NetS_StoryRank SLK_NetS_StoryRank;	//副本关卡
 
@@ -1274,6 +1276,23 @@ struct _slk_NetS_WorldQuest {
 };
 typedef struct _slk_NetS_WorldQuest SLK_NetS_WorldQuest;	//世界任务
 
+struct _slk_NetS_WorldBoss {
+	char m_bossid;	//世界boos信息
+	int m_hp;	//世界boos信息
+	int m_maxhp;	//世界boos信息
+	char m_isfight;	//世界boos信息今天是否打过
+	short m_actorlevel;	//世界boos信息等级限制
+};
+typedef struct _slk_NetS_WorldBoss SLK_NetS_WorldBoss;	//世界boss信息
+
+struct _slk_NetS_LostRebuild {
+	int m_rb_silver;	//家园重建
+	int m_rb_wood;	//家园重建
+	int m_rb_food;	//家园重建
+	int m_rb_df;	//家园重建
+};
+typedef struct _slk_NetS_LostRebuild SLK_NetS_LostRebuild;	//家园重建
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1414,5 +1433,7 @@ int struct_NetS_CityWarInfo_send( char **pptr, int *psize, SLK_NetS_CityWarInfo 
 int struct_NetS_CityWarList_send( char **pptr, int *psize, SLK_NetS_CityWarList *pValue );
 int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *pValue );
 int struct_NetS_WorldQuest_send( char **pptr, int *psize, SLK_NetS_WorldQuest *pValue );
+int struct_NetS_WorldBoss_send( char **pptr, int *psize, SLK_NetS_WorldBoss *pValue );
+int struct_NetS_LostRebuild_send( char **pptr, int *psize, SLK_NetS_LostRebuild *pValue );
 
 #endif

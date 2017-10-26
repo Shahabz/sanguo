@@ -160,3 +160,11 @@ function netsend_mailreply_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_bossid=0,m_herokind={[4]},
+function netsend_worldbossbattle_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_WORLDBOSSBATTLE );
+	struct_NetC_WorldBossBattle_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

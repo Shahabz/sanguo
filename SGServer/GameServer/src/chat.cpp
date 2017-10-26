@@ -273,6 +273,13 @@ int system_talkjson( int zone, int nation, int textid, char *v1, char *v2, char 
 	return 0;
 }
 
+int system_talkjson_world( int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll )
+{
+	SLK_NetS_SystalkJson pValue = { 0 };
+	system_talkjson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6, roll );
+	netsend_systalkjson_S( 0, SENDTYPE_WORLD, &pValue );
+	return 0;
+}
 
 int system_roll( const char *szMsg )
 {

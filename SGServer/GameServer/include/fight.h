@@ -21,6 +21,7 @@
 #define FIGHTTYPE_NATION	3 // 国战
 #define FIGHTTYPE_ENEMY		4 // 流寇
 #define FIGHTTYPE_RES		5 // 资源点争夺
+#define FIGHTTYPE_WORLDBOSS	6 // 世界boss
 
 // 一个战斗单元
 typedef struct _fightunit
@@ -104,6 +105,9 @@ int fight_start_armygroup( int group_index );
 
 // 战斗启动-副本战斗
 int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chapter, int rank );
+
+// 战斗启动-世界boss
+int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue );
 
 // 战斗每一回合
 int fight_oneturn();

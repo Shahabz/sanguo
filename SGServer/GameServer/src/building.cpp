@@ -609,6 +609,11 @@ int building_finish( int city_index, int op, int kind, int offset )
 			city_actorexp( city_index, config->exp, PATH_BUILDING_UPGRADE );
 		}
 
+		// 仓库给予高级重建次数
+		if ( kind == BUILDING_StoreHouse )
+		{
+			g_city[city_index].rb_num += 1;
+		}
 		// 任务
 		quest_checkcomplete( &g_city[city_index] );
 

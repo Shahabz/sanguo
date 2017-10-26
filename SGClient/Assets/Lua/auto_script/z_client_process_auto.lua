@@ -1018,7 +1018,7 @@ function proc_storylist_C( recvValue )
 	StoryDlgRecv( recvValue )
 end
 
--- m_count=0,m_list={m_monsterid=0,m_shape=0,m_level=0,m_color=0,m_corps=0,[m_count]},m_exp=0,m_body=0,
+-- m_count=0,m_list={m_monsterid=0,m_shape=0,m_level=0,m_color=0,m_corps=0,m_hp,[m_count]},m_exp=0,m_body=0,m_type=0
 function proc_storyrank_C( recvValue )
 	-- process.
 	BattleDlgStoryRecv( recvValue )
@@ -1431,10 +1431,26 @@ function proc_citywardel_C( recvValue )
 	MainDlgAddDel( recvValue )
 end
 
-
 -- m_questid=0,m_value=0,m_maxvalue=0,m_complete=0,
 function proc_worldquest_C( recvValue )
 	-- process.
 	MapMainDlgSetWorldQuest( recvValue )
+end
+
+-- m_bossid=0,m_hp=0,m_maxhp=0,m_isfight=0,m_actorlevel
+function proc_worldboss_C( recvValue )
+	-- process.
+	WorldBossDlgRecvValue( recvValue )
+end
+
+-- m_bossid=0,m_herokind={[4]},
+function proc_worldbossbattle_C( recvValue )
+	-- process.
+end
+
+-- m_rb_silver=0,m_rb_wood=0,m_rb_food=0,m_rb_df=0,
+function proc_lostrebuild_C( recvValue )
+	-- process.
+	LostRebuildDlgShow( recvValue )
 end
 

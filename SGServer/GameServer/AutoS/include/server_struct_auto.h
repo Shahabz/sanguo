@@ -131,6 +131,8 @@
 #define CMDS_CITYWARLIST	(CMDS_BASE+124)
 #define CMDS_CITYWARDEL	(CMDS_BASE+125)
 #define CMDS_WORLDQUEST	(CMDS_BASE+126)
+#define CMDS_WORLDBOSS	(CMDS_BASE+127)
+#define CMDS_LOSTREBUILD	(CMDS_BASE+128)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -156,6 +158,7 @@
 #define CMDC_MAILSHARE	(CMDC_BASE+19)
 #define CMDC_MAILSEND	(CMDC_BASE+20)
 #define CMDC_MAILREPLY	(CMDC_BASE+21)
+#define CMDC_WORLDBOSSBATTLE	(CMDC_BASE+22)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

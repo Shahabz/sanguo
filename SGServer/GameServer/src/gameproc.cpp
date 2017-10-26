@@ -40,6 +40,7 @@
 #include "city.h"
 #include "quest.h"
 #include "world_quest.h"
+#include "world_boss.h"
 #include "hero.h"
 #include "chat.h"
 #include "army.h"
@@ -723,6 +724,14 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 116 );
 
+	// 加载世界boss（严格顺序要求，不允许改变）
+	if ( world_boss_load() < 0 )
+	{
+		printf_msg( "world_boss_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
 	// 聊天缓存
 	chat_cache_load();
 
@@ -803,6 +812,10 @@ void process_close()
 
 	// 所有随机事件点保存
 	map_event_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有世界boss
+	world_boss_save( NULL );
 	printf_msg( "\n" );
 
 	// 提交

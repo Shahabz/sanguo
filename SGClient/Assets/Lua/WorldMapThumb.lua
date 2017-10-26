@@ -265,6 +265,13 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		system_askinfo( ASKINFO_MAPZONE, "", 1 );
 		return;
 	end
+	if recvValue.m_zoneid == 13 then
+		SetFalse( ThumbDisplayPrefab.transform:Find("Back1") )
+		SetFalse( ThumbDisplayPrefab.transform:Find("Back2") )
+	else
+		SetTrue( ThumbDisplayPrefab.transform:Find("Back1") )
+		SetTrue( ThumbDisplayPrefab.transform:Find("Back2") )
+	end
 	for tmpi=1, recvValue.m_count, 1 do
 		local townid = recvValue.m_list[tmpi].m_townid;
 		local nation = recvValue.m_list[tmpi].m_nation;
@@ -301,6 +308,14 @@ function WorldMapThumb.SetTownInfo( recvValue )
 				SetFalse( uiArrow )
 			end
 			index = index + 1
+		end
+		-- 皇城地区的范围
+		local Range = thumbObj.transform:Find( "Range" );
+		if recvValue.m_zoneid == 13 then
+			SetTrue( Range )
+			Range:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColorA[nation] )
+		else
+			SetFalse( Range )
 		end
 	end
 end

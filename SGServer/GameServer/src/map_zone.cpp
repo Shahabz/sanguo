@@ -330,6 +330,51 @@ int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
 	return 0;
 }
 
+// 指定地区和国家领土随机一个空坐标
+int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy )
+{
+	int step = 0;
+
+	short findlistx[256] = { 0 };
+	short findlisty[256] = { 0 };
+	short offset = 0;
+	for ( int tmpi = g_zoneinfo[MAPZONE_CENTERID].top_left_posx; tmpi <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx; tmpi++ )
+	{
+		for ( int tmpj = g_zoneinfo[MAPZONE_CENTERID].top_left_posy; tmpj <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy; tmpj++ )
+		{
+			short x = tmpi;
+			short y = tmpj;
+			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+				continue;
+			if ( g_map.m_aTileData[x][y].unit_type > 0 )
+				continue;
+			if ( g_map.m_aTileData[x][y].nation != nation )
+				continue;
+			// 找到所有的空余点
+			findlistx[offset] = x;
+			findlisty[offset] = y;
+			offset += 1;
+			if ( offset >= 256 )
+				break;
+		}
+		if ( offset >= 256 )
+			break;
+	}
+
+	if ( offset > 0 )
+	{
+		int index = rand() % offset;
+		*pPosx = findlistx[index];
+		*pPosy = findlisty[index];
+	}
+	else
+	{
+		*pPosx = -1;
+		*pPosy = -1;
+	}
+	return 0;
+}
+
 //地图地区进入
 void map_zone_change( int actor_index, short posx, short posy )
 {
@@ -512,7 +557,7 @@ int map_zone_center_townlist( int actor_index )
 	{
 		if ( g_towninfo[townid].id <= 0 )
 			continue;
-		if ( g_map_town[townid].zoneid != 13 )
+		if ( g_map_town[townid].zoneid != MAPZONE_CENTERID )
 			continue;
 		pValue.m_list[pValue.m_count].m_townid = townid;
 		pValue.m_list[pValue.m_count].m_nation = g_map_town[townid].nation;
@@ -535,7 +580,7 @@ int map_zone_center_townchange( int townid )
 {
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
-	if ( g_map_town[townid].zoneid != 13 )
+	if ( g_map_town[townid].zoneid != MAPZONE_CENTERID )
 		return -1;
 	SLK_NetS_MapCenterTown pValue = { 0 };
 	pValue.m_townid = townid;

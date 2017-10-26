@@ -48,17 +48,19 @@ function MapMarchRoute.add( recvValue )
 	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_grid, cameraPosX, cameraPosY );
 
 	-- 计算线的颜色
+	-- 1．自己的行军路线：绿色虚线线条
+	-- 2．非我国的行军路线：红色虚线线条。
+	-- 3．同国的行军路线：黄色虚线线条。
+
 	local color = 0;
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
-		color = 1;
-	elseif recvValue.m_from_actorid > 0 and recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
-		color = 1;
-	elseif recvValue.m_from_nation > 0 and recvValue.m_from_nation == GetPlayer().m_nation then
-		color = 1;
+		color = 1; -- 自己的
+	elseif recvValue.m_from_nation == GetPlayer().m_nation then
+		color = 3; -- 同国的
 	elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
-		color = 2;
+		color = 2; -- 敌国的
 	elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
-		color = 2;
+		color = 2; -- 敌国的
 	else
 		color = 3;
 	end

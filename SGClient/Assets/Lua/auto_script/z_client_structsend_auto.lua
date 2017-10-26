@@ -128,3 +128,10 @@ function struct_NetC_MailReply_send( buf, sendValue )
 	buf:WriteInt( sendValue.m_reply_recvtime );
 end
 
+function struct_NetC_WorldBossBattle_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_bossid );
+	for tmpi=1,4,1 do
+		buf:WriteShort( sendValue.m_herokind[tmpi] );
+	end
+end
+

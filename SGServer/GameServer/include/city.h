@@ -250,4 +250,9 @@ int city_move( City *pCity, short posx, short posy );
 
 // ’Ï≤Ï
 int city_spy( int actor_index, int unit_index, int type );
+
+// º“‘∞÷ÿΩ®
+int city_lost_rebuild( City *pCity );
+int city_lost_rebuild_get( int actor_index );
+int city_lost_rebuild_num( int actor_index );
 #endif

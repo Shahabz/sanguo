@@ -23,6 +23,7 @@
 #include "city_tech.h"
 #include "quest.h"
 #include "world_quest.h"
+#include "world_boss.h"
 #include "building.h"
 #include "hero.h"
 #include "story.h"
@@ -103,6 +104,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 世界任务领取奖励
 			worldquest_getaward( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 13 )
+		{ // 世界boss信息
+			worldboss_sendinfo( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 14 )
+		{ // 世界boss信息
+			worldboss_sendbattleinfo( actor_index, pvalue[1] );
+		}
 		break;
 	case ASKINFO_BUILDING:
 		if ( pvalue[0] == 0 )
@@ -125,7 +134,6 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 加速奖励的加速
 			building_awardquick_get( actor_index, pvalue[1], pvalue[2] );
 		}
-		
 		break;
 	case ASKINFO_LEVY:
 		if ( pvalue[0] == 0 )
@@ -502,6 +510,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 1 )
 		{// 城镇列表
 			map_zone_townlist( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_LOSTREBUILD:
+		if ( pvalue[0] == 0 )
+		{
+			city_lost_rebuild_num( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			city_lost_rebuild_get( actor_index );
 		}
 		break;
 	default:

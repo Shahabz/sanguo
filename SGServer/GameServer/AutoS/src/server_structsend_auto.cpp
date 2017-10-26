@@ -1349,6 +1349,7 @@ int struct_NetS_MonsterInfo_send( char **pptr, int *psize, SLK_NetS_MonsterInfo 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
 	return 0;
 }
 
@@ -1363,6 +1364,7 @@ int struct_NetS_StoryRank_send( char **pptr, int *psize, SLK_NetS_StoryRank *pVa
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_body, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 
@@ -1859,6 +1861,29 @@ int struct_NetS_WorldQuest_send( char **pptr, int *psize, SLK_NetS_WorldQuest *p
 	LKSET_WORD_SEND( (*pptr), &pValue->m_maxvalue, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_complete, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dd, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WorldBoss_send( char **pptr, int *psize, SLK_NetS_WorldBoss *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_bossid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isfight, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_actorlevel, (*psize) );
+	return 0;
+}
+
+int struct_NetS_LostRebuild_send( char **pptr, int *psize, SLK_NetS_LostRebuild *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rb_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rb_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rb_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rb_df, (*psize) );
 	return 0;
 }
 

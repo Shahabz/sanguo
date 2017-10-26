@@ -106,6 +106,10 @@ typedef struct _global
 	int town_dev_silver;
 	int town_dev_wood;
 	short nationfight_actorlevel;
+	int lost_rebuild_v1;
+	float lost_rebuild_v2;
+	short lost_rebuild_v3;
+	float lost_rebuild_v4;
 }Global;
 int global_init();
 void global_reload();

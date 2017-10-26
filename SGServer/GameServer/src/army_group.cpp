@@ -751,12 +751,40 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 		// 人口
 		lost_people = (int)min( ceil( pTargetCity->people * global.cityfight_rob_v3 ), building_people_max( pTargetCity ) );
 		rob_people = (int)ceil( lost_people * global.cityfight_rob_v4 );
-
+		if ( lost_people < 0 )
+			lost_people = 0;
+		if ( rob_people < 0 )
+			rob_people = 0;
 		// 损失
 		city_changesilver( pTargetCity->index, -lost_silver, PATH_FIGHT );
 		city_changewood( pTargetCity->index, -lost_wood, PATH_FIGHT );
 		city_changefood( pTargetCity->index, -lost_food, PATH_FIGHT );
 		city_changepeople( pTargetCity->index, -lost_people, PATH_FIGHT );
+		if ( pTargetCity->rb_silver <= 0 )
+		{
+			if ( pTargetCity->rb_num > 0 )
+			{ // 有高级重建家园
+				// 获得量 = Max（20000，防守方玩家损失资源量*0.9）
+				// 补充城防次数 = Min（10，防守方城墙等级）（只当防守方城墙系统开启后才给予）
+				pTargetCity->rb_num -= 1;
+				pTargetCity->rb_silver = (int)max( global.lost_rebuild_v1, lost_silver * global.lost_rebuild_v2 );
+				pTargetCity->rb_wood = (int)max( global.lost_rebuild_v1, lost_wood * global.lost_rebuild_v2 );
+				pTargetCity->rb_food = (int)max( global.lost_rebuild_v1, lost_food * global.lost_rebuild_v2 );
+				Building *pBuilding = building_getptr_kind( pTargetCity->index, BUILDING_Wall );
+				if ( pBuilding && pBuilding->level >= global.city_guard_level )
+				{
+					pTargetCity->rb_df = min( global.lost_rebuild_v3, pBuilding->level );
+				}
+			}
+			else
+			{ // 普通重建家园
+				// 获得量 = 防守方玩家损失资源量*0.3
+				pTargetCity->rb_silver = (int)ceil( lost_silver * global.lost_rebuild_v4 );
+				pTargetCity->rb_wood = (int)ceil( lost_wood * global.lost_rebuild_v4 );
+				pTargetCity->rb_food = (int)ceil( lost_food * global.lost_rebuild_v4 );
+			}
+			city_lost_rebuild( pTargetCity );
+		}
 
 		// 掠夺
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
@@ -799,7 +827,26 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
 		{
 			short move_posx, move_posy;
-			map_zone_randpos( zoneid, &move_posx, &move_posy );
+			if ( zoneid == MAPZONE_CENTERID )
+			{ // 如果玩家在皇城区域
+				int odds = rand() % 100;
+				if ( odds < 85 )
+				{
+					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+				}
+				else
+				{
+					map_zone_randpos( zoneid, &move_posx, &move_posy );
+				}
+			}
+			else
+			{
+				map_zone_randpos( zoneid, &move_posx, &move_posy );
+			}
+			if ( map_canmove( move_posx, move_posy ) == 0 )
+			{
+				map_zone_randpos( zoneid, &move_posx, &move_posy );
+			}
 			if ( map_canmove( move_posx, move_posy ) == 1 )
 			{
 				city_move( pTargetCity, move_posx, move_posy );
@@ -1345,6 +1392,14 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 			continue;
 		if ( g_armygroup[group_index].from_nation == pCity->nation )
 		{
+			return -1;
+		}
+	}
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 && g_map_town[townid].nation == 0 )
+	{// 如果是名城池，那么一个国家只能有7个
+		if ( nation_town_num( pCity->nation, MAPUNIT_TYPE_TOWN_TYPE7 ) >= 7 )
+		{
+			actor_notify_alert( actor_index, 1363 );
 			return -1;
 		}
 	}

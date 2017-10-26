@@ -86,8 +86,6 @@ function StoreDlgShow()
 		return;
 	end 
 	StoreDlgOpen()
-	-- 高级重建次数
-	SetText( m_uiRebuildNum, T(792).."x" )
 	-- 资源道具列表
 	local ResKindList = { 120, 121, 122 }
 	-- 当前资源量
@@ -118,4 +116,10 @@ function StoreDlgShow()
 			SetText( uiText, knum(ResNumList[i]).."/"..knum(ResProjectList[i]) )
 		end
 	end
+	system_askinfo( ASKINFO_LOSTREBUILD, "", 0 )
+end
+
+function StoreDlgRecvValue( num )
+	-- 高级重建次数
+	SetText( m_uiRebuildNum, T(792).."x"..num )
 end

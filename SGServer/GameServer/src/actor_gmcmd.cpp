@@ -28,6 +28,8 @@
 #include "map_town.h"
 #include "quest.h"
 #include "world_quest.h"
+#include "world_boss.h"
+#include "actor_times.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -334,6 +336,19 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		break;
 	case GMC_TOWNATTACK: // ¶¼³Ç¹¥»÷
 		map_town_attack( pValue[0] );
+		break;
+	case  GMC_WORLDBOSS:
+		if ( pValue[0] == -1 )
+		{
+			if ( pCity )
+			{
+				actor_set_today_char_times( pCity->actor_index, TODAY_CHAR_WORLDBOSS, 0 );
+			}
+		}
+		else if( pValue[0] > 0 )
+		{
+			worldboss_gm( pValue[0], pValue[1] );
+		}
 		break;
 	default:
 		break;

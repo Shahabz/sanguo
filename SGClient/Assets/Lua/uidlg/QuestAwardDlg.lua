@@ -90,6 +90,7 @@ end
 -- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,m_type=0;
 function QuestAwardDlgShow( recvValue )
 	QuestAwardDlgOpen()
+	QuestAwardDlgClear()
 	m_questid = recvValue.m_questid;
 	
 	-- 任务名
@@ -104,6 +105,20 @@ function QuestAwardDlgShow( recvValue )
 		SetText( uiObj.transform:Find("Name"), name );
 		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
 	end
+end
+
+-- 清空
+function QuestAwardDlgClear()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "m_uiUIP_Award(Clone)" then
+			m_ObjectPool:Release( "m_uiUIP_Award", obj );
+		end
+    end
 end
 
 -- 领取奖励

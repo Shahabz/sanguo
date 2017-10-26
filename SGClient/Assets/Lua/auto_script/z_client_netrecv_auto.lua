@@ -630,6 +630,16 @@ function netrecv_worldquest_C( buffer )
 	proc_worldquest_C( recvValue );
 end
 
+function netrecv_worldboss_C( buffer )
+	local recvValue = struct_NetS_WorldBoss_recv( buffer );
+	proc_worldboss_C( recvValue );
+end
+
+function netrecv_lostrebuild_C( buffer )
+	local recvValue = struct_NetS_LostRebuild_recv( buffer );
+	proc_lostrebuild_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -757,6 +767,8 @@ Proc_Command = {
 	[CMDS_CITYWARLIST]=netrecv_citywarlist_C;
 	[CMDS_CITYWARDEL]=netrecv_citywardel_C;
 	[CMDS_WORLDQUEST]=netrecv_worldquest_C;
+	[CMDS_WORLDBOSS]=netrecv_worldboss_C;
+	[CMDS_LOSTREBUILD]=netrecv_lostrebuild_C;
 }
 
 function in_proc_command_C( cmd, buffer )

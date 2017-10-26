@@ -48,7 +48,7 @@ int worldquest_init()
 	memset( g_world_questlist, 0, sizeof( int )*g_worldquestinfo_maxnum );
 
 	// 按照顺序读取任务列表
-	sprintf( szSQL, "select questid from quest order by sort asc;" );
+	sprintf( szSQL, "select questid from world_questinfo order by sort asc;" );
 	if ( mysql_query( myData, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
@@ -145,12 +145,27 @@ int worldquest_setvalue( int questid, int value )
 	}
 	world_data_set( WORLD_DATA_WORLDQUEST_BASE + saveindex, value, NULL, NULL );
 
-	// 通知全服在线玩家
-	for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+	if ( questid == WORLDQUEST_WORLDBOSS1 || questid == WORLDQUEST_WORLDBOSS2 )
 	{
-		if ( g_actors[tmpi].actorid > 0 )
+		// 通知全服在线玩家
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
 		{
-			worldquest_checkcomplete( tmpi, 1 );
+			if ( g_actors[tmpi].actorid > 0 )
+			{
+				worldquest_give( tmpi );
+				worldquest_sendinfo( tmpi );
+			}
+		}
+	}
+	else
+	{
+		// 通知全服在线玩家
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid > 0 )
+			{
+				worldquest_checkcomplete( tmpi, 1 );
+			}
 		}
 	}
 	return 0;
@@ -174,6 +189,13 @@ int worldquest_getcomplete( int actor_index, int questid, int *value )
 	if ( complete > 0 )
 	{
 		return 1;
+	}
+	else if ( questid == WORLDQUEST_WORLDBOSS1 || questid == WORLDQUEST_WORLDBOSS2 )
+	{
+		if ( worldquest_check( actor_index, questid, value ) == 1 )
+		{
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -242,7 +264,7 @@ int worldquest_sendinfo( int actor_index )
 		return -1;
 	SLK_NetS_WorldQuest pValue = { 0 };
 	int questid = g_actors[actor_index].worldquestid;
-	if ( questid > 0 && questid < g_worldquestinfo_maxnum )
+	if ( questid > 0 && questid < g_worldquestinfo_maxnum-1 )// -1,不发皇城血战
 	{
 		int datav = 0;
 		int complete = worldquest_check( actor_index, questid, &datav );
@@ -293,7 +315,7 @@ int worldquest_getaward( int actor_index, int questid )
 		return -1;
 
 	char dd = 1;
-	if ( questid == WORLDQUEST_ID4 || questid == WORLDQUEST_ID5 || questid == WORLDQUEST_ID6 || questid == WORLDQUEST_ID8 | questid == WORLDQUEST_ID9 )
+	if ( questid == WORLDQUEST_ID4 || questid == WORLDQUEST_ID5 || questid == WORLDQUEST_ID6 || questid == WORLDQUEST_ID8 || questid == WORLDQUEST_ID9 )
 	{
 		int saveindex = g_worldquestinfo[questid].saveindex;
 		if ( saveindex >= 0 && saveindex < 16 )

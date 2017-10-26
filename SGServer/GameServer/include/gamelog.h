@@ -79,6 +79,8 @@
 #define PATH_TOWNREPAIR					51	// 据点修复
 #define PATH_TOWNLEVY					52	// 据点征收
 #define PATH_TOWNDEV_CONTRIBUTE			53	// 都城开发捐献
+#define PATH_WORLDBOSS					54	// 世界boss
+#define PATH_LOSTREBUILD				55	// 重建家园
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

@@ -28,6 +28,8 @@
 #define AWARDKIND_BUILD_QUICK	50018 // 建造加速
 #define AWARDKIND_HERO_WASH		50019 // 免费洗髓次数
 #define AWARDKIND_EQUIP_WASH	50020 // 免费洗练次数
+#define AWARDKIND_LOSTREBUILD	50021 // 高级重建次数
+#define AWARDKIND_CITYGUARDNUM	50022 // 城防补充次数
 
 // 离线情况下的给予属性
 #define AWARDKIND_OTHERBASE	100000

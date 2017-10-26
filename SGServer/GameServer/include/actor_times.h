@@ -10,6 +10,7 @@ int actor_get_sflag( int actor_index, int offset );
 #define MAX_TODAY_COUNT		127
 #define TODAY_CHAR_BUYBODY		0 // 今天购买体力次数
 #define	TODAY_CHAR_LOGINAWARD	1 // 今天登陆奖励
+#define TODAY_CHAR_WORLDBOSS	2 // 今天是否打过世界boss
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );

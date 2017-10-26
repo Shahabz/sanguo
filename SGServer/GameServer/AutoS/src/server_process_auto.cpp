@@ -12,6 +12,7 @@
 #include "army.h"
 #include "city.h"
 #include "mail.h"
+#include "world_boss.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -243,5 +244,11 @@ void proc_mailreply_S( int client_index, SLK_NetC_MailReply *pValue )
 {
 	// process.
 	mail_actor_reply( client_index, pValue );
+}
+
+void proc_worldbossbattle_S( int client_index, SLK_NetC_WorldBossBattle *pValue )
+{
+	// process.
+	worldboss_battle( client_index, pValue );
 }
 

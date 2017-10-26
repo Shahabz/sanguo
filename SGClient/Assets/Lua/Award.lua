@@ -25,6 +25,8 @@ AWARDKIND_TRAIN_QUICK	=	50017 -- 募兵加速
 AWARDKIND_BUILD_QUICK	=	50018 -- 建造加速
 AWARDKIND_HERO_WASH		=	50019 -- 免费洗髓次数
 AWARDKIND_EQUIP_WASH	=	50020 -- 免费洗练次数
+AWARDKIND_LOSTREBUILD	=	50021 -- 高级重建次数
+AWARDKIND_CITYGUARDNUM	=	50022 -- 城防补充次数
 
 -- 奖励形象
 function AwardInfo( awardkind )
@@ -162,6 +164,14 @@ function AwardInfo( awardkind )
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1101)
+	elseif awardkind == AWARDKIND_LOSTREBUILD then -- 高级重建次数
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 2 );
+		name = T(1375)
+	elseif awardkind == AWARDKIND_CITYGUARDNUM then -- 城防补充次数
+		sprite = LoadSprite( "Char_Default" );
+		color = ItemColorSprite( 1 );
+		name = T(1377)
 	end
 	
 	if sprite == nil then

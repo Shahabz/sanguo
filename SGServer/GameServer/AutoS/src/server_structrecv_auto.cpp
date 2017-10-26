@@ -261,3 +261,12 @@ int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pVa
 	return 0;
 }
 
+int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBossBattle *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_bossid, (*pptr), (*psize) );
+	LKSET_MEM_RECV( pValue->m_herokind, (*pptr), 4*sizeof(short), (*psize) );
+	return 0;
+}
+

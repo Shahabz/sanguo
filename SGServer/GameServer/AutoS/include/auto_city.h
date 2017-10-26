@@ -70,6 +70,11 @@ struct _city {
 				char matnum_will[8];	//材料预定生产数量
 				char matkind_over[8];	//材料生产完毕
 				char matnum_over[8];	//材料生产完毕
+				short rb_num;	//重建家园次数
+				int rb_silver;	//给予的重建家园资源
+				int rb_wood;	//给予的重建家园资源
+				int rb_food;	//给予的重建家园资源
+				short rb_df;	//给予的重建家园资源
 				short nequip[6];	//国器等级
 				char nequip_kind;	//正在升级的国器
 				int nequip_sec;	//国器升级时间

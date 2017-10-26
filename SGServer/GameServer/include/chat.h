@@ -27,6 +27,7 @@ int system_talktonation( int nation, const char *szMsg, char roll );
 
 int system_talkjson_to( int actor_index, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll );
 int system_talkjson( int zone, int nation, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll );
+int system_talkjson_world( int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll );
 
 int system_roll( const char *szMsg );
 int system_rollto( int actor_index, const char *szMsg );

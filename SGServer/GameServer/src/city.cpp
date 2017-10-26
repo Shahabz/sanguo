@@ -31,6 +31,7 @@
 #include "map_event.h"
 #include "mail.h"
 #include "nation.h"
+#include "world_quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1008,7 +1009,8 @@ int city_changesilver( int city_index, int value, short path )
 		g_city[city_index].silver = INT_MAX;
 	else
 		g_city[city_index].silver += value;
-
+	if ( g_city[city_index].silver < 0 )
+		g_city[city_index].silver = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Silver pValue = { 0 };
 	pValue.m_add = value;
@@ -1027,7 +1029,8 @@ int city_changewood( int city_index, int value, short path )
 		g_city[city_index].wood = INT_MAX;
 	else
 		g_city[city_index].wood += value;
-
+	if ( g_city[city_index].wood < 0 )
+		g_city[city_index].wood = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Wood pValue = { 0 };
 	pValue.m_add = value;
@@ -1046,7 +1049,8 @@ int city_changefood( int city_index, int value, short path )
 		g_city[city_index].food = INT_MAX;
 	else
 		g_city[city_index].food += value;
-
+	if ( g_city[city_index].food < 0 )
+		g_city[city_index].food = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Food pValue = { 0 };
 	pValue.m_add = value;
@@ -1065,7 +1069,8 @@ int city_changeiron( int city_index, int value, short path )
 		g_city[city_index].iron = INT_MAX;
 	else
 		g_city[city_index].iron += value;
-
+	if ( g_city[city_index].iron < 0 )
+		g_city[city_index].iron = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Iron pValue = { 0 };
 	pValue.m_add = value;
@@ -1082,7 +1087,8 @@ int city_changepeople( int city_index, int value, short path )
 		g_city[city_index].people = INT_MAX;
 	else
 		g_city[city_index].people += value;
-
+	if ( g_city[city_index].people < 0 )
+		g_city[city_index].people = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_People pValue = { 0 };
 	pValue.m_add = value;
@@ -1099,7 +1105,8 @@ int city_changeprestige( int city_index, int value, short path )
 		g_city[city_index].prestige = INT_MAX;
 	else
 		g_city[city_index].prestige += value;
-
+	if ( g_city[city_index].prestige < 0 )
+		g_city[city_index].prestige = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Prestige pValue = { 0 };
 	pValue.m_add = value;
@@ -1116,7 +1123,8 @@ int city_changefriendship( int city_index, int value, short path )
 		g_city[city_index].friendship = INT_MAX;
 	else
 		g_city[city_index].friendship += value;
-
+	if ( g_city[city_index].friendship < 0 )
+		g_city[city_index].friendship = 0;
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_Friendship pValue = { 0 };
 	pValue.m_add = value;
@@ -3131,49 +3139,164 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			return -1;
 		}
 	}
+	// 当前的地区
+	char cur_zoneid = map_zone_getid( pCity->posx, pCity->posy );
+	char boss1_complete = 0;
+	char boss2_complete = 0;
+	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS1, NULL ) == 1 )
+	{ // 如果已经完成了世界任务张角
+		boss1_complete = 1;
+	}
+	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS2, NULL ) == 1 )
+	{ // 如果已经完成了世界任务董卓
+		boss2_complete = 1;
+	}
 
 	short move_posx = -1;
 	short move_posy = -1;
 	if ( itemkind == 131 )
 	{ // 已经解锁的地图纯随机
-
-	}
-	else if ( itemkind == 132 )
-	{ // 选择指定解锁地图随机
-		char zoneid = map_zone_getid( posx, posy );
-		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
-			return -1;
-		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
-			return -1;
-		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
-			return -1;
-		map_zone_randpos( zoneid, &move_posx, &move_posy );
-		if ( map_canmove( move_posx, move_posy ) == 0 )
-			return -1;
-	}
-	else if ( itemkind == 133 )
-	{ // 选择指定解锁地图指定坐标点
-		char zoneid = map_zone_getid( posx, posy );
-		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
-			return -1;
-		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
-			return -1;
-		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
-			return -1;
-		if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxWidth )
-			return 1;
-
-		if ( g_map.m_aTileData[posx][posy].unit_type == MAPUNIT_TYPE_EVENT )
-		{ // 如果坐标点是别人的随机事件，对方随机事件改变位置
-			if ( map_event_changepos_rand( g_map.m_aTileData[posx][posy].unit_index ) < 0 )
-				return -1;
+		short zoneidlist[32] = { 0 };
+		short zoneidcount = 0;
+		if ( boss2_complete == 1 )
+		{ // 全部地区已经解锁
+			for ( short tmp_zoneid = 1; tmp_zoneid < g_zoneinfo_maxnum; tmp_zoneid++ )
+			{
+				if ( g_zoneinfo[tmp_zoneid].open == 0 )
+					continue;
+				if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
+					continue;
+				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
+					continue;
+				zoneidlist[zoneidcount] = tmp_zoneid;
+				zoneidcount += 1;
+			}
 		}
-		else if ( g_map.m_aTileData[posx][posy].unit_type > 0 )
+		else if ( boss1_complete == 1 )
+		{ // 部分指定地图已经解锁
+			for ( short tmpi = 0; tmpi < 2; tmpi++ )
+			{
+				int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
+				if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
+					continue;
+				if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
+					continue;
+				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
+					continue;
+				zoneidlist[zoneidcount] = tmp_zoneid;
+				zoneidcount += 1;
+			}
+		}
+		if ( zoneidcount <= 0 )
 		{
 			return -1;
 		}
-		move_posx = posx;
-		move_posy = posy;
+		short index = rand() % zoneidcount;
+		short zoneid = zoneidlist[index];
+		// 如果玩家在皇城区域，有85%的概率会随机迁移到皇城区域的该国的领土内。5%几率迁移到其他国家的领土（包括群雄）。10%的几率飞到皇城以外的区域
+		if ( cur_zoneid == MAPZONE_CENTERID )
+		{
+			int odds = rand() % 100;
+			if ( odds < 85 )
+			{
+				map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+			}
+			else if ( odds < 90 )
+			{
+				map_zone_randpos( MAPZONE_CENTERID, &move_posx, &move_posy );
+			}
+			else
+			{
+				map_zone_randpos( zoneid, &move_posx, &move_posy );
+			}
+		}
+		else
+		{ // 不在皇城，暂时随机
+			map_zone_randpos( zoneid, &move_posx, &move_posy );
+		}
+		if ( map_canmove( move_posx, move_posy ) == 0 )
+			return -1;
+	}
+	else if ( itemkind == 132 || itemkind == 133 )
+	{ // 选择指定解锁地图随机 || 选择指定解锁地图指定坐标点
+		char zoneid = map_zone_getid( posx, posy );
+		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+			return -1;
+		if ( g_zoneinfo[zoneid].open == 0 )
+		{
+			actor_notify_alert( actor_index, 1365 );
+			return -1;
+		}
+		if ( boss2_complete == 1 )
+		{ // 全部地区已经解锁
+			
+		}
+		else if ( boss1_complete == 1 )
+		{ // 部分地区已经解锁
+			if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
+			{ // 需要击败世界boss董卓后才可前往该地图
+				actor_notify_alert( actor_index, 1368 );
+				return -1;
+			}
+		}
+
+		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
+		{ // 需要玩家等级{0}才可迁移到该地图
+			char v1[32] = { 0 };
+			sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
+			actor_notify_alert_v( actor_index, 1366, v1, NULL );
+			return -1;
+		}
+		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
+		{ // 需要击败{ 0 }级流寇才可迁移到该地图
+			char v1[32] = { 0 };
+			sprintf( v1, "%d", g_zoneinfo[zoneid].killenemy );
+			actor_notify_alert_v( actor_index, 1367, v1, NULL );
+			return -1;
+		}
+
+		if ( itemkind == 132 )
+		{ // 选择指定解锁地图随机
+			if ( zoneid == MAPZONE_CENTERID )
+			{
+				int odds = rand() % 100;
+				if ( odds < 85 )
+				{
+					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+				}
+				else
+				{
+					map_zone_randpos( zoneid, &move_posx, &move_posy );
+				}
+			}
+			else
+			{
+				map_zone_randpos( zoneid, &move_posx, &move_posy );
+			}
+			if ( map_canmove( move_posx, move_posy ) == 0 )
+			{
+				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				if ( map_canmove( move_posx, move_posy ) == 0 )
+					return -1;
+				return -1;
+			}
+		}
+		else
+		{ // 选择指定解锁地图指定坐标点
+			if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxWidth )
+				return 1;
+			if ( g_map.m_aTileData[posx][posy].unit_type == MAPUNIT_TYPE_EVENT )
+			{ // 如果坐标点是别人的随机事件，对方随机事件改变位置
+				if ( map_event_changepos_rand( g_map.m_aTileData[posx][posy].unit_index ) < 0 )
+					return -1;
+			}
+			else if ( g_map.m_aTileData[posx][posy].unit_type > 0 )
+			{
+				return -1;
+			}
+			move_posx = posx;
+			move_posy = posy;
+		}
 	}
 	else
 		return -1;
@@ -3516,5 +3639,64 @@ int city_spy( int actor_index, int unit_index, int type )
 		//mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
 	}
 
+	return 0;
+}
+
+// 家园重建
+int city_lost_rebuild( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	if ( pCity->actor_index < 0 )
+		return -1;
+	if ( pCity->rb_silver <= 0 )
+		return -1;
+	SLK_NetS_LostRebuild pValue = {0};
+	pValue.m_rb_silver = pCity->rb_silver;
+	pValue.m_rb_wood = pCity->rb_wood;
+	pValue.m_rb_food = pCity->rb_food;
+	pValue.m_rb_df = pCity->rb_df;
+	netsend_lostrebuild_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int city_lost_rebuild_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->rb_silver > 0 )
+	{
+		city_changesilver( pCity->index, pCity->rb_silver, PATH_LOSTREBUILD );
+		pCity->rb_silver = 0;
+	}
+	if ( pCity->rb_wood > 0 )
+	{
+		city_changewood( pCity->index, pCity->rb_wood, PATH_LOSTREBUILD );
+		pCity->rb_wood = 0;
+	}
+	if ( pCity->rb_food > 0 )
+	{
+		city_changefood( pCity->index, pCity->rb_food, PATH_LOSTREBUILD );
+		pCity->rb_food = 0;
+	}
+	if ( pCity->rb_df > 0 )
+	{
+		pCity->rb_df = 0;
+	}
+	return 0;
+}
+
+int city_lost_rebuild_num( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int value[2] = { 0 };
+	value[0] = 0;
+	value[1] = pCity->rb_num;
+	actor_notify_value( actor_index, NOTIFY_LOSTREBUILD, 2, value, NULL );
 	return 0;
 }

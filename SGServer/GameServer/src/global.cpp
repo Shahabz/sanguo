@@ -370,6 +370,22 @@ int global_init()
 		{
 			global.nationfight_actorlevel = atoi( row[1] );
 		}
+		else if ( id == 122 )
+		{
+			global.lost_rebuild_v1 = atoi( row[1] );
+		}
+		else if ( id == 123 )
+		{
+			global.lost_rebuild_v2 = value;
+		}
+		else if ( id == 124 )
+		{
+			global.lost_rebuild_v3 = atoi( row[1] );
+		}
+		else if ( id == 125 )
+		{
+			global.lost_rebuild_v4 = value;
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

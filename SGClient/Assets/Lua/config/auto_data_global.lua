@@ -120,3 +120,7 @@ global.town_dev_contribute = 10 --都城开发-捐献
 global.town_dev_silver = 200000 --都城开发捐献银币
 global.town_dev_wood = 130000 --都城开发捐献木材
 global.nationfight_actorlevel = 45 --国战玩家等级限制
+global.lost_rebuild_v1 = 20000 --重建家园参数
+global.lost_rebuild_v2 = 0.900000 --重建家园参数
+global.lost_rebuild_v3 = 10 --重建家园参数
+global.lost_rebuild_v4 = 0.300000 --重建家园参数

@@ -1201,6 +1201,7 @@ function struct_NetS_MonsterInfo_recv( buffer )
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_color = buffer:ReadSByte();
 	recvValue.m_corps = buffer:ReadSByte();
+	recvValue.m_hp = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -1215,6 +1216,7 @@ function struct_NetS_StoryRank_recv( buffer )
 	end
 	recvValue.m_exp = buffer:ReadInt();
 	recvValue.m_body = buffer:ReadSByte();
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1650,6 +1652,25 @@ function struct_NetS_WorldQuest_recv( buffer )
 	recvValue.m_maxvalue = buffer:ReadShort();
 	recvValue.m_complete = buffer:ReadSByte();
 	recvValue.m_dd = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_WorldBoss_recv( buffer )
+	local recvValue = {};
+	recvValue.m_bossid = buffer:ReadSByte();
+	recvValue.m_hp = buffer:ReadInt();
+	recvValue.m_maxhp = buffer:ReadInt();
+	recvValue.m_isfight = buffer:ReadSByte();
+	recvValue.m_actorlevel = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_LostRebuild_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rb_silver = buffer:ReadInt();
+	recvValue.m_rb_wood = buffer:ReadInt();
+	recvValue.m_rb_food = buffer:ReadInt();
+	recvValue.m_rb_df = buffer:ReadInt();
 	return recvValue;
 end
 

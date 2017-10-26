@@ -47,6 +47,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "nation.h"
+#include "world_boss.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -202,6 +203,8 @@ void actors_on_core()
 	map_res_save( fp );
 	// 所有随机事件点保存
 	map_event_save( fp );
+	// 所有世界boss
+	world_boss_save( fp );
 	if ( fp )
 	{
 		char szSQL[512] = { 0 };
@@ -763,6 +766,9 @@ int actor_entercity( int actor_index )
 
 	// 
 	sc_OnActorIn( actor_index );
+
+	// 重建家园
+	city_lost_rebuild( city_getptr( actor_index ) );
 
 	// 登陆奖励
 	actor_loginaward( actor_index );

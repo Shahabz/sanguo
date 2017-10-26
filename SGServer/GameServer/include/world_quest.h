@@ -8,10 +8,11 @@
 #define WORLDQUEST_ID4	4	//	攻克营地
 #define WORLDQUEST_ID5	5	//	攻克郡县
 #define WORLDQUEST_ID6	6	//	攻克郡城
-#define WORLDQUEST_ID7	7	//	世界boss
+#define WORLDQUEST_WORLDBOSS1	7	//	世界boss 张角
 #define WORLDQUEST_ID8	8	//	攻克州郡
 #define WORLDQUEST_ID9	9	//	攻克州城
-#define WORLDQUEST_ID10	10	//	世界boss
+#define WORLDQUEST_WORLDBOSS2	10	//	世界boss 董卓
+#define WORLDQUEST_ID11	11	//	皇城血战开启
 
 int worldquest_init();
 int worldquest_reload();

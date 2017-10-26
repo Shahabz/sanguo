@@ -47,7 +47,7 @@ int worldbossinfo_init_auto()
 	g_worldbossinfo = (WorldBossInfo *)malloc( sizeof(WorldBossInfo)*g_worldbossinfo_maxnum );
 	memset( g_worldbossinfo, 0, sizeof(WorldBossInfo)*g_worldbossinfo_maxnum );
 
-	sprintf( szSQL, "select `bossid`,`monster` from world_bossinfo;" );
+	sprintf( szSQL, "select `bossid`,`monster`,`hp`,`exp`,`actorlevel`,`awardgroup`,`kill_awardgroup` from world_bossinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,11 @@ int worldbossinfo_init_auto()
 			continue;
 		g_worldbossinfo[bossid].bossid = atoi(row[offset++]);
 		memcpy( g_worldbossinfo[bossid].monster, row[offset++], 128 ); g_worldbossinfo[bossid].monster[127]=0;
+		g_worldbossinfo[bossid].hp = atoi(row[offset++]);
+		g_worldbossinfo[bossid].exp = atoi(row[offset++]);
+		g_worldbossinfo[bossid].actorlevel = atoi(row[offset++]);
+		g_worldbossinfo[bossid].awardgroup = atoi(row[offset++]);
+		g_worldbossinfo[bossid].kill_awardgroup = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

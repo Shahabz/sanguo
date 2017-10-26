@@ -24,6 +24,7 @@
 #include "item.h"
 #include "actor_notify.h"
 #include "fight.h"
+#include "world_boss.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -77,6 +78,9 @@ extern Map g_map;
 
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
+
+extern WorldBoss *g_world_boss;
+extern int g_world_boss_maxcount;
 
 Fight g_fight;
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
@@ -710,6 +714,90 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 	return 0;
 }
 
+// 战斗启动-世界boss
+int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
+{
+	g_gm_isout = 0;
+	g_gm_outresult[0] = '\0';
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int bossid = pValue->m_bossid;
+	if ( bossid <= 0 || bossid >= g_world_boss_maxcount )
+		return -1;
+
+	memset( &g_fight, 0, sizeof( Fight ) );
+	g_fight.attack_armyindex = -1;
+	g_fight.defense_index = -1;
+	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
+	g_fight.randspeed = (int)time( NULL );
+
+	fight_debug( "\n\n============================================== WORLDBOSS FIGHT START ==============================================" );
+	int result = 0;
+
+	// 玩家出战英雄
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		short herokind = pValue->m_herokind[tmpi];
+		if ( herokind > 0 )
+		{
+			Hero *pHero = hero_getptr( actor_index, herokind );
+			if ( !pHero )
+				continue;
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_HERO, -1, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+		}
+	}
+
+	// 世界boss
+	for ( int tmpi = 0; tmpi < WORLDBOSS_MONSTER_MAX; tmpi++ )
+	{
+		int monsterid = g_world_boss[bossid].monster[tmpi];
+		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+			break;
+		MonsterInfo *pMonster = &g_monster[monsterid];
+		if ( !pMonster )
+			continue;
+		fight_add_hero( FIGHT_DEFENSE, 0, -1, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
+			pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill );
+	}
+	g_fight.type = FIGHTTYPE_WORLDBOSS;
+
+	// 战斗回合
+	for ( int tmpi = 0; tmpi < FIGHT_TURNS_MAX; tmpi++ )
+	{
+		result = fight_oneturn();
+		if ( result > 0 )
+		{
+			break;
+		}
+	}
+	if ( result == 0 )
+	{
+		//  超过%回合
+		fight_debug( "[pass turns]" );
+		g_fight.result = FIGHT_LOSE;
+	}
+	else
+	{
+		if ( result == FIGHT_WIN )
+		{
+			fight_debug( "[ATK WIN]" );
+			g_fight.result = FIGHT_WIN;
+		}
+		else if ( result == FIGHT_LOSE )
+		{
+			fight_debug( "[DEF WIN]" );
+			g_fight.result = FIGHT_LOSE;
+		}
+	}
+	return 0;
+}
+
 // 战斗每一回合
 int fight_oneturn()
 {
@@ -1093,6 +1181,8 @@ int fight_lost_calc_single( FightUnit *pUnit )
 }
 int fight_lost_calc()
 {
+	if ( g_fight.type == FIGHTTYPE_STORY || g_fight.type == FIGHTTYPE_WORLDBOSS )
+		return -1;
 	for ( int tmpi = 0; tmpi < FIGHT_UNIT_MAX; tmpi++ )
 	{
 		if ( g_fight.attack_unit[tmpi].offset < 0 )
