@@ -3239,6 +3239,19 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 				return -1;
 			}
 		}
+		else
+		{
+			if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
+			{ // 需要击败世界boss董卓后才可前往该地图
+				actor_notify_alert( actor_index, 1368 );
+				return -1;
+			}
+			else
+			{ // 需要击败世界boss张角后才可前往该地图
+				actor_notify_alert( actor_index, 1378 );
+				return -1;
+			}
+		}
 
 		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
 		{ // 需要玩家等级{0}才可迁移到该地图
