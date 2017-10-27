@@ -25,6 +25,7 @@ local m_custom_name = "";
 
 -- 打开界面
 function MapTownExDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_2" )
 	m_Dlg = eye.uiManager:Open( "MapTownExDlg" );
 end
 
@@ -40,6 +41,7 @@ end
 -- 删除界面
 function MapTownExDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_2" )
 	m_Dlg = nil;
 end
 

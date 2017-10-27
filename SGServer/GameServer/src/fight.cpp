@@ -87,6 +87,11 @@ extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 char g_gm_isout = 0;
 extern int g_map_town_attackmonster[3][8];
 static char *s_fight_posname[] = { "", "attack", "defense" };
+#ifdef _WIN32
+char g_test_fightpower = 1;
+#else
+char g_test_fightpower = 0;
+#endif
 
 // µ÷ÊÔÊä³ö
 #define FIGHT_DEBUG
@@ -555,9 +560,8 @@ int fight_start_armygroup( int group_index )
 				if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
 					continue;
 				int soldier = pTown->soldier[tmpi];
-#ifdef _WIN32
-				soldier /= 100;
-#endif // _WIN32
+				if ( g_test_fightpower == 1 )
+					soldier /= 100;
 
 				if ( soldier <= 0 )
 					continue;

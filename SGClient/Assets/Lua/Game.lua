@@ -69,8 +69,10 @@ function GameManager.Restart()
 end
 	
 -- 主逻辑秒
+GameManager.LastGameLogicTime = 0;
+GameManager.HeartTime = 0;
 function GameManager.GameLogic()
-	--gamelog( "GameLogic:"..os.time() )
+	gamelog( "GameLogic:"..os.time() )
 	-- 建造队列
 	if GetPlayer().m_worker_sec > 0 then
 		GetPlayer().m_worker_sec = GetPlayer().m_worker_sec - 1;
@@ -124,6 +126,18 @@ function GameManager.GameLogic()
 	
 	-- 自动洗练
 	EquipWashDlgAuto()
+	
+	-- 记录上一次logic的时间
+	GameManager.LastGameLogicTime = os.time();
+	
+	-- 心跳
+	GameManager.HeartTime = GameManager.HeartTime + 1;
+	if GameManager.HeartTime > 120 then
+		local sendValue = {};
+		sendValue.m_value = 0;
+		netsend_heart_C( sendValue )
+		GameManager.HeartTime = 0;
+	end
 end
 
 -- 请求退出游戏
@@ -162,16 +176,21 @@ function GameManager.OnApplicationPause( paused )
 	
 	-- 从后台进入前台时
 	else
-
-		gamelog( "PauseTime:"..GameManager.OnApplicationPauseTime.." os.time():"..os.time() );
+		local PauseTime = os.time() - GameManager.OnApplicationPauseTime;
+		gamelog( "PauseTime:"..PauseTime );
+		
+		-- 进入前台后，检查主逻辑运转
+		local gamelogicTime = os.time() - GameManager.LastGameLogicTime;
+		for i=1, gamelogicTime, 1 do
+			GameManager.GameLogic();
+		end
 		-- 检测是否断线
-		if GameManager.OnApplicationPauseTime > 0 and os.time() - GameManager.OnApplicationPauseTime > 180 then
+		if GameManager.OnApplicationPauseTime > 0 and PauseTime > 300 then
 			
 				if Const.NetStatus > 2 or GameManager.restart == true then
 					Invoke( function() 
-							eye.uiManager:Clear();
-							LoginModDestroy();
-							SceneManager.LoadScene( "launcher" ); 
+							GameManager.Restart()
+							GameManager.Logout( 0 );
 						end, 1/2 ); 
 				end
 				Const.NetStatus = 0;

@@ -23,7 +23,7 @@ struct _slk_NetC_Create {
 typedef struct _slk_NetC_Create SLK_NetC_Create;	//客户端请求创建角色
 
 struct _slk_NetC_Heart {
-	int m_value[2];	//心跳-数值
+	int m_value;	//心跳-数值
 };
 typedef struct _slk_NetC_Heart SLK_NetC_Heart;	//心跳
 

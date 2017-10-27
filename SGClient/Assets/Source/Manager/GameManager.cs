@@ -122,17 +122,17 @@ public class GameManager : MonoBehaviour {
 
     void OnApplicationPause( bool paused )
     {
-        //if ( paused )
-        //{
-        //    GameManager.isInBackground = true;
-        //}
-        //else
-        //{
-        //    GameManager.isInBackground = false;
-        //    setDesignContentScale();
-        //}
-        //object[] param = { paused };
-        //LuaFun.gamePause.Call( param );
+        if ( paused )
+        {
+            GameManager.isInBackground = true;
+        }
+        else
+        {
+            GameManager.isInBackground = false;
+            setDesignContentScale();
+        }
+        object[] param = { paused };
+        LuaFun.gamePause.Call( param );
     }
 
     private static int scaleWidth = 0;

@@ -42,6 +42,7 @@ local m_own_maxsec = 0;
 
 -- 打开界面
 function MapTownDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_1" )
 	m_Dlg = eye.uiManager:Open( "MapTownDlg" );
 end
 
@@ -57,6 +58,7 @@ end
 -- 删除界面
 function MapTownDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_1" )
 	m_Dlg = nil;
 end
 

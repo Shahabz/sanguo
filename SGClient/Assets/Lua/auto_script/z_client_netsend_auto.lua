@@ -40,7 +40,7 @@ function netsend_delete_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
--- m_value={[2]},
+-- m_value=0,
 function netsend_heart_C( sendValue )
 	local buf = ByteBuffer.New();
 	buf:WriteShort( CMDC_HEART );

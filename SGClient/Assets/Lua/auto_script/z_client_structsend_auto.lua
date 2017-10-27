@@ -19,9 +19,7 @@ function struct_NetC_Create_send( buf, sendValue )
 end
 
 function struct_NetC_Heart_send( buf, sendValue )
-	for tmpi=1,2,1 do
-		buf:WriteInt( sendValue.m_value[tmpi] );
-	end
+	buf:WriteInt( sendValue.m_value );
 end
 
 function struct_NetC_Gmcmd_send( buf, sendValue )

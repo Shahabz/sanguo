@@ -56,7 +56,7 @@ struct _slk_NetS_Delete {
 typedef struct _slk_NetS_Delete SLK_NetS_Delete;	//服务器返回删除角色
 
 struct _slk_NetS_Heart {
-	int m_value[2];	//心跳-数值
+	int m_value;	//心跳-数值
 };
 typedef struct _slk_NetS_Heart SLK_NetS_Heart;	//心跳
 

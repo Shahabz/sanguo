@@ -61,7 +61,7 @@ int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue )
 {
 	int tmpi = 0;
 
-	LKSET_MEM_RECV( pValue->m_value, (*pptr), 2*sizeof(int), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_value, (*pptr), (*psize) );
 	return 0;
 }
 

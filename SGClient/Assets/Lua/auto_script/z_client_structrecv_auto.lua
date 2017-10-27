@@ -66,10 +66,7 @@ end
 
 function struct_NetS_Heart_recv( buffer )
 	local recvValue = {};
-	recvValue.m_value={};
-	for tmpi=1,2,1 do
-		recvValue.m_value[tmpi] = buffer:ReadInt();
-	end
+	recvValue.m_value = buffer:ReadInt();
 	return recvValue;
 end
 

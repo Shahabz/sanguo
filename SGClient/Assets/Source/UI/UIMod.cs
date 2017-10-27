@@ -47,7 +47,6 @@ public class UIMod : MonoBehaviour
 	public GameObject[] relatedGameObject;
 
 	public string uiName = "";
-	public string uiABName = "";
 	// 事件函数
 	protected LuaFunction onAwake;
 	protected LuaFunction onStart;

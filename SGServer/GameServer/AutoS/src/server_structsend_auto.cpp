@@ -101,7 +101,7 @@ int struct_NetS_Heart_send( char **pptr, int *psize, SLK_NetS_Heart *pValue )
 {
 	int tmpi = 0;
 
-	LKSET_MEM_SEND( (*pptr), pValue->m_value, 2*sizeof(int), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	return 0;
 }
 
