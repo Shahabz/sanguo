@@ -201,7 +201,7 @@ int nation_people_capital_set( int nation, int people )
 // 该国家指定类型城池数量
 int nation_town_num( int nation, int towntype )
 {
-	if ( nation <= 0 || nation >= NATION_MAX )
+	if ( nation < 0 || nation >= NATION_MAX )
 		return 0;
 	int num = 0;
 	for ( int townid = 1; townid < g_map_town_maxcount; townid++ )

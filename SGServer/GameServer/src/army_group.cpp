@@ -1063,6 +1063,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		{ // 如果是都城
 			nation_capital_townid( attackNation, townid );
 			nation_people_capital_set( attackNation, 0 );
+			map_town_attack_checkstart();
 		}
 		
 		if ( notify == 0 )

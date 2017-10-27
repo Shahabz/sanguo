@@ -18,6 +18,7 @@
 #include "server_netsend_auto.h"
 #include "quest.h"
 #include "world_quest.h"
+#include "map_zone.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -88,6 +89,7 @@ int worldquest_give( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	int give_questid = 0;
 	for ( int tmpi = 0; tmpi < g_worldquestinfo_maxnum; tmpi++ )
 	{
 		int questid = g_world_questlist[tmpi];
@@ -103,6 +105,7 @@ int worldquest_give( int actor_index )
 		if ( preid > 0 && worldquest_getcomplete( actor_index, preid, NULL ) == 0 )
 			continue;
 
+		give_questid = questid;
 		if ( g_actors[actor_index].worldquestid != questid )
 		{
 			g_actors[actor_index].worldquestid = questid;
@@ -287,6 +290,18 @@ int worldquest_sendinfo( int actor_index )
 		pValue.m_questid = 0;
 	}
 	netsend_worldquest_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 是否需要通知前往州城
+	if ( pValue.m_questid == 0 )
+	{
+		map_zone_goto_zc_send( actor_index );
+	}
+
+	// 是否需要通知血战皇城
+	if ( pValue.m_questid == 0 )
+	{
+
+	}
 	return 0;
 }
 

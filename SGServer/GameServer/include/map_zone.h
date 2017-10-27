@@ -1,6 +1,9 @@
 #ifndef _MAP_ZONE_H_
 #define _MAP_ZONE_H_
 #include "define.h"
+#define MAPZONE_TYPE0		0 // 郡地
+#define MAPZONE_TYPE1		1 // 州地
+#define MAPZONE_TYPE2		2 // 皇城
 #define MAPZONE_CENTERID	13
 
 int map_zone_load();
@@ -45,4 +48,10 @@ int map_zone_center_townlist( int actor_index );
 
 // 地区皇城区域都城和名城更新
 int map_zone_center_townchange( int townid );
+
+// 显示前往州城按钮
+int map_zone_goto_zc_send( int actor_index );
+
+// 前往州城
+int map_zone_goto_zc( int actor_index );
 #endif 

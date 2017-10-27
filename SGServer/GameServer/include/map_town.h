@@ -53,6 +53,8 @@ int map_town_levy( int actor_index, int townid );
 // 城镇领主奖励
 int map_town_owner_award();
 
+// 都城出动禁卫军功能启动
+int map_town_attack_checkstart();
 // 都城出动禁卫军
 int map_town_attack( int townid );
 

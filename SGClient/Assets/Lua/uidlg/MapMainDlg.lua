@@ -11,6 +11,9 @@ local m_uiNationLayerScroll = nil; --UnityEngine.GameObject
 local m_uiNationLayerContent = nil; --UnityEngine.GameObject
 local m_uiUIP_TownInfo = nil; --UnityEngine.GameObject
 local m_uiWorldQuest = nil; --UnityEngine.GameObject
+local m_uiGotoZone = nil; --UnityEngine.GameObject
+local m_uiActivity1 = nil; --UnityEngine.GameObject
+local m_uiActivity2 = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
@@ -90,6 +93,10 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 世界任务
 		elseif nControlID == 10 then
 			MapMainDlgClickWorldMap()
+		
+		-- 前往州城
+		elseif nControlID == 11 then
+			MapMainDlgClickGotoZone()	
 			
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
@@ -129,6 +136,9 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiNationLayerContent = objs[8];
 	m_uiUIP_TownInfo = objs[9];
 	m_uiWorldQuest = objs[10];
+	m_uiGotoZone = objs[11];
+	m_uiActivity1 = objs[12];
+	m_uiActivity2 = objs[13];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -166,6 +176,10 @@ end
 ----------------------------------------
 function MapMainDlgShow()
 	MapMainDlgOpen()
+	SetFalse( m_uiWorldQuest )
+	SetFalse( m_uiGotoZone )
+	SetFalse( m_uiActivity1 )
+	SetFalse( m_uiActivity2 )
 	for i = 0, 3, 1 do
 		local UIP_BattleInfo = m_uiHeroLayerGrid.transform:GetChild(i).gameObject
 		SetFalse( UIP_BattleInfo )
@@ -531,9 +545,7 @@ function MapMainDlgSetWorldQuest( recvValue )
 	m_WorldQuestCache = recvValue;
 	local questid = recvValue.m_questid
 	if questid == 0 then
-		SetFalse( m_uiWorldQuest );
-		-- 请求皇城血战
-		
+		SetFalse( m_uiWorldQuest );		
 		return;
 	end
 	SetTrue( m_uiWorldQuest );
@@ -567,6 +579,29 @@ function MapMainDlgClickWorldMap()
 	else
 		WorldQuestInfoDlgShow( m_WorldQuestCache )
 	end
+end
+
+-- 前往州城通知
+function MapMainDlgShowGotoZone()
+	SetTrue( m_uiGotoZone )
+end
+function MapMainDlgHideGotoZone()
+	SetFalse( m_uiGotoZone )
+end
+function MapMainDlgClickGotoZone()
+	NpcAlert( T(1370), T(1371), T(1372), T(1373), function()
+		system_askinfo( ASKINFO_QUEST, "", 15 );
+	end )
+end	
+
+-- 活动
+function MapMainDlgShowActivity()
+	--SetFalse( m_uiActivity1 )
+	--SetFalse( m_uiActivity2 )
+end
+function MapMainDlgHideActivity()
+	--SetFalse( m_uiActivity1 )
+	--SetFalse( m_uiActivity2 )
 end
 
 -- 小地图

@@ -20,6 +20,7 @@
 #define NOTIFY_MAIL			13	// 邮件
 #define NOTIFY_ALERT		14	// 弹出确定消息
 #define NOTIFY_LOSTREBUILD	15	// 高级重建次数
+#define NOTIFY_MAPZONEGOZC	16	// 前往州城的显示和隐藏
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

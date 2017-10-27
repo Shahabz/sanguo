@@ -112,6 +112,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 世界boss信息
 			worldboss_sendbattleinfo( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 15 )
+		{ // 首次免费前往州城
+			map_zone_goto_zc( actor_index );
+		}
 		break;
 	case ASKINFO_BUILDING:
 		if ( pvalue[0] == 0 )

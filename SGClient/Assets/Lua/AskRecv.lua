@@ -15,6 +15,7 @@ NOTIFY_VALUECHANGE	=	12	-- 值改变
 NOTIFY_MAIL			=	13	-- 邮件
 NOTIFY_ALERT		=	14	-- 消息确定框
 NOTIFY_LOSTREBUILD	=	15	-- 高级重建次数
+NOTIFY_MAPZONEGOZC	=	16	-- 前往州城的显示和隐藏
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -138,6 +139,14 @@ function RecvActorNotify(recvValue)
 	elseif msgid == NOTIFY_LOSTREBUILD then
 		if value[1] == 0 then
 			StoreDlgRecvValue( value[2] )
+		end
+	
+	-- 前往州城的显示和隐藏	
+	elseif msgid == NOTIFY_MAPZONEGOZC then
+		if value[1] == 0 then
+			MapMainDlgHideGotoZone()
+		elseif value[1] == 1 then	
+			MapMainDlgShowGotoZone()
 		end
     end
 end

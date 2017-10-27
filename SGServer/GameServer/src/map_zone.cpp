@@ -12,6 +12,8 @@
 #include "actor.h"
 #include "server_netsend_auto.h"
 #include "actor_send.h"
+#include "actor_notify.h"
+#include "actor_times.h"
 #include "map.h"
 #include "global.h"
 #include "mapunit.h"
@@ -21,6 +23,7 @@
 #include "map_zone.h"
 #include "map_town.h"
 #include "army_group.h"
+#include "world_quest.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -586,5 +589,87 @@ int map_zone_center_townchange( int townid )
 	pValue.m_townid = townid;
 	pValue.m_nation = g_map_town[townid].nation;
 	netsend_mapcentertown_S( 0, SENDTYPE_WORLDMAP, &pValue );
+	return 0;
+}
+
+// 显示前往州城按钮
+int map_zone_goto_zc_send( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char cur_zoneid = pCity->zone;
+	if ( cur_zoneid <= 0 || cur_zoneid >= g_zoneinfo_maxnum )
+		return -1;
+	if ( g_zoneinfo[cur_zoneid].type != MAPZONE_TYPE0 )
+		return -1;
+	
+	int value = 1;
+	actor_notify_value( actor_index, NOTIFY_MAPZONEGOZC, 1, &value, NULL );
+	return 0;
+}
+
+// 前往州城
+int map_zone_goto_zc( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC ) == 1 )
+		return -1;
+	// 当前的地区
+	char cur_zoneid = pCity->zone;
+	char boss2_complete = 0;
+	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS2, NULL ) == 1 )
+	{ // 如果已经完成了世界任务董卓
+		boss2_complete = 1;
+	}
+	if ( boss2_complete == 0 )
+		return -1;
+
+	short goto_zoneid = 0;
+	for ( short tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
+		if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
+			continue;
+		if ( g_zoneinfo[tmp_zoneid].type == MAPZONE_TYPE1 )
+		{
+			goto_zoneid = tmp_zoneid;
+			break;
+		}
+	}
+	if ( goto_zoneid <= 0 || goto_zoneid >= g_zoneinfo_maxnum )
+	{
+		return -1;
+	}
+
+	short move_posx = -1;
+	short move_posy = -1;
+	if ( pCity->level < g_zoneinfo[goto_zoneid].actorlevel )
+	{ // 需要玩家等级{0}才可迁移到该地图
+		char v1[32] = { 0 };
+		sprintf( v1, "%d", g_zoneinfo[goto_zoneid].actorlevel );
+		actor_notify_alert_v( actor_index, 1366, v1, NULL );
+		return -1;
+	}
+	if ( pCity->mokilllv < g_zoneinfo[goto_zoneid].killenemy )
+	{ // 需要击败{ 0 }级流寇才可迁移到该地图
+		char v1[32] = { 0 };
+		sprintf( v1, "%d", g_zoneinfo[goto_zoneid].killenemy );
+		actor_notify_alert_v( actor_index, 1367, v1, NULL );
+		return -1;
+	}
+	map_zone_randpos( goto_zoneid, &move_posx, &move_posy );
+	if ( map_canmove( move_posx, move_posy ) == 0 )
+		return -1;
+	city_move( pCity, move_posx, move_posy );
+
+	actor_set_sflag( actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC, 1 );
+	// 隐藏前往州城按钮
+	int value = 0;
+	actor_notify_value( actor_index, NOTIFY_MAPZONEGOZC, 1, &value, NULL );
 	return 0;
 }

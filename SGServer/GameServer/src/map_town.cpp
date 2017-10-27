@@ -944,6 +944,51 @@ int map_town_owner_award()
 	return 0;
 }
 
+// 都城出动禁卫军功能启动
+int map_town_attack_checkstart()
+{
+	int num = 0;
+	for ( int townid = 301; townid <= 304; townid++ )
+	{
+		if ( g_map_town[townid].nation > 0 )
+		{
+			num += 1;
+		}
+	}
+	if ( num >= 3 )
+	{ // 满足3个都城都被占领
+		char start = 0;
+		for ( int townid = 301; townid <= 304; townid++ )
+		{
+			if ( g_map_town[townid].attackcd > 0 )
+			{
+				start = 1;
+				break;
+			}
+		}
+
+		// 当前拥有名称最少的国家先发兵
+		int xlist[4] = { 0 };
+		int ylist[4] = { 0, 1, 2, 3 };
+		for ( int nation = 0; nation < 3; nation++ )
+		{
+			xlist[nation] = nation_town_num( nation, MAPUNIT_TYPE_TOWN_TYPE7 );
+		}
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			for ( int tmpj = tmpi+1; tmpj < 4; tmpj++ )
+			{
+				if ( xlist[tmpj] > xlist[tmpi] )
+				{
+
+				}
+			}
+		}
+
+	}
+	return 0;
+}
+
 // 都城出动禁卫军
 int map_town_attack( int townid )
 {

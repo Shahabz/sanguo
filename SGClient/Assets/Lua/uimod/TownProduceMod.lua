@@ -62,5 +62,10 @@ function TownProduceModClick( gameObject )
 	if recvValue == nil then
 		return;
 	end
-	MapTownDlgShow( 1, recvValue )
+	local nation = recvValue.m_char_value[1];
+	if nation == GetPlayer().m_nation then
+		MapTownDlgShow( 1, recvValue )
+	else
+		AlertMsg( T(1290) )
+	end
 end

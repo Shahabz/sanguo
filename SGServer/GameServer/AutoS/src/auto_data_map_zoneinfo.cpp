@@ -47,7 +47,7 @@ int mapzoneinfo_init_auto()
 	g_zoneinfo = (MapZoneInfo *)malloc( sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 	memset( g_zoneinfo, 0, sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`open`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy`,`enemykind`,`enemynum`,`reskind`,`resnum`,`eventkind`,`eventnum`,`actorlevel`,`killenemy`,`questid`,`move_zoneid0`,`move_zoneid1` from map_zoneinfo;" );
+	sprintf( szSQL, "select `id`,`open`,`type`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy`,`enemykind`,`enemynum`,`reskind`,`resnum`,`eventkind`,`eventnum`,`actorlevel`,`killenemy`,`questid`,`move_zoneid0`,`move_zoneid1` from map_zoneinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,7 @@ int mapzoneinfo_init_auto()
 			continue;
 		g_zoneinfo[id].id = atoi(row[offset++]);
 		g_zoneinfo[id].open = atoi(row[offset++]);
+		g_zoneinfo[id].type = atoi(row[offset++]);
 		g_zoneinfo[id].center_posx = atoi(row[offset++]);
 		g_zoneinfo[id].center_posy = atoi(row[offset++]);
 		g_zoneinfo[id].top_left_posx = atoi(row[offset++]);
@@ -116,6 +117,10 @@ int mapzoneinfo_luatable_auto()
 
 		lua_pushstring( servL, "open" );
 		lua_pushinteger( servL, g_zoneinfo[id].open );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "type" );
+		lua_pushinteger( servL, g_zoneinfo[id].type );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "center_posx" );
