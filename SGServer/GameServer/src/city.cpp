@@ -3241,7 +3241,11 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		}
 		else
 		{
-			if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
+			if ( zoneid == cur_zoneid )
+			{
+
+			}
+			else if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
 			{ // 需要击败世界boss董卓后才可前往该地图
 				actor_notify_alert( actor_index, 1368 );
 				return -1;
