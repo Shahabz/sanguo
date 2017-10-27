@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 #include "db.h"
 #include "define.h"
 #include "city.h"
