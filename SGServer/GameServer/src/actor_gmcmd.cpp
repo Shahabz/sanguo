@@ -63,7 +63,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 #ifndef	WIN32
 		if ( g_actors[actor_index].admin < 100 )
 		{
-			system_talkto( actor_index, "Access denied!" );
+			system_talkto( actor_index, "Access denied!", 0 );
 			return GMR_ACCESS_DENIED;
 		}
 #endif // DEBUG
