@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
     private IniUtil m_pLocalAppIni = new IniUtil();
     private IniUtil m_pLocalResverIni = new IniUtil();
     public static bool isInBackground = false;
-
+	private bool m_bLuaInit = false;
     /// <summary>
     /// 初始化游戏管理器
     /// </summary>
@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour {
 
             // 启动游戏主逻辑, 每秒调用
 			InvokeRepeating("GameLogic", 0, 1.0f);
+
+			m_bLuaInit = true;
         } );
         return true;
     }
@@ -122,6 +124,8 @@ public class GameManager : MonoBehaviour {
 
     void OnApplicationPause( bool paused )
     {
+		if (m_bLuaInit == false)
+			return;
         if ( paused )
         {
             GameManager.isInBackground = true;
