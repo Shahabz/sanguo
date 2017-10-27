@@ -91,7 +91,7 @@ ArmyGroup *g_armygroup = NULL;
 int g_armygroup_maxcount = 0;
 int g_armygroup_count = 0;
 extern int g_army_group_maxindex;
-
+extern char g_test_mod;
 // 读档完毕的回调
 int armygroup_loadcb( int group_index )
 {
@@ -1406,11 +1406,12 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 	}
 
 	// 创建集结战场
-#ifdef _WIN32
-	int group_index = armygroup_create( 10, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].fight_maxsec/5 );
-#else
-	int group_index = armygroup_create( 10, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].fight_maxsec );
-#endif // !_WIN32
+	int group_index = -1;
+	if ( g_test_mod )
+		group_index = armygroup_create( 10, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].fight_maxsec/5 );
+	else
+		group_index = armygroup_create( 10, MAPUNIT_TYPE_CITY, pCity->actorid, MAPUNIT_TYPE_TOWN, townid, g_towninfo[townid].fight_maxsec );
+
 	if ( group_index < 0 )
 		return -1;
 

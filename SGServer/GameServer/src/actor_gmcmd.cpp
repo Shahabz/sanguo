@@ -37,7 +37,7 @@ extern Actor *g_actors;
 extern int g_actornum;
 extern int g_maxactornum;
 extern char g_bServerIsInit;
-extern char g_test_fightpower;
+extern char g_test_mod;
 
 int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 {
@@ -102,11 +102,11 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_TEST:
 		if ( pValue[0] == 0 )
 		{
-			g_test_fightpower = 0;
+			g_test_mod = 0;
 		}
 		else if ( pValue[0] == 1 )
 		{
-			g_test_fightpower = 1;
+			g_test_mod = 1;
 		}
 		else if ( pValue[0] == 2 )
 		{

@@ -181,6 +181,7 @@ function GameManager.OnApplicationPause( paused )
 		
 		-- 进入前台后，检查主逻辑运转
 		local gamelogicTime = os.time() - GameManager.LastGameLogicTime;
+		gamelog( "gamelogicTime:"..gamelogicTime );
 		for i=1, gamelogicTime, 1 do
 			GameManager.GameLogic();
 		end
