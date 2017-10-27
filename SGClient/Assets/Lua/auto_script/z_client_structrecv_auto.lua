@@ -1566,6 +1566,7 @@ function struct_NetS_MapTownExInfo_recv( buffer )
 	recvValue.m_dev_expmax = buffer:ReadInt();
 	recvValue.m_mytownid = buffer:ReadShort();
 	recvValue.m_dev_cd = buffer:ReadInt();
+	recvValue.m_attackcd = buffer:ReadInt();
 	return recvValue;
 end
 

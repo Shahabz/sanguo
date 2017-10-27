@@ -966,8 +966,11 @@ int map_town_attack_checkstart()
 				break;
 			}
 		}
-
-		// 当前拥有名称最少的国家先发兵
+		if ( start == 1 )
+		{
+			return -1;
+		}
+		// 当前拥有名城最少的国家先发兵
 		int xlist[4] = { 0 };
 		int ylist[4] = { 0, 1, 2, 3 };
 		for ( int nation = 0; nation < 3; nation++ )
@@ -978,13 +981,29 @@ int map_town_attack_checkstart()
 		{
 			for ( int tmpj = tmpi+1; tmpj < 4; tmpj++ )
 			{
-				if ( xlist[tmpj] > xlist[tmpi] )
+				if ( xlist[tmpj] < xlist[tmpi] )
 				{
+					int xtmp = xlist[tmpj];
+					xlist[tmpj] = xlist[tmpi];
+					xlist[tmpi] = xtmp;
 
+					int ytmp = ylist[tmpj];
+					ylist[tmpj] = ylist[tmpi];
+					ylist[tmpi] = ytmp;
 				}
 			}
 		}
 
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			char nation = ylist[tmpi];
+			int capital_townid = nation_capital_townid_get( nation );
+			if ( capital_townid <= 0 || capital_townid >= g_map_town_maxcount )
+				continue;
+			if ( g_towninfo[capital_townid].type != MAPUNIT_TYPE_TOWN_TYPE8 )
+				continue;
+			g_map_town[capital_townid].attackcd = global.town_attackcd + (tmpi * 3600);
+		}
 	}
 	return 0;
 }
@@ -1379,6 +1398,7 @@ int map_town_ex_sendinfo( int actor_index, int townid )
 	pValue.m_dev_exp = g_map_town[townid].dev_exp;
 	pValue.m_dev_expmax = map_town_dev_expmax( townid );
 	pValue.m_dev_cd = actor_check_uselimit_cd( actor_index, USELIMIT_CD_TOWN_DEV );
+	pValue.m_attackcd = g_map_town[townid].attackcd;
 	netsend_maptownexinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

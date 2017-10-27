@@ -13,6 +13,7 @@ local m_uiButtons = nil; --UnityEngine.GameObject
 local m_uiFightButton = nil; --UnityEngine.GameObject
 local m_uiUpgradeButton = nil; --UnityEngine.GameObject
 local m_uiTimerButton = nil; --UnityEngine.GameObject
+local m_uiAttackcd = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil;
 local m_recvValue = nil;
@@ -97,6 +98,7 @@ function MapTownExDlgOnAwake( gameObject )
 	m_uiFightButton = objs[10];
 	m_uiUpgradeButton = objs[11];
 	m_uiTimerButton = objs[12];
+	m_uiAttackcd = objs[13];
 end
 
 -- 界面初始化时调用
@@ -172,7 +174,7 @@ function MapTownExDlgShow( recvValue )
 	SetImage( m_uiNation, NationSprite(m_nation) )
 end
 
--- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,m_dev_cd=0
+-- m_dev_level=0,m_dev_exp=0,m_dev_expmax=0,m_mytownid=0,m_dev_cd=0,m_attackcd=0
 function MapTownExDlgRecvValue( recvValue )
 	m_recvValue = recvValue
 	MapTownExDlgSetLayer2( recvValue );
@@ -215,7 +217,12 @@ end
 function MapTownExDlgSetLayer2( recvValue )
 	SetProgress( m_uiLayer2.transform:Find("ExpProgress"), recvValue.m_dev_exp/recvValue.m_dev_expmax )
 	SetText( m_uiLayer2.transform:Find("ExpProgress/Text"), T(127)..":"..recvValue.m_dev_exp.."/"..recvValue.m_dev_expmax )
-	
+	if recvValue.m_attackcd > 0 then
+		SetTrue( m_uiAttackcd )
+		SetTimer( m_uiAttackcd, recvValue.m_attackcd, recvValue.m_attackcd )
+	else
+		SetFalse( m_uiAttackcd )
+	end
 	local uiHeroList = m_uiLayer2.transform:Find("HeroList");
 	for i = 1, 3, 1 do
 		SetText( uiHeroList:GetChild(i-1):Find("Name"), "Lv."..i.." "..T(1330) )

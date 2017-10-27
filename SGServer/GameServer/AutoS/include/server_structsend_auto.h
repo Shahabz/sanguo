@@ -1213,6 +1213,7 @@ struct _slk_NetS_MapTownExInfo {
 	int m_dev_expmax;	//都城开发经验
 	short m_mytownid;	//我的都城
 	int m_dev_cd;	//都城开发冷却
+	int m_attackcd;	//攻击倒计时
 };
 typedef struct _slk_NetS_MapTownExInfo SLK_NetS_MapTownExInfo;	//国都信息
 

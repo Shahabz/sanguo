@@ -116,14 +116,14 @@ Nation *nation_getptr( int nation )
 // 设置国家都城
 int nation_capital_townid( int nation, int townid )
 {
-	if ( nation <= 0 || nation >= NATION_MAX )
+	if ( nation < 0 || nation >= NATION_MAX )
 		return 0;
 	g_nation[nation].capital_townid = townid;
 	return 0;
 }
 int nation_capital_townid_get( int nation )
 {
-	if ( nation <= 0 || nation >= NATION_MAX )
+	if ( nation < 0 || nation >= NATION_MAX )
 		return 0;
 	return g_nation[nation].capital_townid;
 }

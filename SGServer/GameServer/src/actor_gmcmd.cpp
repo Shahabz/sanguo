@@ -111,6 +111,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				worldquest_checkcomplete( pCity->actor_index, 0 );
 			}
 		}
+		else if ( pValue[0] == 3 )
+		{
+			map_town_attack_checkstart();
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );
