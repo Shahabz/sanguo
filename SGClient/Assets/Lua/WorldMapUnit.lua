@@ -482,7 +482,7 @@ function MapUnit.createArmy( recvValue )
 			local uiHero = unitObj.transform:GetChild(i-1);
 			if i <= #heroid then
 				SetTrue(uiHero)
-				if from_type == MAPUNIT_TYPE_TOWN then
+				if from_type == MAPUNIT_TYPE_TOWN and heroid[i] >= 1000 then
 					SetText( uiHero.transform:Find("Name"), T(1330) )
 				else
 					SetText( uiHero.transform:Find("Name"), HeroName( heroid[i] ) )
