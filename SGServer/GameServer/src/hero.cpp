@@ -985,7 +985,7 @@ int hero_wash_free( int actor_index, int herokind )
 
 	// 总洗髓资质
 	int total_wash = pHero->attack_wash + pHero->defense_wash + pHero->troops_wash;
-
+	
 	// 总洗髓资质上限
 	int total_wash_limit = config->attack_wash_limit + config->defense_wash_limit + config->troops_wash_limit;
 
@@ -1060,8 +1060,9 @@ int hero_wash_token( int actor_index, int herokind )
 		total_wash = config->total_wash;
 
 	// 特殊处理
+	int odds = rand() % 100;
 	int s = (int)(x * 100);
-	if ( s >= global.hero_wash_token_full_base )
+	if ( s >= global.hero_wash_token_full_base && odds < 15 )
 	{
 		pHero->attack_wash = config->attack_wash_limit;
 		pHero->defense_wash = config->defense_wash_limit;

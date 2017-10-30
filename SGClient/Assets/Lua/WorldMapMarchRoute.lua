@@ -51,7 +51,7 @@ function MapMarchRoute.add( recvValue )
 	-- 1．自己的行军路线：绿色虚线线条
 	-- 2．非我国的行军路线：红色虚线线条。
 	-- 3．同国的行军路线：黄色虚线线条。
-
+--print("from_actorid:"..recvValue.m_from_actorid..",from_nation:"..recvValue.m_from_nation..",to_nation:"..recvValue.m_to_nation..",state:"..recvValue.m_state)
 	local color = 0;
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
 		color = 1; -- 自己的
@@ -59,14 +59,10 @@ function MapMarchRoute.add( recvValue )
 		color = 3; -- 同国的
 	elseif recvValue.m_to_nation == GetPlayer().m_nation and recvValue.m_state == ARMY_STATE_REBACK then
 		color = 3; -- 同国的
-	elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
-		color = 2; -- 敌国的
-	elseif recvValue.m_from_nation == GetPlayer().m_nation then
-		color = 2; -- 敌国的
-	elseif recvValue.m_to_nation == GetPlayer().m_nation then
-		color = 2; -- 敌国的
+	--[[elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
+		color = 2; -- 敌国的--]]
 	else
-		color = 3;
+		color = 2;
 	end
 	
 	-- 如果缓存里面有，那么就更新
