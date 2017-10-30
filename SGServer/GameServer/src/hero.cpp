@@ -1002,8 +1002,8 @@ int hero_wash_free( int actor_index, int herokind )
 	short attack_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
 	short defense_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
 
-	pHero->attack_wash = (short)((total_wash*config->attack_wash_limit) / (total_wash_limit*attack_ratio / 100.0f));
-	pHero->defense_wash = (short)((total_wash*config->defense_wash_limit) / (total_wash_limit*defense_ratio / 100.0f));
+	pHero->attack_wash = (short)min( config->attack_wash_limit, (total_wash*attack_ratio / 100.0f) );
+	pHero->defense_wash = (short)min( config->defense_wash_limit, (total_wash*defense_ratio / 100.0f) );
 	pHero->troops_wash = total_wash - pHero->attack_wash - pHero->defense_wash;
 
 	// ÖØËãÓ¢ĞÛÊôĞÔ
@@ -1071,8 +1071,8 @@ int hero_wash_token( int actor_index, int herokind )
 		// ¹¥·À·ÖÅä±ÈÀı
 		short attack_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
 		short defense_ratio = random( global.hero_wash_ratio_down, global.hero_wash_ratio_up );
-		pHero->attack_wash = (short)((total_wash*config->attack_wash_limit) / (config->total_wash*attack_ratio / 100.0f));
-		pHero->defense_wash = (short)((total_wash*config->defense_wash_limit) / (config->total_wash*defense_ratio / 100.0f));
+		pHero->attack_wash = (short)min( config->attack_wash_limit, (total_wash*attack_ratio / 100.0f) );
+		pHero->defense_wash = (short)min( config->defense_wash_limit, (total_wash*defense_ratio / 100.0f) );
 	}
 	pHero->troops_wash = total_wash - pHero->attack_wash - pHero->defense_wash;
 
