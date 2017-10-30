@@ -1596,47 +1596,64 @@ int armygroup_askhelp( int actor_index, int group_index, int group_id )
 // 集结所有人发送邮件
 int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight )
 {
+	int *pArmyIndex = NULL;
 	if ( attack == 1 )
 	{
-		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		pArmyIndex = g_armygroup[group_index].attack_armyindex;
+	}
+	else if ( attack == 2 )
+	{
+		pArmyIndex = g_armygroup[group_index].defense_armyindex;
+	}
+
+	// 需要过滤掉相同的玩家部队
+	int city_index_list[ARMYGROUP_MAXCOUNT] = { -1 };
+	int city_index_count = 0;
+	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+	{
+		int army_index = pArmyIndex[tmpi];
+		if ( army_index < 0 )
+			continue;
+		City *pArmyCity = army_getcityptr( army_index );
+		if ( !pArmyCity )
+			continue;
+
+		char has = 0;
+		for ( int i = 0; i < ARMYGROUP_MAXCOUNT; i++ )
 		{
-			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
-			if ( army_index < 0 )
-				continue;
-			City *pArmyCity = army_getcityptr( army_index );
-			if ( !pArmyCity )
-				continue;
-			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
-			if ( fight )
+			if ( city_index_list[i] == pArmyCity->index )
 			{
-				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+				has = 1;
+				break;
 			}
+		}
+		if ( has == 0 )
+		{
+			city_index_list[city_index_count] = pArmyCity->index;
+			city_index_count += 1;
 		}
 	}
-	else if( attack == 2 )
+	for ( int tmpi = 0; tmpi < city_index_count; tmpi++ )
 	{
-		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		int city_index = city_index_list[tmpi];
+		if ( city_index < 0 )
+			continue;
+		City *pCity = city_indexptr( city_index );
+		if ( !pCity )
+			continue;
+		i64 mailid = mail( pCity->actor_index, pCity->actorid, type, title, content, "", 0 );
+		if ( fight )
 		{
-			int army_index = g_armygroup[group_index].defense_armyindex[tmpi];
-			if ( army_index < 0 )
-				continue;
-			City *pArmyCity = army_getcityptr( army_index );
-			if ( !pArmyCity )
-				continue;
-			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
-			if ( fight )
-			{
-				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
-			}
+			mail_fight( mailid, pCity->actorid, fight->unit_json );
 		}
-
-		if ( defenseCity )
+	}
+	
+	if ( defenseCity )
+	{
+		i64 mailid = mail( defenseCity->actor_index, defenseCity->actorid, type, title, content, "", 0 );
+		if ( fight )
 		{
-			i64 mailid = mail( defenseCity->actor_index, defenseCity->actorid, type, title, content, "", 0 );
-			if ( fight )
-			{
-				mail_fight( mailid, defenseCity->actorid, fight->unit_json );
-			}
+			mail_fight( mailid, defenseCity->actorid, fight->unit_json );
 		}
 	}
 	return 0;
