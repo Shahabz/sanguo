@@ -210,7 +210,7 @@ function HeroWashDlgSelectHero( kind )
 			-- 攻
 			local uiAttackBase = m_uiGrid.transform:GetChild(1).gameObject;
 			SetText( uiAttackBase.transform:Find("Text"), F(138, (pHero.m_attack_base+pHero.m_attack_wash) ) );
-			SetProgress( uiAttackBase, pHero.m_attack_wash/config.attack_wash_limit )
+			SetProgress( uiAttackBase, (pHero.m_attack_base+pHero.m_attack_wash)/(pHero.m_attack_base+config.attack_wash_limit) )
 			if pHero.m_attack_wash >= config.attack_wash_limit then
 				SetTrue( uiAttackBase.transform:Find("Full") )
 			else
@@ -220,7 +220,7 @@ function HeroWashDlgSelectHero( kind )
 			-- 防
 			local uiDefenseBase = m_uiGrid.transform:GetChild(2).gameObject;
 			SetText( uiDefenseBase.transform:Find("Text"), F(139, (pHero.m_defense_base+pHero.m_defense_wash)) );
-			SetProgress( uiDefenseBase, pHero.m_defense_wash/config.defense_wash_limit )
+			SetProgress( uiDefenseBase, (pHero.m_defense_base+pHero.m_defense_wash)/(pHero.m_defense_base+config.defense_wash_limit) )
 			if pHero.m_defense_wash >= config.defense_wash_limit then
 				SetTrue( uiDefenseBase.transform:Find("Full") )
 			else
@@ -230,7 +230,7 @@ function HeroWashDlgSelectHero( kind )
 			-- 兵
 			local uiTroopsBase = m_uiGrid.transform:GetChild(3).gameObject;
 			SetText( uiTroopsBase.transform:Find("Text"), F(140, (pHero.m_troops_base+pHero.m_troops_wash)) );
-			SetProgress( uiTroopsBase, pHero.m_troops_wash/config.troops_wash_limit )
+			SetProgress( uiTroopsBase, (pHero.m_troops_base+pHero.m_troops_wash)/(pHero.m_troops_base+config.troops_wash_limit) )
 			if pHero.m_troops_wash >= config.troops_wash_limit then
 				SetTrue( uiTroopsBase.transform:Find("Full") )
 			else

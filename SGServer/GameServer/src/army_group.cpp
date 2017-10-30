@@ -931,7 +931,8 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		sprintf( title, "%s%d", TAG_TEXTID, 5027 );// 国战进攻胜利
 
 		// 集结所有人发送邮件
-		//armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+		int actorid_list[ARMYGROUP_MAXCOUNT] = { 0 };
+		int actorid_count = 0;
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
 			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
@@ -941,12 +942,32 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			if ( !pArmyCity )
 				continue;
 
-			// 单独拼奖励
-			sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
-				attackName, attackNation, posx, posy, pTown->townid, pTown->nation, g_army[army_index].silver, g_army[army_index].wood, g_army[army_index].food );
+			char issend = 0;
+			for ( int i = 0; i < actorid_count; i++ )
+			{
+				if ( actorid_list[i] == pArmyCity->actorid )
+				{
+					issend = 1;
+					break;
+				}
+			}
 
-			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
-			mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
+			if ( issend == 0 )
+			{
+				// 单独拼奖励
+				sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
+					attackName, attackNation, posx, posy, pTown->townid, pTown->nation, pArmyCity->temp_silver, pArmyCity->temp_wood, pArmyCity->temp_food );
+
+				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
+				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
+
+				pArmyCity->temp_silver = 0;
+				pArmyCity->temp_wood = 0;
+				pArmyCity->temp_food = 0;
+
+				actorid_list[actorid_count] = pArmyCity->actorid;
+				actorid_count += 1;
+			}
 		}
 
 		// 防守失败邮件
@@ -963,7 +984,8 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		sprintf( title, "%s%d", TAG_TEXTID, 5028 ); // 国战进攻失败
 
 		// 集结所有人发送邮件
-		//armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+		int actorid_list[ARMYGROUP_MAXCOUNT] = { 0 };
+		int actorid_count = 0;
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 		{
 			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
@@ -973,12 +995,32 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			if ( !pArmyCity )
 				continue;
 
-			// 单独拼奖励
-			sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
-				attackName, attackNation, posx, posy, pTown->townid, pTown->nation, g_army[army_index].silver, g_army[army_index].wood, g_army[army_index].food );
+			char issend = 0;
+			for ( int i = 0; i < actorid_count; i++ )
+			{
+				if ( actorid_list[i] == pArmyCity->actorid )
+				{
+					issend = 1;
+					break;
+				}
+			}
 
-			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
-			mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
+			if ( issend == 0 )
+			{
+				// 单独拼奖励
+				sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
+					attackName, attackNation, posx, posy, pTown->townid, pTown->nation, pArmyCity->temp_silver, pArmyCity->temp_wood, pArmyCity->temp_food );
+
+				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
+				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
+
+				pArmyCity->temp_silver = 0;
+				pArmyCity->temp_wood = 0;
+				pArmyCity->temp_food = 0;
+
+				actorid_list[actorid_count] = pArmyCity->actorid;
+				actorid_count += 1;
+			}
 		}
 
 		// 防守成功邮件
@@ -1607,8 +1649,8 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 	}
 
 	// 需要过滤掉相同的玩家部队
-	int city_index_list[ARMYGROUP_MAXCOUNT] = { -1 };
-	int city_index_count = 0;
+	int actorid_list[ARMYGROUP_MAXCOUNT] = { 0 };
+	int actorid_count = 0;
 	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 	{
 		int army_index = pArmyIndex[tmpi];
@@ -1618,33 +1660,25 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 		if ( !pArmyCity )
 			continue;
 
-		char has = 0;
-		for ( int i = 0; i < ARMYGROUP_MAXCOUNT; i++ )
+		char issend = 0;
+		for ( int i = 0; i < actorid_count; i++ )
 		{
-			if ( city_index_list[i] == pArmyCity->index )
+			if ( actorid_list[i] == pArmyCity->actorid )
 			{
-				has = 1;
+				issend = 1;
 				break;
 			}
 		}
-		if ( has == 0 )
+
+		if ( issend == 0 )
 		{
-			city_index_list[city_index_count] = pArmyCity->index;
-			city_index_count += 1;
-		}
-	}
-	for ( int tmpi = 0; tmpi < city_index_count; tmpi++ )
-	{
-		int city_index = city_index_list[tmpi];
-		if ( city_index < 0 )
-			continue;
-		City *pCity = city_indexptr( city_index );
-		if ( !pCity )
-			continue;
-		i64 mailid = mail( pCity->actor_index, pCity->actorid, type, title, content, "", 0 );
-		if ( fight )
-		{
-			mail_fight( mailid, pCity->actorid, fight->unit_json );
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
+			if ( fight )
+			{
+				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+			}
+			actorid_list[actorid_count] = pArmyCity->actorid;
+			actorid_count += 1;
 		}
 	}
 	

@@ -417,6 +417,9 @@ int fight_start_armygroup( int group_index )
 					fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 						pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
 				}
+				pCity->temp_silver = 0;
+				pCity->temp_wood = 0;
+				pCity->temp_food = 0;
 			}
 		}
 		else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
@@ -1131,6 +1134,10 @@ int fight_lost_calc_single( FightUnit *pUnit )
 						g_army[army_index].silver += silver;
 						g_army[army_index].wood += wood;
 						g_army[army_index].food += food;
+
+						pCity->temp_silver += silver;
+						pCity->temp_wood += wood;
+						pCity->temp_food += food;
 					}
 				}
 			}

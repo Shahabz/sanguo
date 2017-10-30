@@ -55,11 +55,15 @@ function MapMarchRoute.add( recvValue )
 	local color = 0;
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
 		color = 1; -- 自己的
-	elseif recvValue.m_from_nation == GetPlayer().m_nation then
+	elseif recvValue.m_from_nation == GetPlayer().m_nation and recvValue.m_state == ARMY_STATE_MARCH then
+		color = 3; -- 同国的
+	elseif recvValue.m_to_nation == GetPlayer().m_nation and recvValue.m_state == ARMY_STATE_REBACK then
 		color = 3; -- 同国的
 	elseif recvValue.m_to_actorid == GetPlayer().m_actorid and recvValue.m_action == ARMY_ACTION_FIGHT then
 		color = 2; -- 敌国的
-	elseif recvValue.m_to_nation > 0 and recvValue.m_to_nation == GetPlayer().m_nation then
+	elseif recvValue.m_from_nation == GetPlayer().m_nation then
+		color = 2; -- 敌国的
+	elseif recvValue.m_to_nation == GetPlayer().m_nation then
 		color = 2; -- 敌国的
 	else
 		color = 3;

@@ -990,7 +990,7 @@ int hero_wash_free( int actor_index, int herokind )
 	int total_wash_limit = config->attack_wash_limit + config->defense_wash_limit + config->troops_wash_limit;
 
 	// 洗髓进度
-	float x = total_wash / (float)total_wash_limit;
+	float x = total_wash / (float)config->total_wash;
 
 	// 每次增加
 	int add = (int)(random( 1, global.hero_wash_free_rand )*(1.0f - x));
@@ -1051,7 +1051,7 @@ int hero_wash_token( int actor_index, int herokind )
 	int total_wash_limit = config->attack_wash_limit + config->defense_wash_limit + config->troops_wash_limit;
 
 	// 洗髓进度
-	float x = total_wash / (float)total_wash_limit;
+	float x = total_wash / (float)config->total_wash;
 
 	// 每次增加
 	int add = max( (int)(random( 1, global.hero_wash_token_rand )*(1.0f - x)), 1 );

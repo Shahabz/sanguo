@@ -1267,7 +1267,7 @@ int city_change_equipwash( int city_index, int value, short path )
 	pValue[1] = value;
 	pValue[2] = g_city[city_index].equip_washnum;
 	pValue[3] = path;
-	actor_notify_value( g_city[city_index].actor_index, NOTIFY_NORMAL, 4, pValue, NULL );
+	actor_notify_value( g_city[city_index].actor_index, NOTIFY_VALUECHANGE, 4, pValue, NULL );
 	return 0;
 }
 

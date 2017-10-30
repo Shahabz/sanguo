@@ -115,6 +115,9 @@ struct _city {
 				int underfire_groupindex[16];	//目标集结索引
 				int zoneunit_index;	//地区显示索引
 				short own_townid;	//哪个城的城主
+				int temp_silver;	//临时存资源
+				int temp_wood;	//临时存资源
+				int temp_food;	//临时存资源
 };
 typedef struct _city City;
 
