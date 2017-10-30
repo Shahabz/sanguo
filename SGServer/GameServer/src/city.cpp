@@ -241,7 +241,7 @@ int city_single_save( City *pCity, FILE *fp )
 }
 
 // 获取这个玩家的城池属性
-City *city_indexptr( int city_index )
+inline City *city_indexptr( int city_index )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
 		return NULL;
@@ -249,7 +249,7 @@ City *city_indexptr( int city_index )
 }
 
 // 获取这个玩家的城池属性
-City *city_getptr( int actor_index )
+inline City *city_getptr( int actor_index )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return NULL;

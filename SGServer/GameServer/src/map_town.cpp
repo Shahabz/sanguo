@@ -1025,6 +1025,8 @@ int map_town_attack( int townid )
 		int id = g_map_town[townid].pre_townid[tmpi];
 		if ( id <= 0 || id >= g_map_town_maxcount )
 			continue;
+		if ( g_map_town[id].protect_sec > 0 )
+			continue;
 		if ( g_map_town[townid].nation != g_map_town[id].nation )
 		{
 			townlist[towncount] = id;
@@ -1047,6 +1049,8 @@ int map_town_attack( int townid )
 			if ( g_towninfo[id].type != MAPUNIT_TYPE_TOWN_TYPE7 )
 				continue;
 			if ( g_map_town[id].nation == g_map_town[townid].nation )
+				continue;
+			if ( g_map_town[id].protect_sec > 0 )
 				continue;
 			townlist[towncount] = id;
 			towncount += 1;

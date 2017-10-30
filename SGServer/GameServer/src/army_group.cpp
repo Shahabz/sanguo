@@ -1385,6 +1385,11 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 		actor_notify_alert_v( actor_index, 1343, v1, NULL );
 		return -1;
 	}
+	if ( g_map_town[townid].protect_sec > 0 )
+	{ // 保护时间，不可被宣战
+		actor_notify_alert( actor_index, 1379 );
+		return -1;
+	}
 	// 检查这个目标是否已经有与我国的国战
 	for ( int tmpi = 0; tmpi < MAP_TOWN_UNDERFIRE_GROUP_MAX; tmpi++ )
 	{
