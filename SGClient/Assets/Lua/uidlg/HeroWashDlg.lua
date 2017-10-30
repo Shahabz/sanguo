@@ -231,7 +231,6 @@ function HeroWashDlgSelectHero( kind )
 			local uiTroopsBase = m_uiGrid.transform:GetChild(3).gameObject;
 			SetText( uiTroopsBase.transform:Find("Text"), F(140, (pHero.m_troops_base+pHero.m_troops_wash)) );
 			SetProgress( uiTroopsBase, (pHero.m_troops_base+pHero.m_troops_wash)/(pHero.m_troops_base+config.troops_wash_limit) )
-			print( pHero.m_troops_wash..","..config.troops_wash_limit )
 			if pHero.m_troops_wash >= config.troops_wash_limit then
 				SetTrue( uiTroopsBase.transform:Find("Full") )
 			else
