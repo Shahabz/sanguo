@@ -167,6 +167,8 @@ end
 -- 自定
 ----------------------------------------
 function EquipForgingDlgShow()
+	HeroInfoDlgClose();
+	HeroListDlgClose();
 	EquipForgingDlgOpen();
 	EquipForgingDlgClear()
 	

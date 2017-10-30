@@ -1835,8 +1835,8 @@ int city_train_finish( City *pCity, BuildingBarracks *barracks )
 			barracks->queuenum[tmpi] = 0;
 			if ( tmpi < queue - 1 )
 			{
-				memmove( &barracks->queuesec[tmpi], &barracks->queuesec[tmpi + 1], sizeof( int )*(queue - 1) );
-				memmove( &barracks->queuenum[tmpi], &barracks->queuenum[tmpi + 1], sizeof( int )*(queue - 1) );
+				memmove( &barracks->queuesec[tmpi], &barracks->queuesec[tmpi + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - tmpi - 1) );
+				memmove( &barracks->queuenum[tmpi], &barracks->queuenum[tmpi + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - tmpi - 1) );
 			}
 			wlog( 0, LOGOP_BARRACKS, PATH_TRAIN, barracks->kind, barracks->trainnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
 			break;
