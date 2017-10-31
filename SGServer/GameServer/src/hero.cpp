@@ -1082,13 +1082,13 @@ int hero_wash_token( int actor_index, int herokind )
 		//pHero->defense_wash = (short)min( config->defense_wash_limit, (total_wash*defense_ratio / 100.0f) );
 
 		// ¹¥·À·ÖÅä±ÈÀı
-		int attack_min = (int)max( 0, (int)ceil( (total_wash - config->defense_wash_limit - config->troops_wash_limit) / (float)total_wash * 100 + 1 ) );
-		int attack_max = (int)min( 1, (int)( (config->attack_wash_limit / (float)total_wash) * 100 - 1 ) );
+		int attack_max = (int)max( 0, (int)ceil( (total_wash - config->defense_wash_limit - config->troops_wash_limit) / (float)total_wash * 100 + 1 ) );
+		int attack_min = (int)min( 1, (int)( (config->attack_wash_limit / (float)total_wash) * 100 - 1 ) );
 		int attack_ratio = random( attack_min, attack_max );
 		pHero->attack_wash = (short)min( config->attack_wash_limit, (total_wash*attack_ratio / 100.0f) );
 
-		int defense_min = (int)max( 0, (int)( (total_wash - pHero->attack_wash - config->troops_wash_limit) / (float)total_wash * 100 + 1 ) );
-		int defense_max = (int)min( 1, (int)ceil( (config->defense_wash_limit / (float)total_wash) * 100 - 1 ) );
+		int defense_max = (int)max( 0, (int)( (total_wash - pHero->attack_wash - config->troops_wash_limit) / (float)total_wash * 100 + 1 ) );
+		int defense_min = (int)min( 1, (int)ceil( (config->defense_wash_limit / (float)total_wash) * 100 - 1 ) );
 		short defense_ratio = random( defense_min, defense_max );
 		pHero->defense_wash = (short)min( config->defense_wash_limit, (total_wash*defense_ratio / 100.0f) );
 	}
