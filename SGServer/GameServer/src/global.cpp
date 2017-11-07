@@ -386,6 +386,46 @@ int global_init()
 		{
 			global.lost_rebuild_v4 = value;
 		}
+		else if ( id == 126 )
+		{
+			global.kingwar_activity_week = atoi( row[1] );
+		}
+		else if ( id == 127 )
+		{
+			global.kingwar_activity_hour = atoi( row[1] );
+		}
+		else if ( id == 128 )
+		{
+			global.kingwar_activity_minute = atoi( row[1] );
+		}
+		else if ( id == 129 )
+		{
+			global.kingwar_activity_duration = atoi( row[1] );
+		}
+		else if ( id == 130 )
+		{
+			global.kingwar_activity_duration_max = atoi( row[1] );
+		}
+		else if ( id == 131 )
+		{
+			global.kingwar_activity_addsec = atoi( row[1] );
+		}
+		else if ( id == 132 )
+		{
+			global.kingwar_dead_cd = atoi( row[1] );
+		}
+		else if ( id == 133 )
+		{
+			global.kingwar_token_def = atoi( row[1] );
+		}
+		else if ( id == 134 )
+		{
+			global.kingwar_token_sneak = atoi( row[1] );
+		}
+		else if ( id == 135 )
+		{
+			global.kingwar_token_pk = atoi( row[1] );
+		}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

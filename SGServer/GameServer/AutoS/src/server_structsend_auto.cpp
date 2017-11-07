@@ -1888,3 +1888,37 @@ int struct_NetS_LostRebuild_send( char **pptr, int *psize, SLK_NetS_LostRebuild 
 	return 0;
 }
 
+int struct_NetS_KingwarTown_send( char **pptr, int *psize, SLK_NetS_KingwarTown *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense_total, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_KingwarTownList_send( char **pptr, int *psize, SLK_NetS_KingwarTownList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_KingwarTown_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_KingWarActivity_send( char **pptr, int *psize, SLK_NetS_KingWarActivity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_beginstamp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endstamp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+

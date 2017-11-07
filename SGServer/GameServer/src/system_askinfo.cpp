@@ -34,6 +34,7 @@
 #include "map_event.h"
 #include "army_march.h"
 #include "army_group.h"
+#include "king_war.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -524,6 +525,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 1 )
 		{
 			city_lost_rebuild_get( actor_index );
+		}
+		break;
+	case ASKINFO_KINGWAR:
+		if ( pvalue[0] == -1 )
+		{ // 取消订阅
+			kingwar_subscribe_cancel( actor_index );
+		}
+		else if ( pvalue[0] == 0 )
+		{ // 获取列表并订阅
+			kingwar_sendlist( actor_index );
 		}
 		break;
 	default:

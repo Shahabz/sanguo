@@ -145,6 +145,20 @@ int world_sendmsg( int datasize, char *databuf )
 	return 0;
 }
 
+// ¸ø¶©ÔÄÕß·¢ËÍ
+int subscribe_sendmsg( int cmd, int datasize, char *databuf )
+{
+	if ( datasize > 0 && cmd >= 0 && cmd < 8 )
+	{
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid > 0 && g_actors[tmpi].subscribe_cmd[cmd] == 1 )
+				sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+		}
+	}
+	return 0;
+}
+
 int actor_senddata( int actor_index, char send_type, char *data, int datasize )
 {
 	switch( send_type )
@@ -169,6 +183,9 @@ int actor_senddata( int actor_index, char send_type, char *data, int datasize )
 		break;
 	case SENDTYPE_INZONE:
 		in_zone_sendmsg( actor_index, datasize, data );
+		break;
+	case SENDTYPE_SUBSCRIBE:
+		subscribe_sendmsg( actor_index, datasize, data );
 		break;
 	case SENDTYPE_NATION1:
 	case SENDTYPE_NATION2:

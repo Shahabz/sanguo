@@ -7,6 +7,7 @@
 #define MAPUNIT_TYPE_ENEMY			4	// 流寇
 #define MAPUNIT_TYPE_RES			5	// 资源
 #define MAPUNIT_TYPE_EVENT			6	// 事件
+#define MAPUNIT_TYPE_KINGWAR_TOWN	10	// 皇城血战据点
 
 // 世界地图显示单元
 typedef struct _mapunit

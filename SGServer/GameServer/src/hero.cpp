@@ -845,7 +845,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	// ×ÛºÏ¼ÆËã
 	pHero->attack = base_attack + attr_attack + equip_attack;
 	pHero->defense = base_defense + attr_defense + equip_defense;
-	pHero->troops = base_troops + attr_troops + equip_troops;
+	pHero->troops = base_troops + (attr_troops + equip_troops)/4;
 	pHero->attack_increase = equip_attack_increase;
 	pHero->defense_increase = equip_defense_increase;
 	pHero->assault = equip_assault;

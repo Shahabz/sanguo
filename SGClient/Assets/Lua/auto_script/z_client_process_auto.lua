@@ -1078,6 +1078,7 @@ end
 function proc_battlelist_C( recvValue )
 	-- process.
 	MapMainDlgBattleRecv( recvValue )
+	BloodyBattleDlgHeroRecv( recvValue )
 end
 
 -- m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_herokind={[4]},m_to_type=0,
@@ -1452,5 +1453,31 @@ end
 function proc_lostrebuild_C( recvValue )
 	-- process.
 	LostRebuildDlgShow( recvValue )
+end
+
+-- m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,
+function proc_kingwartown_C( recvValue )
+	-- process.
+	BloodyBattleDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,[m_count]},
+function proc_kingwartownlist_C( recvValue )
+	-- process.
+	for i=1, recvValue.m_count, 1 do
+		BloodyBattleDlgRecv( recvValue.m_list[i] )
+	end
+end
+
+
+-- m_count=0,m_list={m_id=0,m_beginstamp=0,m_endstamp=0,m_value=0,m_state=0,[m_count]},
+function proc_mapactivitylist_C( recvValue )
+	-- process.
+end
+
+-- m_state=0,m_beginstamp=0,m_endstamp=0,m_nation=0,
+function proc_kingwaractivity_C( recvValue )
+	-- process.
+	MapMainDlgActivityKingWar( recvValue )
 end
 

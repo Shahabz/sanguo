@@ -130,6 +130,9 @@ end
 ----------------------------------------
 function MapBattleDlgShow( recvValue, action, group_index )
 	MapBattleDlgOpen()
+	m_uiShape.transform.localScale = Vector3.New( 100, 100, 100 );
+	SetTrue( m_uiCost )
+	
 	m_appdata = 0;
 	m_id = 0;
 	m_group_index = group_index;
@@ -211,13 +214,34 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 按钮名称
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
 		SetTrue( m_uiAttackDesc )
+		
+	elseif recvValue.m_type == MAPUNIT_TYPE_KINGWAR_TOWN then-- 皇城血战
+		townid = 500
+		-- 标题
+		SetTrue( m_uiAttackDesc )
+		SetText( m_uiTitle.transform:Find("Text"), T(1296) )
+		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1296) );
+		-- 形象
+		local type 	= g_towninfo[townid].type
+		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitTownShapeList[type].."_"..recvValue.m_nation )
+		m_uiShape.transform.localScale = Vector3.New( 48, 48, 48 );
+		-- 名字
+		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )	
+		-- 按钮名称
+		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1392) );
+		SetFalse( m_uiCost )
 	end
 	
 	
 	-- 行军时间
-	m_marchtime = WorldMap.MarchTime( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, posx, posy )
-	SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
-	SetText( m_uiMarchTime2, secnum(m_marchtime) )
+	if recvValue.m_type == MAPUNIT_TYPE_KINGWAR_TOWN then
+		SetText( m_uiMarchTime1, T(1399) )
+		SetText( m_uiMarchTime2, "" )
+	else
+		m_marchtime = WorldMap.MarchTime( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, posx, posy )
+		SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
+		SetText( m_uiMarchTime2, secnum(m_marchtime) )
+	end
 	
 	-- 英雄放到缓存
 	m_HeroList = {};

@@ -153,8 +153,8 @@ void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pVa
 void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
 {
 	// process.
-	if ( pValue->m_action == ARMY_ACTION_HELP_TROOP )
-	{ // 驻防要拆开单个武将
+	if ( pValue->m_action == ARMY_ACTION_HELP_TROOP || pValue->m_action == ARMY_ACTION_KINGWAR )
+	{ // 驻防和皇城战要拆开单个武将
 		SLK_NetC_MapBattle tmpValue = { 0 };
 		for ( int tmpi = 0; tmpi < 4; tmpi++ )
 		{

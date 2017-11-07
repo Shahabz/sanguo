@@ -8,6 +8,7 @@
 #define SENDTYPE_ZONE		3	// 发给当前游戏地区
 #define SENDTYPE_WORLD		4	// 发给当前服务器
 #define SENDTYPE_INZONE		5	// 发给当前游戏地区(当前视图在这个区域)
+#define SENDTYPE_SUBSCRIBE	6	// 发给订阅者
 
 #define SENDTYPE_NATION		10	// 
 #define SENDTYPE_NATION1	11	// 发送给魏国

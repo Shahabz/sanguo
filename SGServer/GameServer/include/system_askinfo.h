@@ -31,6 +31,7 @@
 #define ASKINFO_MAPTOWN			26 // 城镇
 #define ASKINFO_MAPZONE			27 // 地区
 #define ASKINFO_LOSTREBUILD		28 // 家园重建
+#define ASKINFO_KINGWAR			29 // 皇城血战 
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

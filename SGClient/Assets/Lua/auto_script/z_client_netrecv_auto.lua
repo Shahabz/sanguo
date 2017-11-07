@@ -640,6 +640,21 @@ function netrecv_lostrebuild_C( buffer )
 	proc_lostrebuild_C( recvValue );
 end
 
+function netrecv_kingwartown_C( buffer )
+	local recvValue = struct_NetS_KingwarTown_recv( buffer );
+	proc_kingwartown_C( recvValue );
+end
+
+function netrecv_kingwartownlist_C( buffer )
+	local recvValue = struct_NetS_KingwarTownList_recv( buffer );
+	proc_kingwartownlist_C( recvValue );
+end
+
+function netrecv_kingwaractivity_C( buffer )
+	local recvValue = struct_NetS_KingWarActivity_recv( buffer );
+	proc_kingwaractivity_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -769,6 +784,9 @@ Proc_Command = {
 	[CMDS_WORLDQUEST]=netrecv_worldquest_C;
 	[CMDS_WORLDBOSS]=netrecv_worldboss_C;
 	[CMDS_LOSTREBUILD]=netrecv_lostrebuild_C;
+	[CMDS_KINGWARTOWN]=netrecv_kingwartown_C;
+	[CMDS_KINGWARTOWNLIST]=netrecv_kingwartownlist_C;
+	[CMDS_KINGWARACTIVITY]=netrecv_kingwaractivity_C;
 }
 
 function in_proc_command_C( cmd, buffer )

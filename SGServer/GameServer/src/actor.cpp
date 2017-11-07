@@ -48,6 +48,7 @@
 #include "map_event.h"
 #include "nation.h"
 #include "world_boss.h"
+#include "king_war.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -205,6 +206,8 @@ void actors_on_core()
 	map_event_save( fp );
 	// 所有世界boss
 	world_boss_save( fp );
+	// 所有血战皇城据点保存
+	kingwar_town_save( fp );
 	if ( fp )
 	{
 		char szSQL[512] = { 0 };

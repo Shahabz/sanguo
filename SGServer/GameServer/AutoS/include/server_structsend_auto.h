@@ -1294,6 +1294,28 @@ struct _slk_NetS_LostRebuild {
 };
 typedef struct _slk_NetS_LostRebuild SLK_NetS_LostRebuild;	//家园重建
 
+struct _slk_NetS_KingwarTown {
+	char m_id;	//血战据点
+	int m_attack_total;	//血战据点
+	int m_defense_total;	//血战据点
+	char m_nation;	//血战据点
+};
+typedef struct _slk_NetS_KingwarTown SLK_NetS_KingwarTown;	//血战据点
+
+struct _slk_NetS_KingwarTownList {
+	char m_count;	//血战据点列表
+	SLK_NetS_KingwarTown m_list[8];	//血战据点列表
+};
+typedef struct _slk_NetS_KingwarTownList SLK_NetS_KingwarTownList;	//血战据点列表
+
+struct _slk_NetS_KingWarActivity {
+	char m_state;	//血战据点活动信息
+	int m_beginstamp;	//血战据点活动信息
+	int m_endstamp;	//血战据点活动信息
+	char m_nation;	//血战据点活动信息
+};
+typedef struct _slk_NetS_KingWarActivity SLK_NetS_KingWarActivity;	//血战活动
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1436,5 +1458,8 @@ int struct_NetS_CityWarDel_send( char **pptr, int *psize, SLK_NetS_CityWarDel *p
 int struct_NetS_WorldQuest_send( char **pptr, int *psize, SLK_NetS_WorldQuest *pValue );
 int struct_NetS_WorldBoss_send( char **pptr, int *psize, SLK_NetS_WorldBoss *pValue );
 int struct_NetS_LostRebuild_send( char **pptr, int *psize, SLK_NetS_LostRebuild *pValue );
+int struct_NetS_KingwarTown_send( char **pptr, int *psize, SLK_NetS_KingwarTown *pValue );
+int struct_NetS_KingwarTownList_send( char **pptr, int *psize, SLK_NetS_KingwarTownList *pValue );
+int struct_NetS_KingWarActivity_send( char **pptr, int *psize, SLK_NetS_KingWarActivity *pValue );
 
 #endif

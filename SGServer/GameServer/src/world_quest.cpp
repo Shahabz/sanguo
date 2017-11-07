@@ -19,6 +19,7 @@
 #include "quest.h"
 #include "world_quest.h"
 #include "map_zone.h"
+#include "king_war.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -242,6 +243,25 @@ int worldquest_check( int actor_index, int questid, int *value )
 	return 0;
 }
 
+// 任务检查
+int worldquest_check_server( int questid )
+{
+	if ( questid <= 0 || questid >= g_worldquestinfo_maxnum )
+		return 0;
+	if ( g_worldquestinfo[questid].type == 1 )
+	{ // 全服
+		int saveindex = g_worldquestinfo[questid].saveindex;
+		if ( saveindex < 0 || saveindex >= 16 )
+			return 0;
+		int datav = world_data_getcache( WORLD_DATA_WORLDQUEST_BASE + saveindex );
+		if ( datav > 0 )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
 // 任务检查完成情况
 int worldquest_checkcomplete( int actor_index, char type )
 {
@@ -300,7 +320,7 @@ int worldquest_sendinfo( int actor_index )
 	// 是否需要通知血战皇城
 	if ( pValue.m_questid == 0 )
 	{
-
+		kingwar_activity_sendinfo( actor_index );
 	}
 	return 0;
 }

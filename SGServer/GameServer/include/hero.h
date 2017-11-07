@@ -3,7 +3,8 @@
 #include "define.h"
 
 #define HERO_STATE_NORMAL	0	// 闲
-#define HERO_STATE_FIGHT	1	// 战
+#define HERO_STATE_FIGHT	1	// 战斗
+#define HERO_STATE_GATHER	2	// 采集
 
 int actor_hero_getindex( int actor_index, int herokind );
 Hero* actor_hero_getptr( int actor_index, int offset );

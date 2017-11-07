@@ -40,6 +40,7 @@
 #include "auto_data_story.h"
 #include "auto_data_world_bossinfo.h"
 #include "auto_data_world_questinfo.h"
+#include "auto_data_kingwar_towninfo.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"
@@ -57,6 +58,7 @@
 #include "auto_map_event.h"
 #include "auto_nation.h"
 #include "auto_world_boss.h"
+#include "auto_kingwar_town.h"
 #include "actor_send.h"
 #include "award.h"
 

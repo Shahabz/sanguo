@@ -120,6 +120,16 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			map_town_attack_checkstart();
 		}
+		else if ( pValue[0] == 4 )
+		{
+			time_t t;
+			time( &t );
+			t += 120;
+			struct tm *nowtime = localtime( &t );
+			global.kingwar_activity_week = nowtime->tm_wday;
+			global.kingwar_activity_hour = nowtime->tm_hour;
+			global.kingwar_activity_minute = nowtime->tm_min;	
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );

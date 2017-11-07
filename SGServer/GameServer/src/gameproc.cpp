@@ -51,6 +51,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "nation.h"
+#include "king_war.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -589,6 +590,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 血战皇城据点
+	if ( kingwartowninfo_init_auto() < 0 )
+	{
+		printf_msg( "kingwartowninfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	activity_init();
 	time_gmcmd_init();
 	db_closedata();
@@ -696,6 +706,14 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 112 );
+
+	// 加载皇城血战据点（严格顺序要求，不允许改变）
+	if ( kingwar_town_load() < 0 )
+	{
+		printf_msg( "kingwar_town_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
 	// 加载所有部队（严格顺序要求，不允许改变）
 	if ( army_load() < 0 )
@@ -816,6 +834,10 @@ void process_close()
 
 	// 所有世界boss
 	world_boss_save( NULL );
+	printf_msg( "\n" );
+	
+	// 所有血战皇城据点保存
+	kingwar_town_save( NULL );
 	printf_msg( "\n" );
 
 	// 提交
@@ -1061,6 +1083,10 @@ int process_logic()
 	{
 		army_alllogic();
 		armygroup_alllogic();
+	}
+	else if ( tick == 6 )
+	{
+		kingwar_activity_logic();
 	}
 	
 	// 1分钟一次逻辑

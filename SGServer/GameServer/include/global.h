@@ -110,6 +110,16 @@ typedef struct _global
 	float lost_rebuild_v2;
 	short lost_rebuild_v3;
 	float lost_rebuild_v4;
+	char kingwar_activity_week;
+	char kingwar_activity_hour;
+	char kingwar_activity_minute;
+	int kingwar_activity_duration;
+	int kingwar_activity_duration_max;
+	int	kingwar_activity_addsec;
+	int	kingwar_dead_cd;
+	char kingwar_token_def;
+	char kingwar_token_sneak;
+	char kingwar_token_pk;
 }Global;
 int global_init();
 void global_reload();

@@ -35,6 +35,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map.h"
+#include "map_zone.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -79,6 +80,9 @@ extern Fight g_fight;
 
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
+
+extern KingwarTown *g_kingwar_town;
+extern int g_kingwar_town_maxcount;
 
 Army *g_army = NULL;
 int g_army_maxcount = 0;
@@ -773,6 +777,26 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			to_type = MAPUNIT_TYPE_RES;
 			to_id = g_mapunit[info->m_to_unit_index].index;
 		}
+		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_KINGWAR_TOWN )
+		{ // 皇城血战据点
+			int kw_townid = g_mapunit[info->m_to_unit_index].index;
+			if ( kw_townid <= 0 || kw_townid >= g_kingwar_town_maxcount )
+				return -1;
+			if ( pCity->level < global.nationfight_actorlevel )
+			{
+				char v1[32] = { 0 };
+				sprintf( v1, "%d", global.nationfight_actorlevel );
+				actor_notify_alert_v( pCity->actor_index, 1390, v1, NULL );
+				return -1;
+			}
+			if ( pCity->zone != MAPZONE_CENTERID )
+			{
+				actor_notify_alert( pCity->actor_index, 1391 );
+				return -1;
+			}
+			to_type = MAPUNIT_TYPE_KINGWAR_TOWN;
+			to_id = g_mapunit[info->m_to_unit_index].index;
+		}
 	}
 	else
 	{	// 驻扎空地
@@ -787,7 +811,15 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	}
 
 	// 创建部队
-	int army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_MARCH, info );
+	int army_index;
+	if ( to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
+	{
+		army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_KINGWAR_READY, info );
+	}
+	else
+	{
+		army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_MARCH, info );
+	}
 	if ( army_index < 0 )
 		return -1;
 
@@ -920,6 +952,11 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 		g_army[army_index].to_index = index;
 		map_res_getpos( index, &g_army[army_index].to_posx, &g_army[army_index].to_posy );
 	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
+	{ // 目的是血战皇城据点
+		int index = g_army[army_index].to_id;
+		g_army[army_index].to_index = index;
+	}
 	else
 	{ // 目的是空地
 		g_army[army_index].to_posx = info->m_to_posx;
@@ -934,18 +971,20 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 	g_army[army_index].posx = g_army[army_index].from_posx;
 	g_army[army_index].posy = g_army[army_index].from_posy;
 
-	// 距离(不是计算行军时间的距离，这是两点之间的直线距离)
-	g_army[army_index].move_total_distance = (short)sqrt( pow( (float)(g_army[army_index].from_posx - g_army[army_index].to_posx), 2 ) + pow( (float)(g_army[army_index].from_posy - g_army[army_index].to_posy), 2 ) );
+	if ( g_army[army_index].to_type != MAPUNIT_TYPE_KINGWAR_TOWN )
+	{
+		// 距离(不是计算行军时间的距离，这是两点之间的直线距离)
+		g_army[army_index].move_total_distance = (short)sqrt( pow( (float)(g_army[army_index].from_posx - g_army[army_index].to_posx), 2 ) + pow( (float)(g_army[army_index].from_posy - g_army[army_index].to_posy), 2 ) );
 
-	// 计算行军时间
-	army_march_time( army_index );
+		// 计算行军时间
+		army_march_time( army_index );
 
-	// 行军路线
-	army_marchroute_add( army_index );
+		// 行军路线
+		army_marchroute_add( army_index );
 
-	// 添加到地图显示单元
-	g_army[army_index].unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
-
+		// 添加到地图显示单元
+		g_army[army_index].unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
+	}
 	return army_index;
 }
 
@@ -1181,7 +1220,7 @@ void army_setstate( int army_index, char state )
 		army_marchroute_add( army_index );
 		break;
 	default:
-		return;
+		break;
 	}
 
 	// 通知部队所属城池更新出征队列

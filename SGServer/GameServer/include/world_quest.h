@@ -22,6 +22,7 @@ int worldquest_setvalue( int questid, int value );
 int worldquest_setcomplete( int actor_index, int questid );
 int worldquest_getcomplete( int actor_index, int questid, int *value );
 int worldquest_check( int actor_index, int questid, int *value );
+int worldquest_check_server( int questid );
 int worldquest_checkcomplete( int actor_index, char type );
 int worldquest_sendinfo( int actor_index );
 int worldquest_sendaward( int actor_index, int questid );

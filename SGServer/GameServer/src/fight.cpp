@@ -756,7 +756,7 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 			if ( !config )
 				continue;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_HERO, -1, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
 		}
 	}
 

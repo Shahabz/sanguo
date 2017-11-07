@@ -1672,3 +1672,33 @@ function struct_NetS_LostRebuild_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_KingwarTown_recv( buffer )
+	local recvValue = {};
+	recvValue.m_id = buffer:ReadSByte();
+	recvValue.m_attack_total = buffer:ReadInt();
+	recvValue.m_defense_total = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_KingwarTownList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_KingwarTown_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_KingWarActivity_recv( buffer )
+	local recvValue = {};
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_beginstamp = buffer:ReadInt();
+	recvValue.m_endstamp = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+

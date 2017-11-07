@@ -10,6 +10,7 @@
 #include "script.h"
 #include "db.h"
 #include "script_auto.h"
+#include "server_netsend_auto.h"
 #include "activity.h"
 #include "timegmcmd.h"
 #include "gmcmd.h"

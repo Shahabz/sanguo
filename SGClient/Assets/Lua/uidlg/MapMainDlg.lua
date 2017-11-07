@@ -97,7 +97,19 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 前往州城
 		elseif nControlID == 11 then
 			MapMainDlgClickGotoZone()	
+		
+		-- 血战皇城
+		elseif nControlID == 12 then
+			BloodyBattleDlgShow();
+		
+		-- 挖宝
+		elseif nControlID == 13 then
+		
 			
+		-- 恭贺
+		elseif nControlID == 14 then
+
+				
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
 			MapMainDlgReback( nControlID-CONTROLOFFSET_REBACK )
@@ -193,6 +205,10 @@ end
 -- 接收出征队列信息
 -- m_count=0,m_list={m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_to_type=0,m_herokind={[4]},[m_count]},m_unit_index=0,
 function MapMainDlgBattleRecv( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	
 	m_recvValue = recvValue;
 	
 	local index = 0;
@@ -297,10 +313,17 @@ function MapMainDlgBattleSet( root, index, info )
 	elseif info.m_state == ARMY_STATE_REBACK then
 		SetText( uiState, T(978) )
 		SetTrue( uiQuickBtn )
+	elseif info.m_state >= ARMY_STATE_KINGWAR_READY and info.m_state <= ARMY_STATE_KINGWAR_DEAD then
+		SetText( uiState, T(1400) )
 	end
 	
 	-- 状态时间
-	SetTimer( uiTimer, info.m_stateduration-info.m_statetime, info.m_stateduration )
+	if info.m_state >= ARMY_STATE_KINGWAR_READY and info.m_state <= ARMY_STATE_KINGWAR_DEAD then
+		SetFalse( uiTimer )
+	else
+		SetTrue( uiTimer )
+		SetTimer( uiTimer, info.m_stateduration-info.m_statetime, info.m_stateduration )
+	end
 	
 	-- 武将头像
 	SetFalse( uiHero1 )
@@ -594,14 +617,28 @@ function MapMainDlgClickGotoZone()
 	end )
 end	
 
--- 活动
-function MapMainDlgShowActivity()
-	--SetFalse( m_uiActivity1 )
-	--SetFalse( m_uiActivity2 )
-end
-function MapMainDlgHideActivity()
-	--SetFalse( m_uiActivity1 )
-	--SetFalse( m_uiActivity2 )
+-- 血战皇城活动
+-- m_state=0,m_beginstamp=0,m_endstamp=0,m_nation=0,
+function MapMainDlgActivityKingWar( recvValue )
+	BloodyBattleDlgSetActivityInfo( recvValue )
+	-- 尚未开启
+	if recvValue.m_state == 0 and recvValue.m_beginstamp > 0 then
+		SetTrue( m_uiActivity1 )
+		local lefttime = recvValue.m_beginstamp-GetServerTime();
+		SetTimer( m_uiActivity1.transform:Find("Back/Timer"), lefttime, lefttime, 0, T(1393) );
+	
+	-- 已经开启
+	elseif recvValue.m_state == 1 then
+		SetTrue( m_uiActivity1 )
+		local lefttime = recvValue.m_endstamp-GetServerTime();
+		if recvValue.m_nation == GetPlayer().m_nation then
+			SetTimer( m_uiActivity1.transform:Find("Back/Timer"), lefttime, lefttime, 0, T(1394) );
+		else
+			SetTimer( m_uiActivity1.transform:Find("Back/Timer"), lefttime, lefttime, 0, T(1395) );
+		end
+	else
+		SetFalse( m_uiActivity1 )
+	end
 end
 
 -- 小地图
