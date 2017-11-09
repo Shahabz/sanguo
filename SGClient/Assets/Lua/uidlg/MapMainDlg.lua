@@ -396,6 +396,10 @@ function MapMainDlgHero( root, index, pHero )
 	end
 end
 
+function MapMainDlgGetRecvValue()
+	return m_recvValue;
+end
+
 -- 显示武将层
 function MapMainDlgHeroLayerShow()
 	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( true );
@@ -638,6 +642,7 @@ function MapMainDlgActivityKingWar( recvValue )
 		end
 	else
 		SetFalse( m_uiActivity1 )
+		BloodyBattleDlgClose()
 	end
 end
 

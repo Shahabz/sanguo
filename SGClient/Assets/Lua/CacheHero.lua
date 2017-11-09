@@ -4,6 +4,8 @@ MAX_CITYHERONUM		= 12 -- 上阵英雄数量
 
 HERO_STATE_NORMAL	=	0	-- 闲
 HERO_STATE_FIGHT	=	1	-- 战
+HERO_STATE_GATHER	=	2	-- 采集
+HERO_STATE_KINGWAR	=	3	-- 血战
 
 -- 一个英雄结构
 SLK_Hero = class("SLK_Hero")

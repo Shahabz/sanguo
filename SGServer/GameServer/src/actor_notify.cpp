@@ -3,6 +3,8 @@
 #include "actor_send.h"
 #include "gameproc.h"
 #include "server_netsend_auto.h"
+#include "mail.h"
+#include "king_war.h"
 
 extern Actor *g_actors;
 extern int g_actornum;
@@ -86,6 +88,51 @@ int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 )
 	else
 	{
 		actor_notify_value( actor_index, NOTIFY_ALERT, 1, &textid, NULL );
+	}
+	return 0;
+}
+
+// 弹出消息选择框
+int actor_notify_msgbox_v( int actor_index, int msgid, int value1, int value2, int textid, char *v1, char *v2 )
+{
+	char content[128] = { 0 };
+	int value[3] = { 0 };
+	value[0] = msgid;
+	value[1] = value1;
+	value[2] = value2;
+	if ( v1 && v2 )
+	{
+		sprintf( content, "{\"textid\":\"%s%d\",\"v1\":\"%s\",\"v2\":\"%s\"}", TAG_TEXTID, textid, v1, v2 );
+		actor_notify_value( actor_index, NOTIFY_MSGBOX, 3, value, content );
+	}
+	else if ( v1 )
+	{
+		sprintf( content, "{\"textid\":\"%s%d\",\"v1\":\"%s\"}", TAG_TEXTID, textid, v1 );
+		actor_notify_value( actor_index, NOTIFY_MSGBOX, 3, value, content );
+	}
+	else
+	{
+		sprintf( content, "{\"textid\":\"%s%d\"}", TAG_TEXTID, textid );
+		actor_notify_value( actor_index, NOTIFY_MSGBOX, 3, value, NULL );
+	}
+	return 0;
+}
+
+// 消息框回调
+int actor_notify_msgbox_callback( int actor_index, int msgid, int value1, int value2 )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	switch ( msgid )
+	{
+	case MSGBOX_CALLBACK_KINGWAR_DEFENSE:
+		kingwar_army_defense( actor_index, value1, value2 );
+		break;
+	case MSGBOX_CALLBACK_KINGWAR_SNEAK:
+		kingwar_army_sneak( actor_index, value1, value2 );
+		break;
+	default:
+		break;
 	}
 	return 0;
 }

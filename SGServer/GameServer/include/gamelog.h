@@ -81,6 +81,10 @@
 #define PATH_TOWNDEV_CONTRIBUTE			53	// 都城开发捐献
 #define PATH_WORLDBOSS					54	// 世界boss
 #define PATH_LOSTREBUILD				55	// 重建家园
+#define PATH_KINGWAR_SNEAK				56	// 血战活动-偷袭
+#define PATH_KINGWAR_PK					57	// 血战活动-单挑
+#define PATH_KINGWAR_DEFENSE			58	// 血战活动-回防
+#define PATH_KINGWAR_REBIRTH			59	// 血战活动-复活
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

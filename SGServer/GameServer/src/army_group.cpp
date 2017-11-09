@@ -153,7 +153,8 @@ int armygroup_loadcb( int group_index )
 			// 数据前移
 			if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
 			{
-				memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+				memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1 - tmpi) );
+				g_armygroup[group_index].attack_armyindex[ARMYGROUP_MAXCOUNT-1] = -1;
 			}
 		}
 	}
@@ -169,7 +170,8 @@ int armygroup_loadcb( int group_index )
 			// 数据前移
 			if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
 			{
-				memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+				memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1 - tmpi) );
+				g_armygroup[group_index].defense_armyindex[ARMYGROUP_MAXCOUNT-1] = -1;
 			}
 		}
 	}
@@ -480,7 +482,8 @@ void armygroup_delarmy( int army_index )
 				// 数据前移
 				if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
 				{
-					memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+					memmove( &g_armygroup[group_index].attack_armyindex[tmpi], &g_armygroup[group_index].attack_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1 - tmpi) );
+					g_armygroup[group_index].attack_armyindex[ARMYGROUP_MAXCOUNT - 1] = -1;
 				}
 				break;
 			}
@@ -498,7 +501,8 @@ void armygroup_delarmy( int army_index )
 				// 数据前移
 				if ( tmpi < ARMYGROUP_MAXCOUNT - 1 )
 				{
-					memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1) );
+					memmove( &g_armygroup[group_index].defense_armyindex[tmpi], &g_armygroup[group_index].defense_armyindex[tmpi + 1], sizeof( int )*(ARMYGROUP_MAXCOUNT - 1 - tmpi) );
+					g_armygroup[group_index].defense_armyindex[ARMYGROUP_MAXCOUNT - 1] = -1;
 				}
 				break;
 			}

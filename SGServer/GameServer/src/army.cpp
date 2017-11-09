@@ -36,6 +36,7 @@
 #include "map_res.h"
 #include "map.h"
 #include "map_zone.h"
+#include "king_war.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -94,33 +95,7 @@ int army_loadcb( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return -1;
-
-	// 计算临时变量
-	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
-	{ // 出发是城池
-		int city_index = city_getindex_withactorid( g_army[army_index].from_id );
-		g_army[army_index].from_index = city_index;
-		if ( city_index >= 0 && city_index < g_city_maxcount )
-		{
-			city_battlequeue_add( &g_city[city_index], army_index );
-		}
-		// 武将状态
-		// 英雄状态
-		for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
-		{
-			int hero_index = city_hero_getindex( city_index, g_army[army_index].herokind[tmpi] );
-			if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
-			{
-				if ( g_city[city_index].hero[hero_index].state == HERO_STATE_FIGHT )
-					return -1;
-				hero_changestate( city_index, g_army[army_index].herokind[tmpi], HERO_STATE_FIGHT );
-			}
-		}
-	}
-	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
-	{ // 出发是城镇
-		g_army[army_index].from_index = g_army[army_index].from_id;
-	}
+	char hero_state = HERO_STATE_FIGHT;
 
 	if ( g_army[army_index].to_type == MAPUNIT_TYPE_CITY )
 	{ // 目的是城池
@@ -146,8 +121,49 @@ int army_loadcb( int army_index )
 		{
 			map_res_setarmy( g_army[army_index].to_index, army_index );
 		}
+		hero_state = HERO_STATE_GATHER;
 	}
-	
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
+	{ // 目的是血战皇城
+		g_army[army_index].to_index = g_army[army_index].to_id;
+		if ( g_army[army_index].state == ARMY_STATE_KINGWAR_FIGHT )
+		{
+			kingwar_town_queueadd( g_army[army_index].to_index, kingwar_town_attack_or_defense( g_army[army_index].to_index, army_index ), army_index );
+		}
+		hero_state = HERO_STATE_KINGWAR;
+		if ( kingwar_activity_inttime() == 0 )
+		{
+			army_delete( army_index );
+			return 0;
+		}
+	}
+
+	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
+	{ // 出发是城池
+		int city_index = city_getindex_withactorid( g_army[army_index].from_id );
+		g_army[army_index].from_index = city_index;
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			city_battlequeue_add( &g_city[city_index], army_index );
+		}
+		// 武将状态
+		// 英雄状态
+		for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
+		{
+			int hero_index = city_hero_getindex( city_index, g_army[army_index].herokind[tmpi] );
+			if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
+			{
+				if ( g_city[city_index].hero[hero_index].state > HERO_STATE_NORMAL )
+					return -1;
+				hero_changestate( city_index, g_army[army_index].herokind[tmpi], hero_state );
+			}
+		}
+	}
+	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
+	{ // 出发是城镇
+		g_army[army_index].from_index = g_army[army_index].from_id;
+	}
+
 	// 目标是玩家
 	City *pTargetCity = army_getcityptr_target( army_index );
 	if ( pTargetCity && g_army[army_index].state == ARMY_STATE_HELP )
@@ -211,7 +227,7 @@ void army_del_db( int army_index )
 	return;
 }
 
-Army *army_getptr( int army_index )
+inline Army *army_getptr( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return NULL;
@@ -353,7 +369,7 @@ void army_getpos( int army_index, short *posx, short *posy )
 }
 
 // 获取空闲army_index
-int army_getfreeindex()
+inline int army_getfreeindex()
 {
 	for ( int tmpi = 0; tmpi < g_army_maxcount; tmpi++ )
 	{
@@ -370,6 +386,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 {
 	if ( !pCity )
 		return -1;
+	char hero_state = HERO_STATE_FIGHT;
 	int group_index = -1;
 	// 总兵力
 	int totalsoldiers = 0;
@@ -379,7 +396,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		int hero_index = city_hero_getindex( pCity->index, info->m_herokind[tmpi] );
 		if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
 		{
-			if ( pCity->hero[hero_index].state == HERO_STATE_FIGHT )
+			if ( pCity->hero[hero_index].state > HERO_STATE_NORMAL )
 				return -1;
 			totalsoldiers += pCity->hero[hero_index].soldiers;
 		}
@@ -776,12 +793,13 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			}
 			to_type = MAPUNIT_TYPE_RES;
 			to_id = g_mapunit[info->m_to_unit_index].index;
+			hero_state = HERO_STATE_GATHER;
 		}
-		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_KINGWAR_TOWN )
+	}
+	else
+	{	
+		if ( info->m_action == ARMY_ACTION_KINGWAR )
 		{ // 皇城血战据点
-			int kw_townid = g_mapunit[info->m_to_unit_index].index;
-			if ( kw_townid <= 0 || kw_townid >= g_kingwar_town_maxcount )
-				return -1;
 			if ( pCity->level < global.nationfight_actorlevel )
 			{
 				char v1[32] = { 0 };
@@ -795,19 +813,21 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				return -1;
 			}
 			to_type = MAPUNIT_TYPE_KINGWAR_TOWN;
-			to_id = g_mapunit[info->m_to_unit_index].index;
+			to_id = pCity->nation;
+			hero_state = HERO_STATE_KINGWAR;
 		}
-	}
-	else
-	{	// 驻扎空地
-		if ( info->m_action != ARMY_ACTION_OCCUPY )
+		// 驻扎空地
+		else if ( info->m_action != ARMY_ACTION_OCCUPY )
 		{
 			write_gamelog( "[BATTLE_INVALID]_actorid:%d_action:%d_info->unit_index:%d", pCity->actorid, info->m_action, info->m_to_unit_index );
 			//actor_system_message( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
 			return -1;
 		}
-		to_type = 0;
-		to_id = 0;
+		else
+		{
+			to_type = 0;
+			to_id = 0;
+		}
 	}
 
 	// 创建部队
@@ -832,9 +852,9 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		int hero_index = city_hero_getindex( pCity->index, info->m_herokind[tmpi] );
 		if ( hero_index >= 0 && hero_index < HERO_CITY_MAX )
 		{
-			if ( pCity->hero[hero_index].state == HERO_STATE_FIGHT )
+			if ( pCity->hero[hero_index].state > HERO_STATE_NORMAL )
 				continue;
-			hero_changestate( pCity->index, info->m_herokind[tmpi], HERO_STATE_FIGHT );
+			hero_changestate( pCity->index, info->m_herokind[tmpi], hero_state );
 		}
 	}
 
@@ -1004,6 +1024,10 @@ void army_delete( int army_index )
 	{
 		// 被选择次数减少
 		map_enemy_subselected( g_army[army_index].to_index );
+	}
+	else if ( g_army[army_index].state == ARMY_STATE_KINGWAR_FIGHT )
+	{
+		kingwar_town_queuedel( g_army[army_index].to_index, kingwar_town_attack_or_defense( g_army[army_index].to_index, army_index ), army_index );
 	}
 
 	army_marchroute_del( army_index );
@@ -1264,6 +1288,12 @@ void army_logic( int army_index )
 		break;
 	case ARMY_STATE_REBACK:				// 返程中
 		army_reback( army_index );
+		break;
+	case ARMY_STATE_KINGWAR_FIGHT:
+		army_kingwar_queue( army_index );
+		break;
+	case ARMY_STATE_KINGWAR_WAITSOS:
+		army_kingwar_waitsos( army_index );
 		break;
 	}
 }
@@ -1815,3 +1845,23 @@ int army_myself( int actor_index, int army_index )
 	return 0;
 }
 
+// 皇城血战队列待战
+void army_kingwar_queue( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	if ( g_army[army_index].move_total_distance > 0 )
+		g_army[army_index].move_total_distance -= 1;
+}
+
+// 皇城血战死亡CD
+void army_kingwar_waitsos( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return;
+	g_army[army_index].statetime += 1;
+	if ( g_army[army_index].statetime >= g_army[army_index].stateduration )
+	{
+		army_delete( army_index );
+	}
+}

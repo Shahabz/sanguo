@@ -182,6 +182,10 @@ function F( nameid, ... )
 	return Utils.StringFormat( Localization.text( nameid ), ... );
 end
 
+function FF( text, ... )
+	return Utils.StringFormat( text, ... );
+end
+
 function FQUEST( nameid, ... )
 	return Utils.StringFormat( Localization.text_quest( nameid ), ... );
 end

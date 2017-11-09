@@ -428,7 +428,7 @@ int user_queue_logic()
 	if ( nTail != nHead )
 	{
 		int queuecount = 0;
-		if ( nTail > nHead )
+		if ( nTail >= nHead )
 		{
 			queuecount = nTail - nHead;
 		}

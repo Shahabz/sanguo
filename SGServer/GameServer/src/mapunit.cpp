@@ -137,7 +137,7 @@ int mapunit_getpos( int unit_index, short *posx, short *posy )
 }
 
 // 获取一个空闲的索引
-int mapunit_getfreeindex()
+inline int mapunit_getfreeindex()
 {
 	if ( g_mapunit_lastfreeindex < 0 || g_mapunit_lastfreeindex >= g_mapunit_maxcount - 1 )
 	{
@@ -165,7 +165,7 @@ int mapunit_getfreeindex()
 }
 
 // 根据类型和对应索引确定单元索引
-int mapunit_getindex( char type, int index )
+inline int mapunit_getindex( char type, int index )
 {
 	for ( int tmpi = 0; tmpi < g_mapunit_maxcount; tmpi++ )
 	{

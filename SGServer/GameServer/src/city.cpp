@@ -1456,7 +1456,8 @@ int city_guard_subsoldiers( int city_index, int offset, int sub )
 		memset( &g_city[city_index].guard[offset], 0, sizeof( CityGuard ) );
 		if ( offset < CITY_GUARD_MAX - 1 )
 		{
-			memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1) );
+			memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1 - offset) );
+			memset( &g_city[city_index].guard[CITY_GUARD_MAX-1], 0, sizeof( CityGuard ) );
 		}
 	}
 	return 0;
@@ -1806,6 +1807,8 @@ int city_train_cancel( int actor_index, int kind, int queue )
 	{
 		memmove( &barracks->queuesec[queue], &barracks->queuesec[queue + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - 1 - queue) );
 		memmove( &barracks->queuenum[queue], &barracks->queuenum[queue + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - 1 - queue) );
+		barracks->queuesec[CITY_TRAINQUEUE_MAX - 1] = 0;
+		barracks->queuenum[CITY_TRAINQUEUE_MAX - 1] = 0;
 	}
 	city_train_sendinfo( actor_index, kind );
 	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_CANCEL, kind, trainnum, 0, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
@@ -1837,6 +1840,8 @@ int city_train_finish( City *pCity, BuildingBarracks *barracks )
 			{
 				memmove( &barracks->queuesec[tmpi], &barracks->queuesec[tmpi + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - tmpi - 1) );
 				memmove( &barracks->queuenum[tmpi], &barracks->queuenum[tmpi + 1], sizeof( int )*(CITY_TRAINQUEUE_MAX - tmpi - 1) );
+				barracks->queuesec[CITY_TRAINQUEUE_MAX - 1] = 0;
+				barracks->queuenum[CITY_TRAINQUEUE_MAX - 1] = 0;
 			}
 			wlog( 0, LOGOP_BARRACKS, PATH_TRAIN, barracks->kind, barracks->trainnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
 			break;
@@ -2647,6 +2652,12 @@ void city_battlequeue_makestruct( SLK_NetS_BattleInfo *pValue, int army_index )
 		pValue->m_statetime = armygroup_statetime( g_army[army_index].group_index );
 		pValue->m_stateduration = armygroup_stateduration( g_army[army_index].group_index );
 	}
+	else if ( g_army[army_index].state >= ARMY_STATE_KINGWAR_READY && g_army[army_index].state <= ARMY_STATE_KINGWAR_DEAD )
+	{ // 血战等待战斗
+		pValue->m_to_posx = g_army[army_index].to_id;
+		pValue->m_to_posy = g_army[army_index].move_total_distance;
+		pValue->m_unit_index = g_army[army_index].totals;
+	}
 	else
 	{
 		pValue->m_unit_index = g_army[army_index].unit_index;
@@ -2998,7 +3009,8 @@ int city_helparmy_del( City *pCity, int army_index )
 			// 数据前移
 			if ( index < CITY_HELPDEFENSE_MAX - 1 )
 			{
-				memmove( &pCity->help_armyindex[index], &pCity->help_armyindex[index + 1], sizeof( int )*(CITY_HELPDEFENSE_MAX - 1) );
+				memmove( &pCity->help_armyindex[index], &pCity->help_armyindex[index + 1], sizeof( int )*(CITY_HELPDEFENSE_MAX - 1 - index) );
+				pCity->help_armyindex[CITY_HELPDEFENSE_MAX - 1] = -1;
 			}
 			// 给集结 发送援助删除信息
 			//armygroup_send_delinfo( army_index, 1 );

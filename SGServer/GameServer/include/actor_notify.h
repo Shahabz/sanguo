@@ -22,6 +22,7 @@
 #define NOTIFY_ALERT		14	// 弹出确定消息
 #define NOTIFY_LOSTREBUILD	15	// 高级重建次数
 #define NOTIFY_MAPZONEGOZC	16	// 前往州城的显示和隐藏
+#define NOTIFY_MSGBOX		17	// 弹出消息选择框
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );
@@ -40,6 +41,13 @@ int actor_notify_alert( int actor_index, int textid );
 
 // 弹出确定消息带参数
 int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 );
+
+// 消息提示框
+#define MSGBOX_CALLBACK_KINGWAR_DEFENSE	1 // 血战提示前往转回防
+#define MSGBOX_CALLBACK_KINGWAR_SNEAK	2 // 血城战提示进攻转偷袭
+// 弹出消息选择框
+int actor_notify_msgbox_v( int actor_index, int msgid, int value1, int value2, int textid, char *v1, char *v2 );
+int actor_notify_msgbox_callback( int actor_index, int msgid, int value1, int value2 );
 
 // 通知UI更新
 #define UI_UPDATE_NATIONFIGHT		1 // 国战城镇有变化

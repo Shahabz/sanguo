@@ -9,12 +9,8 @@ struct _kingwar_town {
 				int attack_total;	//攻击方总兵力
 				int defense_total;	//防御方总兵力
 				int sec;	//战斗倒计时
-				int attack_queue[4096];	//攻击队列
-				int attack_queue_head;	//攻击队列头
-				int attack_queue_tail;	//攻击队列尾
-				int defense_queue[4096];	//防守队列
-				int defense_queue_head;	//防守队列头
-				int defense_queue_tail;	//防守队列尾
+				int attack_queue[2048];	//攻击队列
+				int defense_queue[2048];	//防守队列
 };
 typedef struct _kingwar_town KingwarTown;
 

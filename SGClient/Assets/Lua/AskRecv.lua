@@ -16,6 +16,7 @@ NOTIFY_MAIL			=	13	-- 邮件
 NOTIFY_ALERT		=	14	-- 消息确定框
 NOTIFY_LOSTREBUILD	=	15	-- 高级重建次数
 NOTIFY_MAPZONEGOZC	=	16	-- 前往州城的显示和隐藏
+NOTIFY_MSGBOX		=	17	-- 弹出消息选择框
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -148,6 +149,32 @@ function RecvActorNotify(recvValue)
 		elseif value[1] == 1 then	
 			MapMainDlgShowGotoZone()
 		end
+	
+	-- 弹出消息选择框
+	elseif msgid == NOTIFY_MSGBOX then
+		local json = require "cjson"
+		local msgjson = json.decode( recvValue.m_msg );
+		local msg = "";
+		if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+			local text = GetMail():GetString( msgjson["textid"] );
+			local v1_str = GetMail():GetString( msgjson["v1"] );
+			local v2_str = GetMail():GetString( msgjson["v2"] );
+			msg = FF( text, v1_str, v2_str )
+		
+		elseif msgjson["v1"] ~= nil then
+			local text = GetMail():GetString( msgjson["textid"] );
+			local v1_str = GetMail():GetString( msgjson["v1"] );
+			msg = FF( text, v1_str )
+			
+		else
+			local text = GetMail():GetString( msgjson["textid"] );
+			msg = text;
+		end
+		MsgBox( msg, function() 
+			if value[1] > 0 then
+				system_askinfo( ASKINFO_MSGBOX_CALLBACK, "", value[1], value[2], value[3] )
+			end
+		end )
     end
 end
 

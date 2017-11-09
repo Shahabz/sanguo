@@ -125,4 +125,9 @@ void army_fight( int army_index );
 // 检查部队是不是自己的
 int army_myself( int actor_index, int army_index );
 
+// 皇城血战队列待战
+void army_kingwar_queue( int army_index );
+
+// 皇城血战死亡CD
+void army_kingwar_waitsos( int army_index );
 #endif

@@ -1085,6 +1085,7 @@ end
 function proc_battleinfo_C( recvValue )
 	-- process.
 	MapMainDlgBattleUpdate( recvValue )
+	BloodyBattleDlgHeroUpdate( recvValue )
 end
 
 -- m_kind=0,m_totalnum=0,m_totalsec=0,m_gathertime=0,m_herokind=0,m_herolevel=0,m_herohp=0,m_actorlevel=0,
@@ -1458,14 +1459,14 @@ end
 -- m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,
 function proc_kingwartown_C( recvValue )
 	-- process.
-	BloodyBattleDlgRecv( recvValue )
+	BloodyBattleDlgTownRecv( recvValue )
 end
 
 -- m_count=0,m_list={m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,[m_count]},
 function proc_kingwartownlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
-		BloodyBattleDlgRecv( recvValue.m_list[i] )
+		BloodyBattleDlgTownRecv( recvValue.m_list[i] )
 	end
 end
 

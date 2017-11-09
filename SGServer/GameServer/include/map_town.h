@@ -12,6 +12,8 @@
 #define MAPUNIT_TYPE_TOWN_TYPE8  8 // 都城
 #define MAPUNIT_TYPE_TOWN_TYPE9  9 // 皇城
 
+#define MAPUNIT_KING_TOWNID 500
+
 #define MAP_TOWN_JOIN_MAX	128	// 参战人员
 #define MAP_TOWN_MONSTER_MAX	16	// 守卫数量
 #define MAP_TOWN_UNDERFIRE_GROUP_MAX 4

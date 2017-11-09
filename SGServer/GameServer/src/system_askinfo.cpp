@@ -534,8 +534,35 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 0 )
 		{ // 获取列表并订阅
-			kingwar_sendlist( actor_index );
+			kingwar_town_sendlist( actor_index );
 		}
+		else if ( pvalue[0] == 1 )
+		{ // 前往
+			kingwar_army_goto( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 偷袭
+			kingwar_army_sneak( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 单挑
+			kingwar_army_pk( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 进攻
+			kingwar_army_attack( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 回防
+			kingwar_army_defense( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 救援
+			kingwar_army_rebirth( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_MSGBOX_CALLBACK:
+		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );
 		break;
 	default:
 		break;

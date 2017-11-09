@@ -85,6 +85,7 @@ end
 function CreateDlgShow( nation_award )
 	CreateDlgOpen()
 	m_nation_award = nation_award
+	CreateDlgSelect(nation_award)
 end
 
 function CreateDlgSelect( nation )	
@@ -102,10 +103,11 @@ function CreateDlgSelect( nation )
 	
 	if nation == m_nation_award then
 		SetTrue( m_uiAward )
-		SetText( m_uiAward.transform:Find("Num"), "x"..global.nation_award_token )
+		SetText( m_uiAward.transform:Find("Num"), "推荐国家，奖励："..global.nation_award_token.."元宝" )
 	else
 		SetFalse( m_uiAward )
 	end
+
 end
 
 function CreateDlgCreate()

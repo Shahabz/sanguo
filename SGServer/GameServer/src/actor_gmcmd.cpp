@@ -130,6 +130,24 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			global.kingwar_activity_hour = nowtime->tm_hour;
 			global.kingwar_activity_minute = nowtime->tm_min;	
 		}
+		else if ( pValue[0] == 5 )
+		{
+			if ( pCity )
+			{
+				pCity->mokilllv = pValue[1];
+				// 通知客户端更新击杀等级
+				int value[2] = { 0 };
+				value[0] = 2;
+				value[1] = pCity->mokilllv;
+				actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 2, value, NULL );
+			}
+		}
+		else if ( pValue[0] == 6 )
+		{
+			char v1[32] = { 0 };
+			sprintf( v1, "%d", global.kingwar_token_sneak );
+			actor_notify_msgbox_v( actor_index, MSGBOX_CALLBACK_KINGWAR_SNEAK, 1, 2, 1411, v1, NULL );
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );
