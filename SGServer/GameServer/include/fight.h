@@ -22,6 +22,7 @@
 #define FIGHTTYPE_ENEMY		4 // 流寇
 #define FIGHTTYPE_RES		5 // 资源点争夺
 #define FIGHTTYPE_WORLDBOSS	6 // 世界boss
+#define FIGHTTYPE_KINGWAR	7 // 皇城血战
 
 // 一个战斗单元
 typedef struct _fightunit

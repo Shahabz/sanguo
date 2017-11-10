@@ -314,6 +314,13 @@ function LoginModQuickLogin()
 	m_PassWord = "";
 	GameManager.writeini( "LASTSERVERID", m_selectServerID );
 	GameManager.writeini( "LASTLOGINTYPE", 2 );	
+	if m_ServerList[m_selectServerID] == nil then
+		AlertMsg( T(406) )
+		LoginModOpenTestLogin()
+		m_uiFastEnter.gameObject:SetActive( true );
+		m_uiRegEnter.gameObject:SetActive( true );
+		return
+	end
 	Network.SDKConnectServer( m_ServerList[m_selectServerID]["h"], m_ServerList[m_selectServerID]["p"] );
 end
 
@@ -325,6 +332,13 @@ function LoginModLogin()
 	m_PassWord = m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
 	GameManager.writeini( "LASTSERVERID", m_selectServerID );
 	GameManager.writeini( "LASTLOGINTYPE", 1 );
+	if m_ServerList[m_selectServerID] == nil then
+		AlertMsg( T(406) )
+		LoginModOpenTestLogin()
+		m_uiFastEnter.gameObject:SetActive( true );
+		m_uiRegEnter.gameObject:SetActive( true );
+		return
+	end
 	Network.SDKConnectServer( m_ServerList[m_selectServerID]["h"], m_ServerList[m_selectServerID]["p"] );
 end
 

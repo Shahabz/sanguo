@@ -51,6 +51,7 @@ extern int g_city_maxindex;
 extern Army *g_army;
 extern int g_army_maxcount;
 extern int g_army_maxindex;
+extern Fight g_fight;
 
 extern KingwarTownInfo *g_kingwar_towninfo;
 extern int g_kingwar_towninfo_maxnum;
@@ -63,6 +64,7 @@ int g_kingwar_activity_beginstamp = 0; // 活动开始时间戳
 int g_kingwar_activity_endstamp = 0; // 活动结束时间戳
 int g_kingwar_activity_duration = 0; // 活动持续时间
 char g_kingwar_activity_open = 0; // 活动是否开启中
+char g_kingwar_town_update = 0;
 
 // 读档完毕的回调
 int kingwar_town_loadcb( int id )
@@ -185,7 +187,6 @@ int kingwar_town_queuedel( int id, char attack, int army_index )
 			if ( g_kingwar_town[id].attack_queue[tmpi] == army_index )
 			{
 				g_kingwar_town[id].attack_queue[tmpi] = -1;
-				g_kingwar_town[id].attack_total -= g_army[army_index].totals;
 				if ( tmpi < KINGWAR_TOWN_QUEUE_MAX - 1 )
 				{
 					memmove( &g_kingwar_town[id].attack_queue[tmpi], &g_kingwar_town[id].attack_queue[tmpi + 1], sizeof(int) *(KINGWAR_TOWN_QUEUE_MAX - 1 - tmpi) );
@@ -203,7 +204,6 @@ int kingwar_town_queuedel( int id, char attack, int army_index )
 			if ( g_kingwar_town[id].defense_queue[tmpi] == army_index )
 			{
 				g_kingwar_town[id].defense_queue[tmpi] = -1;
-				g_kingwar_town[id].defense_total -= g_army[army_index].totals;
 				if ( tmpi < KINGWAR_TOWN_QUEUE_MAX - 1 )
 				{
 					memmove( &g_kingwar_town[id].defense_queue[tmpi], &g_kingwar_town[id].defense_queue[tmpi + 1], sizeof( int ) *(KINGWAR_TOWN_QUEUE_MAX - 1 - tmpi) );
@@ -224,7 +224,6 @@ int kingwar_town_queuedel( int id, char attack, int army_index )
 				if ( g_kingwar_town[id].defense_queue[tmpi] == army_index )
 				{
 					g_kingwar_town[id].defense_queue[tmpi] = -1;
-					g_kingwar_town[id].defense_total -= g_army[army_index].totals;
 					if ( tmpi < KINGWAR_TOWN_QUEUE_MAX - 1 )
 					{
 						memmove( &g_kingwar_town[id].defense_queue[tmpi], &g_kingwar_town[id].defense_queue[tmpi + 1], sizeof( int ) *(KINGWAR_TOWN_QUEUE_MAX - 1 - tmpi) );
@@ -241,7 +240,6 @@ int kingwar_town_queuedel( int id, char attack, int army_index )
 				if ( g_kingwar_town[id].attack_queue[tmpi] == army_index )
 				{
 					g_kingwar_town[id].attack_queue[tmpi] = -1;
-					g_kingwar_town[id].attack_total -= g_army[army_index].totals;
 					if ( tmpi < KINGWAR_TOWN_QUEUE_MAX - 1 )
 					{
 						memmove( &g_kingwar_town[id].attack_queue[tmpi], &g_kingwar_town[id].attack_queue[tmpi + 1], sizeof( int ) *(KINGWAR_TOWN_QUEUE_MAX - 1 - tmpi) );
@@ -252,6 +250,7 @@ int kingwar_town_queuedel( int id, char attack, int army_index )
 			}
 		}
 	}
+	kingwar_town_totalcalc( id, attack );
 	return 0;
 }
 
@@ -273,20 +272,80 @@ int kingwar_town_queueget( int id, char attack )
 	return army_index;
 }
 
-// 攻防交换
-int kingwar_town_queueswap( int id )
+// 从新计算兵力
+int kingwar_town_totalcalc( int id, char attack )
 {
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
+	if ( attack == KINGWAR_TOWN_ATTACK )
+	{ // 攻击方
+		g_kingwar_town[id].attack_total = 0;
+		for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
+		{
+			int army_index = g_kingwar_town[id].attack_queue[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				break;
+			g_kingwar_town[id].attack_total += g_army[army_index].totals;
+		}
+	}
+	else if ( attack == KINGWAR_TOWN_DEFENSE )
+	{ // 防御方
+		g_kingwar_town[id].defense_total = 0;
+		for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
+		{
+			int army_index = g_kingwar_town[id].defense_queue[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				break;
+			g_kingwar_town[id].defense_total += g_army[army_index].totals;
+		}
+	}
+	return 0;
+}
 
-	int temp[KINGWAR_TOWN_QUEUE_MAX];
-	memcpy( temp, g_kingwar_town[id].attack_queue, sizeof( int )*KINGWAR_TOWN_QUEUE_MAX );
-	memcpy( g_kingwar_town[id].attack_queue, g_kingwar_town[id].defense_queue, sizeof( int )*KINGWAR_TOWN_QUEUE_MAX );
-	memcpy( g_kingwar_town[id].defense_queue, temp, sizeof( int )*KINGWAR_TOWN_QUEUE_MAX );
+// 改变国家
+int kingwar_town_change_nation( int id, int nation )
+{
+	if ( id <= 0 || id >= g_kingwar_town_maxcount )
+		return -1;
+	if ( g_kingwar_town[id].nation == nation )
+		return -1;
+	if ( g_kingwar_town[id].defense_queue[0] >= 0 )
+		return -1;
+	g_kingwar_town[id].nation = nation;
+	g_kingwar_town[id].attack_total = 0;
+	g_kingwar_town[id].defense_total = 0;
 
-	int temp_totals = g_kingwar_town[id].attack_total;
-	g_kingwar_town[id].attack_total = g_kingwar_town[id].defense_total;
-	g_kingwar_town[id].defense_total = temp_totals;
+	int temp[KINGWAR_TOWN_QUEUE_MAX] = { 0 };
+	int temp_total = 0;
+	int temp_index = 0;
+
+	// 把攻击队列中属于这个国家的挑出来,放到防御队列里
+	int index = 0;
+	for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
+	{
+		int army_index = g_kingwar_town[id].attack_queue[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( army_getnation( army_index ) == nation )
+		{
+			g_kingwar_town[id].defense_queue[index] = army_index;
+			g_kingwar_town[id].defense_total += g_army[army_index].totals;
+			index += 1;
+		}
+		else
+		{
+			temp[temp_index] = army_index;
+			temp_total += g_army[army_index].totals;
+			temp_index += 1;
+		}
+		g_kingwar_town[id].attack_queue[tmpi] = -1;
+	}
+
+
+	memcpy( g_kingwar_town[id].attack_queue, temp, sizeof( int )*KINGWAR_TOWN_QUEUE_MAX );
+	g_kingwar_town[id].attack_total = temp_total;
+
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -299,11 +358,49 @@ void kingwar_town_fight( int id )
 
 	// 获取攻击方
 	attack_army_index = kingwar_town_queueget( id, KINGWAR_TOWN_ATTACK );
-	
+	if ( attack_army_index < 0 )
+		return;
+
 	// 获取防御方
 	defense_army_index = kingwar_town_queueget( id, KINGWAR_TOWN_DEFENSE );
+	if ( defense_army_index < 0 )
+	{
+		// 防御方没人了，变成攻击方的
+		kingwar_town_change_nation( id, army_getnation( attack_army_index ) );
+		return;
+	}
 
-	
+	// 双方都有人，战斗
+	if ( fight_start( attack_army_index, MAPUNIT_TYPE_KINGWAR_TOWN, defense_army_index ) < 0 )
+	{
+		return;
+	}
+
+	// 战斗结算
+	fight_lost_calc();
+
+	if ( g_fight.result == FIGHT_WIN )
+	{ // 进攻方胜利
+		kingwar_town_totalcalc( id, KINGWAR_TOWN_ATTACK );
+		// 删除一个防守方队列
+		kingwar_town_queuedel( id, KINGWAR_TOWN_DEFENSE, defense_army_index );
+		g_army[defense_army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
+		g_army[defense_army_index].statetime = 0;
+		g_army[defense_army_index].stateduration = global.kingwar_dead_cd;
+	}
+	else
+	{ // 防御方胜利
+		kingwar_town_totalcalc( id, KINGWAR_TOWN_DEFENSE );
+		// 删除一个攻击方队列
+		kingwar_town_queuedel( id, KINGWAR_TOWN_ATTACK, attack_army_index );
+		g_army[attack_army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
+		g_army[attack_army_index].statetime = 0;
+		g_army[attack_army_index].stateduration = global.kingwar_dead_cd;
+	}
+	city_battlequeue_sendupdate( attack_army_index );
+	city_battlequeue_sendupdate( defense_army_index );
+	g_kingwar_town_update = 1;
+	// 战斗通知
 }
 
 void kingwar_town_logic()
@@ -396,7 +493,11 @@ void kingwar_activity_logic()
 		// 城镇逻辑
 		kingwar_town_logic();
 		// 每秒发送一次
-		kingwar_town_sendall();
+		if ( g_kingwar_town_update == 1 )
+		{
+			kingwar_town_sendall();
+			g_kingwar_town_update = 0;
+		}
 	}
 }
 
@@ -547,6 +648,7 @@ int kingwar_town_sendall()
 		pValue.m_list[pValue.m_count].m_defense_total = g_kingwar_town[id].defense_total;
 		pValue.m_count += 1;
 	}
+	pValue.m_leftstamp = g_kingwar_activity_endstamp - (int)time( NULL );
 	netsend_kingwartownlist_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE, &pValue );
 	return 0;
 }
@@ -564,6 +666,7 @@ int kingwar_town_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_defense_total = g_kingwar_town[id].defense_total;
 		pValue.m_count += 1;
 	}
+	pValue.m_leftstamp = g_kingwar_activity_endstamp - (int)time( NULL );
 	netsend_kingwartownlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	g_actors[actor_index].subscribe_cmd[SUBSCRIBE_CMD_KINGWARDLG] = 1;
 	return 0;
@@ -588,7 +691,11 @@ int kingwar_army_goto( int actor_index, int army_index, int id )
 		return -1;
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
-
+	if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 	int oldid = g_army[army_index].to_id;
 	if ( oldid >= 4 && oldid < g_kingwar_town_maxcount )
 	{ // 如果英雄在据点上，并且当前战斗状态，那么不允许使用前往，只能使用回防
@@ -645,6 +752,7 @@ int kingwar_army_goto( int actor_index, int army_index, int id )
 			return -1;
 	}
 	city_battlequeue_sendupdate( army_index );
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -658,6 +766,11 @@ int kingwar_army_attack( int actor_index, int army_index, int id )
 		return -1;
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
+	if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 
 	int oldid = g_army[army_index].to_id;
 	if ( oldid >= 4 && oldid < g_kingwar_town_maxcount )
@@ -691,6 +804,7 @@ int kingwar_army_attack( int actor_index, int army_index, int id )
 			return -1;
 	}
 	city_battlequeue_sendupdate( army_index );
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -704,10 +818,19 @@ int kingwar_army_sneak( int actor_index, int army_index, int id )
 		return -1;
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
+	if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 	if ( g_army[army_index].state != ARMY_STATE_KINGWAR_FIGHT )
 		return -1;
-
 	int oldid = g_army[army_index].to_id;
+	if ( army_index == g_kingwar_town[oldid].attack_queue[0] || army_index == g_kingwar_town[oldid].defense_queue[0] )
+	{ // 该武将已经上阵，无法进行偷袭
+		actor_notify_alert( actor_index, 1404 );
+		return -1;
+	}
 	if ( oldid >= 4 && oldid < g_kingwar_town_maxcount )
 	{ // 如果英雄在据点上，并且当前非战斗状态了，直接转变为进攻，不消耗钻石
 		if ( g_kingwar_town[oldid].attack_queue[0] < 0 )
@@ -735,6 +858,7 @@ int kingwar_army_sneak( int actor_index, int army_index, int id )
 		return -1;
 	actor_change_token( actor_index, -global.kingwar_token_sneak, PATH_KINGWAR_SNEAK, 0 );
 	city_battlequeue_sendupdate( army_index );
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -748,9 +872,20 @@ int kingwar_army_defense( int actor_index, int army_index, int id )
 		return -1;
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
+	if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 	if ( g_army[army_index].state != ARMY_STATE_KINGWAR_FIGHT )
 		return -1;
+
 	int oldid = g_army[army_index].to_id;
+	if ( army_index == g_kingwar_town[oldid].attack_queue[0] || army_index == g_kingwar_town[oldid].defense_queue[0] )
+	{ // 该武将已经上阵，无法进行回防
+		actor_notify_alert( actor_index, 1405 );
+		return -1;
+	}
 	if ( oldid >= 4 && oldid < g_kingwar_town_maxcount )
 	{ // 如果英雄在据点上，并且当前非战斗状态了，直接转变为前往，不消耗钻石
 		if ( g_kingwar_town[oldid].attack_queue[0] < 0 )
@@ -778,6 +913,7 @@ int kingwar_army_defense( int actor_index, int army_index, int id )
 		return -1;
 	actor_change_token( actor_index, -global.kingwar_token_def, PATH_KINGWAR_DEFENSE, 0 );
 	city_battlequeue_sendupdate( army_index );
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -791,8 +927,91 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 		return -1;
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
+	if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 	if ( g_army[army_index].state != ARMY_STATE_KINGWAR_FIGHT )
 		return -1;
+
+	if ( army_index == g_kingwar_town[id].attack_queue[0] || army_index == g_kingwar_town[id].defense_queue[0] )
+	{ // 该武将已经上阵，无法进行单挑
+		actor_notify_alert( actor_index, 1406 );
+		return -1;
+	}
+
+	// 我是攻击方还是防御方
+	char attack = kingwar_town_attack_or_defense( id, army_index );
+	char target;
+	if ( attack == KINGWAR_TOWN_ATTACK )
+		target = KINGWAR_TOWN_DEFENSE;
+	else
+		target = KINGWAR_TOWN_ATTACK;
+
+	if ( kingwar_town_queueget( id, target ) < 0 )
+	{ // 对方无可单挑队伍
+		actor_notify_alert( actor_index, 1407 );
+		return -1;
+	}
+
+	for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
+	{
+		int target_army_index = kingwar_town_queueget( id, attack );
+		if ( target_army_index < 0 || target_army_index >= g_army_maxcount )
+		{ // 没有了对手了
+			break;
+		}
+
+		// 双方都有人，战斗
+		if ( fight_start( army_index, MAPUNIT_TYPE_KINGWAR_TOWN, target_army_index ) < 0 )
+		{
+			break;
+		}
+
+		// 战斗结算
+		fight_lost_calc();
+
+		if ( g_fight.result == FIGHT_WIN )
+		{ // 单挑一次胜利
+			kingwar_town_totalcalc( id, attack );
+			// 删除一个防守方队列
+			kingwar_town_queuedel( id, target, target_army_index );
+			g_army[target_army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
+			g_army[target_army_index].statetime = 0;
+			g_army[target_army_index].stateduration = global.kingwar_dead_cd;
+			city_battlequeue_sendupdate( target_army_index );
+		}
+		else
+		{ // 失败
+			kingwar_town_totalcalc( id, target );
+			// 删除一个攻击方队列
+			kingwar_town_queuedel( id, attack, target_army_index );
+			g_army[target_army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
+			g_army[target_army_index].statetime = 0;
+			g_army[target_army_index].stateduration = global.kingwar_dead_cd;
+			city_battlequeue_sendupdate( target_army_index );
+			break;
+		}
+	}
+
+	city_battlequeue_sendupdate( army_index );
+
+	// 检查目标是否有人
+	if ( kingwar_town_queueget( id, target ) < 0 )
+		return -1;
+
+	//// 获取防御方
+	//defense_army_index = kingwar_town_queueget( id, KINGWAR_TOWN_DEFENSE );
+	//if ( defense_army_index < 0 )
+	//{
+	//	// 防御方没人了，变成攻击方的
+	//	kingwar_town_change_nation( id, army_getnation( attack_army_index ) );
+	//	return;
+	//}
+
+	
+	g_kingwar_town_update = 1;
 	return 0;
 }
 
@@ -802,9 +1021,44 @@ int kingwar_army_rebirth( int actor_index, int army_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	if ( army_myself( actor_index, army_index ) < 0 )
+	if ( g_army[army_index].state == 0 || g_army[army_index].state == ARMY_STATE_KINGWAR_DEAD )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
 		return -1;
+	}
+	if ( army_myself( actor_index, army_index ) < 0 )
+	{ // 此武将已经败退
+		actor_notify_alert( actor_index, 1418 );
+		return -1;
+	}
 	if ( g_army[army_index].state != ARMY_STATE_KINGWAR_WAITSOS )
 		return -1;
+
+	int costtoken = 0;
+	if ( g_army[army_index].appdata == 0 )
+		costtoken = 10;
+	else if ( g_army[army_index].appdata == 1 )
+		costtoken = 100;
+	else if ( g_army[army_index].appdata == 2 )
+		costtoken = 200;
+	else
+		costtoken = 400;
+
+	if ( g_actors[actor_index].token < costtoken )
+		return -1;
+	
+	// 补充士兵
+	int soldiers = hero_addsoldiers( actor_index, g_army[army_index].herokind[0] );
+	g_army[army_index].state = ARMY_STATE_KINGWAR_FIGHT;
+	g_army[army_index].statetime = 0;
+	g_army[army_index].stateduration = 0;
+	g_army[army_index].appdata += 1;
+	g_army[army_index].totals = soldiers;
+
+	if ( kingwar_town_queueadd( g_army[army_index].to_id, kingwar_town_attack_or_defense( g_army[army_index].to_id, army_index ), army_index ) < 0 )
+		return -1;
+	actor_change_token( actor_index, -costtoken, PATH_KINGWAR_REBIRTH, 0 );
+	city_battlequeue_sendupdate( army_index );
+	g_kingwar_town_update = 1;
 	return 0;
 }

@@ -21,10 +21,12 @@ local m_uiTownButtons = {}; --UnityEngine.GameObject
 local m_uiHanGuButtons = nil; --UnityEngine.GameObject
 local m_uiHuLaoButtons = nil; --UnityEngine.GameObject
 local m_uiLuoYangButtons = nil; --UnityEngine.GameObject
+local m_uiToken = nil; --UnityEngine.GameObject
 
 local m_HeroArmyInfo = { nil, nil, nil, nil }
 local m_uiHeroFindIndex = { 1, 1, 1, 1, 1, 1, 1 }
 local m_SelectHeroOffset = -1;
+local m_LastSelectArmyIndex = -1;
 local m_activityinfo = nil;
 local m_TownRecvValue = { nil, nil, nil, nil };
 local m_HeroRecvValue = nil;
@@ -40,6 +42,7 @@ function BloodyBattleDlgClose()
 		return;
 	end
 	system_askinfo( ASKINFO_KINGWAR, "", -1 )
+	BloodyBattleDlgSelectHero( -1 )
 	eye.uiManager:Close( "BloodyBattleDlg" );
 end
 
@@ -93,6 +96,10 @@ function BloodyBattleDlgOnEvent( nType, nControlID, value, gameObject )
 			BloodyBattleDlgDefense( nControlID - 1040 )
 			
         end
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID >= 1 and nControlID <= 4 then	
+			SetFalse( m_uiUIP_Hero[nControlID].transform:Find("Chat") )
+		end
 	end
 end
 
@@ -124,6 +131,7 @@ function BloodyBattleDlgOnAwake( gameObject )
 	m_uiTownButtons[5] = objs[21];
 	m_uiTownButtons[6] = objs[22];
 	m_uiTownButtons[7] = objs[23];
+	m_uiToken = objs[24];
 end
 
 -- 界面初始化时调用
@@ -164,6 +172,7 @@ function BloodyBattleDlgShow()
 		return
 	end
 	BloodyBattleDlgOpen()
+	BloodyBattleDlgChangeToken()
 	m_SelectHeroOffset = -1;
 	if GetPlayer().m_nation == 1 then
 		m_uiWeiGroup:GetComponent("UITweenScale"):Play(true);
@@ -211,6 +220,22 @@ function BloodyBattleDlgTownRecv( recvValue )
 	end
 end
 
+-- 接收活动剩余时间
+function BloodyBattleDlgRecvLeftStamp( leftstamp )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetTimer( m_uiActivitySec, leftstamp, leftstamp )
+end
+
+-- 钻石
+function BloodyBattleDlgChangeToken()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetRichText( m_uiToken.transform:Find("Text"), "<icon=token>"..GetPlayer().m_token );
+end
+
 -- 接收武将信息
 -- m_count=0,m_list={m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_herokind={[4]},[m_count]},m_unit_index=0,
 function BloodyBattleDlgHeroRecv( recvValue )
@@ -241,7 +266,7 @@ function BloodyBattleDlgHeroUpdate( recvValue )
 	BloodyBattleDlgHeroRecv( m_HeroRecvValue )
 end
 
--- 这只一个武将
+-- 创建一个武将
 function BloodyBattleDlgHeroSet( index, offset, info )
 	local uiHero = m_uiUIP_Hero[offset+1];
 	SetTrue( uiHero )
@@ -257,7 +282,14 @@ function BloodyBattleDlgHeroSet( index, offset, info )
 		uiHero.transform.localPosition = Vector3.New( uiBasePos.localPosition.x, uiBasePos.localPosition.y, uiBasePos.localPosition.z );
 		SetControlID( uiHero, 100+offset )
 		SetText( uiHero.transform:Find("Name"), T(1388) )
-	
+		SetTrue( uiHero.transform:Find("Name") )
+		SetFalse( uiHero.transform:Find("Timer") )
+		SetGray( uiHero.transform:Find("Shape"), false )
+		
+		-- 整装待发
+		--SetTrue( uiHero.transform:Find("Chat") );
+		--SetText( uiHero.transform:Find("Chat/Text"), T( 1413 ) );
+		
 	-- 待战	
 	elseif info.m_state == ARMY_STATE_KINGWAR_FIGHT then
 		local id = info.m_to_posx
@@ -267,7 +299,17 @@ function BloodyBattleDlgHeroSet( index, offset, info )
 		uiHero.transform.localPosition = Vector3.New( uiBasePos.localPosition.x, uiBasePos.localPosition.y, uiBasePos.localPosition.z );
 		SetControlID( uiHero, 100+offset )
 		SetText( uiHero.transform:Find("Name"), F(1401, info.m_unit_index) )
-	
+		SetTrue( uiHero.transform:Find("Name") )
+		SetFalse( uiHero.transform:Find("Timer") )
+		SetGray( uiHero.transform:Find("Shape"), false )
+		
+		-- 显示第{0}位上阵
+		if m_LastSelectArmyIndex == info.m_army_index then
+			SetTrue( uiHero.transform:Find("Chat") );
+			SetText( uiHero.transform:Find("Chat/Text"), F( 1412, info.m_to_posy ) );
+			m_LastSelectArmyIndex = -1;
+		end
+		
 	-- 等待救援	
 	elseif info.m_state == ARMY_STATE_KINGWAR_WAITSOS then
 		local id = info.m_to_posx
@@ -277,6 +319,10 @@ function BloodyBattleDlgHeroSet( index, offset, info )
 		uiHero.transform.localPosition = Vector3.New( uiBasePos.localPosition.x, uiBasePos.localPosition.y, uiBasePos.localPosition.z );
 		SetControlID( uiHero, 100+offset )
 		SetText( uiHero.transform:Find("Name"), "" )
+		SetFalse( uiHero.transform:Find("Name") )
+		SetTrue( uiHero.transform:Find("Timer") )
+		SetTimer( uiHero.transform:Find("Timer"), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, T(1419) )
+		SetGray( uiHero.transform:Find("Shape"), true )
 	end
 end
 
@@ -285,10 +331,10 @@ function BloodyBattleDlgSelectHero( offset )
 	if offset == -1 or m_SelectHeroOffset >= 0 then
 		m_SelectHeroOffset = -1;
 		SetFalse( m_uiMaskLayer )
-		m_uiUIP_Hero[1].transform:SetSiblingIndex( 100 )
-		m_uiUIP_Hero[2].transform:SetSiblingIndex( 100 )
-		m_uiUIP_Hero[3].transform:SetSiblingIndex( 100 )
-		m_uiUIP_Hero[4].transform:SetSiblingIndex( 100 )
+		for i=1, 4, 1 do
+			m_uiUIP_Hero[i].transform:SetSiblingIndex( 100 )
+			SetFalse( m_uiUIP_Hero[i].transform:Find("Chat") )
+		end
 		for id = 4, 7, 1 do
 			m_uiTownButtons[id].transform:SetSiblingIndex( 100 )
 			for i = 0 ,m_uiTownButtons[id].transform.childCount - 1 do
@@ -309,6 +355,10 @@ function BloodyBattleDlgSelectHero( offset )
 	
 	-- 准备状态，显示前往
 	if heroArmy.m_state == ARMY_STATE_KINGWAR_READY then
+		-- 整装待发
+		SetTrue( uiHero.transform:Find("Chat") );
+		SetText( uiHero.transform:Find("Chat/Text"), T( 1413 ) );
+		
 		-- 魏国前往平津关，蜀国前往函谷关，吴国虎牢关
 		local townid = heroArmy.m_to_posx -- 当前所在集结点
 		m_uiTownButtons[townid+3].transform:SetSiblingIndex( 201 )
@@ -345,6 +395,10 @@ function BloodyBattleDlgSelectHero( offset )
 	
 	-- 战斗排队中	
 	elseif heroArmy.m_state == ARMY_STATE_KINGWAR_FIGHT then
+		-- 显示第{0}位上阵
+		SetTrue( uiHero.transform:Find("Chat") );
+		SetText( uiHero.transform:Find("Chat/Text"), F( 1412, heroArmy.m_to_posy ) );
+	
 		local townid = heroArmy.m_to_posx -- 当前所在据点
 		for id = 4, 7, 1 do
 			m_uiTownButtons[id].transform:SetSiblingIndex( 201 )
@@ -394,6 +448,7 @@ function BloodyBattleDlgGoto( id )
 	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
 	system_askinfo( ASKINFO_KINGWAR, "", 1, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
 -- 偷袭
@@ -404,6 +459,7 @@ function BloodyBattleDlgSneak( id )
 	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
 	system_askinfo( ASKINFO_KINGWAR, "", 2, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
 -- 单挑
@@ -414,6 +470,7 @@ function BloodyBattleDlgPK( id )
 	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
 	system_askinfo( ASKINFO_KINGWAR, "", 3, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
 -- 进攻
@@ -424,6 +481,7 @@ function BloodyBattleDlgAttack( id )
 	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
 	system_askinfo( ASKINFO_KINGWAR, "", 4, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 	
 -- 回防
@@ -434,11 +492,12 @@ function BloodyBattleDlgDefense( id )
 	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
 	system_askinfo( ASKINFO_KINGWAR, "", 5, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
 -- 救活
 function BloodyBattleDlgRebirth()
-	
+	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
 --m_state=0,m_beginstamp=0,m_endstamp=0,m_nation=0,

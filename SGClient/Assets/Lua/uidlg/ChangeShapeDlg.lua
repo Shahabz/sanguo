@@ -1,10 +1,13 @@
 -- 界面
 local m_Dlg = nil;
+
+--------------------------------------------------------------
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiNameInput = nil; --UnityEngine.GameObject
 local m_uiChangeNameItem = nil; --UnityEngine.GameObject
 local m_uiChangeNameUseBtn = nil; --UnityEngine.GameObject
 local m_uiChangeNameBuyBtn = nil; --UnityEngine.GameObject
+local m_uiContent = nil; --UnityEngine.GameObject
 local m_SelectShape = -1;
 
 -- 打开界面
@@ -60,11 +63,15 @@ end
 function ChangeShapeDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
+	
 	m_uiShape = objs[0];
 	m_uiNameInput = objs[1];
 	m_uiChangeNameItem = objs[2];
 	m_uiChangeNameUseBtn = objs[3];
 	m_uiChangeNameBuyBtn = objs[4];
+	m_uiContent = objs[5];
+
+
 end
 
 -- 界面初始化时调用
@@ -118,6 +125,14 @@ end
 function ChangeShapeDlgSelect( shape )
 	m_SelectShape = shape;
 	m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( shape );
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		local obj = m_uiContent.transform:GetChild(i).gameObject;
+		if obj.transform:GetComponent( typeof(UIButton) ).controlID == shape then
+			SetTrue( obj.transform:Find("Select") )
+		else
+			SetFalse( obj.transform:Find("Select") )
+		end
+    end
 end
 
 -- 改形象

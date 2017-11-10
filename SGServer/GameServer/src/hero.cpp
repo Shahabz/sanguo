@@ -543,7 +543,7 @@ int hero_addsoldiers( int actor_index, int herokind )
 	netsend_herosoldiers_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	city_changesoldiers( pCity->index, config->corps, -add, PATH_HERO_ADDSOLDIERS );
-	return 0;
+	return pHero->soldiers;
 }
 
 int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path )

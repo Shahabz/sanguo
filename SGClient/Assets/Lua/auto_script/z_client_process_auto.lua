@@ -517,6 +517,7 @@ function proc_changtoken_C( recvValue )
 	GetPlayer().m_token = recvValue.m_total;
 	MainDlgSetToken()
 	DialogFrameModChangeToken()
+	BloodyBattleDlgChangeToken()
 end
 
 -- m_offset=0,m_kind=0,m_washid={[4]},
@@ -1462,12 +1463,13 @@ function proc_kingwartown_C( recvValue )
 	BloodyBattleDlgTownRecv( recvValue )
 end
 
--- m_count=0,m_list={m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,[m_count]},
+-- m_count=0,m_list={m_id=0,m_attack_total=0,m_defense_total=0,m_nation=0,[m_count]},m_leftstamp=0
 function proc_kingwartownlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
 		BloodyBattleDlgTownRecv( recvValue.m_list[i] )
 	end
+	BloodyBattleDlgRecvLeftStamp( recvValue.m_leftstamp )
 end
 
 

@@ -323,6 +323,52 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		g_fight.type = FIGHTTYPE_RES;
 
 	}
+	// 防御方为部队（血战皇城使用）
+	else if ( defense_type == MAPUNIT_TYPE_KINGWAR_TOWN )
+	{
+		int army_index = defense_index;
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		Army *pArmy = &g_army[army_index];
+		if ( !pArmy )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+
+		short herokind = pArmy->herokind[0];
+		if ( herokind <= 0 )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		City *pCity = army_getcityptr( army_index );
+		if ( !pCity )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		int hero_index = city_hero_getindex( pCity->index, herokind );
+		if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		Hero *pHero = &pCity->hero[hero_index];
+		HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+		if ( !config )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
+		g_fight.type = FIGHTTYPE_KINGWAR;
+
+	}
 	else
 	{
 		return -1;
@@ -358,7 +404,10 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 	}
 
 	// 信息转json
-	fight_unit2json();
+	if ( g_fight.type != FIGHTTYPE_KINGWAR )
+	{
+		fight_unit2json();
+	}
 	return 0;
 }
 
@@ -1113,7 +1162,7 @@ int fight_lost_calc_single( FightUnit *pUnit )
 			if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
 				return -1;
 			hero_changesoldiers( pCity, &pCity->hero[hero_index], -(pUnit->maxhp - pUnit->hp), PATH_FIGHT );
-
+			g_army[army_index].totals -= (pUnit->maxhp - pUnit->hp);
 			// 部队添加携带威望
 			if ( pUnit->prestige > 0 )
 			{

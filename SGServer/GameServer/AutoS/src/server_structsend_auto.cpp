@@ -1908,6 +1908,7 @@ int struct_NetS_KingwarTownList_send( char **pptr, int *psize, SLK_NetS_KingwarT
 	{
 		struct_NetS_KingwarTown_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_leftstamp, (*psize) );
 	return 0;
 }
 
