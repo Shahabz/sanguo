@@ -22,6 +22,7 @@ local m_uiHanGuButtons = nil; --UnityEngine.GameObject
 local m_uiHuLaoButtons = nil; --UnityEngine.GameObject
 local m_uiLuoYangButtons = nil; --UnityEngine.GameObject
 local m_uiToken = nil; --UnityEngine.GameObject
+local m_uiChatText = nil; --UnityEngine.GameObject
 
 local m_HeroArmyInfo = { nil, nil, nil, nil }
 local m_uiHeroFindIndex = { 1, 1, 1, 1, 1, 1, 1 }
@@ -30,7 +31,7 @@ local m_LastSelectArmyIndex = -1;
 local m_activityinfo = nil;
 local m_TownRecvValue = { nil, nil, nil, nil };
 local m_HeroRecvValue = nil;
-
+local m_ChatRecvValue = nil;
 -- 打开界面
 function BloodyBattleDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BloodyBattleDlg" );
@@ -66,6 +67,10 @@ function BloodyBattleDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 血战排行榜
 		elseif nControlID == 2 then
+		
+		-- 聊天
+		elseif nControlID == 3 then
+			ChatDlgShow();
 		
 		-- 加入血战
 		elseif nControlID == 10 then
@@ -132,6 +137,7 @@ function BloodyBattleDlgOnAwake( gameObject )
 	m_uiTownButtons[6] = objs[22];
 	m_uiTownButtons[7] = objs[23];
 	m_uiToken = objs[24];
+	m_uiChatText = objs[25];
 end
 
 -- 界面初始化时调用
@@ -173,6 +179,10 @@ function BloodyBattleDlgShow()
 	end
 	BloodyBattleDlgOpen()
 	BloodyBattleDlgChangeToken()
+	BloodyBattleDlgSetInfantry()
+	BloodyBattleDlgSetCavalry()
+	BloodyBattleDlgSetArcher()
+	BloodyBattleDlgSetChat( m_ChatRecvValue )
 	m_SelectHeroOffset = -1;
 	if GetPlayer().m_nation == 1 then
 		m_uiWeiGroup:GetComponent("UITweenScale"):Play(true);
@@ -236,9 +246,34 @@ function BloodyBattleDlgChangeToken()
 	SetRichText( m_uiToken.transform:Find("Text"), "<icon=token>"..GetPlayer().m_token );
 end
 
+-- 步兵
+function BloodyBattleDlgSetInfantry()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiInfantryNum, GetPlayer().m_infantry_num );
+end
+
+-- 骑兵
+function BloodyBattleDlgSetCavalry()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiCavalryNum, GetPlayer().m_cavalry_num );
+end
+
+-- 弓兵
+function BloodyBattleDlgSetArcher()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiArcherNum, GetPlayer().m_archer_num );
+end
+
 -- 接收武将信息
 -- m_count=0,m_list={m_army_index=0,m_unit_index=0,m_state=0,m_statetime=0,m_stateduration=0,m_action=0,m_to_posx=0,m_to_posy=0,m_herokind={[4]},[m_count]},m_unit_index=0,
 function BloodyBattleDlgHeroRecv( recvValue )
+	m_HeroRecvValue = recvValue;
 	if m_Dlg == nil or IsActive( m_Dlg ) == false or recvValue == nil then
 		return;
 	end
@@ -246,8 +281,6 @@ function BloodyBattleDlgHeroRecv( recvValue )
 		SetFalse( m_uiUIP_Hero[i] )
 	end
 	m_uiHeroFindIndex = { 1, 1, 1, 1, 1, 1, 1 }
-	
-	m_HeroRecvValue = recvValue;
 	for i=1, recvValue.m_count, 1 do
 		local _, offset = GetHero():GetIndex( recvValue.m_list[i].m_herokind[1] );
 		if offset < 4 then
@@ -349,9 +382,11 @@ function BloodyBattleDlgSelectHero( offset )
 	local heroArmy = m_HeroArmyInfo[offset+1];
 	
 	-- 改变层级遮罩
-	SetTrue( m_uiMaskLayer )
-	m_uiMaskLayer.transform:SetSiblingIndex( 200 )
-	uiHero.transform:SetSiblingIndex( 201 )
+	if heroArmy.m_state ~= ARMY_STATE_KINGWAR_WAITSOS then
+		SetTrue( m_uiMaskLayer )
+		m_uiMaskLayer.transform:SetSiblingIndex( 200 )
+		uiHero.transform:SetSiblingIndex( 201 )
+	end
 	
 	-- 准备状态，显示前往
 	if heroArmy.m_state == ARMY_STATE_KINGWAR_READY then
@@ -367,31 +402,6 @@ function BloodyBattleDlgSelectHero( offset )
 		else
 			SetTrue( m_uiTownButtons[townid+3].transform:Find("Attack") );
 		end
-		
-		--[[for id = 4, 7, 1 do
-			m_uiTownButtons[id].transform:SetSiblingIndex( 201 )
-			if m_TownRecvValue[id].m_nation == GetPlayer().m_nation then
-				SetTrue( m_uiTownButtons[id].transform:Find("Goto") );
-			else
-				if townid == 4 then
-					if m_TownRecvValue[5].m_nation == GetPlayer().m_nation or m_TownRecvValue[6].m_nation == GetPlayer().m_nation or GetPlayer().m_nation == 1 then
-						SetTrue( m_uiTownButtons[id].transform:Find("Attack") );
-					end
-				elseif id == 5 then
-					if m_TownRecvValue[4].m_nation == GetPlayer().m_nation or m_TownRecvValue[6].m_nation == GetPlayer().m_nation or GetPlayer().m_nation == 2 then
-						SetTrue( m_uiTownButtons[id].transform:Find("Attack") );
-					end
-				elseif id == 6 then
-					if m_TownRecvValue[4].m_nation == GetPlayer().m_nation or m_TownRecvValue[5].m_nation == GetPlayer().m_nation or GetPlayer().m_nation == 3 then
-						SetTrue( m_uiTownButtons[id].transform:Find("Attack") );
-					end
-				elseif id == 7 then
-					if m_TownRecvValue[4].m_nation == GetPlayer().m_nation or m_TownRecvValue[5].m_nation == GetPlayer().m_nation or m_TownRecvValue[6].m_nation == GetPlayer().m_nation then
-						SetTrue( m_uiTownButtons[id].transform:Find("Attack") );
-					end
-				end
-			end
-		end--]]
 	
 	-- 战斗排队中	
 	elseif heroArmy.m_state == ARMY_STATE_KINGWAR_FIGHT then
@@ -425,7 +435,10 @@ function BloodyBattleDlgSelectHero( offset )
 				end
 			end
 		end
-		
+	
+	-- 等待救援	
+	elseif heroArmy.m_state == ARMY_STATE_KINGWAR_WAITSOS then
+		BloodyBattleDlgRebirth()
 	end
 end
 
@@ -495,12 +508,59 @@ function BloodyBattleDlgDefense( id )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
 end
 
--- 救活
+-- 救援
 function BloodyBattleDlgRebirth()
-	m_LastSelectArmyIndex = heroArmy.m_army_index
+	if m_SelectHeroOffset < 0 then
+		return
+	end
+	local heroArmy = m_HeroArmyInfo[m_SelectHeroOffset+1];
+	
+	local costtoken = 0;
+	local rebirthNum = heroArmy.m_to_type
+	if rebirthNum == 1 then
+		costtoken = 10;
+	elseif rebirthNum == 2 then
+		costtoken = 100;
+	elseif rebirthNum == 3 then
+		costtoken = 200;
+	else
+		costtoken = 400;
+	end
+	MsgBox( F(1416, costtoken, HeroName( heroArmy.m_herokind[1] ) ), function() 
+		system_askinfo( ASKINFO_KINGWAR, "", 6, heroArmy.m_army_index )
+		BloodyBattleDlgSelectHero( -1 )
+		m_LastSelectArmyIndex = heroArmy.m_army_index
+	end )
 end
+
 
 --m_state=0,m_beginstamp=0,m_endstamp=0,m_nation=0,
 function BloodyBattleDlgSetActivityInfo( info )
 	m_activityinfo = info;
+end
+
+-- 聊天
+function BloodyBattleDlgSetChat( recvValue )
+	m_ChatRecvValue = recvValue
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if recvValue.m_actorid < 0 then
+		-- 系统
+		local name = "<color=FF0000FF>["..recvValue.m_name.."]：</color>"
+		local msg = recvValue.m_msg
+		SetRichText( m_uiChatText, name..msg )
+	else
+		if recvValue.m_channel == 2 then
+		else
+			local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
+			local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
+			local msg = ChatDlgMakeMsg( recvValue )
+			if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
+				SetRichText( m_uiChatText, nation..name..msg )
+			else
+				SetRichText( m_uiChatText, nation..name..msg )
+			end
+		end
+	end
 end

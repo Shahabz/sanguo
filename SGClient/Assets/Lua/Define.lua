@@ -367,6 +367,12 @@ function MapTownName( id )
 	return Localization.text_item(14100+id);
 end
 
+-- 获取血战据点
+KingWarTownNameList = {1384,1385,1386,1380,1381,1382,1383 }
+function KingWarTownName( id )
+	return T( KingWarTownNameList[id] )
+end
+
 -- 获取敌军名称
 function EnemyName( id )
 	return Localization.text_item(8000+id);

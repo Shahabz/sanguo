@@ -19,7 +19,7 @@ int kingwar_town_queueadd( int id, char attack, int army_index );
 int kingwar_town_queuedel( int id, char attack, int army_index );
 int kingwar_town_queueget( int id, char attack );
 int kingwar_town_totalcalc( int id, char attack );
-int kingwar_town_change_nation( int id, int nation );
+int kingwar_town_change_nation( int id, int nation, int attack_army_index );
 void kingwar_town_fight( int id );
 void kingwar_town_logic();
 

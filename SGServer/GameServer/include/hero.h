@@ -25,7 +25,7 @@ int hero_down( int actor_index, int offset );
 
 int hero_useexpitem( int actor_index, int herokind, int itemkind );
 int hero_addexp( City *pCity, Hero *pHero, int exp, short path );
-int hero_addsoldiers( int actor_index, int herokind );
+int hero_addsoldiers( int actor_index, int herokind, char path );
 int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path );
 int hero_changestate( int city_index, int herokind, char state );
 char hero_getline( City *pCity );

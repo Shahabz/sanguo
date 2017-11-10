@@ -34,6 +34,7 @@
 #define TAG_POS				"$#"// 标记--标记为坐标
 #define TAG_NATION			"$N"// 标记--标记为国家
 #define TAG_AWARD			"$A"// 标记--标记为奖励
+#define TAG_KINGWAR			"$K"// 标记--标记为皇城战据点
 
 typedef struct _mailfight_searchcache
 {

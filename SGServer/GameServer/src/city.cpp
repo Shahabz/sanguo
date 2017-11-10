@@ -2656,6 +2656,7 @@ void city_battlequeue_makestruct( SLK_NetS_BattleInfo *pValue, int army_index )
 	{ // ÑªÕ½µÈ´ıÕ½¶·
 		pValue->m_to_posx = g_army[army_index].to_id;
 		pValue->m_to_posy = g_army[army_index].move_total_distance;
+		pValue->m_to_type = g_army[army_index].appdata;
 		pValue->m_unit_index = g_army[army_index].totals;
 	}
 	else

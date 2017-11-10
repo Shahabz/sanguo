@@ -501,7 +501,7 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 }
 
 // ¼Ó±øÁ¦
-int hero_addsoldiers( int actor_index, int herokind )
+int hero_addsoldiers( int actor_index, int herokind, char path )
 {
 	Hero *pHero = NULL;
 	ACTOR_CHECK_INDEX( actor_index );
@@ -511,10 +511,13 @@ int hero_addsoldiers( int actor_index, int herokind )
 	pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
 		return -1;
-	if ( pHero->state != HERO_STATE_NORMAL )
+	if ( path != PATH_KINGWAR_REBIRTH )
 	{
-		POP( actor_index, 845 );
-		return -1;
+		if ( pHero->state != HERO_STATE_NORMAL )
+		{
+			POP( actor_index, 845 );
+			return -1;
+		}
 	}
 
 	int troops = pHero->troops;
@@ -539,10 +542,10 @@ int hero_addsoldiers( int actor_index, int herokind )
 	pValue.m_add = add;
 	pValue.m_soldiers = pHero->soldiers;
 	pValue.m_soldiers_max = troops;
-	pValue.m_path = PATH_HERO_ADDSOLDIERS;
+	pValue.m_path = path;
 	netsend_herosoldiers_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
-	city_changesoldiers( pCity->index, config->corps, -add, PATH_HERO_ADDSOLDIERS );
+	city_changesoldiers( pCity->index, config->corps, -add, path );
 	return pHero->soldiers;
 }
 

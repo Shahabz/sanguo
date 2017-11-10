@@ -748,14 +748,17 @@ function proc_soldiers_C( recvValue )
 		GetPlayer().m_infantry_num = recvValue.m_soldiers;
 		MainDlgSetInfantry();
 		HeroDlgSetInfantry();
+		BloodyBattleDlgSetInfantry()
 	elseif recvValue.m_corps == 1 then
 		GetPlayer().m_cavalry_num = recvValue.m_soldiers;
 		MainDlgSetCavalry();
 		HeroDlgSetCavalry();
+		BloodyBattleDlgSetCavalry()
 	elseif recvValue.m_corps == 2 then
 		GetPlayer().m_archer_num = recvValue.m_soldiers;
 		MainDlgSetArcher();
 		HeroDlgSetArcher();
+		BloodyBattleDlgSetArcher()
 	end
 	
 	if recvValue.m_add > 0 then
@@ -878,6 +881,7 @@ function proc_chat_C( recvValue )
 	-- process.
 	ChatDlgRecv( recvValue );
 	MainDlgSetChat( recvValue );
+	BloodyBattleDlgSetChat( recvValue );
 	ChatDlgScrollToBottom();
 end
 
@@ -888,6 +892,7 @@ function proc_chatlist_C( recvValue )
 		ChatDlgRecv( recvValue.m_list[i] );
 		if i == recvValue.m_count then
 			MainDlgSetChat( recvValue.m_list[i] );
+			BloodyBattleDlgSetChat( recvValue.m_list[i] );
 		end
 	end
 end
@@ -906,6 +911,7 @@ function proc_systalk_C( recvValue )
 	info.m_msg = recvValue.m_msg;
 	info.m_optime = recvValue.m_optime;
 	MainDlgSetChat( info );
+	BloodyBattleDlgSetChat( info );
 	ChatDlgRecv( info );
 	
 	-- 有滚动消息
@@ -1301,6 +1307,7 @@ function proc_systalkjson_C( recvValue )
 	info.m_msg = msg
 	info.m_optime = recvValue.m_optime;
 	MainDlgSetChat( info );
+	BloodyBattleDlgSetChat( info );
 	ChatDlgRecv( info );
 	
 	-- 有滚动消息

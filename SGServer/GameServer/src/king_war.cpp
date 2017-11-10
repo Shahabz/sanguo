@@ -56,10 +56,16 @@ extern Fight g_fight;
 extern KingwarTownInfo *g_kingwar_towninfo;
 extern int g_kingwar_towninfo_maxnum;
 
+extern MapTownInfo *g_towninfo;
+extern int g_towninfo_maxnum;
+
+extern MapTown *g_map_town;
+extern int g_map_town_maxcount;
+
 KingwarTown *g_kingwar_town = NULL;
 int g_kingwar_town_maxcount = 0;
 
-i64 g_kingwar_lost_totalhp = 0; // 总损失兵力
+int g_kingwar_lost_totalhp = 0; // 总损失兵力
 int g_kingwar_activity_beginstamp = 0; // 活动开始时间戳
 int g_kingwar_activity_endstamp = 0; // 活动结束时间戳
 int g_kingwar_activity_duration = 0; // 活动持续时间
@@ -303,7 +309,7 @@ int kingwar_town_totalcalc( int id, char attack )
 }
 
 // 改变国家
-int kingwar_town_change_nation( int id, int nation )
+int kingwar_town_change_nation( int id, int nation, int attack_army_index )
 {
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return -1;
@@ -311,13 +317,18 @@ int kingwar_town_change_nation( int id, int nation )
 		return -1;
 	if ( g_kingwar_town[id].defense_queue[0] >= 0 )
 		return -1;
+	char oldnation = g_kingwar_town[id].nation;
 	g_kingwar_town[id].nation = nation;
 	g_kingwar_town[id].attack_total = 0;
 	g_kingwar_town[id].defense_total = 0;
 
-	int temp[KINGWAR_TOWN_QUEUE_MAX] = { 0 };
+	int temp[KINGWAR_TOWN_QUEUE_MAX];
 	int temp_total = 0;
 	int temp_index = 0;
+	for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
+	{
+		temp[tmpi] = -1;
+	}
 
 	// 把攻击队列中属于这个国家的挑出来,放到防御队列里
 	int index = 0;
@@ -345,6 +356,42 @@ int kingwar_town_change_nation( int id, int nation )
 	memcpy( g_kingwar_town[id].attack_queue, temp, sizeof( int )*KINGWAR_TOWN_QUEUE_MAX );
 	g_kingwar_town[id].attack_total = temp_total;
 
+	// 据点发生变更，那么失败方的救援武将需要移动到集结点等待救援
+	for ( int army_index = 0; army_index < g_army_maxindex/*注意：使用索引位置，为了效率*/; army_index++ )
+	{
+		if ( g_army[army_index].state == ARMY_STATE_KINGWAR_WAITSOS && g_army[army_index].to_id == id )
+		{
+			char army_nation = army_getnation( army_index );
+			if ( army_nation != nation )
+			{
+				g_army[army_index].to_id = army_nation;
+				g_army[army_index].to_index = army_nation;
+				city_battlequeue_sendupdate( army_index );
+			}
+		}
+	}
+
+	if ( id == 7 )
+	{ // 洛阳攻防交替，增加时间
+		if ( g_kingwar_activity_duration < global.kingwar_activity_duration_max )
+		{
+			g_kingwar_activity_duration += global.kingwar_activity_duration;
+			g_kingwar_activity_endstamp += global.kingwar_activity_duration;
+		}
+	}
+	// {0}在皇城血战中奋勇当先，身先士卒，终不负众望攻破{ 1 }{2}据点
+	if ( attack_army_index >= 0 && attack_army_index < g_army_maxcount )
+	{
+		char v1[32] = { 0 };
+		char v2[32] = { 0 };
+		char v3[32] = { 0 };
+		City *pCity = army_getcityptr( attack_army_index );
+		if ( pCity )
+			sprintf( v1, "%s", pCity->name );
+		sprintf( v2, "%s%d", TAG_NATION, oldnation );
+		sprintf( v3, "%s%d", TAG_KINGWAR, id );
+		system_talkjson_world( 6010, v1, v2, v3, NULL, NULL, NULL, 1 );
+	}
 	g_kingwar_town_update = 1;
 	return 0;
 }
@@ -366,7 +413,7 @@ void kingwar_town_fight( int id )
 	if ( defense_army_index < 0 )
 	{
 		// 防御方没人了，变成攻击方的
-		kingwar_town_change_nation( id, army_getnation( attack_army_index ) );
+		kingwar_town_change_nation( id, army_getnation( attack_army_index ), attack_army_index );
 		return;
 	}
 
@@ -378,6 +425,10 @@ void kingwar_town_fight( int id )
 
 	// 战斗结算
 	fight_lost_calc();
+
+	// 总损失兵力
+	g_kingwar_lost_totalhp += g_fight.attack_total_damage;
+	g_kingwar_lost_totalhp += g_fight.defense_total_damage;
 
 	if ( g_fight.result == FIGHT_WIN )
 	{ // 进攻方胜利
@@ -431,7 +482,7 @@ int kingwar_activity_load()
 		g_kingwar_activity_beginstamp = atoi( row[1] );
 		g_kingwar_activity_endstamp = atoi( row[2] );
 		g_kingwar_activity_duration = atoi( row[3] );
-		g_kingwar_lost_totalhp = atoll( row[4] );
+		g_kingwar_lost_totalhp = atoi( row[4] );
 	}
 	mysql_free_result( res );
 	return 0;
@@ -440,9 +491,8 @@ int kingwar_activity_save( FILE *fp )
 {
 	char szSQL[1024];
 	char bigint[21];
-	lltoa( g_kingwar_lost_totalhp, bigint, 10 );
-	sprintf( szSQL, "replace into kingwar_activity ( open,beginstamp,endstamp,duration,lost_totalhp ) values('%d','%d','%d','%d','%s');",
-		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, bigint );
+	sprintf( szSQL, "replace into kingwar_activity ( open,beginstamp,endstamp,duration,lost_totalhp ) values('%d','%d','%d','%d','%d');",
+		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp );
 	if ( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -529,6 +579,7 @@ int kingwar_activity_onopen()
 		}
 	}
 	kingwar_activity_sendinfo( -1 );
+	system_talkjson_world( 6008, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
 	return 0;
 }
 
@@ -547,6 +598,19 @@ int kingwar_activity_onclose()
 			army_delete( army_index );
 		}
 	}
+
+	g_map_town[MAPUNIT_KING_TOWNID].nation = g_kingwar_town[7].nation;
+	// 城镇辐射圈归属
+	map_tile_setnation( g_towninfo[MAPUNIT_KING_TOWNID].posx, g_towninfo[MAPUNIT_KING_TOWNID].posy, g_towninfo[MAPUNIT_KING_TOWNID].range, MAPUNIT_KING_TOWNID, g_map_town[MAPUNIT_KING_TOWNID].nation );
+	// 核心建筑决定地区归属
+	map_zone_setnation( map_zone_getid( g_towninfo[MAPUNIT_KING_TOWNID].posx, g_towninfo[MAPUNIT_KING_TOWNID].posy ), g_map_town[MAPUNIT_KING_TOWNID].nation );
+	// 地区皇城区域都城和名城更新
+	map_zone_center_townchange( MAPUNIT_KING_TOWNID );
+
+	// {0}在血战皇城中获胜，成功占领了洛阳城
+	char v1[32] = { 0 };
+	sprintf( v1, "%s%d", TAG_NATION, g_map_town[MAPUNIT_KING_TOWNID].nation );
+	system_talkjson_world( 6009, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
 	return 0;
 }
 
@@ -972,6 +1036,10 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 		// 战斗结算
 		fight_lost_calc();
 
+		// 总损失兵力
+		g_kingwar_lost_totalhp += g_fight.attack_total_damage;
+		g_kingwar_lost_totalhp += g_fight.defense_total_damage;
+
 		if ( g_fight.result == FIGHT_WIN )
 		{ // 单挑一次胜利
 			kingwar_town_totalcalc( id, attack );
@@ -1006,7 +1074,7 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 	//if ( defense_army_index < 0 )
 	//{
 	//	// 防御方没人了，变成攻击方的
-	//	kingwar_town_change_nation( id, army_getnation( attack_army_index ) );
+	//	kingwar_town_change_nation( id, army_getnation( attack_army_index ), attack_army_index );
 	//	return;
 	//}
 
@@ -1048,15 +1116,29 @@ int kingwar_army_rebirth( int actor_index, int army_index )
 		return -1;
 	
 	// 补充士兵
-	int soldiers = hero_addsoldiers( actor_index, g_army[army_index].herokind[0] );
-	g_army[army_index].state = ARMY_STATE_KINGWAR_FIGHT;
+	int soldiers = hero_addsoldiers( actor_index, g_army[army_index].herokind[0], PATH_KINGWAR_REBIRTH );
+	if ( soldiers <= 0 )
+	{ // 兵营库存不足，救援失败
+		actor_notify_alert( actor_index, 1408 );
+		return -1;
+	}
+
 	g_army[army_index].statetime = 0;
 	g_army[army_index].stateduration = 0;
 	g_army[army_index].appdata += 1;
 	g_army[army_index].totals = soldiers;
 
-	if ( kingwar_town_queueadd( g_army[army_index].to_id, kingwar_town_attack_or_defense( g_army[army_index].to_id, army_index ), army_index ) < 0 )
-		return -1;
+	if ( g_army[army_index].to_id >= 1 && g_army[army_index].to_id <= 3 )
+	{ // 在集结点救援
+		g_army[army_index].state = ARMY_STATE_KINGWAR_READY;
+	}
+	else
+	{
+		g_army[army_index].state = ARMY_STATE_KINGWAR_FIGHT;
+		if ( kingwar_town_queueadd( g_army[army_index].to_id, kingwar_town_attack_or_defense( g_army[army_index].to_id, army_index ), army_index ) < 0 )
+			return -1;
+	}
+
 	actor_change_token( actor_index, -costtoken, PATH_KINGWAR_REBIRTH, 0 );
 	city_battlequeue_sendupdate( army_index );
 	g_kingwar_town_update = 1;

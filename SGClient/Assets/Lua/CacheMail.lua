@@ -24,6 +24,7 @@ TAG_TIMESEC		= "$S"	-- 标记 标记为时间秒
 TAG_POS    		= "$#"	-- 标记 标记为坐标
 TAG_NATION		= "$N"  -- 标记 标记为国家
 TAG_AWARD		= "$A"  -- 标记 标记为奖励
+TAG_KINGWAR		= "$K"	-- 标记--标记为皇城战据点
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -336,7 +337,16 @@ function Mail:GetString( v )
 			end
 		else
 			str = v
-		end		
+		end
+		
+	-- 血战据点
+	elseif self:IsTag( v, TAG_KINGWAR ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_KINGWAR) + 1));
+		if textid ~= nil then
+			str = KingWarTownName( textid )
+		else
+			str = v
+		end
 	else
 		str = v;
 	end

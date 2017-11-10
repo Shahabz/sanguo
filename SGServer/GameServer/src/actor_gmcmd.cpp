@@ -122,13 +122,21 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		else if ( pValue[0] == 4 )
 		{
-			time_t t;
-			time( &t );
-			t += 120;
-			struct tm *nowtime = localtime( &t );
-			global.kingwar_activity_week = nowtime->tm_wday;
-			global.kingwar_activity_hour = nowtime->tm_hour;
-			global.kingwar_activity_minute = nowtime->tm_min;	
+			if ( pValue[1] == 0 )
+			{
+				time_t t;
+				time( &t );
+				t += 120;
+				struct tm *nowtime = localtime( &t );
+				global.kingwar_activity_week = nowtime->tm_wday;
+				global.kingwar_activity_hour = nowtime->tm_hour;
+				global.kingwar_activity_minute = nowtime->tm_min;
+			}
+			else if( pValue[1] == -1 )
+			{
+				extern int g_kingwar_activity_endstamp; // 活动结束时间戳
+				g_kingwar_activity_endstamp = (int)time( NULL ) + 60;
+			}	
 		}
 		else if ( pValue[0] == 5 )
 		{

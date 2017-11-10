@@ -263,7 +263,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_HERO:
 		if ( pvalue[0] == 1 )
 		{// 补兵
-			hero_addsoldiers( actor_index, pvalue[1] );
+			hero_addsoldiers( actor_index, pvalue[1], PATH_HERO_ADDSOLDIERS );
 		}
 		else if ( pvalue[0] == 2 )
 		{// 使用经验道具
