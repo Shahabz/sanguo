@@ -170,6 +170,7 @@ public static class CustomSettings
         _GT(typeof(ResourceManager)),
         _GT(typeof(ObjectPoolManager)),
         _GT(typeof(NetworkManager)),
+		_GT(typeof(AudioManager)),
         _GT(typeof(Localization)),
         _GT(typeof(DeviceHelper)),
         _GT(typeof(OpenUDIDPhone.OpenUDID)),

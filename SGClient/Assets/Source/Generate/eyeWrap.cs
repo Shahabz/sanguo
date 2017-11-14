@@ -15,6 +15,7 @@ public class eyeWrap
 		L.RegVar("luaManager", get_luaManager, null);
 		L.RegVar("networkManager", get_networkManager, null);
 		L.RegVar("uiManager", get_uiManager, null);
+		L.RegVar("audioManager", get_audioManager, null);
 		L.RegVar("resourceManager", get_resourceManager, null);
 		L.RegVar("objectPoolManager", get_objectPoolManager, null);
 		L.RegVar("serverTime", get_serverTime, null);
@@ -122,6 +123,20 @@ public class eyeWrap
 		try
 		{
 			ToLua.Push(L, eye.uiManager);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_audioManager(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, eye.audioManager);
 			return 1;
 		}
 		catch(Exception e)
