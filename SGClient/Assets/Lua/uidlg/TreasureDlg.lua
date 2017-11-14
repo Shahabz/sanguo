@@ -7,6 +7,7 @@ local m_uiBuyButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function TreasureDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_3" )
 	m_Dlg = eye.uiManager:Open( "TreasureDlg" );
 end
 
@@ -22,6 +23,7 @@ end
 -- 删除界面
 function TreasureDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_3" )
 	m_Dlg = nil;
 end
 
