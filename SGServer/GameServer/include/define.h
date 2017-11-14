@@ -41,6 +41,7 @@
 #include "auto_data_world_bossinfo.h"
 #include "auto_data_world_questinfo.h"
 #include "auto_data_kingwar_towninfo.h"
+#include "auto_data_kingwar.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_city_building.h"

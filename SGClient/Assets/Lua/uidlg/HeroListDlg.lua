@@ -12,7 +12,7 @@ local m_SelectHeroKind = 0;
 -- 打开界面
 function HeroListDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroListDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(35), 2, HeroListDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(35), HELP_HeroListDlg, HeroListDlgClose );
 end
 
 -- 隐藏界面

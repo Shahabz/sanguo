@@ -62,6 +62,9 @@ extern int g_towninfo_maxnum;
 extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 
+extern KingWarConfig *g_kingwar_config;
+extern int g_kingwar_config_maxnum;
+
 KingwarTown *g_kingwar_town = NULL;
 int g_kingwar_town_maxcount = 0;
 
@@ -713,6 +716,7 @@ int kingwar_town_sendall()
 		pValue.m_count += 1;
 	}
 	pValue.m_leftstamp = g_kingwar_activity_endstamp - (int)time( NULL );
+	pValue.m_losthp = g_kingwar_lost_totalhp;
 	netsend_kingwartownlist_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE, &pValue );
 	return 0;
 }

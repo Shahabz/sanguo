@@ -51,7 +51,7 @@ local m_super_wash_toggle = false;
 -- 打开界面
 function EquipWashDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipWashDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(32), 7, EquipWashDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(32), HELP_EquipWashDlg, EquipWashDlgClose );
 end
 
 -- 隐藏界面

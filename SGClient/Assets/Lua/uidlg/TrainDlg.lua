@@ -34,7 +34,7 @@ local m_popcd = 0
 -- 打开界面
 function TrainDlgOpen()
 	m_Dlg = eye.uiManager:Open( "TrainDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(m_buildingKind).." Lv."..m_pBuilding.m_level, 8, TrainDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(m_buildingKind).." Lv."..m_pBuilding.m_level, HELP_TrainDlg, TrainDlgClose );
 end
 
 -- 隐藏界面

@@ -11,12 +11,25 @@ local m_uiWarning; --UnityEngine.GameObject
 local m_uiLoading; --UnityEngine.GameObject
 local m_uiFastEnter; --UnityEngine.GameObject
 local m_uiRegEnter; --UnityEngine.GameObject
-
+local m_uiArrayName;
+local m_uiServerContent
+local m_servertab = nil;
+local m_uiArrayObjs = {}
+local m_uiServerObjs = {}
+local m_uiRencommed;
+local m_selectObj=nill --点击服务器数组列表时 实例的移动物体
+local m_selectTransform --实例移动在此物体下
+local m_selectArrayID=nil   --记录点击服务器数组列表的ID
+-- 组列表
+local m_GroupList = {};
 -- 服务器列表
 local m_ServerList = {};
 
 -- 当前选择的服务器ID
 local m_selectServerID = 0;
+
+--服务器的数量
+local m_serverNumber=0;
 
 -- 用户名密码
 local m_UserName = "";
@@ -24,6 +37,11 @@ local m_PassWord = "";
 
 -- 服务器名对象池
 local m_objectPoolServer = {};
+--服务器组名对象池
+local m_objectPoolArray = {};
+
+local GROUPLIST_CONTROLID = 1000
+local SERVERLIST_CONTROLID = 10000
 
 -- 打开界面
 function LoginModOpen()
@@ -56,27 +74,46 @@ end
 -- 所属按钮点击时调用
 function LoginModOnEvent( nType, nControlID, value )
 	if nType == UI_EVENT_CLICK then
+		
 		-- 快速试玩
 		if nControlID == 1 then 
 			LoginModQuickLogin();
-		
+		--关闭服务器列表
+		elseif nControlID==-1  then
+		    LoginModCloseServerList();
 		-- 账户登陆	
 		elseif nControlID == 2 then
 			LoginModLogin();
 			
+		--关闭每组的小列表 返回大列表
+		elseif nControlID == 3 then
+			LoginModCloseArray();
+			
 		-- 显示服务器列表	
 		elseif nControlID == 10 then
 			LoginModOpenServerList();
-				
-		-- 选择服务器
-		elseif nControlID >= 100 then
-			LoginModSelectServer( nControlID - 100 );
+					
+		elseif nControlID == 1000 then	
+			LoginModSelectArrayList( nControlID )
+		
+		-- 选择组	
+		elseif nControlID > GROUPLIST_CONTROLID and nControlID < SERVERLIST_CONTROLID then
+		    LoginModSelectArrayList( nControlID - GROUPLIST_CONTROLID )
 			
+		-- 选择服务器
+		elseif nControlID > SERVERLIST_CONTROLID and nControlID < SERVERLIST_CONTROLID*2 then
+			LoginModSelectServer( nControlID - SERVERLIST_CONTROLID );
 		end
+		
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
 			m_uiWarning.gameObject:SetActive( false );
+		elseif nControlID ==2 then
+		    m_selectObj.transform:SetParent(m_selectTransform.transform,false);
+			print("m_selectArrayID"..m_selectArrayID );
+			LoginModOpenSelectArrayServer(m_selectArrayID);
 		end
+		
 	end
 end
 
@@ -95,6 +132,10 @@ function LoginModOnAwake( gameObject )
 	m_uiLoading = objs[8];
 	m_uiFastEnter = objs[9];
 	m_uiRegEnter = objs[10];
+	m_uiArrayName=objs[11];
+  --  m_uiServerContent=objs[12];
+	 m_uiArrayObjs[1000]=objs[12];
+	m_selectTransform=objs[13]
 	-- 版本号
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	LoginModOpenTestLogin();
@@ -140,12 +181,11 @@ function LoginModOpenTestLogin()
 	m_uiServerInfo.gameObject:SetActive( true );
 	
 	-- 需要隐藏的
-
 	
 	-- 读取上次登陆过的账户密码
 	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
 	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
-	 
+	
 	-- 获取服务器列表
 	HttpRequest.GetServerList( function( response )
 		local json = require "cjson"
@@ -154,17 +194,20 @@ function LoginModOpenTestLogin()
 			netlog( response );
 			return;
 		end
-		-- 设置缓存，ID传字符串
-		m_ServerList = info;	
+
+		m_GroupList = info["grouplist"];
+		m_ServerList = info["serverlist"];
 		
 		-- 检查是否有登陆过的服务器
-		m_selectServerID = GameManager.ini( "LASTSERVERID", "0" );
+		m_selectServerID = GameManager.ini( "USED_SERVER_TAB", "0" );
 		if m_selectServerID == "0" then
-			LoginModOpenServerList();
+			LoginModOpenServerList();   --没有登陆过的服务器就打开 服务器列表
 		else
-			LoginModSelectServer( m_selectServerID );
+		 --有登陆过 就读取并选择最够一次登陆的服务器
+			local m_selectServerTab = json.decode(m_selectServerID)
+			local index = table.getn(m_selectServerTab)			
+			LoginModSelectServer( m_selectServerTab[index][1] );
 		end 
-	
 	end );
 end
 
@@ -186,10 +229,31 @@ function LoginModOpenServerList()
 	m_uiFastEnter.gameObject:SetActive( false );
 	m_uiRegEnter.gameObject:SetActive( false );
 	m_uiServerList.gameObject:SetActive( true );
-	-- 创建服务器名对象
-	for k, v in pairs( m_ServerList ) do
-		LoginModAddServer( v["sid"], v["n"] );
+	
+	-- 常用服务器
+	local localServerList = GameManager.ini( "USED_SERVER_TAB", "false" );
+	if localServerList ~= "false" then 
+		local json2 = require "cjson"
+		local localServerTable = json2.decode( localServerList );	
+		local index = 1;
+		for k, v in pairs( localServerTable ) do
+			local serverinfo = LoginModGetServerInfo( v[1] );
+			if serverinfo ~= nil then
+				LoginModAddServer( serverinfo["sid"], serverinfo["n"], m_uiContent,index);
+				index=index+1;
+			end
+		end
 	end
+	
+	-- 服务器组列表
+	for index, obj in pairs( m_objectPoolArray ) do
+		SetFalse( obj );
+	end
+
+	
+	for k, v in pairs(m_GroupList) do
+		LoginModAddArray( v.g, v.n )
+	end 
 end
 
 -- 打开进度条
@@ -229,13 +293,36 @@ function LoginModOnLoadAssetBundleProc( assetBundleName, progress, totalProgress
 	end
 end
 
+--添加服务器组列表
+function LoginModAddArray(id,name)
+	local uiObj=nil;
+	for index, obj in pairs( m_objectPoolArray ) do
+		if obj and obj.gameObject.activeSelf == false then
+			uiObj = obj;
+			break;
+		end
+	end 
+	if uiObj == nil then
+		uiObj = GameObject.Instantiate( m_uiArrayName );
+		uiObj.transform:SetParent( m_uiContent.transform );
+		uiObj.transform.localScale = Vector3.one;
+		table.insert( m_objectPoolArray, uiObj );
+	end
+	uiObj:SetActive( true );
+	uiObj.transform:GetComponent( "UIButton" ).controlID = id+GROUPLIST_CONTROLID;
+	uiObj.transform:GetChild( 0 ):GetChild( 0 ):GetComponent( "UIText" ).text =name
+	m_uiArrayObjs[id+0] = uiObj;
+end
+
 -- 添加服务器列表
-function LoginModAddServer( id, name )
-	
+function LoginModAddServer( id, name, setparent,siblingIndex )
+	if setparent == nil then
+		return
+	end
 	-- 先检查对象缓存池是否有空余的
 	local uiObj = nil;
 	for index, obj in pairs( m_objectPoolServer ) do
-		if obj and obj.gameObject.activeSelf == false then
+		if obj.gameObject~=nil and obj.gameObject.activeSelf == false then
 			uiObj = obj;
 			break;
 		end
@@ -244,29 +331,55 @@ function LoginModAddServer( id, name )
 	-- 没有空余的就新创建一个
 	if uiObj == nil then
 		uiObj = GameObject.Instantiate( m_uiServerName );
-		uiObj.transform:SetParent( m_uiContent.transform );
+		uiObj.transform:SetParent( setparent.transform );
 		uiObj.transform.localScale = Vector3.one;
 		table.insert( m_objectPoolServer, uiObj );
 	end
 	uiObj:SetActive( true );
-	uiObj.transform:GetComponent( "UIButton" ).controlID = 100 + id;
-	uiObj.transform:GetChild( 0 ):GetChild( 0 ):GetComponent( "UIText" ).text = name;
+	uiObj.transform:GetComponent( "UIButton" ).controlID = SERVERLIST_CONTROLID + id;
+	uiObj.transform:Find("Back/Text"):GetComponent( "UIText" ).text = name;
+	if siblingIndex~=nil then
+		uiObj.transform:SetSiblingIndex(siblingIndex);
+	end
+	
+end
+
+function LoginModGetServerInfo( sid )
+	local serverinfo = nil;
+	local sid = tonumber(sid);
+	for k, v in pairs(m_ServerList) do
+		if tonumber(v.sid) == sid then
+			serverinfo = v;
+			break;
+		end
+	end
+	return serverinfo;
 end
 
 -- 设置当前已经选择的服务器
 function LoginModSelectServer( id )
-	local serverinfo = m_ServerList[tostring(id)];
+	local serverinfo =LoginModGetServerInfo( id )
 	if serverinfo == nil then
 		return;
 	end
 	Const.servername = serverinfo["n"];
 	m_selectServerID = serverinfo["sid"];
 	m_uiServerInfo.transform:Find("Text"):GetComponent( "UIText" ).text = serverinfo["n"];
+	
 	-- 对象缓存池
-	for index, obj in pairs( m_objectPoolServer ) do
+	for index, obj in pairs( m_objectPoolArray ) do
 		if obj then
 			obj.gameObject:SetActive( false );
 		end
+	end
+	for index, obj in pairs(m_objectPoolServer ) do
+		if obj.gameObject~=nil then
+			obj.gameObject:SetActive( false );
+		end
+	end
+
+    if IsActive( m_selectTransform ) == true then
+		LoginModCloseArray();
 	end
 	m_uiServerList:SetActive( false );
 	m_uiFastEnter.gameObject:SetActive( true );
@@ -314,14 +427,15 @@ function LoginModQuickLogin()
 	m_PassWord = "";
 	GameManager.writeini( "LASTSERVERID", m_selectServerID );
 	GameManager.writeini( "LASTLOGINTYPE", 2 );	
-	if m_ServerList[m_selectServerID] == nil then
+	local serverinfo = LoginModGetServerInfo( m_selectServerID )
+	if serverinfo == nil then
 		AlertMsg( T(406) )
 		LoginModOpenTestLogin()
 		m_uiFastEnter.gameObject:SetActive( true );
 		m_uiRegEnter.gameObject:SetActive( true );
 		return
 	end
-	Network.SDKConnectServer( m_ServerList[m_selectServerID]["h"], m_ServerList[m_selectServerID]["p"] );
+	Network.SDKConnectServer(serverinfo["h"], serverinfo["p"] );
 end
 
 -- 用户密码登陆
@@ -330,16 +444,18 @@ function LoginModLogin()
 	LoginModLoginQueue( true );
 	m_UserName = m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
 	m_PassWord = m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
-	GameManager.writeini( "LASTSERVERID", m_selectServerID );
-	GameManager.writeini( "LASTLOGINTYPE", 1 );
-	if m_ServerList[m_selectServerID] == nil then
+	--GameManager.writeini( "LASTSERVERID", m_selectServerID );
+	--GameManager.writeini( "LASTLOGINTYPE", 2);
+	LoginModWriteServer(2)
+	local serverinfo = LoginModGetServerInfo( m_selectServerID )
+	if serverinfo == nil then
 		AlertMsg( T(406) )
 		LoginModOpenTestLogin()
 		m_uiFastEnter.gameObject:SetActive( true );
 		m_uiRegEnter.gameObject:SetActive( true );
 		return
 	end
-	Network.SDKConnectServer( m_ServerList[m_selectServerID]["h"], m_ServerList[m_selectServerID]["p"] );
+	Network.SDKConnectServer( serverinfo["h"], serverinfo["p"] );
 end
 
 -- SDK模式登陆游戏
@@ -433,4 +549,141 @@ function LoginModLoginQueueLogic()
 	InvokeStop( "LoginModLoginQueueLogic" );
 	Invoke( LoginModLoginQueueLogic, 0.5, 0, "LoginModLoginQueueLogic" );--]]
 end
+
+function LoginModWriteServer(loginType)	
+	local isServerTable=GameManager.ini( "USED_SERVER_TAB", "false" );
+	local json_used = require "cjson"
+	m_servertab={}
+	if isServerTable=="false" then		
+		m_servertab[1]={m_selectServerID,loginType}
+		--print("m_selectServerID:"..m_selectServerID.."   tabletype:"..type(m_servertab).."m_servertab[1][1]:"..m_servertab[1][1])
+		local jsonServerID=json_used.encode(m_servertab)
+		GameManager.writeini("USED_SERVER_TAB",jsonServerID)		
+	else
+		local m_servertab=json_used.decode(isServerTable)
+		for k,v in pairs(m_servertab)do 
+			if v[1]==m_selectServerID then
+				table.remove(m_servertab,k)
+				table.insert(m_servertab,v)
+				local jsonServerID=json_used.encode(m_servertab)
+				GameManager.writeini("USED_SERVER_TAB",jsonServerID)	
+				return
+			end
+		end		
+		if table.getn(m_servertab)<3 then
+			table.insert(m_servertab,{m_selectServerID,loginType})		 
+			local jsonServerID=json_used.encode(m_servertab)
+			GameManager.writeini("USED_SERVER_TAB",jsonServerID)				
+		else
+			table.remove(m_servertab,1)
+			 table.insert(m_servertab,{m_selectServerID,loginType})
+			local jsonServerID=json_used.encode(m_servertab)
+			GameManager.writeini("USED_SERVER_TAB",jsonServerID)		
+		end		
+	end	
+end
+
+--点击组
+function LoginModSelectArrayList( buttonid )
+	m_selectArrayID = buttonid;
+	local selectObj = m_uiArrayObjs[buttonid];
+	m_selectObj = GameObject.Instantiate( m_uiArrayName )
+	m_selectObj.transform:SetParent( m_uiContent.transform.parent,false);
+	m_selectObj.transform.localScale = Vector3.one;
+	SetFalse( m_uiContent );
+	m_selectObj.transform:GetComponent( "UIButton" ).controlID = 3;
+	local text = selectObj.transform:Find("Back"):Find("Text"):GetComponent("UIText").text;
+	m_selectObj.transform:Find("Back"):Find("Text"):GetComponent("UIText").text=text
+	--uiObj.transform.localPosition = Vector3.New(222,selectObj.transform.localPosition.y,selectObj.transform.localPosition.z)
+	m_selectObj.transform:GetComponent( "UITweenRectPosition" ).from=Vector2(224,selectObj.transform.localPosition.y)
+	m_selectObj.transform:GetComponent( "UITweenRectPosition" ).to = Vector2( 224, -8 ); 
+	m_selectObj.transform:GetComponent( "UITweenRectPosition" ):Play( true );
+	
+end
+
+-- 关闭组
+function LoginModCloseArray()
+	SetTrue( m_uiContent );
+	clearChild( m_selectTransform )
+	m_selectObj = nil
+	m_selectArrayID = 0
+
+	
+end
+
+function LoginModOpenSelectArrayServer(serverid) 
+	if serverid==1000 then
+		local recommendList={}
+		for k,v in pairs(m_ServerList) do
+			if tonumber(v["new"])==1 then
+				table.insert(recommendList,m_ServerList[k])
+			end
+		end
+		for  i=1,#recommendList  do
+			LoginModAddServer( recommendList[i]["sid"], recommendList[i]["n"],m_selectTransform);
+		end
+	else
+		local arrayid=serverid;
+		--print("cccccc:"..arrayid);
+		for k,v in pairs(m_ServerList) do
+			if v["g"]==tostring(arrayid) then
+				LoginModAddServer( v.sid, v.n, m_selectTransform );
+			end
+		end
+		
+	--[[	
+		print("arrayid"..arrayid);
+		for   j=arrayid,(arrayid-9),-1 do
+			--print("111111111:"..type(tostring(j)))
+			--print("type:"..type(j));
+			print("j:"..j)
+			if m_ServerList[j] == nil then
+				print("null")
+			end
+			print("sid:"..m_ServerList[j]);
+			LoginModAddServer( m_ServerList[srvid]["sid"], m_ServerList[srvid]["n"], m_selectTransform );
+	   end--]]
+	end
+end
+-- 关闭服务器列表
+function LoginModCloseServerList()
+	if IsActive( m_selectTransform ) == true then
+		LoginModCloseArray();
+	end
+	m_uiFastEnter.gameObject:SetActive( true );
+	m_uiRegEnter.gameObject:SetActive( true );
+	m_uiServerList.gameObject:SetActive( false );
+		for index, obj in pairs(m_objectPoolServer ) do
+		if obj.gameObject~=nil then
+			obj.gameObject:SetActive( false );
+		end
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	

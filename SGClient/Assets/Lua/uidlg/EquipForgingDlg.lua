@@ -34,7 +34,7 @@ local m_scrollindex = 0;
 -- 打开界面
 function EquipForgingDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipForgingDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Smithy), 6, EquipForgingDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Smithy), HELP_EquipForgingDlg, EquipForgingDlgClose );
 end
 
 -- 隐藏界面

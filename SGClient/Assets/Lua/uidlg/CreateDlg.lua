@@ -103,7 +103,7 @@ function CreateDlgSelect( nation )
 	
 	if nation == m_nation_award then
 		SetTrue( m_uiAward )
-		SetText( m_uiAward.transform:Find("Num"), "推荐国家，奖励："..global.nation_award_token.."元宝" )
+		SetText( m_uiAward.transform:Find("Num"),F(548,global.nation_award_token))
 	else
 		SetFalse( m_uiAward )
 	end

@@ -35,7 +35,7 @@ local m_CacheEquipList = { };
 -- 打开界面
 function BagDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BagDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(556), 9, BagDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(556), HELP_BagDlg, BagDlgClose );
 end
 
 -- 隐藏界面

@@ -590,6 +590,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 血战皇城
+	if ( kingwarconfig_init_auto() < 0 )
+	{
+		printf_msg( "kingwarconfig_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 血战皇城据点
 	if ( kingwartowninfo_init_auto() < 0 )
 	{

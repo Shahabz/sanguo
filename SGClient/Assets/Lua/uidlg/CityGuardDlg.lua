@@ -18,7 +18,7 @@ local m_guardup_toggle = false;
 -- 打开界面
 function CityGuardDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CityGuardDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Wall).." Lv."..m_level, 4, CityGuardDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Wall).." Lv."..m_level, HELP_CityGuardDlg, CityGuardDlgClose );
 end
 
 -- 隐藏界面

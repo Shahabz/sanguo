@@ -20,7 +20,7 @@ STORY_TYPE_DRAWING	=	6	-- 装备图纸
 -- 打开界面
 function StoryDlgOpen()
 	m_Dlg = eye.uiManager:Open( "StoryDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(553), 8, StoryDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(553), HELP_StoryDlg, StoryDlgClose );
 end
 
 -- 隐藏界面

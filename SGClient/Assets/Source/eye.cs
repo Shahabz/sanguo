@@ -73,17 +73,17 @@ public class eye {
         }
     }
 
-    ///// <summary>
-    ///// 音效管理器
-    ///// </summary>
-    //private static AudioManager _audioManager = null;
-    //public static AudioManager audioManager {
-    //	get {
-    //		if ( _audioManager == null && manager != null )
-    //			_audioManager = manager.GetComponent<AudioManager>();
-    //		return _audioManager;
-    //	}
-    //}
+    /// <summary>
+    /// 音效管理器
+    /// </summary>
+    private static AudioManager _audioManager = null;
+    public static AudioManager audioManager {
+    	get {
+    		if ( _audioManager == null && manager != null )
+    			_audioManager = manager.GetComponent<AudioManager>();
+    		return _audioManager;
+    	}
+    }
 
 
     /// <summary>

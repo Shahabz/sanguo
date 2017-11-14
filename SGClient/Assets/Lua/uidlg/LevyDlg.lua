@@ -38,7 +38,7 @@ local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 -- 打开界面
 function LevyDlgOpen()
 	m_Dlg = eye.uiManager:Open( "LevyDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(1), 1, LevyDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(1), HELP_LevyDlg, LevyDlgClose );
 end
 
 -- 隐藏界面

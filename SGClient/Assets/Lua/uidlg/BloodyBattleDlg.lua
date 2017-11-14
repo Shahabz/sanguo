@@ -238,6 +238,22 @@ function BloodyBattleDlgRecvLeftStamp( leftstamp )
 	SetTimer( m_uiActivitySec, leftstamp, leftstamp )
 end
 
+-- 总损失兵力
+function BloodyBattleDlgRecvLostHP( losthp )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	-- 根据损失兵力计算血战等级
+	local level = 1;
+	for i=1,#g_kingwar_config-1,1 do
+		if losthp < g_kingwar_config[i].exp then
+			level = i;
+			break;
+		end
+	end
+	SetText( m_uiTitleText, F(1423, level, losthp, g_kingwar_config[level].exp ) );
+end
+
 -- 钻石
 function BloodyBattleDlgChangeToken()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then

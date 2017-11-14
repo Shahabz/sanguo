@@ -22,7 +22,7 @@ local m_itemkind = 0;
 -- 打开界面
 function MaterialMakeDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MaterialMakeDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Craftsman).." Lv."..m_pBuilding.m_level, 8, MaterialMakeDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Craftsman).." Lv."..m_pBuilding.m_level, HELP_MaterialMakeDlg, MaterialMakeDlgClose );
 end
 
 -- 隐藏界面

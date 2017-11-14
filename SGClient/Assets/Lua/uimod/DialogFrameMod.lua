@@ -1,6 +1,7 @@
 local m_Mod = {};
 local m_uiTokenText = {};
 local m_closefun = {};
+local m_helptable = 0
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -13,6 +14,8 @@ function DialogFrameModOnEvent( nType, nControlID, value, gameObject )
 				m_closefun[id]();
 			end
 		elseif nControlID == 1 then
+			HelpDlgShowBySystem( m_helptable )
+			
 		elseif nControlID == 2 then
 		end
 	elseif nType == UI_EVENT_PRESS then
@@ -86,6 +89,7 @@ function DialogFrameModOpen( Dlg, title, help, closefun )
 	SetText( uiTokenText, GetPlayer().m_token );
 	m_uiTokenText[id] = uiTokenText;
 	m_closefun[id] = closefun;	
+	m_helptable = help;
 	return obj;
 end
 

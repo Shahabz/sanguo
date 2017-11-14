@@ -10,7 +10,7 @@ local m_pBuilding = nil;
 -- 打开界面
 function StoreDlgOpen()
 	m_Dlg = eye.uiManager:Open( "StoreDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(BUILDING_StoreHouse).." Lv."..m_pBuilding.m_level, 8, StoreDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(BUILDING_StoreHouse).." Lv."..m_pBuilding.m_level, HELP_StoreDlg, StoreDlgClose );
 end
 
 -- 隐藏界面

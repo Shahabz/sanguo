@@ -42,7 +42,7 @@ local GMCMD_CLIENT = {
 [3]="msgbox",
 [4]="notify",
 [5]="dump",
-[6]="t"
+[6]="t",
 }
 
 -- 检查GM指令
@@ -109,8 +109,8 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	
 	elseif cmdstr == "dump"	then
 		ResourceManager.dump()
-	
-	elseif cmdstr == "t" then
-		TreasureDlgShow()
+	elseif cmdstr == "t"	then
+		HelpDlgShow()
 	end
+	
 end

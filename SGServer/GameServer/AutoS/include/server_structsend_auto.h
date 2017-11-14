@@ -1306,6 +1306,7 @@ struct _slk_NetS_KingwarTownList {
 	char m_count;	//血战据点列表
 	SLK_NetS_KingwarTown m_list[8];	//血战据点列表
 	int m_leftstamp;	//血战据点列表
+	int m_losthp;	//血战据点列表
 };
 typedef struct _slk_NetS_KingwarTownList SLK_NetS_KingwarTownList;	//血战据点列表
 

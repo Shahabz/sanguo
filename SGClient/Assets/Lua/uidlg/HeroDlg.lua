@@ -9,7 +9,7 @@ local m_uiArcherNum = nil; --UnityEngine.GameObject
 -- 打开界面
 function HeroDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), 2, HeroDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), HELP_HeroDlg, HeroDlgClose );
 end
 
 -- 隐藏界面

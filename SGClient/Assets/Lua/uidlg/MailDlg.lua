@@ -22,7 +22,7 @@ local m_AllDelState = 0;
 -- 打开界面
 function MailDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MailDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(554), 5, MailDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(554), HELP_MailDlg, MailDlgClose );
 end
 
 -- 隐藏界面

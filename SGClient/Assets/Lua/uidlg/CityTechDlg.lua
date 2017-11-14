@@ -23,7 +23,7 @@ local m_firstKind = 0;
 -- 打开界面
 function CityTechDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CityTechDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(4), 5, CityTechDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(4), HELP_CityTechDlg, CityTechDlgClose );
 end
 
 -- 隐藏界面

@@ -1691,6 +1691,7 @@ function struct_NetS_KingwarTownList_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_leftstamp = buffer:ReadInt();
+	recvValue.m_losthp = buffer:ReadInt();
 	return recvValue;
 end
 
