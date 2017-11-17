@@ -33,6 +33,7 @@ public static class DelegateFactory
 		dict.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene,UnityEngine.SceneManagement.Scene>), UnityEngine_Events_UnityAction_UnityEngine_SceneManagement_Scene_UnityEngine_SceneManagement_Scene);
 		dict.Add(typeof(GameManager.LuaExecute), GameManager_LuaExecute);
 		dict.Add(typeof(System.Action<UnityEngine.Object>), System_Action_UnityEngine_Object);
+		dict.Add(typeof(AudioManager.SwitchChanged), AudioManager_SwitchChanged);
 		dict.Add(typeof(UnityEngine.Canvas.WillRenderCanvases), UnityEngine_Canvas_WillRenderCanvases);
 		dict.Add(typeof(UnityEngine.UI.InputField.OnValidateInput), UnityEngine_UI_InputField_OnValidateInput);
 		dict.Add(typeof(UIInputFieldSubmit.OnValidateInput), UIInputFieldSubmit_OnValidateInput);
@@ -913,6 +914,55 @@ public static class DelegateFactory
 		{
 			System_Action_UnityEngine_Object_Event target = new System_Action_UnityEngine_Object_Event(func, self);
 			System.Action<UnityEngine.Object> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class AudioManager_SwitchChanged_Event : LuaDelegate
+	{
+		public AudioManager_SwitchChanged_Event(LuaFunction func) : base(func) { }
+		public AudioManager_SwitchChanged_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(AudioManager.AudioType param0, bool param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(AudioManager.AudioType param0, bool param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate AudioManager_SwitchChanged(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			AudioManager.SwitchChanged fn = delegate(AudioManager.AudioType param0, bool param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			AudioManager_SwitchChanged_Event target = new AudioManager_SwitchChanged_Event(func);
+			AudioManager.SwitchChanged d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			AudioManager_SwitchChanged_Event target = new AudioManager_SwitchChanged_Event(func, self);
+			AudioManager.SwitchChanged d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

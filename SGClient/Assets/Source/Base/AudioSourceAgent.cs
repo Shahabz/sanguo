@@ -40,7 +40,7 @@ public class AudioSourceAgent : MonoBehaviour
     AudioSource _AudioSource;
 
 
-    void Awake()
+    void Start()
     {
         _AudioSource = GetComponent<AudioSource>();
         AudioManager.OnSwitchChanged += OnSwitchChanged;

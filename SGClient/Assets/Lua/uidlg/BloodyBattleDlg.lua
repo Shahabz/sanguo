@@ -533,11 +533,11 @@ function BloodyBattleDlgRebirth()
 	
 	local costtoken = 0;
 	local rebirthNum = heroArmy.m_to_type
-	if rebirthNum == 1 then
+	if rebirthNum == 0 then
 		costtoken = 10;
-	elseif rebirthNum == 2 then
+	elseif rebirthNum == 1 then
 		costtoken = 100;
-	elseif rebirthNum == 3 then
+	elseif rebirthNum == 2 then
 		costtoken = 200;
 	else
 		costtoken = 400;
@@ -580,3 +580,31 @@ function BloodyBattleDlgSetChat( recvValue )
 		end
 	end
 end
+
+-- 设置log
+-- m_a_heroid=0,m_a_color=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_a_losthp=0,m_a_nation=0,m_d_heroid=0,m_d_color=0,m_d_name_len=0,m_d_name="[m_d_name_len]",m_d_losthp=0,m_d_nation=0,m_result=0,m_id=0,
+function BloodyBattleDlgSetFightLog( recvValue )
+	SetText( m_uiLog.transform:Find("Timer"), "<"..getHourStringByInterval(os.time())..">("..KingWarTownName(recvValue.m_id)..")" );
+	local losthp
+	local heroname
+	local actorname
+	
+	losthp = "<color=#e80017>-"..recvValue.m_a_losthp.."</color> ";
+	heroname = "<color="..NameColorStr(recvValue.m_a_color)..">"..HeroName(recvValue.m_a_heroid).."</color>";
+	if recvValue.m_result == 1 then
+		actorname = "<color=#F7F3BB>["..recvValue.m_a_name.."]</color>"
+	else
+		actorname = "<color=#333333>["..recvValue.m_a_name.."]</color>"
+	end
+	SetText( m_uiLog.transform:Find("AttackName"), losthp..heroname..actorname );
+	
+	losthp = "<color=#e80017>-"..recvValue.m_d_losthp.."</color>";
+	heroname = "<color="..NameColorStr(recvValue.m_d_color)..">"..HeroName(recvValue.m_d_heroid).."</color> ";
+	if recvValue.m_result == 2 then
+		actorname = "<color=#F7F3BB>["..recvValue.m_d_name.."]</color>"
+	else
+		actorname = "<color=#333333>["..recvValue.m_d_name.."]</color>"
+	end
+	SetText( m_uiLog.transform:Find("DefenseName"), actorname..heroname..losthp );
+end
+

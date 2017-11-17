@@ -20,6 +20,11 @@
 #define SENDTYPE_WORLDMAP_NATION2	17	// 发送给蜀国(在野外的玩家)
 #define SENDTYPE_WORLDMAP_NATION3	18	// 发送给吴国(在野外的玩家)
 
+#define SENDTYPE_SUBSCRIBE_NATION	20	// 
+#define SENDTYPE_SUBSCRIBE_NATION1	21	// 发送给魏国(订阅的玩家)
+#define SENDTYPE_SUBSCRIBE_NATION2	22	// 发送给蜀国(订阅的玩家)
+#define SENDTYPE_SUBSCRIBE_NATION3	23	// 发送给吴国(订阅的玩家)
+
 int readtoqueue( int client_index, char *pBuf, int readsize, char stat );
 int actor_senddata( int actor_index, char send_type, char *data, int datasize );
 

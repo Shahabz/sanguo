@@ -131,6 +131,31 @@ int nation_worldmap_sendmsg( int zone, int nation, int datasize, char *databuf )
 	return 0;
 }
 
+// 指定国家发送订阅信息
+int nation_subscribe_sendmsg( int cmd, int nation, int datasize, char *databuf )
+{
+	if ( datasize > 0 )
+	{
+		nation = nation - SENDTYPE_SUBSCRIBE_NATION;
+		for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+		{
+			if ( g_actors[tmpi].actorid <= 0 )
+				continue;
+			if ( g_actors[tmpi].view_areaindex < 0 )
+				continue;
+			City *pCity = city_getptr( tmpi );
+			if ( !pCity )
+				continue;
+
+			if ( g_actors[tmpi].subscribe_cmd[cmd] == 1 && pCity->nation == nation )
+			{
+				sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
+			}	
+		}
+	}
+	return 0;
+}
+
 // 世界信息发送,信息立即发送
 int world_sendmsg( int datasize, char *databuf )
 {
@@ -196,6 +221,11 @@ int actor_senddata( int actor_index, char send_type, char *data, int datasize )
 	case SENDTYPE_WORLDMAP_NATION2:
 	case SENDTYPE_WORLDMAP_NATION3:
 		nation_worldmap_sendmsg( actor_index, send_type, datasize, data );
+		break;
+	case SENDTYPE_SUBSCRIBE_NATION1:
+	case SENDTYPE_SUBSCRIBE_NATION2:
+	case SENDTYPE_SUBSCRIBE_NATION3:
+		nation_subscribe_sendmsg( actor_index, send_type, datasize, data );
 		break;
 	}
 	return 0;

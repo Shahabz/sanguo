@@ -382,7 +382,7 @@ int kingwar_town_change_nation( int id, int nation, int attack_army_index )
 			g_kingwar_activity_endstamp += global.kingwar_activity_duration;
 		}
 	}
-	// {0}在皇城血战中奋勇当先，身先士卒，终不负众望攻破{ 1 }{2}据点
+	// {0}在皇城血战中奋勇当先，身先士卒，终不负众望攻破{1}{2}据点
 	if ( attack_army_index >= 0 && attack_army_index < g_army_maxcount )
 	{
 		char v1[32] = { 0 };
@@ -454,7 +454,39 @@ void kingwar_town_fight( int id )
 	city_battlequeue_sendupdate( attack_army_index );
 	city_battlequeue_sendupdate( defense_army_index );
 	g_kingwar_town_update = 1;
+
 	// 战斗通知
+	SLK_NetS_KingWarNotify pValue = { 0 }; 
+	pValue.m_id = id;
+	pValue.m_result = g_fight.result;
+
+	pValue.m_a_losthp = g_fight.defense_total_damage;
+	pValue.m_d_losthp = g_fight.attack_total_damage;
+
+	pValue.m_a_nation = army_getnation( attack_army_index );
+	pValue.m_d_nation = army_getnation( defense_army_index );
+
+	pValue.m_a_heroid = g_army[attack_army_index].herokind[0];
+	pValue.m_d_heroid = g_army[defense_army_index].herokind[0];
+
+	City *pACity = army_getcityptr( attack_army_index );
+	if ( pACity )
+	{
+		pValue.m_a_color = hero_getcolor( pACity, pValue.m_a_heroid );
+		strncpy( pValue.m_a_name, pACity->name, NAME_SIZE );
+		pValue.m_a_name_len = strlen( pValue.m_a_name );
+	}
+
+	City *pDCity = army_getcityptr( defense_army_index );
+	if ( pDCity )
+	{
+		pValue.m_d_heroid = hero_getcolor( pDCity, pValue.m_d_heroid );
+		strncpy( pValue.m_d_name, pDCity->name, NAME_SIZE );
+		pValue.m_d_name_len = strlen( pValue.m_d_name );
+	}
+	
+	netsend_kingwarnotify_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE_NATION + pValue.m_a_nation, &pValue );
+	netsend_kingwarnotify_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE_NATION + pValue.m_d_nation, &pValue );
 }
 
 void kingwar_town_logic()
@@ -735,6 +767,7 @@ int kingwar_town_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 	pValue.m_leftstamp = g_kingwar_activity_endstamp - (int)time( NULL );
+	pValue.m_losthp = g_kingwar_lost_totalhp;
 	netsend_kingwartownlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	g_actors[actor_index].subscribe_cmd[SUBSCRIBE_CMD_KINGWARDLG] = 1;
 	return 0;

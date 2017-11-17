@@ -1924,3 +1924,38 @@ int struct_NetS_KingWarActivity_send( char **pptr, int *psize, SLK_NetS_KingWarA
 	return 0;
 }
 
+int struct_NetS_KingWarNotify_send( char **pptr, int *psize, SLK_NetS_KingWarNotify *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_a_heroid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_a_color, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_a_name_len, (*psize) );
+	if( pValue->m_a_name_len > 0 && pValue->m_a_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_a_name, pValue->m_a_name_len*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_a_losthp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_a_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_d_heroid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_d_color, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_d_name_len, (*psize) );
+	if( pValue->m_d_name_len > 0 && pValue->m_d_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_d_name, pValue->m_d_name_len*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_d_losthp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_d_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_result, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_id, (*psize) );
+	return 0;
+}
+
+int struct_NetS_KingWarNotifyList_send( char **pptr, int *psize, SLK_NetS_KingWarNotifyList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_KingWarNotify_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

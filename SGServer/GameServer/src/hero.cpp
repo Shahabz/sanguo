@@ -134,6 +134,20 @@ Hero *hero_getptr( int actor_index, int herokind )
 	return NULL;
 }
 
+char hero_getcolor( City *pCity, int herokind )
+{
+	if ( !pCity )
+		return 0;
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind == herokind )
+		{
+			return pCity->hero[tmpi].color;
+		}
+	}
+	return 0;
+}
+
 // 是否有这个武将
 char actor_hashero( int actor_index, int herokind )
 {

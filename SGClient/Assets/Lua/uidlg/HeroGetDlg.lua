@@ -5,11 +5,13 @@ local m_uiHeroHead = nil; --UnityEngine.GameObject
 local m_uiHeroColor = nil; --UnityEngine.GameObject
 local m_uiHeroCorps = nil; --UnityEngine.GameObject
 local m_uiHeroName = nil; --UnityEngine.GameObject
-local m_uiGrowth = nil; --UnityEngine.GameObject
+local m_uiGrowthText = nil; --UnityEngine.GameObject
 local m_uiAttack = nil; --UnityEngine.GameObject
 local m_uiDefense = nil; --UnityEngine.GameObject
 local m_uiTroops = nil; --UnityEngine.GameObject
+local m_uiGrowth = nil; --UnityEngine.GameObject
 local m_herokind = 0;
+
 -- 打开界面
 function HeroGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroGetDlg" );
@@ -55,10 +57,11 @@ function HeroGetDlgOnAwake( gameObject )
 	m_uiHeroColor = objs[1];
 	m_uiHeroCorps = objs[2];
 	m_uiHeroName = objs[3];
-	m_uiGrowth = objs[4];
+	m_uiGrowthText = objs[4];
 	m_uiAttack = objs[5];
 	m_uiDefense = objs[6];
 	m_uiTroops = objs[7];
+	m_uiGrowth = objs[8];
 end
 
 -- 界面初始化时调用
@@ -97,17 +100,27 @@ function HeroGetDlgShow( recvValue )
 	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
 	SetImage( m_uiHeroColor,  HeroColorSprite( recvValue.m_color )  );
 	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );
-	SetText( m_uiHeroName, HeroName( recvValue.m_kind ) )
+	SetText( m_uiHeroName, HeroName( recvValue.m_kind ).."("..T(134+recvValue.m_corps)..")", NameColor(recvValue.m_color) )
 	
-	local attack = recvValue.m_attack_base + recvValue.m_attack_wash;
-	local defense = recvValue.m_defense_base + recvValue.m_defense_wash;
-	local troops = recvValue.m_troops_base + recvValue.m_troops_wash;
-	local growth = attack + defense + troops;
+	local attack = recvValue.m_attack_base;
+	local defense = recvValue.m_defense_base;
+	local troops = recvValue.m_troops_base;
+	local basegrowth = attack + defense + troops;
+	local washgrowth = recvValue.m_attack_wash + recvValue.m_defense_wash + recvValue.m_troops_wash;
 
-	SetText( m_uiGrowth, F( 137, growth ) ) -- 总资质
-	SetText( m_uiAttack, F( 138, attack )  ) -- 攻资质
-	SetText( m_uiDefense, F( 139, defense )  ) -- 防资质
-	SetText( m_uiTroops, F( 140, troops )  ) -- 兵资质
+	SetText( m_uiGrowthText, T( 1671 ) ) -- 总资质
+	
+	if washgrowth ~= 0 then
+		print("非白将")
+		SetText( m_uiGrowth, "<color=#FFFFFF>"..basegrowth.."</color> +"..washgrowth ,NameColor(recvValue.m_color) ) --洗髓资质不为0才显示
+		else
+		print("白将")
+		SetText( m_uiGrowth,basegrowth)
+	end
+	
+	SetText( m_uiAttack, F( 138, attack+recvValue.m_attack_wash )  ) -- 攻资质
+	SetText( m_uiDefense, F( 139, defense+ recvValue.m_defense_wash )  ) -- 防资质
+	SetText( m_uiTroops, F( 140, troops+ recvValue.m_troops_wash )  ) -- 兵资质
 end
 
 function HeroGetDlgIsShow()

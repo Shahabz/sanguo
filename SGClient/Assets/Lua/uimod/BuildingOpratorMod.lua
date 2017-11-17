@@ -43,6 +43,8 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 				CityTechDlgOnShow();
 			elseif m_kind == BUILDING_Craftsman then
 				MaterialMakeDlgShow();
+			elseif m_kind == BUILDING_Cabinet	then
+				CabinetDlgShow();
 			elseif m_kind == BUILDING_Smithy then
 				EquipForgingDlgShow();
 			elseif m_kind == BUILDING_Wash then

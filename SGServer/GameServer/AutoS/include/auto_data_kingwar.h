@@ -7,6 +7,7 @@ struct _kingwarconfig {
 				int id;	//
 				int exp;	//
 				short drawing_num;	//
+				int drawing_other;	//
 				int rank_award_point;	//
 				int totalkill;	//
 				int totalkill_award_point;	//

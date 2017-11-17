@@ -14,6 +14,7 @@ int city_hero_getindex( int city_index, int herokind );
 Hero* city_hero_getptr( int city_index, int offset );
 
 Hero *hero_getptr( int actor_index, int herokind );
+char hero_getcolor( City *pCity, int herokind );
 
 int hero_maxid_init();
 HeroInfoConfig *hero_getconfig( int kind, int color );

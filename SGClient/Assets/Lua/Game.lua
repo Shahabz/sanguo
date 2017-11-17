@@ -243,7 +243,7 @@ function GameManager.ChangeScence( scence )
 				-- 缓存主城
 				GameManager.MainCity = GameObject.Instantiate( obj );
 				City.Init();
-				
+
 				-- 获取进入游戏所需信息
 				local sendValue = {};
 				sendValue.m_value = 0;
@@ -262,6 +262,9 @@ function GameManager.ChangeScence( scence )
 			GameManager.WorldMap = nil;
 		end
 		
+		-- 主城bgm
+		eye.audioManager:Play(203);
+		
 	elseif scence == "worldmap" then
 		if GameManager.WorldMap == nil then
 		-- 加载地图
@@ -279,6 +282,9 @@ function GameManager.ChangeScence( scence )
 		if GameManager.MainCity ~= nil then
 			GameManager.MainCity.gameObject:SetActive( false )
 		end
+		
+		-- 地图bgm
+		eye.audioManager:Play(202);
 	end
 	
 	GameManager.currentScence = scence

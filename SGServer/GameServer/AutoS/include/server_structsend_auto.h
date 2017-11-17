@@ -1318,6 +1318,30 @@ struct _slk_NetS_KingWarActivity {
 };
 typedef struct _slk_NetS_KingWarActivity SLK_NetS_KingWarActivity;	//血战活动
 
+struct _slk_NetS_KingWarNotify {
+	short m_a_heroid;	//血战活动战报
+	char m_a_color;	//血战活动战报
+	char m_a_name_len;	//血战活动战报
+	char m_a_name[32];	//血战活动战报
+	int m_a_losthp;	//血战活动战报
+	char m_a_nation;	//血战活动战报
+	short m_d_heroid;	//血战活动战报
+	char m_d_color;	//血战活动战报
+	char m_d_name_len;	//血战活动战报
+	char m_d_name[32];	//血战活动战报
+	int m_d_losthp;	//血战活动战报
+	char m_d_nation;	//血战活动战报
+	char m_result;	//血战活动战报
+	char m_id;	//血战活动战报-发生据点
+};
+typedef struct _slk_NetS_KingWarNotify SLK_NetS_KingWarNotify;	//血战战报
+
+struct _slk_NetS_KingWarNotifyList {
+	char m_count;	//血战活动单挑战报列表
+	SLK_NetS_KingWarNotify m_list[10];	//血战活动单挑战报列表
+};
+typedef struct _slk_NetS_KingWarNotifyList SLK_NetS_KingWarNotifyList;	//血战战报列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1463,5 +1487,7 @@ int struct_NetS_LostRebuild_send( char **pptr, int *psize, SLK_NetS_LostRebuild 
 int struct_NetS_KingwarTown_send( char **pptr, int *psize, SLK_NetS_KingwarTown *pValue );
 int struct_NetS_KingwarTownList_send( char **pptr, int *psize, SLK_NetS_KingwarTownList *pValue );
 int struct_NetS_KingWarActivity_send( char **pptr, int *psize, SLK_NetS_KingWarActivity *pValue );
+int struct_NetS_KingWarNotify_send( char **pptr, int *psize, SLK_NetS_KingWarNotify *pValue );
+int struct_NetS_KingWarNotifyList_send( char **pptr, int *psize, SLK_NetS_KingWarNotifyList *pValue );
 
 #endif

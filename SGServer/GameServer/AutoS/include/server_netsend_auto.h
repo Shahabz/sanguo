@@ -133,6 +133,8 @@ int netsend_lostrebuild_S( int actor_index, char send_type, SLK_NetS_LostRebuild
 int netsend_kingwartown_S( int actor_index, char send_type, SLK_NetS_KingwarTown *pValue );
 int netsend_kingwartownlist_S( int actor_index, char send_type, SLK_NetS_KingwarTownList *pValue );
 int netsend_kingwaractivity_S( int actor_index, char send_type, SLK_NetS_KingWarActivity *pValue );
+int netsend_kingwarnotify_S( int actor_index, char send_type, SLK_NetS_KingWarNotify *pValue );
+int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingWarNotifyList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

@@ -26,6 +26,7 @@ public static class LuaBinder
 		ResourceManagerWrap.Register(L);
 		ObjectPoolManagerWrap.Register(L);
 		NetworkManagerWrap.Register(L);
+		AudioManagerWrap.Register(L);
 		LocalizationWrap.Register(L);
 		DeviceHelperWrap.Register(L);
 		UnitMoveWrap.Register(L);
@@ -251,6 +252,9 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("GameManager");
 		L.RegFunction("LuaExecute", GameManager_LuaExecute);
+		L.EndModule();
+		L.BeginModule("AudioManager");
+		L.RegFunction("SwitchChanged", AudioManager_SwitchChanged);
 		L.EndModule();
 		L.BeginModule("UIInputFieldSubmit");
 		L.RegFunction("OnValidateInput", UIInputFieldSubmit_OnValidateInput);
@@ -812,6 +816,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(GameManager.LuaExecute), func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AudioManager_SwitchChanged(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(AudioManager.SwitchChanged), func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(AudioManager.SwitchChanged), func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

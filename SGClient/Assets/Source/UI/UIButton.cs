@@ -35,23 +35,17 @@ public class UIButton : Button
             _ClickInterval = StartCoroutine( ClickInterval() );
             interactable = false;
         }
-        LogUtil.GetInstance().WriteGame( "UIEVENT.CLICK["+uiMod.uiName+"]" + controlID );
+        //LogUtil.GetInstance().WriteGame( "UIEVENT.CLICK["+uiMod.uiName+"]" + controlID );
 		object[] param = { UIEVENT.CLICK, controlID, 0 };
 		uiMod.OnEvent( param );
         if (audioID == 0)
         {
-            //fruit.audioManager.Play(45);
+            eye.audioManager.Play(101);
         }
         else
         {
-            //fruit.audioManager.Play(audioID);
+			eye.audioManager.Play(audioID);
         }
-        
-
-        //if( clickSound != null )
-        //{
-        //    fruit.audioManager.PlayAudio(AudioManager.AudioType.UI,  clickSound );
-        //}
 
 	}
 	

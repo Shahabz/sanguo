@@ -163,7 +163,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		elseif nControlID == 12 then
 			ChangeNameDlgShow();
-			
+		
+		-- 系统公告
+		elseif nControlID == 15 then
+			NoticeDlgShow()
+		
 		-- 返回登录
 		elseif nControlID == 18 then
 			MsgBox( T( 518 ),function()

@@ -1492,3 +1492,14 @@ function proc_kingwaractivity_C( recvValue )
 	MapMainDlgActivityKingWar( recvValue )
 end
 
+-- m_a_heroid=0,m_a_color=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_a_losthp=0,m_a_nation=0,m_d_heroid=0,m_d_color=0,m_d_name_len=0,m_d_name="[m_d_name_len]",m_d_losthp=0,m_d_nation=0,m_result=0,m_id=0,
+function proc_kingwarnotify_C( recvValue )
+	-- process.
+	BloodyBattleDlgSetFightLog( recvValue )
+end
+
+-- m_count=0,m_list={m_a_heroid=0,m_a_color=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_a_losthp=0,m_a_nation=0,m_d_heroid=0,m_d_color=0,m_d_name_len=0,m_d_name="[m_d_name_len]",m_d_losthp=0,m_d_nation=0,m_result=0,m_id=0,[m_count]},
+function proc_kingwarnotifylist_C( recvValue )
+	-- process.
+end
+

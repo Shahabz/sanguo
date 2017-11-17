@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour {
         LogUtil.GetInstance().WriteGame( "Add UIManager" );
         Utils.Add<LuaManager>( gameObject );		// 添加LUA管理器
         LogUtil.GetInstance().WriteGame( "Add LuaManager" );
+		Utils.Add<AudioManager>( gameObject );		// 添加音效管理器
+		LogUtil.GetInstance().WriteGame( "Add AudioManager" );
 
         // 初始化LUA
         LuaInited();

@@ -316,7 +316,7 @@ public class ResourceManager : MonoBehaviour
         }
         else
         {
-            object[] param = { "", 0, 0 };
+            object[] param = { "", 1, 1 };
             LuaFun.loadAssetBundleProc.Call( param );
         }
     }

@@ -152,7 +152,7 @@ public class eye {
         _uiManager = null;
         _resourceManager = null;
         _objectPoolManager = null;
-        //_scenceManager = null;
+        _audioManager = null;
         //_nativeNotificationManager = null;
         //_voiceManager = null;
         _getServerTime = null;

@@ -1704,3 +1704,34 @@ function struct_NetS_KingWarActivity_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_KingWarNotify_recv( buffer )
+	local recvValue = {};
+	recvValue.m_a_heroid = buffer:ReadShort();
+	recvValue.m_a_color = buffer:ReadSByte();
+	recvValue.m_a_name_len = buffer:ReadSByte();
+	recvValue.m_a_name = buffer:ReadStringWithLen( recvValue.m_a_name_len );
+	recvValue.m_a_losthp = buffer:ReadInt();
+	recvValue.m_a_nation = buffer:ReadSByte();
+	recvValue.m_d_heroid = buffer:ReadShort();
+	recvValue.m_d_color = buffer:ReadSByte();
+	recvValue.m_d_name_len = buffer:ReadSByte();
+	recvValue.m_d_name = buffer:ReadStringWithLen( recvValue.m_d_name_len );
+	recvValue.m_d_losthp = buffer:ReadInt();
+	recvValue.m_d_nation = buffer:ReadSByte();
+	recvValue.m_result = buffer:ReadSByte();
+	recvValue.m_id = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_KingWarNotifyList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_KingWarNotify_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

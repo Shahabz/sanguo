@@ -121,7 +121,9 @@ function BuildingGetDlgShow( recvValue )
 	m_uiMovePanel.gameObject:SetActive(false);
 	m_uiShape.gameObject:SetActive(true);
 	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( recvValue.m_kind );
-	m_uiName:GetComponent( "UIText" ).text = T( recvValue.m_kind );
+	m_uiName:GetComponent( "UIText" ).text = T(50).." <color=#ECC244>["..T( recvValue.m_kind ).."]</color>";
+	SetTrue(m_uiDesc)
+	SetText(m_uiDesc,T(recvValue.m_kind+50))
 end
 
 function BuildingGetDlgMove()
