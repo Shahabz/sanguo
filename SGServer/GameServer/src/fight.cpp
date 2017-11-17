@@ -1163,6 +1163,7 @@ int fight_lost_calc_single( FightUnit *pUnit )
 				return -1;
 			hero_changesoldiers( pCity, &pCity->hero[hero_index], -(pUnit->maxhp - pUnit->hp), PATH_FIGHT );
 			g_army[army_index].totals -= (pUnit->maxhp - pUnit->hp);
+			g_army[army_index].damage += pUnit->damage;
 			// 部队添加携带威望
 			if ( pUnit->prestige > 0 )
 			{

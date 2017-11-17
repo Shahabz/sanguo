@@ -3585,6 +3585,60 @@ int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingW
 	return 0;
 }
 
+int netsend_kingwarranklist_S( int actor_index, char send_type, SLK_NetS_KingWarRankList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_KINGWARRANKLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_KINGWARRANKLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_KingWarRankList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_kingwarpk_S( int actor_index, char send_type, SLK_NetS_KingWarPK *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_KINGWARPK;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_KINGWARPK; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_KingWarPK_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue )
 {

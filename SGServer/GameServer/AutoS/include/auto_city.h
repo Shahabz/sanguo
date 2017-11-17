@@ -70,6 +70,8 @@ struct _city {
 				char matnum_will[8];	//材料预定生产数量
 				char matkind_over[8];	//材料生产完毕
 				char matnum_over[8];	//材料生产完毕
+				int kw_totalkill;	//本次血战累杀
+				int kw_point;	//血战总击杀
 				short rb_num;	//重建家园次数
 				int rb_silver;	//给予的重建家园资源
 				int rb_wood;	//给予的重建家园资源

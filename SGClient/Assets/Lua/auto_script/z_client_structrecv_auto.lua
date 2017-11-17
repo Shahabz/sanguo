@@ -1735,3 +1735,37 @@ function struct_NetS_KingWarNotifyList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_KingWarRank_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rank = buffer:ReadSByte();
+	recvValue.m_kill = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_name_len = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_len );
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_herocolor = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_KingWarRankList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_KingWarRank_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_mypoint = buffer:ReadInt();
+	recvValue.m_totalkill = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_KingWarPK_recv( buffer )
+	local recvValue = {};
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_hp = buffer:ReadInt();
+	recvValue.m_id = buffer:ReadSByte();
+	return recvValue;
+end
+

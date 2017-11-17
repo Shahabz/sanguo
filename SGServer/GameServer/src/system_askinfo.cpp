@@ -560,6 +560,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // ¾ÈÔ®
 			kingwar_army_rebirth( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 10 )
+		{ // ÑªÕ½ÅÅÐÐ°ñ
+			kingwar_ranklist( actor_index );
+		}
 		break;
 	case ASKINFO_MSGBOX_CALLBACK:
 		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );

@@ -111,10 +111,8 @@ function HeroGetDlgShow( recvValue )
 	SetText( m_uiGrowthText, T( 1671 ) ) -- 总资质
 	
 	if washgrowth ~= 0 then
-		print("非白将")
 		SetText( m_uiGrowth, "<color=#FFFFFF>"..basegrowth.."</color> +"..washgrowth ,NameColor(recvValue.m_color) ) --洗髓资质不为0才显示
-		else
-		print("白将")
+	else
 		SetText( m_uiGrowth,basegrowth)
 	end
 	

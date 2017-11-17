@@ -5,6 +5,7 @@ local m_uiNoticeText = nil; --UnityEngine.GameObject
 -- 打开界面
 function NoticeDlgOpen()
 	ResourceManager.LoadAssetBundle( "ui_static_notice1" )
+	ResourceManager.LoadAssetBundle( "ui_static_notice2" )
 	m_Dlg = eye.uiManager:Open( "NoticeDlg" );
 end
 
@@ -21,6 +22,7 @@ end
 function NoticeDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	ResourceManager.UnloadAssetBundle( "ui_static_notice1" )
+	ResourceManager.UnloadAssetBundle( "ui_static_notice2" )
 	m_Dlg = nil;
 end
 

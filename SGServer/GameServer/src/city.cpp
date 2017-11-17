@@ -1133,6 +1133,19 @@ int city_changefriendship( int city_index, int value, short path )
 	netsend_changefriendship_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+// 血战积分
+int city_kingwarpoint( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].kw_point > INT_MAX - value )
+		g_city[city_index].kw_point = INT_MAX;
+	else
+		g_city[city_index].kw_point += value;
+	if ( g_city[city_index].kw_point < 0 )
+		g_city[city_index].kw_point = 0;
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
 // 保护时间
 int city_changeprotect( int city_index, int value, short path )
 {

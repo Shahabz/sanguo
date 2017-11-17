@@ -1501,5 +1501,19 @@ end
 -- m_count=0,m_list={m_a_heroid=0,m_a_color=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_a_losthp=0,m_a_nation=0,m_d_heroid=0,m_d_color=0,m_d_name_len=0,m_d_name="[m_d_name_len]",m_d_losthp=0,m_d_nation=0,m_result=0,m_id=0,[m_count]},
 function proc_kingwarnotifylist_C( recvValue )
 	-- process.
+	for i = 1, recvValue.m_count, 1 do
+		BloodyBattleDlgSetPKLog( recvValue.m_list[i] );
+	end
+end
+
+-- m_count=0,m_list={m_rank=0,m_kill=0,m_nation=0,m_name_len=0,m_name="[m_name_len]",m_herokind=0,m_herocolor=0,[m_count]},m_mypoint=0,m_totalkill=0,
+function proc_kingwarranklist_C( recvValue )
+	-- process.
+end
+
+-- m_herokind=0,m_hp=0,m_id=0,
+function proc_kingwarpk_C( recvValue )
+	-- process.
+	BloodyBattleDlgShowPKLayer( recvValue )
 end
 

@@ -138,6 +138,8 @@ int city_changepeople( int city_index, int value, short path );
 int city_changeprestige( int city_index, int value, short path );
 // 友谊积分
 int city_changefriendship( int city_index, int value, short path );
+// 血战积分
+int city_kingwarpoint( int city_index, int value, short path );
 // 保护时间
 int city_changeprotect( int city_index, int value, short path );
 // 兵力

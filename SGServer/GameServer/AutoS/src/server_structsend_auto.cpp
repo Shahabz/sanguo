@@ -1959,3 +1959,42 @@ int struct_NetS_KingWarNotifyList_send( char **pptr, int *psize, SLK_NetS_KingWa
 	return 0;
 }
 
+int struct_NetS_KingWarRank_send( char **pptr, int *psize, SLK_NetS_KingWarRank *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_rank, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_kill, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_len, (*psize) );
+	if( pValue->m_name_len > 0 && pValue->m_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_len*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_herocolor, (*psize) );
+	return 0;
+}
+
+int struct_NetS_KingWarRankList_send( char **pptr, int *psize, SLK_NetS_KingWarRankList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_KingWarRank_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypoint, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_totalkill, (*psize) );
+	return 0;
+}
+
+int struct_NetS_KingWarPK_send( char **pptr, int *psize, SLK_NetS_KingWarPK *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_id, (*psize) );
+	return 0;
+}
+

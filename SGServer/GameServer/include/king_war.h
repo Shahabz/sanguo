@@ -10,6 +10,8 @@
 #define KINGWAR_TOWN_ATTACK		1
 #define KINGWAR_TOWN_DEFENSE	2
 
+#define KINGWAR_RANK_MAX		30	// ÑªÕ½ÅÅÐÐ°ñ
+
 int kingwar_town_load();
 int kingwar_town_save( FILE *fp );
 KingwarTown *kingwar_town_getptr( int id );
@@ -35,6 +37,8 @@ int kingwar_town_sendinfo( int id );
 int kingwar_town_sendall();
 int kingwar_town_sendlist( int actor_index );
 int kingwar_subscribe_cancel( int actor_index );
+int kingwar_ranklist( int actor_index );
+int kingwar_rankcalc( int army_index );
 
 int kingwar_army_goto( int actor_index, int army_index, int id );
 int kingwar_army_attack( int actor_index, int army_index, int id );

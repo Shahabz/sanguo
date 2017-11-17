@@ -62,6 +62,8 @@ CREATE TABLE `city` (
   `matnum_will` varbinary(32) NOT NULL DEFAULT '' COMMENT '材料预定生产数量',
   `matkind_over` varbinary(32) NOT NULL DEFAULT '' COMMENT '材料生产完毕',
   `matnum_over` varbinary(32) NOT NULL DEFAULT '' COMMENT '材料生产完毕',
+  `kw_totalkill` int(11) NOT NULL DEFAULT '0' COMMENT '本次血战累杀',
+  `kw_point` int(11) NOT NULL DEFAULT '0' COMMENT '血战总击杀',
   `rb_num` smallint(6) NOT NULL DEFAULT '0' COMMENT '重建家园次数',
   `rb_silver` int(11) NOT NULL DEFAULT '0' COMMENT '给予的重建家园资源',
   `rb_wood` int(11) NOT NULL DEFAULT '0' COMMENT '给予的重建家园资源',

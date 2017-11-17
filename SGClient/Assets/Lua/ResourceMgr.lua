@@ -94,7 +94,7 @@ end
 
 -- 英雄颜色框
 function HeroColorSprite( color )
-	local name = "ui_icon_herocolor"..color;
+	local name = "ui_color_"..color;
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );

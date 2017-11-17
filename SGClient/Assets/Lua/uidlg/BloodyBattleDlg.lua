@@ -23,6 +23,9 @@ local m_uiHuLaoButtons = nil; --UnityEngine.GameObject
 local m_uiLuoYangButtons = nil; --UnityEngine.GameObject
 local m_uiToken = nil; --UnityEngine.GameObject
 local m_uiChatText = nil; --UnityEngine.GameObject
+local m_uiPKLayer = nil; --UnityEngine.GameObject
+local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiUIP_Log = nil; --UnityEngine.GameObject
 
 local m_HeroArmyInfo = { nil, nil, nil, nil }
 local m_uiHeroFindIndex = { 1, 1, 1, 1, 1, 1, 1 }
@@ -34,6 +37,7 @@ local m_HeroRecvValue = nil;
 local m_ChatRecvValue = nil;
 -- 打开界面
 function BloodyBattleDlgOpen()
+	ResourceManager.LoadAssetBundle( "ui_static_pic_1" )
 	m_Dlg = eye.uiManager:Open( "BloodyBattleDlg" );
 end
 
@@ -50,6 +54,7 @@ end
 -- 删除界面
 function BloodyBattleDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "ui_static_pic_1" )
 	m_Dlg = nil;
 end
 
@@ -64,6 +69,8 @@ function BloodyBattleDlgOnEvent( nType, nControlID, value, gameObject )
             BloodyBattleDlgClose();
 		elseif nControlID == -2 then
 			BloodyBattleDlgSelectHero( -1 )
+		elseif nControlID == -3 then
+			SetFalse( m_uiPKLayer );
 			
 		-- 血战排行榜
 		elseif nControlID == 2 then
@@ -138,6 +145,9 @@ function BloodyBattleDlgOnAwake( gameObject )
 	m_uiTownButtons[7] = objs[23];
 	m_uiToken = objs[24];
 	m_uiChatText = objs[25];
+	m_uiPKLayer = objs[26];
+	m_uiContent = objs[27];
+	m_uiUIP_Log = objs[28];
 end
 
 -- 界面初始化时调用
@@ -608,3 +618,20 @@ function BloodyBattleDlgSetFightLog( recvValue )
 	SetText( m_uiLog.transform:Find("DefenseName"), actorname..heroname..losthp );
 end
 
+-- 显示PK信息
+-- m_herokind=0,m_hp=0,m_id=0,
+function BloodyBattleDlgShowPKLayer( recvValue )
+	SetTrue( m_uiPKLayer )
+	SetImage( m_uiPKLayer.transform:Find("Hero/Shape"), HeroHeadSprite( recvValue.m_herokind ) )
+	SetText( m_uiPKLayer.transform:Find("HP/Text"), F( 1425, recvValue.m_hp ) )
+	SetText( m_uiPKLayer.transform:Find("Pos/Text"), F( 1426, KingWarTownName(recvValue.m_id) ) )
+	--m_uiContent = objs[27];
+	--m_uiUIP_Log = objs[28];
+end
+
+-- 设置一条PK结果
+function BloodyBattleDlgSetPKLog( recvValue )
+	print( recvValue.m_a_heroid.." vs "..recvValue.m_d_heroid  )
+	
+	
+end

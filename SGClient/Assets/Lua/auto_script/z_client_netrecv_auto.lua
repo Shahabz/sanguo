@@ -665,6 +665,16 @@ function netrecv_kingwarnotifylist_C( buffer )
 	proc_kingwarnotifylist_C( recvValue );
 end
 
+function netrecv_kingwarranklist_C( buffer )
+	local recvValue = struct_NetS_KingWarRankList_recv( buffer );
+	proc_kingwarranklist_C( recvValue );
+end
+
+function netrecv_kingwarpk_C( buffer )
+	local recvValue = struct_NetS_KingWarPK_recv( buffer );
+	proc_kingwarpk_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -799,6 +809,8 @@ Proc_Command = {
 	[CMDS_KINGWARACTIVITY]=netrecv_kingwaractivity_C;
 	[CMDS_KINGWARNOTIFY]=netrecv_kingwarnotify_C;
 	[CMDS_KINGWARNOTIFYLIST]=netrecv_kingwarnotifylist_C;
+	[CMDS_KINGWARRANKLIST]=netrecv_kingwarranklist_C;
+	[CMDS_KINGWARPK]=netrecv_kingwarpk_C;
 }
 
 function in_proc_command_C( cmd, buffer )
