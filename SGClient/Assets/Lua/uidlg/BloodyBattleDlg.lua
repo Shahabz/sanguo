@@ -632,6 +632,4 @@ end
 -- 设置一条PK结果
 function BloodyBattleDlgSetPKLog( recvValue )
 	print( recvValue.m_a_heroid.." vs "..recvValue.m_d_heroid  )
-	
-	
 end
