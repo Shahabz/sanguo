@@ -670,6 +670,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			local townid 		= recvValue.m_short_value[1]
 			local type 			= g_towninfo[townid].type
 			if type == MAPUNIT_TYPE_TOWN_TYPE9 then
+				BloodyBattleDlgTownClick( recvValue )
 				MapClickEffect.gameObject:SetActive( false );
 				return
 			end

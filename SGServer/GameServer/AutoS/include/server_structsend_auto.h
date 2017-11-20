@@ -1358,6 +1358,7 @@ struct _slk_NetS_KingWarRankList {
 	SLK_NetS_KingWarRank m_list[30];	//血战排行榜列表
 	int m_mypoint;	//血战排行榜列表-我的总积分
 	int m_totalkill;	//血战排行榜列表-当前累计杀敌
+	char m_myrank;	//血战排行榜列表-我的排行
 };
 typedef struct _slk_NetS_KingWarRankList SLK_NetS_KingWarRankList;	//血战排行榜列表
 

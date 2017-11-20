@@ -1063,6 +1063,10 @@ void army_delete( int army_index )
 		{ // 检查集结是否达到解散条件
 			armygroup_dismiss( army_index );
 		}
+		else if ( g_army[army_index].action == ARMY_ACTION_KINGWAR )
+		{ // 删除后计算排行榜连杀
+			kingwar_rankcalc( army_index );
+		}
 	}
 	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
 	{

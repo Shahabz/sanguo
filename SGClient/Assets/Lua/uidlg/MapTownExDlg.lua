@@ -14,6 +14,8 @@ local m_uiFightButton = nil; --UnityEngine.GameObject
 local m_uiUpgradeButton = nil; --UnityEngine.GameObject
 local m_uiTimerButton = nil; --UnityEngine.GameObject
 local m_uiAttackcd = nil; --UnityEngine.GameObject
+local m_uiLayer3 = nil; --UnityEngine.GameObject
+local m_uiKingButton = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil;
 local m_recvValue = nil;
@@ -101,6 +103,9 @@ function MapTownExDlgOnAwake( gameObject )
 	m_uiUpgradeButton = objs[11];
 	m_uiTimerButton = objs[12];
 	m_uiAttackcd = objs[13];
+	m_uiLayer3 = objs[14];
+	m_uiKingButton = objs[15];
+
 end
 
 -- 界面初始化时调用
@@ -153,25 +158,43 @@ function MapTownExDlgShow( recvValue )
 	local type 			= g_towninfo[m_townid].type
 	local level 		= g_towninfo[m_townid].level
 	
-	-- 国都信息
-	system_askinfo( ASKINFO_MAPTOWN, "", 7, m_townid );
+	-- 洛阳
+	if type == MAPUNIT_TYPE_TOWN_TYPE9 then
+		-- 名字
+		SetText( m_uiName, MapTownName(m_townid) )
+		-- 所属
+		if m_nation == 0 then
+			SetText( m_uiOwn, T(951) );
+		else
+			SetText( m_uiOwn, T(1211).." "..NationEx(m_nation) );
+		end
+		SetTrue( m_uiKingButton )
+		SetTrue( m_uiLayer3 )
+		SetFalse( m_uiLayer1 )
+		SetFalse( m_uiLayer2 )
+	else
+		-- 国都信息
+		system_askinfo( ASKINFO_MAPTOWN, "", 7, m_townid );
+		-- 名字
+		if custom_namelen > 0 then
+			SetText( m_uiName, "Lv."..(dev_level+1).." "..m_custom_name )
+		else
+			SetText( m_uiName, "Lv."..(dev_level+1).." "..MapTownName(m_townid) )
+		end
+		-- 所属
+		if m_nation == 0 then
+			SetText( m_uiOwn, T(1328)..":Lv.11 "..MapTownName(m_townid)..T(1328) );
+		else
+			SetText( m_uiOwn, T(1329) );
+		end
+		SetFalse( m_uiKingButton )
+		SetFalse( m_uiLayer3 )
+	end
 	
 	-- 形象
 	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
-	-- 名字
-	if custom_namelen > 0 then
-		SetText( m_uiName, "Lv."..(dev_level+1).." "..m_custom_name )
-	else
-		SetText( m_uiName, "Lv."..(dev_level+1).." "..MapTownName(m_townid) )
-	end
 	-- 位置
 	SetText( m_uiPos, F(1272, m_posx, m_posy) )
-	-- 所属
-	if m_nation == 0 then
-		SetText( m_uiOwn, T(1328)..":Lv.11 "..MapTownName(m_townid)..T(1328) );
-	else
-		SetText( m_uiOwn, T(1329) );
-	end
 	-- 国旗
 	SetImage( m_uiNation, NationSprite(m_nation) )
 end

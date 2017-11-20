@@ -12,6 +12,13 @@
 
 #define KINGWAR_RANK_MAX		30	// ÑªÕ½ÅÅÐÐ°ñ
 
+typedef struct _kingwarrank
+{
+	int actorid;
+	int city_index;
+	SLK_NetS_KingWarRank info;
+}KingWarRank;
+
 int kingwar_town_load();
 int kingwar_town_save( FILE *fp );
 KingwarTown *kingwar_town_getptr( int id );

@@ -375,6 +375,8 @@ int activity_onclose( int activityid )
 		return 0;
 	switch( activityid )
 	{
+	case 0:
+		break;
 	default:
 		sc_ActivityOnClose( activityid );
 		break;
@@ -392,6 +394,8 @@ int activity_onlogic( int activityid )
 		return 0;
 	switch( activityid )
 	{
+	case 0:
+		break;
 	default:
 		sc_ActivityOnLogic( activityid );
 		break;

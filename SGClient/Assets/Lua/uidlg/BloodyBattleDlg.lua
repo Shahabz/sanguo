@@ -26,11 +26,14 @@ local m_uiChatText = nil; --UnityEngine.GameObject
 local m_uiPKLayer = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Log = nil; --UnityEngine.GameObject
+local m_uiHelpLayer = nil; --UnityEngine.GameObject
+local m_uiEnterBtn = nil; --UnityEngine.GameObject
 
 local m_HeroArmyInfo = { nil, nil, nil, nil }
 local m_uiHeroFindIndex = { 1, 1, 1, 1, 1, 1, 1 }
 local m_SelectHeroOffset = -1;
 local m_LastSelectArmyIndex = -1;
+local m_LastSelectOp = 0;
 local m_activityinfo = nil;
 local m_TownRecvValue = { nil, nil, nil, nil };
 local m_HeroRecvValue = nil;
@@ -70,18 +73,27 @@ function BloodyBattleDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == -2 then
 			BloodyBattleDlgSelectHero( -1 )
 		elseif nControlID == -3 then
-			SetFalse( m_uiPKLayer );
+			BloodyBattleDlgClosePKLog()
+		elseif nControlID == -4 then
+			BloodyBattleDlgCloseHelpLayer()
 			
 		-- 血战排行榜
+		elseif nControlID == 1 then
+			KingWarRankDlgShow();
+			BloodyBattleDlgCloseHelpLayer()
+			
 		elseif nControlID == 2 then
-		
+			BloodyBattleDlgOpenHelpLayer();
+			
 		-- 聊天
 		elseif nControlID == 3 then
 			ChatDlgShow();
+			BloodyBattleDlgCloseHelpLayer()
 		
 		-- 加入血战
 		elseif nControlID == 10 then
 			BloodyBattleDlgBattle()
+			BloodyBattleDlgCloseHelpLayer()
 		
 		-- 选择英雄
 		elseif nControlID >= 100 and nControlID < 200 then
@@ -148,6 +160,8 @@ function BloodyBattleDlgOnAwake( gameObject )
 	m_uiPKLayer = objs[26];
 	m_uiContent = objs[27];
 	m_uiUIP_Log = objs[28];
+	m_uiHelpLayer = objs[29];
+	m_uiEnterBtn = objs[30];
 end
 
 -- 界面初始化时调用
@@ -364,8 +378,10 @@ function BloodyBattleDlgHeroSet( index, offset, info )
 		
 		-- 显示第{0}位上阵
 		if m_LastSelectArmyIndex == info.m_army_index then
-			SetTrue( uiHero.transform:Find("Chat") );
-			SetText( uiHero.transform:Find("Chat/Text"), F( 1412, info.m_to_posy ) );
+			if m_LastSelectOp ~= 3 then
+				SetTrue( uiHero.transform:Find("Chat") );
+				SetText( uiHero.transform:Find("Chat/Text"), F( 1412, info.m_to_posy ) );
+			end
 			m_LastSelectArmyIndex = -1;
 		end
 		
@@ -477,6 +493,7 @@ function BloodyBattleDlgBattle()
 	recvValue.m_nation = m_activityinfo.m_nation;
 	recvValue.m_type = MAPUNIT_TYPE_KINGWAR_TOWN;
 	MapBattleDlgShow( recvValue, ARMY_ACTION_KINGWAR, -1 )
+	m_LastSelectOp = 0;
 end
 
 -- 前往
@@ -488,6 +505,7 @@ function BloodyBattleDlgGoto( id )
 	system_askinfo( ASKINFO_KINGWAR, "", 1, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
+	m_LastSelectOp = 1;
 end
 
 -- 偷袭
@@ -499,6 +517,7 @@ function BloodyBattleDlgSneak( id )
 	system_askinfo( ASKINFO_KINGWAR, "", 2, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
+	m_LastSelectOp = 2
 end
 
 -- 单挑
@@ -510,6 +529,7 @@ function BloodyBattleDlgPK( id )
 	system_askinfo( ASKINFO_KINGWAR, "", 3, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
+	m_LastSelectOp = 3
 end
 
 -- 进攻
@@ -521,6 +541,7 @@ function BloodyBattleDlgAttack( id )
 	system_askinfo( ASKINFO_KINGWAR, "", 4, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
+	m_LastSelectOp = 4
 end
 	
 -- 回防
@@ -532,6 +553,7 @@ function BloodyBattleDlgDefense( id )
 	system_askinfo( ASKINFO_KINGWAR, "", 5, heroArmy.m_army_index, id+3 )
 	BloodyBattleDlgSelectHero( -1 )
 	m_LastSelectArmyIndex = heroArmy.m_army_index
+	m_LastSelectOp = 5
 end
 
 -- 救援
@@ -556,6 +578,7 @@ function BloodyBattleDlgRebirth()
 		system_askinfo( ASKINFO_KINGWAR, "", 6, heroArmy.m_army_index )
 		BloodyBattleDlgSelectHero( -1 )
 		m_LastSelectArmyIndex = heroArmy.m_army_index
+		m_LastSelectOp = 6
 	end )
 end
 
@@ -591,31 +614,36 @@ function BloodyBattleDlgSetChat( recvValue )
 	end
 end
 
+function BloodyBattleDlgSetLogText( uilog, recvValue, showpos )
+	if showpos == 1 then
+		SetText( uilog.transform:Find("Timer"), "<"..getHourStringByInterval(os.time())..">("..KingWarTownName(recvValue.m_id)..")" );
+	else
+		SetText( uilog.transform:Find("Timer"), "<"..getHourStringByInterval(os.time())..">" );
+	end
+	local losthp
+	local heroname
+	
+	losthp = "<color=#e80017>-"..recvValue.m_a_losthp.."</color> ";
+	if recvValue.m_result == 1 then
+		heroname = "<color="..NameColorStr(recvValue.m_a_color)..">"..HeroName(recvValue.m_a_heroid).."["..recvValue.m_a_name.."]</color>";
+	else
+		heroname = "<color=#838383FF>"..HeroName(recvValue.m_a_heroid).."["..recvValue.m_a_name.."]</color>";
+	end
+	SetText( uilog.transform:Find("AttackName"), losthp..heroname );
+	
+	losthp = "<color=#e80017>-"..recvValue.m_d_losthp.."</color>";
+	if recvValue.m_result == 2 then
+		heroname = "<color="..NameColorStr(recvValue.m_d_color)..">["..recvValue.m_d_name.."]"..HeroName(recvValue.m_d_heroid).."</color> "
+	else
+		heroname = "<color=#838383FF>["..recvValue.m_d_name.."]"..HeroName(recvValue.m_d_heroid).."</color> "
+	end
+	SetText( uilog.transform:Find("DefenseName"), heroname..losthp );
+end
+
 -- 设置log
 -- m_a_heroid=0,m_a_color=0,m_a_name_len=0,m_a_name="[m_a_name_len]",m_a_losthp=0,m_a_nation=0,m_d_heroid=0,m_d_color=0,m_d_name_len=0,m_d_name="[m_d_name_len]",m_d_losthp=0,m_d_nation=0,m_result=0,m_id=0,
 function BloodyBattleDlgSetFightLog( recvValue )
-	SetText( m_uiLog.transform:Find("Timer"), "<"..getHourStringByInterval(os.time())..">("..KingWarTownName(recvValue.m_id)..")" );
-	local losthp
-	local heroname
-	local actorname
-	
-	losthp = "<color=#e80017>-"..recvValue.m_a_losthp.."</color> ";
-	heroname = "<color="..NameColorStr(recvValue.m_a_color)..">"..HeroName(recvValue.m_a_heroid).."</color>";
-	if recvValue.m_result == 1 then
-		actorname = "<color=#F7F3BB>["..recvValue.m_a_name.."]</color>"
-	else
-		actorname = "<color=#333333>["..recvValue.m_a_name.."]</color>"
-	end
-	SetText( m_uiLog.transform:Find("AttackName"), losthp..heroname..actorname );
-	
-	losthp = "<color=#e80017>-"..recvValue.m_d_losthp.."</color>";
-	heroname = "<color="..NameColorStr(recvValue.m_d_color)..">"..HeroName(recvValue.m_d_heroid).."</color> ";
-	if recvValue.m_result == 2 then
-		actorname = "<color=#F7F3BB>["..recvValue.m_d_name.."]</color>"
-	else
-		actorname = "<color=#333333>["..recvValue.m_d_name.."]</color>"
-	end
-	SetText( m_uiLog.transform:Find("DefenseName"), actorname..heroname..losthp );
+	BloodyBattleDlgSetLogText( m_uiLog, recvValue, 1 )
 end
 
 -- 显示PK信息
@@ -625,11 +653,46 @@ function BloodyBattleDlgShowPKLayer( recvValue )
 	SetImage( m_uiPKLayer.transform:Find("Hero/Shape"), HeroHeadSprite( recvValue.m_herokind ) )
 	SetText( m_uiPKLayer.transform:Find("HP/Text"), F( 1425, recvValue.m_hp ) )
 	SetText( m_uiPKLayer.transform:Find("Pos/Text"), F( 1426, KingWarTownName(recvValue.m_id) ) )
-	--m_uiContent = objs[27];
-	--m_uiUIP_Log = objs[28];
 end
 
 -- 设置一条PK结果
 function BloodyBattleDlgSetPKLog( recvValue )
-	print( recvValue.m_a_heroid.." vs "..recvValue.m_d_heroid  )
+	local uiLog = GameObject.Instantiate( m_uiUIP_Log )
+	uiLog.transform:SetParent( m_uiContent.transform );
+	uiLog.transform.localScale = Vector3.one;
+	SetTrue( uiLog )
+	BloodyBattleDlgSetLogText( uiLog, recvValue, 0 );
+end
+
+-- 关闭PK界面
+function BloodyBattleDlgClosePKLog()
+	SetFalse( m_uiPKLayer );
+	m_LastSelectOp = 0;
+	clearChild( m_uiContent );
+end
+
+-- 开启帮助
+function BloodyBattleDlgOpenHelpLayer()
+	SetTrue( m_uiHelpLayer )
+	SetFalse( m_uiEnterBtn )
+end
+
+-- 关闭帮助
+function BloodyBattleDlgCloseHelpLayer()
+	SetFalse( m_uiHelpLayer )
+	SetTrue( m_uiEnterBtn )
+end
+
+-- 点击洛阳城
+function BloodyBattleDlgTownClick( recvValue )
+	if m_activityinfo == nil then
+		MapTownExDlgShow( recvValue )
+		return
+	end
+	
+	if m_activityinfo.m_state == 1 then
+		BloodyBattleDlgShow()
+	else
+		MapTownExDlgShow( recvValue )
+	end
 end

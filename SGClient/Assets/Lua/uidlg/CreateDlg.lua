@@ -83,9 +83,9 @@ end
 -- 自定
 ----------------------------------------
 function CreateDlgShow( nation_award )
-	CreateDlgOpen()
-	m_nation_award = nation_award
-	CreateDlgSelect(nation_award)
+	CreateDlgOpen();
+	m_nation_award = nation_award;
+	CreateDlgSelect(nation_award);
 end
 
 function CreateDlgSelect( nation )	
@@ -95,21 +95,25 @@ function CreateDlgSelect( nation )
 	m_uiWuTalkPanel:SetActive( false );
 	if nation == 1 then
 		m_uiWeiTalkPanel:SetActive( true );
+		CreateDlgSetAward(m_uiWeiTalkPanel,nation);
 	elseif nation == 2 then
 		m_uiShuTalkPanel:SetActive( true );
+		CreateDlgSetAward(m_uiShuTalkPanel,nation);
 	elseif nation == 3 then
 		m_uiWuTalkPanel:SetActive( true );
+		CreateDlgSetAward(m_uiWuTalkPanel,nation);
+	end
+end
+function CreateDlgSetAward( gameObj,nation )
+	local uiAward=gameObj.transform:Find("SelectNation");
+	if nation == m_nation_award then
+		SetTrue( uiAward );
+		SetText( uiAward.transform:Find("Num"),F(548,global.nation_award_token));
+	else
+		SetFalse( uiAward );
 	end
 	
-	if nation == m_nation_award then
-		SetTrue( m_uiAward )
-		SetText( m_uiAward.transform:Find("Num"),F(548,global.nation_award_token))
-	else
-		SetFalse( m_uiAward )
-	end
-
-end
-
+end	
 function CreateDlgCreate()
 	if m_SelectNation <= 0 then
 		return;

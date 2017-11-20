@@ -1985,6 +1985,7 @@ int struct_NetS_KingWarRankList_send( char **pptr, int *psize, SLK_NetS_KingWarR
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypoint, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_totalkill, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myrank, (*psize) );
 	return 0;
 }
 

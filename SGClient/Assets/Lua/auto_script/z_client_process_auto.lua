@@ -1506,9 +1506,10 @@ function proc_kingwarnotifylist_C( recvValue )
 	end
 end
 
--- m_count=0,m_list={m_rank=0,m_kill=0,m_nation=0,m_name_len=0,m_name="[m_name_len]",m_herokind=0,m_herocolor=0,[m_count]},m_mypoint=0,m_totalkill=0,
+-- m_count=0,m_list={m_rank=0,m_kill=0,m_nation=0,m_name_len=0,m_name="[m_name_len]",m_herokind=0,m_herocolor=0,[m_count]},m_mypoint=0,m_totalkill=0,m_myrank=0
 function proc_kingwarranklist_C( recvValue )
 	-- process.
+	KingWarRankDlgRecvValue( recvValue )
 end
 
 -- m_herokind=0,m_hp=0,m_id=0,

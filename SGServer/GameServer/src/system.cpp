@@ -245,7 +245,7 @@ void weather_logic()
 		if ( g_game_day >= g_weather_maxnum )
 			g_game_day = 1;
 
-		weather_change( g_weather[g_game_day].config[0].nextday, rand() % 3 );
+		weather_change( (char)g_weather[g_game_day].config[0].nextday, rand() % 3 );
 	}
 }
 // 变化天气

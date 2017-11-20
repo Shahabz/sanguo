@@ -65,6 +65,8 @@ extern int g_map_town_maxcount;
 extern KingWarConfig *g_kingwar_config;
 extern int g_kingwar_config_maxnum;
 
+extern char g_test_mod;
+
 KingwarTown *g_kingwar_town = NULL;
 int g_kingwar_town_maxcount = 0;
 
@@ -74,7 +76,7 @@ int g_kingwar_activity_endstamp = 0; // 活动结束时间戳
 int g_kingwar_activity_duration = 0; // 活动持续时间
 char g_kingwar_activity_open = 0; // 活动是否开启中
 char g_kingwar_town_update = 0;
-SLK_NetS_KingWarRank g_kingwar_rank[KINGWAR_RANK_MAX] = { 0 };
+KingWarRank g_kingwar_rank[KINGWAR_RANK_MAX] = { 0 };
 
 // 读档完毕的回调
 int kingwar_town_loadcb( int id )
@@ -402,7 +404,10 @@ int kingwar_town_change_nation( int id, int nation, int attack_army_index )
 
 void kingwar_town_fight( int id )
 {
-	return;
+	if ( g_test_mod == 1 )
+	{
+		return;
+	}
 	if ( id <= 0 || id >= g_kingwar_town_maxcount )
 		return;
 	int attack_army_index = -1;
@@ -530,7 +535,7 @@ int kingwar_activity_save( FILE *fp )
 {
 	char szSQL[1024];
 	char bigint[21];
-	sprintf( szSQL, "replace into kingwar_activity ( open,beginstamp,endstamp,duration,lost_totalhp ) values('%d','%d','%d','%d','%d');",
+	sprintf( szSQL, "replace into kingwar_activity ( id,open,beginstamp,endstamp,duration,lost_totalhp ) values('1','%d','%d','%d','%d','%d');",
 		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp );
 	if ( fp )
 	{
@@ -813,12 +818,63 @@ int kingwar_ranklist( int actor_index )
 	pValue.m_totalkill = pCity->kw_totalkill;
 	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
 	{
-		if ( g_kingwar_rank[tmpi].m_rank <= 0 )
+		if ( g_kingwar_rank[tmpi].actorid <= 0 )
 			break;
-		memcpy( &pValue.m_list[tmpi], &g_kingwar_rank[tmpi], sizeof( SLK_NetS_KingWarRank ) );
+		if ( g_kingwar_rank[tmpi].actorid == pCity->actorid )
+		{
+			pValue.m_myrank = tmpi + 1;
+		}
+		memcpy( &pValue.m_list[tmpi], &g_kingwar_rank[tmpi].info, sizeof( SLK_NetS_KingWarRank ) );
+		pValue.m_list[tmpi].m_rank = tmpi + 1;
 		pValue.m_count += 1;
 	}
 	netsend_kingwarranklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 排行榜计算
+int kingwar_rankcalc( int army_index )
+{
+	City *pArmyCity = army_getcityptr( army_index );
+	if ( !pArmyCity )
+		return -1;
+
+	// 检查排行榜里是否有我的武将，如果有那么和这个存在武将比较，如果比这个存在武将多，那删除，然后进行插入排序
+	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
+	{
+		if ( g_kingwar_rank[tmpi].actorid == pArmyCity->actorid )
+		{
+			if ( g_army[army_index].damage > g_kingwar_rank[tmpi].info.m_kill )
+			{
+				if ( tmpi < KINGWAR_RANK_MAX - 1 )
+				{
+					memmove( &g_kingwar_rank[tmpi], &g_kingwar_rank[tmpi + 1], sizeof( KingWarRank ) * (KINGWAR_RANK_MAX - 1 - tmpi) );
+				}
+				memset( &g_kingwar_rank[KINGWAR_RANK_MAX - 1], 0, sizeof( KingWarRank ) );
+			}
+		}
+	}
+
+	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
+	{
+		if ( g_army[army_index].damage > g_kingwar_rank[tmpi].info.m_kill )
+		{
+			if ( tmpi < KINGWAR_RANK_MAX - 1 )
+			{
+				memmove( &g_kingwar_rank[tmpi+1], &g_kingwar_rank[tmpi], sizeof( KingWarRank ) * (KINGWAR_RANK_MAX - 1 - tmpi) );
+			}
+
+			g_kingwar_rank[tmpi].actorid = pArmyCity->actorid;
+			g_kingwar_rank[tmpi].city_index = pArmyCity->index;
+			g_kingwar_rank[tmpi].info.m_kill = g_army[army_index].damage;
+			g_kingwar_rank[tmpi].info.m_herokind = g_army[army_index].herokind[0];
+			g_kingwar_rank[tmpi].info.m_herocolor = hero_getcolor( pArmyCity, g_army[army_index].herokind[0] );
+			g_kingwar_rank[tmpi].info.m_nation = pArmyCity->nation;
+			strncpy( g_kingwar_rank[tmpi].info.m_name, pArmyCity->name, NAME_SIZE );
+			g_kingwar_rank[tmpi].info.m_name_len = strlen( g_kingwar_rank[tmpi].info.m_name );
+			break;
+		}
+	}
 	return 0;
 }
 
@@ -1113,7 +1169,7 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 	SLK_NetS_KingWarNotifyList pValue = { 0 };
 	for ( int tmpi = 0; tmpi < KINGWAR_TOWN_QUEUE_MAX; tmpi++ )
 	{
-		int target_army_index = kingwar_town_queueget( id, attack );
+		int target_army_index = kingwar_town_queueget( id, target );
 		if ( target_army_index < 0 || target_army_index >= g_army_maxcount )
 		{ // 没有了对手了
 			break;
@@ -1161,6 +1217,8 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 			strncpy( pValue.m_list[pValue.m_count].m_d_name, pDCity->name, NAME_SIZE );
 			pValue.m_list[pValue.m_count].m_d_name_len = strlen( pValue.m_list[pValue.m_count].m_d_name );
 		}
+		pValue.m_count += 1;
+
 		if ( pValue.m_count >= 10 )
 		{
 			netsend_kingwarnotifylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -1181,11 +1239,11 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 		{ // 失败
 			kingwar_town_totalcalc( id, target );
 			// 删除一个攻击方队列
-			kingwar_town_queuedel( id, attack, target_army_index );
-			g_army[target_army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
-			g_army[target_army_index].statetime = 0;
-			g_army[target_army_index].stateduration = global.kingwar_dead_cd;
-			city_battlequeue_sendupdate( target_army_index );
+			kingwar_town_queuedel( id, attack, army_index );
+			g_army[army_index].state = ARMY_STATE_KINGWAR_WAITSOS;
+			g_army[army_index].statetime = 0;
+			g_army[army_index].stateduration = global.kingwar_dead_cd;
+			city_battlequeue_sendupdate( army_index );
 			break;
 		}
 	}
@@ -1204,6 +1262,13 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 	//		kingwar_town_change_nation( id, army_getnation( army_index ), army_index );
 	//	}
 	//}
+
+	// 防御方没人了，变成攻击方的
+	if ( kingwar_town_queueget( id, KINGWAR_TOWN_DEFENSE ) < 0 )
+	{
+		kingwar_town_change_nation( id, army_getnation( army_index ), army_index );
+	}
+
 	g_kingwar_town_update = 1;
 	return 0;
 }

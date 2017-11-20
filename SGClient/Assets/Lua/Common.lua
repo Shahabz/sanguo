@@ -290,6 +290,10 @@ function string.utf8len(input)
     return cnt
 end
 
+-- 超过指定字符数转换...
+function string.omit( input, len )
+end
+
 --[[ 检查并尝试转换为数值，如果无法转换则返回 0-- ]]
 function checknumber(value, base)
     return tonumber(value, base) or 0
@@ -324,12 +328,14 @@ function knum( num )
     if type(num) ~= "number" then
         return num;
     end
-	if num >= 1000000 then
+	if num >= 10000000 then
 		num = num / 1000000;
-		return string.format( "%.1f", num ) .. "M";
-	elseif num >= 1000 then
+		--return string.format( "%.1f", num ) .. "M";
+		return math.floor( num ) .. "M";
+	elseif num >= 10000 then
 		num = num / 1000;
-		return string.format( "%.1f", num ) .. "K";
+		return math.floor( num ) .. "K";
+		--return string.format( "%.1f", num ) .. "K";
 	end
 	return num
 end

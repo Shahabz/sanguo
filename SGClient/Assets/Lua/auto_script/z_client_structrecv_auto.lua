@@ -1758,6 +1758,7 @@ function struct_NetS_KingWarRankList_recv( buffer )
 	end
 	recvValue.m_mypoint = buffer:ReadInt();
 	recvValue.m_totalkill = buffer:ReadInt();
+	recvValue.m_myrank = buffer:ReadSByte();
 	return recvValue;
 end
 

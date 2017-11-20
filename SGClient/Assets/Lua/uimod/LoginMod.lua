@@ -267,7 +267,7 @@ function LoginModOpenServerList()
 	m_uiRegEnter.gameObject:SetActive( false );
 	m_uiServerInfo.gameObject:SetActive( false );
 	m_uiServerList.gameObject:SetActive( true );
-	m_uiButtonList.gameObject:SetActive( false );
+	--m_uiButtonList.gameObject:SetActive( false );
 	
 	
 	-- 常用服务器
@@ -729,7 +729,7 @@ function LoginModCloseServerList()
 	m_uiFastEnter.gameObject:SetActive( true );
 	m_uiRegEnter.gameObject:SetActive( true );
 	m_uiServerList.gameObject:SetActive( false );
-	m_uiButtonList.gameObject:SetActive( true );
+	--m_uiButtonList.gameObject:SetActive( true );
 	for index, obj in pairs(m_objectPoolServer ) do
 		if obj.gameObject~=nil then
 			obj.gameObject:SetActive( false );
