@@ -564,6 +564,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 血战排行榜
 			kingwar_ranklist( actor_index );
 		}
+		else if ( pvalue[0] == 11 )
+		{ // 获取血战积分
+			kingwar_sendpoint( actor_index );
+		}
+		else if ( pvalue[0] == 12 )
+		{ // 皇城密库兑换
+			kingwar_changeitem( actor_index, pvalue[1], pvalue[2] );
+		}
 		break;
 	case ASKINFO_MSGBOX_CALLBACK:
 		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );

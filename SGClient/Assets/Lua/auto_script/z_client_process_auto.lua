@@ -1518,3 +1518,9 @@ function proc_kingwarpk_C( recvValue )
 	BloodyBattleDlgShowPKLayer( recvValue )
 end
 
+-- m_point=0,
+function proc_kingwarpoint_C( recvValue )
+	-- process.
+	KingWarChangeDlgRecv( recvValue )
+end
+

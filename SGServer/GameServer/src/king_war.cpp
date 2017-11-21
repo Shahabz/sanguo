@@ -512,6 +512,8 @@ int kingwar_activity_load()
 	MYSQL_RES		*res;
 	MYSQL_ROW		row;
 	char	szSQL[1024];
+
+	// ∂¡»°¥Êµµ
 	sprintf( szSQL, "select open, beginstamp, endstamp, duration, lost_totalhp from kingwar_activity;" );
 	if ( mysql_query( myGame, szSQL ) )
 	{
@@ -529,6 +531,37 @@ int kingwar_activity_load()
 		g_kingwar_lost_totalhp = atoi( row[4] );
 	}
 	mysql_free_result( res );
+
+	// ∂¡»°≈≈––∞Ò¥Êµµ
+	sprintf( szSQL, "select `rank`, `actorid`, `herokind`, `kill` from kingwar_rank;" );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int rank = atoi( row[0] ) - 1;
+		if ( rank < 0 || rank >= KINGWAR_RANK_MAX )
+			continue;
+		g_kingwar_rank[rank].actorid = atoi( row[1] );
+		g_kingwar_rank[rank].info.m_herokind = atoi( row[2] );
+		g_kingwar_rank[rank].info.m_kill = atoi( row[3] );
+
+		City *pCity = city_getptr_withactorid( g_kingwar_rank[rank].actorid );
+		if ( pCity )
+		{
+			g_kingwar_rank[rank].city_index = pCity->index;
+			g_kingwar_rank[rank].info.m_herocolor = hero_getcolor( pCity, g_kingwar_rank[rank].info.m_herokind );
+			g_kingwar_rank[rank].info.m_nation = pCity->nation;
+			strncpy( g_kingwar_rank[rank].info.m_name, pCity->name, NAME_SIZE );
+			g_kingwar_rank[rank].info.m_name_len = strlen( g_kingwar_rank[rank].info.m_name );
+		}
+
+	}
+	mysql_free_result( res );
 	return 0;
 }
 int kingwar_activity_save( FILE *fp )
@@ -539,7 +572,7 @@ int kingwar_activity_save( FILE *fp )
 		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp );
 	if ( fp )
 	{
-		fprintf( fp, "%s;\n", szSQL );
+		fprintf( fp, "%s\n", szSQL );
 	}
 	else if ( mysql_query( myGame, szSQL ) )
 	{
@@ -548,6 +581,24 @@ int kingwar_activity_save( FILE *fp )
 		if ( mysql_ping( myGame ) != 0 )
 			db_reconnect_game();
 		return -1;
+	}
+
+	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
+	{
+		sprintf( szSQL, "replace into kingwar_rank ( `rank`,`actorid`,`herokind`,`kill` ) values('%d','%d','%d','%d');",
+			tmpi + 1, g_kingwar_rank[tmpi].actorid, g_kingwar_rank[tmpi].info.m_herokind, g_kingwar_rank[tmpi].info.m_kill );
+		if ( fp )
+		{
+			fprintf( fp, "%s\n", szSQL );
+		}
+		else if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+			if ( mysql_ping( myGame ) != 0 )
+				db_reconnect_game();
+			continue;
+		}
 	}
 	return 0;
 }
@@ -629,6 +680,13 @@ int kingwar_activity_onopen()
 			continue;
 		g_city[city_index].kw_totalkill = 0;
 	}
+	// ≈≈––∞Ò≥ı ºªØ
+	memset( g_kingwar_rank, 0, sizeof( KingWarRank )*KINGWAR_RANK_MAX );
+	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
+	{
+		g_kingwar_rank[tmpi].city_index = -1;
+	}
+
 	kingwar_activity_sendinfo( -1 );
 	system_talkjson_world( 6008, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
 	return 0;
@@ -1332,5 +1390,35 @@ int kingwar_army_rebirth( int actor_index, int army_index )
 	actor_change_token( actor_index, -costtoken, PATH_KINGWAR_REBIRTH, 0 );
 	city_battlequeue_sendupdate( army_index );
 	g_kingwar_town_update = 1;
+	return 0;
+}
+
+// ∑¢ÀÕ—™’Ωª˝∑÷
+int kingwar_sendpoint( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_KingWarPoint pValue;
+	pValue.m_point = pCity->kw_point;
+	netsend_kingwarpoint_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// ª ≥«√‹ø‚∂“ªª
+int kingwar_changeitem( int actor_index, int index, int itemkind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( index < 0 || index >= g_kingwar_config_maxnum )
+		return -1;
+	if ( g_kingwar_config[index].exchange_item != itemkind )
+		return -1;
+	if ( pCity->kw_point < g_kingwar_config[index].exchange_point )
+		return -1;
+	item_getitem( actor_index, itemkind, 1, -1, PATH_KINGWAR_CHANGE );
+	city_kingwarpoint( pCity->index, -g_kingwar_config[index].exchange_point, PATH_KINGWAR_CHANGE );
+	kingwar_sendpoint( actor_index );
 	return 0;
 }

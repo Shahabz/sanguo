@@ -53,4 +53,8 @@ int kingwar_army_sneak( int actor_index, int army_index, int id );
 int kingwar_army_defense( int actor_index, int army_index, int id );
 int kingwar_army_pk( int actor_index, int army_index, int id );
 int kingwar_army_rebirth( int actor_index, int army_index );
+
+int kingwar_sendpoint( int actor_index );
+int kingwar_changeitem( int actor_index, int index, int itemkind );
+
 #endif

@@ -13,6 +13,8 @@ local m_uiCongratulateButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function TreasureAwardDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_3" )
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_4" )
 	m_Dlg = eye.uiManager:Open( "TreasureAwardDlg" );
 end
 
@@ -28,6 +30,8 @@ end
 -- 删除界面
 function TreasureAwardDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_3" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_4" )
 	m_Dlg = nil;
 end
 

@@ -395,6 +395,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			worldboss_gm( pValue[0], pValue[1] );
 		}
 		break;
+	case GMC_KWPOINT: // ÑªÕ½»ý·Ö
+		if ( pCity )
+		{
+			city_kingwarpoint( pCity->index, pValue[0], PATH_GM );
+		}
+		break;
 	default:
 		break;
 	}

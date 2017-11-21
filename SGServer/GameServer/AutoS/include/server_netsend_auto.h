@@ -137,6 +137,7 @@ int netsend_kingwarnotify_S( int actor_index, char send_type, SLK_NetS_KingWarNo
 int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingWarNotifyList *pValue );
 int netsend_kingwarranklist_S( int actor_index, char send_type, SLK_NetS_KingWarRankList *pValue );
 int netsend_kingwarpk_S( int actor_index, char send_type, SLK_NetS_KingWarPK *pValue );
+int netsend_kingwarpoint_S( int actor_index, char send_type, SLK_NetS_KingWarPoint *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

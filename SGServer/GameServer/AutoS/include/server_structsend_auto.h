@@ -1369,6 +1369,11 @@ struct _slk_NetS_KingWarPK {
 };
 typedef struct _slk_NetS_KingWarPK SLK_NetS_KingWarPK;	//血战PK
 
+struct _slk_NetS_KingWarPoint {
+	int m_point;	//血战积分
+};
+typedef struct _slk_NetS_KingWarPoint SLK_NetS_KingWarPoint;	//血战积分
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1519,5 +1524,6 @@ int struct_NetS_KingWarNotifyList_send( char **pptr, int *psize, SLK_NetS_KingWa
 int struct_NetS_KingWarRank_send( char **pptr, int *psize, SLK_NetS_KingWarRank *pValue );
 int struct_NetS_KingWarRankList_send( char **pptr, int *psize, SLK_NetS_KingWarRankList *pValue );
 int struct_NetS_KingWarPK_send( char **pptr, int *psize, SLK_NetS_KingWarPK *pValue );
+int struct_NetS_KingWarPoint_send( char **pptr, int *psize, SLK_NetS_KingWarPoint *pValue );
 
 #endif

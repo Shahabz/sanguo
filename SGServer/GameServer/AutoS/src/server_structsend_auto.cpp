@@ -1999,3 +1999,11 @@ int struct_NetS_KingWarPK_send( char **pptr, int *psize, SLK_NetS_KingWarPK *pVa
 	return 0;
 }
 
+int struct_NetS_KingWarPoint_send( char **pptr, int *psize, SLK_NetS_KingWarPoint *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_point, (*psize) );
+	return 0;
+}
+

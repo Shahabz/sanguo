@@ -1143,7 +1143,6 @@ int city_kingwarpoint( int city_index, int value, short path )
 		g_city[city_index].kw_point += value;
 	if ( g_city[city_index].kw_point < 0 )
 		g_city[city_index].kw_point = 0;
-	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	return 0;
 }
 // 保护时间

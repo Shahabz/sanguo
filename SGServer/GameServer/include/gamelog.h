@@ -24,6 +24,7 @@
 #define LOGOP_BARRACKS			18	// 兵营操作
 #define LOGOP_FORGING			19	// 打造
 #define LOGOP_HEROUPGRADE		20	// 英雄升级
+#define LOGOP_KWPOINT			21	// 血战积分
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -85,6 +86,7 @@
 #define PATH_KINGWAR_PK					57	// 血战活动-单挑
 #define PATH_KINGWAR_DEFENSE			58	// 血战活动-回防
 #define PATH_KINGWAR_REBIRTH			59	// 血战活动-复活
+#define PATH_KINGWAR_CHANGE				60	// 血战积分兑换
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

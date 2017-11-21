@@ -64,6 +64,10 @@ function MapTownExDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 开发
 		elseif nControlID == 2 then
 			MapTownExDlgDev()
+		
+		-- 皇城密库
+		elseif nControlID == 3 then
+			KingWarChangeDlgShow();
 			
 		-- 改名
 		elseif nControlID == 10 then	

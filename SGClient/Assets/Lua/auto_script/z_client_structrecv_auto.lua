@@ -1770,3 +1770,9 @@ function struct_NetS_KingWarPK_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_KingWarPoint_recv( buffer )
+	local recvValue = {};
+	recvValue.m_point = buffer:ReadInt();
+	return recvValue;
+end
+
