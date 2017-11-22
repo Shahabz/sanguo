@@ -165,6 +165,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			sprintf( v1, "%d", global.kingwar_token_sneak );
 			actor_notify_msgbox_v( actor_index, MSGBOX_CALLBACK_KINGWAR_SNEAK, 1, 2, 1411, v1, NULL );
 		}
+		else if ( pValue[0] == 7 )
+		{
+			worldquest_setvalue( pValue[1], 1 );
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );

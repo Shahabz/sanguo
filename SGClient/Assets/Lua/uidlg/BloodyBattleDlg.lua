@@ -40,7 +40,7 @@ local m_HeroRecvValue = nil;
 local m_ChatRecvValue = nil;
 -- 打开界面
 function BloodyBattleDlgOpen()
-	ResourceManager.LoadAssetBundle( "ui_static_pic_1" )
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_1" )
 	m_Dlg = eye.uiManager:Open( "BloodyBattleDlg" );
 end
 
@@ -57,7 +57,7 @@ end
 -- 删除界面
 function BloodyBattleDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "ui_static_pic_1" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_1" )
 	m_Dlg = nil;
 end
 

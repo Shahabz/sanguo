@@ -3,10 +3,10 @@ local m_Dlg = nil;
 
 -- 打开界面
 function CabinetDlgOpen()
-	ResourceManager.LoadAssetBundle( "ui_static_cabinet1" );
-	ResourceManager.LoadAssetBundle( "ui_static_cabinet2" );
-	ResourceManager.LoadAssetBundle( "ui_static_cabinet3" );
-	ResourceManager.LoadAssetBundle( "ui_static_cabinetback" );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet1" );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet2" );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet3" );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinetback" );
 	m_Dlg = eye.uiManager:Open( "CabinetDlg" );
 end
 
@@ -22,10 +22,10 @@ end
 -- 删除界面
 function CabinetDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "ui_static_cabinet1" )
-	ResourceManager.UnloadAssetBundle( "ui_static_cabinet2" )
-	ResourceManager.UnloadAssetBundle( "ui_static_cabinet3" )
-	ResourceManager.UnloadAssetBundle( "ui_static_cabinetback" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet1" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet2" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet3" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinetback" )
 	m_Dlg = nil;
 end
 
