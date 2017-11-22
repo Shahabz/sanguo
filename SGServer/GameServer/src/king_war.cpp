@@ -1748,7 +1748,7 @@ int kingwar_treasure_do( int actor_index, short posx, short posy )
 				g_treasure_nationitem_count[nation] -= 1;
 				kingwar_congratulate_add( pCity, itemkind );
 				item_getitem( actor_index, itemkind, 1, -1, PATH_KINGWAR_TREASURE );
-				//pCity->kw_has = 1;
+				pCity->kw_has = 1;
 				kingwar_treasure_sendinfo( -1 );
 
 				// 6011	{0}在神将{1}的指引下，扛着洛阳铲前去挖宝，挖出了<color={2}>{3}</color>
