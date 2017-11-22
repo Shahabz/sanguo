@@ -69,6 +69,9 @@ int map_getrandcitypos( short *pPosx, short *pPosy );
 // 判定这个地点是否能迁城
 int map_canmove( short posX, short posY );
 
+// 跳转坐标
+int map_goto_withpos( int actor_index, char op, short posx, short posy );
+
 // dump地图数据
 void map_tile_dump();
 #endif

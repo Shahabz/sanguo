@@ -152,6 +152,6 @@ int army_mail_gather( int army_index )
 	sprintf( content, "{\"reback\":%d, \"pos\":\"%d,%d\",\"time\":%d,\"res\":%d,\"num\":%d,\"buff\":%d,\"hkind\":%d,\"hlv\":%d,\"hexp\":%d}", 
 		g_army[army_index].reback, g_army[army_index].to_posx, g_army[army_index].to_posy, g_army[army_index].statetime, restype, resnum, g_army[army_index].gatherbuff, pHero->kind, pHero->level, exp );
 
-	mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_GATHER, title, content, "", 0 );
+	mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_GATHER, title, content, "", 0, 0 );
 	return 0;
 }

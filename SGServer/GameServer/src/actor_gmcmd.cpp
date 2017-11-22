@@ -30,6 +30,7 @@
 #include "world_quest.h"
 #include "world_boss.h"
 #include "actor_times.h"
+#include "king_war.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -126,17 +127,25 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			{
 				time_t t;
 				time( &t );
-				t += 120;
+				t += 60;
 				struct tm *nowtime = localtime( &t );
 				global.kingwar_activity_week = nowtime->tm_wday;
 				global.kingwar_activity_hour = nowtime->tm_hour;
 				global.kingwar_activity_minute = nowtime->tm_min;
+				kingwar_activity_sendinfo( -1 );
 			}
 			else if( pValue[1] == -1 )
 			{
 				extern int g_kingwar_activity_endstamp; // 活动结束时间戳
-				g_kingwar_activity_endstamp = (int)time( NULL ) + 60;
+				g_kingwar_activity_endstamp = (int)time( NULL ) + 30;
+				kingwar_activity_sendinfo( -1 );
 			}	
+			else if ( pValue[1] == -2 )
+			{
+				extern int g_kingwar_treasure_endstamp; // 挖宝结束时间戳
+				g_kingwar_treasure_endstamp = (int)time( NULL ) + 30;
+				kingwar_treasure_sendinfo( -1 );
+			}
 		}
 		else if ( pValue[0] == 5 )
 		{
@@ -320,7 +329,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 
 			char attach[256] = { 0 };
 			sprintf( attach, "3,1@5001,1000@5002,2000@50010,10000" );
-			mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+			mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 0 );
 		}
 		break;
 	case GMC_SYSTALK:// 系统喊话

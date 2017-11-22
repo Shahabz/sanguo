@@ -71,12 +71,19 @@ KingwarTown *g_kingwar_town = NULL;
 int g_kingwar_town_maxcount = 0;
 
 int g_kingwar_lost_totalhp = 0; // 总损失兵力
+char g_kingwar_level = 1;
 int g_kingwar_activity_beginstamp = 0; // 活动开始时间戳
 int g_kingwar_activity_endstamp = 0; // 活动结束时间戳
 int g_kingwar_activity_duration = 0; // 活动持续时间
 char g_kingwar_activity_open = 0; // 活动是否开启中
+char g_kingwar_treasure_open = 0; // 挖宝活动开启中
+int g_kingwar_treasure_endstamp = 0; // 挖宝结束时间戳
+int g_kingwar_nextstamp = 0; // 下次开启的时间戳，固定7天以后
 char g_kingwar_town_update = 0;
-KingWarRank g_kingwar_rank[KINGWAR_RANK_MAX] = { 0 };
+KingWarRank g_kingwar_rank[KINGWAR_RANK_MAX] = { 0 }; // 排行榜
+short g_treasure_nationitem[3][KINGWAR_TREASURE_MAX] = { 0 }; // 宝图道具
+char g_treasure_nationitem_count[3] = { 0 }; // 剩余数量
+SLK_NetS_TreasureActor g_treasure_actor[3][KINGWAR_TREASURE_MAX] = { 0 };
 
 // 读档完毕的回调
 int kingwar_town_loadcb( int id )
@@ -514,7 +521,7 @@ int kingwar_activity_load()
 	char	szSQL[1024];
 
 	// 读取存档
-	sprintf( szSQL, "select open, beginstamp, endstamp, duration, lost_totalhp from kingwar_activity;" );
+	sprintf( szSQL, "select open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp from kingwar_activity;" );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -522,13 +529,29 @@ int kingwar_activity_load()
 		return -1;
 	}
 	res = mysql_store_result( myGame );
-	while ( (row = mysql_fetch_row( res )) )
+	if ( (row = mysql_fetch_row( res )) )
 	{
 		g_kingwar_activity_open = atoi( row[0] );
 		g_kingwar_activity_beginstamp = atoi( row[1] );
 		g_kingwar_activity_endstamp = atoi( row[2] );
 		g_kingwar_activity_duration = atoi( row[3] );
 		g_kingwar_lost_totalhp = atoi( row[4] );
+		g_kingwar_level = atoi( row[5] );
+		g_kingwar_treasure_open = atoi( row[6] );
+		g_kingwar_treasure_endstamp = atoi( row[7] );
+		memcpy( g_treasure_nationitem[0], row[8], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		memcpy( g_treasure_nationitem[1], row[9], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		memcpy( g_treasure_nationitem[2], row[10], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		for ( int nation = 0; nation < 3; nation++ )
+		{
+			for ( int tmpi = 0; tmpi < KINGWAR_TREASURE_MAX; tmpi++ )
+			{
+				if ( g_treasure_nationitem[nation][tmpi] <= 0 )
+					break;
+				g_treasure_nationitem_count[nation] += 1;
+			}
+		}
+		g_kingwar_nextstamp = atoi( row[11] );
 	}
 	mysql_free_result( res );
 
@@ -562,14 +585,45 @@ int kingwar_activity_load()
 
 	}
 	mysql_free_result( res );
+
+	// 读取挖取红图玩家
+	sprintf( szSQL, "select `nation`, `offset`, `itemkind`, `name` from kingwar_treasure;" );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		char nation = atoi( row[0] );
+		if ( nation < 0 || nation > 2 )
+			continue;
+		char offset = atoi( row[1] );
+		if ( offset < 0 || offset >= KINGWAR_TREASURE_MAX )
+			continue;
+		g_treasure_actor[nation][offset].m_itemkind = atoi( row[2] );
+		strncpy( g_treasure_actor[nation][offset].m_name, row[3], NAME_SIZE );
+		g_treasure_actor[nation][offset].m_name_len = strlen( g_treasure_actor[nation][offset].m_name );
+	}
+	mysql_free_result( res );
 	return 0;
 }
 int kingwar_activity_save( FILE *fp )
 {
 	char szSQL[1024];
-	char bigint[21];
-	sprintf( szSQL, "replace into kingwar_activity ( id,open,beginstamp,endstamp,duration,lost_totalhp ) values('1','%d','%d','%d','%d','%d');",
-		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp );
+	char nationitem1[sizeof( short ) * KINGWAR_TREASURE_MAX * 2 + 1] = { 0 };
+	char nationitem2[sizeof( short ) * KINGWAR_TREASURE_MAX * 2 + 1] = { 0 };
+	char nationitem3[sizeof( short ) * KINGWAR_TREASURE_MAX * 2 + 1] = { 0 };
+
+	// 保存活动估计出数据
+	sprintf( szSQL, "replace into kingwar_activity ( id,open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp ) values('1','%d','%d','%d','%d','%d','%d','%d','%d','%s','%s','%s','%d');",
+		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp, g_kingwar_level, g_kingwar_treasure_open, g_kingwar_treasure_endstamp,
+		db_escape( (const char *)g_treasure_nationitem[0], nationitem1, sizeof( short ) * KINGWAR_TREASURE_MAX ),
+		db_escape( (const char *)g_treasure_nationitem[1], nationitem2, sizeof( short ) * KINGWAR_TREASURE_MAX ),
+		db_escape( (const char *)g_treasure_nationitem[2], nationitem3, sizeof( short ) * KINGWAR_TREASURE_MAX ),
+		g_kingwar_nextstamp );
 	if ( fp )
 	{
 		fprintf( fp, "%s\n", szSQL );
@@ -583,6 +637,7 @@ int kingwar_activity_save( FILE *fp )
 		return -1;
 	}
 
+	// 保存排行榜数据
 	for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
 	{
 		sprintf( szSQL, "replace into kingwar_rank ( `rank`,`actorid`,`herokind`,`kill` ) values('%d','%d','%d','%d');",
@@ -600,6 +655,33 @@ int kingwar_activity_save( FILE *fp )
 			continue;
 		}
 	}
+
+	// 保存挖红图数据
+	char szText_newname[NAME_SIZE * 2 + 1] = { 0 };
+	for ( int nation = 0; nation < 3; nation++ )
+	{
+		for ( int offset = 0; offset < KINGWAR_TREASURE_MAX; offset++ )
+		{
+			if ( g_treasure_actor[nation][offset].m_itemkind <= 0 )
+				continue;
+			szText_newname[0] = 0;
+			db_escape( (const char *)g_treasure_actor[nation][offset].m_name, szText_newname, 0 );
+			sprintf( szSQL, "replace into kingwar_treasure ( `nation`, `offset`, `itemkind`, `name` ) values('%d','%d','%d','%s');",
+				nation, offset, g_treasure_actor[nation][offset].m_itemkind, szText_newname );
+			if ( fp )
+			{
+				fprintf( fp, "%s\n", szSQL );
+			}
+			else if ( mysql_query( myGame, szSQL ) )
+			{
+				printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+				write_gamelog( "%s", szSQL );
+				if ( mysql_ping( myGame ) != 0 )
+					db_reconnect_game();
+				continue;
+			}
+		}
+	}
 	return 0;
 }
 
@@ -611,38 +693,44 @@ void kingwar_activity_logic()
 		return;
 	}
 
+	int nowstamp = (int)time( NULL );
 	time_t t;
 	time( &t );
 	struct tm *nowtime = localtime( &t );
-	if ( nowtime->tm_wday != global.kingwar_activity_week )
-		return;
-
-	// 活动开始
-	if ( nowtime->tm_hour == global.kingwar_activity_hour && nowtime->tm_min == global.kingwar_activity_minute && nowtime->tm_sec == 0 )
-	{ 
-		kingwar_activity_onopen();
-		return;
-	}
-
-	// 活动结束
-	int nowstamp = (int)time( NULL );
-	if ( g_kingwar_activity_open == 1 && nowstamp >= g_kingwar_activity_endstamp )
+	if ( nowtime->tm_wday == global.kingwar_activity_week )
 	{
-		kingwar_activity_onclose();
-		return;
-	}
-
-	// 在活动中
-	if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
-	{
-		// 城镇逻辑
-		kingwar_town_logic();
-		// 每秒发送一次
-		if ( g_kingwar_town_update == 1 )
+		// 活动开始
+		if ( nowtime->tm_hour == global.kingwar_activity_hour && nowtime->tm_min == global.kingwar_activity_minute && nowtime->tm_sec == 0 )
 		{
-			kingwar_town_sendall();
-			g_kingwar_town_update = 0;
+			kingwar_activity_onopen();
+			return;
 		}
+
+		// 活动结束
+		if ( g_kingwar_activity_open == 1 && nowstamp >= g_kingwar_activity_endstamp )
+		{
+			kingwar_activity_onclose();
+			return;
+		}
+
+		// 在活动中
+		if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
+		{
+			// 城镇逻辑
+			kingwar_town_logic();
+			// 每秒发送一次
+			if ( g_kingwar_town_update == 1 )
+			{
+				kingwar_town_sendall();
+				g_kingwar_town_update = 0;
+			}
+		}
+	}
+
+	// 检查挖宝活动
+	if ( g_kingwar_treasure_open == 1 && nowstamp >= g_kingwar_treasure_endstamp )
+	{
+		kingwar_treasure_onclose();
 	}
 }
 
@@ -650,10 +738,13 @@ void kingwar_activity_logic()
 int kingwar_activity_onopen()
 {
 	g_kingwar_activity_open = 1;
-	g_kingwar_lost_totalhp = 0; // 总损失兵力
 	g_kingwar_activity_beginstamp = (int)time( NULL ); // 活动刚开始时间戳
 	g_kingwar_activity_endstamp = g_kingwar_activity_beginstamp + global.kingwar_activity_duration; // 活动结束时间戳
 	g_kingwar_activity_duration = global.kingwar_activity_duration; // 活动持续时间
+	g_kingwar_lost_totalhp = 0; // 总损失兵力
+	g_kingwar_treasure_open = 0; // 挖宝活动
+	g_kingwar_nextstamp = g_kingwar_activity_beginstamp + 86400 * 7;
+
 	// 据点初始化
 	for ( int id = 1; id < g_kingwar_town_maxcount; id++ )
 	{
@@ -679,6 +770,11 @@ int kingwar_activity_onopen()
 		if ( g_city[city_index].actorid <= 0 )
 			continue;
 		g_city[city_index].kw_totalkill = 0;
+		g_city[city_index].kw_has = 0;
+		g_city[city_index].kw_px = 0;
+		g_city[city_index].kw_py = 0;
+		g_city[city_index].kw_tn = 0;
+		g_city[city_index].kw_co = 0;
 	}
 	// 排行榜初始化
 	memset( g_kingwar_rank, 0, sizeof( KingWarRank )*KINGWAR_RANK_MAX );
@@ -686,7 +782,16 @@ int kingwar_activity_onopen()
 	{
 		g_kingwar_rank[tmpi].city_index = -1;
 	}
-
+	// 图纸初始化
+	for ( int nation = 0; nation < 3; nation++ )
+	{
+		for ( int tmpi = 0; tmpi < KINGWAR_TREASURE_MAX; tmpi++ )
+		{
+			g_treasure_nationitem[nation][tmpi] = 0;
+		}
+		g_treasure_nationitem_count[nation] = 0;
+		memset( g_treasure_actor[nation], 0, sizeof( SLK_NetS_TreasureActor ) * KINGWAR_TREASURE_MAX );
+	}
 	kingwar_activity_sendinfo( -1 );
 	system_talkjson_world( 6008, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
 	return 0;
@@ -717,6 +822,42 @@ int kingwar_activity_onclose()
 			break;
 		}
 	}
+	g_kingwar_level = level;
+
+	// 挖宝图纸列表
+	for ( int nation = 0; nation < 3; nation++ )
+	{
+		g_treasure_nationitem[nation][0] = g_kingwar_config[1].exchange_item;
+		g_treasure_nationitem[nation][1] = g_kingwar_config[2].exchange_item;
+		g_treasure_nationitem[nation][2] = g_kingwar_config[3].exchange_item;
+		g_treasure_nationitem[nation][3] = g_kingwar_config[4].exchange_item;
+		g_treasure_nationitem[nation][4] = g_kingwar_config[5].exchange_item;
+		g_treasure_nationitem[nation][5] = g_kingwar_config[6].exchange_item;
+		if ( level == 1 )
+		{
+			ruffle_short( &g_treasure_nationitem[nation][0], 6 );
+			g_treasure_nationitem_count[nation] = 6;
+		}
+		if ( level == 2 )
+		{
+			g_treasure_nationitem[nation][6] = g_kingwar_config[1].drawing_other;
+			g_treasure_nationitem[nation][7] = g_kingwar_config[2].drawing_other;
+			g_treasure_nationitem[nation][8] = g_kingwar_config[3].drawing_other;
+			ruffle_short( &g_treasure_nationitem[nation][0], 9 );
+			g_treasure_nationitem_count[nation] = 9;
+		}
+		else if( level > 2 )
+		{
+			g_treasure_nationitem[nation][6] = g_kingwar_config[1].exchange_item;
+			g_treasure_nationitem[nation][7] = g_kingwar_config[2].exchange_item;
+			g_treasure_nationitem[nation][8] = g_kingwar_config[3].exchange_item;
+			g_treasure_nationitem[nation][9] = g_kingwar_config[4].exchange_item;
+			g_treasure_nationitem[nation][10] = g_kingwar_config[5].exchange_item;
+			g_treasure_nationitem[nation][11] = g_kingwar_config[6].exchange_item;
+			ruffle_short( &g_treasure_nationitem[nation][0], 12 );
+			g_treasure_nationitem_count[nation] = 12;
+		}
+	}
 
 	g_map_town[MAPUNIT_KING_TOWNID].nation = g_kingwar_town[7].nation;
 	// 城镇辐射圈归属
@@ -725,10 +866,33 @@ int kingwar_activity_onclose()
 	map_zone_setnation( map_zone_getid( g_towninfo[MAPUNIT_KING_TOWNID].posx, g_towninfo[MAPUNIT_KING_TOWNID].posy ), g_map_town[MAPUNIT_KING_TOWNID].nation );
 	// 地区皇城区域都城和名城更新
 	map_zone_center_townchange( MAPUNIT_KING_TOWNID );
+	// 城镇更新
+	mapunit_update( MAPUNIT_TYPE_TOWN, MAPUNIT_KING_TOWNID, g_map_town[MAPUNIT_KING_TOWNID].unit_index );
 	// {0}在血战皇城中获胜，成功占领了洛阳城
 	char v1[32] = { 0 };
 	sprintf( v1, "%s%d", TAG_NATION, g_map_town[MAPUNIT_KING_TOWNID].nation );
-	system_talkjson_world( 6009, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
+	system_talkjson_world( 6009, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+
+	if ( g_map_town[MAPUNIT_KING_TOWNID].nation > 0 )
+	{
+		// 邮件
+		// 5530	本届Lv.{0}皇城血战圆满结束，[{1}]登顶皇城。战胜国战神{2}携带红色图纸消息而来
+		char v1[32] = { 0 };
+		char v2[32] = { 0 };
+		char v3[32] = { 0 };
+		sprintf( v1, "%d", g_kingwar_level );
+		sprintf( v3, "%s%d", TAG_NATION, g_map_town[MAPUNIT_KING_TOWNID].nation );
+		if ( g_map_town[MAPUNIT_KING_TOWNID].nation == 1 )
+			sprintf( v3, "%s%d", TAG_HERO, 92 );
+		else if ( g_map_town[MAPUNIT_KING_TOWNID].nation == 2 )
+			sprintf( v3, "%s%d", TAG_HERO, 118 );
+		else
+			sprintf( v3, "%s%d", TAG_HERO, 119 );
+		mail_sendall( 5034, 5530, v1, v2, v3, "" );
+
+		// 开启挖宝活动
+		kingwar_treasure_onopen();
+	}
 	return 0;
 }
 
@@ -784,7 +948,7 @@ int kingwar_activity_sendinfo( int actor_index )
 		pValue.m_endstamp = 0;
 	}
 	// 活动中
-	else if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
+	else if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp < g_kingwar_activity_endstamp )
 	{
 		pValue.m_state = 1;
 		pValue.m_beginstamp = g_kingwar_activity_beginstamp;
@@ -794,6 +958,7 @@ int kingwar_activity_sendinfo( int actor_index )
 	{ // 活动结束
 		pValue.m_state = 2;
 	}
+	pValue.m_nation = g_map_town[MAPUNIT_KING_TOWNID].nation;
 
 	if ( actor_index >= 0 && actor_index < g_maxactornum )
 	{
@@ -1420,5 +1585,313 @@ int kingwar_changeitem( int actor_index, int index, int itemkind )
 	item_getitem( actor_index, itemkind, 1, -1, PATH_KINGWAR_CHANGE );
 	city_kingwarpoint( pCity->index, -g_kingwar_config[index].exchange_point, PATH_KINGWAR_CHANGE );
 	kingwar_sendpoint( actor_index );
+	return 0;
+}
+
+// 挖宝开启
+int kingwar_treasure_onopen()
+{
+	g_kingwar_treasure_open = 1;
+
+	// 距离今天零点剩余多少秒
+	time_t t;
+	time( &t );
+	struct tm *nowtime = localtime( &t );
+
+	time_t zero_t;
+	time( &zero_t );
+	struct tm *activitytime = localtime( &zero_t );
+	struct tm ZeroTm = { 0 };
+	ZeroTm.tm_year = nowtime->tm_year;
+	ZeroTm.tm_mon = nowtime->tm_mon;
+	ZeroTm.tm_mday = nowtime->tm_mday;
+	ZeroTm.tm_hour = 23;
+	ZeroTm.tm_min = 59;
+	ZeroTm.tm_sec = 59;
+	int endstamp = (int)mktime( &ZeroTm );
+	g_kingwar_treasure_endstamp = endstamp + 24 * 3600;
+	kingwar_treasure_sendinfo( -1 );
+	return 0;
+}
+
+// 挖宝结束
+int kingwar_treasure_onclose()
+{
+	kingwar_treasure_sendinfo( -1 );
+	g_kingwar_treasure_open = 0;
+
+	// 5531	下一届的皇城血战开启时间{ 0 }，请各国在此期间积极备战，争夺霸主之位。
+	char v1[32] = { 0 };
+	sprintf( v1, "%s%d", TAG_DATE, g_kingwar_nextstamp );
+	mail_sendall( 5035, 5531, v1, NULL, NULL, "" );
+	return 0;
+}
+
+// 挖宝活动发送
+int kingwar_treasure_sendinfo( int actor_index )
+{
+	if ( g_kingwar_treasure_open == 0 )
+		return -1;
+
+	SLK_NetS_TreasureActivity pValue = { 0 };
+	int nowstamp = (int)time( NULL );
+	if ( nowstamp < g_kingwar_treasure_endstamp )
+	{
+		pValue.m_state = 1;
+		pValue.m_endstamp = g_kingwar_treasure_endstamp;
+	}
+	else
+	{ // 活动结束
+		pValue.m_state = 2;
+	}
+	pValue.m_nation = g_map_town[MAPUNIT_KING_TOWNID].nation;
+	if ( g_kingwar_level > 0 && g_kingwar_level < g_kingwar_config_maxnum )
+	{
+		pValue.m_treasure_num_max = g_kingwar_config[g_kingwar_level].drawing_num;
+		for ( int tmpi = 0; tmpi < 3; tmpi++ )
+		{
+			pValue.m_treasure_num[tmpi] = g_treasure_nationitem_count[tmpi];
+		}
+	}
+
+	if ( actor_index >= 0 && actor_index < g_maxactornum )
+	{
+		netsend_treasureactivity_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		kingwar_treasure_cityinfo( actor_index );
+	}
+	else
+	{
+		netsend_treasureactivity_S( 0, SENDTYPE_WORLDMAP, &pValue );
+	}
+	return 0;
+}
+
+int kingwar_treasure_cityinfo( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_TreasureHas pValue;
+	pValue.m_has = pCity->kw_has;
+	pValue.m_px = pCity->kw_px;
+	pValue.m_py = pCity->kw_py;
+	pValue.m_tn = pCity->kw_tn;
+	netsend_treasurehas_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 买酒获得坐标
+int kingwar_treasure_buypos( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation - 1;
+	if ( nation < 0 || nation > 2 )
+		return -1;
+
+	if ( g_treasure_nationitem_count[nation] <= 0 )
+	{
+		kingwar_treasure_sendinfo( actor_index );
+		return -1;
+	}
+	if ( pCity->kw_has > 0 )
+	{
+		return -1;
+	}
+
+	if ( pCity->kw_tn >= 10 )
+		pCity->kw_tn = 9;
+
+	if ( actor_change_token( actor_index, -g_kingwar_config[pCity->kw_tn + 1].treasure_costtoken, PATH_KINGWAR_TREASURE, 0 ) < 0 )
+		return -1;
+
+	short posx = -1, posy = -1;
+	map_zone_randpos( MAPZONE_CENTERID, &posx, &posy );
+	pCity->kw_px = posx;
+	pCity->kw_py = posy;
+	pCity->kw_tn += 1;
+	kingwar_treasure_cityinfo( actor_index );
+	return 0;
+}
+
+// 挖宝
+int kingwar_treasure_do( int actor_index, short posx, short posy )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation - 1;
+	if ( nation < 0 || nation > 2 )
+		return -1;
+
+	if ( posx == pCity->kw_px && posy == pCity->kw_py )
+	{ // 是挖宝点
+		// 检查积分
+		if ( pCity->kw_tn > 10 )
+			pCity->kw_tn = 10;
+		if ( pCity->kw_point < g_kingwar_config[pCity->kw_tn].treasure_costpoint )
+		{
+			actor_notify_alert( actor_index, 1918 );
+			return -1;
+		}
+		city_kingwarpoint( pCity->index, -g_kingwar_config[pCity->kw_tn].treasure_costpoint, PATH_KINGWAR_TREASURE );
+
+		int odds = rand() % 1000;
+		if ( odds <= g_kingwar_config[pCity->kw_tn].treasure_equipodds && g_treasure_nationitem_count[nation] > 0 )
+		{ // 掉落装备图纸
+			short itemkind = g_treasure_nationitem[nation][0];
+			if ( itemkind > 0 )
+			{
+				memmove( &g_treasure_nationitem[nation][0], &g_treasure_nationitem[nation][1], sizeof( short )*(KINGWAR_TREASURE_MAX - 1) );
+				g_treasure_nationitem[nation][KINGWAR_TREASURE_MAX - 1] = 0;
+				g_treasure_nationitem_count[nation] -= 1;
+				kingwar_congratulate_add( pCity, itemkind );
+				item_getitem( actor_index, itemkind, 1, -1, PATH_KINGWAR_TREASURE );
+				//pCity->kw_has = 1;
+				kingwar_treasure_sendinfo( -1 );
+
+				// 6011	{0}在神将{1}的指引下，扛着洛阳铲前去挖宝，挖出了<color={2}>{3}</color>
+				char v1[32] = { 0 };
+				char v2[32] = { 0 };
+				char v3[32] = { 0 };
+				char v4[32] = { 0 };
+				sprintf( v1, "%s", pCity->name );
+				if ( pCity->nation == 1 )
+					sprintf( v2, "%s%d", TAG_HERO, 92 );
+				else if ( pCity->nation == 2 )
+					sprintf( v2, "%s%d", TAG_HERO, 118 );
+				else
+					sprintf( v2, "%s%d", TAG_HERO, 119 );
+				sprintf( v3, "%s%d", TAG_COLOR, item_getcolorlevel( itemkind ) );
+				sprintf( v4, "%s%d", TAG_ITEMKIND, itemkind );
+				system_talkjson_world( 6011, v1, v2, v3, v4, NULL, NULL, 1 );
+
+				// 1998	地表冒着灿烂的金光，您掘地三尺，终于挖到了<color=#{0}>{1}</color>
+				actor_notify_alert_v( actor_index, 1998, v3, v4 );
+
+				// 6012	{0}的红色图纸已全部集齐，国宴已顺利开启，主公前往恭贺会获得一份大礼
+				if ( g_treasure_nationitem_count[nation] <= 0 )
+				{
+					sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+					system_talkjson( 0, SENDTYPE_NATION + pCity->nation, 6012, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+				}
+			}
+		}
+		else
+		{ // 给与安慰奖
+			int awardgroup = g_kingwar_config[pCity->kw_tn].treasure_award;
+			AwardGetInfo getinfo = { 0 };
+			awardgroup_withindex( actor_index, awardgroup, -1, PATH_KINGWAR_TREASURE, &getinfo );
+			// 1997	地表似乎有些新的泥土，您掘地三尺，只挖到了{1}, 再去问问新的坐标吧
+			char v1[64] = { 0 };
+			char award_content[256] = { 0 };
+			awardgroup_makestr( &getinfo, award_content );
+			snprintf( v1, 64, "%s%s", TAG_AWARD, award_content );
+			actor_notify_alert_v( actor_index, 1997, v1, NULL );
+		}
+
+		pCity->kw_px = 0;
+		pCity->kw_py = 0;
+		kingwar_treasure_cityinfo( actor_index );
+	}
+	else
+	{ // 非买酒挖宝点
+		if ( pCity->kw_point < g_kingwar_config[1].treasure_normalpoint )
+		{
+			actor_notify_alert( actor_index, 1918 );
+			return -1;
+		}
+		city_kingwarpoint( pCity->index, -g_kingwar_config[1].treasure_normalpoint, PATH_KINGWAR_TREASURE );
+
+		int awardgroup = g_kingwar_config[1].treasure_normalaward;
+		AwardGetInfo getinfo = { 0 };
+		awardgroup_withindex( actor_index, awardgroup, -1, PATH_KINGWAR_TREASURE, &getinfo );
+		// 1923	地表似乎有些新的泥土，您掘地三尺，只挖到了{1}, 再去问问新的坐标吧
+		char v1[64] = { 0 };
+		char award_content[256] = { 0 };
+		awardgroup_makestr( &getinfo, award_content );
+		snprintf( v1, 64, "%s%s", TAG_AWARD, award_content );
+		actor_notify_alert_v( actor_index, 1997, v1, NULL );
+	}
+	return 0;
+}
+// 前往
+int kingwar_treasure_goto( int actor_index, short posx, short posy )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	map_goto_withpos( actor_index, 1, posx, posy );
+	return 0;
+}
+
+// 添加恭贺列表
+int kingwar_congratulate_add( City *pCity, int itemkind )
+{
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation - 1;
+	if ( nation < 0 || nation > 2 )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < KINGWAR_TREASURE_MAX; tmpi++ )
+	{
+		if ( g_treasure_actor[nation][tmpi].m_itemkind <= 0 )
+		{
+			g_treasure_actor[nation][tmpi].m_itemkind = itemkind;
+			strncpy( g_treasure_actor[nation][tmpi].m_name, pCity->name, NAME_SIZE );
+			g_treasure_actor[nation][tmpi].m_name_len = strlen( g_treasure_actor[nation][tmpi].m_name );
+			break;
+		}
+	}
+	return 0;
+}
+
+// 恭贺列表
+int kingwar_congratulate_sendlist( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation - 1;
+	if ( nation < 0 || nation > 2 )
+		return -1;
+	SLK_NetS_TreasureActorList pValue = { 0 };
+	pValue.m_co = pCity->kw_co;
+	for ( int tmpi = 0; tmpi < KINGWAR_TREASURE_MAX; tmpi++ )
+	{
+		if ( g_treasure_actor[nation][tmpi].m_itemkind <= 0 )
+			continue;
+		memcpy( &pValue.m_list[pValue.m_count], &g_treasure_actor[nation][tmpi], sizeof( SLK_NetS_TreasureActor ) );
+		pValue.m_count += 1;
+	}
+	netsend_treasureactorlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 恭贺
+int kingwar_congratulate( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation - 1;
+	if ( nation < 0 || nation > 2 )
+		return -1;
+	if ( pCity->kw_co > 0 )
+		return -1;
+	pCity->kw_co = 1;
+
+	int awardgroup = g_kingwar_config[1].co_award;
+	AwardGetInfo getinfo = { 0 };
+	awardgroup_withindex( actor_index, awardgroup, -1, PATH_KINGWAR_TREASURE_CO, &getinfo );
+
+	// 1999	恭贺获得{0}
+	char v1[64] = { 0 };
+	char award_content[256] = { 0 };
+	awardgroup_makestr( &getinfo, award_content );
+	snprintf( v1, 64, "%s%s", TAG_AWARD, award_content );
+	actor_notify_alert_v( actor_index, 1999, v1, NULL );
 	return 0;
 }

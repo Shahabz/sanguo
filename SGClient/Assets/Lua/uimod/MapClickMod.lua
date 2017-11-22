@@ -11,6 +11,7 @@ local m_uiMyFightBtn = nil; --UnityEngine.GameObject
 local m_uiTownInfo = nil; --UnityEngine.GameObject
 local m_uiNationInfoBtn = nil; --UnityEngine.GameObject
 local m_uiNationFightBtn = nil; --UnityEngine.GameObject
+local m_uiTreasureBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 local m_towntype = 0;
@@ -52,6 +53,10 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		-- 本城城战(无用)
 		elseif nControlID == 6 then
 		
+		-- 挖宝
+		elseif nControlID == 7 then
+			TreasureDlgDo( WorldMap.m_nLastTouchGameCoorX, WorldMap.m_nLastTouchGameCoorY )
+			
 		-- 城镇信息
 		elseif nControlID == 11 then
 			if m_towntype == MAPUNIT_TYPE_TOWN_TYPE8 then
@@ -90,6 +95,7 @@ function MapClickModOnAwake( gameObject )
 	m_uiTownInfo = objs[8];
 	m_uiNationInfoBtn = objs[9];
 	m_uiNationFightBtn = objs[10];
+	m_uiTreasureBtn = objs[11];
 end
 
 -- 界面初始化时调用
@@ -173,6 +179,10 @@ function MapClickModOpenEmpty( recvValue, gameCoorX, gameCoorY )
 	SetTrue( m_uiEmptyInfo )
 	SetText( m_uiEmptyInfo.transform:Find("Pos"), "["..gameCoorX..","..gameCoorY.."]" )
 	local buttonList = { m_uiMoveCityBtn }
+	-- 挖宝活动中
+	if MapMainDlgActivityTreasureState() == 1 then
+		buttonList = { m_uiMoveCityBtn, m_uiTreasureBtn }
+	end
 	MapClickModButton( buttonList );
 end
 

@@ -1,7 +1,7 @@
 -- 界面
 local m_Dlg = nil;
 local m_uiTitle = nil; --UnityEngine.GameObject
-local m_uiTimeNum = nil; --UnityEngine.GameObject
+local m_uiTimer = nil; --UnityEngine.GameObject
 local m_uiAward1 = nil; --UnityEngine.GameObject
 local m_uiAward2 = nil; --UnityEngine.GameObject
 local m_uiAward3 = nil; --UnityEngine.GameObject
@@ -11,6 +11,8 @@ local m_uiAward6 = nil; --UnityEngine.GameObject
 local m_uiExitButton = nil; --UnityEngine.GameObject
 local m_uiCongratulateButton = nil; --UnityEngine.GameObject
 
+local tableData = {}
+	
 -- 打开界面
 function TreasureAwardDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_3" )
@@ -45,9 +47,12 @@ function TreasureAwardDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             TreasureAwardDlgClose();
 		elseif nControlID == 1 then
-			print"点击恭贺"
-		
+			TreasureAwardDlgCongratulate()
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			TreasureAwardDlgClose()
+		end
 	end
 end
 
@@ -56,7 +61,7 @@ function TreasureAwardDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
 	m_uiTitle = objs[0];
-	m_uiTimeNum = objs[1];
+	m_uiTimer = objs[1];
 	m_uiAward1 = objs[2];
 	m_uiAward2 = objs[3];
 	m_uiAward3 = objs[4];
@@ -98,34 +103,67 @@ end
 ----------------------------------------
 function TreasureAwardDlgShow()
 	TreasureAwardDlgOpen()
-	local playernation = GetPlayer().m_nation
-	print("m_nation"..playernation)
-	SetText(m_uiTitle,F(1682,T(110+playernation)))
-	--倒计时
-	local lasttime = "12:12:12"
-	SetText(m_uiTimeNum,lasttime)
+	SetButtonFalse( m_uiCongratulateButton )
+	
+	-- 标题
+	SetText( m_uiTitle, F( 1682, NationEx( GetPlayer().m_nation ) ) )
+	-- 活动倒计时
+	local leftstamp = MapMainDlgActivityTreasureEndStamp()-GetServerTime();
+	SetTimer( m_uiTimer, leftstamp, leftstamp, 1, T(1680) )
+	
+	-- 获取列表
+	system_askinfo( ASKINFO_KINGWAR, "", 16 );
+	
+	tableData = { 
+	[44]={ uiObj = m_uiAward1, num = 0 }, 
+	[48]={ uiObj = m_uiAward2, num = 0 }, 
+	[52]={ uiObj = m_uiAward3, num = 0 }, 
+	[56]={ uiObj = m_uiAward4, num = 0 }, 
+	[60]={ uiObj = m_uiAward5, num = 0 }, 
+	[64]={ uiObj = m_uiAward6, num = 0 },
+	}
+	
+	-- 道具信息
+	for k, v in pairs( tableData ) do
+		SetImage( v.uiObj.transform:Find("Shape"), ItemSprite( k ) );
+		SetImage( v.uiObj.transform:Find("Color"), ItemColorSprite( item_getcolor(k) ) );
+		SetText( v.uiObj.transform:Find("EquipName"), item_getname(k) );
+		SetText( v.uiObj.transform:Find("Num"),"" );
+	end
+	
+end
 
-	--获得图纸的玩家名称
-	local name={"吴晖","廖一凡","郑佳","张自若","许文浴","司徒星空","神","","妹子五个字","","六个名字玩家",""}
-	SetText(m_uiAward1.transform:Find("Name1"),name[1])
-	SetText(m_uiAward1.transform:Find("Name2"),name[2])
-	SetText(m_uiAward2.transform:Find("Name1"),name[3])
-	SetText(m_uiAward2.transform:Find("Name2"),name[4])
-	SetText(m_uiAward3.transform:Find("Name1"),name[5])
-	SetText(m_uiAward3.transform:Find("Name2"),name[6])
-	SetText(m_uiAward4.transform:Find("Name1"),name[7])
-	SetText(m_uiAward4.transform:Find("Name2"),name[8])
-	SetText(m_uiAward5.transform:Find("Name1"),name[9])
-	SetText(m_uiAward5.transform:Find("Name2"),name[10])
-	SetText(m_uiAward6.transform:Find("Name1"),name[11])
-	SetText(m_uiAward6.transform:Find("Name2"),name[12])
-	--	图纸数量
-	local equipnum={2,2,2,1,1,1}
-	SetText(m_uiAward1.transform:Find("Num"),"x"..equipnum[1])
-	SetText(m_uiAward2.transform:Find("Num"),"x"..equipnum[2])
-	SetText(m_uiAward3.transform:Find("Num"),"x"..equipnum[3])
-	SetText(m_uiAward4.transform:Find("Num"),"x"..equipnum[4])
-	SetText(m_uiAward5.transform:Find("Num"),"x"..equipnum[5])
-	SetText(m_uiAward6.transform:Find("Num"),"x"..equipnum[6])
+-- m_count=0,m_list={m_itemkind=0,m_name_len=0,m_name="[m_name_len]",[m_count]},m_co=0,
+function TreasureAwardDlgRecv( recvValue )
+	
+	if recvValue.m_co == 1 then
+		SetButtonFalse( m_uiCongratulateButton )
+	else
+		SetButtonTrue( m_uiCongratulateButton )
+	end
+	for i=1, recvValue.m_count, 1 do
+		local itemkind = recvValue.m_list[i].m_itemkind;
+		if tableData[itemkind] ~= nil then
+			tableData[itemkind].num = tableData[itemkind].num + 1;
+			if tableData[itemkind].num == 1 then
+				SetText( tableData[itemkind].uiObj.transform:Find("Name1"), recvValue.m_list[i].m_name )
+			elseif tableData[itemkind].num == 2 then
+				SetText( tableData[itemkind].uiObj.transform:Find("Name2"), recvValue.m_list[i].m_name )
+			end
+		end
+	end
+	
+	-- 设置数量
+	for k, v in pairs( tableData ) do
+		if v.num > 0 then
+			SetText( v.uiObj.transform:Find("Num"),"x"..v.num );
+		end
+	end
+	
+end
 
+-- 恭贺
+function TreasureAwardDlgCongratulate()
+	system_askinfo( ASKINFO_KINGWAR, "", 17 );
+	SetButtonFalse( m_uiCongratulateButton )
 end

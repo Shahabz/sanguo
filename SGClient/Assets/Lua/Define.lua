@@ -396,7 +396,7 @@ end
 
 -- 名称颜色
 function NameColorStr( color )
-	local c = { "#f7f3bbff", "#25c9ffff", "#03de27ff", "#ffde00ff", "#e80017ff", "#d95df4ff", "#9b8869ff", "#9b8869ff", "#9b8869ff", "#9b8869ff" }
+	local c = { "f7f3bbff", "25c9ffff", "03de27ff", "ffde00ff", "e80017ff", "d95df4ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff" }
 	return c[color+1]
 end
 

@@ -260,6 +260,10 @@ function TrainDlgSetObject( recvValue, type, index )
 	local uiSecIcon = objs[10];
 	local uiFoodIcon = objs[11];
 	local uiWait = objs[12];
+	local uiBack1 = objs[13];
+	local uiBack2 = objs[14];
+	local uiBack3 = objs[15];
+	local uiBack4 = objs[16];
 	SetTimer( uiTimer, 0, 0, 0 )
 	
 	if type == 1 then -- 正在招募中
@@ -267,6 +271,9 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetTrue( uiTimerProgress )
 		SetTrue( uiTimer )
 		SetTrue( uiQuickBtn )
+		SetTrue( uiBack2 )
+		SetTrue( uiBack3 )
+		SetTrue( uiBack4 )
 		SetFalse( uiSecIcon )
 		SetFalse( uiFoodIcon )
 		SetFalse( uiSec )
@@ -281,6 +288,9 @@ function TrainDlgSetObject( recvValue, type, index )
 		m_uiTimerCache = uiTimer
 	elseif type == 2 then -- 选择招募
 		SetTrue( uiNum )
+		SetTrue( uiBack2 )
+		SetTrue( uiBack3 )
+		SetTrue( uiBack4 )
 		SetFalse( uiTimerProgress )
 		SetFalse( uiTimer )
 		SetFalse( uiQuickBtn )
@@ -302,6 +312,9 @@ function TrainDlgSetObject( recvValue, type, index )
 		m_sliderFood = uiFood;
 		TrainDlgSetSlider( m_slider, maxv )
 	elseif type == 3 then -- 空闲中
+		SetFalse( uiBack2 )
+		SetFalse( uiBack3 )
+		SetFalse( uiBack4 )
 		SetFalse( uiNum )
 		SetFalse( uiTimerProgress )
 		SetFalse( uiTimer )
@@ -313,6 +326,7 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetFalse( uiSlider )
 		SetFalse( uiTrainBtn )
 		SetFalse( uiCancelBtn )
+		SetTrue( uiBack1 )
 		SetTrue( uiIdle )
 		SetText( uiIdle, T(632) )
 		SetFalse( uiWait )
@@ -351,9 +365,9 @@ function TrainDlgSetSlider( slider, maxv )
 	
 	-- 选择数量
 	if space <= 0 then
-		SetText( m_sliderNum, "<color=#e80017>"..m_selectnum.."</color>" );
+		SetText( m_sliderNum, "<color=#e80017>"..T(625)..":"..m_selectnum.."</color>" );
 	else
-		SetText( m_sliderNum, m_selectnum );
+		SetText( m_sliderNum, T(625)..":"..m_selectnum );
 	end
 	-- 需要时间
 	SetText( m_sliderSec, secnum( m_selectsec ) );

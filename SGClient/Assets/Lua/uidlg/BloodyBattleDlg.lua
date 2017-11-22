@@ -625,7 +625,7 @@ function BloodyBattleDlgSetLogText( uilog, recvValue, showpos )
 	
 	losthp = "<color=#e80017>-"..recvValue.m_a_losthp.."</color> ";
 	if recvValue.m_result == 1 then
-		heroname = "<color="..NameColorStr(recvValue.m_a_color)..">"..HeroName(recvValue.m_a_heroid).."["..recvValue.m_a_name.."]</color>";
+		heroname = "<color=#"..NameColorStr(recvValue.m_a_color)..">"..HeroName(recvValue.m_a_heroid).."["..recvValue.m_a_name.."]</color>";
 	else
 		heroname = "<color=#838383FF>"..HeroName(recvValue.m_a_heroid).."["..recvValue.m_a_name.."]</color>";
 	end
@@ -633,7 +633,7 @@ function BloodyBattleDlgSetLogText( uilog, recvValue, showpos )
 	
 	losthp = "<color=#e80017>-"..recvValue.m_d_losthp.."</color>";
 	if recvValue.m_result == 2 then
-		heroname = "<color="..NameColorStr(recvValue.m_d_color)..">["..recvValue.m_d_name.."]"..HeroName(recvValue.m_d_heroid).."</color> "
+		heroname = "<color=#"..NameColorStr(recvValue.m_d_color)..">["..recvValue.m_d_name.."]"..HeroName(recvValue.m_d_heroid).."</color> "
 	else
 		heroname = "<color=#838383FF>["..recvValue.m_d_name.."]"..HeroName(recvValue.m_d_heroid).."</color> "
 	end

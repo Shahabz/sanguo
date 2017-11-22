@@ -3540,7 +3540,7 @@ int city_spy( int actor_index, int unit_index, int type )
 		}
 
 		// 发送给侦察人
-		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0, 0 );
 		if ( hero_success == 1 )
 		{ // 侦察到武将信息
 			g_szSpyMailjson[0] = 0;
@@ -3661,7 +3661,7 @@ int city_spy( int actor_index, int unit_index, int type )
 		// 发给被侦察人
 		sprintf( be_title, "%s%d", TAG_TEXTID, 5013 );
 		snprintf( be_content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pCity->nation, pCity->level, pCity->name, pCity->posx, pCity->posy );
-		mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
+		mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0, 0 );
 
 		// 事件
 		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 1, mailid );
@@ -3671,7 +3671,7 @@ int city_spy( int actor_index, int unit_index, int type )
 	{ // 侦察失败
 		sprintf( title, "%s%d", TAG_TEXTID, 5012 );
 		snprintf( content, MAIL_CONTENT_MAXSIZE, "{\"flag\":0,\"n\":%d,\"lv\":%d,\"na\":\"%s\",\"pos\":\"%d,%d\"}", pTargetCity->nation, pTargetCity->level, pTargetCity->name, pTargetCity->posx, pTargetCity->posy );
-		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0 );
+		i64 mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_CITY_SPY, title, content, "", 0, 0 );
 
 		// 事件
 		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 0, mailid );

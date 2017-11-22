@@ -24,6 +24,7 @@ local m_recvValue = {}
 local m_WorldQuestCache = {}
 local m_bHeroLayerShow = false;
 local m_bNationLayerShow = false;
+local m_TreasureActivity = {};
 
 -- 打开界面
 function MapMainDlgOpen()
@@ -104,12 +105,15 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 挖宝
 		elseif nControlID == 13 then
-		
+			if m_TreasureActivity == nil then
+				return
+			end
+			if m_TreasureActivity.m_treasure_num[GetPlayer().m_nation] > 0 then
+				TreasureDlgShow( m_TreasureActivity );
+			else
+				TreasureAwardDlgShow();
+			end
 			
-		-- 恭贺
-		elseif nControlID == 14 then
-
-				
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
 			MapMainDlgReback( nControlID-CONTROLOFFSET_REBACK )
@@ -644,6 +648,40 @@ function MapMainDlgActivityKingWar( recvValue )
 		SetFalse( m_uiActivity1 )
 		BloodyBattleDlgClose()
 	end
+end
+
+-- 挖宝活动
+-- m_state=0,m_endstamp=0,m_nation=0,m_treasure_num=0,m_treasure_num_max=0
+function MapMainDlgActivityTreasure( recvValue )
+	-- 已经开启
+	m_TreasureActivity = recvValue
+	if recvValue.m_state == 1 then
+		SetTrue( m_uiActivity2 )
+		local lefttime = recvValue.m_endstamp-GetServerTime();
+		SetTimer( m_uiActivity2.transform:Find("Back/Timer"), lefttime, lefttime, 0, T(1462) );
+		SetImage( m_uiActivity2.transform:Find("Back/Pic"), LoadSprite( "ui_mapmain_treasure_nation"..recvValue.m_nation ) ); 
+	else 
+		SetFalse( m_uiActivity2 )
+		TreasureAwardDlgClose()
+	end
+end
+function MapMainDlgActivityTreasureState()
+	if m_TreasureActivity == nil then
+		return 0;
+	end
+	if m_TreasureActivity.m_state == nil then
+		return 0;
+	end
+	return m_TreasureActivity.m_state;
+end
+function MapMainDlgActivityTreasureEndStamp()
+	if m_TreasureActivity == nil then
+		return 0;
+	end
+	if m_TreasureActivity.m_endstamp == nil then
+		return 0;
+	end
+	return m_TreasureActivity.m_endstamp;
 end
 
 -- 小地图

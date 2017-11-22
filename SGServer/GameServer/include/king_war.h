@@ -11,6 +11,7 @@
 #define KINGWAR_TOWN_DEFENSE	2
 
 #define KINGWAR_RANK_MAX		30	// 血战排行榜
+#define KINGWAR_TREASURE_MAX	12  // 最多有12个红图
 
 typedef struct _kingwarrank
 {
@@ -57,4 +58,15 @@ int kingwar_army_rebirth( int actor_index, int army_index );
 int kingwar_sendpoint( int actor_index );
 int kingwar_changeitem( int actor_index, int index, int itemkind );
 
+int kingwar_treasure_onopen();
+int kingwar_treasure_onclose();
+int kingwar_treasure_sendinfo( int actor_index );
+int kingwar_treasure_cityinfo( int actor_index );
+int kingwar_treasure_buypos( int actor_index );
+int kingwar_treasure_do( int actor_index, short posx, short posy );
+int kingwar_treasure_goto( int actor_index, short posx, short posy );
+
+int kingwar_congratulate_add( City *pCity, int itemkind );
+int kingwar_congratulate_sendlist( int actor_index );
+int kingwar_congratulate( int actor_index );
 #endif

@@ -91,7 +91,7 @@ int mail_make( int actorid, char type, char *title, int *title_len, char *conten
 }
 
 // 发送邮件
-i64 mail( int actor_index, int actorid, char type, char *title, char *content, char *attach, i64 fightid )
+i64 mail( int actor_index, int actorid, char type, char *title, char *content, char *attach, i64 fightid, char queue )
 {
 	if ( title == NULL || content == NULL )
 		return -1;
@@ -101,6 +101,19 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 	int attach_len = 0;
 	char szSQL[4096] = { 0 };
 	mail_make( actorid, type, title, &title_len, content, &content_len, attach, &attach_len, fightid, szSQL );
+
+	if ( queue == 1 )
+	{
+		dbwork_addsql( szSQL, DBWORK_CMD_MAIL_INSERT, 0 );
+		if ( actor_index >= 0 && actor_index < g_maxactornum )
+		{
+			// 通知未读数量
+			g_actors[actor_index].mail_notreadnum += 1;
+			mail_noread_send( actor_index );
+		}
+		return 0;
+	}
+
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -147,7 +160,7 @@ i64 mail( int actor_index, int actorid, char type, char *title, char *content, c
 }
 
 // 系统邮件
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach )
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach, char queue )
 {
 	char title[64] = { 0 };
 	sprintf( title, "%s%d", TAG_TEXTID, titleid );
@@ -156,12 +169,12 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char 
 	sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
 
 	i64 mailid;
-	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, queue );
 	return mailid;
 }
 
 // 系统邮件
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo )
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo, char queue )
 {
 	char title[64] = { 0 };
 	sprintf( title, "%s%d", TAG_TEXTID, titleid );
@@ -186,12 +199,12 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, Award
 	}
 
 	i64 mailid;
-	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, queue );
 	return mailid;
 }
 
 // 系统邮件
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup )
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup, char queue )
 {
 	char title[64] = { 0 };
 	sprintf( title, "%s%d", TAG_TEXTID, titleid );
@@ -206,12 +219,12 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int a
 	}
 
 	i64 mailid;
-	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, queue );
 	return mailid;
 }
 
 // 系统邮件
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach )
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach, char queue )
 {
 	char title[64] = { 0 };
 	sprintf( title, "%s%d", TAG_TEXTID, titleid );
@@ -234,9 +247,24 @@ i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char 
 		sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
 	}
 
-	i64 mailid;
-	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0 );
+	i64 mailid = 0;
+	mailid = mail( actor_index, actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, queue );
 	return mailid;
+}
+
+// 邮件插入完毕的返回
+int mailqueue_insert_complete()
+{
+	// 如收件人在线，通知有新的消息
+	for ( int tmpi = 0; tmpi < g_maxactornum; tmpi++ )
+	{
+		if ( g_actors[tmpi].actorid <= 0 )
+			continue;
+		int value[2] = { 0 };
+		value[0] = 3;
+		actor_notify_value( tmpi, NOTIFY_MAIL, 2, value, NULL );
+	}
+	return 0;
 }
 
 // 战斗详情邮件
@@ -817,7 +845,7 @@ int mail_actor_send( int actor_index, SLK_NetC_MailSend *pValue )
 	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
 	sprintf( content, "{\"fromid\":%d,\"msg\":\"%s\"}", pCity->actorid, pValue->m_content );
 
-	mail( MAIL_ACTORID, actorid, MAIL_TYPE_ACTOR_SEND, title, content, "", 0 );
+	mail( MAIL_ACTORID, actorid, MAIL_TYPE_ACTOR_SEND, title, content, "", 0, 0 );
 	return 0;
 }
 
@@ -843,6 +871,31 @@ int mail_actor_reply( int actor_index, SLK_NetC_MailReply *pValue )
 	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
 	snprintf( content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
 
-	mail( MAIL_ACTORID, actorid, MAIL_TYPE_ACTOR_REPLY, title, content, "", 0 );
+	mail( MAIL_ACTORID, actorid, MAIL_TYPE_ACTOR_REPLY, title, content, "", 0, 0 );
 	return 0;
+}
+
+// 给所有城池邮件
+void mail_sendall( int titleid, int contentid, char *v1, char *v2, char *v3, char *attach )
+{
+	int currtime = (int)time( NULL );
+	int offlinesec = 15 * 86400;
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid <= 0 )
+			continue;
+		if ( g_city[tmpi].type == CityLairdType_Robot )
+			continue;
+		if ( (currtime - g_city[tmpi].lastlogin) >= offlinesec )
+			continue;
+		if ( g_city[tmpi].actor_index >= 0 && g_city[tmpi].actor_index < g_maxactornum )
+		{
+			mail_system( g_city[tmpi].actor_index, g_city[tmpi].actorid, titleid, contentid, v1, v2, v3, attach, 0 );
+		}
+		else
+		{
+			mail_system( g_city[tmpi].actor_index, g_city[tmpi].actorid, titleid, contentid, v1, v2, v3, attach, 1 );
+		}
+	}
+	//dbwork_addsql( "", DBWORK_CMD_MAIL_INSERTCOMPLETE, 0 );
 }

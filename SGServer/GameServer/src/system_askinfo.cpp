@@ -572,6 +572,26 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // »Ê³ÇÃÜ¿â¶Ò»»
 			kingwar_changeitem( actor_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 13 )
+		{ // Âò¾ÆÌ×»°
+			kingwar_treasure_buypos( actor_index );
+		}
+		else if ( pvalue[0] == 14 )
+		{ // ÍÚ±¦
+			kingwar_treasure_do( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 15 )
+		{ // ÍÚ±¦Ç°Íù
+			kingwar_treasure_goto( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 16 )
+		{ // ¹§ºØÁÐ±í
+			kingwar_congratulate_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 17 )
+		{ // ¹§ºØ
+			kingwar_congratulate( actor_index );
+		}
 		break;
 	case ASKINFO_MSGBOX_CALLBACK:
 		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );

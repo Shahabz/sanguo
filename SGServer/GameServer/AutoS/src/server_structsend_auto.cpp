@@ -2007,3 +2007,62 @@ int struct_NetS_KingWarPoint_send( char **pptr, int *psize, SLK_NetS_KingWarPoin
 	return 0;
 }
 
+int struct_NetS_TreasureActivity_send( char **pptr, int *psize, SLK_NetS_TreasureActivity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endstamp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_treasure_num, 3*sizeof(short), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_treasure_num_max, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TreasureHas_send( char **pptr, int *psize, SLK_NetS_TreasureHas *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_has, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_px, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_py, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_tn, (*psize) );
+	return 0;
+}
+
+int struct_NetS_GotoAsyn_send( char **pptr, int *psize, SLK_NetS_GotoAsyn *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureActor *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_itemkind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_len, (*psize) );
+	if( pValue->m_name_len > 0 && pValue->m_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_len*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_TreasureActor_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_co, (*psize) );
+	return 0;
+}
+

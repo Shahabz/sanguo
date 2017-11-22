@@ -321,6 +321,7 @@ int worldquest_sendinfo( int actor_index )
 	if ( pValue.m_questid == 0 )
 	{
 		kingwar_activity_sendinfo( actor_index );
+		kingwar_treasure_sendinfo( actor_index );
 	}
 	return 0;
 }

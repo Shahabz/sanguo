@@ -21,10 +21,13 @@ TAG_TIMEDAY		= "$D"	-- 标记 标记为时间天
 TAG_TIMEHOUR	= "$H"	-- 标记 标记为时间小时
 TAG_TIMEMIN		= "$M"	-- 标记 标记为时间分钟
 TAG_TIMESEC		= "$S"	-- 标记 标记为时间秒
+TAG_DATE		= "$T"	-- 标记--标记为时间年月日：时分秒
 TAG_POS    		= "$#"	-- 标记 标记为坐标
 TAG_NATION		= "$N"  -- 标记 标记为国家
 TAG_AWARD		= "$A"  -- 标记 标记为奖励
 TAG_KINGWAR		= "$K"	-- 标记--标记为皇城战据点
+TAG_HERO		= "$R"  -- 标记--标记为武将
+TAG_COLOR		= "$C"	-- 标记--标记为颜色
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -347,6 +350,34 @@ function Mail:GetString( v )
 		else
 			str = v
 		end
+	
+	-- 武将	
+	elseif self:IsTag( v, TAG_HERO ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_HERO) + 1));
+		if textid ~= nil then
+			str = HeroName( textid )
+		else
+			str = v
+		end
+	
+	-- 颜色	
+	elseif self:IsTag( v, TAG_COLOR ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_COLOR) + 1));
+		if textid ~= nil then
+			str = NameColorStr( textid )
+		else
+			str = v
+		end	
+		
+	-- 日期	
+	elseif self:IsTag( v, TAG_DATE ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_DATE) + 1));
+		if textid ~= nil then
+			str =  getTimeStringByInterval( textid )
+		else
+			str = v
+		end		
+
 	else
 		str = v;
 	end

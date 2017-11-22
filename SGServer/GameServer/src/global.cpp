@@ -426,6 +426,18 @@ int global_init()
 		{
 			global.kingwar_token_pk = atoi( row[1] );
 		}
+		//else if ( id == 136 )
+		//{
+		//	global.kingwar_treasure_hour = atoi( row[1] );
+		//}
+		//else if ( id == 137 )
+		//{
+		//	global.kingwar_treasure_hour = atoi( row[1] );
+		//}
+		//else if ( id == 138 )
+		//{
+		//	global.kingwar_treasure_minute = atoi( row[1] );
+		//}
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

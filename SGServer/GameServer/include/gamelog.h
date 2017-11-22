@@ -87,6 +87,8 @@
 #define PATH_KINGWAR_DEFENSE			58	// 血战活动-回防
 #define PATH_KINGWAR_REBIRTH			59	// 血战活动-复活
 #define PATH_KINGWAR_CHANGE				60	// 血战积分兑换
+#define PATH_KINGWAR_TREASURE			61	// 血战挖宝
+#define PATH_KINGWAR_TREASURE_CO		62	// 血战恭贺
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

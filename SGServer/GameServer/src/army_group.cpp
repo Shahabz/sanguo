@@ -856,7 +856,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				city_move( pTargetCity, move_posx, move_posy );
 
 				// 给城主发送击飞邮件
-				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "" );
+				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "", 0 );
 			}
 		}
 	}
@@ -962,7 +962,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
 					attackName, attackNation, posx, posy, pTown->townid, pTown->nation, pArmyCity->temp_silver, pArmyCity->temp_wood, pArmyCity->temp_food );
 
-				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
+				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0, 0 );
 				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
 
 				pArmyCity->temp_silver = 0;
@@ -1015,7 +1015,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"pos\":\"%d,%d\",\"townid\":%d,\"tn\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d}",
 					attackName, attackNation, posx, posy, pTown->townid, pTown->nation, pArmyCity->temp_silver, pArmyCity->temp_wood, pArmyCity->temp_food );
 
-				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0 );
+				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0, 0 );
 				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
 
 				pArmyCity->temp_silver = 0;
@@ -1676,7 +1676,7 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 
 		if ( issend == 0 )
 		{
-			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0 );
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0, 0 );
 			if ( fight )
 			{
 				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
@@ -1688,7 +1688,7 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 	
 	if ( defenseCity )
 	{
-		i64 mailid = mail( defenseCity->actor_index, defenseCity->actorid, type, title, content, "", 0 );
+		i64 mailid = mail( defenseCity->actor_index, defenseCity->actorid, type, title, content, "", 0, 0 );
 		if ( fight )
 		{
 			mail_fight( mailid, defenseCity->actorid, fight->unit_json );

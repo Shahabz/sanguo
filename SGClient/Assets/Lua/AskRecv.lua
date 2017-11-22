@@ -111,6 +111,9 @@ function RecvActorNotify(recvValue)
 			if value[2] == 0 or value[2] == 1 then
 				MailDlgMailRecvOver( value[2], value[3] );
 			end
+		-- 
+		elseif value[1] == 3 then
+			GetMail().m_bLoadNew = false
 		end
 		
 	-- 消息确定框

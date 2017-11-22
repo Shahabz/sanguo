@@ -31,10 +31,13 @@
 #define TAG_TIMEHOUR		"$H"// 标记--标记为时间小时
 #define TAG_TIMEMIN			"$M"// 标记--标记为时间分钟
 #define TAG_TIMESEC			"$S"// 标记--标记为时间秒
+#define TAG_DATE			"$T"// 标记--标记为时间年月日：时分秒
 #define TAG_POS				"$#"// 标记--标记为坐标
 #define TAG_NATION			"$N"// 标记--标记为国家
 #define TAG_AWARD			"$A"// 标记--标记为奖励
 #define TAG_KINGWAR			"$K"// 标记--标记为皇城战据点
+#define TAG_HERO			"$R"// 标记--标记为武将
+#define TAG_COLOR			"$C"// 标记--标记为颜色
 
 typedef struct _mailfight_searchcache
 {
@@ -43,11 +46,13 @@ typedef struct _mailfight_searchcache
 }MailFightSearchCache;
 
 // 发送邮件
-i64 mail( int actor_index, int actorid, char type, char *title, char *content, char *attach, i64 fightid );
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach );
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo );
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup );
-i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach );
+i64 mail( int actor_index, int actorid, char type, char *title, char *content, char *attach, i64 fightid, char queue );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *attach, char queue );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, AwardGetInfo *getinfo, char queue );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, int awardgroup, char queue );
+i64 mail_system( int actor_index, int actorid, int titleid, int contentid, char *v1, char *v2, char *v3, char *attach, char queue );
+// 插入完mail的回调
+int mailqueue_insert_complete();
 
 // 战斗详情邮件
 int mail_fight( i64 mailid, int actorid, char *json );
@@ -111,4 +116,7 @@ int mail_actor_send( int actor_index, SLK_NetC_MailSend *pValue );
 
 // 玩家间邮件回复
 int mail_actor_reply( int actor_index, SLK_NetC_MailReply *pValue );
+
+// 给所有城池邮件
+void mail_sendall( int titleid, int contentid, char *v1, char *v2, char *v3, char *attach );
 #endif

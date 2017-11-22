@@ -50,7 +50,8 @@ local m_LastPosX;
 local m_LastPosY;
 local m_Faded = false;
 local m_FadeStopCount = 0;
- 
+local m_MoveType = 0;
+
 -- 地图区域
 Area = {}
 -- 根据世界坐标获取区域编号
@@ -502,14 +503,20 @@ function WorldMap.ViewChangeFrame()
 	end
 	WorldMap.m_nLastCameraX = cameraPosX;
 	WorldMap.m_nLastCameraY	= cameraPosY;
-    -- 主城坐标
+
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( cameraPosX, cameraPosY );
     WorldMap.m_nLastCameraGameX = gameCoorX;
     WorldMap.m_nLastCameraGameY = gameCoorY;
 	
 	-- 有移动行为就关闭
-	if MapClickEffect.gameObject.activeSelf == true or MapClickMod.gameObject.activeSelf == true then
-		WorldMap.OnClickClose();
+	if MapClickEffect.gameObject.activeSelf == true then
+		if math.abs( MapClickEffect.transform.localPosition.x - cameraPosX ) > 2.56 or math.abs( MapClickEffect.transform.localPosition.y - cameraPosY ) > 1.28 then
+			WorldMap.OnClickClose();
+		end
+	elseif MapClickMod.gameObject.activeSelf == true then
+		if math.abs( MapClickMod.transform.localPosition.x - cameraPosX ) > 2.56 or math.abs( MapClickMod.transform.localPosition.y - cameraPosY ) > 1.28 then
+			WorldMap.OnClickClose();
+		end
 	end
 	
 	-- 操作界面更新坐标
@@ -700,6 +707,36 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 	MapClickMod.gameObject:SetActive( true );
 end
 
+-- 显示点击特效
+function WorldMap.OnClickShow( gameCoorX, gameCoorY )
+	if MapClickEffect == nil then
+		return
+	end
+	if MapClickEffect.gameObject == nil then
+		return
+	end
+	
+	-- 只有城镇才会大于1个格子
+	local grid = 1
+	local type = MAPUNIT_TYPE_CITY;
+	for k, v in pairs( g_towninfo ) do
+		if v.grid == 2 then
+			
+		elseif v.grid == 3 then
+			
+		end
+	end
+	
+	MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );
+	
+	-- 转换中心坐标
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( gameCoorX, gameCoorY );
+	cameraPosX, cameraPosY = MapUnit.getGridTrans( type, grid, cameraPosX, cameraPosY );
+		
+	MapClickEffect.transform.localPosition = Vector3.New( cameraPosX, cameraPosY, WORLDMAP_ZORDER_CLICKMOD )
+	MapClickEffect.gameObject:SetActive( true );
+end
+
 -- 关闭操作界面
 function WorldMap.OnClickClose()
 	if MapClickEffect ~= nil and MapClickEffect.gameObject ~= nil then
@@ -764,9 +801,21 @@ function WorldMap.GotoUnit( unit_index )
 end
 
 -- 服务器发回的到unit位置
+-- m_posx=0,m_posy=0,m_type=0,m_unit_index=0,m_op=0,
 function WorldMap.GotoUnitAsyn( recvValue )
-	WorldMap.m_nLastGotoUnitIndex = recvValue.m_unit_index;
-	WorldMap.CameraSetPosition( recvValue.m_type, recvValue.m_posx, recvValue.m_posy );
+	if recvValue.m_op == 1 then
+		-- 挖宝前往使用
+		WorldMap.CameraSetPosition( recvValue.m_type, recvValue.m_posx, recvValue.m_posy );
+		WorldMap.OnClickShow( recvValue.m_posx, recvValue.m_posy )
+		if recvValue.m_type > 0 then
+			TreasureDlgDo( recvValue.m_posx, recvValue.m_posy )
+		else
+			WorldMap.OnSelect( nil, recvValue.m_posx, recvValue.m_posy, recvValue.m_unit_index );
+		end
+	else
+		WorldMap.m_nLastGotoUnitIndex = recvValue.m_unit_index;
+		WorldMap.CameraSetPosition( recvValue.m_type, recvValue.m_posx, recvValue.m_posy );
+	end
 	--WorldMap.ViewChangeSec();
 end
 
@@ -776,6 +825,7 @@ function WorldMap.GotoCoor( gameCoorX, gameCoorY )
 		WorldMap.GotoWorldMap( gameCoorX, gameCoorY )
     elseif GameManager.currentScence == "worldmap" then
 		WorldMap.CameraSetPosition( MAPUNIT_TYPE_CITY, gameCoorX, gameCoorY );
+		WorldMap.OnClickShow( gameCoorX, gameCoorY )
 		--WorldMap.ViewChangeSec();
 	end
     
@@ -786,6 +836,12 @@ end
 -- 我的城池
 function WorldMap.GotoMyCity()
 	WorldMap.GotoCoor( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
+	local recvValue = WorldMap.m_nMapUnitList[WorldMap.m_nMyCityUnitIndex];
+	if recvValue == nil then
+		WorldMap.m_nLastGotoUnitIndex = WorldMap.m_nMyCityUnitIndex
+	else
+		WorldMap.OnSelect( MapUnit.cache[recvValue.m_unit_index], recvValue.m_posx, recvValue.m_posy, recvValue.m_unit_index );
+	end
 end
 
 -- 开启摄像机跟随模式

@@ -7,7 +7,7 @@ struct _kingwarconfig {
 				int id;	//
 				int exp;	//
 				short drawing_num;	//
-				int drawing_other;	//
+				short drawing_other;	//
 				int rank_award_point;	//
 				int totalkill;	//
 				int totalkill_award_point;	//
@@ -16,8 +16,11 @@ struct _kingwarconfig {
 				int treasure_costtoken;	//
 				int treasure_award;	//
 				int treasure_equipodds;	//
+				int treasure_normalpoint;	//
+				int treasure_normalaward;	//
 				short exchange_item;	//
 				int exchange_point;	//
+				int co_award;	//
 };
 typedef struct _kingwarconfig KingWarConfig;
 

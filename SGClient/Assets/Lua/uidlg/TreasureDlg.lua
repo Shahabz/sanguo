@@ -4,6 +4,10 @@ local m_uiTitle = nil; --UnityEngine.GameObject
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiTalk = nil; --UnityEngine.GameObject
 local m_uiBuyButton = nil; --UnityEngine.GameObject
+local m_uiGotoButton = nil; --UnityEngine.GameObject
+local m_uiTimer = nil; --UnityEngine.GameObject
+
+local m_recvValue = nil;
 
 -- 打开界面
 function TreasureDlgOpen()
@@ -38,7 +42,13 @@ function TreasureDlgOnEvent( nType, nControlID, value, gameObject )
             TreasureDlgClose();
 		elseif nControlID == 1 then
 			TreasureDlgBuy();
+		elseif nControlID == 2 then
+			TreasureDlgGoTo();
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			TreasureDlgClose()
+		end
 	end
 end
 
@@ -50,6 +60,8 @@ function TreasureDlgOnAwake( gameObject )
 	m_uiShape = objs[1];
 	m_uiTalk = objs[2];
 	m_uiBuyButton = objs[3];
+	m_uiGotoButton = objs[4];
+	m_uiTimer = objs[5];
 end
 
 -- 界面初始化时调用
@@ -87,13 +99,27 @@ local m_Talks ={
 [3] = { 1451, 1452, 1453 }, -- wu
  }
 
+local m_PosTalks ={ 
+[1] = { 1434, 1435, 1436 } , -- wei
+[2] = { 1444, 1445, 1446 }, -- shu
+[3] = { 1454, 1455, 1456 }, -- wu
+ }
+
 local m_OverTalks ={ 
 [1] = { 1430 } , -- wei
 [2] = { 1440 }, -- shu
 [3] = { 1450 }, -- wu
  }
-function TreasureDlgShow()
+function TreasureDlgShow( recvValue )
 	TreasureDlgOpen()
+	SetFalse( m_uiBuyButton )
+	SetFalse( m_uiGotoButton )
+	
+	-- 活动倒计时
+	local leftstamp = MapMainDlgActivityTreasureEndStamp()-GetServerTime();
+	SetTimer( m_uiTimer, leftstamp, leftstamp, 1, T(1462) )
+		
+	-- 神将形象
 	if GetPlayer().m_nation == 1 then
 		SetImage( m_uiShape, LoadSprite("heroface_72") )
 	elseif GetPlayer().m_nation == 2 then
@@ -102,33 +128,81 @@ function TreasureDlgShow()
 		SetImage( m_uiShape, LoadSprite("heroface_119") )
 	end
 	
-	system_askinfo( ASKINFO_KINGWAR, "", 10 );
-	
-	local recvValue = {}
-	recvValue.m_treasure_num = 8
-	recvValue.m_treasure_num_ed = 3
-	recvValue.m_isover = 1;
-	TreasureDlgRecv( recvValue )
+	-- 标题
+	SetText( m_uiTitle, F(1420, recvValue.m_treasure_num_max, recvValue.m_treasure_num_max-recvValue.m_treasure_num[GetPlayer().m_nation] ) )
+	TreasureDlgRecv( m_recvValue )
 end
 
--- 接收服务器信息
+-- m_has=0,m_px=0,m_py=0,m_tn=0
 function TreasureDlgRecv( recvValue )
-	SetText( m_uiTitle, F(1420, recvValue.m_treasure_num, recvValue.m_treasure_num_ed)  )
+	m_recvValue = recvValue;
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	-- 挖宝完毕
-	if recvValue.m_isover == 1 then
+	if recvValue.m_has > 0 then
 		local talk = m_OverTalks[GetPlayer().m_nation];
 		local idx = math.random( 1, #talk )
 		SetText( m_uiTalk, T( talk[idx] ) )
 		SetFalse( m_uiBuyButton )
+		SetFalse( m_uiGotoButton )
 	else
 		local talk = m_Talks[GetPlayer().m_nation];
 		local idx = math.random( 1, #talk )
-		SetText( m_uiTalk, T( talk[idx] ) )
-		SetTrue( m_uiBuyButton )
+		
+		if recvValue.m_px > 0 then
+			local talk = m_PosTalks[GetPlayer().m_nation];
+			local idx = math.random( 1, #talk )		
+			SetText( m_uiTalk, F( talk[idx], recvValue.m_px, recvValue.m_py ) )
+			SetFalse( m_uiBuyButton )
+			SetTrue( m_uiGotoButton )
+		else
+			local talk = m_Talks[GetPlayer().m_nation];
+			local idx = math.random( 1, #talk )
+			SetText( m_uiTalk, T( talk[idx] ) )
+			SetTrue( m_uiBuyButton )
+			SetFalse( m_uiGotoButton )
+		end
 	end
 end
 
 -- 买酒
 function TreasureDlgBuy()
-	
+	if m_recvValue.m_has > 0 then
+		return
+	end
+	if m_recvValue.m_px > 0 then
+		return
+	end 
+	local tn = m_recvValue.m_tn
+	MsgBox( F( 1920, g_kingwar_config[tn+1].treasure_costtoken ), function() 
+		if GetPlayer().m_token < g_kingwar_config[tn+1].treasure_costtoken then
+			JumpToken();
+			return
+		end
+		system_askinfo( ASKINFO_KINGWAR, "", 13 );
+	end )
+end
+
+-- 前往
+function TreasureDlgGoTo()
+	system_askinfo( ASKINFO_KINGWAR, "", 15, m_recvValue.m_px, m_recvValue.m_py );
+	TreasureDlgClose()
+end
+
+-- 挖宝
+function TreasureDlgDo( GameCoorX, GameCoorY )
+	local num = m_recvValue.m_tn
+	if num <= 0 then
+		num = 1
+	end
+	local point = g_kingwar_config[num].treasure_costpoint
+	if m_recvValue.m_px == GameCoorX and m_recvValue.m_py == GameCoorY then
+		point = g_kingwar_config[num].treasure_costpoint -- 买酒挖宝
+	else
+		point = g_kingwar_config[1].treasure_normalpoint -- 缺省挖宝
+	end
+	MsgBox( F(1922,point), function() 
+		system_askinfo( ASKINFO_KINGWAR, "", 14, GameCoorX, GameCoorY );
+	end )
 end

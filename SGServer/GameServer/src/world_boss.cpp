@@ -203,7 +203,7 @@ int worldboss_battle( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 	//	// 最后一击
 	//	char attach[256] = { 0 };
 	//	awardgroup_mail( g_worldbossinfo[bossid].awardgroup, 0, attach );
-	//	mail_system( actor_index, pCity->actorid, 5032, 5528, v1, NULL, NULL, );
+	//	mail_system( actor_index, pCity->actorid, 5032, 5528, v1, NULL, NULL,0 );
 	//}
 
 	g_world_boss[bossid].hp -= g_fight.attack_total_damage;
@@ -212,7 +212,7 @@ int worldboss_battle( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 		g_world_boss[bossid].hp = 0;
 
 		// 最后一击
-		mail_system( actor_index, pCity->actorid, 5033, 5529, g_worldbossinfo[bossid].kill_awardgroup );
+		mail_system( actor_index, pCity->actorid, 5033, 5529, g_worldbossinfo[bossid].kill_awardgroup, 0 );
 
 		if ( bossid == 1 )
 		{

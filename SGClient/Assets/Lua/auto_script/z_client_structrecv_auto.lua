@@ -1776,3 +1776,56 @@ function struct_NetS_KingWarPoint_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_TreasureActivity_recv( buffer )
+	local recvValue = {};
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_endstamp = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_treasure_num={};
+	for tmpi=1,3,1 do
+		recvValue.m_treasure_num[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_treasure_num_max = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_TreasureHas_recv( buffer )
+	local recvValue = {};
+	recvValue.m_has = buffer:ReadSByte();
+	recvValue.m_px = buffer:ReadShort();
+	recvValue.m_py = buffer:ReadShort();
+	recvValue.m_tn = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_GotoAsyn_recv( buffer )
+	local recvValue = {};
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_op = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_TreasureActor_recv( buffer )
+	local recvValue = {};
+	recvValue.m_itemkind = buffer:ReadShort();
+	recvValue.m_name_len = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_len );
+	return recvValue;
+end
+
+function struct_NetS_TreasureActorList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_TreasureActor_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_co = buffer:ReadSByte();
+	return recvValue;
+end
+

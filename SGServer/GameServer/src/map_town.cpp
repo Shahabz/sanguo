@@ -331,7 +331,7 @@ void map_town_logic( int townid )
 			char v2[64] = { 0 };
 			sprintf( v1, "%s%d", TAG_TOWNID, townid );
 			sprintf( v2, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
-			mail_system( -1, g_map_town[townid].own_actorid, 5024, 5522, v1, v2, NULL, "" );
+			mail_system( -1, g_map_town[townid].own_actorid, 5024, 5522, v1, v2, NULL, "", 0 );
 
 			// 重置
 			if ( g_map_town[townid].own_city_index >= 0 && g_map_town[townid].own_city_index < g_city_maxcount )
@@ -564,7 +564,7 @@ int map_town_ask_owner( int actor_index, int townid )
 		sprintf( v1, "%s%d", TAG_TOWNID, townid );
 		sprintf( v2, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 		sprintf( v3, "%s%d", TAG_TIMEDAY, g_towninfo[townid].own_maxsec );
-		mail_system( pCity->actor_index, pCity->actorid, 5025, 5524, v1, v2, v3, "" );
+		mail_system( pCity->actor_index, pCity->actorid, 5025, 5524, v1, v2, v3, "", 0 );
 		actor_notify_alert_v( actor_index, 1307, v1, NULL );
 
 		// 6003	玩家{3}重建了{0}的{1}<color=d95df4ff><url={2}>[{2}]</url></color>
@@ -637,7 +637,7 @@ int map_town_alloc_owner( int townid )
 	sprintf( v1, "%s%d", TAG_TOWNID, townid );
 	sprintf( v2, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 	sprintf( v3, "%s%d", TAG_TIMEDAY, g_towninfo[townid].own_maxsec );
-	mail_system( pCity->index, pCity->actorid, 5025, 5524, v1, v2, v3, "" );
+	mail_system( pCity->index, pCity->actorid, 5025, 5524, v1, v2, v3, "", 0 );
 
 	// 给其它竞选者发送失败邮件, 并返还资源
 	// 很遗憾，{0}在众多候选人中爵位最高，成为了{1}<url={2}>[{2}]</url>的城主
@@ -676,7 +676,7 @@ int map_town_alloc_owner( int townid )
 		City *pAsk = city_indexptr( g_map_town[townid].ask_city_index[tmpi] );
 		if ( !pAsk )
 			continue;
-		mail_system( pAsk->index, pAsk->actorid, 5026, 5525, v1, v2, v3, attach );
+		mail_system( pAsk->index, pAsk->actorid, 5026, 5525, v1, v2, v3, attach, 0 );
 		g_map_town[townid].ask_actorid[tmpi] = 0;
 		g_map_town[townid].ask_city_index[tmpi] = -1;
 	}
@@ -881,7 +881,7 @@ int map_town_levy( int actor_index, int townid )
 	sprintf( v3, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 	sprintf( v4, "%s", pCity->name );
 	awardgroup_makestr( &getinfo, award_content );
-	sprintf( v5, "%s%s", TAG_AWARD, award_content );
+	snprintf( v5, 64, "%s%s", TAG_AWARD, award_content );
 	system_talkjson( 0, pCity->nation, 6005, v1, v2, v3, v4, v5, NULL, 1 );
 	return 0;
 }
@@ -928,7 +928,7 @@ int map_town_owner_award_actor( int townid )
 	char v3[32] = { 0 };
 	sprintf( v3, "%d", g_map_town[townid].own_sec/86400 );
 
-	mail_system( MAIL_ACTORID, g_map_town[townid].own_actorid, 5031, 5527, v1, v2, v3, attach );
+	mail_system( MAIL_ACTORID, g_map_town[townid].own_actorid, 5031, 5527, v1, v2, v3, attach, 0 );
 	return 0;
 }
 int map_town_owner_award()

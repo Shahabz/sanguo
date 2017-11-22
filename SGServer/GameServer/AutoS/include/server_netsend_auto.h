@@ -138,6 +138,10 @@ int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingW
 int netsend_kingwarranklist_S( int actor_index, char send_type, SLK_NetS_KingWarRankList *pValue );
 int netsend_kingwarpk_S( int actor_index, char send_type, SLK_NetS_KingWarPK *pValue );
 int netsend_kingwarpoint_S( int actor_index, char send_type, SLK_NetS_KingWarPoint *pValue );
+int netsend_treasureactivity_S( int actor_index, char send_type, SLK_NetS_TreasureActivity *pValue );
+int netsend_treasurehas_S( int actor_index, char send_type, SLK_NetS_TreasureHas *pValue );
+int netsend_gotoasyn_S( int actor_index, char send_type, SLK_NetS_GotoAsyn *pValue );
+int netsend_treasureactorlist_S( int actor_index, char send_type, SLK_NetS_TreasureActorList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

@@ -195,6 +195,17 @@ void ruffle( int *list, int count )
 		list[index] = swap;
 	}
 }
+void ruffle_short( short *list, int count )
+{
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		int index = rand() % count;
+		short swap = list[index];
+		swap = list[tmpi];
+		list[tmpi] = list[index];
+		list[index] = swap;
+	}
+}
 
 // 产生长度为length的随机字符串  
 void random_str( char *out, int length )

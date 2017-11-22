@@ -47,7 +47,7 @@ int kingwarconfig_init_auto()
 	g_kingwar_config = (KingWarConfig *)malloc( sizeof(KingWarConfig)*g_kingwar_config_maxnum );
 	memset( g_kingwar_config, 0, sizeof(KingWarConfig)*g_kingwar_config_maxnum );
 
-	sprintf( szSQL, "select `id`,`exp`,`drawing_num`,`drawing_other`,`rank_award_point`,`totalkill`,`totalkill_award_point`,`treasure_donum`,`treasure_costpoint`,`treasure_costtoken`,`treasure_award`,`treasure_equipodds`,`exchange_item`,`exchange_point` from kingwar;" );
+	sprintf( szSQL, "select `id`,`exp`,`drawing_num`,`drawing_other`,`rank_award_point`,`totalkill`,`totalkill_award_point`,`treasure_donum`,`treasure_costpoint`,`treasure_costtoken`,`treasure_award`,`treasure_equipodds`,`treasure_normalpoint`,`treasure_normalaward`,`exchange_item`,`exchange_point`,`co_award` from kingwar;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -73,8 +73,11 @@ int kingwarconfig_init_auto()
 		g_kingwar_config[id].treasure_costtoken = atoi(row[offset++]);
 		g_kingwar_config[id].treasure_award = atoi(row[offset++]);
 		g_kingwar_config[id].treasure_equipodds = atoi(row[offset++]);
+		g_kingwar_config[id].treasure_normalpoint = atoi(row[offset++]);
+		g_kingwar_config[id].treasure_normalaward = atoi(row[offset++]);
 		g_kingwar_config[id].exchange_item = atoi(row[offset++]);
 		g_kingwar_config[id].exchange_point = atoi(row[offset++]);
+		g_kingwar_config[id].co_award = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

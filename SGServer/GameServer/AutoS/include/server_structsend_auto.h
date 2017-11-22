@@ -1374,6 +1374,46 @@ struct _slk_NetS_KingWarPoint {
 };
 typedef struct _slk_NetS_KingWarPoint SLK_NetS_KingWarPoint;	//血战积分
 
+struct _slk_NetS_TreasureActivity {
+	char m_state;	//挖宝活动信息
+	int m_endstamp;	//挖宝活动信息
+	char m_nation;	//挖宝活动信息
+	short m_treasure_num[3];	//挖宝活动信息
+	short m_treasure_num_max;	//挖宝活动信息
+};
+typedef struct _slk_NetS_TreasureActivity SLK_NetS_TreasureActivity;	//挖宝活动
+
+struct _slk_NetS_TreasureHas {
+	char m_has;	//是否已经挖到图纸
+	short m_px;	//宝图坐标
+	short m_py;	//宝图坐标
+	char m_tn;	//挖宝次数
+};
+typedef struct _slk_NetS_TreasureHas SLK_NetS_TreasureHas;	//是否已经挖到图纸
+
+struct _slk_NetS_GotoAsyn {
+	short m_posx;	//异步跳转
+	short m_posy;	//异步跳转
+	char m_type;	//异步跳转
+	int m_unit_index;	//异步跳转
+	char m_op;	//异步跳转
+};
+typedef struct _slk_NetS_GotoAsyn SLK_NetS_GotoAsyn;	//异步跳转
+
+struct _slk_NetS_TreasureActor {
+	short m_itemkind;	//恭贺信息
+	char m_name_len;	//恭贺信息
+	char m_name[32];	//恭贺信息
+};
+typedef struct _slk_NetS_TreasureActor SLK_NetS_TreasureActor;	//挖红图信息
+
+struct _slk_NetS_TreasureActorList {
+	char m_count;	//恭贺列表
+	SLK_NetS_TreasureActor m_list[16];	//恭贺列表
+	char m_co;	//玩家是否已经恭贺
+};
+typedef struct _slk_NetS_TreasureActorList SLK_NetS_TreasureActorList;	//挖红图信息列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1525,5 +1565,10 @@ int struct_NetS_KingWarRank_send( char **pptr, int *psize, SLK_NetS_KingWarRank 
 int struct_NetS_KingWarRankList_send( char **pptr, int *psize, SLK_NetS_KingWarRankList *pValue );
 int struct_NetS_KingWarPK_send( char **pptr, int *psize, SLK_NetS_KingWarPK *pValue );
 int struct_NetS_KingWarPoint_send( char **pptr, int *psize, SLK_NetS_KingWarPoint *pValue );
+int struct_NetS_TreasureActivity_send( char **pptr, int *psize, SLK_NetS_TreasureActivity *pValue );
+int struct_NetS_TreasureHas_send( char **pptr, int *psize, SLK_NetS_TreasureHas *pValue );
+int struct_NetS_GotoAsyn_send( char **pptr, int *psize, SLK_NetS_GotoAsyn *pValue );
+int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureActor *pValue );
+int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue );
 
 #endif

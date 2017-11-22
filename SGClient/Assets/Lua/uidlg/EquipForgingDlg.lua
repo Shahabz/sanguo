@@ -103,7 +103,10 @@ function EquipForgingDlgOnEvent( nType, nControlID, value, gameObject )
 		
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
-			EquipForgingDlgClose();
+			-- 延迟1秒关闭
+			Invoke(function()
+				EquipForgingDlgClose();
+			end, 1)
 		end
 	end
 end

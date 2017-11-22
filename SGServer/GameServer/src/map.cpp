@@ -659,6 +659,20 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 	return 0;
 }
 
+int map_goto_withpos( int actor_index, char op, short posx, short posy )
+{
+	if ( posx <= 0 || posy <= 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxHeight )
+		return -1;
+	SLK_NetS_GotoAsyn pValue = { 0 };
+	pValue.m_op = op;
+	pValue.m_posx = posx;
+	pValue.m_posy = posy;
+	pValue.m_type = g_map.m_aTileData[posx][posy].unit_type;
+	pValue.m_unit_index = g_map.m_aTileData[posx][posy].unit_index;
+	netsend_gotoasyn_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
 bool ptInLine( Pos point, Pos lineStartPoint, Pos lineEndPoint, double fTolerance )
 {
 	double L, R, S;

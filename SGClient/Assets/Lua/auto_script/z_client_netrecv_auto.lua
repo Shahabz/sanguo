@@ -680,6 +680,26 @@ function netrecv_kingwarpoint_C( buffer )
 	proc_kingwarpoint_C( recvValue );
 end
 
+function netrecv_treasureactivity_C( buffer )
+	local recvValue = struct_NetS_TreasureActivity_recv( buffer );
+	proc_treasureactivity_C( recvValue );
+end
+
+function netrecv_treasurehas_C( buffer )
+	local recvValue = struct_NetS_TreasureHas_recv( buffer );
+	proc_treasurehas_C( recvValue );
+end
+
+function netrecv_gotoasyn_C( buffer )
+	local recvValue = struct_NetS_GotoAsyn_recv( buffer );
+	proc_gotoasyn_C( recvValue );
+end
+
+function netrecv_treasureactorlist_C( buffer )
+	local recvValue = struct_NetS_TreasureActorList_recv( buffer );
+	proc_treasureactorlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -817,6 +837,10 @@ Proc_Command = {
 	[CMDS_KINGWARRANKLIST]=netrecv_kingwarranklist_C;
 	[CMDS_KINGWARPK]=netrecv_kingwarpk_C;
 	[CMDS_KINGWARPOINT]=netrecv_kingwarpoint_C;
+	[CMDS_TREASUREACTIVITY]=netrecv_treasureactivity_C;
+	[CMDS_TREASUREHAS]=netrecv_treasurehas_C;
+	[CMDS_GOTOASYN]=netrecv_gotoasyn_C;
+	[CMDS_TREASUREACTORLIST]=netrecv_treasureactorlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

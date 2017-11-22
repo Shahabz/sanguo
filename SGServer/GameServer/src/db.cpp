@@ -20,6 +20,7 @@
 #include "actor.h"
 #include "gameproc.h"
 #include "define.h"
+#include "mail.h"
 
 extern int g_tick;
 
@@ -469,7 +470,7 @@ void dbwork_fetchcomplete()
 
 		if ( cmd == DBWORK_CMD_MAIL_INSERTCOMPLETE )
 		{
-			//mailqueue_insert_complete();
+			mailqueue_insert_complete();
 		}	
 	}
 }

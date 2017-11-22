@@ -1524,3 +1524,27 @@ function proc_kingwarpoint_C( recvValue )
 	KingWarChangeDlgRecv( recvValue )
 end
 
+-- m_state=0,m_endstamp=0,m_nation=0,m_treasure_num=0,m_treasure_num_max=0,
+function proc_treasureactivity_C( recvValue )
+	-- process.
+	MapMainDlgActivityTreasure( recvValue )
+end
+
+-- m_has=0,m_px=0,m_py=0,m_tn=0,
+function proc_treasurehas_C( recvValue )
+	-- process.
+	TreasureDlgRecv( recvValue )
+end
+
+-- m_posx=0,m_posy=0,m_type=0,m_unit_index=0,m_op=0,
+function proc_gotoasyn_C( recvValue )
+	-- process.
+	WorldMap.GotoUnitAsyn( recvValue )
+end
+
+-- m_count=0,m_list={m_itemkind=0,m_name_len=0,m_name="[m_name_len]",[m_count]},m_co=0,
+function proc_treasureactorlist_C( recvValue )
+	-- process.
+	TreasureAwardDlgRecv( recvValue )
+end
+

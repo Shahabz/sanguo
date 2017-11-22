@@ -153,7 +153,9 @@ function KingWarRankDlgRecvValue( recvValue )
 	local myrank = recvValue.m_myrank;
 	local myaward = nil;
 	local sumrank = #g_kingwar_config;
-	if myrank < sumrank then
+	if myrank == 0 then
+		myaward = 0;
+	elseif myrank < sumrank then
 		myaward = g_kingwar_config[myrank].rank_award_point;
 	else
 		myaward = g_kingwar_config[myrank].rank_award_point;
