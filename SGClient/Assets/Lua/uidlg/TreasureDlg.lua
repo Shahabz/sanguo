@@ -130,7 +130,11 @@ function TreasureDlgShow( recvValue )
 	
 	-- 标题
 	SetText( m_uiTitle, F(1420, recvValue.m_treasure_num_max, recvValue.m_treasure_num_max-recvValue.m_treasure_num[GetPlayer().m_nation] ) )
-	TreasureDlgRecv( m_recvValue )
+	if m_recvValue == nil then
+		system_askinfo( ASKINFO_KINGWAR, "", 18 );
+	else
+		TreasureDlgRecv( m_recvValue )
+	end
 end
 
 -- m_has=0,m_px=0,m_py=0,m_tn=0

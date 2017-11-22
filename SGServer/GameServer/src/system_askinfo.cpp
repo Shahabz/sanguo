@@ -592,6 +592,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // ¹§ºØ
 			kingwar_congratulate( actor_index );
 		}
+		else if ( pvalue[0] == 18 )
+		{
+			kingwar_treasure_cityinfo( actor_index );
+		}
 		break;
 	case ASKINFO_MSGBOX_CALLBACK:
 		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );

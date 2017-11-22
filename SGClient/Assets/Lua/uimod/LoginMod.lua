@@ -52,7 +52,7 @@ function LoginModOpen()
 	if m_Dlg == nil then
 		m_Dlg = eye.uiManager:GetLayer( 3 ):Find( "LoginMod" ).gameObject;
 	end
-	m_Dlg:SetActive( true );		
+	m_Dlg:SetActive( true );
 end
 
 -- 隐藏界面
@@ -177,6 +177,7 @@ end
 
 -- 界面初始化时调用
 function LoginModOnStart()
+	eye.audioManager:Play(201);
 end
 
 -- 界面显示时调用
