@@ -1,6 +1,7 @@
 -- 界面
 local m_Dlg = nil;
 
+local m_pBuilding = nil;
 -- 打开界面
 function CabinetDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet1" );
@@ -8,6 +9,7 @@ function CabinetDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet3" );
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinetback" );
 	m_Dlg = eye.uiManager:Open( "CabinetDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Cabinet).." Lv."..m_pBuilding.m_level, HELP_CabinetDlg, CabinetDlgClose );
 end
 
 -- 隐藏界面
@@ -15,7 +17,8 @@ function CabinetDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "CabinetDlg" );
 end
 
@@ -78,5 +81,6 @@ end
 -- 自定
 ----------------------------------------
 function CabinetDlgShow()
+	m_pBuilding = GetPlayer():GetBuilding( BUILDING_Cabinet );
 	CabinetDlgOpen()
 end
