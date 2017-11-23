@@ -90,6 +90,7 @@ public static class LuaBinder
 		MapUnitMoveWrap.Register(L);
 		WorldMapCameraWrap.Register(L);
 		WorldMapThumbCameraWrap.Register(L);
+		ScreenBlurWrap.Register(L);
 		UIPrimitiveBaseWrap.Register(L);
 		L.BeginModule("UnityEngine");
 		UnityEngine_ComponentWrap.Register(L);

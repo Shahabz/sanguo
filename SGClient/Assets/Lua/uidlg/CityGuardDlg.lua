@@ -226,7 +226,6 @@ function CityGuardDlgSet( recvValue )
 				break;
 			end
 		end
-		print( color.."/"..maxcolor )
 		if color >= maxcolor then
 			m_dataCache[offset].m_arrow = false
 		end
@@ -304,7 +303,7 @@ function CityGuardDlgChangeSec( recvValue )
 		SetTrue( m_uiDescText );
 		SetTrue( m_uiCDButton );
 		SetFalse( m_uiCallButton );
-		SetTimer( m_uiTimerText, recvValue.m_guardsec, recvValue.m_guardsec, 1 )
+		SetTimer( m_uiTimerText, recvValue.m_guardsec, recvValue.m_guardsec, 1, T(1463) )
 	else
 		SetFalse( m_uiTimerText );
 		SetFalse( m_uiDescText );

@@ -334,10 +334,10 @@ function MaterialMakeDlgMakeInfo()
 end
 
 -- 选择生产内容
-local colorsprite = { "ui_color_2", "ui_color_3", "ui_color_4" }
-local colorname = { 898, 899, 900 }
-local matname = { 913, 914, 915 }
-local drawingname = { 901, 902, 903 }
+local colorsprite = { "ui_color_2", "ui_color_3", "ui_color_4", "ui_color_5" }
+local colorname = { 898, 899, 900,1684 }
+local matname = { 913, 914, 915,916 }
+local drawingname = { 901, 902, 903,904 }
 function MaterialMakeDlgSelect( id )
 	m_id = id;
 	local objs = m_uiMakeInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -345,9 +345,10 @@ function MaterialMakeDlgSelect( id )
 	local uiInfo = objs[1];
 	local uiItems = objs[2];
 	local uiItemWarn = objs[3];
+	local uiMakeBtn = objs[4];
 	
 	-- 选择颜色
-	for i = 1, 3, 1 do
+	for i = 1, 4, 1 do
 		local uiObj = uiTags.transform:GetChild(i-1).gameObject;
 		if i <= m_pBuilding.m_level then
 			SetControlID( uiObj, 10+i )
@@ -384,6 +385,7 @@ function MaterialMakeDlgSelect( id )
 	if #m_CacheItemList > 0 then
 		SetTrue( uiItems )
 		SetFalse( uiItemWarn )
+		SetButtonTrue( uiMakeBtn )
 		for i=1, 6, 1 do
 			local uiObj = uiItems.transform:GetChild(i-1).gameObject;
 			if i <= #m_CacheItemList then
@@ -400,6 +402,7 @@ function MaterialMakeDlgSelect( id )
 		end
 		MaterialMakeDlgSelectItem( 1 )
 	else
+		SetButtonFalse( uiMakeBtn )
 		SetFalse( uiItems )
 		SetTrue( uiItemWarn )
 		SetText( uiItemWarn, F(910, T(drawingname[m_id]) ) )

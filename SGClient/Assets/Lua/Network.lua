@@ -179,7 +179,6 @@ function Network.OnConnectFail( buffer )
 	local err = buffer:ReadShort();
 	local msg = buffer:ReadString();
 	netlog("[OnConnectFail] error:"..err.." msg:"..msg);
-	
 	if Const.NetStatus < 2 then
 --[[		if Const.platid > 10 then
 			LoginModOpenSDKLoginActive( true );

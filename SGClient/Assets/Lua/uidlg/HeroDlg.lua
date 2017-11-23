@@ -175,7 +175,7 @@ function HeroDlgSetHero( index, pHero )
 	SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
 	SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
 	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
-	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
+	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
 	SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
 	SetText( uiSoldiersText, pHero.m_soldiers.."/"..pHero.m_troops );
 	if pHero.m_soldiers < pHero.m_troops then

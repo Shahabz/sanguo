@@ -30,6 +30,7 @@ public class UIProgress : MonoBehaviour
     Vector2                 _OriginValue = Vector2.zero;
 
 	public Image			progress;
+	public Image			fullProgress;
 	public ProgressMode		mode = ProgressMode.Scale;
 
     public void SetValue( float value )
@@ -41,10 +42,25 @@ public class UIProgress : MonoBehaviour
         if( float.IsNaN( value ) )
             value = 0f;
 
-        if ( value > 1.0 )
-            value = 1.0f;
-        else if ( value < 0.0 )
-            value = 0.0f;
+		if (value > 1.0)
+		{
+			value = 1.0f;
+		} 
+		else if (value < 0.0) 
+		{
+			value = 0.0f;
+		} 
+
+		if (fullProgress != null) 
+		{
+			if (value >= 0.99999f) {
+				fullProgress.gameObject.SetActive (true);
+				progress.gameObject.SetActive (false);
+			} else {
+				fullProgress.gameObject.SetActive (false);
+				progress.gameObject.SetActive (true);
+			}
+		}
 
 		switch( mode )
 		{
@@ -52,15 +68,23 @@ public class UIProgress : MonoBehaviour
 			Vector3 scale = progress.transform.localScale;
 			scale.x = value;
 			progress.transform.localScale = scale;
+			if ( fullProgress != null )
+				fullProgress.transform.localScale = scale;
 			break;
 		case ProgressMode.Fill:
 			progress.fillAmount = value;
+			if ( fullProgress != null )
+				fullProgress.fillAmount = value;
 			break;
         case ProgressMode.ExpandHorizon:
             progress.rectTransform.sizeDelta = new Vector2( _OriginValue.x * value, _OriginValue.y );
+			if ( fullProgress != null )
+				fullProgress.rectTransform.sizeDelta = new Vector2( _OriginValue.x * value, _OriginValue.y );
             break;
         case ProgressMode.Expandvertical:
             progress.rectTransform.sizeDelta = new Vector2( _OriginValue.x, _OriginValue.y * value );
+			if ( fullProgress != null )
+				fullProgress.rectTransform.sizeDelta = new Vector2( _OriginValue.x, _OriginValue.y * value );
             break;
 		}
 	}

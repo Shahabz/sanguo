@@ -8,6 +8,7 @@ local m_questid = 0;
 
 -- 打开界面
 function QuestAwardDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "QuestAwardDlg" );
 end
 
@@ -29,6 +30,7 @@ end
 -- 删除界面
 function QuestAwardDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 

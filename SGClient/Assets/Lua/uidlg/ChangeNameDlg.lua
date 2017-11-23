@@ -5,6 +5,7 @@ local m_uiNameInput = nil; --UnityEngine.GameObject
 local m_uiChangeNameBtn = nil; --UnityEngine.GameObject
 -- 打开界面
 function ChangeNameDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "ChangeNameDlg" );
 end
 
@@ -20,6 +21,7 @@ end
 -- 删除界面
 function ChangeNameDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 

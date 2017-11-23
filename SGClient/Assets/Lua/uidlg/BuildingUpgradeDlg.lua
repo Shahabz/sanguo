@@ -22,10 +22,18 @@ local m_recvValue = nil
 function BuildingUpgradeDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingUpgradeDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(801), 8, BuildingUpgradeDlgClose );
+	MainDlgClose()
+	if City.m_Camera ~= nil then
+		City.m_Camera.transform:GetComponent("ScreenBlur").enabled = true
+	end
 end
 
 -- 隐藏界面
 function BuildingUpgradeDlgClose()
+	if City.m_Camera ~= nil then
+		City.m_Camera.transform:GetComponent("ScreenBlur").enabled = false
+	end
+	MainDlgOpen()
 	if m_Dlg == nil then
 		return;
 	end
@@ -304,12 +312,12 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 	
 	-- 对号错号
 	local uiFlag = uiObj.transform:Find("Flag");
-	if type == 2 or type == 3 then
+	--if type == 2 or type == 3 then
 		SetImage( uiFlag, LoadSprite(flagname) );
 		SetTrue( uiFlag );
-	else
-		SetFalse( uiFlag );
-	end
+	--else
+		--SetFalse( uiFlag );
+	--end
 	
 	-- 按钮
 	local uiButton = uiObj.transform:Find("Button");
