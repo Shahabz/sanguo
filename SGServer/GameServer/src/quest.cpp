@@ -190,6 +190,7 @@ int quest_give( int actor_index )
 	}
 
 	quest_sendlist( actor_index );
+	//quest_checkcomplete( pCity );
 	return 0;
 }
 

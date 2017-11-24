@@ -131,7 +131,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1796297064999214}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4019919086348936}
@@ -239,6 +239,8 @@ MonoBehaviour:
   BuildingTimerMod: {fileID: 0}
   BuildingFreeMod: {fileID: 0}
   BuildingOverMod: {fileID: 0}
+  BuildingQuickMod: {fileID: 0}
+  BuildingWorkerQuickMod: {fileID: 0}
 --- !u!114 &114782902722968034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -306,6 +308,7 @@ SpriteRenderer:
   m_Size: {x: 1.88, y: 1.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!212 &212797394211232128
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -337,15 +340,16 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 10c7a67ee4f6a7142b317e51f9bd45bf, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: e667fc3e7beea4b22b0155634a672063, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.88, y: 1.08}
+  m_Size: {x: 2.55, y: 1.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!222 &222174354457192624
 CanvasRenderer:
   m_ObjectHideFlags: 1

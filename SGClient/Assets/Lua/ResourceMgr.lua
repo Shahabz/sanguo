@@ -122,6 +122,16 @@ function BuildingSprite( kind )
 	return sprite;
 end
 
+-- 建筑图标形象
+function BuildingIconSprite( kind )
+	local name = string.format("ui_main_building_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
 -- 道具形象
 function ItemSprite( kind )
 	local name = string.format("item_icon_%d", kind );

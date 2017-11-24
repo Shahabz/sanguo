@@ -57,4 +57,5 @@ int hero_colorup( int actor_index, int herokind );
 // 
 int hero_gm_level( City *pCity, int level );
 int hero_gm_soldiers( City *pCity );
+int hero_gm_getallhero( City *pCity );
 #endif

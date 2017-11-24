@@ -5,6 +5,7 @@ local m_uiUpgrade = nil; --UnityEngine.GameObject
 local m_uiEnter = nil; --UnityEngine.GameObject
 local m_uiTrain = nil; --UnityEngine.GameObject
 local m_uiSpeed = nil; --UnityEngine.GameObject
+local m_uiDelete = nil; --UnityEngine.GameObject
 
 local m_kind = 0;
 local m_offset = -1;
@@ -86,6 +87,7 @@ function BuildingOpratorModOnAwake( gameObject )
 	m_uiEnter = objs[2];
 	m_uiTrain = objs[3];
 	m_uiSpeed = objs[4];
+	m_uiDelete = objs[5];
    
     BuildingOpratorModClose();
 end
@@ -158,13 +160,28 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 				else
 					m_uiTrain:SetActive(true);
 				end
+				
+				-- 重建
+				if m_kind >= BUILDING_Militiaman_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+					if GetPlayer().m_attr.m_ability_open_203 > 0 then
+						m_uiDelete:SetActive(true);
+					end
+				end
+				
 			end
 			
 		
 		-- 资源	
 		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
-			m_uiUpgrade:SetActive(true);
-		
+			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+			if pBuilding.m_level < #g_building_upgrade[m_kind] then
+				m_uiUpgrade:SetActive(true);
+			end
+			-- 重建
+			if GetPlayer().m_attr.m_ability_open_203 > 0 then
+				m_uiDelete:SetActive(true);
+			end
+			
 		-- 太学院	
 		elseif m_kind == BUILDING_Tech then
 			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );

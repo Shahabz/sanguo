@@ -168,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1865286192661784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4667189146202508}
@@ -319,6 +319,8 @@ MonoBehaviour:
   BuildingTimerMod: {fileID: 0}
   BuildingFreeMod: {fileID: 0}
   BuildingOverMod: {fileID: 0}
+  BuildingQuickMod: {fileID: 0}
+  BuildingWorkerQuickMod: {fileID: 0}
 --- !u!114 &114487346245491908
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -338,7 +340,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 1ff6bbb7123564f84af15e7ad3d05cb4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f14279b8481d34b1494c24c4ed6542c8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -471,6 +473,7 @@ SpriteRenderer:
   m_Size: {x: 1.88, y: 1.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!212 &212523316970276026
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -502,15 +505,16 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 10c7a67ee4f6a7142b317e51f9bd45bf, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: d7eafa55e40f44f22a77d726bfa523b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.88, y: 1.08}
+  m_Size: {x: 1.25, y: 0.67}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
 --- !u!222 &222522568782959338
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -564,7 +568,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 44, y: 36}
+  m_SizeDelta: {x: 68, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224610126050158594
 RectTransform:

@@ -294,7 +294,7 @@ function City.BuildingSetTimer( info )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-50, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-100, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
@@ -329,11 +329,12 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-50, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-100, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
 	if sec <= 0 then
+		SetFalse( unitObj.transform:Find("shape_up") )
 		timerObj.gameObject:SetActive(false);
 		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
@@ -342,6 +343,7 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 		timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
 		timer:SetTime( 0, 0 );
 	else
+		SetTrue( unitObj.transform:Find("shape_up") )
 		timerObj.gameObject:SetActive(true);
 		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
@@ -433,6 +435,11 @@ function City.BuildingSetOver( kind )
 		overObj.transform.position = unitObj.transform.position;
 		overObj.transform.localPosition = Vector3.New( overObj.transform.localPosition.x, overObj.transform.localPosition.y, 0 );
 		overObj.transform.localScale = Vector3.one;
+		if kind == BUILDING_Craftsman then -- 材料作坊特殊处理
+			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..kind ) );
+		else
+			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..kind ) );
+		end
 		unitObj:GetComponent("CityBuilding").BuildingOverMod = overObj;
 	end
 	local ShareData = overObj.transform:GetComponent("ShareData");
@@ -559,19 +566,29 @@ end
 function City.GoToWorker()
 	-- 移动并选择
 	if GetPlayer().m_worker_kind > 0 then
-		City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, true )
+		if GetPlayer().m_worker_free > 0 then
+			-- 免费加速
+			system_askinfo( ASKINFO_BUILDING, "", 2, GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
+		else
+			City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, true )
+		end
 		return;
 	end
 	
 	-- 找到一个可以升级的
-	
+	City.FindCanUpgrade()
 end
 
 -- 点击建造队列商用
 function City.GoToWorkerEx()
 	-- 移动并选择
 	if GetPlayer().m_worker_kind_ex > 0 then
-		City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
+		if GetPlayer().m_worker_free_ex > 0 then
+			-- 免费加速
+			system_askinfo( ASKINFO_BUILDING, "", 2, GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
+		else
+			City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
+		end
 		return
 	end
 	
@@ -579,10 +596,68 @@ function City.GoToWorkerEx()
 	if GetPlayer().m_worker_expire_ex <= 0 then
 		-- 
 		BuyWorkerDlgShow();
+		return
 	end
 	
 	-- 找到一个可以升级的
+	City.FindCanUpgrade()
+end
+
+-- 找到一个可以升级的
+function City.FindCanUpgrade()
 	
+	-- 空闲建造队是否满足
+	local flag = true;
+	if GetPlayer().m_worker_kind > 0 and GetPlayer().m_worker_kind_ex > 0 then
+		flag = false;
+	elseif GetPlayer().m_worker_kind > 0 and GetPlayer().m_worker_expire_ex <= 0 then
+		flag = false;
+	end
+	if flag == false then
+		return;
+	end
+	
+	-- 优先普通建筑
+	for k, v in pairs( g_building_upgrade ) do
+		if k >= BUILDING_Main and k <= BUILDING_Militiaman_Archer and (k ~= GetPlayer().m_worker_kind and k ~= GetPlayer().m_worker_kind_ex) then
+			local pBuilding = GetPlayer():GetBuilding( k, -1 )
+			if pBuilding ~= nil then
+				local buildingConfig = v[pBuilding.m_level+1]
+				if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+					GetPlayer().m_level >= buildingConfig.actorlevel and
+					GetPlayer().m_silver >= buildingConfig.silver and
+					GetPlayer().m_wood >= buildingConfig.wood and
+					GetPlayer().m_food >= buildingConfig.food and
+					GetPlayer().m_iron >= buildingConfig.iron then
+					City.Move( k, -1, true )
+					return
+				end
+			end
+		end
+	end
+	
+	-- 找资源建筑
+	for k, v in pairs( g_building_upgrade ) do
+		if k >= BUILDING_Silver and k <= BUILDING_Iron and (k ~= GetPlayer().m_worker_kind and k ~= GetPlayer().m_worker_kind_ex) then
+			for offset=1, 64, 1 do
+				local pBuilding = GetPlayer():GetBuilding( k, offset )
+				if pBuilding ~= nil and pBuilding.m_level < #v then
+					local buildingConfig = v[pBuilding.m_level+1]
+					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+						GetPlayer().m_level >= buildingConfig.actorlevel and
+						GetPlayer().m_silver >= buildingConfig.silver and
+						GetPlayer().m_wood >= buildingConfig.wood and
+						GetPlayer().m_food >= buildingConfig.food and
+						GetPlayer().m_iron >= buildingConfig.iron then
+						City.Move( k, offset, true )
+						return
+					end
+				end
+			end
+		end
+	end
+	
+	--City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
 end
 
 -- 任务图标

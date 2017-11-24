@@ -116,5 +116,5 @@ int item_list( int actor_index );	// 发送道具列表
 int item_info( int actor_index, short itemindex ); // 发送道具详细信息
 int item_info_withitem( Item *pItem, int actor_index, short itemindex );// 真正的发送道具信息函数
 int item_tokenbuy_getinfo( int actor_index, int itemkind );
-
+int item_gm_getall( int actor_index );
 #endif

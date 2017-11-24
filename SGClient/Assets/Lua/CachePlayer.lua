@@ -185,6 +185,9 @@ end
 
 function Player:GetBuilding( kind, offset )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		if self.m_buildings_res[kind] == nil then
+			return nil
+		end
 		return self.m_buildings_res[kind][offset];
 	else
 		return self.m_buildings[kind];

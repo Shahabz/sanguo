@@ -258,6 +258,7 @@ int equip_getequip( int actor_index, int equipkind, char path )
 	if ( equipkind <= 0 || equipkind >= g_equipinfo_maxnum )
 		return -1;
 	Actor *pActor = &g_actors[actor_index];
+	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
 
 	// 创建道具
 	EquipOut pOut;
@@ -266,7 +267,7 @@ int equip_getequip( int actor_index, int equipkind, char path )
 	int ret = equip_create( actor_index, equipkind, &pOut );
 	if ( ret < 0 )
 		return -1;
-	if ( pOut.m_equip_offset >= 0 && pOut.m_equip_offset < MAX_DEFAULT_EQUIPNUM )
+	if ( pOut.m_equip_offset >= 0 && pOut.m_equip_offset < max_equipnum )
 	{
 		equip_sendget( actor_index, pOut.m_equip_offset, path );
 		wlog( 0, LOGOP_EQUIPGET, path, equipkind, 1, pActor->equip[pOut.m_equip_offset].id, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
@@ -1090,5 +1091,30 @@ int equip_wash_super( int actor_index, int offset )
 	{
 		equip_sendbag( actor_index, offset );
 	}
+	return 0;
+}
+
+int equip_gm_getall( int actor_index )
+{
+	equip_getequip( actor_index, 6, PATH_GM ); 
+	equip_getequip( actor_index, 16, PATH_GM );
+	equip_getequip( actor_index, 26, PATH_GM );
+	equip_getequip( actor_index, 36, PATH_GM );
+	equip_getequip( actor_index, 46, PATH_GM );
+	equip_getequip( actor_index, 56, PATH_GM );
+
+	equip_getequip( actor_index, 5, PATH_GM );
+	equip_getequip( actor_index, 15, PATH_GM );
+	equip_getequip( actor_index, 25, PATH_GM );
+	equip_getequip( actor_index, 35, PATH_GM );
+	equip_getequip( actor_index, 45, PATH_GM );
+	equip_getequip( actor_index, 55, PATH_GM );
+
+	equip_getequip( actor_index, 4, PATH_GM );
+	equip_getequip( actor_index, 14, PATH_GM );
+	equip_getequip( actor_index, 24, PATH_GM );
+	equip_getequip( actor_index, 34, PATH_GM );
+	equip_getequip( actor_index, 44, PATH_GM );
+	equip_getequip( actor_index, 54, PATH_GM );
 	return 0;
 }

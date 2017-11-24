@@ -125,12 +125,13 @@ function BuildingUpgradeDlgShow( kind, offset )
 	clearChild( m_uiCondition )
 
 	-- 请求数据
-	system_askinfo( ASKINFO_BUILDING, "", 0, kind, offset );
+	--system_askinfo( ASKINFO_BUILDING, "", 0, kind, offset );
 	
 	local m_pBuilding = GetPlayer():GetBuilding( kind, offset )
+	local nextlevel = m_pBuilding.m_level+1
 	SetImage( m_uiShape, BuildingSprite( kind ) );
 	SetText( m_uiName, BuildingNameLv( kind, (offset%16), m_pBuilding.m_level ) );
-	SetLevel( m_uiLevel, m_pBuilding.m_level+1 );
+	SetLevel( m_uiLevel, nextlevel );
 	SetText( m_uiSec, "" );
 	
 	-- 描述
@@ -211,9 +212,22 @@ function BuildingUpgradeDlgShow( kind, offset )
 		flag = false;
 	end
 	BuildingUpgradeCondSet( uiObj, T(607), flag, 1 )
+	
+	-- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,
+	local recvValue = {}
+	recvValue.m_maxlevel = #g_building_upgrade[kind]
+	recvValue.m_citylevel = g_building_upgrade[kind][nextlevel].citylevel
+	recvValue.m_actorlevel = g_building_upgrade[kind][nextlevel].actorlevel
+	recvValue.m_silver = g_building_upgrade[kind][nextlevel].silver
+	recvValue.m_wood = g_building_upgrade[kind][nextlevel].wood
+	recvValue.m_food = g_building_upgrade[kind][nextlevel].food
+	recvValue.m_iron = g_building_upgrade[kind][nextlevel].iron
+	recvValue.m_sec = g_building_upgrade[kind][nextlevel].sec
+	BuildingUpgradeDlgRecv( recvValue )
 end
 
 -- 数据返回
+-- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,
 function BuildingUpgradeDlgRecv( recvValue )
 	m_recvValue = recvValue;
 	local uiObj = nil;

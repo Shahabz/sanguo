@@ -32,23 +32,25 @@ local m_uiFood = nil; --UnityEngine.GameObject
 local m_uiFoodNum = nil; --UnityEngine.GameObject
 local m_uiAutoBuild = nil; --UnityEngine.GameObject
 local m_uiQuestText = nil; --UnityEngine.GameObject
-local m_uiButtonHero = nil; --UnityEngine.GameObject
-local m_uiButtonQuest = nil; --UnityEngine.GameObject
-local m_uiButtonNation = nil; --UnityEngine.GameObject
-local m_uiButtonWorld = nil; --UnityEngine.GameObject
-local m_uiButtonCity = nil; --UnityEngine.GameObject
-local m_uiButtonStory = nil; --UnityEngine.GameObject
-local m_uiButtonMail = nil; --UnityEngine.GameObject
-local m_uiButtonMore = nil; --UnityEngine.GameObject
-local m_uiButtonBag = nil; --UnityEngine.GameObject
-local m_uiButtonFriend = nil; --UnityEngine.GameObject
-local m_uiButtonNationEquip = nil; --UnityEngine.GameObject
-local m_uiButtonRank = nil; --UnityEngine.GameObject
-local m_uiButtonNotice = nil; --UnityEngine.GameObject
-local m_uiButtonSetting = nil; --UnityEngine.GameObject
-local m_uiButtonGM = nil; --UnityEngine.GameObject
-local m_uiButtonRelogin = nil; --UnityEngine.GameObject
-local m_uiButtonRestart = nil; --UnityEngine.GameObject
+local ButtonTable = {}
+ButtonTable.m_uiButtonHero = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonQuest = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonNation = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonWorld = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonCity = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonStory = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonMail = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonMore = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonBag = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonFriend = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonNationEquip = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonRank = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonNotice = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonSetting = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonGM = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonRelogin = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonRestart = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonGril = nil; --UnityEngine.GameObject
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
@@ -116,23 +118,25 @@ end
 -- 所属按钮点击时调用
 function MainDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
+		if nControlID ~= 8 and m_bMorePanel == true then
+			SetFalse( ButtonTable.m_uiButtonMore.transform:Find("Select") )
+			SetFalse(m_uiMorePanel)
+			m_bMorePanel = false;
+		end
         if nControlID == -1 then
             --MainDlgClose();
 		
 		-- 英雄
 		elseif nControlID == 1 then
 			HeroDlgShow();
-			
-		elseif nControlID == 2 then
-			--local kind = 21;
-			--local offsetlist ={ 49, 50, 51, 52 }
-			--for i=1, 2, 1 do
-				--local offset = math.random( 0, 63 )
-				--BuildingGetDlgShow( {m_kind=kind,m_offset=offset,m_level=1} );
-			--end
-		elseif nControlID == 3 then
-			--QuestAwardDlgShow();
 		
+		-- 任务	
+		elseif nControlID == 2 then
+		
+		-- 国家
+		elseif nControlID == 3 then
+			
+		-- 城池，世界
 		elseif nControlID == 4 or nControlID == 5 then
 			if GameManager.currentScence == "city" then
 				WorldMap.GotoWorldMap(-1, -1)
@@ -141,18 +145,22 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 				MainDlgShowCity()
 			end
 		
+		-- 副本
 		elseif nControlID == 6 then
 			StoryDlgShow()
-	
+		
+		-- 邮件
 		elseif nControlID == 7 then
 			MailDlgShow()
 		
 		-- 更多	
 		elseif nControlID == 8 then
 			if m_bMorePanel == true then
+				SetFalse( ButtonTable.m_uiButtonMore.transform:Find("Select") )
 				SetFalse(m_uiMorePanel)
 				m_bMorePanel = false;
 			else
+				SetTrue( ButtonTable.m_uiButtonMore.transform:Find("Select") )
 				SetTrue(m_uiMorePanel)
 				m_bMorePanel = true;
 			end
@@ -161,8 +169,14 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 11 then
 			BagDlgShow();
 		
+		-- 好友
 		elseif nControlID == 12 then
-			ChangeNameDlgShow();
+			
+		-- 国器
+		elseif nControlID == 13 then
+		
+		-- 排行榜
+		elseif nControlID == 14 then
 		
 		-- 系统公告
 		elseif nControlID == 15 then
@@ -200,6 +214,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		elseif nControlID == 100 then
 			PlayerDlgShow();
+			
 		elseif nControlID == 101 then
 		
 	
@@ -323,24 +338,24 @@ function MainDlgOnAwake( gameObject )
 	m_uiFoodNum = objs[29];
 	m_uiAutoBuild = objs[30];
 	m_uiQuestText = objs[31];
-	m_uiButtonHero = objs[32];
-	m_uiButtonQuest = objs[33];
-	m_uiButtonNation = objs[34];
-	m_uiButtonWorld = objs[35];
-	m_uiButtonCity = objs[36];
-	m_uiButtonStory = objs[37];
-	m_uiButtonMail = objs[38];
-	m_uiButtonMore = objs[39];
-	m_uiButtonBag = objs[40];
-	m_uiButtonFriend = objs[41];
-	m_uiButtonNationEquip = objs[42];
-	m_uiButtonRank = objs[43];
-	m_uiButtonNotice = objs[44];
-	m_uiButtonSetting = objs[45];
-	m_uiButtonGM = objs[46];
-	m_uiButtonRelogin = objs[47];
-	m_uiFunctionPanel = objs[48];
-	m_uiMorePanel = objs[49];
+	ButtonTable.m_uiButtonHero = objs[32];
+	ButtonTable.m_uiButtonQuest = objs[33];
+	ButtonTable.m_uiButtonNation = objs[34];
+	ButtonTable.m_uiButtonWorld = objs[35];
+	ButtonTable.m_uiButtonCity = objs[36];
+	ButtonTable.m_uiButtonStory = objs[37];
+	ButtonTable.m_uiButtonMail = objs[38];
+	ButtonTable.m_uiButtonMore = objs[39];
+	ButtonTable.m_uiButtonBag = objs[40];
+	ButtonTable.m_uiButtonFriend = objs[41];
+	ButtonTable.m_uiButtonNationEquip = objs[42];
+	ButtonTable.m_uiButtonRank = objs[43];
+	ButtonTable.m_uiButtonNotice = objs[44];
+	ButtonTable.m_uiButtonSetting = objs[45];
+	ButtonTable.m_uiButtonGM = objs[46];
+	ButtonTable.m_uiButtonRelogin = objs[47];
+	ButtonTable.m_uiFunctionPanel = objs[48];
+	ButtonTable.m_uiMorePanel = objs[49];
 	m_uiButtonBack[1] = objs[50];
 	m_uiButtonBack[2] = objs[51];
 	m_uiButtonBack[3] = objs[52];
@@ -354,7 +369,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiChat = objs[71];
 	m_uiChatText = objs[72];
 	m_uiQuest = objs[73];
-	m_uiButtonRestart = objs[74];
+	ButtonTable.m_uiButtonRestart = objs[74];
 	m_uiTopLeft = objs[75];
 	m_uiZoneName = objs[76];
 	m_uiWeatherDay = objs[77];
@@ -365,6 +380,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiWarTable.m_uiWarContent =  m_uiWarTable.m_uiWar.transform:Find("Scroll/Viewport/Content");
 	m_uiWarTable.m_uiUIP_WarText = objs[81];
 	m_uiWarTable.m_uiWarWarning = objs[82];
+	ButtonTable.m_uiButtonGril = objs[83];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
@@ -423,7 +439,7 @@ function MainDlgSetNation()
 		return;
 	end
 	SetImage( m_uiNation, NationSprite( GetPlayer().m_nation ) );
-	SetImage( m_uiButtonNation.transform:Find("Back"), NationSprite( GetPlayer().m_nation ) );
+	SetImage( ButtonTable.m_uiButtonNation.transform:Find("Back"), NationSprite( GetPlayer().m_nation ) );
 end
 
 -- 银币
@@ -580,12 +596,12 @@ function MainDlgSetMailNum( num )
 		return;
 	end
 	if num <= 0 then
-		SetFalse( m_uiButtonMail.transform:Find("Back/NumBack") )
-		SetFalse( m_uiButtonMail.transform:Find("Back/Num") )
+		SetFalse( ButtonTable.m_uiButtonMail.transform:Find("Back/NumBack") )
+		SetFalse( ButtonTable.m_uiButtonMail.transform:Find("Back/Num") )
 	else
-		SetTrue( m_uiButtonMail.transform:Find("Back/NumBack") )
-		SetTrue( m_uiButtonMail.transform:Find("Back/Num") )
-		SetText( m_uiButtonMail.transform:Find("Back/Num"), num );
+		SetTrue( ButtonTable.m_uiButtonMail.transform:Find("Back/NumBack") )
+		SetTrue( ButtonTable.m_uiButtonMail.transform:Find("Back/Num") )
+		SetText( ButtonTable.m_uiButtonMail.transform:Find("Back/Num"), num );
 	end
 end
 
@@ -627,26 +643,30 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 		
 		-- 停止动画
 		MainDlgWorkerStop( type+1 )
-		
-		uiWorker.transform:Find("NormalShape").gameObject:SetActive(true);
-		uiWorker.transform:Find("NormalShape").transform.localScale = Vector3.one;
+		local NormalShape = uiWorker.transform:Find("NormalShape");
+		if type == 1 then
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_3" ) )
+		else
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_4" ) )
+		end
+		NormalShape.gameObject:SetActive(true);
+		NormalShape.transform.localScale = Vector3.one;
 		uiWorker.transform:Find("WorkProgress").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
 		uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
-		
 		return;
 	end
 	
 	-- 建筑名
 	local name = T(kind);
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-		name = (offset%16+1).."号"..T(kind);		
+		name = (offset%16+1)..T(597)..T(kind);		
 	end
 		
 	-- 建筑形象
 	local BuildingShape = uiWorker.transform:Find("BuildingShape");
-	BuildingShape:GetComponent( "Image" ).sprite = BuildingSprite( kind );
+	BuildingShape:GetComponent( "Image" ).sprite = BuildingIconSprite( kind );
 	BuildingShape.gameObject:SetActive(true);
 	
 	-- 建筑名称
@@ -671,6 +691,19 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 	NormalShape.gameObject:SetActive(false);
 	NormalShape:GetComponent("UITweenScale"):Play(true);
 	
+	if type == 0 then
+		if GetPlayer().m_worker_free > 0 then
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_free" ) )
+		else
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_4" ) )
+		end
+	elseif type == 1 then 
+		if GetPlayer().m_worker_free_ex > 0 then
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_free" ) )
+		else
+			SetImage( NormalShape, LoadSprite( "ui_main_worker_3" ) )
+		end
+	end
 	-- 缺省文字
 	uiWorker.transform:Find("NormalText").gameObject:SetActive(false);
 	
@@ -744,52 +777,34 @@ end
 function MainDlgSetButtons()
 	for i=1, 24, 1 do
 		m_hasButton[i] = false;
-	end
---[[	SetParent( m_uiButtonHero = objs[32];
-	SetParent( m_uiButtonQuest = objs[33];
-	SetParent( m_uiButtonNation = objs[34];
-	SetParent( m_uiButtonWorld = objs[35];
-	SetParent( m_uiButtonCity = objs[36];
-	SetParent( m_uiButtonStory = objs[37];
-	SetParent( m_uiButtonMail = objs[38];
-	SetParent( m_uiButtonMore = objs[39];
-	SetParent( m_uiButtonBag = objs[40];
-	SetParent( m_uiButtonFriend = objs[41];
-	SetParent( m_uiButtonNationEquip = objs[42];
-	SetParent( m_uiButtonRank = objs[43];
-	SetParent( m_uiButtonNotice = objs[44];
-	SetParent( m_uiButtonSetting = objs[45];
-	SetParent( m_uiButtonGM = objs[46];
-	SetParent( m_uiButtonRelogin = objs[47];--]]--]]
-	
-	
+	end	
 	-- 英雄
-	SetParent( m_uiButtonHero, m_uiButtonBack[1] );
+	SetParent( ButtonTable.m_uiButtonHero, m_uiButtonBack[1] );
 	m_hasButton[1] = true;
 	
 	-- 任务
-	SetParent( m_uiButtonQuest, m_uiButtonBack[2] );
+	SetParent( ButtonTable.m_uiButtonQuest, m_uiButtonBack[2] );
 	m_hasButton[2] = true;
 	
 	-- 世界
-	SetParent( m_uiButtonWorld, m_uiButtonBack[4] );
-	SetParent( m_uiButtonCity, m_uiButtonBack[4] );
-	SetFalse( m_uiButtonWorld );
-	SetFalse( m_uiButtonCity );
+	SetParent( ButtonTable.m_uiButtonWorld, m_uiButtonBack[4] );
+	SetParent( ButtonTable.m_uiButtonCity, m_uiButtonBack[4] );
+	SetFalse( ButtonTable.m_uiButtonWorld );
+	SetFalse( ButtonTable.m_uiButtonCity );
 	m_hasButton[4] = true;
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WORLD ) == 1 then
-		SetTrue( m_uiButtonWorld );
+		SetTrue( ButtonTable.m_uiButtonWorld );
 	end
 	
 	-- 更多
-	SetParent( m_uiButtonMore, m_uiButtonBack[7] );
+	SetParent( ButtonTable.m_uiButtonMore, m_uiButtonBack[7] );
 	m_hasButton[7] = true;
 	
 	-- 国家
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATION ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonNation, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonNation, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end
@@ -798,7 +813,7 @@ function MainDlgSetButtons()
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_STORY ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonStory, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonStory, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end
@@ -807,7 +822,7 @@ function MainDlgSetButtons()
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_MAIL ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonMail, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonMail, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end	
@@ -815,7 +830,7 @@ function MainDlgSetButtons()
 	-- 背包
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonBag, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonBag, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	
@@ -823,7 +838,7 @@ function MainDlgSetButtons()
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FRIEND ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonFriend, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonFriend, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end	
@@ -832,7 +847,7 @@ function MainDlgSetButtons()
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonNationEquip, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonNationEquip, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end	
@@ -841,7 +856,7 @@ function MainDlgSetButtons()
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_RANK ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
-			SetParent( m_uiButtonRank, m_uiButtonBack[offset] );
+			SetParent( ButtonTable.m_uiButtonRank, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end	
@@ -849,35 +864,35 @@ function MainDlgSetButtons()
 	-- 系统公告
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonNotice, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonNotice, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	
 	-- 设置
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonSetting, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonSetting, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	
 	-- 联系客服
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonGM, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonGM, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	
 	-- 返回登陆
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonRelogin, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonRelogin, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	
 	-- 重新创角
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
-		SetParent( m_uiButtonRestart, m_uiButtonBack[offset] );
+		SetParent( ButtonTable.m_uiButtonRestart, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 end
@@ -891,8 +906,8 @@ end
 function MainDlgShowCity()
 	SetTrue( m_uiTop_City )
 	SetFalse( m_uiTop_Map )
-	SetTrue(m_uiButtonWorld )
-	SetFalse( m_uiButtonCity )
+	SetTrue( ButtonTable.m_uiButtonWorld )
+	SetFalse( ButtonTable.m_uiButtonCity )
 	MapMainDlgClose()
 end
 
@@ -900,8 +915,8 @@ end
 function MainDlgShowMap()
 	SetTrue( m_uiTop_Map )
 	SetFalse( m_uiTop_City )
-	SetFalse(m_uiButtonWorld )
-	SetTrue( m_uiButtonCity )
+	SetFalse( ButtonTable.m_uiButtonWorld )
+	SetTrue( ButtonTable.m_uiButtonCity )
 	MapMainDlgShow()
 	SetText( m_uiTopLeft.transform:Find( "Name" ), NationEx( GetPlayer().m_nation ) );
 	SetImage( m_uiTopLeft.transform:Find( "Icon" ), LoadSprite( "ui_worldmap_nation_"..GetPlayer().m_nation ) )

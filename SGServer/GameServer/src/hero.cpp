@@ -1263,3 +1263,16 @@ int hero_gm_soldiers( City *pCity )
 	}
 	return 0;
 }
+
+// 获取全部武将
+int hero_gm_getallhero( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	
+	for ( int kind = 1; kind < g_heroinfo_maxnum; kind++ )
+	{
+		hero_gethero( pCity->actor_index, kind, PATH_GM );
+	}
+	return 0;
+}

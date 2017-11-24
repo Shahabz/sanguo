@@ -64,4 +64,6 @@ int equip_wash_sendinfo( int actor_index );
 int equip_wash_free( int actor_index, int offset );
 int equip_wash_token( int actor_index, int offset );
 int equip_wash_super( int actor_index, int offset );
+
+int equip_gm_getall( int actor_index );
 #endif

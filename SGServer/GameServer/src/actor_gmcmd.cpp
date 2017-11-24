@@ -200,7 +200,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_ITEM:// µÀ¾ß
-		if ( pValue[0] == -1 && actor_index >= 0 )
+		if ( pValue[0] == -100 )
+		{
+			item_gm_getall( actor_index );
+			break;
+		}
+		else if ( pValue[0] == -1 && actor_index >= 0 )
 		{
 			int item_clear( int actorindex );
 			item_clear( actor_index );
@@ -245,6 +250,11 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			equip_clear( pCity->actor_index );
 			break;
 		}
+		else if ( pCity && pValue[0] == -100 )
+		{
+			equip_gm_getall( pCity->actor_index );
+			break;
+		}
 
 		if ( pCity )
 		{
@@ -270,6 +280,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			else if( pValue[0] == -2 )
 			{
 				hero_gm_soldiers( pCity );
+			}
+			else if ( pValue[0] == -100 )
+			{
+				hero_gm_getallhero( pCity );
 			}
 			else
 				hero_gethero( pCity->actor_index, pValue[0], PATH_GM );

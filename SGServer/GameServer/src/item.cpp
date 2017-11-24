@@ -771,3 +771,17 @@ int item_clear( int actor_index )
 
 	return 0;
 }
+
+int item_gm_getall( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	for ( short itemkind = 1; itemkind < g_itemkind_maxnum; itemkind++ )
+	{
+		if ( g_itemkind[itemkind].m_level <= 0 )
+			continue;
+		item_getitem( actor_index, itemkind, g_itemkind[itemkind].m_overlap, -1, PATH_GM );
+	}
+		
+	return 0;
+}
