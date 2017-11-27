@@ -294,9 +294,9 @@ struct _slk_NetS_AddMapUnit {
 	char m_char_value_count;	//地图单元-通用字段长度
 	char m_char_value[16];	//地图单元-通用字段
 	char m_short_value_count;	//地图单元-通用字段长度
-	short m_short_value[8];	//地图单元-通用字段
+	short m_short_value[16];	//地图单元-通用字段
 	char m_int_value_count;	//地图单元-通用字段长度
-	int m_int_value[8];	//地图单元-通用字段
+	int m_int_value[16];	//地图单元-通用字段
 	char m_prefixlen;	//地图单元-称号长度
 	char m_prefix[22];	//地图单元-称号
 };

@@ -69,6 +69,13 @@ public class BuildCharAnimaiton : Editor
                         dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
 				    AssetDatabase.SaveAssets();
                 }
+				else if( name.Substring( name.Length - 1 ) == "5" )
+				{
+					name = name.Substring( 0, name.Length - 1 ) + "3";
+					AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
+						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+					AssetDatabase.SaveAssets();
+				}
 				else if( name.Substring( name.Length - 1 ) == "6" )
 				{
 					name = name.Substring( 0, name.Length - 1 ) + "2";
@@ -76,6 +83,14 @@ public class BuildCharAnimaiton : Editor
 						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
 					AssetDatabase.SaveAssets();
 				}
+				else if( name.Substring( name.Length - 1 ) == "7" )
+				{
+					name = name.Substring( 0, name.Length - 1 ) + "1";
+					AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
+						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+					AssetDatabase.SaveAssets();
+				}
+
 
 				AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, dictoryAnimations.Name ),
                     dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + dictoryAnimations.Name + ".anim" );
@@ -196,7 +211,7 @@ public class BuildCharAnimaiton : Editor
         //}
 
         // 方向，5,7，翻转
-		if( name.Substring( name.Length - 1 ) == "5" || name.Substring( name.Length - 1 ) == "2" || name.Substring( name.Length - 1 ) == "7" )
+		if( name.Substring( name.Length - 1 ) == "1" || name.Substring( name.Length - 1 ) == "2" || name.Substring( name.Length - 1 ) == "3" )
         {
             EditorCurveBinding curve = new EditorCurveBinding();
             curve.type = typeof( Transform );

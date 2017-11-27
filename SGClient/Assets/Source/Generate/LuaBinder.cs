@@ -29,7 +29,7 @@ public static class LuaBinder
 		AudioManagerWrap.Register(L);
 		LocalizationWrap.Register(L);
 		DeviceHelperWrap.Register(L);
-		UnitMoveWrap.Register(L);
+		ArmyMoveWrap.Register(L);
 		ProgressSpriteWrap.Register(L);
 		UIModWrap.Register(L);
 		UISystemWrap.Register(L);
@@ -74,6 +74,7 @@ public static class LuaBinder
 		UIPolygonChartWrap.Register(L);
 		UIAutoSizeWrap.Register(L);
 		UITextAgentWrap.Register(L);
+		SpriteAnimationWrap.Register(L);
 		YlyAssetIdentifyWrap.Register(L);
 		YlyRichTextWrap.Register(L);
 		YlyDelegateUtilWrap.Register(L);

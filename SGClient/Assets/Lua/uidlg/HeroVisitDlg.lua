@@ -1,9 +1,13 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
 
 -- 打开界面
 function HeroVisitDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_gray" );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_up" );
 	m_Dlg = eye.uiManager:Open( "HeroVisitDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(1923), HELP_HeroDlg, HeroVisitDlgClose );
 end
 
 -- 隐藏界面
@@ -11,13 +15,16 @@ function HeroVisitDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "HeroVisitDlg" );
 end
 
 -- 删除界面
 function HeroVisitDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_herovisit_gray" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_herovisit_up" )
 	m_Dlg = nil;
 end
 

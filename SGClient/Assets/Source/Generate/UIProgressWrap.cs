@@ -11,6 +11,7 @@ public class UIProgressWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("progress", get_progress, set_progress);
+		L.RegVar("fullProgress", get_fullProgress, set_fullProgress);
 		L.RegVar("mode", get_mode, set_mode);
 		L.EndClass();
 	}
@@ -70,6 +71,25 @@ public class UIProgressWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_fullProgress(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UIProgress obj = (UIProgress)o;
+			UnityEngine.UI.Image ret = obj.fullProgress;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index fullProgress on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_mode(IntPtr L)
 	{
 		object o = null;
@@ -104,6 +124,25 @@ public class UIProgressWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index progress on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_fullProgress(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			UIProgress obj = (UIProgress)o;
+			UnityEngine.UI.Image arg0 = (UnityEngine.UI.Image)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.UI.Image));
+			obj.fullProgress = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index fullProgress on a nil value" : e.Message);
 		}
 	}
 

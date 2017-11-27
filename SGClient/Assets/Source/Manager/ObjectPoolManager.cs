@@ -44,10 +44,10 @@ public class ObjectPoolManager : MonoBehaviour
             GameObjectPool pool = m_GameObjectPools[poolName];
             result = pool.NextAvailableObject();
             if (result == null) {
-                Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
+                //Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
             }
         } else {
-            Debug.LogError("Invalid pool name specified: " + poolName);
+            //Debug.LogError("Invalid pool name specified: " + poolName);
         }
         return result;
     }
@@ -57,7 +57,7 @@ public class ObjectPoolManager : MonoBehaviour
             GameObjectPool pool = m_GameObjectPools[poolName];
             pool.ReturnObjectToPool(poolName, go);
         } else {
-            Debug.LogWarning("No pool available with name: " + poolName);
+            //Debug.LogWarning("No pool available with name: " + poolName);
         }
     }
 

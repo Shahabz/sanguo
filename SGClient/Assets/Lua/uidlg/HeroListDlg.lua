@@ -65,8 +65,10 @@ function HeroListDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 5 then
 			HeroListDlgOpenInfo();
 			HeroListDlgSelectCloseToggle();
+		--武将寻访
 		elseif nControlID == 6 then
-			--武将寻访
+			HeroListDlgClose()
+			HeroVisitDlgShow()
 		elseif nControlID >= 10000 then
 			HeroListDlgSelect(nControlID-10000);
 			HeroListDlgSelectCloseToggle();
@@ -388,7 +390,6 @@ function HeroListDlgSetHero( uiHeroObj, pHero )
 	SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 	SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
-	print(".."..pHero.m_qualtiy..".."..pHero.m_washqualtiy);
 	SetText(uiQualtiyText,F(1930,pHero.m_qualtiy,pHero.m_washqualtiy));
 	SetText(uiAttackText,pHero.m_attack);
 	SetText(uiDefenseText,pHero.m_defense);

@@ -208,7 +208,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 标题
 		SetText( m_uiTitle.transform:Find("Text"), T(954) )
 		-- 形象
-		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
+		m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
 		-- 名字+位置
 		SetText( m_uiName, F(955, level, posx, posy) )
 		-- 按钮名称

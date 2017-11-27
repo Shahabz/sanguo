@@ -270,9 +270,17 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 	{
 		return;
 	}
+
 	pAttr->m_state = pArmy->state;
 	pAttr->m_posx = pArmy->posx;
 	pAttr->m_posy = pArmy->posy;
+	strncpy( pAttr->m_name, army_getname( army_index ), NAME_SIZE );
+	pAttr->m_namelen = strlen( pAttr->m_name );
+	char from_nation = army_getnation( army_index );
+	if ( from_nation == 0 )
+	{ // 群雄部队不现实
+		return;
+	}
 
 	// 有出发位置和目的位置
 	if ( pArmy->state == ARMY_STATE_MARCH || pArmy->state == ARMY_STATE_REBACK )
@@ -331,12 +339,22 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 
 		}
 		// 国家
-		pAttr->m_char_value[4] = army_getnation( army_index );
+		pAttr->m_char_value[4] = from_nation;
 		pAttr->m_char_value_count = 5;
 
 		// 行为
 		pAttr->m_short_value[4] = pArmy->action;
 		pAttr->m_short_value_count = 5;
+
+		// 武将
+		for ( int i = 0; i < ARMY_HERO_MAX; i++ )
+		{
+			if ( pArmy->herokind[i] > 0 )
+			{
+				pAttr->m_short_value[pAttr->m_short_value_count] = pArmy->herokind[i];
+				pAttr->m_short_value_count += 1;
+			}
+		}
 
 		// 部队索引
 		pAttr->m_int_value[0] = army_index;
@@ -344,16 +362,11 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 		pAttr->m_int_value[1] = pArmy->statetime;
 		// 需要多少秒
 		pAttr->m_int_value[2] = pArmy->stateduration;
-		pAttr->m_int_value_count = 3;
-		// 武将
-		for ( int i = 0; i < ARMY_HERO_MAX; i++ )
-		{
-			if ( pArmy->herokind[i] > 0 )
-			{
-				pAttr->m_int_value[pAttr->m_int_value_count] = pArmy->herokind[i];
-				pAttr->m_int_value_count += 1;
-			}
-		}
+		// 出发actorid
+		pAttr->m_int_value[3] = army_getcityid( army_index );
+		// 目标actorid
+		pAttr->m_int_value[4] = army_getcityid_target( army_index );
+		pAttr->m_int_value_count = 5;
 
 	}
 }
@@ -1303,7 +1316,7 @@ void army_logic( int army_index )
 }
 
 // 获取部队所属城池
-City *army_getcityptr( int army_index )
+inline City *army_getcityptr( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return NULL;
@@ -1319,7 +1332,7 @@ City *army_getcityptr( int army_index )
 }
 
 // 获取部队目标所属城池
-City *army_getcityptr_target( int army_index )
+inline City *army_getcityptr_target( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return NULL;
@@ -1422,7 +1435,7 @@ char *army_getname_target( int army_index )
 }
 
 // 获取部队所属城池
-int army_getcityid( int army_index )
+inline int army_getcityid( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return 0;
@@ -1460,7 +1473,7 @@ int army_getnation( int army_index )
 }
 
 // 获取部队目标城池
-int army_getcityid_target( int army_index )
+inline int army_getcityid_target( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return 0;

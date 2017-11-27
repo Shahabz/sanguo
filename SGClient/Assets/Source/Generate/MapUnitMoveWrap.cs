@@ -42,8 +42,8 @@ public class MapUnitMoveWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			MapUnitMove obj = (MapUnitMove)o;
-			int ret = obj.stat;
-			LuaDLL.lua_pushinteger(L, ret);
+			short ret = obj.stat;
+			LuaDLL.lua_pushnumber(L, ret);
 			return 1;
 		}
 		catch(Exception e)
@@ -99,7 +99,7 @@ public class MapUnitMoveWrap
 		{
 			o = ToLua.ToObject(L, 1);
 			MapUnitMove obj = (MapUnitMove)o;
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			short arg0 = (short)LuaDLL.luaL_checknumber(L, 2);
 			obj.stat = arg0;
 			return 0;
 		}

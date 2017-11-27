@@ -23,6 +23,10 @@ local m_uiExpPanel = nil; --UnityEngine.GameObject
 local m_uiSoldierPanel = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
 local m_uiEquipInfo = nil; --UnityEngine.GameObject
+local m_uiAttackIncreaseIcon = nil; --UnityEngine.GameObject
+local m_uiAttackIncrease = nil; --UnityEngine.GameObject
+local m_uiDefenseIncreaseIcon = nil; --UnityEngine.GameObject
+local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
@@ -142,7 +146,11 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiSoldierPanel = objs[23];
 	m_uiName = objs[24];
 	m_uiEquipInfo = objs[25];
-	
+	m_uiAttackIncreaseIcon = objs[26];
+	m_uiAttackIncrease = objs[27];
+	m_uiDefenseIncreaseIcon = objs[28];
+	m_uiDefenseIncrease = objs[29];
+
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_HeroHead", 4, 4, m_uiUIP_HeroHead);
@@ -193,12 +201,6 @@ function HeroInfoDlgSet( sys, pHero, up )
 	m_up = up
 	HeroInfoDlgClear()
 	
-	-- 能力范围图
---[[	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
-	uiPolygonChart.VerticesDistances[0] = 0.5
-	uiPolygonChart.VerticesDistances[1] = 0.5
-	uiPolygonChart.VerticesDistances[2] = 0.5--]]
-	
 	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
 	
@@ -212,6 +214,7 @@ function HeroInfoDlgSet( sys, pHero, up )
 	-- 兵力
 	SetProgress( m_uiSoldierPanel.transform:Find("Progress"), pHero.m_soldiers/pHero.m_troops )
 	SetText( m_uiSoldierPanel.transform:Find("Text"), knum(pHero.m_soldiers).."/"..knum(pHero.m_troops) )
+	SetImage( m_uiSoldierPanel.transform:Find("Corps"), CorpsSprite( pHero.m_corps ) )
 	
 	-- 属性
 	SetText( m_uiAttackBase, T(143).." "..(pHero.m_attack_base+pHero.m_attack_wash) );
@@ -224,7 +227,35 @@ function HeroInfoDlgSet( sys, pHero, up )
 	SetText( m_uiAttack,  T(146)..":"..pHero.m_attack );
 	SetText( m_uiDefense,  T(147)..":"..pHero.m_defense )
 	SetText( m_uiSoldier,  T(148)..":"..pHero.m_troops )
-		
+	
+	-- 强攻
+	if pHero.m_attack_increase > 0 then
+		SetTrue( m_uiAttackIncreaseIcon )
+		SetTrue( m_uiAttackIncrease )
+		SetText( m_uiAttackIncrease, T(165).."+"..pHero.m_attack_increase );
+	else
+		SetFalse( m_uiAttackIncreaseIcon )
+		SetFalse( m_uiAttackIncrease )
+	end
+	
+	-- 强防
+	if pHero.m_defense_increase > 0 then
+		SetTrue( m_uiDefenseIncreaseIcon )
+		SetTrue( m_uiDefenseIncrease )
+		SetText( m_uiDefenseIncrease, T(166).."+"..pHero.m_defense_increase );
+	else
+		SetFalse( m_uiDefenseIncreaseIcon )
+		SetFalse( m_uiDefenseIncrease )
+	end
+	
+	SetFalse( m_uiAbilityArea )
+	SetTrue( m_uiAbilityArea )
+	-- 能力范围图
+	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
+	uiPolygonChart.VerticesDistances[0] = pHero.m_attack_base/total
+	uiPolygonChart.VerticesDistances[1] = pHero.m_defense_base/total
+	uiPolygonChart.VerticesDistances[2] = pHero.m_troops_base/total
+	
 	-- 装备
 	for i=0,5,1 do
 		local objs = m_uiEquip[i].transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -251,7 +282,7 @@ function HeroInfoDlgSet( sys, pHero, up )
 			else
 				SetFalse( uiAdd )
 			end
-			SetImage( uiShape, LoadSprite("ui_icon_back_3") )
+			SetImage( uiShape, EquipNormalSprite(i+1) )
 		end
 	end
 	
@@ -395,6 +426,10 @@ function HeroInfoDlgSelectEquip( offset )
 	local uiUIP_Equip = objs[9];
 	local uiForgingBtn = objs[10];
 	local uiWash = objs[11];
+	local uiWashLevel = objs[12];
+	local uiScrollBack = objs[13];
+	local uiEmpty = objs[14];
+	
 	SetControlID( uiDownBtn, 10 + offset );
 	SetControlID( uiWashBtn, 100 + offset );
 	-- 已经装备的信息
@@ -406,12 +441,15 @@ function HeroInfoDlgSelectEquip( offset )
 		SetFalse( uiDesc )
 		SetTrue( uiDownBtn )
 		SetTrue( uiWashBtn )
+		SetTrue( uiWash )
+		SetTrue( uiWashLevel )
 		
 		SetImage( uiShape, EquipSprite( kind ) )
 		SetImage( uiColor, ItemColorSprite( equip_getcolor( kind ) ) )
 		SetText( uiName, equip_getname( kind ), NameColor( equip_getcolor( kind ) ) );
 		SetText( uiAbility, equip_getabilityname( kind ) );
 		SetEquipWash( uiWash, m_pCacheHero.m_Equip[offset] );
+		SetEquipWashLevel( uiWashLevel, m_pCacheHero.m_Equip[offset] );
 	else
 	
 		SetTrue( uiShape )
@@ -419,9 +457,11 @@ function HeroInfoDlgSelectEquip( offset )
 		SetFalse( uiName )
 		SetFalse( uiAbility )
 		SetTrue( uiDesc )
+		SetFalse( uiWash )
+		SetFalse( uiWashLevel )
 		SetFalse( uiDownBtn )
 		SetFalse( uiWashBtn )
-		SetImage( uiShape, LoadSprite("ui_icon_back_3") )
+		SetImage( uiShape, EquipNormalSprite(offset+1) )
 		SetText( uiDesc, T(823+offset) )
 	end
 	
@@ -454,19 +494,26 @@ function HeroInfoDlgSelectEquip( offset )
 		local uiUpBtn = objs[3];
 		local uiColor = objs[4];
 		local uiWash = objs[5];
-		
+		local uiWashLevel = objs[6];
 		SetControlID( uiUpBtn, 2000+equipoffset )
 		SetImage( uiShape, EquipSprite( pEquip.m_kind ) )
 		SetImage( uiColor, ItemColorSprite( equip_getcolor( pEquip.m_kind ) ) )
 		SetText( uiName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor( pEquip.m_kind ) ) );
 		SetText( uiAbility, equip_getabilityname( pEquip.m_kind ) );
 		SetEquipWash( uiWash, pEquip );
+		SetTrue( uiWash )
+		SetEquipWashLevel( uiWashLevel, pEquip );
+		SetTrue( uiWashLevel )
 	end
 	
     if #m_MatchEquipList == 0 then
 		SetTrue( uiForgingBtn )
+		SetFalse( uiScrollBack )
+		SetTrue( uiEmpty )
 	else
 		SetFalse( uiForgingBtn )
+		SetTrue( uiScrollBack )
+		SetFalse( uiEmpty )
 	end       
 end
 

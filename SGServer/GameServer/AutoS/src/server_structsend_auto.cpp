@@ -450,10 +450,10 @@ int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *p
 	if( pValue->m_char_value_count > 0 && pValue->m_char_value_count <= 16 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_char_value, pValue->m_char_value_count*sizeof(char), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_short_value_count, (*psize) );
-	if( pValue->m_short_value_count > 0 && pValue->m_short_value_count <= 8 )
+	if( pValue->m_short_value_count > 0 && pValue->m_short_value_count <= 16 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_short_value, pValue->m_short_value_count*sizeof(short), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_int_value_count, (*psize) );
-	if( pValue->m_int_value_count > 0 && pValue->m_int_value_count <= 8 )
+	if( pValue->m_int_value_count > 0 && pValue->m_int_value_count <= 16 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_int_value, pValue->m_int_value_count*sizeof(int), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_prefixlen, (*psize) );
 	if( pValue->m_prefixlen > 0 && pValue->m_prefixlen <= 22 )

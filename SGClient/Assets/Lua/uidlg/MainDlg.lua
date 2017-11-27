@@ -132,7 +132,8 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 任务	
 		elseif nControlID == 2 then
-		
+			QuestDlgShow()
+			
 		-- 国家
 		elseif nControlID == 3 then
 			

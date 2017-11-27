@@ -92,7 +92,6 @@ local MapClickMod		= nil;	-- 操作界面
 local MapCamera 		= nil;	-- 地图摄像机
 local MapTmx            = {};   -- 地图池，只实例化4个
 CityArmyGroupClickMod	= nil;	-- 
-
 local m_RecvValue = nil;
 
 -- 世界地图信息
@@ -258,13 +257,13 @@ function WorldMap.Start( Prefab )
     MapUnit.unitRoot = Prefab.transform:Find("MapUnitRoot");
 
 	-- 获取组件
-	MapTmxRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapTmxRoot" );
-	MapUnitRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapUnitRoot" );
-	MapLineRoot				= WorldMapPrefab:GetComponent("Transform"):Find( "MapLineRoot" );
-	MapClickEffect			= WorldMapPrefab:GetComponent("Transform"):Find( "MapClickEffect" );
-	MapClickMod				= WorldMapPrefab:GetComponent("Transform"):Find( "MapClickMod" );
-	MapCamera				= WorldMapPrefab:GetComponent("Transform"):Find( "MapCamera" );
-	CityArmyGroupClickMod	= WorldMapPrefab:GetComponent("Transform"):Find( "CityArmyGroupClickMod" ).transform:GetComponent("UIMod");
+	MapTmxRoot				= WorldMapPrefab.transform:Find( "MapTmxRoot" );
+	MapUnitRoot				= WorldMapPrefab.transform:Find( "MapUnitRoot" );
+	MapLineRoot				= WorldMapPrefab.transform:Find( "MapLineRoot" );
+	MapClickEffect			= WorldMapPrefab.transform:Find( "MapClickEffect" );
+	MapClickMod				= WorldMapPrefab.transform:Find( "MapClickMod" );
+	MapCamera				= WorldMapPrefab.transform:Find( "MapCamera" );
+	CityArmyGroupClickMod	= WorldMapPrefab.transform:Find( "CityArmyGroupClickMod" ).transform:GetComponent("UIMod");
 	
 	-- 根据地图大小动态加载N*N个Tmx地图
 	local TmxMapPrefab = LoadPrefab( "TmxMap" );

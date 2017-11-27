@@ -110,7 +110,7 @@ function WorldQuestInfoDlgShow( recvValue )
 	
 	-- 显示流寇
 	if questid == 1 or questid == 2 or questid == 3 then
-		SetImage( m_uiShape, LoadSprite("mapunit_enemy_level1") )
+		SetImage( m_uiShape, EnemySprite( 1, 1 ) )
 		SetText( m_uiName, T(938) )
 		
 	-- 显示营地

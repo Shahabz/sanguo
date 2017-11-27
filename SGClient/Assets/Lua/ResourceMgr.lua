@@ -92,14 +92,21 @@ function CorpsFaceSpriteEx( buildingkind )
 	return CorpsFaceSprite( corps );
 end
 
--- 英雄颜色框
+-- 英雄颜色底板(带ab读取)
 function HeroColorSprite( color )
-	local name = "ui_color_"..color;
+	local name = "ui_static_colorpanel_"..color;
+	ResourceManager.LoadAssetBundle( "_ab_"..name );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "ui_static_colorpanel_0" );
 	end
 	return sprite;
+end
+
+-- 英雄颜色底板卸载
+function HeroColorSpriteUnload( color )
+	local name = "ui_static_colorpanel_"..color;
+	ResourceManager.UnloadAssetBundle( "_ab_"..name );
 end
 
 -- 守卫头像
@@ -145,6 +152,16 @@ end
 -- 装备形象
 function EquipSprite( kind )
 	local name = string.format("equip_icon_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "equip_icon_1" );
+	end
+	return sprite;
+end
+
+-- 装备缺省图标
+function EquipNormalSprite( type )
+	local name = string.format("ui_icon_back_equip%d", type );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "equip_icon_1" );
@@ -252,6 +269,16 @@ end
 function ResItemIcon( type )
 	local list = { "item_icon_120", "item_icon_121", "item_icon_122", "item_icon_123", "item_icon_124" }
 	local sprite = LoadSprite( list[type] );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 流寇形象
+function EnemySprite( shape, frames )
+	local name = string.format("map_enemy_%d_%d", shape, frames );
+	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
 	end

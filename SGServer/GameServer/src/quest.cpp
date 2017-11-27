@@ -65,7 +65,12 @@ int questlist_init()
 			int index = questlist_index[questtype];
 			if ( index >= 0 && index <= g_questinfo_maxnum )
 			{
-				g_questlist[questtype][index] = atoi( row[1] );
+				int questid = atoi( row[1] );
+				if ( questid <= 0 || questid >= QUEST_MAXNUM )
+				{
+					return -1;
+				}
+				g_questlist[questtype][index] = questid;
 				questlist_index[questtype] += 1;
 			}
 		}
@@ -118,7 +123,7 @@ int quest_give( int actor_index )
 	for ( int tmpi = 0; tmpi < g_questinfo_maxnum; tmpi++ )
 	{
 		int questid = g_questlist[QUEST_TYPE_MAIN][tmpi];
-		if ( questid <= 0 || questid >= QUEST_MAXNUM )
+		if ( questid <= 0 || questid >= g_questinfo_maxnum )
 			break;
 		QuestInfo *questinfo = &g_questinfo[questid];
 		if ( questinfo == NULL )
@@ -160,7 +165,7 @@ int quest_give( int actor_index )
 	for ( int tmpi = 0; tmpi < g_questinfo_maxnum; tmpi++ )
 	{
 		int questid = g_questlist[QUEST_TYPE_BRANCH][tmpi];
-		if ( questid <= 0 || questid >= QUEST_MAXNUM )
+		if ( questid <= 0 || questid >= g_questinfo_maxnum )
 			break;
 		QuestInfo *questinfo = &g_questinfo[questid];
 		int preid = questinfo->preid;
@@ -203,7 +208,7 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
 	{
 		int questid = pCity->questid[tmpi];
-		if ( questid <= 0 || questid >= QUEST_MAXNUM )
+		if ( questid <= 0 || questid >= g_questinfo_maxnum )
 			continue;
 		QuestInfo *questinfo = &g_questinfo[questid];
 		if ( !questinfo )
@@ -237,7 +242,7 @@ int quest_getcomplete( int actor_index, int questid, int *value )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	if ( questid <= 0 || questid >= QUEST_MAXNUM )
+	if ( questid <= 0 || questid >= g_questinfo_maxnum )
 		return -1;
 	// 每个unsigned char 存4个任务状态，每个任务占2位, 2位最大表示3，3的二进制是11
 	int offset = (questid - 1) * 2 / 8;
@@ -255,7 +260,7 @@ int quest_setcomplete( int actor_index, int questid, int flag )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-	if ( questid <= 0 || questid >= QUEST_MAXNUM )
+	if ( questid <= 0 || questid >= g_questinfo_maxnum )
 		return -1;
 	int offset = (questid - 1) * 2 / 8;
 	int bit = (questid - 1) * 2 % 8;
@@ -495,7 +500,7 @@ int quest_sendlist( int actor_index )
 	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
 	{
 		int questid = pCity->questid[tmpi];
-		if ( questid > 0 && questid < QUEST_MAXNUM )
+		if ( questid > 0 && questid < g_questinfo_maxnum )
 		{
 			int nowvalue = 0;
 			int flag = quest_getcomplete( actor_index, questid, &nowvalue );
@@ -570,7 +575,7 @@ int quest_sendawardinfo( int actor_index, int questid )
 //	for ( int tmpi = 0; tmpi < g_questinfo_maxnum; tmpi++ )
 //	{
 //		int id = g_questlist[QUEST_TYPE_MAIN][tmpi];
-//		if ( id <= 0 || id >= QUEST_MAXNUM )
+//		if ( id <= 0 || id >= g_questinfo_maxnum )
 //			break;
 //		QuestInfo *questinfo = &g_questinfo[id];
 //		if ( questinfo == NULL )
@@ -586,7 +591,7 @@ int quest_sendawardinfo( int actor_index, int questid )
 //	}
 //
 //	// 主线任务
-//	if ( questid > 0 && questid < QUEST_MAXNUM )
+//	if ( questid > 0 && questid < g_questinfo_maxnum )
 //	{
 //		int nowvalue = 0;
 //		int flag = QUEST_COMPLETEFLAG_NORMAL;

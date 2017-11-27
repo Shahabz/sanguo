@@ -29,6 +29,12 @@ end
 -- 删除界面
 function HeroColorupDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	HeroColorSpriteUnload( 0 )
+	HeroColorSpriteUnload( 1 )
+	HeroColorSpriteUnload( 2 )
+	HeroColorSpriteUnload( 3 )
+	HeroColorSpriteUnload( 4 )
+	HeroColorSpriteUnload( 5 )
 	m_Dlg = nil;
 end
 
@@ -102,7 +108,7 @@ function HeroColorupDlgShow( pHero )
 	
 	local itemname = item_getname( config.itemkind )
 	m_hasitemnum = GetItem():GetCount( config.itemkind )
-	SetText( m_uiMyItemNum, T(848)..itemname.." "..m_hasitemnum )
+	SetText( m_uiMyItemNum, T(848)..itemname.." "..knum(m_hasitemnum) )
 	SetText( m_uiColorDesc, F( 853, ColorName(pHero.m_color), HeroName(pHero.m_kind), ColorName(config.nextcolor) ) )
 	if m_hasitemnum >= config.itemnum then
 		SetText( m_uiCoatValue, T(850)..itemname..":<color=#03de27ff>"..config.itemnum.."</color><color=#03de27ff>/"..m_hasitemnum.."</color>" )
@@ -125,14 +131,16 @@ function HeroColorupDlgSetHero( uiObj, pHero, color )
 	SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind )  );
 	SetImage( uiObj.transform:Find("Color"),  ItemColorSprite( color )  );
 	SetImage( uiObj.transform:Find("Corps"),  CorpsSprite( pHero.m_corps )  );
+	SetImage( uiObj.transform:Find("Back"),  HeroColorSprite( color ) )
 	local uiGrid = uiObj.transform:Find("Grid");
 	
 	-- 总资质
+	local attrname = T(149)..":<color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
 	local total = config.attack_base + config.defense_base + config.troops_base;
 	local total_wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash;
 	
 	local uiTotalGrowth = uiGrid.transform:GetChild(0).gameObject;
-	SetText( uiTotalGrowth.transform:Find("Text"), T(149)..":"..(total).."+"..(total_wash) )
+	SetText( uiTotalGrowth.transform:Find("Text"), Utils.StringFormat( attrname, total, total_wash ) )
 	
 	-- 攻
 	local uiAttackBase = uiGrid.transform:GetChild(1).gameObject;

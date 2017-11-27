@@ -1436,7 +1436,7 @@ int kingwar_army_pk( int actor_index, int army_index, int id )
 		if ( pDCity )
 		{
 			pDCity->kw_totalkill += g_fight.defense_total_damage;
-			pValue.m_list[pValue.m_count].m_d_heroid = hero_getcolor( pDCity, pValue.m_list[pValue.m_count].m_d_heroid );
+			pValue.m_list[pValue.m_count].m_d_color = hero_getcolor( pDCity, pValue.m_list[pValue.m_count].m_d_heroid );
 			strncpy( pValue.m_list[pValue.m_count].m_d_name, pDCity->name, NAME_SIZE );
 			pValue.m_list[pValue.m_count].m_d_name_len = strlen( pValue.m_list[pValue.m_count].m_d_name );
 		}

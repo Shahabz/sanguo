@@ -246,14 +246,14 @@ function BagDlgClearItem()
 end
 -- 清空装备对象
 function BagDlgClearEquip()
-    if m_uiEquipContent ~= nil then
+   --[[ if m_uiEquipContent ~= nil then
         local childCount = m_uiEquipContent.transform.childCount;
         for i = 6, childCount - 1, 1 do
             local child = m_uiEquipContent.transform:GetChild(i).gameObject;
             -- 不删除,改为隐藏
             child:SetActive(false);
         end
-    end
+    end--]]
     m_CacheEquipCache = { };
     m_CacheEquipList = { };
 end
@@ -376,7 +376,7 @@ function BagDlgLoadEquip()
     local equipCount = 0;
     local currEquipRow = nil;
     local rowCount = 0;
-
+	
     -- 先放进临时缓存
     for nEquipIndex = 1, MAX_EQUIPNUM, 1 do
         local pEquip = GetEquip().m_Equip[nEquipIndex];
@@ -394,24 +394,29 @@ function BagDlgLoadEquip()
     -- 排序
     table.sort(m_CacheEquipCache, BagDlgEquipCacheSort);
 
-    -- 创建对象
+    -- 创建排数对象
+	local MaxEquipNum = GetPlayer().m_equipext+MAX_DEFAULT_EQUIPNUM
+	local MaxRow = math.floor( MaxEquipNum/5 ); -- 最大排数
+	local NowRow =  m_uiEquipContent.transform.childCount;-- 当前排数
+	for i=1, MaxRow-NowRow, 1 do
+		currEquipRow = GameObject.Instantiate(m_uiUIP_EquipRow);
+		currEquipRow.transform:SetParent(m_uiEquipContent.transform);
+		currEquipRow.transform.localScale = Vector3.one;
+		currEquipRow:SetActive(true);
+		BagDlgClearEquipRow(currEquipRow);
+	end
+	
+	-- 创建对象
     for nEquipIndex = 1, #m_CacheEquipCache, 1 do
+		local equipIndex = equipCount % 5;
+		if equipIndex == 0 then
+			currEquipRow = m_uiEquipContent.transform:GetChild(rowCount).gameObject;
+			BagDlgClearEquipRow(currEquipRow);
+			rowCount = rowCount + 1;
+		end
+			
         local pEquip = m_CacheEquipCache[nEquipIndex];
         if pEquip ~= nil and pEquip.m_kind > 0 then
-            local equipIndex = equipCount % 5;
-            if equipIndex == 0 then
-                if rowCount >= m_uiEquipContent.transform.childCount then
-                    currEquipRow = GameObject.Instantiate(m_uiUIP_EquipRow);
-                    currEquipRow.transform:SetParent(m_uiEquipContent.transform);
-                    currEquipRow.transform.localScale = Vector3.one;
-                    currEquipRow:SetActive(true);
-                else
-                    currEquipRow = m_uiEquipContent.transform:GetChild(rowCount).gameObject;
-                    currEquipRow:SetActive(true);
-                end
-				BagDlgClearEquipRow(currEquipRow);
-                rowCount = rowCount + 1;
-            end
             local uiEquipObj = currEquipRow.transform:GetChild(equipIndex);
             uiEquipObj:GetComponent("UIButton").controlID = 2000 + pEquip.m_offset;
 			local objs = uiEquipObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;

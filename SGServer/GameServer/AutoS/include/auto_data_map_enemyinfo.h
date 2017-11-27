@@ -6,6 +6,7 @@ struct _mapenemyinfo {
 //--Automatically generated
 				short kind;	//
 				short level;	//
+				short shape;	//
 				int first_awardgroup;	//
 				int awardgroup;	//
 				short monsterid[4];	//

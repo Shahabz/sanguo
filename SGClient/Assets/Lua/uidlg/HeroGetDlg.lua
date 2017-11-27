@@ -14,6 +14,7 @@ local m_herokind = 0;
 
 -- 打开界面
 function HeroGetDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "HeroGetDlg" );
 end
 
@@ -29,6 +30,7 @@ end
 -- 删除界面
 function HeroGetDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 
@@ -98,7 +100,7 @@ function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
 	m_herokind = recvValue.m_kind;
 	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
-	SetImage( m_uiHeroColor,  HeroColorSprite( recvValue.m_color )  );
+	SetImage( m_uiHeroColor,  ItemColorSprite( recvValue.m_color )  );
 	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );
 	SetText( m_uiHeroName, HeroName( recvValue.m_kind ).."("..T(134+recvValue.m_corps)..")", NameColor(recvValue.m_color) )
 	

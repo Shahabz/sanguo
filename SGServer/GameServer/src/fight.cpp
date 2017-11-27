@@ -88,7 +88,7 @@ char g_gm_isout = 0;
 extern int g_map_town_attackmonster[3][8];
 static char *s_fight_posname[] = { "", "attack", "defense" };
 #ifdef _WIN32
-char g_test_mod = 1;
+char g_test_mod = 0;
 #else
 char g_test_mod = 0;
 #endif

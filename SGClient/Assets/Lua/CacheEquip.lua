@@ -443,3 +443,19 @@ function SetEquipWash( uiWash, pEquip )
 	end
 end
 
+-- 设置装备洗练属性信息
+function SetEquipWashLevel( uiWashLevel, pEquip )
+	for i=1, 4, 1 do
+		local uiLevel = uiWashLevel.transform:GetChild(i-1).gameObject;
+		local color = equip_getcolor( pEquip.m_kind );
+		local washid = pEquip.m_washid[i];
+		if washid > 0 then
+			SetTrue( uiLevel )
+			SetImage( uiLevel.transform:Find("Icon"), EquipWashSprite( g_equip_wash[washid].ability ) )
+			SetText( uiLevel.transform:Find("Level"), "Lv."..g_equip_wash[washid].level )
+		else	
+			SetFalse( uiLevel )
+		end
+	end
+end
+

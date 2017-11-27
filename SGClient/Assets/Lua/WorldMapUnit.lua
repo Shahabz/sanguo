@@ -211,6 +211,8 @@ MapUnit.objectPoolEnemy 		= {}; 	-- 流寇
 MapUnit.objectPoolRes 			= {}; 	-- 资源田
 MapUnit.objectPoolEvent 		= {}; 	-- 事件
 MapUnit.objectCenterTownRange 	= {}; 	-- 皇城区域范围
+MapUnit.SpritePoolEnemy			= {};	-- 流寇形象
+MapUnit.SpritePoolRes			= {};	-- 资源田形象
 
 -- 初始化
 function MapUnit.init()
@@ -224,6 +226,24 @@ function MapUnit.init()
 		MapUnitEvent		= LoadPrefab("MapUnitEvent");
 		MapBorder			= LoadPrefab("MapBorder");
 		MapTownRange		= LoadPrefab("MapTownRange");
+		
+		-- 流寇资源
+		for k, v in pairs( g_enemyinfo ) do
+			if MapUnit.SpritePoolEnemy[v.shape] == nil or #MapUnit.SpritePoolEnemy[v.shape] == 0 then
+				MapUnit.SpritePoolEnemy[v.shape] = {}
+				MapUnit.SpritePoolEnemy[v.shape][1] = EnemySprite( v.shape, 1 )
+				MapUnit.SpritePoolEnemy[v.shape][2] = EnemySprite( v.shape, 2 )
+				MapUnit.SpritePoolEnemy[v.shape][3] = EnemySprite( v.shape, 3 )
+			end	
+		end
+		
+		-- 资源田形象 g_resinfo
+		for k, v in pairs( g_resinfo ) do
+			if MapUnit.SpritePoolRes[v.type] == nil then
+				MapUnit.SpritePoolRes[v.type] = LoadSprite( MapUnitResShapeList[v.type] )
+			end
+		end
+		
 		MapUnitInited 	= true;
 	end
 end
@@ -246,6 +266,8 @@ function MapUnit.clear()
 	MapUnit.objectPoolEnemy 	= {};
 	MapUnit.objectPoolRes 		= {};
 	MapUnit.objectPoolEvent 	= {};
+	MapUnit.SpritePoolEnemy		= {};
+	MapUnit.SpritePoolRes		= {};
 	
 	MapUnit.cache 				= {};
 	MapUnit.objectCenterTownRange = {};
@@ -392,13 +414,15 @@ function MapUnit.createArmy( recvValue )
 	local state 	= recvValue.m_state;
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
-	
-	-- 本国玩家可看见驻防
+	local action	= recvValue.m_short_value[5];
+	local nation	= recvValue.m_char_value[5];
+	local from_actorid = recvValue.m_int_value[4];
+	local to_actorid = recvValue.m_int_value[5];
+			
+	-- 驻防玩家和被驻防玩家可看见驻防部队
 	if state == ARMY_STATE_MARCH or state == ARMY_STATE_REBACK then
-		local action	= recvValue.m_short_value[5];
-		local nation	= recvValue.m_char_value[5];
 		if action == ARMY_ACTION_HELP_TROOP then
-			if nation ~= GetPlayer().m_nation then
+			if from_actorid ~= GetPlayer().m_actorid and to_actorid ~= GetPlayer().m_actorid then
 				return
 			end
 		end
@@ -440,17 +464,15 @@ function MapUnit.createArmy( recvValue )
 		local to_grid 		= recvValue.m_char_value[4];
 		local to_posx 		= recvValue.m_short_value[3];
 		local to_posy		= recvValue.m_short_value[4];
-		local nation	    = recvValue.m_char_value[5];
-		local action		= recvValue.m_short_value[5];
 		local army_index 	= recvValue.m_int_value[1];
 		local move_time 	= recvValue.m_int_value[2];
 		local move_needtime = recvValue.m_int_value[3];
 
 		-- 武将
 		local heroid = {};
-		if recvValue.m_int_value_count >= 4 then
-			for i=4,recvValue.m_int_value_count,1 do
-				table.insert( heroid, recvValue.m_int_value[i] )
+		if recvValue.m_short_value_count >= 6 then
+			for i=6,recvValue.m_short_value_count,1 do
+				table.insert( heroid, recvValue.m_short_value[i] )
 			end
 		end
 		
@@ -478,46 +500,80 @@ function MapUnit.createArmy( recvValue )
 		local direction = Vector3.New( tposx - fposx, tposy - fposy, 0 );
 
 		-- 开始移动
-		local moveAttr = unitObj:GetComponent("MapUnitMove");
+		local moveAttr = unitObj:GetComponent("ArmyMove");
 		moveAttr.stat = 1;
 		moveAttr.speed = speed;
+		moveAttr.fromPosition = Vector3.New( fposx, fposy, WORLDMAP_ZORDER_ARMY );
 		moveAttr.toPosition = Vector3.New( tposx, tposy, WORLDMAP_ZORDER_ARMY );
+		--[[if state == ARMY_STATE_MARCH then
+			moveAttr.reback = 0
+		elseif state == ARMY_STATE_REBACK then
+			moveAttr.reback = 1
+		end--]]
 		
 		-- 武将形象
-		for i=1, 4, 1 do
-			local uiHero = unitObj.transform:GetChild(i-1);
-			if i <= #heroid then
-				SetTrue(uiHero)
-				if from_type == MAPUNIT_TYPE_TOWN and heroid[i] >= 1000 then
-					SetText( uiHero.transform:Find("Name"), T(1330) )
+		if from_actorid == GetPlayer().m_actorid then
+			moveAttr.invokeShow = 1;
+			for i=1, 4, 1 do
+				local uiHero = unitObj.transform:GetChild(i-1);
+				if i <= #heroid then
+					if i == 1 then
+						SetTrue(uiHero) -- 第1个武将默认显示
+					else
+						SetFalse(uiHero)
+					end
+					if from_type == MAPUNIT_TYPE_TOWN and heroid[i] >= 1000 then
+						SetText( uiHero.transform:Find("Name"), T(1330) )
+					else
+						SetText( uiHero.transform:Find("Name"), HeroName( heroid[i] ) )
+					end	
+					local shapeObj = uiHero.transform:Find("Shape");
+					local childCount = shapeObj.transform.childCount;
+					for i = 0, childCount - 1, 1 do
+						GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
+					end
+					local shape = nation;
+					if shape == 0 then
+						shape = 1;
+					end
+					local charactor = Character.Create( shape );
+					charactor.transform:SetParent( shapeObj.transform );
+					charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
+					charactor.transform.localScale = Vector3.one;
+					charactor:TurnTo( direction );
+					charactor:Walk();
+					
+					local pos = direction.normalized * ( ( i - 1 ) * -0.8 )
+					pos.z = pos.y;
+					uiHero.transform.localPosition = pos;
+
 				else
-					SetText( uiHero.transform:Find("Name"), HeroName( heroid[i] ) )
-				end	
-				local shapeObj = uiHero.transform:Find("Shape");
-				local childCount = shapeObj.transform.childCount;
-				for i = 0, childCount - 1, 1 do
-					GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
+					SetFalse( uiHero )
 				end
-				local shape = nation;
-				if shape == 0 then
-					shape = 4;
-				end
-				local charactor = Character.Create( shape );
-				charactor.transform:SetParent( shapeObj.transform );
-				charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
-				charactor.transform.localScale = Vector3.one;
-				charactor:Show(true)
-				charactor:TurnTo( direction );
-				charactor:Walk();
-				
-				local pos = direction * ( ( #heroid - 1 ) * 0.3 -  0.6 * ( i - 1 ) )/10;
-				pos.z = pos.y;
-				uiHero.transform.localPosition = pos;
-			else
-				SetFalse( uiHero )
 			end
+			moveAttr.heroCount = #heroid
+		else
+			moveAttr.invokeShow = 0;
+			-- 别人的部队
+			local uiHero = unitObj.transform:GetChild(0);
+			SetFalse( unitObj.transform:GetChild(1) )
+			SetFalse( unitObj.transform:GetChild(2) )
+			SetFalse( unitObj.transform:GetChild(3) )
+			SetTrue( uiHero )
+			SetText( uiHero.transform:Find("Name"), recvValue.m_name )
+			local shapeObj = uiHero.transform:Find("Shape");
+			local childCount = shapeObj.transform.childCount;
+			for i = 0, childCount - 1, 1 do
+				GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
+			end
+			local shape = nation;
+			local charactor = Character.Create( shape );
+			charactor.transform:SetParent( shapeObj.transform );
+			charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
+			charactor.transform.localScale = Vector3.one;
+			charactor:TurnTo( direction );
+			charactor:Walk();
 		end
-		
 	end
 	return unitObj;
 end
@@ -731,51 +787,19 @@ function MapUnit.createEnemy( recvValue )
 		SetText( uiName, "Lv."..level.." "..T(938), Color.white )
 	end
 	
-	if level <= 7 then
-		uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
+	local shape = g_enemyinfo[kind].shape
+	local spriteAni = uiShape:GetComponent( typeof(SpriteAnimation) )
+	spriteAni.SpriteFrames[0] =  MapUnit.SpritePoolEnemy[shape][1]
+	spriteAni.SpriteFrames[1] =  MapUnit.SpritePoolEnemy[shape][2]
+	spriteAni.SpriteFrames[2] =  MapUnit.SpritePoolEnemy[shape][3]
+	
+	local spriteRenderer = uiShape:GetComponent("SpriteRenderer");
+	spriteRenderer.sprite = MapUnit.SpritePoolEnemy[shape][1]
+	if math.random( 1, 2 ) == 1 then
+		spriteRenderer.flipX = true;
 	else
-		uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level7");
-	end
-	-- 形象
-	
---[[	local shapeObj = unitObj.transform:FindChild("Shape");
-	local childCount = shapeObj.transform.childCount;
-	for i = 0, childCount - 1, 1 do
-		GameObject.Destroy( shapeObj.transform:GetChild(i).gameObject );
-	end--]]
-	--[[local charactor = Character.Create( shape );
-    charactor.transform:SetParent( unitObj.transform:FindChild("Shape").transform );
-	charactor.transform.localPosition = Vector3.New( 0, 0, 0 );
-    charactor.transform.localScale = Vector3.one;
-	charactor.transform:FindChild("Sprite"):GetComponent("SpriteRenderer").sortingOrder  = 0
-	charactor.transform:FindChild("Shadow"):GetComponent("SpriteRenderer").sortingOrder  = 0;
-    charactor.defalutDirction = math.random( 0, 1 ) * 2 + 3;
-	charactor:Show(true);
-
-    -- 是否是使命目标怪物
-    if level == MissionGetTargetMosnterLevel() then
-        unitObj.transform:FindChild("Mark").gameObject:SetActive( true );
-        --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.red;
-    else
-        unitObj.transform:FindChild("Mark").gameObject:SetActive( false );
-        --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.white;
-    end
-	
-	-- 动作
-	-- 待机
-	if action == MONSTER_ACTION_IDLE then
-	    charactor:GetComponent("Character"):Idle();
-		
-	-- 攻击	
-	elseif action == MONSTER_ACTION_ATTACK then
-		charactor:GetComponent("Character"):Attack();
-	
-	-- 死亡	
-	elseif action == MONSTER_ACTION_DEAD then
-		charactor:GetComponent("Character"):Die();
-		
-	end--]]
-
+		spriteRenderer.flipX = false;
+	end	
 	return unitObj;
 end
 
@@ -820,7 +844,8 @@ function MapUnit.createRes( recvValue )
 	local uiEffectGather = objs[2];
 		
 	-- 形象
-    uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
+    --uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
+	uiShape:GetComponent("SpriteRenderer").sprite = MapUnit.SpritePoolRes[restype]
 	
 	-- 名字
 	if state == ARMY_STATE_GATHER then
@@ -1055,7 +1080,6 @@ function MapUnit.armySpeedUpdate( unit_index, state, statetime, stateduration )
 	local speed = distance/(move_needtime-move_time);
 
 	-- 开始移动
-	local moveAttr = unitObj:GetComponent("MapUnitMove");
+	local moveAttr = unitObj:GetComponent("ArmyMove");
 	moveAttr.speed = speed;
 end
-

@@ -87,6 +87,7 @@
      <Compile Include="Assets\Source\Base\ShareData.cs" />
      <Compile Include="Assets\Source\Base\ShowFPS.cs" />
      <Compile Include="Assets\Source\Base\ShowMemorySize.cs" />
+     <Compile Include="Assets\Source\Base\SpriteAnimation.cs" />
      <Compile Include="Assets\Source\Base\SpriteGroup.cs" />
      <Compile Include="Assets\Source\Base\Utils.cs" />
      <Compile Include="Assets\Source\Camera\Camera2D.cs" />
@@ -118,6 +119,7 @@
      <Compile Include="Assets\Source\FileSystem\PathUtil.cs" />
      <Compile Include="Assets\Source\FileSystem\StringUtil.cs" />
      <Compile Include="Assets\Source\FileSystem\TableUtil.cs" />
+     <Compile Include="Assets\Source\Generate\ArmyMoveWrap.cs" />
      <Compile Include="Assets\Source\Generate\AudioManagerWrap.cs" />
      <Compile Include="Assets\Source\Generate\BezierMoveWrap.cs" />
      <Compile Include="Assets\Source\Generate\BezierWrap.cs" />
@@ -189,6 +191,7 @@
      <Compile Include="Assets\Source\Generate\ScreenBlurWrap.cs" />
      <Compile Include="Assets\Source\Generate\ShakeWrap.cs" />
      <Compile Include="Assets\Source\Generate\ShareDataWrap.cs" />
+     <Compile Include="Assets\Source\Generate\SpriteAnimationWrap.cs" />
      <Compile Include="Assets\Source\Generate\StringUtilWrap.cs" />
      <Compile Include="Assets\Source\Generate\TableUtilWrap.cs" />
      <Compile Include="Assets\Source\Generate\TypeWriterWrap.cs" />
@@ -233,7 +236,6 @@
      <Compile Include="Assets\Source\Generate\UITweenScaleWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenSizeDeltaWrap.cs" />
      <Compile Include="Assets\Source\Generate\UITweenWrap.cs" />
-     <Compile Include="Assets\Source\Generate\UnitMoveWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_AnimationBlendModeWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_AnimationClipWrap.cs" />
      <Compile Include="Assets\Source\Generate\UnityEngine_AnimationStateWrap.cs" />
@@ -333,9 +335,9 @@
      <Compile Include="Assets\Source\Manager\ThreadManager.cs" />
      <Compile Include="Assets\Source\Manager\UIManager.cs" />
      <Compile Include="Assets\Source\Manager\UpdateManager.cs" />
+     <Compile Include="Assets\Source\Map\ArmyMove.cs" />
      <Compile Include="Assets\Source\Map\MapBorder.cs" />
      <Compile Include="Assets\Source\Map\MapUnitMove.cs" />
-     <Compile Include="Assets\Source\Map\UnitMove.cs" />
      <Compile Include="Assets\Source\Map\WorldMap.cs" />
      <Compile Include="Assets\Source\Map\WorldMapCamera.cs" />
      <Compile Include="Assets\Source\Map\WorldMapThumb.cs" />

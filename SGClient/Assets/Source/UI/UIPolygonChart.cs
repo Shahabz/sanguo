@@ -20,6 +20,12 @@ public class UIPolygonChart : UIPrimitiveBase
 
 	private float size = 0;  
 
+	protected override void Start ()
+	{
+		base.Start ();
+		Update ();
+	}
+
 	public void DrawPolygon(int _sides)  
 	{  
 		sides = _sides;  

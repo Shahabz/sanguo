@@ -114,7 +114,7 @@ function MapEnemyDlgShow( recvValue )
 	end
 	
 	-- 形象
-	m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_enemy_level"..level);
+	m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
 	-- 名字
 	SetText( m_uiName, "Lv."..level.." "..T(938) )
 	-- 位置

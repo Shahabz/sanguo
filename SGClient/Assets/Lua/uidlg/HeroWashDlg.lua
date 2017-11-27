@@ -11,6 +11,8 @@ local m_uiCorps = nil; --UnityEngine.GameObject
 local m_uiGrid = nil; --UnityEngine.GameObject
 local m_uiUIP_HeroHead = nil; --UnityEngine.GameObject
 local m_uiTimer = nil; --UnityEngine.GameObject
+local m_uiColorBack = nil; --UnityEngine.GameObject
+
 local m_ObjectPool = nil;
 
 local m_CacheHeroCache = {};
@@ -36,6 +38,12 @@ end
 -- 删除界面
 function HeroWashDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	HeroColorSpriteUnload( 0 )
+	HeroColorSpriteUnload( 1 )
+	HeroColorSpriteUnload( 2 )
+	HeroColorSpriteUnload( 3 )
+	HeroColorSpriteUnload( 4 )
+	HeroColorSpriteUnload( 5 )
 	m_Dlg = nil;
 end
 
@@ -83,6 +91,7 @@ function HeroWashDlgOnAwake( gameObject )
 	m_uiGrid = objs[8];
 	m_uiUIP_HeroHead = objs[9];
 	m_uiTimer = objs[10];
+	m_uiColorBack = objs[11];
 	
 	SetFalse( m_uiNum );
 	SetFalse( m_uiTimer );
@@ -191,6 +200,7 @@ function HeroWashDlgSelectHero( kind )
 			SetImage( m_uiShape, HeroHeadSprite( pHero.m_kind )  );
 			SetImage( m_uiColor,  ItemColorSprite( pHero.m_color )  );
 			SetImage( m_uiCorps,  CorpsSprite( pHero.m_corps )  );
+			SetImage( m_uiColorBack, HeroColorSprite( pHero.m_color ) )
 			
 			local config = g_heroinfo[pHero.m_kind][pHero.m_color];
 			
@@ -198,8 +208,9 @@ function HeroWashDlgSelectHero( kind )
 			local total = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
 			local total_wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash;
 			
+			local attrname = T(149)..":<color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
 			local uiTotalGrowth = m_uiGrid.transform:GetChild(0).gameObject;
-			SetText( uiTotalGrowth.transform:Find("Text"), T(149)..":"..(total).."+"..(total_wash) )
+			SetText( uiTotalGrowth.transform:Find("Text"), Utils.StringFormat( attrname, total, total_wash ) )
 			SetProgress( uiTotalGrowth, total_wash/config.total_wash )
 			if total_wash >= config.total_wash then
 				SetTrue( uiTotalGrowth.transform:Find("Full") )
@@ -277,6 +288,9 @@ function HeroWashDlgUpdate()
 end
 
 function HeroWashDlgFree()
+	if m_recvValue == nil then
+		return
+	end
 	if m_recvValue.m_hero_washnum <= 0 then
 		pop(T(843))
 		return

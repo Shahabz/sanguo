@@ -120,9 +120,6 @@ public class Character : MonoBehaviour
         _CurrShape = GetShape( shapeID );
         _CharAnime.SetShape( _CurrShape );
         ResetForward();
-        
-        // 影子
-        transform.Find( "Shadow" ).localScale = Vector3.one * _CurrShape.shadow;
     }
 
     // 调整朝向

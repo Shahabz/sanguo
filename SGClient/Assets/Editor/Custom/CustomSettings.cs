@@ -174,7 +174,7 @@ public static class CustomSettings
         _GT(typeof(Localization)),
         _GT(typeof(DeviceHelper)),
         _GT(typeof(OpenUDIDPhone.OpenUDID)),
-		_GT(typeof(UnitMove)),
+		_GT(typeof(ArmyMove)),
         _GT(typeof(ProgressSprite)),
 
         // UI
@@ -241,6 +241,7 @@ public static class CustomSettings
 		_GT(typeof(UIPolygonChart)),
 		_GT(typeof(UIAutoSize)),
 		_GT(typeof(UITextAgent)),
+		_GT(typeof(SpriteAnimation)),
 
 		_GT(typeof(YlyAssetIdentify)),
 		_GT(typeof(YlyRichText)),

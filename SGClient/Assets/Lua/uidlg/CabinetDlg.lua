@@ -1,6 +1,6 @@
 -- 界面
 local m_Dlg = nil;
-
+local m_DialogFrameMod = nil;
 local m_pBuilding = nil;
 -- 打开界面
 function CabinetDlgOpen()

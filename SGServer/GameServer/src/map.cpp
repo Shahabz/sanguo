@@ -139,7 +139,7 @@ void map_areaenter( int actor_index, int areaindex, short posx, short posy )
 }
 
 // 获取占地格子
-int map_getobject_grid( int type, int index )
+inline int map_getobject_grid( int type, int index )
 {
 	int grid = 1;
 	switch ( type )
