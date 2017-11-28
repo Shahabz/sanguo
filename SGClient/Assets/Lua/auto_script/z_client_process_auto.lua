@@ -184,6 +184,10 @@ function proc_buildinglist_C( recvValue )
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_WISHING ) == 1 then
 		GetPlayer():SetBuilding( BUILDING_Wishing,{ m_kind = BUILDING_Wishing, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
 	end
+	-- Ãñ±øÓª
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_Militiaman ) == 1 then
+		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
+	end
 	MainDlgSetButtons();
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
@@ -807,9 +811,10 @@ function proc_function_C( recvValue )
 		local kind = kindlist[ recvValue.m_openoffset ]
 		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
 		
+	elseif recvValue.m_openoffset == CITY_FUNCTION_Militiaman then
+		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
 	else
 		MainDlgSetButtons();
-		
 	end
 end
 
@@ -864,7 +869,9 @@ end
 function proc_buildingaction_C( recvValue )
 	-- process.
 	if recvValue.m_action == 1 then
-		City.BuildingSetUpgradeing( recvValue.m_kind, recvValue.m_offset, 0, 0 )
+		City.BuildingSetUpgradeing( recvValue.m_kind, recvValue.m_offset, 0, 0, 0 )
+	elseif recvValue.m_action == 2 then
+		City.BuildingDel( { m_kind=recvValue.m_kind, m_offset=recvValue.m_offset } )
 	end
 end
 

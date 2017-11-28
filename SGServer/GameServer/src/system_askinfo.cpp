@@ -139,6 +139,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 加速奖励的加速
 			building_awardquick_get( actor_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 5 )
+		{ // 改建
+			building_rebuild( g_actors[actor_index].city_index, pvalue[1], pvalue[2], pvalue[3] );
+		}
 		break;
 	case ASKINFO_LEVY:
 		if ( pvalue[0] == 0 )

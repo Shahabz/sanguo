@@ -62,9 +62,17 @@ function City.BuildingSelect( transform )
 	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
 		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
 		if GetPlayer().m_worker_kind == building.kind then
-			QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+			if GetPlayer().m_worker_op == 4 then
+				QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec );
+			else
+				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+			end
 		else
-			QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+			if GetPlayer().m_worker_op_ex == 4 then
+				QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+			else
+				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+			end
 		end
 	else
 		BuildingOpratorModShow( false, 0, -1, nil );
@@ -128,7 +136,7 @@ function City.BuildingLandSelect( transform )
 		return;
 	else
 		buildingLand = transform:GetComponent("CityLand");
-		BuildingCreateDlgShow( buildingLand.buildingkinds, buildingLand.offset );
+		BuildingCreateDlgShowByID( 0, buildingLand.id );
 		City.m_Camera:TweenPosToInBound( transform.position, 0.2 );
 	end
 end
@@ -238,18 +246,43 @@ function City.BuildingDel( info )
 		landname = BuildingPrefab[kind].land;
 		unitObj = City.m_Buildings[kind];
 	end
+	GameObject.Destroy( unitObj.gameObject );
 	
-	GameObject.Destroy( unitObj );
-	
-	local land = City.BuildingRoot().transform.Find( landname );
-	land:SetActive(true);
-	
+
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		City.m_Buildings_res[kind][offset] = nil;	
 	else	
 		City.m_Buildings[kind] = nil;		
 	end
 end
+
+-- 显示空地
+function City.BuildingLandShow( kind, offset )
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		if City.m_Buildings_res[kind] ~= nil then
+			unitObj = City.m_Buildings_res[kind][offset];
+		end
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	-- 没有就显示
+	if unitObj == nil then
+		if BuildingPrefab[kind] == nil then
+			return
+		end
+		local landname = "";
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			landname = BuildingPrefab[kind].land..offset;
+		else
+			landname = BuildingPrefab[kind].land;
+		end
+		
+		local land = City.BuildingRoot().transform:Find( landname );
+		SetTrue( land )
+	end
+end
+
 
 -- 刷新
 function City.BuildingRefurbish( info ) 
@@ -294,7 +327,7 @@ function City.BuildingSetTimer( info )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-100, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x-10, timerObj.transform.localPosition.y-100, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
@@ -305,8 +338,18 @@ function City.BuildingSetTimer( info )
 		else
 			timerObj.gameObject:SetActive(true);
 		end
-
-		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
+		
+		local iconname = "";
+		if kind == BUILDING_Tech then -- 太学院
+			iconname = "ui_opration_state_3"
+		elseif kind == BUILDING_Craftsman then -- 材料作坊
+			iconname = "ui_opration_item_"..info.m_value;
+		elseif kind >= BUILDING_Infantry and kind <= BUILDING_Militiaman_Archer then -- 兵营
+			iconname = "ui_opration_state_2"
+		elseif kind == BUILDING_Smithy then -- 铁匠铺
+			iconname = "ui_opration_state_4"
+		end
+		timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite = LoadSprite( iconname );
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
 		timer.controlID = 1;
 		timer.uiMod = timerObj.transform:GetComponent("UIMod");
@@ -316,7 +359,7 @@ function City.BuildingSetTimer( info )
 end
 
 -- 升级计时器
-function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
+function City.BuildingSetUpgradeing( kind, offset, needsec, sec, op )
 	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		unitObj = City.m_Buildings_res[kind][offset];
@@ -329,23 +372,35 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec )
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
 		timerObj.transform:SetParent( City.m_BuildingUI );
 		timerObj.transform.position = unitObj.transform.position;
-		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x, timerObj.transform.localPosition.y-100, 0 );
+		timerObj.transform.localPosition = Vector3.New( timerObj.transform.localPosition.x-10, timerObj.transform.localPosition.y-100, 0 );
 		timerObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingTimerMod = timerObj;
 	end
 	if sec <= 0 then
+		unitObj.transform:Find("shape"):GetComponent("SpriteRenderer").color = Hex2Color( 0xffffffff )
 		SetFalse( unitObj.transform:Find("shape_up") )
 		timerObj.gameObject:SetActive(false);
-		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
 		timer.controlID = 0;
 		timer.uiMod = timerObj.transform:GetComponent("UIMod");
 		timer.uiProgress = timerObj.transform:Find( "Progress" ):GetComponent( "UIProgress" );
 		timer:SetTime( 0, 0 );
 	else
-		SetTrue( unitObj.transform:Find("shape_up") )
 		timerObj.gameObject:SetActive(true);
-		--timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite;
+		
+		local opicon = "ui_opration_state_1";
+		if op == 1 then -- 建造
+			SetTrue( unitObj.transform:Find("shape_up") )
+			opicon = "ui_opration_3";
+		elseif op == 2 then -- 升级
+			SetTrue( unitObj.transform:Find("shape_up") )
+			opicon = "ui_opration_state_1";
+		elseif op == 4 then -- 拆除
+			unitObj.transform:Find("shape"):GetComponent("SpriteRenderer").color = Hex2Color( 0xffffff7f )
+			opicon = "ui_opration_3";
+		end
+		timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite = LoadSprite( opicon );
+		
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
 		timer.controlID = 1;
 		timer.uiMod = timerObj.transform:GetComponent("UIMod");
@@ -361,7 +416,8 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_kind, 
 		GetPlayer().m_worker_offset, 
 		GetPlayer().m_worker_needsec,
-		GetPlayer().m_worker_sec );
+		GetPlayer().m_worker_sec,
+		GetPlayer().m_worker_op );
 		
 		if GetPlayer().m_worker_free > 0 then
 			City.BuildingSetFree( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
@@ -375,7 +431,8 @@ function City.BuildingWorker()
 		GetPlayer().m_worker_kind_ex, 
 		GetPlayer().m_worker_offset_ex, 
 		GetPlayer().m_worker_needsec_ex,
-		GetPlayer().m_worker_sec_ex );
+		GetPlayer().m_worker_sec_ex,
+		GetPlayer().m_worker_op_ex );
 		
 		if GetPlayer().m_worker_free_ex > 0 then
 			City.BuildingSetFree( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
@@ -436,7 +493,11 @@ function City.BuildingSetOver( kind )
 		overObj.transform.localPosition = Vector3.New( overObj.transform.localPosition.x, overObj.transform.localPosition.y, 0 );
 		overObj.transform.localScale = Vector3.one;
 		if kind == BUILDING_Craftsman then -- 材料作坊特殊处理
-			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..kind ) );
+			local info = GetPlayer():GetBuilding( kind, -1 )
+			local iconname = "ui_opration_item_"..info.m_overvalue;
+			SetImage( overObj.transform:Find("Back"), LoadSprite( iconname ) );
+		elseif kind >= BUILDING_Militiaman_Infantry and kind <= BUILDING_Militiaman_Archer then
+			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..(kind-3) ) );
 		else
 			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..kind ) );
 		end

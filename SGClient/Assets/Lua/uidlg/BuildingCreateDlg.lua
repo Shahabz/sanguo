@@ -1,8 +1,13 @@
 -- 界面
 local m_Dlg = nil;
-local m_uiUIP_Building = nil; --UnityEngine.GameObject
-local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiTitle = nil; --UnityEngine.GameObject
+local m_uiGrid = nil; --UnityEngine.GameObject
+local m_uiUIP_Building = {nil,nil,nil}; --UnityEngine.GameObject
+local m_uiUIP_BuildingRes = {nil,nil,nil,nil}; --UnityEngine.GameObject
+
+local m_kind = 0;
 local m_offset = -1;
+
 -- 打开界面
 function BuildingCreateDlgOpen()
 	m_Dlg = eye.uiManager:Open( "BuildingCreateDlg" );
@@ -13,7 +18,6 @@ function BuildingCreateDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	clearChild( m_uiContent.transform );
 	eye.uiManager:Close( "BuildingCreateDlg" );
 end
 
@@ -33,7 +37,7 @@ function BuildingCreateDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             BuildingCreateDlgClose();
 		elseif nControlID > 0 and nControlID < 64 then
-			BuildingCreateDlgBuild( kind )
+			BuildingCreateDlgBuild( nControlID )
         end
 	end
 end
@@ -42,8 +46,15 @@ end
 function BuildingCreateDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
-	m_uiUIP_Building = objs[0];
-	m_uiContent = objs[1];	
+	m_uiTitle = objs[0];
+	m_uiGrid = objs[1];
+	m_uiUIP_Building[1] = objs[2];
+	m_uiUIP_Building[2] = objs[3];
+	m_uiUIP_Building[3] = objs[4];
+	m_uiUIP_BuildingRes[1] = objs[5];
+	m_uiUIP_BuildingRes[2] = objs[6];
+	m_uiUIP_BuildingRes[3] = objs[7];
+	m_uiUIP_BuildingRes[4] = objs[8];
 end
 
 -- 界面初始化时调用
@@ -75,29 +86,63 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function BuildingCreateDlgShow( buildingkinds, offset )
-	if buildingkinds == nil then
+
+-- 民兵营建筑
+function BuildingCreateDlgShowByID( op, id )
+	if op == 0 and id ~= 9 then
 		return
 	end
-	local len = buildingkinds.Length;
-	if len == 0 then
-		pop("固定建筑位")
-		return
-	end	
 	BuildingCreateDlgOpen()
-	m_offset = offset;
-	for i = 0, len - 1 do
-		local kind = buildingkinds[i];
-		local uiObj = GameObject.Instantiate( m_uiUIP_Building );
-		uiObj.gameObject:SetActive( true );
-		uiObj.transform:SetParent( m_uiContent.transform );
-		uiObj.transform.localScale = Vector3.one;
-		uiObj:GetComponent( "UIButton" ).controlID = kind;
-		uiObj.transform:Find("Shape"):GetComponent( "Image" ).sprite = BuildingSprite( kind );
-		uiObj.transform:Find("Name"):GetComponent( "UIText" ).text = T( kind );
-	end 
+	for i = 1, 4, 1 do
+		SetFalse( m_uiUIP_BuildingRes[i] );
+	end
+	SetText( m_uiTitle.transform:Find("Text"), T(1465) )
+	if op == 0 then
+		m_kind = 0;
+	else
+		m_kind = id;
+	end
+	m_offset = -1;
+	local buildingList = { BUILDING_Militiaman_Infantry, BUILDING_Militiaman_Cavalry, BUILDING_Militiaman_Archer }
+	local corpsList = { 0, 1, 2 }
+	local descList = { 1470, 1471, 1472 }
+	for i = 1, #buildingList, 1 do
+		local kind = buildingList[i];
+		SetTrue( m_uiUIP_Building[i] );
+		SetControlID( m_uiUIP_Building[i].transform:Find("CreateButton"), kind );
+		SetImage( m_uiUIP_Building[i].transform:Find("Shape"), BuildingSprite( kind ) );
+		SetImage( m_uiUIP_Building[i].transform:Find("Icon"), CorpsSprite( corpsList[i] ) );
+		SetText( m_uiUIP_Building[i].transform:Find("Name"), BuildingName( kind ) )
+		SetText( m_uiUIP_Building[i].transform:Find("Desc1"), T(descList[i]) )
+	end
 end
 
-function BuildingCreateDlgBuild( kind )
+-- 资源田建筑
+function BuildingCreateDlgShowByRes( buildingkind, offset )
+	if buildingkind < BUILDING_Silver or buildingkind > BUILDING_Iron then
+		return
+	end
+	BuildingCreateDlgOpen()
+	for i = 1, 3, 1 do
+		SetFalse( m_uiUIP_Building[i] );
+	end
+	SetText( m_uiTitle.transform:Find("Text"), T(1465) )
+	m_kind = buildingkind;
+	m_offset = offset;
+	local buildingList = { BUILDING_Silver, BUILDING_Wood, BUILDING_Food, BUILDING_Iron }
+	for i = 1, #buildingList, 1 do
+		local kind = buildingList[i];
+		SetTrue( m_uiUIP_BuildingRes[i] );
+		SetControlID( m_uiUIP_BuildingRes[i].transform:Find("CreateButton"), kind );
+		SetImage( m_uiUIP_BuildingRes[i].transform:Find("Shape"), BuildingSprite( kind ) );
+		SetText( m_uiUIP_BuildingRes[i].transform:Find("Name"), BuildingName( kind ) )
+		SetText( m_uiUIP_BuildingRes[i].transform:Find("Desc"), T(70+i) )
+	end
+end
+
+-- 建造或改建
+function BuildingCreateDlgBuild( buildkind )
+	--system_askinfo( ASKINFO_BUILDING, "", 2, m_kind, m_offset, buildkind );
 	BuildingCreateDlgClose()
+	BuildingUpgradeDlgShow( m_kind, m_offset, buildkind )
 end

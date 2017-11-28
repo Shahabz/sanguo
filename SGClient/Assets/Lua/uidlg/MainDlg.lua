@@ -183,6 +183,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 15 then
 			NoticeDlgShow()
 		
+		-- 设置
+		elseif nControlID == 16 then
+			SettingDlgShow()
+			
 		-- 返回登录
 		elseif nControlID == 18 then
 			MsgBox( T( 518 ),function()

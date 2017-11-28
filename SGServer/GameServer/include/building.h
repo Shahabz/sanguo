@@ -41,7 +41,7 @@
 #define	BUILDING_OP_BUILD	1	// 建造
 #define	BUILDING_OP_UPGRADE	2	// 升级
 #define	BUILDING_OP_DELETE	3	// 拆除
-
+#define	BUILDING_OP_REBUILD	4	// 改建
 #define	BUILDING_TRAIN_MAXNUM	8	// 兵营最多8个招募队列	
 
 // 获取建筑指针
@@ -72,6 +72,9 @@ int building_upgrade( int city_index, int kind, int offset );
 
 // 建筑拆除
 int building_delete( int city_index, int kind, int offset );
+
+// 建筑改建
+int building_rebuild( int city_index, int kind, int offset, int rebuild_kind );
 
 // 建筑升级或拆除操作完成
 int building_finish( int city_index, int op, int kind, int offset );

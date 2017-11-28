@@ -53,11 +53,13 @@ function Player:Init()
 	
 	self.m_function			=	0;
 	self.m_levynum			=	0;
+	self.m_worker_op		=	0;
 	self.m_worker_kind		=	0;
 	self.m_worker_offset	=	0;
 	self.m_worker_sec		=	0;
 	self.m_worker_needsec   =	0;
 	self.m_worker_free   	=	0;
+	self.m_worker_op_ex		=	0;
 	self.m_worker_kind_ex	=	0;
 	self.m_worker_offset_ex	=	0;
 	self.m_worker_sec_ex	=	0;
@@ -147,11 +149,13 @@ function Player:SetBuildingRes( kind, offset, info, active )
 end
 
 function Player:SetBuildingWorker( recvValue )
+	self.m_worker_op		=	recvValue.m_worker_op;
 	self.m_worker_kind		=	recvValue.m_worker_kind;
 	self.m_worker_offset	=	recvValue.m_worker_offset;
 	self.m_worker_sec		=	recvValue.m_worker_sec;
 	self.m_worker_needsec   =	recvValue.m_worker_needsec;
 	self.m_worker_free   	=	recvValue.m_worker_free;
+	self.m_worker_op_ex		=	recvValue.m_worker_op_ex;
 	self.m_worker_kind_ex	=	recvValue.m_worker_kind_ex;
 	self.m_worker_offset_ex	=	recvValue.m_worker_offset_ex;
 	self.m_worker_sec_ex	=	recvValue.m_worker_sec_ex;

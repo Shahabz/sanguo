@@ -121,7 +121,7 @@ function QuickItemDlgSet( sec, update )
 		end
 	end
 	
-	-- 升级
+	-- 升级加速
 	if m_op == 1 then
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
 		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level ).."->" )
@@ -132,6 +132,13 @@ function QuickItemDlgSet( sec, update )
 	elseif m_op == 2 then
 		SetImage( m_uiShape, CorpsFaceSpriteEx(m_buildingkind) );
 		SetText( m_uiName, T(605)..CorpsNameEx(m_buildingkind) )
+		SetText( m_uiTargetName, "" );
+		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
+		
+	-- 改造加速
+	elseif m_op == 3 then
+		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
+		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level )..T(1474) )
 		SetText( m_uiTargetName, "" );
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 	end
@@ -157,7 +164,7 @@ function QuickItemDlgTokenCalc()
 	local left = m_uiTimer.transform:GetComponent( typeof(UITextTimeCountdown) ).LeftTime
 	local min = math.floor(left/60) + 1
 	local token = 0
-	if m_op == 1 then
+	if m_op == 1 or m_op == 3 then
 		token = math.ceil( min*global.upgradequick_token)
 	elseif m_op == 2 then
 		token = math.ceil( min*global.upgradequick_token)

@@ -11,12 +11,16 @@ local m_uiDesc3 = nil; --UnityEngine.GameObject
 local m_uiSec = nil; --UnityEngine.GameObject
 local m_uiCondition = nil; --UnityEngine.GameObject
 local m_uiUIP_UpgradeCond = nil; --UnityEngine.GameObject
+local m_uiUpgrade = nil; --UnityEngine.GameObject
 
 local m_kind = 0;
 local m_offset = -1;
+local m_srckind = 0;
+local m_rebuildkind = 0;
 local m_pBuilding = nil;
 local m_bUpgrade = true;
 local m_recvValue = nil
+local m_op = 0;
 
 -- 打开界面
 function BuildingUpgradeDlgOpen()
@@ -87,6 +91,7 @@ function BuildingUpgradeDlgOnAwake( gameObject )
 	m_uiSec = objs[6];
 	m_uiCondition = objs[7];
 	m_uiUIP_UpgradeCond = objs[8];
+	m_uiUpgrade = objs[9];
 end
 
 -- 界面初始化时调用
@@ -118,19 +123,52 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function BuildingUpgradeDlgShow( kind, offset )
+function BuildingUpgradeDlgShow( kind, offset, rebuildkind )
+	m_srckind = kind;
 	m_kind = kind;
 	m_offset = offset;
+	m_rebuildkind = rebuildkind
 	BuildingUpgradeDlgOpen()
 	clearChild( m_uiCondition )
 
 	-- 请求数据
 	--system_askinfo( ASKINFO_BUILDING, "", 0, kind, offset );
+
+	-- 建造
+	if rebuildkind > 0 and kind == 0 then
+		m_op = 1;
+	-- 改建	
+	elseif rebuildkind > 0 and kind > 0 then
+		m_op = 2
+	-- 升级
+	else
+		m_op = 3
+	end
 	
-	local m_pBuilding = GetPlayer():GetBuilding( kind, offset )
-	local nextlevel = m_pBuilding.m_level+1
-	SetImage( m_uiShape, BuildingSprite( kind ) );
-	SetText( m_uiName, BuildingNameLv( kind, (offset%16), m_pBuilding.m_level ) );
+	if m_op == 1 then
+		m_srckind = rebuildkind;
+		m_kind = rebuildkind;
+	elseif m_op == 2 then
+		m_kind = rebuildkind;
+	end
+	
+	local level = 1
+	local nextlevel = 1
+	local m_pBuilding = nil
+	if m_op == 1 then -- 建造
+		level = 1
+		nextlevel = 1
+	elseif m_op == 2 then -- 改建
+		m_pBuilding = GetPlayer():GetBuilding( kind, offset )
+		level = m_pBuilding.m_level
+		nextlevel = m_pBuilding.m_level
+	else
+		m_pBuilding = GetPlayer():GetBuilding( m_kind, offset )
+		level = m_pBuilding.m_level
+		nextlevel = m_pBuilding.m_level+1
+	end
+	SetImage( m_uiShape, BuildingSprite( m_kind ) );
+	SetText( m_uiName, BuildingNameLv( m_kind, (offset%16), level ) );
 	SetLevel( m_uiLevel, nextlevel );
 	SetText( m_uiSec, "" );
 	
@@ -138,67 +176,67 @@ function BuildingUpgradeDlgShow( kind, offset )
 	SetText( m_uiDesc1, "" )
 	SetText( m_uiDesc2, "" )
 	SetText( m_uiDesc3, "" )
-	if kind == BUILDING_Main then
+	if m_kind == BUILDING_Main then
 		SetText( m_uiDesc1, T(803) )
 		
-	elseif kind == BUILDING_Wall then
+	elseif m_kind == BUILDING_Wall then
 		SetText( m_uiDesc1, T(805) )
 		
-	elseif kind == BUILDING_StoreHouse then
+	elseif m_kind == BUILDING_StoreHouse then
 		SetText( m_uiDesc1, T(806) )
 	
-	elseif kind == BUILDING_Tech then
+	elseif m_kind == BUILDING_Tech then
 		SetText( m_uiDesc1, T(807) )
 	
-	elseif kind == BUILDING_Craftsman then
+	elseif m_kind == BUILDING_Craftsman then
 		SetText( m_uiDesc1, T(809) )
 	
-	elseif kind == BUILDING_Cabinet then
-		if m_pBuilding.m_level == 1 then
+	elseif m_kind == BUILDING_Cabinet then
+		if level == 1 then
 			SetText( m_uiDesc1, T(810) )
-		elseif m_pBuilding.m_level == 2 then
+		elseif level == 2 then
 			SetText( m_uiDesc1, T(811) )
 		end
 		
-	elseif kind == BUILDING_Infantry then
+	elseif m_kind == BUILDING_Infantry then
 		SetText( m_uiDesc1, T(812) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Infantry][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Infantry][level].value1.." +"..(g_building_upgrade[BUILDING_Infantry][nextlevel].value1-g_building_upgrade[BUILDING_Infantry][level].value1) )
 		
-	elseif kind == BUILDING_Cavalry then
+	elseif m_kind == BUILDING_Cavalry then
 		SetText( m_uiDesc1, T(813) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Cavalry][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Cavalry][level].value1.." +"..(g_building_upgrade[BUILDING_Cavalry][nextlevel].value1-g_building_upgrade[BUILDING_Cavalry][level].value1) )
 		
-	elseif kind == BUILDING_Archer then
+	elseif m_kind == BUILDING_Archer then
 		SetText( m_uiDesc1, T(814) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Archer][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Archer][level].value1.." +"..(g_building_upgrade[BUILDING_Archer][nextlevel].value1-g_building_upgrade[BUILDING_Archer][level].value1) )
 		
-	elseif kind == BUILDING_Militiaman_Infantry then
+	elseif m_kind == BUILDING_Militiaman_Infantry then
 		SetText( m_uiDesc1, T(815) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Infantry][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Infantry][level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Infantry][nextlevel].value1-g_building_upgrade[BUILDING_Militiaman_Infantry][level].value1) )
 		
-	elseif kind == BUILDING_Militiaman_Cavalry then
+	elseif m_kind == BUILDING_Militiaman_Cavalry then
 		SetText( m_uiDesc1, T(815) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Cavalry][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Cavalry][level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Cavalry][nextlevel].value1-g_building_upgrade[BUILDING_Militiaman_Cavalry][level].value1) )
 		
-	elseif kind == BUILDING_Militiaman_Archer then
+	elseif m_kind == BUILDING_Militiaman_Archer then
 		SetText( m_uiDesc1, T(815) )
-		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Militiaman_Archer][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(791)..":"..g_building_upgrade[BUILDING_Militiaman_Archer][level].value1.." +"..(g_building_upgrade[BUILDING_Militiaman_Archer][nextlevel].value1-g_building_upgrade[BUILDING_Militiaman_Archer][level].value1) )
 		
-	elseif kind == BUILDING_Silver then
+	elseif m_kind == BUILDING_Silver then
 		SetText( m_uiDesc1, T(816) )
-		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Silver][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Silver][level].value1.." +"..(g_building_upgrade[BUILDING_Silver][nextlevel].value1-g_building_upgrade[BUILDING_Silver][level].value1) )
 		
-	elseif kind == BUILDING_Wood then
+	elseif m_kind == BUILDING_Wood then
 		SetText( m_uiDesc1, T(817) )
-		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Wood][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Wood][level].value1.." +"..(g_building_upgrade[BUILDING_Wood][nextlevel].value1-g_building_upgrade[BUILDING_Wood][level].value1) )
 	
-	elseif kind == BUILDING_Food then
+	elseif m_kind == BUILDING_Food then
 		SetText( m_uiDesc1, T(818) )
-		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Food][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Food][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Food][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Food][level].value1.." +"..(g_building_upgrade[BUILDING_Food][nextlevel].value1-g_building_upgrade[BUILDING_Food][level].value1) )
 	
-	elseif kind == BUILDING_Iron then
+	elseif m_kind == BUILDING_Iron then
 		SetText( m_uiDesc1, T(819) )
-		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level].value1.." +"..(g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level+1].value1-g_building_upgrade[BUILDING_Iron][m_pBuilding.m_level].value1) )
+		SetText( m_uiDesc2, T(820)..":"..g_building_upgrade[BUILDING_Iron][level].value1.." +"..(g_building_upgrade[BUILDING_Iron][nextlevel].value1-g_building_upgrade[BUILDING_Iron][level].value1) )
 		
 	end
 	
@@ -213,16 +251,32 @@ function BuildingUpgradeDlgShow( kind, offset )
 	end
 	BuildingUpgradeCondSet( uiObj, T(607), flag, 1 )
 	
+	-- 建造
+	if m_op == 1 then
+		SetText( m_uiUpgrade.transform:Find("Back/Text"), T(1468) )
+	-- 改建	
+	elseif m_op == 2 then
+		SetText( m_uiUpgrade.transform:Find("Back/Text"), T(598) )
+	-- 升级
+	else
+		SetText( m_uiUpgrade.transform:Find("Back/Text"), T(604) )
+	end
+	
 	-- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,
 	local recvValue = {}
-	recvValue.m_maxlevel = #g_building_upgrade[kind]
-	recvValue.m_citylevel = g_building_upgrade[kind][nextlevel].citylevel
-	recvValue.m_actorlevel = g_building_upgrade[kind][nextlevel].actorlevel
-	recvValue.m_silver = g_building_upgrade[kind][nextlevel].silver
-	recvValue.m_wood = g_building_upgrade[kind][nextlevel].wood
-	recvValue.m_food = g_building_upgrade[kind][nextlevel].food
-	recvValue.m_iron = g_building_upgrade[kind][nextlevel].iron
-	recvValue.m_sec = g_building_upgrade[kind][nextlevel].sec
+	recvValue.m_maxlevel = #g_building_upgrade[m_kind]
+	recvValue.m_citylevel = g_building_upgrade[m_kind][nextlevel].citylevel
+	recvValue.m_actorlevel = g_building_upgrade[m_kind][nextlevel].actorlevel
+	recvValue.m_silver = g_building_upgrade[m_kind][nextlevel].silver
+	recvValue.m_wood = g_building_upgrade[m_kind][nextlevel].wood
+	recvValue.m_food = g_building_upgrade[m_kind][nextlevel].food
+	recvValue.m_iron = g_building_upgrade[m_kind][nextlevel].iron
+	-- 改建
+	if m_op == 2 then
+		recvValue.m_sec = global.building_delete_cd
+	else
+		recvValue.m_sec = g_building_upgrade[m_kind][nextlevel].sec
+	end
 	BuildingUpgradeDlgRecv( recvValue )
 end
 
@@ -354,13 +408,26 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 	end
 end
 
--- 领取奖励
+-- 升级
 function BuildingUpgradeDlgUpgrade()
 	if m_bUpgrade == false then
 		pop(T(802))
 		return
-	end	
-	system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
+	end
+	
+	-- 建造
+	if m_op == 1 then
+		system_askinfo( ASKINFO_BUILDING, "", 5, 0, -1, m_rebuildkind );
+		
+	-- 改建
+	elseif m_op == 2 then
+		system_askinfo( ASKINFO_BUILDING, "", 5, m_srckind, m_offset, m_rebuildkind );
+		
+	-- 升级
+	elseif m_op == 3 then
+		system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
+	end
+	
 	BuildingUpgradeDlgClose();
 end
 

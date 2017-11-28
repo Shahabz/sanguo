@@ -34,6 +34,7 @@
 #define CITY_FUNCTION_AUTOBUILD		17	// 自动建造
 #define CITY_FUNCTION_CHAT			18	// 聊天
 #define CITY_FUNCTION_WARKEREX		19	// 商业建造队
+#define CITY_FUNCTION_Militiaman	20	// 民兵营
 
 #define CITY_EVENT_BUILDING			1	// 建筑升级
 #define CITY_EVENT_TRAIN			2	// 募兵

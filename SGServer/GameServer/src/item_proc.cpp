@@ -302,7 +302,7 @@ int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, 
 	if ( itemtype != ITEM_TYPE_QUICK )
 		return -1;
 	int value1 = item_get_base_value( itemkind, 0 );
-	if ( op == 1 )
+	if ( op == 1 || op == 3 )
 	{ // Éý¼¶¼ÓËÙ
 		if ( value1 == -1 )
 		{

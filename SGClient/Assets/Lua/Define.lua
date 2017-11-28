@@ -68,6 +68,7 @@ CITY_FUNCTION_RANK			=16	-- 排行榜
 CITY_FUNCTION_AUTOBUILD		=17	-- 自动建造
 CITY_FUNCTION_CHAT			=18	-- 聊天
 CITY_FUNCTION_WARKEREX		=19	-- 商业建造队
+CITY_FUNCTION_Militiaman	=20	-- 民兵营
 
 BuildingPrefab={
 [BUILDING_Main] = { prefab = "BUILDING_Main", land="BuildingLand0" },

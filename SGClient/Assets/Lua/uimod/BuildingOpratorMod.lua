@@ -30,7 +30,7 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
     if nType == UI_EVENT_CLICK then
 		-- 升级
         if nControlID == 1 then
-			BuildingUpgradeDlgShow( m_kind, m_offset )
+			BuildingUpgradeDlgShow( m_kind, m_offset, 0 )
 		
 		-- 进入
         elseif nControlID == 2 then
@@ -63,6 +63,14 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			elseif m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
 				local pBuilding = GetPlayer():GetBuilding( m_kind, -1 );
 				QuickItemDlgShow( 2, m_kind, -1, pBuilding.m_sec )
+			end
+			
+		-- 改建
+		elseif nControlID == 5 then
+			if m_kind >= BUILDING_Militiaman_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+				BuildingCreateDlgShowByID( 1, m_kind )
+			elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
+				BuildingCreateDlgShowByRes( m_kind, m_offset )
 			end
         end
 		City.BuildingUnSelect();
