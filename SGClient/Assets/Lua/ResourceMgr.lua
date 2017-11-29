@@ -95,7 +95,7 @@ end
 -- 英雄颜色底板(带ab读取)
 function HeroColorSprite( color )
 	local name = "ui_static_colorpanel_"..color;
-	ResourceManager.LoadAssetBundle( "_ab_"..name );
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_colorpanel" );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "ui_static_colorpanel_0" );
@@ -104,9 +104,8 @@ function HeroColorSprite( color )
 end
 
 -- 英雄颜色底板卸载
-function HeroColorSpriteUnload( color )
-	local name = "ui_static_colorpanel_"..color;
-	ResourceManager.UnloadAssetBundle( "_ab_"..name );
+function HeroColorSpriteUnload()
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_colorpanel" );
 end
 
 -- 守卫头像

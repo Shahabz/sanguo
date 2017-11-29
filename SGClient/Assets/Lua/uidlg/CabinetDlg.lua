@@ -7,7 +7,6 @@ function CabinetDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet1" );
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet2" );
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet3" );
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinetback" );
 	m_Dlg = eye.uiManager:Open( "CabinetDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, BuildingName(BUILDING_Cabinet).." Lv."..m_pBuilding.m_level, HELP_CabinetDlg, CabinetDlgClose );
 end
@@ -28,7 +27,6 @@ function CabinetDlgDestroy()
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet1" )
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet2" )
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet3" )
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinetback" )
 	m_Dlg = nil;
 end
 

@@ -38,12 +38,7 @@ end
 -- 删除界面
 function HeroWashDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	HeroColorSpriteUnload( 0 )
-	HeroColorSpriteUnload( 1 )
-	HeroColorSpriteUnload( 2 )
-	HeroColorSpriteUnload( 3 )
-	HeroColorSpriteUnload( 4 )
-	HeroColorSpriteUnload( 5 )
+	HeroColorSpriteUnload()
 	m_Dlg = nil;
 end
 
