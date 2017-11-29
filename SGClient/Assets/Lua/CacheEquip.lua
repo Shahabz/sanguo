@@ -426,6 +426,7 @@ end
 
 -- 设置装备洗练星级
 function SetEquipWash( uiWash, pEquip )
+	local has = 0;
 	for i=1, 4, 1 do
 		local uiStar = uiWash.transform:GetChild(i-1).gameObject;
 		local color = equip_getcolor( pEquip.m_kind );
@@ -437,9 +438,15 @@ function SetEquipWash( uiWash, pEquip )
 			else
 				SetImage( uiStar, LoadSprite("ui_icon_star_2") )
 			end
+			has = 1;
 		else	
 			SetFalse( uiStar )
 		end
+	end
+	if has == 1 then
+		SetTrue( uiWash )
+	else
+		SetFalse( uiWash )
 	end
 end
 

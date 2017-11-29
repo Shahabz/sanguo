@@ -500,10 +500,10 @@ function HeroInfoDlgSelectEquip( offset )
 		SetImage( uiColor, ItemColorSprite( equip_getcolor( pEquip.m_kind ) ) )
 		SetText( uiName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor( pEquip.m_kind ) ) );
 		SetText( uiAbility, equip_getabilityname( pEquip.m_kind ) );
-		SetEquipWash( uiWash, pEquip );
 		SetTrue( uiWash )
-		SetEquipWashLevel( uiWashLevel, pEquip );
 		SetTrue( uiWashLevel )
+		SetEquipWash( uiWash, pEquip );
+		SetEquipWashLevel( uiWashLevel, pEquip );	
 	end
 	
     if #m_MatchEquipList == 0 then

@@ -317,7 +317,7 @@ function BagDlgLoadItem()
 	
 	-- 一个道具都没有
 	if #m_CacheItemCache == 0 then
-		BagDlgClearItemRow(m_uiItemContent.transform:GetChild(0).gameObject)
+		BagDlgClearItemRow(m_uiItemContent.transform:GetChild(0):Find("Content").gameObject)
 		return;
 	end
 	
@@ -339,10 +339,10 @@ function BagDlgLoadItem()
                     currItemRow = m_uiItemContent.transform:GetChild(rowCount).gameObject;
                     currItemRow:SetActive(true);
                 end
-				BagDlgClearItemRow(currItemRow);
+				BagDlgClearItemRow(currItemRow.transform:Find("Content"));
                 rowCount = rowCount + 1;
             end
-            local uiItemObj = currItemRow.transform:GetChild(itemIndex);
+            local uiItemObj = currItemRow.transform:Find("Content").transform:GetChild(itemIndex);
             uiItemObj:GetComponent("UIButton").controlID = 1000 + pItem.m_offset;
 			local objs = uiItemObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 			local uiShape = objs[0];
@@ -624,6 +624,7 @@ function BagDlgSelectEquip( offset )
 	SetText( EquipName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor(pEquip.m_kind) ) );
 	SetText( EquipDesc, equip_getabilityname( pEquip.m_kind ) );
 	SetEquipWash( EquipObj.transform:Find("Wash"), pEquip );
+	SetEquipWashLevel( EquipObj.transform:Find("WashLevel"), pEquip );
 	
 	-- 装备类型1-6 变成0-5
 	m_equiptype = equip_gettype( pEquip.m_kind )-1
@@ -720,14 +721,13 @@ function BagDlgSelectHeroEquip( index )
 				SetTrue( UseButton ); -- 装备
 			else
 				local hEquip = GetHero().m_CityHero[i].m_Equip[m_equiptype]
-				SetText( uiTips.transform:Find( "Name" ), EquipName( hEquip.m_kind ) )
+				SetText( uiTips.transform:Find( "Name" ), EquipName( hEquip.m_kind ),NameColor( equip_getcolor(hEquip.m_kind) ) )
 				SetText( uiTips.transform:Find( "Ability" ), equip_getabilityname( hEquip.m_kind ) )
-				SetTrue( uiTips.transform:Find( "Wash" ) )
+				SetEquipWashLevel( uiTips.transform:Find( "WashLevel" ), hEquip );
 				SetFalse( UseButton ); -- 装备
 				SetTrue( ReplaceButton ); -- 替换
 			end
-		
-			
+	
 		else
 			SetFalse( uiSelect )
 			SetFalse( uiTips )	

@@ -91,7 +91,10 @@ function MailInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 战斗回放
 		elseif nControlID == 12 then
-		
+			MailInfoDlgClose()
+			MailDlgClose()
+			FightDlgShow( m_recvValue )
+			
 		-- 拉黑
 		elseif nControlID == 13 then
 		
