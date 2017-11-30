@@ -428,6 +428,18 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			city_kingwarpoint( pCity->index, pValue[0], PATH_GM );
 		}
 		break;
+	case GMC_GIVERES: // 给与一个未启用资源点
+		if ( pCity )
+		{
+			building_giveres( pCity->index, pValue[0] );
+		}
+		break;
+	case GMC_AUTOBUILD: // 自动建造次数
+		if ( pCity )
+		{
+			city_change_autobuild( pCity->index, pValue[0], PATH_GM );
+		}
+		break;
 	default:
 		break;
 	}

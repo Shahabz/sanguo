@@ -146,6 +146,7 @@ int city_changeprotect( int city_index, int value, short path );
 // 兵力
 int city_changesoldiers( int city_index, short corps, int value, short path );
 // 自动建造次数
+int city_autobuild_open( int city_index );
 int city_change_autobuild( int city_index, int value, short path );
 // 洗髓次数
 int city_change_herowash( int city_index, int value, short path );

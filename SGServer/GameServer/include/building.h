@@ -64,11 +64,19 @@ int building_getlevel( int city_index, int kind, int no );
 // 给予一个建筑
 int building_give( int city_index, int kind, int num );
 
+// 给予一个资源点（未启用状态的）
+int building_giveres( int city_index, int kind );
+int building_giveres_build( int actor_index, int kind, int offset );
+
 // 创建建筑
 int building_create( int city_index, int kind, int offset );
 
 // 建筑升级
 int building_upgrade( int city_index, int kind, int offset );
+
+// 建筑自动升级
+int building_upgrade_auto( int city_index, int kind, int offset );
+void building_upgrade_autocheck( int city_index );
 
 // 建筑拆除
 int building_delete( int city_index, int kind, int offset );

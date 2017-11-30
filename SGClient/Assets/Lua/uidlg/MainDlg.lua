@@ -185,7 +185,8 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 设置
 		elseif nControlID == 16 then
-			SettingDlgShow()
+			m_Setting_state = 0
+			SettingDlgOptionShow()
 			
 		-- 返回登录
 		elseif nControlID == 18 then
@@ -216,6 +217,16 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 点击建造队列商用
 		elseif nControlID == 51 then
 			City.GoToWorkerEx()
+		
+		-- 自动建造
+		elseif nControlID == 52 then
+			if GetPlayer().m_autobuildopen == 1 then
+				GetPlayer().m_autobuildopen = 0
+			else
+				GetPlayer().m_autobuildopen = 1
+			end
+			MainDlgSetAutoBuild( 0 );
+			system_askinfo( ASKINFO_AUTOBUILD, "", 0 );
 			
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -760,14 +771,28 @@ function MainDlgWorkerObjectInit()
 	m_uiBuildingNameUITweenScale1[2] = m_uiWorkerEx.transform:Find("BuildingName"):GetComponent("UITweenScale1")
 end
 
-ButtonMap = {
-[CITY_FUNCTION_NATION] = { offset = 3 },
-[CITY_FUNCTION_STORY] = { offset = 5 },
-[CITY_FUNCTION_MAIL] = { offset = 6 },
-[CITY_FUNCTION_FRIEND] = { offset = 12 },
-[CITY_FUNCTION_NATIONEQUIP] = { offset = 13 },
-[CITY_FUNCTION_RANK] = { offset = 14 },
-}
+-- 自动建造
+function MainDlgSetAutoBuild( path )
+	if GetPlayer().m_autobuild > 0 then
+		SetTrue( m_uiAutoBuild );
+	else
+		SetFalse( m_uiAutoBuild );
+		return
+	end
+	if GetPlayer().m_autobuildopen == 1 then
+		SetTrue( m_uiAutoBuild.transform:Find("Back/Effect") )
+	else
+		SetFalse( m_uiAutoBuild.transform:Find("Back/Effect") )
+	end
+	SetText( m_uiAutoBuild.transform:Find("Back/Num"), GetPlayer().m_autobuild )
+	
+	-- 播放特效
+	if path == PATH_QUEST or path == PATH_GM then
+		local tween = m_uiAutoBuild.transform:GetComponent( "UITweenRectPosition" );
+		tween.from = Vector2.New( 315, -432 );
+		tween:Play(true);
+	end
+end
 
 function MainDlgGetEmptyButton()
 	for i=1, 24, 1 do

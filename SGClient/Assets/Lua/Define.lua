@@ -537,3 +537,11 @@ function SetGray( transform, gray )
 	end
 end
 
+--
+function SetSpriteGray( transform, gray )
+	if gray == true then
+		transform:GetComponent( "SpriteRenderer" ).material = ResourceManager.LoadMaterial( "UI_Mat_SpriteGray" );
+	else
+		transform:GetComponent( "SpriteRenderer" ).material = ResourceManager.LoadMaterial( "UI_Mat_SpriteDefault" );
+	end
+end

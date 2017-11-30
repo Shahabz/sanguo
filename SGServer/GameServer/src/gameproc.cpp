@@ -403,6 +403,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 建筑升级数据初始化
+	if ( buildingresunlock_init_auto() < 0 )
+	{
+		printf_msg( "buildingresunlock_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 科技
 	if ( techinfo_init_auto() < 0 )
 	{

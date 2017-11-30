@@ -143,6 +143,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 改建
 			building_rebuild( g_actors[actor_index].city_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
+		else if ( pvalue[0] == 6 )
+		{ // 资源点建设
+			building_giveres_build( actor_index, pvalue[1], pvalue[2] );
+		}
 		break;
 	case ASKINFO_LEVY:
 		if ( pvalue[0] == 0 )
@@ -603,6 +607,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_MSGBOX_CALLBACK:
 		actor_notify_msgbox_callback( actor_index, pvalue[0], pvalue[1], pvalue[2] );
+		break;
+	case ASKINFO_AUTOBUILD:
+		if ( pvalue[0] == 0 )
+		{
+			city_autobuild_open( g_actors[actor_index].city_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 客户端发过来的自动升级
+			building_upgrade_auto( g_actors[actor_index].city_index, pvalue[1], pvalue[2] );
+		}
 		break;
 	default:
 		break;

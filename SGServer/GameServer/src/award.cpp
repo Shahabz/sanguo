@@ -563,6 +563,22 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		city_change_equipwash( g_actors[actor_index].city_index, num, path );
 	}
+	else if ( kind == AWARDKIND_RES_SILVER ) // 奖励未启用资源点（民居）
+	{
+		building_giveres( g_actors[actor_index].city_index, BUILDING_Silver );
+	}
+	else if ( kind == AWARDKIND_RES_WOOD )// 奖励未启用资源点（木材厂）
+	{
+		building_giveres( g_actors[actor_index].city_index, BUILDING_Wood );
+	}
+	else if ( kind == AWARDKIND_RES_FOOD )// 奖励未启用资源点（农田）
+	{
+		building_giveres( g_actors[actor_index].city_index, BUILDING_Food );
+	}
+	else if ( kind == AWARDKIND_RES_IRON )// 奖励未启用资源点（矿厂）
+	{
+		building_giveres( g_actors[actor_index].city_index, BUILDING_Iron );
+	}
 	else if ( kind < 0 )
 	{ // 道具组
 		awardgroup_withindex( actor_index, -kind, city_mainlevel( g_actors[actor_index].city_index ), path, getinfo );

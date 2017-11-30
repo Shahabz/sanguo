@@ -182,6 +182,11 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 		-- 资源	
 		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
 			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+			if pBuilding.m_level <= 0 then
+				 BuildingOpratorModClose();
+				ResDrawingDlgShow( m_kind, m_offset );
+				return
+			end
 			if pBuilding.m_level < #g_building_upgrade[m_kind] then
 				m_uiUpgrade:SetActive(true);
 			end

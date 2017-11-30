@@ -24,9 +24,12 @@ end
 -- 删除界面
 function CabinetDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet1" )
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet2" )
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet3" )
+	Invoke( function() 
+			ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_cabinet1" )
+			ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_cabinet2" )
+			ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_cabinet3" )
+		end, 0.3 );
+		
 	m_Dlg = nil;
 end
 

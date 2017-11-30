@@ -303,7 +303,18 @@ function City.BuildingSetName( info )
 	if kind <= BUILDING_Militiaman_Archer then
 		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind).." "..info.m_level;
 	elseif kind <= BUILDING_Iron then
-		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = "Lv."..info.m_level;
+		if info.m_level <= 0 then
+			SetSpriteGray( unitObj:Find("shape"), true )
+			SetFalse( unitObj:Find("panel") )
+			SetTrue( unitObj:Find("ResDrawingMod") );
+		else
+			if info.m_level == 1 then -- 只有1级有必要
+				SetSpriteGray( unitObj:Find("shape"), false )
+				SetTrue( unitObj:Find("panel") )
+				SetFalse( unitObj:Find("ResDrawingMod") );
+			end
+			unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = "Lv."..info.m_level;
+		end
 	else
 		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind)
 	end
@@ -600,9 +611,12 @@ function City.BuildingAddLevy()
 		if City.m_Buildings_res[i] then
 			for k, v in pairs( City.m_Buildings_res[i] ) do
 				local obj = v:Find("LevyMod").gameObject;
-				if obj and obj.activeSelf == false then
-					obj:SetActive( true );
-					break;
+				local drawingObj = v:Find("ResDrawingMod").gameObject;
+				if drawingObj == nil or drawingObj.activeSelf == false then
+					if obj and obj.activeSelf == false then
+						obj:SetActive( true );
+						break;
+					end
 				end
 			end
 		end
@@ -637,7 +651,9 @@ function City.GoToWorker()
 	end
 	
 	-- 找到一个可以升级的
-	City.FindCanUpgrade()
+	City.FindCanUpgrade( function( kind, offset )
+		City.Move( kind, offset, true );
+	end )
 end
 
 -- 点击建造队列商用
@@ -661,11 +677,23 @@ function City.GoToWorkerEx()
 	end
 	
 	-- 找到一个可以升级的
-	City.FindCanUpgrade()
+	City.FindCanUpgrade( function( kind, offset )
+		City.Move( kind, offset, true );
+	end )
 end
 
 -- 找到一个可以升级的
-function City.FindCanUpgrade()
+function City.AutoBuild()
+	if GetPlayer().m_autobuildopen == 0 then
+		return
+	end
+	City.FindCanUpgrade( function( kind, offset )
+		system_askinfo( ASKINFO_AUTOBUILD, "", 1, kind, offset );
+	end )
+end
+
+-- 找到一个可以升级的
+function City.FindCanUpgrade( callback )
 	
 	-- 空闲建造队是否满足
 	local flag = true;
@@ -690,7 +718,7 @@ function City.FindCanUpgrade()
 					GetPlayer().m_wood >= buildingConfig.wood and
 					GetPlayer().m_food >= buildingConfig.food and
 					GetPlayer().m_iron >= buildingConfig.iron then
-					City.Move( k, -1, true )
+					callback( k, -1 )
 					return
 				end
 			end
@@ -710,15 +738,13 @@ function City.FindCanUpgrade()
 						GetPlayer().m_wood >= buildingConfig.wood and
 						GetPlayer().m_food >= buildingConfig.food and
 						GetPlayer().m_iron >= buildingConfig.iron then
-						City.Move( k, offset, true )
+						callback( k, offset )
 						return
 					end
 				end
 			end
 		end
 	end
-	
-	--City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
 end
 
 -- 任务图标

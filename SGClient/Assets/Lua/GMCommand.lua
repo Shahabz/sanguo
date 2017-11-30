@@ -33,7 +33,9 @@ local GMCMD_SERVER = {
 [30]="vw",
 [31]="townattack",
 [32]="worldboss",
-[33]="kwpoint"
+[33]="kwpoint",
+[34]="giveres",
+[35]="autobuild"
 }
  
 -- 发到客户端本地指令

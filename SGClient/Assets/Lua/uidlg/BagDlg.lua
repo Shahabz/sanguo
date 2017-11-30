@@ -717,6 +717,7 @@ function BagDlgSelectHeroEquip( index )
 				SetText( uiTips.transform:Find( "Name" ), T(822) )
 				SetText( uiTips.transform:Find( "Ability" ) )
 				SetFalse( uiTips.transform:Find( "Wash" ) )
+				SetFalse( uiTips.transform:Find( "WashLevel" ) )
 				SetFalse( ReplaceButton ); -- 替换
 				SetTrue( UseButton ); -- 装备
 			else

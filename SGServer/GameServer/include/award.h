@@ -30,6 +30,10 @@
 #define AWARDKIND_EQUIP_WASH	50020 // 免费洗练次数
 #define AWARDKIND_LOSTREBUILD	50021 // 高级重建次数
 #define AWARDKIND_CITYGUARDNUM	50022 // 城防补充次数
+#define AWARDKIND_RES_SILVER	60001 // 奖励未启用资源点（民居）
+#define AWARDKIND_RES_WOOD		60002 // 奖励未启用资源点（木材厂）
+#define AWARDKIND_RES_FOOD		60003 // 奖励未启用资源点（农田）
+#define AWARDKIND_RES_IRON		60004 // 奖励未启用资源点（矿厂）
 
 // 离线情况下的给予属性
 #define AWARDKIND_OTHERBASE	100000

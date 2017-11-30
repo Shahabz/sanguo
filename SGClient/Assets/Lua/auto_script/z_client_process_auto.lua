@@ -126,6 +126,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetArcher()
 	MainDlgSetToken()
 	MainDlgSetVipLevel()
+	MainDlgSetAutoBuild(0)
 	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather );
 end
 
@@ -1553,5 +1554,13 @@ end
 function proc_treasureactorlist_C( recvValue )
 	-- process.
 	TreasureAwardDlgRecv( recvValue )
+end
+
+-- m_autobuild=0,m_autobuildopen=0,m_path
+function proc_changeautobuild_C( recvValue )
+	-- process.
+	GetPlayer().m_autobuild		=	recvValue.m_autobuild;
+	GetPlayer().m_autobuildopen	=	recvValue.m_autobuildopen;
+	MainDlgSetAutoBuild( recvValue.m_path )
 end
 

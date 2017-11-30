@@ -416,6 +416,19 @@ void city_logic_sec()
 		if ( g_city[city_index].actorid <= 0 )
 			continue;
 		
+		// 商用建造队列到期时间
+		if ( g_city[city_index].worker_expire_ex > 0 )
+		{
+			g_city[city_index].worker_expire_ex -= 1;
+			if ( g_city[city_index].worker_expire_ex <= 0 )
+			{
+				if ( g_city[city_index].worker_sec_ex <= 0 )
+				{
+					building_sendworker( g_city[city_index].actor_index );
+				}
+			}
+		}
+
 		// 普通建造队列
 		if ( g_city[city_index].worker_sec > 0 )
 		{
@@ -430,6 +443,9 @@ void city_logic_sec()
 				g_city[city_index].wnsec = 0;
 				g_city[city_index].wnquick = 0;
 				building_sendworker( g_city[city_index].actor_index );
+
+				// 自动建造
+				building_upgrade_autocheck( city_index );
 			}
 		}
 
@@ -447,6 +463,9 @@ void city_logic_sec()
 				g_city[city_index].wnsec_ex = 0;
 				g_city[city_index].wnquick_ex = 0;
 				building_sendworker( g_city[city_index].actor_index );
+
+				// 自动建造
+				building_upgrade_autocheck( city_index );
 			}
 		}
 
@@ -937,6 +956,12 @@ int city_actorexp( int city_index, int exp, char path )
 		Value.m_path = path;
 		netsend_experience_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &Value );
 	}
+
+	if ( isup )
+	{
+		// 自动建造
+		building_upgrade_autocheck( city_index );
+	}
 	return isup;
 }
 
@@ -1017,6 +1042,12 @@ int city_changesilver( int city_index, int value, short path )
 	pValue.m_total = g_city[city_index].silver;
 	pValue.m_path = path;
 	netsend_changesilver_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+
+	if ( value > 0 )
+	{
+		// 自动建造
+		building_upgrade_autocheck( city_index );
+	}
 	return 0;
 }
 // 木材
@@ -1037,6 +1068,12 @@ int city_changewood( int city_index, int value, short path )
 	pValue.m_total = g_city[city_index].wood;
 	pValue.m_path = path;
 	netsend_changewood_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+
+	if ( value > 0 )
+	{
+		// 自动建造
+		building_upgrade_autocheck( city_index );
+	}
 	return 0;
 }
 // 粮草
@@ -1227,6 +1264,30 @@ int city_changesoldiers( int city_index, short corps, int value, short path )
 	return 0;
 }
 
+int city_autobuild_open( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].autobuildopen == 1 )
+		g_city[city_index].autobuildopen = 0;
+	else
+	{
+		if ( g_city[city_index].autobuild <= 0 )
+			g_city[city_index].autobuildopen = 0;
+		else
+			g_city[city_index].autobuildopen = 1;
+	}
+
+	// 自动建造
+	building_upgrade_autocheck( city_index );
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_ChangeAutoBuild pValue = { 0 };
+	pValue.m_autobuild = g_city[city_index].autobuild;
+	pValue.m_autobuildopen = g_city[city_index].autobuildopen;
+	netsend_changeautobuild_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
 // 自动建造次数
 int city_change_autobuild( int city_index, int value, short path )
 {
@@ -1236,7 +1297,21 @@ int city_change_autobuild( int city_index, int value, short path )
 	else
 		g_city[city_index].autobuild += value;
 
+	if ( g_city[city_index].autobuild <= 0 )
+	{
+		g_city[city_index].autobuild = 0;
+		g_city[city_index].autobuildopen = 0;
+	}
+	if ( path == PATH_QUEST && g_city[city_index].autobuild > 0 )
+	{
+		g_city[city_index].autobuildopen = 1;
+	}
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_ChangeAutoBuild pValue = { 0 };
+	pValue.m_autobuild = g_city[city_index].autobuild;
+	pValue.m_autobuildopen = g_city[city_index].autobuildopen;
+	pValue.m_path = path;
+	netsend_changeautobuild_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 // 洗髓次数

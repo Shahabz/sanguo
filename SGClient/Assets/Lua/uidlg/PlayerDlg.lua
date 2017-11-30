@@ -47,7 +47,8 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 设置
 		elseif nControlID == 11 then
-		
+			m_Setting_state = 1
+			SettingDlgShow();
 		-- 反馈
 		elseif nControlID == 12 then
 		

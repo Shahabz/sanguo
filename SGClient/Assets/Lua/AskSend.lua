@@ -30,7 +30,7 @@ ASKINFO_MAPZONE			=	27 -- 地区
 ASKINFO_LOSTREBUILD		=	28 -- 家园重建
 ASKINFO_KINGWAR			=	29 -- 皇城血战 
 ASKINFO_MSGBOX_CALLBACK =	30 -- 消息框点击确定回调
-
+ASKINFO_AUTOBUILD		=	31 -- 自动建造
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议
 	if Const.NetStatus < 3 then

@@ -14,6 +14,7 @@
 #include "auto_data_equip_washrule.h"
 #include "auto_data_platinfo.h"
 #include "auto_data_upgrade.h"
+#include "auto_data_building_res_unlock.h"
 #include "auto_data_building_upgrade.h"
 #include "auto_data_vip.h"
 #include "auto_data_hero.h"

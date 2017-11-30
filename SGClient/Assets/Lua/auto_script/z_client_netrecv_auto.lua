@@ -700,6 +700,11 @@ function netrecv_treasureactorlist_C( buffer )
 	proc_treasureactorlist_C( recvValue );
 end
 
+function netrecv_changeautobuild_C( buffer )
+	local recvValue = struct_NetS_ChangeAutoBuild_recv( buffer );
+	proc_changeautobuild_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -841,6 +846,7 @@ Proc_Command = {
 	[CMDS_TREASUREHAS]=netrecv_treasurehas_C;
 	[CMDS_GOTOASYN]=netrecv_gotoasyn_C;
 	[CMDS_TREASUREACTORLIST]=netrecv_treasureactorlist_C;
+	[CMDS_CHANGEAUTOBUILD]=netrecv_changeautobuild_C;
 }
 
 function in_proc_command_C( cmd, buffer )

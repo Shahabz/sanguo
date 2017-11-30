@@ -1414,6 +1414,13 @@ struct _slk_NetS_TreasureActorList {
 };
 typedef struct _slk_NetS_TreasureActorList SLK_NetS_TreasureActorList;	//挖红图信息列表
 
+struct _slk_NetS_ChangeAutoBuild {
+	char m_autobuild;	//自动建造
+	char m_autobuildopen;	//自动建造
+	short m_path;	//自动建造
+};
+typedef struct _slk_NetS_ChangeAutoBuild SLK_NetS_ChangeAutoBuild;	//自动建造
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1570,5 +1577,6 @@ int struct_NetS_TreasureHas_send( char **pptr, int *psize, SLK_NetS_TreasureHas 
 int struct_NetS_GotoAsyn_send( char **pptr, int *psize, SLK_NetS_GotoAsyn *pValue );
 int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureActor *pValue );
 int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue );
+int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue );
 
 #endif

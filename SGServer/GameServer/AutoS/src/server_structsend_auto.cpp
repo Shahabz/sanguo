@@ -2066,3 +2066,13 @@ int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_Treasu
 	return 0;
 }
 
+int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuild, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autobuildopen, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+

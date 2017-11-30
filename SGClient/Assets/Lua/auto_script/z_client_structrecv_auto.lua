@@ -1829,3 +1829,11 @@ function struct_NetS_TreasureActorList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_ChangeAutoBuild_recv( buffer )
+	local recvValue = {};
+	recvValue.m_autobuild = buffer:ReadSByte();
+	recvValue.m_autobuildopen = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
