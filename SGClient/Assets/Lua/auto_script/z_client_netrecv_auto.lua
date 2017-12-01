@@ -705,6 +705,11 @@ function netrecv_changeautobuild_C( buffer )
 	proc_changeautobuild_C( recvValue );
 end
 
+function netrecv_herovisitinfo_C( buffer )
+	local recvValue = struct_NetS_HeroVisitInfo_recv( buffer );
+	proc_herovisitinfo_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -847,6 +852,7 @@ Proc_Command = {
 	[CMDS_GOTOASYN]=netrecv_gotoasyn_C;
 	[CMDS_TREASUREACTORLIST]=netrecv_treasureactorlist_C;
 	[CMDS_CHANGEAUTOBUILD]=netrecv_changeautobuild_C;
+	[CMDS_HEROVISITINFO]=netrecv_herovisitinfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

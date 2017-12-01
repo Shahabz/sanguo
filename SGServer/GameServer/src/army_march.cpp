@@ -146,7 +146,7 @@ void army_march( int army_index )
 		City *pActorCity = army_getcityptr( army_index );
 		if ( pActorCity )
 		{
-			//actor_system_message( pActorCity->actor_index, 67 );
+			//actor_system_pop( pActorCity->actor_index, 67 );
 		}
 
 		army_arrived( army_index );
@@ -184,7 +184,7 @@ void army_reback( int army_index )
 			if ( pUnitCity && pActorCity && pUnitCity->actorid == pActorCity->actorid )
 			{
 				// 通知：部队已经返回城内
-				//actor_system_message( pActorCity->actor_index, 68 );
+				//actor_system_pop( pActorCity->actor_index, 68 );
 
 				// 删除部队
 				army_delete( army_index );
@@ -239,7 +239,7 @@ void army_arrived( int army_index )
 				{
 					army_setstate( army_index, ARMY_STATE_REBACK );
 					if ( pCity )
-						actor_system_message( pCity->actor_index, 1241 ); // 可被驻防的队列已满
+						actor_system_pop( pCity->actor_index, 1241 ); // 可被驻防的队列已满
 					return;
 				}
 

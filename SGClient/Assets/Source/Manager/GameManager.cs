@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour {
         //RecUtil.GetInstance().FrameUpdate();
         if ( Input.GetKeyDown(KeyCode.Escape) )
         {
-            //uluaMgr.lua.GetFunction( "GameManager.OnAskQuit" ).Call();
+			eye.luaManager.GetFunction( "GameManager.OnAskQuit" ).Call();
         }
     }
 

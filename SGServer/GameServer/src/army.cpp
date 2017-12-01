@@ -440,7 +440,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				int num = city_helparmy_getnum( pTargetCity );
 				if ( num >= CITY_HELPDEFENSE_MAX || num >= city_helparmy_maxnum( pTargetCity ) )
 				{
-					actor_system_message( pCity->actor_index, 1241 ); // 可被驻防的队列已满
+					actor_system_pop( pCity->actor_index, 1241 ); // 可被驻防的队列已满
 					return -1;
 				}
 			}
@@ -457,7 +457,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				// 战争守护状态检查
 				if ( pTargetCity->ptsec > 0 )
 				{
-					actor_system_message( pCity->actor_index, 1248 );
+					actor_system_pop( pCity->actor_index, 1248 );
 					return -1;
 				}
 
@@ -798,7 +798,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 					int city_index = g_army[army_index].from_index;
 					if ( pCity->nation == g_city[city_index].nation )
 					{
-						//actor_system_message( pCity->actor_index, 71 );
+						//actor_system_pop( pCity->actor_index, 71 );
 						return -1;
 					}
 					city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
@@ -833,7 +833,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		else if ( info->m_action != ARMY_ACTION_OCCUPY )
 		{
 			write_gamelog( "[BATTLE_INVALID]_actorid:%d_action:%d_info->unit_index:%d", pCity->actorid, info->m_action, info->m_to_unit_index );
-			//actor_system_message( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
+			//actor_system_pop( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
 			return -1;
 		}
 		else
@@ -1113,7 +1113,7 @@ int army_tocity( int army_index )
 	{
 		hero_changestate( pCity->index, g_army[army_index].herokind[tmpi], HERO_STATE_NORMAL );
 	}
-	actor_system_message( pCity->actor_index, 983 );
+	actor_system_pop( pCity->actor_index, 983 );
 	
 	// 途径
 	char path = PATH_SYSTEM;
@@ -1787,9 +1787,9 @@ void army_fight( int army_index )
 		//	if ( pActorCity )
 		//	{
 		//		if ( g_fight.result == FIGHT_WIN )
-		//			actor_system_message( pActorCity->actor_index, 65 );
+		//			actor_system_pop( pActorCity->actor_index, 65 );
 		//		else
-		//			actor_system_message( pActorCity->actor_index, 66 );
+		//			actor_system_pop( pActorCity->actor_index, 66 );
 		//	}
 		//}
 		//// 攻击方是野外城镇

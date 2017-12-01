@@ -197,7 +197,16 @@ function NationSprite( nation )
 	end
 	return sprite;
 end
-
+--国家旗子
+function NationSpriteFlag( nation )
+	local name = string.format("ui_icon_nationflag_%d", nation);
+	print("name:"..name);
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
 -- 科技形象
 function TechSprite( kind )
 	local name = string.format("tech_icon_%d", kind );

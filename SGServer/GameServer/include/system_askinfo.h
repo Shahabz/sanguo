@@ -34,6 +34,7 @@
 #define ASKINFO_KINGWAR			29 // 皇城血战
 #define ASKINFO_MSGBOX_CALLBACK 30 // 消息框点击确定回调
 #define ASKINFO_AUTOBUILD		31 // 自动建造
+#define ASKINFO_HERO_VISIT		32 // 武将寻访
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

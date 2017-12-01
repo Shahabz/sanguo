@@ -434,10 +434,54 @@ int global_init()
 		//{
 		//	global.kingwar_treasure_hour = atoi( row[1] );
 		//}
-		//else if ( id == 138 )
-		//{
-		//	global.kingwar_treasure_minute = atoi( row[1] );
-		//}
+		else if ( id == 138 )
+			global.hero_visit_mainlevel = atoi( row[1] );
+		else if ( id == 139 )
+			global.hero_visit_actorlevel = atoi( row[1] );
+		else if ( id == 140 )
+			global.hero_visit_free_cd = atoi( row[1] );
+		else if ( id == 141 )
+			global.hero_visit_high_sec = atoi( row[1] );
+		else if ( id == 142 )
+			global.hero_visit_low_token = atoi( row[1] );
+		else if ( id == 143 )
+			global.hero_visit_low_token10 = atoi( row[1] );
+		else if ( id == 144 )
+			global.hero_visit_high_token = atoi( row[1] );
+		else if ( id == 145 )
+			global.hero_visit_high_token10 = atoi( row[1] );
+		else if ( id == 146 )
+			global.hero_visit_low_itemnum = atoi( row[1] );
+		else if ( id == 147 )
+			global.hero_visit_low_itemnum10 = atoi( row[1] );
+		else if ( id == 148 )
+			global.hero_visit_high_itemnum = atoi( row[1] );
+		else if ( id == 149 )
+			global.hero_visit_high_itemnum10 = atoi( row[1] );
+		else if ( id == 150 )
+			global.hero_visit_low_max = atoi( row[1] );
+		else if ( id == 151 )
+			global.hero_visit_high_max = atoi( row[1] );
+		else if ( id == 152 )
+			global.hero_visit_low_normal_award = atoi( row[1] );
+		else if ( id == 153 )
+			global.hero_visit_low_hero_award = atoi( row[1] );
+		else if ( id == 154 )
+			global.hero_visit_high_normal_award = atoi( row[1] );
+		else if ( id == 155 )
+			global.hero_visit_high_hero_award = atoi( row[1] );
+		else if ( id == 156 )
+			global.hero_visit_progress_normal = atoi( row[1] );
+		else if ( id == 157 )
+			global.hero_visit_progress_color1 = atoi( row[1] );
+		else if ( id == 158 )
+			global.hero_visit_progress_color2 = atoi( row[1] );
+		else if ( id == 159 )
+			global.hero_visit_progress_color3 = atoi( row[1] );
+		else if ( id == 160 )
+			global.hero_visit_progress_color4 = atoi( row[1] );
+		else if ( id == 161 )
+			global.autobuild_max = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

@@ -10,6 +10,7 @@ SRC = \
 ../AutoS/src/auto_data_world_bossinfo.cpp \
 ../AutoS/src/auto_data_map_zoneinfo.cpp \
 ../AutoS/src/server_netrecv_auto.cpp \
+../AutoS/src/auto_data_hero_visit.cpp \
 ../AutoS/src/auto_city_building.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_map_town.cpp \
@@ -163,6 +164,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_map_zoneinfo.o: ../AutoS/src/auto_data_map_zoneinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_netrecv_auto.o: ../AutoS/src/server_netrecv_auto.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_hero_visit.o: ../AutoS/src/auto_data_hero_visit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building.o: ../AutoS/src/auto_city_building.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

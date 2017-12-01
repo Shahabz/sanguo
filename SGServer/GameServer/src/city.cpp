@@ -637,6 +637,22 @@ void city_logic_sec()
 			}
 		}
 
+		// 良将免费寻访
+		if ( g_city[city_index].hv_fcd > 0 )
+		{
+			g_city[city_index].hv_fcd -= 1;
+			if ( g_city[city_index].hv_fcd <= 0 )
+			{ // 可以免费良将寻访了
+
+			}
+		}
+
+		// 神将寻访持续时间
+		if ( g_city[city_index].hv_hsec > 0 )
+		{
+			g_city[city_index].hv_hsec -= 1;
+		}
+
 		// 雇佣官
 		for ( int i = 0; i < 3; i++ )
 		{
@@ -1292,8 +1308,8 @@ int city_autobuild_open( int city_index )
 int city_change_autobuild( int city_index, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	if ( value > 0 && g_city[city_index].autobuild > CHAR_MAX - value )
-		g_city[city_index].autobuild = CHAR_MAX;
+	if ( value > 0 && g_city[city_index].autobuild > global.autobuild_max - value )
+		g_city[city_index].autobuild = global.autobuild_max;
 	else
 		g_city[city_index].autobuild += value;
 
@@ -1382,7 +1398,7 @@ int city_guard_call( int city_index )
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].guardsec > 0 )
 	{
-		actor_system_message( g_city[city_index].actor_index, 795 );
+		actor_system_pop( g_city[city_index].actor_index, 795 );
 		return -1;
 	}
 	Building *pBuilding = building_getptr_kind( city_index, BUILDING_Wall );
@@ -3235,7 +3251,7 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 	{
 		if ( pCity->hero[tmpi].state > 0 )
 		{
-			actor_system_message( pCity->actor_index, 1001 ); // 召回在外征战的武将
+			actor_system_pop( pCity->actor_index, 1001 ); // 召回在外征战的武将
 			return -1;
 		}
 	}

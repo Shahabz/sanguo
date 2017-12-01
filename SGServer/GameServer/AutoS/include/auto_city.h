@@ -70,6 +70,9 @@ struct _city {
 				char matnum_will[8];	//材料预定生产数量
 				char matkind_over[8];	//材料生产完毕
 				char matnum_over[8];	//材料生产完毕
+				int hv_fcd;	//良将寻访免费CD
+				int hv_hsec;	//神将寻访解锁时长
+				char hv_hf;	//神将寻访免费次数
 				char kw_co;	//恭贺是否完毕
 				short kw_px;	//挖宝坐标
 				short kw_py;	//挖宝坐标

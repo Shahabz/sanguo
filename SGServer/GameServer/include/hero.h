@@ -54,6 +54,12 @@ int hero_colorup_sendinfo( int actor_index, int herokind );
 int hero_colorup_reset( int actor_index );
 int hero_colorup( int actor_index, int herokind );
 
+// Îä½«Ñ°·Ã
+int hero_visit_setprogress( int actor_index, int value );
+int hero_visit_sendinfo( int actor_index );
+int hero_visit_low( int actor_index, int type );
+int hero_visit_high( int actor_index, int type );
+
 // 
 int hero_gm_level( City *pCity, int level );
 int hero_gm_soldiers( City *pCity );

@@ -52,6 +52,9 @@ struct _actor {
 				int cdkey2;	//是否领取该批次兑换码
 				int cdkey3;	//是否领取该批次兑换码
 				int cdkey4;	//是否领取该批次兑换码
+				char hv_ln;	//良将寻访次数
+				char hv_hn;	//神将寻访次数
+				short hv_pro;	//当前寻访进度
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

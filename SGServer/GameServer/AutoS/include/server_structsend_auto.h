@@ -1421,6 +1421,16 @@ struct _slk_NetS_ChangeAutoBuild {
 };
 typedef struct _slk_NetS_ChangeAutoBuild SLK_NetS_ChangeAutoBuild;	//自动建造
 
+struct _slk_NetS_HeroVisitInfo {
+	int m_hv_free_cd;	//良将寻访免费CD
+	int m_hv_high_sec;	//神将寻访解锁时长
+	char m_hv_high_free;	//神将寻访剩余免费次数
+	char m_hv_low_num;	//良将寻访次数
+	char m_hv_high_num;	//神将寻访次数
+	short m_hv_progress;	//寻访进度
+};
+typedef struct _slk_NetS_HeroVisitInfo SLK_NetS_HeroVisitInfo;	//武将寻访信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1578,5 +1588,6 @@ int struct_NetS_GotoAsyn_send( char **pptr, int *psize, SLK_NetS_GotoAsyn *pValu
 int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureActor *pValue );
 int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue );
 int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue );
+int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue );
 
 #endif

@@ -644,6 +644,7 @@ function City.GoToWorker()
 		if GetPlayer().m_worker_free > 0 then
 			-- 免费加速
 			system_askinfo( ASKINFO_BUILDING, "", 2, GetPlayer().m_worker_kind, GetPlayer().m_worker_offset );
+			City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, false )
 		else
 			City.Move( GetPlayer().m_worker_kind, GetPlayer().m_worker_offset, true )
 		end
@@ -663,6 +664,7 @@ function City.GoToWorkerEx()
 		if GetPlayer().m_worker_free_ex > 0 then
 			-- 免费加速
 			system_askinfo( ASKINFO_BUILDING, "", 2, GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex );
+			City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, false )
 		else
 			City.Move( GetPlayer().m_worker_kind_ex, GetPlayer().m_worker_offset_ex, true )
 		end

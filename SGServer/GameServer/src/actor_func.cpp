@@ -292,7 +292,7 @@ int actor_changename( int actor_index, char *pname, int type )
 	{
 		if ( atoi( row[0] ) >= 1 )
 		{
-			actor_system_message( actor_index, 787 ); // 该名字已经有人使用
+			actor_system_pop( actor_index, 787 ); // 该名字已经有人使用
 			mysql_free_result( res );
 			return -1;
 		}

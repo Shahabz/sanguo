@@ -2076,3 +2076,16 @@ int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAu
 	return 0;
 }
 
+int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hv_free_cd, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_hv_high_sec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hv_high_free, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hv_low_num, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hv_high_num, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_hv_progress, (*psize) );
+	return 0;
+}
+

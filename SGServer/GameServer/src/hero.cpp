@@ -51,6 +51,9 @@ extern int g_heroinfo_maxnum;
 extern HeroColorupInfo *g_hero_colorup;
 extern int g_hero_colorup_maxnum;
 
+extern HeroVisit *g_hero_visit;
+extern int g_hero_visit_maxnum;
+
 i64 g_maxheroid;
 
 int actor_hero_getindex( int actor_index, int herokind )
@@ -1227,6 +1230,53 @@ int hero_colorup( int actor_index, int herokind )
 	pValue.m_value = pHero->colorup;
 	pValue.m_isup = isup;
 	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 设置寻访进度
+int hero_visit_setprogress( int actor_index, int value )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	return 0;
+}
+
+// 寻访信息
+int hero_visit_sendinfo( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_HeroVisitInfo pValue = { 0 };
+	pValue.m_hv_free_cd = pCity->hv_fcd;
+	pValue.m_hv_high_sec = pCity->hv_hsec;
+	pValue.m_hv_high_free = pCity->hv_hf;
+	pValue.m_hv_low_num = g_actors[actor_index].hv_ln;
+	pValue.m_hv_high_num = g_actors[actor_index].hv_hn;
+	pValue.m_hv_progress = g_actors[actor_index].hv_pro;
+	netsend_herovisitinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 良将寻访
+int hero_visit_low( int actor_index, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	return 0;
+}
+
+// 神将寻访
+int hero_visit_high( int actor_index, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
 	return 0;
 }
 

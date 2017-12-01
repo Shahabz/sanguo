@@ -1837,3 +1837,14 @@ function struct_NetS_ChangeAutoBuild_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_HeroVisitInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_hv_free_cd = buffer:ReadInt();
+	recvValue.m_hv_high_sec = buffer:ReadInt();
+	recvValue.m_hv_high_free = buffer:ReadSByte();
+	recvValue.m_hv_low_num = buffer:ReadSByte();
+	recvValue.m_hv_high_num = buffer:ReadSByte();
+	recvValue.m_hv_progress = buffer:ReadShort();
+	return recvValue;
+end
+

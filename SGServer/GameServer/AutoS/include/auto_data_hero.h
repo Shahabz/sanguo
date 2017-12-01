@@ -21,6 +21,7 @@ struct _heroinfo_config {
 				short defense;	//
 				short troops;	//
 				short skillid;	//
+				int itemnum;	//
 };
 typedef struct _heroinfo_config HeroInfoConfig;
 

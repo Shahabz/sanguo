@@ -443,7 +443,7 @@ int map_event_getaward( int actor_index, int unit_index )
 	if ( !config )
 		return -1;
 
-	actor_system_message( actor_index, 1020 + config->type );
+	actor_system_pop( actor_index, 1020 + config->type );
 
 	// »ñÈ¡½±Àø
 	AwardGetInfo info = { 0 };

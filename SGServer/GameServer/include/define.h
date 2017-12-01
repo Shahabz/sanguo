@@ -21,6 +21,7 @@
 #include "auto_data_hero_colorup.h"
 #include "auto_data_hero_corpsmul.h"
 #include "auto_data_hero_skill.h"
+#include "auto_data_hero_visit.h"
 #include "auto_data_quest.h"
 #include "auto_data_city_guard.h"
 #include "auto_data_city_tech.h"

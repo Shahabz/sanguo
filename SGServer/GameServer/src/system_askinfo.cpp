@@ -618,6 +618,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			building_upgrade_auto( g_actors[actor_index].city_index, pvalue[1], pvalue[2] );
 		}
 		break;
+	case ASKINFO_HERO_VISIT:
+		if ( pvalue[0] == 0 )
+		{ // 寻访信息
+			hero_visit_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 良将寻访
+			hero_visit_low( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 神将寻访
+			hero_visit_high( actor_index, pvalue[1] );
+		}
+		break;
 	default:
 		break;
 	}

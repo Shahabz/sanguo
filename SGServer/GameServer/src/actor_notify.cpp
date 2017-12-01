@@ -51,9 +51,9 @@ int actor_notify_value( int actor_index, short msgid, char count, const int *dat
 }
 
 // 发消息提示，通过消息ID
-int actor_system_message( int actor_index, int msgid )
+int actor_system_pop( int actor_index, int textid )
 {
-	actor_notify_value( actor_index, NOTIFY_NORMAL, 1, &msgid, NULL );
+	actor_notify_value( actor_index, NOTIFY_POP, 1, &textid, NULL );
 	return 0;
 }
 
@@ -61,6 +61,34 @@ int actor_system_message( int actor_index, int msgid )
 int npc_talk( int actor_index, int textid )
 {
 	actor_notify_value( actor_index, NOTIFY_NPCTALK, 1, &textid, NULL );
+	return 0;
+}
+
+// 弹框消息
+int actor_notify_box( int actor_index, int textid )
+{
+	actor_notify_value( actor_index, NOTIFY_BOX, 1, &textid, NULL );
+	return 0;
+}
+int actor_notify_box_v( int actor_index, int textid, char *v1, char *v2 )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	char content[128] = { 0 };
+	if ( v1 && v2 )
+	{
+		sprintf( content, "{\"v1\":\"%s\",\"v2\":\"%s\"}", v1, v2 );
+		actor_notify_value( actor_index, NOTIFY_BOX, 1, &textid, content );
+	}
+	else if ( v1 )
+	{
+		sprintf( content, "{\"v1\":\"%s\"}", v1 );
+		actor_notify_value( actor_index, NOTIFY_BOX, 1, &textid, content );
+	}
+	else
+	{
+		actor_notify_value( actor_index, NOTIFY_BOX, 1, &textid, NULL );
+	}
 	return 0;
 }
 
@@ -74,6 +102,8 @@ int actor_notify_alert( int actor_index, int textid )
 // 弹出确定消息带参数
 int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 )
 {
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
 	char content[128] = { 0 };
 	if ( v1 && v2 )
 	{
@@ -95,6 +125,8 @@ int actor_notify_alert_v( int actor_index, int textid, char *v1, char *v2 )
 // 弹出消息选择框
 int actor_notify_msgbox_v( int actor_index, int msgid, int value1, int value2, int textid, char *v1, char *v2 )
 {
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
 	char content[128] = { 0 };
 	int value[3] = { 0 };
 	value[0] = msgid;

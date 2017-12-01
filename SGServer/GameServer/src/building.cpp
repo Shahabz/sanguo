@@ -317,11 +317,10 @@ int building_giveres( int city_index, int kind )
 		}
 	}
 
-	BuildingRes *pBuilding = buildingres_getptr( city_index, offset );
-	if ( pBuilding )
-	{
-		building_sendinfo_res( g_city[city_index].actor_index, offset );
-	}
+	SLK_NetS_BuildingResGet pValue = { 0 };
+	building_res_makestruct( &g_city[city_index].building_res[offset], offset, &pValue.m_res );
+	netsend_buildingresget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	city_building_res_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building_res[offset], "city_building_res", NULL );
 	return 0;
 }
 
@@ -1139,6 +1138,17 @@ int building_finish( int city_index, int op, int kind, int offset )
 		building_action( g_city[city_index].actor_index, kind, offset, 1 );
 
 		city_battlepower_building_calc( &g_city[city_index] );
+	}
+
+	// ·¢Í¨Öª
+	if ( g_city[city_index].actor_index >= 0 )
+	{
+		int value[4] = { 0 };
+		value[0] = op;
+		value[1] = kind;
+		value[2] = building_offset2no( kind, offset );
+		value[3] = level + 1;
+		actor_notify_value( g_city[city_index].actor_index, NOTIFY_BUILDINGFINISH, 4, value, NULL );
 	}
 	return 0;
 }

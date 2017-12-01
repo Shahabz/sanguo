@@ -1564,3 +1564,9 @@ function proc_changeautobuild_C( recvValue )
 	MainDlgSetAutoBuild( recvValue.m_path )
 end
 
+-- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
+function proc_herovisitinfo_C( recvValue )
+	-- process.
+	HeroVisitDlgRecv( recvValue )
+end
+

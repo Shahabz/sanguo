@@ -2,11 +2,11 @@
 #define __ACTOR_NOTIFY_H
 #include "server_structsend_auto.h"
 
-#define POP( actor_index, msgid ) actor_system_message( actor_index, msgid )
+#define POP( actor_index, msgid ) actor_system_pop( actor_index, msgid )
 #define SUBSCRIBE_CMD_KINGWARDLG	1
 
-#define NOTIFY_NORMAL		0	// 服务端发文字信息
-#define	NOTIFY_TEXTTABLE	1	// 
+#define NOTIFY_NORMAL		0	
+#define	NOTIFY_TEXTTABLE	1	
 #define	NOTIFY_ITEM			2
 #define	NOTIFY_ITEMNUM		3
 #define	NOTIFY_LOGIN_QUEUE	4
@@ -23,6 +23,9 @@
 #define NOTIFY_LOSTREBUILD	15	// 高级重建次数
 #define NOTIFY_MAPZONEGOZC	16	// 前往州城的显示和隐藏
 #define NOTIFY_MSGBOX		17	// 弹出消息选择框
+#define NOTIFY_BOX			18	// 弹出消息框
+#define NOTIFY_POP			19	// 弹出消息，无框
+#define NOTIFY_BUILDINGFINISH	20	// 建筑完成
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );
@@ -31,10 +34,14 @@ int actor_notify( int actor_index, short msgid, const char *msg );
 int actor_notify_value( int actor_index, short msgid, char count, const int *data, const char *msg );
 
 // 发消息提示，通过消息ID
-int actor_system_message( int actor_index, int msgid );
+int actor_system_pop( int actor_index, int textid );
 
 // npc对话
 int npc_talk( int actor_index, int textid );
+
+// 弹框消息
+int actor_notify_box( int actor_index, int textid );
+int actor_notify_box_v( int actor_index, int textid, char *v1, char *v2 );
 
 // 弹出确定消息
 int actor_notify_alert( int actor_index, int textid );

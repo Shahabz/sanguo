@@ -17,7 +17,9 @@ NOTIFY_ALERT		=	14	-- 消息确定框
 NOTIFY_LOSTREBUILD	=	15	-- 高级重建次数
 NOTIFY_MAPZONEGOZC	=	16	-- 前往州城的显示和隐藏
 NOTIFY_MSGBOX		=	17	-- 弹出消息选择框
-
+NOTIFY_BOX			=	18	-- 弹出消息，带框
+NOTIFY_POP			=	19	-- 弹出消息，无框
+NOTIFY_BUILDINGFINISH = 20  --  建筑完成
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
     local msgid = recvValue.m_msgid;
@@ -178,6 +180,45 @@ function RecvActorNotify(recvValue)
 				system_askinfo( ASKINFO_MSGBOX_CALLBACK, "", value[1], value[2], value[3] )
 			end
 		end )
+	
+	-- 弹出消息，带框	
+	elseif msgid == NOTIFY_BOX then
+		if recvValue.m_msg_length > 1 then
+			local json = require "cjson"
+			local msgjson = json.decode( recvValue.m_msg );
+			local msg = "";
+			if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				local v2_str = GetMail():GetString( msgjson["v2"] );
+				msg = F( value[1], v1_str, v2_str )
+			
+			elseif msgjson["v1"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				msg = F( value[1], v1_str )
+				
+			else
+				msg = T(value[1])
+			end
+			Notify( msg )
+		else
+			Notify( T(value[1]) )
+		end
+		
+	-- 弹出消息，无框
+	elseif msgid == NOTIFY_POP then
+		pop(T(value[1]))
+	
+	-- 建筑完成	
+	elseif msgid == NOTIFY_BUILDINGFINISH then
+		local op = value[1]
+		local kind = value[2]
+		local offset = value[3];
+		local level = value[4]
+		if offset >= 0 then
+			Notify( F(1481,level,offset+1,BuildingName(kind)) )
+		else
+			Notify( F(1480,level,BuildingName(kind)) )
+		end
     end
 end
 

@@ -49,5 +49,8 @@ CREATE TABLE `actor` (
   `cdkey2` int(11) NOT NULL DEFAULT '0' COMMENT '是否领取该批次兑换码',
   `cdkey3` int(11) NOT NULL DEFAULT '0' COMMENT '是否领取该批次兑换码',
   `cdkey4` int(11) NOT NULL DEFAULT '0' COMMENT '是否领取该批次兑换码',
+  `hv_ln` tinyint(3) NOT NULL DEFAULT '0' COMMENT '良将寻访次数',
+  `hv_hn` tinyint(3) NOT NULL DEFAULT '0' COMMENT '神将寻访次数',
+  `hv_pro` smallint(6) NOT NULL DEFAULT '0' COMMENT '当前寻访进度',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

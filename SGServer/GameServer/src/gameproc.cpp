@@ -367,6 +367,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 英雄寻访
+	if ( herovisit_init_auto() < 0 )
+	{
+		printf_msg( "herovisit_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 怪物信息初始化
 	if ( monsterinfo_init_auto() < 0 )
 	{

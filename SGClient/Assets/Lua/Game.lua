@@ -154,8 +154,8 @@ function GameManager.OnAskQuit()
     end
 
     -- 
-    MsgBox( T( 518 ),function()
-		GameManager.Restart()
+   MsgBox( T( 518 ),function()
+		GameManager.Restart();
 		GameManager.Logout( 1 );
 	end )
 end
