@@ -94,7 +94,20 @@ function Hero:ResetAll()
 	for i=0,MAX_HERONUM-1,1 do
 		self.m_Hero[i] = SLK_Hero.new();
 	end
-	
+end
+
+function Hero:ResetCityHero( beginoffset, endoffset )
+	-- 上阵英雄列表
+	for i=beginoffset,endoffset,1 do
+		self.m_CityHero[i]:empty()
+	end
+end
+
+function Hero:ResetHero()
+	-- 英雄列表
+	for i=0,MAX_HERONUM-1,1 do
+		self.m_Hero[i]:empty()
+	end
 end
 
 -- 设置背包英雄

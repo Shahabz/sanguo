@@ -617,7 +617,7 @@ int equip_list( int actor_index )
 		for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
 		{
 			if ( pCity->hero[heroindex].equip[equipoffset].kind <= 0 )
-				continue;;
+				continue;
 			Value.m_list[Value.m_count].m_offset = pCity->hero[heroindex].equip[equipoffset].offset;
 			Value.m_list[Value.m_count].m_kind = pCity->hero[heroindex].equip[equipoffset].kind;
 			Value.m_list[Value.m_count].m_washid[0] = pCity->hero[heroindex].equip[equipoffset].washid[0];

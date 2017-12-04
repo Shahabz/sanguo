@@ -10,6 +10,7 @@ local m_uiOpenInfoBtu = nil; --UnityEngine.GameObject 显示资质
 local m_uiCloseInfoBtu = nil; --UnityEngine.GameObject 隐藏资质
 local m_uiRankWayText = nil; --UnityEngine.GameObjec 显示排序方法的Text
 local m_uiEmptyHeroContent = nil; --UnityEngine.GameObject
+local m_uiHeoVisitEnter = nil; --UnityEngine.GameObject
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 local m_SelectHeroKind = 0;
@@ -104,6 +105,7 @@ function HeroListDlgOnAwake( gameObject )
 	m_uiCloseInfoBtu = objs[6];
 	m_uiRankWayText = objs[7];
 	m_uiEmptyHeroContent = objs[8];
+	m_uiHeoVisitEnter = objs[9];
 end
 
 -- 界面初始化时调用
@@ -113,7 +115,11 @@ end
 
 -- 界面显示时调用
 function HeroListDlgOnEnable( gameObject )
-	
+	if ( GetPlayer().m_level >= global.hero_visit_actorlevel and GetPlayer():CityLevel() >= global.hero_visit_mainlevel ) then
+		SetTrue(m_uiHeoVisitEnter);
+	else
+		SetFalse(m_uiHeoVisitEnter);
+	end
 end
 
 -- 界面隐藏时调用
@@ -269,17 +275,37 @@ function HeroListDlgLoadHero()
     -- 创建上阵对象
 	local upHeroRow = m_uiContent.transform:GetChild(1).gameObject;
 	HeroListDlgClearHeroRow(upHeroRow,true);
-	local index = 1;
+
+	local tmpCache = {};
     for i=1, #m_CacheHeroCache, 1 do
 		local pHero = m_CacheHeroCache[i];
+        if pHero.m_offset < 10000 then
+			table.insert( tmpCache, pHero );
+			--m_CacheHeroList[pHero.m_offset] = upHeroRow.transform:GetChild(index);
+            --HeroListDlgSetHero( m_CacheHeroList[pHero.m_offset], pHero, index )
+			--index = index + 1
+		end
+	end
+	table.sort( tmpCache, function(a,b) 
+		if a.m_offset < b.m_offset then 
+			return true 
+		end
+		return false;
+	end )
+	
+	local index = 1;
+	for i=1, #tmpCache, 1 do
+		local pHero = tmpCache[i];
         if pHero.m_offset < 10000 then
 			m_CacheHeroList[pHero.m_offset] = upHeroRow.transform:GetChild(index);
             HeroListDlgSetHero( m_CacheHeroList[pHero.m_offset], pHero, index )
 			index = index + 1
 		end
 	end
+	
+	
 	-- 创建锁定的对象
-	if index < 4 then
+	if index <= 4 then
 		for tmpi=index,4,1 do
 			HeroListDlgSetHero( upHeroRow.transform:GetChild(tmpi), nil, tmpi )
 		end
@@ -361,8 +387,20 @@ function HeroListDlgQualtiySort(a,b)
 	if a ~= nil and b ~= nil then
         if a.m_color > b.m_color then
             return true;
-        else
-            return false;
+        elseif a.m_color == b.m_color then
+			if a.m_level > b.m_level then
+				return true;
+			elseif a.m_level == b.m_level then
+				if (a.m_qualtiy + a.m_washqualtiy) > (b.m_qualtiy + b.m_washqualtiy) then
+					return true
+				else
+					return false;
+				end
+			else
+				return false
+			end
+		else
+			return false
         end
     else
         return false;
@@ -372,8 +410,14 @@ function HeroListDlgTalentSort(a,b)
 	if a ~= nil and b ~= nil then
         if (a.m_qualtiy + a.m_washqualtiy) > (b.m_qualtiy + b.m_washqualtiy) then
             return true;
-        else
-            return false;
+        elseif (a.m_qualtiy + a.m_washqualtiy) == (b.m_qualtiy + b.m_washqualtiy) then
+			if a.m_level > b.m_level then
+				return true;
+			else
+				return false;
+			end
+		else
+			return false
         end
     else
         return false;
@@ -383,8 +427,14 @@ function HeroListDlgLevelSort(a,b)
 	if a ~= nil and b ~= nil then
         if a.m_level > b.m_level then
             return true;
-        else
-            return false;
+        elseif a.m_level == b.m_level then
+			if a.m_color > b.m_color then
+				return true;
+			else
+				return false;
+			end
+		else
+			return false
         end
     else
         return false;

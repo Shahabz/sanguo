@@ -569,6 +569,107 @@ int hero_down( int actor_index, int kind )
 	pValue.m_down_kind = kind;
 	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
+	// 后面的英雄往前移动
+	char send = 0;
+	if ( heroindex >= 4 && heroindex < 7 )
+	{ // 财赋署武将
+		for ( int tmpi = 4; tmpi < 7; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+			{
+				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+			}
+		}
+
+		// 英雄列表更新
+		SLK_NetS_HeroList pValue = { 0 };
+		pValue.m_type = 11;
+		for ( int tmpi = 4; tmpi < 8; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].id <= 0 )
+				continue;
+			hero_makestruct( pCity, HERO_BASEOFFSET + tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
+			pValue.m_count += 1;
+		}
+		if ( pValue.m_count > 0 )
+			netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+		// 装备更新
+		SLK_NetS_EquipList Value = { 0 };
+		Value.m_equipext = g_actors[actor_index].equipext;
+		Value.m_count = 0;
+		for ( int tmpi = 4; tmpi < 8; tmpi++ )
+		{
+			if ( pCity->hero[heroindex].kind <= 0 )
+				continue;
+			for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
+			{
+				if ( pCity->hero[heroindex].equip[equipoffset].kind <= 0 )
+					continue;
+				Value.m_list[Value.m_count].m_offset = pCity->hero[heroindex].equip[equipoffset].offset;
+				Value.m_list[Value.m_count].m_kind = pCity->hero[heroindex].equip[equipoffset].kind;
+				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[heroindex].equip[equipoffset].washid[0];
+				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[heroindex].equip[equipoffset].washid[1];
+				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[heroindex].equip[equipoffset].washid[2];
+				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[heroindex].equip[equipoffset].washid[3];
+				Value.m_count++;
+			}
+		}
+		if ( Value.m_count > 0 )
+			netsend_equiplist_S( actor_index, SENDTYPE_ACTOR, &Value );
+	}
+	else if ( heroindex >= 8 && heroindex < 11 )
+	{ // 御林卫武将
+		for ( int tmpi = 8; tmpi < 11; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+			{
+				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+			}
+		}
+
+		// 英雄列表更新
+		SLK_NetS_HeroList pValue = { 0 };
+		pValue.m_type = 12;
+		for ( int tmpi = 8; tmpi < 12; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].id <= 0 )
+				continue;
+			hero_makestruct( pCity, HERO_BASEOFFSET + tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
+			pValue.m_count += 1;
+		}
+		if ( pValue.m_count > 0 )
+			netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+		// 装备更新
+		SLK_NetS_EquipList Value = { 0 };
+		Value.m_equipext = g_actors[actor_index].equipext;
+		Value.m_count = 0;
+		for ( int tmpi = 8; tmpi < 12; tmpi++ )
+		{
+			if ( pCity->hero[heroindex].kind <= 0 )
+				continue;
+			for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
+			{
+				if ( pCity->hero[heroindex].equip[equipoffset].kind <= 0 )
+					continue;
+				Value.m_list[Value.m_count].m_offset = pCity->hero[heroindex].equip[equipoffset].offset;
+				Value.m_list[Value.m_count].m_kind = pCity->hero[heroindex].equip[equipoffset].kind;
+				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[heroindex].equip[equipoffset].washid[0];
+				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[heroindex].equip[equipoffset].washid[1];
+				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[heroindex].equip[equipoffset].washid[2];
+				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[heroindex].equip[equipoffset].washid[3];
+				Value.m_count++;
+			}
+		}
+		if ( Value.m_count > 0 )
+			netsend_equiplist_S( actor_index, SENDTYPE_ACTOR, &Value );
+	}
+	
 	// 更新英雄信息
 	hero_sendinfo( actor_index, &g_actors[actor_index].hero[offset] );
 	return 0;

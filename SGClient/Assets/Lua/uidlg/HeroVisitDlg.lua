@@ -4,9 +4,11 @@ local m_DialogFrameMod = nil;
 local m_uiDot = nil; --UnityEngine.GameObject
 local m_uiGodHero = nil; --UnityEngine.GameObject
 local m_uiGodHeroGray = nil; --UnityEngine.GameObject
-local m_uiGoodOpenTime = nil; --UnityEngine.GameObject
+local m_uiOpenTime = nil; --UnityEngine.GameObject
+local m_uiCloseTime = nil; --UnityEngine.GameObject
 local m_uiGodOpenTime = nil; --UnityEngine.GameObject
-
+local m_uiGrayText = nil; --UnityEngine.GameObject
+local m_uiHandle = nil; --UnityEngine.GameObject
 local m_cacheAward = nil;
 -- 打开界面
 function HeroVisitDlgOpen()
@@ -44,6 +46,11 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             HeroVisitDlgClose();
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND  then
+		if nControlID == 1 then
+			print("Timer()");
+			HeroVisitDlgShow();
+		end
 	end
 end
 
@@ -54,9 +61,12 @@ function HeroVisitDlgOnAwake( gameObject )
 	m_uiDot = objs[0];
 	m_uiGodHero = objs[1];
 	m_uiGodHeroGray = objs[2];
-	m_uiGoodOpenTime = objs[3];
-	m_uiGodOpenTime = objs[4];
-	
+	m_uiOpenTime = objs[3];
+	m_uiCloseTime = objs[4];
+	m_uiGodOpenTime = objs[5];
+	m_uiGrayText = objs[6];
+	m_uiHandle = objs[7];
+
 end
 
 -- 界面初始化时调用
@@ -96,13 +106,13 @@ end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
 function HeroVisitDlgRecv( recvValue )
+	
 	-- m_hv_free_cd=0,良将寻访免费CD
 	-- m_hv_high_sec=0,神将寻访解锁时长
 	-- m_hv_high_free=0,神将寻访剩余免费次数
 	-- m_hv_low_num=0,良将寻访次数
 	-- m_hv_high_num=0,神将寻访次数
 	-- m_hv_progress=0,寻访进度
-	
 --[[
 global.hero_visit_actorlevel = 88 --武将寻访玩家等级限制
 global.hero_visit_mainlevel = 17 --武将寻访官府等级限制
@@ -125,6 +135,34 @@ global.hero_visit_progress_color3 = 15 --寻访突破获取进度
 global.hero_visit_progress_color4 = 50 --寻访突破获取进度
 global.hero_visit_progress_normal = 2 --寻访获取进度
 --]]
+	recvValue.m_hv_free_cd = 0;
+	recvValue.m_hv_high_free = 3000;
+	recvValue.m_hv_progress = 50;
+	
+	if	recvValue.m_hv_free_cd == 0 then
+		SetTrue(m_uiDot);
+		SetFalse(m_uiOpenTime);
+		SetTrue(m_uiCloseTime);
+		SetTimer( m_uiOpenTime, 0, 0, 0 );
+	else
+		SetFalse(m_uiDot);
+		SetTrue(m_uiOpenTime);
+		SetFalse(m_uiCloseTime);
+		SetTimer( m_uiOpenTime, recvValue.m_hv_free_cd, recvValue.m_hv_free_cd, 1,T(1950) );
+	end
+	if recvValue.m_hv_progress >= global.hero_visit_progress_max then
+		SetTrue(m_uiGodHero);
+		SetFalse(m_uiGodHeroGray);
+		SetTimer( m_uiGodOpenTime, recvValue.m_hv_high_free, recvValue.m_hv_high_free, 2,T(1954) );
+	else
+		SetTimer( m_uiGodOpenTime, 0, 0, 0 );
+		SetTrue(m_uiGodHeroGray);
+		SetFalse(m_uiGodHero);
+		local floorNum = recvValue.m_hv_progress / global.hero_visit_progress_max ;
+		local intNum = math.floor(floorNum*100);
+		SetText(m_uiGrayText,F(1957,intNum));
+		m_uiHandle.transform:GetComponent( "Image" ).fillAmount = floorNum;
+	end
 end
 
 -- 良将寻访

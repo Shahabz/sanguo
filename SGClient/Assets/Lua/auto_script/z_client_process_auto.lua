@@ -596,11 +596,29 @@ function proc_herolist_C( recvValue )
 			pHero:Set( recvValue.m_list[i] );
 			GetHero():SetCityHero( recvValue.m_list[i].m_offset-HERO_BASEOFFSET, pHero );
 		end
-	else
+	elseif recvValue.m_type == 1 then
 		for i=1, recvValue.m_count, 1 do
 			local pHero = SLK_Hero.new();
 			pHero:Set( recvValue.m_list[i] );
 			GetHero():SetHero( recvValue.m_list[i].m_offset, pHero );
+		end
+	
+	-- 财赋署武将
+	elseif recvValue.m_type == 11 then
+		GetHero():ResetCityHero( 4, 7 )
+		for i=1, recvValue.m_count, 1 do
+			local pHero = SLK_Hero.new();
+			pHero:Set( recvValue.m_list[i] );
+			GetHero():SetCityHero( recvValue.m_list[i].m_offset-HERO_BASEOFFSET, pHero );
+		end
+	
+	-- 御林卫武将
+	elseif recvValue.m_type == 12 then
+		GetHero():ResetCityHero( 8, 11 )
+		for i=1, recvValue.m_count, 1 do
+			local pHero = SLK_Hero.new();
+			pHero:Set( recvValue.m_list[i] );
+			GetHero():SetCityHero( recvValue.m_list[i].m_offset-HERO_BASEOFFSET, pHero );
 		end
 	end
 end
