@@ -320,7 +320,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver).."/"..knum(GetPlayer().m_silver), flag, 4 );
+		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver).." / "..knum(GetPlayer().m_silver), flag, 4 );
 	end
 	
 	-- 木材是否满足
@@ -331,7 +331,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood).."/"..knum(GetPlayer().m_wood), flag, 5 );
+		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood).." / "..knum(GetPlayer().m_wood), flag, 5 );
 	end
 	
 	-- 粮草是否满足
@@ -342,7 +342,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food).."/"..knum(GetPlayer().m_food), flag, 6 );
+		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food).." / "..knum(GetPlayer().m_food), flag, 6 );
 	end
 	
 	-- 镔铁是否满足
@@ -353,7 +353,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 			flag = false;
 			m_bUpgrade = false;
 		end
-		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron).."/"..knum(GetPlayer().m_iron), flag, 7 );
+		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron).." / "..knum(GetPlayer().m_iron), flag, 7 );
 	end
 end
 

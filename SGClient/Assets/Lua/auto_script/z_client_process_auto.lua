@@ -473,6 +473,7 @@ function proc_changefood_C( recvValue )
 	end
 	GetPlayer().m_food = recvValue.m_total;
 	MainDlgSetFood();
+	HeroGuardDlgSetFood()
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -572,12 +573,15 @@ end
 function proc_hero_C( recvValue )
 	-- process.
 	local type, offset = GetHero():GetIndex( recvValue.m_kind );
+	--print( "kind:"..recvValue.m_kind.." type:"..type.." offset:"..offset )
 	if type == "CityHero" then
 		GetHero().m_CityHero[offset]:Set( recvValue );
 	elseif type == "Hero" then
 		GetHero().m_Hero[offset]:Set( recvValue );
 	end
 	HeroDlgUpdate();
+	HeroGatherDlgUpdate();
+	HeroGuardDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind );
 	HeroListDlgLoadHero();
 	HeroWashDlgUpdate();
@@ -590,7 +594,7 @@ function proc_herolist_C( recvValue )
 		for i=1, recvValue.m_count, 1 do
 			local pHero = SLK_Hero.new();
 			pHero:Set( recvValue.m_list[i] );
-			GetHero():SetCityHero( recvValue.m_list[i].m_offset, pHero );
+			GetHero():SetCityHero( recvValue.m_list[i].m_offset-HERO_BASEOFFSET, pHero );
 		end
 	else
 		for i=1, recvValue.m_count, 1 do
@@ -628,6 +632,8 @@ function proc_herosoldiers_C( recvValue )
 		GetHero().m_Hero[offset].m_soldiers = recvValue.m_soldiers;
 	end
 	HeroDlgUpdate();
+	HeroGatherDlgUpdate();
+	HeroGuardDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind )
 	MapBattleDlgUpdate( recvValue.m_kind, recvValue.m_soldiers );
 end
@@ -642,15 +648,19 @@ function proc_herostate_C( recvValue )
 		GetHero().m_Hero[offset].m_state = recvValue.m_state;
 	end
 	HeroDlgUpdate();
+	HeroGatherDlgUpdate();
+	HeroGuardDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind )
 end
 
--- m_up_kind=0,m_down_kind=0,
+-- m_up_kind=0,m_down_kind=0,m_up_offset=0,m_down_offset=0
 function proc_heroreplace_C( recvValue )
 	-- process.
 	local up_type, up_offset = GetHero():GetIndex( recvValue.m_up_kind );
 	local down_type, down_offset = GetHero():GetIndex( recvValue.m_down_kind );
-	-- 
+	--print( "up_type:"..up_type.." up_offset:"..up_offset.." down_type:"..down_type.." down_offset:"..down_offset )
+	
+	-- 两个上阵英雄之间的交换
 	if up_type == down_type and up_type == "CityHero" then
 		local tmp = clone( GetHero().m_CityHero[up_offset] )
 		GetHero().m_CityHero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
@@ -658,7 +668,7 @@ function proc_heroreplace_C( recvValue )
 		return;
 	end
 	
-	--
+	-- 两个背包英雄之间的交换
 	if up_type == down_type and up_type == "Hero" then
 		local tmp = clone( GetHero().m_Hero[up_offset] )
 		GetHero().m_Hero[up_offset] = clone( GetHero().m_Hero[down_offset] )
@@ -666,15 +676,11 @@ function proc_heroreplace_C( recvValue )
 		return;
 	end
 	
-	--
+	-- 背包英雄和上阵英雄的交换
 	if up_type == "Hero" then
+		-- 如果是单纯上阵，没有交换行为
 		if recvValue.m_down_kind == 0 then 
-			for i = 0, 3, 1 do
-				if GetHero().m_CityHero[i].m_kind <= 0 then 
-					down_offset = i
-					break;
-				end
-			end
+			down_offset = recvValue.m_down_offset
 		end
 		local tmp = clone( GetHero().m_Hero[up_offset] )
 		GetHero().m_Hero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
@@ -682,31 +688,36 @@ function proc_heroreplace_C( recvValue )
 		return;
 	end
 	
-	--
-	if up_type == "CityHero" then
-		if recvValue.m_down_kind == 0 then 
-			for i = 0, MAX_HERONUM-1, 1 do
-				if GetHero().m_Hero[i].m_kind <= 0 then 
-					down_offset = i
-					break;
-				end
+	-- 处理单纯下阵
+	-- 下阵up_type: up_offset:-1 down_type:CityHero down_offset:4
+	if up_type == "" then
+		local offset = -1;
+		for i = 0, MAX_HERONUM-1, 1 do
+			if GetHero().m_Hero[i].m_kind <= 0 then 
+				offset = i
+				break;
 			end
 		end
-		local tmp = clone( GetHero().m_CityHero[up_offset] )
-		GetHero().m_CityHero[up_offset] = clone( GetHero().m_Hero[down_offset] )
-		GetHero().m_Hero[down_offset] = tmp;
-		return;
+		if offset < 0 then
+			return -1;
+		end
+		GetHero().m_Hero[offset] = clone( GetHero().m_CityHero[down_offset] )
+		GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset]:empty();
 	end
 
 end
 
--- m_kind=0,m_path=0,m_hero={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
+-- m_kind=0,m_path=0,m_itemnum=0,m_hero={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
 function proc_heroget_C( recvValue )
 	-- process.
 	local pHero = SLK_Hero.new();
 	pHero:Set( recvValue.m_hero );
 	GetHero():SetHero( recvValue.m_hero.m_offset, pHero );
-	HeroGetDlgShow( recvValue.m_hero );
+	if recvValue.m_path == PATH_HEROVISIT then
+		HeroVisitDlgAwardAdd( 2, recvValue.m_hero )
+	else
+		HeroGetDlgShow( recvValue.m_hero );
+	end
 end
 
 -- m_citylevel=0,m_actorlevel=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_sec=0,m_old_value={[8]},m_new_value={[8]},m_maxlevel=0,

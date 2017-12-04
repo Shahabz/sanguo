@@ -54,6 +54,7 @@ extern int g_hero_colorup_maxnum;
 extern HeroVisit *g_hero_visit;
 extern int g_hero_visit_maxnum;
 
+HeroVisitAwardGroup g_herovisit_awardgroup[HERO_VISIT_AWARDGROUPMAX];
 i64 g_maxheroid;
 
 int actor_hero_getindex( int actor_index, int herokind )
@@ -226,9 +227,28 @@ int hero_gethero( int actor_index, int kind, short path )
 		return -1;
 	if ( kind <= 0 || kind >= g_heroinfo_maxnum )
 		return -1;
+
 	// 检查是否已经有这个武将了
-	if ( actor_hashero( actor_index, kind ) == 1 )
+	Hero *pHasHero = hero_getptr( actor_index, kind );
+	if ( pHasHero )
+	{
+		if ( path == PATH_HEROVISIT )
+		{ // 寻访即使获得了，也要发过去，界面需要显示
+			char color = hero_defaultcolor( kind );
+			HeroInfoConfig *config = hero_getconfig( kind, color );
+			SLK_NetS_HeroGet pValue = { 0 };
+			pValue.m_kind = kind;
+			pValue.m_path = path;
+			if ( config )
+			{
+				pValue.m_itemnum = config->itemnum;
+				item_getitem( actor_index, 173, config->itemnum, -1, PATH_HEROVISIT_CHANGE );
+			}
+			hero_makestruct( city_getptr( actor_index ), pHasHero->offset, pHasHero, &pValue.m_hero );
+			netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		}
 		return -1;
+	}
 
 	// 找空余位置
 	int offset = -1;
@@ -257,12 +277,10 @@ int hero_gethero( int actor_index, int kind, short path )
 	g_actors[actor_index].hero[offset].attack_wash = config->attack_wash;	//洗髓攻击资质
 	g_actors[actor_index].hero[offset].defense_wash = config->defense_wash;	//洗髓防御资质
 	g_actors[actor_index].hero[offset].troops_wash = config->troops_wash;	//洗髓兵力资质
-	
+	g_actors[actor_index].hero[offset].soldiers = 0;
+
 	// 重算英雄属性
 	hero_attr_calc( pCity, &g_actors[actor_index].hero[offset] );
-
-	// 兵力补满
-	g_actors[actor_index].hero[offset].soldiers = g_actors[actor_index].hero[offset].troops;
 
 	SLK_NetS_HeroGet pValue = { 0 };
 	pValue.m_kind = kind;
@@ -311,11 +329,14 @@ int hero_up_auto( int actor_index, int offset )
 	SLK_NetS_HeroReplace pValue = { 0 };
 	pValue.m_up_kind = pCity->hero[index].kind;
 	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 自动上阵，补满兵力
+	hero_addsoldiers( actor_index, pCity->hero[index].kind, PATH_HERO_UP );
 	return 0;
 }
 
 // 上阵带替换效果
-int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
+int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, char uptype )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -324,18 +345,66 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 	Hero *pHero = city_hero_getptr( pCity->index, HERO_BASEOFFSET + city_hero_getindex( pCity->index, selectkind ) );
 	if ( !pHero )
 	{ // 没有需要替换的,找空位
-		int maxhero = 2 + pCity->attr.hero_up_num;
-		if ( maxhero > 4 )
-			maxhero = 4;
 		int index = -1;
-		for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
-		{
-			if ( pCity->hero[tmpi].id <= 0 )
+		if ( uptype == 0 )
+		{ // 战斗武将位置0-3
+			int maxhero = 2 + pCity->attr.hero_up_num;
+			if ( maxhero > 4 )
+				maxhero = 4;
+			for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
 			{
-				index = tmpi;
-				break;
+				if ( pCity->hero[tmpi].id <= 0 )
+				{
+					index = tmpi;
+					break;
+				}
 			}
 		}
+		else if ( uptype == 1 )
+		{ // 财富署武将位置4-7
+			if ( building_getlevel( pCity->index, BUILDING_Cabinet, -1 ) < 1 )
+				return -1;
+			int maxhero = 5;
+			if ( pCity->level >= global.hero_cabinet_level4 )
+				maxhero = 8;
+			else if ( pCity->level >= global.hero_cabinet_level3 )
+				maxhero = 7;
+			else if ( pCity->level >= global.hero_cabinet_level2 )
+				maxhero = 6;
+			else if ( pCity->level >= global.hero_cabinet_level1 )
+				maxhero = 5;
+			for ( int tmpi = 4; tmpi < maxhero; tmpi++ )
+			{
+				if ( pCity->hero[tmpi].id <= 0 )
+				{
+					index = tmpi;
+					break;
+				}
+			}
+		}
+		else if ( uptype == 2 )
+		{ // 羽林卫武将位置8-11
+			if ( building_getlevel( pCity->index, BUILDING_Cabinet, -1 ) < 2 )
+				return -1;
+			int maxhero = 9;
+			if ( pCity->level >= global.hero_cabinet_level4 )
+				maxhero = 12;
+			else if ( pCity->level >= global.hero_cabinet_level3 )
+				maxhero = 11;
+			else if ( pCity->level >= global.hero_cabinet_level2 )
+				maxhero = 10;
+			else if ( pCity->level >= global.hero_cabinet_level1 )
+				maxhero = 9;
+			for ( int tmpi = 8; tmpi < maxhero; tmpi++ )
+			{
+				if ( pCity->hero[tmpi].id <= 0 )
+				{
+					index = tmpi;
+					break;
+				}
+			}
+		}
+		
 		if ( index < 0 )
 			return -1;
 		pHero = &pCity->hero[index];
@@ -357,7 +426,26 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 	{
 		return -1;
 	}
-	
+
+	// 下阵武将，兵力回营
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( config )
+	{
+		if ( pHero->offset >= HERO_BASEOFFSET && pHero->offset < HERO_BASEOFFSET + 4 )
+		{ // 上阵武将
+			city_changesoldiers( pCity->index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+		}
+		else if ( pHero->offset >= HERO_BASEOFFSET + 4 && pHero->offset <HERO_BASEOFFSET + 8 )
+		{ // 财赋署武将
+			city_changesoldiers( pCity->index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+		}
+		else if ( pHero->offset >= HERO_BASEOFFSET + 8 && pHero->offset < HERO_BASEOFFSET + 12 )
+		{ // 御林卫武将
+			city_changefood( pCity->index, (int)(pHero->soldiers*global.trainfood), PATH_HERO_DOWN );
+		}
+	}
+	pHero->soldiers = 0;
+
 	int hero_offset = pHero->offset;
 	int up_hero_offset = pUpHero->offset;
 
@@ -388,11 +476,30 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 	SLK_NetS_HeroReplace pValue = { 0 };
 	pValue.m_up_kind = upkind;
 	pValue.m_down_kind = selectkind;
+	pValue.m_up_offset = up_hero_offset;
+	pValue.m_down_offset = hero_offset - HERO_BASEOFFSET;
 	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 重算英雄属性
 	hero_attr_calc( pCity, pHero );
 	hero_attr_calc( pCity, pUpHero );
+
+	// 新上阵英雄自动补满兵
+	int add = pHero->troops - pHero->soldiers;
+	if ( add > 0 )
+	{
+		HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+		if ( config )
+		{
+			int has = city_soldiers( pCity->index, config->corps );
+			if ( has > 0 )
+			{
+				if ( add > has )
+					add = has;
+				pHero->soldiers += add;
+			}
+		}
+	}
 
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );
@@ -410,8 +517,60 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip )
 int hero_down( int actor_index, int kind )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	if ( kind <= 0 || kind >= g_heroinfo_maxnum )
 		return -1;
+	int heroindex = city_hero_getindex( pCity->index, kind );
+	Hero *pHero = city_hero_getptr( pCity->index, HERO_BASEOFFSET + heroindex );
+	if ( !pHero )
+		return -1;
+
+	// 玩家英雄栏找到一个空位
+	int offset = -1;
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].id <= 0 )
+		{
+			offset = tmpi;
+			break;
+		}
+	}
+	if ( offset < 0 )
+		return -1;
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return -1;
+
+	// 下阵武将，兵力回营
+	if ( heroindex >= 0 && heroindex < 4 )
+	{ // 上阵武将
+		city_changesoldiers( pCity->index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+	}
+	else if( heroindex >= 4 && heroindex < 8 )
+	{ // 财赋署武将
+		city_changesoldiers( pCity->index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+	}
+	else if ( heroindex >= 8 && heroindex < 12 )
+	{ // 御林卫武将
+		city_changefood( pCity->index, (int)(pHero->soldiers*global.trainfood), PATH_HERO_DOWN );
+	}
+	pHero->soldiers = 0;
+	memset( &g_actors[actor_index].hero[offset], 0, sizeof( Hero ) );
+	memcpy( &g_actors[actor_index].hero[offset], pHero, sizeof( Hero ) );
+	g_actors[actor_index].hero[offset].offset = offset;
+	memset( pHero, 0, sizeof( Hero ) );
+	pHero->offset = -1;
+	hero_attr_calc( pCity, &g_actors[actor_index].hero[offset] );
+
+	SLK_NetS_HeroReplace pValue = { 0 };
+	pValue.m_up_kind = 0;
+	pValue.m_down_kind = kind;
+	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 更新英雄信息
+	hero_sendinfo( actor_index, &g_actors[actor_index].hero[offset] );
 	return 0;
 }
 
@@ -597,6 +756,77 @@ int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path )
 		pValue.m_path = PATH_HERO_ADDSOLDIERS;
 		netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+	return 0;
+}
+
+// 御林卫自动补充士兵
+void hero_guard_soldiers_auto( City *pCity )
+{
+	if ( !pCity )
+		return;
+	char foodchange = 0;
+	int foodtotal = 0;
+	for ( int i = 8; i < 12; i++ )
+	{// 御林卫恢复兵力
+		if ( pCity->hero[i].kind <= 0 )
+			continue;
+		if ( pCity->hero[i].soldiers < pCity->hero[i].troops )
+		{
+			int soldiers = (int)ceil( pCity->hero[i].troops*global.hero_cabinet_guard_hp / 100.0f );
+			int food = (int)(soldiers * global.trainfood);
+			if ( pCity->food < food )
+				continue;
+			pCity->hero[i].soldiers += soldiers;
+			if ( pCity->hero[i].soldiers > pCity->hero[i].troops )
+				pCity->hero[i].soldiers = pCity->hero[i].troops;
+			if ( pCity->actor_index >= 0 )
+			{
+				SLK_NetS_HeroSoldiers pValue = { 0 };
+				pValue.m_kind = pCity->hero[i].kind;
+				pValue.m_add = soldiers;
+				pValue.m_soldiers = pCity->hero[i].soldiers;
+				pValue.m_soldiers_max = pCity->hero[i].troops;
+				pValue.m_path = PATH_HERO_GUARD_AUTO;
+				netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+			}
+			pCity->food -= food;
+			foodtotal -= food;
+			foodchange = 1;
+		}
+	}
+	if ( foodchange == 1 && pCity->actor_index >= 0 )
+	{
+		SLK_NetS_Food pValue = { 0 };
+		pValue.m_add = foodtotal;
+		pValue.m_total = pCity->food;
+		pValue.m_path = PATH_HERO_GUARD_AUTO;
+		netsend_changefood_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+}
+
+// 御林卫钻石补充士兵
+int hero_guard_soldiers_token( int actor_index, int herokind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	int soldiers = pHero->troops - pHero->soldiers;
+	int progress = (int)ceil( soldiers / (float)pHero->troops * 100.0f );
+	int token = (int)ceil( progress * (float)global.hero_cabinet_guard_token );
+	if ( g_actors[actor_index].token < token )
+		return -1;
+	actor_change_token( actor_index, -token, PATH_HERO_GUARD, 0 );
+	pHero->soldiers = pHero->troops;
+	SLK_NetS_HeroSoldiers pValue = { 0 };
+	pValue.m_kind = pHero->kind;
+	pValue.m_add = soldiers;
+	pValue.m_soldiers = pHero->soldiers;
+	pValue.m_soldiers_max = pHero->troops;
+	pValue.m_path = PATH_HERO_GUARD;
+	netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -939,7 +1169,7 @@ int hero_list( int actor_index )
 		{
 			if ( pCity->hero[tmpi].id <= 0 )
 				continue;
-			hero_makestruct( pCity, tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
+			hero_makestruct( pCity, HERO_BASEOFFSET + tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
 			pValue.m_count += 1;
 		}
 		netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -1210,7 +1440,7 @@ int hero_colorup( int actor_index, int herokind )
 		isup = 1;
 	}
 	
-
+	char oldcolor = pHero->color;
 	pHero->colorup += g_hero_colorup[pHero->color].value;
 	if ( pHero->colorup >= g_hero_colorup[pHero->color].needvalue || isup == 1 )
 	{
@@ -1223,6 +1453,16 @@ int hero_colorup( int actor_index, int herokind )
 		city_battlepower_hero_calc( pCity );
 		// 更新英雄
 		hero_sendinfo( actor_index, pHero );
+
+		// 突破增加寻访进度
+		if ( oldcolor == 2 )
+			hero_visit_setprogress( actor_index, global.hero_visit_progress_color1 );
+		else if ( oldcolor == 3 )
+			hero_visit_setprogress( actor_index, global.hero_visit_progress_color2 );
+		else if ( oldcolor == 4 )
+			hero_visit_setprogress( actor_index, global.hero_visit_progress_color3 );
+		else if ( oldcolor == 5 )
+			hero_visit_setprogress( actor_index, global.hero_visit_progress_color4 );
 	}
 
 	// 更新客户端
@@ -1233,11 +1473,51 @@ int hero_colorup( int actor_index, int herokind )
 	return 0;
 }
 
+// 初始化
+int hero_visit_init()
+{
+	memset( g_herovisit_awardgroup, 0, sizeof( HeroVisitAwardGroup )*HERO_VISIT_AWARDGROUPMAX );
+	for ( int tmpi = 0; tmpi < g_hero_visit_maxnum; tmpi++ )
+	{
+		if ( g_hero_visit[tmpi].awardgroup <= 0 )
+			continue;
+		if ( g_hero_visit[tmpi].awardgroup >= HERO_VISIT_AWARDGROUPMAX )
+			return -1;
+		int awardgroup = g_hero_visit[tmpi].awardgroup;
+		int count = g_herovisit_awardgroup[awardgroup].allcount;
+		if ( count < 0 || count >= HERO_VISIT_AWARDMAX )
+		{
+			return -1;
+		}
+		g_herovisit_awardgroup[awardgroup].award[count].kind = g_hero_visit[tmpi].kind;
+		g_herovisit_awardgroup[awardgroup].award[count].num = g_hero_visit[tmpi].num;
+		g_herovisit_awardgroup[awardgroup].award[count].color = (char)g_hero_visit[tmpi].color;
+		g_herovisit_awardgroup[awardgroup].award[count].value = g_hero_visit[tmpi].value;
+		g_herovisit_awardgroup[awardgroup].allvalue += g_hero_visit[tmpi].value;
+		g_herovisit_awardgroup[awardgroup].allcount += 1;
+	}
+	return 0;
+}
+
 // 设置寻访进度
 int hero_visit_setprogress( int actor_index, int value )
 {
-	ACTOR_CHECK_INDEX( actor_index );
-
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->level < global.hero_visit_actorlevel )
+		return -1;
+	if ( city_mainlevel( pCity->index ) < global.hero_visit_mainlevel )
+		return -1;
+	if ( pCity->hv_hsec > 0 )
+		return -1;// 已经开启
+	g_actors[actor_index].hv_pro += value;
+	if ( g_actors[actor_index].hv_pro >= global.hero_visit_progress_max )
+	{ // 开启神将寻访
+		g_actors[actor_index].hv_pro = 0;
+		pCity->hv_hsec = global.hero_visit_high_sec;
+		hero_visit_snedflag( actor_index );
+	}
 	return 0;
 }
 
@@ -1258,25 +1538,281 @@ int hero_visit_sendinfo( int actor_index )
 	return 0;
 }
 
+// 发送可寻访标记
+int hero_visit_snedflag( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->level < global.hero_visit_actorlevel )
+		return -1;
+	if ( city_mainlevel( pCity->index ) < global.hero_visit_mainlevel )
+		return -1;
+
+	int value[2] = { 0 };
+	value[0] = 0;
+	if ( pCity->hv_fcd <= 0 )
+	{ // 有免费次数
+		value[1] = 1;
+	}
+	else if ( pCity->hv_hsec > 0 )
+	{ // 有神将寻访
+		value[1] = 2;
+	}
+	else
+	{
+		value[1] = 0;
+	}
+	actor_notify_value( pCity->actor_index, NOTIFY_HERO_VISIT, 2, value, NULL );
+	return 0;
+}
+
+// 通知播放奖励奖励动画
+int hero_visit_playaward_action( int actor_index )
+{
+	int value[2] = { 0 };
+	value[0] = 1;
+	actor_notify_value( actor_index, NOTIFY_HERO_VISIT, 2, value, NULL );
+	return 0;
+}
+
+// 获取寻访池奖励
+int hero_visit_getaward( int awardgroup, AwardGetInfo *getinfo )
+{
+	if ( awardgroup <= 0 || awardgroup >= HERO_VISIT_AWARDGROUPMAX )
+		return -1;
+	if ( !getinfo )
+		return -1;
+	// 然后按照评价值随机
+	int allvalue = g_herovisit_awardgroup[awardgroup].allvalue;
+	int curvalue = 0;
+	int odds = allvalue > 0 ? rand() % allvalue : 0;
+	for ( int tmpi = 0; tmpi < g_herovisit_awardgroup[awardgroup].allcount; tmpi++ )
+	{
+		// 按照评价值方式随机
+		curvalue = g_herovisit_awardgroup[awardgroup].award[tmpi].value;
+		if ( curvalue > 0 && curvalue > odds )
+		{
+			int kind = g_herovisit_awardgroup[awardgroup].award[tmpi].kind;
+			int num = g_herovisit_awardgroup[awardgroup].award[tmpi].num;
+			char color = g_herovisit_awardgroup[awardgroup].award[tmpi].color;
+
+			if ( kind < 0 )
+				hero_visit_getaward( -kind, getinfo );
+			else if ( kind > 0 )
+			{
+				if (  getinfo->count < AWARDGETINFO_MAXCOUNT )
+				{
+					getinfo->kind[getinfo->count] = kind;
+					getinfo->num[getinfo->count] = num;
+					getinfo->color[getinfo->count] = color;
+					getinfo->count++;
+				}
+				if ( getinfo->count >= AWARDGETINFO_MAXCOUNT )
+					break;
+			}
+			break;
+		}
+		odds -= curvalue;
+	}
+	return 0;
+}
+
 // 良将寻访
-int hero_visit_low( int actor_index, int type )
+int hero_visit_low( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	// 免费次数检查
+	char costtype = 1;
+	if ( pCity->hv_fcd > 0 )
+	{
+		if ( item_getitemnum( actor_index, 484 ) < global.hero_visit_low_itemnum )
+		{
+			if ( g_actors[actor_index].token < global.hero_visit_low_token )
+				return -1;
+			costtype = 2;
+		}
+	}
+	
+	// 抽取计数
+	g_actors[actor_index].hv_ln += 1;
+
+	AwardGetInfo getinfo = { 0 };
+	if ( g_actors[actor_index].hv_ln >= global.hero_visit_low_max )
+	{ // 特殊抽取
+		g_actors[actor_index].hv_ln = 0;
+		hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo );
+	}
+	else
+	{ // 普通抽取
+		hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo );
+	}
+
+	// 给奖励
+	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
+	{
+		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+	}
+	hero_visit_playaward_action( actor_index );
+
+	if ( pCity->hv_fcd > 0 )
+	{
+		if ( costtype == 1 )
+			item_lost( actor_index, 484, global.hero_visit_low_itemnum, PATH_HEROVISIT );
+		else
+			actor_change_token( actor_index, -global.hero_visit_low_token, PATH_HEROVISIT, 0 );
+	}
+	else
+	{
+		pCity->hv_fcd = global.hero_visit_free_cd;
+		hero_visit_snedflag( actor_index );
+	}
+	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal );
+	return 0;
+}
+
+// 良将寻访10连
+int hero_visit_low10( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
 
+	if ( g_actors[actor_index].token < global.hero_visit_low_token10 )
+		return -1;
+
+	AwardGetInfo getinfo = { 0 };
+	for ( int tmpi = 0; tmpi < 10; tmpi++ )
+	{
+		// 抽取计数
+		g_actors[actor_index].hv_ln += 1;
+
+		if ( g_actors[actor_index].hv_ln >= global.hero_visit_low_max )
+		{ // 特殊抽取
+			g_actors[actor_index].hv_ln = 0;
+			hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo );
+		}
+		else
+		{ // 普通抽取
+			hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo );
+		}
+	}
+
+	// 给奖励
+	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
+	{
+		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+	}
+	hero_visit_playaward_action( actor_index );
+	actor_change_token( actor_index, -global.hero_visit_low_token10, PATH_HEROVISIT, 0 );
+	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal*10 );
 	return 0;
 }
 
 // 神将寻访
-int hero_visit_high( int actor_index, int type )
+int hero_visit_high( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	// 免费次数检查
+	char costtype = 1;
+	if ( pCity->hv_hf <= 0 )
+	{
+		if ( item_getitemnum( actor_index, 485 ) < global.hero_visit_high_itemnum )
+		{
+			if ( g_actors[actor_index].token < global.hero_visit_high_token )
+				return -1;
+			costtype = 2;
+		}
+	}
 
+	// 抽取计数
+	g_actors[actor_index].hv_hn += 1;
+
+	AwardGetInfo getinfo = { 0 };
+	if ( g_actors[actor_index].hv_hn >= global.hero_visit_high_max )
+	{ // 特殊抽取
+		g_actors[actor_index].hv_hn = 0;
+		hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo );
+	}
+	else
+	{ // 普通抽取
+		hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo );
+	}
+
+	// 给奖励
+	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
+	{
+		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+	}
+	hero_visit_playaward_action( actor_index );
+
+	if ( pCity->hv_hf <= 0 )
+	{
+		if ( costtype == 1 )
+			item_lost( actor_index, 485, global.hero_visit_high_itemnum, PATH_HEROVISIT );
+		else
+			actor_change_token( actor_index, -global.hero_visit_high_token, PATH_HEROVISIT, 0 );
+	}
+	else
+	{
+		pCity->hv_hf -= 1;
+		hero_visit_snedflag( actor_index );
+	}
+	return 0;
+}
+
+// 神将寻访10连
+int hero_visit_high10( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	
+	if ( g_actors[actor_index].token < global.hero_visit_high_token10 )
+		return -1;
+
+	AwardGetInfo getinfo = { 0 };
+	for ( int tmpi = 0; tmpi < 10; tmpi++ )
+	{
+		// 抽取计数
+		g_actors[actor_index].hv_hn += 1;
+
+		if ( g_actors[actor_index].hv_hn >= global.hero_visit_high_max )
+		{ // 特殊抽取
+			g_actors[actor_index].hv_hn = 0;
+			hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo );
+		}
+		else
+		{ // 普通抽取
+			hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo );
+		}
+	}
+
+	// 给奖励
+	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
+	{
+		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+	}
+	hero_visit_playaward_action( actor_index );
+
+	if ( pCity->hv_hf <= 0 )
+	{
+		actor_change_token( actor_index, -global.hero_visit_high_token10, PATH_HEROVISIT, 0 );
+	}
+	else
+	{
+		pCity->hv_hf -= 1;
+		hero_visit_snedflag( actor_index );
+	}
 	return 0;
 }
 

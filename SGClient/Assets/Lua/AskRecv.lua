@@ -19,7 +19,10 @@ NOTIFY_MAPZONEGOZC	=	16	-- 前往州城的显示和隐藏
 NOTIFY_MSGBOX		=	17	-- 弹出消息选择框
 NOTIFY_BOX			=	18	-- 弹出消息，带框
 NOTIFY_POP			=	19	-- 弹出消息，无框
-NOTIFY_BUILDINGFINISH = 20  --  建筑完成
+NOTIFY_BUILDINGFINISH = 20  -- 建筑完成
+NOTIFY_CITYGUARDNUM	  = 21	-- 城防军数量
+NOTIFY_HERO_VISIT	  =	22	-- 武将寻访
+
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
     local msgid = recvValue.m_msgid;
@@ -214,10 +217,30 @@ function RecvActorNotify(recvValue)
 		local kind = value[2]
 		local offset = value[3];
 		local level = value[4]
-		if offset >= 0 then
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 			Notify( F(1481,level,offset+1,BuildingName(kind)) )
 		else
 			Notify( F(1480,level,BuildingName(kind)) )
+		end
+	
+	-- 城防军数量	
+	elseif msgid == NOTIFY_CITYGUARDNUM then
+		GetPlayer().m_guardnum = value[1];
+		City.GuardCallMod( nil, true )
+	
+	-- 武将寻访	
+	elseif msgid == NOTIFY_HERO_VISIT then
+		if value[1] == 0 then
+			if value[2] == 0 then
+				City.HeroVisitMod( nil, false, 0 )
+			elseif value[2] == 1 then
+				City.HeroVisitMod( nil, true, 1 )
+			elseif value[2] == 2 then
+				City.HeroVisitMod( nil, true, 2 )
+			end
+		-- 开始播放动画
+		elseif value[1] == 1 then
+			HeroVisitDlgAwardPlayAction()
 		end
     end
 end

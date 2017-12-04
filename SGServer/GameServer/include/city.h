@@ -91,7 +91,7 @@ void city_getpos( int city_index, short *posx, short *posy );
 int city_new( City *pCity );
 
 // 所有城市每秒的逻辑
-void city_logic_sec();
+void city_logic_sec( int begin, int end );
 
 // 城市主城等级
 int city_mainlevel( int city_index );
@@ -164,6 +164,7 @@ int city_guard_clearcd( int city_index );
 int city_guard_send( int actor_index, int offset );
 int city_guard_sendsec( int actor_index );
 int city_guard_sendlist( int actor_index );
+int city_guard_sendnum( int actor_index );
 
 // 征收
 int city_levy( int actor_index );

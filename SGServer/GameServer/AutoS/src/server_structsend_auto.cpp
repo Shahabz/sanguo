@@ -289,6 +289,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_guardnum, (*psize) );
 	return 0;
 }
 
@@ -682,6 +683,8 @@ int struct_NetS_HeroReplace_send( char **pptr, int *psize, SLK_NetS_HeroReplace 
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_up_kind, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_down_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_up_offset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_down_offset, (*psize) );
 	return 0;
 }
 
@@ -692,6 +695,7 @@ int struct_NetS_HeroGet_send( char **pptr, int *psize, SLK_NetS_HeroGet *pValue 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	struct_NetS_Hero_send( pptr, psize, &pValue->m_hero );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_itemnum, (*psize) );
 	return 0;
 }
 

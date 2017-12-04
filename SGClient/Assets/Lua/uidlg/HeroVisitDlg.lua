@@ -7,6 +7,7 @@ local m_uiGodHeroGray = nil; --UnityEngine.GameObject
 local m_uiGoodOpenTime = nil; --UnityEngine.GameObject
 local m_uiGodOpenTime = nil; --UnityEngine.GameObject
 
+local m_cacheAward = nil;
 -- 打开界面
 function HeroVisitDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_gray" );
@@ -89,8 +90,8 @@ end
 ----------------------------------------
 function HeroVisitDlgShow()
 	HeroVisitDlgOpen()
+	m_cacheAward = nil;
 	system_askinfo( ASKINFO_HERO_VISIT, "", 0 );
-	
 end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
@@ -158,6 +159,23 @@ function HeroVisitDlgHigh()
 	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 1 );
 end
 
+-- 添加获取的奖励到缓存type==1道具 type==2武将
+function HeroVisitDlgAwardAdd( type, recvValue )
+	table.insert( m_cacheAward, { awardType=type, awardInfo=recvValue } ) 
+end
+
+-- 播放奖励动画
+function HeroVisitDlgAwardPlayAction()
+	if m_cacheAward == nil then
+		return
+	end
+	if #m_cacheAward == 1 then
+		-- 播放单个道具或武将的动画
+		
+	else
+		-- 播放多个道具或武将的动画
+	end
+end
 
 --设置良将
 function HeroVisitDlgSetGood()

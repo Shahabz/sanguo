@@ -126,20 +126,25 @@ function NationDlgShow()
 	NationInfo.rank = 5
 	NationInfo.newbuillding = 5
 	NationInfo.sumbuillding = 11
-	NationInfo.prestige  = 100000000
+	NationInfo.prestige  = 100
 	NationInfo.officer = "丞相"
 end
 
 function NationDlgFillInfo(nationInfo)
-	SetText(m_uiLevelText,nationInfo.level);
-	local nationExp = string.format("%s/%s",knum(nationInfo.newexp),knum(nationInfo.sumexp));
+	local leveText = string.format("<color=#ddbd88ff>:</color> %d",nationInfo.level);
+	SetText(m_uiLevelText,leveText);
+	local nationExp = string.format("<color=#ddbd88ff>:</color> %s/%s",knum(nationInfo.newexp),knum(nationInfo.sumexp));
 	SetText(m_uiExpText,nationExp);
-	SetText(m_uiRankText,nationInfo.rank);
-	local nationBuild = string.format("已建设（%d/%d）",nationInfo.newbuillding,nationInfo.sumbuillding);
+	local levelText = string.format("<color=#ddbd88ff>:</color> %d",nationInfo.rank);
+	SetText(m_uiRankText,levelText);
+	local nationBuild = string.format("<color=#ddbd88ff>:</color> 已建设（%d/%d）",nationInfo.newbuillding,nationInfo.sumbuillding);
 	SetText(m_uiBuildingText,nationBuild);
-	SetText(m_uiPrestigeText,knum(nationInfo.prestige));
-	SetText(m_uiOfficialerText,nationInfo.officer);
-	print("nationInfo.nation:"..nationInfo.nation);
+	local prestigeText = string.format("<color=#ddbd88ff>:</color> %s",knum(nationInfo.prestige));
+	SetText(m_uiPrestigeText,prestigeText);
+	local officerText = string.format("<color=#d95df4ff>:</color> %s",nationInfo.officer);
+	SetText(m_uiOfficialerText,officerText);
+	local nobilityText = string.format("<color=#ddbd88ff>:</color> ");
+	SetText(m_uiNobilityText,nobilityText);
 	SetImage(m_uiFlag,NationSpriteFlag(nationInfo.nation));
 end
 

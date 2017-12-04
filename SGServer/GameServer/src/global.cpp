@@ -481,7 +481,21 @@ int global_init()
 		else if ( id == 160 )
 			global.hero_visit_progress_color4 = atoi( row[1] );
 		else if ( id == 161 )
+			global.hero_visit_progress_max = atoi( row[1] );
+		else if ( id == 162 )
 			global.autobuild_max = atoi( row[1] );
+		else if ( id == 163 )
+			global.hero_cabinet_level1 = atoi( row[1] );
+		else if ( id == 164 )
+			global.hero_cabinet_level2 = atoi( row[1] );
+		else if ( id == 165 )
+			global.hero_cabinet_level3 = atoi( row[1] );
+		else if ( id == 166 )
+			global.hero_cabinet_level4 = atoi( row[1] );
+		else if ( id == 167 )
+			global.hero_cabinet_guard_hp = atoi( row[1] );
+		else if ( id == 168 )
+			global.hero_cabinet_guard_token = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

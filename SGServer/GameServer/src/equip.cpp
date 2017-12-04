@@ -459,7 +459,14 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 		if ( config )
 		{
 			pHero->soldiers -= (oldsoldiers - troops);
-			city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
+			if ( pHero->offset >= HERO_BASEOFFSET + 8 && pHero->offset < HERO_BASEOFFSET + 12 )
+			{ // 御林卫武将
+				city_changefood( pCity->index, (int)((oldsoldiers - troops)*global.trainfood), PATH_HERO_SOLDIERS_EQUIP );
+			}
+			else
+			{
+				city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
+			}
 		}
 	}
 	
@@ -529,7 +536,14 @@ int equip_down( int actor_index, short herokind, int index )
 		if ( config )
 		{
 			pHero->soldiers -= (oldsoldiers - troops);
-			city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
+			if ( pHero->offset >= HERO_BASEOFFSET + 8 && pHero->offset < HERO_BASEOFFSET + 12 )
+			{ // 御林卫武将
+				city_changefood( pCity->index, (int)((oldsoldiers - troops)*global.trainfood), PATH_HERO_SOLDIERS_EQUIP );
+			}
+			else
+			{
+				city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
+			}
 		}
 	}
 

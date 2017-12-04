@@ -89,6 +89,12 @@
 #define PATH_KINGWAR_CHANGE				60	// 血战积分兑换
 #define PATH_KINGWAR_TREASURE			61	// 血战挖宝
 #define PATH_KINGWAR_TREASURE_CO		62	// 血战恭贺
+#define PATH_HEROVISIT					63	// 武将寻访
+#define PATH_HEROVISIT_CHANGE			64	// 武将寻访-英雄转道具
+#define PATH_HERO_UP					65	// 上阵
+#define PATH_HERO_DOWN					66	// 下阵
+#define PATH_HERO_GUARD					67	// 御林卫
+#define PATH_HERO_GUARD_AUTO			68	// 御林卫自动
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

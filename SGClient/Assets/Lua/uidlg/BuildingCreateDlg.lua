@@ -126,7 +126,7 @@ function BuildingCreateDlgShowByRes( buildingkind, offset )
 	for i = 1, 3, 1 do
 		SetFalse( m_uiUIP_Building[i] );
 	end
-	SetText( m_uiTitle.transform:Find("Text"), T(1465) )
+	SetText( m_uiTitle.transform:Find("Text"), T(1466) )
 	m_kind = buildingkind;
 	m_offset = offset;
 	local buildingList = { BUILDING_Silver, BUILDING_Wood, BUILDING_Food, BUILDING_Iron }

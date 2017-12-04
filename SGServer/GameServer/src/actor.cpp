@@ -775,6 +775,9 @@ int actor_entercity( int actor_index )
 
 	// 登陆奖励
 	actor_loginaward( actor_index );
+
+	// 发送可寻访标记
+	hero_visit_snedflag( actor_index );
 	return 0;
 }
 
@@ -859,6 +862,7 @@ int actor_load( int actor_index, int actorid )
 		if ( g_actors[actor_index].hero[tmpi].kind <= 0 )
 			continue;
 		hero_attr_calc( &g_city[city_index], &g_actors[actor_index].hero[tmpi] );
+		g_actors[actor_index].hero[tmpi].soldiers = 0;
 	}
 	return 0;
 }

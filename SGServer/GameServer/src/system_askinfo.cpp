@@ -279,7 +279,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 3 )
 		{// 上阵
-			hero_up( actor_index, pvalue[1], pvalue[2], pvalue[3] );
+			hero_up( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
 		}
 		else if ( pvalue[0] == 4 )
 		{ // 打开洗髓界面获取信息
@@ -300,6 +300,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 8 )
 		{ // 良将突破
 			hero_colorup( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 9 )
+		{// 下阵
+			hero_down( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 10 )
+		{ // 补充御林卫士兵
+			hero_guard_soldiers_token( actor_index, pvalue[1] );
 		}
 		
 		break;
@@ -625,11 +633,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{ // 良将寻访
-			hero_visit_low( actor_index, pvalue[1] );
+			if ( pvalue[1] == 0 )
+				hero_visit_low( actor_index );
+			else
+				hero_visit_low10( actor_index );
 		}
 		else if ( pvalue[0] == 2 )
 		{ // 神将寻访
-			hero_visit_high( actor_index, pvalue[1] );
+			if ( pvalue[1] == 0 )
+				hero_visit_high( actor_index );
+			else
+				hero_visit_high10( actor_index );
 		}
 		break;
 	default:

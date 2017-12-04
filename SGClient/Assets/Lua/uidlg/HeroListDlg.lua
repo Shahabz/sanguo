@@ -5,7 +5,7 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_HeroRow = nil; --UnityEngine.GameObject
 local m_uiToggleRank = nil; --UnityEngine.GameObject toggle按钮
 local m_uiTooglGroup = nil; --UnityEngine.GameObject
-local m_uiGeneralBtu = nil; --UnityEngine.GameObject
+local m_uiCityHeroTitle = nil; --UnityEngine.GameObject
 local m_uiOpenInfoBtu = nil; --UnityEngine.GameObject 显示资质
 local m_uiCloseInfoBtu = nil; --UnityEngine.GameObject 隐藏资质
 local m_uiRankWayText = nil; --UnityEngine.GameObjec 显示排序方法的Text
@@ -15,7 +15,14 @@ local m_CacheHeroList = {}
 local m_SelectHeroKind = 0;
 local m_SelectRankWay = 0;
 local b_OpenCloseInfo = false;
-	
+
+local m_rankType = 1;
+local m_path = 0;
+HEROLIST_PATH_HERO			= 0
+HEROLIST_PATH_HERO_GATHER	= 1
+HEROLIST_PATH_HERO_GUARD	= 2
+HEROLIST_PATH_HERO_LIST		= 3
+
 -- 打开界面
 function HeroListDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroListDlg" );
@@ -92,19 +99,11 @@ function HeroListDlgOnAwake( gameObject )
 	m_uiUIP_HeroRow = objs[1];
 	m_uiToggleRank = objs[2];
 	m_uiTooglGroup = objs[3];
-	m_uiGeneralBtu = objs[4];
+	m_uiCityHeroTitle = objs[4];
 	m_uiOpenInfoBtu = objs[5];
 	m_uiCloseInfoBtu = objs[6];
 	m_uiRankWayText = objs[7];
 	m_uiEmptyHeroContent = objs[8];
-
---[[
-	if b_OpenCloseInfo == true then
-		HeroListDlgCloseInfo();
-	end
---]]
-	--m_uiToggleRank.transform:GetComponent("UIToggle").ControlID = 1;
-    --m_uiGeneralBtu.transform:GetComponent( "UIButton").ControlID = 1;
 end
 
 -- 界面初始化时调用
@@ -136,7 +135,8 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroListDlgShow()
+function HeroListDlgShow( path )
+	m_path = path
 	HeroListDlgOpen()
 	HeroListDlgLoadHero();
 end
@@ -178,7 +178,6 @@ function HeroListDlgClearHeroRow( row, up )
 		local uiShape = objs[1];
 		local uiColor = objs[2];
 		local uiCorps = objs[3];
-		local uiNameBack = objs[4];
 		local uiName = objs[5];
 		local uiBack = objs[6];
 		
@@ -186,7 +185,6 @@ function HeroListDlgClearHeroRow( row, up )
 		SetFalse( uiShape )
 		SetFalse( uiColor )
 		SetFalse( uiCorps )
-		SetFalse( uiNameBack )
 		SetFalse( uiName )
 		SetFalse( uiBack )
 		
@@ -213,14 +211,33 @@ function HeroListDlgLoadHero()
     local heroCount = 0;
     local currHeroRow = nil;
     local rowCount = 0;
-
+	
+	local baseoffset = 0; 
+	if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+		SetText( m_uiCityHeroTitle.transform:Find("Text"), T(692) )
+		baseoffset = 0;
+		
+	elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+		SetText( m_uiCityHeroTitle.transform:Find("Text"), T(1491) )
+		baseoffset = 4
+		
+	elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+		SetText( m_uiCityHeroTitle.transform:Find("Text"), T(1492) )
+		baseoffset = 8	
+	end
+	
     -- 先放进临时缓存
-    for offset = 0, 3, 1 do
+    for offset = 0+baseoffset, 3+baseoffset, 1 do
         local pHero = GetHero().m_CityHero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base	;
-			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash	;
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset,m_qualtiy = base,m_washqualtiy = wash,m_attack=pHero.m_attack,m_defense=pHero.m_defense,m_troops=pHero.m_troops} );
+			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset,
+			m_qualtiy = base, 
+			m_washqualtiy = wash,
+			m_attack = pHero.m_attack_base + pHero.m_attack_wash,
+			m_defense = pHero.m_defense_base + pHero.m_defense_wash,
+			m_troops = pHero.m_troops_base + pHero.m_troops_wash} );
         end
     end
 	
@@ -228,14 +245,26 @@ function HeroListDlgLoadHero()
     for offset = 0, MAX_HERONUM-1, 1 do
         local pHero = GetHero().m_Hero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base	;
-			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset,m_qualtiy = base,m_washqualtiy = wash,m_attack=pHero.m_attack,m_defense=pHero.m_defense,m_troops=pHero.m_troops });
+			local base = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
+			local wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset,
+			m_qualtiy = base, 
+			m_washqualtiy = wash,
+			m_attack = pHero.m_attack_base + pHero.m_attack_wash,
+			m_defense = pHero.m_defense_base + pHero.m_defense_wash,
+			m_troops = pHero.m_troops_base + pHero.m_troops_wash} );
         end
     end
 
     -- 排序
-    table.sort(m_CacheHeroCache, HeroListDlgLevelSort);
+	HeroListDlgSelectRankWay( m_rankType );
+	if m_rankType == 1 then
+	    table.sort(m_CacheHeroCache,HeroListDlgQualtiySort);
+	elseif m_rankType == 2 then
+	    table.sort(m_CacheHeroCache, HeroListDlgTalentSort);
+	elseif m_rankType == 3 then
+	    table.sort(m_CacheHeroCache, HeroListDlgLevelSort);
+	end
 
     -- 创建上阵对象
 	local upHeroRow = m_uiContent.transform:GetChild(1).gameObject;
@@ -245,8 +274,14 @@ function HeroListDlgLoadHero()
 		local pHero = m_CacheHeroCache[i];
         if pHero.m_offset < 10000 then
 			m_CacheHeroList[pHero.m_offset] = upHeroRow.transform:GetChild(index);
-            HeroListDlgSetHero( m_CacheHeroList[pHero.m_offset], pHero )
+            HeroListDlgSetHero( m_CacheHeroList[pHero.m_offset], pHero, index )
 			index = index + 1
+		end
+	end
+	-- 创建锁定的对象
+	if index < 4 then
+		for tmpi=index,4,1 do
+			HeroListDlgSetHero( upHeroRow.transform:GetChild(tmpi), nil, tmpi )
 		end
 	end
 	
@@ -274,22 +309,22 @@ function HeroListDlgLoadHero()
                 rowCount = rowCount + 1;
             end
             local uiHeroObj = currHeroRow.transform:GetChild(_index+1);
-            HeroListDlgSetHero( uiHeroObj, pHero )
+            HeroListDlgSetHero( uiHeroObj, pHero, _index+1 )
 			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
 			heroCount = heroCount + 1;
         end
     end
 end
 
-function HeroListDlgRankWay( uiRanKum )
+function HeroListDlgRankWay( rankType )
     local heroCount = 0;
     local currHeroRow = nil;
-	
-	if uiRanKum == 1 then
+	m_rankType = rankType
+	if m_rankType == 1 then
 	    table.sort(m_CacheHeroCache,HeroListDlgQualtiySort);
-	elseif uiRanKum == 2 then
+	elseif m_rankType == 2 then
 	    table.sort(m_CacheHeroCache, HeroListDlgTalentSort);
-	elseif uiRanKum == 3 then
+	elseif m_rankType == 3 then
 	    table.sort(m_CacheHeroCache, HeroListDlgLevelSort);
 	end
 	SetTrue(m_uiEmptyHeroContent);
@@ -315,7 +350,7 @@ function HeroListDlgRankWay( uiRanKum )
                 rowCount = rowCount + 1;
             end
             local uiHeroObj = currHeroRow.transform:GetChild(_index+1);
-            HeroListDlgSetHero( uiHeroObj, pHero )
+            HeroListDlgSetHero( uiHeroObj, pHero, _index+1 )
 			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
 			heroCount = heroCount + 1;
         end
@@ -335,7 +370,7 @@ function HeroListDlgQualtiySort(a,b)
 end
 function HeroListDlgTalentSort(a,b)
 	if a ~= nil and b ~= nil then
-        if a.m_qualtiy > b.m_qualtiy then
+        if (a.m_qualtiy + a.m_washqualtiy) > (b.m_qualtiy + b.m_washqualtiy) then
             return true;
         else
             return false;
@@ -362,14 +397,12 @@ function HeroListDlgSetBackTF(obj,b_tf)
 end
 
 -- 设置单个对象
-function HeroListDlgSetHero( uiHeroObj, pHero )
-	uiHeroObj:GetComponent("UIButton").controlID = 10000 + pHero.m_offset;
+function HeroListDlgSetHero( uiHeroObj, pHero, index )
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiBorder = objs[0];
 	local uiShape = objs[1];
 	local uiColor = objs[2];
 	local uiCorps = objs[3];
-	local uiNameBack = objs[4];
 	local uiName = objs[5];
 	local uiBack = objs[6]
 	local uiHidBack = objs[7];
@@ -378,10 +411,77 @@ function HeroListDlgSetHero( uiHeroObj, pHero )
 	local uiDefenseText = objs[10];
 	local uiTroopsText = objs[11];
 	
+	-- 空对象
+	if pHero == nil then
+		SetTrue( uiBack )
+		SetTrue( uiShape )
+		SetFalse( uiColor )
+		SetTrue( uiName )
+		SetTrue( uiBorder )
+		SetFalse( uiHidBack )
+		
+		if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+			if index == 3 then
+				if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
+					SetText( uiName, T(610) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+
+			elseif index == 4 then
+				if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
+					SetText( uiName, T(611) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+			end
+			
+		elseif m_path == HEROLIST_PATH_HERO_GATHER or m_path == HEROLIST_PATH_HERO_GUARD then -- 财赋署武将 -- 御林卫武将
+			if index == 1 then
+				if GetPlayer().m_level < global.hero_cabinet_level1 then -- 等级0开放
+					SetText( uiName, F(1486,global.hero_cabinet_level1) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+			elseif index == 2 then
+				if GetPlayer().m_level < global.hero_cabinet_level2 then -- 等级100开放
+					SetText( uiName, F(1486,global.hero_cabinet_level2) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+			elseif index == 3 then
+				if GetPlayer().m_level < global.hero_cabinet_level3 then -- 等级105开放
+					SetText( uiName, F(1486,global.hero_cabinet_level3) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+
+			elseif index == 4 then
+				if GetPlayer().m_level < global.hero_cabinet_level4 then -- 等级110开放
+					SetText( uiName, F(1486,global.hero_cabinet_level4) )
+					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+				else
+					SetText( uiName, "" )
+					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+				end
+			end
+		end
+		return
+	end
+	uiHeroObj:GetComponent("UIButton").controlID = 10000 + pHero.m_offset;
 	SetTrue( uiBack )
 	SetTrue( uiShape )
 	SetTrue( uiColor )
-	SetTrue( uiNameBack )
 	SetTrue( uiName )
 	SetTrue( uiBorder )
 	SetFalse(uiHidBack)	
@@ -390,10 +490,10 @@ function HeroListDlgSetHero( uiHeroObj, pHero )
 	SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 	SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
-	SetText(uiQualtiyText,F(1930,pHero.m_qualtiy,pHero.m_washqualtiy));
-	SetText(uiAttackText,pHero.m_attack);
-	SetText(uiDefenseText,pHero.m_defense);
-	SetText(uiTroopsText,pHero.m_troops);
+	SetText( uiQualtiyText,F(1930,pHero.m_qualtiy,pHero.m_washqualtiy) );
+	SetText( uiAttackText, pHero.m_attack );
+	SetText( uiDefenseText, pHero.m_defense );
+	SetText( uiTroopsText, pHero.m_troops );
 	if b_OpenCloseInfo == true then
 		SetTrue(uiHidBack);
 		SetFalse(uiCorps);
@@ -423,12 +523,12 @@ function HeroListDlgSelect( offset )
 	if m_SelectHeroKind <= 0 then
 		return
 	end
-	HeroInfoDlgShow( 1, pHero, up )
+	HeroInfoDlgShow( m_path, pHero, up )
 end
 
 --设置ToggleGroup的隐藏显示
 function HeroListDlgSetTogGroup()
-	local b_toggle = m_uiToggleRank.transform:GetComponent( "UIToggle"  ).isOn;
+	local b_toggle = m_uiToggleRank.transform:GetComponent( "UIToggle" ).isOn;
 	if b_toggle == true then
 		SetTrue(m_uiTooglGroup);
 	else
@@ -444,6 +544,7 @@ function HeroListDlgSelectRankWay(number)
 		else
 			SetFalse(obj);
 		end
+
 		if  i == 1 then
 			SetText(m_uiRankWayText,T(1925));
 		elseif i == 2 then
@@ -466,6 +567,11 @@ function HeroListDlgSelectCloseToggle()
 	if b_toggle.isOn == true then
 		b_toggle.isOn=false;
 	end
+end
+
+-- 获取排序类型
+function HeroListDlgGetRankType()
+	return m_rankType
 end
 
 --显示资质

@@ -162,6 +162,13 @@ int city_loadcb( int city_index )
 		hero_attr_calc( &g_city[city_index], &g_city[city_index].hero[tmpi] );
 	}
 
+	// 城墙守卫数量
+	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
+	{
+		if ( g_city[city_index].guard[tmpi].monsterid > 0 )
+			g_city[city_index].guardnum += 1;
+	}
+
 	// 最后计算战力
 	city_battlepower_reset( &g_city[city_index] );
 
@@ -399,7 +406,7 @@ int city_new( City *pCity )
 }
 
 // 所有城市每秒的逻辑 , 一般是检查建筑的建造升级拆除，造兵等
-void city_logic_sec()
+void city_logic_sec( int begin, int end )
 {
 	if ( !g_city_allinited )
 		return;
@@ -505,6 +512,20 @@ void city_logic_sec()
 								g_city[city_index].people = 0;
 						}
 					}		
+				}
+				break;
+			case BUILDING_Cabinet:
+				if ( g_city[city_index].building[tmpi].level >= 2 )
+				{
+					if ( g_city[city_index].building[tmpi].value <= 0 )
+					{
+						hero_guard_soldiers_auto( &g_city[city_index] );
+						g_city[city_index].building[tmpi].value = 60;
+					}
+					else
+					{
+						g_city[city_index].building[tmpi].value -= 1;
+					}
 				}
 				break;
 			case BUILDING_Tech:
@@ -643,7 +664,7 @@ void city_logic_sec()
 			g_city[city_index].hv_fcd -= 1;
 			if ( g_city[city_index].hv_fcd <= 0 )
 			{ // 可以免费良将寻访了
-
+				hero_visit_snedflag( g_city[city_index].actor_index );
 			}
 		}
 
@@ -977,6 +998,11 @@ int city_actorexp( int city_index, int exp, char path )
 	{
 		// 自动建造
 		building_upgrade_autocheck( city_index );
+
+		if ( g_city[city_index].level == global.hero_visit_actorlevel )
+		{
+			hero_visit_snedflag( g_city[city_index].actor_index );
+		}
 	}
 	return isup;
 }
@@ -1412,6 +1438,7 @@ int city_guard_call( int city_index )
 		if ( g_city[city_index].guard[tmpi].monsterid > 0 )
 			count += 1;
 	}
+	g_city[city_index].guardnum = count;
 	if ( count >= pBuilding->level )
 	{
 		return -1;
@@ -1456,6 +1483,7 @@ int city_guard_call( int city_index )
 	}
 	city_guard_send( g_city[city_index].actor_index, offset );
 	city_guard_sendsec( g_city[city_index].actor_index );
+	g_city[city_index].guardnum += 1;
 	return 0;
 }
 
@@ -1561,6 +1589,7 @@ int city_guard_subsoldiers( int city_index, int offset, int sub )
 		{
 			memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1 - offset) );
 			memset( &g_city[city_index].guard[CITY_GUARD_MAX-1], 0, sizeof( CityGuard ) );
+			g_city[city_index].guardnum -= 1;
 		}
 	}
 	return 0;
@@ -1634,7 +1663,7 @@ int city_guard_sendlist( int actor_index )
 	if ( !pCity )
 		return -1;
 	SLK_NetS_CityGuardList pValue = { 0 };
-	pValue.m_guardsec = pCity->guardsec;;
+	pValue.m_guardsec = pCity->guardsec;
 	for ( int tmpi = 0; tmpi < CITY_GUARD_MAX; tmpi++ )
 	{
 		if ( pCity->guard[tmpi].monsterid <= 0 )
@@ -1642,10 +1671,21 @@ int city_guard_sendlist( int actor_index )
 		city_guard_makestruct( pCity, &pValue.m_list[pValue.m_count], tmpi );
 		pValue.m_count += 1;
 	}
+	pCity->guardnum = (char)pValue.m_count;
 	netsend_cityguardlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
+int city_guard_sendnum( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int value = pCity->guardnum;
+	actor_notify_value( pCity->actor_index, NOTIFY_CITYGUARDNUM, 1, &value, NULL );
+	return 0;
+}
 // 获取基础产量
 int city_yield_base( City *pCity, int kind )
 {

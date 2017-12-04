@@ -128,6 +128,7 @@ struct _city {
 				int temp_silver;	//临时存资源
 				int temp_wood;	//临时存资源
 				int temp_food;	//临时存资源
+				char guardnum;	//城墙守卫数量
 };
 typedef struct _city City;
 

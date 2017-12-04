@@ -91,7 +91,7 @@ function City.BuildingSelect( transform )
 		elseif building.kind == BUILDING_Shop then -- 商店
 			
 		elseif building.kind == BUILDING_Hero then -- 聚贤馆
-			HeroListDlgShow();
+			HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
 			
 		elseif building.kind == BUILDING_Wishing then -- 聚宝盆
 
@@ -230,6 +230,15 @@ function City.BuildingAdd( info, active )
 	City.BuildingSetTimer( info );
 	City.BuildingHideFree( kind, offset )
 	City.BuildingHideWorkerQuick( kind, offset )
+	
+	-- 城墙-补充城防头
+	if kind == BUILDING_Wall then
+		City.GuardCallMod( unitObj, true )
+	-- 聚贤馆-免费寻访头
+	elseif kind == BUILDING_Hero then
+		City.HeroVisitMod( unitObj, false, 0 )
+	end
+	
 	return unitObj;
 end
 
@@ -474,6 +483,8 @@ function City.BuildingSetFree( kind, offset )
 	ShareData.intValue[0] = kind;
 	ShareData.intValue[1] = offset;
 	freeObj.gameObject:SetActive(true);
+	-- 显示免费头，关闭城防补充头
+	City.GuardCallMod( unitObj, false );
 end
 
 function City.BuildingHideFree( kind, offset )
@@ -488,6 +499,8 @@ function City.BuildingHideFree( kind, offset )
 		return
 	end
 	freeObj.gameObject:SetActive(false);
+	-- 关闭免费头，开启城防补充头
+	City.GuardCallMod( unitObj, false );
 end
 
 -- 完成标记
@@ -623,6 +636,7 @@ function City.BuildingAddLevy()
 	end
 end
 
+-- 征收次数
 function City.BuildingSubLevy()
 	for i=21, 24, 1 do
 		if City.m_Buildings_res[i] then
@@ -636,6 +650,54 @@ function City.BuildingSubLevy()
 		end
 	end
 end
+
+-- 城墙-补充城防头
+function City.GuardCallMod( unitObj, show )
+	if show == true then
+		local level = GetPlayer():BuildingLevel( BUILDING_Wall, -1 )
+		if level < global.city_guard_level then
+			show = false -- 没开启
+		end
+		if GetPlayer().m_guardnum >= level then
+			show = false -- 满了
+		end		
+	end
+	if unitObj == nil then
+		unitObj = City.m_Buildings[BUILDING_Wall];
+		if unitObj == nil then
+			return
+		end
+	end
+	local modObj = unitObj.transform:Find( "GuardCallMod" )
+	if modObj == nil then
+		return
+	end
+	
+	modObj.gameObject:SetActive( show );	
+end
+
+-- 聚贤馆-免费寻访头
+function City.HeroVisitMod( unitObj, show, type )
+	if unitObj == nil then
+		unitObj = City.m_Buildings[BUILDING_Hero];
+		if unitObj == nil then
+			return
+		end
+	end
+	local modObj = unitObj.transform:Find( "HeroVisitMod" )
+	if modObj == nil then
+		return
+	end
+	if show == true then
+		if type == 1 then
+			SetText( modObj.transform:Find("Back/Text"), T(1952) )
+		else
+			SetText( modObj.transform:Find("Back/Text"), T(1932) )
+		end
+	end
+	modObj.gameObject:SetActive( show );
+end
+
 
 -- 点击建造队列
 function City.GoToWorker()

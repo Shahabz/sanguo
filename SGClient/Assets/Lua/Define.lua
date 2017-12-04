@@ -163,6 +163,12 @@ PATH_HERO_WASH					=	38	-- 英雄洗髓
 PATH_EQUIP_WASH					=	39	-- 装备洗练
 PATH_MATERIALMAKE_QUEUE			=	40	-- 材料制造队列
 PATH_MATERIALMAKE				=	41	-- 材料制造
+PATH_HEROVISIT					=	63  -- 武将寻访
+PATH_HEROVISIT_CHANGE			=	64	-- 武将寻访-英雄转道具
+PATH_HERO_UP					=	65	-- 上阵
+PATH_HERO_DOWN					=	66	-- 下阵
+PATH_HERO_GUARD					=	67	-- 御林卫
+PATH_HERO_GUARD_AUTO			=	68	-- 御林卫自动
 
 -- 文字表
 -- 获取本地化文字

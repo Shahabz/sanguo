@@ -104,7 +104,7 @@ function HeroDlgUpdate()
 		return;
 	end
 	local index = 1;
-	for i=0,3,1 do
+	for i=0,3,1 do -- 战斗武将位置0-3
 		HeroDlgSetHero( index, GetHero().m_CityHero[i] );
 		index = index + 1;
 	end
@@ -219,19 +219,19 @@ function HeroDlgSelect( index )
 		if index == 3 then
 			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
 			else
-				HeroListDlgShow()
+				HeroListDlgShow( HEROLIST_PATH_HERO )
 				HeroDlgClose()
 			end
 		elseif index == 4 then
 			if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
 			else
-				HeroListDlgShow()
+				HeroListDlgShow( HEROLIST_PATH_HERO )
 				HeroDlgClose()
 			end
 		end
 		return;
 	end
-	HeroInfoDlgShow( 0, GetHero().m_CityHero[index-1], true );
+	HeroInfoDlgShow( HEROLIST_PATH_HERO, GetHero().m_CityHero[index-1], true );
 end
 
 -- 补兵
@@ -239,5 +239,27 @@ function HeroDlgSoldiers( index )
 	if GetHero().m_CityHero[index-1] == nil then
 		return;
 	end
-	system_askinfo( ASKINFO_HERO, "", 1, GetHero().m_CityHero[index-1].m_kind );
+	local pHero = GetHero().m_CityHero[index-1]
+	local soldiers = pHero.m_troops - pHero.m_soldiers;
+	if soldiers <= 0 then
+		return
+	end
+
+	if pHero.m_corps == 0 then
+		if GetPlayer().m_infantry_num <= 0 then
+			pop( T(1995) )
+			return
+		end
+	elseif pHero.m_corps == 1 then
+		if GetPlayer().m_cavalry_num <= 0 then
+			pop( T(1995) )
+			return
+		end
+	elseif pHero.m_corps == 2 then
+		if GetPlayer().m_archer_num <= 0 then
+			pop( T(1995) )
+			return
+		end
+	end
+	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
 end

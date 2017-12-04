@@ -21,13 +21,15 @@ HeroInfoConfig *hero_getconfig( int kind, int color );
 
 int hero_gethero( int actor_index, int kind, short path );
 int hero_up_auto( int actor_index, int offset );
-int hero_up( int actor_index, int selectkind, int upkind, int replace_equip );
-int hero_down( int actor_index, int offset );
+int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, char uptype );
+int hero_down( int actor_index, int kind );
 
 int hero_useexpitem( int actor_index, int herokind, int itemkind );
 int hero_addexp( City *pCity, Hero *pHero, int exp, short path );
 int hero_addsoldiers( int actor_index, int herokind, char path );
 int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path );
+void hero_guard_soldiers_auto( City *pCity );
+int hero_guard_soldiers_token( int actor_index, int herokind );
 int hero_changestate( int city_index, int herokind, char state );
 char hero_getline( City *pCity );
 //int hero_attack( City *pCity, Hero *pHero );
@@ -55,10 +57,29 @@ int hero_colorup_reset( int actor_index );
 int hero_colorup( int actor_index, int herokind );
 
 // Îä½«Ñ°·Ã
+#define HERO_VISIT_AWARDMAX			32
+#define HERO_VISIT_AWARDGROUPMAX	5
+typedef struct _hero_visit_award
+{
+	int kind;
+	int num;
+	char color;
+	int value;
+}HeroVisitAward;
+typedef struct _hero_visit_awardgroup
+{
+	HeroVisitAward award[HERO_VISIT_AWARDMAX];
+	char allcount;
+	int allvalue;
+}HeroVisitAwardGroup;
+int hero_visit_init();
 int hero_visit_setprogress( int actor_index, int value );
 int hero_visit_sendinfo( int actor_index );
-int hero_visit_low( int actor_index, int type );
-int hero_visit_high( int actor_index, int type );
+int hero_visit_snedflag( int actor_index );
+int hero_visit_low( int actor_index );
+int hero_visit_low10( int actor_index);
+int hero_visit_high( int actor_index );
+int hero_visit_high10( int actor_index );
 
 // 
 int hero_gm_level( City *pCity, int level );

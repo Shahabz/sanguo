@@ -143,7 +143,14 @@ typedef struct _global
 	short hero_visit_progress_color2;
 	short hero_visit_progress_color3;
 	short hero_visit_progress_color4;
+	short hero_visit_progress_max;
 	char autobuild_max;
+	short hero_cabinet_level1;
+	short hero_cabinet_level2;
+	short hero_cabinet_level3;
+	short hero_cabinet_level4;
+	short hero_cabinet_guard_hp;
+	short hero_cabinet_guard_token;
 }Global;
 int global_init();
 void global_reload();

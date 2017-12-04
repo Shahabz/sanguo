@@ -6,7 +6,7 @@ local m_uiDesc = nil; --UnityEngine.GameObject
 
 local m_upkind = 0;
 local m_selectkind = 0;
-
+local m_path = 0;
 -- 打开界面
 function HeroReplaceDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroReplaceDlg" );
@@ -84,7 +84,8 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroReplaceDlgShow( upkind )
+function HeroReplaceDlgShow( path, upkind )
+	m_path = path
 	m_upkind = upkind
 	HeroReplaceDlgOpen()
 	HeroReplaceDlgSetHero()
@@ -93,9 +94,21 @@ end
 
 -- 英雄
 function HeroReplaceDlgSetHero()
+	local baseoffset = 0; 
+	if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+		baseoffset = 0;
+		
+	elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+		baseoffset = 4
+		
+	elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+		baseoffset = 8	
+	end
+	
+	local isfull = 1;
 	for i=0,3,1 do
 		local uiHero = m_uiContent.transform:GetChild(i).gameObject;
-		local pHero = GetHero().m_CityHero[i]
+		local pHero = GetHero().m_CityHero[i+baseoffset]
 		SetTrue( uiHero )
 		SetControlID( uiHero, 1000+pHero.m_kind )
 		local objs = uiHero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -105,8 +118,7 @@ function HeroReplaceDlgSetHero()
 		local uiName = objs[3];
 		local uiSelect = objs[4];
 			
-		if pHero.m_kind > 0 then
-			
+		if pHero.m_kind > 0 then		
 			SetTrue( uiShape )
 			SetTrue( uiColor )
 			SetTrue( uiCorps )
@@ -124,20 +136,40 @@ function HeroReplaceDlgSetHero()
 			SetFalse( uiCorps )
 			SetFalse( uiName )
 			SetFalse( uiSelect )
-			SetImage( uiShape, LoadSprite( "ui_icon_back_3" )  );
+			SetImage( uiShape, LoadSprite( "ui_icon_back_2" )  );
+			isfull = 0;
 		end
+	end
+	
+	if isfull == 1 then
+		SetTrue( m_uiDesc )
+		SetText( m_uiDesc.transform:Find("Text"), T(1499) )
+	else
+		SetFalse( m_uiDesc )
 	end
 end
 
 -- 选择英雄
 function HeroReplaceDlgSelectHero( kind )
 	m_selectkind = kind
+	
+	local baseoffset = 0; 
+	if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+		baseoffset = 0;
+		
+	elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+		baseoffset = 4
+		
+	elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+		baseoffset = 8	
+	end
+	
 	for i=0,3,1 do
 		local uiHero = m_uiContent.transform:GetChild(i).gameObject;
 		local objs = uiHero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiSelect = objs[4];
 		
-		local pHero = GetHero().m_CityHero[i]
+		local pHero = GetHero().m_CityHero[i+baseoffset]
 		if pHero.m_kind > 0 and pHero.m_kind == kind then
 			m_pHero = pHero;
 			SetTrue( uiSelect )

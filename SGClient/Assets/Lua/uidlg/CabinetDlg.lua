@@ -1,5 +1,8 @@
 -- 界面
 local m_Dlg = nil;
+local m_uiGather = nil; --UnityEngine.GameObject
+local m_uiGuard = nil; --UnityEngine.GameObject
+local m_uiBooks = nil; --UnityEngine.GameObject
 local m_DialogFrameMod = nil;
 local m_pBuilding = nil;
 -- 打开界面
@@ -42,6 +45,14 @@ function CabinetDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             CabinetDlgClose();
+		
+		-- 财赋署
+		elseif nControlID == 1 then
+			HeroGatherDlgShow()
+			
+		-- 御林卫
+		elseif nControlID == 2 then
+			HeroGuardDlgShow()
         end
 	end
 end
@@ -50,6 +61,9 @@ end
 function CabinetDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
+	m_uiGather = objs[0];
+	m_uiGuard = objs[1];
+	m_uiBooks = objs[2];
 end
 
 -- 界面初始化时调用
@@ -84,4 +98,35 @@ end
 function CabinetDlgShow()
 	m_pBuilding = GetPlayer():GetBuilding( BUILDING_Cabinet );
 	CabinetDlgOpen()
+	local buildingname = BuildingName(BUILDING_Cabinet)	
+	if m_pBuilding.m_level == 1 then
+		SetTrue( m_uiGather.transform:Find("EnterButton") )
+		SetText( m_uiGather.transform:Find("Lock"), "" )
+		
+		SetFalse( m_uiGuard.transform:Find("EnterButton") )
+		SetText( m_uiGuard.transform:Find("Lock"), F(725, buildingname, 2 ) )
+		
+		SetFalse( m_uiBooks.transform:Find("EnterButton") )
+		SetText( m_uiBooks.transform:Find("Lock"), F(725, buildingname, 3 ) )
+		
+	elseif m_pBuilding.m_level == 2 then
+		SetTrue( m_uiGather.transform:Find("EnterButton") )
+		SetText( m_uiGather.transform:Find("Lock"), "" )
+		
+		SetTrue( m_uiGuard.transform:Find("EnterButton") )
+		SetText( m_uiGuard.transform:Find("Lock"), "" )
+		
+		SetFalse( m_uiBooks.transform:Find("EnterButton") )
+		SetText( m_uiBooks.transform:Find("Lock"), F(725, buildingname, 3 ) )
+		
+	elseif m_pBuilding.m_level == 3 then
+		SetTrue( m_uiGather.transform:Find("EnterButton") )
+		SetText( m_uiGather.transform:Find("Lock"), "" )
+		
+		SetTrue( m_uiGuard.transform:Find("EnterButton") )
+		SetText( m_uiGuard.transform:Find("Lock"), "" )
+		
+		SetTrue( m_uiBooks.transform:Find("EnterButton") )
+		SetText( m_uiBooks.transform:Find("Lock"), "" )
+	end
 end

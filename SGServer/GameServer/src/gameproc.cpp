@@ -376,6 +376,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 英雄寻访
+	if ( hero_visit_init() < 0 )
+	{
+		printf_msg( "hero_visit_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 怪物信息初始化
 	if ( monsterinfo_init_auto() < 0 )
 	{
@@ -1100,9 +1109,17 @@ int process_logic()
 	}
 	else if ( tick == 1 )
 	{
-		city_logic_sec();
+		city_logic_sec( 0, 0 );
 	}
-	else if ( tick == 2 )
+	//else if ( tick == 2 )
+	//{
+	//	city_logic_sec();
+	//}
+	//else if ( tick == 3 )
+	//{
+	//	city_logic_sec();
+	//}
+	else if ( tick == 4 )
 	{
 		map_town_alllogic();
 	}

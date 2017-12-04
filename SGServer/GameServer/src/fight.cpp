@@ -552,6 +552,8 @@ int fight_start_armygroup( int group_index )
 			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
 			if ( !config )
 				continue;
+			if ( pHero->soldiers < pHero->troops )
+				continue;
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_HERO, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
 				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid );
 		}

@@ -27,15 +27,16 @@ local m_uiAttackIncreaseIcon = nil; --UnityEngine.GameObject
 local m_uiAttackIncrease = nil; --UnityEngine.GameObject
 local m_uiDefenseIncreaseIcon = nil; --UnityEngine.GameObject
 local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
+local m_uiDownBtn = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 
 local m_ObjectPool = nil;
 local m_pCacheHero = nil;
-local m_sys = 0;
 local m_up = false
 local m_MatchEquipList = {};
+local m_path = 0;
 
 -- 打开界面
 function HeroInfoDlgOpen()
@@ -87,8 +88,12 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 4 then
 			HeroColorupDlgShow( m_pCacheHero )
 		
-		-- 打造装备
+		-- 下阵
 		elseif nControlID == 5 then
+			HeroInfoDlgHeroDown();
+			
+		-- 打造装备
+		elseif nControlID == 6 then
 			EquipForgingDlgShow();
 			HeroInfoDlgClose();
 			HeroDlgClose()
@@ -150,6 +155,7 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiAttackIncrease = objs[27];
 	m_uiDefenseIncreaseIcon = objs[28];
 	m_uiDefenseIncrease = objs[29];
+	m_uiDownBtn = objs[30];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -186,18 +192,18 @@ end
 -- 自定
 ----------------------------------------
 
-function HeroInfoDlgShow( sys, pHero, up )
+function HeroInfoDlgShow( path, pHero, up )
 	if pHero == nil or pHero.m_kind <= 0 then
 		return
 	end
 	HeroInfoDlgOpen();
 	HeroInfoDlgSelectEquip( -1 )
-	HeroInfoDlgSet( sys, pHero, up )
+	HeroInfoDlgSet( path, pHero, up )
 end
 
-function HeroInfoDlgSet( sys, pHero, up )
+function HeroInfoDlgSet( path, pHero, up )
+	m_path = path;
 	m_pCacheHero = pHero;
-	m_sys = sys;
 	m_up = up
 	HeroInfoDlgClear()
 	
@@ -286,27 +292,51 @@ function HeroInfoDlgSet( sys, pHero, up )
 		end
 	end
 	
-	
+	local baseoffset = -1; 
+	if pHero.m_offset >= 1000 and pHero.m_offset < 1004 then -- 上阵武将
+		baseoffset = 0;
+		
+	elseif pHero.m_offset >= 1004 and pHero.m_offset < 1008 then -- 财赋署武将
+		baseoffset = 4
+		
+	elseif pHero.m_offset >= 1008 and pHero.m_offset < 1012 then -- 御林卫武将
+		baseoffset = 8			
+	end
+
 	-- 先放进临时缓存
-    for offset = 0, 3, 1 do
-        local pHero = GetHero().m_CityHero[offset];
-        if pHero ~= nil and pHero.m_kind > 0 then
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset });
-        end
-    end
-	
-	-- 先放进临时缓存
-	if sys == 1 then --1全放			
-		for offset = 0, MAX_HERONUM-1, 1 do
-			local pHero = GetHero().m_Hero[offset];
+	if baseoffset >= 0 then
+		for offset = 0+baseoffset, 3+baseoffset, 1 do
+			local pHero = GetHero().m_CityHero[offset];
 			if pHero ~= nil and pHero.m_kind > 0 then
-				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 1000+offset });
+				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset, m_qualtiy = base, m_washqualtiy = wash });
 			end
 		end
 	end
 	
+	-- 先放进临时缓存	
+	if pHero.m_offset < 1000 then -- 聚贤阁武将		
+		for offset = 0, MAX_HERONUM-1, 1 do
+			local pHero = GetHero().m_Hero[offset];
+			if pHero ~= nil and pHero.m_kind > 0 then
+				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 1000+offset, m_qualtiy = base, m_washqualtiy = wash });
+			end
+		end	
+		-- 当前排序类型
+		local rankType = HeroListDlgGetRankType()
+		if rankType == 1 then
+			table.sort( m_CacheHeroCache, HeroListDlgQualtiySort );
+		elseif rankType == 2 then
+			table.sort( m_CacheHeroCache, HeroListDlgTalentSort );
+		elseif rankType == 3 then
+			table.sort( m_CacheHeroCache, HeroListDlgLevelSort );
+		end
+	end
+	
 	-- 创建对象
-	--local tmp = nil
 	for i=1, #m_CacheHeroCache, 1 do
 		local pHero = m_CacheHeroCache[i];
         if pHero ~= nil and pHero.m_kind > 0 then
@@ -324,7 +354,6 @@ function HeroInfoDlgSet( sys, pHero, up )
 			
 			if pHero.m_kind == m_pCacheHero.m_kind then
 				SetTrue( uiSelect )
-				--tmp = uiHeroObj;
 			else
 				SetFalse( uiSelect )
 			end
@@ -342,11 +371,34 @@ function HeroInfoDlgSet( sys, pHero, up )
 	
 	-- 已经上阵的
 	if up == true then
-		SetTrue( m_uiUpgradeBtn );
 		SetFalse( m_uiUpBtn );
+		
+		-- 是否显示下阵按钮
+		if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+			SetTrue( m_uiUpgradeBtn );
+			SetFalse( m_uiDownBtn )
+		elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+			SetFalse( m_uiUpgradeBtn );
+			SetTrue( m_uiDownBtn )
+			SetText( m_uiDownBtn.transform:Find("Back/Text"), T(1497) )
+		elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+			SetFalse( m_uiUpgradeBtn );
+			SetTrue( m_uiDownBtn )
+			SetText( m_uiDownBtn.transform:Find("Back/Text"), T(1498) )
+		end 
 	else
 		SetFalse( m_uiUpgradeBtn );
 		SetTrue( m_uiUpBtn );
+		SetFalse( m_uiDownBtn )
+		
+		-- 是否显示上阵按钮
+		if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+			SetText( m_uiUpBtn.transform:Find("Back/Text"), T(696) )
+		elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+			SetText( m_uiUpBtn.transform:Find("Back/Text"), T(1495) )
+		elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+			SetText( m_uiUpBtn.transform:Find("Back/Text"), T(1496) )
+		end 
 	end
 	
 	-- 洗髓
@@ -398,7 +450,7 @@ function HeroInfoDlgSelectHero( herooffset )
 			if herooffset >= 1000 then
 				up = false;
 			end
-			HeroInfoDlgSet( m_sys, pHero, up )
+			HeroInfoDlgSet( m_path, pHero, up )
 			break;
 		end
 	end
@@ -464,8 +516,7 @@ function HeroInfoDlgSelectEquip( offset )
 		SetImage( uiShape, EquipNormalSprite(offset+1) )
 		SetText( uiDesc, T(823+offset) )
 	end
-	
-	
+		
 	-- 同部位装备列表
 	m_MatchEquipList = GetEquip():GetEquipsByType( offset+1 )
 	
@@ -561,19 +612,75 @@ function HeroInfoDlgHeroUp()
 	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
 		return
 	end
-	-- 检查是否有空位
-	local heromax = 2 + GetPlayer().m_attr.m_hero_up_num;
-	for i=0,heromax-1,1 do
-		local pHero = GetHero().m_CityHero[i]
-		if pHero and pHero.m_kind <= 0 then
-			system_askinfo( ASKINFO_HERO, "", 3, 0, m_pCacheHero.m_kind, 0 );
-			HeroInfoDlgClose();
-			return
+	
+	if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
+		-- 检查是否有空位
+		local heromax = 2 + GetPlayer().m_attr.m_hero_up_num;
+		for i=0,heromax-1,1 do
+			local pHero = GetHero().m_CityHero[i]
+			if pHero and pHero.m_kind <= 0 then
+				system_askinfo( ASKINFO_HERO, "", 3, 0, m_pCacheHero.m_kind, 0, 0 );
+				HeroInfoDlgClose();
+				return
+			end
 		end
-	end
+		-- 没空位打开替换界面
+		HeroReplaceDlgShow( m_path, m_pCacheHero.m_kind )
+	
+	elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+		local heromax = 0;
+		if GetPlayer().m_level >= global.hero_cabinet_level4 then
+			heromax = 7
+		elseif GetPlayer().m_level >= global.hero_cabinet_level3 then
+			heromax = 6
+		elseif GetPlayer().m_level >= global.hero_cabinet_level2 then
+			heromax = 5
+		elseif GetPlayer().m_level >= global.hero_cabinet_level1 then
+			heromax = 4
+		end
+		for i=4,heromax,1 do
+			local pHero = GetHero().m_CityHero[i]
+			if pHero and pHero.m_kind <= 0 then
+				system_askinfo( ASKINFO_HERO, "", 3, 0, m_pCacheHero.m_kind, 0, 1 );
+				HeroInfoDlgClose();
+				return
+			end
+		end
+		-- 没空位打开替换界面
+		HeroReplaceDlgShow( m_path, m_pCacheHero.m_kind )
+		
+	elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+		local heromax = 0;
+		if GetPlayer().m_level >= global.hero_cabinet_level4 then
+			heromax = 11
+		elseif GetPlayer().m_level >= global.hero_cabinet_level3 then
+			heromax = 10
+		elseif GetPlayer().m_level >= global.hero_cabinet_level2 then
+			heromax = 9
+		elseif GetPlayer().m_level >= global.hero_cabinet_level1 then
+			heromax = 8
+		end
+		for i=8,heromax,1 do
+			local pHero = GetHero().m_CityHero[i]
+			if pHero and pHero.m_kind <= 0 then
+				system_askinfo( ASKINFO_HERO, "", 3, 0, m_pCacheHero.m_kind, 0, 2 );
+				HeroInfoDlgClose();
+				return
+			end
+		end
+		-- 没空位打开替换界面
+		HeroReplaceDlgShow( m_path, m_pCacheHero.m_kind )
+	end 
+		
+end
 
-	-- 没空位打开替换界面
-	HeroReplaceDlgShow( m_pCacheHero.m_kind )
+-- 下阵
+function HeroInfoDlgHeroDown()
+	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
+		return
+	end
+	system_askinfo( ASKINFO_HERO, "", 9, m_pCacheHero.m_kind );
+	HeroInfoDlgClose();
 end
 
 function HeroInfoDlgUpdate( herokind )
@@ -587,5 +694,5 @@ function HeroInfoDlgUpdate( herokind )
 	if pHero == nil then
 		return;
 	end
-	HeroInfoDlgSet( m_sys, pHero, m_up )
+	HeroInfoDlgSet( m_path, pHero, m_up )
 end

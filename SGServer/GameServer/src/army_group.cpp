@@ -879,6 +879,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
 	}
 
+	if ( pTargetCity )
+		city_guard_sendnum( pTargetCity->actor_index );
 	return 0;
 }
 

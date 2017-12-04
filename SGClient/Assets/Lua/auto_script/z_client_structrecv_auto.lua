@@ -228,6 +228,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_game_day = buffer:ReadShort();
 	recvValue.m_game_weather = buffer:ReadShort();
 	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_guardnum = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -584,6 +585,8 @@ function struct_NetS_HeroReplace_recv( buffer )
 	local recvValue = {};
 	recvValue.m_up_kind = buffer:ReadShort();
 	recvValue.m_down_kind = buffer:ReadShort();
+	recvValue.m_up_offset = buffer:ReadShort();
+	recvValue.m_down_offset = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -592,6 +595,7 @@ function struct_NetS_HeroGet_recv( buffer )
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_path = buffer:ReadShort();
 	recvValue.m_hero = struct_NetS_Hero_recv( buffer );
+	recvValue.m_itemnum = buffer:ReadShort();
 	return recvValue;
 end
 

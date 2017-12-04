@@ -181,6 +181,7 @@ struct _slk_NetS_ActorInfo {
 	short m_game_day;	//服务器发送玩家基本信息-游戏虚拟日期
 	short m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
 	char m_state;	//服务器发送玩家基本信息-城池状态
+	char m_guardnum;	//服务器发送玩家基本信息-守卫数量
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -460,6 +461,8 @@ typedef struct _slk_NetS_HeroState SLK_NetS_HeroState;	//英雄状态
 struct _slk_NetS_HeroReplace {
 	short m_up_kind;	//上阵武将
 	short m_down_kind;	//下阵武将
+	short m_up_offset;	//
+	short m_down_offset;	//
 };
 typedef struct _slk_NetS_HeroReplace SLK_NetS_HeroReplace;	//英雄上下阵替换
 
@@ -467,6 +470,7 @@ struct _slk_NetS_HeroGet {
 	short m_kind;	//获取的武将
 	short m_path;	//途径
 	SLK_NetS_Hero m_hero;	//获取的英雄信息
+	short m_itemnum;	//转换的道具数量
 };
 typedef struct _slk_NetS_HeroGet SLK_NetS_HeroGet;	//英雄获取
 

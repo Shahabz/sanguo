@@ -1,6 +1,7 @@
 -- 英雄缓存信息
 MAX_HERONUM			= 128 -- 英雄数量
 MAX_CITYHERONUM		= 12 -- 上阵英雄数量
+HERO_BASEOFFSET 	= 1000
 
 HERO_STATE_NORMAL	=	0	-- 闲
 HERO_STATE_FIGHT	=	1	-- 战
@@ -50,6 +51,7 @@ end
 
 function SLK_Hero:Set( recvValue )
 	self.m_kind  		= 	recvValue.m_kind;-- 种类
+	self.m_offset		=	recvValue.m_offset;
 	self.m_level		=	recvValue.m_level;-- 等级
 	self.m_corps  		= 	recvValue.m_corps;-- 兵种
 	self.m_color		=	recvValue.m_color;-- 颜色

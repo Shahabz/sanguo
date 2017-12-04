@@ -15,6 +15,7 @@
 #include "quest.h"
 #include "city_attr.h"
 #include "item.h"
+#include "hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -135,6 +136,8 @@ inline int building_sec( City *pCity, BuildingUpgradeConfig *config )
 
 inline int building_offset2no( int kind, int offset )
 {
+	if ( offset <= 0 )
+		return 0;
 	return offset%16;
 }
 
@@ -1149,6 +1152,12 @@ int building_finish( int city_index, int op, int kind, int offset )
 		value[2] = building_offset2no( kind, offset );
 		value[3] = level + 1;
 		actor_notify_value( g_city[city_index].actor_index, NOTIFY_BUILDINGFINISH, 4, value, NULL );
+	}
+	
+	// ¼ì²éÌáÐÑÑ°·Ã
+	if ( kind == BUILDING_Main && (level + 1) == global.hero_visit_mainlevel )
+	{
+		hero_visit_snedflag( g_city[city_index].actor_index );
 	}
 	return 0;
 }

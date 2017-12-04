@@ -143,6 +143,18 @@ function CityGuardDlgShow()
 	end 
 	m_level = m_pBuilding.m_level;
 	CityGuardDlgOpen();
+	
+	-- 设置御林卫
+	for i=8,11,1 do -- 羽林卫武将位置8-11
+		if GetHero().m_CityHero[i].m_kind > 0 then
+			local pHero = GetHero().m_CityHero[i];
+			local uiObj = m_ObjectPool:Get( "UIP_Guard" );
+			SetControlID( uiObj, 0 )
+			uiObj.transform:SetParent( m_uiContent.transform );
+			CityGuardDlgSetObj( uiObj, -pHero.m_kind, pHero.m_color, pHero.m_corps, pHero.m_level, pHero.m_soldiers, pHero.m_troops, nil, false, true )
+		end
+	end 
+	
 	CityGuardDlgCreateEmpty();
 	system_askinfo( ASKINFO_CITYGUARD, "", 0 );
 end
@@ -156,12 +168,14 @@ function CityGuardDlgRecv( recvValue )
 	
 	-- 城防军数量
 	m_num = recvValue.m_count;
+	GetPlayer().m_guardnum = m_num
+	City.GuardCallMod( nil, true )
 	if m_level < global.city_guard_level then
 		SetText( m_uiGuardNum, "" );
 	else
 		SetText( m_uiGuardNum, T(652).." "..m_num.."/"..m_level );
 	end
-	
+
 	-- 冷却时间
 	CityGuardDlgChangeSec( recvValue )
 end
@@ -173,14 +187,14 @@ function CityGuardDlgCreateEmpty()
 		local uiObj = m_ObjectPool:Get( "UIP_Guard" );
 		uiObj.transform:SetParent( m_uiContent.transform );
 		m_nextlevel = global.city_guard_level;
-		CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, true )
+		CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, true, false )
 	else
 		
 		-- 已解锁的
 		for i=0, m_level-1, 1 do
 			local uiObj = m_ObjectPool:Get( "UIP_Guard" );
 			uiObj.transform:SetParent( m_uiContent.transform );
-			CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, false )
+			CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, false, false )
 			SetControlID( uiObj, 1000+i )
 			m_uiCache[i] = uiObj;
 		end
@@ -189,7 +203,7 @@ function CityGuardDlgCreateEmpty()
 		local uiObj = m_ObjectPool:Get( "UIP_Guard" );
 		uiObj.transform:SetParent( m_uiContent.transform );
 		m_nextlevel = m_level + 1;
-		CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, true )
+		CityGuardDlgSetObj( uiObj, nil, nil, nil, nil, nil, nil, false, true, false )
 		
 	end
 	
@@ -203,6 +217,8 @@ function CityGuardDlgSet( recvValue )
 	if m_dataCache[offset] == nil then
 		-- 新加城防军数量
 		m_num = m_num + 1;
+		GetPlayer().m_guardnum = m_num
+		City.GuardCallMod( nil, true )
 		SetText( m_uiGuardNum, T(652).." "..m_num.."/"..m_level );
 	end
 	m_dataCache[offset] = recvValue;
@@ -230,11 +246,11 @@ function CityGuardDlgSet( recvValue )
 			m_dataCache[offset].m_arrow = false
 		end
 	end
-	CityGuardDlgSetObj( uiObj, m_dataCache[offset].m_shape, m_dataCache[offset].m_color, m_dataCache[offset].m_corps, m_dataCache[offset].m_level, m_dataCache[offset].m_soldiers, m_dataCache[offset].m_troops, m_dataCache[offset].m_arrow, false )
+	CityGuardDlgSetObj( uiObj, m_dataCache[offset].m_shape, m_dataCache[offset].m_color, m_dataCache[offset].m_corps, m_dataCache[offset].m_level, m_dataCache[offset].m_soldiers, m_dataCache[offset].m_troops, m_dataCache[offset].m_arrow, false, false )
 end
 
 -- 设置对象
-function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow, lock )
+function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow, lock, flag )
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiColor = objs[1];
@@ -242,7 +258,7 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 	local uiLevel = objs[3];
 	local uiArrow = objs[4];
 	local uiProgress = objs[5];
-	
+	local uiFlag = objs[6];
 	-- 
 	if shape == nil then
 		if lock == true then
@@ -251,7 +267,11 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 			SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 		end
 	else
-		SetImage( uiShape, GuardSprite( shape ) )
+		if shape > 0 then
+			SetImage( uiShape, GuardSprite( shape ) )
+		else
+			SetImage( uiShape, HeroHeadSprite( -shape ) )
+		end
 	end
 	
 	--
@@ -294,6 +314,13 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 	else
 		SetFalse( uiArrow );
 	end
+	
+	--
+	if flag == true then
+		SetTrue( uiFlag );
+	else
+		SetFalse( uiFlag );
+	end
 end
 
 function CityGuardDlgChangeSec( recvValue )
@@ -308,7 +335,7 @@ function CityGuardDlgChangeSec( recvValue )
 		SetFalse( m_uiTimerText );
 		SetFalse( m_uiDescText );
 		SetFalse( m_uiCDButton );
-		if m_level < global.city_guard_level then
+		if m_level < global.city_guard_level or GetPlayer().m_guardnum >= m_level then
 			SetFalse( m_uiCallButton );
 		else
 			SetTrue( m_uiCallButton );
