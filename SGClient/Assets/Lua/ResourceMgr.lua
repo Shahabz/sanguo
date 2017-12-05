@@ -197,6 +197,7 @@ function NationSprite( nation )
 	end
 	return sprite;
 end
+
 --国家旗子
 function NationFlagSprite( nation )
 	local name = string.format("ui_icon_nationflag_%d", nation);
