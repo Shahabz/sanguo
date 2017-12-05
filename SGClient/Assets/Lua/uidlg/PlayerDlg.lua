@@ -154,7 +154,7 @@ function PlayerDlgSet()
 	-- 其它信息
 	SetText( m_uiLabelNationText, NationEx( GetPlayer().m_nation ) );
 	SetText( m_uiLabelNameText, GetPlayer().m_name );
-	SetText( m_uiLabelPlaceText, "" );
+	SetText( m_uiLabelPlaceText, PlaceName( GetPlayer().m_place ) );
 	SetText( m_uiLabelServerText, Const.servername );
 	SetText( m_uiLabelIDText, GetPlayer().m_actorid );
 	SetText( m_uiLabelBattlepowerText, GetPlayer().m_battlepower );

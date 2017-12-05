@@ -1,18 +1,33 @@
 -- 界面
 local m_Dlg = nil;
-local m_uiLevelText = nil; --UnityEngine.GameObject
-local m_uiNobilityText = nil; --UnityEngine.GameObject
-local m_uiNobilityIcon = nil; --UnityEngine.GameObject
-local m_uiExpText = nil; --UnityEngine.GameObject
-local m_uiRankText = nil; --UnityEngine.GameObject
-local m_uiBuildingText = nil; --UnityEngine.GameObject
-local m_uiPrestigeText = nil; --UnityEngine.GameObject
-local m_uiOfficialerText = nil; --UnityEngine.GameObject
+local m_DialogFrameMod = nil;
+
+local m_uiLevel = nil; --UnityEngine.GameObject
+local m_uiExp = nil; --UnityEngine.GameObject
+local m_uiBuild = nil; --UnityEngine.GameObject
+local m_uiPlace = nil; --UnityEngine.GameObject
+local m_uiRank = nil; --UnityEngine.GameObject
+local m_uiPrestige = nil; --UnityEngine.GameObject
 local m_uiFlag = nil; --UnityEngine.GameObject
+local m_uiOfficialer = nil; --UnityEngine.GameObject
+local m_uiNotice = nil; --UnityEngine.GameObject
+local m_uiKingName = nil; --UnityEngine.GameObject
+local m_uiNationBuildBtn = nil; --UnityEngine.GameObject
+local m_uiPlaceUpBtn = nil; --UnityEngine.GameObject
+local m_uiQuestBtn = nil; --UnityEngine.GameObject
+local m_uiTownBtn = nil; --UnityEngine.GameObject
+local m_uiWarBtn = nil; --UnityEngine.GameObject
+local m_uiHeroBtn = nil; --UnityEngine.GameObject
+local m_uiHonorBtn = nil; --UnityEngine.GameObject
+local m_uiOfficerListBtn = nil; --UnityEngine.GameObject
+local m_uiLogBtn = nil; --UnityEngine.GameObject
+local m_uiQuestInfo = nil; --UnityEngine.GameObject
+
 local NationInfo = { }
 -- 打开界面
 function NationDlgOpen()
 	m_Dlg = eye.uiManager:Open( "NationDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(133), HELP_NationDlg, NationDlgClose );
 end
 
 -- 隐藏界面
@@ -20,7 +35,8 @@ function NationDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationDlg" );
 end
 
@@ -77,20 +93,32 @@ end
 function NationDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
-	m_uiLevelText = objs[0];
-	m_uiNobilityText = objs[1];
-	m_uiNobilityIcon = objs[2];
-	m_uiExpText = objs[3];
-	m_uiRankText = objs[4];
-	m_uiBuildingText = objs[5];
-	m_uiPrestigeText = objs[6];
-	m_uiOfficialerText = objs[7];
-	m_uiFlag = objs[8];
+	m_uiLevel = objs[0];
+	m_uiExp = objs[1];
+	m_uiBuild = objs[2];
+	m_uiPlace = objs[3];
+	m_uiRank = objs[4];
+	m_uiPrestige = objs[5];
+	m_uiFlag = objs[6];
+	m_uiOfficialer = objs[7];
+	m_uiNotice = objs[8];
+	m_uiKingName = objs[9];
+	m_uiNationBuildBtn = objs[10];
+	m_uiPlaceUpBtn = objs[11];
+	m_uiQuestBtn = objs[12];
+	m_uiTownBtn = objs[13];
+	m_uiWarBtn = objs[14];
+	m_uiHeroBtn = objs[15];
+	m_uiHonorBtn = objs[16];
+	m_uiOfficerListBtn = objs[17];
+	m_uiLogBtn = objs[18];
+	m_uiQuestInfo = objs[19];
+
 end
 
 -- 界面初始化时调用
 function NationDlgOnStart( gameObject )
-	NationDlgFillInfo(NationInfo);
+
 end
 
 -- 界面显示时调用
@@ -119,18 +147,42 @@ end
 ----------------------------------------
 function NationDlgShow()
 	NationDlgOpen()
-	NationInfo.nation = 2
-	NationInfo.level = 78 
-	NationInfo.newexp = 7520000
-	NationInfo.sumexp = 8552155555
-	NationInfo.rank = 5
-	NationInfo.newbuillding = 5
-	NationInfo.sumbuillding = 11
-	NationInfo.prestige  = 100
-	NationInfo.officer = "丞相"
+	m_uiHeroBtn.transform:SetSiblingIndex(1000);
+	m_uiHonorBtn.transform:SetSiblingIndex(1001);
+	m_uiOfficerListBtn.transform:SetSiblingIndex(1002);
+	m_uiLogBtn.transform:SetSiblingIndex(1003);
+	
+	-- 国家旗帜
+	SetImage( m_uiFlag, NationFlagSprite( GetPlayer().m_nation ) )
+	
+	NationDlgChangePlace();
+	NationDlgChangePrestige();
+	
 end
 
-function NationDlgFillInfo(nationInfo)
+-- 
+function NationDlgRecv( recvValue )
+	
+end
+
+-- 我的爵位
+function NationDlgChangePlace()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiPlace, T(1938).."：<color=#ECC244FF>"..PlaceName( GetPlayer().m_place ).."</color>" )
+end
+
+-- 我的威望
+function NationDlgChangePrestige()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiPrestige, T(1941).."："..GetPlayer().m_prestige )
+end
+
+
+--[[function NationDlgFillInfo(nationInfo)
 	local leveText = string.format("<color=#ddbd88ff>:</color> %d",nationInfo.level);
 	SetText(m_uiLevelText,leveText);
 	local nationExp = string.format("<color=#ddbd88ff>:</color> %s/%s",knum(nationInfo.newexp),knum(nationInfo.sumexp));
@@ -146,7 +198,7 @@ function NationDlgFillInfo(nationInfo)
 	local nobilityText = string.format("<color=#ddbd88ff>:</color> ");
 	SetText(m_uiNobilityText,nobilityText);
 	SetImage(m_uiFlag,NationSpriteFlag(nationInfo.nation));
-end
+end--]]
 
 
 

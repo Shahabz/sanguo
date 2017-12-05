@@ -14,6 +14,8 @@ local m_uiWorldQuest = nil; --UnityEngine.GameObject
 local m_uiGotoZone = nil; --UnityEngine.GameObject
 local m_uiActivity1 = nil; --UnityEngine.GameObject
 local m_uiActivity2 = nil; --UnityEngine.GameObject
+local m_uiGatherLayer = nil; --UnityEngine.GameObject
+local m_uiGatherLayerGrid = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
@@ -155,6 +157,8 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiGotoZone = objs[11];
 	m_uiActivity1 = objs[12];
 	m_uiActivity2 = objs[13];
+	m_uiGatherLayer = objs[14];
+	m_uiGatherLayerGrid = objs[15];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -200,6 +204,10 @@ function MapMainDlgShow()
 		local UIP_BattleInfo = m_uiHeroLayerGrid.transform:GetChild(i).gameObject
 		SetFalse( UIP_BattleInfo )
 	end
+	for i = 0, 3, 1 do
+		local UIP_BattleInfo = m_uiGatherLayerGrid.transform:GetChild(i).gameObject
+		SetFalse( UIP_BattleInfo )
+	end
 	-- 请求出征队列
 	system_askinfo( ASKINFO_WORLDMAP, "", 2 );
 	-- 请求世界任务
@@ -214,12 +222,15 @@ function MapMainDlgBattleRecv( recvValue )
 	end
 	
 	m_recvValue = recvValue;
-	
+	-- 创建主力武将
 	local index = 0;
 	for i=1, m_recvValue.m_count, 1 do
 		-- 这里要检查，如果是财署武将
-		MapMainDlgBattleSet( m_uiHeroLayerGrid, index, m_recvValue.m_list[i] )
-		index = index + 1;
+		local _, offset = GetHero():GetIndex( m_recvValue.m_list[i].m_herokind[1] )
+		if offset >= 0 and offset < 4 then
+			MapMainDlgBattleSet( m_uiHeroLayerGrid, index, m_recvValue.m_list[i] )
+			index = index + 1;
+		end
 	end
 	
 	local HeroList = {};
@@ -235,10 +246,39 @@ function MapMainDlgBattleRecv( recvValue )
 			table.insert( HeroList, clone(GetHero().m_CityHero[i]) )
 		end
 	end
-	
-	-- 空闲武将
+	-- 创建空闲武将
 	for i=1,#HeroList,1 do
 		MapMainDlgHero( m_uiHeroLayerGrid, index, HeroList[i] );
+		index = index + 1;
+	end
+	
+	
+	-- 创建财赋署武将
+	index = 0;
+	for i=1, m_recvValue.m_count, 1 do
+		-- 这里要检查，如果是财署武将
+		local _, offset = GetHero():GetIndex( m_recvValue.m_list[i].m_herokind[1] )
+		if offset >= 4 and offset < 8 then
+			MapMainDlgBattleSet( m_uiGatherLayerGrid, index, m_recvValue.m_list[i] )
+			index = index + 1;
+		end
+	end
+	local HeroGatherList = {};
+	-- 未出阵的
+	for i=4,7,1 do
+		if GetHero().m_CityHero[i].m_kind > 0 and GetHero().m_CityHero[i].m_state == 0 then
+			table.insert( HeroGatherList, clone(GetHero().m_CityHero[i]) )
+		end
+	end
+	-- 无
+	for i=4,7,1 do
+		if GetHero().m_CityHero[i].m_kind <= 0 then
+			table.insert( HeroGatherList, clone(GetHero().m_CityHero[i]) )
+		end
+	end
+	-- 创建空闲武将
+	for i=1,#HeroGatherList,1 do
+		MapMainDlgHero( m_uiGatherLayerGrid, index, HeroGatherList[i] );
 		index = index + 1;
 	end
 end
@@ -406,6 +446,12 @@ end
 
 -- 显示武将层
 function MapMainDlgHeroLayerShow()
+	local pBuilding = GetPlayer():GetBuilding( BUILDING_Cabinet );
+	if pBuilding ~= nil and pBuilding.m_level >= 1 then
+		SetTrue( m_uiGatherLayer )
+	else
+		SetFalse( m_uiGatherLayer )
+	end
 	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):Play( true );
 	m_uiHeroLayer.transform:GetComponent( "UITweenRectPosition" ):Play( true );
 	m_bHeroLayerShow = true;

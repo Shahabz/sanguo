@@ -136,6 +136,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 国家
 		elseif nControlID == 3 then
+			NationDlgShow()
 			
 		-- 城池，世界
 		elseif nControlID == 4 or nControlID == 5 then
