@@ -20,6 +20,9 @@ extern int g_city_maxindex;
 extern MapUnit *g_mapunit;
 extern int g_mapunit_maxcount;
 
+extern MapEvent *g_map_event;
+extern int g_map_event_maxcount;
+
 extern int g_nUnitQueueNumLimit;		// 单个队列的极限，超过后不再分配
 extern int *g_pTmpEnterArmy;
 extern int *g_pTmpLeaveArmy;
@@ -275,11 +278,26 @@ int area_enter( int actor_index, int area_index )
 			cur_index = next_index;
 			continue;
 		}
+
 		if ( g_mapunit[cur_index].type == 0 )
 		{
 			cur_index = next_index;
 			continue;
 		}
+		else if ( g_mapunit[cur_index].type == MAPUNIT_TYPE_EVENT )
+		{
+			if ( actor_index < 0 || actor_index >= g_maxactornum )
+			{
+				cur_index = next_index;
+				continue;
+			}
+			if ( g_mapunit[cur_index].actorid > 0 && g_mapunit[cur_index].actorid != g_actors[actor_index].actorid )
+			{
+				cur_index = next_index;
+				continue;
+			}
+		}
+
 		// 组织数据包
 		if ( mapunit_enterinfo( cur_index, msg + sizeof(short), &size ) < 0 )
 		{
@@ -328,6 +346,20 @@ int area_leave( int actor_index, int area_index )
 			cur_index = next_index;
 			continue;
 		}
+		else if ( g_mapunit[cur_index].type == MAPUNIT_TYPE_EVENT )
+		{
+			if ( actor_index < 0 || actor_index >= g_maxactornum )
+			{
+				cur_index = next_index;
+				continue;
+			}
+			if ( g_mapunit[cur_index].actorid > 0 && g_mapunit[cur_index].actorid != g_actors[actor_index].actorid )
+			{
+				cur_index = next_index;
+				continue;
+			}
+		}
+
 		// 组织数据包
 		if ( mapunit_leaveinfo( cur_index, msg + sizeof(short), &size ) < 0 )
 		{
@@ -795,6 +827,20 @@ int area_sendunitinfo( int client_index, int posx, int posy )
 					cur_index = next_index;
 					continue;
 				}
+				else if ( g_mapunit[cur_index].type == MAPUNIT_TYPE_EVENT )
+				{
+					if ( client_index < 0 || client_index >= g_maxactornum )
+					{
+						cur_index = next_index;
+						continue;
+					}
+					if ( g_mapunit[cur_index].actorid > 0 && g_mapunit[cur_index].actorid != g_actors[client_index].actorid )
+					{
+						cur_index = next_index;
+						continue;
+					}
+				}
+
 				if ( mapunit_enterinfo( cur_index, msg + sizeof(short), &size ) < 0 )
 				{
 					*(unsigned short *)msg = size;

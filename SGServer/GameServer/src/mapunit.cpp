@@ -204,16 +204,32 @@ int mapunit_del( char type, int index, int unit_index )
 	if ( unit_index < 0 )
 		return -1;
 
-	char tmpbuf[2048];
-	int sizeleft = 2048;
-	SLK_NetS_DelMapUnit info = { 0 };
-	info.m_unit_index = unit_index;
-	int tmpsize = netsend_delmapunit_S( tmpbuf, sizeleft, &info );
-
 	short posx = 0, posy = 0;
 	mapunit_getpos( unit_index, &posx, &posy );
 	int area_index = area_getindex( posx, posy );
-	area_sendmsg( area_index, tmpsize, tmpbuf );
+
+	// 如果是玩家自己的，那么只给他自己发即可
+	if ( g_mapunit[unit_index].actorid > 0 )
+	{
+		int actor_index = actor_getindex_withid( g_mapunit[unit_index].actorid );
+		if ( actor_index >= 0 && actor_index < g_maxactornum )
+		{
+			char msg[2048] = { 0 };
+			int size = 0;
+			mapunit_leaveinfo( unit_index, msg + sizeof( short ), &size );
+			*(unsigned short *)msg = size;
+			sendtoclient( actor_index, msg, size + sizeof( short ) );
+		}
+	}
+	else
+	{
+		char tmpbuf[2048];
+		int sizeleft = 2048;
+		SLK_NetS_DelMapUnit info = { 0 };
+		info.m_unit_index = unit_index;
+		int tmpsize = netsend_delmapunit_S( tmpbuf, sizeleft, &info );
+		area_sendmsg( area_index, tmpsize, tmpbuf );
+	}
 
 	area_delmapunit( unit_index, area_index );
 	memset( &g_mapunit[unit_index], 0, sizeof( MapUnit ) );
@@ -230,27 +246,44 @@ int mapunit_update( char type, int index, int unit_index )
 	     unit_index = mapunit_getindex( type, index );
 	if ( unit_index < 0 )
 		return -1;
-	// 已经在外部更新完毕的结构
-	SLK_NetS_AddMapUnit unitinfo = { 0 };
-	mapunit_getattr( unit_index, &unitinfo );
 
-	SLK_NetS_UpdateMapUnit updateinfo = { 0 };
-	memcpy( &updateinfo.m_info, &unitinfo, sizeof( SLK_NetS_AddMapUnit ) );
+	// 如果是玩家自己的，那么只给他自己发即可
+	if ( g_mapunit[unit_index].actorid > 0 )
+	{
+		int actor_index = actor_getindex_withid( g_mapunit[unit_index].actorid );
+		if ( actor_index >= 0 && actor_index < g_maxactornum )
+		{
+			char msg[2048] = { 0 };
+			int size = 0;
+			mapunit_updateinfo( unit_index, msg + sizeof( short ), &size );
+			*(unsigned short *)msg = size;
+			sendtoclient( actor_index, msg, size + sizeof( short ) );
+		}
+	}
+	else
+	{
+		SLK_NetS_AddMapUnit unitinfo = { 0 };
+		mapunit_getattr( unit_index, &unitinfo );
 
-	// 组织信息
-	char tmpbuf[2048];
-	int sizeleft = 2048;
-	int tmpsize = netsend_updatemapunit_S( tmpbuf, sizeleft, &updateinfo );
-	int area_index = area_getindex( unitinfo.m_posx, unitinfo.m_posy );
+		SLK_NetS_UpdateMapUnit updateinfo = { 0 };
+		memcpy( &updateinfo.m_info, &unitinfo, sizeof( SLK_NetS_AddMapUnit ) );
 
-	area_sendmsg( area_index, tmpsize, tmpbuf );
-	//area_clearmsg( area_index );
+		// 组织信息
+		char tmpbuf[2048];
+		int sizeleft = 2048;
+		int tmpsize = netsend_updatemapunit_S( tmpbuf, sizeleft, &updateinfo );
+		int area_index = area_getindex( unitinfo.m_posx, unitinfo.m_posy );
+		area_sendmsg( area_index, tmpsize, tmpbuf );
+		//area_clearmsg( area_index );
+	}
 	return 0;
 }
 
 // 显示单元进入世界地图，关联到区域中，并通知区域
 int mapunit_enterworld( int unit_index, short posx, short posy )
 {
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
+		return 0;
 	int area_index = area_getindex( posx, posy );
 	if ( area_addmapunit( unit_index, area_index ) < 0 )
 	{
@@ -258,11 +291,27 @@ int mapunit_enterworld( int unit_index, short posx, short posy )
 		return -1;
 	}
 
-	// 组织数据包发送到区域缓冲
-	char tmpbuf[2048] = { 0 };
-	int tmpsize = 0;
-	mapunit_enterinfo( unit_index, tmpbuf, &tmpsize );
-	area_sendmsg( area_index, tmpsize, tmpbuf );
+	// 如果是玩家自己的，那么只给他自己发即可
+	if ( g_mapunit[unit_index].actorid > 0 )
+	{
+		int actor_index = actor_getindex_withid( g_mapunit[unit_index].actorid );
+		if ( actor_index >= 0 && actor_index < g_maxactornum )
+		{
+			char msg[2048] = { 0 };
+			int size = 0;
+			mapunit_enterinfo( unit_index, msg + sizeof( short ), &size );
+			*(unsigned short *)msg = size;
+			sendtoclient( actor_index, msg, size + sizeof( short ) );
+		}
+	}
+	else
+	{
+		char tmpbuf[2048] = { 0 };
+		int tmpsize = 0;
+		mapunit_enterinfo( unit_index, tmpbuf, &tmpsize );
+		// 组织数据包发送到区域缓冲
+		area_sendmsg( area_index, tmpsize, tmpbuf );
+	}
 	return 0;
 }
 
@@ -315,6 +364,32 @@ int mapunit_leaveinfo( int unit_index, char *databuf, int *psize )
 	return 0;
 }
 
+// 组织一个单元更新的数据包
+int mapunit_updateinfo( int unit_index, char *databuf, int *psize )
+{
+	char tmpbuf[2048];
+	int allsize = 0;
+	int sizeleft = 2048;
+	int cursize = 0;
+	SLK_NetS_AddMapUnit unitinfo = { 0 };
+	mapunit_getattr( unit_index, &unitinfo );
+
+	SLK_NetS_UpdateMapUnit updateinfo = { 0 };
+	memcpy( &updateinfo.m_info, &unitinfo, sizeof( SLK_NetS_AddMapUnit ) );
+
+	if ( (cursize = netsend_updatemapunit_S( tmpbuf, sizeleft, &updateinfo )) == 0 )
+		return -1;
+	sizeleft -= cursize;
+	allsize += cursize;
+
+	if ( *psize + allsize > 2040 )
+	{
+		return -1;
+	}
+	memcpy( databuf + (*psize), tmpbuf, allsize );
+	*psize += allsize;
+	return 0;
+}
 
 // 处理单一区域的进入事件
 int mapunit_enterarea( int unit_index, int area_index )

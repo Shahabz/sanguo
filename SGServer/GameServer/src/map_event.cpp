@@ -105,14 +105,14 @@ int map_event_maxcount_set( int maxcount )
 	return 0;
 }
 
-MapEvent *map_event_getptr( int index )
+inline MapEvent *map_event_getptr( int index )
 {
 	if ( index < 0 || index >= g_map_event_maxcount )
 		return NULL;
 	return &g_map_event[index];
 }
 
-MapEventInfo *map_event_getconfig( int kind )
+inline MapEventInfo *map_event_getconfig( int kind )
 {
 	if ( kind < 0 || kind >= g_eventinfo_maxnum )
 		return NULL;

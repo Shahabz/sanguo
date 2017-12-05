@@ -1852,3 +1852,13 @@ function struct_NetS_HeroVisitInfo_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_NationInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_exp_max = buffer:ReadInt();
+	recvValue.m_buildfree = buffer:ReadSByte();
+	recvValue.m_buildnum = buffer:ReadSByte();
+	return recvValue;
+end
+

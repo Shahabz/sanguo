@@ -23,6 +23,7 @@ int hero_gethero( int actor_index, int kind, short path );
 int hero_up_auto( int actor_index, int offset );
 int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, char uptype );
 int hero_down( int actor_index, int kind );
+int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list );
 
 int hero_useexpitem( int actor_index, int herokind, int itemkind );
 int hero_addexp( City *pCity, Hero *pHero, int exp, short path );

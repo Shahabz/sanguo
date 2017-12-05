@@ -173,6 +173,7 @@
 #define CMDC_MAILSEND	(CMDC_BASE+20)
 #define CMDC_MAILREPLY	(CMDC_BASE+21)
 #define CMDC_WORLDBOSSBATTLE	(CMDC_BASE+22)
+#define CMDC_HEROGUARDSORT	(CMDC_BASE+23)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引

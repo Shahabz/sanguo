@@ -43,9 +43,10 @@ int mapunit_update( char type, int index, int unit_index );
 // 显示单元进入世界地图
 int mapunit_enterworld( int unit_index, short posx, short posy );
 
-// 组织一个单元真正进入，离开区域的数据包
+// 组织一个单元真正进入，离开，更新区域的数据包
 int mapunit_enterinfo( int unit_index, char *databuf, int *psize );
 int mapunit_leaveinfo( int unit_index, char *databuf, int *psize );
+int mapunit_updateinfo( int unit_index, char *databuf, int *psize );
 
 // 单一区域的发送事件
 int mapunit_enterarea( int unit_index, int area_index );

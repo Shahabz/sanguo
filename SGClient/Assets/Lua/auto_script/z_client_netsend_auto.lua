@@ -168,3 +168,11 @@ function netsend_worldbossbattle_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_herokind={[4]},
+function netsend_heroguardsort_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_HEROGUARDSORT );
+	struct_NetC_HeroGuardSort_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

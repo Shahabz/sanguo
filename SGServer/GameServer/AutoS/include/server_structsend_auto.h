@@ -1435,6 +1435,15 @@ struct _slk_NetS_HeroVisitInfo {
 };
 typedef struct _slk_NetS_HeroVisitInfo SLK_NetS_HeroVisitInfo;	//武将寻访信息
 
+struct _slk_NetS_NationInfo {
+	char m_level;	//国家等级
+	int m_exp;	//国家进度
+	int m_exp_max;	//今天玩家建设免费
+	char m_buildfree;	//今天玩家建设免费
+	char m_buildnum;	//今天玩家建设次数
+};
+typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1593,5 +1602,6 @@ int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureAc
 int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue );
 int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue );
 int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue );
+int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
 
 #endif

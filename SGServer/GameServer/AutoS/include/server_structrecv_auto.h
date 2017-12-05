@@ -141,6 +141,11 @@ struct _slk_NetC_WorldBossBattle {
 };
 typedef struct _slk_NetC_WorldBossBattle SLK_NetC_WorldBossBattle;	//世界boss战斗
 
+struct _slk_NetC_HeroGuardSort {
+	short m_herokind[4];	//御林卫武将更改顺序
+};
+typedef struct _slk_NetC_HeroGuardSort SLK_NetC_HeroGuardSort;	//御林卫守卫顺序
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -159,5 +164,6 @@ int struct_NetS_MailShare_recv( char **pptr, int *psize, SLK_NetS_MailShare *pVa
 int struct_NetC_MailSend_recv( char **pptr, int *psize, SLK_NetC_MailSend *pValue );
 int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pValue );
 int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBossBattle *pValue );
+int struct_NetC_HeroGuardSort_recv( char **pptr, int *psize, SLK_NetC_HeroGuardSort *pValue );
 
 #endif

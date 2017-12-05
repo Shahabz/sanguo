@@ -270,3 +270,11 @@ int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBos
 	return 0;
 }
 
+int struct_NetC_HeroGuardSort_recv( char **pptr, int *psize, SLK_NetC_HeroGuardSort *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_RECV( pValue->m_herokind, (*pptr), 4*sizeof(short), (*psize) );
+	return 0;
+}
+

@@ -602,18 +602,18 @@ int hero_down( int actor_index, int kind )
 		Value.m_count = 0;
 		for ( int tmpi = 4; tmpi < 8; tmpi++ )
 		{
-			if ( pCity->hero[heroindex].kind <= 0 )
+			if ( pCity->hero[tmpi].kind <= 0 )
 				continue;
 			for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
 			{
-				if ( pCity->hero[heroindex].equip[equipoffset].kind <= 0 )
+				if ( pCity->hero[tmpi].equip[equipoffset].kind <= 0 )
 					continue;
-				Value.m_list[Value.m_count].m_offset = pCity->hero[heroindex].equip[equipoffset].offset;
-				Value.m_list[Value.m_count].m_kind = pCity->hero[heroindex].equip[equipoffset].kind;
-				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[heroindex].equip[equipoffset].washid[0];
-				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[heroindex].equip[equipoffset].washid[1];
-				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[heroindex].equip[equipoffset].washid[2];
-				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[heroindex].equip[equipoffset].washid[3];
+				Value.m_list[Value.m_count].m_offset = pCity->hero[tmpi].equip[equipoffset].offset;
+				Value.m_list[Value.m_count].m_kind = pCity->hero[tmpi].equip[equipoffset].kind;
+				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[tmpi].equip[equipoffset].washid[0];
+				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[tmpi].equip[equipoffset].washid[1];
+				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[tmpi].equip[equipoffset].washid[2];
+				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[tmpi].equip[equipoffset].washid[3];
 				Value.m_count++;
 			}
 		}
@@ -651,18 +651,18 @@ int hero_down( int actor_index, int kind )
 		Value.m_count = 0;
 		for ( int tmpi = 8; tmpi < 12; tmpi++ )
 		{
-			if ( pCity->hero[heroindex].kind <= 0 )
+			if ( pCity->hero[tmpi].kind <= 0 )
 				continue;
 			for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
 			{
-				if ( pCity->hero[heroindex].equip[equipoffset].kind <= 0 )
+				if ( pCity->hero[tmpi].equip[equipoffset].kind <= 0 )
 					continue;
-				Value.m_list[Value.m_count].m_offset = pCity->hero[heroindex].equip[equipoffset].offset;
-				Value.m_list[Value.m_count].m_kind = pCity->hero[heroindex].equip[equipoffset].kind;
-				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[heroindex].equip[equipoffset].washid[0];
-				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[heroindex].equip[equipoffset].washid[1];
-				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[heroindex].equip[equipoffset].washid[2];
-				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[heroindex].equip[equipoffset].washid[3];
+				Value.m_list[Value.m_count].m_offset = pCity->hero[tmpi].equip[equipoffset].offset;
+				Value.m_list[Value.m_count].m_kind = pCity->hero[tmpi].equip[equipoffset].kind;
+				Value.m_list[Value.m_count].m_washid[0] = pCity->hero[tmpi].equip[equipoffset].washid[0];
+				Value.m_list[Value.m_count].m_washid[1] = pCity->hero[tmpi].equip[equipoffset].washid[1];
+				Value.m_list[Value.m_count].m_washid[2] = pCity->hero[tmpi].equip[equipoffset].washid[2];
+				Value.m_list[Value.m_count].m_washid[3] = pCity->hero[tmpi].equip[equipoffset].washid[3];
 				Value.m_count++;
 			}
 		}
@@ -672,6 +672,82 @@ int hero_down( int actor_index, int kind )
 	
 	// 更新英雄信息
 	hero_sendinfo( actor_index, &g_actors[actor_index].hero[offset] );
+	return 0;
+}
+
+// 武将顺序
+int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+ 	
+	for ( int i = 0; i < 4; i++ )
+	{
+		short kind = list->m_herokind[i];
+		if ( kind <= 0 )
+			continue;
+
+		for ( int tmpi = 8; tmpi < 12; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind == kind )
+			{
+				if ( i + 8 == tmpi )
+					continue;
+
+				Hero pTmp = {0};
+				memcpy( &pTmp, &pCity->hero[8 + i], sizeof( Hero ) );
+				memcpy( &pCity->hero[8 + i], &pCity->hero[tmpi], sizeof( Hero ) );
+				memcpy( &pCity->hero[tmpi], &pTmp, sizeof( Hero ) );
+
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+			}
+			if ( pCity->hero[tmpi].kind > 0 )
+			{
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+			}
+		}
+	}
+
+
+	// 英雄列表更新
+	SLK_NetS_HeroList pValue = { 0 };
+	pValue.m_type = 12;
+	for ( int tmpi = 8; tmpi < 12; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].id <= 0 )
+			continue;
+		hero_makestruct( pCity, HERO_BASEOFFSET + tmpi, &pCity->hero[tmpi], &pValue.m_list[pValue.m_count] );
+		pValue.m_count += 1;
+	}
+	if ( pValue.m_count > 0 )
+		netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 装备更新
+	SLK_NetS_EquipList Value = { 0 };
+	Value.m_equipext = g_actors[actor_index].equipext;
+	Value.m_count = 0;
+	for ( int tmpi = 8; tmpi < 12; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		for ( int equipoffset = 0; equipoffset < 6; equipoffset++ )
+		{
+			if ( pCity->hero[tmpi].equip[equipoffset].kind <= 0 )
+				continue;
+			Value.m_list[Value.m_count].m_offset = pCity->hero[tmpi].equip[equipoffset].offset;
+			Value.m_list[Value.m_count].m_kind = pCity->hero[tmpi].equip[equipoffset].kind;
+			Value.m_list[Value.m_count].m_washid[0] = pCity->hero[tmpi].equip[equipoffset].washid[0];
+			Value.m_list[Value.m_count].m_washid[1] = pCity->hero[tmpi].equip[equipoffset].washid[1];
+			Value.m_list[Value.m_count].m_washid[2] = pCity->hero[tmpi].equip[equipoffset].washid[2];
+			Value.m_list[Value.m_count].m_washid[3] = pCity->hero[tmpi].equip[equipoffset].washid[3];
+			Value.m_count++;
+		}
+	}
+	if ( Value.m_count > 0 )
+		netsend_equiplist_S( actor_index, SENDTYPE_ACTOR, &Value );
+
 	return 0;
 }
 

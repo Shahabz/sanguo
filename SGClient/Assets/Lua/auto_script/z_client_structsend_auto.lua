@@ -133,3 +133,9 @@ function struct_NetC_WorldBossBattle_send( buf, sendValue )
 	end
 end
 
+function struct_NetC_HeroGuardSort_send( buf, sendValue )
+	for tmpi=1,4,1 do
+		buf:WriteShort( sendValue.m_herokind[tmpi] );
+	end
+end
+

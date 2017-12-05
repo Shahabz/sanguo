@@ -2093,3 +2093,15 @@ int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitI
 	return 0;
 }
 
+int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buildfree, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buildnum, (*psize) );
+	return 0;
+}
+

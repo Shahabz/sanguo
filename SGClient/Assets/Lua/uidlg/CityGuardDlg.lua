@@ -8,6 +8,8 @@ local m_uiTimerText = nil; --UnityEngine.GameObject
 local m_uiDescText = nil; --UnityEngine.GameObject
 local m_uiCDButton = nil; --UnityEngine.GameObject
 local m_uiCallButton = nil; --UnityEngine.GameObject
+local m_uiHeroSortLayer = nil; --UnityEngine.GameObject
+
 local m_level = 1;
 local m_nextlevel = 1;
 local m_ObjectPool = nil;
@@ -15,6 +17,10 @@ local m_dataCache = {};
 local m_uiCache = {};
 local m_num = 0;
 local m_guardup_toggle = false;
+
+local m_HeroList = {}
+local m_HeroObjList = {}
+local m_HeroSortList = {}
 -- 打开界面
 function CityGuardDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CityGuardDlg" );
@@ -38,6 +44,8 @@ function CityGuardDlgClose()
     end
 	m_dataCache = {};
 	m_uiCache = {};
+	m_HeroList = {}
+	m_HeroObjList = {}
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "CityGuardDlg" );
@@ -58,7 +66,9 @@ function CityGuardDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             CityGuardDlgClose();
-		
+		elseif nControlID == -2 then
+			CityGuardDlgHeroSortLayerHide()
+			
 		-- 招募按钮
 		elseif nControlID == 101 then
 			system_askinfo( ASKINFO_CITYGUARD, "", 1 );
@@ -69,7 +79,7 @@ function CityGuardDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 武将防守顺序
 		elseif nControlID == 103 then
-			
+			CityGuardDlgHeroSortLayerShow()
 			
 		-- 友军驻防武将
 		elseif nControlID == 104 then
@@ -78,7 +88,15 @@ function CityGuardDlgOnEvent( nType, nControlID, value, gameObject )
 			else
 				CityArmyHelpDlgShow()
 			end
+		
+		-- 防守顺序调整确定
+		elseif nControlID == 105 then
+			CityGuardDlgHeroSortOK()
 			
+		-- 防守顺序调整
+		elseif nControlID >= 110 and nControlID <= 114 then
+			CityGuardDlgHeroSortUp( nControlID-110 )
+				
 		-- 选择守卫
 		elseif nControlID >= 1000 and nControlID < 1100 then
 			CityGuardDlgSelect( nControlID-1000 )
@@ -101,6 +119,8 @@ function CityGuardDlgOnAwake( gameObject )
 	m_uiDescText = objs[4];
 	m_uiCDButton = objs[5];
 	m_uiCallButton = objs[6];
+	m_uiHeroSortLayer = objs[7];
+	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Guard", m_level, m_level, m_uiUIP_Guard);
@@ -145,18 +165,29 @@ function CityGuardDlgShow()
 	CityGuardDlgOpen();
 	
 	-- 设置御林卫
+	m_HeroList = {}
+	m_HeroObjList = {}
 	for i=8,11,1 do -- 羽林卫武将位置8-11
 		if GetHero().m_CityHero[i].m_kind > 0 then
-			local pHero = GetHero().m_CityHero[i];
+			table.insert( m_HeroList, GetHero().m_CityHero[i] );
+			
 			local uiObj = m_ObjectPool:Get( "UIP_Guard" );
-			SetControlID( uiObj, 0 )
+			table.insert( m_HeroObjList, uiObj )
 			uiObj.transform:SetParent( m_uiContent.transform );
-			CityGuardDlgSetObj( uiObj, -pHero.m_kind, pHero.m_color, pHero.m_corps, pHero.m_level, pHero.m_soldiers, pHero.m_troops, nil, false, true )
 		end
 	end 
-	
+	CityGuardDlgSetHero();
 	CityGuardDlgCreateEmpty();
 	system_askinfo( ASKINFO_CITYGUARD, "", 0 );
+end
+
+function CityGuardDlgSetHero()
+	for i=1, #m_HeroList, 1 do
+		local pHero = m_HeroList[i];
+		local uiObj = m_HeroObjList[i]
+		SetControlID( uiObj, 0 )
+		CityGuardDlgSetObj( uiObj, -pHero.m_kind, pHero.m_color, pHero.m_corps, pHero.m_level, pHero.m_soldiers, pHero.m_troops, nil, false, true )
+	end
 end
 
 -- m_count=0,m_list={m_corps=0,m_color=0,m_shape=0,m_level=0,m_soldiers=0,m_troops=0,m_offset=0,[m_count]},m_guardsec=0,
@@ -396,3 +427,76 @@ function CityGuardDlgClearCD()
 	end ) 
 end
 
+-- 武将防守顺序调整
+function CityGuardDlgHeroSortLayerShow()
+	SetTrue( m_uiHeroSortLayer )
+	local uiGrid = m_uiHeroSortLayer.transform:Find("Panel/Grid");
+	for i=0,3,1 do
+		local uiObj = uiGrid.transform:GetChild( i )
+		SetFalse( uiObj )
+	end
+	-- 设置御林卫
+	m_HeroSortList = {}
+	local index = 0;
+	for i=8,11,1 do -- 羽林卫武将位置8-11
+		if GetHero().m_CityHero[i].m_kind > 0 then
+			table.insert( m_HeroSortList, GetHero().m_CityHero[i] );
+		end
+	end 
+	CityGuardDlgHeroSortSet()
+end
+
+function CityGuardDlgHeroSortLayerHide()
+	SetFalse( m_uiHeroSortLayer )
+end
+
+function CityGuardDlgHeroSortSet()
+	local uiGrid = m_uiHeroSortLayer.transform:Find("Panel/Grid");
+	-- 设置御林卫
+	for index=1,#m_HeroSortList,1 do
+		local pHero = m_HeroSortList[index]
+		local uiObj = uiGrid.transform:GetChild( index-1 )
+		SetTrue( uiObj )
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiCorps = objs[2];
+		local uiName = objs[3];
+		local uiSortText = objs[4];
+		local uiUpBtn = objs[5];
+		SetControlID( uiUpBtn, 110+index )
+		SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
+		SetImage( uiColor, ItemColorSprite(pHero.m_color) )
+		SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
+		SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
+		SetText( uiSortText, index )
+		if index == 1 then
+			SetFalse( uiUpBtn )
+		else
+			SetTrue( uiUpBtn )
+		end
+	end 
+end
+
+function CityGuardDlgHeroSortUp( index )
+	if index == 1 then
+		return;
+	end
+	m_HeroSortList[index-1], m_HeroSortList[index] = m_HeroSortList[index], m_HeroSortList[index-1]
+	CityGuardDlgHeroSortSet()
+end
+
+function CityGuardDlgHeroSortOK()
+	CityGuardDlgHeroSortLayerHide()
+	
+	-- m_herokind={[4]},
+	local sendValue = {}
+	sendValue.m_herokind = { 0, 0, 0, 0 }
+	
+	for i=1, #m_HeroSortList, 1 do
+		m_HeroList[i] = m_HeroSortList[i]
+		sendValue.m_herokind[i] = m_HeroSortList[i].m_kind
+	end	
+	netsend_heroguardsort_C( sendValue )
+	CityGuardDlgSetHero()
+end

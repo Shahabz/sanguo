@@ -898,7 +898,7 @@ function MapUnit.createEvent( recvValue )
 		unitObj.transform:SetParent( MapUnit.unitRoot );
 		table.insert( MapUnit.objectPoolEvent, unitObj );
 	end
-	
+
 	-- 位置
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_EVENT, 0, cameraPosX, cameraPosY );

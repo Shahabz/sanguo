@@ -9,6 +9,8 @@ struct _nation {
 				int exp;	//经验
 				char notice[512];	//国家公告
 				int official_actorid[16];	//官员id，索引0是国王
+				int tiance_point;	//天策府统领点数
+				short tiance_level;	//天策府统领等级
 				int people;	//国家总人口
 				int people_famous;	//名城人口
 				int people_capital;	//都城人口

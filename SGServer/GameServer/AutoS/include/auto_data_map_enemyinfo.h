@@ -10,6 +10,7 @@ struct _mapenemyinfo {
 				int first_awardgroup;	//
 				int awardgroup;	//
 				short monsterid[4];	//
+				short type;	//
 };
 typedef struct _mapenemyinfo MapEnemyInfo;
 
