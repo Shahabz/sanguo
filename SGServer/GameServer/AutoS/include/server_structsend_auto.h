@@ -1444,6 +1444,12 @@ struct _slk_NetS_NationInfo {
 };
 typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
 
+struct _slk_NetS_HeroVisitAward {
+	short m_id[10];	//寻访获取的奖励id
+	char m_count;	//数量
+};
+typedef struct _slk_NetS_HeroVisitAward SLK_NetS_HeroVisitAward;	//寻访奖励id
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1603,5 +1609,6 @@ int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_Treasu
 int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue );
 int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue );
 int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
+int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisitAward *pValue );
 
 #endif

@@ -1862,3 +1862,13 @@ function struct_NetS_NationInfo_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_HeroVisitAward_recv( buffer )
+	local recvValue = {};
+	recvValue.m_id={};
+	for tmpi=1,10,1 do
+		recvValue.m_id[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_count = buffer:ReadSByte();
+	return recvValue;
+end
+

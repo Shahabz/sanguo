@@ -189,7 +189,12 @@ end
 function MapMainDlgOnLogic( gameObject )
 	
 end
-
+function MapMainDlgIsActive()
+	if m_Dlg == nil then
+		return false
+	end
+	return IsActive( m_Dlg )
+end
 
 ----------------------------------------
 -- 自定

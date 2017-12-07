@@ -46,6 +46,7 @@ function BagDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "BagDlg" );
+	coroutine.stop( BagDlgCreateItem )
 end
 
 -- 删除界面
@@ -303,9 +304,6 @@ function BagDlgLoadItem()
 		return;
 	end
     BagDlgClearItem()
-    local itemCount = 0;
-    local currItemRow = nil;
-    local rowCount = 0;
 
     -- 先放进临时缓存
     for nItemIndex = 1, MAX_ITEMNUM, 1 do
@@ -323,8 +321,18 @@ function BagDlgLoadItem()
 	
     -- 排序
     table.sort(m_CacheItemCache, BagDlgItemCacheSort);
+	
+	coroutine.stop( BagDlgCreateItem )
+	coroutine.start( BagDlgCreateItem )
+	-- 创建
+	--BagDlgCreateItem()
+end
 
-    -- 创建对象
+function BagDlgCreateItem()
+	local itemCount = 0;
+    local currItemRow = nil;
+    local rowCount = 0;
+	-- 创建对象
     for nItemIndex = 1, #m_CacheItemCache, 1 do
         local pItem = m_CacheItemCache[nItemIndex];
         if pItem ~= nil and pItem.m_kind > 0 then
@@ -335,6 +343,7 @@ function BagDlgLoadItem()
                     currItemRow.transform:SetParent(m_uiItemContent.transform);
                     currItemRow.transform.localScale = Vector3.one;
                     currItemRow:SetActive(true);
+					coroutine.wait(0.03) -- 此处等待
                 else
                     currItemRow = m_uiItemContent.transform:GetChild(rowCount).gameObject;
                     currItemRow:SetActive(true);
@@ -364,6 +373,8 @@ function BagDlgLoadItem()
         end
     end
 end
+
+
 function BagDlgLoadEquip()
 	if m_Dlg == nil then
 		return;

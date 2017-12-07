@@ -20,7 +20,19 @@ local m_uiTenthText = nil; --UnityEngine.GameObject
 local m_cacheAward = nil;
 local m_tokenObjectArray = {};
 local m_heroObjectArray = {};
+local m_combineObjectArray = {};
+local b_isVisit = false ;
+
 local m_controlID = 0 ;
+
+
+local sumtime = 0;
+local delttime = 18 ;
+local transformNum = 1;
+local trsndfsum = 25
+local lastSelectId = 0;
+local selectid = 0 ;
+local nextid = 0 ;
 -- 打开界面
 function HeroVisitDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_gray" );
@@ -34,6 +46,9 @@ function HeroVisitDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	
+	-- 此处判断当前在哪个页，如果在奖励页就关闭奖励页，显示信息页
+	
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "HeroVisitDlg" );
@@ -62,17 +77,24 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroVisitDlgOpenAward(nControlID);
 		elseif nControlID == 3 then
 			HeroVisitDlgOpenAward(nControlID);
-		elseif nControlID >= 20000 then
-			if m_controlID	==2 then
-				HeroConfigDlgShow( g_heroinfo[nControlID-20000][3]);
-			else
-				HeroConfigDlgShow( g_heroinfo[nControlID-20000][2]);
+		elseif nControlID == 4 then	--寻访1次
+			 selectid = HeroVisitDlgTransform(20)
+			print("selectid:"..selectid);
+			 b_isVisit = true ;
+		elseif nControlID == 5 then	--寻访10次
+		
+		elseif nControlID >= 17 and 400 > nControlID then
+			local kindid = g_hero_visit[nControlID].kind ;
+			if kindid >= 20000 then
+				if m_controlID	==2 then
+					HeroConfigDlgShow( g_heroinfo[kindid-20000][3]);
+				else
+					HeroConfigDlgShow( g_heroinfo[kindid-20000][2]);
+				end				
 			end
-			
         end		
 	elseif nType == UI_EVENT_TIMECOUNTEND  then
 		if nControlID == 1 then
-			print("Timer()");
 			HeroVisitDlgShow();
 		end
 	end
@@ -126,9 +148,43 @@ function HeroVisitDlgOnDestroy( gameObject )
 	m_Dlg = nil;
 end
 
+
 -- 每帧调用
-function HeroVisitDlgOnLogic( gameObject )
+function HeroVisitDlgOnLogic( gameObject )	
 	
+	if b_isVisit == true then
+		sumtime = sumtime + Time.deltaTime * delttime;
+		if sumtime > 1 then
+			sumtime = 0 
+			if transformNum == 1 then
+				if lastSelectId ~= 0 then
+					SetFalse(m_combineObjectArray[lastSelectId].transform:Find("Select"));
+					lastSelectId = 0;
+				else
+					SetFalse(m_combineObjectArray[25].transform:Find("Select"));
+				end
+			else
+				SetFalse(m_combineObjectArray[transformNum-1].transform:Find("Select"));
+			end
+			SetTrue(m_combineObjectArray[transformNum].transform:Find("Select"));
+			if nextid == 2 then
+				if transformNum == selectid then
+					b_isVisit = false;
+					transformNum = 1;
+					nextid = 0;
+					trsndfsum=25;
+					lastSelectId=selectid;
+					return ;
+				end
+			end			
+			if transformNum == 25 then			
+				transformNum = 1;
+				nextid = nextid +1 ;
+			else 
+				transformNum = transformNum + 1 ;
+			end
+		end
+	end
 end
 
 
@@ -142,40 +198,7 @@ function HeroVisitDlgShow()
 end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
-function HeroVisitDlgRecv( recvValue )
-	
-	-- m_hv_free_cd=0,良将寻访免费CD
-	-- m_hv_high_sec=0,神将寻访解锁时长
-	-- m_hv_high_free=0,神将寻访剩余免费次数
-	-- m_hv_low_num=0,良将寻访次数
-	-- m_hv_high_num=0,神将寻访次数
-	-- m_hv_progress=0,寻访进度
---[[
-global.hero_visit_actorlevel = 88 --武将寻访玩家等级限制
-global.hero_visit_mainlevel = 17 --武将寻访官府等级限制
-global.hero_visit_low_token10 = 1800 --良将寻访十连钻石
-global.hero_visit_high_token = 800 --神将寻访钻石
-global.hero_visit_high_token10 = 6400 --神将寻访十连钻石
-global.hero_visit_low_itemnum = 1 --良将寻访道具数
-global.hero_visit_low_itemnum10 = 10 --良将寻访十连道具数
-global.hero_visit_high_itemnum = 1 --神将寻访道具数
-global.hero_visit_high_itemnum10 = 10 --神将寻访十连道具数
-global.hero_visit_low_max = 10 --良将特殊抽取达到次数
-global.hero_visit_high_max = 10 --神将特殊抽取达到次数
-global.hero_visit_low_normal_award = 1 --良将普通寻访获得道具和武将
-global.hero_visit_low_hero_award = 2 --良将特殊寻访获得武将
-global.hero_visit_high_normal_award = 3 --神将普通寻访获得道具和武将
-global.hero_visit_high_hero_award = 4 --神将特殊寻访获得武将
-global.hero_visit_progress_color1 = 10 --寻访突破获取进度
-global.hero_visit_progress_color2 = 5 --寻访突破获取进度
-global.hero_visit_progress_color3 = 15 --寻访突破获取进度
-global.hero_visit_progress_color4 = 50 --寻访突破获取进度
-global.hero_visit_progress_normal = 2 --寻访获取进度
---]]
-	recvValue.m_hv_free_cd = 0;
-	recvValue.m_hv_high_free = 3000;
-	recvValue.m_hv_progress = 100;
-	
+function HeroVisitDlgRecv( recvValue )	
 	if	recvValue.m_hv_free_cd == 0 then
 		SetTrue(m_uiDot);
 		SetFalse(m_uiOpenTime);
@@ -234,21 +257,45 @@ function HeroVisitDlgHigh()
 	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 1 );
 end
 
--- 添加获取的奖励到缓存type==1道具 type==2武将
-function HeroVisitDlgAwardAdd( type, recvValue )
-	table.insert( m_cacheAward, { awardType=type, awardInfo=recvValue } ) 
-end
-
 -- 播放奖励动画
-function HeroVisitDlgAwardPlayAction()
+-- m_id={[10]},m_count=0,
+function HeroVisitDlgRecvAward( recvValue )
+	m_cacheAward = recvValue
 	if m_cacheAward == nil then
 		return
 	end
-	if #m_cacheAward == 1 then
+	if m_cacheAward.m_count <= 0 then
+		return
+	end
+	if m_cacheAward.m_count == 1 then
 		-- 播放单个道具或武将的动画
-		
+		for k, v in pairs( g_hero_visit ) do      
+			if v.id == m_cacheAward.m_id[1] then
+				-- 奖励武将
+				if v.kind >= AWARDKIND_HEROBASE then
+					-- 武将配置信息
+					local pHeroConfig = g_heroinfo[v.kind][v.color]
+					if pHeroConfig == nil then
+						break
+					end
+					local hero = { m_kind = v.kind, m_color = v.color, m_level = 1, m_corps = pHeroConfig.corps, m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,
+						m_attack_base = pHeroConfig.attack_base, m_attack_wash = pHeroConfig.attack_wash,
+						m_defense_base = pHeroConfig.defense_base, m_defense_wash = pHeroConfig.defense_wash,
+						m_troops_base = pHeroConfig.troops_base, m_troops_wash = pHeroConfig.troops_wash,
+						m_attack = pHeroConfig.attack,m_defense = pHeroConfig.defense,m_troops = pHeroConfig.troops, m_offset = 0 }
+					HeroGetDlgShow( hero );
+					
+				-- 奖励道具
+				else
+					ItemGetDlgShow( v.kind, v.num )
+				end
+				break
+			end
+		end	
+	
 	else
 		-- 播放多个道具或武将的动画
+		-- 原理同上，只不过这里循环10个动画显示
 	end
 end
 
@@ -319,23 +366,32 @@ function HeroVisitDlgOpenAward( controlid )
 	SetTrue(m_uiAwardLayer);
 	SetFalse(m_uiInfoLayer);				
 end
-
+--
+function HeroVisitDlgSort(a,b)
+	return 	tonumber(a.transform.name) < tonumber(b.transform.name)
+end
 --获得道具和英雄的GameObject
 function HeroVisitDlgGetObject()
 
 	for i = 0,m_uiLeftToken.transform.childCount-1  do
 		table.insert(m_tokenObjectArray,m_uiLeftToken.transform:GetChild(i));
+		table.insert(m_combineObjectArray,m_uiLeftToken.transform:GetChild(i));
 	end
-	for i = 0,m_uiRightToken.transform.childCount-1  do
-		
+	for i = 0,m_uiRightToken.transform.childCount-1  do		
 		table.insert(m_tokenObjectArray,m_uiRightToken.transform:GetChild(i));
+		table.insert(m_combineObjectArray,m_uiRightToken.transform:GetChild(i));
 	end	
 	for i = 0,m_uiUpToken.transform.childCount-1  do
 		table.insert(m_tokenObjectArray,m_uiUpToken.transform:GetChild(i));
+		table.insert(m_combineObjectArray,m_uiUpToken.transform:GetChild(i));
 	end	
 	for i = 0,m_uiHeroLayout.transform.childCount-1  do
 		table.insert(m_heroObjectArray,m_uiHeroLayout.transform:GetChild(i));
+		table.insert(m_combineObjectArray,m_uiHeroLayout.transform:GetChild(i));
 	end	
+	table.sort(m_combineObjectArray,HeroVisitDlgSort)
+
+	
 end
 	--[[
 	local goodHeroList = {};
@@ -367,7 +423,8 @@ end
 --设置单个对象
 function HeroVisitDlgSetCell(uiHeroObj,value)
 	local sprite, color, name = AwardInfo(value.kind  ) ;
-	local colorSprite = ItemColorSprite(value.color);	
+	local colorSprite = ItemColorSprite(value.color);
+	uiHeroObj:GetComponent("UIButton").controlID = value.id;
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	if value.kind >= 20000 then
 		local uiShape = objs[0];
@@ -380,7 +437,7 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 		SetImage(uiColor,colorSprite);
 		SetImage(uiCorps,CorpsSprite(g_heroinfo[(value.kind-20000)][value.color].corps));
 		SetText(uiName,name);
-		uiHeroObj:GetComponent("UIButton").controlID = value.kind;
+		
 		local haveHero = GetHero():GetPtr(value.kind-20000);
 		if haveHero ~= nil  then
 			SetTrue(uiAlreadlyHave);
@@ -400,6 +457,17 @@ end
 function HeroVisitDlgSelect( colickid )
 	
 	
+end
+-- 通过id找出寻访物品位置
+function HeroVisitDlgTransform( id )
+	local transformid  = 0;
+	for i = 1 ,#m_combineObjectArray do
+		if id == m_combineObjectArray[i].transform:GetComponent("UIButton").controlID then
+			transformid = i
+			
+		end
+	end
+	return transformid ;
 end
 
 

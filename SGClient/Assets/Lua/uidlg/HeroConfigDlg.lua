@@ -13,10 +13,7 @@ local m_uiSoldier = nil; --UnityEngine.GameObject
 local m_uiExpPanel = nil; --UnityEngine.GameObject
 local m_uiSoldierPanel = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
-local m_uiAttackIncreaseIcon = nil; --UnityEngine.GameObject
-local m_uiAttackIncrease = nil; --UnityEngine.GameObject
-local m_uiDefenseIncreaseIcon = nil; --UnityEngine.GameObject
-local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
+
 
 -- 打开界面
 function HeroConfigDlgOpen()
@@ -26,15 +23,12 @@ end
 
 -- 隐藏界面
 function HeroConfigDlgClose()
-	print("wwwwwww");
 	if m_Dlg == nil then
 		return;
 	end
-	print("eeeeee");
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;	
 	eye.uiManager:Close( "HeroConfigDlg" );
-	print("errrrrr");
 end
 
 -- 删除界面
@@ -53,7 +47,6 @@ function HeroConfigDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroConfigDlgClose();
-			print("qqqqqq");
         end
 	end
 end
@@ -74,10 +67,7 @@ function HeroConfigDlgOnAwake( gameObject )
 	m_uiExpPanel = objs[9];
 	m_uiSoldierPanel = objs[10];
 	m_uiName = objs[11];
-	m_uiAttackIncreaseIcon = objs[12];
-	m_uiAttackIncrease = objs[13];
-	m_uiDefenseIncreaseIcon = objs[14];
-	m_uiDefenseIncrease = objs[15]
+
 end
 
 -- 界面初始化时调用
@@ -110,11 +100,9 @@ end
 -- 自定
 ----------------------------------------
 function HeroConfigDlgShow( pHero)
-	print("aaaaaa");
 	if pHero == nil or pHero.kind <= 0 then
 		return
 	end
-	print("xxxxxxx");
 	HeroConfigDlgOpen()
 	HeroConfigDlgSet(  pHero )
 end
@@ -144,27 +132,7 @@ function HeroConfigDlgSet( pHero)
 	SetText( m_uiAttack,  T(146)..":"..pHero.attack );
 	SetText( m_uiDefense,  T(147)..":"..pHero.defense )
 	SetText( m_uiSoldier,  T(148)..":"..pHero.troops )
-	
-	-- 强攻
-	if pHero.attack_base > 0 then
-		SetTrue( m_uiAttackIncreaseIcon )
-		SetTrue( m_uiAttackIncrease )
-		SetText( m_uiAttackIncrease, T(165).."+"..pHero.attack_base );
-	else
-		SetFalse( m_uiAttackIncreaseIcon )
-		SetFalse( m_uiAttackIncrease )
-	end
-		
-	-- 强防
-	if pHero.defense_base > 0 then
-		SetTrue( m_uiDefenseIncreaseIcon )
-		SetTrue( m_uiDefenseIncrease )
-		SetText( m_uiDefenseIncrease, T(166).."+"..pHero.defense_base );
-	else
-		SetFalse( m_uiDefenseIncreaseIcon )
-		SetFalse( m_uiDefenseIncrease )
-	end
-	
+
 	SetFalse( m_uiAbilityArea )
 	SetTrue( m_uiAbilityArea )
 

@@ -62,6 +62,7 @@ int hero_colorup( int actor_index, int herokind );
 #define HERO_VISIT_AWARDGROUPMAX	5
 typedef struct _hero_visit_award
 {
+	int id;
 	int kind;
 	int num;
 	char color;

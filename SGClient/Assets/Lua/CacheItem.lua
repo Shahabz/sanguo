@@ -309,7 +309,6 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 	if path == PATH_MATERIALMAKE then
 		ItemGetDlgShow( nItemKind, num )
 	elseif path == PATH_HEROVISIT then
-		HeroVisitDlgAwardAdd( 1, {itemkind=nItemKind, itemnum=num } )
 	elseif path == PATH_HEROVISIT_CHANGE then
     else
 		pop( F( 690, item_getname(nItemKind), num ) )

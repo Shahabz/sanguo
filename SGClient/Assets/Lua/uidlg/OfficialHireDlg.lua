@@ -10,7 +10,7 @@ local m_type = 0;
 -- 打开界面
 function OfficialHireDlgOpen()
 	m_Dlg = eye.uiManager:Open( "OfficialHireDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, m_DlgName, 5, OfficialHireDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, m_DlgName, HELP_LevyDlg, OfficialHireDlgClose );
 end
 
 -- 隐藏界面
@@ -143,7 +143,7 @@ function OfficialHireDlgSet( type )
 	end
 end
 
-local function UIP_InfoSet( uiObj, kind, shape, color, name, desc, otherDesc, timerDesc, sec, title, res, silver, token, free, getfree )
+local function UIP_InfoSet( uiObj, kind, shape, color, name, desc, otherDesc, timerDesc, sec, title, titlecolor , res, silver, token, free, getfree )
 	SetTrue(uiObj)
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
@@ -213,7 +213,7 @@ local function UIP_InfoSet( uiObj, kind, shape, color, name, desc, otherDesc, ti
 		SetFalse( uiTitle )
 	else
 		SetTrue( uiTitle )
-		SetText( uiTitle, title );
+		SetText( uiTitle, title , titlecolor );
 	end
 	
 	if res == nil then
@@ -243,7 +243,7 @@ local function UIP_InfoSet( uiObj, kind, shape, color, name, desc, otherDesc, ti
 			SetControlID( uiButton, kind )
 			if silver > 0 then
 				SetImage( uiButtonIcon, LoadSprite("ui_icon_res_silver") );
-				SetText( uiButtonNum, silver ) 
+				SetText( uiButtonNum, knum(silver) ) 
 			else
 				SetImage( uiButtonIcon, LoadSprite("ui_icon_res_token") );
 				SetText( uiButtonNum, token ) 
@@ -266,12 +266,13 @@ function OfficialHireDlgSetForging()
 		UIP_InfoSet( m_uiUIP_Info[1], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_forging[kind].level..T(721), -- name
+						"Lv."..g_official_forging[kind].level.."  "..T(721), -- name
 						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
 						nil,  -- otherDesc
 						"\n\n"..T(771),  -- timerDesc
 						info.m_ofsec, -- sec
 						T(719)..T(721), -- title
+						NameColor(3),	-- titlecolor
 						nil, -- res
 						0, -- silver
 						0, -- token
@@ -281,7 +282,7 @@ function OfficialHireDlgSetForging()
 		
 	else
 		-- 未雇佣
-		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(721), nil, nil, nil, nil, T(719)..T(721), nil, 0, 0, 0, 0 )
+		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(721), nil, nil, nil, nil, T(719)..T(721), NameColor(0), nil, 0, 0, 0, 0 )
 	end
 	
 	-- 可雇佣
@@ -299,19 +300,24 @@ function OfficialHireDlgSetForging()
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_forging[kind].level..T(721), -- name
+						"Lv."..g_official_forging[kind].level.."  "..T(721), -- name
 						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
 						nil,  -- otherDesc
 						nil,  -- timerDesc
 						nil, -- sec
 						T(718)..T(721), -- title
+						NameColor(1),	-- titlecolor
 						nil, -- res
 						g_official_forging[kind].silver, -- silver
 						g_official_forging[kind].token, -- token
 						g_official_forging[kind].free,
 						info.m_offree ) -- token
 			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			index = index + 1
+			if index == #m_uiUIP_Info then
+				return
+				else
+				index = index + 1;			
+			end
 			cankind = kind;
 			break;
 		end
@@ -324,12 +330,13 @@ function OfficialHireDlgSetForging()
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_forging[kind].level..T(721), -- name
+						"Lv."..g_official_forging[kind].level.."  "..T(721), -- name
 						F(769, zhtime(g_official_forging[kind].quick) ), -- desc
 						nil,  -- otherDesc
 						BuildingNameLv(BUILDING_Main,nil,ptr.buildinglevel).." "..T(724),  -- timerDesc
 						nil, -- sec
 						T(718)..T(721), -- title
+						NameColor(1),	-- titlecolor
 						nil, -- res
 						0, -- silver
 						0, -- token
@@ -355,12 +362,13 @@ function OfficialHireDlgSetGov()
 		UIP_InfoSet( m_uiUIP_Info[1], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_gov[kind].level..T(722), -- name
+						"Lv."..g_official_gov[kind].level.."  "..T(722), -- name
 						F(732, g_official_gov[kind].produce), -- desc
 						nil,  -- otherDesc
 						nil,  -- timerDesc
 						info.m_ofsec, -- sec
 						T(719)..T(722), -- title
+						NameColor(3),	-- titlecolor
 						{ 1,1,1,g_official_gov[kind].haveiron }, -- res
 						0, -- silver
 						0, -- token
@@ -374,7 +382,7 @@ function OfficialHireDlgSetGov()
 		
 	else
 		-- 未雇佣
-		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(722), nil, nil, nil, nil, T(719)..T(722), nil, 0, 0, 0, 0 )
+		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(722), nil, nil, nil, nil, T(719)..T(722), NameColor(3), nil, 0, 0, 0, 0 )
 	end
 	
 	-- 可雇佣
@@ -389,19 +397,27 @@ function OfficialHireDlgSetGov()
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_gov[kind].level..T(722), -- name
+						"Lv."..g_official_gov[kind].level.."  "..T(722), -- name
 						F(732, g_official_gov[kind].produce), -- desc
 						nil,  -- otherDesc
 						nil,  -- timerDesc
 						nil, -- sec
 						T(718)..T(722), -- title
+						NameColor(1),	-- titlecolor
 						{ 1,1,1,g_official_gov[kind].haveiron }, -- res
 						g_official_gov[kind].silver, -- silver
 						g_official_gov[kind].token, -- token
 						g_official_gov[kind].free,
 						info.m_offree ) -- token
 			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			index = index + 1;
+			if index == #m_uiUIP_Info then
+				return
+				else
+				index = index + 1;			
+			end
+		
+			
+
 		end
 	end
 end
@@ -420,12 +436,13 @@ function OfficialHireDlgSetTech()
 		UIP_InfoSet( m_uiUIP_Info[1], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_tech[kind].level..T(723), -- name
+						"Lv."..g_official_tech[kind].level.."  "..T(723), -- name
 						F(727, zhtime(g_official_tech[kind].quick) ), -- desc
 						nil,  -- otherDesc
 						nil,  -- timerDesc
 						info.m_ofsec, -- sec
 						T(719)..T(723), -- title
+						NameColor(3),	-- titlecolor
 						nil, -- res
 						0, -- silver
 						0, -- token
@@ -439,7 +456,7 @@ function OfficialHireDlgSetTech()
 		
 	else
 		-- 未雇佣
-		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(723), nil, nil, nil, nil, T(719)..T(723), nil, 0, 0, 0, 0 )
+		UIP_InfoSet( m_uiUIP_Info[1], 0, nil, nil, T(728)..T(723), nil, nil, nil, nil, T(719)..T(723),NameColor(0), nil, 0, 0, 0, 0 )
 	end
 	
 	-- 可雇佣
@@ -454,19 +471,24 @@ function OfficialHireDlgSetTech()
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
-						"Lv."..g_official_tech[kind].level..T(723), -- name
+						"Lv."..g_official_tech[kind].level.."  "..T(723), -- name
 						F(727, zhtime(g_official_tech[kind].quick) ), -- desc
 						nil,  -- otherDesc
 						nil,  -- timerDesc
 						nil, -- sec
 						T(718)..T(723), -- title
+						NameColor(1),	-- titlecolor
 						nil, -- res
 						g_official_tech[kind].silver, -- silver
 						g_official_tech[kind].token, -- token
 						g_official_tech[kind].free,
 						info.m_offree ) -- token
 			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			index = index + 1;
+			if index == #m_uiUIP_Info then
+				return
+				else
+				index = index + 1;			
+			end
 		end
 	end
 end

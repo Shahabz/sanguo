@@ -1666,6 +1666,7 @@ int hero_visit_init()
 		{
 			return -1;
 		}
+		g_herovisit_awardgroup[awardgroup].award[count].id = g_hero_visit[tmpi].id;
 		g_herovisit_awardgroup[awardgroup].award[count].kind = g_hero_visit[tmpi].kind;
 		g_herovisit_awardgroup[awardgroup].award[count].num = g_hero_visit[tmpi].num;
 		g_herovisit_awardgroup[awardgroup].award[count].color = (char)g_hero_visit[tmpi].color;
@@ -1745,17 +1746,8 @@ int hero_visit_snedflag( int actor_index )
 	return 0;
 }
 
-// 通知播放奖励奖励动画
-int hero_visit_playaward_action( int actor_index )
-{
-	int value[2] = { 0 };
-	value[0] = 1;
-	actor_notify_value( actor_index, NOTIFY_HERO_VISIT, 2, value, NULL );
-	return 0;
-}
-
 // 获取寻访池奖励
-int hero_visit_getaward( int awardgroup, AwardGetInfo *getinfo )
+int hero_visit_getaward( int awardgroup, AwardGetInfo *getinfo, SLK_NetS_HeroVisitAward *netAward )
 {
 	if ( awardgroup <= 0 || awardgroup >= HERO_VISIT_AWARDGROUPMAX )
 		return -1;
@@ -1776,7 +1768,7 @@ int hero_visit_getaward( int awardgroup, AwardGetInfo *getinfo )
 			char color = g_herovisit_awardgroup[awardgroup].award[tmpi].color;
 
 			if ( kind < 0 )
-				hero_visit_getaward( -kind, getinfo );
+				hero_visit_getaward( -kind, getinfo, netAward );
 			else if ( kind > 0 )
 			{
 				if (  getinfo->count < AWARDGETINFO_MAXCOUNT )
@@ -1785,6 +1777,12 @@ int hero_visit_getaward( int awardgroup, AwardGetInfo *getinfo )
 					getinfo->num[getinfo->count] = num;
 					getinfo->color[getinfo->count] = color;
 					getinfo->count++;
+
+					if ( netAward->m_count < 10 )
+					{
+						netAward->m_id[netAward->m_count] = g_herovisit_awardgroup[awardgroup].award[tmpi].id;
+						netAward->m_count++;
+					}
 				}
 				if ( getinfo->count >= AWARDGETINFO_MAXCOUNT )
 					break;
@@ -1818,15 +1816,16 @@ int hero_visit_low( int actor_index )
 	// 抽取计数
 	g_actors[actor_index].hv_ln += 1;
 
+	SLK_NetS_HeroVisitAward netAward = { 0 };
 	AwardGetInfo getinfo = { 0 };
 	if ( g_actors[actor_index].hv_ln >= global.hero_visit_low_max )
 	{ // 特殊抽取
 		g_actors[actor_index].hv_ln = 0;
-		hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo );
+		hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo, &netAward );
 	}
 	else
 	{ // 普通抽取
-		hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo );
+		hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo, &netAward );
 	}
 
 	// 给奖励
@@ -1834,7 +1833,8 @@ int hero_visit_low( int actor_index )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
 	}
-	hero_visit_playaward_action( actor_index );
+	// 发送获取的奖励ID
+	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
 
 	if ( pCity->hv_fcd > 0 )
 	{
@@ -1863,6 +1863,7 @@ int hero_visit_low10( int actor_index )
 	if ( g_actors[actor_index].token < global.hero_visit_low_token10 )
 		return -1;
 
+	SLK_NetS_HeroVisitAward netAward = { 0 };
 	AwardGetInfo getinfo = { 0 };
 	for ( int tmpi = 0; tmpi < 10; tmpi++ )
 	{
@@ -1872,11 +1873,11 @@ int hero_visit_low10( int actor_index )
 		if ( g_actors[actor_index].hv_ln >= global.hero_visit_low_max )
 		{ // 特殊抽取
 			g_actors[actor_index].hv_ln = 0;
-			hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo );
+			hero_visit_getaward( global.hero_visit_low_hero_award, &getinfo, &netAward );
 		}
 		else
 		{ // 普通抽取
-			hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo );
+			hero_visit_getaward( global.hero_visit_low_normal_award, &getinfo, &netAward );
 		}
 	}
 
@@ -1885,7 +1886,8 @@ int hero_visit_low10( int actor_index )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
 	}
-	hero_visit_playaward_action( actor_index );
+	// 发送获取的奖励ID
+	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
 	actor_change_token( actor_index, -global.hero_visit_low_token10, PATH_HEROVISIT, 0 );
 	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal*10 );
 	return 0;
@@ -1913,15 +1915,16 @@ int hero_visit_high( int actor_index )
 	// 抽取计数
 	g_actors[actor_index].hv_hn += 1;
 
+	SLK_NetS_HeroVisitAward netAward = { 0 };
 	AwardGetInfo getinfo = { 0 };
 	if ( g_actors[actor_index].hv_hn >= global.hero_visit_high_max )
 	{ // 特殊抽取
 		g_actors[actor_index].hv_hn = 0;
-		hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo );
+		hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo, &netAward );
 	}
 	else
 	{ // 普通抽取
-		hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo );
+		hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo, &netAward );
 	}
 
 	// 给奖励
@@ -1929,7 +1932,8 @@ int hero_visit_high( int actor_index )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
 	}
-	hero_visit_playaward_action( actor_index );
+	// 发送获取的奖励ID
+	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
 
 	if ( pCity->hv_hf <= 0 )
 	{
@@ -1957,6 +1961,7 @@ int hero_visit_high10( int actor_index )
 	if ( g_actors[actor_index].token < global.hero_visit_high_token10 )
 		return -1;
 
+	SLK_NetS_HeroVisitAward netAward = { 0 };
 	AwardGetInfo getinfo = { 0 };
 	for ( int tmpi = 0; tmpi < 10; tmpi++ )
 	{
@@ -1966,11 +1971,11 @@ int hero_visit_high10( int actor_index )
 		if ( g_actors[actor_index].hv_hn >= global.hero_visit_high_max )
 		{ // 特殊抽取
 			g_actors[actor_index].hv_hn = 0;
-			hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo );
+			hero_visit_getaward( global.hero_visit_high_hero_award, &getinfo, &netAward );
 		}
 		else
 		{ // 普通抽取
-			hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo );
+			hero_visit_getaward( global.hero_visit_high_normal_award, &getinfo, &netAward );
 		}
 	}
 
@@ -1979,7 +1984,8 @@ int hero_visit_high10( int actor_index )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
 	}
-	hero_visit_playaward_action( actor_index );
+	// 发送获取的奖励ID
+	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
 
 	if ( pCity->hv_hf <= 0 )
 	{

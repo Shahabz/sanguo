@@ -238,9 +238,6 @@ function RecvActorNotify(recvValue)
 			elseif value[2] == 2 then
 				City.HeroVisitMod( nil, true, 2 )
 			end
-		-- 开始播放动画
-		elseif value[1] == 1 then
-			HeroVisitDlgAwardPlayAction()
 		end
     end
 end

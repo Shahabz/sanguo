@@ -732,7 +732,6 @@ function proc_heroget_C( recvValue )
 	pHero:Set( recvValue.m_hero );
 	GetHero():SetHero( recvValue.m_hero.m_offset, pHero );
 	if recvValue.m_path == PATH_HEROVISIT then
-		HeroVisitDlgAwardAdd( 2, recvValue.m_hero )
 	else
 		HeroGetDlgShow( recvValue.m_hero );
 	end
@@ -1597,5 +1596,11 @@ end
 function proc_herovisitinfo_C( recvValue )
 	-- process.
 	HeroVisitDlgRecv( recvValue )
+end
+
+-- m_id={[10]},m_count=0,
+function proc_herovisitaward_C( recvValue )
+	-- process.
+	HeroVisitDlgRecvAward( recvValue )
 end
 

@@ -16,6 +16,8 @@ local m_uiRightPk = nil; --UnityEngine.GameObject
 local m_uiPkIcon = nil; --UnityEngine.GameObject
 local m_uiTop = nil; --UnityEngine.GameObject
 local m_uiBottom = nil; --UnityEngine.GameObject
+local m_uiLeftGround = nil; --UnityEngine.GameObject
+local m_uiRightGround = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_assetBundleName = ""
@@ -27,7 +29,6 @@ local m_playing = 0;
 
 -- 打开界面
 function FightDlgOpen()
-	ResourceManager.LoadAssetBundle( m_assetBundleName );
 	m_Dlg = eye.uiManager:Open( "FightDlg" );
 end
 
@@ -38,6 +39,7 @@ function FightDlgClose()
 	end
 	m_playing = 0;
 	eye.uiManager:Close( "FightDlg" );
+	FightScene.Delete()
 end
 
 -- 删除界面
@@ -45,7 +47,7 @@ function FightDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	Invoke( function() 
-			ResourceManager.UnloadAssetBundleImmediately( m_assetBundleName )
+			ResourceManager.UnloadAssetBundleImmediately( "_ab_char_shape_infantry" )
 		end, 0.3 );
 end
 
@@ -85,6 +87,8 @@ function FightDlgOnAwake( gameObject )
 	m_uiPkIcon = objs[13];
 	m_uiTop = objs[14];
 	m_uiBottom = objs[15];
+	m_uiLeftGround = objs[16];
+	m_uiRightGround = objs[17];
 end
 
 -- 界面初始化时调用
@@ -117,7 +121,6 @@ end
 -- 自定
 ----------------------------------------
 function FightDlgShow( recvValue )
-	m_assetBundleName = "_ab_ui_static_fight_back_1"
 	FightDlgOpen()
 	SetFalse( m_uiTop )
 	SetFalse( m_uiBottom )
@@ -135,6 +138,9 @@ function FightDlgShow( recvValue )
 	else
 		SetText( m_uiTypeName, T(2000+fighttype-1) )
 	end
+	
+	-- 战场对象初始化
+	FightScene.Create()
 	
 	-- 战场初始化
 	fight_init( info["randspeed"] );
@@ -364,7 +370,7 @@ function FightDlgUnitVsLayerShow()
 		SetFalse( m_uiPkIcon )
 		leftTween:Play( false )
 		rightTween:Play( false )
-	end, 2.5 );
+	end, 1.5 );
 end
 
 -- 启动战斗
@@ -378,6 +384,7 @@ function FightDlgStart()
 	
 	FightDlgUnitVsLayerShow()
 	
+	FightDlgCreateUnit()
 end
 
 
@@ -396,15 +403,3 @@ function FightDlgLogic()
 		m_playing = 0
 	end
 end
-
-
---[[//int		attack;				// 攻击
-//int		defense;			// 防御
-//int		troops;				// 血上限
-//short	attack_increase;	// 攻击增强
-//short	defense_increase;	// 防御增强
-//short	assault;			// 攻城
-//short	defend;				// 守城
-//char	line;				// 带兵排数
-//char	skillid;			// 武将技
---]]

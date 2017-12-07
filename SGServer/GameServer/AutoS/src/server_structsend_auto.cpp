@@ -2105,3 +2105,12 @@ int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *p
 	return 0;
 }
 
+int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisitAward *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_id, 10*sizeof(short), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	return 0;
+}
+

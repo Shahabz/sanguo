@@ -290,7 +290,7 @@ int random_custom( int min, int max, int *randspeed )
 	int speed1 = *randspeed;
 	int v = min + ((*randspeed) % value);
 	//fight_debug( "random_custom:%d", v );
-	printf( "random_custom:min:%d,max:%d,value:%d,speed:%d,speed1:%d,v:%d\n", min, max, value, speed, speed1, v );
+	//printf( "random_custom:min:%d,max:%d,value:%d,speed:%d,speed1:%d,v:%d\n", min, max, value, speed, speed1, v );
 	return v;
 }
 
