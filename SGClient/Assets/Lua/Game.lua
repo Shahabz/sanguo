@@ -138,6 +138,9 @@ function GameManager.GameLogic()
 		netsend_heart_C( sendValue )
 		GameManager.HeartTime = 0;
 	end
+	
+	-- 战斗
+	FightDlgLogic()
 end
 
 -- 请求退出游戏

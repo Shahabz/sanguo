@@ -176,7 +176,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 国器
 		elseif nControlID == 13 then
-		
+			NationEquipDlgShow()
 		-- 排行榜
 		elseif nControlID == 14 then
 		

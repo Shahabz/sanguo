@@ -719,11 +719,16 @@ function WorldMap.OnClickShow( gameCoorX, gameCoorY )
 	local grid = 1
 	local type = MAPUNIT_TYPE_CITY;
 	for k, v in pairs( g_towninfo ) do
-		if v.grid == 2 then
+		if v.posx == gameCoorX and v.posy == gameCoorY then
+			grid = v.grid
+			type = MAPUNIT_TYPE_TOWN
+			break;
+		end
+--[[		if v.grid == 2 then
 			
 		elseif v.grid == 3 then
 			
-		end
+		end--]]
 	end
 	
 	MapClickEffect.transform.localScale = Vector3.New( grid, grid, grid );

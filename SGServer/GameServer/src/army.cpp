@@ -756,6 +756,22 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		}
 		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_RES )
 		{ // 资源点
+			// 检查采集部队数量，只允许4个
+			int gather_count = 0;
+			for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+			{
+				int army_index = pCity->battle_armyindex[tmpi];
+				if ( army_index < 0 || army_index >= g_army_maxcount )
+					continue;
+				if ( g_army[army_index].action == ARMY_ACTION_GATHER )
+				{
+					gather_count += 1;
+				}
+			}
+			if ( gather_count >= 4 )
+			{
+				return -1;
+			}
 			MapRes *res = map_res_getptr( g_mapunit[info->m_to_unit_index].index );
 			if ( !res )
 				return -1;

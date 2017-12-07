@@ -858,7 +858,7 @@ function MapUnit.createRes( recvValue )
 		end
 		uiEffectGather.gameObject:SetActive( true );
 	else
-		uiName:GetComponent("UIText").text = "Lv."..level.." "..T(MapUnitResNameList[restype])
+		SetText( uiName, "Lv."..level.." "..T(MapUnitResNameList[restype]), Hex2Color( 0xFFFFFFFF ) ) 
 		uiEffectGather.gameObject:SetActive( false );
 	end
 	return unitObj;

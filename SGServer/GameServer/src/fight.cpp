@@ -221,8 +221,8 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 	g_fight.attack_armyindex = -1;
 	g_fight.defense_index = -1;
 	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
-	g_fight.randspeed = (int)time( NULL );
-
+	g_fight.randspeed = (int)time( NULL )/7;
+	g_fight.randspeed_init = g_fight.randspeed;
 	g_fight.attack_armyindex = attack_armyindex;
 	g_fight.attack_type = g_army[attack_armyindex].from_type;
 	g_fight.defense_type = defense_type;
@@ -432,7 +432,8 @@ int fight_start_armygroup( int group_index )
 	}
 
 	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
-	g_fight.randspeed = (int)time( NULL );
+	g_fight.randspeed = (int)time( NULL ) / 7;
+	g_fight.randspeed_init = g_fight.randspeed;
 	g_fight.attack_type = g_armygroup[group_index].from_type;
 	g_fight.attack_armyindex = g_armygroup[group_index].from_index;
 	g_fight.defense_type = g_armygroup[group_index].to_type;
@@ -705,7 +706,8 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 	g_fight.attack_armyindex = -1;
 	g_fight.defense_index = -1;
 	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
-	g_fight.randspeed = (int)time( NULL );
+	g_fight.randspeed = (int)time( NULL ) / 7;
+	g_fight.randspeed_init = g_fight.randspeed;
 
 	fight_debug( "\n\n============================================== STORY FIGHT START ==============================================" );
 	int result = 0;
@@ -769,6 +771,8 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 			g_fight.result = FIGHT_LOSE;
 		}
 	}
+	// 信息转json
+	fight_unit2json();
 	return 0;
 }
 
@@ -789,7 +793,8 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 	g_fight.attack_armyindex = -1;
 	g_fight.defense_index = -1;
 	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
-	g_fight.randspeed = (int)time( NULL );
+	g_fight.randspeed = (int)time( NULL ) / 7;
+	g_fight.randspeed_init = g_fight.randspeed;
 
 	fight_debug( "\n\n============================================== WORLDBOSS FIGHT START ==============================================" );
 	int result = 0;
@@ -853,6 +858,8 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 			g_fight.result = FIGHT_LOSE;
 		}
 	}
+	// 信息转json
+	fight_unit2json();
 	return 0;
 }
 
@@ -1300,8 +1307,8 @@ int fight_unit2json()
 		}
 	}
 
-	sprintf( szTmp, "{\"a_name\":\"%s\",\"a_type\":%d,\"a_shape\":%d,\"a_nation\":%d,\"a_lv\":%d,\"a_maxhp\":%d,\"a_hp\":%d,\"a_unit\":[", 
-		AttackName, g_fight.attack_type, AttackShape, AttackNation, AttackLevel, g_fight.attack_total_maxhp, g_fight.attack_total_hp );
+	sprintf( szTmp, "{\"ft\":%d,\"ft\":%d,\"randspeed\":%d,\"a_name\":\"%s\",\"a_type\":%d,\"a_shape\":%d,\"a_nation\":%d,\"a_lv\":%d,\"a_maxhp\":%d,\"a_hp\":%d,\"a_unit\":[", 
+		g_fight.type, g_fight.result, g_fight.randspeed_init, AttackName, g_fight.attack_type, AttackShape, AttackNation, AttackLevel, g_fight.attack_total_maxhp, g_fight.attack_total_hp );
 	strcat( g_fight.unit_json, szTmp );
 
 	// 攻击方每一个战斗单元信息
@@ -1350,8 +1357,10 @@ int fight_unit2json()
 			pUnit->prestige = pUnit->maxhp - pUnit->hp;
 		}
 
-		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d,\"vw\":%d}", 
-			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, pUnit->prestige );
+		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d,\"vw\":%d,"
+			"\"a1\":%d,\"a2\":%d,\"a3\":%d,\"a4\":%d,\"a5\":%d,\"a6\":%d,\"a7\":%d,\"a8\":%d,\"a9\":%d}", 
+			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, pUnit->prestige,
+			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid );
 		strcat( g_fight.unit_json, szTmp );
 	}
 	sprintf( szTmp, "]," );
@@ -1454,8 +1463,10 @@ int fight_unit2json()
 			pUnit->prestige = pUnit->maxhp - pUnit->hp;
 		}
 
-		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d,\"vw\":%d}",
-			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, pUnit->prestige );
+		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d,\"vw\":%d,"
+			"\"a1\":%d,\"a2\":%d,\"a3\":%d,\"a4\":%d,\"a5\":%d,\"a6\":%d,\"a7\":%d,\"a8\":%d,\"a9\":%d}",
+			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, pUnit->prestige,
+			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid );
 		strcat( g_fight.unit_json, szTmp );
 	}
 	sprintf( szTmp, "]}" );

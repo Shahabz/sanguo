@@ -90,6 +90,8 @@
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
 #define SHAPE_MAX					64		// 形象
 
+#define FIGHT_JSON_MAX	16384	// 战斗json数据长度
+
 // 推送秘钥长度
 #define CLIENT_PUSHKEY_MAX	256
 

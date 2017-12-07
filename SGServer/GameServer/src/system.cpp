@@ -278,14 +278,20 @@ int weather_change( char day, char weather )
 }
 
 /* 自定义随机 */
+//extern int fight_debug( const char *format, ... );
 int random_custom( int min, int max, int *randspeed )
 {
+	int speed = *randspeed;
 	int value = (max - min + 1);
 	if ( value <= 0 )
 		value = 1;
 
-	*randspeed = (7 * (*randspeed)) % 65535;
-	return min + ( *randspeed ) % value;
+	*randspeed = ( 7 * (*randspeed) ) % 65535;
+	int speed1 = *randspeed;
+	int v = min + ((*randspeed) % value);
+	//fight_debug( "random_custom:%d", v );
+	printf( "random_custom:min:%d,max:%d,value:%d,speed:%d,speed1:%d,v:%d\n", min, max, value, speed, speed1, v );
+	return v;
 }
 
 DelayExec g_DelayExec[DELAYEXEC_MAX];

@@ -42,7 +42,7 @@
 typedef struct _mailfight_searchcache
 {
 	i64 m_mailid;
-	char m_content[8192];
+	char m_content[FIGHT_JSON_MAX];
 }MailFightSearchCache;
 
 // ·¢ËÍÓÊ¼ş

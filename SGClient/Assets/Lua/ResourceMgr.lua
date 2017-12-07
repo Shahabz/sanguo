@@ -158,6 +158,17 @@ function EquipSprite( kind )
 	return sprite;
 end
 
+-- 国器形象
+function NationEquipSprite( kind )
+	local name = string.format("nation_equip_icon_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "nation_equip_icon_1" );
+	end
+	return sprite;
+end
+
+
 -- 装备缺省图标
 function EquipNormalSprite( type )
 	local name = string.format("ui_icon_back_equip%d", type );

@@ -319,15 +319,18 @@ function MapMainDlgBattleSet( root, index, info )
 	SetControlID( uiGpsBtn, CONTROLOFFSET_GPS+info.m_army_index )
 	
 	-- 状态名称
+	print (  info.m_state..",".. info.m_action ..",".. info.m_to_type)
 	if info.m_state == ARMY_STATE_MARCH or info.m_state == ARMY_STATE_GROUP_END then
-		if info.m_action == ARMY_ACTION_FIGHT or info.m_action == ARMY_ACTION_GROUP_CREATE or info.m_action == ARMY_ACTION_GROUP_ATTACK or info.m_action == ARMY_ACTION_GROUP_DEFENSE then
+		if info.m_action == ARMY_ACTION_FIGHT then
 			if info.m_to_type == MAPUNIT_TYPE_CITY then
 				SetText( uiState, T(975) )
+				SetTrue( uiGpsBtn )
 			elseif info.m_to_type == MAPUNIT_TYPE_ARMY then
 				SetText( uiState, T(974) )
 				SetTrue( uiQuickBtn )
 			elseif info.m_to_type == MAPUNIT_TYPE_TOWN then
 				SetText( uiState, T(969) )
+				SetTrue( uiGpsBtn )
 			elseif info.m_to_type == MAPUNIT_TYPE_ENEMY then
 				SetText( uiState, T(974) )
 				SetTrue( uiQuickBtn )
@@ -361,6 +364,24 @@ function MapMainDlgBattleSet( root, index, info )
 		SetText( uiState, T(1400) )
 	end
 	
+	if info.m_action == ARMY_ACTION_GROUP_CREATE or info.m_action == ARMY_ACTION_GROUP_ATTACK or info.m_action == ARMY_ACTION_GROUP_DEFENSE then
+		if info.m_state == ARMY_STATE_MARCH then
+			SetText( uiState, T(975) )
+			SetTrue( uiGpsBtn )
+		elseif info.m_state == ARMY_STATE_REBACK then
+			SetText( uiState, T(978) )
+			SetTrue( uiQuickBtn )
+		end
+	elseif info.m_action == ARMY_ACTION_NATION_ATTACK or info.m_action == ARMY_ACTION_NATION_DEFENSE then
+		if info.m_state == ARMY_STATE_MARCH then
+			SetText( uiState, T(969) )
+			SetTrue( uiGpsBtn )
+		elseif info.m_state == ARMY_STATE_REBACK then
+			SetText( uiState, T(978) )
+			SetTrue( uiQuickBtn )
+		end
+	end
+		
 	-- 状态时间
 	if info.m_state >= ARMY_STATE_KINGWAR_READY and info.m_state <= ARMY_STATE_KINGWAR_DEAD then
 		SetFalse( uiTimer )

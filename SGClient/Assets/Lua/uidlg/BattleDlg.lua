@@ -15,6 +15,7 @@ local m_uiRightContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
+local m_type = 0;
 local m_battleType = 0;
 local m_storyid = 0;
 local m_bossid = 0;
@@ -22,6 +23,7 @@ local m_HeroList = {};
 
 -- 打开界面
 function BattleDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_battle_back" );
 	m_Dlg = eye.uiManager:Open( "BattleDlg" );
 end
 
@@ -38,6 +40,7 @@ end
 function BattleDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_battle_back" );
 end
 
 ----------------------------------------
@@ -123,6 +126,7 @@ end
 -- 副本使用
 function BattleDlgShowByStory( storyid )
 	BattleDlgOpen()
+	m_type = 0
 	m_battleType = 0;
 	m_storyid = storyid;
 	SetTrue( m_uiTitleText )
@@ -146,6 +150,7 @@ end
 -- 世界boss使用
 function BattleDlgShowByWorldBoss( bossid )
 	BattleDlgOpen()
+	m_type = 0
 	m_battleType = 1;
 	m_bossid = bossid;
 	SetTrue( m_uiTitleText )
@@ -180,7 +185,7 @@ function BattleDlgStoryRecv( recvValue )
 	
 	for i=1, recvValue.m_count, 1 do
 		local unit = recvValue.m_list[i]
-		BattleDlgUnit( i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, nil )
+		BattleDlgUnit( m_uiRightContent, i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, nil )
 	end
 end
 
@@ -256,9 +261,9 @@ function BattleDlgHeroUp( index )
 end
 
 -- 设置一个unit信息
-function BattleDlgUnit( index, unittype, kind, name, shape, color, corps, level, hp )
+function BattleDlgUnit( root, index, unittype, kind, name, shape, color, corps, level, hp )
 	local uiObj = m_ObjectPool:Get( "UIP_Unit" );
-	uiObj.transform:SetParent( m_uiRightContent.transform );
+	uiObj.transform:SetParent( root.transform );
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiColor = objs[1];

@@ -65,7 +65,8 @@ typedef struct _fight
 	char	type;							// 战斗类型
 	char	result;							// 战斗结果
 	int		turns;							// 当前回合
-	int		randspeed;						// 随机种子
+	int		randspeed;						// 当前随机种子
+	int		randspeed_init;					// 初始随机种子
 
 	int		attack_armyindex;				// 攻击方部队索引，攻击方只能是部队
 	char	attack_type;
@@ -92,7 +93,7 @@ typedef struct _fight
 
 	int town_total_maxhp;	// 如果防御方要是据点，据点的总兵力
 
-	char unit_json[8192];	// 单元json字符串
+	char unit_json[FIGHT_JSON_MAX];	// 单元json字符串
 }Fight;
 
 // 向战场里添加一个英雄

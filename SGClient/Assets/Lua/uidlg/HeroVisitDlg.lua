@@ -9,7 +9,18 @@ local m_uiCloseTime = nil; --UnityEngine.GameObject
 local m_uiGodOpenTime = nil; --UnityEngine.GameObject
 local m_uiGrayText = nil; --UnityEngine.GameObject
 local m_uiHandle = nil; --UnityEngine.GameObject
+local m_uiInfoLayer = nil; --UnityEngine.GameObject
+local m_uiAwardLayer  = nil; --UnityEngine.GameObject
+local m_uiUpToken = nil; --UnityEngine.GameObject
+local m_uiLeftToken = nil; --UnityEngine.GameObject
+local m_uiRightToken = nil; --UnityEngine.GameObject
+local m_uiHeroLayout = nil; --UnityEngine.GameObject
+local m_uiOnceText = nil; --UnityEngine.GameObject
+local m_uiTenthText = nil; --UnityEngine.GameObject
 local m_cacheAward = nil;
+local m_tokenObjectArray = {};
+local m_heroObjectArray = {};
+local m_controlID = 0 ;
 -- 打开界面
 function HeroVisitDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_gray" );
@@ -44,8 +55,21 @@ end
 function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-            HeroVisitDlgClose();
-        end
+            HeroVisitDlgClose();	
+		elseif nControlID == 1 then --聚贤馆
+			
+		elseif nControlID == 2 then --良将寻访
+			HeroVisitDlgOpenAward(nControlID);
+		elseif nControlID == 3 then
+			HeroVisitDlgOpenAward(nControlID);
+		elseif nControlID >= 20000 then
+			if m_controlID	==2 then
+				HeroConfigDlgShow( g_heroinfo[nControlID-20000][3]);
+			else
+				HeroConfigDlgShow( g_heroinfo[nControlID-20000][2]);
+			end
+			
+        end		
 	elseif nType == UI_EVENT_TIMECOUNTEND  then
 		if nControlID == 1 then
 			print("Timer()");
@@ -66,7 +90,15 @@ function HeroVisitDlgOnAwake( gameObject )
 	m_uiGodOpenTime = objs[5];
 	m_uiGrayText = objs[6];
 	m_uiHandle = objs[7];
-
+	m_uiInfoLayer = objs[8];
+	m_uiAwardLayer  = objs[9];
+	m_uiUpToken = objs[10];
+	m_uiLeftToken = objs[11];
+	m_uiRightToken = objs[12];
+	m_uiHeroLayout = objs[13];
+	m_uiOnceText = objs[14];
+	m_uiTenthText = objs[15];
+	HeroVisitDlgGetObject();
 end
 
 -- 界面初始化时调用
@@ -76,7 +108,12 @@ end
 
 -- 界面显示时调用
 function HeroVisitDlgOnEnable( gameObject )
-	
+	if IsActive(m_uiInfoLayer) then
+		return;
+	else
+		SetTrue(m_uiInfoLayer);
+		SetFalse(m_uiAwardLayer);
+	end	
 end
 
 -- 界面隐藏时调用
@@ -137,7 +174,7 @@ global.hero_visit_progress_normal = 2 --寻访获取进度
 --]]
 	recvValue.m_hv_free_cd = 0;
 	recvValue.m_hv_high_free = 3000;
-	recvValue.m_hv_progress = 50;
+	recvValue.m_hv_progress = 100;
 	
 	if	recvValue.m_hv_free_cd == 0 then
 		SetTrue(m_uiDot);
@@ -224,4 +261,151 @@ end
 function HeroVisitDlgSetGod()
 	
 end
+--关闭聚贤馆 打开寻访界面 并填充每个模块
+function HeroVisitDlgOpenAward( controlid )	
+	if controlid == 2 then
+		if m_controlID == 2 then
+			SetTrue(m_uiAwardLayer);
+			SetFalse(m_uiInfoLayer);
+			return;
+		end	
+		m_controlID = 2;
+		local goodHeroList = {};
+		for key, value in pairs(g_hero_visit) do      
+			if global.hero_visit_low_normal_award == value.awardgroup then
+				table.insert(goodHeroList,value);
+			end
+		end	
+		local tokenCount = 1;
+		local heroCount = 1;
+		for key,value in pairs(goodHeroList) do	
+			if value.kind >= 20000 then
+				HeroVisitDlgSetCell(m_heroObjectArray[heroCount],value);
+				heroCount=heroCount+1;
+			else
+				HeroVisitDlgSetCell(m_tokenObjectArray[tokenCount],value);
+				tokenCount=tokenCount+1;
+			end
+		end	
+		SetText(m_uiOnceText,global.hero_visit_low_token)	
+		SetText(m_uiTenthText,global.hero_visit_low_token10)		
+	elseif controlid == 3 then
+		if m_controlID == 3 then
+			SetTrue(m_uiAwardLayer);
+			SetFalse(m_uiInfoLayer);
+			return;
+		end	
+		m_controlID = 3;
+		local goodHeroList = {};
+		for key, value in pairs(g_hero_visit) do      
+			if global.hero_visit_high_normal_award == value.awardgroup then
+				table.insert(goodHeroList,value);
+			end
+		end	
+		local tokenCount = 1;
+		local heroCount = 1;
+		for key,value in pairs(goodHeroList) do	
+			if value.kind >= 20000 then
+				HeroVisitDlgSetCell(m_heroObjectArray[heroCount],value);
+				heroCount=heroCount+1;
+			else
+				HeroVisitDlgSetCell(m_tokenObjectArray[tokenCount],value);
+				tokenCount=tokenCount+1;
+			end
+		end	
+		SetText(m_uiOnceText,global.hero_visit_high_token)
+		SetText(m_uiTenthText,global.hero_visit_high_token10)		
+	end	
+	SetTrue(m_uiAwardLayer);
+	SetFalse(m_uiInfoLayer);				
+end
+
+--获得道具和英雄的GameObject
+function HeroVisitDlgGetObject()
+
+	for i = 0,m_uiLeftToken.transform.childCount-1  do
+		table.insert(m_tokenObjectArray,m_uiLeftToken.transform:GetChild(i));
+	end
+	for i = 0,m_uiRightToken.transform.childCount-1  do
+		
+		table.insert(m_tokenObjectArray,m_uiRightToken.transform:GetChild(i));
+	end	
+	for i = 0,m_uiUpToken.transform.childCount-1  do
+		table.insert(m_tokenObjectArray,m_uiUpToken.transform:GetChild(i));
+	end	
+	for i = 0,m_uiHeroLayout.transform.childCount-1  do
+		table.insert(m_heroObjectArray,m_uiHeroLayout.transform:GetChild(i));
+	end	
+end
+	--[[
+	local goodHeroList = {};
+	for key, value in pairs(g_hero_visit) do      
+		if global.hero_visit_low_normal_award == value.awardgroup then
+			table.insert(goodHeroList,value);
+		end
+	end
+	local tokenCount = 1;
+	local heroCount = 1;
+	for key,value in pairs(goodHeroList) do	
+		--local sprite, color, name = AwardInfo(value.kind  ) ;	
+		if value.kind >= 20000 then
+			HeroVisitDlgSetCell(m_heroObjectArray[heroCount],value);
+			heroCount=heroCount+1;
+		else
+			HeroVisitDlgSetCell(m_tokenObjectArray[tokenCount],value);
+			tokenCount=tokenCount+1;
+		
+			SetImage(m_tokenObjectArray[tokenCount].transform:Find("Shape"),sprite);
+			SetImage( m_tokenObjectArray[tokenCount].transform:Find("Color"), ItemColorSprite(value.color) );
+			SetText(m_tokenObjectArray[tokenCount].transform:Find("Num"),"x"..value.num,NameColor(value.color));
+			tokenCount=tokenCount+1;
+		
+		end
+	end
+	--]]
+
+--设置单个对象
+function HeroVisitDlgSetCell(uiHeroObj,value)
+	local sprite, color, name = AwardInfo(value.kind  ) ;
+	local colorSprite = ItemColorSprite(value.color);	
+	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	if value.kind >= 20000 then
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiCorps = objs[2];
+		local uiName = objs[3];
+		local uiSelect = objs[4];
+		local uiAlreadlyHave = objs[5]
+		SetImage(uiShape,sprite);
+		SetImage(uiColor,colorSprite);
+		SetImage(uiCorps,CorpsSprite(g_heroinfo[(value.kind-20000)][value.color].corps));
+		SetText(uiName,name);
+		uiHeroObj:GetComponent("UIButton").controlID = value.kind;
+		local haveHero = GetHero():GetPtr(value.kind-20000);
+		if haveHero ~= nil  then
+			SetTrue(uiAlreadlyHave);
+		else
+			SetFalse(uiAlreadlyHave);
+		end
+	else
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiName = objs[2];
+		SetImage(uiShape,sprite);
+		SetImage(uiColor,colorSprite);
+		SetText(uiName,"x"..value.num,NameColor(value.color));
+	end
+end
+--点击英雄头像
+function HeroVisitDlgSelect( colickid )
+	
+	
+end
+
+
+
+
+
+
+
 

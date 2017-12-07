@@ -78,7 +78,8 @@ function HeroListDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroListDlgClose()
 			HeroVisitDlgShow()
 		elseif nControlID >= 10000 then
-			HeroListDlgSelect(nControlID-10000);
+			print("ccccccccccc");
+		 	HeroListDlgSelect(nControlID-10000);
 			HeroListDlgSelectCloseToggle();
         end
 	elseif nType == UI_EVENT_TOGGLEVALUECHANGE then
@@ -555,6 +556,7 @@ end
 
 -- 选择
 function HeroListDlgSelect( offset )
+	print("ccccccccc");
 	local up = true;
 	local pHero = nil;
 	if offset < 10000 then

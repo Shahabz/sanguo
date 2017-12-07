@@ -42,7 +42,7 @@ extern MapUnit *g_mapunit;
 extern int g_mapunit_maxcount;
 
 char g_szFightSql[65535] = { 0 };
-char g_szFightJson[8192 * 2] = { 0 };
+char g_szFightJson[FIGHT_JSON_MAX] = { 0 };
 
 SLK_NetS_MailView g_MailSearchCache[MAIL_SEARCHCACHE_MAX];
 MailFightSearchCache g_MailFightSearchCache[MAIL_SEARCHCACHE_MAX];

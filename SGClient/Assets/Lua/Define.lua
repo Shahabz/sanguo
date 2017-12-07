@@ -344,6 +344,12 @@ function EquipName( kind )
 	return Localization.text_item(kind+2000);
 end
 
+-- 获取国器名称
+function NationEquipName( kind )
+	return Localization.text_item(kind+2200);
+end
+
+
 -- 获取科技名称
 function TechName( kind )
 	return Localization.text_item(kind+4000);

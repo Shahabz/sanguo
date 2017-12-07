@@ -188,6 +188,7 @@ function SettingDlgOptionShow()
 	SettingDlgOptionClear()
 	SettingDlgTitleClear()
 	SetTrue( m_uiOption )
+		
 	for k,v in pairs(m_SettingItems) do
 		-- 创建标题
 		if v.type == 1 then
@@ -196,7 +197,6 @@ function SettingDlgOptionShow()
 			SetText( uiObj.transform:Find("TitleText"), T(v.textid) )
 			uiObj.transform:SetSiblingIndex(v.sort);
 			v.uiObj = uiObj;
-			--print(v.sort)
 		-- 创建内容	
 		elseif v.type == 2 then
 			local uiObj = m_ObjectPool:Get( "UIP_Setting_Option" );
@@ -207,14 +207,17 @@ function SettingDlgOptionShow()
 				SetText( uiObj.transform:Find("OptionText"), T(v.textid), Hex2Color(0x547688FF) )
 				SetTrue( uiObj.transform:Find("OptionCheck2") )
 				SetTrue( uiObj.transform:Find("OptionBack2") )
+				SetFalse( uiObj.transform:Find("OptionCheck1") )
+				SetFalse( uiObj.transform:Find("OptionBack1") )
 			else
 				SetText( uiObj.transform:Find("OptionText"), T(v.textid) )
 				SetTrue( uiObj.transform:Find("OptionCheck1") )
 				SetTrue( uiObj.transform:Find("OptionBack1") )
+				SetFalse( uiObj.transform:Find("OptionCheck2") )
+				SetFalse( uiObj.transform:Find("OptionBack2") )
 			end
 			uiObj.transform:SetSiblingIndex(v.sort);
 			v.uiObj = uiObj
-			--print(v.sort)
 		end
 		
 	end

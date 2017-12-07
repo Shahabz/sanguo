@@ -15,7 +15,7 @@ local m_uiButtonNext = nil; --UnityEngine.GameObject
 --各个界面帮助ID
 
 HELP_StoryDlg = 1501--副本
---HELP_NationEquipDlg = 1502--国器
+HELP_NationEquipDlg = 1502--国器
 HELP_QuestDlg = 1503--任务
 --HELP_VipDlg = 1506--VIP
 HELP_LevyDlg = 1520--官府

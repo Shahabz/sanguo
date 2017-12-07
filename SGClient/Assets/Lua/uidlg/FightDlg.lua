@@ -14,10 +14,20 @@ local m_uiSkipBtn = nil; --UnityEngine.GameObject
 local m_uiLeftPk = nil; --UnityEngine.GameObject
 local m_uiRightPk = nil; --UnityEngine.GameObject
 local m_uiPkIcon = nil; --UnityEngine.GameObject
+local m_uiTop = nil; --UnityEngine.GameObject
+local m_uiBottom = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
+local m_assetBundleName = ""
+
+local m_uiLeftHeroCache = {} -- 左面武将信息缓存
+local m_uiRightHeroCache = {}-- 右面武将信息缓存
+local m_playing = 0;
+
+
 -- 打开界面
 function FightDlgOpen()
+	ResourceManager.LoadAssetBundle( m_assetBundleName );
 	m_Dlg = eye.uiManager:Open( "FightDlg" );
 end
 
@@ -26,7 +36,7 @@ function FightDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	m_playing = 0;
 	eye.uiManager:Close( "FightDlg" );
 end
 
@@ -34,6 +44,9 @@ end
 function FightDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	Invoke( function() 
+			ResourceManager.UnloadAssetBundleImmediately( m_assetBundleName )
+		end, 0.3 );
 end
 
 ----------------------------------------
@@ -45,6 +58,9 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             FightDlgClose();
+		
+		elseif nControlID == 1 then
+			FightDlgClose();
         end
 	end
 end
@@ -67,6 +83,8 @@ function FightDlgOnAwake( gameObject )
 	m_uiLeftPk = objs[11];
 	m_uiRightPk = objs[12];
 	m_uiPkIcon = objs[13];
+	m_uiTop = objs[14];
+	m_uiBottom = objs[15];
 end
 
 -- 界面初始化时调用
@@ -99,71 +117,294 @@ end
 -- 自定
 ----------------------------------------
 function FightDlgShow( recvValue )
+	m_assetBundleName = "_ab_ui_static_fight_back_1"
 	FightDlgOpen()
+	SetFalse( m_uiTop )
+	SetFalse( m_uiBottom )
+	m_playing = 0;
 	m_recvValue = recvValue;
 	local info = json.decode( m_recvValue.m_fight_content );
-		
---[[	-- 我是攻击方，攻击方显示左面
-	local my = m_recvValue.m_content_json["my"];
-	if my == nil or my == 1 then	
+	
+	-- 显示战前信息
+	FightInfoDlgShow( info );
+	
+	-- 战斗类型	
+	local fighttype = info["ft"]
+	if fighttype == nil then
+		SetText( m_uiTypeName, "" )
+	else
+		SetText( m_uiTypeName, T(2000+fighttype-1) )
+	end
+	
+	-- 战场初始化
+	fight_init( info["randspeed"] );
+	
+	-- 我是攻击方，攻击方显示左面
+	local my = info["my"];
+	if my == nil or my == 1 then
 		-- 攻击方
-		SetText( m_uiMailFight.transform:Find("AttackBack/Text"), T(1174) );
+		SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		if info["a_nation"] > 0 then
+			SetTrue( m_uiLeftNation )
+			SetImage( m_uiLeftNation, NationSprite( info["a_nation"] ) );
+		else
+			SetFalse( m_uiLeftNation )
+		end
 		-- 防御方
-		SetText( m_uiMailFight.transform:Find("DefenseBack/Text"), T(1175) );
+		SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		if info["d_nation"] > 0 then
+			SetTrue( m_uiRightNation )
+			SetImage( m_uiRightNation, NationSprite( info["d_nation"] ) );
+		else
+			SetFalse( m_uiRightNation )
+		end
+
+		-- 攻击方对象
+		for i=1, #info["a_unit"], 1 do
+			local v =  info["a_unit"][i]
+			fight_add_unit( FIGHT_ATTACK, v.i, v.t, v.kd, v.sp, v.lv, v.cr, v.cs, v.a1, v.a2, v.mhp, v.a3, v.a4, v.a5, v.a6, v.a7, v.a8, v.a9 )
+		end
 		
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("AttackMain"), info["a_type"], info["a_name"], info["a_shape"], info["a_nation"], info["a_maxhp"], info["a_hp"] );
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("DefenseMain"), info["d_type"], info["d_name"], info["d_shape"], info["d_nation"], info["d_maxhp"], info["d_hp"] );
+		-- 防御方对象
+		for i=1, #info["d_unit"], 1 do
+			local v =  info["d_unit"][i]
+			fight_add_unit( FIGHT_DEFENSE, v.i, v.t, v.kd, v.sp, v.lv, v.cr, v.cs, v.a1, v.a2, v.mhp, v.a3, v.a4, v.a5, v.a6, v.a7, v.a8, v.a9 )
+		end
 	
 	-- 我是防御方，防御方显示左面
 	else
-		-- 防御方
-		SetText( m_uiMailFight.transform:Find("AttackBack/Text"), T(1175) );
 		-- 攻击方
-		SetText( m_uiMailFight.transform:Find("DefenseBack/Text"), T(1174) );
-		
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("DefenseMain"), info["a_type"], info["a_name"], info["a_shape"], info["a_nation"], info["a_maxhp"], info["a_hp"] );
-		MailInfoDlgSetFightMainUnit( m_uiMailFight.transform:Find("AttackMain"), info["d_type"], info["d_name"], info["d_shape"], info["d_nation"], info["d_maxhp"], info["d_hp"] );
-	end
-		
-		
-		-- 战斗单元取一个最多的
-		local unitcount = #info["a_unit"];
-		if #info["d_unit"] > unitcount then
-			unitcount = #info["d_unit"];
+		SetText( m_uiLeftName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		if info["d_nation"] > 0 then
+			SetTrue( m_uiLeftNation )
+			SetImage( m_uiLeftNation, NationSprite( info["d_nation"] ) );
+		else
+			SetFalse( m_uiLeftNation )
 		end
-		-- 创建战斗单元
-		for i=1, unitcount, 1 do
-			local unit = nil;
-			local uiObj = m_ObjectPool:Get( "UIP_UnitRow" );
-			uiObj.transform:SetParent( m_uiMailFight.transform );
-
-			local uiAttack = uiObj.transform:Find("Attack");
-			-- 我是攻击方，攻击方显示左面
-			if my == nil or my == 1 then
-				unit = info["a_unit"][i];
-			else
-				unit = info["d_unit"][i];
-			end
-			if unit ~= nil then
-				SetTrue( uiAttack )
-				MailInfoDlgSetFightUnit( uiAttack, unit["t"], unit["n"], unit["na"], unit["kd"], unit["sp"], unit["lv"], unit["cr"], unit["cs"], unit["mhp"], unit["hp"], unit["dmg"], unit["vw"] )
-			else
-				SetFalse( uiAttack )
-			end
-			
-			local uiDefense = uiObj.transform:Find("Defense");
-			-- 我是防御方，防御方显示左面
-			if my == nil or my == 1 then
-				unit = info["d_unit"][i];
-			else
-				unit = info["a_unit"][i];
-			end
-			if unit ~= nil then
-				SetTrue( uiDefense )
-				MailInfoDlgSetFightUnit( uiDefense, unit["t"], unit["n"], unit["na"], unit["kd"], unit["sp"], unit["lv"], unit["cr"], unit["cs"], unit["mhp"], unit["hp"], unit["dmg"], unit["vw"] )
-			else
-				SetFalse( uiDefense )
-			end	
-		end--]]
+		-- 防御方
+		SetText( m_uiRightName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		if info["a_nation"] > 0 then
+			SetTrue( m_uiRightNation )
+			SetImage( m_uiRightNation, NationSprite( info["a_nation"] ) );
+		else
+			SetFalse( m_uiRightNation )
+		end
 		
+		
+		-- 攻击方对象
+		for i=1, #info["d_unit"], 1 do
+			local v =  info["d_unit"][i]
+			fight_add_unit( FIGHT_ATTACK, v.i, v.t, v.kd, v.sp, v.lv, v.cr, v.cs, v.a1, v.a2, v.mhp, v.a3, v.a4, v.a5, v.a6, v.a7, v.a8, v.a9 )
+		end
+		
+		-- 防御方对象
+		for i=1, #info["a_unit"], 1 do
+			local v =  info["a_unit"][i]
+			fight_add_unit( FIGHT_DEFENSE, v.i, v.t, v.kd, v.sp, v.lv, v.cr, v.cs, v.a1, v.a2, v.mhp, v.a3, v.a4, v.a5, v.a6, v.a7, v.a8, v.a9 )
+		end
+	end
+	FightDlgUnitUpdate()
 end
+
+-- 更新英雄阵列显示
+function FightDlgUnitUpdate()
+	for i=0, 3, 1 do
+		local uiLeftObj = m_uiLeftHeroList.transform:GetChild(i)
+		SetFalse( uiLeftObj.transform:GetChild(1) )
+		SetFalse( uiLeftObj.transform:GetChild(2) )
+		SetFalse( uiLeftObj.transform:GetChild(3) )
+		SetFalse( uiLeftObj.transform:GetChild(4) )
+		
+		local uiRightObj = m_uiRightHeroList.transform:GetChild(i)
+		SetFalse( uiRightObj.transform:GetChild(1) )
+		SetFalse( uiRightObj.transform:GetChild(2) )
+		SetFalse( uiRightObj.transform:GetChild(3) )
+		SetFalse( uiRightObj.transform:GetChild(4) )
+	end
+	
+	local LeftNum = g_fight.attack_unit_num
+	if LeftNum > 4 then
+		LeftNum = 4
+	end
+	for i=1, LeftNum, 1 do
+		local unit = g_fight.attack_unit[i-1]
+		FightDlgUnit( m_uiLeftHeroList.transform:GetChild(i-1), i, unit.type, unit.kind, unit.shape, unit.color, unit.corps, unit.level, unit.maxhp, unit.hp )
+	end
+	
+	local RightNum = g_fight.defense_unit_num
+	if RightNum > 4 then
+		RightNum = 4
+	end
+	for i=1, RightNum, 1 do
+		local unit = g_fight.defense_unit[i-1]
+		FightDlgUnit( m_uiRightHeroList.transform:GetChild(i-1), i, unit.type, unit.kind, unit.shape, unit.color, unit.corps, unit.level, unit.maxhp, unit.hp )
+	end
+	
+	-- 对战信息
+	FightDlgUnitVsUpdateName()
+	FightDlgUnitVsUpdateHp()
+	FightDlgUnitVsUpdateLayer()
+end
+
+-- 设置一个unit信息
+function FightDlgUnit( uiObj, index, unittype, kind, shape, color, corps, level, maxhp, hp )
+	SetTrue( uiObj.transform:GetChild(1) )
+	SetTrue( uiObj.transform:GetChild(2) )
+	SetTrue( uiObj.transform:GetChild(3) )
+	
+	SetImage( uiObj.transform:GetChild(1), FightDlgUnitShape( unittype, kind, shape ) );
+	SetImage( uiObj.transform:GetChild(2), ItemColorSprite( color ) );
+	SetImage( uiObj.transform:GetChild(3), CorpsSprite( corps ) );
+	
+	if index == 1 then
+		SetFalse( uiObj.transform:GetChild(4) )
+	else
+		SetTrue( uiObj.transform:GetChild(4) )
+		SetText( uiObj.transform:GetChild(4), FightDlgUnitName( unittype, kind ) );
+	end
+			
+end
+
+-- 设置战斗单元名称
+function FightDlgUnitName( unittype, kind )
+	-- 玩家 部队 资源点
+	if unittype == FIGHT_UNITTYPE_HERO then
+		return HeroName( kind );
+			
+	-- 城镇
+	elseif unittype == FIGHT_UNITTYPE_GUARD then
+		return T( 1119 )
+		
+	-- 流寇
+	elseif unittype == FIGHT_UNITTYPE_MONSTER then
+		return EnemyName( kind )
+	end
+	return ""
+end
+
+-- 设置战斗单元名称
+function FightDlgUnitShape( unittype, kind, shape )
+	-- 玩家 部队 资源点
+	if unittype == FIGHT_UNITTYPE_HERO then
+		return HeroHeadSprite( kind )
+			
+	-- 城镇
+	elseif unittype == FIGHT_UNITTYPE_GUARD then
+		return GuardSprite( shape )
+		
+	-- 流寇
+	elseif unittype == FIGHT_UNITTYPE_MONSTER then
+		return EnemyHeadSprite( shape )
+	end
+	return ""
+end
+
+-- 对战者名称
+function FightDlgUnitVsUpdateName()
+	local unit = fight_nextptr( FIGHT_ATTACK )
+	if unit ~= nil then
+		SetText( m_uiLeftHp.transform:Find("Name"), FightDlgUnitName( unit.type, unit.kind ) )
+	end
+	
+	unit = fight_nextptr( FIGHT_DEFENSE )
+	if unit ~= nil then
+		SetText( m_uiRightHp.transform:Find("Name"), FightDlgUnitName( unit.type, unit.kind ) )
+	end
+end
+
+-- 对战者血量
+function FightDlgUnitVsUpdateHp()
+	local unit = fight_nextptr( FIGHT_ATTACK )
+	if unit ~= nil then
+		SetText( m_uiLeftHp.transform:Find("Text"), unit.hp )
+		SetProgress( m_uiLeftHp.transform:Find("Progress"), unit.hp/unit.maxhp )
+	end
+	
+	unit = fight_nextptr( FIGHT_DEFENSE )
+	if unit ~= nil then
+		SetText( m_uiRightHp.transform:Find("Text"), unit.hp )
+		SetProgress( m_uiRightHp.transform:Find("Progress"), unit.hp/unit.maxhp )
+	end
+end
+
+-- 创建对战页信息
+function FightDlgUnitVsUpdateLayer()
+	local unit = fight_nextptr( FIGHT_ATTACK )
+	if unit ~= nil then
+		SetImage( m_uiLeftPk.transform:Find("UIP_Hero/Shape"), FightDlgUnitShape( unit.type, unit.kind, unit.shape ) )
+		SetImage( m_uiLeftPk.transform:Find("UIP_Hero/Color"), ItemColorSprite( unit.color ) )
+		SetImage( m_uiLeftPk.transform:Find("UIP_Hero/Corps"), CorpsSprite( unit.corps ) )
+		SetText( m_uiLeftPk.transform:Find("Name"), FightDlgUnitName( unit.type, unit.kind ) )
+		SetText( m_uiLeftPk.transform:Find("Hp/Text"), unit.hp )
+	end
+	
+	unit = fight_nextptr( FIGHT_DEFENSE )
+	if unit ~= nil then
+		SetImage( m_uiRightPk.transform:Find("UIP_Hero/Shape"), FightDlgUnitShape( unit.type, unit.kind, unit.shape ) )
+		SetImage( m_uiRightPk.transform:Find("UIP_Hero/Color"), ItemColorSprite( unit.color ) )
+		SetImage( m_uiRightPk.transform:Find("UIP_Hero/Corps"), CorpsSprite( unit.corps ) )
+		SetText( m_uiRightPk.transform:Find("Name"), FightDlgUnitName( unit.type, unit.kind ) )
+		SetText( m_uiRightPk.transform:Find("Hp/Text"), unit.hp )
+	end
+end
+
+-- 双方当前对战武将详情
+function FightDlgUnitVsLayerShow()
+	local leftTween = m_uiLeftPk.transform:GetComponent( "UITweenRectPosition" )
+	leftTween:Play( true )
+	
+	local rightTween = m_uiRightPk.transform:GetComponent( "UITweenRectPosition" )
+	rightTween:Play( true )
+	
+	Invoke( function() 
+		SetTrue( m_uiPkIcon )
+	end, 0.5 );
+		
+	Invoke( function() 
+		SetFalse( m_uiPkIcon )
+		leftTween:Play( false )
+		rightTween:Play( false )
+	end, 2.5 );
+end
+
+-- 启动战斗
+function FightDlgStart()
+	if m_playing == 1 then
+		return
+	end
+	SetTrue( m_uiTop )
+	SetTrue ( m_uiBottom )
+	m_playing = 1;
+	
+	FightDlgUnitVsLayerShow()
+	
+end
+
+
+-- 战斗逻辑每一秒一次
+function FightDlgLogic()
+	if m_playing == 0 then
+		return
+	end
+	local result = fight_oneturn()
+	if result > 0 then
+		if  result == FIGHT_WIN then
+			fight_debug( "[ATK WIN]" );
+		elseif result == FIGHT_LOSE then
+			fight_debug( "[DEF WIN]" );
+		end
+		m_playing = 0
+	end
+end
+
+
+--[[//int		attack;				// 攻击
+//int		defense;			// 防御
+//int		troops;				// 血上限
+//short	attack_increase;	// 攻击增强
+//short	defense_increase;	// 防御增强
+//short	assault;			// 攻城
+//short	defend;				// 守城
+//char	line;				// 带兵排数
+//char	skillid;			// 武将技
+--]]
