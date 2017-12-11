@@ -54,6 +54,11 @@ public class GizmoPlane : MonoBehaviour
 		_MeshRender.material.color = color;
 	}
 
+	public void SetMaterial( Material material )
+	{
+		_MeshRender.material = material;
+	}
+
     //void OnDestroy()
     //{
     //    DestroyImmediate( _MeshRender.material );

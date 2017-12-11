@@ -86,6 +86,7 @@ local m_updateWaitFrame = 0;
 local WorldMapPrefab	= nil;	-- 地图根
 local MapTmxRoot		= nil;	-- tmx地图根节点
 MapUnitRoot				= nil;	-- 所有显示对象的根节点
+MapArmyRoot				= nil;	-- 部队单独拿出
 local MapLineRoot		= nil;	-- 所有线根节点
 local MapClickEffect	= nil;	-- 点击特效
 local MapClickMod		= nil;	-- 操作界面
@@ -136,6 +137,7 @@ function WorldMap.Clear()
 	MapTile.clear();
 	MapMarchRoute.clear();
 	MapUnitRoot = nil;
+	MapArmyRoot = nil;
     MapCamera = nil;
 	WorldMap.SendAreaIndex( WorldMap.m_nLastAreaIndex, -1, -1 )
     
@@ -260,6 +262,7 @@ function WorldMap.Start( Prefab )
 	MapTmxRoot				= WorldMapPrefab.transform:Find( "MapTmxRoot" );
 	MapUnitRoot				= WorldMapPrefab.transform:Find( "MapUnitRoot" );
 	MapLineRoot				= WorldMapPrefab.transform:Find( "MapLineRoot" );
+	MapArmyRoot				= WorldMapPrefab.transform:Find( "MapArmyRoot" );
 	MapClickEffect			= WorldMapPrefab.transform:Find( "MapClickEffect" );
 	MapClickMod				= WorldMapPrefab.transform:Find( "MapClickMod" );
 	MapCamera				= WorldMapPrefab.transform:Find( "MapCamera" );

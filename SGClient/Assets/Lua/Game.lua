@@ -267,6 +267,7 @@ function GameManager.ChangeScence( scence )
 		
 		-- 主城bgm
 		eye.audioManager:Play(203);
+		GameManager.currentScence = scence
 		
 	elseif scence == "worldmap" then
 		if GameManager.WorldMap == nil then
@@ -288,8 +289,20 @@ function GameManager.ChangeScence( scence )
 		
 		-- 地图bgm
 		eye.audioManager:Play(202);
-	end
+		GameManager.currentScence = scence
+		
+	elseif scence == "fight" then
+		if GameManager.MainCity ~= nil then
+			GameManager.MainCity.gameObject:SetActive( false )
+		end
+		if GameManager.WorldMap ~= nil then
+			GameManager.WorldMap.gameObject:SetActive( false )
+		end
+		-- 战斗bgm
+		eye.audioManager:Play(202);
 	
-	GameManager.currentScence = scence
+	elseif scence == "current" then
+		GameManager.ChangeScence( GameManager.currentScence )
+	end
 end
 

@@ -660,7 +660,10 @@ function City.GuardCallMod( unitObj, show )
 		end
 		if GetPlayer().m_guardnum >= level then
 			show = false -- 满了
-		end		
+		end
+		if GetPlayer().m_guardsec > 0 then
+			show = false -- 冷却
+		end
 	end
 	if unitObj == nil then
 		unitObj = City.m_Buildings[BUILDING_Wall];

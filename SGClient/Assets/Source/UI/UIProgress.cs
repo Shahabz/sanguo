@@ -28,10 +28,25 @@ public class UIProgress : MonoBehaviour
 	}
 
     Vector2                 _OriginValue = Vector2.zero;
-
 	public Image			progress;
 	public Image			fullProgress;
 	public ProgressMode		mode = ProgressMode.Scale;
+	private	float 			_timeCounter = 0;
+	private float 			_lastvalue = 0.0f;
+	private float 			_beginvalue = 0.0f;
+	private float 			_endvalue = 0.0f;
+	private short			_playcount = 1;
+	private float 			_speed = 1.0f;
+	private bool			_playing = false;
+
+	public delegate void LuaCallback( object param );
+	public LuaCallback callback = null;
+
+	// Use this for initialization
+	void Start () 
+	{
+
+	}
 
     public void SetValue( float value )
 	{
@@ -61,6 +76,7 @@ public class UIProgress : MonoBehaviour
 				progress.gameObject.SetActive (true);
 			}
 		}
+		_lastvalue = value;
 
 		switch( mode )
 		{
@@ -86,6 +102,70 @@ public class UIProgress : MonoBehaviour
 			if ( fullProgress != null )
 				fullProgress.rectTransform.sizeDelta = new Vector2( _OriginValue.x, _OriginValue.y * value );
             break;
+		}
+	}
+
+	/// <summary>
+	/// 播放进度过程
+	/// beginvalue 开始值
+	/// endvalue 结束值
+	/// speed 速度
+	/// count 经过几个完整进度
+	/// </summary>
+	public void Play( float beginvalue, float endvalue, float speed, short playcount = 1 )
+	{
+		SetValue (beginvalue);
+		_beginvalue = beginvalue;
+		_endvalue = endvalue;
+		_speed = speed;
+		_playcount = playcount;
+		_playing = true;
+	}
+
+	public void Stop()
+	{
+		_beginvalue = 0;
+		_endvalue = 0;
+		_speed = 0;
+		_playcount = 0;
+		_playing = false;
+		callback = null;
+	}
+
+	/// <summary>
+	/// 结束经验条播放动画
+	/// </summary>
+	public void OverPlay()
+	{
+		SetValue( _endvalue );
+		if ( callback != null )
+			callback (null);
+	}
+
+	public void Update()
+	{
+		if (_playing) {
+			if (_playcount > 0) {
+				if (_playcount == 1) {
+					if (_lastvalue < _endvalue) {
+						SetValue (_lastvalue + Time.deltaTime*_speed);
+					} else {
+						_playcount--;
+					}
+				} else {
+					if (_lastvalue < 1) {
+						SetValue (_lastvalue + Time.deltaTime*_speed);
+					} else {
+						_playcount--;
+						SetValue (0);
+						if ( callback != null )
+							callback (null);
+					}
+				}
+			} else { 
+				_playing = false;
+					OverPlay (); 
+			}
 		}
 	}
 }

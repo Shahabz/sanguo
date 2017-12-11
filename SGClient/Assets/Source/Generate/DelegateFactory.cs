@@ -39,6 +39,7 @@ public static class DelegateFactory
 		dict.Add(typeof(UIInputFieldSubmit.OnValidateInput), UIInputFieldSubmit_OnValidateInput);
 		dict.Add(typeof(UnityEngine.RectTransform.ReapplyDrivenProperties), UnityEngine_RectTransform_ReapplyDrivenProperties);
 		dict.Add(typeof(UITween.OnFinish), UITween_OnFinish);
+		dict.Add(typeof(UIProgress.LuaCallback), UIProgress_LuaCallback);
 		dict.Add(typeof(YlyDelegateUtil.StringDelegate), YlyDelegateUtil_StringDelegate);
 		dict.Add(typeof(DragonBones.ListenerDelegate<DragonBones.EventObject>), DragonBones_ListenerDelegate_DragonBones_EventObject);
 		dict.Add(typeof(Character.OnEvent), Character_OnEvent);
@@ -1212,6 +1213,53 @@ public static class DelegateFactory
 		{
 			UITween_OnFinish_Event target = new UITween_OnFinish_Event(func, self);
 			UITween.OnFinish d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UIProgress_LuaCallback_Event : LuaDelegate
+	{
+		public UIProgress_LuaCallback_Event(LuaFunction func) : base(func) { }
+		public UIProgress_LuaCallback_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(object param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(object param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UIProgress_LuaCallback(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UIProgress.LuaCallback fn = delegate(object param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UIProgress_LuaCallback_Event target = new UIProgress_LuaCallback_Event(func);
+			UIProgress.LuaCallback d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UIProgress_LuaCallback_Event target = new UIProgress_LuaCallback_Event(func, self);
+			UIProgress.LuaCallback d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

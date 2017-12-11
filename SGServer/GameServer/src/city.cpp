@@ -634,6 +634,8 @@ void city_logic_sec( int begin, int end )
 		if ( g_city[city_index].guardsec > 0 )
 		{
 			g_city[city_index].guardsec -= 1;
+			if ( g_city[city_index].guardsec == 0 )
+				city_guard_sendsec( g_city[city_index].actor_index );
 		}
 		
 		// 装备打造

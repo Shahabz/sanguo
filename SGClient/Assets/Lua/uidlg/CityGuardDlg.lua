@@ -355,6 +355,9 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 end
 
 function CityGuardDlgChangeSec( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	-- 冷却时间
 	if recvValue.m_guardsec > 0 then
 		SetTrue( m_uiTimerText );

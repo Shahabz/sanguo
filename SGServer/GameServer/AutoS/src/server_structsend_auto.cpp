@@ -290,6 +290,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_guardnum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
 	return 0;
 }
 

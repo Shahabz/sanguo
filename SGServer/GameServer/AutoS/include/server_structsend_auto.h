@@ -182,6 +182,7 @@ struct _slk_NetS_ActorInfo {
 	short m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
 	char m_state;	//服务器发送玩家基本信息-城池状态
 	char m_guardnum;	//服务器发送玩家基本信息-守卫数量
+	short m_guardsec;	//服务器发送玩家基本信息-守卫数量
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

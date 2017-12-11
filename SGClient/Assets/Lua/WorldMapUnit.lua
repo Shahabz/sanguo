@@ -444,7 +444,7 @@ function MapUnit.createArmy( recvValue )
 	-- 没有空余的就新创建一个
 	if unitObj == nil then
 		unitObj = GameObject.Instantiate( MapUnitArmy );
-		unitObj.transform:SetParent( MapUnit.unitRoot );
+		unitObj.transform:SetParent( MapArmyRoot );
 		table.insert( MapUnit.objectPoolArmy, unitObj );
 	end
 	

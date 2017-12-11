@@ -19,16 +19,26 @@ MapMarchRoute.root = nil;
 -- 路线对象池
 MapMarchRoute.objectPool = {};
 
+MarchRouteMatGreen = nil
+MarchRouteMatRed = nil
+MarchRouteMatYellow = nil
+
 -- 初始化
 function MapMarchRoute.init( MapLineRoot )
 	MapMarchRoute.root = MapLineRoot;
 	MapMarchRoute.prefab = LoadPrefab( "MarchRoute" );
+	MarchRouteMatGreen =  ResourceManager.LoadMaterial( "MarchRouteMatGreen" );
+	MarchRouteMatRed =  ResourceManager.LoadMaterial( "MarchRouteMatRed" );
+	MarchRouteMatYellow =  ResourceManager.LoadMaterial( "MarchRouteMatYellow" );
 end
 
 -- 清空
 function MapMarchRoute.clear()
 	MapMarchRoute.cache = {};
 	MapMarchRoute.objectPool = {};
+	MarchRouteMatGreen = nil
+	MarchRouteMatRed = nil
+	MarchRouteMatYellow = nil
 end
 
 -- 添加行军路线
@@ -48,10 +58,10 @@ function MapMarchRoute.add( recvValue )
 	local tposx, tposy = MapUnit.getGridTrans( recvValue.m_to_type, recvValue.m_to_grid, cameraPosX, cameraPosY );
 
 	-- 计算线的颜色
-	-- 1．自己的行军路线：绿色虚线线条
-	-- 2．非我国的行军路线：红色虚线线条。
-	-- 3．同国的行军路线：黄色虚线线条。
---print("from_actorid:"..recvValue.m_from_actorid..",from_nation:"..recvValue.m_from_nation..",to_nation:"..recvValue.m_to_nation..",state:"..recvValue.m_state)
+	-- 1．自己的行军路线：绿色。MarchRouteMatGreen
+	-- 2．非我国的行军路线：红色。MarchRouteMatRed
+	-- 3．同国的行军路线：黄色。MarchRouteMatYellow
+	--print("from_actorid:"..recvValue.m_from_actorid..",from_nation:"..recvValue.m_from_nation..",to_nation:"..recvValue.m_to_nation..",state:"..recvValue.m_state)
 	local color = 0;
 	if recvValue.m_from_actorid == GetPlayer().m_actorid then
 		color = 1; -- 自己的
@@ -131,13 +141,13 @@ function MapMarchRoute.draw( obj, from, to, state, color, parent )
 	local offset = ( to - from ).x >= 0 and -1 or 1;
 	obj.transform.localEulerAngles = Vector3.New( 0, 0, Vector3.Angle( Vector3( 0, 1, 0 ), to - from ) * offset );
 	if color == 1 then
-		plane:SetColor( Color.green );
+		plane:SetMaterial( MarchRouteMatGreen );
     elseif color == 2 then
-        plane:SetColor( Color.red );
+        plane:SetMaterial( MarchRouteMatRed );
 	elseif color == 3 then
-        plane:SetColor( Color.yellow );
+        plane:SetMaterial( MarchRouteMatYellow );
 	else
-		plane:SetColor( Color.white );
+		plane:SetMaterial( MarchRouteMatYellow );
 	end
 	plane:Set();
 	return obj;

@@ -265,6 +265,9 @@ public static class LuaBinder
 		L.BeginModule("UITween");
 		L.RegFunction("OnFinish", UITween_OnFinish);
 		L.EndModule();
+		L.BeginModule("UIProgress");
+		L.RegFunction("LuaCallback", UIProgress_LuaCallback);
+		L.EndModule();
 		L.BeginModule("YlyDelegateUtil");
 		L.RegFunction("StringDelegate", YlyDelegateUtil_StringDelegate);
 		L.EndModule();
@@ -900,6 +903,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(UITween.OnFinish), func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int UIProgress_LuaCallback(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(UIProgress.LuaCallback), func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(UIProgress.LuaCallback), func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

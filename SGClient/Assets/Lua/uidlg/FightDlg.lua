@@ -49,6 +49,10 @@ function FightDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	for i=0, 3, 1 do
+		local uiObj = m_uiHeroList.transform:GetChild( i )
+		SetProgressStop( uiObj.transform:Find("Progress") )
+	end	
 	m_playing = 0;
 	eye.uiManager:Close( "FightDlg" );
 	FightScene.Delete()
@@ -652,7 +656,10 @@ function FightDlgResultLayerShow()
 			end
 			
 			-- 检查是否升级
+			local beginvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
+			local playcount = 1;
 			local isup = 0;
+			local level =  v.lv;
 			v.mexp = v.mexp + v.exp;
 			while v.mexp >= hero_getexp_max( v.lv, v.cr ) do
 				local curlevel = v.lv;
@@ -662,15 +669,21 @@ function FightDlgResultLayerShow()
 				end
 				v.lv = v.lv + 1;
 				v.mexp = v.mexp - hero_getexp_max( curlevel, v.cr );
-				isup = 1;
+				isup = isup + 1;
+				playcount = playcount + 1
 			end
+			local endvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
 			
-			-- 名称+等级
-			SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, v.lv ) )
-			
-			-- 进度条
+			-- 进度条SetProgressPlay( transform, beginvalue, endvalue, duration, playcount )
 			if v.mexp ~= nil then
-				SetProgress( uiObj.transform:Find("Progress"), v.mexp/hero_getexp_max( v.lv, v.cr ) )
+				SetProgressPlay( uiObj.transform:Find("Progress"), beginvalue, endvalue, 2, playcount, function() 
+					-- 名称+等级
+					level = level + 1
+					if level > v.lv then
+						level = v.lv
+					end
+					SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, level ) )
+				end )
 			else
 				SetProgress( uiObj.transform:Find("Progress"), 0 )
 			end

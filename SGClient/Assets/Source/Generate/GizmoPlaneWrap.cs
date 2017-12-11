@@ -9,6 +9,7 @@ public class GizmoPlaneWrap
 		L.BeginClass(typeof(GizmoPlane), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("Set", Set);
 		L.RegFunction("SetColor", SetColor);
+		L.RegFunction("SetMaterial", SetMaterial);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("vertices", get_vertices, set_vertices);
@@ -59,6 +60,23 @@ public class GizmoPlaneWrap
 			GizmoPlane obj = (GizmoPlane)ToLua.CheckObject(L, 1, typeof(GizmoPlane));
 			UnityEngine.Color arg0 = ToLua.ToColor(L, 2);
 			obj.SetColor(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetMaterial(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			GizmoPlane obj = (GizmoPlane)ToLua.CheckObject(L, 1, typeof(GizmoPlane));
+			UnityEngine.Material arg0 = (UnityEngine.Material)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Material));
+			obj.SetMaterial(arg0);
 			return 0;
 		}
 		catch(Exception e)

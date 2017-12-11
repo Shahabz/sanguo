@@ -36,9 +36,7 @@ function FightScene.Create()
 	if FightScene.m_mapMainDlgIsActive == true then
 		MapMainDlgClose()
 	end
-	
-	-- 战斗bgm
-	eye.audioManager:Play(202);
+	GameManager.ChangeScence( "fight" )
 end
 
 -- 销毁战场
@@ -53,6 +51,7 @@ function FightScene.Delete()
 	ResourceManager.UnloadAssetBundleImmediately( FightScene.m_mapABName )
 	ResourceManager.UnloadAssetBundleImmediately( "_ab_fight" )
 	ResourceManager.UnloadAssetBundleImmediately( "_ab_char_shape_fightunit"  );
+	GameManager.ChangeScence( "current" )
 	MainDlgOpen()
 	if FightScene.m_mapMainDlgIsActive == true then
 		MapMainDlgShow()

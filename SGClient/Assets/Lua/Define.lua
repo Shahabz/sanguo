@@ -525,6 +525,16 @@ function SetProgress( transform, value )
 	transform:GetComponent( typeof(UIProgress) ):SetValue(value);
 end
 
+function SetProgressPlay( transform, beginvalue, endvalue, duration, playcount, callback )
+	local transform = transform:GetComponent( typeof(UIProgress) )
+	transform:Play( beginvalue, endvalue, duration, playcount );
+	transform.callback = callback
+end
+function SetProgressStop( transform)
+	local transform = transform:GetComponent( typeof(UIProgress) )
+	transform:Stop();
+end
+
 function SetSlider( transform, value )
 	transform:GetComponent( typeof(UISlider) ).value = value;
 end

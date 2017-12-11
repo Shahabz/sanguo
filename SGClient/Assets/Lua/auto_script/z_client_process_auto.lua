@@ -860,13 +860,20 @@ end
 -- m_count=0,m_list={m_corps=0,m_color=0,m_shape=0,m_level=0,m_soldiers=0,m_troops=0,m_offset=0,[m_count]},m_guardsec=0,
 function proc_cityguardlist_C( recvValue )
 	-- process.
+	GetPlayer().m_guardsec = recvValue.m_guardsec
 	CityGuardDlgRecv( recvValue );
 end
 
--- m_gusrdsec=0,
+-- m_guardsec=0,
 function proc_cityguardsec_C( recvValue )
 	-- process.
 	CityGuardDlgChangeSec( recvValue );
+	GetPlayer().m_guardsec = recvValue.m_guardsec;
+	if GetPlayer().m_guardsec > 0 then
+		City.GuardCallMod( nil, false )
+	else
+		City.GuardCallMod( nil, true )
+	end
 end
 
 -- m_forgingkind=0,m_forgingsec=0,m_forgingsec_need=0,

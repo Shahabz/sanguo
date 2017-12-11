@@ -229,6 +229,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_game_weather = buffer:ReadShort();
 	recvValue.m_state = buffer:ReadSByte();
 	recvValue.m_guardnum = buffer:ReadSByte();
+	recvValue.m_guardsec = buffer:ReadShort();
 	return recvValue;
 end
 
