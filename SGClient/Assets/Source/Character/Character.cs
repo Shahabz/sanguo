@@ -17,7 +17,7 @@ public class Character : MonoBehaviour
     public int                  defalutAction = 0;
     public bool                 hideOnDeath = true;
     public bool                 disableOnHide = false;
-
+	public bool					attackOnce = true;
     //    
     public Vector3              targetDirection { get { return _TargetDirection; } }
     public Shape                currShape { get { return _CurrShape; } }
@@ -172,7 +172,7 @@ public class Character : MonoBehaviour
         }
         else if( _CurrShape.actionDirNum[currAction] == 2 )   // 2 方向  去左右里找能用的
         {
-            if( _TargetDirection.x >= 0 )
+            if( _TargetDirection.x < 0 )
             {
                 for( int i = 0; i < 5; i++ )
                 {
@@ -427,6 +427,9 @@ public class Character : MonoBehaviour
     // 攻击动画触发
     public virtual void OnAttack()
     {
+		// 如果只攻击一次
+		if( attackOnce )
+			Stop();
     }
 
     // 播放完死亡动画

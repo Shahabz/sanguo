@@ -38,6 +38,7 @@ local m_spy_hashero = 0;
 FIGHT_UNITTYPE_HERO		=	1 -- 玩家英雄
 FIGHT_UNITTYPE_GUARD	=	2 -- 玩家城墙守卫
 FIGHT_UNITTYPE_MONSTER	=	3 -- 怪物表
+FIGHT_UNITTYPE_LEADER_HERO = 4  -- 队长英雄，跟其他玩家区分一下
 
 -- 打开界面
 function MailInfoDlgOpen()
@@ -834,7 +835,7 @@ end
 function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level, color, corps, maxhp, hp, damage, vw )
 	
 	-- 玩家英雄	
-	if type == FIGHT_UNITTYPE_HERO then
+	if type == FIGHT_UNITTYPE_LEADER_HERO or type == FIGHT_UNITTYPE_HERO then
 		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( kind ) );
 		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( color ) );
 		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
@@ -844,8 +845,11 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 			SetText( uiObj.transform:Find("Name"), HeroName( kind ) );
 		end
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+"..vw );
-		
+		if vw ~= nil then
+			SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+"..vw );
+		else
+			SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+0" );
+		end
 	-- 玩家城墙守卫
 	elseif type == FIGHT_UNITTYPE_GUARD then
 		SetImage( uiObj.transform:Find("Shape"), GuardSprite( shape ) );

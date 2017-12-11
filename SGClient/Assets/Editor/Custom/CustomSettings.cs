@@ -218,6 +218,7 @@ public static class CustomSettings
         _GT(typeof(UITweenSizeDelta)),
         _GT(typeof(UITweenCityBuilding)),
         _GT(typeof(UITweenMove)),
+		_GT(typeof(UITweenJump)),
         _GT(typeof(MaskableGraphic)),
         _GT(typeof(Graphic)),
         _GT(typeof(TextGenerator)),

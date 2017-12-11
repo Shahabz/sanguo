@@ -45,6 +45,7 @@ public class CharacterWrap
 		L.RegVar("defalutAction", get_defalutAction, set_defalutAction);
 		L.RegVar("hideOnDeath", get_hideOnDeath, set_hideOnDeath);
 		L.RegVar("disableOnHide", get_disableOnHide, set_disableOnHide);
+		L.RegVar("attackOnce", get_attackOnce, set_attackOnce);
 		L.RegVar("targetDirection", get_targetDirection, null);
 		L.RegVar("currShape", get_currShape, null);
 		L.RegVar("currDirection", get_currDirection, null);
@@ -745,6 +746,25 @@ public class CharacterWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_attackOnce(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Character obj = (Character)o;
+			bool ret = obj.attackOnce;
+			LuaDLL.lua_pushboolean(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index attackOnce on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_targetDirection(IntPtr L)
 	{
 		object o = null;
@@ -1005,6 +1025,25 @@ public class CharacterWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index disableOnHide on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_attackOnce(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			Character obj = (Character)o;
+			bool arg0 = LuaDLL.luaL_checkboolean(L, 2);
+			obj.attackOnce = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index attackOnce on a nil value" : e.Message);
 		}
 	}
 

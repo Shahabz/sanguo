@@ -494,8 +494,11 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeprestige_C( recvValue )
 	-- process.
-	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+	if recvValue.m_path == PATH_FIGHT then
+	else
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_prestige = recvValue.m_total;
 end

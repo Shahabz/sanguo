@@ -9,8 +9,10 @@ public class AudioManagerWrap
 		L.BeginClass(typeof(AudioManager), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("OnDestroy", OnDestroy);
 		L.RegFunction("Play", Play);
+		L.RegFunction("Stop", Stop);
 		L.RegFunction("SetAudioSwitch", SetAudioSwitch);
 		L.RegFunction("PlayAudio", PlayAudio);
+		L.RegFunction("StopAudio", StopAudio);
 		L.RegFunction("GetAudioClip", GetAudioClip);
 		L.RegFunction("GetAudioObject", GetAudioObject);
 		L.RegFunction("SetChannelVolume", SetChannelVolume);
@@ -49,6 +51,24 @@ public class AudioManagerWrap
 			AudioManager obj = (AudioManager)ToLua.CheckObject(L, 1, typeof(AudioManager));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			string o = obj.Play(arg0);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Stop(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			AudioManager obj = (AudioManager)ToLua.CheckObject(L, 1, typeof(AudioManager));
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			string o = obj.Stop(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}
@@ -122,6 +142,26 @@ public class AudioManagerWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: AudioManager.PlayAudio");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int StopAudio(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 4);
+			AudioManager obj = (AudioManager)ToLua.CheckObject(L, 1, typeof(AudioManager));
+			AudioManager.AudioType arg0 = (AudioManager.AudioType)ToLua.CheckObject(L, 2, typeof(AudioManager.AudioType));
+			UnityEngine.AudioClip arg1 = (UnityEngine.AudioClip)ToLua.CheckUnityObject(L, 3, typeof(UnityEngine.AudioClip));
+			bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
+			string o = obj.StopAudio(arg0, arg1, arg2);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{

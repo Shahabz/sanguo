@@ -140,7 +140,7 @@ function GameManager.GameLogic()
 	end
 	
 	-- 战斗
-	FightDlgLogic()
+	fight_logic()
 end
 
 -- 请求退出游戏

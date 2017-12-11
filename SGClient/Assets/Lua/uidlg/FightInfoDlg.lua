@@ -196,7 +196,7 @@ function FightInfoDlgUnit( root, index, unittype, kind, name, shape, color, corp
 		SetText( uiHp, maxhp )
 	end
 	-- 玩家英雄
-	if unittype == FIGHT_UNITTYPE_HERO then
+	if unittype == FIGHT_UNITTYPE_LEADER_HERO or unittype == FIGHT_UNITTYPE_HERO then
 		SetImage( uiShape, HeroHeadSprite( kind ) );
 		SetImage( uiColor, ItemColorSprite( color ) );
 		SetImage( uiCorps, CorpsSprite( corps ) );

@@ -12,9 +12,10 @@
 #define FIGHT_ATTACK		1	
 #define FIGHT_DEFENSE		2
 
-#define FIGHT_UNITTYPE_HERO		1 // 玩家英雄
-#define FIGHT_UNITTYPE_GUARD	2 // 玩家城墙守卫
-#define FIGHT_UNITTYPE_MONSTER	3 // 怪物表
+#define FIGHT_UNITTYPE_HERO			1 // 玩家英雄
+#define FIGHT_UNITTYPE_GUARD		2 // 玩家城墙守卫
+#define FIGHT_UNITTYPE_MONSTER		3 // 怪物表
+#define FIGHT_UNITTYPE_LEADER_HERO	4 // 队长英雄，跟其他玩家区分一下
 
 #define FIGHTTYPE_STORY		1 // 副本战斗
 #define FIGHTTYPE_CITY		2 // 城战
@@ -55,7 +56,9 @@ typedef struct _fightunit
 	char	line_left;			// 当前剩余排数
 	int		line_hp;			// 当前排剩余兵力
 	int		damage;				// 总伤害
-	int		prestige;			// 威望
+	int		prestige;			// 战后获得威望
+	int		exp;				// 战后获得经验
+	int		expmax;				// 参战时经验
 	int		town_damage;		// 对据点守军造成的伤害
 }FightUnit;
 
@@ -97,7 +100,7 @@ typedef struct _fight
 }Fight;
 
 // 向战场里添加一个英雄
-int fight_add_hero( int pos, char unit_type, int unit_index, char type, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid );
+int fight_add_hero( int pos, char unit_type, int unit_index, char type, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid, int expmax );
 
 // 战斗启动
 int fight_start( int attack_armyindex, char defense_type, int defense_index );

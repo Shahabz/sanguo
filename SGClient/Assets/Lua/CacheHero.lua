@@ -253,3 +253,30 @@ function GetHero()
 	end
 	return G_Hero;
 end
+
+-- 获取英雄升级所需经验
+function hero_getexp_max( level, color )
+	if level <= 0 or level > #g_upgradeinfo then
+		return -1;
+	end
+	if level >= global.actorlevel_max then
+		return -1;
+	end
+	if color < 0 or color >= ITEM_COLOR_LEVEL_MAX then
+		return -1;
+	end
+	if color == 0 then
+		return g_upgradeinfo[level].heroexp0;
+	elseif color == 1 then
+		return g_upgradeinfo[level].heroexp1;
+	elseif color == 2 then
+		return g_upgradeinfo[level].heroexp2;
+	elseif color == 3 then
+		return g_upgradeinfo[level].heroexp3;
+	elseif color == 4 then
+		return g_upgradeinfo[level].heroexp4;
+	elseif color == 5 then
+		return g_upgradeinfo[level].heroexp5;
+	end
+	return 0;
+end

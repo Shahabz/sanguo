@@ -146,6 +146,24 @@ public class AudioManager : MonoBehaviour
         return "";
     }
 
+	/// <summary>
+	/// 停止播放
+	/// </summary>
+	/// <param name="type"></param>
+	/// <param name="path"></param>
+	public string Stop(int id)
+	{
+		if (_Configs.ContainsKey(id))
+		{
+			AudioConfig config = _Configs[id];
+			AudioClip clip = GetAudioClip(id);
+			if (clip == null)
+				return "";
+
+			return StopAudio(config.Type, clip, config.IsOverlay);
+		}
+		return "";
+	}
 
     /// <summary>
     /// 设置音乐开关
@@ -209,6 +227,22 @@ public class AudioManager : MonoBehaviour
         else
             return "";
     }
+
+	/// <summary>
+	/// 停止播放
+	/// </summary>
+	/// <param name="type"></param>
+	/// <param name="audioClip"></param>
+	public string StopAudio(AudioType type, AudioClip audioClip, bool isOverlay)
+	{
+		if (_AudioSources[type] == null)
+			return "";
+		if ( !isOverlay ) 
+		{
+			_AudioSources [type].Stop ();
+		}
+		return "";
+	}
 
     // 获取到音频内容
     public AudioClip GetAudioClip(int id)

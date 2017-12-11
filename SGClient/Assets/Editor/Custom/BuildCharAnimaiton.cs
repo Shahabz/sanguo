@@ -146,7 +146,7 @@ public class BuildCharAnimaiton : Editor
         ObjectReferenceKeyframe[] keyFrames;
         Sprite sprite;
         //动画长度是按秒为单位，1/10就表示1秒切10张图片，根据项目的情况可以自己调节
-        float frameTime = 1f / 4f;
+        float frameTime = 1f / 5f;
         
         // 最后补一个第一帧
         // 补帧一个第一帧
@@ -281,10 +281,12 @@ public class BuildCharAnimaiton : Editor
 
             // 龙的攻击从第一帧开始
 			AnimationEvent evt = new AnimationEvent();
-            if( name.Contains( "Monster11" ) )
-                evt.time = 0;
-            else
-                evt.time = keyFrames[images.Length - 1].time - frameTime * Mathf.Max( 0, ( 2 + 1 - Mathf.Pow( 1.07f, 2 ) ) );
+			if (name.Contains ("Monster11"))
+				evt.time = 0;
+			else {
+				// evt.time = keyFrames [images.Length - 1].time - frameTime * Mathf.Max (0, (2 + 1 - Mathf.Pow (1.07f, 2)));
+				evt.time = keyFrames [images.Length - 1].time + 0.5f;
+			}
 			evt.functionName = "OnAttack";
 
 			AnimationUtility.SetAnimationEvents( clip, new AnimationEvent[]{ evt } );

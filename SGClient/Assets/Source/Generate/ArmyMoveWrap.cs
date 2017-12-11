@@ -17,6 +17,7 @@ public class ArmyMoveWrap
 		L.RegVar("heroGameObject", get_heroGameObject, set_heroGameObject);
 		L.RegVar("heroCount", get_heroCount, set_heroCount);
 		L.RegVar("invokeShow", get_invokeShow, set_invokeShow);
+		L.RegVar("direction", get_direction, set_direction);
 		L.EndClass();
 	}
 
@@ -191,6 +192,25 @@ public class ArmyMoveWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_direction(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float ret = obj.direction;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_stat(IntPtr L)
 	{
 		object o = null;
@@ -339,6 +359,25 @@ public class ArmyMoveWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index invokeShow on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_direction(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			obj.direction = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction on a nil value" : e.Message);
 		}
 	}
 }
