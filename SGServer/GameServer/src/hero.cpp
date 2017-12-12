@@ -1849,6 +1849,7 @@ int hero_visit_low( int actor_index )
 		hero_visit_snedflag( actor_index );
 	}
 	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal );
+	hero_visit_sendinfo( actor_index );
 	return 0;
 }
 
@@ -1890,6 +1891,7 @@ int hero_visit_low10( int actor_index )
 	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
 	actor_change_token( actor_index, -global.hero_visit_low_token10, PATH_HEROVISIT, 0 );
 	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal*10 );
+	hero_visit_sendinfo( actor_index );
 	return 0;
 }
 
@@ -1947,6 +1949,7 @@ int hero_visit_high( int actor_index )
 		pCity->hv_hf -= 1;
 		hero_visit_snedflag( actor_index );
 	}
+	hero_visit_sendinfo( actor_index );
 	return 0;
 }
 
@@ -1996,6 +1999,7 @@ int hero_visit_high10( int actor_index )
 		pCity->hv_hf -= 1;
 		hero_visit_snedflag( actor_index );
 	}
+	hero_visit_sendinfo( actor_index );
 	return 0;
 }
 
