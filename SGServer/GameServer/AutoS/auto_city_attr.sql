@@ -37,6 +37,8 @@ CREATE TABLE `city_attr` (
   `everyday_body_buymax` tinyint(3) NOT NULL DEFAULT '0' COMMENT '体力购买次数上限',
   `everyday_autobuild_buynum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动建造免费购买次数',
   `everyday_army_recall` tinyint(3) NOT NULL DEFAULT '0' COMMENT '每日免费行军召回',
+  `hero_row_fight` tinyint(3) NOT NULL DEFAULT '0' COMMENT '增加武将带兵排数（固定数值）(内阁)',
+  `hero_row_gather` tinyint(3) NOT NULL DEFAULT '0' COMMENT '增加武将带兵排数（固定数值）（内阁）',
   `ability_open_201` tinyint(3) NOT NULL DEFAULT '0' COMMENT '秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）',
   `ability_open_202` tinyint(3) NOT NULL DEFAULT '0' COMMENT '极品装备：打造装备有概率直接获得秘技装备（开启功能）',
   `ability_open_203` tinyint(3) NOT NULL DEFAULT '0' COMMENT '改土辟地：可拆除建筑并选择指定类型建筑进行重建（开启功能）',

@@ -30,6 +30,8 @@ struct _city_attr {
 				char everyday_body_buymax;	//体力购买次数上限
 				char everyday_autobuild_buynum;	//自动建造免费购买次数
 				char everyday_army_recall;	//每日免费行军召回
+				char hero_row_fight;	//增加武将带兵排数（固定数值）(内阁)
+				char hero_row_gather;	//增加武将带兵排数（固定数值）（内阁）
 				char ability_open_201;	//秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）
 				char ability_open_202;	//极品装备：打造装备有概率直接获得秘技装备（开启功能）
 				char ability_open_203;	//改土辟地：可拆除建筑并选择指定类型建筑进行重建（开启功能）

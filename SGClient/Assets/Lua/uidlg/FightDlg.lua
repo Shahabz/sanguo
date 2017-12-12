@@ -510,9 +510,9 @@ function FightDlgStart()
 	
 	-- 战斗逻辑启动
 	Invoke( function()
-		g_fight.frame_max = 2;
+		g_fight.frame_max = 2*FightScene.m_speed;
 		fight_start()
-	end, 2, nil, "Fight_Start" )
+	end, 2*FightScene.m_speed, nil, "Fight_Start" )
 end
 
 -- 战斗结束页

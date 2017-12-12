@@ -21,6 +21,8 @@ local RightUnitPrePosX = { 4.2, 5, 5.8, 6.6, 7.4, 8.2, 9, 9.8, 10.6, 11.4, 12.2 
 local LeftUnitPosX = { -0.4, -1.8, -2.6, -3.4, -4.2, -5, -5.8, -6.6, -7.4, -8.2, -9 }
 local RightUnitPosX = { 0.4, 1.8, 2.6, 3.4, 4.2, 5, 5.8, 6.6, 7.4, 8.2, 9 }
 
+-- 战斗速度
+FightScene.m_speed = 0.8
 
 -- 创建战场
 function FightScene.Create()
@@ -104,9 +106,20 @@ function FightScene.UnitCreate( pos, unit )
 		return
 	end
 	if pos == FIGHT_ATTACK then
-		for line=1, unit.line, 1 do
+		for line=1, unit.line_left, 1 do
 			FightScene.m_leftUnit[line] = {}
-			for i=1, 9, 1 do
+			
+			local unitcount = 9;
+			if line == unit.line_left and unit.troops > unit.maxhp then
+				-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+				local line_troops = math.floor( unit.troops / unit.line );
+				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+				local line_hp = (unit.troops - unit.maxhp) % line_troops;
+				-- 战斗中最后一排士兵个数=最后一排兵力/每排兵力*9，结果向上取整
+				unitcount =  math.floor( line_hp/line_troops*9 )
+			end
+			
+			for i=1, unitcount, 1 do
 				local charactor = FightScene.PoolGet( unit.corps+1 );
 				charactor.transform:SetParent( FightScene.m_displayRoot.transform );
 				charactor.transform.localPosition = Vector3.New( LeftUnitPrePosX[line], UnitPosY[i], 0 );
@@ -118,9 +131,20 @@ function FightScene.UnitCreate( pos, unit )
 			end
 		end
 	else
-		for line=1, unit.line, 1 do
+		for line=1, unit.line_left, 1 do
 			FightScene.m_rightUnit[line] = {}
-			for i=1, 9, 1 do
+			
+			local unitcount = 9;
+			if line == unit.line_left and unit.troops > unit.maxhp then
+				-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+				local line_troops = math.floor( unit.troops / unit.line );
+				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+				local line_hp = (unit.troops - unit.maxhp) % line_troops;
+				-- 战斗中最后一排士兵个数=最后一排兵力/每排兵力*9，结果向上取整
+				unitcount =  math.floor( line_hp/line_troops*9 )
+			end
+			
+			for i=1, unitcount, 1 do
 				local charactor = FightScene.PoolGet( unit.corps+1 );
 				charactor.transform:SetParent( FightScene.m_displayRoot.transform );
 				charactor.transform.localPosition = Vector3.New( RightUnitPrePosX[line], UnitPosY[i], 0 );
@@ -138,7 +162,7 @@ end
 -- 部队入场
 function FightScene.UnitWalk( pos, unit )
 	if pos == FIGHT_ATTACK then
-		for line=1, unit.line, 1 do
+		for line=1, unit.line_left, 1 do
 			if FightScene.m_leftUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_leftUnit[line] ) do
 					local charactor = v;
@@ -149,7 +173,7 @@ function FightScene.UnitWalk( pos, unit )
 			end
 		end
 	else
-		for line=1, unit.line, 1 do
+		for line=1, unit.line_left, 1 do
 			if FightScene.m_rightUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_rightUnit[line] ) do
 					local charactor = v;

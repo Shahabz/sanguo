@@ -32,7 +32,7 @@ int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path );
 void hero_guard_soldiers_auto( City *pCity );
 int hero_guard_soldiers_token( int actor_index, int herokind );
 int hero_changestate( int city_index, int herokind, char state );
-char hero_getline( City *pCity );
+char hero_getline( City *pCity, char state );
 //int hero_attack( City *pCity, Hero *pHero );
 //int hero_defense( City *pCity, Hero *pHero );
 //int hero_troops( City *pCity, Hero *pHero );

@@ -130,9 +130,23 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 	pUnit.defend = defend;
 	pUnit.line = line;
 	pUnit.skillid = skillid;
-	pUnit.line_left = line;
-	pUnit.line_hp = math.ceil( hp / line );
 	pUnit.damage = 0;
+	
+	-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+	local line_troops = math.floor( pUnit.troops / pUnit.line );
+	-- 战斗中带兵排数 = 实际参战兵力 / 每排兵力，结果向上取整
+	pUnit.line_left = math.ceil( pUnit.maxhp / line_troops );
+	if pUnit.line_left == 1 then
+		-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+		if pUnit.troops == pUnit.maxhp then
+			pUnit.line_hp = line_troops;
+		else
+			pUnit.line_hp = (pUnit.troops - pUnit.maxhp) % line_troops;
+		end
+	else
+		-- 其余排的兵力都等于每排兵力
+		pUnit.line_hp = line_troops;
+	end
 	return 0;
 end
 
@@ -191,7 +205,7 @@ function fight_oneturn()
 	local left_change_unit = 0;
 	local right_change_line = 0;
 	local right_change_unit = 0;
-	g_fight.frame_max = 2;
+	g_fight.frame_max = 2*FightScene.m_speed;
 	
 	g_fight.turns = g_fight.turns + 1;
 	fight_debug( "--------------------------- [turns-%d] ---------------------------", g_fight.turns );
@@ -272,8 +286,8 @@ function fight_oneturn()
 					-- 上前音效
 					eye.audioManager:Play(305);
 					FightScene.UnitWalk( FIGHT_DEFENSE, pDefenseUnit )
-				end, 2, nil, "Fight_Invoke_1" );
-				g_fight.frame_max = 4;
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_1" );
+				g_fight.frame_max = 4*FightScene.m_speed;
 				
 			end
 			-- 播放动画-武将改变
@@ -283,12 +297,12 @@ function fight_oneturn()
 					-- 进场音效
 					eye.audioManager:Play(301);
 					FightScene.UnitCreate( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-				end, 2, nil, "Fight_Invoke_2" );
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_2" );
 				-- 移动军阵
 				Invoke( function() 
 					FightScene.UnitWalk( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-				end, 2, nil, "Fight_Invoke_3" );
-				g_fight.frame_max = 5;
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_3" );
+				g_fight.frame_max = 5*FightScene.m_speed;
 			end
 			-- 更新界面显示
 			FightDlgUnitUpdate()
@@ -313,8 +327,8 @@ function fight_oneturn()
 					-- 上前音效
 					eye.audioManager:Play(305);
 					FightScene.UnitWalk( FIGHT_ATTACK, pAttackUnit )
-				end, 2, nil, "Fight_Invoke_11" );
-				g_fight.frame_max = 4;
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_11" );
+				g_fight.frame_max = 4*FightScene.m_speed;
 				
 			end
 			-- 播放动画-武将改变
@@ -324,12 +338,12 @@ function fight_oneturn()
 					-- 进场音效
 					eye.audioManager:Play(301);
 					FightScene.UnitCreate( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-				end, 2, nil, "Fight_Invoke_12" );
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_12" );
 				-- 移动军阵
 				Invoke( function() 
 					FightScene.UnitWalk( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-				end, 2, nil, "Fight_Invoke_13" );
-				g_fight.frame_max = 5;
+				end, 2*FightScene.m_speed, nil, "Fight_Invoke_13" );
+				g_fight.frame_max = 5*FightScene.m_speed;
 			end
 			-- 更新界面显示
 			FightDlgUnitUpdate()
@@ -342,9 +356,9 @@ function fight_oneturn()
 				FightDlgUnitVsLayerShow()
 				-- 更新界面显示
 				FightDlgUnitUpdate()
-			end, 3, nil, "Fight_Invoke_20" );
+			end, 3*FightScene.m_speed, nil, "Fight_Invoke_20" );
 		end
-	end, 0.6, nil, "Fight_Invoke_0" );
+	end, 0.6*FightScene.m_speed, nil, "Fight_Invoke_0" );
 	return 0;
 end
 
@@ -466,7 +480,20 @@ function fight_changehp( pos, pTargetUnit, damage )
 		change_line = 1; -- 排数是否改变
 		if pTargetUnit.line_left > 0 then
 			-- 减少一排
-			pTargetUnit.line_hp = math.ceil( pTargetUnit.maxhp / pTargetUnit.line );
+			-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+			local line_troops = math.floor( pTargetUnit.troops / pTargetUnit.line );
+			if pTargetUnit.line_left == 1 then
+				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+				if pTargetUnit.troops == pTargetUnit.maxhp then
+					pTargetUnit.line_hp = line_troops;
+				else
+					pTargetUnit.line_hp = (pTargetUnit.troops - pTargetUnit.maxhp) % line_troops;
+				end
+			else
+				-- 其余排的兵力都等于每排兵力
+				pTargetUnit.line_hp = line_troops;
+			end
+
 		else
 			pTargetUnit.hp = 0;
 			if pos == FIGHT_ATTACK then

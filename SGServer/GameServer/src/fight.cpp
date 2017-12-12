@@ -172,10 +172,28 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 	pUnit->defend = defend;
 	pUnit->line = line;
 	pUnit->skillid = skillid;
-	pUnit->line_left = line;
-	pUnit->line_hp = (int)ceil( hp / (float)line );
 	pUnit->damage = 0;
-	pUnit->expmax = expmax;
+	pUnit->expmax = expmax; // 参战时候经验
+
+	// 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+	int line_troops = pUnit->troops / pUnit->line;
+	// 战斗中带兵排数 = 实际参战兵力 / 每排兵力，结果向上取整
+	pUnit->line_left = (int)ceil( pUnit->maxhp / (float)line_troops );
+	if ( pUnit->line_left == 1 )
+	{ // 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+		if ( pUnit->troops == pUnit->maxhp )
+			pUnit->line_hp = line_troops;
+		else
+			pUnit->line_hp = (pUnit->troops - pUnit->maxhp) % line_troops;
+	}
+	else
+	{
+		// 其余排的兵力都等于每排兵力
+		pUnit->line_hp = line_troops;
+	}
+
+	// 战斗中最后一排兵力=取余数（（可带兵力-实际参战兵力）/每排兵力）
+
 	char name[64] = { 0 };
 	if ( type == FIGHT_UNITTYPE_LEADER_HERO || type == FIGHT_UNITTYPE_HERO )
 	{
@@ -251,7 +269,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			if ( !config )
 				continue;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, attack_armyindex, FIGHT_UNITTYPE_LEADER_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 
 		}
 	}
@@ -319,7 +337,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			return 0;
 		}
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
 		g_fight.type = FIGHTTYPE_RES;
 
 	}
@@ -365,7 +383,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			return 0;
 		}
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_KINGWAR ), (char)config->skillid, pHero->exp );
 		g_fight.type = FIGHTTYPE_KINGWAR;
 
 	}
@@ -465,7 +483,7 @@ int fight_start_armygroup( int group_index )
 					if ( !config )
 						continue;
 					fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-						pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+						pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 				}
 				pCity->temp_silver = 0;
 				pCity->temp_wood = 0;
@@ -528,7 +546,7 @@ int fight_start_armygroup( int group_index )
 				if ( !config )
 					continue;
 				fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 
 			}
 		}
@@ -543,7 +561,7 @@ int fight_start_armygroup( int group_index )
 			if ( pHero->state > 0 )
 				continue;
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_LEADER_HERO, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 		}
 
 		// 羽林卫部队
@@ -556,7 +574,7 @@ int fight_start_armygroup( int group_index )
 			if ( pHero->soldiers < pHero->troops )
 				continue;
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_HERO, tmpi, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 		}
 
 		// 城墙部队
@@ -596,7 +614,7 @@ int fight_start_armygroup( int group_index )
 				if ( !config )
 					continue;
 				fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 
 			}
 		}
@@ -651,7 +669,7 @@ int fight_start_armygroup( int group_index )
 				if ( !config )
 					continue;
 				fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+					pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 
 			}
 		}
@@ -725,7 +743,7 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 			if ( !config )
 				continue;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_LEADER_HERO, -1, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 		}
 	}
 
@@ -812,7 +830,7 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 			if ( !config )
 				continue;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_LEADER_HERO, -1, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 		}
 	}
 
@@ -1024,7 +1042,21 @@ int fight_changehp( int pos, FightUnit *pTargetUnit, int damage )
 		pTargetUnit->line_left -= 1;
 		if ( pTargetUnit->line_left > 0 )
 		{ // 减少一排
-			pTargetUnit->line_hp = (int)ceil( pTargetUnit->maxhp / (float)pTargetUnit->line );
+
+			// 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
+			int line_troops = pTargetUnit->troops / pTargetUnit->line;	
+			if ( pTargetUnit->line_left == 1 )
+			{ // 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
+				if ( pTargetUnit->troops == pTargetUnit->maxhp )
+					pTargetUnit->line_hp = line_troops;
+				else
+					pTargetUnit->line_hp = (pTargetUnit->troops - pTargetUnit->maxhp) % line_troops;
+			}
+			else
+			{
+				// 其余排的兵力都等于每排兵力
+				pTargetUnit->line_hp = line_troops;
+			}
 		}
 		else
 		{

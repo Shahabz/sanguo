@@ -1031,11 +1031,23 @@ int hero_changestate( int city_index, int herokind, char state )
 }
 
 // 武将带兵排数
-char hero_getline( City *pCity )
+inline char hero_getline( City *pCity, char state )
 {
 	if ( !pCity )
 		return 2;
-	return 2 + pCity->attr.hero_row_num;
+	if ( state == HERO_STATE_NORMAL )
+	{
+		return 2 + pCity->attr.hero_row_num;
+	}
+	else if ( state == HERO_STATE_FIGHT || state == HERO_STATE_KINGWAR )
+	{
+		return 2 + pCity->attr.hero_row_num + pCity->attr.hero_row_fight;
+	}
+	else if ( state == HERO_STATE_GATHER )
+	{
+		return 2 + pCity->attr.hero_row_num + pCity->attr.hero_row_gather;
+	}
+	return 2;
 }
 
 // 计算装备加成
@@ -1272,11 +1284,29 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	// 综合计算
 	pHero->attack = base_attack + attr_attack + equip_attack;
 	pHero->defense = base_defense + attr_defense + equip_defense;
-	pHero->troops = base_troops + (attr_troops + equip_troops)/4;
 	pHero->attack_increase = equip_attack_increase;
 	pHero->defense_increase = equip_defense_increase;
 	pHero->assault = equip_assault;
 	pHero->defend = equip_defend;
+
+	// 兵力特殊，需要分类计算
+	int hero_troops  = base_troops + (attr_troops + equip_troops) / 4;
+	if ( pHero->offset < HERO_BASEOFFSET )
+	{ // 无职务武将
+		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
+	}
+	else if ( pHero->offset >= HERO_BASEOFFSET && pHero->offset < HERO_BASEOFFSET + 4 )
+	{ // 上阵武将
+		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_FIGHT );
+	}
+	else if ( pHero->offset >= HERO_BASEOFFSET+4 && pHero->offset < HERO_BASEOFFSET + 8 )
+	{ // 财富署武将
+		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_GATHER );
+	}
+	else if ( pHero->offset >= HERO_BASEOFFSET+8 && pHero->offset < HERO_BASEOFFSET + 12 )
+	{ // 御林卫武将
+		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
+	}
 	return 0;
 }
 
