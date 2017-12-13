@@ -15,6 +15,7 @@
 #include "map.h"
 #include "equip.h"
 #include "quest.h"
+#include "hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -264,6 +265,13 @@ int city_tech_get( int actor_index )
 	}
 	// 计算临时属性
 	city_attr_reset( pCity );
+
+	// 重算武将属性
+	if ( kind > 20 )
+	{
+		hero_attr_calc_all( pCity, 1 );
+	}
+
 	city_event_add( pCity->index, CITY_EVENT_TECH, kind, pCity->techlevel[kind] * 100 + pCity->techprogress[kind] );
 	wlog( 0, LOGOP_TECH, PATH_TECH_GET, kind, pCity->techlevel[kind], pCity->techprogress[kind], g_actors[actor_index].actorid, city_mainlevel( pCity->index ) );
 	return 0;

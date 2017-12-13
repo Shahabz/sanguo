@@ -369,6 +369,20 @@ public class LuaFun
 		}
 	}
 
+	/// <summary>
+	/// 战斗逻辑
+	/// </summary>
+	private static LuaFunction _fightLogic = null;
+	public static LuaFunction fightLogic
+	{
+		get
+		{
+			if ( _fightLogic == null )
+				_fightLogic = eye.luaManager.GetFunction( "fight_logic" );
+
+			return _fightLogic;
+		}
+	}
 
     public static void Destroy()
     {
@@ -400,5 +414,6 @@ public class LuaFun
 		_worldMapThumbStart = null;
 		_worldMapThumbOnClick = null;
 		_worldMapThumbOnDrag = null;
+		_fightLogic = null;
     }
 }

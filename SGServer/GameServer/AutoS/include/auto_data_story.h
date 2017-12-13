@@ -2,33 +2,46 @@
 #define __STORY_DATA_AUTO_H
 #include "define.h"
 
-struct _storyinfo_config {
+struct _storyinfo {
 //--Automatically generated
+				int id;	//
 				short chapter;	//
 				short rank;	//
-				int id;	//
-				short saveoffset;	//
 				short type;	//
 				short preid;	//
+				short nextid;	//
+				short unlock_preid;	//
 				int monsterid[4];	//
 				int exp;	//
 				int silver;	//
 				int awardgroup;	//
-				short ranknum;	//
-				short ranknum_saveoffset;	//
-				int ranksec;	//
-				short ranksec_saveoffset;	//
 				short body;	//
 				short returnbody;	//
 				short skip;	//
 				short color;	//
-};
-typedef struct _storyinfo_config StoryInfoConfig;
-
-struct _storyinfo {
-//--Automatically generated
-	StoryInfoConfig *config;
-	int	maxnum;
+				short shapeback;	//
+				short shape;	//
+				short star_saveoffset;	//
+				short hero_kind[2];	//
+				short hero_odds;	//
+				int hero_token;	//
+				short hero_saveoffset;	//
+				short restype;	//
+				int rescount;	//
+				short resnum;	//
+				short resnum_saveoffset;	//
+				int ressec;	//
+				short ressec_saveoffset;	//
+				short res_reset_num;	//
+				short res_reset_saveoffset;	//
+				char res_reset_token[128];	//
+				int item_awardkind;	//
+				int item_awardodds;	//
+				short itemnum;	//
+				short itemnum_saveoffset;	//
+				short drawing_kind;	//
+				short drawing_token;	//
+				short drawing_saveoffset;	//
 };
 typedef struct _storyinfo StoryInfo;
 

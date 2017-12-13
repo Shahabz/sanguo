@@ -47,74 +47,49 @@ extern int g_monster_maxnum;
 
 extern Fight g_fight;
 
-// 一个副本的下一个副本id 1, 7, 下一个就是2，1
-int story_nextid( int chapter, int rank )
+StoryInfo *story_getconfig( int id )
 {
-	int next_chapter = 0;
-	int next_rank = 0;
-	int nextid = 0;
-	if ( chapter < 0 || chapter >= g_storyinfo_maxnum )
-		return -1;
-	if ( rank < 0 || rank >= g_storyinfo[chapter].maxnum )
-		return -1;
-	if ( chapter == 0 && rank == 0 )
-	{
-		nextid = 11;
-		return nextid;
-	}
-	if ( rank >= g_storyinfo[chapter].maxnum-1 )
-	{ // 最后一个关卡
-		if ( chapter < g_storyinfo_maxnum - 1 )
-		{
-			next_chapter = chapter + 1;
-			next_rank = 1;
-		}
-		else
-		{
-			next_chapter = g_storyinfo_maxnum - 1;
-			next_rank = g_storyinfo[next_chapter].maxnum - 1;
-		}
-	}
-	else
-	{
-		next_chapter = chapter;
-		next_rank = rank + 1;
-	}
-	nextid = next_chapter * 10 + next_rank;
-	return nextid;
-}
-
-StoryInfoConfig *story_getconfig( int id )
-{
-	int chapter = id / 10;
-	int rank = id % 10;
-	if ( chapter <= 0 || chapter >= g_storyinfo_maxnum )
+	if ( id <= 0 || id >= g_storyinfo_maxnum )
 		return NULL;
-	if ( rank <= 0 || rank >= g_storyinfo[chapter].maxnum )
-		return NULL;
-	return &g_storyinfo[chapter].config[rank];
+	return &g_storyinfo[id];
 }
 
 // 发送所有副本信息
 int story_sendinfo( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	if ( g_actors[actor_index].storyid == 0 )
+		g_actors[actor_index].storyid = 11;
+
 	SLK_NetS_StoryList pValue = { 0 };
-	pValue.m_story_chapter = g_actors[actor_index].story_chapter;
-	pValue.m_story_rank = g_actors[actor_index].story_rank;
-	for ( int tmpi = 0; tmpi < 512; tmpi++ )
-	{
-		pValue.m_rankstate[tmpi] = g_actors[actor_index].story_state[tmpi];
+	pValue.m_storyid = g_actors[actor_index].storyid;
+	for ( int tmpi = 0; tmpi < STORY_STAR_OFFSETMAX; tmpi++ )
+	{// 精英副本星级
+		pValue.m_story_star[tmpi] = g_actors[actor_index].story_star[tmpi];
 	}
-
-	for ( int tmpi = 0; tmpi < 32; tmpi++ )
-	{
-		pValue.m_ranknum[tmpi] = g_actors[actor_index].story_ranknum[tmpi];
+	for ( int tmpi = 0; tmpi < STORY_HERO_OFFSETMAX; tmpi++ )
+	{// 招募副本
+		pValue.m_story_hero[tmpi] = g_actors[actor_index].story_hero[tmpi];
 	}
-
-	for ( int tmpi = 0; tmpi < 32; tmpi++ )
-	{
-		pValue.m_ranktime[tmpi] = g_actors[actor_index].story_ranktime[tmpi];
+	for ( int tmpi = 0; tmpi < STORY_RESTIME_OFFSETMAX; tmpi++ )
+	{// 资源副本时间
+		pValue.m_story_restime[tmpi] = g_actors[actor_index].story_restime[tmpi];
+	}
+	for ( int tmpi = 0; tmpi < STORY_RESNUM_OFFSETMAX; tmpi++ )
+	{// 资源副本次数
+		pValue.m_story_resnum[tmpi] = g_actors[actor_index].story_resnum[tmpi];
+	}
+	for ( int tmpi = 0; tmpi < STORY_RESRESET_OFFSETMAX; tmpi++ )
+	{// 资源副本重置次数
+		pValue.m_story_resreset[tmpi] = g_actors[actor_index].story_resreset[tmpi];
+	}
+	for ( int tmpi = 0; tmpi < STORY_ITEMNUM_OFFSETMAX; tmpi++ )
+	{// 资源副本重置次数
+		pValue.m_story_itemnum[tmpi] = g_actors[actor_index].story_itemnum[tmpi];
+	}
+	for ( int tmpi = 0; tmpi < STORY_DRAWING_OFFSETMAX; tmpi++ )
+	{// 装备图纸副本是否购买
+		pValue.m_story_drawing[tmpi] = g_actors[actor_index].story_drawing[tmpi];
 	}
 	netsend_storylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
@@ -124,7 +99,7 @@ int story_sendinfo( int actor_index )
 int story_sendrank( int actor_index, int id )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	StoryInfoConfig *config = story_getconfig( id );
+	StoryInfo *config = story_getconfig( id );
 	if ( !config )
 		return -1;
 
@@ -147,56 +122,56 @@ int story_sendrank( int actor_index, int id )
 	return 0;
 }
 
-// 更新副本状态
-int story_sendrankstate( int actor_index, int id )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	StoryInfoConfig *config = story_getconfig( id );
-	if ( !config )
-		return -1;
-	if ( config->saveoffset < 0 || config->saveoffset >= 512 )
-		return -1;
-	SLK_NetS_StoryState pValue = { 0 };
-	pValue.m_storyid = id;
-	pValue.m_saveoffset = config->saveoffset;
-	pValue.m_state = g_actors[actor_index].story_state[config->saveoffset];
-	netsend_storystate_S( actor_index, SENDTYPE_ACTOR, &pValue );
-	return 0;
-}
-
-// 更新副本关卡次数
-int story_sendranknum( int actor_index, int id )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	StoryInfoConfig *config = story_getconfig( id );
-	if ( !config )
-		return -1;
-	if ( config->ranknum_saveoffset < 0 || config->ranknum_saveoffset >= 32 )
-		return -1;
-	SLK_NetS_StoryRanknum pValue = { 0 };
-	pValue.m_storyid = id;
-	pValue.m_saveoffset = config->ranknum_saveoffset;
-	pValue.m_num = g_actors[actor_index].story_ranknum[config->ranknum_saveoffset];
-	netsend_storyranknum_S( actor_index, SENDTYPE_ACTOR, &pValue );
-	return 0;
-}
-
-// 更新副本关卡时间
-int story_sendranktime( int actor_index, int id )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	StoryInfoConfig *config = story_getconfig( id );
-	if ( !config )
-		return -1;
-	if ( config->ranksec_saveoffset < 0 || config->ranksec_saveoffset >= 32 )
-		return -1;
-	SLK_NetS_StoryRanktime pValue = { 0 };
-	pValue.m_storyid = id;
-	pValue.m_saveoffset = config->ranksec_saveoffset;
-	pValue.m_time = g_actors[actor_index].story_ranktime[config->ranksec_saveoffset];
-	netsend_storyranktime_S( actor_index, SENDTYPE_ACTOR, &pValue );
-	return 0;
-}
+//// 更新副本状态
+//int story_sendrankstate( int actor_index, int id )
+//{
+//	ACTOR_CHECK_INDEX( actor_index );
+//	StoryInfo *config = story_getconfig( id );
+//	if ( !config )
+//		return -1;
+//	if ( config->saveoffset < 0 || config->saveoffset >= 512 )
+//		return -1;
+//	SLK_NetS_StoryState pValue = { 0 };
+//	pValue.m_storyid = id;
+//	pValue.m_saveoffset = config->saveoffset;
+//	pValue.m_state = g_actors[actor_index].story_state[config->saveoffset];
+//	netsend_storystate_S( actor_index, SENDTYPE_ACTOR, &pValue );
+//	return 0;
+//}
+//
+//// 更新副本关卡次数
+//int story_sendranknum( int actor_index, int id )
+//{
+//	ACTOR_CHECK_INDEX( actor_index );
+//	StoryInfo *config = story_getconfig( id );
+//	if ( !config )
+//		return -1;
+//	if ( config->ranknum_saveoffset < 0 || config->ranknum_saveoffset >= 32 )
+//		return -1;
+//	SLK_NetS_StoryRanknum pValue = { 0 };
+//	pValue.m_storyid = id;
+//	pValue.m_saveoffset = config->ranknum_saveoffset;
+//	pValue.m_num = g_actors[actor_index].story_ranknum[config->ranknum_saveoffset];
+//	netsend_storyranknum_S( actor_index, SENDTYPE_ACTOR, &pValue );
+//	return 0;
+//}
+//
+//// 更新副本关卡时间
+//int story_sendranktime( int actor_index, int id )
+//{
+//	ACTOR_CHECK_INDEX( actor_index );
+//	StoryInfo *config = story_getconfig( id );
+//	if ( !config )
+//		return -1;
+//	if ( config->ranksec_saveoffset < 0 || config->ranksec_saveoffset >= 32 )
+//		return -1;
+//	SLK_NetS_StoryRanktime pValue = { 0 };
+//	pValue.m_storyid = id;
+//	pValue.m_saveoffset = config->ranksec_saveoffset;
+//	pValue.m_time = g_actors[actor_index].story_ranktime[config->ranksec_saveoffset];
+//	netsend_storyranktime_S( actor_index, SENDTYPE_ACTOR, &pValue );
+//	return 0;
+//}
 
 // 战斗
 int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
@@ -205,30 +180,38 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	int chapter = pValue->m_storyid / 10;
-	int rank = pValue->m_storyid % 10;
-	StoryInfoConfig *config = story_getconfig( pValue->m_storyid );
+	StoryInfo *config = story_getconfig( pValue->m_storyid );
 	if ( !config )
 		return -1;
-	if ( config->saveoffset < 0 || config->saveoffset >= 512 )
-		return -1;
-
-	// 当前进度的下一个副本id
-	int nextid = story_nextid( g_actors[actor_index].story_chapter, g_actors[actor_index].story_rank );
-
 	if ( config->type == STORY_TYPE_NORMAL )
-	{ // 缺省副本打完一次就不能再打
-		if ( g_actors[actor_index].story_state[config->saveoffset] > 0 )
+	{ // 普通副本打完一次就不能再打
+		if ( g_actors[actor_index].storyid > pValue->m_storyid )
 		{
 			return -1;
 		}
-		int nextid = story_nextid( g_actors[actor_index].story_chapter, g_actors[actor_index].story_rank );
-		if ( nextid != pValue->m_storyid )
+	}
+	else if( config->type == STORY_TYPE_BOSS )
+	{ // 精英副本，可以反复打
+
+	}
+	else if ( config->type == STORY_TYPE_ITEM )
+	{ // 道具副本，道具次数没了，就不能打了
+		int saveoffset = config->itemnum_saveoffset;
+		if ( saveoffset < 0 || saveoffset >= STORY_ITEMNUM_OFFSETMAX )
+			return -1;
+		if ( g_actors[actor_index].story_itemnum[saveoffset] >= config->itemnum )
 			return -1;
 	}
-
-	if ( fight_start_bystory( actor_index, pValue, chapter, rank ) < 0 )
+	else
 		return -1;
+
+	// 触发战斗
+	if ( fight_start_bystory( actor_index, pValue ) < 0 )
+		return -1;
+
+	// 播放战斗
+	fight_play( actor_index, g_fight.unit_json );
+
 	if ( g_fight.result == FIGHT_WIN )
 	{ // 胜利
 		// 给奖励
@@ -237,36 +220,28 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 		city_changesilver( pCity->index, config->silver, PATH_STORY );
 		awardgroup_withindex( actor_index, config->awardgroup, 0, PATH_STORY, &getinfo );
 
-		if ( chapter > g_actors[actor_index].story_chapter )
-		{ // 打的是新章节
-			g_actors[actor_index].story_chapter = chapter;
-			g_actors[actor_index].story_rank = 1;
-		}
-		else if ( chapter == g_actors[actor_index].story_chapter )
-		{ // 打的是新关卡
-			if ( rank > g_actors[actor_index].story_rank )
-				g_actors[actor_index].story_rank = rank;
-		}
+		// 当前进度的下一个副本id
+		//g_actors[actor_index].storyid = config->nextid;
 
-		// 精英副本
-		if ( config->type == STORY_TYPE_BOSS )
-		{ // 计算战斗评分
-			char star = 1;
-			int lostper = (int)ceil(g_fight.attack_total_hp / (float)g_fight.attack_total_maxhp * 100);
-			if ( lostper <= 60 )
-				star = 3;
-			else if ( lostper <= 80 )
-				star = 2;
+		//// 精英副本
+		//if ( config->type == STORY_TYPE_BOSS )
+		//{ // 计算战斗评分
+		//	char star = 1;
+		//	int lostper = (int)ceil(g_fight.attack_total_hp / (float)g_fight.attack_total_maxhp * 100);
+		//	if ( lostper <= 60 )
+		//		star = 3;
+		//	else if ( lostper <= 80 )
+		//		star = 2;
 
-			g_actors[actor_index].story_state[config->saveoffset] = star;
-		}
-		else
-		{
-			g_actors[actor_index].story_state[config->saveoffset] = 1;
-		}
+		//	g_actors[actor_index].story_state[config->saveoffset] = star;
+		//}
+		//else
+		//{
+		//	g_actors[actor_index].story_state[config->saveoffset] = 1;
+		//}
 
-		// 更新关卡状态
-		story_sendrankstate( actor_index, pValue->m_storyid );
+		// 更新
+		story_sendinfo( actor_index );
 	}
 	else
 	{ // 失败

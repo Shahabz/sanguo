@@ -1065,7 +1065,7 @@ function proc_materialwilllist_C( recvValue )
 	MaterialMakeWillDlgRecv( recvValue )
 end
 
--- m_chapter=0,m_count=0,m_ranklist={}[m_count],m_story_chapter=0,m_story_rank=0,
+-- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,
 function proc_storylist_C( recvValue )
 	-- process.
 	StoryDlgRecv( recvValue )
@@ -1612,5 +1612,26 @@ end
 function proc_herovisitaward_C( recvValue )
 	-- process.
 	HeroVisitDlgRecvAward( recvValue )
+end
+
+-- m_flag=0,m_content_length=0,m_content="[m_content_length]",
+function proc_fightplay_C( recvValue )
+	-- process.
+	if recvValue.m_flag == 0 then -- 准备发送
+		MailFightContent = "";
+		
+	elseif recvValue.m_flag == 1 then -- 发送中
+		MailFightContent = MailFightContent..recvValue.m_content;
+
+		
+	elseif recvValue.m_flag == 2 then -- 发送完毕
+	
+		local info = {}
+		info.m_fight_content = MailFightContent;
+		info.m_content_json = {}
+		FightDlgShow( info )
+		BattleDlgClose()
+		StoryDlgClose()
+	end
 end
 

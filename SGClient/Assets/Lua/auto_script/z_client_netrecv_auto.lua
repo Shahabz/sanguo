@@ -715,6 +715,11 @@ function netrecv_herovisitaward_C( buffer )
 	proc_herovisitaward_C( recvValue );
 end
 
+function netrecv_fightplay_C( buffer )
+	local recvValue = struct_NetS_FightPlay_recv( buffer );
+	proc_fightplay_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -859,6 +864,7 @@ Proc_Command = {
 	[CMDS_CHANGEAUTOBUILD]=netrecv_changeautobuild_C;
 	[CMDS_HEROVISITINFO]=netrecv_herovisitinfo_C;
 	[CMDS_HEROVISITAWARD]=netrecv_herovisitaward_C;
+	[CMDS_FIGHTPLAY]=netrecv_fightplay_C;
 }
 
 function in_proc_command_C( cmd, buffer )

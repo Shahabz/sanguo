@@ -48,7 +48,7 @@ function FightUnit:empty()
 	self.defend = 0;			-- 守城
 	self.line = 0;				-- 带兵排数
 	self.skillid = 0;			-- 武将技
-
+	self.skillid_init = 0;			-- 武将技
 	self.line_left = 0;			-- 当前剩余排数
 	self.line_hp = 0;			-- 当前排剩余兵力
 	self.damage = 0;			-- 总伤害
@@ -57,15 +57,16 @@ end
 
 -- 全局战场
 g_fight = {};
-g_fight.playing = 0
 g_fight.frame = 0;
-g_fight.frame_max = 1
+g_fight.frame_max = 0
+g_fight.frame_append = 0;
+
 function fight_init( randspeed )
 	g_fight.turns = 0;
 	g_fight.randspeed = randspeed;
 	g_fight.frame = 0;
-	g_fight.frame_max = 1
-	g_fight.playing = 0
+	g_fight.frame_max = 10;
+	g_fight.frame_append = 0;
 	g_fight.attack_unit = {}
 	g_fight.defense_unit ={}
 	for i=0, FIGHT_UNIT_MAX-1, 1 do
@@ -87,6 +88,19 @@ function fight_init( randspeed )
 
 	g_fight.attack_total_damage = 0;
 	g_fight.defense_total_damage = 0;
+	
+	-- 战斗过程中临时记录
+	g_fight.attack_skill_damage = 0;
+	g_fight.defense_skill_damage = 0;
+	g_fight.attack_damage = 0;
+	g_fight.defense_damage = 0;
+	g_fight.attack_crit = 0;
+	g_fight.defense_crit = 0;
+	g_fight.result = 0;
+	g_fight.left_change_line = 0;
+	g_fight.left_change_unit = 0;
+	g_fight.right_change_line = 0;
+	g_fight.right_change_unit = 0;
 end
 
 -- 向战场里添加一个战斗单元
@@ -129,13 +143,18 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 	pUnit.assault = assault;
 	pUnit.defend = defend;
 	pUnit.line = line;
+	pUnit.skillid_init = skillid
 	pUnit.skillid = skillid;
 	pUnit.damage = 0;
 	
 	-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
 	local line_troops = math.floor( pUnit.troops / pUnit.line );
 	-- 战斗中带兵排数 = 实际参战兵力 / 每排兵力，结果向上取整
-	pUnit.line_left = math.ceil( pUnit.maxhp / line_troops );
+	if pUnit.troops == pUnit.maxhp then
+		pUnit.line_left = pUnit.line;
+	else
+		pUnit.line_left = math.ceil( pUnit.maxhp / line_troops );
+	end
 	if pUnit.line_left == 1 then
 		-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 		if pUnit.troops == pUnit.maxhp then
@@ -151,216 +170,316 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 end
 
 function fight_destory()
-	InvokeStop("Fight_Start")
-	InvokeStop("Fight_Invoke_0")
-	InvokeStop("Fight_Invoke_1")
-	InvokeStop("Fight_Invoke_2")
-	InvokeStop("Fight_Invoke_3")
-	InvokeStop("Fight_Invoke_11")
-	InvokeStop("Fight_Invoke_12")
-	InvokeStop("Fight_Invoke_13")
-	InvokeStop("Fight_Invoke_20")
-	g_fight.playing = 0
+	InvokeStop("FightInvoke_Start")
+	InvokeStop("FightInvoke_Process")
+	InvokeStop("FightInvoke_Skill_1")
+	InvokeStop("FightInvoke_Skill_2")
+	InvokeStop("FightInvoke_MissEffect_1")
+	InvokeStop("FightInvoke_MissEffect_2")
+	InvokeStop("FightInvoke_ChangeLine_1")
+	InvokeStop("FightInvoke_ChangeLine_2")
+	InvokeStop("FightInvoke_CreateUnit_1")
+	InvokeStop("FightInvoke_CreateUnit_2")
+	InvokeStop("FightInvoke_UnitWalk_1")
+	InvokeStop("FightInvoke_UnitWalk_2")
+	InvokeStop("FightInvoke_UpdateLayer")
+	InvokeStop("FightInvoke_FightResult")
+	InvokeStop("FightInvoke_PlayBeat")
 end
 
-function fight_start()
-	g_fight.playing = 1
-end
-
-function fight_stop()
-	g_fight.playing = 0
-end
-
-function fight_logic()
-	if g_fight.playing == 0 then
-		return
-	end
+function fight_start()	
+	-- 创建军阵
+	FightScene.UnitCreate( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
+	FightScene.UnitCreate( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
 	
-	-- 战斗速度控制
-	g_fight.frame = g_fight.frame + 1;
-	if g_fight.frame < g_fight.frame_max then
-		return
-	end
-	g_fight.frame = 0
+	-- 军阵移动
+	FightScene.UnitWalk( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
+	FightScene.UnitWalk( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
 	
-	local result = fight_oneturn()
-	if result > 0 then
-		if  result == FIGHT_WIN then
-			fight_debug( "[ATK WIN]" );
-		elseif result == FIGHT_LOSE then
-			fight_debug( "[DEF WIN]" );
-		end
-		FightDlgResultLayerShow()
-	end
+	-- 战斗逻辑启动
+	Invoke( function()
 	
-end
--- 一回合
-function fight_oneturn()
-	local attack_damage = 0;
-	local defense_damage = 0;
-	local attack_crit = 0;
-	local defense_crit = 0;
-	local result = 0;
-	local left_change_line = 0;
-	local left_change_unit = 0;
-	local right_change_line = 0;
-	local right_change_unit = 0;
-	g_fight.frame_max = 2*FightScene.m_speed;
-	
-	g_fight.turns = g_fight.turns + 1;
-	fight_debug( "--------------------------- [turns-%d] ---------------------------", g_fight.turns );
-
-	-- 攻击方当前出手英雄
-	local pAttackUnit = fight_nextptr( FIGHT_ATTACK );
-	if pAttackUnit == nil then
-		return FIGHT_LOSE
-	end
-
-	-- 防守方当前出手英雄
-	local pDefenseUnit = fight_nextptr( FIGHT_DEFENSE );
-	if pDefenseUnit == nil then
-		return FIGHT_WIN;
-	end
-	
-	-- 双方使用出场技能
-	attack_damage = fight_useskill( FIGHT_ATTACK, pAttackUnit, pDefenseUnit );
-	defense_damage = fight_useskill( FIGHT_DEFENSE, pDefenseUnit, pAttackUnit );
-	if attack_damage > 0 then	
-		result, right_change_line, right_change_unit = fight_changehp( FIGHT_ATTACK, pDefenseUnit, attack_damage );
-		if result > 0 then
-			return result;
-		end
-	end
-	if defense_damage > 0 then
-		result, left_change_line, left_change_unit  = fight_changehp( FIGHT_DEFENSE, pAttackUnit, defense_damage );
-		if result > 0 then
-			return result;
-		end
-	end
-	
-	-- 播放动画-攻击
-	FightScene.UnitAttack( FIGHT_ATTACK )
-	FightScene.UnitAttack( FIGHT_DEFENSE )
+		-- 攻击方当前出手英雄
+		local pAttackUnit = nil
+		local pDefenseUnit = nil
+		fight_process( 0, pAttackUnit, pDefenseUnit )
 		
-	Invoke( function() 
-					
-		-- 双方出手攻击
-		attack_damage, attack_crit = fight_damage( FIGHT_ATTACK, pAttackUnit, pDefenseUnit );
-		defense_damage, defense_crit = fight_damage( FIGHT_DEFENSE, pDefenseUnit, pAttackUnit );
+	end, 2*FightScene.m_speed, nil, "FightInvoke_Start" )
+end
+
+-- 战斗过程-一回合分N个战斗过程
+function fight_process( step, pAttackUnit, pDefenseUnit )
+	
+	-- 初始回合
+	if step == 0 then
+		-- 回合
+		g_fight.turns = g_fight.turns + 1;
+		fight_debug( "--------------------------- [turns-%d] ---------------------------", g_fight.turns )
+		
+		-- 攻击方当前出手英雄
+		pAttackUnit = fight_nextptr( FIGHT_ATTACK );
+		if pAttackUnit == nil then
+			fight_process_over( FIGHT_LOSE )
+			return
+		end
+
+		-- 防守方当前出手英雄
+		pDefenseUnit = fight_nextptr( FIGHT_DEFENSE );
+		if pDefenseUnit == nil then
+			fight_process_over( FIGHT_WIN )
+			return;
+		end
+		
+		-- 战斗过程中临时记录
+		g_fight.attack_skill_damage = 0;
+		g_fight.defense_skill_damage = 0;
+		g_fight.attack_damage = 0;
+		g_fight.defense_damage = 0;
+		g_fight.attack_crit = 0;
+		g_fight.defense_crit = 0;
+		g_fight.result = 0;
+		g_fight.left_change_line = 0;
+		g_fight.left_change_unit = 0;
+		g_fight.right_change_line = 0;
+		g_fight.right_change_unit = 0;
+		
+		fight_process( 1, pAttackUnit, pDefenseUnit )
+		
+	-- 攻击方使用技能-动画
+	elseif step == 1 then
+		-- 使用出场技能
+		g_fight.attack_skill_damage = fight_useskill( FIGHT_ATTACK, pAttackUnit, pDefenseUnit );
+		if g_fight.attack_skill_damage > 0 then
+			-- 播放技能动画
+			FightDlgPlaySkill( FIGHT_ATTACK, pAttackUnit.skillid_init, pAttackUnit.type, pAttackUnit.kind, pAttackUnit.shape )
+			-- 本过程时间
+			Invoke( function() fight_process( 2, pAttackUnit, pDefenseUnit ) end, 2.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+		else
+			fight_process( 11, pAttackUnit, pDefenseUnit )
+		end
+		
+	
+	-- 攻击方使用技能-结果	
+	elseif step == 2 then
+		-- 减血
+		g_fight.result, g_fight.left_change_line, g_fight.left_change_unit = fight_changehp( FIGHT_ATTACK, pDefenseUnit, g_fight.attack_skill_damage );
+		-- 播放减血动画
+		FightDlgPlayHpEffect( FIGHT_DEFENSE, g_fight.attack_skill_damage, 0 )
+		
+		local timer = 1.0
+		if g_fight.result > 0 then
+			-- 删除一排部队
+			FightScene.UnitDead( FIGHT_DEFENSE )
+			fight_process_over( g_fight.result );
+			return
+		end
+		
+		-- 播放动画-排数改变
+		if g_fight.left_change_line == 1 then
+			ChangeLine( FIGHT_DEFENSE, pDefenseUnit )
+			timer = 3.5
+		end
+		-- 播放动画-武将改变
+		if g_fight.left_change_unit == 1 then
+			ChangeUnit( FIGHT_DEFENSE )
+			timer = 4.5
+		end
+		-- 更新界面显示
+		FightDlgUnitUpdate()
+			
+		-- 本过程时间
+        Invoke( function() fight_process( 11, pAttackUnit, pDefenseUnit ) end, timer*FightScene.m_speed , nil, "FightInvoke_Process" );
+		
+	-- 防御方方使用技能-动画
+	elseif step == 11 then
+		-- 使用出场技能
+		g_fight.defense_skill_damage = fight_useskill( FIGHT_DEFENSE, pDefenseUnit, pAttackUnit );
+		if g_fight.defense_skill_damage > 0 then
+			-- 播放技能动画
+			FightDlgPlaySkill( FIGHT_DEFENSE, pDefenseUnit.skillid_init, pDefenseUnit.type, pDefenseUnit.kind, pDefenseUnit.shape )
+			-- 本过程时间
+			Invoke( function() fight_process( 12, pAttackUnit, pDefenseUnit ) end, 2.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+		else
+			fight_process( 21, pAttackUnit, pDefenseUnit )
+		end
+		
+	-- 防御方使用技能-结果	
+	elseif step == 12 then
+		-- 减血
+		g_fight.result, g_fight.right_change_line, g_fight.right_change_unit = fight_changehp( FIGHT_DEFENSE, pAttackUnit, g_fight.defense_skill_damage );
+		-- 播放减血动画
+		FightDlgPlayHpEffect( FIGHT_ATTACK, g_fight.defense_skill_damage, 0 )
+		
+		local timer = 1.0
+		if g_fight.result > 0 then
+			-- 删除一排部队
+			FightScene.UnitDead( FIGHT_ATTACK )
+			fight_process_over( g_fight.result );
+			return
+		end
+		
+		-- 播放动画-排数改变
+		if g_fight.right_change_line == 1 then
+			ChangeLine( FIGHT_ATTACK, pAttackUnit )
+			timer = 3.5
+		end
+		-- 播放动画-武将改变
+		if g_fight.right_change_unit == 1 then
+			ChangeUnit( FIGHT_ATTACK )
+			timer = 4.5
+		end
+		-- 更新界面显示
+		FightDlgUnitUpdate()
+			
+		-- 本过程时间
+        Invoke( function() fight_process( 21, pAttackUnit, pDefenseUnit ) end, timer*FightScene.m_speed , nil, "FightInvoke_Process" );	
+		
+	
+	-- 普通攻击-动画
+	elseif step == 21 then
+		-- 播放普攻动作
+		FightScene.UnitAttack( FIGHT_ATTACK )
+		FightScene.UnitAttack( FIGHT_DEFENSE )
+		-- 本过程时间
+        Invoke( function() fight_process( 22, pAttackUnit, pDefenseUnit ) end, 0.6*FightScene.m_speed , nil, "FightInvoke_Process" );	
+	
+	-- 普通攻击-结果
+	elseif step == 22 then
+		-- 播放挨打
+		FightScene.PlayBeat()
+		-- 计算伤害
+		g_fight.attack_damage, g_fight.attack_crit = fight_damage( FIGHT_ATTACK, pAttackUnit, pDefenseUnit );
+		g_fight.defense_damage, g_fight.defense_crit = fight_damage( FIGHT_DEFENSE, pDefenseUnit, pAttackUnit );
 		
 		-- 攻击音效
-		if attack_crit == 1 or defense_crit == 1 then
+		if g_fight.attack_crit == 1 or g_fight.defense_crit == 1 then
 			eye.audioManager:Play(306);
 		else
 			eye.audioManager:Play(307);
 		end
 				
 		-- 播放伤害
-		if attack_damage <= 0 then
+		if g_fight.attack_damage <= 0 then
 			FightDlgPlayMissEffect( FIGHT_DEFENSE )
 		else
-			FightDlgPlayHpEffect( FIGHT_DEFENSE, attack_damage, attack_crit )
+			FightDlgPlayHpEffect( FIGHT_DEFENSE, g_fight.attack_damage, g_fight.attack_crit )
 		end
-		if defense_damage <= 0 then
+		if g_fight.defense_damage <= 0 then
 			FightDlgPlayMissEffect( FIGHT_ATTACK )
 		else
-			FightDlgPlayHpEffect( FIGHT_ATTACK, defense_damage, defense_crit )
+			FightDlgPlayHpEffect( FIGHT_ATTACK, g_fight.defense_damage, g_fight.defense_crit )
 		end
 		
-		if attack_damage > 0 then
-			result, right_change_line, right_change_unit  = fight_changehp( FIGHT_ATTACK, pDefenseUnit, attack_damage );
-			if result > 0 then
+		local timer = 1.0
+		-- 攻击方->防御方造成的伤害结果
+		if g_fight.attack_damage > 0 then
+			g_fight.result, g_fight.right_change_line, g_fight.right_change_unit  = fight_changehp( FIGHT_ATTACK, pDefenseUnit, g_fight.attack_damage );
+			if g_fight.result > 0 then
 				-- 删除一排部队
 				FightScene.UnitDead( FIGHT_DEFENSE )
-				-- 更新界面显示
-				FightDlgUnitUpdate()
-				return result;
+				fight_process_over( g_fight.result );
+				return;
 			end
 			
 			-- 播放动画-排数改变
-			if right_change_line == 1 then
-				-- 删除一排部队
-				FightScene.UnitDead( FIGHT_DEFENSE )
-				-- 后续排前进
-				Invoke( function() 
-					-- 上前音效
-					eye.audioManager:Play(305);
-					FightScene.UnitWalk( FIGHT_DEFENSE, pDefenseUnit )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_1" );
-				g_fight.frame_max = 4*FightScene.m_speed;
-				
+			if g_fight.right_change_line == 1 then
+				ChangeLine( FIGHT_DEFENSE, pDefenseUnit )
+				timer = 3.5
 			end
 			-- 播放动画-武将改变
-			if right_change_unit == 1 and result <= 0 then
-				-- 创建军阵
-				Invoke( function() 
-					-- 进场音效
-					eye.audioManager:Play(301);
-					FightScene.UnitCreate( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_2" );
-				-- 移动军阵
-				Invoke( function() 
-					FightScene.UnitWalk( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_3" );
-				g_fight.frame_max = 5*FightScene.m_speed;
+			if g_fight.right_change_unit == 1 and g_fight.result <= 0 then
+				ChangeUnit( FIGHT_DEFENSE )
+				timer = 4.5
 			end
 			-- 更新界面显示
 			FightDlgUnitUpdate()
 		end
-	
-		if defense_damage > 0 then
-			result, left_change_line, left_change_unit  = fight_changehp( FIGHT_DEFENSE, pAttackUnit, defense_damage );
-			if result > 0 then
+		
+		-- 防御方->攻击方造成的伤害结果
+		if g_fight.defense_damage > 0 then
+			g_fight.result, g_fight.left_change_line, g_fight.left_change_unit  = fight_changehp( FIGHT_DEFENSE, pAttackUnit, g_fight.defense_damage );
+			if g_fight.result > 0 then
 				-- 删除一排部队
 				FightScene.UnitDead( FIGHT_ATTACK )
-				-- 更新界面显示
-				FightDlgUnitUpdate()
-				return result;
+				fight_process_over( g_fight.result );
+				return;
 			end
-			
 			-- 播放动画-排数改变
-			if left_change_line == 1 then
-				-- 删除一排部队
-				FightScene.UnitDead( FIGHT_ATTACK )
-				-- 后续排前进
-				Invoke( function()
-					-- 上前音效
-					eye.audioManager:Play(305);
-					FightScene.UnitWalk( FIGHT_ATTACK, pAttackUnit )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_11" );
-				g_fight.frame_max = 4*FightScene.m_speed;
-				
+			if g_fight.left_change_line == 1 then
+				ChangeLine( FIGHT_ATTACK, pAttackUnit )
+				timer = 3.5
 			end
 			-- 播放动画-武将改变
-			if left_change_unit == 1 and result <= 0 then
-				-- 创建军阵
-				Invoke( function() 
-					-- 进场音效
-					eye.audioManager:Play(301);
-					FightScene.UnitCreate( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_12" );
-				-- 移动军阵
-				Invoke( function() 
-					FightScene.UnitWalk( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-				end, 2*FightScene.m_speed, nil, "Fight_Invoke_13" );
-				g_fight.frame_max = 5*FightScene.m_speed;
+			if g_fight.left_change_unit == 1 and g_fight.result <= 0 then
+				ChangeUnit( FIGHT_ATTACK )
+				timer = 4.5
 			end
 			-- 更新界面显示
 			FightDlgUnitUpdate()
 		end
 		
 		-- 对战界面对战信息页
-		if left_change_unit == 1 or right_change_unit == 1 then
+		if g_fight.left_change_unit == 1 or g_fight.right_change_unit == 1 then
+			--  有军阵改变的下一回合时间
+			-- 播放
 			Invoke( function() 
 				FightDlgUnitVsUpdateLayer()
 				FightDlgUnitVsLayerShow()
 				-- 更新界面显示
 				FightDlgUnitUpdate()
-			end, 3*FightScene.m_speed, nil, "Fight_Invoke_20" );
+			end, 2.8*FightScene.m_speed, nil, "FightInvoke_UpdateLayer" );
 		end
-	end, 0.6*FightScene.m_speed, nil, "Fight_Invoke_0" );
-	return 0;
+	
+		-- 本过程时间
+        Invoke( function() fight_process( 0, pAttackUnit, pDefenseUnit ) end, timer*FightScene.m_speed , nil, "FightInvoke_Process" );	
+	end
 end
+
+-- 结束
+function fight_process_over( result )
+	-- 更新界面显示
+	FightDlgUnitUpdate()
+	if result > 0 then
+		if  result == FIGHT_WIN then
+			fight_debug( "[ATK WIN]" );
+		elseif result == FIGHT_LOSE then
+			fight_debug( "[DEF WIN]" );
+		end
+		Invoke( function() 
+			FightDlgResultLayerShow()
+		end, 2, nil, "FightInvoke_FightResult" );
+	end
+end
+
+-- 播放动画-排数改变
+function ChangeLine( pos, unit )
+	-- 删除一排部队
+	FightScene.UnitDead( pos )
+	-- 后续排前进
+	Invoke( function()
+		-- 上前音效
+		eye.audioManager:Play(305);
+		-- 移动
+		FightScene.UnitWalk( pos, unit )
+	end, 2*FightScene.m_speed, nil, "FightInvoke_ChangeLine_"..pos );
+end
+
+-- 播放动画-武将改变
+function ChangeUnit( pos )
+	-- 创建军阵
+	Invoke( function() 
+		-- 进场音效
+		eye.audioManager:Play(301);
+		-- 创建
+		FightScene.UnitCreate( pos, fight_nextptr( pos ) )
+	end, 2*FightScene.m_speed, nil, "FightInvoke_CreateUnit_"..pos );
+	
+	-- 移动军阵
+	Invoke( function() 
+		-- 移动
+		FightScene.UnitWalk( pos, fight_nextptr( pos ) )
+	end, 2*FightScene.m_speed, nil, "FightInvoke_UnitWalk_"..pos );
+end			
 
 -- 兵种相克系数
 function _corpsmul( corps, target_corps )

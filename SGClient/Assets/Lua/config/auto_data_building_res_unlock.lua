@@ -1,7 +1,7 @@
 g_building_res_unlock = {
 [21] = 
 { 
-	[0] = { kind=21,number=0,itemkind=0,itemnum=0,},
+	[0] = { kind=21,number=0,itemkind=256,itemnum=20,},
 	[1] = { kind=21,number=1,itemkind=0,itemnum=0,},
 	[2] = { kind=21,number=2,itemkind=0,itemnum=0,},
 	[3] = { kind=21,number=3,itemkind=0,itemnum=0,},
@@ -20,7 +20,7 @@ g_building_res_unlock = {
 },
 [22] = 
 { 
-	[0] = { kind=22,number=0,itemkind=0,itemnum=0,},
+	[0] = { kind=22,number=0,itemkind=356,itemnum=20,},
 	[1] = { kind=22,number=1,itemkind=0,itemnum=0,},
 	[2] = { kind=22,number=2,itemkind=0,itemnum=0,},
 	[3] = { kind=22,number=3,itemkind=0,itemnum=0,},
@@ -39,7 +39,7 @@ g_building_res_unlock = {
 },
 [23] = 
 { 
-	[0] = { kind=23,number=0,itemkind=0,itemnum=0,},
+	[0] = { kind=23,number=0,itemkind=306,itemnum=20,},
 	[1] = { kind=23,number=1,itemkind=0,itemnum=0,},
 	[2] = { kind=23,number=2,itemkind=0,itemnum=0,},
 	[3] = { kind=23,number=3,itemkind=0,itemnum=0,},
@@ -58,7 +58,7 @@ g_building_res_unlock = {
 },
 [24] = 
 { 
-	[0] = { kind=24,number=0,itemkind=0,itemnum=0,},
+	[0] = { kind=24,number=0,itemkind=406,itemnum=20,},
 	[1] = { kind=24,number=1,itemkind=0,itemnum=0,},
 	[2] = { kind=24,number=2,itemkind=0,itemnum=0,},
 	[3] = { kind=24,number=3,itemkind=0,itemnum=0,},

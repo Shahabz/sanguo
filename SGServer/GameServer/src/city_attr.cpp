@@ -220,10 +220,10 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 	case CITY_ATTR_ABILITY_137:// 每日免费行军召回（固定数值）
 		pAttr->everyday_army_recall += value;
 		break;
-	case CITY_ATTR_ABILITY_138:// 增加上阵武将数量（固定数值）（内阁上阵）
+	case CITY_ATTR_ABILITY_138:// 增加武将带兵排数（固定数值）（内阁上阵）
 		pAttr->hero_row_fight += value;
 		break;
-	case CITY_ATTR_ABILITY_139:// 增加上阵武将数量（固定数值）（内阁采集）
+	case CITY_ATTR_ABILITY_139:// 增加武将带兵排数（固定数值）（内阁采集）
 		pAttr->hero_row_gather += value;
 		break;
 	case CITY_ATTR_ABILITY_201:// 秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）

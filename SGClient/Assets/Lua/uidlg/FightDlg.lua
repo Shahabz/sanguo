@@ -29,6 +29,8 @@ local m_uiHeroList = nil; --UnityEngine.GameObject
 local m_uiCloseBtn = nil; --UnityEngine.GameObject
 local m_uiReturnCityBtn = nil; --UnityEngine.GameObject
 local m_uiReturnStoryBtn = nil; --UnityEngine.GameObject
+local m_uiLeftSkill = nil; --UnityEngine.GameObject
+local m_uiRightSkill = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_jsonFightInfo = nil
@@ -88,15 +90,11 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 返回副本
 		elseif nControlID == 3 then	
 			FightDlgClose();
-			
+			StoryDlgShow()
         end
 		
 	elseif nType == UI_EVENT_TWEENFINISH then
-		if nControlID == 101 then
-			SetFalse( m_uiLeftHpEffect )
-		elseif nControlID == 102 then
-			SetFalse( m_uiRightHpEffect )
-		end
+
 	end
 end
 
@@ -133,6 +131,8 @@ function FightDlgOnAwake( gameObject )
 	m_uiCloseBtn = objs[26];
 	m_uiReturnCityBtn = objs[27];
 	m_uiReturnStoryBtn = objs[28];
+	m_uiLeftSkill = objs[29];
+	m_uiRightSkill = objs[30];
 end
 
 -- 界面初始化时调用
@@ -157,7 +157,6 @@ end
 
 -- 每帧调用
 function FightDlgOnLogic( gameObject )
-	
 end
 
 
@@ -476,7 +475,7 @@ function FightDlgPlayMissEffect( pos )
 		SetTrue( m_uiLeftMissEffect );
 		Invoke( function()
 			SetFalse( m_uiLeftMissEffect );
-		end, 0.8 )
+		end, 0.8, nil, "FightInvoke_MissEffect_"..pos )
 	else
 		SetFalse( m_uiRightMissEffect );
 		SetTrue( m_uiRightMissEffect );
@@ -486,6 +485,66 @@ function FightDlgPlayMissEffect( pos )
 	end
 end
 
+-- 播放技能
+function FightDlgPlaySkill( pos, skillid, unittype, kind, shape )
+	local uiObj = nil
+	if pos == FIGHT_ATTACK then
+		uiObj = m_uiLeftSkill
+	else
+		uiObj = m_uiRightSkill
+	end
+	SetTrue( uiObj )
+	SetTrue( uiObj.transform:Find("Mask") )
+	local uiName = uiObj.transform:Find("Name")
+	local uiPic = uiObj.transform:Find("Pic");
+	SetImage( uiPic.transform:Find("Shape"), FightDlgUnitShape( unittype, kind, shape ) )
+	SetText( uiPic.transform:Find("Name"), FightDlgUnitName( unittype, kind ) )
+	SetImage( uiPic, LoadSprite("ui_fightdlg_skill_back"..skillid) )
+	SetImage( uiName, LoadSprite("ui_fightdlg_skill_"..skillid) )
+	
+	-- 播放移进动画
+	local uiPicTween = uiPic.transform:GetComponent( "UITweenRectPosition" );
+	local uiNameTween = uiName.transform:GetComponent( "UITweenRectPosition" );
+	if pos == FIGHT_ATTACK then
+		uiPicTween.from = Vector2( -750, 0 ); 
+		uiPicTween.to = Vector2( 0, 0 ); 
+		uiNameTween.from = Vector2( -540, -71 ); 
+		uiNameTween.to = Vector2( 210, -71 ); 
+	else
+		uiPicTween.from = Vector2( 750, 0 ); 
+		uiPicTween.to = Vector2( 0, 0 ); 
+		uiNameTween.from = Vector2( 540, -71 ); 
+		uiNameTween.to = Vector2( -210, -71 ); 
+	end
+	
+	uiPicTween.duration = 0.3;
+	uiPicTween:Play( true );
+	uiNameTween.duration = 0.4;
+	uiNameTween:Play( true );
+	
+	-- 播放移出动画
+	Invoke( function()
+		SetFalse( uiObj.transform:Find("Mask") )
+		if pos == FIGHT_ATTACK then
+			uiPicTween.from = Vector2( 0, 0 ); 
+			uiPicTween.to = Vector2( 750, 0 ); 
+			uiNameTween.from = Vector2( 210, -71 ); 
+			uiNameTween.to = Vector2( 960, -71 ); 
+		else
+			uiPicTween.from = Vector2( 0, 0 ); 
+			uiPicTween.to = Vector2( -750, 0 ); 
+			uiNameTween.from = Vector2( -210, -71 ); 
+			uiNameTween.to = Vector2( -960, -71 ); 
+		end
+		
+		uiPicTween.duration = 0.2;
+		uiPicTween:Play( true );
+		uiNameTween.duration = 0.2;
+		uiNameTween:Play( true );
+
+	end, 1.2, nil, "FightInvoke_Skill_"..pos )
+end
+	
 -- 启动战斗
 function FightDlgStart()
 	if m_playing == 1 then
@@ -499,20 +558,8 @@ function FightDlgStart()
 	
 	-- 进场音效
 	eye.audioManager:Play(301);
-	
-	-- 创建军阵
-	FightScene.UnitCreate( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-	FightScene.UnitCreate( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-	
-	-- 军阵移动
-	FightScene.UnitWalk( FIGHT_ATTACK, fight_nextptr( FIGHT_ATTACK ) )
-	FightScene.UnitWalk( FIGHT_DEFENSE, fight_nextptr( FIGHT_DEFENSE ) )
-	
-	-- 战斗逻辑启动
-	Invoke( function()
-		g_fight.frame_max = 2*FightScene.m_speed;
-		fight_start()
-	end, 2*FightScene.m_speed, nil, "Fight_Start" )
+	-- 启动战斗
+	fight_start();
 end
 
 -- 战斗结束页
@@ -707,4 +754,3 @@ function FightDlgResultLayerShow()
 		SetFalse( m_uiReturnStoryBtn )
 	end
 end
-

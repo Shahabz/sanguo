@@ -1337,11 +1337,14 @@ int struct_NetS_StoryList_send( char **pptr, int *psize, SLK_NetS_StoryList *pVa
 {
 	int tmpi = 0;
 
-	LKSET_MEM_SEND( (*pptr), pValue->m_rankstate, 512*sizeof(short), (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_ranknum, 32*sizeof(short), (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_ranktime, 32*sizeof(int), (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_story_chapter, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_story_rank, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_star, 128*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_hero, 32*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_restime, 32*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_resnum, 32*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_resreset, 32*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_itemnum, 64*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_story_drawing, 16*sizeof(short), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	return 0;
 }
 
@@ -2112,6 +2115,17 @@ int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisit
 
 	LKSET_MEM_SEND( (*pptr), pValue->m_id, 10*sizeof(short), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	return 0;
+}
+
+int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_content_length, (*psize) );
+	if( pValue->m_content_length > 0 && pValue->m_content_length <= 1800 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_content, pValue->m_content_length*sizeof(char), (*psize) );
 	return 0;
 }
 

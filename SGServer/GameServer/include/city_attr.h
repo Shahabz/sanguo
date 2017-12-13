@@ -46,8 +46,8 @@
 #define CITY_ATTR_ABILITY_135		135	// 体力购买次数上限（固定数值）
 #define CITY_ATTR_ABILITY_136		136	// 自动建造免费购买次数（固定数值）
 #define CITY_ATTR_ABILITY_137		137	// 每日免费行军召回（固定数值）
-#define CITY_ATTR_ABILITY_138		138	// 增加上阵武将数量（固定数值）（内阁上阵）
-#define CITY_ATTR_ABILITY_139		139	// 增加上阵武将数量（固定数值）（内阁采集）
+#define CITY_ATTR_ABILITY_138		138	// 增加武将带兵排数（固定数值）（内阁上阵）
+#define CITY_ATTR_ABILITY_139		139	// 增加武将带兵排数（固定数值）（内阁采集）
 
 #define CITY_ATTR_ABILITY_201		201	// 秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）
 #define CITY_ATTR_ABILITY_202		202 // 极品装备：打造装备有概率直接获得秘技装备（开启功能）

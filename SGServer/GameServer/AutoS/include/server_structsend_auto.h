@@ -918,11 +918,14 @@ struct _slk_NetS_MaterialWillList {
 typedef struct _slk_NetS_MaterialWillList SLK_NetS_MaterialWillList;	//预定材料生产列表
 
 struct _slk_NetS_StoryList {
-	short m_rankstate[512];	//副本信息-副本状态
-	short m_ranknum[32];	//副本信息-副本次数的信息
-	int m_ranktime[32];	//副本信息-副本时间的信息
-	short m_story_chapter;	//副本信息-玩家进度章节
-	short m_story_rank;	//副本信息-玩家进度关卡
+	short m_story_star[128];	//副本信息-副本状态
+	short m_story_hero[32];	//副本信息-招募副本
+	int m_story_restime[32];	//副本信息-资源副本时间
+	short m_story_resnum[32];	//副本信息-资源副本次数
+	short m_story_resreset[32];	//副本信息-资源副本重置次数
+	short m_story_itemnum[64];	//副本信息-道具副本掉落次数
+	short m_story_drawing[16];	//副本信息-装备图纸副本是否购买
+	short m_storyid;	//副本信息-玩家进度
 };
 typedef struct _slk_NetS_StoryList SLK_NetS_StoryList;	//副本信息
 
@@ -1451,6 +1454,13 @@ struct _slk_NetS_HeroVisitAward {
 };
 typedef struct _slk_NetS_HeroVisitAward SLK_NetS_HeroVisitAward;	//寻访奖励id
 
+struct _slk_NetS_FightPlay {
+	char m_flag;	//战斗详情
+	short m_content_length;	//战斗详情
+	char m_content[1800];	//战斗详情
+};
+typedef struct _slk_NetS_FightPlay SLK_NetS_FightPlay;	//战斗播放
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1611,5 +1621,6 @@ int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAu
 int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue );
 int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
 int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisitAward *pValue );
+int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pValue );
 
 #endif

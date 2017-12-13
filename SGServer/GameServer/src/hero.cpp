@@ -674,7 +674,6 @@ int hero_down( int actor_index, int kind )
 	hero_sendinfo( actor_index, &g_actors[actor_index].hero[offset] );
 	return 0;
 }
-
 // 武将顺序
 int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list )
 {
@@ -849,6 +848,7 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 		hero_attr_calc( pCity, pHero );
 		// 重算战力
 		city_battlepower_hero_calc( pCity );
+		hero_sendinfo( pCity->actor_index, pHero );
 	}
 	return 0;
 }
@@ -1306,6 +1306,34 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	else if ( pHero->offset >= HERO_BASEOFFSET+8 && pHero->offset < HERO_BASEOFFSET + 12 )
 	{ // 御林卫武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
+	}
+	return 0;
+}
+int hero_attr_calc_all( City *pCity, char path )
+{
+	// 计算所有上阵英雄属性
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		hero_attr_calc( pCity, &pCity->hero[tmpi] );
+		hero_sendinfo( pCity->actor_index, &pCity->hero[tmpi] );
+	}
+
+	if ( path == 1 )
+	{
+		// 计未上阵英雄属性
+		int actor_index = pCity->actor_index;
+		if ( actor_index >= 0 && actor_index < g_maxactornum )
+		{
+			for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+			{
+				if ( g_actors[actor_index].hero[tmpi].kind <= 0 )
+					continue;
+				hero_attr_calc( pCity, &g_actors[actor_index].hero[tmpi] );
+				hero_sendinfo( actor_index, &g_actors[actor_index].hero[tmpi] );
+			}
+		}
 	}
 	return 0;
 }

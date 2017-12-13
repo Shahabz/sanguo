@@ -347,7 +347,6 @@ function BattleDlgFight()
 			sendValue.m_herokind[i] = m_HeroList[i].m_kind
 		end 
 		netsend_storybattle_C( sendValue )
-		BattleDlgClose()
 		
 	elseif m_battleType == 1 then
 		-- m_bossid=0,m_herokind={[4]},
@@ -361,8 +360,6 @@ function BattleDlgFight()
 		BattleDlgClose()
 		
 	end
-	
-	BattleDlgClose()
 end
 
 -- 快速开始

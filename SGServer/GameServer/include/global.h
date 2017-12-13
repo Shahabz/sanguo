@@ -151,6 +151,7 @@ typedef struct _global
 	short hero_cabinet_level4;
 	short hero_cabinet_guard_hp;
 	short hero_cabinet_guard_token;
+	short story_sweep_vip;
 }Global;
 int global_init();
 void global_reload();

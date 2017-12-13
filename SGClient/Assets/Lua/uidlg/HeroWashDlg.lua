@@ -15,11 +15,13 @@ local m_uiColorBack = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 
+local m_upHeroCache = {}	
 local m_CacheHeroCache = {};
 local m_CacheHeroList = {}
 local m_recvValue = nil;
 local m_herokind = 0;
 local m_wash_toggle = false;
+local m_path = 0;
 
 -- 打开界面
 function HeroWashDlgOpen()
@@ -125,7 +127,8 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroWashDlgShow( kind )
+function HeroWashDlgShow( kind, path )
+	m_path = path
 	HeroWashDlgOpen()
 	system_askinfo( ASKINFO_HERO, "", 4 );
 	HeroWashDlgSetHero()
@@ -135,24 +138,58 @@ end
 -- 英雄
 function HeroWashDlgSetHero()
 	HeroWashDlgClear()
-	 -- 先放进临时缓存
-    for offset = 0, 3, 1 do
-        local pHero = GetHero().m_CityHero[offset];
-        if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero });
-        end
-    end
+	local baseoffset = -1; 
+	if m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
+		baseoffset = 4
+	elseif m_path == HEROLIST_PATH_HERO_GUARD then -- 御林卫武将
+		baseoffset = 8		
+	end
+					
+	if baseoffset >= 0 then
+		for offset = 0+baseoffset, 3+baseoffset, 1 do	
+			local pHero = GetHero().m_CityHero[offset];
+			if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
+				table.insert(m_upHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero });
+			end
+		end
+	else
+		-- 主将进入临时缓存
+		for offset = 0, 3, 1 do	
+			local pHero = GetHero().m_CityHero[offset];
+			if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
+				table.insert(m_upHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero });
+			end
+		end
+		
+		-- 聚贤阁进临时缓存			
+		for offset = 0, MAX_HERONUM-1, 1 do
+			local pHero = GetHero().m_Hero[offset];
+			if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
+				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
+			end
+		end
+		
+		-- 当前排序类型
+		local rankType = HeroListDlgGetRankType()
+		if rankType == 1 then
+			table.sort( m_CacheHeroCache, HeroWashDlgQualtiySort );
+		elseif rankType == 2 then
+			table.sort( m_CacheHeroCache, HeroWashDlgTalentSort );
+		elseif rankType == 3 then
+			table.sort( m_CacheHeroCache, HeroWashDlgLevelSort );
+		end
+	end	
 	
-	-- 先放进临时缓存			
-    for offset = 0, MAX_HERONUM-1, 1 do
-        local pHero = GetHero().m_Hero[offset];
-        if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero });
-        end
-    end
-	
-	for i=1, #m_CacheHeroCache, 1 do
-		local pHero = m_CacheHeroCache[i].m_pHero;
+	local num = #m_upHeroCache+#m_CacheHeroCache;
+	for i=1, num, 1 do
+		local pHero = nil
+		if i <= #m_upHeroCache then
+			pHero = m_upHeroCache[i].m_pHero;
+		else
+			pHero = m_CacheHeroCache[i-#m_upHeroCache].m_pHero;
+		end
 		local uiHeroObj = m_ObjectPool:Get( "UIP_HeroHead" );
 		uiHeroObj.transform:SetParent( m_uiContent.transform );
 		SetTrue( uiHeroObj )
@@ -183,9 +220,14 @@ end
 function HeroWashDlgSelectHero( kind )
 	m_herokind = kind
 	
-	for i=1, #m_CacheHeroCache, 1 do
-		local pHero = m_CacheHeroCache[i].m_pHero;
-		
+	local num = #m_upHeroCache+#m_CacheHeroCache;
+	for i=1, num, 1 do
+		local pHero = nil
+		if i <= #m_upHeroCache then
+			pHero = m_upHeroCache[i].m_pHero;
+		else
+			pHero = m_CacheHeroCache[i-#m_upHeroCache].m_pHero;
+		end
 		local uiHeroObj = m_CacheHeroList[pHero.m_kind];
 		local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiSelect = objs[4];
@@ -259,6 +301,7 @@ function HeroWashDlgClear()
 		local obj = v;
 		m_ObjectPool:Release( "UIP_HeroHead", obj );
     end
+	m_upHeroCache = {}
 	m_CacheHeroCache = {};
 	m_CacheHeroList = {};
 end
@@ -307,3 +350,61 @@ function HeroWashDlgToken()
 	end, m_wash_toggle ) 
 end
 
+
+function HeroWashDlgQualtiySort(a,b)
+	if a ~= nil and b ~= nil then
+        if a.m_pHero.m_color > b.m_pHero.m_color then
+            return true;
+        elseif a.m_pHero.m_color == b.m_pHero.m_color then
+			if a.m_pHero.m_level > b.m_pHero.m_level then
+				return true;
+			elseif a.m_pHero.m_level == b.m_pHero.m_level then
+				if a.total > b.total then
+					return true
+				else
+					return false;
+				end
+			else
+				return false
+			end
+		else
+			return false
+        end
+    else
+        return false;
+    end	
+end
+function HeroWashDlgTalentSort(a,b)
+	if a ~= nil and b ~= nil then
+        if a.total > b.total then
+            return true;
+        elseif a.total == b.total then
+			if a.m_pHero.m_level > b.m_pHero.m_level then
+				return true;
+			else
+				return false;
+			end
+		else
+			return false
+        end
+    else
+        return false;
+    end	
+end
+function HeroWashDlgLevelSort(a,b)
+	if a ~= nil and b ~= nil then
+        if a.m_pHero.m_level > b.m_pHero.m_level then
+            return true;
+        elseif a.m_pHero.m_level == b.m_pHero.m_level then
+			if a.m_pHero.m_color > b.m_pHero.m_color then
+				return true;
+			else
+				return false;
+			end
+		else
+			return false
+        end
+    else
+        return false;
+    end	
+end

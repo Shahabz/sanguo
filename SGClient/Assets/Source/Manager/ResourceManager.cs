@@ -419,7 +419,7 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_sprite == null || m_resmap_sprite.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+           // Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return null;
         }
@@ -445,7 +445,7 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_prefab == null || m_resmap_prefab.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+            //Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return null;
         }
@@ -510,7 +510,7 @@ public class ResourceManager : MonoBehaviour
 #endif
         if ( m_resmap_object == null || m_resmap_object.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+            //Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return default( T );
         }
@@ -761,7 +761,7 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_sprite == null || m_resmap_sprite.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+            //Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return;
         }
@@ -783,7 +783,7 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_sprite == null || m_resmap_sprite.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+            //Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return;
         }
@@ -805,7 +805,7 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_prefab == null || m_resmap_prefab.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
+            //Debug.Log( reskeyname + " is not found" );
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return;
         }

@@ -78,7 +78,7 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 武将洗髓
 		elseif nControlID == 2 then
-			HeroWashDlgShow( m_pCacheHero.m_kind )
+			HeroWashDlgShow( m_pCacheHero.m_kind, m_path )
 		
 		-- 上阵
 		elseif nControlID == 3 then

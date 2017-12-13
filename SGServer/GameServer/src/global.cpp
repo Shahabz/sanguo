@@ -496,6 +496,8 @@ int global_init()
 			global.hero_cabinet_guard_hp = atoi( row[1] );
 		else if ( id == 168 )
 			global.hero_cabinet_guard_token = atoi( row[1] );
+		else if ( id == 169 )
+			global.story_sweep_vip = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

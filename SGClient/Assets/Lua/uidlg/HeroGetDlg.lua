@@ -10,6 +10,10 @@ local m_uiAttack = nil; --UnityEngine.GameObject
 local m_uiDefense = nil; --UnityEngine.GameObject
 local m_uiTroops = nil; --UnityEngine.GameObject
 local m_uiGrowth = nil; --UnityEngine.GameObject
+local m_uiCloseBtn = nil; --UnityEngine.GameObject
+local m_uiHaveCloseBtn = nil; --UnityEngine.GameObject
+local m_uiText = nil; --UnityEngine.GameObject
+
 local m_herokind = 0;
 
 -- 打开界面
@@ -24,7 +28,9 @@ function HeroGetDlgClose()
 		return;
 	end
 	
+	
 	eye.uiManager:Close( "HeroGetDlg" );
+	HeroVisitDlgCloseHeroGetEvent();
 end
 
 -- 删除界面
@@ -64,6 +70,9 @@ function HeroGetDlgOnAwake( gameObject )
 	m_uiDefense = objs[6];
 	m_uiTroops = objs[7];
 	m_uiGrowth = objs[8];
+	m_uiCloseBtn = objs[9];
+	m_uiHaveCloseBtn = objs[10];
+	m_uiText = objs[11];
 end
 
 -- 界面初始化时调用
@@ -99,6 +108,16 @@ end
 function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
 	m_herokind = recvValue.m_kind;
+	local haveHero = GetHero():GetPtr(m_herokind);
+	if haveHero ~= nil  then
+		SetTrue(m_uiHaveCloseBtn);
+		SetFalse(m_uiCloseBtn);
+		print("recvValue.m_itemnum"..recvValue.m_itemnum);
+		SetText(m_uiText,F(1968,recvValue.m_itemnum));
+	else
+		SetFalse(m_uiHaveCloseBtn);
+		SetTrue(m_uiCloseBtn);
+	end
 	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
 	SetImage( m_uiHeroColor,  ItemColorSprite( recvValue.m_color )  );
 	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );

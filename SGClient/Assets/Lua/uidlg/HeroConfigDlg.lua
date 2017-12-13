@@ -113,7 +113,7 @@ function HeroConfigDlgSet( pHero)
 	SetImage( m_uiShape, HeroFaceSprite( pHero.kind ) )	
 	-- 名称
 	--SetText( m_uiName, HeroNameLv(pHero.m_kind, pHero.m_level ) )
-	SetText( m_uiName,pHero.name);
+	SetText( m_uiName,HeroName(pHero.kind));
 	-- 经验
 	--SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
 	--SetText( m_uiExpPanel.transform:Find("Text"), knum(pHero.m_exp).."/"..knum(pHero.m_exp_max) )

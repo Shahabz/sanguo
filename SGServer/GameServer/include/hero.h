@@ -41,6 +41,7 @@ char hero_getline( City *pCity, char state );
 //int hero_assault( City *pCity, Hero *pHero );
 //int hero_defend( City *pCity, Hero *pHero );
 int hero_attr_calc( City *pCity, Hero *pHero );
+int hero_attr_calc_all( City *pCity, char path );
 
 int hero_getexp_max( int level, int color );
 void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValue );

@@ -1503,10 +1503,10 @@ int city_guard_upgrade( int city_index, int offset )
 		return -1;
 	char monsterid = g_city[city_index].guard[offset].monsterid;
 	char color = g_city[city_index].guard[offset].color;
-	char level = g_city[city_index].guard[offset].level;
+	unsigned char level = g_city[city_index].guard[offset].level;
 	if ( color < 0 || color >= 6 )
 		return -1;
-	
+
 	// µÈ¼¶Éý¼¶
 	unsigned char maxlevel = buildingconfig->value[1];
 	unsigned char randomlevel = buildingconfig->value[2];

@@ -167,3 +167,4 @@ global.hero_cabinet_level3 = 105 --内阁武将栏等级限制
 global.hero_cabinet_level4 = 110 --内阁武将栏等级限制
 global.hero_cabinet_guard_hp = 5 --每分钟补充御林卫兵力百分比
 global.hero_cabinet_guard_token = 1 --御林卫立即补充消耗元宝
+global.story_sweep_vip = 5 --副本扫荡等级

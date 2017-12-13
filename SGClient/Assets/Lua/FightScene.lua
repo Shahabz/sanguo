@@ -1,11 +1,13 @@
 FightScene = {};
 FightScene.m_sceneObject = nil -- 战斗场景对象
 FightScene.m_displayRoot = nil
+FightScene.m_effectRoot = nil
 FightScene.m_mapABName = "_ab_ui_static_fight_back_1"
 FightScene.m_mapMainDlgIsActive = false;
 FightScene.m_leftUnit = {}
 FightScene.m_rightUnit = {}
-FightScene.m_objectPool  = {}
+FightScene.m_unitPool  = {}
+FightScene.m_effectPool  = {}
 
 -- 形象
 local corps_shape = { 4, 5, 6 }
@@ -21,8 +23,11 @@ local RightUnitPrePosX = { 4.2, 5, 5.8, 6.6, 7.4, 8.2, 9, 9.8, 10.6, 11.4, 12.2 
 local LeftUnitPosX = { -0.4, -1.8, -2.6, -3.4, -4.2, -5, -5.8, -6.6, -7.4, -8.2, -9 }
 local RightUnitPosX = { 0.4, 1.8, 2.6, 3.4, 4.2, 5, 5.8, 6.6, 7.4, 8.2, 9 }
 
+-- 攻击点
+local BeatPos = { 2.0, -0.8, -3.6 }
+
 -- 战斗速度
-FightScene.m_speed = 0.8
+FightScene.m_speed = 1
 
 -- 创建战场
 function FightScene.Create()
@@ -32,6 +37,7 @@ function FightScene.Create()
 	ResourceManager.LoadAssetBundle( "_ab_char_shape_fightunit"  );
 	FightScene.m_sceneObject = GameObject.Instantiate( LoadPrefab("FightScene") );
 	FightScene.m_displayRoot = FightScene.m_sceneObject.transform:Find( "Display" );
+	FightScene.m_effectRoot = FightScene.m_sceneObject.transform:Find( "Effect" );
 	MainDlgClose()
 	ChatDlgClose()
 	FightScene.m_mapMainDlgIsActive = MapMainDlgIsActive()
@@ -47,9 +53,12 @@ function FightScene.Delete()
 		GameObject.Destroy( FightScene.m_sceneObject );
 		FightScene.m_sceneObject = nil;
 	end
+	FightScene.m_displayRoot = nil
+	FightScene.m_effectRoot = nil
 	FightScene.m_leftUnit = {}
 	FightScene.m_rightUnit = {}
-	FightScene.m_objectPool  = {}
+	FightScene.m_unitPool  = {}
+	FightScene.m_effectPool  = {}
 	ResourceManager.UnloadAssetBundleImmediately( FightScene.m_mapABName )
 	ResourceManager.UnloadAssetBundleImmediately( "_ab_fight" )
 	ResourceManager.UnloadAssetBundleImmediately( "_ab_char_shape_fightunit"  );
@@ -67,10 +76,10 @@ function FightScene.Delete()
 end
 
 -- 从士兵池获取一个士兵对象
-function FightScene.PoolGet( corps )
+function FightScene.PoolGetUnit( corps )
 	local unitObj = nil
-	if FightScene.m_objectPool[corps] ~= nil then
-		for index, unit in pairs( FightScene.m_objectPool[corps] ) do
+	if FightScene.m_unitPool[corps] ~= nil then
+		for index, unit in pairs( FightScene.m_unitPool[corps] ) do
 			if unit and unit.gameObject.activeSelf == false then
 				unitObj = unit;
 				break;
@@ -84,17 +93,17 @@ function FightScene.PoolGet( corps )
 		--unitObj.transform:Find("Sprite").gameObject.layer = 9;
 		unitObj.transform:Find("Shadow"):GetComponent("SpriteRenderer").sortingOrder  = 11;
 		--unitObj.transform:Find("Shadow").gameObject.layer = 9;
-		if FightScene.m_objectPool[corps] == nil then
-			FightScene.m_objectPool[corps] = {}
+		if FightScene.m_unitPool[corps] == nil then
+			FightScene.m_unitPool[corps] = {}
 		end
-		table.insert( FightScene.m_objectPool[corps], unitObj );
+		table.insert( FightScene.m_unitPool[corps], unitObj );
 	end
 	unitObj.gameObject:SetActive( true );
 	return unitObj
 end
 
--- 从士兵池获取一个士兵对象
-function FightScene.PoolRelease( unitObj )
+-- 从士兵池释放一个士兵对象
+function FightScene.PoolReleaseUnit( unitObj )
 	if unitObj ~= nil then
 		unitObj.gameObject:SetActive( false );
 	end
@@ -102,6 +111,9 @@ end
 	
 -- 创建军阵
 function FightScene.UnitCreate( pos, unit )
+	if FightScene.m_displayRoot == nil then
+		return
+	end
 	if unit == nil then
 		return
 	end
@@ -120,7 +132,7 @@ function FightScene.UnitCreate( pos, unit )
 			end
 			
 			for i=1, unitcount, 1 do
-				local charactor = FightScene.PoolGet( unit.corps+1 );
+				local charactor = FightScene.PoolGetUnit( unit.corps+1 );
 				charactor.transform:SetParent( FightScene.m_displayRoot.transform );
 				charactor.transform.localPosition = Vector3.New( LeftUnitPrePosX[line], UnitPosY[i], 0 );
 				charactor.transform.localScale = Vector3.New( 1, 1, 1 );
@@ -145,7 +157,7 @@ function FightScene.UnitCreate( pos, unit )
 			end
 			
 			for i=1, unitcount, 1 do
-				local charactor = FightScene.PoolGet( unit.corps+1 );
+				local charactor = FightScene.PoolGetUnit( unit.corps+1 );
 				charactor.transform:SetParent( FightScene.m_displayRoot.transform );
 				charactor.transform.localPosition = Vector3.New( RightUnitPrePosX[line], UnitPosY[i], 0 );
 				charactor.transform.localScale = Vector3.New( 1, 1, 1 );
@@ -166,7 +178,7 @@ function FightScene.UnitWalk( pos, unit )
 			if FightScene.m_leftUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_leftUnit[line] ) do
 					local charactor = v;
-					charactor:SetSpeed( math.random( 18, 21 )/10 )
+					charactor:SetSpeed( math.random( 20, 23 )/10 )
 					charactor:MoveTo( Vector3.New( LeftUnitPosX[line], charactor.transform.localPosition.y, charactor.transform.localPosition.z ) )
 					charactor:Walk();
 				end
@@ -177,7 +189,7 @@ function FightScene.UnitWalk( pos, unit )
 			if FightScene.m_rightUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_rightUnit[line] ) do
 					local charactor = v;
-					charactor:SetSpeed( math.random( 18, 21 )/10 )
+					charactor:SetSpeed( math.random( 20, 23 )/10 )
 					charactor:MoveTo( Vector3.New( RightUnitPosX[line], charactor.transform.localPosition.y, charactor.transform.localPosition.z ) )
 					charactor:Walk();
 				end
@@ -233,3 +245,52 @@ function FightScene.UnitDead( pos )
 		table.remove( FightScene.m_rightUnit, 1 );
 	end
 end
+
+-- 从特效池获取一个特效对象
+function FightScene.PoolGetEffect( name )
+	local effectObj = nil
+	if FightScene.m_effectPool[name] ~= nil then
+		for index, effect in pairs( FightScene.m_effectPool[name] ) do
+			if effect and effect.gameObject.activeSelf == false then
+				effectObj = effect;
+				break;
+			end
+		end
+	end
+	-- 缓存没有，那么创建一个，并放进缓存
+	if effectObj == nil then
+		effectObj = GameObject.Instantiate( LoadPrefab( name ) )
+		effectObj.transform:SetParent( FightScene.m_effectRoot.transform );
+		if FightScene.m_effectPool[name] == nil then
+			FightScene.m_effectPool[name] = {}
+		end
+		table.insert( FightScene.m_effectPool[name], effectObj );
+	end
+	effectObj.gameObject:SetActive( true );
+	return effectObj
+end
+
+-- 释放一个特效对象到特效池
+function FightScene.PoolReleaseEffect( effectObj )
+	if effectObj ~= nil then
+		effectObj.gameObject:SetActive( false );
+	end
+end
+
+-- 播放特效
+function FightScene.PlayBeat()
+	local list = {}
+	for i=1,3,1 do
+		local effectObj = FightScene.PoolGetEffect( "Tysj" )
+		effectObj.transform.localPosition = Vector3.New( 0, BeatPos[i], 0 );
+		effectObj.transform.localScale = Vector3.New( 5, 5, 5 );
+		table.insert( list, effectObj )
+	end
+	Invoke( function() 
+		for i=1, #list, 1 do
+			FightScene.PoolReleaseEffect( list[i] )
+		end
+	end, 0.5, nil, "FightInvoke_PlayBeat");
+	
+end
+

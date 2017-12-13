@@ -171,6 +171,7 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 	pUnit->assault = assault;
 	pUnit->defend = defend;
 	pUnit->line = line;
+	pUnit->skillid_init = skillid;
 	pUnit->skillid = skillid;
 	pUnit->damage = 0;
 	pUnit->expmax = expmax; // 参战时候经验
@@ -178,7 +179,14 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 	// 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
 	int line_troops = pUnit->troops / pUnit->line;
 	// 战斗中带兵排数 = 实际参战兵力 / 每排兵力，结果向上取整
-	pUnit->line_left = (int)ceil( pUnit->maxhp / (float)line_troops );
+	if ( pUnit->troops == pUnit->maxhp )
+	{
+		pUnit->line_left = pUnit->line;
+	}
+	else
+	{
+		pUnit->line_left = (int)ceil( pUnit->maxhp / (float)line_troops );
+	}
 	if ( pUnit->line_left == 1 )
 	{ // 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 		if ( pUnit->troops == pUnit->maxhp )
@@ -711,7 +719,7 @@ int fight_start_armygroup( int group_index )
 }
 
 // 战斗启动-副本战斗
-int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chapter, int rank )
+int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue )
 {
 	g_gm_isout = 0;
 	g_gm_outresult[0] = '\0';
@@ -743,14 +751,14 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chap
 			if ( !config )
 				continue;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_LEADER_HERO, -1, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
-				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
+				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 		}
 	}
 
 	// 副本英雄
 	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
-		int monsterid = g_storyinfo[chapter].config[rank].monsterid[tmpi];
+		int monsterid = g_storyinfo[pValue->m_storyid].monsterid[tmpi];
 		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
 			continue;
 		MonsterInfo *pMonster = &g_monster[monsterid];
@@ -1421,7 +1429,7 @@ int fight_unit2json()
 		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d%s%s,"
 			"\"a1\":%d,\"a2\":%d,\"a3\":%d,\"a4\":%d,\"a5\":%d,\"a6\":%d,\"a7\":%d,\"a8\":%d,\"a9\":%d}", 
 			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, expstr, vwstr,
-			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid );
+			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid_init );
 		strcat( g_fight.unit_json, szTmp );
 	}
 	sprintf( szTmp, "]," );
@@ -1542,10 +1550,47 @@ int fight_unit2json()
 		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d%s%s,"
 			"\"a1\":%d,\"a2\":%d,\"a3\":%d,\"a4\":%d,\"a5\":%d,\"a6\":%d,\"a7\":%d,\"a8\":%d,\"a9\":%d}",
 			sflag, pUnit->offset, pUnit->type, nation, name, pUnit->kind, pUnit->shape, pUnit->level, pUnit->color, pUnit->corps, pUnit->maxhp, pUnit->hp, pUnit->damage, expstr, vwstr,
-			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid );
+			pUnit->attack, pUnit->defense, pUnit->troops, pUnit->attack_increase, pUnit->defense_increase, pUnit->assault, pUnit->defend, pUnit->line, pUnit->skillid_init );
 		strcat( g_fight.unit_json, szTmp );
 	}
 	sprintf( szTmp, "]}" );
 	strcat( g_fight.unit_json, szTmp );
+	return 0;
+}
+
+// 播放战斗
+int fight_play( int actor_index, char *content )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( !content )
+		return -1;
+	SLK_NetS_FightPlay pValue = { 0 };
+
+	// 发送开始
+	pValue.m_flag = 0;
+	pValue.m_content_length = 0;
+	netsend_fightplay_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 发内容过程
+	pValue.m_flag = 1;
+	int total_length = strlen( content );
+	int offset = 0;
+	while ( total_length > 0 )
+	{
+		int length = strlen( content + offset );
+		if ( length > 1600 )
+			length = 1600;
+		pValue.m_content_length = length;
+		memcpy( pValue.m_content, content + offset, sizeof( char )*length );
+		offset += length;
+		total_length -= length;
+		netsend_fightplay_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+
+	// 发送完毕
+	pValue.m_flag = 2;
+	pValue.m_content_length = 0;
+	netsend_fightplay_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -18,6 +18,16 @@ local m_uiHeroLayout = nil; --UnityEngine.GameObject
 local m_uiOnceText = nil; --UnityEngine.GameObject
 local m_uiTenthText = nil; --UnityEngine.GameObject
 local m_uiTimesText = nil; --UnityEngine.GameObject
+local m_uiOneUpText = nil; --UnityEngine.GameObject
+local m_uiTenUpText = nil; --UnityEngine.GameObject
+local m_uiOnePage = nil; --UnityEngine.GameObject
+local m_uiTenPage = nil; --UnityEngine.GameObject
+local m_uiTenTokenText = nil; --UnityEngine.GameObject
+local m_uiAward = nil; --UnityEngine.GameObject
+local m_uiAwardGrop = nil; --UnityEngine.GameObject
+local m_uiTenAgainVisitBtn = nil; --UnityEngine.GameObject
+local m_uiTenthBtn = nil; --UnityEngine.GameObject
+local m_uiOnceBtn = nil; --UnityEngine.GameObject
 local m_cacheAward = nil;
 local m_tokenObjectArray = {};
 local m_heroObjectArray = {};
@@ -25,10 +35,11 @@ local m_combineObjectArray = {};
 local i_goodTimesNum = 0 ; --良将寻访次数
 local i_godTimesNum = 0 ; --神将寻访次数
 local i_TimesNum = 0 ;  -- 再寻访几次得特殊武将 
-local b_isVisit = false ;
-
+local b_isVisit = false ; --控制一次寻访
+local b_isTenVisit = false ;--控制十连寻访
 local i_controlID = 0 ;
-
+local f_awardPosition = {}; --存储十连抽每个奖励的位置
+local i_tweenId = 1;
 
 
 
@@ -46,12 +57,22 @@ function HeroVisitDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	if IsActive(m_uiTenPage) then
+		clearChild(m_uiAwardGrop);
+		i_tweenId = 1;
+		SetFalse(m_uiTenPage);
+		SetTrue(m_uiOnePage);
+		return;
+	end
 	-- 此处判断当前在哪个页，如果在奖励页就关闭奖励页，显示信息页
-	
-	DialogFrameModClose( m_DialogFrameMod );
-	m_DialogFrameMod = nil;
-	eye.uiManager:Close( "HeroVisitDlg" );
+	if IsActive(m_uiInfoLayer) then
+		DialogFrameModClose( m_DialogFrameMod );
+		m_DialogFrameMod = nil;
+		eye.uiManager:Close( "HeroVisitDlg" );
+	else
+		SetTrue(m_uiInfoLayer);
+		SetFalse(m_uiAwardLayer);
+	end	
 end
 
 -- 删除界面
@@ -89,6 +110,7 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 				print("i_controlID value error ");
 			end
 		elseif nControlID == 5 then	--寻访10次
+			i_tweenId=1;
 			if i_controlID == 2 then
 				MsgBox(F(1965,global.hero_visit_low_token10,10,"良"),function()
 				HeroVisitDlgLow10() end);
@@ -97,13 +119,21 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 				HeroVisitDlgHigh10() end);
 			else
 				print("i_controlID value error ");
-			end		
+			end	
+		elseif nControlID == 6 then --
+
 		elseif nControlID >= 17 and nControlID < 400 then
 			HeroVisitDlgSelect(nControlID);
         end		
 	elseif nType == UI_EVENT_TIMECOUNTEND  then
 		if nControlID == 1 then
 			HeroVisitDlgShow();
+		end
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 1 then
+			if b_isTenVisit == true then
+				HeroVisitDlgSetCellTen(g_hero_visit[m_cacheAward.m_id[i_tweenId]]);
+			end
 		end
 	end
 end
@@ -129,6 +159,16 @@ function HeroVisitDlgOnAwake( gameObject )
 	m_uiOnceText = objs[14];
 	m_uiTenthText = objs[15];
 	m_uiTimesText = objs[16];
+	m_uiOneUpText = objs[17];
+	m_uiTenUpText = objs[18];
+	m_uiOnePage = objs[19];
+	m_uiTenPage = objs[20];
+	m_uiTenTokenText = objs[21];
+	m_uiAward = objs[22];
+	m_uiAwardGrop = objs[23];
+	m_uiTenAgainVisitBtn = objs[24];
+	m_uiTenthBtn = objs[25];
+	m_uiOnceBtn = objs[26];
 	HeroVisitDlgGetObject();
 end
 
@@ -139,12 +179,7 @@ end
 
 -- 界面显示时调用
 function HeroVisitDlgOnEnable( gameObject )
-	if IsActive(m_uiInfoLayer) then
-		return;
-	else
-		SetTrue(m_uiInfoLayer);
-		SetFalse(m_uiAwardLayer);
-	end	
+
 end
 
 -- 界面隐藏时调用
@@ -171,6 +206,8 @@ local logic_value = nil ; -- 奖励信息
 function HeroVisitDlgOnLogic( gameObject )	
 	
 	if b_isVisit == true then
+		SetButtonFalse(m_uiOnceBtn);
+		SetButtonFalse(m_uiTenthBtn);
 		logic_sumTime = logic_sumTime + Time.deltaTime * logic_deltTime;
 		if logic_sumTime > 1 then
 			logic_sumTime = 0 
@@ -194,6 +231,8 @@ function HeroVisitDlgOnLogic( gameObject )
 					logic_lastSelectId = logic_selectid;
 					logic_deltTime = 25;
 					logic_deltTimeMed = 0;
+					SetButtonTrue(m_uiOnceBtn);
+					SetButtonTrue(m_uiTenthBtn);
 					b_isVisit = false;
 					return ;
 				end
@@ -223,7 +262,7 @@ end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
 function HeroVisitDlgRecv( recvValue )	
-	recvValue.m_hv_progress = 100 ;
+	
 	i_goodTimesNum = recvValue.m_hv_low_num ;
 	i_godTimesNum = recvValue.m_hv_high_num ;
 	if	recvValue.m_hv_free_cd == 0 then
@@ -267,6 +306,16 @@ end
 -- 良将寻访10连
 function HeroVisitDlgLow10()
 	-- 关键条件判断
+	if IsActive(m_uiOnePage) then		
+		SetFalse(m_uiOnePage);
+		SetTrue(m_uiTenPage);
+		SetText(m_uiTenTokenText,global.hero_visit_low_token10);
+	end
+	if #f_awardPosition == 0 then
+		HeroVisitDlgGetPosition();
+	else
+		clearChild(m_uiAwardGrop);
+	end
 	
 	-- 发送信息
 	system_askinfo( ASKINFO_HERO_VISIT, "", 1, 1 );
@@ -280,6 +329,9 @@ function HeroVisitDlgHigh()
 		i_TimesNum = 10 ;
 	end
 	SetText(m_uiTimesText,F(1964,i_TimesNum));
+	if f_awardPosition == nil then
+		HeroVisitDlgGetPosition();
+	end
 	-- 发送信息
 	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );
 end
@@ -287,7 +339,16 @@ end
 -- 神将寻访10连
 function HeroVisitDlgHigh10()
 	-- 关键条件判断
-	
+	if IsActive(m_uiOnePage) then		
+		SetFalse(m_uiOnePage);
+		SetTrue(m_uiTenPage);
+		SetText(m_uiTenTokenText,global.hero_visit_high_token10);
+	end
+	if #f_awardPosition == 0 then
+		HeroVisitDlgGetPosition();
+	else
+		clearChild(m_uiAwardGrop);
+	end	
 	-- 发送信息
 	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 1 );
 end
@@ -314,7 +375,11 @@ function HeroVisitDlgRecvAward( recvValue )
 			end
 		end	
 	else
-		
+		b_isTenVisit = true;
+		HeroVisitDlgSetCellTen(g_hero_visit[m_cacheAward.m_id[i_tweenId]]);
+		if IsActive(m_uiTenAgainVisitBtn) then
+			SetFalse( m_uiTenAgainVisitBtn );
+		end
 		-- 播放多个道具或武将的动画
 		-- 原理同上，只不过这里循环10个动画显示
 	end
@@ -332,7 +397,7 @@ function HeroVisitDlgSetAnimation( value )
 			m_attack_base = pHeroConfig.attack_base, m_attack_wash = pHeroConfig.attack_wash,
 			m_defense_base = pHeroConfig.defense_base, m_defense_wash = pHeroConfig.defense_wash,
 			m_troops_base = pHeroConfig.troops_base, m_troops_wash = pHeroConfig.troops_wash,
-			m_attack = pHeroConfig.attack,m_defense = pHeroConfig.defense,m_troops = pHeroConfig.troops, m_offset = 0 }
+			m_attack = pHeroConfig.attack,m_defense = pHeroConfig.defense,m_troops = pHeroConfig.troops, m_offset = 0 ,m_itemnum = pHeroConfig.itemnum }
 		HeroGetDlgShow( hero );		
 	-- 奖励道具
 	else
@@ -351,8 +416,9 @@ end
 --关闭聚贤馆 打开寻访界面 并填充每个模块
 function HeroVisitDlgOpenAward( controlid )	
 	if controlid == 2 then
+		SetText(m_uiOneUpText,T(1962));
 		 i_TimesNum = global.hero_visit_low_max - i_goodTimesNum ;
-		SetText(m_uiTimesText,F(1963,i_TimesNum));
+		 SetText(m_uiTimesText,F(1963,i_TimesNum));
 		if i_controlID == 2 then
 			SetTrue(m_uiAwardLayer);
 			SetFalse(m_uiInfoLayer);
@@ -379,6 +445,7 @@ function HeroVisitDlgOpenAward( controlid )
 		SetText(m_uiOnceText,global.hero_visit_low_token)	
 		SetText(m_uiTenthText,global.hero_visit_low_token10)		
 	elseif controlid == 3 then
+		SetText(m_uiOneUpText,T(1961));
 		i_TimesNum = global.hero_visit_high_max - i_godTimesNum ;
 		SetText(m_uiTimesText,F(1964,i_TimesNum));
 		if i_controlID == 3 then
@@ -408,7 +475,7 @@ function HeroVisitDlgOpenAward( controlid )
 		SetText(m_uiTenthText,global.hero_visit_high_token10)		
 	end	
 	SetTrue(m_uiAwardLayer);
-	SetFalse(m_uiInfoLayer);				
+	SetFalse(m_uiInfoLayer);	
 end
 --
 function HeroVisitDlgSort(a,b)
@@ -435,34 +502,8 @@ function HeroVisitDlgGetObject()
 	end	
 	table.sort(m_combineObjectArray,HeroVisitDlgSort)
 end
-	--[[
-	local goodHeroList = {};
-	for key, value in pairs(g_hero_visit) do      
-		if global.hero_visit_low_normal_award == value.awardgroup then
-			table.insert(goodHeroList,value);
-		end
-	end
-	local tokenCount = 1;
-	local heroCount = 1;
-	for key,value in pairs(goodHeroList) do	
-		--local sprite, color, name = AwardInfo(value.kind  ) ;	
-		if value.kind >= 20000 then
-			HeroVisitDlgSetCell(m_heroObjectArray[heroCount],value);
-			heroCount=heroCount+1;
-		else
-			HeroVisitDlgSetCell(m_tokenObjectArray[tokenCount],value);
-			tokenCount=tokenCount+1;
-		
-			SetImage(m_tokenObjectArray[tokenCount].transform:Find("Shape"),sprite);
-			SetImage( m_tokenObjectArray[tokenCount].transform:Find("Color"), ItemColorSprite(value.color) );
-			SetText(m_tokenObjectArray[tokenCount].transform:Find("Num"),"x"..value.num,NameColor(value.color));
-			tokenCount=tokenCount+1;
-		
-		end
-	end
-	--]]
 
---设置单个对象
+--单次寻访设置单个对象
 function HeroVisitDlgSetCell(uiHeroObj,value)
 	local sprite, color, name = AwardInfo(value.kind  ) ;
 	local colorSprite = ItemColorSprite(value.color);
@@ -479,7 +520,6 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 		SetImage(uiColor,colorSprite);
 		SetImage(uiCorps,CorpsSprite(g_heroinfo[(value.kind-20000)][value.color].corps));
 		SetText(uiName,name);
-		
 		local haveHero = GetHero():GetPtr(value.kind-20000);
 		if haveHero ~= nil  then
 			SetTrue(uiAlreadlyHave);
@@ -493,6 +533,52 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 		SetImage(uiShape,sprite);
 		SetImage(uiColor,colorSprite);
 		SetText(uiName,"x"..value.num,NameColor(value.color));
+	end
+end
+-- 十连寻访设置单个对象
+function HeroVisitDlgSetCellTen(value)
+	--print("number:"..i_tweenId);
+	--print("value"..value.kind);
+	local uiItemObj = newobject(m_uiAward);
+	SetTrue(uiItemObj.transform);
+	uiItemObj.transform:SetParent( m_uiAwardGrop.transform,false );
+	local sprite, color, name = AwardInfo(value.kind  ) ;
+	local colorSprite = ItemColorSprite(value.color);
+	local objs = uiItemObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	if value.kind >= 20000 then
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiCorps = objs[2];
+		local uiName = objs[3];
+		SetImage(uiShape,sprite);
+		SetImage(uiColor,colorSprite);
+		SetImage(uiCorps,CorpsSprite(g_heroinfo[(value.kind-20000)][value.color].corps));
+		local haveHero = GetHero():GetPtr(value.kind-20000);
+		uiItemObj.transform.localPosition = f_awardPosition[i_tweenId];
+		if haveHero ~= nil  then
+			SetText(uiName,"将令x"..g_heroinfo[(value.kind-20000)][value.color].itemnum);
+		else
+			SetText(uiName,name);
+		end
+		b_isTenVisit = false;
+		HeroVisitDlgSetAnimation(value);
+	else
+		uiItemObj.transform:GetComponent("UITweenLocalPosition").to = f_awardPosition[i_tweenId];
+		uiItemObj.transform:GetComponent("UITweenLocalPosition"):Play(true);
+		uiItemObj.transform:GetComponent("UITweenLocalRotation"):Play(true);
+		local uiShape = objs[0];
+		local uiColor = objs[1];
+		local uiCorps = objs[2];
+		local uiName = objs[3];	
+		SetFalse(uiCorps);
+		SetImage(uiShape,sprite);
+		SetImage(uiColor,colorSprite);
+		SetText(uiName,"将令x"..value.num);	
+	end
+	i_tweenId =i_tweenId+1;	
+	if i_tweenId ==11 then
+		b_isTenVisit = false;
+		SetTrue( m_uiTenAgainVisitBtn );
 	end
 end
 --点击英雄头像
@@ -523,6 +609,25 @@ function HeroVisitDlgTransform( id )
 		end
 	end
 	return transformid ;
+end
+-- 获取十连寻访每个将领物体的位置
+function HeroVisitDlgGetPosition()
+	for i = m_uiAwardGrop.transform.childCount-1,0,-1 do
+		f_awardPosition[i+1]=m_uiAwardGrop.transform:GetChild(i).transform.localPosition ;		
+	end
+	clearChild(m_uiAwardGrop);
+end
+-- 获得新武将界面关闭时时调用此方法
+function HeroVisitDlgCloseHeroGetEvent()
+	if IsActive(m_uiTenPage) then
+		print("i_tweenId"..i_tweenId);
+		if i_tweenId  >=11 then
+			return;
+		else
+			b_isTenVisit = true;
+			HeroVisitDlgSetCellTen(g_hero_visit[m_cacheAward.m_id[i_tweenId]]);
+		end
+	end
 end
 
 

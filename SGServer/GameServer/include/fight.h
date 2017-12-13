@@ -51,7 +51,8 @@ typedef struct _fightunit
 	short	assault;			// 攻城
 	short	defend;				// 守城
 	char	line;				// 带兵排数
-	char	skillid;			// 武将技
+	char	skillid_init;		// 武将技，不变
+	char	skillid;			// 武将技,使用后变0
 
 	char	line_left;			// 当前剩余排数
 	int		line_hp;			// 当前排剩余兵力
@@ -109,7 +110,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index );
 int fight_start_armygroup( int group_index );
 
 // 战斗启动-副本战斗
-int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue, int chapter, int rank );
+int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue );
 
 // 战斗启动-世界boss
 int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue );
@@ -137,5 +138,8 @@ int fight_lost_calc();
 
 // 战斗信息
 int fight_unit2json();
+
+// 播放战斗
+int fight_play( int actor_index, char *content );
 #endif
 
