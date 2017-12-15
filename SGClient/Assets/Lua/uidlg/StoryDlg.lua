@@ -6,10 +6,14 @@ local m_uiPreBtn = nil; --UnityEngine.GameObject
 local m_uiNextBtn = nil; --UnityEngine.GameObject
 local m_uiGrid = nil; --UnityEngine.GameObject
 local m_uiWarning = nil; --UnityEngine.GameObject
+local m_uiResResetLayer = nil; --UnityEngine.GameObject
+
 local m_chapter =0;
 
 local m_recvValue = nil
 local m_id = 0;
+local m_uiObjCache = {}
+local m_resResetLayerStoryid = 0;
 
 STORY_TYPE_NORMAL	=	1	-- 普通，不能反复打
 STORY_TYPE_BOSS		=	2	-- 精英，可以反复打，3星后可以扫荡
@@ -32,6 +36,7 @@ function StoryDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "StoryDlg" );
+	m_uiObjCache = {}
 end
 
 -- 删除界面
@@ -49,10 +54,14 @@ function StoryDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             StoryDlgClose();
+		elseif nControlID == -2 then
+			StoryDlgHideResResetLayer()
 		elseif nControlID == 1 then
 			StoryDlgPre();
 		elseif nControlID == 2 then
 			StoryDlgNext();
+		elseif nControlID == 3 then
+			StoryDlgResReset()
 		elseif nControlID > 10000 and nControlID < 20000 then
 			StoryDlgSelect( nControlID - 10000 )
         end
@@ -68,6 +77,7 @@ function StoryDlgOnAwake( gameObject )
 	m_uiNextBtn = objs[2];
 	m_uiGrid = objs[3];
 	m_uiWarning = objs[4];
+	m_uiResResetLayer = objs[5];
 	SetFalse( m_uiGrid );
 	SetFalse( m_uiPreBtn )
 	SetFalse( m_uiNextBtn )
@@ -105,6 +115,7 @@ end
 ----------------------------------------
 function StoryDlgShow()
 	StoryDlgOpen()
+	SetFalse( m_uiResResetLayer )
 	if m_recvValue == nil then
 		system_askinfo( ASKINFO_STORY, "", 0 );
 	else
@@ -112,15 +123,74 @@ function StoryDlgShow()
 	end
 end
 
--- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,
+-- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind = 0
 function StoryDlgRecv( recvValue )
 	m_recvValue = recvValue;
-	m_recvValue.m_storyid = 646
-	m_chapter = g_story[m_recvValue.m_storyid].chapter;
+	--m_recvValue.m_storyid = 646
+	
+	-- 首次打开默认最新章节
 	if m_chapter == 0 then
-		m_chapter = 1;
+		m_chapter = g_story[m_recvValue.m_storyid].chapter;
+		if m_chapter == 0 then
+			m_chapter = 1;
+		end
 	end
 	StoryDlgSetInfo()
+end
+
+-- 状态接收
+-- m_storyid=0,m_state=0,m_savetype=0,m_saveoffset=0,m_actor_storyid=0
+function StoryDlgStateRecv( recvValue )
+	if recvValue.m_savetype == 1 then
+		-- 更新星级
+		m_recvValue.m_story_star[recvValue.m_saveoffset+1] = recvValue.m_state
+		
+	elseif recvValue.m_savetype == 2 then
+		-- 更新招募信息
+		m_recvValue.m_story_hero[recvValue.m_saveoffset+1] = recvValue.m_state
+
+	elseif recvValue.m_savetype == 3 then
+		-- 更新资源副本时间
+		m_recvValue.m_story_restime[recvValue.m_saveoffset+1] = recvValue.m_state
+
+	elseif recvValue.m_savetype == 4 then
+		-- 更新资源副本可打次数
+		m_recvValue.m_story_resnum[recvValue.m_saveoffset+1] = recvValue.m_state
+
+	elseif recvValue.m_savetype == 5 then
+		-- 更新资源副本重置次数
+		m_recvValue.m_story_resreset[recvValue.m_saveoffset+1] = recvValue.m_state
+
+	elseif recvValue.m_savetype == 6 then
+		-- 更新道具副本掉落次数
+		m_recvValue.m_story_itemnum[recvValue.m_saveoffset+1] = recvValue.m_state
+
+	elseif recvValue.m_savetype == 7 then
+		-- 装备图纸副本是否购买
+		m_recvValue.m_story_drawing[recvValue.m_saveoffset+1] = recvValue.m_state
+		
+	end
+	if m_uiObjCache[recvValue.m_storyid] == nil then
+		return
+	end
+	
+	-- 更新	
+	local storyid = recvValue.m_storyid;
+	StoryDlgSetRank( m_uiObjCache[storyid], g_story[storyid] )
+	
+	if m_recvValue.m_storyid < recvValue.m_actor_storyid then
+		m_recvValue.m_storyid = recvValue.m_actor_storyid;
+		StoryDlgRecv( m_recvValue )
+		
+		-- 检查是否有最新章节，下一章闪光
+		local chapter = g_story[m_recvValue.m_storyid].chapter;
+		if chapter > m_chapter then
+			SetTrue( m_uiNextBtn )
+		else
+			
+		end
+	end
+		
 end
 
 -- 上一章
@@ -183,15 +253,22 @@ function StoryDlgSetInfo()
 		end
 	 end )
 	
+	m_uiObjCache = {}
 	for i=1, #ranklist, 1 do
 		local uiObj = m_uiGrid.transform:GetChild(i-1).gameObject
 		StoryDlgSetRank( uiObj, ranklist[i] )
+		-- 缓存起来
+		local id = ranklist[i].id;
+		m_uiObjCache[id] = uiObj;
 	end
 	
 end
 
 -- 设置一个副本
 function StoryDlgSetRank( uiObj, storyConfig )
+	if uiObj == nil then
+		return
+	end
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiFrame = objs[1];
@@ -264,7 +341,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
 			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
+			SetGray( uiShapeBack, false )
 			SetTrue( uiFlag );
 			-- 星级
 			local starlv = m_recvValue.m_story_star[storyConfig.star_saveoffset+1]
@@ -315,14 +392,51 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		end
 		
 	elseif type == STORY_TYPE_RES then-- 资源
+		-- 攻打次数
+		local resnum_saveoffset = storyConfig.resnum_saveoffset;
+		local resnum = m_recvValue.m_story_resnum[resnum_saveoffset+1];
+		-- 结束时间
+		local ressec_saveoffset = storyConfig.ressec_saveoffset;
+		local restime = m_recvValue.m_story_restime[ressec_saveoffset+1];
+		-- 重置次数
+		local res_reset_saveoffset = storyConfig.res_reset_saveoffset;
+		local res_reset = m_recvValue.m_story_resreset[res_reset_saveoffset+1];
+		-- 没可攻打次数了，并且时间到了，消失
+		if resnum >= storyConfig.resnum and GetServerTime() >= restime then
+			SetFalse( uiObj )
+			return
+		end
+		
+		-- 如果到了重置次数，并且没有次数了消失
+		if resnum >= storyConfig.resnum and res_reset >= storyConfig.res_reset_num then
+			SetFalse( uiObj )
+			return
+		end
+		
 		-- 已经通关
-		if m_recvValue.m_storyid > storyConfig.id then
+		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
-			SetGray( uiShape, true )
+			SetGray( uiShape, false )
 			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
-			StoryDlgShowIcon( uiItem, storyConfig )	
+			SetGray( uiShapeBack, false )
+			StoryDlgShowIcon( uiItem, storyConfig )
+			
+			if resnum < storyConfig.resnum then
+				SetTrue( uiCount )
+				SetText( uiCount, F(2015, storyConfig.resnum-resnum) )
+				SetFalse( uiToken )
+			else
+				local token = StoryDlgResResetGet( storyConfig, res_reset )
+				SetTrue( uiToken )
+				SetText( uiToken.transform:Find("Text"), token )
+			end
+			if restime > GetServerTime() then
+				SetTrue( uiTimer )
+				SetTimer( uiTimer, restime-GetServerTime(), storyConfig.ressec )
+			else
+				SetFalse( uiTimer )
+			end
 			
 		-- 当前正在打的关卡
 		elseif m_recvValue.m_storyid == storyConfig.id then
@@ -333,6 +447,21 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
+			
+			if resnum < storyConfig.resnum then
+				SetTrue( uiCount )
+				SetText( uiCount, F(2015, storyConfig.resnum-resnum) )
+			else
+				local token = StoryDlgResResetGet( storyConfig, res_reset )
+				SetTrue( uiToken )
+				SetText( uiToken.transform:Find("Text"), token )
+			end
+			if restime > GetServerTime() then
+				SetTrue( uiTimer )
+				SetTimer( uiTimer, restime-GetServerTime(), storyConfig.ressec )
+			else
+				SetFalse( uiTimer )
+			end
 				
 		-- 尚未通关
 		else
@@ -352,20 +481,25 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 形象
 		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
-		-- 显示资源形象
-		if storyConfig.restype > 0 then
-			StoryDlgItemShape( uiItem, storyConfig.restype )
-		end
 		
 	elseif type == STORY_TYPE_ITEM then-- 道具
+		local save_offset = storyConfig.itemnum_saveoffset;
+		local num = m_recvValue.m_story_itemnum[save_offset+1];
+		if num >= storyConfig.itemnum then
+			-- 已经掉落完毕
+			SetFalse( uiObj )
+			return
+		end
 		-- 已经通关
-		if m_recvValue.m_storyid > storyConfig.id then
+		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
-			SetGray( uiShape, true )
+			SetGray( uiShape, false )
 			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
+			SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
+			SetTrue( uiCount )
+			SetText( uiCount, F( 2029, num, storyConfig.itemnum )  )
 			
 		-- 当前正在打的关卡
 		elseif m_recvValue.m_storyid == storyConfig.id then
@@ -376,6 +510,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
+			SetTrue( uiCount )
+			SetText( uiCount, F( 2029, num, storyConfig.itemnum )  )
 				
 		-- 尚未通关
 		else
@@ -401,13 +537,35 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		end
 		
 	elseif type == STORY_TYPE_HERO then-- 武将招募
+		local save_offset = storyConfig.hero_saveoffset;
+		local iscallover = m_recvValue.m_story_hero[save_offset+1];
+		if storyConfig.hero_kind0 > 0 and storyConfig.hero_kind1 > 0 then
+			if iscallover == 11 then
+				-- 已经招募完毕
+				SetFalse( uiObj )
+				return
+			end
+		elseif storyConfig.hero_kind0 > 0 then
+			if iscallover == 1 then
+				-- 已经招募完毕
+				SetFalse( uiObj )
+				return
+			end
+		elseif storyConfig.hero_kind1 > 0 then
+			if iscallover == 1 or iscallover == 10 then
+				-- 已经招募完毕
+				SetFalse( uiObj )
+				return
+			end
+		end
+		
 		-- 已经通关
-		if m_recvValue.m_storyid > storyConfig.id then
+		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
-			SetGray( uiShape, true )
+			SetGray( uiShape, false )
 			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
+			SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			
 		-- 当前正在打的关卡
@@ -440,15 +598,30 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		StoryRankShape( uiShape, storyConfig.shape )
 	
 	elseif type == STORY_TYPE_DRAWING then-- 装备图纸
+		local save_offset = storyConfig.drawing_saveoffset;
+		local isbuy = m_recvValue. m_story_drawing[save_offset+1];
+		if isbuy == 2 then
+			-- 已经购买完毕
+			SetFalse( uiObj )
+			return		
+		end
+		
 		-- 已经通关
-		if m_recvValue.m_storyid > storyConfig.id then
+		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
-			SetGray( uiShape, true )
+			SetGray( uiShape, false )
 			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
+			SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
-			
+			if isbuy == 1 then
+				SetTrue( uiCount )
+				SetText( uiCount, F( 2015, 1 )  )
+			else
+				SetTrue( uiToken )
+				SetText( uiToken.transform:Find("Text"), storyConfig.drawing_token )
+			end
+		
 		-- 当前正在打的关卡
 		elseif m_recvValue.m_storyid == storyConfig.id then
 			SetControlID( uiObj, 10000+storyConfig.id )
@@ -458,6 +631,13 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
+			if isbuy == 1 then
+				SetTrue( uiCount )
+				SetText( uiCount, F( 2015, 1 )  )
+			else
+				SetTrue( uiToken )
+				SetText( uiToken.transform:Find("Text"), storyConfig.drawing_token )
+			end
 				
 		-- 尚未通关
 		else
@@ -487,17 +667,56 @@ end
 -- 选择副本
 function StoryDlgSelect( id )
 	m_id = id;
-	
+	local storyConfig = g_story[id]
 	local type = g_story[id].type;
 	if type == STORY_TYPE_NORMAL then -- 普通副本
 		BattleDlgShowByStory( id )
+		
 	elseif type == STORY_TYPE_BOSS then-- 精英
-		BattleDlgShowByStory( id )
+		-- 星级
+		local starlv = m_recvValue.m_story_star[storyConfig.star_saveoffset+1]
+		if starlv == 3 then
+			-- 扫荡
+			StorySweepDlgShow( id )
+		else
+			BattleDlgShowByStory( id )
+		end
+		
 	elseif type == STORY_TYPE_RES then-- 资源
+		-- 攻打次数
+		local resnum_saveoffset = storyConfig.resnum_saveoffset;
+		local resnum = m_recvValue.m_story_resnum[resnum_saveoffset+1];
+		-- 结束时间
+		local ressec_saveoffset = storyConfig.ressec_saveoffset;
+		local restime = m_recvValue.m_story_restime[ressec_saveoffset+1];
+		-- 重置次数
+		local res_reset_saveoffset = storyConfig.res_reset_saveoffset;
+		local res_reset = m_recvValue.m_story_resreset[res_reset_saveoffset+1];
+		-- 没有可攻打次数，重置
+		if resnum == storyConfig.resnum then
+			if res_reset < storyConfig.res_reset_num then
+				StoryDlgShowResResetLayer( storyConfig, res_reset )
+			end
+		else
+			system_askinfo( ASKINFO_STORY, "", 2, id );
+		end
+		
 	elseif type == STORY_TYPE_ITEM then-- 道具
 		BattleDlgShowByStory( id )
+		
 	elseif type == STORY_TYPE_HERO then-- 武将招募
+		StoryHeroDlgShow( id, m_recvValue.m_story_hero )
+		
 	elseif type == STORY_TYPE_DRAWING then-- 装备图纸
+		local save_offset = storyConfig.drawing_saveoffset;
+		local isbuy = m_recvValue. m_story_drawing[save_offset+1];
+		if isbuy == 0 then
+			MsgBox( F(2030, storyConfig.drawing_token), function() 
+				system_askinfo( ASKINFO_STORY, "", 6, id );
+			end )
+		elseif isbuy == 1 then
+			system_askinfo( ASKINFO_STORY, "", 7, id );
+		end
 	end
 end 
 
@@ -552,9 +771,52 @@ function StoryDlgHeroShape( uiItem, herokind )
 end
 
 -- 设置副本资源图标
-function StoryDlgResShape( uiRoot, restype )
+function StoryDlgResShape( uiItem, restype )
 	SetImage( uiItem.transform:Find("Shape"), ResItemIcon( restype ) )
 	SetTrue( uiItem )
+end
+
+-- 资源副本重置次数
+function StoryDlgResResetGet( storyConfig, res_reset )
+	local token = 0
+	if res_reset == 0 then
+		token = storyConfig.res_reset_token0
+	elseif res_reset == 1 then
+		token = storyConfig.res_reset_token1
+	elseif res_reset == 2 then
+		token = storyConfig.res_reset_token2
+	elseif res_reset == 3 then
+		token = storyConfig.res_reset_token3
+	elseif res_reset == 4 then
+		token = storyConfig.res_reset_token4
+	elseif res_reset == 5 then
+		token = storyConfig.res_reset_token5
+	elseif res_reset > 5 then
+		token = storyConfig.res_reset_token5
+	end
+	return token
+end
+
+-- 资源副本重置页
+function StoryDlgShowResResetLayer( storyConfig, res_reset )
+	m_resResetLayerStoryid = storyConfig.id
+	SetTrue( m_uiResResetLayer )
+	SetImage( m_uiResResetLayer.transform:Find("Windows/Shape"), ResItemIcon( storyConfig.restype ) )
+	SetText( m_uiResResetLayer.transform:Find("Windows/Name"), StoryRankName( storyConfig.id ) )
+	SetText( m_uiResResetLayer.transform:Find("Windows/Desc"), F( 2032, ResName( storyConfig.restype ).."x"..(storyConfig.rescount*storyConfig.resnum) ) )
+	local token = StoryDlgResResetGet( storyConfig, res_reset )
+	SetRichText( m_uiResResetLayer.transform:Find("Windows/Cost"), F(2033,token) )
+end
+
+-- 资源副本重置
+function StoryDlgResReset()
+	system_askinfo( ASKINFO_STORY, "", 3, m_resResetLayerStoryid );
+	StoryDlgHideResResetLayer()
+end
+
+-- 隐藏资源副本页
+function StoryDlgHideResResetLayer()
+	SetFalse( m_uiResResetLayer )
 end
 
 -- 获取章节名称

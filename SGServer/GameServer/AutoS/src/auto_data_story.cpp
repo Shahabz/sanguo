@@ -47,7 +47,7 @@ int storyinfo_init_auto()
 	g_storyinfo = (StoryInfo *)malloc( sizeof(StoryInfo)*g_storyinfo_maxnum );
 	memset( g_storyinfo, 0, sizeof(StoryInfo)*g_storyinfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`chapter`,`rank`,`type`,`preid`,`nextid`,`unlock_preid`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3`,`exp`,`silver`,`awardgroup`,`body`,`returnbody`,`skip`,`color`,`shapeback`,`shape`,`star_saveoffset`,`hero_kind0`,`hero_kind1`,`hero_odds`,`hero_token`,`hero_saveoffset`,`restype`,`rescount`,`resnum`,`resnum_saveoffset`,`ressec`,`ressec_saveoffset`,`res_reset_num`,`res_reset_saveoffset`,`res_reset_token`,`item_awardkind`,`item_awardodds`,`itemnum`,`itemnum_saveoffset`,`drawing_kind`,`drawing_token`,`drawing_saveoffset` from story;" );
+	sprintf( szSQL, "select `id`,`chapter`,`rank`,`type`,`preid`,`nextid`,`unlock_preid`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3`,`exp`,`silver`,`awardgroup`,`body`,`lose_body`,`skip`,`color`,`shapeback`,`shape`,`star_saveoffset`,`hero_kind0`,`hero_kind1`,`hero_odds`,`hero_token`,`hero_saveoffset`,`restype`,`rescount`,`resnum`,`resnum_saveoffset`,`ressec`,`ressec_saveoffset`,`res_reset_num`,`res_reset_saveoffset`,`res_reset_token0`,`res_reset_token1`,`res_reset_token2`,`res_reset_token3`,`res_reset_token4`,`res_reset_token5`,`item_awardkind`,`item_awardodds`,`itemnum`,`itemnum_saveoffset`,`drawing_kind`,`drawing_token`,`drawing_saveoffset` from story;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -76,7 +76,7 @@ int storyinfo_init_auto()
 		g_storyinfo[id].silver = atoi(row[offset++]);
 		g_storyinfo[id].awardgroup = atoi(row[offset++]);
 		g_storyinfo[id].body = atoi(row[offset++]);
-		g_storyinfo[id].returnbody = atoi(row[offset++]);
+		g_storyinfo[id].lose_body = atoi(row[offset++]);
 		g_storyinfo[id].skip = atoi(row[offset++]);
 		g_storyinfo[id].color = atoi(row[offset++]);
 		g_storyinfo[id].shapeback = atoi(row[offset++]);
@@ -95,7 +95,12 @@ int storyinfo_init_auto()
 		g_storyinfo[id].ressec_saveoffset = atoi(row[offset++]);
 		g_storyinfo[id].res_reset_num = atoi(row[offset++]);
 		g_storyinfo[id].res_reset_saveoffset = atoi(row[offset++]);
-		memcpy( g_storyinfo[id].res_reset_token, row[offset++], 128 ); g_storyinfo[id].res_reset_token[127]=0;
+		g_storyinfo[id].res_reset_token[0] = atoi(row[offset++]);
+		g_storyinfo[id].res_reset_token[1] = atoi(row[offset++]);
+		g_storyinfo[id].res_reset_token[2] = atoi(row[offset++]);
+		g_storyinfo[id].res_reset_token[3] = atoi(row[offset++]);
+		g_storyinfo[id].res_reset_token[4] = atoi(row[offset++]);
+		g_storyinfo[id].res_reset_token[5] = atoi(row[offset++]);
 		g_storyinfo[id].item_awardkind = atoi(row[offset++]);
 		g_storyinfo[id].item_awardodds = atoi(row[offset++]);
 		g_storyinfo[id].itemnum = atoi(row[offset++]);

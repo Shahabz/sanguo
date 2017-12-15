@@ -232,21 +232,24 @@ int hero_gethero( int actor_index, int kind, short path )
 	Hero *pHasHero = hero_getptr( actor_index, kind );
 	if ( pHasHero )
 	{
+		
+		// 寻访即使获得了，也要发过去，界面需要显示
+		char color = hero_defaultcolor( kind );
+		HeroInfoConfig *config = hero_getconfig( kind, color );
+		SLK_NetS_HeroGet pValue = { 0 };
+		pValue.m_kind = kind;
+		pValue.m_path = path;
 		if ( path == PATH_HEROVISIT )
-		{ // 寻访即使获得了，也要发过去，界面需要显示
-			char color = hero_defaultcolor( kind );
-			HeroInfoConfig *config = hero_getconfig( kind, color );
-			SLK_NetS_HeroGet pValue = { 0 };
-			pValue.m_kind = kind;
-			pValue.m_path = path;
+		{
 			if ( config )
 			{
 				pValue.m_itemnum = config->itemnum;
 				item_getitem( actor_index, 173, config->itemnum, -1, PATH_HEROVISIT_CHANGE );
 			}
-			hero_makestruct( city_getptr( actor_index ), pHasHero->offset, pHasHero, &pValue.m_hero );
-			netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
 		}
+		hero_makestruct( city_getptr( actor_index ), pHasHero->offset, pHasHero, &pValue.m_hero );
+		netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		
 		return -1;
 	}
 

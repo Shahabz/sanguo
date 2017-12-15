@@ -1389,7 +1389,7 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 					rtt.anchorMax = new Vector2(0, 1);
 					rtt.anchorMin = new Vector2(0, 1);
 					rtt.localScale = new Vector3(1, 1, 1);
-					rtt.localPosition = new Vector3(m_Lines[i].assetDatas[j].x, m_Lines[i].assetDatas[j].y, m_Lines[i].z);
+					rtt.localPosition = new Vector3(m_Lines[i].assetDatas[j].x, m_Lines[i].assetDatas[j].y-4, m_Lines[i].z);
 					rtt.sizeDelta = new Vector2(m_Lines[i].assetDatas[j].width, m_Lines[i].assetDatas[j].height);
 				}
 			}

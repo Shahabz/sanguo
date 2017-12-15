@@ -248,6 +248,9 @@ end
 
 -- 从特效池获取一个特效对象
 function FightScene.PoolGetEffect( name )
+	if FightScene.m_effectRoot == nil then
+		return
+	end
 	local effectObj = nil
 	if FightScene.m_effectPool[name] ~= nil then
 		for index, effect in pairs( FightScene.m_effectPool[name] ) do
@@ -277,11 +280,14 @@ function FightScene.PoolReleaseEffect( effectObj )
 	end
 end
 
--- 播放特效
+-- 播放被击特效
 function FightScene.PlayBeat()
 	local list = {}
 	for i=1,3,1 do
 		local effectObj = FightScene.PoolGetEffect( "Tysj" )
+		if effectObj == nil then
+			return
+		end
 		effectObj.transform.localPosition = Vector3.New( 0, BeatPos[i], 0 );
 		effectObj.transform.localScale = Vector3.New( 5, 5, 5 );
 		table.insert( list, effectObj )
@@ -291,6 +297,20 @@ function FightScene.PlayBeat()
 			FightScene.PoolReleaseEffect( list[i] )
 		end
 	end, 0.5, nil, "FightInvoke_PlayBeat");
-	
 end
 
+-- 播放技能特效
+function FightScene.PlaySkill( pos, skillid )
+	local skill = { {name="Jn1",ax=-0.09,ay=-0.67, dx=0.09,dy=-0.67},{name="Jn2",ax=0,ay=-1, dx=0,dy=-1},{name="Jn2",ax=2.4,ay=-0.51, dx=-2.4,dy=-0.51} }
+	local effectObj = FightScene.PoolGetEffect( skill[skillid].name )
+	if pos == FIGHT_ATTACK then
+		effectObj.transform.localPosition = Vector3.New( skill[skillid].ax, skill[skillid].ay, 0 );
+		effectObj.transform.localScale = Vector3.New( -7, 7, 7 );
+	else
+		effectObj.transform.localPosition = Vector3.New( skill[skillid].dx, skill[skillid].dy, 0 );
+		effectObj.transform.localScale = Vector3.New( 7, 7, 7 );
+	end
+	Invoke( function()
+		FightScene.PoolReleaseEffect( effectObj )
+	end, 1, nil, "FightInvoke_PlaySkill");
+end

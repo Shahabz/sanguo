@@ -9,6 +9,7 @@
 #include "global.h"
 #include "wqueue.h"
 #include "actor.h"
+#include "actor_times.h"
 #include "city.h"
 #include "city_attr.h"
 #include "city_tech.h"
@@ -674,6 +675,10 @@ void city_logic_sec( int begin, int end )
 		if ( g_city[city_index].hv_hsec > 0 )
 		{
 			g_city[city_index].hv_hsec -= 1;
+			if ( g_city[city_index].hv_hsec <= 0 )
+			{
+				hero_visit_snedflag( g_city[city_index].actor_index );
+			}
 		}
 
 		// 雇佣官
@@ -3484,6 +3489,7 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			return -1;
 		}
 	}
+
 	return city_move( pCity, move_posx, move_posy );
 }
 int city_move( City *pCity, short posx, short posy )
@@ -3522,15 +3528,29 @@ int city_move( City *pCity, short posx, short posy )
 		map_event_changepos_randhaspos( pCity->mapevent_index[tmpi], pCity->posx, pCity->posy );
 	}
 
-	// 通知客户端更新缓存
-	int value[6] = { 0 };
-	value[0] = 1;
-	value[1] = pCity->unit_index;
-	value[2] = pCity->posx;
-	value[3] = pCity->posy;
-	value[4] = lastposx;
-	value[5] = lastposy;
-	actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 6, value, NULL );
+	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+	{
+		if ( g_zoneinfo[pCity->zone].type == MAPZONE_TYPE1 )
+		{
+			if ( actor_get_sflag( pCity->actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC ) == 0 )
+			{
+				actor_set_sflag( pCity->actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC, 1 );
+				// 隐藏前往州城按钮
+				int value = 0;
+				actor_notify_value( pCity->actor_index, NOTIFY_MAPZONEGOZC, 1, &value, NULL );
+			}
+		}
+
+		// 通知客户端更新缓存
+		int value[6] = { 0 };
+		value[0] = 1;
+		value[1] = pCity->unit_index;
+		value[2] = pCity->posx;
+		value[3] = pCity->posy;
+		value[4] = lastposx;
+		value[5] = lastposy;
+		actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 6, value, NULL );
+	}
 	return 0;
 }
 

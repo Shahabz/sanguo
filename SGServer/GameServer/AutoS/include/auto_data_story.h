@@ -16,7 +16,7 @@ struct _storyinfo {
 				int silver;	//
 				int awardgroup;	//
 				short body;	//
-				short returnbody;	//
+				short lose_body;	//
 				short skip;	//
 				short color;	//
 				short shapeback;	//
@@ -34,7 +34,7 @@ struct _storyinfo {
 				short ressec_saveoffset;	//
 				short res_reset_num;	//
 				short res_reset_saveoffset;	//
-				char res_reset_token[128];	//
+				short res_reset_token[6];	//
 				int item_awardkind;	//
 				int item_awardodds;	//
 				short itemnum;	//

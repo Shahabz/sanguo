@@ -411,15 +411,19 @@ end
 -- m_addexp=0,m_curexp=0,m_isup=0,m_level, m_expmax, m_path=0,
 function proc_experience_C( recvValue )
 	-- process.
-	if recvValue.m_addexp > 0 then
-		pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		if recvValue.m_addexp > 0 then
+			pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+		end
 	end
 	GetPlayer().m_level = recvValue.m_level;
 	GetPlayer().m_exp = recvValue.m_curexp;
 	GetPlayer().m_exp_max = recvValue.m_expmax;
 	MainDlgSetExp();
 	if recvValue.m_isup == 1 then
-		pop( T(150) );
+		if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+			pop( T(150) );
+		end
 		MainDlgSetLevel();
 	end
 end
@@ -448,8 +452,10 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changesilver_C( recvValue )
 	-- process.
-	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_silver = recvValue.m_total;
 	MainDlgSetSilver();
@@ -458,8 +464,10 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changewood_C( recvValue )
 	-- process.
-	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_wood = recvValue.m_total;
 	MainDlgSetWood();
@@ -468,8 +476,10 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changefood_C( recvValue )
 	-- process.
-	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_food = recvValue.m_total;
 	MainDlgSetFood();
@@ -479,8 +489,10 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changeiron_C( recvValue )
 	-- process.
-	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		if recvValue.m_add > 0 then
+			pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_iron = recvValue.m_total;
 	MainDlgSetIron();
@@ -1077,9 +1089,10 @@ function proc_storyrank_C( recvValue )
 	BattleDlgStoryRecv( recvValue )
 end
 
--- m_storyid=0,m_state=0,
+-- m_storyid=0,m_state=0,m_savetype=0,m_saveoffset=0,m_actor_storyid=0
 function proc_storystate_C( recvValue )
 	-- process.
+	StoryDlgStateRecv( recvValue )
 end
 
 -- m_storyid=0,m_num=0,m_saveoffset=0,
@@ -1618,20 +1631,30 @@ end
 function proc_fightplay_C( recvValue )
 	-- process.
 	if recvValue.m_flag == 0 then -- 准备发送
-		MailFightContent = "";
+		if recvValue.m_content_length > 0 then
+			g_fight.infoJson = json.decode( recvValue.m_content )
+		else
+			g_fight.infoJson = ""
+		end
+		g_fight.contentJson = "";
 		
 	elseif recvValue.m_flag == 1 then -- 发送中
-		MailFightContent = MailFightContent..recvValue.m_content;
+		g_fight.contentJson = g_fight.contentJson..recvValue.m_content;
 
-		
 	elseif recvValue.m_flag == 2 then -- 发送完毕
 	
 		local info = {}
-		info.m_fight_content = MailFightContent;
-		info.m_content_json = {}
+		info.m_fight_content = g_fight.contentJson;
+		info.m_content_json = g_fight.infoJson
 		FightDlgShow( info )
 		BattleDlgClose()
 		StoryDlgClose()
 	end
+end
+
+-- m_exp=0,m_silver=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},m_herocount=0,m_hero={m_kind=0,m_color=0,m_level=0,m_pre_exp=0,m_exp=0,[m_herocount]},
+function proc_storysweepresult_C( recvValue )
+	-- process.
+	FightDlgSweepResult( recvValue )
 end
 

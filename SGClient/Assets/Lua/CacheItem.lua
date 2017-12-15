@@ -308,6 +308,7 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 	
 	if path == PATH_MATERIALMAKE then
 		ItemGetDlgShow( nItemKind, num )
+	elseif path == PATH_STORY or path == PATH_STORY_SWEEP then
 	elseif path == PATH_HEROVISIT then
 	elseif path == PATH_HEROVISIT_CHANGE then
     else

@@ -280,3 +280,17 @@ function hero_getexp_max( level, color )
 	end
 	return 0;
 end
+
+-- 缺省颜色
+function hero_getnormalcolor( kind )
+	if g_heroinfo[kind] == nil then
+		return 0
+	end
+	local minlevel = 999
+	for k, v in pairs( g_heroinfo[kind] ) do
+		if v.color < minlevel then
+			minlevel = v.color;
+		end
+	end
+	return minlevel;
+end

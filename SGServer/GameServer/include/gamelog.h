@@ -95,6 +95,10 @@
 #define PATH_HERO_DOWN					66	// 下阵
 #define PATH_HERO_GUARD					67	// 御林卫
 #define PATH_HERO_GUARD_AUTO			68	// 御林卫自动
+#define PATH_STORY_RES					69	// 副本资源副本途径
+#define PATH_STORY_HERO					70	// 副本英雄副本途径
+#define PATH_STORY_DRAWING				71	// 副本装备副本途径
+#define PATH_STORY_SWEEP				72	// 副本扫荡途径
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

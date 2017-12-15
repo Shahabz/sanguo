@@ -146,6 +146,7 @@ int netsend_changeautobuild_S( int actor_index, char send_type, SLK_NetS_ChangeA
 int netsend_herovisitinfo_S( int actor_index, char send_type, SLK_NetS_HeroVisitInfo *pValue );
 int netsend_herovisitaward_S( int actor_index, char send_type, SLK_NetS_HeroVisitAward *pValue );
 int netsend_fightplay_S( int actor_index, char send_type, SLK_NetS_FightPlay *pValue );
+int netsend_storysweepresult_S( int actor_index, char send_type, SLK_NetS_StorySweepResult *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

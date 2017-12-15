@@ -1344,6 +1344,7 @@ int struct_NetS_StoryList_send( char **pptr, int *psize, SLK_NetS_StoryList *pVa
 	LKSET_MEM_SEND( (*pptr), pValue->m_story_resreset, 32*sizeof(short), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_story_itemnum, 64*sizeof(short), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_story_drawing, 16*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_sweep_herokind, 4*sizeof(short), (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	return 0;
 }
@@ -1381,8 +1382,10 @@ int struct_NetS_StoryState_send( char **pptr, int *psize, SLK_NetS_StoryState *p
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_state, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_saveoffset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_savetype, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_actor_storyid, (*psize) );
 	return 0;
 }
 
@@ -2126,6 +2129,37 @@ int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pVa
 	LKSET_WORD_SEND( (*pptr), &pValue->m_content_length, (*psize) );
 	if( pValue->m_content_length > 0 && pValue->m_content_length <= 1800 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_content, pValue->m_content_length*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySweepHero *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_pre_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	return 0;
+}
+
+int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySweepResult *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_awardcount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_awardcount; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_award[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_herocount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_herocount; tmpi++ )
+	{
+		struct_NetS_StorySweepHero_send( pptr, psize, &pValue->m_hero[tmpi] );
+	}
 	return 0;
 }
 

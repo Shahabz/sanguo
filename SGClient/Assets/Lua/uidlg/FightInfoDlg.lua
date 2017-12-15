@@ -13,6 +13,7 @@ local m_uiLeftContent = nil; --UnityEngine.GameObject
 local m_uiRightScroll = nil; --UnityEngine.GameObject
 local m_uiRightContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
+local m_uiWarningText = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function FightInfoDlgOpen()
@@ -71,6 +72,7 @@ function FightInfoDlgOnAwake( gameObject )
 	m_uiRightScroll = objs[10];
 	m_uiRightContent = objs[11];
 	m_uiUIP_Unit = objs[12];
+	m_uiWarningText = objs[13];
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Unit", 8, 8, m_uiUIP_Unit);
 end
@@ -106,8 +108,21 @@ end
 ----------------------------------------
 function FightInfoDlgShow( info )
 	FightInfoDlgOpen()
-	SetText( m_uiTitleText, "" )
-	SetTimer( m_uiCountDown, 9, 10, 1 )
+	
+	-- 战斗类型	
+	local fighttype = info["ft"]
+	if fighttype == nil then
+		SetText( m_uiTitleText, "" )
+		SetText( m_uiWarningText, "" )
+	else
+		SetText( m_uiTitleText, T(2000+fighttype-1) )
+		if fighttype == FIGHTTYPE_STORY then
+			SetText( m_uiWarningText, T(2019) )
+		else
+			SetText( m_uiWarningText, "" )
+		end
+	end
+	SetTimer( m_uiCountDown, 10, 10, 1 )
 	-- 我是攻击方，攻击方显示左面
 	local my = info["my"];
 	if my == nil or my == 1 then

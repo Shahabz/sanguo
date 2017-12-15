@@ -5,6 +5,7 @@ FIGHTTYPE_ENEMY		=	4 -- 流寇战
 FIGHTTYPE_RES		=	5 -- 资源战
 FIGHTTYPE_WORLDBOSS	=	6 -- 世界boss
 FIGHTTYPE_KINGWAR	=	7 -- 皇城血战
+FIGHTTYPE_STORYSWEEP	=	8 -- 副本扫荡
 
 FIGHT_UNIT_MAX		=	256
 FIGHT_TURNS_MAX		=	8192
@@ -57,6 +58,9 @@ end
 
 -- 全局战场
 g_fight = {};
+g_fight.infoJson = ""
+g_fight.contentJson = ""
+g_fight.m_playing = false
 g_fight.frame = 0;
 g_fight.frame_max = 0
 g_fight.frame_append = 0;
@@ -105,6 +109,9 @@ end
 
 -- 向战场里添加一个战斗单元
 function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, attack, defense, hp, troops, attack_increase, defense_increase, assault, defend, line, skillid )
+	if hp > troops then
+		hp = troops
+	end
 	local pUnit = nil;
 	if  pos == FIGHT_ATTACK then
 		if offset < FIGHT_UNIT_MAX - 1 then
@@ -185,6 +192,8 @@ function fight_destory()
 	InvokeStop("FightInvoke_UpdateLayer")
 	InvokeStop("FightInvoke_FightResult")
 	InvokeStop("FightInvoke_PlayBeat")
+	InvokeStop("FightInvoke_PlaySkill")
+	g_fight.m_playing = false
 end
 
 function fight_start()	
@@ -198,7 +207,7 @@ function fight_start()
 	
 	-- 战斗逻辑启动
 	Invoke( function()
-	
+		g_fight.m_playing = true
 		-- 攻击方当前出手英雄
 		local pAttackUnit = nil
 		local pDefenseUnit = nil
@@ -209,7 +218,10 @@ end
 
 -- 战斗过程-一回合分N个战斗过程
 function fight_process( step, pAttackUnit, pDefenseUnit )
-	
+	if g_fight.m_playing == false then
+		return
+	end
+
 	-- 初始回合
 	if step == 0 then
 		-- 回合
@@ -245,7 +257,7 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 		
 		fight_process( 1, pAttackUnit, pDefenseUnit )
 		
-	-- 攻击方使用技能-动画
+	-- 攻击方使用技能-喊话动画
 	elseif step == 1 then
 		-- 使用出场技能
 		g_fight.attack_skill_damage = fight_useskill( FIGHT_ATTACK, pAttackUnit, pDefenseUnit );
@@ -253,14 +265,20 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			-- 播放技能动画
 			FightDlgPlaySkill( FIGHT_ATTACK, pAttackUnit.skillid_init, pAttackUnit.type, pAttackUnit.kind, pAttackUnit.shape )
 			-- 本过程时间
-			Invoke( function() fight_process( 2, pAttackUnit, pDefenseUnit ) end, 2.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+			Invoke( function() fight_process( 2, pAttackUnit, pDefenseUnit ) end, 1.5*FightScene.m_speed , nil, "FightInvoke_Process" );
 		else
 			fight_process( 11, pAttackUnit, pDefenseUnit )
 		end
-		
 	
-	-- 攻击方使用技能-结果	
+	-- 攻击方使用技能-技能特效	
 	elseif step == 2 then
+		-- 特效
+		FightScene.PlaySkill( FIGHT_ATTACK, pAttackUnit.skillid_init );
+		-- 本过程时间
+		Invoke( function() fight_process( 3, pAttackUnit, pDefenseUnit ) end, 1.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+		
+	-- 攻击方使用技能-结果	
+	elseif step == 3 then
 		-- 减血
 		g_fight.result, g_fight.left_change_line, g_fight.left_change_unit = fight_changehp( FIGHT_ATTACK, pDefenseUnit, g_fight.attack_skill_damage );
 		-- 播放减血动画
@@ -285,12 +303,16 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			timer = 4.5
 		end
 		-- 更新界面显示
-		FightDlgUnitUpdate()
+		if g_fight.left_change_unit == 1 then
+			FightDlgUnitUpdate()
+		else
+			FightDlgUnitVsUpdateHp()
+		end
 			
 		-- 本过程时间
         Invoke( function() fight_process( 11, pAttackUnit, pDefenseUnit ) end, timer*FightScene.m_speed , nil, "FightInvoke_Process" );
 		
-	-- 防御方方使用技能-动画
+	-- 防御方方使用技能-喊话动画
 	elseif step == 11 then
 		-- 使用出场技能
 		g_fight.defense_skill_damage = fight_useskill( FIGHT_DEFENSE, pDefenseUnit, pAttackUnit );
@@ -298,13 +320,20 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			-- 播放技能动画
 			FightDlgPlaySkill( FIGHT_DEFENSE, pDefenseUnit.skillid_init, pDefenseUnit.type, pDefenseUnit.kind, pDefenseUnit.shape )
 			-- 本过程时间
-			Invoke( function() fight_process( 12, pAttackUnit, pDefenseUnit ) end, 2.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+			Invoke( function() fight_process( 12, pAttackUnit, pDefenseUnit ) end, 1.5*FightScene.m_speed , nil, "FightInvoke_Process" );
 		else
 			fight_process( 21, pAttackUnit, pDefenseUnit )
 		end
 		
-	-- 防御方使用技能-结果	
+	-- 防御方方使用技能-技能特效
 	elseif step == 12 then
+		-- 特效
+		FightScene.PlaySkill( FIGHT_DEFENSE, pDefenseUnit.skillid_init );
+		-- 本过程时间
+		Invoke( function() fight_process( 13, pAttackUnit, pDefenseUnit ) end, 1.0*FightScene.m_speed , nil, "FightInvoke_Process" );
+			
+	-- 防御方使用技能-结果
+	elseif step == 13 then
 		-- 减血
 		g_fight.result, g_fight.right_change_line, g_fight.right_change_unit = fight_changehp( FIGHT_DEFENSE, pAttackUnit, g_fight.defense_skill_damage );
 		-- 播放减血动画
@@ -329,7 +358,11 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			timer = 4.5
 		end
 		-- 更新界面显示
-		FightDlgUnitUpdate()
+		if g_fight.right_change_unit == 1 then
+			FightDlgUnitUpdate()
+		else
+			FightDlgUnitVsUpdateHp()
+		end
 			
 		-- 本过程时间
         Invoke( function() fight_process( 21, pAttackUnit, pDefenseUnit ) end, timer*FightScene.m_speed , nil, "FightInvoke_Process" );	
@@ -392,7 +425,11 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 				timer = 4.5
 			end
 			-- 更新界面显示
-			FightDlgUnitUpdate()
+			if g_fight.right_change_unit == 1 then
+				FightDlgUnitUpdate()
+			else
+				FightDlgUnitVsUpdateHp()
+			end
 		end
 		
 		-- 防御方->攻击方造成的伤害结果
@@ -415,7 +452,11 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 				timer = 4.5
 			end
 			-- 更新界面显示
-			FightDlgUnitUpdate()
+			if g_fight.left_change_unit == 1 then
+				FightDlgUnitUpdate()
+			else
+				FightDlgUnitVsUpdateHp()
+			end
 		end
 		
 		-- 对战界面对战信息页
@@ -438,7 +479,7 @@ end
 -- 结束
 function fight_process_over( result )
 	-- 更新界面显示
-	FightDlgUnitUpdate()
+	FightDlgUnitVsUpdateHp()
 	if result > 0 then
 		if  result == FIGHT_WIN then
 			fight_debug( "[ATK WIN]" );

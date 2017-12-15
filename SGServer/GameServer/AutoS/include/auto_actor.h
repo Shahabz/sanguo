@@ -41,12 +41,13 @@ struct _actor {
 				int function;	//功能是否开启
 				short storyid;	//副本进度章节
 				char story_star[128];	//精英副本星级
-				short story_hero[32];	//招募副本
-				int story_restime[32];	//资源副本时间
+				char story_hero[32];	//招募副本
 				char story_resnum[32];	//资源副本次数
+				int story_restime[32];	//资源副本时间
 				char story_resreset[32];	//资源副本重置次数
 				char story_itemnum[64];	//道具副本掉落次数
 				char story_drawing[16];	//装备图纸副本是否购买
+				short story_sweephero[4];	//扫荡武将
 				int view_lastframe;	//上次发送的区域信息时间
 				short subscribe_cmd[8];	//订阅的消息ID
 				int lastpeople_c;	//上次本城人口

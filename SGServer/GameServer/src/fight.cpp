@@ -126,6 +126,8 @@ int fight_debug( const char *format, ... )
 // 向战场里添加一个英雄
 int fight_add_hero( int pos, char unit_type, int unit_index, char type, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid, int expmax )
 {
+	if ( hp > troops )
+		hp = troops;
 	FightUnit *pUnit = NULL;
 	if ( pos == FIGHT_ATTACK )
 	{
@@ -199,8 +201,6 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 		// 其余排的兵力都等于每排兵力
 		pUnit->line_hp = line_troops;
 	}
-
-	// 战斗中最后一排兵力=取余数（（可带兵力-实际参战兵力）/每排兵力）
 
 	char name[64] = { 0 };
 	if ( type == FIGHT_UNITTYPE_LEADER_HERO || type == FIGHT_UNITTYPE_HERO )
@@ -1377,7 +1377,7 @@ int fight_unit2json()
 		if ( tmpi == 0 )
 			sflag = ' ';
 		
-		if ( g_fight.type != FIGHTTYPE_ENEMY )
+		if ( g_fight.type != FIGHTTYPE_ENEMY && g_fight.type != FIGHTTYPE_STORY && g_fight.type != FIGHTTYPE_WORLDBOSS )
 		{ // 对阵流寇的战斗，每一个单元的玩家名称就不用了
 			if ( pUnit->type == FIGHT_UNITTYPE_LEADER_HERO || pUnit->type == FIGHT_UNITTYPE_HERO )
 			{
@@ -1498,7 +1498,7 @@ int fight_unit2json()
 		if ( tmpi == 0 )
 			sflag = ' ';
 
-		if ( g_fight.type != FIGHTTYPE_ENEMY )
+		if ( g_fight.type != FIGHTTYPE_ENEMY && g_fight.type != FIGHTTYPE_STORY && g_fight.type != FIGHTTYPE_WORLDBOSS )
 		{ // 对阵流寇的战斗，每一个单元的玩家名称就不用了
 			if ( pUnit->type == FIGHT_UNITTYPE_LEADER_HERO || pUnit->type == FIGHT_UNITTYPE_HERO )
 			{
@@ -1559,7 +1559,7 @@ int fight_unit2json()
 }
 
 // 播放战斗
-int fight_play( int actor_index, char *content )
+int fight_play( int actor_index, char *content, char *info )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
@@ -1569,7 +1569,15 @@ int fight_play( int actor_index, char *content )
 
 	// 发送开始
 	pValue.m_flag = 0;
-	pValue.m_content_length = 0;
+	if ( !info )
+	{
+		pValue.m_content_length = 0;
+	}
+	else
+	{
+		strncpy( pValue.m_content, info, sizeof( char ) * 1024 );
+		pValue.m_content_length = strlen( pValue.m_content );
+	}
 	netsend_fightplay_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 发内容过程

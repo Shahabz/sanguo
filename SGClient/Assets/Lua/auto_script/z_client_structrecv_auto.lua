@@ -1207,6 +1207,10 @@ function struct_NetS_StoryList_recv( buffer )
 	for tmpi=1,16,1 do
 		recvValue.m_story_drawing[tmpi] = buffer:ReadShort();
 	end
+	recvValue.m_sweep_herokind={};
+	for tmpi=1,4,1 do
+		recvValue.m_sweep_herokind[tmpi] = buffer:ReadShort();
+	end
 	recvValue.m_storyid = buffer:ReadShort();
 	return recvValue;
 end
@@ -1240,8 +1244,10 @@ end
 function struct_NetS_StoryState_recv( buffer )
 	local recvValue = {};
 	recvValue.m_storyid = buffer:ReadInt();
-	recvValue.m_state = buffer:ReadShort();
+	recvValue.m_state = buffer:ReadInt();
 	recvValue.m_saveoffset = buffer:ReadShort();
+	recvValue.m_savetype = buffer:ReadShort();
+	recvValue.m_actor_storyid = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -1893,6 +1899,37 @@ function struct_NetS_FightPlay_recv( buffer )
 	recvValue.m_flag = buffer:ReadSByte();
 	recvValue.m_content_length = buffer:ReadShort();
 	recvValue.m_content = buffer:ReadStringWithLen( recvValue.m_content_length );
+	return recvValue;
+end
+
+function struct_NetS_StorySweepHero_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_pre_exp = buffer:ReadInt();
+	recvValue.m_exp = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_StorySweepResult_recv( buffer )
+	local recvValue = {};
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_silver = buffer:ReadInt();
+	recvValue.m_awardcount = buffer:ReadSByte();
+	recvValue.m_award = {};
+	for tmpi=1,recvValue.m_awardcount,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_AwardInfo_recv( buffer );
+		table.insert( recvValue.m_award, tmpValue );
+	end
+	recvValue.m_herocount = buffer:ReadSByte();
+	recvValue.m_hero = {};
+	for tmpi=1,recvValue.m_herocount,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_StorySweepHero_recv( buffer );
+		table.insert( recvValue.m_hero, tmpValue );
+	end
 	return recvValue;
 end
 

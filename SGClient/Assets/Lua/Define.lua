@@ -173,6 +173,7 @@ PATH_HERO_UP					=	65	-- 上阵
 PATH_HERO_DOWN					=	66	-- 下阵
 PATH_HERO_GUARD					=	67	-- 御林卫
 PATH_HERO_GUARD_AUTO			=	68	-- 御林卫自动
+PATH_STORY_SWEEP				=   72	-- 副本扫荡途径
 
 -- 文字表
 -- 获取本地化文字

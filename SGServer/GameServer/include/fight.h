@@ -24,6 +24,7 @@
 #define FIGHTTYPE_RES		5 // 资源点争夺
 #define FIGHTTYPE_WORLDBOSS	6 // 世界boss
 #define FIGHTTYPE_KINGWAR	7 // 皇城血战
+#define FIGHTTYPE_STORYSWEEP 8 // 副本扫荡
 
 // 一个战斗单元
 typedef struct _fightunit
@@ -140,6 +141,6 @@ int fight_lost_calc();
 int fight_unit2json();
 
 // 播放战斗
-int fight_play( int actor_index, char *content );
+int fight_play( int actor_index, char *content, char *info );
 #endif
 

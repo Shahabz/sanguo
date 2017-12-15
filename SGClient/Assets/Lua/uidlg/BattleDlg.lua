@@ -3,9 +3,7 @@ local m_Dlg = nil;
 local m_uiTitleText = nil; --UnityEngine.GameObject
 local m_uiCancelBtn = nil; --UnityEngine.GameObject
 local m_uiFightBtn = nil; --UnityEngine.GameObject
-local m_uiFastBtn = nil; --UnityEngine.GameObject
 local m_uiArmyIcon = nil; --UnityEngine.GameObject
-local m_uiCountDown = nil; --UnityEngine.GameObject
 local m_uiLeftName = nil; --UnityEngine.GameObject
 local m_uiRightName = nil; --UnityEngine.GameObject
 local m_uiLeftScroll = nil; --UnityEngine.GameObject
@@ -13,6 +11,8 @@ local m_uiLeftContent = nil; --UnityEngine.GameObject
 local m_uiRightScroll = nil; --UnityEngine.GameObject
 local m_uiRightContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
+local m_uiStoryExp = nil; --UnityEngine.GameObject
+local m_uiStoryBody = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_type = 0;
@@ -56,10 +56,6 @@ function BattleDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 战斗
 		elseif nControlID == 1 then
 			BattleDlgFight();
-		
-		-- 快速开始
-		elseif nControlID == 2 then
-			BattleDlgFast();
 			
 		-- 上移
 		elseif nControlID >= 201 and nControlID <= 204 then
@@ -75,9 +71,7 @@ function BattleDlgOnAwake( gameObject )
 	m_uiTitleText = objs[0];
 	m_uiCancelBtn = objs[1];
 	m_uiFightBtn = objs[2];
-	m_uiFastBtn = objs[3];
 	m_uiArmyIcon = objs[4];
-	m_uiCountDown = objs[5];
 	m_uiLeftName = objs[6];
 	m_uiRightName = objs[7];
 	m_uiLeftScroll = objs[8];
@@ -85,6 +79,8 @@ function BattleDlgOnAwake( gameObject )
 	m_uiRightScroll = objs[10];
 	m_uiRightContent = objs[11];
 	m_uiUIP_Unit = objs[12];
+	m_uiStoryExp = objs[13];
+	m_uiStoryBody = objs[14];
 
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Unit", 8, 8, m_uiUIP_Unit);
@@ -133,8 +129,16 @@ function BattleDlgShowByStory( storyid )
 	SetText( m_uiTitleText, StoryChapterName( math.floor(storyid/10) ) )
 	SetTrue( m_uiCancelBtn )
 	SetTrue( m_uiFightBtn )
-	SetFalse( m_uiFastBtn )
-	
+	SetTrue( m_uiStoryExp )
+	SetTrue( m_uiStoryBody )
+	-- 预计获得经验
+	SetText( m_uiStoryExp, F(2016, g_story[storyid].exp ) )
+	-- 消耗体力
+	if GetPlayer().m_body < g_story[storyid].body then
+		SetText( m_uiStoryBody.transform:Find("Text"), F(2018, g_story[storyid].body, GetPlayer().m_body ) )	
+	else
+		SetText( m_uiStoryBody.transform:Find("Text"), F(2017, g_story[storyid].body,GetPlayer().m_body ) )	
+	end
 	-- 英雄放到缓存
 	m_HeroList = {};
 	for i=0,3,1 do
@@ -157,7 +161,8 @@ function BattleDlgShowByWorldBoss( bossid )
 	SetText( m_uiTitleText, T(1359) )
 	SetTrue( m_uiCancelBtn )
 	SetTrue( m_uiFightBtn )
-	SetFalse( m_uiFastBtn )
+	SetFalse( m_uiStoryExp )
+	SetFalse( m_uiStoryBody )
 	
 	-- 英雄放到缓存
 	m_HeroList = {};
@@ -338,7 +343,13 @@ end
 
 -- 战斗
 function BattleDlgFight()
-	if m_battleType == 0 then
+	if m_battleType == 0 then	
+		-- 消耗体力
+		if GetPlayer().m_body < g_story[m_storyid].body then
+			BattleDlgClose()
+			JumpBody()
+			return
+		end	
 		-- m_storyid=0,m_herokind={[4]},
 		local sendValue={}
 		sendValue.m_storyid = m_storyid;
@@ -362,7 +373,3 @@ function BattleDlgFight()
 	end
 end
 
--- 快速开始
-function BattleDlgFast()
-	
-end

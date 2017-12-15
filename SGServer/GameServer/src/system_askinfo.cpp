@@ -391,7 +391,35 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 1 )
 		{
 			story_sendrank( actor_index, pvalue[1] );
-		}		
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 资源副本攻打
+			story_res_get( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 资源副本重置
+			story_res_reset( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 招募副本免费招募
+			story_hero_free( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 招募副本花钱招募
+			story_hero_token( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 图纸副本购买
+			story_drawing_buy( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 图纸副本攻打
+			story_drawing_get( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 8 )
+		{ // 扫荡
+			story_sweep( actor_index, pvalue[1] );
+		}
 		break;
 	case ASKINFO_WORLDMAP:
 		if ( pvalue[0] == 1 )

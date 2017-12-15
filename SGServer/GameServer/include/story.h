@@ -20,4 +20,21 @@
 int story_sendinfo( int actor_index );
 int story_sendrank( int actor_index, int id );
 int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue );
+// 更新副本状态
+int story_sendrankstate( int actor_index, int id, int savetype, int saveoffset );
+// 资源副本攻打
+int story_res_get( int actor_index, int id );
+// 资源副本重置
+int story_res_reset( int actor_index, int id );
+// 招募副本免费招募
+int story_hero_free( int actor_index, int id );
+// 招募副本花钱招募
+int story_hero_token( int actor_index, int id );
+// 图纸副本购买
+int story_drawing_buy( int actor_index, int id );
+// 图纸副本攻打
+int story_drawing_get( int actor_index, int id );
+
+// 副本扫荡
+int story_sweep( int actor_index, int id );
 #endif

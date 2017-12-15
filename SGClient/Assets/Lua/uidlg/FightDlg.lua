@@ -31,6 +31,10 @@ local m_uiReturnCityBtn = nil; --UnityEngine.GameObject
 local m_uiReturnStoryBtn = nil; --UnityEngine.GameObject
 local m_uiLeftSkill = nil; --UnityEngine.GameObject
 local m_uiRightSkill = nil; --UnityEngine.GameObject
+local m_uiStar = nil; --UnityEngine.GameObject
+local m_uiStarWarn = nil; --UnityEngine.GameObject
+local m_uiWarn = nil; --UnityEngine.GameObject
+local m_uiSweepBtn = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_jsonFightInfo = nil
@@ -64,9 +68,6 @@ end
 function FightDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
-	Invoke( function() 
-			ResourceManager.UnloadAssetBundleImmediately( "_ab_char_shape_infantry" )
-		end, 0.3 );
 end
 
 ----------------------------------------
@@ -91,6 +92,11 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then	
 			FightDlgClose();
 			StoryDlgShow()
+			
+		-- 继续扫荡
+		elseif nControlID == 3 then	
+			FightDlgClose();
+			StorySweepDlgSweep()
         end
 		
 	elseif nType == UI_EVENT_TWEENFINISH then
@@ -133,6 +139,10 @@ function FightDlgOnAwake( gameObject )
 	m_uiReturnStoryBtn = objs[28];
 	m_uiLeftSkill = objs[29];
 	m_uiRightSkill = objs[30];
+	m_uiStar = objs[31];
+	m_uiStarWarn = objs[32];
+	m_uiWarn = objs[33];
+	m_uiSweepBtn = objs[34];
 end
 
 -- 界面初始化时调用
@@ -377,12 +387,18 @@ function FightDlgUnitVsUpdateHp()
 	if unit ~= nil then
 		SetText( m_uiLeftHp.transform:Find("Text"), unit.hp )
 		SetProgress( m_uiLeftHp.transform:Find("Progress"), unit.hp/unit.maxhp )
+	else
+		SetText( m_uiLeftHp.transform:Find("Text"), 0 )
+		SetProgress( m_uiLeftHp.transform:Find("Progress"), 0 )
 	end
 	
 	unit = fight_nextptr( FIGHT_DEFENSE )
 	if unit ~= nil then
 		SetText( m_uiRightHp.transform:Find("Text"), unit.hp )
 		SetProgress( m_uiRightHp.transform:Find("Progress"), unit.hp/unit.maxhp )
+	else
+		SetText( m_uiRightHp.transform:Find("Text"), 0 )
+		SetProgress( m_uiRightHp.transform:Find("Progress"), 0 )
 	end
 end
 
@@ -409,6 +425,9 @@ end
 
 -- 双方当前对战武将详情
 function FightDlgUnitVsLayerShow()
+	if g_fight.m_playing == false then
+		return
+	end
 	local leftTween = m_uiLeftPk.transform:GetComponent( "UITweenRectPosition" )
 	leftTween:Play( true )
 	
@@ -428,6 +447,9 @@ end
 
 -- 播放血动画
 function FightDlgPlayHpEffect( pos, hp, crit )
+	if g_fight.m_playing == false then
+		return
+	end
 	local uiObj = nil
 	if pos == FIGHT_ATTACK then
 		uiObj = m_uiLeftHpEffect
@@ -470,6 +492,9 @@ end
 
 -- 播放Miss动画
 function FightDlgPlayMissEffect( pos )
+	if g_fight.m_playing == false then
+		return
+	end
 	if pos == FIGHT_ATTACK then
 		SetFalse( m_uiLeftMissEffect );
 		SetTrue( m_uiLeftMissEffect );
@@ -487,6 +512,9 @@ end
 
 -- 播放技能
 function FightDlgPlaySkill( pos, skillid, unittype, kind, shape )
+	if g_fight.m_playing == false then
+		return
+	end
 	local uiObj = nil
 	if pos == FIGHT_ATTACK then
 		uiObj = m_uiLeftSkill
@@ -571,6 +599,12 @@ function FightDlgResultLayerShow()
 	eye.audioManager:Stop(202);
 	eye.audioManager:Stop(301);
 	eye.audioManager:Stop(305);
+	
+	m_uiLeftSkill.transform:Find("Name"):GetComponent( "UITweenRectPosition" ):Kill(true)
+	m_uiLeftSkill.transform:Find("Pic"):GetComponent( "UITweenRectPosition" ):Kill(true)
+	m_uiRightSkill.transform:Find("Name"):GetComponent( "UITweenRectPosition" ):Kill(true)
+	m_uiRightSkill.transform:Find("Pic"):GetComponent( "UITweenRectPosition" ):Kill(true)
+	
 	fight_destory()
 	SetTrue( m_uiResultLayer )
 	
@@ -665,8 +699,8 @@ function FightDlgResultLayerShow()
 		end
 	end	
 	
-	if index > 3 then
-		index = 3
+	if index > 4 then
+		index = 4
 	end
 	for i=0, index-1, 1 do
 		local sprite, color, name = AwardInfo( awardTable[i].kind )
@@ -745,12 +779,130 @@ function FightDlgResultLayerShow()
 			
 	-- 副本战斗返回按钮
 	if fighttype == FIGHTTYPE_STORY then
+		SetFalse( m_uiWarn )
 		SetFalse( m_uiCloseBtn )
 		SetTrue( m_uiReturnCityBtn )
 		SetTrue( m_uiReturnStoryBtn )
+		local star = m_recvValue.m_content_json["star"]
+		if star ~= nil and star > 0 then
+			SetTrue( m_uiStar )
+			SetTrue( m_uiStarWarn )
+			StoryDlgStar( m_uiStar, star )
+		else
+			SetFalse( m_uiStar )
+			SetFalse( m_uiStarWarn )
+		end
 	else
+		SetFalse( m_uiWarn )
 		SetTrue( m_uiCloseBtn )
 		SetFalse( m_uiReturnCityBtn )
 		SetFalse( m_uiReturnStoryBtn )
+		SetFalse( m_uiStar )
+		SetFalse( m_uiStarWarn )
+	end
+end
+
+-- 扫荡结果
+-- m_exp=0,m_silver=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},m_herocount=0,m_hero={m_kind=0,m_color=0,m_level=0,m_pre_exp=0,m_exp=0,[m_herocount]},
+function FightDlgSweepResult( recvValue )
+	FightDlgOpen()
+	SetFalse( m_uiTop )
+	SetFalse( m_uiBottom )
+	SetFalse( m_uiLeftHpEffect );
+	SetFalse( m_uiRightHpEffect );
+	SetTrue( m_uiResultLayer )
+	
+	SetText( m_uiTitle.transform:Find("Text"), T(2000+FIGHTTYPE_STORY-1) )
+	SetTrue( m_uiPicWin ) 
+	SetFalse( m_uiPicLose ) 
+	eye.audioManager:Play(408);
+			
+	SetFalse( m_uiCloseBtn )
+	SetFalse( m_uiReturnCityBtn )
+	SetTrue( m_uiReturnStoryBtn )
+	SetTrue( m_uiSweepBtn )
+	SetFalse( m_uiStar )
+	SetFalse( m_uiStarWarn )
+	SetTrue( m_uiWarn )
+	SetText( m_uiWarn, T(2034) )
+	
+	for i=0, 3, 1 do
+		SetFalse( m_uiAwardGrid.transform:GetChild( i ) )
+	end	
+	for i=0, 3, 1 do
+		SetFalse( m_uiHeroList.transform:GetChild( i ) )
+	end	
+	
+	
+	local index = 0
+	local awardTable = {}
+	-- 经验奖励	
+	if recvValue.m_exp > 0 then
+		awardTable[index] = { kind = AWARDKIND_EXP, num = recvValue.m_exp }
+		index = index + 1
+	end
+	
+	-- 资源奖励
+	if recvValue.m_silver > 0 then
+		awardTable[index] = { kind = AWARDKIND_SILVER, num = recvValue.m_silver }
+		index = index + 1
+	end
+	
+	-- 道具奖励
+	for i=1, recvValue.m_awardcount, 1 do
+		awardTable[index] = { kind = recvValue.m_award[i].m_kind, num = recvValue.m_award[i].m_num }
+		index = index + 1
+	end
+	
+	-- 设置显示奖励
+	if index > 4 then
+		index = 4
+	end
+	for i=0, index-1, 1 do
+		local sprite, color, name = AwardInfo( awardTable[i].kind )
+		local uiAward = m_uiAwardGrid.transform:GetChild( i )
+		SetTrue( uiAward )
+		SetImage( uiAward.transform:Find("Icon"), sprite );
+		SetText( uiAward.transform:Find("Name"), name.."x"..awardTable[i].num  )
+	end
+	
+	-- 武将经验信息
+	for i=1, recvValue.m_herocount, 1 do
+		local uiObj = m_uiHeroList.transform:GetChild( i-1 )
+		local pHero = recvValue.m_hero[i]
+		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind ) )
+		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )
+		
+		-- 获取经验
+		SetText( uiObj.transform:Find("Exp"), "+"..pHero.m_exp )
+		
+		-- 检查是否升级
+		local beginvalue = v.mexp/hero_getexp_max( pHero.m_level, pHero.m_color );
+		local playcount = 1;
+		local isup = 0;
+		local level =  pHero.m_level;
+		pHero.m_pre_exp = v.mexp + pHero.m_exp;
+		while pHero.m_pre_exp >= hero_getexp_max( pHero.m_level, pHero.m_color ) do
+			local curlevel = pHero.m_level
+			-- 可以升级
+			if curlevel >= global.actorlevel_max then
+				break
+			end
+			pHero.m_level = pHero.m_level + 1;
+			pHero.m_pre_exp = pHero.m_pre_exp - hero_getexp_max( curlevel, pHero.m_color );
+			isup = isup + 1;
+			playcount = playcount + 1
+		end
+		local endvalue = v.mexp/hero_getexp_max( pHero.m_level, pHero.m_color );
+		
+		-- 进度条
+		SetProgressPlay( uiObj.transform:Find("Progress"), beginvalue, endvalue, 2, playcount, function() 
+			-- 名称+等级
+			level = level + 1
+			if level > pHero.m_level then
+				level = pHero.m_level
+			end
+			SetText( uiObj.transform:Find("Name"), HeroNameLv( pHero.m_kind, level ) )
+		end )
 	end
 end

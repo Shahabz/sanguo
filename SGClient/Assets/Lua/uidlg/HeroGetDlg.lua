@@ -28,7 +28,6 @@ function HeroGetDlgClose()
 		return;
 	end
 	
-	
 	eye.uiManager:Close( "HeroGetDlg" );
 	HeroVisitDlgCloseHeroGetEvent();
 end
@@ -107,16 +106,16 @@ end
 --{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
 function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
-	m_herokind = recvValue.m_kind;
-	local haveHero = GetHero():GetPtr(m_herokind);
-	if haveHero ~= nil  then
-		SetTrue(m_uiHaveCloseBtn);
-		SetFalse(m_uiCloseBtn);
-		print("recvValue.m_itemnum"..recvValue.m_itemnum);
-		SetText(m_uiText,F(1968,recvValue.m_itemnum));
+	m_herokind = recvValue.m_kind+AWARDKIND_HEROBASE;
+	local b_haveHero = HeroVisitDlgIsHaveHero( m_herokind );
+	if b_haveHero == true and recvValue.m_itemnum ~= nil then
+		SetTrue( m_uiHaveCloseBtn );
+		SetFalse( m_uiCloseBtn );
+		SetText( m_uiText, F( 1968, recvValue.m_itemnum ) );
 	else
-		SetFalse(m_uiHaveCloseBtn);
-		SetTrue(m_uiCloseBtn);
+		SetFalse( m_uiHaveCloseBtn );
+		SetTrue( m_uiCloseBtn );
+		HeroVisitDlgAddHero(m_herokind);
 	end
 	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
 	SetImage( m_uiHeroColor,  ItemColorSprite( recvValue.m_color )  );

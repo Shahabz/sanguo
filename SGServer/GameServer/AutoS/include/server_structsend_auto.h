@@ -925,6 +925,7 @@ struct _slk_NetS_StoryList {
 	short m_story_resreset[32];	//副本信息-资源副本重置次数
 	short m_story_itemnum[64];	//副本信息-道具副本掉落次数
 	short m_story_drawing[16];	//副本信息-装备图纸副本是否购买
+	short m_sweep_herokind[4];	//副本信息-扫荡武将kind
 	short m_storyid;	//副本信息-玩家进度
 };
 typedef struct _slk_NetS_StoryList SLK_NetS_StoryList;	//副本信息
@@ -950,8 +951,10 @@ typedef struct _slk_NetS_StoryRank SLK_NetS_StoryRank;	//副本关卡
 
 struct _slk_NetS_StoryState {
 	int m_storyid;	//副本id
-	short m_state;	//副本状态
+	int m_state;	//副本状态
 	short m_saveoffset;	//存档索引
+	short m_savetype;	//类型
+	short m_actor_storyid;	//玩家副本进度id
 };
 typedef struct _slk_NetS_StoryState SLK_NetS_StoryState;	//副本状态更新
 
@@ -1461,6 +1464,25 @@ struct _slk_NetS_FightPlay {
 };
 typedef struct _slk_NetS_FightPlay SLK_NetS_FightPlay;	//战斗播放
 
+struct _slk_NetS_StorySweepHero {
+	short m_kind;	//扫荡武将信息
+	char m_color;	//扫荡武将信息
+	short m_level;	//扫荡武将信息
+	int m_pre_exp;	//扫荡武将信息
+	int m_exp;	//扫荡武将信息
+};
+typedef struct _slk_NetS_StorySweepHero SLK_NetS_StorySweepHero;	//扫荡武将
+
+struct _slk_NetS_StorySweepResult {
+	int m_exp;	//扫荡结果
+	int m_silver;	//扫荡结果
+	char m_awardcount;	//扫荡结果
+	SLK_NetS_AwardInfo m_award[16];	//扫荡结果
+	char m_herocount;	//扫荡结果
+	SLK_NetS_StorySweepHero m_hero[4];	//扫荡结果
+};
+typedef struct _slk_NetS_StorySweepResult SLK_NetS_StorySweepResult;	//扫荡结果
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1622,5 +1644,7 @@ int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitI
 int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
 int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisitAward *pValue );
 int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pValue );
+int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySweepHero *pValue );
+int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySweepResult *pValue );
 
 #endif
