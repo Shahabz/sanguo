@@ -123,7 +123,7 @@ function StoryDlgShow()
 	end
 end
 
--- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind = 0
+-- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind[4] = 0
 function StoryDlgRecv( recvValue )
 	m_recvValue = recvValue;
 	--m_recvValue.m_storyid = 646
@@ -677,7 +677,7 @@ function StoryDlgSelect( id )
 		local starlv = m_recvValue.m_story_star[storyConfig.star_saveoffset+1]
 		if starlv == 3 then
 			-- 扫荡
-			StorySweepDlgShow( id )
+			StorySweepDlgShow( id, m_recvValue.m_sweep_herokind )
 		else
 			BattleDlgShowByStory( id )
 		end

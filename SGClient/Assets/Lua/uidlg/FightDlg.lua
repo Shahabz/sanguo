@@ -94,7 +94,7 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 			StoryDlgShow()
 			
 		-- 继续扫荡
-		elseif nControlID == 3 then	
+		elseif nControlID == 4 then	
 			FightDlgClose();
 			StorySweepDlgSweep()
         end
@@ -872,16 +872,16 @@ function FightDlgSweepResult( recvValue )
 		local pHero = recvValue.m_hero[i]
 		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind ) )
 		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )
-		
+		SetTrue( uiObj )
 		-- 获取经验
 		SetText( uiObj.transform:Find("Exp"), "+"..pHero.m_exp )
 		
 		-- 检查是否升级
-		local beginvalue = v.mexp/hero_getexp_max( pHero.m_level, pHero.m_color );
+		local beginvalue = pHero.m_pre_exp/hero_getexp_max( pHero.m_level, pHero.m_color );
 		local playcount = 1;
 		local isup = 0;
 		local level =  pHero.m_level;
-		pHero.m_pre_exp = v.mexp + pHero.m_exp;
+		pHero.m_pre_exp = pHero.m_pre_exp + pHero.m_exp;
 		while pHero.m_pre_exp >= hero_getexp_max( pHero.m_level, pHero.m_color ) do
 			local curlevel = pHero.m_level
 			-- 可以升级
@@ -893,7 +893,7 @@ function FightDlgSweepResult( recvValue )
 			isup = isup + 1;
 			playcount = playcount + 1
 		end
-		local endvalue = v.mexp/hero_getexp_max( pHero.m_level, pHero.m_color );
+		local endvalue = pHero.m_pre_exp/hero_getexp_max( pHero.m_level, pHero.m_color );
 		
 		-- 进度条
 		SetProgressPlay( uiObj.transform:Find("Progress"), beginvalue, endvalue, 2, playcount, function() 

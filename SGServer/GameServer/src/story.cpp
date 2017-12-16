@@ -324,8 +324,11 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 				star = 2;
 			else
 				star = 1;
-			g_actors[actor_index].story_star[config->star_saveoffset] = star;
-			story_sendrankstate( actor_index, pValue->m_storyid, 1, config->star_saveoffset );
+			if ( g_actors[actor_index].story_star[config->star_saveoffset] < star )
+			{
+				g_actors[actor_index].story_star[config->star_saveoffset] = star;
+				story_sendrankstate( actor_index, pValue->m_storyid, 1, config->star_saveoffset );
+			}
 		}
 		// 道具副本
 		else if ( config->type == STORY_TYPE_ITEM && config->itemnum_saveoffset >= 0 && config->itemnum_saveoffset < STORY_ITEMNUM_OFFSETMAX )
@@ -597,7 +600,7 @@ int story_drawing_get( int actor_index, int id )
 }
 
 // 副本扫荡
-int story_sweep( int actor_index, int id )
+int story_sweep( int actor_index, int id, int herokind0, int herokind1, int herokind2, int herokind3 )
 {
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
@@ -617,16 +620,43 @@ int story_sweep( int actor_index, int id )
 			return -1;
 	}
 
+	g_actors[actor_index].story_sweephero[0] = 0;
+	g_actors[actor_index].story_sweephero[1] = 0;
+	g_actors[actor_index].story_sweephero[2] = 0;
+	g_actors[actor_index].story_sweephero[3] = 0;
+	int offset = 0;
+	if ( herokind0 > 0 )
+	{
+		g_actors[actor_index].story_sweephero[offset++] = (short)herokind0;
+	}
+	if ( herokind1 > 0 )
+	{
+		g_actors[actor_index].story_sweephero[offset++] = (short)herokind1;
+	}
+	if ( herokind2 > 0 )
+	{
+		g_actors[actor_index].story_sweephero[offset++] = (short)herokind2;
+	}
+	if ( herokind3 > 0 )
+	{
+		g_actors[actor_index].story_sweephero[offset++] = (short)herokind3;
+	}
+
+	if ( offset == 0 )
+	{
+		actor_notify_alert( actor_index, 2037 );
+		return -1;
+	}
+
 	int maxcount = 5;
 	// 检查体力是否足够
 	if ( pCity->body < config->body*maxcount )
 	{
 		return -1;
 	}
-
 	// 扣除体力
 	city_changebody( pCity->index, -config->body*maxcount, PATH_STORY_SWEEP );
-	
+
 	SLK_NetS_StorySweepResult pValue = { 0 };
 
 	// 经验银币奖励

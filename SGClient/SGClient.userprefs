@@ -1,9 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Manager/ResourceManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs">
     <Files>
       <File FileName="Assets/Source/UI/Tween/UITweenRectPosition.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Manager/ResourceManager.cs" Line="445" Column="6" />
+      <File FileName="Assets/Source/Manager/ResourceManager.cs" Line="513" Column="13" />
       <File FileName="Assets/Source/UI/UIClippingLoop.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIButtonPolygon.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenRectPositionBetween.cs" Line="1" Column="1" />
@@ -13,7 +13,7 @@
       <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Manager/GameManager.cs" Line="109" Column="6" />
+      <File FileName="Assets/Source/Manager/GameManager.cs" Line="201" Column="14" />
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/AudioManagerWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
@@ -27,7 +27,7 @@
       <File FileName="Assets/Source/UI/Tween/UITweenPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIPolygonChart.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIPolygon.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Character/Character.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Character/Character.cs" Line="173" Column="1" />
       <File FileName="Assets/Source/Character/CharController.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Character/CharacterAnimator.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Character/CameraController.cs" Line="1" Column="1" />
@@ -42,14 +42,14 @@
       <File FileName="Assets/Source/FileSystem/IniUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/City/CityLand.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollRect.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Tween/UITween.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/Tween/UITween.cs" Line="68" Column="27" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPosition.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/Const.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenJump.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenBeat.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenColor.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenFade.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIMod.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIMod.cs" Line="64" Column="1" />
       <File FileName="Assets/Source/UI/UIAutoSize.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollBase.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollRing.cs" Line="1" Column="1" />
@@ -58,11 +58,16 @@
       <File FileName="Assets/Source/Gizmo/GizmoPlane.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Gizmo/GizmoBezierLine.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Gizmo/GizmoRing.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/Utils.cs" Line="25" Column="19" />
-      <File FileName="Assets/Source/Fight/Fight.cs" Line="26" Column="28" />
-      <File FileName="Assets/Source/Map/WorldMap.cs" Line="45" Column="36" />
-      <File FileName="Assets/Source/Base/LuaFun.cs" Line="417" Column="22" />
-      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="32" Column="24" />
+      <File FileName="Assets/Source/Base/Utils.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Fight/Fight.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/WorldMap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIDepth.cs" Line="10" Column="10" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="1392" Column="94" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="193" Column="19" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyAssetIdentify.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyDelegateUtil.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -84,7 +89,6 @@
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="55" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Camera/CityCamera.cs" line="64" column="1" />
       <Breakpoint file="/Users/miya/sanguo/SGClient/Assets/Source/Base/AudioSourceAgent.cs" line="73" column="1" />
-      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Character/Character.cs" line="173" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/Tween/UITweenJump.cs" line="29" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/Tween/UITweenJump.cs" line="34" column="1" />
     </BreakpointStore>

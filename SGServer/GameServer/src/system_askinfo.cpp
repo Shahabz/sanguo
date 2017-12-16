@@ -418,7 +418,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 8 )
 		{ // É¨µ´
-			story_sweep( actor_index, pvalue[1] );
+			story_sweep( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4], pvalue[5] );
 		}
 		break;
 	case ASKINFO_WORLDMAP:
