@@ -123,6 +123,9 @@ int city_tech_upgrade( int actor_index, short kind )
 	pBuilding->overvalue = 0;
 	building_sendinfo( actor_index, BUILDING_Tech );
 	wlog( 0, LOGOP_TECH, PATH_TECH_UPGRADE, kind, pCity->techlevel[kind], pCity->techprogress[kind], pCity->actorid, city_mainlevel( pCity->index ) );
+
+	// хннЯ
+	quest_addvalue( pCity, QUEST_DATATYPE_CITY_TECHONE, kind, 0, 1 );
 	return 0;
 }
 
