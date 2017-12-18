@@ -502,10 +502,10 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
-	// 任务列表
-	if ( questlist_init() < 0 )
+	// 任务对话
+	if ( questtalk_init_auto() < 0 )
 	{
-		printf_msg( "questlist_init Module Error!" );
+		printf_msg( "questtalk_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

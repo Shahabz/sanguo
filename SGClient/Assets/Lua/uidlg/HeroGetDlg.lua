@@ -15,6 +15,8 @@ local m_uiHaveCloseBtn = nil; --UnityEngine.GameObject
 local m_uiText = nil; --UnityEngine.GameObject
 
 local m_herokind = 0;
+local m_WaitCallback = nil;
+local m_WaitValue = nil;
 
 -- 打开界面
 function HeroGetDlgOpen()
@@ -30,6 +32,12 @@ function HeroGetDlgClose()
 	
 	eye.uiManager:Close( "HeroGetDlg" );
 	HeroVisitDlgCloseHeroGetEvent();
+	
+	if m_WaitCallback then
+		m_WaitCallback( m_WaitValue );
+	end
+	m_WaitCallback = nil;
+	m_WaitValue = nil;
 end
 
 -- 删除界面
@@ -48,10 +56,6 @@ function HeroGetDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroGetDlgClose();
-			-- 马岱对话
-			if m_herokind == 1 then
-				HeroTalkKind( m_herokind, T(10003) )
-			end
         end
 	end
 end
@@ -146,4 +150,10 @@ function HeroGetDlgIsShow()
 		return IsActive( m_Dlg )
 	end
 	return false;
+end
+
+-- 设置等待数据
+function HeroGetDlgWait( callback, value )
+	m_WaitCallback = callback;
+	m_WaitValue = value;
 end

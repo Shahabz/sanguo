@@ -5,7 +5,7 @@ local m_uiName = nil; --UnityEngine.GameObject
 local m_uiTalk = nil; --UnityEngine.GameObject
 local m_WaitCallback = nil;
 local m_WaitValue = nil;
-local m_textid = 0;
+
 -- 打开界面
 function NpcTalkDlgOpen()
 	m_Dlg = eye.uiManager:Open( "NpcTalkDlg" );
@@ -38,14 +38,7 @@ end
 function NpcTalkDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-			if m_textid == 10006 then
-				NpcTalkID( 10007 )
-			elseif m_textid == 10004 then
-				
-				NpcTalkDlgClose();
-			else
-				NpcTalkDlgClose();
-			end
+			NpcTalkDlgClose();
         end
 	end
 end
@@ -88,20 +81,12 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function NpcTalk( talk )
-	m_textid = 0;
+function NpcTalk( talk, callback )
 	NpcTalkDlgOpen();
 	--m_uiShape:GetComponent( "Image" ).sprite = shape;
 	--m_uiName:GetComponent( "UIText" ).text = name;
 	m_uiTalk:GetComponent( "UIText" ).text = talk;
-end
-
-function NpcTalkID( textid )
-	m_textid = textid;
-	NpcTalkDlgOpen();
-	--m_uiShape:GetComponent( "Image" ).sprite = shape;
-	--m_uiName:GetComponent( "UIText" ).text = name;
-	m_uiTalk:GetComponent( "UIText" ).text = T(textid);
+	m_WaitCallback = callback;
 end
 
 function NpcTalkIsShow()

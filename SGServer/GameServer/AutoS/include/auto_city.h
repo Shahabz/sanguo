@@ -57,8 +57,8 @@ struct _city {
 				int ptsec;	//城池保护状态剩余时间
 				short peoplesec;	//城池人口回复时间
 				int eventsec;	//事件倒计时
-				short questid[6];	//任务ID
-				int questvalue[6];	//任务数值
+				short questid[16];	//任务ID
+				int questvalue[16];	//任务数值
 				char techlevel[40];	//科技
 				char techprogress[40];	//科技进度
 				int data_record[16];	//数据记录

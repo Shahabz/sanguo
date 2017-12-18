@@ -7,8 +7,8 @@ struct _questinfo {
 				int questid;	//
 				short type;	//
 				short nameid;	//
-				int sort;	//
-				int preid;	//
+				int nextid;	//
+				int unlock_branch[2];	//
 				int datatype;	//
 				int datakind;	//
 				short dataoffset;	//
@@ -18,9 +18,9 @@ struct _questinfo {
 				short brushrange;	//
 				int awardkind[5];	//
 				int awardnum[5];	//
-				short trigger_type[2];	//
 				int trigger_kind[2];	//
-				int trigger_value[2];	//
+				int trigger_num[2];	//
+				int trigger_talk;	//
 };
 typedef struct _questinfo QuestInfo;
 

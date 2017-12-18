@@ -26,6 +26,7 @@ end
 function StoryHeroDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	HeroColorSpriteUnload()
 end
 
 ----------------------------------------

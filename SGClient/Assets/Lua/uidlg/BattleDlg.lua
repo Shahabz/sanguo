@@ -190,7 +190,7 @@ function BattleDlgStoryRecv( recvValue )
 	
 	for i=1, recvValue.m_count, 1 do
 		local unit = recvValue.m_list[i]
-		BattleDlgUnit( m_uiRightContent, i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, nil )
+		BattleDlgUnit( m_uiRightContent, i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, unit.m_hp )
 	end
 end
 
@@ -284,6 +284,7 @@ function BattleDlgUnit( root, index, unittype, kind, name, shape, color, corps, 
 		SetFalse( uiHp )
 	else
 		SetTrue( uiHp )
+		SetText( uiHp, hp );
 	end
 	-- 玩家英雄
 	if unittype == FIGHT_UNITTYPE_HERO then
@@ -308,7 +309,7 @@ function BattleDlgUnit( root, index, unittype, kind, name, shape, color, corps, 
 		SetImage( uiShape, EnemyHeadSprite( shape ) );
 		SetImage( uiColor, ItemColorSprite( color ) );
 		SetImage( uiCorps, CorpsSprite( corps ) );
-		SetText( uiName, EnemyName( kind ) );
+		SetText( uiName, "Lv."..level.." "..EnemyName( kind ) );
 	end
 	SetText( uiSort, index );
 end

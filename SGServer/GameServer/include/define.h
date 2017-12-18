@@ -23,6 +23,7 @@
 #include "auto_data_hero_skill.h"
 #include "auto_data_hero_visit.h"
 #include "auto_data_quest.h"
+#include "auto_data_quest_talk.h"
 #include "auto_data_city_guard.h"
 #include "auto_data_city_tech.h"
 #include "auto_data_trainlong.h"

@@ -218,7 +218,7 @@ function LevyDlgChangeSec( sec )
 		SetFalse( m_uiTimerText );
 		SetTrue( m_uiLevyNumText );
 		SetTimer( m_uiTimerText, 0, 0, 0 );
-		SetText( m_uiLevyNumText, GetPlayer().m_levynum.."/"..global.levy_max );
+		SetText( m_uiLevyNumText, F(656,GetPlayer().m_levynum,global.levy_max) );
 	else
 		SetFalse( m_uiLevyNumText );
 		SetTrue( m_uiTimerText );

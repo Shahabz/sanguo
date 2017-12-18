@@ -255,7 +255,9 @@ function EquipForgingDlgShow()
 		
 		-- 选择状态
 		SetFalse( uiSelect )
-    end  
+    end 
+	-- 任务检查
+	QuestClickCheck( 4 )
 end
 
 -- 排序

@@ -767,7 +767,14 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue )
 		fight_add_hero( FIGHT_DEFENSE, 0, -1, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 			pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
 	}
-	g_fight.type = FIGHTTYPE_STORY;
+	if ( pValue->m_storyid < 10 )
+	{
+		g_fight.type = FIGHTTYPE_QUEST;
+	}
+	else
+	{
+		g_fight.type = FIGHTTYPE_STORY;
+	}
 
 	// Õ½¶·»ØºÏ
 	for ( int tmpi = 0; tmpi < FIGHT_TURNS_MAX; tmpi++ )

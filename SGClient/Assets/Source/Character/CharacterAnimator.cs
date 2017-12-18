@@ -98,7 +98,7 @@ public class CharacterAnimator : MonoBehaviour
                 // 读取动画文件，并累计动作数量
                 if( ( shape.action[j] & ( 1 << i ) ) != 0 )
                 {
-                    AnimationClip clip = ResourceManager.LoadCharactorAnime( shape.shape + "_" + actionName + "_" + i, shape.shape );
+                    AnimationClip clip = ResourceManager.LoadCharactorAnime( shape.shape + "_" + actionName + "_" + i, shape.shape, shape.abname );
                     if( clip == null )
                         continue;
 

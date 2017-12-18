@@ -113,6 +113,17 @@ function City.BuildingSelect( transform )
 				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
 						
 			else
+		
+				if building.kind == BUILDING_Wood and GetPlayer().m_questid == QUEST_MAINID_MADAI then
+					BuildingQuestModHide()
+					QuestTalkAsk( 5 )
+					return
+				elseif building.kind == BUILDING_Silver and GetPlayer().m_questid == QUEST_MAINID_LIUKOU then
+					BuildingQuestModHide()
+					QuestTalkAsk( 14 )
+					return
+				end
+	
 				BuildingOpratorModShow( true, building.kind, building.offset, transform );
 			end
 		end
@@ -161,6 +172,10 @@ end
 
 -- 移到制定建筑
 function City.Move( kind, offset, select )
+	-- 在城外就切回城内
+	if GameManager.currentScence == "worldmap" then
+		WorldMap.ReturnCity()
+	end
 	local unitObj = City.GetBuilding( kind, offset )
 	if unitObj == nil then
 		return;
@@ -329,6 +344,10 @@ function City.BuildingSetName( info )
 	end
 end
 
+-- 设置建筑不启用
+function City.BuildingSetGray()
+end
+
 -- 操作计时器
 function City.BuildingSetTimer( info )
 	local kind = info.m_kind;
@@ -475,7 +494,11 @@ function City.BuildingSetFree( kind, offset )
 		freeObj = GameObject.Instantiate( City.m_BuildingFreeMod );
 		freeObj.transform:SetParent( City.m_BuildingUI );
 		freeObj.transform.position = unitObj.transform.position;
-		freeObj.transform.localPosition = Vector3.New( freeObj.transform.localPosition.x, freeObj.transform.localPosition.y+80, 0 );
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			freeObj.transform.localPosition = Vector3.New( freeObj.transform.localPosition.x, freeObj.transform.localPosition.y+50, 0 );
+		else
+			freeObj.transform.localPosition = Vector3.New( freeObj.transform.localPosition.x, freeObj.transform.localPosition.y+80, 0 );
+		end
 		freeObj.transform.localScale = Vector3.one;
 		unitObj:GetComponent("CityBuilding").BuildingFreeMod = freeObj;
 	end
@@ -814,9 +837,47 @@ function City.FindCanUpgrade( callback )
 	end
 end
 
+-- 找到一个可以升级的
+function City.QuestFindCanUpgrade( kind, callback )	
+	-- 找资源建筑
+	for k, v in pairs( g_building_upgrade ) do
+		if k == kind then
+			for offset=1, 64, 1 do
+				local pBuilding = GetPlayer():GetBuilding( k, offset )
+				if pBuilding ~= nil and pBuilding.m_level < #v then
+					local buildingConfig = v[pBuilding.m_level+1]
+					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+						GetPlayer().m_level >= buildingConfig.actorlevel and
+						GetPlayer().m_silver >= buildingConfig.silver and
+						GetPlayer().m_wood >= buildingConfig.wood and
+						GetPlayer().m_food >= buildingConfig.food and
+						GetPlayer().m_iron >= buildingConfig.iron then
+						callback( k, offset )
+						return
+					end
+				end
+			end
+		end
+	end
+end
+
 -- 任务图标
 function City.BuildingQuestMod( questid )
 	City.m_BuildingQuestMod.gameObject:SetActive(true);
+	local uiTween = City.m_BuildingQuestMod.transform:GetComponent("UITweenRectPosition")
+	if questid == 20 then
+		City.m_BuildingQuestMod.transform.localPosition = Vector3.New( -110, -461, 0 );
+		uiTween.from = Vector2.New( -110, -461 );
+		uiTween.to = Vector2.New( -110, -451 );
+		uiTween:Play(true)
+		SetImage( City.m_BuildingQuestMod.transform:Find("Back"), LoadSprite("ui_opration_quest_1") )
+	elseif questid == 55 then
+		City.m_BuildingQuestMod.transform.localPosition = Vector3.New( 407, -314, 0 );
+		uiTween.from = Vector2.New( 407, -314 );
+		uiTween.to = Vector2.New( 407, -304 );
+		uiTween:Play(true)
+		SetImage( City.m_BuildingQuestMod.transform:Find("Back"), LoadSprite("ui_opration_quest_2") )
+	end
 	local ShareData = City.m_BuildingQuestMod.transform:GetComponent("ShareData");
 	ShareData.intValue[0] = questid;
 end

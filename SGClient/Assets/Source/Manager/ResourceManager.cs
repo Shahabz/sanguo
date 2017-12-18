@@ -843,11 +843,15 @@ public class ResourceManager : MonoBehaviour
     }
 
 	// 读取角色动画，因为数量巨大所以单独提出来，写死了
-	static public AnimationClip LoadCharactorAnime( string anime, string dirName )
+	static public AnimationClip LoadCharactorAnime( string anime, string dirName, string abname )
 	{
 		if ( Const.ResourceMode == "assetbundle" )
 		{
-			return Load( dirName.ToLower(), anime, typeof( AnimationClip ) ) as UnityEngine.AnimationClip;
+			if (abname == string.Empty) {
+				return Load (dirName.ToLower(), anime, typeof(AnimationClip)) as UnityEngine.AnimationClip;
+			} else {
+				return Load (abname.ToLower(), anime, typeof(AnimationClip)) as UnityEngine.AnimationClip;
+			}
 		}
 		else
 		{

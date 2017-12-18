@@ -230,6 +230,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_state = buffer:ReadSByte();
 	recvValue.m_guardnum = buffer:ReadSByte();
 	recvValue.m_guardsec = buffer:ReadShort();
+	recvValue.m_questid = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -814,7 +815,7 @@ function struct_NetS_Quest_recv( buffer )
 	recvValue.m_flag = buffer:ReadSByte();
 	recvValue.m_datatype = buffer:ReadSByte();
 	recvValue.m_datakind = buffer:ReadShort();
-	recvValue.m_dataoffset = buffer:ReadSByte();
+	recvValue.m_dataoffset = buffer:ReadShort();
 	recvValue.m_value = buffer:ReadInt();
 	recvValue.m_needvalue = buffer:ReadInt();
 	recvValue.m_awardkind={};
@@ -1930,6 +1931,15 @@ function struct_NetS_StorySweepResult_recv( buffer )
 		tmpValue = struct_NetS_StorySweepHero_recv( buffer );
 		table.insert( recvValue.m_hero, tmpValue );
 	end
+	return recvValue;
+end
+
+function struct_NetS_QuestTalk_recv( buffer )
+	local recvValue = {};
+	recvValue.m_talkid = buffer:ReadInt();
+	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_talk_textid = buffer:ReadInt();
+	recvValue.m_btn_textid = buffer:ReadInt();
 	return recvValue;
 end
 

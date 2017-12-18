@@ -144,7 +144,6 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 				WorldMap.GotoWorldMap(-1, -1)
 			else
 				WorldMap.ReturnCity()
-				MainDlgShowCity()
 			end
 		
 		-- 副本
@@ -586,23 +585,16 @@ function MainDlgSetQuest()
 	
 	-- 引导任务部分
 	local questid = CacheQuest.m_list[1].m_questid;
-	-- 弹出改名
-	if questid == 4 then
-		if NpcTalkIsShow() == true then
-			NpcTalkWait( ChangeNameDlgShow, nil )
-		else
-			ChangeNameDlgShow();
-		end
 	
-	-- 查看停留在木场上的马岱
-	elseif questid == 5 then
+	-- 弹出受伤少年
+	if questid == 20 then
 		City.BuildingQuestMod( questid )
-	
-	-- 自动建造
-	elseif questid == 6 then
-		if HeroGetDlgIsShow() == false then
-			HeroTalkKind( 1, T(10003) )
-		end
+		
+	-- 清剿山贼
+	elseif questid == 55 then
+		City.BuildingQuestMod( questid )
+	else
+		BuildingQuestModHide()
 	end
 end
 
@@ -805,7 +797,7 @@ function MainDlgGetEmptyButton()
 end
 
 -- 设置获得的功能按钮
-function MainDlgSetButtons()
+function MainDlgSetButtons( openoffset )
 	for i=1, 24, 1 do
 		m_hasButton[i] = false;
 	end	
@@ -825,6 +817,9 @@ function MainDlgSetButtons()
 	m_hasButton[4] = true;
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WORLD ) == 1 then
 		SetTrue( ButtonTable.m_uiButtonWorld );
+		if openoffset == CITY_FUNCTION_WORLD then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonWorld )
+		end
 	end
 	
 	-- 更多
@@ -837,6 +832,9 @@ function MainDlgSetButtons()
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonNation, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
+		end	
+		if openoffset == CITY_FUNCTION_NATION then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonNation )
 		end
 	end
 	
@@ -846,6 +844,9 @@ function MainDlgSetButtons()
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonStory, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
+		end	
+		if openoffset == CITY_FUNCTION_STORY then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonStory )
 		end
 	end
 		
@@ -855,6 +856,9 @@ function MainDlgSetButtons()
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonMail, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
+		end
+		if openoffset == CITY_FUNCTION_MAIL then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonMail )
 		end
 	end	
 
@@ -872,6 +876,9 @@ function MainDlgSetButtons()
 			SetParent( ButtonTable.m_uiButtonFriend, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
+		if openoffset == CITY_FUNCTION_FRIEND then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonFriend )
+		end
 	end	
 	
 	-- 国器
@@ -881,6 +888,9 @@ function MainDlgSetButtons()
 			SetParent( ButtonTable.m_uiButtonNationEquip, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
+		if openoffset == CITY_FUNCTION_NATIONEQUIP then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonNationEquip )
+		end
 	end	
 	
 	-- 排行榜
@@ -889,6 +899,9 @@ function MainDlgSetButtons()
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonRank, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
+		end
+		if openoffset == CITY_FUNCTION_RANK then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonRank )
 		end
 	end	
 	
@@ -928,9 +941,12 @@ function MainDlgSetButtons()
 	end
 end
 
--- 获得功能按钮特效
-function MainDlgButtonGetEffect( offset )
-	
+-- 播放获得功能按钮特效
+function MainDlgButtonPlayEffect( uiObj )
+	local effect = GameObject.Instantiate( LoadPrefab( "Tbcx" ) )
+	effect.transform:SetParent( uiObj.transform );
+	effect.transform.localPosition = Vector3( 0, 0, 0 );
+	GameObject.Destroy( effect, 5 );
 end
 
 -- 显示内城的控件

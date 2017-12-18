@@ -763,8 +763,13 @@ int actor_entercity( int actor_index )
 	// 离线奖励-用户ID
 	gift_uid_check( actor_index );
 
-	// 任务相关（不发）
-	quest_give( actor_index );
+	// 任务列表
+	quest_newplayer( actor_index );
+	quest_sendlist( actor_index );
+	quest_talk_check( actor_index );
+	quest_changename( actor_index );
+
+	// 世界任务相关（不发）
 	worldquest_give( actor_index );
 
 	// 
@@ -853,7 +858,7 @@ int actor_load( int actor_index, int actorid )
 	// 道具背包数据
 	item_load( actor_index );
 
-	// 为上阵英雄装备和装备栏数据
+	// 未上阵英雄装备和装备栏数据
 	equip_load( actor_index );
 
 	// 计未上阵英雄属性
@@ -875,7 +880,7 @@ int actor_new( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	// 所有的非字符串类型的varbin类型在这里初始化为0
-	memset( g_actors[actor_index].quest_complete, 0, sizeof( char )*ACTOR_QUEST_MAX );
+
 	// 上线之后加的varbin字段必须有这一步初始化
 
 	// 初始信息
@@ -935,6 +940,8 @@ int actor_new( int actor_index )
 		actor_change_token( actor_index, global.nation_award_token, PATH_SYSTEM, 0 );
 	}
 
+	// 征收时间
+	g_city[city_index].levysec = global.levy_max;
 	// 刷事件
 	g_city[city_index].eventsec = global.mapevent_sec;
 	exec_queue_add( EXEC_QUEUE_TYPE_MAPEVENT_CREATE, city_index, g_city[city_index].zone );

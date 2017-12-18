@@ -160,6 +160,9 @@ function WorldMap.ReturnCity()
 	GameManager.ChangeScence( "city" )
 	TmxLastList = { 0, 0, 0, 0 };
 	WorldMap.Clear()
+	MainDlgShowCity()
+	-- 任务检查
+	QuestClickCheck( 3 )
 end
 
 -- 发送客户端当前区域索引
@@ -321,6 +324,9 @@ function WorldMap.Start( Prefab )
 	
 	-- 显示世界地图界面
 	MainDlgShowMap();
+	
+	-- 任务检查
+	QuestClickCheck( 2 )
 	
 	-- 返回地图数据给程序一份
 	return WorldMap.m_nMaxWidth, WorldMap.m_nMaxHeight, MAP_TILEWIDTH, MAP_TILEHEIGHT

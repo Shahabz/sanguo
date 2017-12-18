@@ -176,3 +176,11 @@ function netsend_heroguardsort_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_talkid=0,m_type=0,
+function netsend_questtalknext_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_QUESTTALKNEXT );
+	struct_NetC_QuestTalkNext_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

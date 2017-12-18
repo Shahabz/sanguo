@@ -334,7 +334,7 @@ int actor_changename( int actor_index, char *pname, int type )
 	netsend_changename_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 任务
-	quest_addvalue( pCity, QUEST_DATAINDEX_CREATENAME, 0, 0, 1 );
+	quest_addvalue( pCity, QUEST_DATATYPE_CREATENAME, 0, 0, 1 );
 
 	// 通知到城外
 	mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
@@ -491,6 +491,7 @@ int actor_getinfo( int actor_index )
 		info.m_forgingsec = pCity->forgingsec;
 		info.m_guardnum = pCity->guardnum;
 		info.m_guardsec = pCity->guardsec;
+		info.m_questid = pCity->questid[0];
 		for ( int i = 0; i < CITY_TECH_MAX; i++ )
 		{
 			info.m_techlevel[i] = pCity->techlevel[i];

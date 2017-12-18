@@ -278,3 +278,12 @@ int struct_NetC_HeroGuardSort_recv( char **pptr, int *psize, SLK_NetC_HeroGuardS
 	return 0;
 }
 
+int struct_NetC_QuestTalkNext_recv( char **pptr, int *psize, SLK_NetC_QuestTalkNext *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_talkid, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_type, (*pptr), (*psize) );
+	return 0;
+}
+

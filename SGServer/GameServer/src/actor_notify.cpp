@@ -58,9 +58,15 @@ int actor_system_pop( int actor_index, int textid )
 }
 
 // npc对话
-int npc_talk( int actor_index, int textid )
+int npc_talk( int actor_index, int textid, int btntextid )
 {
 	actor_notify_value( actor_index, NOTIFY_NPCTALK, 1, &textid, NULL );
+	return 0;
+}
+
+// 武将说话
+int hero_talk( int actor_index, int herokind, int textid )
+{
 	return 0;
 }
 

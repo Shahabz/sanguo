@@ -14,6 +14,7 @@
 #include "mail.h"
 #include "world_boss.h"
 #include "hero.h"
+#include "quest.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -257,5 +258,18 @@ void proc_heroguardsort_S( int client_index, SLK_NetC_HeroGuardSort *pValue )
 {
 	// process.
 	hero_guard_sort( client_index, pValue );
+}
+
+void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue )
+{
+	// process.
+	if ( pValue->m_type == 0 )
+	{
+		quest_talk_next( client_index, pValue->m_talkid );
+	}
+	else if( pValue->m_type == 1 )
+	{
+		quest_talk_client_ask( client_index, pValue->m_talkid );
+	}
 }
 

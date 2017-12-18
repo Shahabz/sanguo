@@ -146,6 +146,12 @@ struct _slk_NetC_HeroGuardSort {
 };
 typedef struct _slk_NetC_HeroGuardSort SLK_NetC_HeroGuardSort;	//御林卫守卫顺序
 
+struct _slk_NetC_QuestTalkNext {
+	int m_talkid;	//任务对话点击返回
+	char m_type;	//任务对话点击类型
+};
+typedef struct _slk_NetC_QuestTalkNext SLK_NetC_QuestTalkNext;	//任务对话点击下一个
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -165,5 +171,6 @@ int struct_NetC_MailSend_recv( char **pptr, int *psize, SLK_NetC_MailSend *pValu
 int struct_NetC_MailReply_recv( char **pptr, int *psize, SLK_NetC_MailReply *pValue );
 int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBossBattle *pValue );
 int struct_NetC_HeroGuardSort_recv( char **pptr, int *psize, SLK_NetC_HeroGuardSort *pValue );
+int struct_NetC_QuestTalkNext_recv( char **pptr, int *psize, SLK_NetC_QuestTalkNext *pValue );
 
 #endif

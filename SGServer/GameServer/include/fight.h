@@ -25,7 +25,7 @@
 #define FIGHTTYPE_WORLDBOSS	6 // 世界boss
 #define FIGHTTYPE_KINGWAR	7 // 皇城血战
 #define FIGHTTYPE_STORYSWEEP 8 // 副本扫荡
-
+#define FIGHTTYPE_QUEST		 9 // 任务战
 // 一个战斗单元
 typedef struct _fightunit
 {

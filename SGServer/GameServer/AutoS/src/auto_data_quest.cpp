@@ -47,7 +47,7 @@ int questinfo_init_auto()
 	g_questinfo = (QuestInfo *)malloc( sizeof(QuestInfo)*g_questinfo_maxnum );
 	memset( g_questinfo, 0, sizeof(QuestInfo)*g_questinfo_maxnum );
 
-	sprintf( szSQL, "select `questid`,`type`,`nameid`,`sort`,`preid`,`datatype`,`datakind`,`dataoffset`,`needvalue`,`brushlevel`,`brushnum`,`brushrange`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`trigger_type0`,`trigger_type1`,`trigger_kind0`,`trigger_kind1`,`trigger_value0`,`trigger_value1` from quest;" );
+	sprintf( szSQL, "select `questid`,`type`,`nameid`,`nextid`,`unlock_branch0`,`unlock_branch1`,`datatype`,`datakind`,`dataoffset`,`needvalue`,`brushlevel`,`brushnum`,`brushrange`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`trigger_kind0`,`trigger_kind1`,`trigger_num0`,`trigger_num1`,`trigger_talk` from quest;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -64,8 +64,9 @@ int questinfo_init_auto()
 		g_questinfo[questid].questid = atoi(row[offset++]);
 		g_questinfo[questid].type = atoi(row[offset++]);
 		g_questinfo[questid].nameid = atoi(row[offset++]);
-		g_questinfo[questid].sort = atoi(row[offset++]);
-		g_questinfo[questid].preid = atoi(row[offset++]);
+		g_questinfo[questid].nextid = atoi(row[offset++]);
+		g_questinfo[questid].unlock_branch[0] = atoi(row[offset++]);
+		g_questinfo[questid].unlock_branch[1] = atoi(row[offset++]);
 		g_questinfo[questid].datatype = atoi(row[offset++]);
 		g_questinfo[questid].datakind = atoi(row[offset++]);
 		g_questinfo[questid].dataoffset = atoi(row[offset++]);
@@ -83,12 +84,11 @@ int questinfo_init_auto()
 		g_questinfo[questid].awardnum[2] = atoi(row[offset++]);
 		g_questinfo[questid].awardnum[3] = atoi(row[offset++]);
 		g_questinfo[questid].awardnum[4] = atoi(row[offset++]);
-		g_questinfo[questid].trigger_type[0] = atoi(row[offset++]);
-		g_questinfo[questid].trigger_type[1] = atoi(row[offset++]);
 		g_questinfo[questid].trigger_kind[0] = atoi(row[offset++]);
 		g_questinfo[questid].trigger_kind[1] = atoi(row[offset++]);
-		g_questinfo[questid].trigger_value[0] = atoi(row[offset++]);
-		g_questinfo[questid].trigger_value[1] = atoi(row[offset++]);
+		g_questinfo[questid].trigger_num[0] = atoi(row[offset++]);
+		g_questinfo[questid].trigger_num[1] = atoi(row[offset++]);
+		g_questinfo[questid].trigger_talk = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

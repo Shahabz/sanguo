@@ -38,8 +38,11 @@ int actor_notify_value( int actor_index, short msgid, char count, const int *dat
 // 发消息提示，通过消息ID
 int actor_system_pop( int actor_index, int textid );
 
-// npc对话
-int npc_talk( int actor_index, int textid );
+// npc说话
+int npc_talk( int actor_index, int textid, int btntextid );
+
+// 武将说话
+int hero_talk( int actor_index, int herokind, int textid );
 
 // 弹框消息
 int actor_notify_box( int actor_index, int textid );

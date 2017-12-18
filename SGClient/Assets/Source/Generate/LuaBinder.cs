@@ -49,6 +49,7 @@ public static class LuaBinder
 		UIToggleWrap.Register(L);
 		UITweenWrap.Register(L);
 		UITweenRectPositionWrap.Register(L);
+		UITweenRectPositionBetweenWrap.Register(L);
 		UITweenFadeWrap.Register(L);
 		UITweenColorWrap.Register(L);
 		UITweenLocalPositionWrap.Register(L);
@@ -60,6 +61,7 @@ public static class LuaBinder
 		UITweenCityBuildingWrap.Register(L);
 		UITweenMoveWrap.Register(L);
 		UITweenJumpWrap.Register(L);
+		UITweenPathWrap.Register(L);
 		UITextTimeCountdownWrap.Register(L);
 		UITextNumCountdownWrap.Register(L);
 		UITextUnderlineWrap.Register(L);

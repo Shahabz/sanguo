@@ -68,6 +68,7 @@ SRC = \
 ../AutoS/src/server_netsend_auto.cpp \
 ../AutoS/src/auto_data_vip.cpp \
 ../AutoS/src/auto_data_paygoods.cpp \
+../AutoS/src/auto_data_quest_talk.cpp \
 ../AutoS/src/auto_city_guard.cpp \
 ../AutoS/src/auto_data_fight.cpp \
 login_user.cpp \
@@ -280,6 +281,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_vip.o: ../AutoS/src/auto_data_vip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paygoods.o: ../AutoS/src/auto_data_paygoods.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_quest_talk.o: ../AutoS/src/auto_data_quest_talk.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_guard.o: ../AutoS/src/auto_city_guard.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

@@ -183,6 +183,7 @@ struct _slk_NetS_ActorInfo {
 	char m_state;	//服务器发送玩家基本信息-城池状态
 	char m_guardnum;	//服务器发送玩家基本信息-守卫数量
 	short m_guardsec;	//服务器发送玩家基本信息-守卫数量
+	int m_questid;	//服务器发送玩家基本信息-主线任务id
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -659,7 +660,7 @@ struct _slk_NetS_Quest {
 	char m_flag;	//完成标记
 	char m_datatype;	//任务类型
 	short m_datakind;	//任务种类
-	char m_dataoffset;	//任务编号
+	short m_dataoffset;	//任务编号
 	int m_value;	//值
 	int m_needvalue;	//需要值
 	int m_awardkind[5];	//奖励
@@ -670,7 +671,7 @@ typedef struct _slk_NetS_Quest SLK_NetS_Quest;	//任务
 
 struct _slk_NetS_QuestList {
 	short m_count;	//任务列表
-	SLK_NetS_Quest m_list[6];	//任务列表
+	SLK_NetS_Quest m_list[16];	//任务列表
 };
 typedef struct _slk_NetS_QuestList SLK_NetS_QuestList;	//任务列表
 
@@ -1483,6 +1484,14 @@ struct _slk_NetS_StorySweepResult {
 };
 typedef struct _slk_NetS_StorySweepResult SLK_NetS_StorySweepResult;	//扫荡结果
 
+struct _slk_NetS_QuestTalk {
+	int m_talkid;	//任务对话
+	short m_herokind;	//任务对话
+	int m_talk_textid;	//任务对话
+	int m_btn_textid;	//任务对话
+};
+typedef struct _slk_NetS_QuestTalk SLK_NetS_QuestTalk;	//任务对话
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1646,5 +1655,6 @@ int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisit
 int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pValue );
 int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySweepHero *pValue );
 int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySweepResult *pValue );
+int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pValue );
 
 #endif

@@ -721,24 +721,60 @@ function MapUnit.createTown( recvValue )
 	return unitObj;
 end
 
--- 刷新下目标怪物
-function MapUnit.RefreshTargetMonster( targetLevel )
+-- 刷新下任务目标流寇
+function MapUnit.RefreshQuestEnemy( targetLevel )
     for index, unit in pairs( WorldMap.m_nMapUnitList ) do
-        if unit.m_type == MAPUNIT_TYPE_MONSTER then
+        if unit.m_type == MAPUNIT_TYPE_ENEMY then
             local unitObj = MapUnit.cache[ unit.m_unit_index ];
             if unitObj ~= nil then
-                local level = unit.m_char_value[2];
-                -- 是否是使命目标怪物
-                if targetLevel == level then
-                    unitObj.transform:FindChild("Mark").gameObject:SetActive( true );
-                    --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.red;
-                else
-                    unitObj.transform:FindChild("Mark").gameObject:SetActive( false );
-                    --unitObj.transform:FindChild("Name"):GetComponent("UIText").color = Color.white;
-                end
+                local level = unit.m_char_value[1];
+                local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+				local uiQuest = objs[2];
+	
+				if level == g_QuestTargetEnemyLevel then
+					if uiQuest == nil then
+						uiQuest = GameObject.Instantiate( LoadPrefab( "Djjt" ) )
+						uiQuest.transform:SetParent( unitObj.transform );
+						uiQuest.transform.localPosition = Vector3( 0, 0.4, 0 );
+						objs[2] = uiQuest;
+					end
+					SetTrue( uiQuest )
+				else
+					if uiQuest ~= nil then
+						SetFalse( uiQuest )
+					end
+				end
             end
         end
     end    
+end
+
+-- 刷新下目标战斗流寇
+function MapUnit.RefreshTargetEnemy( recvValue )
+	for index, unit in pairs( WorldMap.m_nMapUnitList ) do
+        if unit.m_type == MAPUNIT_TYPE_ENEMY then
+            local unitObj = MapUnit.cache[ unit.m_unit_index ];
+            if unitObj ~= nil then
+				local posx 		= unit.m_posx;
+				local posy 		= unit.m_posy;
+                local objs 		= unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+				local uiTarget = objs[3];
+				if recvValue ~= nil and recvValue.m_to_posx == posx and recvValue.m_to_posy == posy then
+					if uiTarget == nil then
+						uiTarget = GameObject.Instantiate( LoadPrefab( "Zdtb" ) )
+						uiTarget.transform:SetParent( unitObj.transform );
+						uiTarget.transform.localPosition = Vector3( 0, 0.4, 0 );
+						objs[3] = uiTarget;
+					end
+					SetTrue( uiTarget )
+				else
+					if uiTarget ~= nil then
+						SetFalse( uiTarget )
+					end
+				end
+            end
+        end
+    end
 end
 
 -- 创建流寇
@@ -778,8 +814,8 @@ function MapUnit.createEnemy( recvValue )
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
-	local uiMark = objs[2];
-	
+	local uiQuest = objs[2];
+	local uiTarget = objs[3];
 	-- 名字
 	if level > GetPlayer().m_mokilllv+1 then
 		SetText( uiName, "Lv."..level.." "..T(938), Color.red )
@@ -800,6 +836,43 @@ function MapUnit.createEnemy( recvValue )
 	else
 		spriteRenderer.flipX = false;
 	end	
+	
+	-- 是否是主线任务目标流寇
+    if level == g_QuestTargetEnemyLevel then
+		if uiQuest == nil then
+			uiQuest = GameObject.Instantiate( LoadPrefab( "Djjt" ) )
+			uiQuest.transform:SetParent( unitObj.transform );
+			uiQuest.transform.localPosition = Vector3( 0, 0.4, 0 );
+			objs[2] = uiQuest;
+		end
+		SetTrue( uiQuest )
+    else
+		if uiQuest ~= nil then
+			SetFalse( uiQuest )
+        end
+    end
+	
+	-- 是否我部队行军目标
+	local isTarget = 0;
+	for i=1, #g_targetEnemyPos, 1 do
+		if recvValue.m_posx == g_targetEnemyPos[i].x and recvValue.m_posy == g_targetEnemyPos[i].y then
+			isTarget = 1;
+			break
+		end
+	end
+	if isTarget == 1 then
+		if uiTarget == nil then
+			uiTarget = GameObject.Instantiate( LoadPrefab( "Zdtb" ) )
+			uiTarget.transform:SetParent( unitObj.transform );
+			uiTarget.transform.localPosition = Vector3( 0, 0.4, 0 );
+			objs[3] = uiTarget;
+		end
+		SetTrue( uiTarget )
+    else
+		if uiTarget ~= nil then
+			SetFalse( uiTarget )
+        end
+    end
 	return unitObj;
 end
 

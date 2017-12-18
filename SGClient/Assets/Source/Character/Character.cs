@@ -523,6 +523,7 @@ public class Character : MonoBehaviour
         public Color    color;                      // 染色
         public short    ai;                         // AI的ID
         public string   overridePre;                // 覆盖预制物体
+		public string 	abname;						// 所在的abname				
     }
 
     static Dictionary<int,Shape>      s_ShapeData;
@@ -551,7 +552,7 @@ public class Character : MonoBehaviour
                 ColorUtility.TryParseHtmlString( objectTable.GetValue( row, 11 ), out shape.color );
                 shape.ai = short.Parse( objectTable.GetValue( row, 12 ) );
                 shape.overridePre = objectTable.GetValue( row, 13 );
-
+				shape.abname = objectTable.GetValue( row, 15 );
                 s_ShapeData.Add( int.Parse( objectTable.GetValue( row, 0 ) ), shape );
             }
         }

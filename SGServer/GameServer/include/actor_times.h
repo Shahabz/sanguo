@@ -4,6 +4,7 @@
 // 32位整数，标志位操作0或1 标示开没开，有没有，做没做（永久存档）
 #define ACTOR_SFLAG_BODY_FREEBUY	0	// 首次购买体力免费
 #define ACTOR_SFLAG_MAPZONE_GO_ZC	1	// 首次免费前往州城
+#define ACTOR_SFLAG_QUEST_AUTOBUILD	2	// 新手任务是否领取过自动建造
 void actor_set_sflag( int actor_index, int offset, char value );
 int actor_get_sflag( int actor_index, int offset );
 

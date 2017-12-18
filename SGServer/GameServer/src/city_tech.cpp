@@ -272,6 +272,9 @@ int city_tech_get( int actor_index )
 		hero_attr_calc_all( pCity, 1 );
 	}
 
+	// ÈÎÎñ
+	quest_addvalue( pCity, QUEST_DATATYPE_CITY_TECH, kind, 0, pCity->techlevel[kind] );
+
 	city_event_add( pCity->index, CITY_EVENT_TECH, kind, pCity->techlevel[kind] * 100 + pCity->techprogress[kind] );
 	wlog( 0, LOGOP_TECH, PATH_TECH_GET, kind, pCity->techlevel[kind], pCity->techprogress[kind], g_actors[actor_index].actorid, city_mainlevel( pCity->index ) );
 	return 0;

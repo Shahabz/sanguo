@@ -59,10 +59,17 @@ function BuildingQuestClick(gameObject)
 	local ShareData = gameObject.transform:GetComponent("ShareData");
 	local questid = ShareData.intValue[0];
 	
-	if questid == 5 then
-		NpcTalkOne( T(10001), T(10002), function() 
-			system_askinfo( ASKINFO_QUEST, "", 2, questid );
-		end );
+	if questid == QUEST_MAINID_MADAI then
+		QuestTalkAsk( 5 )
+		
+	elseif questid == QUEST_MAINID_LIUKOU then
+		QuestTalkAsk( 14 )
 	end
 	gameObject:SetActive( false );
+end
+
+function BuildingQuestModHide()
+	if m_Mod then
+		m_Mod:SetActive( false );
+	end
 end

@@ -396,10 +396,11 @@ public class ResourceManagerWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
+			ToLua.CheckArgsCount(L, 3);
 			string arg0 = ToLua.CheckString(L, 1);
 			string arg1 = ToLua.CheckString(L, 2);
-			UnityEngine.AnimationClip o = ResourceManager.LoadCharactorAnime(arg0, arg1);
+			string arg2 = ToLua.CheckString(L, 3);
+			UnityEngine.AnimationClip o = ResourceManager.LoadCharactorAnime(arg0, arg1, arg2);
 			ToLua.Push(L, o);
 			return 1;
 		}

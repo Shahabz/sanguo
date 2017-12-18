@@ -27,6 +27,7 @@ local m_WorldQuestCache = {}
 local m_bHeroLayerShow = false;
 local m_bNationLayerShow = false;
 local m_TreasureActivity = {};
+g_targetEnemyPos = {}
 
 -- 打开界面
 function MapMainDlgOpen()
@@ -226,6 +227,10 @@ function MapMainDlgBattleRecv( recvValue )
 		return;
 	end
 	
+	-- 刷新目标流寇
+	g_targetEnemyPos = {};
+	MapUnit.RefreshTargetEnemy( nil );
+	
 	m_recvValue = recvValue;
 	-- 创建主力武将
 	local index = 0;
@@ -235,6 +240,15 @@ function MapMainDlgBattleRecv( recvValue )
 		if offset >= 0 and offset < 4 then
 			MapMainDlgBattleSet( m_uiHeroLayerGrid, index, m_recvValue.m_list[i] )
 			index = index + 1;
+		end
+		
+		if m_recvValue.m_list[i].m_to_type == MAPUNIT_TYPE_ENEMY then
+			if recvValue.m_list[i].m_state == ARMY_STATE_MARCH or recvValue.m_list[i].m_state == ARMY_STATE_FIGHT then
+				-- 刷新目标流寇
+				MapUnit.RefreshTargetEnemy( m_recvValue.m_list[i] );
+				-- 缓存起来
+				table.insert( g_targetEnemyPos, {x=m_recvValue.m_list[i].m_to_posx, y=m_recvValue.m_list[i].m_to_posy} )
+			end
 		end
 	end
 	

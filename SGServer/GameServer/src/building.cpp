@@ -618,6 +618,9 @@ int building_upgrade( int city_index, int kind, int offset )
 			building_sendinfo_res( g_city[city_index].actor_index, offset );
 		}
 		building_sendworker( g_city[city_index].actor_index );
+
+		// 任务
+		quest_main_addvalue( &g_city[city_index], QUEST_DATATYPE_BUILDING_UPGRADE, kind, offset, level+1 );
 	}
 	return 0;
 }
@@ -671,47 +674,16 @@ void building_upgrade_autocheck( int city_index )
 	char kind = 0;
 	char offset = -1;
 
-	// 优先普通建筑
-	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	if ( g_city[city_index].questid[0] >= 200 )
 	{
-		if ( g_city[city_index].building[tmpi].kind <= 0 )
-			continue;
-		if ( g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind_ex )
-			continue;
-		BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building[tmpi].kind, g_city[city_index].building[tmpi].level + 1 );
-		if ( config )
+		// 优先普通建筑
+		for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
 		{
-			// 角色等级是否满足
-			if ( g_city[city_index].level < config->actorlevel )
+			if ( g_city[city_index].building[tmpi].kind <= 0 )
 				continue;
-			// 官府等级是否满足
-			if ( city_mainlevel( city_index ) < config->citylevel )
+			if ( g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind_ex )
 				continue;
-			// 资源是否满足
-			if ( g_city[city_index].silver < config->silver )
-				continue;
-			if ( g_city[city_index].wood < config->wood )
-				continue;
-			//if ( g_city[city_index].food < config->food )
-			//	continue;
-			//if ( g_city[city_index].iron < config->iron )
-			//	continue;
-			kind = g_city[city_index].building[tmpi].kind;
-			offset = tmpi;
-			break;
-		}
-	}
-
-	// 兵营建筑
-	if ( kind <= 0 )
-	{
-		for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
-		{
-			if ( g_city[city_index].building_barracks[tmpi].kind <= 0 || g_city[city_index].building_barracks[tmpi].level <= 0 )
-				continue;
-			if ( g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind_ex )
-				continue;
-			BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building_barracks[tmpi].kind, g_city[city_index].building_barracks[tmpi].level + 1 );
+			BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building[tmpi].kind, g_city[city_index].building[tmpi].level + 1 );
 			if ( config )
 			{
 				// 角色等级是否满足
@@ -729,9 +701,43 @@ void building_upgrade_autocheck( int city_index )
 				//	continue;
 				//if ( g_city[city_index].iron < config->iron )
 				//	continue;
-				kind = g_city[city_index].building_barracks[tmpi].kind;
+				kind = g_city[city_index].building[tmpi].kind;
 				offset = tmpi;
 				break;
+			}
+		}
+
+		// 兵营建筑
+		if ( kind <= 0 )
+		{
+			for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+			{
+				if ( g_city[city_index].building_barracks[tmpi].kind <= 0 || g_city[city_index].building_barracks[tmpi].level <= 0 )
+					continue;
+				if ( g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind_ex )
+					continue;
+				BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building_barracks[tmpi].kind, g_city[city_index].building_barracks[tmpi].level + 1 );
+				if ( config )
+				{
+					// 角色等级是否满足
+					if ( g_city[city_index].level < config->actorlevel )
+						continue;
+					// 官府等级是否满足
+					if ( city_mainlevel( city_index ) < config->citylevel )
+						continue;
+					// 资源是否满足
+					if ( g_city[city_index].silver < config->silver )
+						continue;
+					if ( g_city[city_index].wood < config->wood )
+						continue;
+					//if ( g_city[city_index].food < config->food )
+					//	continue;
+					//if ( g_city[city_index].iron < config->iron )
+					//	continue;
+					kind = g_city[city_index].building_barracks[tmpi].kind;
+					offset = tmpi;
+					break;
+				}
 			}
 		}
 	}
@@ -889,7 +895,7 @@ int building_build( int city_index, int kind, int offset )
 			else
 			{
 				// 任务
-				quest_checkcomplete( &g_city[city_index] );
+				quest_checkcomplete( g_city[city_index].actor_index );
 
 				// 通知客户端更新状态
 				building_action( g_city[city_index].actor_index, kind, offset, 1 );
@@ -1089,7 +1095,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 			g_city[city_index].rb_num += 1;
 		}
 		// 任务
-		quest_checkcomplete( &g_city[city_index] );
+		quest_checkcomplete( g_city[city_index].actor_index );
 
 		// 通知客户端更新状态
 		building_action( g_city[city_index].actor_index, kind, offset, 1 );
@@ -1135,7 +1141,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 		}
 
 		// 任务
-		quest_checkcomplete( &g_city[city_index] );
+		quest_checkcomplete( g_city[city_index].actor_index );
 
 		// 通知客户端更新状态
 		building_action( g_city[city_index].actor_index, kind, offset, 1 );

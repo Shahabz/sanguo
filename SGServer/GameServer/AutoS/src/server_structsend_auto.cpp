@@ -291,6 +291,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_guardnum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_questid, (*psize) );
 	return 0;
 }
 
@@ -953,7 +954,7 @@ int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue )
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_datatype, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_datakind, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
@@ -2160,6 +2161,17 @@ int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySw
 	{
 		struct_NetS_StorySweepHero_send( pptr, psize, &pValue->m_hero[tmpi] );
 	}
+	return 0;
+}
+
+int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_talkid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_talk_textid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_btn_textid, (*psize) );
 	return 0;
 }
 

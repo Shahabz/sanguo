@@ -87,11 +87,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_QUEST:
 		if ( pvalue[0] == 1 )
 		{ // 获取任务奖励
-			quest_getaward( actor_index, pvalue[1], 0 );
+			quest_getaward( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 2 )
 		{ // 完成特殊类型的任务
-			quest_setcomplete( actor_index, pvalue[1], QUEST_COMPLETEFLAG_SUCCESS );
+			quest_client_op( actor_index, pvalue[1], pvalue[2] );
 		}
 		else if ( pvalue[0] == 10 )
 		{ // 世界任务

@@ -30,6 +30,8 @@
 #define AWARDKIND_EQUIP_WASH	50020 // 免费洗练次数
 #define AWARDKIND_LOSTREBUILD	50021 // 高级重建次数
 #define AWARDKIND_CITYGUARDNUM	50022 // 城防补充次数
+#define AWARDKIND_QUESTFIGHT	50023 // 任务战斗
+#define AWARDKIND_CHANGENAME	50024 // 任务改名
 #define AWARDKIND_RES_SILVER	60001 // 奖励未启用资源点（民居）
 #define AWARDKIND_RES_WOOD		60002 // 奖励未启用资源点（木材厂）
 #define AWARDKIND_RES_FOOD		60003 // 奖励未启用资源点（农田）

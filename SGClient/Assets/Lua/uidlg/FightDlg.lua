@@ -44,7 +44,9 @@ local m_uiLeftHeroCache = {} -- 左面武将信息缓存
 local m_uiRightHeroCache = {}-- 右面武将信息缓存
 local m_playing = 0;
 
-
+local m_WaitCallback = nil;
+local m_WaitValue = nil;
+	
 -- 打开界面
 function FightDlgOpen()
 	m_Dlg = eye.uiManager:Open( "FightDlg" );
@@ -62,6 +64,12 @@ function FightDlgClose()
 	m_playing = 0;
 	eye.uiManager:Close( "FightDlg" );
 	FightScene.Delete()
+	
+	if m_WaitCallback then
+		m_WaitCallback( m_WaitValue );
+	end
+	m_WaitCallback = nil;
+	m_WaitValue = nil;
 end
 
 -- 删除界面
@@ -185,16 +193,18 @@ function FightDlgShow( recvValue )
 	m_recvValue = recvValue;
 	local info = json.decode( m_recvValue.m_fight_content );
 	m_jsonFightInfo = info;
-	
-	-- 显示战前信息
-	FightInfoDlgShow( info );
-	
+		
 	-- 战斗类型	
 	local fighttype = info["ft"]
 	if fighttype == nil then
 		SetText( m_uiTypeName, "" )
 	else
 		SetText( m_uiTypeName, T(2000+fighttype-1) )
+	end
+	
+	-- 显示战前信息
+	if fighttype ~= FIGHTTYPE_QUEST then
+		FightInfoDlgShow( info );
 	end
 	
 	-- 战场对象初始化
@@ -267,6 +277,11 @@ function FightDlgShow( recvValue )
 		end
 	end
 	FightDlgUnitUpdate()
+	
+	-- 任务战特殊处理
+	if fighttype == FIGHTTYPE_QUEST then
+		FightDlgStart()
+	end
 end
 
 -- 更新英雄阵列显示
@@ -596,6 +611,7 @@ function FightDlgResultLayerShow()
 		FightDlgClose()
 		return
 	end
+	
 	eye.audioManager:Stop(202);
 	eye.audioManager:Stop(301);
 	eye.audioManager:Stop(305);
@@ -612,6 +628,8 @@ function FightDlgResultLayerShow()
 	local fighttype = m_jsonFightInfo["ft"]
 	if fighttype == nil then
 		SetText( m_uiTitle.transform:Find("Text"), "" )
+	elseif fighttype == FIGHTTYPE_QUEST then
+		FightDlgClose()
 	else
 		SetText( m_uiTitle.transform:Find("Text"), T(2000+fighttype-1) )
 	end
@@ -905,4 +923,16 @@ function FightDlgSweepResult( recvValue )
 			SetText( uiObj.transform:Find("Name"), HeroNameLv( pHero.m_kind, level ) )
 		end )
 	end
+end
+
+function FightDlgIsShow()
+	if m_Dlg ~= nil then
+		return IsActive( m_Dlg )
+	end
+	return false;
+end
+-- 设置等待数据
+function FightDlgWait( callback, value )
+	m_WaitCallback = callback;
+	m_WaitValue = value;
 end

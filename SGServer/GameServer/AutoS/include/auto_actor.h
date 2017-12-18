@@ -29,7 +29,7 @@ struct _actor {
 				Equip equip[150];	//角色携带的装备
 				unsigned char equipext;	//扩展的装备栏位数
 				Hero hero[128];	//未上阵英雄
-				char quest_complete[2048];	//任务完成情况
+				int quest_talkid;	//任务对话
 				int worldquest_complete;	//世界任务领取情况
 				short worldquestid;	//世界任务
 				int sflag;	//特定标志位

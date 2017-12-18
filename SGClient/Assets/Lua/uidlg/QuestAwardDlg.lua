@@ -127,10 +127,4 @@ end
 function QuestAwardDlgGet()
 	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
 	QuestAwardDlgClose();
-	QuestAwardDlgNextTalk( m_questid );
-end
-
--- 是否有NPC说话
-function QuestAwardDlgNextTalk( questid )
-
 end

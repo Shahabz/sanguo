@@ -33,8 +33,8 @@ FightScene.m_speed = 1
 function FightScene.Create()
 	FightScene.m_mapABName = "_ab_ui_static_fight_back_1"
 	ResourceManager.LoadAssetBundle( FightScene.m_mapABName );
-	ResourceManager.LoadAssetBundle( "_ab_fight"  );
 	ResourceManager.LoadAssetBundle( "_ab_char_shape_fightunit"  );
+	ResourceManager.LoadAssetBundle( "_ab_fight"  );
 	FightScene.m_sceneObject = GameObject.Instantiate( LoadPrefab("FightScene") );
 	FightScene.m_displayRoot = FightScene.m_sceneObject.transform:Find( "Display" );
 	FightScene.m_effectRoot = FightScene.m_sceneObject.transform:Find( "Effect" );
@@ -289,7 +289,7 @@ function FightScene.PlayBeat()
 			return
 		end
 		effectObj.transform.localPosition = Vector3.New( 0, BeatPos[i], 0 );
-		effectObj.transform.localScale = Vector3.New( 5, 5, 5 );
+		effectObj.transform.localScale = Vector3.New( 1, 1, 1 );
 		table.insert( list, effectObj )
 	end
 	Invoke( function() 

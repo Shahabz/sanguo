@@ -33,6 +33,7 @@
 #include "mail.h"
 #include "nation.h"
 #include "world_quest.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1353,7 +1354,7 @@ int city_change_autobuild( int city_index, int value, short path )
 	}
 	if ( path == PATH_QUEST && g_city[city_index].autobuild > 0 )
 	{
-		g_city[city_index].autobuildopen = 1;
+		g_city[city_index].autobuildopen = 0;
 	}
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_ChangeAutoBuild pValue = { 0 };
@@ -1798,6 +1799,9 @@ int city_levy( int actor_index )
 		city_changeiron( pCity->index, iron, PATH_LEVY );
 
 	city_changelevy( pCity->index, -1, PATH_LEVY );
+
+	// хннЯ
+	quest_main_addvalue( pCity, QUEST_DATATYPE_LEVYNUM, 0, 0, 1 );
 	return 0;
 }
 

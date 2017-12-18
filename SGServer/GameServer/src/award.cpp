@@ -21,6 +21,7 @@
 #include "building.h"
 #include "vip.h"
 #include "hero.h"
+#include "quest.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -578,6 +579,14 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	else if ( kind == AWARDKIND_RES_IRON )// 奖励未启用资源点（矿厂）
 	{
 		building_giveres( g_actors[actor_index].city_index, BUILDING_Iron );
+	}
+	else if ( kind == AWARDKIND_QUESTFIGHT )// 任务战斗
+	{
+		quest_fight( actor_index, num );
+	}
+	else if ( kind == AWARDKIND_CHANGENAME )
+	{
+		quest_changename( actor_index );
 	}
 	else if ( kind < 0 )
 	{ // 道具组

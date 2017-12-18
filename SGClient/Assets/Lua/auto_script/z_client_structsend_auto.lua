@@ -139,3 +139,8 @@ function struct_NetC_HeroGuardSort_send( buf, sendValue )
 	end
 end
 
+function struct_NetC_QuestTalkNext_send( buf, sendValue )
+	buf:WriteInt( sendValue.m_talkid );
+	buf:WriteSByte( sendValue.m_type );
+end
+

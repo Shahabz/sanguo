@@ -22,6 +22,7 @@
 #include "city.h"
 #include "building.h"
 #include "city_attr.h"
+#include "quest.h"
 
 extern Global global;
 extern MYSQL *myData;
@@ -408,7 +409,8 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 		return -1;
 	}
 
-	int index = equip_gettype( g_actors[actor_index].equip[equip_offset].kind ) - 1;
+	int equipkind = g_actors[actor_index].equip[equip_offset].kind;
+	int index = equip_gettype( equipkind ) - 1;
 	if ( index < 0 || index >= EQUIP_TYPE_MAX )
 		return -1;
 
@@ -472,6 +474,9 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 	
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_UP, herokind, equipkind, 1 );
 	return 0;
 }
 
@@ -870,6 +875,9 @@ int equip_forging_get( int actor_index )
 	pCity->forgingkind = 0;
 	pCity->forgingsec = 0;
 	building_smithy_send( pCity->index );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_FORGING, kind, 0, 1 );
 	return 0;
 }
 

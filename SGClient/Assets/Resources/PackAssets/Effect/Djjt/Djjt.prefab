@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33134998571947932}
   - component: {fileID: 64399566147493496}
   - component: {fileID: 23986894277414064}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Djjt_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4570293014073538}
   - component: {fileID: 95638617164406764}
-  m_Layer: 5
+  - component: {fileID: 210011360108555650}
+  m_Layer: 0
   m_Name: Djjt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +57,7 @@ GameObject:
   - component: {fileID: 33382665606256874}
   - component: {fileID: 64492802451056716}
   - component: {fileID: 23538086242858144}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Djjt_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,9 +83,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1287912955922794}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 4948682894387214}
   - {fileID: 4064906815706402}
@@ -227,3 +228,13 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!210 &210011360108555650
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1287912955922794}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 101

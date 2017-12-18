@@ -77,6 +77,10 @@ function GMCommandCheck( strarray )
 			sendValue.m_msg = cmdvalue[5];
 			sendValue.m_msg_length = string.len( sendValue.m_msg );
 			netsend_gmcmd_C( sendValue )
+			
+			if k == 25 then
+				ChatDlgClose()
+			end
 			return true;
 		end
 	end
@@ -114,7 +118,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	elseif cmdstr == "dump"	then
 		ResourceManager.dump()
 	elseif cmdstr == "t"	then
-		KingWarRankDlgShow()--HelpDlgShow()
+		RankKingListDlgShow();
 	elseif cmdstr == "f"	then
 		CabinetDlgShow()
 	end

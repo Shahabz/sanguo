@@ -189,7 +189,7 @@ function proc_buildinglist_C( recvValue )
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_Militiaman ) == 1 then
 		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
 	end
-	MainDlgSetButtons();
+	MainDlgSetButtons( -1 );
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
 	
@@ -836,7 +836,15 @@ end
 -- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,
 function proc_questaward_C( recvValue )
 	-- process.
-	QuestAwardDlgShow( recvValue )
+	if FightDlgIsShow() == true then
+		FightDlgWait( QuestAwardDlgShow, recvValue )
+	elseif HeroGetDlgIsShow() == true then
+		HeroGetDlgWait( QuestAwardDlgShow, recvValue )
+	elseif NpcTalkIsShow() == true then
+		NpcTalkWait( QuestAwardDlgShow, recvValue )
+	else
+		QuestAwardDlgShow( recvValue )
+	end
 end
 
 -- m_function=0,m_openoffset=0,m_path=0,
@@ -858,7 +866,7 @@ function proc_function_C( recvValue )
 	elseif recvValue.m_openoffset == CITY_FUNCTION_Militiaman then
 		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
 	else
-		MainDlgSetButtons();
+		MainDlgSetButtons( recvValue.m_openoffset );
 	end
 end
 
@@ -1656,5 +1664,42 @@ end
 function proc_storysweepresult_C( recvValue )
 	-- process.
 	FightDlgSweepResult( recvValue )
+end
+
+-- m_talkid=0,m_herokind=0,m_talk_textid=0,m_btn_textid=0,
+function proc_questtalk_C( recvValue )
+	-- process.
+	if recvValue.m_talkid == -1 then
+		ChangeNameDlgShow();
+		return
+	end
+	local callback = function()
+		local sendValue = {};
+		sendValue.m_talkid = recvValue.m_talkid;
+		sendValue.m_type = 0;
+		netsend_questtalknext_C( sendValue )
+	end
+	
+	if recvValue.m_herokind > 0 then
+		if BuildingGetDlgIsShow() == true then
+			BuildingGetDlgWait( HeroTalk, recvValue.m_herokind, Localization.text_quest(recvValue.m_talk_textid), callback )
+		else
+			HeroTalk( recvValue.m_herokind, Localization.text_quest(recvValue.m_talk_textid), callback )
+		end
+	else
+		if recvValue.m_btn_textid > 0 then
+			if BuildingGetDlgIsShow() == true then
+				BuildingGetDlgWait( NpcTalkOne, Localization.text_quest(recvValue.m_talk_textid), Localization.text_quest(recvValue.m_btn_textid), callback )
+			else
+				NpcTalkOne( Localization.text_quest(recvValue.m_talk_textid), Localization.text_quest(recvValue.m_btn_textid), callback )
+			end
+		else
+			if BuildingGetDlgIsShow() == true then
+				BuildingGetDlgWait( NpcTalk, Localization.text_quest(recvValue.m_talk_textid), callback )
+			else
+				NpcTalk( Localization.text_quest(recvValue.m_talk_textid), callback )
+			end
+		end
+	end
 end
 

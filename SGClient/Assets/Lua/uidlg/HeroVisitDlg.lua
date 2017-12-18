@@ -54,6 +54,7 @@ local objCache = {
 
 -- 打开界面
 function HeroVisitDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_cabinet1" );
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_gray" );
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_herovisit_up" );
 	m_Dlg = eye.uiManager:Open( "HeroVisitDlg" );
@@ -91,6 +92,7 @@ function HeroVisitDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_herovisit_gray" )
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_herovisit_up" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_cabinet1" );
 	m_Dlg = nil;
 end
 

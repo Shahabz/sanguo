@@ -23,6 +23,7 @@
 #include "actor_notify.h"
 #include "story.h"
 #include "fight.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -352,6 +353,9 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 		char award_content[256] = { 0 };
 		awardgroup_makestr( &getinfo, award_content );
 		sprintf( content, "{\"star\":%d,\"exp\":%d,\"silver\":%d,\"award\":\"%s\"}", star, config->exp, config->silver, award_content );
+
+		// 任务
+		quest_addvalue( pCity, QUEST_DATATYPE_STORY, pValue->m_storyid, 0, 1 );
 	}
 	else
 	{ // 失败
@@ -414,6 +418,9 @@ int story_res_get( int actor_index, int id )
 	}
 	g_actors[actor_index].story_resnum[saveoffset] += 1;
 	story_sendrankstate( actor_index, id, 4, saveoffset );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_STORY, id, 0, 1 );
 	return 0;
 }
 
@@ -502,6 +509,9 @@ int story_hero_free( int actor_index, int id )
 		story_actor_setid( actor_index, nextid );
 	}
 	story_sendrankstate( actor_index, id, 2, config->hero_saveoffset );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_STORY, id, 0, 1 );
 	return 0;
 }
 

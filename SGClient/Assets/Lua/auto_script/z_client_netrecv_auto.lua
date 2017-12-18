@@ -725,6 +725,11 @@ function netrecv_storysweepresult_C( buffer )
 	proc_storysweepresult_C( recvValue );
 end
 
+function netrecv_questtalk_C( buffer )
+	local recvValue = struct_NetS_QuestTalk_recv( buffer );
+	proc_questtalk_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -871,6 +876,7 @@ Proc_Command = {
 	[CMDS_HEROVISITAWARD]=netrecv_herovisitaward_C;
 	[CMDS_FIGHTPLAY]=netrecv_fightplay_C;
 	[CMDS_STORYSWEEPRESULT]=netrecv_storysweepresult_C;
+	[CMDS_QUESTTALK]=netrecv_questtalk_C;
 }
 
 function in_proc_command_C( cmd, buffer )

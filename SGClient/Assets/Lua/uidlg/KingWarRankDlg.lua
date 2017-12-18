@@ -96,7 +96,7 @@ function KingWarRankDlgShow()
 	
 	KingWarRankDlgOpen()
 	KingWarRankDlgClear();
-	local recvValue = {}
+	--local recvValue = {}
 	-- 获取血战排行榜列表
 	system_askinfo( ASKINFO_KINGWAR, "", 10 )
 	--[[local recvValue = {}
@@ -107,7 +107,7 @@ function KingWarRankDlgShow()
 		{ m_rank=1,m_kill=456222,m_nation=1,m_name="x皇天后土",m_herokind=1,m_herocolor=1 },
 		{ m_rank=2,m_kill=55655,m_nation=2,m_name="身高多少",m_herokind=2,m_herocolor=1 },
 		{ m_rank=3,m_kill=656,m_nation=3,m_name="x法国队",m_herokind=3,m_herocolor=1 },
-		{ m_rank=4,m_kill=756,m_nation=2,m_name="似的发射点",m_herokind=4,m_herocolor=1 },
+		{ m_rank=4,m_kill=756,m_nation=2,m_name="似的发射点射点射点",m_herokind=4,m_herocolor=1 },
 		{ m_rank=5,m_kill=856,m_nation=1,m_name="防晒",m_herokind=2,m_herocolor=1 },
 		{ m_rank=6,m_kill=900,m_nation=2,m_name="xxxxxx",m_herokind=3,m_herocolor=1 },
 		{ m_rank=7,m_kill=1056,m_nation=3,m_name="xxxxxx",m_herokind=1,m_herocolor=1 },
@@ -121,7 +121,8 @@ function KingWarRankDlgShow()
 		{ m_rank=15,m_kill=1856,m_nation=1,m_name="xxxxxx",m_herokind=1,m_herocolor=1 },
 	}
 	 recvValue.m_myrank = 10;
-	]]--
+	KingWarRankDlgRecvValue(recvValue);
+	--]]
 end
 
 --填充榜单中的信息

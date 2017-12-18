@@ -3,7 +3,8 @@ local m_Dlg = nil;
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
 local m_uiTalk = nil; --UnityEngine.GameObject
-local m_herokind = 0;
+
+local m_callback = nil;
 
 -- 打开界面
 function HeroTalkDlgOpen()
@@ -15,7 +16,6 @@ function HeroTalkDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
 	eye.uiManager:Close( "HeroTalkDlg" );
 end
 
@@ -34,8 +34,8 @@ function HeroTalkDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroTalkDlgClose();
-			if m_herokind == 1 then
-				NpcTalkID( 10004 );
+			if m_callback ~= nil then
+				m_callback()
 			end
         end
 	end
@@ -79,18 +79,15 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroTalk( shape, name, talk )
+function HeroTalk( herokind, text, callback )
 	HeroTalkDlgOpen();
-	m_herokind = 0;
-	m_uiShape:GetComponent( "Image" ).sprite = shape;
-	m_uiName:GetComponent( "UIText" ).text = name;
-	m_uiTalk:GetComponent( "UIText" ).text = talk;
-end
-
-function HeroTalkKind( herokind, text )
-	HeroTalkDlgOpen();
-	m_herokind = herokind
-	m_uiShape:GetComponent( "Image" ).sprite = HeroFaceSprite( herokind );
-	m_uiName:GetComponent( "UIText" ).text = HeroName(herokind);
+	if herokind == 999 then
+		m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( 3 );
+		m_uiName:GetComponent( "UIText" ).text = T(439);
+	else
+		m_uiShape:GetComponent( "Image" ).sprite = HeroFaceSprite( herokind );
+		m_uiName:GetComponent( "UIText" ).text = HeroName(herokind);
+	end
 	m_uiTalk:GetComponent( "UIText" ).text = text;
+	m_callback = callback;
 end

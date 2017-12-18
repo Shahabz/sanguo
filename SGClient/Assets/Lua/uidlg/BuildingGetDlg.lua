@@ -12,7 +12,9 @@ local m_offset = {};
 local m_info = {};
 
 local m_WaitCallback = nil;
-local m_WaitValue = nil;
+local m_WaitValue1 = nil;
+local m_WaitValue2 = nil;
+local m_WaitValue3 = nil;
 
 -- 打开界面
 function BuildingGetDlgOpen()
@@ -39,12 +41,19 @@ function BuildingGetDlgClose()
 	m_info = {};
 	
 	-- 回调
-	if m_WaitCallback then
-		m_WaitCallback( m_WaitValue );
+	if m_WaitCallback ~= nil then
+		if m_WaitValue1 ~= nil and m_WaitValue2 ~= nil and m_WaitValue3 ~= nil then
+			m_WaitCallback( m_WaitValue1, m_WaitValue2, m_WaitValue3 );
+		elseif m_WaitValue1 ~= nil and m_WaitValue2 ~= nil then
+			m_WaitCallback( m_WaitValue1, m_WaitValue2 );
+		else
+			m_WaitCallback( m_WaitValue1 );
+		end
 	end
 	m_WaitCallback = nil;
-	m_WaitValue = nil;
-	
+	m_WaitValue1 = nil;
+	m_WaitValue2 = nil;
+	m_WaitValue3 = nil;
 	eye.uiManager:Close( "BuildingGetDlg" );
 end
 
@@ -173,21 +182,64 @@ function BuildingGetDlgMove()
 			SetGray( uiShape[k], false )
 		end
 		
-		Invoke( function() 
+		--[[Invoke( function() 
 			uiShape[k]:GetComponent( "UITweenRectPosition" ).from = Vector2( uiShape[k].transform.localPosition.x, uiShape[k].transform.localPosition.y );
 			local screenPos = City.m_CameraMain:WorldToScreenPoint(unitObj[k].transform.position);
 			local x = screenPos.x-Screen.width/2;
 			local y= screenPos.y-Screen.height/2;
-			uiShape[k]:GetComponent( "UITweenRectPosition" ).to = Vector2( x, y ); 
+			uiShape[k]:GetComponent( "UITweenRectPosition" ).to = Vector2( x, y+10 ); 
 			uiShape[k]:GetComponent( "UITweenRectPosition" ):Play( true );
-		end, 1.1 )
-		
-		Invoke( function() 
+		end, 1.1 )--]]
+			
+		--[[Invoke( function() 
 			uiShape[k]:GetComponent( "UITweenScale" ):ToInit();
 			uiShape[k]:GetComponent( "UITweenRectPosition" ):ToInit();
 			unitObj[k].gameObject:SetActive(true);
 			if k == 1 then
-				City.BuildingSelect( unitObj[k].transform );
+				--City.BuildingSelect( unitObj[k].transform );
+			end
+			if k == count then
+				BuildingGetDlgClose();
+			end
+			
+			if bAllMove == false then
+				table.remove( m_info, 1 );
+				local tmp = m_info;
+				BuildingGetDlgClose();
+				for i,info in pairs(tmp) do
+					BuildingGetDlgShow( info );
+				end
+			end
+		end, 1.6 )--]]
+		
+		uiShape[k]:GetComponent( "UITweenScale" ).to = Vector3( 0.8, 0.8, 0.8 ); 
+		uiShape[k]:GetComponent( "UITweenScale" ):Play( true );
+
+		
+		Invoke( function() 
+			uiShape[k]:GetComponent( "UITweenPath" ).from = Vector2( uiShape[k].transform.localPosition.x, uiShape[k].transform.localPosition.y );
+			local screenPos = City.m_CameraMain:WorldToScreenPoint( Vector3.New( unitObj[k].transform.position.x,unitObj[k].transform.position.y+0.5,unitObj[k].transform.position.z ) );
+			local x = screenPos.x-Screen.width/2;
+			local y= screenPos.y-Screen.height/2;
+			uiShape[k]:GetComponent( "UITweenPath" ).path[0] = Vector2( x, y ); 
+			
+--[[			screenPos = City.m_CameraMain:WorldToScreenPoint(unitObj[k].transform.position);
+			x = screenPos.x-Screen.width/2;
+			y= screenPos.y-Screen.height/2;
+			uiShape[k]:GetComponent( "UITweenPath" ).path[1] = Vector2( x, y ); --]]
+			uiShape[k]:GetComponent( "UITweenPath" ):Play( true );
+		end, 1.1 )
+			
+		Invoke( function() 
+			uiShape[k]:GetComponent( "UITweenScale" ):ToInit();
+			uiShape[k]:GetComponent( "UITweenPath" ):ToInit();
+			unitObj[k].gameObject:SetActive(true);
+			if k == 1 then
+				if m_kind[1] == BUILDING_Silver then
+					if m_offset[1] == 0 or m_offset[1] == 1 then
+						City.BuildingSelect( unitObj[k].transform );
+					end
+				end
 			end
 			if k == count then
 				BuildingGetDlgClose();
@@ -202,7 +254,6 @@ function BuildingGetDlgMove()
 				end
 			end
 		end, 1.6 )
-		
 		if bAllMove == false then
 			break;
 		end
@@ -219,7 +270,9 @@ function BuildingGetDlgIsShow()
 end
 
 -- 设置等待数据
-function BuildingGetDlgWait( callback, value )
+function BuildingGetDlgWait( callback, value1, value2, value3 )
 	m_WaitCallback = callback;
-	m_WaitValue = value;
+	m_WaitValue1 = value1;
+	m_WaitValue2 = value2;
+	m_WaitValue3 = value3;
 end

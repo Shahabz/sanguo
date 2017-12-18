@@ -48,7 +48,6 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 5 then
 			if GameManager.currentScence == "worldmap" then
 				WorldMap.ReturnCity()
-				MainDlgShowCity()
 			end
 		
 		-- 本城城战(无用)

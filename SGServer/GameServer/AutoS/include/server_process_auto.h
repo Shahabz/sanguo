@@ -29,5 +29,6 @@ void proc_mailsend_S( int client_index, SLK_NetC_MailSend *pValue );
 void proc_mailreply_S( int client_index, SLK_NetC_MailReply *pValue );
 void proc_worldbossbattle_S( int client_index, SLK_NetC_WorldBossBattle *pValue );
 void proc_heroguardsort_S( int client_index, SLK_NetC_HeroGuardSort *pValue );
+void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue );
 
 #endif
