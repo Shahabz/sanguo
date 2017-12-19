@@ -143,7 +143,7 @@ int rank_server()
 			continue;
 		if ( g_rank_zone[tmpi] )
 		{
-			memset( &g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+			memset( g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 			g_rank_zone_count[tmpi] = 0;
 		}
 	}
@@ -153,7 +153,7 @@ int rank_server()
 	{
 		if ( g_rank_nation[tmpi] )
 		{
-			memset( &g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+			memset( g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 			g_rank_nation_count[tmpi] = 0;
 		}
 	}

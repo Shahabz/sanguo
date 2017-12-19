@@ -68,7 +68,7 @@ inline int _friend_target_has_my( int target_index, int myid )
 // 添加离线事件
 int actor_friend_addevent( int event, int actorid, int target_actorid )
 {
-	char szSQL[2048] = { 0 };
+	char szSQL[256] = { 0 };
 	sprintf( szSQL, "REPLACE INTO actor_friend_event ( actorid, event, target_actorid, optime ) VALUES ('%d','%d','%d','%d')", actorid, event, target_actorid, (int)time( NULL ) );
 	dbwork_addsql( szSQL, DBWORK_CMD_NORMAL, 0 );
 	return 0;
@@ -80,7 +80,7 @@ int actor_friend_loadevent( int actor_index )
 	ACTOR_CHECK_INDEX( actor_index );
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
-	char	szSQL[2048] = { 0 };
+	char	szSQL[256] = { 0 };
 	char has = 0;
 	sprintf( szSQL, "select `event`,`target_actorid` from actor_friend_event where actorid='%d'", g_actors[actor_index].actorid );
 	if ( mysql_query( myGame, szSQL ) )
@@ -120,6 +120,52 @@ int actor_friend_loadevent( int actor_index )
 int actor_friend_enevt( int actor_index, int event, int target_actorid )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	if ( event == ACTOR_FRIEND_EVENT_ASK )
+	{
+		for ( int tmpi = 0; tmpi < ACTOR_FRIEND_MAXCOUNT; tmpi++ )
+		{
+			if ( g_actors[actor_index].friends[tmpi].friend_actorid <= 0 )
+			{
+				g_actors[actor_index].friends[tmpi].actorid = g_actors[target_actorid].actorid;
+				g_actors[actor_index].friends[tmpi].friend_actorid = target_actorid;
+				g_actors[actor_index].friends[tmpi].offset = tmpi;
+				g_actors[actor_index].friends[tmpi].city_index = -1;
+				g_actors[actor_index].friends[tmpi].jointime = 0;
+				break;
+			}
+		}
+	}
+	else if ( event == ACTOR_FRIEND_EVENT_AGREE )
+	{
+		for ( int tmpi = 0; tmpi < ACTOR_FRIEND_MAXCOUNT; tmpi++ )
+		{
+			if ( g_actors[actor_index].friends[tmpi].friend_actorid <= 0 )
+			{
+				g_actors[actor_index].friends[tmpi].actorid = g_actors[actor_index].actorid;
+				g_actors[actor_index].friends[tmpi].friend_actorid = target_actorid;
+				g_actors[actor_index].friends[tmpi].offset = tmpi;
+				g_actors[actor_index].friends[tmpi].city_index = -1;
+				g_actors[actor_index].friends[tmpi].jointime = (int)time( NULL );
+				break;
+			}
+		}
+	}
+	else if ( event == ACTOR_FRIEND_EVENT_DEL )
+	{
+		for ( int tmpi = 0; tmpi < ACTOR_FRIEND_MAXCOUNT; tmpi++ )
+		{
+			if ( g_actors[actor_index].friends[tmpi].friend_actorid == target_actorid )
+			{
+				g_actors[actor_index].friends[tmpi].actorid = 0;
+				g_actors[actor_index].friends[tmpi].friend_actorid = 0;
+				g_actors[actor_index].friends[tmpi].offset = -1;
+				g_actors[actor_index].friends[tmpi].city_index = -1;
+				g_actors[actor_index].friends[tmpi].jointime = 0;
+				actor_friend_delete_db( g_actors[actor_index].actorid, target_actorid );
+				break;
+			}
+		}
+	}
 	return 0;
 }
 
@@ -260,6 +306,7 @@ int actor_friend_reject( int actor_index, int target_actorid, int target_city_in
 			g_actors[actor_index].friends[tmpi].offset = -1;
 			g_actors[actor_index].friends[tmpi].city_index = -1;
 			g_actors[actor_index].friends[tmpi].jointime = 0;
+			actor_friend_delete_db( g_actors[actor_index].actorid, target_actorid );
 			break;
 		}
 	}
@@ -304,6 +351,7 @@ int actor_friend_delete( int actor_index, int target_actorid, int target_city_in
 			g_actors[actor_index].friends[tmpi].offset = -1;
 			g_actors[actor_index].friends[tmpi].city_index = -1;
 			g_actors[actor_index].friends[tmpi].jointime = 0;
+			actor_friend_delete_db( g_actors[actor_index].actorid, target_actorid );
 			break;
 		}
 	}
@@ -321,6 +369,7 @@ int actor_friend_delete( int actor_index, int target_actorid, int target_city_in
 				g_actors[target_actor_index].friends[tmpi].offset = -1;
 				g_actors[target_actor_index].friends[tmpi].city_index = -1;
 				g_actors[target_actor_index].friends[tmpi].jointime = 0;
+				actor_friend_delete_db( target_actorid, g_actors[actor_index].actorid );
 				break;
 			}
 		}
@@ -330,6 +379,22 @@ int actor_friend_delete( int actor_index, int target_actorid, int target_city_in
 		// 不在线，插入数据库
 		actor_friend_addevent( ACTOR_FRIEND_EVENT_DEL, target_actorid, g_actors[actor_index].actorid );
 	}
+	return 0;
+}
+
+// 数据库删除
+int actor_friend_delete_db( int actorid, int target_actorid )
+{
+	char szSQL[256] = { 0 };
+	sprintf( szSQL, "delete from actor_friend where actorid='%d' and friend_actorid='%d'", actorid, target_actorid );
+	//if ( mysql_query( myGame, szSQL ) )
+	//{
+	//	printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+	//	write_gamelog( "%s", szSQL );
+	//	if ( mysql_ping( myGame ) != 0 )
+	//		db_reconnect_game();
+	//}
+	dbwork_addsql( szSQL, DBWORK_CMD_NORMAL, 0 );
 	return 0;
 }
 

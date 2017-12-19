@@ -31,7 +31,7 @@ int actor_friend_reject( int actor_index, int target_actorid, int target_city_in
 
 // 删除好友
 int actor_friend_delete( int actor_index, int target_actorid, int target_city_index );
-
+int actor_friend_delete_db( int actorid, int target_actorid );
 // 好友列表
 int actor_friend_sendlist( int actor_index );
 
