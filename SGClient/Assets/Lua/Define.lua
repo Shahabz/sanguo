@@ -430,7 +430,14 @@ function clearChild( object )
     --end
 	Utils.ClearChild( object.transform );
 end
-
+-- 获取所有子节点
+function GetChild( object )
+	local arrayObj = {};
+	for i = 0 ,object.transform.childCount - 1 do
+		table.insert(arrayObj,bject.transform:GetChild(i).gameObject);
+	end
+	return arrayObj;
+end
 
 -- 添加节点
 function addChild( object, prefab )

@@ -1512,6 +1512,25 @@ struct _slk_NetS_RankList {
 };
 typedef struct _slk_NetS_RankList SLK_NetS_RankList;	//排行榜列表
 
+struct _slk_NetS_FriendInfo {
+	int m_actorid;	//好友信息
+	int m_city_index;	//好友信息
+	char m_shape;	//好友信息
+	char m_namelen;	//好友信息
+	char m_name[32];	//好友信息
+	short m_level;	//好友信息
+	char m_place;	//好友信息
+	int m_battlepower;	//好友信息
+	char m_ask;	//好友信息
+};
+typedef struct _slk_NetS_FriendInfo SLK_NetS_FriendInfo;	//好友信息
+
+struct _slk_NetS_FriendList {
+	char m_count;	//好友列表
+	SLK_NetS_FriendInfo m_list[40];	//好友列表
+};
+typedef struct _slk_NetS_FriendList SLK_NetS_FriendList;	//好友列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1678,5 +1697,7 @@ int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySw
 int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pValue );
 int struct_NetS_RankInfo_send( char **pptr, int *psize, SLK_NetS_RankInfo *pValue );
 int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValue );
+int struct_NetS_FriendInfo_send( char **pptr, int *psize, SLK_NetS_FriendInfo *pValue );
+int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *pValue );
 
 #endif

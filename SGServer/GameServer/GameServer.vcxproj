@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClCompile Include="AutoS\src\auto_actor.cpp" />
     <ClCompile Include="AutoS\src\auto_actor_equip.cpp" />
+    <ClCompile Include="AutoS\src\auto_actor_friend.cpp" />
     <ClCompile Include="AutoS\src\auto_actor_hero.cpp" />
     <ClCompile Include="AutoS\src\auto_actor_item.cpp" />
     <ClCompile Include="AutoS\src\auto_army.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="src\account.cpp" />
     <ClCompile Include="src\activity.cpp" />
     <ClCompile Include="src\actor.cpp" />
+    <ClCompile Include="src\actor_friend.cpp" />
     <ClCompile Include="src\actor_func.cpp" />
     <ClCompile Include="src\actor_gmcmd.cpp" />
     <ClCompile Include="src\actor_times.cpp" />
@@ -230,6 +232,7 @@
   <ItemGroup>
     <ClInclude Include="AutoS\include\auto_actor.h" />
     <ClInclude Include="AutoS\include\auto_actor_equip.h" />
+    <ClInclude Include="AutoS\include\auto_actor_friend.h" />
     <ClInclude Include="AutoS\include\auto_actor_hero.h" />
     <ClInclude Include="AutoS\include\auto_actor_item.h" />
     <ClInclude Include="AutoS\include\auto_army.h" />
@@ -302,6 +305,7 @@
     <ClInclude Include="include\account.h" />
     <ClInclude Include="include\activity.h" />
     <ClInclude Include="include\actor.h" />
+    <ClInclude Include="include\actor_friend.h" />
     <ClInclude Include="include\actor_times.h" />
     <ClInclude Include="include\army.h" />
     <ClInclude Include="include\army_fight.h" />

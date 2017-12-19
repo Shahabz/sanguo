@@ -1709,3 +1709,8 @@ function proc_ranklist_C( recvValue )
 	RankListDlgRecv( recvValue )
 end
 
+-- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
+function proc_friendlist_C( recvValue )
+	-- process.
+end
+

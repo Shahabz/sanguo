@@ -1970,3 +1970,29 @@ function struct_NetS_RankList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_FriendInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_city_index = buffer:ReadInt();
+	recvValue.m_shape = buffer:ReadSByte();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_ask = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_FriendList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_FriendInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

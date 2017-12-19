@@ -2205,3 +2205,32 @@ int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValu
 	return 0;
 }
 
+int struct_NetS_FriendInfo_send( char **pptr, int *psize, SLK_NetS_FriendInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_city_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ask, (*psize) );
+	return 0;
+}
+
+int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_FriendInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

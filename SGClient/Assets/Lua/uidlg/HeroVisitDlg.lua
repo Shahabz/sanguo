@@ -43,7 +43,7 @@ local b_isVisit = false ; --控制一次寻访
 local b_isTenVisit = false ;--控制十连寻访
 local i_controlID = 0 ;
 local f_awardPosition = {}; --存储十连抽每个奖励的位置
-local i_tweenId = 1; --失联寻访每个奖励物品的nControlID 
+local i_tweenId = 1; --十连寻访每个奖励物品的nControlID 
 local i_freeTimes = 0 ; --免费寻访次数
 local i_itemTimes = 0 ;--道具数量
 local t_getHero ={} ; --已用于英雄列表
@@ -113,47 +113,18 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroVisitDlgOpenAward(nControlID);
 		elseif nControlID == 4 then	--寻访1次
 			if i_controlID == 2 then
-				local token = global.hero_visit_low_token
-				MsgBox(F(1965,token,1,"良"),function()
-					if GetPlayer().m_token < token then
-						JumpToken();
-					else
-						HeroVisitDlgLow();
-					end
-				end);
-				--HeroVisitDlgLow();
+				HeroVisitDlgLow();
 			elseif i_controlID == 3 then
-				local token = global.hero_visit_high_token
-				MsgBox(F(1965,token,1,"神"),function()
-					if GetPlayer().m_token < token then
-						JumpToken();
-					else
-						HeroVisitDlgHigh();
-					end
-				 end);
+				HeroVisitDlgHigh();
 			else
 				print("i_controlID value error ");
 			end
 		elseif nControlID == 5 then	--寻访10次
 			i_tweenId=1;
 			if i_controlID == 2 then
-				local token = global.hero_visit_low_token10
-				MsgBox(F(1965,token,10,"良"),function()
-					if GetPlayer().m_token < token then
-						JumpToken();
-					else
-						HeroVisitDlgLow10() ;
-					end				
-				end);
+				HeroVisitDlgLow10();
 			elseif i_controlID == 3 then
-				local token = global.hero_visit_high_token10
-				MsgBox(F(1965,token,10,"神"),function()
-					if GetPlayer().m_token < token then
-						JumpToken();
-					else
-						HeroVisitDlgHigh10();
-					end					
-				 end);
+				HeroVisitDlgHigh10();
 			else
 				print("i_controlID value error ");
 			end	
@@ -347,61 +318,88 @@ end
 -- 良将寻访
 function HeroVisitDlgLow()
 	-- 关键条件判断
-	 i_TimesNum = i_TimesNum -1 ;
-	if i_TimesNum == 0 then
-		i_TimesNum = 10 ;
-	end
-	SetText(m_uiTimesText,F(1963,i_TimesNum));
-	-- 发送信息
-	system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );
+	local token = global.hero_visit_low_token
+	MsgBox(F(1978,token,1),function()
+		if GetPlayer().m_token < token then
+			JumpToken();
+		else
+			i_TimesNum = i_TimesNum -1 ;
+			if i_TimesNum == 0 then
+				i_TimesNum = 10 ;
+			end
+			SetText(m_uiTimesText,F(1963,i_TimesNum));
+			-- 发送信息
+			system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
+		end
+	end);
 end
 
 -- 良将寻访10连
 function HeroVisitDlgLow10()
 	-- 关键条件判断
-	if IsActive(m_uiOnePage) then		
-		SetFalse(m_uiOnePage);
-		SetTrue(m_uiTenPage);
-		SetText(m_uiTenTokenText,global.hero_visit_low_token10);
-	end
-	if #f_awardPosition == 0 then
-		HeroVisitDlgGetPosition();
-	else
-		clearChild(m_uiAwardGrop);
-	end
-	
-	-- 发送信息
-	system_askinfo( ASKINFO_HERO_VISIT, "", 1, 1 );
+	local token = global.hero_visit_low_token10
+	MsgBox(F(1978,token,10),function()
+		if GetPlayer().m_token < token then
+			JumpToken();
+		else
+			if IsActive(m_uiOnePage) then		
+				SetFalse(m_uiOnePage);
+				SetTrue(m_uiTenPage);
+				SetText(m_uiTenTokenText,global.hero_visit_low_token10);
+			end
+			if #f_awardPosition == 0 then
+				HeroVisitDlgGetPosition();
+			else
+				clearChild(m_uiAwardGrop);
+			end
+			-- 发送信息
+			system_askinfo( ASKINFO_HERO_VISIT, "", 1, 1 );
+		end				
+	end);	
 end
 
 -- 神将寻访
 function HeroVisitDlgHigh()
 	-- 关键条件判断
-	 i_TimesNum = i_TimesNum -1 ;
-	if i_TimesNum == 0 then
-		i_TimesNum = 10 ;
-	end
-	SetText(m_uiTimesText,F(1964,i_TimesNum));
+	local token = global.hero_visit_high_token
+	MsgBox(F(1979,token,1),function()
+		if GetPlayer().m_token < token then
+			JumpToken();
+		else
+			i_TimesNum = i_TimesNum -1 ;
+			if i_TimesNum == 0 then
+				i_TimesNum = 10 ;
+			end
+			SetText(m_uiTimesText,F(1964,i_TimesNum));
 
-	-- 发送信息
-	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );
+			-- 发送信息
+			system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );
+		end
+	 end);
 end
 
 -- 神将寻访10连
 function HeroVisitDlgHigh10()
 	-- 关键条件判断
-	if IsActive(m_uiOnePage) then		
-		SetFalse(m_uiOnePage);
-		SetTrue(m_uiTenPage);
-		SetText(m_uiTenTokenText,global.hero_visit_high_token10);
-	end
-	if #f_awardPosition == 0 then
-		HeroVisitDlgGetPosition();
-	else
-		clearChild(m_uiAwardGrop);
-	end	
-	-- 发送信息
-	system_askinfo( ASKINFO_HERO_VISIT, "", 2, 1 );
+	local token = global.hero_visit_high_token10
+	MsgBox(F(1979,token,10),function()
+		if GetPlayer().m_token < token then
+			JumpToken();
+		else
+			if IsActive(m_uiOnePage) then		
+				SetFalse(m_uiOnePage);
+				SetTrue(m_uiTenPage);
+				SetText(m_uiTenTokenText,global.hero_visit_high_token10);
+			end
+			if #f_awardPosition == 0 then
+				HeroVisitDlgGetPosition();
+			else
+				clearChild(m_uiAwardGrop);
+			end	
+			-- 发送信息
+			system_askinfo( ASKINFO_HERO_VISIT, "", 2, 1 );
+		end					
+	 end);
 end
 
 -- 播放奖励动画

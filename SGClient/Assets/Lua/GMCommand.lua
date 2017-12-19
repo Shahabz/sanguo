@@ -120,7 +120,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	elseif cmdstr == "t" then
 		RankListDlgShow()
 	elseif cmdstr == "f" then
-		RankListDlgSelectType( value1 )
+
 	end
 	
 end

@@ -16,6 +16,7 @@
 #include "actor.h"
 #include "actor_send.h"
 #include "actor_times.h"
+#include "actor_friend.h"
 #include "wqueue.h"
 #include "define.h"
 #include "client.h"
@@ -263,6 +264,8 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 	// 保存装备
 	equip_save( actor_index, fp );
 
+	// 保存好友数据
+	actor_friend_batch_save_auto( g_actors[actor_index].friends, ACTOR_FRIEND_MAXCOUNT, "actor_friend", fp );
 	return 0;
 }
 
@@ -868,6 +871,18 @@ int actor_load( int actor_index, int actorid )
 			continue;
 		hero_attr_calc( &g_city[city_index], &g_actors[actor_index].hero[tmpi] );
 		g_actors[actor_index].hero[tmpi].soldiers = 0;
+	}
+
+	// 读取好友数据
+	actor_friend_load_auto( g_actors[actor_index].actorid, actor_index, actor_friend_getptr, "actor_friend" );
+	for ( int tmpi = 0; tmpi < ACTOR_FRIEND_MAXCOUNT; tmpi++ )
+	{
+		g_actors[actor_index].friends[tmpi].city_index = -1;
+		if ( g_actors[actor_index].friends[tmpi].friend_actorid <= 0 )
+		{
+			g_actors[actor_index].friends[tmpi].actorid = 0;
+			g_actors[actor_index].friends[tmpi].offset = -1;
+		}
 	}
 	return 0;
 }

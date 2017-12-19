@@ -124,6 +124,7 @@ int rank_sortfunc( const void* a, const void* b )
 
 int rank_server()
 {
+	return 0;
 #ifdef WIN32
 	DWORD b = timeGetTime();
 #else

@@ -47,6 +47,7 @@
 #include "auto_data_kingwar.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
+#include "auto_actor_friend.h"
 #include "auto_city_building.h"
 #include "auto_city_building_barracks.h"
 #include "auto_city_building_res.h"
