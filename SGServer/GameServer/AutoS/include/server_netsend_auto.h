@@ -148,6 +148,7 @@ int netsend_herovisitaward_S( int actor_index, char send_type, SLK_NetS_HeroVisi
 int netsend_fightplay_S( int actor_index, char send_type, SLK_NetS_FightPlay *pValue );
 int netsend_storysweepresult_S( int actor_index, char send_type, SLK_NetS_StorySweepResult *pValue );
 int netsend_questtalk_S( int actor_index, char send_type, SLK_NetS_QuestTalk *pValue );
+int netsend_ranklist_S( int actor_index, char send_type, SLK_NetS_RankList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

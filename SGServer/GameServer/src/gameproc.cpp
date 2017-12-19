@@ -52,6 +52,7 @@
 #include "map_event.h"
 #include "nation.h"
 #include "king_war.h"
+#include "rank.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -793,6 +794,15 @@ int process_init( int max_connection )
 	sc_OnWorldMapBrush();
 	serv_setstat( 117 );
 	
+	// 排行榜
+	if ( rank_init() < 0 )
+	{
+		printf_msg( "Rank Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 118 );
+
 	// 数据库多线程启动
 	if ( dbwork_start() >= 0 )
 		printf_msg( "dbwork Module ready!" );
@@ -1150,17 +1160,18 @@ int process_logic()
 	{
 		
 	}
-	
+	else if ( tick == 11 )
+	{
+		rank_reset();
+		rank_server();
+	}
+
 	if ( g_speed > 108000 )
 	{
 		tick = g_speed % 108000;
 		if ( tick == 0 )
 		{ // 每小时一次逻辑
 			sc_Script_Hour();
-		}
-		else if ( tick == 20 )
-		{
-
 		}
 	}
 	g_frame_count++;

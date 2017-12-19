@@ -287,3 +287,13 @@ int struct_NetC_QuestTalkNext_recv( char **pptr, int *psize, SLK_NetC_QuestTalkN
 	return 0;
 }
 
+int struct_NetC_RankAsk_recv( char **pptr, int *psize, SLK_NetC_RankAsk *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_RECV( &pValue->m_type, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_page, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_myrange, (*pptr), (*psize) );
+	return 0;
+}
+

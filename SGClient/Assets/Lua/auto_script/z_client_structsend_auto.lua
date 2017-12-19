@@ -144,3 +144,9 @@ function struct_NetC_QuestTalkNext_send( buf, sendValue )
 	buf:WriteSByte( sendValue.m_type );
 end
 
+function struct_NetC_RankAsk_send( buf, sendValue )
+	buf:WriteSByte( sendValue.m_type );
+	buf:WriteInt( sendValue.m_page );
+	buf:WriteSByte( sendValue.m_myrange );
+end
+

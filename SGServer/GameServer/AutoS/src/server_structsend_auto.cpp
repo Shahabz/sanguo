@@ -2175,3 +2175,33 @@ int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pVa
 	return 0;
 }
 
+int struct_NetS_RankInfo_send( char **pptr, int *psize, SLK_NetS_RankInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	return 0;
+}
+
+int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_RankInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_page, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_myrank, (*psize) );
+	return 0;
+}
+

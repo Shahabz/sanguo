@@ -1943,3 +1943,30 @@ function struct_NetS_QuestTalk_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_RankInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rank = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_battlepower = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_RankList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_RankInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_page = buffer:ReadInt();
+	recvValue.m_myrank = buffer:ReadInt();
+	return recvValue;
+end
+

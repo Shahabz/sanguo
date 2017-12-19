@@ -29,6 +29,7 @@ int netrecv_mailreply_S( int client_index, char *data, int size );
 int netrecv_worldbossbattle_S( int client_index, char *data, int size );
 int netrecv_heroguardsort_S( int client_index, char *data, int size );
 int netrecv_questtalknext_S( int client_index, char *data, int size );
+int netrecv_ranklistask_S( int client_index, char *data, int size );
 
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code );
 int netrecv_wqueue_list_S( int client_index, char *data, int size, int exec_code );

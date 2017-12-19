@@ -101,6 +101,7 @@ timegmcmd.cpp \
 map_enemy.cpp \
 login_net.cpp \
 activity.cpp \
+rank.cpp \
 map.cpp \
 city.cpp \
 mapunit.cpp \
@@ -347,6 +348,8 @@ map_enemy.o: map_enemy.cpp
 login_net.o: login_net.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 activity.o: activity.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+rank.o: rank.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map.o: map.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

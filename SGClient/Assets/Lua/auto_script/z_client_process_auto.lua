@@ -1703,3 +1703,9 @@ function proc_questtalk_C( recvValue )
 	end
 end
 
+-- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,[m_count]},m_myrank=0,m_type=0,m_page=0,m_myrank=0,
+function proc_ranklist_C( recvValue )
+	-- process.
+	RankListDlgRecv( recvValue )
+end
+

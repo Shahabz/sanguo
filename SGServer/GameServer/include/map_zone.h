@@ -5,6 +5,7 @@
 #define MAPZONE_TYPE1		1 // ÖÝµØ
 #define MAPZONE_TYPE2		2 // »Ê³Ç
 #define MAPZONE_CENTERID	13
+#define MAPZONE_MAXNUM		26 // 1-25
 
 int map_zone_load();
 int map_zone_save( FILE *fp );

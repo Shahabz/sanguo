@@ -1492,6 +1492,26 @@ struct _slk_NetS_QuestTalk {
 };
 typedef struct _slk_NetS_QuestTalk SLK_NetS_QuestTalk;	//任务对话
 
+struct _slk_NetS_RankInfo {
+	int m_rank;	//排行榜
+	char m_namelen;	//排行榜
+	char m_name[32];	//排行榜
+	char m_nation;	//排行榜
+	short m_level;	//排行榜
+	char m_place;	//排行榜
+	int m_battlepower;	//排行榜
+};
+typedef struct _slk_NetS_RankInfo SLK_NetS_RankInfo;	//排行榜信息
+
+struct _slk_NetS_RankList {
+	char m_count;	//排行榜列表
+	SLK_NetS_RankInfo m_list[10];	//排行榜列表
+	char m_type;	//排行榜列表-类型
+	int m_page;	//排行榜列表-页号
+	int m_myrank;	//排行榜列表-我的排名
+};
+typedef struct _slk_NetS_RankList SLK_NetS_RankList;	//排行榜列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1656,5 +1676,7 @@ int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pVa
 int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySweepHero *pValue );
 int struct_NetS_StorySweepResult_send( char **pptr, int *psize, SLK_NetS_StorySweepResult *pValue );
 int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pValue );
+int struct_NetS_RankInfo_send( char **pptr, int *psize, SLK_NetS_RankInfo *pValue );
+int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValue );
 
 #endif

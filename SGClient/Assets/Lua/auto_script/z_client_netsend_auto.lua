@@ -184,3 +184,11 @@ function netsend_questtalknext_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_type=0,m_page=0,m_myrange=0,
+function netsend_ranklistask_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_RANKLISTASK );
+	struct_NetC_RankAsk_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

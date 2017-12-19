@@ -129,6 +129,9 @@ struct _city {
 				int temp_wood;	//临时存资源
 				int temp_food;	//临时存资源
 				char guardnum;	//城墙守卫数量
+				int rank_server;	//全服排行榜排名
+				int rank_zone;	//区域排行榜排名
+				int rank_nation;	//国家排行榜排名
 };
 typedef struct _city City;
 

@@ -7,6 +7,7 @@ struct _questinfo {
 				int questid;	//
 				short type;	//
 				short nameid;	//
+				int descid;	//
 				int nextid;	//
 				int unlock_branch[2];	//
 				int datatype;	//

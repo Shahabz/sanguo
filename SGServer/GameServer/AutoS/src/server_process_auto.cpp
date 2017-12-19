@@ -15,6 +15,7 @@
 #include "world_boss.h"
 #include "hero.h"
 #include "quest.h"
+#include "rank.h"
 extern SConfig g_Config;
 
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
@@ -270,6 +271,23 @@ void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue )
 	else if( pValue->m_type == 1 )
 	{
 		quest_talk_client_ask( client_index, pValue->m_talkid );
+	}
+}
+
+void proc_ranklistask_S( int client_index, SLK_NetC_RankAsk *pValue )
+{
+	// process.
+	if ( pValue->m_type == 1 )
+	{
+		rank_server_sendlist( client_index, pValue->m_page, pValue->m_myrange );
+	}
+	else if ( pValue->m_type == 2 )
+	{
+		rank_zone_sendlist( client_index, pValue->m_page, pValue->m_myrange );
+	}
+	else if ( pValue->m_type == 3 )
+	{
+		rank_nation_sendlist( client_index, pValue->m_page, pValue->m_myrange );
 	}
 }
 

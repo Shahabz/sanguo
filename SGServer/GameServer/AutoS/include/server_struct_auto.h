@@ -151,6 +151,7 @@
 #define CMDS_FIGHTPLAY	(CMDS_BASE+203)
 #define CMDS_STORYSWEEPRESULT	(CMDS_BASE+205)
 #define CMDS_QUESTTALK	(CMDS_BASE+206)
+#define CMDS_RANKLIST	(CMDS_BASE+209)
 
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
@@ -179,6 +180,7 @@
 #define CMDC_WORLDBOSSBATTLE	(CMDC_BASE+22)
 #define CMDC_HEROGUARDSORT	(CMDC_BASE+23)
 #define CMDC_QUESTTALKNEXT	(CMDC_BASE+24)
+#define CMDC_RANKLISTASK	(CMDC_BASE+25)
 struct _slk_NetU_Logined {
 	int m_result;	//用户服务器返回-登录返回值
 	int m_client_index;	//用户服务器返回-角色索引
