@@ -57,6 +57,7 @@ SRC = \
 ../AutoS/src/auto_map_zone.cpp \
 ../AutoS/src/auto_data_story.cpp \
 ../AutoS/src/auto_city_building_barracks.cpp \
+../AutoS/src/auto_actor_friend.cpp \
 ../AutoS/src/auto_data_weather.cpp \
 ../AutoS/src/auto_data_map_towninfo.cpp \
 ../AutoS/src/auto_world_boss.cpp \
@@ -79,6 +80,7 @@ vip.cpp \
 actor_gmcmd.cpp \
 world_quest.cpp \
 map_zone.cpp \
+actor_friend.cpp \
 client.cpp \
 king_war.cpp \
 story.cpp \
@@ -261,6 +263,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building_barracks.o: ../AutoS/src/auto_city_building_barracks.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_actor_friend.o: ../AutoS/src/auto_actor_friend.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_weather.o: ../AutoS/src/auto_data_weather.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
@@ -304,6 +308,8 @@ actor_gmcmd.o: actor_gmcmd.cpp
 world_quest.o: world_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_zone.o: map_zone.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+actor_friend.o: actor_friend.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 client.o: client.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
