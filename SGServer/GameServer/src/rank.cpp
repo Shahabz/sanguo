@@ -59,6 +59,7 @@ int rank_init()
 		if ( g_zoneinfo[tmpi].open == 0 )
 			continue;
 		g_rank_zone[tmpi] = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
+		memset( &g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 		g_rank_zone_count[tmpi] = 0;
 	}
 
@@ -66,6 +67,7 @@ int rank_init()
 	for ( int tmpi = 0; tmpi < 3; tmpi++ )
 	{
 		g_rank_nation[tmpi] = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
+		memset( &g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 		g_rank_nation_count[tmpi] = 0;
 	}
 
@@ -133,6 +135,29 @@ int rank_server()
 	int zone = 0;
 	if ( g_city_maxindex <= 0 )
 		return -1;
+
+	// 区域排行榜
+	for ( int tmpi = 1; tmpi < MAPZONE_MAXNUM; tmpi++ )
+	{
+		if ( g_zoneinfo[tmpi].open == 0 )
+			continue;
+		if ( g_rank_zone[tmpi] )
+		{
+			memset( &g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+			g_rank_zone_count[tmpi] = 0;
+		}
+	}
+
+	// 国家排行榜
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		if ( g_rank_nation[tmpi] )
+		{
+			memset( &g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+			g_rank_nation_count[tmpi] = 0;
+		}
+	}
+
 	//调用qsort排序
 	qsort( g_rank_server, g_city_maxindex, sizeof( ActorRank ), rank_sortfunc );
 	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
