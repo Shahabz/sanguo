@@ -45,7 +45,6 @@ int g_rank_nation_count[3] = { 0 };
 
 int rank_init()
 {
-	return 0;
 	if ( g_zoneinfo_maxnum != MAPZONE_MAXNUM )
 	{
 		printf_msg( "rank_init g_map_zone_maxcount != MAPZONE_MAXNUM" );
@@ -60,7 +59,7 @@ int rank_init()
 		if ( g_zoneinfo[tmpi].open == 0 )
 			continue;
 		g_rank_zone[tmpi] = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
-		memset( &g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+		memset( g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 		g_rank_zone_count[tmpi] = 0;
 	}
 
@@ -68,7 +67,7 @@ int rank_init()
 	for ( int tmpi = 0; tmpi < 3; tmpi++ )
 	{
 		g_rank_nation[tmpi] = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
-		memset( &g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
+		memset( g_rank_nation[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 		g_rank_nation_count[tmpi] = 0;
 	}
 
@@ -79,7 +78,6 @@ int rank_init()
 
 int rank_reset()
 {
-	return 0;
 	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
 	{
 		// 默认排名,避免如果初始顺序已经正确后,不会修改排名的问题
@@ -126,7 +124,6 @@ int rank_sortfunc( const void* a, const void* b )
 
 int rank_server()
 {
-	return 0;
 #ifdef WIN32
 	DWORD b = timeGetTime();
 #else
