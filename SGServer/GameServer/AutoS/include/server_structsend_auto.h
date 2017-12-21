@@ -1500,6 +1500,7 @@ struct _slk_NetS_RankInfo {
 	short m_level;	//排行榜
 	char m_place;	//排行榜
 	int m_battlepower;	//排行榜
+	int m_actorid;	//排行榜
 };
 typedef struct _slk_NetS_RankInfo SLK_NetS_RankInfo;	//排行榜信息
 
@@ -1530,6 +1531,38 @@ struct _slk_NetS_FriendList {
 	SLK_NetS_FriendInfo m_list[40];	//好友列表
 };
 typedef struct _slk_NetS_FriendList SLK_NetS_FriendList;	//好友列表
+
+struct _slk_NetS_ActorSearch {
+	int m_actorid;	//查询玩家信息
+	int m_city_index;	//查询玩家信息
+	char m_namelen;	//查询玩家信息
+	char m_name[32];	//查询玩家信息
+	char m_signlen;	//查询玩家信息
+	char m_sign[128];	//查询玩家信息
+	short m_level;	//查询玩家信息
+	char m_official;	//查询玩家信息
+	char m_place;	//查询玩家信息
+	char m_zone;	//查询玩家信息
+	char m_nation;	//查询玩家信息
+	int m_battlepower;	//查询玩家信息
+	int m_killcity;	//查询玩家信息
+	char m_herocount;	//查询玩家信息
+	SLK_NetS_StorySweepHero m_hero[4];	//查询玩家信息
+	int m_bp_hero;	//查询玩家信息
+	int m_bp_equip;	//查询玩家信息
+	int m_bp_tech;	//查询玩家信息
+	int m_bp_nequip;	//查询玩家信息
+	int m_bp_girl;	//查询玩家信息
+	int m_bp_place;	//查询玩家信息
+	int m_my_bp_hero;	//查询玩家信息
+	int m_my_bp_equip;	//查询玩家信息
+	int m_my_bp_tech;	//查询玩家信息
+	int m_my_bp_nequip;	//查询玩家信息
+	int m_my_bp_girl;	//查询玩家信息
+	int m_my_bp_place;	//查询玩家信息
+	char m_shape;	//查询玩家信息
+};
+typedef struct _slk_NetS_ActorSearch SLK_NetS_ActorSearch;	//玩家查询信息
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1699,5 +1732,6 @@ int struct_NetS_RankInfo_send( char **pptr, int *psize, SLK_NetS_RankInfo *pValu
 int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValue );
 int struct_NetS_FriendInfo_send( char **pptr, int *psize, SLK_NetS_FriendInfo *pValue );
 int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *pValue );
+int struct_NetS_ActorSearch_send( char **pptr, int *psize, SLK_NetS_ActorSearch *pValue );
 
 #endif

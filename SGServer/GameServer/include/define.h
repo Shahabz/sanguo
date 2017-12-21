@@ -72,6 +72,7 @@
 #ifndef NAME_SIZE
 #define NAME_SIZE					22		// 玩家名字和物品名字长度
 #endif
+#define SIGNATURE_SIZE				128		// 个性签名
 #define EPSINON 0.000001
 
 // 最小的角色ID值

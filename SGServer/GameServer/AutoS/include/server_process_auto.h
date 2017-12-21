@@ -31,5 +31,6 @@ void proc_worldbossbattle_S( int client_index, SLK_NetC_WorldBossBattle *pValue 
 void proc_heroguardsort_S( int client_index, SLK_NetC_HeroGuardSort *pValue );
 void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue );
 void proc_ranklistask_S( int client_index, SLK_NetC_RankAsk *pValue );
+void proc_friendop_S( int client_index, SLK_NetC_FriendOp *pValue );
 
 #endif

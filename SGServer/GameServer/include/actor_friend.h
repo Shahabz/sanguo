@@ -21,7 +21,7 @@ int actor_friend_loadevent( int actor_index );
 int actor_friend_enevt( int actor_index, int event, int target_actorid );
 
 // 申请加好友
-int actor_friend_ask( int actor_index, int target_actorid );
+int actor_friend_ask( int actor_index, int target_actorid, const char *target_name );
 
 // 同意添加好友
 int actor_friend_agree( int actor_index, int target_actorid, int target_city_index );

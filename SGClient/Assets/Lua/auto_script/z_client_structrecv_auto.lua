@@ -1952,6 +1952,7 @@ function struct_NetS_RankInfo_recv( buffer )
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_place = buffer:ReadSByte();
 	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_actorid = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -1993,6 +1994,44 @@ function struct_NetS_FriendList_recv( buffer )
 		tmpValue = struct_NetS_FriendInfo_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	return recvValue;
+end
+
+function struct_NetS_ActorSearch_recv( buffer )
+	local recvValue = {};
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_city_index = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_signlen = buffer:ReadSByte();
+	recvValue.m_sign = buffer:ReadStringWithLen( recvValue.m_signlen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_official = buffer:ReadSByte();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_zone = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_killcity = buffer:ReadInt();
+	recvValue.m_herocount = buffer:ReadSByte();
+	recvValue.m_hero = {};
+	for tmpi=1,recvValue.m_herocount,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_StorySweepHero_recv( buffer );
+		table.insert( recvValue.m_hero, tmpValue );
+	end
+	recvValue.m_bp_hero = buffer:ReadInt();
+	recvValue.m_bp_equip = buffer:ReadInt();
+	recvValue.m_bp_tech = buffer:ReadInt();
+	recvValue.m_bp_nequip = buffer:ReadInt();
+	recvValue.m_bp_girl = buffer:ReadInt();
+	recvValue.m_bp_place = buffer:ReadInt();
+	recvValue.m_my_bp_hero = buffer:ReadInt();
+	recvValue.m_my_bp_equip = buffer:ReadInt();
+	recvValue.m_my_bp_tech = buffer:ReadInt();
+	recvValue.m_my_bp_nequip = buffer:ReadInt();
+	recvValue.m_my_bp_girl = buffer:ReadInt();
+	recvValue.m_my_bp_place = buffer:ReadInt();
+	recvValue.m_shape = buffer:ReadSByte();
 	return recvValue;
 end
 

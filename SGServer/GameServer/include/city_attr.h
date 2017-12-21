@@ -63,7 +63,12 @@ void city_attr_sendinfo( int actor_index );
 
 // 战力变化途径
 #define  BATTLEPOWER_PATH_HERO		1
-#define  BATTLEPOWER_PATH_BUILDING	2
+#define  BATTLEPOWER_PATH_EQUIP		2
+#define  BATTLEPOWER_PATH_TECH		3
+#define  BATTLEPOWER_PATH_NEQUIP	4
+#define  BATTLEPOWER_PATH_PLACE		5
+#define  BATTLEPOWER_PATH_GIRL		6
+#define  BATTLEPOWER_PATH_BUILDING	7
 
 // 重置总战力
 void city_battlepower_reset( City *pCity );
@@ -73,6 +78,21 @@ void city_battlepower_calc( City *pCity, char path );
 
 // 英雄提供战力
 void city_battlepower_hero_calc( City *pCity );
+
+// 装备提供战力
+void city_battlepower_equip_calc( City *pCity );
+
+// 科技提供战力
+void city_battlepower_tech_calc( City *pCity );
+
+// 国器提供战力
+void city_battlepower_nequip_calc( City *pCity );
+
+// 爵位提供战力
+void city_battlepower_place_calc( City *pCity );
+
+// 女将提供战力
+void city_battlepower_girl_calc( City *pCity );
 
 // 建筑提供战力
 void city_battlepower_building_calc( City *pCity );

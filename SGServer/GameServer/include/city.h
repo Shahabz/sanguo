@@ -77,6 +77,9 @@ City *city_getptr_withactorid( int actorid );
 // 根据玩家id找到城池索引
 int city_getindex_withactorid( int actorid );
 
+// 根据玩家名称找到城池索引
+int city_getindex_withactorname( const char *actorname );
+
 // 获取国家
 char city_getnation( int city_index );
 

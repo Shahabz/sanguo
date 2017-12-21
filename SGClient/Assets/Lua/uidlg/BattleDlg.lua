@@ -229,7 +229,7 @@ end
 -- 设置英雄出战顺序
 function BattleDlgSetHeroSort()
 	local sort = 1;
-	for i=1,4,1 do
+	for i=1,#m_HeroList,1 do
 		local pHero = m_HeroList[i];
 		local uiObj = m_uiLeftContent.transform:GetChild(i-1).gameObject
 		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;

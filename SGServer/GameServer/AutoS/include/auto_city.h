@@ -31,8 +31,12 @@ struct _city {
 				char place;	//爵位
 				char zone;	//区域
 				int battlepower;	//战力
-				int battlepower_building;	//建筑提供战力
 				int battlepower_hero;	//英雄提供战力
+				int battlepower_equip;	//装备提供战力
+				int battlepower_tech;	//科技提供战力
+				int battlepower_nequip;	//国器提供战力
+				int battlepower_place;	//爵位提供战力
+				int battlepower_girl;	//女将提供战力
 				char mokilllv;	//击杀野怪最高级别
 				short body;	//体力
 				short bodysec;	//体力恢复时间(每秒-1)
@@ -113,6 +117,7 @@ struct _city {
 				int ofsec[3];	//建筑官员剩余秒
 				int offree[3];	//建筑官员免费情况
 				int ofquick[3];	//建筑官员已经使用的加速时间
+				char signature[128];	//个性签名
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

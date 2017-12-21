@@ -192,3 +192,11 @@ function netsend_ranklistask_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
+-- m_op=0,m_target_actorid=0,m_target_cityindex=0,m_target_namelen=0,m_target_name="[m_target_namelen]",
+function netsend_friendop_C( sendValue )
+	local buf = ByteBuffer.New();
+	buf:WriteShort( CMDC_FRIENDOP );
+	struct_NetC_FriendOp_send( buf, sendValue );
+	eye.networkManager:SendMessage(buf);
+end
+

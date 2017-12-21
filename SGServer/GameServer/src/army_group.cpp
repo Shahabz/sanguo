@@ -859,6 +859,18 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "", 0 );
 			}
 		}
+
+		//  数据记录杀城池数量
+		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
+		{
+			int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				continue;
+			City *pArmyCity = army_getcityptr( army_index );
+			if ( !pArmyCity )
+				continue;
+			data_record_addvalue( pArmyCity, DATA_RECORD_KILLCITY, 1 );
+		}
 	}
 	else
 	{

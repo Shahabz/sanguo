@@ -356,6 +356,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 重新开始角色
 			actor_restart( actor_index );
 		}
+		else if ( pvalue[0] == 2 )
+		{ // 获取角色信息
+			actor_search( actor_index, pvalue[1], pvalue[2] );
+		}
 		break;
 	case ASKINFO_MATERIALMAKE:
 		if ( pvalue[0] == 0 )

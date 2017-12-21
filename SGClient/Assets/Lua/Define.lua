@@ -396,12 +396,17 @@ function EnemyName( id )
 	return Localization.text_item(8000+id);
 end
 
+-- 官职名称
+function OfficialName( place )
+	return Localization.text( 240+place );
+end
+
 -- 职位名称
 function PlaceName( place )
 	return Localization.text( 200+place );
 end
 
--- 职位名称
+-- 世界任务名称
 function WorldQuestName( questid )
 	return Localization.text_quest( 2000+questid );
 end
@@ -416,6 +421,18 @@ end
 function NameColorStr( color )
 	local c = { "f7f3bbff", "25c9ffff", "03de27ff", "ffde00ff", "e80017ff", "d95df4ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff" }
 	return c[color+1]
+end
+
+-- 国家颜色
+function NationColor( nation )
+	local c = { 0x25C9FFFF, 0xE80017FF, 0x03DE27FF }
+	return Hex2Color( c[nation] )
+end
+
+-- 国家颜色
+function NationColorStr( nation )
+	local c = { "25C9FFFF", "E80017FF", "03DE27FF" }
+	return c[nation]
 end
 
 -- 颜色名称
@@ -434,7 +451,7 @@ end
 function GetChild( object )
 	local arrayObj = {};
 	for i = 0 ,object.transform.childCount - 1 do
-		table.insert(arrayObj,bject.transform:GetChild(i).gameObject);
+		table.insert(arrayObj,object.transform:GetChild(i).gameObject);
 	end
 	return arrayObj;
 end
@@ -491,6 +508,11 @@ function SetRichText( transform, text, callback )
 	if callback ~= nil then
 		uiComponent.onLinkClick = callback
 	end
+end
+
+function SetRichTextColor( transform, color )
+	local uiComponent = transform:GetComponent( typeof(YlyRichText) )
+	uiComponent.color = color;
 end
 
 function SetControlID( transform, controlID )

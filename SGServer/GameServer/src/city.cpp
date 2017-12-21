@@ -294,6 +294,25 @@ int city_getindex_withactorid( int actorid )
 	return city_index;
 }
 
+// 根据玩家名称找到城池索引
+int city_getindex_withactorname( const char *actorname )
+{
+	if ( !actorname )
+		return -1;
+	int city_index = -1;
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		if ( strcmp( g_city[tmpi].name, actorname ) == 0 )
+		{
+			city_index = tmpi;
+			break;
+		}
+	}
+	return city_index;
+}
+
 // 获取国家
 char city_getnation( int city_index )
 {

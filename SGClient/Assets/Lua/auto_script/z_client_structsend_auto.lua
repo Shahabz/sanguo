@@ -150,3 +150,11 @@ function struct_NetC_RankAsk_send( buf, sendValue )
 	buf:WriteSByte( sendValue.m_myrange );
 end
 
+function struct_NetC_FriendOp_send( buf, sendValue )
+	buf:WriteSByte( sendValue.m_op );
+	buf:WriteInt( sendValue.m_target_actorid );
+	buf:WriteInt( sendValue.m_target_cityindex );
+	buf:WriteSByte( sendValue.m_target_namelen );
+	buf:WriteStringWithLength( sendValue.m_target_name );
+end
+

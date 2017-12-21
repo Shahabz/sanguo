@@ -170,12 +170,29 @@ int actor_friend_enevt( int actor_index, int event, int target_actorid )
 }
 
 // 申请加好友
-int actor_friend_ask( int actor_index, int target_actorid )
+int actor_friend_ask( int actor_index, int target_actorid, const char *target_name )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	int target_city_index = city_getindex_withactorid( target_actorid );
+	int target_city_index = -1;
+	if ( target_actorid > 0 )
+	{
+		target_city_index = city_getindex_withactorid( target_actorid );
+	}
+	else
+	{
+		target_city_index = city_getindex_withactorname( target_name );
+	}
 	if ( target_city_index < 0 )
+	{
+		actor_notify_alert( actor_index, 2055 ); // 玩家不存在
 		return -1;
+	}
+
+	if ( city_getnation( g_actors[actor_index].city_index ) != g_city[target_city_index].nation )
+	{
+		actor_notify_alert( actor_index, 2056 ); // 不能加其他国家的玩家为好友
+		return -1;
+	}
 	
 	// 我好友列表是否有他
 	if ( _friend_my_has_target( actor_index, target_actorid ) == 1 )

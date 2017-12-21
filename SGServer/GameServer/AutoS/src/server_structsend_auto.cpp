@@ -2187,6 +2187,7 @@ int struct_NetS_RankInfo_send( char **pptr, int *psize, SLK_NetS_RankInfo *pValu
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
 	return 0;
 }
 
@@ -2231,6 +2232,46 @@ int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *p
 	{
 		struct_NetS_FriendInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	return 0;
+}
+
+int struct_NetS_ActorSearch_send( char **pptr, int *psize, SLK_NetS_ActorSearch *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_city_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_signlen, (*psize) );
+	if( pValue->m_signlen > 0 && pValue->m_signlen <= 128 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_sign, pValue->m_signlen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_official, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zone, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_killcity, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_herocount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_herocount; tmpi++ )
+	{
+		struct_NetS_StorySweepHero_send( pptr, psize, &pValue->m_hero[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_hero, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_equip, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_tech, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_nequip, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_girl, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bp_place, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_hero, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_equip, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_tech, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_nequip, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_girl, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_place, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
 	return 0;
 }
 

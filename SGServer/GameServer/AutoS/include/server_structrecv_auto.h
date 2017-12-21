@@ -159,6 +159,15 @@ struct _slk_NetC_RankAsk {
 };
 typedef struct _slk_NetC_RankAsk SLK_NetC_RankAsk;	//排行榜请求列表
 
+struct _slk_NetC_FriendOp {
+	char m_op;	//好友列表操作
+	int m_target_actorid;	//好友列表操作
+	int m_target_cityindex;	//好友列表操作
+	char m_target_namelen;	//好友列表操作
+	char m_target_name[32];	//好友列表操作
+};
+typedef struct _slk_NetC_FriendOp SLK_NetC_FriendOp;	//好友操作
+
 int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue );
 int struct_NetC_Create_recv( char **pptr, int *psize, SLK_NetC_Create *pValue );
 int struct_NetC_Heart_recv( char **pptr, int *psize, SLK_NetC_Heart *pValue );
@@ -180,5 +189,6 @@ int struct_NetC_WorldBossBattle_recv( char **pptr, int *psize, SLK_NetC_WorldBos
 int struct_NetC_HeroGuardSort_recv( char **pptr, int *psize, SLK_NetC_HeroGuardSort *pValue );
 int struct_NetC_QuestTalkNext_recv( char **pptr, int *psize, SLK_NetC_QuestTalkNext *pValue );
 int struct_NetC_RankAsk_recv( char **pptr, int *psize, SLK_NetC_RankAsk *pValue );
+int struct_NetC_FriendOp_recv( char **pptr, int *psize, SLK_NetC_FriendOp *pValue );
 
 #endif

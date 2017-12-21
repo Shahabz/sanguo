@@ -66,7 +66,7 @@ int nationequipinfo_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`level`,`actorlevel`,`itemkind`,`itemnum`,`progress`,`iron`,`sec`,`ability`,`value` from nation_equip;" );
+	sprintf( szSQL, "select `kind`,`level`,`actorlevel`,`itemkind`,`itemnum`,`progress`,`iron`,`sec`,`ability`,`value`,`battlepower` from nation_equip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -93,6 +93,7 @@ int nationequipinfo_init_auto()
 		g_nationequip[kind].config[level].sec = atoi(row[offset++]);
 		g_nationequip[kind].config[level].ability = atoi(row[offset++]);
 		g_nationequip[kind].config[level].value = atoi(row[offset++]);
+		g_nationequip[kind].config[level].battlepower = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

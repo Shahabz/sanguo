@@ -2,6 +2,7 @@
 #include "server_netsend_auto.h"
 #include "actor_send.h"
 #include "actor_notify.h"
+#include "actor_friend.h"
 #include "login.h"
 #include "gameproc.h"
 #include "system_askinfo.h"
@@ -288,6 +289,31 @@ void proc_ranklistask_S( int client_index, SLK_NetC_RankAsk *pValue )
 	else if ( pValue->m_type == 3 )
 	{
 		rank_nation_sendlist( client_index, pValue->m_page, pValue->m_myrange );
+	}
+}
+
+void proc_friendop_S( int client_index, SLK_NetC_FriendOp *pValue )
+{
+	// process.
+	if ( pValue->m_op == 0 )
+	{ // 列表
+		actor_friend_sendlist( client_index );
+	}
+	else if ( pValue->m_op == 1 )
+	{ // 请求
+		actor_friend_ask( client_index, pValue->m_target_actorid, pValue->m_target_name );
+	}
+	else if ( pValue->m_op == 2 )
+	{ // 同意
+		actor_friend_agree( client_index, pValue->m_target_actorid, pValue->m_target_cityindex );
+	}
+	else if ( pValue->m_op == 3 )
+	{ // 拒绝
+		actor_friend_reject( client_index, pValue->m_target_actorid, pValue->m_target_cityindex );
+	}
+	else if ( pValue->m_op == 4 )
+	{ // 删除
+		actor_friend_delete( client_index, pValue->m_target_actorid, pValue->m_target_cityindex );
 	}
 }
 

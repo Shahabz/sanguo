@@ -740,6 +740,11 @@ function netrecv_friendlist_C( buffer )
 	proc_friendlist_C( recvValue );
 end
 
+function netrecv_actorsearch_C( buffer )
+	local recvValue = struct_NetS_ActorSearch_recv( buffer );
+	proc_actorsearch_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -889,6 +894,7 @@ Proc_Command = {
 	[CMDS_QUESTTALK]=netrecv_questtalk_C;
 	[CMDS_RANKLIST]=netrecv_ranklist_C;
 	[CMDS_FRIENDLIST]=netrecv_friendlist_C;
+	[CMDS_ACTORSEARCH]=netrecv_actorsearch_C;
 }
 
 function in_proc_command_C( cmd, buffer )

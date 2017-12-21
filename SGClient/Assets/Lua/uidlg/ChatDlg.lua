@@ -4,20 +4,33 @@ local m_Dlg = nil;
 local m_uiScrollView = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatItem = nil; --UnityEngine.GameObject
-local m_uiChannelBtn1 = nil; --UnityEngine.GameObject
-local m_uiChannelBtn2 = nil; --UnityEngine.GameObject
+local m_uiNationBtn = nil; --UnityEngine.GameObject
+local m_uiZoneBtn = nil; --UnityEngine.GameObject
 local m_uiChatEdit = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatItemSelf = nil; --UnityEngine.GameObject
 local m_uiInput = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatTime = nil; --UnityEngine.GameObject
 local m_uiUIP_ChatSystalk = nil; --UnityEngine.GameObject
-local m_SelectChannel = 0;
+local m_uiNationSelectBtn = nil; --UnityEngine.GameObject
+local m_uiZoneSelectBtn = nil; --UnityEngine.GameObject
+local m_uiTitleText = nil; --UnityEngine.GameObject
+local m_uiScrollViewZone = nil; --UnityEngine.GameObject
+local m_uiContentZone = nil; --UnityEngine.GameObject
+local m_uiHornLayer = nil; --UnityEngine.GameObject
+local m_uiItem = nil; --UnityEngine.GameObject
+local m_uiContentField = nil; --UnityEngine.GameObject
+local m_uiBuyButton = nil; --UnityEngine.GameObject
+local m_uiSendButton = nil; --UnityEngine.GameObject
 
-local m_objectPool = {};
+local m_ObjectPool = nil;
+local m_SelectChannel = 0;
 
 local m_ChatCache = {};
 local m_ChatCacheCount = 0;
+local m_ChatCacheObj = {};
+
 local m_LastTime = 0;
+local m_horn_itemnum = 0;
 
 CHAT_MSGTYPE_ACTORCHAT			=	0		-- 消息类型-玩家聊天
 CHAT_MSGTYPE_VS					=	1		-- 消息类型-对战
@@ -54,12 +67,77 @@ function ChatDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             ChatDlgClose();
+		elseif nControlID == -2 then
+			ChatDlgHornLayerHide()
+			
+		-- 发送
 		elseif nControlID == 1 then
 			ChatDlgSend();
+			
+		-- 喇叭
 		elseif nControlID == 2 then
+			ChatDlgHornLayerShow()
+			
+		-- 选择国家频道
 		elseif nControlID == 3 then
+			SetFalse( m_uiNationSelectBtn )
+			SetFalse( m_uiZoneSelectBtn )
+			SetFalse( m_uiZoneBtn )
+			SetTrue( m_uiNationBtn )
+			SetText( m_uiTitleText, T(2057) )
+			SetTrue( m_uiScrollView )
+			SetFalse( m_uiScrollViewZone )
+			ChatDlgSelectChannel( 0 )
+			
+		-- 选择区域频道
 		elseif nControlID == 4 then
+			SetFalse( m_uiNationSelectBtn )
+			SetFalse( m_uiZoneSelectBtn )
+			SetFalse( m_uiNationBtn )
+			SetTrue( m_uiZoneBtn )
+			SetText( m_uiTitleText, T(2058) )
+			SetFalse( m_uiScrollView )
+			SetTrue( m_uiScrollViewZone )
+			ChatDlgSelectChannel( 1 )
+			
+		-- 点击国家频道
+		elseif nControlID == 5 then
+			SetFalse( m_uiNationSelectBtn )
+			SetTrue( m_uiZoneSelectBtn )
+		
+		-- 点击区域频道
+		elseif nControlID == 6 then
+			SetFalse( m_uiZoneSelectBtn )
+			SetTrue( m_uiNationSelectBtn )
+			
+		-- 喇叭-购买并使用
+		elseif nControlID == 11 then
+			ChatDlgHornBuy()
+		-- 喇叭-发送
+		elseif nControlID == 12 then
+			ChatDlgHornSend()
+			
+		-- 点击玩家
+		elseif nControlID > 1000 then
+			ChatDlgClickActor( nControlID - 1000 )
         end
+		
+	elseif nType == UI_EVENT_INPUTVALUECHANGED then
+		if nControlID == 0 then
+			local text = m_uiChatEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiChatEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiChatEdit.transform:Find("Input/Hint") )
+			end
+		elseif nControlID == 1 then
+			local text = m_uiContentField.transform:GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiContentField.transform:Find("Hint") )
+			else
+				SetFalse( m_uiContentField.transform:Find("Hint") )
+			end
+		end
 	end
 end
 
@@ -70,13 +148,30 @@ function ChatDlgOnAwake( gameObject )
 	m_uiScrollView = objs[0];
 	m_uiContent = objs[1];
 	m_uiUIP_ChatItem = objs[2];
-	m_uiChannelBtn1 = objs[3];
-	m_uiChannelBtn2 = objs[4];
+	m_uiNationBtn = objs[3];
+	m_uiZoneBtn = objs[4];
 	m_uiChatEdit = objs[5];
 	m_uiUIP_ChatItemSelf = objs[6];
 	m_uiInput = objs[7];
 	m_uiUIP_ChatTime = objs[8];
 	m_uiUIP_ChatSystalk = objs[9];
+	m_uiNationSelectBtn = objs[10];
+	m_uiZoneSelectBtn = objs[11];
+	m_uiTitleText = objs[12];
+	m_uiScrollViewZone = objs[13];
+	m_uiContentZone = objs[14];
+	m_uiHornLayer = objs[15];
+	m_uiItem = objs[16];
+	m_uiContentField = objs[17];
+	m_uiBuyButton = objs[18];
+	m_uiSendButton = objs[19];
+
+	-- 对象池
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	m_ObjectPool:CreatePool("UIP_ChatItem", 5, 5, m_uiUIP_ChatItem);
+	m_ObjectPool:CreatePool("UIP_ChatItemSelf", 1, 1, m_uiUIP_ChatItemSelf);
+	m_ObjectPool:CreatePool("UIP_ChatSystalk", 1, 1, m_uiUIP_ChatSystalk);
+	m_ObjectPool:CreatePool("UIP_ChatTime", 1, 1, m_uiUIP_ChatTime);
 end
 
 -- 界面初始化时调用
@@ -110,7 +205,11 @@ end
 ----------------------------------------
 function ChatDlgShow()
 	ChatDlgOpen();
-	ChatDlgScrollToBottom();
+	if m_SelectChannel == 0 then
+		ChatDlgScrollToBottom( m_uiScrollView );
+	else
+		ChatDlgScrollToBottom( m_uiScrollViewZone );
+	end
 end
 
 -- 解析内容
@@ -133,62 +232,91 @@ function ChatDlgMakeMsg( recvValue )
 		msg = F( 1125, info["pos"], NationEx(info["n"]), info["na"] );
 	
 	else
-		msg = recvValue.m_msg
+		local horn = ""
+		if recvValue.m_channel == 1 then
+			horn = "<icon=horn>"
+		end
+		msg = horn..recvValue.m_msg
 	end
 	return msg;
 end
 
 -- 添加聊天消息
-function ChatDlgAddMsg( recvValue )
+-- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
+function ChatDlgAddMsg( uiRoot, recvValue )
 	local uiObj = nil;
 	if recvValue.m_actorid == GetPlayer().m_actorid then
-		uiObj = GameObject.Instantiate( m_uiUIP_ChatItemSelf );
+		uiObj = m_ObjectPool:Get( "UIP_ChatItemSelf" );
 	else
-		uiObj = GameObject.Instantiate( m_uiUIP_ChatItem );
+		uiObj = m_ObjectPool:Get( "UIP_ChatItem" );
+	end
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiHead = objs[0]
+	local uiShape = objs[1]
+	local uiName = objs[2]
+	local uiArrow = objs[3]
+	local uiBack = objs[4]
+	local uiText = objs[5]
+	
+	SetControlID( uiHead, 1000 + recvValue.m_actorid )
+	
+	-- 玩家头像
+	SetImage( uiShape, PlayerHeadSprite( recvValue.m_shape ) );
+	
+	-- 国家
+	local nation = ""
+	
+	-- 世界
+	if recvValue.m_channel == 1 then
+		SetImage( uiArrow, LoadSprite("ui_chatdlg_talkarrow_2") );
+		SetImage( uiBack, LoadSprite("ui_chatdlg_talkback_2") );
+		SetRichTextColor( uiText, Hex2Color(0xf7f3bbff) )
+		nation = " <color="..NationColorStr(recvValue.m_nation)..">["..Nation( recvValue.m_nation ).."]</color>"
+		
+	-- 国家
+	else
+		SetImage( uiArrow, LoadSprite("ui_chatdlg_talkarrow_1") );
+		SetImage( uiBack, LoadSprite("ui_chatdlg_talkback_1") );
+		SetRichTextColor( uiText, Hex2Color(0x685036FF) )
 	end
 	
-	local content = uiObj.transform:Find("Content");
-	content.transform:Find("Head/Back"):GetComponent( "Image" ).sprite = PlayerHeadSprite( recvValue.m_shape );
-	content.transform:Find("Name"):GetComponent( "YlyRichText" ).text = "<emote=001><color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>青州</color>"
+	-- 名字等级区域等信息
+	SetRichText( uiName, PlaceRichText( recvValue.m_place+1 ).."<color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>"..MapZoneName( recvValue.m_zone ).."</color>"..nation );
+	
+	-- 内容
 	if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then
-		SetRichText( content.transform:Find("Text"), ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickMail );
+		SetRichText( uiText, ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickMail );
 	else
-		SetRichText( content.transform:Find("Text"), ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickPos );
+		SetRichText( uiText, ChatDlgMakeMsg( recvValue ), ChatDlgOnLinkClickPos );
 	end
-	content.transform:Find("Back"):GetComponent( "UIAutoSize" ):Dirty();
-	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
-	uiObj.transform:SetParent( m_uiContent.transform );
+	uiObj.transform:SetParent( uiRoot.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );	
-	table.insert( m_objectPool, uiObj );
 end
 
 -- 添加系统消息
-function ChatDlgAddSysTalk( recvValue )
-	local uiObj = GameObject.Instantiate( m_uiUIP_ChatSystalk );
-	--uiObj.transform:Find("Content/Name"):GetComponent( "UIText" ).text = "<emote=001><color=00AE01FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=00FFC0FF>青州</color>"
-	SetRichText( uiObj.transform:Find("Content/Text"), recvValue.m_msg, ChatDlgOnLinkClickPos )
-	uiObj.transform:Find("Content/Back"):GetComponent( "UIAutoSize" ):Dirty();
-	uiObj.transform:GetComponent( "UIAutoSize" ):Dirty();
-	uiObj.transform:SetParent( m_uiContent.transform );
+function ChatDlgAddSysTalk( uiRoot, recvValue )
+	local uiObj = m_ObjectPool:Get( "UIP_ChatSystalk" );
+	SetRichText( uiObj.transform:Find("Talk/Text"), recvValue.m_msg, ChatDlgOnLinkClickPos )
+	uiObj.transform:SetParent( uiRoot.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
-	ChatDlgScrollToBottom()
 end
 
 -- 添加时间
-function ChatDlgAddTime( optime )
-	local uiObj = GameObject.Instantiate( m_uiUIP_ChatTime );
+function ChatDlgAddTime( uiRoot, optime )
+	local uiObj = m_ObjectPool:Get( "UIP_ChatTime" );
 	uiObj.transform:Find("Content/Text"):GetComponent( "UIText" ).text = os.date( "%m-%d %H:%M", optime )
-	uiObj.transform:SetParent( m_uiContent.transform );
+	uiObj.transform:SetParent( uiRoot.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
 end
 
 -- 滑动到底部
-function ChatDlgScrollToBottom()
+function ChatDlgScrollToBottom( uiObj )
 	--m_uiScrollView:GetComponent("UIScrollRect"):ResetScroll();
-	m_uiScrollView:GetComponent("UIScrollRect"):ScrollToBottom();
+	--m_uiScrollView:GetComponent("UIScrollRect").normalizedPosition = Vector2.zero;
+	uiObj:GetComponent("UIScrollRect"):ScrollToBottom();
 end
 
 -- 发送消息
@@ -214,7 +342,26 @@ function ChatDlgSend()
 	
 	-- 发送
 	local sendValue = {};
-	sendValue.m_channel = m_SelectChannel;
+	sendValue.m_channel = 0;
+	sendValue.m_msg = msg;
+	sendValue.m_msglen = string.len( msg );
+	netsend_chat_C( sendValue );
+end
+
+-- 发送消息-喇叭
+function ChatDlgSendHorn()
+	local msg = m_uiContentField.transform:GetComponent( "UIInputField" ).text;
+	if msg == "" then
+		return;
+	end
+	if string.len(msg) >= 127 then
+		return;
+	end
+	m_uiContentField.transform:GetComponent( "UIInputField" ).text = "";
+		
+	-- 发送
+	local sendValue = {};
+	sendValue.m_channel = 1;
 	sendValue.m_msg = msg;
 	sendValue.m_msglen = string.len( msg );
 	netsend_chat_C( sendValue );
@@ -226,6 +373,10 @@ function ChatDlgRecv( recvValue )
 	-- 缓存
 	if m_ChatCacheCount >= 100 then
 		table.remove( m_ChatCache, 1 );
+		
+		if m_ChatCacheObj[1] ~= nil then
+			
+		end
 	end
 	table.insert( m_ChatCache, recvValue );
 	m_ChatCacheCount = m_ChatCacheCount + 1;
@@ -237,16 +388,102 @@ function ChatDlgRecv( recvValue )
 	
 	-- 超过10分钟添加时间
 	if recvValue.m_optime - m_LastTime > 600 then
-		ChatDlgAddTime( recvValue.m_optime )
+		ChatDlgAddTime( m_uiContent, recvValue.m_optime )
 	end
 	m_LastTime = recvValue.m_optime;
 	
 	-- 创建一条聊天
 	if recvValue.m_actorid > 0 then
-		ChatDlgAddMsg( recvValue );
+		ChatDlgAddMsg( m_uiContent, recvValue );
 	elseif recvValue.m_actorid == -1 then
-		ChatDlgAddSysTalk( recvValue );
+		ChatDlgAddSysTalk( m_uiContent, recvValue );
 	end
+	ChatDlgScrollToBottom( m_uiScrollView )
+end
+
+-- 频道选择
+function ChatDlgSelectChannel( channel )
+	if m_SelectChannel == channel then
+		return
+	end
+	m_SelectChannel = channel;	
+	
+	if m_SelectChannel == 0 then
+		local objs={}
+		for i = 0 ,m_uiContentZone.transform.childCount - 1 do
+			table.insert( objs, m_uiContentZone.transform:GetChild(i).gameObject )
+		end
+		for k, v in pairs(objs) do
+			local obj = v;
+			if obj.name == "UIP_ChatItem(Clone)" then
+				m_ObjectPool:Release( "UIP_ChatItem", obj );
+			elseif obj.name == "UIP_ChatItemSelf(Clone)" then
+				m_ObjectPool:Release( "UIP_ChatItemSelf", obj );
+			elseif obj.name == "UIP_ChatSystalk(Clone)" then
+				m_ObjectPool:Release( "UIP_ChatSystalk", obj );
+			elseif obj.name == "UIP_ChatTime(Clone)" then
+				m_ObjectPool:Release( "UIP_ChatTime", obj );
+			end
+		end
+		ChatDlgScrollToBottom( m_uiScrollView )
+	elseif m_SelectChannel == 1 then
+		local lastTime = 0
+		for i= 1, #m_ChatCache, 1 do		
+			-- 超过10分钟添加时间
+			if GetPlayer().m_zone == m_ChatCache[i].m_zone then
+				if m_ChatCache[i].m_optime - lastTime > 600 then
+					ChatDlgAddTime( m_uiContentZone, m_ChatCache[i].m_optime )
+				end
+				lastTime = m_ChatCache[i].m_optime;
+			end
+	
+			-- 创建一条聊天
+			if m_ChatCache[i].m_actorid > 0 then
+				if GetPlayer().m_zone == m_ChatCache[i].m_zone then
+					ChatDlgAddMsg( m_uiContentZone, m_ChatCache[i] );
+				end
+			elseif m_ChatCache[i].m_actorid == -1 then
+				ChatDlgAddSysTalk( m_uiContentZone, m_ChatCache[i] );
+			end
+		end
+		Invoke( function()
+			ChatDlgScrollToBottom( m_uiScrollViewZone )
+		end, 1/30 )
+	end
+end
+
+-- 喇叭页
+function ChatDlgHornLayerShow()
+	SetTrue( m_uiHornLayer )
+	m_horn_itemnum = GetItem():GetCount(171);
+	SetImage( m_uiItem.transform:Find("Shape"), ItemSprite(171) )
+	SetText( m_uiItem.transform:Find("Num"), "x"..m_horn_itemnum );
+	if m_horn_itemnum == 0 then
+		SetTrue( m_uiBuyButton )
+		SetFalse( m_uiSendButton )
+	else
+		SetFalse( m_uiBuyButton )
+		SetTrue( m_uiSendButton )
+	end
+end
+
+function ChatDlgHornLayerHide()
+	SetFalse( m_uiHornLayer )
+end
+
+function ChatDlgHornBuy()
+	local cost = item_gettoken(171)
+	MsgBox( F( 2063, cost ), function() 
+		if GetPlayer().m_token < cost then
+			JumpToken()
+		end
+		ChatDlgHornSend()
+	end )
+end
+
+function ChatDlgHornSend()
+	ChatDlgSendHorn();
+	ChatDlgHornLayerHide()
 end
 
 -- 点击分享的邮件
@@ -264,3 +501,14 @@ end
 function ChatDlgOnLinkClickPos( str )
 	MailOnLinkClick(str)
 end
+
+-- 点击玩家
+function ChatDlgClickActor( actorid )
+	-- 自己
+	if GetPlayer().m_actorid == actorid then
+		ActorSearchDlgShow( actorid )
+	else
+		ActorSearchDlgShow( actorid )
+	end
+end
+

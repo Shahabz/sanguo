@@ -66,7 +66,7 @@ int techinfo_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`level`,`buildinglevel`,`prekind`,`prelevel`,`progress`,`sec`,`silver`,`wood`,`food`,`iron`,`ability`,`value` from city_tech;" );
+	sprintf( szSQL, "select `kind`,`level`,`buildinglevel`,`prekind`,`prelevel`,`progress`,`sec`,`silver`,`wood`,`food`,`iron`,`ability`,`value`,`battlepower` from city_tech;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -96,6 +96,7 @@ int techinfo_init_auto()
 		g_techinfo[kind].config[level].iron = atoi(row[offset++]);
 		g_techinfo[kind].config[level].ability = atoi(row[offset++]);
 		g_techinfo[kind].config[level].value = atoi(row[offset++]);
+		g_techinfo[kind].config[level].battlepower = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

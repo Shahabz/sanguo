@@ -108,5 +108,6 @@ CREATE TABLE `city` (
   `ofquick0` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
   `ofquick1` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
   `ofquick2` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
+  `signature` varbinary(128) NOT NULL DEFAULT '' COMMENT '个性签名',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

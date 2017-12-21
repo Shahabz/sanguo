@@ -297,3 +297,17 @@ int struct_NetC_RankAsk_recv( char **pptr, int *psize, SLK_NetC_RankAsk *pValue 
 	return 0;
 }
 
+int struct_NetC_FriendOp_recv( char **pptr, int *psize, SLK_NetC_FriendOp *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_RECV( &pValue->m_op, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_target_actorid, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_target_cityindex, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_target_namelen, (*pptr), (*psize) );
+	if( pValue->m_target_namelen < 0 || pValue->m_target_namelen > (*psize)*(int)sizeof(char) || pValue->m_target_namelen > 32 )
+		return -1;
+	LKSET_MEM_RECV( pValue->m_target_name, (*pptr), pValue->m_target_namelen*sizeof(char), (*psize) );
+	return 0;
+}
+

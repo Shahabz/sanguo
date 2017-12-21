@@ -127,6 +127,9 @@ int actor_getconfig( int actor_index, int index );
 // 购买体力
 int actor_buybody( int actor_index, int ask );
 
+// 查询玩家信息
+int actor_search( int actor_index, int target_actorid, int target_city_index );
+
 // ------------------------------- actor_gmcmd.c -----------------------------------
 int actor_command( int actor_index, short cmd, int *pValue, char *pMsg );
 

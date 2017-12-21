@@ -948,7 +948,6 @@ function proc_chat_C( recvValue )
 	ChatDlgRecv( recvValue );
 	MainDlgSetChat( recvValue );
 	BloodyBattleDlgSetChat( recvValue );
-	ChatDlgScrollToBottom();
 end
 
 -- m_count=0,m_list={m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,[m_count]},m_channel=0,
@@ -1703,7 +1702,7 @@ function proc_questtalk_C( recvValue )
 	end
 end
 
--- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,[m_count]},m_myrank=0,m_type=0,m_page=0,m_myrank=0,
+-- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,m_actorid=0,[m_count]},m_myrank=0,m_type=0,m_page=0,m_myrank=0,
 function proc_ranklist_C( recvValue )
 	-- process.
 	RankListDlgRecv( recvValue )
@@ -1712,5 +1711,12 @@ end
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
 function proc_friendlist_C( recvValue )
 	-- process.
+	FriendDlgRecv( recvValue )
+end
+
+-- m_actorid=0,m_city_index=0,m_namelen=0,m_name="[m_namelen]",m_signlen=0,m_sign="[m_signlen]",m_level=0,m_official=0,m_place=0,m_zone=0,m_nation=0,m_battlepower=0,m_killcity=0,m_herocount=0,m_hero={m_kind=0,m_color=0,m_level=0,m_pre_exp=0,m_exp=0,[m_herocount]},
+function proc_actorsearch_C( recvValue )
+	-- process.
+	ActorSearchDlgRecv( recvValue )
 end
 

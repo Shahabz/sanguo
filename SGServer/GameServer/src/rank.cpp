@@ -258,6 +258,7 @@ int rank_server_sendlist( int actor_index, int page, int myrange )
 		pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
 		strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );
 		pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+		pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
 		pValue.m_count += 1;
 		if ( pValue.m_count >= 10 )
 		{
@@ -308,6 +309,7 @@ int rank_zone_sendlist( int actor_index, int page, int myrange )
 		pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
 		strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );
 		pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+		pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
 		pValue.m_count += 1;
 		if ( pValue.m_count >= 10 )
 		{
@@ -349,7 +351,7 @@ int rank_nation_sendlist( int actor_index, int page, int myrange )
 	{
 		if ( g_rank_nation[nation][tmpi].level <= 0 )
 			continue;
-		int city_index = g_rank_zone[pCity->zone][tmpi].city_index;
+		int city_index = g_rank_nation[nation][tmpi].city_index;
 		if ( city_index < 0 || city_index >= g_city_maxcount )
 			continue;
 		pValue.m_list[pValue.m_count].m_rank = tmpi + 1;
@@ -359,6 +361,7 @@ int rank_nation_sendlist( int actor_index, int page, int myrange )
 		pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
 		strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );
 		pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+		pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
 		pValue.m_count += 1;
 		if ( pValue.m_count >= 10 )
 		{

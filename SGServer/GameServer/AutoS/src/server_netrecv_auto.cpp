@@ -371,6 +371,19 @@ int netrecv_ranklistask_S( int client_index, char *data, int size )
 	return 0;
 }
 
+int netrecv_friendop_S( int client_index, char *data, int size )
+{
+	SLK_NetC_FriendOp Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetC_FriendOp_recv( &ptr, &tmpsize, &Value );
+
+	proc_friendop_S( client_index, &Value );
+
+	return 0;
+}
+
 int netrecv_wqueue_create_S( int client_index, char *data, int size, int exec_code )
 {
 	client_setwait( client_index, 1 );
@@ -515,6 +528,9 @@ int proc_command_S( int client_index, short cmd, char *ptr, int tmpsize, int exe
 		break;
 	case CMDC_RANKLISTASK:
 		netrecv_ranklistask_S( client_index, ptr, tmpsize );
+		break;
+	case CMDC_FRIENDOP:
+		netrecv_friendop_S( client_index, ptr, tmpsize );
 		break;
 	default:
 		return -1;

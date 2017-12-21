@@ -19,6 +19,7 @@
 #include "global.h"
 #include "city.h"
 #include "chat.h"
+#include "item.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -33,7 +34,7 @@ extern int g_city_maxcount;
 extern Actor *g_actors;
 extern int g_maxactornum;
 
-SLK_NetS_Chat g_ChatCacheNation[CHAT_CACHE_QUEUE_COUNT];
+SLK_NetS_Chat g_ChatCacheNation[3][CHAT_CACHE_QUEUE_COUNT];
 
 int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 {
@@ -63,6 +64,28 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 	}
 	else if ( channel == CHAT_CHANNEL_WORLD )
 	{
+		// 优先检查道具，没有道具使用钻石
+		int costtype = 0;// 使用道具模式
+		int itemkind = 171;
+		// 有道具使用道具，无道具使用钻石
+		if ( item_getitemnum( actor_index, itemkind ) <= 0 )
+		{
+			if ( g_actors[actor_index].token < item_gettoken( itemkind ) )
+			{
+				return -1;
+			}
+			costtype = 1; // 使用钻石模式
+		}
+
+		if ( costtype == 0 )
+		{
+			item_lost( actor_index, itemkind, 1, PATH_ITEMUSE );
+		}
+		else
+		{
+			actor_change_token( actor_index, -item_gettoken( itemkind ), PATH_ITEMUSE, 0 );
+		}
+
 		chat_send_world( &pValue );
 	}
 	
@@ -73,8 +96,11 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 int chat_send_nation( SLK_NetS_Chat *pValue )
 {
 	netsend_chat_S( 0, SENDTYPE_NATION + pValue->m_nation, pValue );
-	chat_cache_queue_add( g_ChatCacheNation, pValue );
-	chat_cache_queue_add_db( pValue );
+	if ( pValue->m_nation >= 1 && pValue->m_nation <= 3 )
+	{
+		chat_cache_queue_add( g_ChatCacheNation[pValue->m_nation-1], pValue );
+		chat_cache_queue_add_db( pValue );
+	}
 	return 0;
 }
 
@@ -82,7 +108,9 @@ int chat_send_nation( SLK_NetS_Chat *pValue )
 int chat_send_world( SLK_NetS_Chat *pValue )
 {
 	netsend_chat_S( 0, SENDTYPE_WORLD, pValue );
-	chat_cache_queue_add( g_ChatCacheNation, pValue );
+	chat_cache_queue_add( g_ChatCacheNation[0], pValue );
+	chat_cache_queue_add( g_ChatCacheNation[1], pValue );
+	chat_cache_queue_add( g_ChatCacheNation[2], pValue );
 	chat_cache_queue_add_db( pValue );
 	return 0;
 }
@@ -120,12 +148,12 @@ int chat_cache_queue_add_db( SLK_NetS_Chat *pValue )
 	return 0;
 }
 
-int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
+int chat_cache_loaddb( SLK_NetS_Chat *pCache, char nation )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
 	char	szSQL[1024];
-	sprintf( szSQL, "SELECT channel, actorid, shape, level, frame, nation, zone, place, name, msg, msgtype, optime FROM (SELECT * FROM chat WHERE channel='%d' or channel='%d' ORDER BY optime DESC LIMIT %d ) a ORDER BY optime ASC;", channel, CHAT_CHANNEL_WORLD, CHAT_CACHE_QUEUE_COUNT );
+	sprintf( szSQL, "SELECT channel, actorid, shape, level, frame, nation, zone, place, name, msg, msgtype, optime FROM (SELECT * FROM chat WHERE (channel='%d' and nation='%d') or channel='%d' ORDER BY optime DESC LIMIT %d ) a ORDER BY optime ASC;", CHAT_CHANNEL_NATION, nation, CHAT_CHANNEL_WORLD, CHAT_CACHE_QUEUE_COUNT );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -161,20 +189,27 @@ int chat_cache_loaddb( SLK_NetS_Chat *pCache, int channel )
 
 int chat_cache_load()
 {
-	chat_cache_loaddb( g_ChatCacheNation, CHAT_CHANNEL_NATION );
+	chat_cache_loaddb( g_ChatCacheNation[0], 1 );
+	chat_cache_loaddb( g_ChatCacheNation[1], 2 );
+	chat_cache_loaddb( g_ChatCacheNation[2], 3 );
 	return 0;
 }
 
 int chat_cache_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->nation < 1 || pCity->nation > 3 )
+		return -1;
 	SLK_NetS_ChatList pValue = { 0 };
 	pValue.m_channel = CHAT_CHANNEL_NATION;
 	for ( int tmpi = 0; tmpi < CHAT_CACHE_QUEUE_COUNT; tmpi++ )
 	{
-		if ( g_ChatCacheNation[tmpi].m_actorid <= 0 )
+		if ( g_ChatCacheNation[pCity->nation-1][tmpi].m_actorid <= 0 )
 			continue;
-		memcpy( &pValue.m_list[pValue.m_count], &g_ChatCacheNation[tmpi], sizeof( SLK_NetS_Chat ) );
+		memcpy( &pValue.m_list[pValue.m_count], &g_ChatCacheNation[pCity->nation-1][tmpi], sizeof( SLK_NetS_Chat ) );
 		pValue.m_count += 1;
 		if ( pValue.m_count >= 10 )
 		{

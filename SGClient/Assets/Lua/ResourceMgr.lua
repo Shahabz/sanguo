@@ -304,3 +304,19 @@ function EnemySprite( shape, frames )
 	end
 	return sprite;
 end
+
+-- 爵位形象
+function PlaceSprite( place )
+	local name = string.format("p%d", place );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "Char_Default" );
+	end
+	return sprite;
+end
+
+-- 爵位形象
+function PlaceRichText( place )
+	local name = string.format("<icon=p%d>", place );
+	return name;
+end

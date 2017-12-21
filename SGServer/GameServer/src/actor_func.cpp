@@ -41,6 +41,10 @@ extern BodyTokenInfo *g_bodytoken;
 extern int g_bodytoken_maxnum;
 extern int g_nation_actornum[3];
 
+extern City *g_city;
+extern int g_city_maxcount;
+
+
 extern char g_game_day;
 extern char g_game_weather;
 //-----------------------------------------------------------------------------
@@ -599,3 +603,66 @@ int actor_buybody( int actor_index, int ask )
 	actor_add_today_char_times( actor_index, TODAY_CHAR_BUYBODY );
 	return 0;
 }
+
+// 查询玩家信息
+int actor_search( int actor_index, int target_actorid, int target_city_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( target_city_index >= 0 && target_city_index < g_city_maxcount )
+	{
+		if ( target_actorid != g_city[target_city_index].actorid )
+		{
+			target_city_index = city_getindex_withactorid( target_actorid );
+		}
+	}
+	else
+	{
+		target_city_index = city_getindex_withactorid( target_actorid );
+	}
+	if ( target_city_index < 0 || target_city_index >= g_city_maxcount )
+		return -1;
+
+	SLK_NetS_ActorSearch pValue = { 0 };
+	pValue.m_actorid = target_actorid;
+	pValue.m_city_index = target_city_index;
+	strncpy( pValue.m_name, g_city[target_city_index].name, NAME_SIZE );
+	pValue.m_namelen = strlen( pValue.m_name );
+	strncpy( pValue.m_sign, g_city[target_city_index].signature, SIGNATURE_SIZE );
+	pValue.m_signlen = strlen( pValue.m_sign );
+	pValue.m_shape = g_city[target_city_index].shape;
+	pValue.m_level = g_city[target_city_index].level;
+	pValue.m_official = g_city[target_city_index].official;
+	pValue.m_place = g_city[target_city_index].place;
+	pValue.m_zone = g_city[target_city_index].zone;
+	pValue.m_nation = g_city[target_city_index].nation;
+	pValue.m_battlepower = g_city[target_city_index].battlepower;
+	pValue.m_killcity = data_record_getvalue( &g_city[target_city_index], DATA_RECORD_KILLCITY );
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( g_city[target_city_index].hero[tmpi].kind > 0 )
+		{
+			pValue.m_hero[pValue.m_herocount].m_kind = g_city[target_city_index].hero[tmpi].kind;
+			pValue.m_hero[pValue.m_herocount].m_color = g_city[target_city_index].hero[tmpi].color;
+			pValue.m_hero[pValue.m_herocount].m_level = g_city[target_city_index].hero[tmpi].level;
+			pValue.m_herocount += 1;
+		}
+	}
+	
+	pValue.m_bp_hero = g_city[target_city_index].battlepower_hero;
+	pValue.m_bp_equip = g_city[target_city_index].battlepower_equip;
+	pValue.m_bp_tech = g_city[target_city_index].battlepower_tech;
+	pValue.m_bp_nequip = g_city[target_city_index].battlepower_nequip;
+	pValue.m_bp_place = g_city[target_city_index].battlepower_place;
+	pValue.m_bp_girl = g_city[target_city_index].battlepower_girl;
+	pValue.m_my_bp_hero = pCity->battlepower_hero;
+	pValue.m_my_bp_equip = pCity->battlepower_equip;
+	pValue.m_my_bp_tech = pCity->battlepower_tech;
+	pValue.m_my_bp_nequip = pCity->battlepower_nequip;
+	pValue.m_my_bp_place = pCity->battlepower_place;
+	pValue.m_my_bp_girl = pCity->battlepower_girl;
+	netsend_actorsearch_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+

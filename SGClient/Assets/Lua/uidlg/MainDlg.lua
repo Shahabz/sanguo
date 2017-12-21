@@ -178,7 +178,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			NationEquipDlgShow()
 		-- 排行榜
 		elseif nControlID == 14 then
-		
+			RankListDlgShow()
 		-- 系统公告
 		elseif nControlID == 15 then
 			NoticeDlgShow()
@@ -561,7 +561,7 @@ function MainDlgSetChat( recvValue )
 	else
 		if recvValue.m_channel == 2 then
 		else
-			local nation = "<color=4F57FFFF>【"..Nation( recvValue.m_nation ).."】</color>"
+			local nation = "<color="..NationColorStr(recvValue.m_nation)..">【"..Nation( recvValue.m_nation ).."】</color>"
 			local name = "<color=FFB900FF>["..recvValue.m_name.."]：</color>"
 			local msg = ChatDlgMakeMsg( recvValue )
 			if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then

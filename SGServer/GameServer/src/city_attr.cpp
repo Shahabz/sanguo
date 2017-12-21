@@ -294,7 +294,7 @@ void city_battlepower_calc( City *pCity, char path )
 	if ( !pCity )
 		return;
 	int old_battlepower = pCity->battlepower;
-	pCity->battlepower = pCity->battlepower_hero + pCity->battlepower_building;
+	pCity->battlepower = pCity->battlepower_hero + pCity->battlepower_equip + pCity->battlepower_tech + pCity->battlepower_nequip + pCity->battlepower_place + pCity->battlepower_girl;
 
 	// 有变化
 	if ( old_battlepower != pCity->battlepower )
@@ -332,48 +332,98 @@ void city_battlepower_hero_calc( City *pCity )
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_HERO );
 }
 
-// 建筑提供战力
-void city_battlepower_building_calc( struct _city *pCity )
+// 装备提供战力
+void city_battlepower_equip_calc( City *pCity )
 {
 	if ( !pCity )
 		return;
 	int battlepower = 0;
-	// 普通建筑
-	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
-	{
-		if ( pCity->building[tmpi].kind <= 0 )
-			continue;
-		BuildingUpgradeConfig *config = building_getconfig( pCity->building[tmpi].kind, pCity->building[tmpi].level );
-		if ( config )
-		{
-			battlepower += config->battlepower;
-		}
-	}
+	pCity->battlepower_equip = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_EQUIP );
+}
 
-	// 兵营建筑
-	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
-	{
-		if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
-			continue;
-		BuildingUpgradeConfig *config = building_getconfig( pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
-		if ( config )
-		{
-			battlepower += config->battlepower;
-		}
-	}
+// 科技提供战力
+void city_battlepower_tech_calc( City *pCity )
+{
+	if ( !pCity )
+		return;
+	int battlepower = 0;
+	pCity->battlepower_tech = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_TECH );
+}
 
-	// 资源建筑
-	for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
-	{
-		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
-			continue;
-		BuildingUpgradeConfig *config = building_getconfig( pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
-		if ( config )
-		{
-			battlepower += config->battlepower;
-		}
-	}
-	int old_battlepower = pCity->battlepower_building;
-	pCity->battlepower_building = battlepower;
-	city_battlepower_calc( pCity, BATTLEPOWER_PATH_BUILDING );
+// 国器提供战力
+void city_battlepower_nequip_calc( City *pCity )
+{
+	if ( !pCity )
+		return;
+	int battlepower = 0;
+	pCity->battlepower_nequip = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_NEQUIP );
+}
+
+// 爵位提供战力
+void city_battlepower_place_calc( City *pCity )
+{
+	if ( !pCity )
+		return;
+	int battlepower = 0;
+	pCity->battlepower_place = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_PLACE );
+}
+
+// 女将提供战力
+void city_battlepower_girl_calc( City *pCity )
+{
+	if ( !pCity )
+		return;
+	int battlepower = 0;
+	pCity->battlepower_girl = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_GIRL );
+}
+
+// 建筑提供战力
+void city_battlepower_building_calc( struct _city *pCity )
+{
+	//if ( !pCity )
+	//	return;
+	//int battlepower = 0;
+	//// 普通建筑
+	//for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	//{
+	//	if ( pCity->building[tmpi].kind <= 0 )
+	//		continue;
+	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building[tmpi].kind, pCity->building[tmpi].level );
+	//	if ( config )
+	//	{
+	//		battlepower += config->battlepower;
+	//	}
+	//}
+
+	//// 兵营建筑
+	//for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+	//{
+	//	if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
+	//		continue;
+	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
+	//	if ( config )
+	//	{
+	//		battlepower += config->battlepower;
+	//	}
+	//}
+
+	//// 资源建筑
+	//for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+	//{
+	//	if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
+	//		continue;
+	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
+	//	if ( config )
+	//	{
+	//		battlepower += config->battlepower;
+	//	}
+	//}
+	//int old_battlepower = pCity->battlepower_building;
+	//pCity->battlepower_building = battlepower;
+	//city_battlepower_calc( pCity, BATTLEPOWER_PATH_BUILDING );
 }
