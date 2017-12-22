@@ -116,6 +116,10 @@ function ChatDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 6 then
 			SetFalse( m_uiZoneSelectBtn )
 			SetTrue( m_uiNationSelectBtn )
+		
+		-- 黑名单
+		elseif nControlID == 10 then
+			BlackListDlgShow()
 			
 		-- 喇叭-购买并使用
 		elseif nControlID == 11 then
@@ -591,5 +595,6 @@ end
 -- 操作-屏蔽说话
 function ChatDlgOpForbid()
 	ChatDlgOpLayerHide()
+	system_askinfo( ASKINFO_ACTOR, "", 4, m_clickActorid );
 end
 

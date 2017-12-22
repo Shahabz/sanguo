@@ -1,13 +1,24 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
+
 local m_uiUIP_Friend = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
-local m_uiFr
+local m_uiFrendsLayer = nil; --UnityEngine.GameObject
+local m_uiClickShowIcon = nil; --UnityEngine.GameObject
+local m_uiScroll = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiFriendObj = {};
+local FRIENDLIST_BUTTONID = 1000;
+local FRIENDLIST_REFUSE = 2000; --拒绝
+local FRIENDLIST_ACCEPT = 3000; -- 同意
+local t_actorid = {} --存储m_actorid和m_city_index值 点击详细信息时传入，如果m_city_index为nil就只传m_actorid
+local t_selectActorid = nil; --存储选中好友的m_actorid和m_city_index值，
+local t_recvValue = {} --缓存好友列表
+
 -- m_op=0,m_target_actorid=0,m_target_cityindex=0,m_target_namelen=0,m_target_name="[m_target_namelen]",
-local sendValue ={}
+local sendValue = {};
 sendValue.m_op = 0;
 sendValue.m_target_actorid = 0;
 sendValue.m_target_cityindex = 0;
@@ -17,6 +28,7 @@ sendValue.m_target_name = "";
 -- 打开界面
 function FriendDlgOpen()
 	m_Dlg = eye.uiManager:Open( "FriendDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(557), HELP_ChatDlg, FriendDlgClose );
 end
 
 -- 隐藏界面
@@ -24,7 +36,8 @@ function FriendDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "FriendDlg" );
 end
 
@@ -43,7 +56,29 @@ function FriendDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             FriendDlgClose();
+		elseif	nControlID	== 1 then --关闭好友列表进阶操作面
+			FriendDlgCloseClickShow();
+		elseif nControlID == 2 then --查看好友信息
+			if IsActive(m_uiClickShowIcon) then
+				FriendDlgCheckInfo();
+			end
+		elseif nControlID == 3 then --给好友发邮件
+			
+		elseif nControlID == 4 then --删除好友
+		
+		elseif nControlID < FRIENDLIST_REFUSE then
+			FriendDlgClickShow(nControlID);
+		elseif nControlID < FRIENDLIST_ACCEPT then
+			FriendDlgRefuse(nControlID)
+		elseif	nControlID > FRIENDLIST_ACCEPT then
+			FriendDlgAccept(nControlID)	
         end
+	elseif	nType ==UI_EVENT_SCROLLDRAG then
+		if value == 0 then
+			if	nControlID == 1 then
+				FriendDlgCloseClickShow();
+			end
+		end
 	end
 end
 
@@ -53,7 +88,9 @@ function FriendDlgOnAwake( gameObject )
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
 	m_uiUIP_Friend = objs[0];
 	m_uiContent = objs[1];
-	
+	m_uiFrendsLayer = objs[2];
+	m_uiClickShowIcon = objs[3];
+	m_uiScroll = objs[4];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Friend", 6, 6, m_uiUIP_Friend);
@@ -91,25 +128,12 @@ end
 function FriendDlgShow()
 	FriendDlgOpen()
 	FriendDlgAskList()
-	FriendDlgRecv();
+	FriendDlgClear();
 end
 
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
 function FriendDlgRecv( recvValue )
-	local recvValue ={};
-	recvValue.m_count = 10;
-	recvValue.m_list={
-						{m_actorid=0,m_city_index =0,m_shape=1,m_namelen=4,m_name="xxxxxxxx",m_level=15,m_place=3,m_battlepower=33323,m_ask=0},	
-						{m_actorid=0,m_city_index =0,m_shape=2,m_namelen=4,m_name="cccccccc",m_level=123,m_place=4,m_battlepower=35454,m_ask=1},	
-						{m_actorid=0,m_city_index =0,m_shape=3,m_namelen=4,m_name="xxxxxvvs",m_level=152,m_place=6,m_battlepower=356565,m_ask=1},	
-						{m_actorid=0,m_city_index =0,m_shape=4,m_namelen=4,m_name="sdasdfds",m_level=124,m_place=7,m_battlepower=37777,m_ask=0},	
-						{m_actorid=0,m_city_index =0,m_shape=5,m_namelen=4,m_name="bcxcfgg",m_level=34,m_place=8,m_battlepower=38888,m_ask=1},	
-						{m_actorid=0,m_city_index =0,m_shape=6,m_namelen=4,m_name="erwerw",m_level=23,m_place=8,m_battlepower=344444,m_ask=1},	
-						{m_actorid=0,m_city_index =0,m_shape=7,m_namelen=4,m_name="hdfrgrg",m_level=6,m_place=8,m_battlepower=333333,m_ask=1},	
-						{m_actorid=0,m_city_index =0,m_shape=8,m_namelen=4,m_name="adsdsfds",m_level=123,m_place=4,m_battlepower=322222,m_ask=0},	
-						{m_actorid=0,m_city_index =0,m_shape=9,m_namelen=4,m_name="shgsfdsfds",m_level=21,m_place=5,m_battlepower=32222111,m_ask=0},	
-						{m_actorid=0,m_city_index =0,m_shape=10,m_namelen=4,m_name="asgasdfsdf",m_level=22,m_place=9,m_battlepower=311111,m_ask=0},	
-					}
+
 	table.sort(recvValue.m_list,function(a,b)
 				local r
 				local al = tonumber(a.m_level);
@@ -129,11 +153,15 @@ function FriendDlgRecv( recvValue )
 				end
 				return r 
 		end);
-	for i=1,recvValue.m_count,1 do
+		
+		
+		t_recvValue = recvValue;
+	for i=1,#t_recvValue.m_list,1 do
 		local uiObj = m_ObjectPool:Get( "UIP_Friend" );
 		uiObj.transform:SetParent( m_uiContent.transform );	
-		m_uiFriendObj[i] = 	uiObj;
-		local recvList = recvValue.m_list[i];
+		uiObj.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_BUTTONID + i;
+		m_uiFriendObj[FRIENDLIST_BUTTONID + i] = uiObj;
+		local recvList = t_recvValue.m_list[i];
 		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiHeroPic = objs[0]
 		local uiPlacePic = objs[1]
@@ -142,6 +170,7 @@ function FriendDlgRecv( recvValue )
 		local uiBattleText = objs[4]
 		local uiAcceptBtn = objs[5]
 		local uiRefuseBtn = objs[6]
+		t_actorid[FRIENDLIST_BUTTONID + i] ={m_actorid=recvList.m_actorid,m_city_index=recvList.m_city_index}
 		SetImage(uiHeroPic,HeroHeadSprite(recvList.m_shape));
 		SetImage(uiPlacePic,PlaceSprite(recvList.m_place));
 		SetLevel(uiLevelText,recvList.m_level);
@@ -153,12 +182,10 @@ function FriendDlgRecv( recvValue )
 		else
 			SetTrue(uiAcceptBtn)
 			SetTrue(uiRefuseBtn)
+			uiAcceptBtn.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_ACCEPT + i;
+			uiRefuseBtn.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_REFUSE + i;
 		end
-		
 	end
-
-	
-	
 end
 
 -- 获取列表
@@ -200,3 +227,92 @@ function FriendDlgDelete( actorid, cityindex )
 	sendValue.m_target_name = "";
 	netsend_friendop_C( sendValue )
 end
+--点击好友列表弹出进阶操作
+function FriendDlgClickShow( ncontrolid )
+	t_selectActorid = t_actorid[ncontrolid];
+	local parentObj = m_uiFriendObj[ncontrolid];
+	m_uiClickShowIcon.transform:SetParent(parentObj.transform);
+	m_uiClickShowIcon.transform.anchoredPosition = Vector2(150,-70);
+	m_uiClickShowIcon.transform:SetParent(m_uiFrendsLayer.transform);
+	SetTrue(m_uiClickShowIcon);
+end
+--关闭好友列表进阶操作
+function FriendDlgCloseClickShow()
+	if	IsActive(m_uiClickShowIcon) then
+		SetFalse(m_uiClickShowIcon);
+		t_selectActorid = nil ;
+	end
+end
+--点击每个排行玩家查看详细信息
+function FriendDlgCheckInfo()
+	if t_selectActorid == nil then
+		print("t_selectActorid==nil");
+		return;
+	end
+	if t_selectActorid.m_city_index == nil then
+		ActorSearchDlgShow(t_selectActorid.m_actorid);
+	else
+		ActorSearchDlgShow(t_selectActorid.m_actorid ,t_selectActorid.m_city_index )
+	end
+end
+--从好友列表中删除
+function FriendDlgDeleteFriend()
+	if t_selectActorid == nil then
+		print("t_selectActorid==nil");
+		return;
+	end
+	local actorid = t_selectActorid.m_actorid;
+	local city_index = t_selectActorid.m_city_index;
+	FriendDlgDelete(actorid,city_index);
+end
+--向好友发邮件
+function FriendDlgSendMail()
+	if t_selectActorid == nil then
+		return;
+	end
+	local actorid = t_selectActorid.m_actorid;
+	local city_index = t_selectActorid.m_city_index;
+end
+--同意
+function FriendDlgAccept( ncontrolid )
+	local listid = ncontrolid - FRIENDLIST_ACCEPT;
+	t_recvValue.m_list[listid].m_ask = 0;
+	FriendDlgAgree(t_actorid[FRIENDLIST_BUTTONID + listid].m_actorid,t_actorid[FRIENDLIST_BUTTONID + listid].m_city_index );
+	FriendDlgClear();
+	FriendDlgRecv(t_recvValue);
+end
+--拒绝
+function FriendDlgRefuse( ncontrolid )
+	local listid = ncontrolid - FRIENDLIST_REFUSE;
+	table.remove(t_recvValue.m_list,listid);
+	FriendDlgReject(t_actorid[FRIENDLIST_BUTTONID + listid].m_actorid,t_actorid[FRIENDLIST_BUTTONID + listid].m_city_index );
+	FriendDlgClear();
+	FriendDlgRecv(t_recvValue);	
+end
+-- 清空
+function FriendDlgClear()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_Friend(Clone)" then
+			m_ObjectPool:Release( "UIP_Friend", obj );
+		end
+    end
+	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
+	m_uiContent.transform.localPosition = Vector2.zero
+	m_uiFriendObj ={}; --清空好友列表Obj
+	t_actorid = {};	--清空好友列表m_actorid和m_city_index值 
+end
+
+
+
+
+
+
+
+
+
+

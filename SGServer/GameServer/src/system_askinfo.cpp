@@ -360,6 +360,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 获取角色信息
 			actor_search( actor_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // 黑名单列表
+			actor_blacklist_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 黑名单添加
+			actor_blacklist_add( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 黑名单删除
+			actor_blacklist_del( actor_index, pvalue[1] );
+		}
 		break;
 	case ASKINFO_MATERIALMAKE:
 		if ( pvalue[0] == 0 )

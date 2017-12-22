@@ -1724,11 +1724,13 @@ end
 function proc_blackinfo_C( recvValue )
 	-- process.
 	GetPlayer():AddBlacklist( recvValue.m_actorid )
+	BlackListDlgAdd( recvValue )
 end
 
 -- m_count=0,m_list={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,[m_count]},
 function proc_blacklist_C( recvValue )
 	-- process.
+	BlackListDlgRecv( recvValue )
 end
 
 -- m_count=0,m_actorid={}[m_count],

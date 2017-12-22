@@ -172,7 +172,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 好友
 		elseif nControlID == 12 then
-			
+			FriendDlgShow()
 		-- 国器
 		elseif nControlID == 13 then
 			NationEquipDlgShow()
