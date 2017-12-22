@@ -188,6 +188,11 @@ int actor_friend_ask( int actor_index, int target_actorid, const char *target_na
 		return -1;
 	}
 
+	if ( g_actors[actor_index].actorid == target_actorid )
+	{
+		return -1;
+	}
+
 	if ( city_getnation( g_actors[actor_index].city_index ) != g_city[target_city_index].nation )
 	{
 		actor_notify_alert( actor_index, 2056 ); // 不能加其他国家的玩家为好友

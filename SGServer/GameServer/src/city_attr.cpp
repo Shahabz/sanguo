@@ -41,6 +41,12 @@ extern int g_itemkindnum;
 extern TechInfo *g_techinfo;
 extern int g_techinfo_maxnum;
 
+extern NationEquipInfo *g_nationequip;
+extern int g_nationequip_maxnum;
+
+extern NationPlace *g_nation_place;
+extern int g_nation_place_maxnum;
+
 extern Actor *g_actors;
 extern int g_maxactornum;
 
@@ -61,19 +67,6 @@ void city_attr_reset( City *pCity )
 			city_attr_calc( &pCity->attr, g_techinfo[kind].config[tech_level].ability, g_techinfo[kind].config[tech_level].value, 100.0f );
 		}
 	}
-
-	//// buff影响
-	//for ( int tmpi = 0; tmpi < CITY_BUFF_MAX; tmpi++ )
-	//{
-	//	short buff_id = pCity->buff_id[tmpi];
-	//	int duration = pCity->buff_duration[tmpi];
-	//	if ( duration <= 0 )
-	//		continue;
-	//	if ( buff_id > 0 && buff_id < g_citybuff_maxcount )
-	//	{
-	//		city_attr_calc( &pCity->attr, g_citybuff[buff_id].ability, g_citybuff[buff_id].value, 100.0f );
-	//	}
-	//}
 
 	// VIP影响
 	if ( pCity->viplevel > 0 && pCity->viplevel < g_vipinfo_maxnum )
@@ -285,6 +278,11 @@ void city_battlepower_reset( City *pCity )
 	if ( !pCity )
 		return;
 	city_battlepower_hero_calc( pCity );
+	city_battlepower_equip_calc( pCity );
+	city_battlepower_tech_calc( pCity );
+	city_battlepower_nequip_calc( pCity );
+	city_battlepower_place_calc( pCity );
+	city_battlepower_girl_calc( pCity );
 	city_battlepower_building_calc( pCity );
 }
 
@@ -294,7 +292,7 @@ void city_battlepower_calc( City *pCity, char path )
 	if ( !pCity )
 		return;
 	int old_battlepower = pCity->battlepower;
-	pCity->battlepower = pCity->battlepower_hero + pCity->battlepower_equip + pCity->battlepower_tech + pCity->battlepower_nequip + pCity->battlepower_place + pCity->battlepower_girl;
+	pCity->battlepower = pCity->battlepower_hero + pCity->battlepower_equip + pCity->battlepower_tech + pCity->battlepower_nequip + pCity->battlepower_place + pCity->battlepower_girl + pCity->battlepower_building;
 
 	// 有变化
 	if ( old_battlepower != pCity->battlepower )
@@ -319,14 +317,7 @@ void city_battlepower_hero_calc( City *pCity )
 	{
 		if ( pCity->hero[tmpi].kind <= 0 )
 			continue;
-		float attack =  pCity->hero[tmpi].attack * global.battlepower_attack;
-		float defense = pCity->hero[tmpi].defense * global.battlepower_defense;
-		float troops = pCity->hero[tmpi].troops * global.battlepower_troops;
-		float attack_increase = pCity->hero[tmpi].attack_increase * global.battlepower_attack_increase;
-		float defense_increase = pCity->hero[tmpi].defense_increase * global.battlepower_defense_increase;
-		float assault = pCity->hero[tmpi].assault * global.battlepower_assault;
-		float defend = pCity->hero[tmpi].defend * global.battlepower_defend;
-		battlepower += (int)ceil( attack + defense + troops + attack_increase + defense_increase + assault + defend );
+		battlepower += pCity->hero[tmpi].bp_hero;
 	}
 	pCity->battlepower_hero = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_HERO );
@@ -338,6 +329,12 @@ void city_battlepower_equip_calc( City *pCity )
 	if ( !pCity )
 		return;
 	int battlepower = 0;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		battlepower += pCity->hero[tmpi].bp_equip;
+	}
 	pCity->battlepower_equip = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_EQUIP );
 }
@@ -348,6 +345,12 @@ void city_battlepower_tech_calc( City *pCity )
 	if ( !pCity )
 		return;
 	int battlepower = 0;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		battlepower += pCity->hero[tmpi].bp_tech;
+	}
 	pCity->battlepower_tech = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_TECH );
 }
@@ -358,6 +361,12 @@ void city_battlepower_nequip_calc( City *pCity )
 	if ( !pCity )
 		return;
 	int battlepower = 0;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		battlepower += pCity->hero[tmpi].bp_nequip;
+	}
 	pCity->battlepower_nequip = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_NEQUIP );
 }
@@ -367,7 +376,15 @@ void city_battlepower_place_calc( City *pCity )
 {
 	if ( !pCity )
 		return;
+	if ( pCity->place < 0 || pCity->place >= g_nationequip_maxnum - 1 )
+		return;
 	int battlepower = 0;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		battlepower += g_nation_place[pCity->place + 1].value * global.battlepower_attack;
+	}
 	pCity->battlepower_place = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_PLACE );
 }
@@ -385,45 +402,45 @@ void city_battlepower_girl_calc( City *pCity )
 // 建筑提供战力
 void city_battlepower_building_calc( struct _city *pCity )
 {
-	//if ( !pCity )
-	//	return;
-	//int battlepower = 0;
-	//// 普通建筑
-	//for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
-	//{
-	//	if ( pCity->building[tmpi].kind <= 0 )
-	//		continue;
-	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building[tmpi].kind, pCity->building[tmpi].level );
-	//	if ( config )
-	//	{
-	//		battlepower += config->battlepower;
-	//	}
-	//}
+	if ( !pCity )
+		return;
+	int battlepower = 0;
+	// 普通建筑
+	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building[tmpi].kind <= 0 )
+			continue;
+		BuildingUpgradeConfig *config = building_getconfig( pCity->building[tmpi].kind, pCity->building[tmpi].level );
+		if ( config )
+		{
+			battlepower += config->battlepower;
+		}
+	}
 
-	//// 兵营建筑
-	//for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
-	//{
-	//	if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
-	//		continue;
-	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
-	//	if ( config )
-	//	{
-	//		battlepower += config->battlepower;
-	//	}
-	//}
+	// 兵营建筑
+	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_barracks[tmpi].kind <= 0 || pCity->building_barracks[tmpi].level <= 0 )
+			continue;
+		BuildingUpgradeConfig *config = building_getconfig( pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
+		if ( config )
+		{
+			battlepower += config->battlepower;
+		}
+	}
 
-	//// 资源建筑
-	//for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
-	//{
-	//	if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
-	//		continue;
-	//	BuildingUpgradeConfig *config = building_getconfig( pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
-	//	if ( config )
-	//	{
-	//		battlepower += config->battlepower;
-	//	}
-	//}
-	//int old_battlepower = pCity->battlepower_building;
-	//pCity->battlepower_building = battlepower;
-	//city_battlepower_calc( pCity, BATTLEPOWER_PATH_BUILDING );
+	// 资源建筑
+	for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
+			continue;
+		BuildingUpgradeConfig *config = building_getconfig( pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
+		if ( config )
+		{
+			battlepower += config->battlepower;
+		}
+	}
+	int old_battlepower = pCity->battlepower_building;
+	pCity->battlepower_building = battlepower;
+	city_battlepower_calc( pCity, BATTLEPOWER_PATH_BUILDING );
 }

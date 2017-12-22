@@ -39,6 +39,8 @@
 #include "auto_data_map_enemyinfo.h"
 #include "auto_data_map_resinfo.h"
 #include "auto_data_map_eventinfo.h"
+#include "auto_data_nation_equip.h"
+#include "auto_data_nation_place.h"
 #include "auto_data_weather.h"
 #include "auto_data_story.h"
 #include "auto_data_world_bossinfo.h"
@@ -76,7 +78,7 @@
 #define EPSINON 0.000001
 
 // 最小的角色ID值
-#define MINACTORID	3100
+#define MINACTORID	1000
 
 #define ACTOR_QUEST_MAX	2048
 
@@ -92,7 +94,7 @@
 #define HERO_CITY_MAX				12	// 上阵英雄
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
 #define SHAPE_MAX					64		// 形象
-
+#define ACTOR_BLACKLIST_MAX			50		// 黑名单
 #define FIGHT_JSON_MAX	16384	// 战斗json数据长度
 
 // 推送秘钥长度

@@ -86,6 +86,12 @@ int actor_kick( int actorid, int kicktime );
 // 禁言
 int actor_forbidtalk( int actor_index, int forbidtime );
 
+// 黑名单
+int actor_blacklist_add( int actor_index, int actorid );
+int actor_blacklist_del( int actor_index, int actorid );
+int actor_blacklist_sendlist( int actor_index );
+int actor_blacklist_sendlist_actorid( int actor_index );
+
 // 订阅一个及时通知的消息
 int actor_subscribecmd_add( int actor_index, short cmd );
 int actor_subscribecmd_del( int actor_index, short cmd );
@@ -115,6 +121,9 @@ int actor_changename_gm( int actorid, char *pname );
 
 // 修改头像
 int actor_changeshape( int actor_index, char shape );
+
+// 修改签名
+int actor_changsign( int actor_index, char *sign );
 
 // 角色信息
 int actor_getinfo( int actor_index );

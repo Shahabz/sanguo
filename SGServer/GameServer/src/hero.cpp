@@ -42,6 +42,12 @@ extern int g_equipinfo_maxnum;
 extern EquipWashInfo *g_equipwash;
 extern int g_equipwash_maxnum;
 
+extern NationEquipInfo *g_nationequip;
+extern int g_nationequip_maxnum;
+
+extern NationPlace *g_nation_place;
+extern int g_nation_place_maxnum;
+
 extern UpgradeInfo *g_upgradeinfo;
 extern int g_upgradeinfo_maxnum;
 
@@ -1205,10 +1211,10 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	int base_defense = DEFENSE( pHero->level, config->defense, (config->defense_base + pHero->defense_wash) );
 	int base_troops = TROOPS( pHero->level, config->troops, (config->troops_base + pHero->troops_wash) );
 
-	// 属性附加攻击
-	int attr_attack = pCity->attr.hero_attack[config->corps];
-	int attr_defense = pCity->attr.hero_defense[config->corps];
-	int attr_troops = pCity->attr.hero_troops[config->corps];
+	// 科技附加
+	int tech_attack = pCity->attr.hero_attack[config->corps];
+	int tech_defense = pCity->attr.hero_defense[config->corps];
+	int tech_troops = pCity->attr.hero_troops[config->corps];
 
 	// 装备附加
 	int equip_attack = 0;
@@ -1248,7 +1254,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 				equip_defend += g_equipinfo[kind].value;
 				break;
 			}
-			
+
 			// 装备洗练属性
 			for ( int i = 0; i < EQUIP_WASHMAX; i++ )
 			{
@@ -1284,16 +1290,50 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		}
 	}
 
+	// 国器附加
+	int nequip_attack = 0;
+	int nequip_defense = 0;
+	int nequip_troops = 0;
+	for ( int type = 1; type < g_nationequip_maxnum; type++ )
+	{
+		int level = pCity->nequip_level[type - 1];
+		if ( level <= 0 || level >= g_nationequip[type].maxnum )
+			continue;
+		switch ( g_nationequip[type].config[level].ability )
+		{
+		case CITY_ATTR_ABILITY_100:
+			nequip_attack += g_nationequip[type].config[level].value;
+		case CITY_ATTR_ABILITY_110:
+			nequip_defense += g_nationequip[type].config[level].value;
+		case CITY_ATTR_ABILITY_120:
+			nequip_troops += g_nationequip[type].config[level].value;
+		default:
+			break;
+		}
+	}
+
+	// 爵位加成
+	int place_attack = 0;
+	if ( pCity->place >= 0 && pCity->place < g_nationequip_maxnum - 1 )
+	{
+		place_attack = g_nation_place[pCity->place + 1].value;
+	}
+
 	// 综合计算
-	pHero->attack = base_attack + attr_attack + equip_attack;
-	pHero->defense = base_defense + attr_defense + equip_defense;
+	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack;
+	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense;
 	pHero->attack_increase = equip_attack_increase;
 	pHero->defense_increase = equip_defense_increase;
 	pHero->assault = equip_assault;
 	pHero->defend = equip_defend;
 
+	// 顺路计算这个英雄的单独战力
+	float bp_attack = base_attack * global.battlepower_attack;
+	float bp_defense = base_defense * global.battlepower_defense;
+	float bp_troops = 0;
+
 	// 兵力特殊，需要分类计算
-	int hero_troops  = base_troops + (attr_troops + equip_troops) / 4;
+	int hero_troops = base_troops + (tech_troops + equip_troops + nequip_troops) / 4;
 	if ( pHero->offset < HERO_BASEOFFSET )
 	{ // 无职务武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
@@ -1302,13 +1342,45 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	{ // 上阵武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_FIGHT );
 	}
-	else if ( pHero->offset >= HERO_BASEOFFSET+4 && pHero->offset < HERO_BASEOFFSET + 8 )
+	else if ( pHero->offset >= HERO_BASEOFFSET + 4 && pHero->offset < HERO_BASEOFFSET + 8 )
 	{ // 财富署武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_GATHER );
 	}
-	else if ( pHero->offset >= HERO_BASEOFFSET+8 && pHero->offset < HERO_BASEOFFSET + 12 )
+	else if ( pHero->offset >= HERO_BASEOFFSET + 8 && pHero->offset < HERO_BASEOFFSET + 12 )
 	{ // 御林卫武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
+	}
+
+	// 顺路计算这个英雄的单独战力
+	if ( pHero->offset >= HERO_BASEOFFSET && pHero->offset < HERO_BASEOFFSET + 4 )
+	{
+		// 英雄基础属性战力
+		float bp_attack = base_attack * global.battlepower_attack;
+		float bp_defense = base_defense * global.battlepower_defense;
+		float bp_troops = base_troops * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
+		pHero->bp_hero = (int)ceil( bp_attack + bp_defense + bp_troops );
+
+		// 身上装备战力
+		float bp_equip_attack = equip_attack * global.battlepower_attack;
+		float bp_equip_defense = equip_defense * global.battlepower_defense;
+		float bp_equip_attack_increase = equip_attack_increase * global.battlepower_attack_increase;
+		float bp_equip_defense_increase = equip_defense_increase * global.battlepower_defense_increase;
+		float bp_equip_assault = equip_assault * global.battlepower_assault;
+		float bp_equip_defend = equip_defend * global.battlepower_defend;
+		float bp_equip_troops = (equip_troops / 4) * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
+		pHero->bp_equip = (int)ceil( bp_equip_attack + bp_equip_defense + bp_equip_attack_increase + bp_equip_defense_increase + bp_equip_assault + bp_equip_defend + bp_equip_troops );
+
+		// 国器提供战力
+		float bp_nequip_attack = nequip_attack * global.battlepower_attack;
+		float bp_nequip_defense = nequip_defense * global.battlepower_defense;
+		float bp_nequip_troops = (nequip_troops / 4) * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
+		pHero->bp_nequip = (int)ceil( bp_nequip_attack + bp_nequip_defense + bp_nequip_troops );
+
+		// 科技提供战力
+		float bp_tech_attack = tech_attack * global.battlepower_attack;
+		float bp_tech_defense = tech_defense * global.battlepower_defense;
+		float bp_tech_troops = (tech_troops / 4) * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
+		pHero->bp_tech = (int)ceil( bp_tech_attack + bp_tech_defense + bp_tech_troops );
 	}
 	return 0;
 }

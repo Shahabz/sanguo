@@ -33,6 +33,7 @@ struct _actor {
 				int worldquest_complete;	//世界任务领取情况
 				short worldquestid;	//世界任务
 				ActorFriend friends[100];	//好友
+				int blacklist[50];	//黑名单
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数

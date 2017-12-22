@@ -9,8 +9,6 @@ local m_uiAdvance = nil; --UnityEngine.GameObject
 
 
 --临时服务器数据
-
-
 local m_nation_equip={
 [1] = {level=10,progress=15},
 [2] = {level=100,progress=0,advanceprogress={0,3}},
@@ -24,9 +22,6 @@ local m_nation_equip={
 CITY_ATTR_ABILITY_100 = 100	--所有武将攻击
 CITY_ATTR_ABILITY_110 = 110	--所有武将防御
 CITY_ATTR_ABILITY_120 = 120	--所有武将兵力
-
-
-
 
 
 -- 打开界面
@@ -87,7 +82,7 @@ function NationEquipDlgOnAwake( gameObject )
 	m_uiUIP_NationEquip = objs[2];
 	m_uiAdvance = objs[3];
 	
-		-- 对象池
+	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_NationEquip", 2, 2, m_uiUIP_NationEquip);
 end
@@ -124,34 +119,42 @@ end
 function NationEquipDlgShow()
 	NationEquipDlgOpen()
 	NationEquipDlgClear()
-	SetText(m_uiIronNum,T(124)..":"..GetPlayer().m_iron)
+end
+
+function NationEquipDlgRecv( recvValue )
+	SetText( m_uiIronNum, T(124)..":"..GetPlayer().m_iron )
 	for i=1, #g_nation_equip do
-		local uiObj = m_ObjectPool:Get( "UIP_NationEquip" );
-		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-		local uiShape = objs[0] ;
-		local uiStarLv = objs[1] ;
-		local uiStarImage = objs[2] ;
-		local uiLock = objs[3] ;
-		local uiEquipDesc = objs[4] ;
-		local uiProgressDesc = objs[5] ;
-		local uiAdvanceTimer = objs[6] ;
-		local uiProgressBar = objs[7] ;
-		local uiUpgradeBtn = objs[8] ;
-		local uiAdvanceBtn = objs[9] ;
-		local uiSpeedBtn = objs[10] ;
-		local uiCostIron = objs[11] ;
-		local uiCostNum = objs[12] ;
-		local uiMakeCostText = objs[13] ;
-		local uiMakeBtn = objs[14] ;
-		local uiAdvanceDescText = objs[15] ;
-		local uiAdvanceProgressText = objs[16] ;
-		local uiLockDesc = objs[17] ;
-		
-		uiObj.transform:SetParent( m_uiContent.transform );
-		local playerlevel = GetPlayer().m_level
-		local name = NationEquipName(i)
-		--判断此国器是否解锁
-		if playerlevel <  g_nation_equip[i][1].actorlevel then	--未解锁
+		NationEquipDlgCreateEquip( i )
+	end
+end
+
+function NationEquipDlgCreateEquip( i )
+	local uiObj = m_ObjectPool:Get( "UIP_NationEquip" );
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0] ;
+	local uiStarLv = objs[1] ;
+	local uiStarImage = objs[2] ;
+	local uiLock = objs[3] ;
+	local uiEquipDesc = objs[4] ;
+	local uiProgressDesc = objs[5] ;
+	local uiAdvanceTimer = objs[6] ;
+	local uiProgressBar = objs[7] ;
+	local uiUpgradeBtn = objs[8] ;
+	local uiAdvanceBtn = objs[9] ;
+	local uiSpeedBtn = objs[10] ;
+	local uiCostIron = objs[11] ;
+	local uiCostNum = objs[12] ;
+	local uiMakeCostText = objs[13] ;
+	local uiMakeBtn = objs[14] ;
+	local uiAdvanceDescText = objs[15] ;
+	local uiAdvanceProgressText = objs[16] ;
+	local uiLockDesc = objs[17] ;
+	
+	uiObj.transform:SetParent( m_uiContent.transform );
+	local playerlevel = GetPlayer().m_level
+	local name = NationEquipName(i)
+	--判断此国器是否解锁
+	if playerlevel <  g_nation_equip[i][1].actorlevel then	--未解锁
 		SetTrue(uiLock)
 		SetText(uiEquipDesc,name,Hex2Color( 0x9B8869FF ))
 		SetTrue(uiLockDesc)
@@ -167,12 +170,11 @@ function NationEquipDlgShow()
 		SetFalse(uiMakeBtn)
 		SetFalse(uiAdvanceDescText)
 		SetFalse(uiAdvanceProgressText)
-
-		else
-			SetFalse(uiLock)
-			SetFalse(uiLockDesc)
-			SetTrue(uiEquipDesc)
-			if m_nation_equip[i].level == 0 then		--已解锁未打造
+	else
+		SetFalse(uiLock)
+		SetFalse(uiLockDesc)
+		SetTrue(uiEquipDesc)
+		if m_nation_equip[i].level == 0 then--已解锁未打造
 			SetImage(uiShape, NationEquipSprite(i) )
 			SetText(uiEquipDesc,name)
 			SetFalse(uiProgressDesc)
@@ -182,50 +184,44 @@ function NationEquipDlgShow()
 			SetFalse(uiCostIron)
 			SetTrue(uiMakeBtn)
 			uiMakeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 100+i
-		
-			elseif m_nation_equip[i].level > 0 then		--已解锁已打造
+	
+		elseif m_nation_equip[i].level > 0 then	--已解锁已打造
 			SetImage(uiShape, NationEquipSprite(i) )
 			local attrname = nation_equip_getabilityname(i,m_nation_equip[i].level)
 			SetText(uiEquipDesc,"Lv."..m_nation_equip[i].level.."  "..name.."  "..attrname,Hex2Color( 0xD95DF4FF ))
-			
-				if m_nation_equip[i].advanceprogress == nil  then		--升级中
+			if m_nation_equip[i].advanceprogress == nil  then		--升级中
 				SetText(uiProgressDesc,T(1748)..":"..m_nation_equip[i].progress.."%")
 				SetTrue(uiProgressBar)
 				SetProgress( uiProgressBar, m_nation_equip[i].progress/100 );
 				SetTrue(uiCostIron)
 				SetTrue(uiUpgradeBtn)
 				uiUpgradeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 200+i
-					if GetPlayer().m_iron < g_nation_equip[i][m_nation_equip[i].level].iron then 
-						SetText(uiCostIron.transform:Find("CostNum"),g_nation_equip[i][m_nation_equip[i].level].iron,Hex2Color( 0xE80017FF ))
-					end
-				
-				
-				elseif m_nation_equip[i].advanceprogress[1] ~= nil  then	--改造中
-					SetFalse(uiCostIron)
-					SetFalse(uiProgressDesc)
-					SetTrue(uiAdvanceProgressText)
-					SetText(uiAdvanceProgressText,T(1742)..m_nation_equip[i].advanceprogress[1].."/"..m_nation_equip[i].advanceprogress[2])
-					if m_nation_equip[i].advanceprogress[1] == 0 and m_nation_equip[i].progress == 0 then	--尚未开始改造
+				if GetPlayer().m_iron < g_nation_equip[i][m_nation_equip[i].level].iron then 
+					SetText(uiCostIron.transform:Find("CostNum"),g_nation_equip[i][m_nation_equip[i].level].iron,Hex2Color( 0xE80017FF ))
+				end
+			
+			elseif m_nation_equip[i].advanceprogress[1] ~= nil  then	--改造中
+				SetFalse(uiCostIron)
+				SetFalse(uiProgressDesc)
+				SetTrue(uiAdvanceProgressText)
+				SetText(uiAdvanceProgressText,T(1742)..m_nation_equip[i].advanceprogress[1].."/"..m_nation_equip[i].advanceprogress[2])
+				if m_nation_equip[i].advanceprogress[1] == 0 and m_nation_equip[i].progress == 0 then	--尚未开始改造
 					SetTrue(uiAdvanceDescText)
 					local maxlv = m_nation_equip[i].level+10
 					SetText(uiAdvanceDescText,T(1743)..maxlv)
 					SetFalse(uiProgressBar)
 					SetTrue(uiAdvanceBtn)
 					uiAdvanceBtn.transform:GetComponent( typeof(UIButton) ).controlID = 300+i
-					else																				
+				else																				
 					SetTrue(uiAdvanceTimer)	--已经在改造中
 					SetTimer( uiAdvanceTimer, m_nation_equip[i].time, m_nation_equip[i].tataltime, 1, T(1463) )
 					SetTrue(uiProgressBar)
 					SetTrue(uiSpeedBtn)
 					uiSpeedBtn.transform:GetComponent( typeof(UIButton) ).controlID = 400+i
-					end
 				end
 			end
-
 		end
-		
 	end
-
 end
 
 -- 获取国器基础属性
@@ -245,6 +241,7 @@ function nation_equip_getabilityname( kind , level )
 	end
 	return name
 end
+
 -- 清空
 function NationEquipDlgClear()
 	local objs = {};
@@ -282,24 +279,22 @@ function NationEquipDlgAdvanceShow(kind)
 	end
 	SetTrue(m_uiAdvance)
 	local objs = m_uiAdvance.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-		local uiShape1 = objs[0] ;
-		local uiColor1 = objs[1] ;
-		local uiStarImage1 = objs[2] ;
-		local uiMaxLv1 = objs[3] ;
-		local uiShape2 = objs[4] ;
-		local uiColor2 = objs[5] ;
-		local uiStarImage2 = objs[6] ;
-		local uiMaxLv2 = objs[7] ;
-		local uiCloseBtn = objs[8] ;
-		local uiImageGroup = objs[9] ;
-		local uiCostTime = objs[10] ;
-		local uiChangeBtn = objs[11] ;
-		local uiCostText = objs[12] ;
-		
-		SetImage(uiShape1, NationEquipSprite(kind) )
-		SetImage(uiShape2, NationEquipSprite(kind) )
-		uiChangeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 500+kind
-		
+	local uiShape1 = objs[0] ;
+	local uiColor1 = objs[1] ;
+	local uiStarImage1 = objs[2] ;
+	local uiMaxLv1 = objs[3] ;
+	local uiShape2 = objs[4] ;
+	local uiColor2 = objs[5] ;
+	local uiStarImage2 = objs[6] ;
+	local uiMaxLv2 = objs[7] ;
+	local uiCloseBtn = objs[8] ;
+	local uiImageGroup = objs[9] ;
+	local uiCostTime = objs[10] ;
+	local uiChangeBtn = objs[11] ;
+	local uiCostText = objs[12] ;
+	SetImage(uiShape1, NationEquipSprite(kind) )
+	SetImage(uiShape2, NationEquipSprite(kind) )
+	uiChangeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 500+kind
 end
 
 --改造加速

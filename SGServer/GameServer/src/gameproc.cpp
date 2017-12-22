@@ -359,6 +359,24 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 国器初始化
+	if ( nationequipinfo_init_auto() < 0 )
+	{
+		printf_msg( "nationequipinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 爵位初始化
+	if ( nationplace_init_auto() < 0 )
+	{
+		printf_msg( "nationplace_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 英兵种相克数据初始化
 	if ( herocorpsmulinfo_init_auto() < 0 )
 	{

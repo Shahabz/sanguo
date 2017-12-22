@@ -827,6 +827,7 @@ function struct_NetS_Quest_recv( buffer )
 		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
 	end
 	recvValue.m_nameid = buffer:ReadInt();
+	recvValue.m_descid = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -2032,6 +2033,38 @@ function struct_NetS_ActorSearch_recv( buffer )
 	recvValue.m_my_bp_girl = buffer:ReadInt();
 	recvValue.m_my_bp_place = buffer:ReadInt();
 	recvValue.m_shape = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BlackInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BlackList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_BlackInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_BlackListID_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_actorid={};
+	for tmpi=1,recvValue.m_count,1 do
+		recvValue.m_actorid[tmpi] = buffer:ReadInt();
+	end
 	return recvValue;
 end
 

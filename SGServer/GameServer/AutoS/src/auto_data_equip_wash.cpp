@@ -47,7 +47,7 @@ int equipwashinfo_init_auto()
 	g_equipwash = (EquipWashInfo *)malloc( sizeof(EquipWashInfo)*g_equipwash_maxnum );
 	memset( g_equipwash, 0, sizeof(EquipWashInfo)*g_equipwash_maxnum );
 
-	sprintf( szSQL, "select `washid`,`level`,`ability`,`value`,`free_odds`,`token_odds` from equip_wash;" );
+	sprintf( szSQL, "select `washid`,`level`,`ability`,`value`,`free_odds`,`token_odds`,`battlepower` from equip_wash;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -67,6 +67,7 @@ int equipwashinfo_init_auto()
 		g_equipwash[washid].value = atoi(row[offset++]);
 		g_equipwash[washid].free_odds = atoi(row[offset++]);
 		g_equipwash[washid].token_odds = atoi(row[offset++]);
+		g_equipwash[washid].battlepower = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

@@ -17,8 +17,8 @@ local WorldMapThumbPrefab	= nil;	-- 地图根
 local ThumbDisplayPrefab	= nil;	-- 地图显示层
 local ThumbCityRoot			= nil;	-- 地图显示层
 local ThumbCamera			= nil;	-- 地图摄像机
-local ThumbDisplayTownPrefab= nil;
-
+local ThumbDisplayTownPrefab = nil;
+local ThumbDisplayCityPrefab = nil;
 -- 只是显示隐藏 
 function WorldMapThumb.Show( bShow )
 	if WorldMapThumbObject ~= nil then
@@ -33,6 +33,7 @@ function WorldMapThumb.Create( zoneid )
 	if GameManager.WorldMap ~= nil then
 		GameManager.WorldMap.gameObject:SetActive( false );
 	end
+	
     --MainDlgClose();
     --fruit.audioManager:Play(71);
 	-- 注释掉，防止去缩略图后返回大地图部队显示不正确
@@ -53,6 +54,8 @@ function WorldMapThumb.Delete()
 	if GameManager.WorldMap ~= nil then
 		GameManager.WorldMap.gameObject:SetActive( true );
 	end
+	ThumbDisplayTownPrefab= nil;
+	ThumbDisplayCityPrefab = nil;
     --fruit.audioManager:Play(72);
     --MainDlgPlayBGM(true);
     --MainDlgOpen();
@@ -247,8 +250,10 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		local level = recvValue.m_list[tmpi].level
 
 		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
-		print( thumbX..","..thumbY..","..nation )
-		local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayCity") );
+		if ThumbDisplayCityPrefab == nil then
+		   ThumbDisplayCityPrefab = LoadPrefab("ThumbDisplayCity");
+		end
+		local thumbObj = GameObject.Instantiate( ThumbDisplayCityPrefab );
 		thumbObj.transform:SetParent( ThumbCityRoot );
 		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
 		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )

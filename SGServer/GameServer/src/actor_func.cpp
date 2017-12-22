@@ -448,6 +448,23 @@ int actor_changeshape( int actor_index, char shape )
 	return 0;
 }
 
+// 修改签名
+int actor_changsign( int actor_index, char *sign )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( !sign )
+		return -1;
+	int signlen = (int)strlen( sign );
+	if ( signlen <= 0 || signlen >= SIGNATURE_SIZE )
+		return -1;
+
+	strncpy( pCity->signature, sign, SIGNATURE_SIZE );
+	pCity->signature[SIGNATURE_SIZE - 1] = 0;
+	return 0;
+}
+
 //-----------------------------------------------------------------------------
 // actor_getinfo
 // 函数说明: 角色信息

@@ -32,6 +32,7 @@ ASKINFO_KINGWAR			=	29 -- 皇城血战
 ASKINFO_MSGBOX_CALLBACK =	30 -- 消息框点击确定回调
 ASKINFO_AUTOBUILD		=	31 -- 自动建造
 ASKINFO_HERO_VISIT		=	32 -- 武将寻访
+ASKINFO_CHANGESIGN		=	33 -- 个性签名
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

@@ -14,7 +14,6 @@ struct _nationequipinfo_config {
 				int sec;	//
 				short ability;	//
 				int value;	//
-				int battlepower;	//
 };
 typedef struct _nationequipinfo_config NationEquipInfoConfig;
 

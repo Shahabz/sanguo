@@ -40,7 +40,7 @@ function CacheQuestClear()
 	CacheQuest = {};
 end
 
--- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,[m_count]},
+-- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,m_descid=0,[m_count]},
 function CacheQuestSet( recvValue )
 	g_QuestTargetEnemyLevel = 0;
 	if CacheQuest ~= nil and CacheQuest.m_list ~= nil and CacheQuest.m_list[1] ~= nil then
@@ -58,6 +58,60 @@ function CacheQuestSet( recvValue )
 	
 	CacheQuest = recvValue;
 	GetPlayer().m_questid = recvValue.m_list[1].m_questid
+end
+
+-- 任务类型
+function QuestType( recvValue )
+	local typename = ""
+	local datatype = recvValue.m_datatype;
+	if datatype == QUEST_DATATYPE_ACTOR_LEVEL then-- 主公等级 datatype=1 datakind=0 needvalue=等级
+		typename = Localization.text_quest( 90 )
+	elseif datatype == QUEST_DATATYPE_BUILDING_LEVEL or datatype == QUEST_DATATYPE_BUILDING_UPGRADE then-- 建筑等级 datatype=2 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_BUILDING_SILVER then-- N个民居达到N级 datatype=3 datakind=等级 needvalue=建筑数量
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_BUILDING_WOOD then-- N个木场达到N级 datatype=4 datakind=等级 needvalue=建筑数量
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_BUILDING_FOOD then-- N个农田达到N级 datatype=5 datakind=等级 needvalue=建筑数量
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_BUILDING_IRON then-- N个矿场达到N级 datatype=6 datakind=等级 needvalue=建筑数量
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_LEVYNUM then-- 征收次数 datatype=7 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 91 )
+	elseif datatype == QUEST_DATATYPE_HISTORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
+		typename = Localization.text_quest( 92 )
+	elseif datatype == QUEST_DATATYPE_KILLMONSTER then-- 打流寇N次 datatype=9 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_KILLMONSTER_LEVEL then-- 打流寇N级N次 datatype=10 datakind=等级 needvalue=数量
+		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING then-- 打造N装备N数量 datatype=11 datakind=装备kind needvalue=数量
+		typename = Localization.text_quest( 94 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_WASH then-- 装备洗炼次数 datatype=12 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 94 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_COLORWASH then-- 将N品质装备的属性洗炼至满级 datatype=13 datakind=颜色 needvalue=1
+		typename = Localization.text_quest( 94 )
+	elseif datatype == QUEST_DATATYPE_TRAIN then-- 募兵N兵种N数量 datatype=14 datakind=兵种（1，2，3） needvalue=数量
+		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_TRAINCOUNT then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_CITY_TECH then-- 研究N科技N级 datatype=16 datakind=科技ID needvalue=等级
+		typename = Localization.text_quest( 96 )
+	elseif datatype == QUEST_DATATYPE_CITY_TECHONE	 then-- 研究一次N科技 datatype=17 datakind=科技ID needvalue=1
+		typename = Localization.text_quest( 96 )
+	elseif datatype == QUEST_DATATYPE_HERO_WASHCOUNT then-- 武将洗髓N次 datatype=18 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
+		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_WISHING then	-- 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 99 )
+	elseif datatype == QUEST_DATATYPE_CITYFIGHT then-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_UP then-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 93 )
+	end
+	return typename;
 end
 
 -- 任务名称

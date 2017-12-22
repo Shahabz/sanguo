@@ -118,7 +118,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	elseif cmdstr == "dump"	then
 		ResourceManager.dump()
 	elseif cmdstr == "t" then
-		RankListDlgShow()
+		RankListDlgShow();
 	elseif cmdstr == "f" then
 
 	end

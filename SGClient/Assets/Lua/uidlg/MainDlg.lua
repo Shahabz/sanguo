@@ -206,10 +206,26 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 30 then
 			ChatDlgShow();
 		
-		-- 任务导航
+		-- 主线任务导航
 		elseif nControlID == 31 then
 			QuestGoto( 1 );
+		
+		-- 打开支线任务
+		elseif nControlID == 32 then
+			SetTrue( m_uiQuestList )
+			SetFalse( m_uiQuest.transform:Find("Button") )
+		
+		-- 收起支线任务
+		elseif nControlID == 33 then
+			SetFalse( m_uiQuestList )
+			if #CacheQuest > 1 then
+				SetTrue( m_uiQuest.transform:Find("Button") )
+			end
 			
+		-- 点击支线任务导航
+		elseif nControlID >= 40 and nControlID < 50 then
+			--QuestGoto( 1 );
+					
 		-- 点击建造队列
 		elseif nControlID == 50 then
 			City.GoToWorker()
@@ -595,6 +611,28 @@ function MainDlgSetQuest()
 		City.BuildingQuestMod( questid )
 	else
 		BuildingQuestModHide()
+	end
+	
+	-- 设置支线任务
+	local questnum = 0;
+	for i=0, 4, 1 do
+		local questInfo = CacheQuest.m_list[i+2]
+		local uiObj = m_uiQuestList.transform:GetChild( i )
+		if questInfo == nil then
+			SetFalse( uiObj );
+		else
+			SetTrue( uiObj );
+			SetText( uiObj.transform:Find("Text"), QuestType( questInfo ) )
+			SetText( uiObj.transform:Find("QuestText"), QuestName( -1, questInfo ) )
+			questnum = questnum + 1;
+		end
+	end
+	
+	if questnum > 0 then
+		SetTrue( m_uiQuest.transform:Find("Button") )
+		SetText( m_uiQuest.transform:Find("Button/Num"), questnum )
+	else
+		SetFalse( m_uiQuest.transform:Find("Button") )
 	end
 end
 

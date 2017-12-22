@@ -10,6 +10,7 @@ struct _equipwashinfo {
 				int value;	//
 				int free_odds;	//
 				int token_odds;	//
+				int battlepower;	//
 };
 typedef struct _equipwashinfo EquipWashInfo;
 

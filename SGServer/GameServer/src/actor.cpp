@@ -103,7 +103,7 @@ int actors_init()
 	// 设定不能低于最小的角色ID值
 	if ( g_maxactorid < MINACTORID )
 	{ // 只要第一次就可以了，之后都会读最大的
-		g_maxactorid = MINACTORID;
+		g_maxactorid = g_Config.server_code*100000 + MINACTORID;
 	}
 
 	g_actors = (Actor *)malloc( sizeof(Actor)*g_maxactornum );
@@ -751,6 +751,9 @@ int actor_entercity( int actor_index )
 	// 装备列表
 	equip_list( actor_index );
 
+	// 聊天数据之前，要把黑名单列表发过去
+	actor_blacklist_sendlist_actorid( actor_index );
+
 	// 聊天缓存
 	chat_cache_sendlist( actor_index );
 
@@ -1178,6 +1181,101 @@ int actor_forbidtalk( int actor_index, int forbidtime )
 	{
 		g_actors[actor_index].forbidtime = -1;
 	}
+	return 0;
+}
+
+// 黑名单
+int actor_blacklist_add( int actor_index, int actorid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( actorid <= 0 )
+		return -1;
+	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].blacklist[tmpi] == actorid )
+		{
+			return -1;
+		}
+	}
+	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].blacklist[tmpi] <= 0 )
+		{
+			g_actors[actor_index].blacklist[tmpi] = actorid;
+			int city_index = city_getindex_withactorid( actorid );
+			if ( city_index >= 0 && city_index < g_city_maxcount )
+			{
+				SLK_NetS_BlackInfo pValue = { 0 };
+				pValue.m_actorid = actorid;
+				pValue.m_level = g_city[city_index].level;
+				pValue.m_nation = g_city[city_index].nation;
+				strncpy( pValue.m_name, g_city[city_index].name, NAME_SIZE );
+				pValue.m_namelen = strlen( pValue.m_name );
+				netsend_blackinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			}
+			break;
+		}
+	}
+	return 0;
+}
+int actor_blacklist_del( int actor_index, int actorid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( actorid <= 0 )
+		return -1;
+	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].blacklist[tmpi] == actorid )
+		{
+			g_actors[actor_index].blacklist[tmpi] = 0;
+			break;
+		}
+	}
+	return 0;
+}
+int actor_blacklist_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_BlackList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].blacklist[tmpi] <= 0 )
+			continue;
+		int city_index = city_getindex_withactorid( g_actors[actor_index].blacklist[tmpi] );
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
+			pValue.m_list[pValue.m_count].m_level = g_city[city_index].level;
+			pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
+			strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+			netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count += 1;
+			if ( pValue.m_count >= 25 )
+			{
+				netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+				pValue.m_count = 0;
+			}
+		}
+	}
+	if ( pValue.m_count > 0 )
+		netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int actor_blacklist_sendlist_actorid( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_BlackListID pValue = { 0 };
+	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].blacklist[tmpi] <= 0 )
+			continue;
+		pValue.m_actorid[pValue.m_count] = g_actors[actor_index].blacklist[tmpi];
+		pValue.m_count += 1;
+	}
+	if ( pValue.m_count > 0 )
+		netsend_blacklistid_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

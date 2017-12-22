@@ -109,6 +109,23 @@ function SettingDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID > 100 and nControlID < 200 then			--设置选项
 			SettingDlgOptionSelect( nControlID )							
         end
+		
+	elseif nType == UI_EVENT_INPUTVALUECHANGED then
+		if nControlID == 0 then
+			local text = m_uiSignature.transform:Find("Edit/Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiSignature.transform:Find("Edit/Input/Hint") )
+			else
+				SetFalse( m_uiSignature.transform:Find("Edit/Input/Hint") )
+			end
+		elseif nControlID == 1 then
+			local text = m_uiExchangeText.transform:Find("Edit/Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiExchangeText.transform:Find("Edit/Hint") )
+			else
+				SetFalse( m_uiExchangeText.transform:Find("Edit/Hint") )
+			end
+		end
 	end
 end
 
@@ -332,7 +349,7 @@ function SettingDlgSendSignature()
 		pop(T(1732))
 		return;
 	end
-	
+	system_askinfo( ASKINFO_CHANGESIGN, signature, 0 );
 	SettingDlgClose()
 	pop( T(1731) )
 end

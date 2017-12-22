@@ -1720,3 +1720,20 @@ function proc_actorsearch_C( recvValue )
 	ActorSearchDlgRecv( recvValue )
 end
 
+-- m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,
+function proc_blackinfo_C( recvValue )
+	-- process.
+	GetPlayer():AddBlacklist( recvValue.m_actorid )
+end
+
+-- m_count=0,m_list={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,[m_count]},
+function proc_blacklist_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_actorid={}[m_count],
+function proc_blacklistid_C( recvValue )
+	-- process.
+	GetPlayer():SetBlacklist( recvValue )
+end
+

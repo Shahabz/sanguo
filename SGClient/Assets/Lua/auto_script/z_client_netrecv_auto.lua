@@ -745,6 +745,21 @@ function netrecv_actorsearch_C( buffer )
 	proc_actorsearch_C( recvValue );
 end
 
+function netrecv_blackinfo_C( buffer )
+	local recvValue = struct_NetS_BlackInfo_recv( buffer );
+	proc_blackinfo_C( recvValue );
+end
+
+function netrecv_blacklist_C( buffer )
+	local recvValue = struct_NetS_BlackList_recv( buffer );
+	proc_blacklist_C( recvValue );
+end
+
+function netrecv_blacklistid_C( buffer )
+	local recvValue = struct_NetS_BlackListID_recv( buffer );
+	proc_blacklistid_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -895,6 +910,9 @@ Proc_Command = {
 	[CMDS_RANKLIST]=netrecv_ranklist_C;
 	[CMDS_FRIENDLIST]=netrecv_friendlist_C;
 	[CMDS_ACTORSEARCH]=netrecv_actorsearch_C;
+	[CMDS_BLACKINFO]=netrecv_blackinfo_C;
+	[CMDS_BLACKLIST]=netrecv_blacklist_C;
+	[CMDS_BLACKLISTID]=netrecv_blacklistid_C;
 }
 
 function in_proc_command_C( cmd, buffer )

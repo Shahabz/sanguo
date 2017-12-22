@@ -678,6 +678,9 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				hero_visit_high10( actor_index );
 		}
 		break;
+	case ASKINFO_CHANGESIGN:
+		actor_changsign( actor_index, pstr );
+		break;
 	default:
 		break;
 	}

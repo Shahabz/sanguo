@@ -447,6 +447,8 @@ int equip_up( int actor_index, short herokind, int equip_offset )
 
 	// 重算英雄属性
 	hero_attr_calc( pCity, pHero );
+	// 重算装备战力
+	city_battlepower_equip_calc( pCity );
 	// 重算英雄战力
 	city_battlepower_hero_calc( pCity );
 	// 通知客户端英雄穿上装备
@@ -529,6 +531,8 @@ int equip_down( int actor_index, short herokind, int index )
 
 	// 重算英雄属性
 	hero_attr_calc( pCity, pHero );
+	// 重算装备战力
+	city_battlepower_equip_calc( pCity );
 	// 重算英雄战力
 	city_battlepower_hero_calc( pCity );
 
@@ -973,6 +977,9 @@ int equip_wash_free( int actor_index, int offset )
 		equip_sendhero( actor_index, pHero, equipoffset );
 		hero_attr_calc( pCity, pHero );
 		hero_sendinfo( actor_index, pHero );
+		// 重算装备战力
+		city_battlepower_equip_calc( pCity );
+		// 重算英雄战力
 		city_battlepower_hero_calc( pCity );
 	}
 	else
@@ -1046,6 +1053,9 @@ int equip_wash_token( int actor_index, int offset )
 		equip_sendhero( actor_index, pHero, equipoffset );
 		hero_attr_calc( pCity, pHero );
 		hero_sendinfo( actor_index, pHero );
+		// 重算装备战力
+		city_battlepower_equip_calc( pCity );
+		// 重算英雄战力
 		city_battlepower_hero_calc( pCity );
 	}
 	else
@@ -1107,6 +1117,9 @@ int equip_wash_super( int actor_index, int offset )
 		equip_sendhero( actor_index, pHero, equipoffset );
 		hero_attr_calc( pCity, pHero );
 		hero_sendinfo( actor_index, pHero );
+		// 重算装备战力
+		city_battlepower_equip_calc( pCity );
+		// 重算英雄战力
 		city_battlepower_hero_calc( pCity );
 	}
 	else

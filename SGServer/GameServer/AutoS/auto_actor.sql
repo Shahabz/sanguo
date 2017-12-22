@@ -17,6 +17,7 @@ CREATE TABLE `actor` (
   `equipext` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩展的装备栏位数',
   `quest_talkid` int(11) NOT NULL DEFAULT '0' COMMENT '任务对话',
   `worldquest_complete` int(11) NOT NULL DEFAULT '0' COMMENT '世界任务领取情况',
+  `blacklist` varbinary(200) NOT NULL DEFAULT '' COMMENT '黑名单',
   `sflag` int(11) NOT NULL DEFAULT '0' COMMENT '特定标志位',
   `fdate` int(11) NOT NULL DEFAULT '0' COMMENT '刷新的日子是哪天',
   `today_char` varbinary(512) NOT NULL DEFAULT '' COMMENT 'char类型每日次数',

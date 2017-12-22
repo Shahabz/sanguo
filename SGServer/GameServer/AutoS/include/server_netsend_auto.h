@@ -151,6 +151,9 @@ int netsend_questtalk_S( int actor_index, char send_type, SLK_NetS_QuestTalk *pV
 int netsend_ranklist_S( int actor_index, char send_type, SLK_NetS_RankList *pValue );
 int netsend_friendlist_S( int actor_index, char send_type, SLK_NetS_FriendList *pValue );
 int netsend_actorsearch_S( int actor_index, char send_type, SLK_NetS_ActorSearch *pValue );
+int netsend_blackinfo_S( int actor_index, char send_type, SLK_NetS_BlackInfo *pValue );
+int netsend_blacklist_S( int actor_index, char send_type, SLK_NetS_BlackList *pValue );
+int netsend_blacklistid_S( int actor_index, char send_type, SLK_NetS_BlackListID *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

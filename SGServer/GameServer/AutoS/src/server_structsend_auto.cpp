@@ -960,6 +960,7 @@ int struct_NetS_Quest_send( char **pptr, int *psize, SLK_NetS_Quest *pValue )
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_descid, (*psize) );
 	return 0;
 }
 
@@ -2272,6 +2273,41 @@ int struct_NetS_ActorSearch_send( char **pptr, int *psize, SLK_NetS_ActorSearch 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_girl, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_my_bp_place, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BlackInfo_send( char **pptr, int *psize, SLK_NetS_BlackInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BlackList_send( char **pptr, int *psize, SLK_NetS_BlackList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_BlackInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_BlackListID_send( char **pptr, int *psize, SLK_NetS_BlackListID *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	if( pValue->m_count > 0 && pValue->m_count <= 50 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_actorid, pValue->m_count*sizeof(int), (*psize) );
 	return 0;
 }
 

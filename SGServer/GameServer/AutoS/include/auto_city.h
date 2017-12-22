@@ -89,7 +89,8 @@ struct _city {
 				int rb_wood;	//给予的重建家园资源
 				int rb_food;	//给予的重建家园资源
 				short rb_df;	//给予的重建家园资源
-				short nequip[6];	//国器等级
+				short nequip_level[6];	//国器等级
+				char nequip_pro[6];	//国器进度
 				char nequip_kind;	//正在升级的国器
 				int nequip_sec;	//国器升级时间
 				short guardsec;	//城墙守卫冷却时间
@@ -137,6 +138,7 @@ struct _city {
 				int rank_server;	//全服排行榜排名
 				int rank_zone;	//区域排行榜排名
 				int rank_nation;	//国家排行榜排名
+				int battlepower_building;	//建筑提供战力
 };
 typedef struct _city City;
 

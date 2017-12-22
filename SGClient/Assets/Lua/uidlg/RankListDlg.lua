@@ -10,6 +10,7 @@ local t_uiInfoContentObj = {};
 local m_selectType = 0; -- 类型:1全服，2区域， 3国家
 local t_selectTypeName = {[1]=1983,[2]=1984,[3]=1985}
 local m_page = 0; -- 当前页
+local t_actorid = {} --存储m_actorid和m_city_index值 点击详细信息时传入，如果m_city_index为nil就只传m_actorid
 
 -- 发送结构
 local sendValue = {}
@@ -46,6 +47,8 @@ function RankListDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             RankListDlgClose();
+		elseif	nControlID > 0 and nControlID < 11 then
+			RankListDlgCheckInfo(nControlID);
 		elseif nControlID == 11 then
 			RankListDlgLeft();
 		elseif	nControlID == 12 then
@@ -105,7 +108,7 @@ function RankListDlgShow()
 	RankListDlgSelectType(m_selectType);
 	RankListDlgSetPointShow(1,3,m_selectType);
 end
--- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,m_actorid=0,[m_count]},m_myrank=0,m_type=0,m_page=0,
+-- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,m_actorid=0,[m_count]},m_myrank=0,m_type=0,m_page=0, m_actorid=0,m_city_index=0,
 function RankListDlgRecv( recvValue )
 	if recvValue.m_count == 0 then
 		-- 提示没有更多了
@@ -113,6 +116,7 @@ function RankListDlgRecv( recvValue )
 	end
 	m_page = recvValue.m_page;
 	SetText(m_uiMyRankText,F(1977,recvValue.m_myrank));
+	t_actorid = {};
 	for i = 1,#t_uiInfoContentObj,1 do
 		local rankInfo = recvValue.m_list[i]
 		-- 创建一行排名信息
@@ -159,6 +163,7 @@ function RankListDlgCreateRow( index, rankInfo )
 	if rankInfo == nill then
 		SetFalse(t_uiInfoContentObj[index]);
 	else
+		t_actorid[index] ={m_actorid=rankInfo.m_actorid,m_city_index=rankInfo.m_city_index}
 		SetTrue(t_uiInfoContentObj[index]);
 		local objs = t_uiInfoContentObj[index]:GetComponent( typeof(Reference) ).relatedGameObject;
 		t_uiInfoContentObj[index]:GetComponent( typeof(UIButton) ).controlID = index;
@@ -213,5 +218,17 @@ function RankListDlgSetPointShow( i_min,i_max,index)
 		SetTrue(m_uiRightBtn);
 	end
 	SetText(m_uiRankTypeText,T(t_selectTypeName[index]));
+end
+--点击每个排行玩家查看详细信息
+function RankListDlgCheckInfo( ncontrolid )
+	if t_actorid[ncontrolid].m_city_index == nil then
+		ActorSearchDlgShow(t_actorid[ncontrolid].m_actorid);
+	else
+		ActorSearchDlgShow(t_actorid[ncontrolid].m_actorid ,t_actorid[ncontrolid].m_city_index )
+	end
 	
 end
+
+
+
+

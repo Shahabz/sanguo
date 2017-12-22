@@ -21,6 +21,8 @@ local m_uiItem = nil; --UnityEngine.GameObject
 local m_uiContentField = nil; --UnityEngine.GameObject
 local m_uiBuyButton = nil; --UnityEngine.GameObject
 local m_uiSendButton = nil; --UnityEngine.GameObject
+local m_uiOpLayer = nil; --UnityEngine.GameObject
+local m_uiOpForbidBtn = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_SelectChannel = 0;
@@ -31,6 +33,9 @@ local m_ChatCacheObj = {};
 
 local m_LastTime = 0;
 local m_horn_itemnum = 0;
+
+local m_OpLayerShow = false;
+local m_clickActorid = 0;
 
 CHAT_MSGTYPE_ACTORCHAT			=	0		-- 消息类型-玩家聊天
 CHAT_MSGTYPE_VS					=	1		-- 消息类型-对战
@@ -69,6 +74,8 @@ function ChatDlgOnEvent( nType, nControlID, value, gameObject )
             ChatDlgClose();
 		elseif nControlID == -2 then
 			ChatDlgHornLayerHide()
+		elseif nControlID == -3 then
+			ChatDlgOpLayerHide()
 			
 		-- 发送
 		elseif nControlID == 1 then
@@ -113,13 +120,25 @@ function ChatDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 喇叭-购买并使用
 		elseif nControlID == 11 then
 			ChatDlgHornBuy()
+			
 		-- 喇叭-发送
 		elseif nControlID == 12 then
 			ChatDlgHornSend()
+		
+		-- 操作-查看信息
+		elseif nControlID == 21 then
+			ChatDlgOpSearch()
+			
+		-- 操作-加为好友
+		elseif nControlID == 22 then
+			ChatDlgOpFriend()
+		-- 操作-屏蔽说话
+		elseif nControlID == 23 then
+			ChatDlgOpForbid()
 			
 		-- 点击玩家
 		elseif nControlID > 1000 then
-			ChatDlgClickActor( nControlID - 1000 )
+			ChatDlgClickActor( nControlID - 1000, value )
         end
 		
 	elseif nType == UI_EVENT_INPUTVALUECHANGED then
@@ -136,6 +155,13 @@ function ChatDlgOnEvent( nType, nControlID, value, gameObject )
 				SetTrue( m_uiContentField.transform:Find("Hint") )
 			else
 				SetFalse( m_uiContentField.transform:Find("Hint") )
+			end
+		end
+		
+	elseif nType == UI_EVENT_SCROLLDRAG then
+		if nControlID == 0 then
+			if m_OpLayerShow == true then
+				ChatDlgOpLayerHide()
 			end
 		end
 	end
@@ -165,7 +191,9 @@ function ChatDlgOnAwake( gameObject )
 	m_uiContentField = objs[17];
 	m_uiBuyButton = objs[18];
 	m_uiSendButton = objs[19];
-
+	m_uiOpLayer = objs[20];
+	m_uiOpForbidBtn = objs[21];
+	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_ChatItem", 5, 5, m_uiUIP_ChatItem);
@@ -210,6 +238,7 @@ function ChatDlgShow()
 	else
 		ChatDlgScrollToBottom( m_uiScrollViewZone );
 	end
+	SetFalse( m_uiOpLayer )
 end
 
 -- 解析内容
@@ -370,6 +399,9 @@ end
 -- 接收消息
 -- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
 function ChatDlgRecv( recvValue )
+	if GetPlayer():CheckBlacklist( recvValue.m_actorid ) == true then
+		return
+	end
 	-- 缓存
 	if m_ChatCacheCount >= 100 then
 		table.remove( m_ChatCache, 1 );
@@ -503,12 +535,61 @@ function ChatDlgOnLinkClickPos( str )
 end
 
 -- 点击玩家
-function ChatDlgClickActor( actorid )
-	-- 自己
-	if GetPlayer().m_actorid == actorid then
-		ActorSearchDlgShow( actorid )
+function ChatDlgClickActor( actorid, gameObject )
+	m_clickActorid = actorid
+	if GetPlayer().m_actorid == m_clickActorid then
+		ActorSearchDlgShow( m_clickActorid )
+	elseif GetPlayer():CheckBlacklist( m_clickActorid ) == true then
+		ChatDlgOpLayerShow( gameObject, 1 )
 	else
-		ActorSearchDlgShow( actorid )
+		ChatDlgOpLayerShow( gameObject, 0 )
 	end
+end
+
+function ChatDlgOpLayerShow( gameObject, isblack )
+	m_OpLayerShow = true
+	SetTrue( m_uiOpLayer )
+	m_uiOpLayer.transform:SetParent( gameObject.transform )
+	m_uiOpLayer.transform.anchoredPosition = Vector2( gameObject.transform.anchoredPosition.x*2, -49 )
+	m_uiOpLayer.transform:SetParent( m_Dlg.transform )
+	
+	if isblack == 1 then
+		SetFalse( m_uiOpForbidBtn )
+	else
+		SetTrue( m_uiOpForbidBtn )
+	end
+end
+
+function ChatDlgOpLayerHide()
+	SetFalse( m_uiOpLayer )
+	m_OpLayerShow = false
+end
+
+-- 操作-查看信息
+function ChatDlgOpSearch()
+	ChatDlgOpLayerHide()
+	-- 自己
+	if GetPlayer().m_actorid == m_clickActorid then
+		ActorSearchDlgShow( m_clickActorid )
+	else
+		ActorSearchDlgShow( m_clickActorid )
+	end
+end
+
+-- 操作-加为好友
+function ChatDlgOpFriend()
+	ChatDlgOpLayerHide()
+	local sendValue = {}
+	sendValue.m_op = 1;
+	sendValue.m_target_actorid = m_clickActorid;
+	sendValue.m_target_cityindex = -1;
+	sendValue.m_target_namelen = 0;
+	sendValue.m_target_name = "";
+	netsend_friendop_C( sendValue )
+end
+
+-- 操作-屏蔽说话
+function ChatDlgOpForbid()
+	ChatDlgOpLayerHide()
 end
 

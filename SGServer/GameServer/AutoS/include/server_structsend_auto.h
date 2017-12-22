@@ -666,6 +666,7 @@ struct _slk_NetS_Quest {
 	int m_awardkind[5];	//奖励
 	int m_awardnum[5];	//奖励
 	int m_nameid;	//名称ID
+	int m_descid;	//描述ID
 };
 typedef struct _slk_NetS_Quest SLK_NetS_Quest;	//任务
 
@@ -1564,6 +1565,27 @@ struct _slk_NetS_ActorSearch {
 };
 typedef struct _slk_NetS_ActorSearch SLK_NetS_ActorSearch;	//玩家查询信息
 
+struct _slk_NetS_BlackInfo {
+	int m_actorid;	//黑名单
+	char m_namelen;	//黑名单
+	char m_name[32];	//黑名单
+	short m_level;	//黑名单
+	char m_nation;	//黑名单
+};
+typedef struct _slk_NetS_BlackInfo SLK_NetS_BlackInfo;	//黑名单
+
+struct _slk_NetS_BlackList {
+	char m_count;	//黑名单列表
+	SLK_NetS_BlackInfo m_list[50];	//黑名单列表
+};
+typedef struct _slk_NetS_BlackList SLK_NetS_BlackList;	//黑名单列表
+
+struct _slk_NetS_BlackListID {
+	char m_count;	//黑名单列表
+	int m_actorid[50];	//黑名单列表
+};
+typedef struct _slk_NetS_BlackListID SLK_NetS_BlackListID;	//黑名单列表只发id
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1733,5 +1755,8 @@ int struct_NetS_RankList_send( char **pptr, int *psize, SLK_NetS_RankList *pValu
 int struct_NetS_FriendInfo_send( char **pptr, int *psize, SLK_NetS_FriendInfo *pValue );
 int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *pValue );
 int struct_NetS_ActorSearch_send( char **pptr, int *psize, SLK_NetS_ActorSearch *pValue );
+int struct_NetS_BlackInfo_send( char **pptr, int *psize, SLK_NetS_BlackInfo *pValue );
+int struct_NetS_BlackList_send( char **pptr, int *psize, SLK_NetS_BlackList *pValue );
+int struct_NetS_BlackListID_send( char **pptr, int *psize, SLK_NetS_BlackListID *pValue );
 
 #endif

@@ -21,6 +21,7 @@ SRC = \
 ../AutoS/src/auto_army.cpp \
 ../AutoS/src/auto_data_quest.cpp \
 ../AutoS/src/auto_map_res.cpp \
+../AutoS/src/auto_data_nation_place.cpp \
 ../AutoS/src/auto_data_equip.cpp \
 ../AutoS/src/auto_data_equip_washrule.cpp \
 ../AutoS/src/auto_nation.cpp \
@@ -190,6 +191,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_quest.o: ../AutoS/src/auto_data_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_res.o: ../AutoS/src/auto_map_res.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_place.o: ../AutoS/src/auto_data_nation_place.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip.o: ../AutoS/src/auto_data_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

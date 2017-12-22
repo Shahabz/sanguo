@@ -17,7 +17,6 @@ struct _techinfo_config {
 				int iron;	//
 				short ability;	//
 				int value;	//
-				int battlepower;	//
 };
 typedef struct _techinfo_config TechInfoConfig;
 

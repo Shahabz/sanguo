@@ -424,6 +424,7 @@ int quest_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_datakind = g_questinfo[questid].datakind;
 		pValue.m_list[pValue.m_count].m_dataoffset = g_questinfo[questid].dataoffset;
 		pValue.m_list[pValue.m_count].m_nameid = g_questinfo[questid].nameid;
+		pValue.m_list[pValue.m_count].m_descid = g_questinfo[questid].descid;
 		if ( flag == QUEST_COMPLETEFLAG_SUCCESS )
 		{
 			pValue.m_list[pValue.m_count].m_value = g_questinfo[questid].needvalue;

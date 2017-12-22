@@ -25,6 +25,11 @@ struct _actor_hero {
 				short assault;	//攻城
 				short defend;	//守城
 				char state;	//状态
+				int bp_hero;	//武将基础战力
+				int bp_equip;	//装备提供战力
+				int bp_nequip;	//国器提供战力
+				int bp_tech;	//科技提供战力
+				int bp_girl;	//女将提供战力
 };
 typedef struct _actor_hero Hero;
 

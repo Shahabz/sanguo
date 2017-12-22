@@ -73,7 +73,8 @@ function Player:Init()
 	self.m_wnquick_ex		=	0;
 	self.m_buildings 		=	{};
 	self.m_buildings_res 	=	{};
-	self.m_attr 			= 	{}
+	self.m_attr 			= 	{};
+	self.m_blacklist		= 	{};
 end
 
 -- 属性变化
@@ -234,6 +235,38 @@ end
 
 function Player:CityLevel()
 	return self.m_buildings[1].m_level;
+end
+
+-- 黑名单
+function Player:SetBlacklist( recvValue )
+	for i=1, recvValue.m_count do
+		local actorid = recvValue.m_actorid[i]
+		self.m_blacklist[actorid] = actorid
+	end
+end
+function Player:AddBlacklist( actorid )
+	if self.m_blacklist == nil then
+		return
+	end
+	self.m_blacklist[actorid] = actorid
+end
+function Player:DelBlacklist( actorid )
+	if self.m_blacklist == nil then
+		return
+	end
+	if self.m_blacklist[actorid] == nil then
+		return
+	end
+	self.m_blacklist[actorid] = nil
+end
+function Player:CheckBlacklist( actorid )
+	if self.m_blacklist == nil then
+		return false
+	end
+	if self.m_blacklist[actorid] == nil then
+		return false
+	end
+	return true
 end
 
 -- 服务器发过来的时间戳

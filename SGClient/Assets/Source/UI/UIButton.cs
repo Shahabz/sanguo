@@ -36,7 +36,7 @@ public class UIButton : Button
             interactable = false;
         }
         //LogUtil.GetInstance().WriteGame( "UIEVENT.CLICK["+uiMod.uiName+"]" + controlID );
-		object[] param = { UIEVENT.CLICK, controlID, 0 };
+		object[] param = { UIEVENT.CLICK, controlID, this };
 		uiMod.OnEvent( param );
         if (audioID == 0)
         {

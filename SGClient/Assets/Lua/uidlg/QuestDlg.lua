@@ -125,12 +125,17 @@ function QuestDlgSetObject( offset, recvValue )
 		SetText( uiName, QuestName( 1, recvValue ) );
 	end
 	
+	-- 先隐藏
+	for i=0, 3, 1 do
+		SetFalse( uiAwardList.transform:GetChild(i) )
+	end
 	-- 奖励
 	local index = 0
 	for i=1, 4, 1 do
 		if recvValue.m_awardkind[i] > 0 then
 			local sprite, color, name = AwardInfo( recvValue.m_awardkind[i] )
 			local awardObj = uiAwardList.transform:GetChild(index);
+			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			SetText( awardObj.transform:Find("Name"), name );
 			SetText( awardObj.transform:Find("Num"), recvValue.m_awardnum[i] );
