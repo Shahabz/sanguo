@@ -31,7 +31,7 @@
 #define CITY_FUNCTION_FRIEND		14	// 好友
 #define CITY_FUNCTION_NATIONEQUIP	15	// 国器
 #define CITY_FUNCTION_RANK			16	// 排行榜
-#define CITY_FUNCTION_AUTOBUILD		17	// 自动建造
+#define CITY_FUNCTION_HEROBUTTON	17	// 英雄
 #define CITY_FUNCTION_CHAT			18	// 聊天
 #define CITY_FUNCTION_WARKEREX		19	// 商业建造队
 #define CITY_FUNCTION_Militiaman	20	// 民兵营

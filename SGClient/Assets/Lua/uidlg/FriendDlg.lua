@@ -66,6 +66,11 @@ function FriendDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		elseif nControlID == 4 then --删除好友
 		
+		elseif nControlID == 5 then --获取好友列表
+			FriendDlgClear();
+			FriendDlgAskList();
+		elseif nControlID == 6 then --添加好友
+			FriendDlgAddFriends();
 		elseif nControlID < FRIENDLIST_REFUSE then
 			FriendDlgClickShow(nControlID);
 		elseif nControlID < FRIENDLIST_ACCEPT then
@@ -127,8 +132,8 @@ end
 ----------------------------------------
 function FriendDlgShow()
 	FriendDlgOpen()
+	FriendDlgClear()
 	FriendDlgAskList()
-	FriendDlgClear();
 end
 
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
@@ -153,13 +158,11 @@ function FriendDlgRecv( recvValue )
 				end
 				return r 
 		end);
-		
-		
-		t_recvValue = recvValue;
+	t_recvValue = recvValue;
 	for i=1,#t_recvValue.m_list,1 do
 		local uiObj = m_ObjectPool:Get( "UIP_Friend" );
 		uiObj.transform:SetParent( m_uiContent.transform );	
-		uiObj.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_BUTTONID + i;
+		SetControlID(uiObj,FRIENDLIST_BUTTONID + i);
 		m_uiFriendObj[FRIENDLIST_BUTTONID + i] = uiObj;
 		local recvList = t_recvValue.m_list[i];
 		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -171,19 +174,19 @@ function FriendDlgRecv( recvValue )
 		local uiAcceptBtn = objs[5]
 		local uiRefuseBtn = objs[6]
 		t_actorid[FRIENDLIST_BUTTONID + i] ={m_actorid=recvList.m_actorid,m_city_index=recvList.m_city_index}
-		SetImage(uiHeroPic,HeroHeadSprite(recvList.m_shape));
+		SetImage(uiHeroPic,PlayerHeadSprite(recvList.m_shape));
 		SetImage(uiPlacePic,PlaceSprite(recvList.m_place));
 		SetLevel(uiLevelText,recvList.m_level);
 		SetText(uiHeroNameText,recvList.m_name);
-		SetText(uiBattleText,recvList.m_battlepower);
+		SetText(uiBattleText,F(1990,recvList.m_battlepower));
 		if recvList.m_ask == 0 then
 			SetFalse(uiAcceptBtn)
 			SetFalse(uiRefuseBtn)
 		else
 			SetTrue(uiAcceptBtn)
 			SetTrue(uiRefuseBtn)
-			uiAcceptBtn.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_ACCEPT + i;
-			uiRefuseBtn.transform:GetComponent( typeof(UIButton) ).controlID = FRIENDLIST_REFUSE + i;
+			SetControlID(uiAcceptBtn,FRIENDLIST_ACCEPT + i);
+			SetControlID(uiRefuseBtn,FRIENDLIST_ACCEPT + i);
 		end
 	end
 end
@@ -305,6 +308,10 @@ function FriendDlgClear()
 	m_uiContent.transform.localPosition = Vector2.zero
 	m_uiFriendObj ={}; --清空好友列表Obj
 	t_actorid = {};	--清空好友列表m_actorid和m_city_index值 
+end
+--添加好友
+function FriendDlgAddFriends()
+	print("AddFriends");
 end
 
 

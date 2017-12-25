@@ -307,7 +307,7 @@ end
 
 -- 爵位形象
 function PlaceSprite( place )
-	local name = string.format("p%d", place );
+	local name = string.format("p%d", place+1 );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );
@@ -317,6 +317,6 @@ end
 
 -- 爵位形象
 function PlaceRichText( place )
-	local name = string.format("<icon=p%d>", place );
+	local name = string.format("<icon=p%d>", place+1 );
 	return name;
 end

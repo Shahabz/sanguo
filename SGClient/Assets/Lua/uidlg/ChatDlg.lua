@@ -314,7 +314,7 @@ function ChatDlgAddMsg( uiRoot, recvValue )
 	end
 	
 	-- 名字等级区域等信息
-	SetRichText( uiName, PlaceRichText( recvValue.m_place+1 ).."<color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>"..MapZoneName( recvValue.m_zone ).."</color>"..nation );
+	SetRichText( uiName, PlaceRichText( recvValue.m_place ).."<color=00FFC0FF>Lv."..recvValue.m_level.." "..recvValue.m_name.."</color> <color=FF00EDFF>"..MapZoneName( recvValue.m_zone ).."</color>"..nation );
 	
 	-- 内容
 	if recvValue.m_msgtype == CHAT_MSGTYPE_VS or recvValue.m_msgtype == CHAT_MSGTYPE_SPY then

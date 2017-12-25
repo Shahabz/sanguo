@@ -9,7 +9,7 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int actor_friend_load_auto( int actorid, int actor_index, LPCB_GETACTORFRIEND pCB_GetActorFriend, const char *pTab )
+int actor_friend_load_auto( int actorid, int city_index, LPCB_GETACTORFRIEND pCB_GetActorFriend, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
@@ -31,7 +31,7 @@ int actor_friend_load_auto( int actorid, int actor_index, LPCB_GETACTORFRIEND pC
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pActorFriend = pCB_GetActorFriend( actor_index, atoi(row[0]) );
+		pActorFriend = pCB_GetActorFriend( city_index, atoi(row[1]) );
 		if( pActorFriend == NULL )
 			continue;
 		pActorFriend->actorid = atoi(row[offset++]);
@@ -42,7 +42,7 @@ int actor_friend_load_auto( int actorid, int actor_index, LPCB_GETACTORFRIEND pC
 	mysql_free_result( res );
 	return 0;
 }
-int actor_friend_save_auto( ActorFriend *pActorFriend, const char *pTab, FILE *fp )
+int actor_friend_save_auto( int actorid, int offset, ActorFriend *pActorFriend, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
@@ -72,7 +72,7 @@ RE_ACTORFRIEND_UPDATE:
 	return 0;
 }
 
-int actor_friend_batch_save_auto( ActorFriend *pActorFriend, int maxcount, const char *pTab, FILE *fp )
+int actor_friend_batch_save_auto( int actorid, ActorFriend *pActorFriend, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	if ( pActorFriend == NULL )

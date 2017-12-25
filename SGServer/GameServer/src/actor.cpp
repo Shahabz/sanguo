@@ -265,7 +265,7 @@ int actor_save( int actor_index, int savecity, FILE *fp )
 	equip_save( actor_index, fp );
 
 	// 保存好友数据
-	actor_friend_batch_save_auto( g_actors[actor_index].friends, ACTOR_FRIEND_MAXCOUNT, "actor_friend", fp );
+	actor_friend_batch_save_auto( g_actors[actor_index].actorid, g_actors[actor_index].friends, ACTOR_FRIEND_MAXCOUNT, "actor_friend", fp );
 	return 0;
 }
 
@@ -789,6 +789,9 @@ int actor_entercity( int actor_index )
 
 	// 发送可寻访标记
 	hero_visit_snedflag( actor_index );
+
+	// 好友离线事件
+	actor_friend_loadevent( actor_index );
 	return 0;
 }
 

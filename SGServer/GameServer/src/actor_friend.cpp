@@ -126,7 +126,7 @@ int actor_friend_enevt( int actor_index, int event, int target_actorid )
 		{
 			if ( g_actors[actor_index].friends[tmpi].friend_actorid <= 0 )
 			{
-				g_actors[actor_index].friends[tmpi].actorid = g_actors[target_actorid].actorid;
+				g_actors[actor_index].friends[tmpi].actorid = g_actors[actor_index].actorid;
 				g_actors[actor_index].friends[tmpi].friend_actorid = target_actorid;
 				g_actors[actor_index].friends[tmpi].offset = tmpi;
 				g_actors[actor_index].friends[tmpi].city_index = -1;
@@ -432,7 +432,7 @@ int actor_friend_sendlist( int actor_index )
 		int city_index = g_actors[actor_index].friends[tmpi].city_index;
 		if ( city_index < 0 || city_index >= g_city_maxcount )
 		{
-			city_index = city_getindex_withactorid( g_actors[actor_index].friends[tmpi].actorid );
+			city_index = city_getindex_withactorid( g_actors[actor_index].friends[tmpi].friend_actorid );
 			g_actors[actor_index].friends[tmpi].city_index = city_index;
 		}
 		if ( city_index < 0 || city_index >= g_city_maxcount )
