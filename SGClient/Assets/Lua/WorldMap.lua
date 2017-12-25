@@ -143,6 +143,8 @@ function WorldMap.Clear()
     
     m_LastPosX = nil;
     m_LastPosY = nil;
+	
+	WorldMapMini.Delete()
 	--collectgarbage("collect");
 end
 
@@ -324,6 +326,9 @@ function WorldMap.Start( Prefab )
 	
 	-- 显示世界地图界面
 	MainDlgShowMap();
+	
+	-- 显示小地图
+	WorldMapMini.Create()
 	
 	-- 任务检查
 	QuestClickCheck( 2 )

@@ -181,8 +181,12 @@ int actor_friend_ask( int actor_index, int target_actorid, const char *target_na
 	else
 	{
 		target_city_index = city_getindex_withactorname( target_name );
+		if ( target_city_index >= 0 && target_city_index < g_city_maxcount )
+		{
+			target_actorid = g_city[target_city_index].actorid;
+		}
 	}
-	if ( target_city_index < 0 )
+	if ( target_city_index < 0 || target_actorid <= 0 )
 	{
 		actor_notify_alert( actor_index, 2055 ); // Íæ¼Ò²»´æÔÚ
 		return -1;

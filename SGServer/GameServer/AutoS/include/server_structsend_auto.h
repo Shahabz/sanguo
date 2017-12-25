@@ -1586,6 +1586,15 @@ struct _slk_NetS_BlackListID {
 };
 typedef struct _slk_NetS_BlackListID SLK_NetS_BlackListID;	//黑名单列表只发id
 
+struct _slk_NetS_NationEquip {
+	short m_nequip_level[6];	//国器信息
+	short m_nequip_exp[6];	//国器信息
+	char m_nequip_kind;	//国器信息
+	char m_nequip_pro;	//国器信息
+	int m_nequip_sec;	//国器信息
+};
+typedef struct _slk_NetS_NationEquip SLK_NetS_NationEquip;	//国器信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1758,5 +1767,6 @@ int struct_NetS_ActorSearch_send( char **pptr, int *psize, SLK_NetS_ActorSearch 
 int struct_NetS_BlackInfo_send( char **pptr, int *psize, SLK_NetS_BlackInfo *pValue );
 int struct_NetS_BlackList_send( char **pptr, int *psize, SLK_NetS_BlackList *pValue );
 int struct_NetS_BlackListID_send( char **pptr, int *psize, SLK_NetS_BlackListID *pValue );
+int struct_NetS_NationEquip_send( char **pptr, int *psize, SLK_NetS_NationEquip *pValue );
 
 #endif

@@ -2311,3 +2311,15 @@ int struct_NetS_BlackListID_send( char **pptr, int *psize, SLK_NetS_BlackListID 
 	return 0;
 }
 
+int struct_NetS_NationEquip_send( char **pptr, int *psize, SLK_NetS_NationEquip *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_nequip_level, 6*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_nequip_exp, 6*sizeof(short), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_pro, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nequip_sec, (*psize) );
+	return 0;
+}
+

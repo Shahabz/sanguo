@@ -292,6 +292,7 @@ public static class CustomSettings
 		_GT(typeof(MapBorder)),
 		_GT(typeof(MapUnitMove)),
 		_GT(typeof(WorldMapCamera)),
+		_GT(typeof(WorldMapMiniCamera)),
 		_GT(typeof(WorldMapThumbCamera)),
 		_GT(typeof(ScreenBlur)),
 

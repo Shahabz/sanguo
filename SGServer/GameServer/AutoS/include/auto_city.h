@@ -90,9 +90,10 @@ struct _city {
 				int rb_food;	//给予的重建家园资源
 				short rb_df;	//给予的重建家园资源
 				short nequip_level[6];	//国器等级
-				char nequip_pro[6];	//国器进度
-				char nequip_kind;	//正在升级的国器
-				int nequip_sec;	//国器升级时间
+				char nequip_exp[6];	//国器经验
+				char nequip_kind;	//正在改造的国器
+				char nequip_pro;	//正在改造的进度
+				int nequip_sec;	//国器改造时间
 				short guardsec;	//城墙守卫冷却时间
 				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄

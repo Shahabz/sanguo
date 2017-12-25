@@ -760,6 +760,11 @@ function netrecv_blacklistid_C( buffer )
 	proc_blacklistid_C( recvValue );
 end
 
+function netrecv_nationequip_C( buffer )
+	local recvValue = struct_NetS_NationEquip_recv( buffer );
+	proc_nationequip_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -913,6 +918,7 @@ Proc_Command = {
 	[CMDS_BLACKINFO]=netrecv_blackinfo_C;
 	[CMDS_BLACKLIST]=netrecv_blacklist_C;
 	[CMDS_BLACKLISTID]=netrecv_blacklistid_C;
+	[CMDS_NATIONEQUIP]=netrecv_nationequip_C;
 }
 
 function in_proc_command_C( cmd, buffer )

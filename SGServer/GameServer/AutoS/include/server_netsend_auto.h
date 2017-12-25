@@ -154,6 +154,7 @@ int netsend_actorsearch_S( int actor_index, char send_type, SLK_NetS_ActorSearch
 int netsend_blackinfo_S( int actor_index, char send_type, SLK_NetS_BlackInfo *pValue );
 int netsend_blacklist_S( int actor_index, char send_type, SLK_NetS_BlackList *pValue );
 int netsend_blacklistid_S( int actor_index, char send_type, SLK_NetS_BlackListID *pValue );
+int netsend_nationequip_S( int actor_index, char send_type, SLK_NetS_NationEquip *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

@@ -1739,3 +1739,8 @@ function proc_blacklistid_C( recvValue )
 	GetPlayer():SetBlacklist( recvValue )
 end
 
+-- m_nequip_level={[6]},m_nequip_exp={[6]},m_nequip_kind=0,m_nequip_pro=0,m_nequip_sec=0,
+function proc_nationequip_C( recvValue )
+	-- process.
+end
+

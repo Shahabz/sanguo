@@ -57,5 +57,6 @@ CREATE TABLE `actor` (
   `hv_ln` tinyint(3) NOT NULL DEFAULT '0' COMMENT '良将寻访次数',
   `hv_hn` tinyint(3) NOT NULL DEFAULT '0' COMMENT '神将寻访次数',
   `hv_pro` smallint(6) NOT NULL DEFAULT '0' COMMENT '当前寻访进度',
+  `vipbag` int(11) NOT NULL DEFAULT '0' COMMENT 'vip礼包是否购买',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

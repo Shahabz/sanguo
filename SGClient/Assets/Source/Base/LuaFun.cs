@@ -325,6 +325,21 @@ public class LuaFun
 	}
 
 	/// <summary>
+	/// 世界地图初始化
+	/// </summary>
+	private static LuaFunction _worldMapMiniStart = null;
+	public static LuaFunction worldMapMiniStart
+	{
+		get
+		{
+			if ( _worldMapMiniStart == null )
+				_worldMapMiniStart = eye.luaManager.GetFunction( "WorldMapMini.Start" );
+
+			return _worldMapMiniStart;
+		}
+	}
+
+	/// <summary>
 	/// 世界地图缩略图
 	/// </summary>
 	private static LuaFunction _worldMapThumbStart = null;
@@ -414,6 +429,7 @@ public class LuaFun
 		_worldMapThumbStart = null;
 		_worldMapThumbOnClick = null;
 		_worldMapThumbOnDrag = null;
+		_worldMapMiniStart = null;
 		_fightLogic = null;
     }
 }

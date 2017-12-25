@@ -9,6 +9,7 @@ struct _nationequipinfo_config {
 				short actorlevel;	//
 				short itemkind;	//
 				int itemnum;	//
+				short exp;	//
 				short progress;	//
 				int iron;	//
 				int sec;	//

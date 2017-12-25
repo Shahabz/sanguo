@@ -44,6 +44,7 @@ SRC = \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
+../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_army_group.cpp \
 ../AutoS/src/auto_kingwar_town.cpp \
@@ -61,6 +62,7 @@ SRC = \
 ../AutoS/src/auto_actor_friend.cpp \
 ../AutoS/src/auto_data_weather.cpp \
 ../AutoS/src/auto_data_map_towninfo.cpp \
+../AutoS/src/auto_data_vipbag.cpp \
 ../AutoS/src/auto_world_boss.cpp \
 ../AutoS/src/global_netsend_auto.cpp \
 ../AutoS/src/auto_data_map_resinfo.cpp \
@@ -238,6 +240,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor_hero.o: ../AutoS/src/auto_actor_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_army_group.o: ../AutoS/src/auto_army_group.cpp 
@@ -271,6 +275,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_weather.o: ../AutoS/src/auto_data_weather.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_vipbag.o: ../AutoS/src/auto_data_vipbag.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_world_boss.o: ../AutoS/src/auto_world_boss.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

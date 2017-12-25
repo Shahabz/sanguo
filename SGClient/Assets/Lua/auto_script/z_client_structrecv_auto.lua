@@ -2068,3 +2068,19 @@ function struct_NetS_BlackListID_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_NationEquip_recv( buffer )
+	local recvValue = {};
+	recvValue.m_nequip_level={};
+	for tmpi=1,6,1 do
+		recvValue.m_nequip_level[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_nequip_exp={};
+	for tmpi=1,6,1 do
+		recvValue.m_nequip_exp[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_nequip_kind = buffer:ReadSByte();
+	recvValue.m_nequip_pro = buffer:ReadSByte();
+	recvValue.m_nequip_sec = buffer:ReadInt();
+	return recvValue;
+end
+
