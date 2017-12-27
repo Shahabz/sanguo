@@ -44,8 +44,8 @@ struct _actor {
 				short storyid;	//副本进度章节
 				char story_star[128];	//精英副本星级
 				char story_hero[32];	//招募副本
-				char story_resnum[32];	//资源副本次数
 				int story_restime[32];	//资源副本时间
+				char story_resnum[32];	//资源副本次数
 				char story_resreset[32];	//资源副本重置次数
 				char story_itemnum[64];	//道具副本掉落次数
 				char story_drawing[16];	//装备图纸副本是否购买
@@ -62,6 +62,9 @@ struct _actor {
 				char hv_hn;	//神将寻访次数
 				short hv_pro;	//当前寻访进度
 				int vipbag;	//vip礼包是否购买
+				char shop_useitem;	//商店是否优先使用道具购买符
+				int charge_point;	//充值积分
+				short pay_maxtier;	//单笔付费最大级别
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

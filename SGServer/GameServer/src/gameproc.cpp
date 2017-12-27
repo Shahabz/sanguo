@@ -53,6 +53,7 @@
 #include "nation.h"
 #include "king_war.h"
 #include "rank.h"
+#include "pay.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -494,6 +495,59 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// VIP礼包
+	if ( vipbag_init_auto() < 0 )
+	{
+		printf_msg( "vipbag_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 多国支付价格初始化
+	if ( payprice_init() >= 0 )
+		printf_msg( "PayPrice Module ready!" );
+	else
+	{
+		printf_msg( "PayPrice Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 8 );
+
+	// 多国支付地区信息
+	if ( paycountry_init() >= 0 )
+		printf_msg( "paycountry_init Module ready!" );
+	else
+	{
+		printf_msg( "paycountry_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 9 );
+
+	// 商品初始化
+	if ( paygoods_init_auto() >= 0 )
+		printf_msg( "paygoods_init_auto Module ready!" );
+	else
+	{
+		printf_msg( "paygoods_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 10 );
+
+	// 支付商店初始化
+	if ( paystore_init_auto() >= 0 )
+		printf_msg( "paystore_init_auto Module ready!" );
+	else
+	{
+		printf_msg( "paystore_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 11 );
+
 	// 募兵时长
 	if ( trainlonginfo_init_auto() < 0 )
 	{
@@ -649,6 +703,15 @@ int process_init( int max_connection )
 	if ( kingwartowninfo_init_auto() < 0 )
 	{
 		printf_msg( "kingwartowninfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 商店
+	if ( shop_init_auto() < 0 )
+	{
+		printf_msg( "shop_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

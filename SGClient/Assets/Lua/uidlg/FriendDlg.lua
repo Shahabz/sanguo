@@ -7,6 +7,8 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiFrendsLayer = nil; --UnityEngine.GameObject
 local m_uiClickShowIcon = nil; --UnityEngine.GameObject
 local m_uiScroll = nil; --UnityEngine.GameObject
+local m_uiAddFriendLayer = nil; --UnityEngine.GameObject
+local m_uiNameInput = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiFriendObj = {};
@@ -19,7 +21,7 @@ local t_selectObjID = nil;
 
 -- m_op=0,m_target_actorid=0,m_target_cityindex=0,m_target_namelen=0,m_target_name="[m_target_namelen]",
 local sendValue = {};
-sendValue.m_op = 0;
+sendValue.m_op = 0;  
 sendValue.m_target_actorid = 0;
 sendValue.m_target_cityindex = 0;
 sendValue.m_target_namelen = 0;
@@ -35,6 +37,9 @@ end
 function FriendDlgClose()
 	if m_Dlg == nil then
 		return;
+	end
+	if IsActive(m_uiAddFriendLayer) then
+		SetFalse(m_uiAddFriendLayer);
 	end
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
@@ -71,6 +76,10 @@ function FriendDlgOnEvent( nType, nControlID, value, gameObject )
 			FriendDlgAskList();
 		elseif nControlID == 6 then --添加好友
 			FriendDlgAddFriends();
+		elseif nControlID == 7 then--关闭添加好友页面
+			FriendDlgCloseAddFriends();
+		elseif nControlID == 8 then
+			FriendDlgMakeAddFriends();
 		elseif nControlID < FRIENDLIST_REFUSE then
 			FriendDlgClickShow(nControlID);
 		elseif nControlID < FRIENDLIST_ACCEPT then
@@ -96,6 +105,8 @@ function FriendDlgOnAwake( gameObject )
 	m_uiFrendsLayer = objs[2];
 	m_uiClickShowIcon = objs[3];
 	m_uiScroll = objs[4];
+	m_uiAddFriendLayer = objs[5];
+	m_uiNameInput = objs[6];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Friend", 6, 6, m_uiUIP_Friend);
@@ -138,7 +149,6 @@ end
 
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
 function FriendDlgRecv( recvValue )
-
 	table.sort(recvValue.m_list,function(a,b)
 				local r
 				local al = tonumber(a.m_level);
@@ -230,6 +240,18 @@ function FriendDlgDelete( actorid, cityindex )
 	sendValue.m_target_name = "";
 	netsend_friendop_C( sendValue )
 end
+--加为好友
+function FriendDlgOpFriend(name,namelen)
+	sendValue.m_op = 1;
+	sendValue.m_target_actorid = 0;
+	sendValue.m_target_cityindex = -1;
+	sendValue.m_target_namelen = namelen;
+	sendValue.m_target_name = name;
+	netsend_friendop_C( sendValue )
+end
+
+
+
 --点击好友列表弹出进阶操作
 function FriendDlgClickShow( ncontrolid )
 	if t_recvValue.m_list[ncontrolid - FRIENDLIST_BUTTONID ].m_ask == 1 then
@@ -266,6 +288,7 @@ function FriendDlgCheckInfo()
 end
 --从好友列表中删除
 function FriendDlgDeleteFriend()
+	MsgBox(T(1991),function()
 	if t_selectRecvValue == nil then
 		print("t_selectRecvValue==nil");
 		return;
@@ -278,6 +301,7 @@ function FriendDlgDeleteFriend()
 	local city_index = t_selectRecvValue.m_city_index;
 	FriendDlgDelete(actorid,city_index);
 	FriendDlgCloseClickShow();
+	end);
 end
 --向好友发邮件
 function FriendDlgSendMail()
@@ -286,9 +310,8 @@ function FriendDlgSendMail()
 	end
 	local actorid = t_selectRecvValue.m_actorid;
 	local name = t_selectRecvValue.m_name;
-	local cityid = t_selectRecvValue.m_city_index;
-	--local nation = t_selectRecvValue.m_nation; 
-	MailSendDlgShow(actorid,name,cityid);
+	local nation = GetPlayer().m_nation; 
+	MailSendDlgShow(actorid,name,nation);
 	FriendDlgCloseClickShow();
 end
 --同意
@@ -326,10 +349,33 @@ function FriendDlgClear()
 end
 --添加好友
 function FriendDlgAddFriends()
+	SetTrue(m_uiAddFriendLayer);
 	FriendDlgCloseClickShow();
-	print("AddFriends");
 end
-
+--关闭添加好友界面
+function FriendDlgCloseAddFriends()
+	SetFalse(m_uiAddFriendLayer);
+	m_uiNameInput.transform:GetComponent("UIInputField" ).text = " "
+end
+--确定添加好友
+function FriendDlgMakeAddFriends()
+	local playerName = m_uiNameInput.transform:GetComponent("UIInputField" ).text;
+		-- 非法检查
+	local namelen = string.len( playerName );
+	if namelen < 4 or namelen > 18 then
+		pop(T(790))
+		return
+	end
+	if string.checksign( playerName ) == false then
+		pop(T(788))
+		return
+	end
+	if Utils.MaskWordCheck( playerName ) == false then
+		pop(T(789))
+		return;
+	end
+	FriendDlgOpFriend(playerName,namelen);
+end
 
 
 

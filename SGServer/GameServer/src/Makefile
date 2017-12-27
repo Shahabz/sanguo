@@ -32,7 +32,6 @@ SRC = \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
-../AutoS/src/auto_data_paycountry.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
@@ -43,6 +42,7 @@ SRC = \
 ../AutoS/src/auto_data_city_tech.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
+../AutoS/src/auto_data_paystore.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
@@ -105,6 +105,7 @@ map_event.cpp \
 timegmcmd.cpp \
 map_enemy.cpp \
 login_net.cpp \
+pay.cpp \
 activity.cpp \
 rank.cpp \
 map.cpp \
@@ -119,6 +120,7 @@ wqueue.cpp \
 actor_times.cpp \
 army.cpp \
 account.cpp \
+shop.cpp \
 zoneunit.cpp \
 map_res.cpp \
 world_boss.cpp \
@@ -216,8 +218,6 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
-../AutoS/src/auto_data_paycountry.o: ../AutoS/src/auto_data_paycountry.cpp 
-	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_eventinfo.o: ../AutoS/src/auto_data_map_eventinfo.cpp 
@@ -237,6 +237,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_city_building_res.o: ../AutoS/src/auto_city_building_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_world_questinfo.o: ../AutoS/src/auto_data_world_questinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -362,6 +364,8 @@ map_enemy.o: map_enemy.cpp
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 login_net.o: login_net.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+pay.o: pay.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 activity.o: activity.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 rank.o: rank.cpp 
@@ -389,6 +393,8 @@ actor_times.o: actor_times.cpp
 army.o: army.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 account.o: account.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+shop.o: shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 zoneunit.o: zoneunit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

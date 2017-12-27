@@ -8,7 +8,8 @@ struct _vipinfo {
 				int exp;	//
 				int ability[6];	//
 				int value[6];	//
-				short goodsid;	//
+				int buykind[6];	//
+				short buynum[6];	//
 };
 typedef struct _vipinfo VipInfo;
 

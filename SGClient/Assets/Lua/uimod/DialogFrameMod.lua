@@ -17,6 +17,7 @@ function DialogFrameModOnEvent( nType, nControlID, value, gameObject )
 			HelpDlgShowBySystem( m_helptable )
 			
 		elseif nControlID == 2 then
+			PayDlgShow()
 		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then

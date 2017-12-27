@@ -111,5 +111,10 @@ CREATE TABLE `city` (
   `ofquick1` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
   `ofquick2` int(11) NOT NULL DEFAULT '0' COMMENT '建筑官员已经使用的加速时间',
   `signature` varbinary(128) NOT NULL DEFAULT '' COMMENT '个性签名',
+  `wcard` smallint(6) NOT NULL DEFAULT '0' COMMENT '周卡天数',
+  `mcard` smallint(6) NOT NULL DEFAULT '0' COMMENT '月卡天数',
+  `bag_gid` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包',
+  `bag_time` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包剩余时间',
+  `bag_num` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包剩余次数',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

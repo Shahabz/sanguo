@@ -2043,6 +2043,7 @@ function struct_NetS_BlackInfo_recv( buffer )
 	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_shape = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2081,6 +2082,104 @@ function struct_NetS_NationEquip_recv( buffer )
 	recvValue.m_nequip_kind = buffer:ReadSByte();
 	recvValue.m_nequip_pro = buffer:ReadSByte();
 	recvValue.m_nequip_sec = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ShopItem_recv( buffer )
+	local recvValue = {};
+	recvValue.m_offset = buffer:ReadShort();
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_awardnum = buffer:ReadInt();
+	recvValue.m_token = buffer:ReadShort();
+	recvValue.m_original_token = buffer:ReadShort();
+	recvValue.m_itemkind = buffer:ReadShort();
+	recvValue.m_sale = buffer:ReadShort();
+	recvValue.m_today_buynum = buffer:ReadSByte();
+	recvValue.m_today_buynum_max = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_ShopList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ShopItem_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_useitem = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_PayStoreGoods_recv( buffer )
+	local recvValue = {};
+	recvValue.m_goodsid = buffer:ReadShort();
+	recvValue.m_price = buffer:ReadInt();
+	recvValue.m_token = buffer:ReadInt();
+	recvValue.m_day = buffer:ReadShort();
+	recvValue.m_nameid = buffer:ReadShort();
+	recvValue.m_icon = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_PayStore_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_PayStoreGoods_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_GoodsInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_goodsid = buffer:ReadShort();
+	recvValue.m_price = buffer:ReadInt();
+	recvValue.m_nameid = buffer:ReadInt();
+	recvValue.m_descid = buffer:ReadInt();
+	recvValue.m_icon = buffer:ReadSByte();
+	recvValue.m_sale = buffer:ReadShort();
+	recvValue.m_worth = buffer:ReadInt();
+	recvValue.m_bag_time = buffer:ReadInt();
+	recvValue.m_bag_num = buffer:ReadSByte();
+	recvValue.m_awardcount = buffer:ReadSByte();
+	recvValue.m_award = {};
+	for tmpi=1,recvValue.m_awardcount,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_AwardInfo_recv( buffer );
+		table.insert( recvValue.m_award, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_PayStoreActivity_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_GoodsInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_PayOrder_recv( buffer )
+	local recvValue = {};
+	recvValue.m_orderid_len = buffer:ReadSByte();
+	recvValue.m_orderid = buffer:ReadStringWithLen( recvValue.m_orderid_len );
+	recvValue.m_ext_len = buffer:ReadSByte();
+	recvValue.m_ext = buffer:ReadStringWithLen( recvValue.m_ext_len );
+	recvValue.m_goodsid = buffer:ReadShort();
+	recvValue.m_productid = buffer:ReadInt();
+	recvValue.m_nameid = buffer:ReadInt();
+	recvValue.m_descid = buffer:ReadInt();
+	recvValue.m_price = buffer:ReadInt();
 	return recvValue;
 end
 

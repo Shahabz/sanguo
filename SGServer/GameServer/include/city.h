@@ -15,6 +15,7 @@
 #define CITY_HELPDEFENSE_MAX		32	// 最多受多少支部队驻防
 #define CITY_MAPEVENT_MAX			6	// 地图事件最大数量
 #define CITY_MAPEVENT_ING_MAX		2	// 地图事件正在进行数量
+#define CITY_BAG_MAX				8	// 推送的礼包数量
 
 // 功能入口
 #define	CITY_FUNCTION_SMITHY		0	// 铁匠铺
@@ -50,6 +51,8 @@
 
 #define CITY_STATE_FIRE				0x01	// 着火中
 #define CITY_STATE_ARMYGROUP		0x02	// 被城战中
+
+#define CITY_SFLAG_FRISTPAY			1		// 首次充值
 
 // 城池领主类型
 typedef enum

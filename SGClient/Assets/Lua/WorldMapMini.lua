@@ -46,11 +46,11 @@ end
 
 -- 删除小地图
 function WorldMapMini.Delete()
-    WorldMapMini.m_nMapUnitList = {};
-	WorldMapMini.QueueClear();
-    MapCamera = nil;
-    m_LastPosX = nil;
-    m_LastPosY = nil;
+    --WorldMapMini.m_nMapUnitList = {};
+	--WorldMapMini.QueueClear();
+    --MapCamera = nil;
+    --m_LastPosX = nil;
+    --m_LastPosY = nil;
 	--GameObject.Destroy( WorldMapMini.prefab.gameObject );
 end
 

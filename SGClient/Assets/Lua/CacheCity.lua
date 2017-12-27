@@ -89,6 +89,7 @@ function City.BuildingSelect( transform )
 		elseif building.kind == BUILDING_Fangshi then -- 坊市
 			
 		elseif building.kind == BUILDING_Shop then -- 商店
+			ShopDlgShow()
 			
 		elseif building.kind == BUILDING_Hero then -- 聚贤馆
 			HeroListDlgShow( HEROLIST_PATH_HERO_LIST );

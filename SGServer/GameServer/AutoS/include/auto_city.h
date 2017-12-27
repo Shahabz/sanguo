@@ -120,6 +120,11 @@ struct _city {
 				int offree[3];	//建筑官员免费情况
 				int ofquick[3];	//建筑官员已经使用的加速时间
 				char signature[128];	//个性签名
+				short wcard;	//周卡天数
+				short mcard;	//月卡天数
+				short bag_gid[8];	//推送的礼包
+				int bag_time[8];	//推送的礼包剩余时间
+				char bag_num[8];	//推送的礼包剩余次数
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

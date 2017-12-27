@@ -10,9 +10,12 @@ int actor_get_sflag( int actor_index, int offset );
 
 // char 类型的每日数据（每天更新）
 #define MAX_TODAY_COUNT		127
-#define TODAY_CHAR_BUYBODY		0 // 今天购买体力次数
-#define	TODAY_CHAR_LOGINAWARD	1 // 今天登陆奖励
-#define TODAY_CHAR_WORLDBOSS	2 // 今天是否打过世界boss
+#define TODAY_CHAR_BUYBODY			0 // 今天购买体力次数
+#define	TODAY_CHAR_LOGINAWARD		1 // 今天登陆奖励
+#define TODAY_CHAR_WORLDBOSS		2 // 今天是否打过世界boss
+#define TODAY_CHAR_ITEMBUY_BEGIN	11	// 今天购买指定道具次数
+#define TODAY_CHAR_ITEMBUY_END		31	// 今天购买指定道具次数
+
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );

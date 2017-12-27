@@ -1730,6 +1730,7 @@ end
 -- m_count=0,m_list={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,[m_count]},
 function proc_blacklist_C( recvValue )
 	-- process.
+	print("proc_blacklist_C")
 	BlackListDlgRecv( recvValue )
 end
 
@@ -1741,6 +1742,33 @@ end
 
 -- m_nequip_level={[6]},m_nequip_exp={[6]},m_nequip_kind=0,m_nequip_pro=0,m_nequip_sec=0,
 function proc_nationequip_C( recvValue )
+	-- process.
+end
+
+-- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_original_token=0,m_itemkind=0,m_sale=0,[m_count]},
+function proc_shoplist_C( recvValue )
+	-- process.
+	ShopDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_goodsid=0,m_price=0,m_token=0,m_day=0,m_nameid=0,m_icon=0,[m_count]},
+function proc_paystore_C( recvValue )
+	-- process.
+	PayDlgRecv( recvValue )
+end
+
+-- m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},
+function proc_goodsinfo_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},[m_count]},
+function proc_paystoreactivity_C( recvValue )
+	-- process.
+end
+
+-- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
+function proc_payorder_C( recvValue )
 	-- process.
 end
 

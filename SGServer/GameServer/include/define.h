@@ -13,6 +13,8 @@
 #include "auto_data_equip_wash.h"
 #include "auto_data_equip_washrule.h"
 #include "auto_data_platinfo.h"
+#include "auto_data_paygoods.h"
+#include "auto_data_paystore.h"
 #include "auto_data_upgrade.h"
 #include "auto_data_building_res_unlock.h"
 #include "auto_data_building_upgrade.h"

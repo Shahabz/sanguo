@@ -133,8 +133,8 @@
     <ClCompile Include="AutoS\src\auto_data_official_forging.cpp" />
     <ClCompile Include="AutoS\src\auto_data_official_gov.cpp" />
     <ClCompile Include="AutoS\src\auto_data_official_tech.cpp" />
-    <ClCompile Include="AutoS\src\auto_data_paycountry.cpp" />
     <ClCompile Include="AutoS\src\auto_data_paygoods.cpp" />
+    <ClCompile Include="AutoS\src\auto_data_paystore.cpp" />
     <ClCompile Include="AutoS\src\auto_data_platinfo.cpp" />
     <ClCompile Include="AutoS\src\auto_data_quest.cpp" />
     <ClCompile Include="AutoS\src\auto_data_quest_talk.cpp" />
@@ -215,8 +215,10 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mapunit.cpp" />
     <ClCompile Include="src\nation.cpp" />
+    <ClCompile Include="src\pay.cpp" />
     <ClCompile Include="src\quest.cpp" />
     <ClCompile Include="src\rank.cpp" />
+    <ClCompile Include="src\shop.cpp" />
     <ClCompile Include="src\story.cpp" />
     <ClCompile Include="src\system.cpp" />
     <ClCompile Include="src\system_askinfo.cpp" />
@@ -274,8 +276,8 @@
     <ClInclude Include="AutoS\include\auto_data_official_forging.h" />
     <ClInclude Include="AutoS\include\auto_data_official_gov.h" />
     <ClInclude Include="AutoS\include\auto_data_official_tech.h" />
-    <ClInclude Include="AutoS\include\auto_data_paycountry.h" />
     <ClInclude Include="AutoS\include\auto_data_paygoods.h" />
+    <ClInclude Include="AutoS\include\auto_data_paystore.h" />
     <ClInclude Include="AutoS\include\auto_data_platinfo.h" />
     <ClInclude Include="AutoS\include\auto_data_quest.h" />
     <ClInclude Include="AutoS\include\auto_data_quest_talk.h" />
@@ -351,8 +353,10 @@
     <ClInclude Include="include\item.h" />
     <ClInclude Include="include\mapunit.h" />
     <ClInclude Include="include\nation.h" />
+    <ClInclude Include="include\pay.h" />
     <ClInclude Include="include\quest.h" />
     <ClInclude Include="include\rank.h" />
+    <ClInclude Include="include\shop.h" />
     <ClInclude Include="include\story.h" />
     <ClInclude Include="include\system.h" />
     <ClInclude Include="include\system_askinfo.h" />

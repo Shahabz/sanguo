@@ -4125,6 +4125,141 @@ int netsend_nationequip_S( int actor_index, char send_type, SLK_NetS_NationEquip
 	return 0;
 }
 
+int netsend_shoplist_S( int actor_index, char send_type, SLK_NetS_ShopList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_SHOPLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_SHOPLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_ShopList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_paystore_S( int actor_index, char send_type, SLK_NetS_PayStore *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_PAYSTORE;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_PAYSTORE; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_PayStore_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_goodsinfo_S( int actor_index, char send_type, SLK_NetS_GoodsInfo *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_GOODSINFO;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_GOODSINFO; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_GoodsInfo_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_paystoreactivity_S( int actor_index, char send_type, SLK_NetS_PayStoreActivity *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_PAYSTOREACTIVITY;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_PAYSTOREACTIVITY; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_PayStoreActivity_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_payorder_S( int actor_index, char send_type, SLK_NetS_PayOrder *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_PAYORDER;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_PAYORDER; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_PayOrder_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue )
 {

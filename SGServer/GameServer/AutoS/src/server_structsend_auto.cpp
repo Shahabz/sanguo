@@ -2286,6 +2286,7 @@ int struct_NetS_BlackInfo_send( char **pptr, int *psize, SLK_NetS_BlackInfo *pVa
 		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
 	return 0;
 }
 
@@ -2320,6 +2321,112 @@ int struct_NetS_NationEquip_send( char **pptr, int *psize, SLK_NetS_NationEquip 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_kind, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_pro, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_nequip_sec, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ShopItem_send( char **pptr, int *psize, SLK_NetS_ShopItem *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_original_token, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_itemkind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_sale, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_today_buynum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_today_buynum_max, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ShopList_send( char **pptr, int *psize, SLK_NetS_ShopList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_useitem, (*psize) );
+	return 0;
+}
+
+int struct_NetS_PayStoreGoods_send( char **pptr, int *psize, SLK_NetS_PayStoreGoods *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_goodsid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_price, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_day, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_icon, (*psize) );
+	return 0;
+}
+
+int struct_NetS_PayStore_send( char **pptr, int *psize, SLK_NetS_PayStore *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_PayStoreGoods_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_GoodsInfo_send( char **pptr, int *psize, SLK_NetS_GoodsInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_goodsid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_price, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_descid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_icon, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_sale, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_worth, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bag_time, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_bag_num, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_awardcount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_awardcount; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_award[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_PayStoreActivity_send( char **pptr, int *psize, SLK_NetS_PayStoreActivity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_GoodsInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_orderid_len, (*psize) );
+	if( pValue->m_orderid_len > 0 && pValue->m_orderid_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_orderid, pValue->m_orderid_len*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ext_len, (*psize) );
+	if( pValue->m_ext_len > 0 && pValue->m_ext_len <= 64 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_ext, pValue->m_ext_len*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_goodsid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_productid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_descid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_price, (*psize) );
 	return 0;
 }
 

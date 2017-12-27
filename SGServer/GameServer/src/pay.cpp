@@ -1,0 +1,1228 @@
+#ifdef WIN32
+#include <winsock2.h>
+#include <windows.h>
+#include <time.h>
+#endif
+#include <mysql.h>
+#include "actor.h"
+#include "db.h"
+#include "pay.h"
+#include "actor_send.h"
+#include "actor_notify.h"
+#include "server_netsend_auto.h"
+#include "client.h"
+#include "gamelog.h"
+#include "login.h"
+#include "activity.h"
+#include "mail.h"
+#include "login.h"
+#include "system.h"
+#include "actor_times.h"
+#include "script_auto.h"
+#include "city.h"
+#include "global.h"
+#include "activity.h"
+
+extern Actor *g_actors;
+extern int g_maxactornum;
+extern MYSQL *myGame;
+extern MYSQL *myData;
+
+extern SConfig g_Config;
+extern Global global;
+
+extern City * g_city;
+extern int g_city_maxcount;
+extern int g_city_maxindex;
+
+extern AwardGroup *g_awardgroup;
+extern int g_awardgroup_count;
+
+extern ActivityItem *g_activity_item;
+extern int g_activity_count;
+
+extern int g_serverpoint;
+extern int g_server_citylevel5_count;
+
+PayPrice *g_PayPrice = NULL;
+int g_PayPriceCount = 0;
+
+PayCountry *g_PayCountry = NULL;
+int g_PayCountryCount = 0;
+
+extern PayGoods *g_paygoods;
+extern int g_paygoods_maxnum;
+
+extern PayStore *g_paystore;
+extern int g_paystore_maxnum;
+
+const char *g_PayCoinString[PAYCOINMAX] = {
+	"USD",	//	美元
+	"CAD",	//	加元
+	"MXN",	//	墨西哥元
+	"AUD",	//	澳元
+	"NZD",	//	新西兰元
+	"JPY",	//	日元
+	"Euro",	//	欧元
+	"DKK",	//	丹麦克朗
+	"SEK",	//	瑞典克朗
+	"CHF",	//	瑞士法郎
+	"NOK",	//	挪威克朗
+	"GBP",	//	英镑
+	"CNY",	//	人民币元
+	"SGD",	//	新加坡元
+	"HKD",	//	港元
+	"TWD",	//	新台币
+	"RUB",	//	俄罗斯卢布
+	"TRY",	//	土耳其里拉
+	"INR",	//	印度卢比
+	"IDR",	//	印尼卢比
+	"ILS",	//	以色列新锡克尔
+	"ZAR",	//	南非兰特
+	"SAR",	//	沙特沙亚币
+	"AED",	//	阿联酋迪拉姆
+};
+
+
+// 获取货币简称对应的索引
+int paycoin_getindex_withplat( int platid )
+{
+	if ( platid == 12 || platid == 13 )
+	{
+		return 12;
+	}
+	else if ( platid == 14 )
+	{
+		return 0;
+	}
+	return 0;
+}
+
+int payprice_init()
+{
+	MYSQL_RES		*res;
+	MYSQL_ROW		row;
+	char	szSQL[1024];
+
+	// 获得表格中最大的任务ID
+	sprintf( szSQL, "select max(Tier) from payprice" );
+	if ( mysql_query( myData, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		if ( row[0] )
+			g_PayPriceCount = atoi( row[0] ) + 1;
+		else
+			g_PayPriceCount = 0;
+	}
+	else
+	{
+		mysql_free_result( res );
+		return -1;
+	}
+	mysql_free_result( res );
+
+	// 分配空间
+	g_PayPrice = (PayPrice *)malloc( sizeof(PayPrice)*g_PayPriceCount );
+	memset( g_PayPrice, 0, sizeof(PayPrice)*g_PayPriceCount );
+
+	sprintf( szSQL, "select * from payprice" );
+	if ( mysql_query( myData, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int index = 0;
+		int tier = atoi( row[index++] );
+		if ( tier <= 0 || tier >= g_PayPriceCount )
+		{
+			continue;
+		}
+
+		for ( int coin = 0; coin < PAYCOINMAX; coin++ )
+		{
+			g_PayPrice[tier].price[coin] = atoi( row[index++] );
+		}
+	}
+	mysql_free_result( res );
+	return 0;
+}
+
+int paycountry_init()
+{
+	MYSQL_RES		*res;
+	MYSQL_ROW		row;
+	char	szSQL[1024];
+
+	// 获得表格中最大的任务ID
+	sprintf( szSQL, "select count(*) from paycountry" );
+	if ( mysql_query( myData, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		if ( row[0] )
+			g_PayCountryCount = atoi( row[0] ) + 1;
+		else
+			g_PayCountryCount = 0;
+	}
+	else
+	{
+		mysql_free_result( res );
+		return -1;
+	}
+	mysql_free_result( res );
+
+	// 分配空间
+	g_PayCountry = (PayCountry *)malloc( sizeof( PayCountry )*g_PayCountryCount );
+	memset( g_PayCountry, 0, sizeof( PayCountry )*g_PayCountryCount );
+
+	sprintf( szSQL, "select country_code, country_str, offset from paycountry" );
+	if ( mysql_query( myData, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+	int offset = 0;
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int index = 0;
+		g_PayCountry[offset].country_code = atoi( row[index++] );
+		strncpy( g_PayCountry[offset].country_str, row[index++], 2 );
+		g_PayCountry[offset].country_str[2] = 0;
+		g_PayCountry[offset].offset = atoi( row[index++] );
+		offset += 1;
+	}
+	mysql_free_result( res );
+	return 0;
+}
+
+int paycountry_reload()
+{
+	if ( g_PayCountry )
+	{
+		free( g_PayCountry );
+		g_PayCountry = NULL;
+	}
+	g_PayCountryCount = 0;
+	paycountry_init();
+	return 0;
+}
+
+// 支付商店列表
+int paystore_list( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	if ( coinindex < 0 || coinindex > PAYCOINMAX )
+		coinindex = 0;
+
+	SLK_NetS_PayStore store = { 0 };
+	for ( short id = 1; id < g_paystore_maxnum; id++ )
+	{
+		short goodsid = g_paystore[id].goodsid;
+		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+			continue;
+		int tier = g_paygoods[goodsid].tier;
+		if ( tier <= 0 || tier >= g_PayPriceCount )
+			continue;
+		store.m_list[store.m_count].m_goodsid = goodsid;
+		store.m_list[store.m_count].m_price = (unsigned int)(g_PayPrice[tier].price[coinindex]);
+		store.m_list[store.m_count].m_token = g_paygoods[goodsid].token;
+
+		//// 永久限购
+		//if ( g_paystore[id].limitbuy_count > 0 )
+		//{
+		//	int surplus = g_paystore[id].limitbuy_count - actor_limitybuy_getnum( actor_index, g_paystore[id].limitbuy_saveindex );
+		//	if ( surplus < 0 )
+		//		surplus = 0;
+		//	if ( surplus > 0 )
+		//	{
+		//		store.m_list[store.m_count].m_limitbuy_gifttoken = g_paystore[id].limitbuy_gifttoken;
+		//		store.m_list[store.m_count].m_limitbuy_surplus = surplus;
+		//	}
+		//}
+
+		//// 每日限购
+		//if ( g_paystore[id].everyday_count > 0 )
+		//{
+		//	int surplus = g_paystore[id].everyday_count - actor_everyday_limitybuy_getnum( actor_index, g_paystore[id].everyday_saveindex );
+		//	if ( surplus < 0 )
+		//		surplus = 0;
+		//	if ( surplus > 0 )
+		//	{
+		//		store.m_list[store.m_count].m_everyday_gifttoken = g_paystore[id].everyday_gifttoken;
+		//		store.m_list[store.m_count].m_everyday_surplus = surplus;
+		//	}
+		//}
+		
+		if ( g_paygoods[goodsid].type == PAY_GOODSTYPE_MONTHCARD )
+		{// 月卡
+			store.m_list[store.m_count].m_day = pCity->mcard;
+		}
+		else if ( g_paygoods[goodsid].type == PAY_GOODSTYPE_WEEKCARD )
+		{// 周卡
+			store.m_list[store.m_count].m_day = pCity->wcard;
+		}
+		store.m_list[store.m_count].m_nameid = g_paygoods[goodsid].nameid;
+		store.m_list[store.m_count].m_icon = g_paygoods[goodsid].icon;
+		store.m_count += 1;
+	}
+	
+	netsend_paystore_S( actor_index, SENDTYPE_ACTOR, &store );
+	return 0;
+}
+
+// 活动礼包列表
+int paystore_activity_list( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	if ( coinindex < 0 || coinindex > PAYCOINMAX )
+		coinindex = 0;
+	SLK_NetS_PayStoreActivity store = { 0 };
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		short goodsid = pCity->bag_gid[tmpi];
+		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+			continue;
+
+		int actionbag_endtime = pCity->bag_time[tmpi];
+		if ( actionbag_endtime > 0 && (int)time( NULL ) >= actionbag_endtime )
+		{
+			city_paybag_del( pCity, goodsid );
+			continue;
+		}
+
+		char actionbag_count = pCity->bag_num[tmpi];
+		if ( actionbag_count <= 0 )
+		{
+			city_paybag_del( pCity, goodsid );
+			continue;
+		}
+
+		int tier = g_paygoods[goodsid].tier;
+		if ( tier <= 0 || tier >= g_PayPriceCount )
+			continue;
+
+		store.m_list[store.m_count].m_goodsid = goodsid;
+		store.m_list[store.m_count].m_price = g_PayPrice[tier].price[coinindex];
+		store.m_list[store.m_count].m_nameid = g_paygoods[goodsid].nameid;
+		store.m_list[store.m_count].m_descid = g_paygoods[goodsid].descid;
+		store.m_list[store.m_count].m_icon = g_paygoods[goodsid].icon;
+		store.m_list[store.m_count].m_sale = g_paygoods[goodsid].sale;
+		store.m_list[store.m_count].m_worth = g_paygoods[goodsid].worth;
+		store.m_list[store.m_count].m_bag_time = actionbag_endtime;
+		store.m_list[store.m_count].m_bag_num = actionbag_count;
+		int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+		if ( awardgroup > 0 && awardgroup < g_awardgroup_count )
+		{
+			for ( int i = 0; i < g_awardgroup[awardgroup].allcount; i++ )
+			{
+				if ( g_awardgroup[awardgroup].show[i] == 0 )
+					continue;
+				int awardcount = store.m_list[store.m_count].m_awardcount;
+				if ( awardcount >= 16 )
+					break;
+				store.m_list[store.m_count].m_award[awardcount].m_kind = g_awardgroup[awardgroup].kind[i];
+				store.m_list[store.m_count].m_award[awardcount].m_num = g_awardgroup[awardgroup].minnum[i];
+				store.m_list[store.m_count].m_awardcount += 1;
+			}
+		}
+		store.m_count += 1;
+	}
+	netsend_paystoreactivity_S( actor_index, SENDTYPE_ACTOR, &store );
+	return 0;
+}
+
+// 礼包信息
+int pay_goodsinfo( int actor_index, int type, int goodsid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+
+	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	if ( coinindex < 0 || coinindex > PAYCOINMAX )
+		coinindex = 0;
+
+	SLK_NetS_GoodsInfo pValue = { 0 };
+	int tier = g_paygoods[goodsid].tier;
+	if ( tier <= 0 || tier >= g_PayPriceCount )
+		return -1;
+
+	pValue.m_goodsid = goodsid;
+	pValue.m_price = g_PayPrice[tier].price[coinindex];
+	pValue.m_nameid = g_paygoods[goodsid].nameid;
+	pValue.m_descid = g_paygoods[goodsid].descid;
+	pValue.m_icon = g_paygoods[goodsid].icon;
+	pValue.m_sale = g_paygoods[goodsid].sale;
+	pValue.m_worth = g_paygoods[goodsid].worth;
+	pValue.m_bag_time = 0;
+	pValue.m_bag_num = 0;
+	int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+	if ( awardgroup > 0 && awardgroup < g_awardgroup_count )
+	{
+		for ( int i = 0; i < g_awardgroup[awardgroup].allcount; i++ )
+		{
+			if ( g_awardgroup[awardgroup].show[i] == 0 )
+				continue;
+			int awardcount = pValue.m_awardcount;
+			if ( awardcount >= 16 )
+				break;
+			pValue.m_award[awardcount].m_kind = g_awardgroup[awardgroup].kind[i];
+			pValue.m_award[awardcount].m_num = g_awardgroup[awardgroup].minnum[i];
+			pValue.m_awardcount += 1;
+		}
+	}
+	netsend_goodsinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 通过type获取ID列表
+int paystore_goodslist_withtype( int type, int *goodsid, int count )
+{
+	if ( type < 0 || goodsid == NULL )
+		return -1;
+	int index = 0;
+	for ( int tmpi = 0; tmpi < g_paygoods_maxnum; tmpi++ )
+	{
+		if ( g_paygoods[tmpi].type < 0 )
+			continue;
+		if ( g_paygoods[tmpi].type == type && index < count )
+		{
+			goodsid[index] = tmpi;
+			index++;
+		}
+	}
+	return 0;
+}
+
+// 购买商品
+int paystore_buy( int actor_index, int goodsid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	if ( coinindex < 0 || coinindex > PAYCOINMAX )
+		coinindex = 0;
+
+	int goodstype = g_paygoods[goodsid].type;
+	if ( goodstype == PAY_GOODSTYPE_MONTHCARD || goodstype == PAY_GOODSTYPE_WEEKCARD )
+	{//月卡周卡
+
+	}
+	
+	// 生成一份订单
+	// 订单构成：服务器ID_角色ID_时间随机值
+	char pOrderID[32] = { 0 };
+	snprintf( pOrderID, 32, "%d_%d_%d%d%d%d", g_Config.server_code, g_actors[actor_index].actorid, (int)time(NULL), rand() % 10, rand() % 10, rand() % 10 );
+
+	// 订单插入数据库，支付成功以后以订单为准
+	if ( paystore_addorder( actor_index, goodsid, pOrderID ) < 0 )
+		return -1;
+
+	// 透传参数构成：服务器编号#角色编号#平台产品编号#游戏商品编号
+	char pOrderExt[64] = { 0 };
+	snprintf( pOrderExt, 64, "%d#%d#%d#%d", g_Config.server_code, g_actors[actor_index].actorid, g_paygoods[goodsid].productid, goodsid );
+
+	// 发送去支付
+	SLK_NetS_PayOrder info = { 0 };
+
+	strncpy( info.m_orderid, pOrderID, 32 );
+	info.m_orderid_len = strlen( info.m_orderid );
+
+	strncpy( info.m_ext, pOrderExt, 64 );
+	info.m_ext_len = strlen( info.m_ext );
+
+	info.m_productid = g_paygoods[goodsid].productid;
+	info.m_goodsid = goodsid;
+	info.m_nameid = g_paygoods[goodsid].nameid;
+	info.m_descid = g_paygoods[goodsid].descid;
+	info.m_price = (int)( g_PayPrice[g_paygoods[goodsid].tier].price[coinindex] );
+	netsend_payorder_S( actor_index, SENDTYPE_ACTOR, &info );
+	return 0;
+}
+
+// 添加订单
+int paystore_addorder( int actor_index, int goodsid, char *pOrderID )
+{
+	char szSQL[2048];
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	if ( pOrderID == NULL )
+		return -1;
+
+	char szUserID[21];
+	i64 userid = client_getuserid( actor_index );
+	lltoa( userid, szUserID, 10 );
+
+	int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+	sprintf( szSQL, "insert into pay_order( orderid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%s','%d','%d','%d','%d','%d','%d','%s','%d','%d' )", 
+		pOrderID, szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), g_paygoods[goodsid].productid, goodsid, awardgroup, client_getip( actor_index ), 0, (int)time( NULL ) );
+
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	return 0;
+}
+
+// 添加离线订单
+int paystore_payoffline( int actorid, int goodsid, char *pOrderID )
+{
+	char szSQL[2048];
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	if ( pOrderID == NULL )
+		return -1;
+
+	sprintf( szSQL, "insert into pay_offline( actorid, orderid, goodsid, optime ) values( '%d','%s','%d','%d' )", actorid, pOrderID, goodsid, (int)time( NULL ) );
+
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	return 0;
+}
+
+int paystore_payoffline_get( int actor_index )
+{
+	MYSQL_RES *res;
+	MYSQL_ROW  row;
+	char szSQL[1024];
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	int paycount = 0;
+	sprintf( szSQL, "select count(*) from pay_offline where actorid='%d'", g_actors[actor_index].actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	if ( row = mysql_fetch_row( res ) )
+	{
+		paycount = atoi( row[0] );
+		mysql_free_result( res );
+	}
+	else
+	{
+		mysql_free_result( res );
+		return -1;
+	}
+	if ( paycount > 0 )
+	{
+		sprintf( szSQL, "select orderid, goodsid from pay_offline where actorid='%d'", g_actors[actor_index].actorid );
+		if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+			if ( mysql_ping( myGame ) != 0 )
+				db_reconnect_game();
+			return -1;
+		}
+		res = mysql_store_result( myGame );
+		while ( row = mysql_fetch_row( res ) )
+		{
+			char szOrderid[128] = { 0 };
+			strncpy( szOrderid, row[0], 127 );
+
+			int goodsid = atoi( row[1] );
+
+			// 充值
+			actor_pay( g_actors[actor_index].actorid, goodsid, szOrderid, "0", "0" );
+
+			// 删除掉
+			sprintf( szSQL, "delete from pay_offline where orderid='%s'", szOrderid );
+			if ( mysql_query( myGame, szSQL ) )
+			{
+				printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+				write_gamelog( "%s", szSQL );
+				if ( mysql_ping( myGame ) != 0 )
+					db_reconnect_game();
+			}
+		}
+		mysql_free_result( res );
+	}
+	return 0;
+}
+
+// 限购添加次数
+int actor_limitybuy_addnum( int actor_index, int index )
+{
+	//if ( actor_index < 0 || actor_index >= g_maxactornum )
+		//return -1;
+	//if ( index < 0 || index >= 8 )
+	//	return -1;
+	//if ( g_actors[actor_index].base_limitbuy[index] < 100 )
+	//	g_actors[actor_index].base_limitbuy[index] += 1;
+	return 0;
+}
+int actor_limitybuy_getnum( int actor_index, int index )
+{
+	//if ( actor_index < 0 || actor_index >= g_maxactornum )
+	//	return -1;
+	//if ( index < 0 || index >= 8 )
+	//	return -1;
+	//return g_actors[actor_index].base_limitbuy[index];
+	return 0;
+}
+int actor_limitybuy_addnum_db( int actorid, int index )
+{
+	/*if ( index < 0 || index >= 8 )
+		return -1;
+	char szSQL[1024];
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char base_limitbuy[8] = { 0 };
+
+	sprintf( szSQL, "select `base_limitbuy` from actor where actorid='%d'", actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		memcpy( base_limitbuy, row[0], 8 );
+	}
+	mysql_free_result( res );
+
+	if ( base_limitbuy[index] < 100 )
+	{	
+		char szText_base_limitbuy[17]={0};
+		base_limitbuy[index] += 1;
+		sprintf( szSQL, "update actor set base_limitbuy='%s' where actorid='%d'", db_escape((const char *)base_limitbuy,szText_base_limitbuy,0), actorid );
+		if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+			if ( mysql_ping( myGame ) != 0 )
+				db_reconnect_game();
+			return 0;
+		}
+	}	*/
+	return 0;
+}
+int actor_limitybuy_getnum_db( int actorid, int index )
+{
+	/*if ( index < 0 || index >= 8 )
+		return -1;
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char	szSQL[1024];
+	char base_limitbuy[8] = { 0 };
+
+	sprintf( szSQL, "select `base_limitbuy` from actor where actorid='%d'", actorid );
+	if( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error(myGame) );
+		write_gamelog( "%s", szSQL );
+		if( mysql_ping(myGame) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	
+	if( ( row = mysql_fetch_row( res ) ) )
+	{
+		memcpy( base_limitbuy, row[0], 8 );
+		mysql_free_result( res );
+		return base_limitbuy[index];
+	}
+	mysql_free_result( res );*/
+	return 0;
+}
+
+// 每日限购添加次数
+int actor_everyday_limitybuy_addnum( int actor_index, int index )
+{
+	/*if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( index < 0 || index >= 8 )
+		return -1;
+	if ( g_actors[actor_index].everyday_limitbuy[index] < 100 )
+		g_actors[actor_index].everyday_limitbuy[index] += 1;*/
+	return 0;
+}
+int actor_everyday_limitybuy_getnum( int actor_index, int index )
+{
+	/*if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( index < 0 || index >= 8 )
+		return -1;
+	return g_actors[actor_index].everyday_limitbuy[index];*/
+	return 0;
+}
+int actor_everyday_limitybuy_addnum_db( int actorid, int index )
+{
+	/*if ( index < 0 || index >= 8 )
+		return -1;
+	char szSQL[1024];
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char everyday_limitbuy[8] = { 0 };
+
+	sprintf( szSQL, "select `everyday_limitbuy` from actor where actorid='%d'", actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		memcpy( everyday_limitbuy, row[0], 8 );
+	}
+	mysql_free_result( res );
+
+	if ( everyday_limitbuy[index] < 100 )
+	{
+		char szText_everyday_limitbuy[17] = { 0 };
+		everyday_limitbuy[index] += 1;
+		sprintf( szSQL, "update actor set everyday_limitbuy='%s' where actorid='%d'", db_escape( (const char *)everyday_limitbuy, szText_everyday_limitbuy, 0 ), actorid );
+		if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+			if ( mysql_ping( myGame ) != 0 )
+				db_reconnect_game();
+			return 0;
+		}
+	}*/
+	return 0;
+}
+int actor_everyday_limitybuy_getnum_db( int actorid, int index )
+{
+	/*if ( index < 0 || index >= 8 )
+		return -1;
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char	szSQL[1024];
+	char everyday_limitbuy[8] = { 0 };
+
+	sprintf( szSQL, "select `everyday_limitbuy` from actor where actorid='%d'", actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		memcpy( everyday_limitbuy, row[0], 8 );
+		mysql_free_result( res );
+		return everyday_limitbuy[index];
+	}
+	mysql_free_result( res );*/
+	return 0;
+}
+
+// 获取这个商品在商店里的ID
+int paystore_getid( int goodsid )
+{
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	for ( int id = 1; id < g_paystore_maxnum; id++ )
+	{
+		if ( goodsid == g_paystore[id].goodsid )
+		{
+			return id;
+		}
+	}
+	return -1;
+}
+
+// 支付成功
+int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *currency )
+{
+	char szSQL[1024];
+	int token = 0;
+	int limitbuy_gifttoken = 0;
+	int everyday_gifttoken = 0;
+	int awardgroup = 0;
+	if ( !pOrderID )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	int goodstype = g_paygoods[goodsid].type;
+
+	// 玩家在线状态
+	int actor_index = actor_getindex_withid( actorid );
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+	{
+		// 不在线插入数据库，上线以后读取
+		paystore_payoffline( actorid, goodsid, pOrderID );
+		return -1;
+	}
+
+	if ( goodstype == PAY_GOODSTYPE_BASE )
+	{ // 基础商店的商品
+		token = g_paygoods[goodsid].token;
+
+		int id = paystore_getid( goodsid );
+		if ( id > 0 )
+		{
+			// 永久限购
+			if ( g_paystore[id].limitbuy_count > 0 )
+			{
+				if ( actor_index >= 0 )
+				{
+					if ( actor_limitybuy_getnum( actor_index, g_paystore[id].limitbuy_saveindex ) < g_paystore[id].limitbuy_count )
+					{
+						actor_limitybuy_addnum( actor_index, g_paystore[id].limitbuy_saveindex );
+						limitbuy_gifttoken = g_paystore[id].limitbuy_gifttoken;
+					}
+				}
+				else
+				{
+					if ( actor_limitybuy_getnum_db( actor_index, g_paystore[id].limitbuy_saveindex ) < g_paystore[id].limitbuy_count )
+					{
+						actor_limitybuy_addnum_db( actor_index, g_paystore[id].limitbuy_saveindex );
+						limitbuy_gifttoken = g_paystore[id].limitbuy_gifttoken;
+					}
+				}
+			}
+
+			// 每日限购
+			if ( g_paystore[id].everyday_count > 0 )
+			{
+				if ( actor_index >= 0 )
+				{
+					if ( actor_everyday_limitybuy_getnum( actor_index, g_paystore[id].everyday_saveindex ) < g_paystore[id].everyday_count )
+					{
+						actor_everyday_limitybuy_addnum( actor_index, g_paystore[id].everyday_saveindex );
+						everyday_gifttoken = g_paystore[id].everyday_gifttoken;
+					}
+				}
+				else
+				{
+					if ( actor_everyday_limitybuy_getnum_db( actor_index, g_paystore[id].everyday_saveindex ) < g_paystore[id].everyday_count )
+					{
+						actor_everyday_limitybuy_addnum_db( actor_index, g_paystore[id].everyday_saveindex );
+						everyday_gifttoken = g_paystore[id].everyday_gifttoken;
+					}
+				}
+			}
+		}
+	}
+	else if ( goodstype == PAY_GOODSTYPE_PUSH )
+	{ // 精准推送的礼包
+		token = g_paygoods[goodsid].token;
+	}
+	else if ( goodstype == PAY_GOODSTYPE_DEFAULT )
+	{ // 轮播图礼包
+		token = g_paygoods[goodsid].token;
+	}
+	else if ( goodstype == PAY_GOODSTYPE_ACTIVITY )
+	{ // 活动的礼包
+		token = g_paygoods[goodsid].token;
+	}
+	else if ( goodstype == PAY_GOODSTYPE_MONTHCARD )
+	{ // 月卡
+		token = g_paygoods[goodsid].token;
+	} 
+	else if ( goodstype == PAY_GOODSTYPE_WEEKCARD )
+	{ // 周卡
+		token = g_paygoods[goodsid].token;
+	}
+	
+	// 最终钻石计算完毕
+	token = token + limitbuy_gifttoken + everyday_gifttoken;
+
+	// 给钻石
+	if ( token > 0 )
+	{
+		actor_change_token( actor_index, token, PATH_PAY, 0 );
+		if ( goodstype == PAY_GOODSTYPE_BASE )
+		{
+			paystore_list( actor_index );
+		}
+	}
+	
+
+	// 带礼包的
+	awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+	AwardGetInfo awardGet = { 0 };
+	if ( goodsid > 10 && awardgroup > 0 && goodstype != PAY_GOODSTYPE_MONTHCARD && goodstype != PAY_GOODSTYPE_WEEKCARD )
+	{
+		awardgroup_withid( actorid, awardgroup, PATH_PAY, &awardGet );
+	}
+	else if ( goodstype == PAY_GOODSTYPE_MONTHCARD || goodstype == PAY_GOODSTYPE_WEEKCARD )
+	{ // 周卡、月卡显示只给一次的奖励
+		awardgroup_withid( actorid, awardgroup+1, PATH_PAY, &awardGet );
+		//activity_sendnewlist( actor_index );
+	}
+
+	// 更新订单状态
+	sprintf( szSQL, "update pay_order set status='1' where orderid='%s'", pOrderID );
+	if( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+	}
+	
+
+	if ( goodstype == PAY_GOODSTYPE_PUSH )
+	{
+		// 推送下一个礼包
+		short next_goodsid = 0;
+		int next_goodcd = 0;
+		short next_goodstrategy = 0;
+		/*sc_PushBagNextGoodsID( goodstype, goodsid, g_actors[actor_index].push_goodsid_strategy , &next_goodsid, &next_goodcd, &next_goodstrategy );
+
+		if ( goodstype == PAY_GOODSTYPE_PUSH )
+		{
+			g_actors[actor_index].push_goodsid = next_goodsid;
+			g_actors[actor_index].push_goodsid_strategy = (char)next_goodstrategy;
+			if ( next_goodcd > 0 )
+			{
+				g_actors[actor_index].push_goodsid_time = (int)time( NULL ) + next_goodcd;
+			}
+			else
+			{
+				g_actors[actor_index].push_goodsid_time = 0;
+			}
+			actor_pushbaginfo( actor_index );
+		}*/
+	}
+	else if ( goodstype == PAY_GOODSTYPE_DEFAULT || goodstype == PAY_GOODSTYPE_ACTIVITY )
+	{
+		city_paybag_sub( city_getptr( actor_index ), goodsid, goodstype );
+		paystore_activity_list( actor_index );
+	}
+
+	// 记录总充值多少钱
+	if ( money )
+		g_actors[actor_index].charge_dollar += (float)atof( money );
+
+	// 总充值积分（人民币，由于玩家不一定是美金支付的，有可能是欧元什么的）
+	g_actors[actor_index].charge_point += g_paygoods[goodsid].point;
+
+	//// 发送购买成功通知邮件
+	//char szItemGet[512] = { 0 };
+	//char szTempGet[64] = { 0 };
+	//if ( token > 0 )
+	//{
+	//	sprintf( szTempGet, "%d,%d@", 100005, token );
+	//	strcat( szItemGet, szTempGet );
+	//}
+	//for ( int i = 0 ; i < awardGet.count; i++ )
+	//{
+	//	sprintf( szTempGet, "%d,%d@", awardGet.kind[i], awardGet.num[i] );
+	//	strcat( szItemGet, szTempGet );
+	//}
+	//char szNameID[32] = { 0 };
+	//sprintf( szNameID, "%s%d", TAG_CONTENTID , g_paygoods[goodsid].nameid );
+	//mail_send_message_item( actorid, MAIL_TYPE_SYSTEM, 99, 6313, 6243 , szItemGet, szNameID, NULL, NULL, 0, 0 );
+
+	City *pCity = city_getptr( actor_index );
+	if ( pCity )
+	{ 
+		// 充过值
+		city_set_sflag( pCity, CITY_SFLAG_FRISTPAY, 1 );
+	}
+
+	// 单笔付费
+	if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )
+	{
+		g_actors[actor_index].pay_maxtier = g_paygoods[goodsid].tier;
+	}
+
+	return 0;
+}
+
+// 推送礼包信息
+int actor_pushbaginfo( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	/*SLK_NetS_PushBagInfo info = { 0 };
+	info.m_push_goodsid = g_actors[actor_index].push_goodsid;
+	info.m_push_goodsid_time = g_actors[actor_index].push_goodsid_time;
+	info.m_push_speedbag_goodsid = g_actors[actor_index].push_speedbag_goodsid;
+	info.m_push_resbag_goodsid[0] = g_actors[actor_index].push_resbag_goodsid[0];
+	info.m_push_resbag_goodsid[1] = g_actors[actor_index].push_resbag_goodsid[1];
+	info.m_push_resbag_goodsid[2] = g_actors[actor_index].push_resbag_goodsid[2];
+	info.m_push_resbag_goodsid[3] = g_actors[actor_index].push_resbag_goodsid[3];
+	info.m_push_callbag_goodsid = g_actors[actor_index].push_callbag_goodsid;
+	info.m_push_healbag_goodsid = g_actors[actor_index].push_healbag_goodsid;
+	info.m_push_techbag_goodsid = g_actors[actor_index].push_techbag_goodsid;
+	info.m_push_forgingbag_goodsid = g_actors[actor_index].push_forgingbag_goodsid;
+	info.m_push_tfbag_goodsid = g_actors[actor_index].push_tfbag_goodsid;
+	netsend_pushbaginfo_S( actor_index, SENDTYPE_ACTOR, &info );*/
+	return 0;
+}
+
+// 添加推送礼包
+int city_paybag_add( City *pCity, short goodsid, int cd, int limitcount, char path )
+{
+	if ( !pCity )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] == goodsid )
+		{ // 如果有这个礼包，检查时间
+			if ( path == 1 || (int)time( NULL ) >= pCity->bag_time[tmpi] )
+			{
+				pCity->bag_gid[tmpi] = 0;
+				pCity->bag_time[tmpi] = 0;
+				pCity->bag_num[tmpi] = 0;
+				break;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+	}
+
+	int has = 0;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] <= 0 )
+		{
+			pCity->bag_gid[tmpi] = goodsid;
+			if ( cd > 0 )
+				pCity->bag_time[tmpi] = (int)time( NULL ) + cd;
+			else
+				pCity->bag_time[tmpi] = 0;
+			pCity->bag_num[tmpi] = limitcount;
+			has = 1;
+			break;
+		}
+	}
+
+	if ( has == 0 )
+		return -1;
+
+	return 0;
+}
+
+// 礼包剩余次数-1
+int city_paybag_sub( City *pCity, short goodsid, short goodstype )
+{
+	if ( !pCity )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] == goodsid )
+		{
+			pCity->bag_num[tmpi] -= 1;
+			if ( pCity->bag_num[tmpi] <= 0 )
+			{
+				if ( goodstype == PAY_GOODSTYPE_DEFAULT )
+				{
+					pCity->bag_gid[tmpi] = g_paygoods[goodsid].nextid;
+					pCity->bag_num[tmpi] = (char)g_paygoods[goodsid].nextcount;
+					if ( g_paygoods[goodsid].nextid <= 0 )
+					{
+						pCity->bag_gid[tmpi] = 0;
+						pCity->bag_num[tmpi] = 0;
+					}
+				}
+				else if ( goodstype == PAY_GOODSTYPE_ACTIVITY )
+				{
+					pCity->bag_gid[tmpi] = g_paygoods[goodsid].nextid;
+					if ( g_paygoods[goodsid].nextid > 0 )
+					{
+						pCity->bag_num[tmpi] = (char)g_paygoods[goodsid].nextcount;
+					}
+					else
+					{
+						pCity->bag_time[tmpi] = 0;
+						pCity->bag_num[tmpi] = 0;
+					}
+				}
+			}
+			break;
+		}
+	}
+	return 0;
+}
+
+// 删除推送礼包
+int city_paybag_del( City *pCity, short goodsid )
+{
+	if ( !pCity )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] == goodsid )
+		{
+			pCity->bag_gid[tmpi] = 0;
+			pCity->bag_time[tmpi] = 0;
+			pCity->bag_num[tmpi] = 0;
+			break;
+		}
+	}
+	return 0;
+}
+
+// 根据类型删除推送礼包
+int city_paybag_del_withtype( City *pCity, int type )
+{
+	if ( !pCity )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		int goodsid = pCity->bag_gid[tmpi];
+		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+			continue;
+		if ( g_paygoods[goodsid].type == type )
+		{
+			pCity->bag_gid[tmpi] = 0;
+			pCity->bag_time[tmpi] = 0;
+			pCity->bag_num[tmpi] = 0;
+		}
+	}
+	return 0;
+}
+
+// 检查是否有这个推送礼包
+char city_paybag_has( City *pCity, short goodsid )
+{
+	if ( !pCity )
+		return 0;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return 0;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] == goodsid )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+// 活动礼包开启
+int activity_paybag_open( int activityid )
+{
+	if ( activityid <= 0 || activityid >= g_activity_count )
+		return -1;
+
+	short goodsid = g_activity_item[activityid].m_value[0];
+	int cd = activity_lefttime( activityid );
+	int limitcount = g_activity_item[activityid].m_value[1];
+
+	if ( goodsid <= 0 )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		city_paybag_add( &g_city[tmpi], goodsid, cd, limitcount, 1 );
+	}
+	return 0;
+}
+
+// 活动礼包关闭
+int activity_paybag_close( int activityid )
+{
+	if ( activityid <= 0 || activityid >= g_activity_count )
+		return -1;
+
+	short goodsid = g_activity_item[activityid].m_value[0];
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		city_paybag_del( &g_city[tmpi], goodsid );
+	}
+	return 0;
+}
+
+// 创建后读取部分
+int activity_paybag_citynew( City* pCity )
+{
+	if ( !pCity )
+		return -1;
+	if ( pCity->actorid < MINACTORID )
+		return -1;
+	for ( int activityid = ACTIVITY_PAYBAG1; activityid <= ACTIVITY_PAYBAG5; activityid++ )
+	{
+		if ( activity_intime( activityid ) )
+		{
+			short goodsid = g_activity_item[activityid].m_value[0];
+			int cd = activity_lefttime( activityid );
+			int limitcount = g_activity_item[activityid].m_value[1];
+			city_paybag_add( pCity, goodsid, cd, limitcount, 0 );
+		}
+	}
+	return 0;
+}
+
+// 获取这个商品应得的礼包
+int paygoods_getawardgroup( int actor_index, short goodsid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	return g_paygoods[goodsid].awardgroup;
+}

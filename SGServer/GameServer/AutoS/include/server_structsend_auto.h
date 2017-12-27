@@ -1571,6 +1571,7 @@ struct _slk_NetS_BlackInfo {
 	char m_name[32];	//黑名单
 	short m_level;	//黑名单
 	char m_nation;	//黑名单
+	char m_shape;	//黑名单
 };
 typedef struct _slk_NetS_BlackInfo SLK_NetS_BlackInfo;	//黑名单
 
@@ -1594,6 +1595,77 @@ struct _slk_NetS_NationEquip {
 	int m_nequip_sec;	//国器信息
 };
 typedef struct _slk_NetS_NationEquip SLK_NetS_NationEquip;	//国器信息
+
+struct _slk_NetS_ShopItem {
+	short m_offset;	//商店道具
+	int m_awardkind;	//商店道具
+	int m_awardnum;	//商店道具
+	short m_token;	//商店道具
+	short m_original_token;	//商店道具
+	short m_itemkind;	//商店道具
+	short m_sale;	//商店道具
+	char m_today_buynum;	//商店道具
+	char m_today_buynum_max;	//商店道具
+};
+typedef struct _slk_NetS_ShopItem SLK_NetS_ShopItem;	//商店道具
+
+struct _slk_NetS_ShopList {
+	char m_type;	//商店列表
+	char m_count;	//商店列表
+	SLK_NetS_ShopItem m_list[64];	//商店列表
+	char m_useitem;	//商店列表
+};
+typedef struct _slk_NetS_ShopList SLK_NetS_ShopList;	//商店道具列表
+
+struct _slk_NetS_PayStoreGoods {
+	short m_goodsid;	//支付商店
+	int m_price;	//支付商店
+	int m_token;	//支付商店
+	short m_day;	//支付商店
+	short m_nameid;	//支付商店
+	short m_icon;	//支付商店
+};
+typedef struct _slk_NetS_PayStoreGoods SLK_NetS_PayStoreGoods;	//支付商品
+
+struct _slk_NetS_PayStore {
+	char m_count;	//支付商店列表
+	SLK_NetS_PayStoreGoods m_list[16];	//支付商店列表
+};
+typedef struct _slk_NetS_PayStore SLK_NetS_PayStore;	//支付商品商店
+
+struct _slk_NetS_GoodsInfo {
+	short m_goodsid;	//商品信息
+	int m_price;	//商品信息
+	int m_nameid;	//商品信息
+	int m_descid;	//商品信息
+	char m_icon;	//商品信息
+	short m_sale;	//商品信息
+	int m_worth;	//商品信息
+	int m_bag_time;	//商品信息
+	char m_bag_num;	//商品信息
+	char m_awardcount;	//商品信息
+	SLK_NetS_AwardInfo m_award[16];	//商品信息
+};
+typedef struct _slk_NetS_GoodsInfo SLK_NetS_GoodsInfo;	//礼包商品信息
+
+struct _slk_NetS_PayStoreActivity {
+	char m_count;	//礼包列表
+	SLK_NetS_GoodsInfo m_list[8];	//礼包列表
+};
+typedef struct _slk_NetS_PayStoreActivity SLK_NetS_PayStoreActivity;	//礼包列表
+
+struct _slk_NetS_PayOrder {
+	char m_orderid_len;	//支付订单
+	char m_orderid[32];	//支付订单
+	char m_ext_len;	//支付订单
+	char m_ext[64];	//支付订单
+	short m_goodsid;	//支付订单
+	int m_productid;	//支付订单
+	int m_nameid;	//支付订单
+	int m_descid;	//支付订单
+	int m_price;	//支付订单
+};
+typedef struct _slk_NetS_PayOrder SLK_NetS_PayOrder;	//订单
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1768,5 +1840,12 @@ int struct_NetS_BlackInfo_send( char **pptr, int *psize, SLK_NetS_BlackInfo *pVa
 int struct_NetS_BlackList_send( char **pptr, int *psize, SLK_NetS_BlackList *pValue );
 int struct_NetS_BlackListID_send( char **pptr, int *psize, SLK_NetS_BlackListID *pValue );
 int struct_NetS_NationEquip_send( char **pptr, int *psize, SLK_NetS_NationEquip *pValue );
+int struct_NetS_ShopItem_send( char **pptr, int *psize, SLK_NetS_ShopItem *pValue );
+int struct_NetS_ShopList_send( char **pptr, int *psize, SLK_NetS_ShopList *pValue );
+int struct_NetS_PayStoreGoods_send( char **pptr, int *psize, SLK_NetS_PayStoreGoods *pValue );
+int struct_NetS_PayStore_send( char **pptr, int *psize, SLK_NetS_PayStore *pValue );
+int struct_NetS_GoodsInfo_send( char **pptr, int *psize, SLK_NetS_GoodsInfo *pValue );
+int struct_NetS_PayStoreActivity_send( char **pptr, int *psize, SLK_NetS_PayStoreActivity *pValue );
+int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValue );
 
 #endif

@@ -47,7 +47,7 @@ int vipinfo_init_auto()
 	g_vipinfo = (VipInfo *)malloc( sizeof(VipInfo)*g_vipinfo_maxnum );
 	memset( g_vipinfo, 0, sizeof(VipInfo)*g_vipinfo_maxnum );
 
-	sprintf( szSQL, "select `level`,`exp`,`ability0`,`ability1`,`ability2`,`ability3`,`ability4`,`ability5`,`value0`,`value1`,`value2`,`value3`,`value4`,`value5`,`goodsid` from vip;" );
+	sprintf( szSQL, "select `level`,`exp`,`ability0`,`ability1`,`ability2`,`ability3`,`ability4`,`ability5`,`value0`,`value1`,`value2`,`value3`,`value4`,`value5`,`buykind0`,`buykind1`,`buykind2`,`buykind3`,`buykind4`,`buykind5`,`buynum0`,`buynum1`,`buynum2`,`buynum3`,`buynum4`,`buynum5` from vip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -75,7 +75,18 @@ int vipinfo_init_auto()
 		g_vipinfo[level].value[3] = atoi(row[offset++]);
 		g_vipinfo[level].value[4] = atoi(row[offset++]);
 		g_vipinfo[level].value[5] = atoi(row[offset++]);
-		g_vipinfo[level].goodsid = atoi(row[offset++]);
+		g_vipinfo[level].buykind[0] = atoi(row[offset++]);
+		g_vipinfo[level].buykind[1] = atoi(row[offset++]);
+		g_vipinfo[level].buykind[2] = atoi(row[offset++]);
+		g_vipinfo[level].buykind[3] = atoi(row[offset++]);
+		g_vipinfo[level].buykind[4] = atoi(row[offset++]);
+		g_vipinfo[level].buykind[5] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[0] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[1] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[2] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[3] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[4] = atoi(row[offset++]);
+		g_vipinfo[level].buynum[5] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

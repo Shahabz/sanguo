@@ -36,6 +36,8 @@
 #define ASKINFO_AUTOBUILD		31 // 自动建造
 #define ASKINFO_HERO_VISIT		32 // 武将寻访
 #define ASKINFO_CHANGESIGN		33 // 个性签名
+#define ASKINFO_SHOP			34 // 商店
+#define ASKINFO_PAY				35 // 支付
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

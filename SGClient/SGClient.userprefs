@@ -1,24 +1,24 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Map/WorldMap.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Base/LuaFun.cs">
     <Files>
-      <File FileName="Assets/Source/UI/UIRaycast.cs" Line="10" Column="27" />
+      <File FileName="Assets/Source/UI/UIRaycast.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIClippingLoop.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenRectPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenRectPosition.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIButtonPolygon.cs" Line="18" Column="3" />
+      <File FileName="Assets/Source/UI/UIButtonPolygon.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/ImageScreenBlur.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/UIManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/AudioManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIButton.cs" Line="69" Column="49" />
+      <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/AudioManagerWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/Packager.cs" Line="44" Column="54" />
+      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="286" Column="3" />
       <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/ScreenBlur.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIProgress.cs" Line="1" Column="1" />
@@ -48,7 +48,7 @@
       <File FileName="Assets/Source/UI/Tween/UITweenBeat.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenColor.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenFade.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIMod.cs" Line="114" Column="41" />
+      <File FileName="Assets/Source/UI/UIMod.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIAutoSize.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollBase.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollRing.cs" Line="1" Column="1" />
@@ -60,9 +60,9 @@
       <File FileName="Assets/Source/Base/Utils.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Fight/Fight.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Map/WorldMap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIDepth.cs" Line="20" Column="63" />
+      <File FileName="Assets/Source/Base/LuaFun.cs" Line="337" Column="4" />
+      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="27" Column="36" />
+      <File FileName="Assets/Source/UI/UIDepth.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyAssetIdentify.cs" Line="1" Column="1" />
@@ -71,13 +71,13 @@
       <File FileName="Assets/Source/Generate/ResourceManagerWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIParticleSystem.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/Tween/UITweenPath.cs" Line="9" Column="16" />
+      <File FileName="Assets/Source/UI/Tween/UITweenPath.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/Reference.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPosition.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenMove.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/UITweenPathWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIClippingChat.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIIgnoreRaycast.cs" Line="5" Column="69" />
+      <File FileName="Assets/Source/UI/UIIgnoreRaycast.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIButtonAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIClickEvent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIDragger.cs" Line="1" Column="1" />
@@ -85,6 +85,9 @@
       <File FileName="Assets/Source/UI/UIScrollView.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIInputFieldSubmit.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Map/WorldMapThumbCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/WorldMapMini.cs" Line="27" Column="28" />
+      <File FileName="Assets/Source/Map/WorldMapMiniCamera.cs" Line="43" Column="3" />
+      <File FileName="Assets/Source/Manager/LuaManager.cs" Line="125" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -35,6 +35,8 @@
 #include "army_march.h"
 #include "army_group.h"
 #include "king_war.h"
+#include "shop.h"
+#include "pay.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -692,6 +694,41 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_CHANGESIGN:
 		actor_changsign( actor_index, pstr );
+		break;
+	case ASKINFO_SHOP:
+		if ( pvalue[0] == 0 )
+		{
+			shop_list( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			shop_buy( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
+		}
+		else if ( pvalue[0] == 10 )
+		{
+			shop_set_useitembuy( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_PAY:
+		if ( pvalue[0] == 1 )
+		{ // 支付商店列表
+			paystore_list( actor_index );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 礼包列表
+			paystore_activity_list( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 购买商品
+			paystore_buy( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 测试支付
+			if ( g_actors[actor_index].admin >= 90 )
+			{
+				actor_pay( g_actors[actor_index].actorid, pvalue[1], pstr, "0", "0" );
+			}
+		}
 		break;
 	default:
 		break;

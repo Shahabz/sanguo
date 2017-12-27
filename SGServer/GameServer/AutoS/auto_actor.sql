@@ -42,8 +42,8 @@ CREATE TABLE `actor` (
   `storyid` smallint(6) NOT NULL DEFAULT '0' COMMENT '副本进度章节',
   `story_star` varbinary(512) NOT NULL DEFAULT '' COMMENT '精英副本星级',
   `story_hero` varbinary(128) NOT NULL DEFAULT '' COMMENT '招募副本',
-  `story_resnum` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本次数',
   `story_restime` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本时间',
+  `story_resnum` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本次数',
   `story_resreset` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本重置次数',
   `story_itemnum` varbinary(256) NOT NULL DEFAULT '' COMMENT '道具副本掉落次数',
   `story_drawing` varbinary(64) NOT NULL DEFAULT '' COMMENT '装备图纸副本是否购买',
@@ -58,5 +58,8 @@ CREATE TABLE `actor` (
   `hv_hn` tinyint(3) NOT NULL DEFAULT '0' COMMENT '神将寻访次数',
   `hv_pro` smallint(6) NOT NULL DEFAULT '0' COMMENT '当前寻访进度',
   `vipbag` int(11) NOT NULL DEFAULT '0' COMMENT 'vip礼包是否购买',
+  `shop_useitem` tinyint(3) NOT NULL DEFAULT '0' COMMENT '商店是否优先使用道具购买符',
+  `charge_point` int(11) NOT NULL DEFAULT '0' COMMENT '充值积分',
+  `pay_maxtier` smallint(6) NOT NULL DEFAULT '0' COMMENT '单笔付费最大级别',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

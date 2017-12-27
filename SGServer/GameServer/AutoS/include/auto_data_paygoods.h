@@ -7,25 +7,23 @@ struct _paygoods {
 				int goodsid;	//
 				int productid;	//
 				short tier;	//
+				int point;	//
 				int token;	//
-				int awardgroup[5];	//
+				int awardgroup;	//
 				short type;	//
 				int nameid;	//
-				int icon;	//
-				float sale;	//
-				int be_worth;	//
-				short stage;	//
 				int descid;	//
-				float point;	//
+				int icon;	//
+				short sale;	//
+				int worth;	//
+				short day;	//
 				short nextid;	//
 				int nextcd;	//
 				short nextcount;	//
-				int clubaward;	//
 };
 typedef struct _paygoods PayGoods;
 
 int paygoods_init_auto();
 int paygoods_reload_auto();
-int paygoods_luatable_auto();
 
 #endif

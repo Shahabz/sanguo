@@ -765,6 +765,31 @@ function netrecv_nationequip_C( buffer )
 	proc_nationequip_C( recvValue );
 end
 
+function netrecv_shoplist_C( buffer )
+	local recvValue = struct_NetS_ShopList_recv( buffer );
+	proc_shoplist_C( recvValue );
+end
+
+function netrecv_paystore_C( buffer )
+	local recvValue = struct_NetS_PayStore_recv( buffer );
+	proc_paystore_C( recvValue );
+end
+
+function netrecv_goodsinfo_C( buffer )
+	local recvValue = struct_NetS_GoodsInfo_recv( buffer );
+	proc_goodsinfo_C( recvValue );
+end
+
+function netrecv_paystoreactivity_C( buffer )
+	local recvValue = struct_NetS_PayStoreActivity_recv( buffer );
+	proc_paystoreactivity_C( recvValue );
+end
+
+function netrecv_payorder_C( buffer )
+	local recvValue = struct_NetS_PayOrder_recv( buffer );
+	proc_payorder_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -919,6 +944,11 @@ Proc_Command = {
 	[CMDS_BLACKLIST]=netrecv_blacklist_C;
 	[CMDS_BLACKLISTID]=netrecv_blacklistid_C;
 	[CMDS_NATIONEQUIP]=netrecv_nationequip_C;
+	[CMDS_SHOPLIST]=netrecv_shoplist_C;
+	[CMDS_PAYSTORE]=netrecv_paystore_C;
+	[CMDS_GOODSINFO]=netrecv_goodsinfo_C;
+	[CMDS_PAYSTOREACTIVITY]=netrecv_paystoreactivity_C;
+	[CMDS_PAYORDER]=netrecv_payorder_C;
 }
 
 function in_proc_command_C( cmd, buffer )
