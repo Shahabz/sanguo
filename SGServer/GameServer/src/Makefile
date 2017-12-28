@@ -50,6 +50,7 @@ SRC = \
 ../AutoS/src/auto_kingwar_town.cpp \
 ../AutoS/src/auto_data_city_guard.cpp \
 ../AutoS/src/server_structsend_auto.cpp \
+../AutoS/src/auto_data_vipshop.cpp \
 ../AutoS/src/auto_data_bodytoken.cpp \
 ../AutoS/src/auto_city_attr.cpp \
 ../AutoS/src/auto_data_kingwar.cpp \
@@ -253,6 +254,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_city_guard.o: ../AutoS/src/auto_data_city_guard.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_structsend_auto.o: ../AutoS/src/server_structsend_auto.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_vipshop.o: ../AutoS/src/auto_data_vipshop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_bodytoken.o: ../AutoS/src/auto_data_bodytoken.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
