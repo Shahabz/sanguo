@@ -27,6 +27,18 @@ AWARDKIND_HERO_WASH		=	50019 -- 免费洗髓次数
 AWARDKIND_EQUIP_WASH	=	50020 -- 免费洗练次数
 AWARDKIND_LOSTREBUILD	=	50021 -- 高级重建次数
 AWARDKIND_CITYGUARDNUM	=	50022 -- 城防补充次数
+AWARDKIND_BUFF_TRAIN	=	50025 -- 武卒官加速N%，时间1天
+AWARDKIND_BUFF_MARCH	=	50026 -- 行军耗时降低N%，时间1天
+AWARDKIND_LEVY_SILVER	=	50027 -- 奖励N次银币征收量
+AWARDKIND_LEVY_WOOD		=	50028 -- 奖励N次木材征收量
+AWARDKIND_LEVY_FOOD		=	50029 -- 奖励N次粮食征收量
+AWARDKIND_LEVY_IRON		=	50030 -- 奖励N次镔铁征收量
+AWARDKIND_PERMISSION_1	=	50051 -- 购买步兵权限（只用于显示）
+AWARDKIND_PERMISSION_2	=	50052 -- 购买骑兵权限（只用于显示）
+AWARDKIND_PERMISSION_3	=	50053 -- 购买弓兵权限（只用于显示）
+AWARDKIND_PERMISSION_4	=	50054 -- 科技快研
+AWARDKIND_PERMISSION_5	=	50055 -- 装备回收图纸
+AWARDKIND_PERMISSION_6	=	50056 -- 作坊预设
 
 -- 奖励形象
 function AwardInfo( awardkind )
@@ -34,6 +46,7 @@ function AwardInfo( awardkind )
 	local color = nil;
 	local name = "";
 	local c = 0;
+	local desc = ""
 	-- 掉落包
 	if awardkind <= AWARDKIND_ITEMBASE then
 		sprite = LoadSprite( "Char_Default" );
@@ -46,14 +59,16 @@ function AwardInfo( awardkind )
 		color = ItemColorSprite( item_getcolor( awardkind ) );
 		name = item_getname( awardkind )
 		c = item_getcolor( awardkind );
+		desc = item_getdesc( awardkind )
 		
 	-- 装备
 	elseif awardkind <= AWARDKIND_HEROBASE then
 		local kind = awardkind-AWARDKIND_EQUIPBASE
 		sprite = EquipSprite( kind )
 		color = ItemColorSprite( equip_getcolor( kind ) );
-		name = EquipName( awardkind )
+		name = EquipName( kind )
 		c = equip_getcolor( kind )
+		desc = equip_getabilityname( kind )
 		
 	-- 英雄	
 	elseif awardkind <= AWARDKIND_BUILDINGBASE then
@@ -172,6 +187,71 @@ function AwardInfo( awardkind )
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 1 );
 		name = T(1377)
+		
+	elseif awardkind == AWARDKIND_BUFF_TRAIN then -- 武卒官加速N%，时间1天
+	elseif awardkind == AWARDKIND_BUFF_MARCH then -- 行军耗时降低N%，时间1天
+	elseif awardkind == AWARDKIND_LEVY_SILVER then -- 奖励N次银币征收量
+		sprite = ItemSprite( 120 );
+		color = ItemColorSprite( 0 );
+		name = T(121)
+		
+	elseif awardkind == AWARDKIND_LEVY_WOOD then -- 奖励N次木材征收量
+		sprite = ItemSprite( 121 );
+		color = ItemColorSprite( 0 );
+		name = T(122)
+		
+	elseif awardkind == AWARDKIND_LEVY_FOOD then -- 奖励N次粮食征收量
+		sprite = ItemSprite( 122 );
+		color = ItemColorSprite( 0 );
+		name = T(123)
+		
+	elseif awardkind == AWARDKIND_LEVY_IRON	then -- 奖励N次镔铁征收量
+		sprite = ItemSprite( 123 );
+		color = ItemColorSprite( 0 );
+		name = T(124)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_1 then -- 购买步兵权限（只用于显示）
+		sprite = LoadSprite( "item_icon_445" );
+		color = ItemColorSprite( 0 );
+		name = T(2251)
+		c = 3
+		desc = T(2252)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_2 then -- 购买骑兵权限（只用于显示）
+		sprite = LoadSprite( "item_icon_446" );
+		color = ItemColorSprite( 0 );
+		name = T(2253)
+		c = 3
+		desc = T(2254)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_3 then -- 购买弓兵权限（只用于显示）
+		sprite = LoadSprite( "item_icon_447" );
+		color = ItemColorSprite( 0 );
+		name = T(2255)
+		c = 3
+		desc = T(2256)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_4 then -- 科技快研
+		sprite = LoadSprite( "herohead_4" );
+		color = ItemColorSprite( 0 );
+		name = T(2257)
+		c = 5
+		desc = T(2258)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_5 then -- 装备回收图纸
+		sprite = LoadSprite( "item_icon_226" );
+		color = ItemColorSprite( 0 );
+		name = T(2259)
+		c = 5
+		desc = T(2260)
+		
+	elseif awardkind == AWARDKIND_PERMISSION_6 then -- 作坊预设
+		sprite = LoadSprite( "item_icon_34" );
+		color = ItemColorSprite( 0 );
+		name = T(2261)
+		c = 5
+		desc = T(2262)
+		
 	end
 	
 	if sprite == nil then
@@ -180,6 +260,6 @@ function AwardInfo( awardkind )
 	if color == nil then
 		color = LoadSprite( ItemColorSprite( 0 ) );
 	end
-	return sprite, color, name, c;
+	return sprite, color, name, c, desc;
 end
 

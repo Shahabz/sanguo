@@ -35,6 +35,8 @@ ASKINFO_HERO_VISIT		=	32 -- 武将寻访
 ASKINFO_CHANGESIGN		=	33 -- 个性签名
 ASKINFO_SHOP			=	34 -- 商店
 ASKINFO_PAY				=	35 -- 支付
+ASKINFO_VIPSHOP			=	36 -- VIP商店
+ASKINFO_VIPBAG			=	37 -- VIP礼包
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

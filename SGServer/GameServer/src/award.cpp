@@ -588,6 +588,38 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		quest_changename( actor_index );
 	}
+	else if ( kind == AWARDKIND_BUFF_TRAIN )// 武卒官加速N%，时间1天
+	{
+
+	}
+	else if ( kind == AWARDKIND_BUFF_MARCH )// 行军耗时降低N%，时间1天
+	{
+
+	}
+	else if ( kind == AWARDKIND_LEVY_SILVER )// 奖励N次银币征收量
+	{
+		int silver = city_yield_total( city_getptr( actor_index ), BUILDING_Silver );
+		if ( silver > 0 )
+			city_changesilver( g_actors[actor_index].city_index, silver, PATH_LEVY );
+	}
+	else if ( kind == AWARDKIND_LEVY_WOOD )// 奖励N次木材征收量
+	{
+		int wood = city_yield_total( city_getptr( actor_index ), BUILDING_Wood );
+		if ( wood > 0 )
+			city_changewood( g_actors[actor_index].city_index, wood, PATH_LEVY );
+	}
+	else if ( kind == AWARDKIND_LEVY_FOOD ) // 奖励N次粮食征收量
+	{
+		int food = city_yield_total( city_getptr( actor_index ), BUILDING_Food );
+		if ( food > 0 )
+			city_changefood( g_actors[actor_index].city_index, food, PATH_LEVY );
+	}
+	else if ( kind == AWARDKIND_LEVY_IRON )// 奖励N次镔铁征收量
+	{
+		int iron = city_yield_total( city_getptr( actor_index ), BUILDING_Iron );
+		if ( iron > 0 )
+			city_changeiron( g_actors[actor_index].city_index, iron, PATH_LEVY );
+	}
 	else if ( kind < 0 )
 	{ // 道具组
 		awardgroup_withindex( actor_index, -kind, city_mainlevel( g_actors[actor_index].city_index ), path, getinfo );

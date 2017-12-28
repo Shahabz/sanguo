@@ -20,6 +20,7 @@
 #include "auto_data_building_upgrade.h"
 #include "auto_data_vip.h"
 #include "auto_data_vipbag.h"
+#include "auto_data_vipshop.h"
 #include "auto_data_hero.h"
 #include "auto_data_hero_colorup.h"
 #include "auto_data_hero_corpsmul.h"

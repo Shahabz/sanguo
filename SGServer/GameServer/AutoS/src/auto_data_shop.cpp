@@ -66,7 +66,7 @@ int shop_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `type`,`offset`,`awardkind`,`awardnum`,`token`,`original_token`,`itemkind`,`actorlevel`,`sale` from shop;" );
+	sprintf( szSQL, "select `type`,`offset`,`awardkind`,`awardnum`,`token`,`original_token`,`actorlevel`,`sale` from shop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -89,7 +89,6 @@ int shop_init_auto()
 		g_shop[type].config[offset].awardnum = atoi(row[offset++]);
 		g_shop[type].config[offset].token = atoi(row[offset++]);
 		g_shop[type].config[offset].original_token = atoi(row[offset++]);
-		g_shop[type].config[offset].itemkind = atoi(row[offset++]);
 		g_shop[type].config[offset].actorlevel = atoi(row[offset++]);
 		g_shop[type].config[offset].sale = atoi(row[offset++]);
 	}

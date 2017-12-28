@@ -99,6 +99,9 @@
 #define PATH_STORY_HERO					70	// 副本英雄副本途径
 #define PATH_STORY_DRAWING				71	// 副本装备副本途径
 #define PATH_STORY_SWEEP				72	// 副本扫荡途径
+#define PATH_SHOP						73	// 商店
+#define PATH_VIPSHOP					74	// VIP特价商店
+#define PATH_VIPBAG						75	// VIP礼包
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

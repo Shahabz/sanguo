@@ -2091,11 +2091,7 @@ function struct_NetS_ShopItem_recv( buffer )
 	recvValue.m_awardkind = buffer:ReadInt();
 	recvValue.m_awardnum = buffer:ReadInt();
 	recvValue.m_token = buffer:ReadShort();
-	recvValue.m_original_token = buffer:ReadShort();
-	recvValue.m_itemkind = buffer:ReadShort();
 	recvValue.m_sale = buffer:ReadShort();
-	recvValue.m_today_buynum = buffer:ReadSByte();
-	recvValue.m_today_buynum_max = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2109,7 +2105,6 @@ function struct_NetS_ShopList_recv( buffer )
 		tmpValue = struct_NetS_ShopItem_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
-	recvValue.m_useitem = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2180,6 +2175,31 @@ function struct_NetS_PayOrder_recv( buffer )
 	recvValue.m_nameid = buffer:ReadInt();
 	recvValue.m_descid = buffer:ReadInt();
 	recvValue.m_price = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_VipShopItem_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_awardnum = buffer:ReadInt();
+	recvValue.m_token = buffer:ReadShort();
+	recvValue.m_itemkind = buffer:ReadShort();
+	recvValue.m_vip_token = buffer:ReadShort();
+	recvValue.m_vip_buynum = buffer:ReadShort();
+	recvValue.m_vip_buynum_max = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_VipShop_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_VipShopItem_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_useitem = buffer:ReadSByte();
 	return recvValue;
 end
 

@@ -32,6 +32,19 @@
 #define AWARDKIND_CITYGUARDNUM	50022 // 城防补充次数
 #define AWARDKIND_QUESTFIGHT	50023 // 任务战斗
 #define AWARDKIND_CHANGENAME	50024 // 任务改名
+#define AWARDKIND_BUFF_TRAIN	50025 // 武卒官加速N%，时间1天
+#define AWARDKIND_BUFF_MARCH	50026 // 行军耗时降低N%，时间1天
+#define AWARDKIND_LEVY_SILVER	50027 // 奖励N次银币征收量
+#define AWARDKIND_LEVY_WOOD		50028 // 奖励N次木材征收量
+#define AWARDKIND_LEVY_FOOD		50029 // 奖励N次粮食征收量
+#define AWARDKIND_LEVY_IRON		50030 // 奖励N次镔铁征收量
+#define AWARDKIND_PERMISSION_1	50051 // 购买步兵权限（只用于显示）
+#define AWARDKIND_PERMISSION_2	50052 // 购买骑兵权限（只用于显示）
+#define AWARDKIND_PERMISSION_3	50053 // 购买弓兵权限（只用于显示）
+#define AWARDKIND_PERMISSION_4	50054 // 科技快研
+#define AWARDKIND_PERMISSION_5	50055 // 装备回收图纸
+#define AWARDKIND_PERMISSION_6	50056 // 作坊预设
+
 #define AWARDKIND_RES_SILVER	60001 // 奖励未启用资源点（民居）
 #define AWARDKIND_RES_WOOD		60002 // 奖励未启用资源点（木材厂）
 #define AWARDKIND_RES_FOOD		60003 // 奖励未启用资源点（农田）

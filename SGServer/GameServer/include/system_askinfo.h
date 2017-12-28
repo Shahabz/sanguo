@@ -38,6 +38,8 @@
 #define ASKINFO_CHANGESIGN		33 // 个性签名
 #define ASKINFO_SHOP			34 // 商店
 #define ASKINFO_PAY				35 // 支付
+#define ASKINFO_VIPSHOP			36 // VIP商店
+#define ASKINFO_VIPBAG			37 // VIP礼包
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

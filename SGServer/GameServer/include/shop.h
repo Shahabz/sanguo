@@ -7,6 +7,5 @@
 #define SHOPTYPE_OTHER	3	// ÆäËû
 
 int shop_list( int actor_index, int type );
-int shop_buy( int actor_index, int type, int offset, int awardkind, int use );
-int shop_set_useitembuy( int actor_index, int open );
+int shop_buy( int actor_index, int type, int offset, int awardkind );
 #endif

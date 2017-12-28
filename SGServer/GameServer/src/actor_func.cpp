@@ -231,6 +231,9 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 	{ // 充值量
 		int viplevel = 0;
 		g_actors[actor_index].total_charge += token;
+
+		// vip经验
+		vip_exp( g_actors[actor_index].city_index, token, PATH_PAY );
 	}
 
 	if ( token > 0 )
@@ -582,7 +585,7 @@ int actor_buybody( int actor_index, int ask )
 		return 0;
 	}
 	// 最大购买次数
-	int maxtimes = 1 + pCity->attr.everyday_body_buymax;
+	int maxtimes = pCity->attr.everyday_body_buymax + vip_attr_bodybuy( pCity );
 	// 今天购买体力次数
 	int times  = actor_get_today_char_times( actor_index, TODAY_CHAR_BUYBODY );
 	if ( times >= maxtimes )

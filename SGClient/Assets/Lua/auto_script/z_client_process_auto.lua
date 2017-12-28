@@ -527,6 +527,8 @@ function proc_changevip_C( recvValue )
 	GetPlayer().m_vipexp		=	recvValue.m_curexp;
 	GetPlayer().m_vipexp_max	=	recvValue.m_expmax;
 	MainDlgSetVipLevel();
+	PayDlgUpdateVip()
+	VipDlgUpdateVip()
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -1730,7 +1732,6 @@ end
 -- m_count=0,m_list={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,[m_count]},
 function proc_blacklist_C( recvValue )
 	-- process.
-	print("proc_blacklist_C")
 	BlackListDlgRecv( recvValue )
 end
 
@@ -1745,10 +1746,10 @@ function proc_nationequip_C( recvValue )
 	-- process.
 end
 
--- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_original_token=0,m_itemkind=0,m_sale=0,[m_count]},
+-- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_sale=0,[m_count]},
 function proc_shoplist_C( recvValue )
 	-- process.
-	ShopDlgRecv( recvValue )
+	ShopDlgRecvShop( recvValue )
 end
 
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_token=0,m_day=0,m_nameid=0,m_icon=0,[m_count]},
@@ -1770,5 +1771,11 @@ end
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function proc_payorder_C( recvValue )
 	-- process.
+end
+
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_token=0,m_itemkind=0,m_vip_token=0,m_vip_buynum=0,m_vip_buynum_max=0,[m_count]},m_useitem=0,
+function proc_vipshop_C( recvValue )
+	-- process.
+	ShopDlgRecvVipShop( recvValue )
 end
 

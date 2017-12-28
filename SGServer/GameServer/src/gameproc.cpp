@@ -1094,7 +1094,8 @@ int process_set_exit( int weekday, int hour, int min, int isnotify )
 int process_oclock_process( int hour )
 {
 	if ( hour == 0 )
-	{
+	{ // ÔÂ¿¨·¢·Å
+		paycard_give();
 	}
 	else if ( hour == 1 )
 	{

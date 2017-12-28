@@ -790,6 +790,11 @@ function netrecv_payorder_C( buffer )
 	proc_payorder_C( recvValue );
 end
 
+function netrecv_vipshop_C( buffer )
+	local recvValue = struct_NetS_VipShop_recv( buffer );
+	proc_vipshop_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -949,6 +954,7 @@ Proc_Command = {
 	[CMDS_GOODSINFO]=netrecv_goodsinfo_C;
 	[CMDS_PAYSTOREACTIVITY]=netrecv_paystoreactivity_C;
 	[CMDS_PAYORDER]=netrecv_payorder_C;
+	[CMDS_VIPSHOP]=netrecv_vipshop_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -149,6 +149,8 @@ end
 
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
 function FriendDlgRecv( recvValue )
+	print("recvValue:"..recvValue.m_count);
+	
 	table.sort(recvValue.m_list,function(a,b)
 				local r
 				local al = tonumber(a.m_level);
@@ -169,35 +171,8 @@ function FriendDlgRecv( recvValue )
 				return r 
 		end);
 	t_recvValue = recvValue;
-	print("count:"..recvValue.m_count);
 	for i=1,#t_recvValue.m_list,1 do
-		local uiObj = m_ObjectPool:Get( "UIP_Friend" );
-		uiObj.transform:SetParent( m_uiContent.transform );	
-		SetControlID(uiObj,FRIENDLIST_BUTTONID + i);
-		m_uiFriendObj[FRIENDLIST_BUTTONID + i] = uiObj;
-		local recvList = t_recvValue.m_list[i];
-		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-		local uiHeroPic = objs[0]
-		local uiPlacePic = objs[1]
-		local uiLevelText = objs[2]
-		local uiHeroNameText = objs[3]
-		local uiBattleText = objs[4]
-		local uiAcceptBtn = objs[5]
-		local uiRefuseBtn = objs[6]
-		SetImage(uiHeroPic,PlayerHeadSprite(recvList.m_shape));
-		SetImage(uiPlacePic,PlaceSprite(recvList.m_place));
-		SetLevel(uiLevelText,recvList.m_level);
-		SetText(uiHeroNameText,recvList.m_name);
-		SetText(uiBattleText,F(1990,recvList.m_battlepower));
-		if recvList.m_ask == 0 then
-			SetFalse(uiAcceptBtn)
-			SetFalse(uiRefuseBtn)
-		else
-			SetTrue(uiAcceptBtn)
-			SetTrue(uiRefuseBtn)
-			SetControlID(uiAcceptBtn,FRIENDLIST_ACCEPT + i);
-			SetControlID(uiRefuseBtn,FRIENDLIST_ACCEPT + i);
-		end
+		FriendDlgSetOneCell(i);
 	end
 end
 
@@ -296,7 +271,8 @@ function FriendDlgDeleteFriend()
 	if t_selectObjID == nil then
 		return;
 	end
-	destroy(m_uiFriendObj[t_selectObjID]);
+	m_ObjectPool:Release("UIP_Friend",m_uiFriendObj[t_selectObjID])
+	--destroy(m_uiFriendObj[t_selectObjID]);
 	local actorid = t_selectRecvValue.m_actorid;
 	local city_index = t_selectRecvValue.m_city_index;
 	FriendDlgDelete(actorid,city_index);
@@ -375,6 +351,37 @@ function FriendDlgMakeAddFriends()
 		return;
 	end
 	FriendDlgOpFriend(playerName,namelen);
+end
+--设置每一行
+function FriendDlgSetOneCell( index )
+	
+	local uiObj = m_ObjectPool:Get( "UIP_Friend" );
+	uiObj.transform:SetParent( m_uiContent.transform );	
+	SetControlID(uiObj,FRIENDLIST_BUTTONID + index);
+	m_uiFriendObj[FRIENDLIST_BUTTONID + index] = uiObj;
+	local recvList = t_recvValue.m_list[index];
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiHeroPic = objs[0]
+	local uiPlacePic = objs[1]
+	local uiLevelText = objs[2]
+	local uiHeroNameText = objs[3]
+	local uiBattleText = objs[4]
+	local uiAcceptBtn = objs[5]
+	local uiRefuseBtn = objs[6]
+	SetImage(uiHeroPic,PlayerHeadSprite(recvList.m_shape));
+	SetImage(uiPlacePic,PlaceSprite(recvList.m_place));
+	SetLevel(uiLevelText,recvList.m_level);
+	SetText(uiHeroNameText,recvList.m_name);
+	SetText(uiBattleText,F(1990,recvList.m_battlepower));
+	if recvList.m_ask == 0 then
+		SetFalse(uiAcceptBtn)
+		SetFalse(uiRefuseBtn)
+	else
+		SetTrue(uiAcceptBtn)
+		SetTrue(uiRefuseBtn)
+		SetControlID(uiAcceptBtn,FRIENDLIST_ACCEPT + index);
+		SetControlID(uiRefuseBtn,FRIENDLIST_ACCEPT + index);
+	end
 end
 
 

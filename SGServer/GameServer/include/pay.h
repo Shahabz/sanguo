@@ -14,6 +14,9 @@
 #define PAY_INT_MONTH_DAY				30         // 一个月30天
 #define PAY_INT_WEEK_DAY				7          // 一周7天
 
+#define PAY_MONTH_AWARDGROUP				160         // 月卡奖励
+#define PAY_WEEK_AWARDGROUP					159          // 周卡奖励
+
 // 货币数字定义
 // 注意：修改这里同时，源文件还有一个字符串定义，需一并修改
 enum PayCoin
@@ -123,6 +126,9 @@ int activity_paybag_citynew( struct _city *pCity );
 
 // 获取这个玩家所在国家应得的礼包
 int paygoods_getawardgroup( int actor_index, short goodsid );
+
+// 月卡或周卡每天的发放
+int paycard_give();
 #endif
 
 

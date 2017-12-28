@@ -881,7 +881,7 @@ int kingwar_activity_onclose()
 		char v2[32] = { 0 };
 		char v3[32] = { 0 };
 		sprintf( v1, "%d", g_kingwar_level );
-		sprintf( v3, "%s%d", TAG_NATION, g_map_town[MAPUNIT_KING_TOWNID].nation );
+		sprintf( v2, "%s%d", TAG_NATION, g_map_town[MAPUNIT_KING_TOWNID].nation );
 		if ( g_map_town[MAPUNIT_KING_TOWNID].nation == 1 )
 			sprintf( v3, "%s%d", TAG_HERO, 92 );
 		else if ( g_map_town[MAPUNIT_KING_TOWNID].nation == 2 )

@@ -41,7 +41,7 @@ local m_path = 0;
 -- 打开界面
 function HeroInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroInfoDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), 3, HeroInfoDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), HELP_HeroDlg, HeroInfoDlgClose );
 end
 
 -- 隐藏界面

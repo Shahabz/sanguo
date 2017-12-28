@@ -22,6 +22,7 @@
 #include "city.h"
 #include "global.h"
 #include "activity.h"
+#include "vip.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -87,12 +88,12 @@ const char *g_PayCoinString[PAYCOINMAX] = {
 // 获取货币简称对应的索引
 int paycoin_getindex_withplat( int platid )
 {
-	if ( platid == 12 || platid == 13 )
-	{
+	if ( platid < 100 )
+	{ // 国内
 		return 12;
 	}
-	else if ( platid == 14 )
-	{
+	else
+	{ // 国外
 		return 0;
 	}
 	return 0;
@@ -433,12 +434,7 @@ int paystore_buy( int actor_index, int goodsid )
 	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
-
 	int goodstype = g_paygoods[goodsid].type;
-	if ( goodstype == PAY_GOODSTYPE_MONTHCARD || goodstype == PAY_GOODSTYPE_WEEKCARD )
-	{//月卡周卡
-
-	}
 	
 	// 生成一份订单
 	// 订单构成：服务器ID_角色ID_时间随机值
@@ -809,11 +805,13 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		paystore_payoffline( actorid, goodsid, pOrderID );
 		return -1;
 	}
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 
 	if ( goodstype == PAY_GOODSTYPE_BASE )
 	{ // 基础商店的商品
 		token = g_paygoods[goodsid].token;
-
 		int id = paystore_getid( goodsid );
 		if ( id > 0 )
 		{
@@ -872,15 +870,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	{ // 活动的礼包
 		token = g_paygoods[goodsid].token;
 	}
-	else if ( goodstype == PAY_GOODSTYPE_MONTHCARD )
-	{ // 月卡
-		token = g_paygoods[goodsid].token;
-	} 
-	else if ( goodstype == PAY_GOODSTYPE_WEEKCARD )
-	{ // 周卡
-		token = g_paygoods[goodsid].token;
-	}
-	
+
 	// 最终钻石计算完毕
 	token = token + limitbuy_gifttoken + everyday_gifttoken;
 
@@ -888,24 +878,53 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	if ( token > 0 )
 	{
 		actor_change_token( actor_index, token, PATH_PAY, 0 );
-		if ( goodstype == PAY_GOODSTYPE_BASE )
-		{
-			paystore_list( actor_index );
-		}
 	}
-	
 
 	// 带礼包的
 	awardgroup = paygoods_getawardgroup( actor_index, goodsid );
 	AwardGetInfo awardGet = { 0 };
-	if ( goodsid > 10 && awardgroup > 0 && goodstype != PAY_GOODSTYPE_MONTHCARD && goodstype != PAY_GOODSTYPE_WEEKCARD )
+	if ( goodstype == PAY_GOODSTYPE_MONTHCARD )
+	{ // 月卡累计时间，因为当时给了一次，所以每次都是29
+		if ( pCity )
+		{
+			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			pCity->wcard += (PAY_INT_MONTH_DAY - 1);
+			// 发邮件
+			char v1[64] = { 0 };
+			AwardGetInfo getinfo = { 0 };
+			char award_content[256] = { 0 };
+			sprintf( v1, "%d", pCity->wcard );
+			awardgroup_random( PAY_MONTH_AWARDGROUP, 0, &getinfo );
+			awardgroup_makestr( &getinfo, award_content );
+			mail_system( actor_index, pCity->actorid, 5036, 5532, v1, NULL, NULL, award_content, 0 );
+			actor_notify_alert( actor_index, 2201 );
+		}
+	}
+	else if ( goodstype == PAY_GOODSTYPE_WEEKCARD )
+	{// 周卡
+		if ( pCity )
+		{
+			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			pCity->mcard += (PAY_INT_WEEK_DAY - 1);
+			// 发邮件
+			char v1[64] = { 0 };
+			AwardGetInfo getinfo = { 0 };
+			char award_content[256] = { 0 };
+			sprintf( v1, "%d", pCity->mcard );
+			awardgroup_random( PAY_WEEK_AWARDGROUP, 0, &getinfo );
+			awardgroup_makestr( &getinfo, award_content );
+			mail_system( actor_index, g_actors[actor_index].actorid, 5037, 5533, v1, NULL, NULL, award_content, 0 );
+			actor_notify_alert( actor_index, 2202 );
+		}
+	}
+	else if ( awardgroup > 0 )
 	{
 		awardgroup_withid( actorid, awardgroup, PATH_PAY, &awardGet );
+		actor_notify_alert( actor_index, 2203 );
 	}
-	else if ( goodstype == PAY_GOODSTYPE_MONTHCARD || goodstype == PAY_GOODSTYPE_WEEKCARD )
-	{ // 周卡、月卡显示只给一次的奖励
-		awardgroup_withid( actorid, awardgroup+1, PATH_PAY, &awardGet );
-		//activity_sendnewlist( actor_index );
+	else if ( token > 0 )
+	{ // 通知一下
+		actor_notify_alert( actor_index, 2203 );
 	}
 
 	// 更新订单状态
@@ -916,10 +935,13 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		write_gamelog( "%s", szSQL );
 		if( mysql_ping( myGame ) != 0 )
 			db_reconnect_game();
-	}
-	
+	}	
 
-	if ( goodstype == PAY_GOODSTYPE_PUSH )
+	if ( goodstype == PAY_GOODSTYPE_BASE || goodstype == PAY_GOODSTYPE_MONTHCARD || goodstype == PAY_GOODSTYPE_WEEKCARD )
+	{
+		paystore_list( actor_index );
+	}
+	else if ( goodstype == PAY_GOODSTYPE_PUSH )
 	{
 		// 推送下一个礼包
 		short next_goodsid = 0;
@@ -972,12 +994,9 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	//sprintf( szNameID, "%s%d", TAG_CONTENTID , g_paygoods[goodsid].nameid );
 	//mail_send_message_item( actorid, MAIL_TYPE_SYSTEM, 99, 6313, 6243 , szItemGet, szNameID, NULL, NULL, 0, 0 );
 
-	City *pCity = city_getptr( actor_index );
-	if ( pCity )
-	{ 
-		// 充过值
-		city_set_sflag( pCity, CITY_SFLAG_FRISTPAY, 1 );
-	}
+
+	// 充过值
+	city_set_sflag( pCity, CITY_SFLAG_FRISTPAY, 1 );
 
 	// 单笔付费
 	if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )
@@ -1225,4 +1244,37 @@ int paygoods_getawardgroup( int actor_index, short goodsid )
 	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
 		return -1;
 	return g_paygoods[goodsid].awardgroup;
+}
+
+// 月卡或周卡每天的发放
+int paycard_give()
+{
+	char v1[64] = { 0 };
+	AwardGetInfo m_getinfo = { 0 };
+	AwardGetInfo w_getinfo = { 0 };
+	char m_award[256] = { 0 };
+	char w_award[256] = { 0 };
+
+	awardgroup_random( PAY_MONTH_AWARDGROUP, 0, &m_getinfo );
+	awardgroup_random( PAY_WEEK_AWARDGROUP, 0, &w_getinfo );
+
+	awardgroup_makestr( &m_getinfo, m_award );
+	awardgroup_makestr( &w_getinfo, w_award );
+
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		if ( g_city[city_index].mcard > 0 )
+		{
+			sprintf( v1, "%d", g_city[city_index].mcard );
+			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5036, 5532, v1, NULL, NULL, m_award, 1 );
+		}
+		if ( g_city[city_index].wcard > 0 )
+		{
+			sprintf( v1, "%d", g_city[city_index].mcard );
+			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5037, 5533, v1, NULL, NULL, w_award, 1 );
+		}
+	}
+	return 0;
 }

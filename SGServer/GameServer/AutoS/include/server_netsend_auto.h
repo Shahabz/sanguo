@@ -160,6 +160,7 @@ int netsend_paystore_S( int actor_index, char send_type, SLK_NetS_PayStore *pVal
 int netsend_goodsinfo_S( int actor_index, char send_type, SLK_NetS_GoodsInfo *pValue );
 int netsend_paystoreactivity_S( int actor_index, char send_type, SLK_NetS_PayStoreActivity *pValue );
 int netsend_payorder_S( int actor_index, char send_type, SLK_NetS_PayOrder *pValue );
+int netsend_vipshop_S( int actor_index, char send_type, SLK_NetS_VipShop *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

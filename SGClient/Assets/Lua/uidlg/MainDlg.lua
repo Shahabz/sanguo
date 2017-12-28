@@ -243,6 +243,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			end
 			MainDlgSetAutoBuild( 0 );
 			system_askinfo( ASKINFO_AUTOBUILD, "", 0 );
+			
+		-- VIP充值充值	
+		elseif nControlID == 60 then
+			VipDlgShow()
 		
 		-- 角色信息	
 		elseif nControlID == 100 then
@@ -251,9 +255,9 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 充值	
 		elseif nControlID == 101 then
 			PayDlgShow()
-	
+		
+		-- 
 		elseif nControlID == 102 then
-			
 
 		elseif nControlID == 104 then
 		

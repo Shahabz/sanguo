@@ -19,6 +19,7 @@ CREATE TABLE `city` (
   `sflag` int(11) NOT NULL DEFAULT '0' COMMENT '标志位',
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '玩家等级',
   `exp` int(11) NOT NULL DEFAULT '0' COMMENT '玩家经验',
+  `viplevel` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'VIP等级',
   `vipexp` int(11) NOT NULL DEFAULT '0' COMMENT 'VIP经验',
   `nation` tinyint(3) NOT NULL DEFAULT '0' COMMENT '国家(魏蜀吴)',
   `official` tinyint(3) NOT NULL DEFAULT '0' COMMENT '官职',

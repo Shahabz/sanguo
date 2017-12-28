@@ -2332,11 +2332,7 @@ int struct_NetS_ShopItem_send( char **pptr, int *psize, SLK_NetS_ShopItem *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_token, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_original_token, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_itemkind, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_sale, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_today_buynum, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_today_buynum_max, (*psize) );
 	return 0;
 }
 
@@ -2350,7 +2346,6 @@ int struct_NetS_ShopList_send( char **pptr, int *psize, SLK_NetS_ShopList *pValu
 	{
 		struct_NetS_ShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_useitem, (*psize) );
 	return 0;
 }
 
@@ -2427,6 +2422,33 @@ int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_descid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_price, (*psize) );
+	return 0;
+}
+
+int struct_NetS_VipShopItem_send( char **pptr, int *psize, SLK_NetS_VipShopItem *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_itemkind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_token, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_buynum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_buynum_max, (*psize) );
+	return 0;
+}
+
+int struct_NetS_VipShop_send( char **pptr, int *psize, SLK_NetS_VipShop *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_VipShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_useitem, (*psize) );
 	return 0;
 }
 

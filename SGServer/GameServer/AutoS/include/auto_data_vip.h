@@ -6,10 +6,14 @@ struct _vipinfo {
 //--Automatically generated
 				int level;	//
 				int exp;	//
-				int ability[6];	//
-				int value[6];	//
-				int buykind[6];	//
-				short buynum[6];	//
+				int buildfree;	//
+				int bodybuy;	//
+				int autobuild;	//
+				int skipfight;	//
+				int marchcall;	//
+				int train;	//
+				int palace;	//
+				int storysweep;	//
 };
 typedef struct _vipinfo VipInfo;
 

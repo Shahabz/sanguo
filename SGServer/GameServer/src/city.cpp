@@ -151,8 +151,6 @@ int city_loadcb( int city_index )
 
 	// 城池事件
 	city_event_load( &g_city[city_index] );
-	// 计算VIP等级
-	vip_calclevel( city_index );
 	// 计算临时属性
 	city_attr_reset( &g_city[city_index] );
 
@@ -1874,7 +1872,8 @@ int city_trainnum( City *pCity, BuildingBarracks *barracks )
 	int base = config->value[0];
 	int tech = (int)ceil(config->value[0] * pCity->attr.train_per[corps]);
 	int buff = (int)ceil( config->value[0] * pCity->attr.trainspeed_per );
-	int total = base + tech + buff;
+	int vip = (int)ceil( config->value[0] * (float)(vip_attr_train( pCity )/100.0f) );
+	int total = base + tech + buff + vip;
 	return total;
 }
 

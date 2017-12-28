@@ -67,17 +67,6 @@ void city_attr_reset( City *pCity )
 			city_attr_calc( &pCity->attr, g_techinfo[kind].config[tech_level].ability, g_techinfo[kind].config[tech_level].value, 100.0f );
 		}
 	}
-
-	// VIPÓ°Ïì
-	if ( pCity->viplevel > 0 && pCity->viplevel < g_vipinfo_maxnum )
-	{
-		for ( char tmpi = 0; tmpi < VIP_ABILITY_MAXNUM; tmpi++ )
-		{
-			if ( g_vipinfo[pCity->viplevel].ability[tmpi] <= 0 )
-				continue;
-			city_attr_calc( &pCity->attr, g_vipinfo[pCity->viplevel].ability[tmpi], g_vipinfo[pCity->viplevel].value[tmpi], 100.0f );
-		}
-	}
 	city_attr_sendinfo( pCity->actor_index );
 }
 

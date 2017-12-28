@@ -17,8 +17,9 @@ local m_uiName = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function HeroConfigDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_heroinfodlg" );
 	m_Dlg = eye.uiManager:Open( "HeroConfigDlg" );
-	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), 3, HeroConfigDlgClose );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(550), HELP_HeroDlg, HeroConfigDlgClose );
 end
 
 -- 隐藏界面
@@ -35,7 +36,9 @@ end
 function HeroConfigDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
-
+	Invoke( function() 
+			ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_heroinfodlg" )
+	end, 0.3 );
 end
 
 ----------------------------------------
@@ -99,7 +102,7 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function HeroConfigDlgShow( pHero)
+function HeroConfigDlgShow( pHero )
 	if pHero == nil or pHero.kind <= 0 then
 		return
 	end
@@ -117,10 +120,12 @@ function HeroConfigDlgSet( pHero)
 	-- 经验
 	--SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
 	--SetText( m_uiExpPanel.transform:Find("Text"), knum(pHero.m_exp).."/"..knum(pHero.m_exp_max) )
+	SetFalse( m_uiExpPanel.transform:Find("Text") )
 	-- 兵力
 	SetProgress( m_uiSoldierPanel.transform:Find("Progress"), pHero.troops_wash/pHero.troops_wash )
 	SetText( m_uiSoldierPanel.transform:Find("Text"), knum(pHero.troops_wash).."/"..knum(pHero.troops_wash) )
 	SetImage( m_uiSoldierPanel.transform:Find("Corps"), CorpsSprite( pHero.corps ) )
+	SetFalse( m_uiSoldierPanel.transform:Find("Text") )
 	-- 属性
 	SetText( m_uiAttackBase, T(143).." "..(pHero.attack_base+pHero.attack_wash) );
 	SetText( m_uiDefenseBase, T(144).." "..(pHero.defense_base+pHero.defense_wash) );

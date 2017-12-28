@@ -1,2 +1,17 @@
 g_vipbag = {
+[0] = { level=0,token=20,original_token=200,awardkind0=107,awardnum0=5,awardkind1=0,awardnum1=0,awardkind2=0,awardnum2=0,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[1] = { level=1,token=100,original_token=300,awardkind0=10012,awardnum0=1,awardkind1=107,awardnum1=5,awardkind2=50006,awardnum2=100,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[2] = { level=2,token=150,original_token=400,awardkind0=10026,awardnum0=1,awardkind1=445,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[3] = { level=3,token=360,original_token=800,awardkind0=20031,awardnum0=1,awardkind1=445,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=132,awardnum3=1,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[4] = { level=4,token=580,original_token=1200,awardkind0=81,awardnum0=5,awardkind1=445,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=172,awardnum3=1,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[5] = { level=5,token=880,original_token=2400,awardkind0=81,awardnum0=10,awardkind1=445,awardnum1=1,awardkind2=441,awardnum2=5,awardkind3=50006,awardnum3=100,awardkind4=136,awardnum4=1,awardkind5=0,awardnum5=0,},
+[6] = { level=6,token=1200,original_token=3000,awardkind0=20050,awardnum0=1,awardkind1=84,awardnum1=1,awardkind2=445,awardnum2=1,awardkind3=443,awardnum3=5,awardkind4=50006,awardnum4=100,awardkind5=0,awardnum5=0,},
+[7] = { level=7,token=2400,original_token=5000,awardkind0=10054,awardnum0=1,awardkind1=84,awardnum1=5,awardkind2=445,awardnum2=1,awardkind3=441,awardnum3=5,awardkind4=50006,awardnum4=100,awardkind5=0,awardnum5=0,},
+[8] = { level=8,token=4000,original_token=8000,awardkind0=10044,awardnum0=1,awardkind1=84,awardnum1=10,awardkind2=441,awardnum2=10,awardkind3=442,awardnum3=10,awardkind4=50006,awardnum4=200,awardkind5=0,awardnum5=0,},
+[9] = { level=9,token=6000,original_token=12000,awardkind0=20071,awardnum0=1,awardkind1=86,awardnum1=7,awardkind2=443,awardnum2=10,awardkind3=50006,awardnum3=200,awardkind4=171,awardnum4=10,awardkind5=0,awardnum5=0,},
+[10] = { level=10,token=9800,original_token=20000,awardkind0=86,awardnum0=30,awardkind1=441,awardnum1=20,awardkind2=442,awardnum2=20,awardkind3=50006,awardnum3=300,awardkind4=136,awardnum4=1,awardkind5=0,awardnum5=0,},
+[11] = { level=11,token=25800,original_token=50000,awardkind0=10055,awardnum0=1,awardkind1=86,awardnum1=50,awardkind2=441,awardnum2=30,awardkind3=442,awardnum3=30,awardkind4=50006,awardnum4=400,awardkind5=0,awardnum5=0,},
+[12] = { level=12,token=39800,original_token=80000,awardkind0=10045,awardnum0=1,awardkind1=86,awardnum1=80,awardkind2=441,awardnum2=50,awardkind3=442,awardnum3=50,awardkind4=50006,awardnum4=600,awardkind5=0,awardnum5=0,},
+[13] = { level=13,token=49800,original_token=100000,awardkind0=65,awardnum0=1,awardkind1=69,awardnum1=1,awardkind2=97,awardnum2=50,awardkind3=44,awardnum3=10,awardkind4=50006,awardnum4=800,awardkind5=0,awardnum5=0,},
+[14] = { level=14,token=69800,original_token=100000,awardkind0=66,awardnum0=1,awardkind1=70,awardnum1=1,awardkind2=97,awardnum2=80,awardkind3=48,awardnum3=20,awardkind4=50006,awardnum4=1000,awardkind5=0,awardnum5=0,},
 }

@@ -1601,11 +1601,7 @@ struct _slk_NetS_ShopItem {
 	int m_awardkind;	//商店道具
 	int m_awardnum;	//商店道具
 	short m_token;	//商店道具
-	short m_original_token;	//商店道具
-	short m_itemkind;	//商店道具
 	short m_sale;	//商店道具
-	char m_today_buynum;	//商店道具
-	char m_today_buynum_max;	//商店道具
 };
 typedef struct _slk_NetS_ShopItem SLK_NetS_ShopItem;	//商店道具
 
@@ -1613,7 +1609,6 @@ struct _slk_NetS_ShopList {
 	char m_type;	//商店列表
 	char m_count;	//商店列表
 	SLK_NetS_ShopItem m_list[64];	//商店列表
-	char m_useitem;	//商店列表
 };
 typedef struct _slk_NetS_ShopList SLK_NetS_ShopList;	//商店道具列表
 
@@ -1666,6 +1661,24 @@ struct _slk_NetS_PayOrder {
 	int m_price;	//支付订单
 };
 typedef struct _slk_NetS_PayOrder SLK_NetS_PayOrder;	//订单
+
+struct _slk_NetS_VipShopItem {
+	int m_awardkind;	//vip特价商品
+	int m_awardnum;	//vip特价商品
+	short m_token;	//vip特价商品
+	short m_itemkind;	//vip特价商品
+	short m_vip_token;	//vip特价商品
+	short m_vip_buynum;	//vip特价商品
+	short m_vip_buynum_max;	//vip特价商品
+};
+typedef struct _slk_NetS_VipShopItem SLK_NetS_VipShopItem;	//vip特价商品
+
+struct _slk_NetS_VipShop {
+	short m_count;	//vip特价商店
+	SLK_NetS_VipShopItem m_list[32];	//vip特价商店
+	char m_useitem;	//vip特价商店
+};
+typedef struct _slk_NetS_VipShop SLK_NetS_VipShop;	//vip特价商店
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1847,5 +1860,7 @@ int struct_NetS_PayStore_send( char **pptr, int *psize, SLK_NetS_PayStore *pValu
 int struct_NetS_GoodsInfo_send( char **pptr, int *psize, SLK_NetS_GoodsInfo *pValue );
 int struct_NetS_PayStoreActivity_send( char **pptr, int *psize, SLK_NetS_PayStoreActivity *pValue );
 int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValue );
+int struct_NetS_VipShopItem_send( char **pptr, int *psize, SLK_NetS_VipShopItem *pValue );
+int struct_NetS_VipShop_send( char **pptr, int *psize, SLK_NetS_VipShop *pValue );
 
 #endif

@@ -16,6 +16,7 @@
 #include "city_attr.h"
 #include "item.h"
 #include "hero.h"
+#include "vip.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1234,12 +1235,8 @@ int building_workerfree( int actor_index, int kind, int offset )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	int freetime = 0;
-	if ( pCity->attr.free_sec > global.worker_freetime )
-	{
-		freetime = pCity->attr.free_sec;
-	}
-	else
+	int freetime = pCity->attr.free_sec + vip_attr_buildfree( pCity )*60;
+	if ( freetime < global.worker_freetime )
 	{
 		freetime = global.worker_freetime;
 	}

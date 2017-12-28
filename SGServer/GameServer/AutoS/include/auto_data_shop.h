@@ -10,7 +10,6 @@ struct _shop_config {
 				int awardnum;	//
 				int token;	//
 				int original_token;	//
-				short itemkind;	//
 				short actorlevel;	//
 				short sale;	//
 };

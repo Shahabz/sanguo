@@ -14,6 +14,8 @@ local m_uiUIP_SaleItem = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_selectType = 0;
+local m_selectShopType = 0;
+
 -- 打开界面
 function ShopDlgOpen()
 	m_Dlg = eye.uiManager:Open( "ShopDlg" );
@@ -102,26 +104,69 @@ function ShopDlgShow()
 	ShopDlgSelectType( 1 )
 end
 
--- 选择种类
-function ShopDlgSelectType( type )
-	system_askinfo( ASKINFO_SHOP, "", 0, type );
+function ShopDlgShowByType( type )
+	ShopDlgOpen()
+	ShopDlgSelectType( type )
 end
 
--- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_original_token=0,m_itemkind=0,m_sale=0,m_today_buynum,m_today_buynum_max=0 [m_count]},
-function ShopDlgRecv( recvValue )
-	m_selectType = recvValue.m_type;
+-- 选择种类
+function ShopDlgSelectType( type )
+	-- VIP特价商店
+	if type == 1 then
+		system_askinfo( ASKINFO_VIPSHOP, "", 0 );
+		
+	-- VIP 礼包
+	elseif type == 2 then
+		system_askinfo( ASKINFO_VIPBAG, "", 0 );
+		
+	-- 普通商店-军事
+	elseif type == 3 then
+		system_askinfo( ASKINFO_SHOP, "", 0, 1 );
+	
+	-- 普通商店-其他
+	elseif type == 4 then
+		system_askinfo( ASKINFO_SHOP, "", 0, 2 );
+	end
+end
+
+-- 返回VIP特价商店信息
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_token=0,m_itemkind=0,m_vip_token=0,m_vip_buynum=0,m_vip_buynum_max=0,[m_count]},m_useitem=0,
+function ShopDlgRecvVipShop( recvValue )
+	m_selectType = 1
 	for i = 1, recvValue.m_count, 1 do
 		
 	end
+end
+function ShopDlgCreateVipShopItem(  )
 	
-	-- 优先使用道具购买符
-	if m_selectType == 1 then
-		if recvValue.shop_useitem == 0 then
-		else
-		end
-	end
 end
 
-function ShopDlgCreateSaleItem(  )
+-- 返回VIP礼包信息
+function ShopDlgRecvVipBag( recvValue )
+	m_selectType = 2
+	for i = 1, recvValue.m_count, 1 do
+		
+	end
+end
+function ShopDlgCreateVipBagItem()
 	
 end
+
+-- 返回普通商店信息
+-- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_sale=0 [m_count]},
+function ShopDlgRecvShop( recvValue )
+	m_selectShopType = recvValue.m_type
+	if m_selectShopType == 1 then
+		m_selectType = 3
+	elseif m_selectShopType == 2 then
+		m_selectType = 4
+	end
+	for i = 1, recvValue.m_count, 1 do
+		
+	end
+end
+function ShopDlgCreateShopItem(  )
+	
+end
+
+
