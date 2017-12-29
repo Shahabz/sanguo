@@ -504,6 +504,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// VIP商店
+	if ( vipshop_init_auto() < 0 )
+	{
+		printf_msg( "vipshop_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 多国支付价格初始化
 	if ( payprice_init() >= 0 )
 		printf_msg( "PayPrice Module ready!" );

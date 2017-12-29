@@ -22,7 +22,7 @@ int buildingupgrade_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from building_upgrade;" );
+	sprintf( szSQL, "select max(`kind`) from building_upgrade;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int buildingupgrade_init_auto()
 	g_building_upgrade = (BuildingUpgrade *)malloc( sizeof(BuildingUpgrade)*g_building_upgrade_maxnum );
 	memset( g_building_upgrade, 0, sizeof(BuildingUpgrade)*g_building_upgrade_maxnum );
 
-	sprintf( szSQL, "select kind, max( level ) from building_upgrade group by kind;" );
+	sprintf( szSQL, "select `kind`, max( `level` ) from building_upgrade group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

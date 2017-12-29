@@ -22,7 +22,7 @@ int weatherinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(day) from weather;" );
+	sprintf( szSQL, "select max(`day`) from weather;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int weatherinfo_init_auto()
 	g_weather = (WeatherInfo *)malloc( sizeof(WeatherInfo)*g_weather_maxnum );
 	memset( g_weather, 0, sizeof(WeatherInfo)*g_weather_maxnum );
 
-	sprintf( szSQL, "select day, max( weather ) from weather group by day;" );
+	sprintf( szSQL, "select `day`, max( `weather` ) from weather group by `day`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

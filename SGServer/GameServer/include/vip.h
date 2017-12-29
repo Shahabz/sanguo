@@ -29,9 +29,12 @@ int vip_attr_train( City *pCity );
 // VIP礼包
 int vipbag_list( int actor_index );
 int vipbag_buy( int actor_index, int level );
+int vipbag_check( int actor_index, int level );
 
 // VIP特价商店
 int vipshop_list( int actor_index );
+int vipshop_getbuynum( int actor_index, int id );
+int vipshop_addbuynum( int actor_index, int id );
 int vipshop_buy( int actor_index, int id, int awardkind );
 int vipshop_set_useitembuy( int actor_index, int close );
 #endif

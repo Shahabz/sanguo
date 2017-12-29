@@ -22,7 +22,7 @@ int techinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from city_tech;" );
+	sprintf( szSQL, "select max(`kind`) from city_tech;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int techinfo_init_auto()
 	g_techinfo = (TechInfo *)malloc( sizeof(TechInfo)*g_techinfo_maxnum );
 	memset( g_techinfo, 0, sizeof(TechInfo)*g_techinfo_maxnum );
 
-	sprintf( szSQL, "select kind, max( level ) from city_tech group by kind;" );
+	sprintf( szSQL, "select `kind`, max( `level` ) from city_tech group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

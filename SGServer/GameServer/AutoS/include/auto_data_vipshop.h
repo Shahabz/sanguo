@@ -10,6 +10,9 @@ struct _vipshop {
 				int token;	//
 				short itemkind;	//
 				short actorlevel;	//
+				short viplevel;	//
+				short vipbaglevel;	//
+				short fun;	//
 				short vip_token[16];	//
 				short vip_buynum[16];	//
 };

@@ -22,7 +22,7 @@ int vipshop_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(id) from vipshop;" );
+	sprintf( szSQL, "select max(`id`) from vipshop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int vipshop_init_auto()
 	g_vipshop = (VipShop *)malloc( sizeof(VipShop)*g_vipshop_maxnum );
 	memset( g_vipshop, 0, sizeof(VipShop)*g_vipshop_maxnum );
 
-	sprintf( szSQL, "select `id`,`awardkind`,`awardnum`,`token`,`itemkind`,`actorlevel`,`vip_token0`,`vip_token1`,`vip_token2`,`vip_token3`,`vip_token4`,`vip_token5`,`vip_token6`,`vip_token7`,`vip_token8`,`vip_token9`,`vip_token10`,`vip_token11`,`vip_token12`,`vip_token13`,`vip_token14`,`vip_token15`,`vip_buynum0`,`vip_buynum1`,`vip_buynum2`,`vip_buynum3`,`vip_buynum4`,`vip_buynum5`,`vip_buynum6`,`vip_buynum7`,`vip_buynum8`,`vip_buynum9`,`vip_buynum10`,`vip_buynum11`,`vip_buynum12`,`vip_buynum13`,`vip_buynum14`,`vip_buynum15` from vipshop;" );
+	sprintf( szSQL, "select `id`,`awardkind`,`awardnum`,`token`,`itemkind`,`actorlevel`,`viplevel`,`vipbaglevel`,`fun`,`vip_token00`,`vip_token01`,`vip_token02`,`vip_token03`,`vip_token04`,`vip_token05`,`vip_token06`,`vip_token07`,`vip_token08`,`vip_token09`,`vip_token10`,`vip_token11`,`vip_token12`,`vip_token13`,`vip_token14`,`vip_token15`,`vip_buynum00`,`vip_buynum01`,`vip_buynum02`,`vip_buynum03`,`vip_buynum04`,`vip_buynum05`,`vip_buynum06`,`vip_buynum07`,`vip_buynum08`,`vip_buynum09`,`vip_buynum10`,`vip_buynum11`,`vip_buynum12`,`vip_buynum13`,`vip_buynum14`,`vip_buynum15` from vipshop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -67,6 +67,9 @@ int vipshop_init_auto()
 		g_vipshop[id].token = atoi(row[offset++]);
 		g_vipshop[id].itemkind = atoi(row[offset++]);
 		g_vipshop[id].actorlevel = atoi(row[offset++]);
+		g_vipshop[id].viplevel = atoi(row[offset++]);
+		g_vipshop[id].vipbaglevel = atoi(row[offset++]);
+		g_vipshop[id].fun = atoi(row[offset++]);
 		g_vipshop[id].vip_token[0] = atoi(row[offset++]);
 		g_vipshop[id].vip_token[1] = atoi(row[offset++]);
 		g_vipshop[id].vip_token[2] = atoi(row[offset++]);

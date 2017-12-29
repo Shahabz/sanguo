@@ -22,7 +22,7 @@ int mapenemyinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from map_enemyinfo;" );
+	sprintf( szSQL, "select max(`kind`) from map_enemyinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

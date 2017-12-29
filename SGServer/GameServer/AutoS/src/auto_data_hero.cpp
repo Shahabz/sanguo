@@ -22,7 +22,7 @@ int heroinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from hero;" );
+	sprintf( szSQL, "select max(`kind`) from hero;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int heroinfo_init_auto()
 	g_heroinfo = (HeroInfo *)malloc( sizeof(HeroInfo)*g_heroinfo_maxnum );
 	memset( g_heroinfo, 0, sizeof(HeroInfo)*g_heroinfo_maxnum );
 
-	sprintf( szSQL, "select kind, max( color ) from hero group by kind;" );
+	sprintf( szSQL, "select `kind`, max( `color` ) from hero group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

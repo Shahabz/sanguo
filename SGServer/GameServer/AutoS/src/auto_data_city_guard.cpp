@@ -22,7 +22,7 @@ int cityguardinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(monsterid) from city_guard;" );
+	sprintf( szSQL, "select max(`monsterid`) from city_guard;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int cityguardinfo_init_auto()
 	g_cityguardinfo = (CityGuardInfo *)malloc( sizeof(CityGuardInfo)*g_cityguardinfo_maxnum );
 	memset( g_cityguardinfo, 0, sizeof(CityGuardInfo)*g_cityguardinfo_maxnum );
 
-	sprintf( szSQL, "select monsterid, max( color ) from city_guard group by monsterid;" );
+	sprintf( szSQL, "select `monsterid`, max( `color` ) from city_guard group by `monsterid`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

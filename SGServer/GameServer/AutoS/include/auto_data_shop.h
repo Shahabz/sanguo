@@ -5,13 +5,15 @@
 struct _shop_config {
 //--Automatically generated
 				short type;	//
-				short offset;	//
+				short index;	//
 				int awardkind;	//
 				int awardnum;	//
 				int token;	//
 				int original_token;	//
-				short actorlevel;	//
+				short actorlevel_min;	//
+				short actorlevel_max;	//
 				short sale;	//
+				short buyuse;	//
 };
 typedef struct _shop_config ShopConfig;
 

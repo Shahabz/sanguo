@@ -56,6 +56,7 @@ function JumpDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 充值
 		elseif nControlID == 3 then
 			JumpDlgClose();
+			PayDlgShow()
 			
 		-- 购买体力
 		elseif nControlID == 4 then

@@ -22,7 +22,7 @@ int materialmakeinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(id) from material_make;" );
+	sprintf( szSQL, "select max(`id`) from material_make;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

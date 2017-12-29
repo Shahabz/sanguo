@@ -22,7 +22,7 @@ int nationequipinfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from nation_equip;" );
+	sprintf( szSQL, "select max(`kind`) from nation_equip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int nationequipinfo_init_auto()
 	g_nationequip = (NationEquipInfo *)malloc( sizeof(NationEquipInfo)*g_nationequip_maxnum );
 	memset( g_nationequip, 0, sizeof(NationEquipInfo)*g_nationequip_maxnum );
 
-	sprintf( szSQL, "select kind, max( level ) from nation_equip group by kind;" );
+	sprintf( szSQL, "select `kind`, max( `level` ) from nation_equip group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

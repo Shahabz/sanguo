@@ -22,7 +22,7 @@ int bodytokeninfo_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(count) from bodytoken;" );
+	sprintf( szSQL, "select max(`count`) from bodytoken;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

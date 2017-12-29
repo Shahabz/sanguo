@@ -1779,3 +1779,9 @@ function proc_vipshop_C( recvValue )
 	ShopDlgRecvVipShop( recvValue )
 end
 
+-- m_vipbag=0,,m_m_vipbag_count=0
+function proc_vipbag_C( recvValue )
+	-- process.
+	ShopDlgRecvVipBag( recvValue )
+end
+

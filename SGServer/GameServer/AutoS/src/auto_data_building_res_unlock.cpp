@@ -22,7 +22,7 @@ int buildingresunlock_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(kind) from building_res_unlock;" );
+	sprintf( szSQL, "select max(`kind`) from building_res_unlock;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int buildingresunlock_init_auto()
 	g_building_res_unlock = (BuildingResUnlock *)malloc( sizeof(BuildingResUnlock)*g_building_res_unlock_maxnum );
 	memset( g_building_res_unlock, 0, sizeof(BuildingResUnlock)*g_building_res_unlock_maxnum );
 
-	sprintf( szSQL, "select kind, max( number ) from building_res_unlock group by kind;" );
+	sprintf( szSQL, "select `kind`, max( `number` ) from building_res_unlock group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );

@@ -22,7 +22,7 @@ int shop_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(type) from shop;" );
+	sprintf( szSQL, "select max(`type`) from shop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int shop_init_auto()
 	g_shop = (Shop *)malloc( sizeof(Shop)*g_shop_maxnum );
 	memset( g_shop, 0, sizeof(Shop)*g_shop_maxnum );
 
-	sprintf( szSQL, "select type, max( offset ) from shop group by type;" );
+	sprintf( szSQL, "select `type`, max( `index` ) from shop group by `type`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -66,7 +66,7 @@ int shop_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `type`,`offset`,`awardkind`,`awardnum`,`token`,`original_token`,`actorlevel`,`sale` from shop;" );
+	sprintf( szSQL, "select `type`,`index`,`awardkind`,`awardnum`,`token`,`original_token`,`actorlevel_min`,`actorlevel_max`,`sale`,`buyuse` from shop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -80,17 +80,19 @@ int shop_init_auto()
 		int type = atoi( row[0] );
 		if ( type < 0 || type >= g_shop_maxnum  )
 			continue;
-		int offset = atoi( row[1] );
-		if ( offset < 0 || offset >= g_shop[type].maxnum )
+		int index = atoi( row[1] );
+		if ( index < 0 || index >= g_shop[type].maxnum )
 			continue;
-		g_shop[type].config[offset].type = atoi(row[offset++]);
-		g_shop[type].config[offset].offset = atoi(row[offset++]);
-		g_shop[type].config[offset].awardkind = atoi(row[offset++]);
-		g_shop[type].config[offset].awardnum = atoi(row[offset++]);
-		g_shop[type].config[offset].token = atoi(row[offset++]);
-		g_shop[type].config[offset].original_token = atoi(row[offset++]);
-		g_shop[type].config[offset].actorlevel = atoi(row[offset++]);
-		g_shop[type].config[offset].sale = atoi(row[offset++]);
+		g_shop[type].config[index].type = atoi(row[offset++]);
+		g_shop[type].config[index].index = atoi(row[offset++]);
+		g_shop[type].config[index].awardkind = atoi(row[offset++]);
+		g_shop[type].config[index].awardnum = atoi(row[offset++]);
+		g_shop[type].config[index].token = atoi(row[offset++]);
+		g_shop[type].config[index].original_token = atoi(row[offset++]);
+		g_shop[type].config[index].actorlevel_min = atoi(row[offset++]);
+		g_shop[type].config[index].actorlevel_max = atoi(row[offset++]);
+		g_shop[type].config[index].sale = atoi(row[offset++]);
+		g_shop[type].config[index].buyuse = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

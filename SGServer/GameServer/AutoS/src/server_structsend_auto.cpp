@@ -2333,6 +2333,7 @@ int struct_NetS_ShopItem_send( char **pptr, int *psize, SLK_NetS_ShopItem *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_token, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_sale, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buyuse, (*psize) );
 	return 0;
 }
 
@@ -2436,6 +2437,7 @@ int struct_NetS_VipShopItem_send( char **pptr, int *psize, SLK_NetS_VipShopItem 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_token, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_buynum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_vip_buynum_max, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_id, (*psize) );
 	return 0;
 }
 
@@ -2449,6 +2451,15 @@ int struct_NetS_VipShop_send( char **pptr, int *psize, SLK_NetS_VipShop *pValue 
 		struct_NetS_VipShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_useitem, (*psize) );
+	return 0;
+}
+
+int struct_NetS_VipBag_send( char **pptr, int *psize, SLK_NetS_VipBag *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_vipbag, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_vipbag_count, (*psize) );
 	return 0;
 }
 
