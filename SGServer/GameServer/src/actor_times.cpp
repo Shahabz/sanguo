@@ -61,6 +61,7 @@ void _check_fday( int actor_index )
 	{
 		g_actors[actor_index].fdate = thisday;
 		memset( g_actors[actor_index].today_char, 0, MAX_TODAY_COUNT + 1 );
+		memset( g_actors[actor_index].today_short, 0, sizeof( short )*MAX_TODAY_SHORT_COUNT );
 		memset( g_actors[actor_index].today_int, 0, sizeof( int )*MAX_TODAY_INTNUM );
 		hero_colorup_reset( actor_index );
 		write_gamelog( "[reset fdate:%d] %d", g_actors[actor_index].fdate, g_actors[actor_index].actorid );
@@ -96,6 +97,37 @@ int actor_set_today_char_times( int actor_index, int offset, char value )
 		return -1;
 	_check_fday( actor_index );
 	g_actors[actor_index].today_char[offset] = value;
+	return 0;
+}
+
+// short 类型的每日数据（每天更新）
+int actor_get_today_short_times( int actor_index, int offset )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( offset >= MAX_TODAY_SHORT_COUNT || offset < 0 )
+		return -1;
+	_check_fday( actor_index );
+	return g_actors[actor_index].today_short[offset];
+}
+int actor_add_today_short_times( int actor_index, int offset, short value )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( offset >= MAX_TODAY_SHORT_COUNT || offset < 0 )
+		return -1;
+	_check_fday( actor_index );
+	g_actors[actor_index].today_short[offset] += value;
+	return 0;
+}
+int actor_set_today_short_times( int actor_index, int offset, short value )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( offset >= MAX_TODAY_SHORT_COUNT || offset < 0 )
+		return -1;
+	_check_fday( actor_index );
+	g_actors[actor_index].today_short[offset] = value;
 	return 0;
 }
 

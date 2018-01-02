@@ -34,7 +34,8 @@ int vipbag_check( int actor_index, int level );
 // VIPÃÿº€…ÃµÍ
 int vipshop_list( int actor_index );
 int vipshop_getbuynum( int actor_index, int id );
-int vipshop_addbuynum( int actor_index, int id );
-int vipshop_buy( int actor_index, int id, int awardkind );
+int vipshop_addbuynum( int actor_index, int id, short num );
+int vipshop_buy( int actor_index, int id, int awardkind, int count );
+int vipshop_useitem_buy( int actor_index, int id, int awardkind );
 int vipshop_set_useitembuy( int actor_index, int close );
 #endif

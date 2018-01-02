@@ -138,7 +138,7 @@ int shop_checksale( int actor_index, int awardkind )
 	return 0;
 }
 
-int shop_buy( int actor_index, int type, int offset, int awardkind, int buyuse )
+int shop_buy( int actor_index, int type, int offset, int awardkind, int count, int buyuse )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( type <= 0 || type >= g_shop_maxnum )
@@ -147,15 +147,16 @@ int shop_buy( int actor_index, int type, int offset, int awardkind, int buyuse )
 		return -1;
 	if ( g_shop[type].config[offset].awardkind != awardkind )
 		return -1;
-	
+	if ( count <= 0 )
+		return -1;
 	if ( shop_checksale( actor_index, awardkind ) == 1 )
 	{
-		if ( actor_change_token( actor_index, -g_shop[type].config[offset].token, PATH_SHOP, 0 ) < 0 )
+		if ( actor_change_token( actor_index, -g_shop[type].config[offset].token*count, PATH_SHOP, 0 ) < 0 )
 			return -1;
 	}
 	else
 	{
-		if ( actor_change_token( actor_index, -g_shop[type].config[offset].original_token, PATH_SHOP, 0 ) < 0 )
+		if ( actor_change_token( actor_index, -g_shop[type].config[offset].original_token*count, PATH_SHOP, 0 ) < 0 )
 			return -1;
 	}
 	
@@ -164,7 +165,7 @@ int shop_buy( int actor_index, int type, int offset, int awardkind, int buyuse )
 	}
 	else
 	{
-		award_getaward( actor_index, g_shop[type].config[offset].awardkind, g_shop[type].config[offset].awardnum, -1, PATH_SHOP, NULL );
+		award_getaward( actor_index, g_shop[type].config[offset].awardkind, g_shop[type].config[offset].awardnum*count, -1, PATH_SHOP, NULL );
 	}
 	return 0;
 }

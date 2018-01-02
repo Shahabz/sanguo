@@ -14,12 +14,17 @@ int actor_get_sflag( int actor_index, int offset );
 #define	TODAY_CHAR_LOGINAWARD		1 // 今天登陆奖励
 #define TODAY_CHAR_WORLDBOSS		2 // 今天是否打过世界boss
 #define TODAY_CHAR_SHOP_SALEITEM	3 // 今天是否随机了打折物品
-#define TODAY_CHAR_VIPSHOP_BUYNUM_BASE		10	// 今天购买指定道具次数
-#define TODAY_CHAR_VIPSHOP_BUYNUM_END		40	// 今天购买指定道具次数
-
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );
+
+// short 类型的每日数据（每天更新）
+#define MAX_TODAY_SHORT_COUNT		32
+#define TODAY_SHORT_VIPSHOP_BUYNUM_BASE		0	// 今天购买指定道具次数
+#define TODAY_SHORT_VIPSHOP_BUYNUM_END		24	// 今天购买指定道具次数
+int actor_get_today_short_times( int actor_index, int offset );
+int actor_add_today_short_times( int actor_index, int offset, short value );
+int actor_set_today_short_times( int actor_index, int offset, short value );
 
 // int 类型的每日数据（每天更新）
 #define MAX_TODAY_INTNUM	8

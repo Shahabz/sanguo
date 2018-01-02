@@ -102,8 +102,9 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_IRON then	-- 镔铁
 		sprite = ItemSprite( 123 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(124)
+		c = 1
 		
 	elseif awardkind == AWARDKIND_TOKEN then-- 元宝
 		sprite = ItemSprite( 124 );
@@ -118,14 +119,17 @@ function AwardInfo( awardkind )
 	elseif awardkind == AWARDKIND_INFANTRY then -- 步兵
 		sprite = LoadSprite( "item_icon_445" );
 		color = ItemColorSprite( 0 );
+		name = T(134)
 		
 	elseif awardkind == AWARDKIND_CAVALRY then -- 骑兵
 		sprite = LoadSprite( "item_icon_446" );
 		color = ItemColorSprite( 0 );
+		name = T(135)
 		
 	elseif awardkind == AWARDKIND_ARCHER then -- 弓兵
 		sprite = LoadSprite( "item_icon_447" );
 		color = ItemColorSprite( 0 );
+		name = T(136)
 		
 	elseif awardkind == AWARDKIND_EXP then	-- 角色经验
 		sprite = ItemSprite( 127 );
@@ -139,7 +143,7 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_AUTOBUILD	then -- 自动建造次数
 		sprite = LoadSprite( "item_icon_469" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(191)
 		c = 2
 		
@@ -149,14 +153,15 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_PEOPLE then	-- 人口
 		sprite = LoadSprite( "Char_Default" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(127)
 		c = 2
 		
 	elseif awardkind == AWARDKIND_PRESTIGE then	-- 威望值
 		sprite = LoadSprite( "item_icon_125" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(152)
+		c = 2
 		
 	elseif awardkind == AWARDKIND_FRIENDSHIP then -- 友谊积分
 		sprite = LoadSprite( "Char_Default" );
@@ -182,18 +187,30 @@ function AwardInfo( awardkind )
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 0 );
 		name = T(1101)
+		
 	elseif awardkind == AWARDKIND_LOSTREBUILD then -- 高级重建次数
 		sprite = LoadSprite( "Char_Default" );
 		color = ItemColorSprite( 2 );
 		name = T(1375)
+		
 	elseif awardkind == AWARDKIND_CITYGUARDNUM then -- 城防补充次数
 		sprite = LoadSprite( "item_icon_471" );
-		color = ItemColorSprite( 1 );
+		color = ItemColorSprite( 2 );
 		name = T(1377)
 		c = 2
 		
 	elseif awardkind == AWARDKIND_BUFF_TRAIN then -- 武卒官加速N%，时间1天
+		sprite = LoadSprite( "item_icon_473" );
+		color = ItemColorSprite( 5 );
+		name = item_getname(474)
+		c = 5
+			
 	elseif awardkind == AWARDKIND_BUFF_MARCH then -- 行军耗时降低N%，时间1天
+		sprite = LoadSprite( "item_icon_474" );
+		color = ItemColorSprite( 5 );
+		name = item_getname(473)
+		c = 5
+		
 	elseif awardkind == AWARDKIND_LEVY_SILVER then -- 奖励N次银币征收量
 		sprite = ItemSprite( 120 );
 		color = ItemColorSprite( 0 );
@@ -211,8 +228,9 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_LEVY_IRON	then -- 奖励N次镔铁征收量
 		sprite = ItemSprite( 123 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(124)
+		c = 1
 		
 	elseif awardkind == AWARDKIND_PERMISSION_1 then -- 购买步兵权限（只用于显示）
 		sprite = LoadSprite( "item_icon_445" );

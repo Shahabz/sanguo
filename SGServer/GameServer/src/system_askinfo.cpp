@@ -703,7 +703,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{
-			shop_buy( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4] );
+			shop_buy( actor_index, pvalue[1], pvalue[2], pvalue[3], pvalue[4], pvalue[5] );
 		}
 		break;
 	case ASKINFO_PAY:
@@ -734,7 +734,15 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{
-			vipshop_buy( actor_index, pvalue[1], pvalue[2] );
+			vipshop_buy( actor_index, pvalue[1], pvalue[2], pvalue[3] );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			vipshop_set_useitembuy( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			vipshop_useitem_buy( actor_index, pvalue[1], pvalue[2] );
 		}
 		break;
 	case ASKINFO_VIPBAG:

@@ -14,6 +14,7 @@
 #include "actor_send.h"
 #include "actor_times.h"
 #include "server_netsend_auto.h"
+#include "item.h"
 #include "vip.h"
 
 extern SConfig g_Config;
@@ -226,18 +227,21 @@ int vipshop_list( int actor_index )
 		return -1;
 
 	SLK_NetS_VipShop pValue = { 0 };
-	int m_awardkind;	//vip特价商品
-	int m_awardnum;	//vip特价商品
-	short m_token;	//vip特价商品
-	short m_itemkind;	//vip特价商品
-	short m_vip_token;	//vip特价商品
-	short m_vip_buynum;	//vip特价商品
-	short m_vip_buynum_max;	//vip特价商品
+	pValue.m_useitem = g_actors[actor_index].shop_useitem;
 	for ( int tmpi = 0; tmpi < g_vipshop_maxnum; tmpi++ )
 	{
 		if ( g_vipshop[tmpi].id <= 0 )
 			continue;
-		pValue.m_list[pValue.m_count].m_id = g_vipshop[tmpi].id;
+		if ( pCity->level < g_vipshop[tmpi].actorlevel )
+			continue;
+		if ( pCity->viplevel < g_vipshop[tmpi].viplevel )
+			continue;
+		if ( g_vipshop[tmpi].vipbaglevel > 0 )
+		{
+			if ( vipbag_check( actor_index, g_vipshop[tmpi].vipbaglevel ) == 0 )
+				continue;
+		}
+		pValue.m_list[pValue.m_count].m_id = (char)g_vipshop[tmpi].id;
 		pValue.m_list[pValue.m_count].m_awardkind = g_vipshop[tmpi].awardkind;
 		pValue.m_list[pValue.m_count].m_token = g_vipshop[tmpi].token;
 		pValue.m_list[pValue.m_count].m_itemkind = g_vipshop[tmpi].itemkind;
@@ -272,22 +276,80 @@ int vipshop_getbuynum( int actor_index, int id )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return 0;
-	int todaynum = actor_get_today_char_times( actor_index, TODAY_CHAR_VIPSHOP_BUYNUM_BASE+id );
+	int todaynum = actor_get_today_short_times( actor_index, TODAY_SHORT_VIPSHOP_BUYNUM_BASE + id - 1 );
 	return todaynum;
 }
 
 // 添加今天已经vip价格购买次数
-int vipshop_addbuynum( int actor_index, int id )
+int vipshop_addbuynum( int actor_index, int id, short num )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return 0;
-	actor_add_today_char_times( actor_index, TODAY_CHAR_VIPSHOP_BUYNUM_BASE + id );
+	actor_add_today_short_times( actor_index, TODAY_SHORT_VIPSHOP_BUYNUM_BASE + id - 1, num );
 	return 0;
 }
 
 // 购买
-int vipshop_buy( int actor_index, int id, int awardkind )
+int vipshop_buy( int actor_index, int id, int awardkind, int count )
 {
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int viplevel = pCity->viplevel;
+	if ( viplevel < 0 || viplevel >= g_vipshop_maxnum )
+		return -1;
+	if ( id <= 0 || id >= g_vipshop_maxnum )
+		return -1;
+	if ( g_vipshop[id].awardkind != awardkind )
+		return -1;
+
+	int addtimes = 0;
+	int costtoken = g_vipshop[id].token * count;
+	if ( g_vipshop[id].vip_buynum[viplevel] > 0 )
+	{
+		int leftnum = g_vipshop[id].vip_buynum[viplevel] - vipshop_getbuynum( actor_index, id );
+		if ( leftnum > 0 )
+		{
+			if ( count > leftnum )
+				count = leftnum;
+			costtoken = count * g_vipshop[id].vip_token[viplevel]; 
+			addtimes = count;
+		}
+	}
+	
+	if ( actor_change_token( actor_index, -costtoken, PATH_SHOP, 0 ) < 0 )
+		return -1;
+
+	award_getaward( actor_index, g_vipshop[id].awardkind, g_vipshop[id].awardnum*count, -1, PATH_VIPSHOP, NULL );
+	if ( addtimes > 0 )
+	{
+		vipshop_addbuynum( actor_index, id, addtimes );
+	}
+	vipshop_list( actor_index );
+	return 0;
+}
+
+// 使用道具购买
+int vipshop_useitem_buy( int actor_index, int id, int awardkind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int viplevel = pCity->viplevel;
+	if ( viplevel < 0 || viplevel >= g_vipshop_maxnum )
+		return -1;
+	if ( id <= 0 || id >= g_vipshop_maxnum )
+		return -1;
+	if ( g_vipshop[id].awardkind != awardkind )
+		return -1;
+	if ( g_vipshop[id].itemkind <= 0 )
+		return -1;
+	if ( item_lost( actor_index, g_vipshop[id].itemkind, 1, PATH_VIPSHOP ) < 0 )
+		return -1;
+	award_getaward( actor_index, g_vipshop[id].awardkind, g_vipshop[id].awardnum, -1, PATH_VIPSHOP, NULL );
+	vipshop_list( actor_index );
 	return 0;
 }
 
@@ -303,5 +365,6 @@ int vipshop_set_useitembuy( int actor_index, int close )
 	{
 		g_actors[actor_index].shop_useitem = 0;
 	}
+	vipshop_list( actor_index );
 	return 0;
 }

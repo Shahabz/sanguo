@@ -18,6 +18,9 @@ local m_uiFightContent = nil; --UnityEngine.GameObject
 local m_uiOtherContent = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_uiBuyInfo = nil; --UnityEngine.GameObject
+local m_uiVipShopUseItem = nil; --UnityEngine.GameObject
+local m_uiSwitchOnBtn = nil; --UnityEngine.GameObject
+local m_uiSwitchOffBtn = nil; --UnityEngine.GameObject
 
 local m_uiCostToken = nil
 local m_uiUseNum = nil
@@ -32,6 +35,7 @@ local m_AwardDescLayerShow = false
 
 -- 打开界面
 function ShopDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_bagdlg" );
 	m_Dlg = eye.uiManager:Open( "ShopDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(34), HELP_BagDlg, ShopDlgClose );
 end
@@ -50,6 +54,7 @@ end
 function ShopDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_bagdlg" );
 end
 
 ----------------------------------------
@@ -68,28 +73,44 @@ function ShopDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		elseif nControlID >= 1 and nControlID <= 4 then
 			ShopDlgSelectType( nControlID )
-				
-		-- 加1
+		
+		-- 减10
 		elseif nControlID == 11 then
-			ShopDlgBuyItemSetNum( 1 )
-			
+			ShopDlgBuyItemSetNum( -10 )
+					
 		-- 减1
 		elseif nControlID == 12 then
 			ShopDlgBuyItemSetNum( -1 )
-		
-		-- 购买
+			
+		-- 加1
 		elseif nControlID == 13 then
+			ShopDlgBuyItemSetNum( 1 )
+		
+		-- 加10
+		elseif nControlID == 14 then
+			ShopDlgBuyItemSetNum( 10 )
+			
+		-- 购买
+		elseif nControlID == 15 then
 			ShopDlgItemBuy( 0 )
 			
 		-- 购买并使用
-		elseif nControlID == 14 then
+		elseif nControlID == 16 then
 			ShopDlgItemBuy( 1 )
+		
+		-- 点击优先使用道具	
+		elseif nControlID == 21 then
+			system_askinfo( ASKINFO_VIPSHOP, "", 2, 1 );
+			
+		-- 点击优先使用道具
+		elseif nControlID == 22 then
+			system_askinfo( ASKINFO_VIPSHOP, "", 2, 0 );
 		
 		-- 军事其他商店-点击购买
 		elseif nControlID >= 1000 and nControlID < 2000 then
 			ShopDlgBuyAsk( nControlID-1000 )
 		
-		-- VIP商店点击购买	
+		-- VIP礼包点击购买	
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			ShopDlgVipBagBuy( nControlID-2000 )
 				
@@ -128,7 +149,10 @@ function ShopDlgOnAwake( gameObject )
 	m_uiOtherContent = objs[15];
 	m_uiAwardDescLayer = objs[16];
 	m_uiBuyInfo = objs[17];
-	
+	m_uiVipShopUseItem = objs[18];
+	m_uiSwitchOnBtn = objs[19];
+	m_uiSwitchOffBtn = objs[20];
+
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_VipShopItem", 8, 8, m_uiUIP_VipShopItem);
@@ -179,6 +203,7 @@ end
 function ShopDlgSelectType( type )
 	-- VIP特价商店
 	if type == 1 then
+		SetTrue( m_uiVipShopUseItem )
 		SetTrue( m_uiVipShopScroll )
 		SetFalse( m_uiVipBagScroll )
 		SetFalse( m_uiFightScroll )
@@ -191,6 +216,7 @@ function ShopDlgSelectType( type )
 		
 	-- VIP 礼包
 	elseif type == 2 then
+		SetFalse( m_uiVipShopUseItem )
 		SetFalse( m_uiVipShopScroll )
 		SetTrue( m_uiVipBagScroll )
 		SetFalse( m_uiFightScroll )
@@ -203,6 +229,7 @@ function ShopDlgSelectType( type )
 		
 	-- 普通商店-军事
 	elseif type == 3 then
+		SetFalse( m_uiVipShopUseItem )
 		SetFalse( m_uiVipShopScroll )
 		SetFalse( m_uiVipBagScroll )
 		SetTrue( m_uiFightScroll )
@@ -215,6 +242,7 @@ function ShopDlgSelectType( type )
 	
 	-- 普通商店-其他
 	elseif type == 4 then
+		SetFalse( m_uiVipShopUseItem )
 		SetFalse( m_uiVipShopScroll )
 		SetFalse( m_uiVipBagScroll )
 		SetFalse( m_uiFightScroll )
@@ -232,11 +260,14 @@ end
 -- m_count=0,m_list={m_id=0,m_awardkind=0,m_awardnum=0,m_token=0,m_itemkind=0,m_vip_token=0,m_vip_buynum=0,m_vip_buynum_max=0,[m_count]},m_useitem=0,
 function ShopDlgRecvVipShop( recvValue )
 	m_selectType = 1
+	ShopDlgVipShopSwitchUseItem( recvValue.m_useitem )
+	ShopDlgClearVipShopItem()
+	m_Cache = recvValue;
 	for i = 1, recvValue.m_count, 1 do
-		ShopDlgCreateVipShopItem( i, recvValue.m_list[i] )
+		ShopDlgCreateVipShopItem( i, recvValue.m_list[i], recvValue.m_useitem )
 	end
 end
-function ShopDlgCreateVipShopItem( index, info )
+function ShopDlgCreateVipShopItem( index, info, useitem )
 	local uiObj = m_ObjectPool:Get( "UIP_VipShopItem" );
 	uiObj.transform:SetParent( m_uiVipShopContent.transform );
 	uiObj.transform.localScale = Vector3.one;
@@ -260,11 +291,82 @@ function ShopDlgCreateVipShopItem( index, info )
 	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )
 	SetImage( uiShape, sprite );
 	SetImage( uiColor, color );
-	SetText( uiName, name, NameColor(c) )
-	SetText( uiToken, info.m_token )	
+	if info.m_awardnum > 1 then
+		if info.m_id == 15 or info.m_id == 16 then
+			SetText( uiName, name..info.m_awardnum.."%", NameColor(c) )
+		else
+			SetText( uiName, name.."x"..info.m_awardnum, NameColor(c) )
+		end
+	else
+		SetText( uiName, name, NameColor(c) )
+	end	
 	SetText( uiDesc1, F( 2280+info.m_id, info.m_awardnum ) );
-	SetText( uiDesc2, F( 2089, info.m_token, info.m_vip_buynum_max-info.m_vip_buynum) )
+	
+	-- 可以道具购买并且已经优选选择道具购买
+	local isuse = 0
+	if info.m_itemkind > 0 and useitem == 0 then
+		local itemnum = GetItem():GetCount( info.m_itemkind )
+		if itemnum > 0 then
+			isuse = 1;
+			SetTrue( uiFree )
+			SetText( uiFree, T(2277) )
+			SetFalse( uiDesc2 )
+			SetFalse( uiRedLine )
+			SetTrue( uiPrice )
+			SetText( uiPrice, item_getname(info.m_itemkind).."("..itemnum..")" )
+			SetFalse( uiIcon )
+			SetText( uiToken, "" )
+		end
+	end
+	
+	if isuse == 0 then
+		if info.m_id ~= 15 and info.m_id ~= 16 then
+			local leftnum =  info.m_vip_buynum_max-info.m_vip_buynum
+			if leftnum > 0 then
+				SetTrue( uiDesc2 )
+				SetText( uiDesc2, F( 2089, info.m_vip_token, leftnum) )
+				SetTrue( uiRedLine )
+				SetTrue( uiPrice )
+				SetText( uiPrice, F( 2088, info.m_token ) )
+				SetText( uiToken, info.m_vip_token )
+			else
+				SetFalse( uiDesc2 )
+				SetFalse( uiRedLine )
+				SetFalse( uiPrice )
+				SetText( uiToken, info.m_token )
+			end
+		else
+			SetFalse( uiDesc2 )
+			SetFalse( uiRedLine )
+			SetTrue( uiPrice )
+			SetText( uiPrice, T(2276) )
+		end
+		SetTrue( uiIcon )
+		SetFalse( uiFree )
+	end
 	SetControlID( uiBuyButton, 1000+index )
+end
+-- VIP商店清空对象
+function ShopDlgClearVipShopItem()
+	local objs = {};
+	for i=0,m_uiVipShopContent.transform.childCount-1 do
+		table.insert(objs,m_uiVipShopContent.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_VipShopItem(Clone)" then
+			m_ObjectPool:Release( "UIP_VipShopItem", obj );
+		end
+	end
+end
+function ShopDlgVipShopSwitchUseItem( useitem )
+	if useitem == 0 then
+		SetTrue( m_uiSwitchOnBtn )
+		SetFalse( m_uiSwitchOffBtn )
+	else
+		SetFalse( m_uiSwitchOnBtn )
+		SetTrue( m_uiSwitchOffBtn )
+	end
 end
 
 -- 返回VIP礼包信息
@@ -275,7 +377,7 @@ function ShopDlgRecvVipBag( recvValue )
 	if maxlevel > recvValue.m_vipbag_count then
 		maxlevel = recvValue.m_vipbag_count
 	end
-	ShopDlgClearVipShopItem()
+	ShopDlgClearVipBagItem()
 	for level = 0, maxlevel, 1 do
 		if Utils.get_int_sflag( recvValue.m_vipbag, level ) == 0 then
 			ShopDlgCreateVipBagItem( level, 0 )
@@ -346,8 +448,8 @@ function ShopDlgCreateVipBagItem( level, hasbuy )
 		end
 	end
 end
--- VIP礼包返回对象池
-function ShopDlgClearVipShopItem()
+-- VIP礼包清空对象
+function ShopDlgClearVipBagItem()
 	local objs = {};
 	for i=0,m_uiVipBagContent.transform.childCount-1 do
 		table.insert(objs,m_uiVipBagContent.transform:GetChild(i).gameObject);
@@ -488,34 +590,64 @@ function ShopDlgHideAwardDescLayer()
 end
 
 -- 购买确定框
-function ShopDlgBuyAsk( index )		
+function ShopDlgBuyAsk( index )	
+	if m_Cache == nil then
+		return
+	end
+	m_CacheItem = m_Cache.m_list[index]
+	if m_CacheItem == nil then
+		return
+	end		
+	SetTrue( m_uiBuyInfo )
+	local objs = m_uiBuyInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local ItemObj = objs[0];
+	local ItemName = objs[1];
+	local ItemDesc = objs[2];
+	local UseNum = objs[3];
+	local BuyButton = objs[4];
+	local UseButton = objs[5];
+	local NumSelect = objs[6];
+	local CostToken = objs[7];
+	m_uiCostToken = CostToken;
+	m_uiUseNum = UseNum;
+	m_SelectItemNum = 1;
+		
+	-- vip特价商店购买框		
 	if m_selectType == 1 then
-		
-	elseif m_selectType == 2 then
-		
-	elseif m_selectType == 3 or m_selectType == 4 then
-		if m_Cache == nil then
-			return
+		-- m_id=0,m_awardkind=0,m_awardnum=0,m_token=0,m_itemkind=0,m_vip_token=0,m_vip_buynum=0,m_vip_buynum_max=0
+		if m_CacheItem.m_itemkind > 0 and m_Cache.m_useitem == 0 then
+			local itemnum = GetItem():GetCount( m_CacheItem.m_itemkind )
+			if itemnum > 0 then
+				-- 直接道具购买
+				SetFalse( m_uiBuyInfo )
+				system_askinfo( ASKINFO_VIPSHOP, "", 3, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+				return
+			end
 		end
-		m_CacheItem = m_Cache.m_list[index]
-		if m_CacheItem == nil then
-			return
-		end		
-		SetTrue( m_uiBuyInfo )
+		local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
+		SetImage( ItemObj.transform:Find("Shape"), sprite )
+		SetImage( ItemObj.transform:Find("Color"), color )
+		SetText( ItemName, name, NameColor(c) );
+		SetText( ItemDesc, desc )
+		SetText( m_uiUseNum, m_SelectItemNum );
 		
-		local objs = m_uiBuyInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-		local ItemObj = objs[0];
-		local ItemName = objs[1];
-		local ItemDesc = objs[2];
-		local UseNum = objs[3];
-		local BuyButton = objs[4];
-		local UseButton = objs[5];
-		local NumSelect = objs[6];
-		local CostToken = objs[7];
-		m_uiCostToken = CostToken;
-		m_uiUseNum = UseNum;
-		
-		m_SelectItemNum = 1;
+		local leftnum =  m_CacheItem.m_vip_buynum_max-m_CacheItem.m_vip_buynum
+		if leftnum > 0 then
+			m_buytoken = m_CacheItem.m_vip_token;
+		else
+			m_buytoken = m_CacheItem.m_token;
+		end
+		local cost = m_SelectItemNum*m_buytoken
+		if GetPlayer().m_token < cost then
+			SetRichText( CostToken, F( 2274, cost ) )
+		else
+			SetRichText( CostToken, F( 2273, cost ) )
+		end
+		SetFalse( UseButton )
+	
+	-- 军事其他商店购买框	
+	elseif m_selectType == 3 or m_selectType == 4 then
+		-- {m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_sale=0,m_buyuse=0 [m_count]},
 		local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
 		SetImage( ItemObj.transform:Find("Shape"), sprite )
 		SetImage( ItemObj.transform:Find("Color"), color )
@@ -555,6 +687,16 @@ function ShopDlgBuyItemSetNum( num )
 	if m_SelectItemNum <= 0 then
 		m_SelectItemNum = 1;
 	end
+	
+	-- VIP购买次数检查
+	if m_selectType == 1 then
+		local leftnum =  m_CacheItem.m_vip_buynum_max-m_CacheItem.m_vip_buynum
+		if leftnum > 0 and m_SelectItemNum > leftnum then
+			m_SelectItemNum = leftnum;
+			pop( F(2089, m_CacheItem.m_vip_token,leftnum) )
+		end
+	end		
+	
 	SetText( m_uiUseNum, m_SelectItemNum );
 	local cost = m_SelectItemNum*m_buytoken
 	if GetPlayer().m_token < cost then
@@ -566,21 +708,24 @@ end
 		
 -- 购买
 function ShopDlgItemBuy( buyuse )
+	local cost = m_SelectItemNum*m_buytoken
+	if GetPlayer().m_token < cost then
+		JumpToken()
+		return
+	end
+	if m_CacheItem == nil then
+		return
+	end
+		
 	if m_selectType == 1 then
+		system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
 			
 	elseif m_selectType == 3 or m_selectType == 4 then
-		local cost = m_SelectItemNum*m_buytoken
-		if GetPlayer().m_token < cost then
-			JumpToken()
-			return
-		end
-		if m_CacheItem == nil then
-			return
-		end
+	
 		if m_selectType == 3 then
-			system_askinfo( ASKINFO_SHOP, "", 1, 1, m_CacheItem.m_offset, m_CacheItem.m_awardkind, buyuse );
+			system_askinfo( ASKINFO_SHOP, "", 1, 1, m_CacheItem.m_offset, m_CacheItem.m_awardkind, m_SelectItemNum, buyuse );
 		elseif m_selectType == 4 then
-			system_askinfo( ASKINFO_SHOP, "", 1, 2, m_CacheItem.m_offset, m_CacheItem.m_awardkind, buyuse  );
+			system_askinfo( ASKINFO_SHOP, "", 1, 2, m_CacheItem.m_offset, m_CacheItem.m_awardkind, m_SelectItemNum, buyuse  );
 		end
 	end
 	ShopDlgHideBuyInfoLayer()
