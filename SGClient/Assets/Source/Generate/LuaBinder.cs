@@ -40,6 +40,7 @@ public static class LuaBinder
 		UIInputFieldSubmitWrap.Register(L);
 		UISliderWrap.Register(L);
 		UIScrollRectWrap.Register(L);
+		UIScrollPageWrap.Register(L);
 		UIScrollBaseWrap.Register(L);
 		UIScrollRingWrap.Register(L);
 		UIScrollViewWrap.Register(L);
@@ -93,6 +94,7 @@ public static class LuaBinder
 		MapBorderWrap.Register(L);
 		MapUnitMoveWrap.Register(L);
 		WorldMapCameraWrap.Register(L);
+		WorldMapMiniCameraWrap.Register(L);
 		WorldMapThumbCameraWrap.Register(L);
 		ScreenBlurWrap.Register(L);
 		UIPrimitiveBaseWrap.Register(L);

@@ -31,6 +31,7 @@
 #include "world_boss.h"
 #include "actor_times.h"
 #include "king_war.h"
+#include "pay.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -49,6 +50,11 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	char szMsg[1024] = { 0 };
 	int actorid = pValue[3];
 	City *pCity = NULL;
+
+	if ( cmd == GMC_PAYBAG )
+	{
+		actorid = 0;
+	}
 
 	// 有些指令必须玩家在线
 	if ( actorid > 0 && (cmd == GMC_SYSTALK) )
@@ -438,6 +444,16 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			city_change_autobuild( pCity->index, pValue[0], PATH_GM );
+		}
+		break;
+	case GMC_PAYBAG:
+		if ( pValue[0] > 0 )
+		{
+			paybag_insert( pValue[0], pValue[1], pValue[2], pValue[3] );
+		}
+		else if ( pValue[0] < 0 )
+		{
+			paybag_delete( -pValue[0] );
 		}
 		break;
 	default:

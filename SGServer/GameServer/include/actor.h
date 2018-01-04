@@ -97,6 +97,10 @@ int actor_subscribecmd_add( int actor_index, short cmd );
 int actor_subscribecmd_del( int actor_index, short cmd );
 int actor_subscribecmd_check( int actor_index, short cmd );
 
+// 权限
+int actor_permission_open( int actor_index, int offset );
+int actor_permission_check( int actor_index, int offset );
+
 // ------------------------------- actor_func.c -----------------------------------
 // 根据索引获取用户id
 i64 actor_getoffline_userid( int actorid );

@@ -35,6 +35,8 @@ local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
 local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
+local m_uiOfficialEffect = nil; --UnityEngine.GameObject
+
 -- 打开界面
 function LevyDlgOpen()
 	m_Dlg = eye.uiManager:Open( "LevyDlg" );
@@ -127,6 +129,7 @@ function LevyDlgOnAwake( gameObject )
 	m_uiOfficialTime = objs[30];
 	m_uiOfficialName = objs[31];
 	m_uiOfficialDesc = objs[32];
+	m_uiOfficialEffect = objs[33];
 end
 
 -- 界面初始化时调用
@@ -237,6 +240,7 @@ function LevyDlgSetOfficial()
 	-- 已雇佣
 	if info.m_ofkind > 0 then
 		SetTrue( m_uiOfficialShape )
+		SetFalse( m_uiOfficialEffect )
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
@@ -244,8 +248,9 @@ function LevyDlgSetOfficial()
 		SetText( m_uiOfficialDesc, F(732, g_official_gov[info.m_ofkind].produce ) )
 		SetImage( m_uiOfficialShape, OfSprite( g_official_gov[info.m_ofkind].shape ) )
 	else
-		-- 未雇佣		
+		-- 未雇佣
 		SetFalse( m_uiOfficialShape )
+		SetTrue( m_uiOfficialEffect )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )
 		local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );

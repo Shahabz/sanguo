@@ -34,6 +34,7 @@
 #include "nation.h"
 #include "world_quest.h"
 #include "quest.h"
+#include "pay.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -419,6 +420,9 @@ int city_new( City *pCity )
 		g_city_maxindex = city_index + 1;
 	}
 
+	// 活动礼包
+	activity_paybag_citynew( &g_city[city_index] );
+
 	// 存档
 	city_save_auto( &g_city[city_index], "city", NULL );
 	return city_index;
@@ -654,7 +658,19 @@ void city_logic_sec( int begin, int end )
 		{
 			g_city[city_index].guardsec -= 1;
 			if ( g_city[city_index].guardsec == 0 )
-				city_guard_sendsec( g_city[city_index].actor_index );
+			{
+				if ( g_city[city_index].atgu_op == 1 && g_city[city_index].atgu > 0 )
+				{
+					if ( city_guard_call( city_index ) >= 0 )
+					{
+						city_change_autoguard( city_index, -1, PATH_SYSTEM );
+					}
+				}
+				else
+				{
+					city_guard_sendsec( g_city[city_index].actor_index );
+				}
+			}
 		}
 		
 		// 装备打造
@@ -713,6 +729,19 @@ void city_logic_sec( int begin, int end )
 					g_city[city_index].ofquick[i] = 0;
 					if ( g_city[city_index].actor_index >= 0 )
 						city_officialhire_sendinfo( &g_city[city_index], i );
+				}
+			}
+		}
+
+		// buff
+		for ( int i = 0; i < CITY_BUFF_MAX; i++ )
+		{
+			if ( g_city[city_index].buffsec[i] > 0 )
+			{
+				g_city[city_index].buffsec[i] -= 1;
+				if ( g_city[city_index].buffsec[i] == 0 )
+				{
+					city_change_buff( city_index, i, 0, PATH_SYSTEM );
 				}
 			}
 		}
@@ -1381,6 +1410,60 @@ int city_change_autobuild( int city_index, int value, short path )
 	netsend_changeautobuild_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+
+int city_autoguard_open( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].atgu_op == 1 )
+		g_city[city_index].atgu_op = 0;
+	else
+	{
+		if ( g_city[city_index].atgu <= 0 )
+			g_city[city_index].atgu_op = 0;
+		else
+			g_city[city_index].atgu_op = 1;
+	}
+
+	// 自动补充
+	if ( g_city[city_index].atgu_op == 1 )
+	{
+		city_guard_call( city_index );
+	}
+
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_ChangeAutoGuard pValue = { 0 };
+	pValue.m_autoguard = g_city[city_index].atgu;
+	pValue.m_autoguardopen = g_city[city_index].atgu_op;
+	netsend_changeautoguard_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 城防补充次数
+int city_change_autoguard( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].atgu > global.autoguard_max - value )
+		g_city[city_index].atgu = (char)global.autoguard_max;
+	else
+		g_city[city_index].atgu += value;
+
+	if ( g_city[city_index].atgu <= 0 )
+	{
+		g_city[city_index].atgu = 0;
+		g_city[city_index].atgu_op = 0;
+	}
+	if ( path == PATH_QUEST && g_city[city_index].atgu > 0 )
+	{
+		g_city[city_index].atgu_op = 0;
+	}
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	SLK_NetS_ChangeAutoGuard pValue = { 0 };
+	pValue.m_autoguard = g_city[city_index].atgu;
+	pValue.m_autoguardopen = g_city[city_index].atgu_op;
+	pValue.m_path = path;
+	netsend_changeautoguard_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
 // 洗髓次数
 int city_change_herowash( int city_index, int value, short path )
 {
@@ -1631,6 +1714,14 @@ int city_guard_clearcd( int city_index )
 		return -1;
 	g_city[city_index].guardsec = 0;
 	city_guard_sendsec( g_city[city_index].actor_index );
+
+	if ( g_city[city_index].atgu_op == 1 && g_city[city_index].atgu > 0 )
+	{
+		if ( city_guard_call( city_index ) >= 0 )
+		{
+			city_change_autoguard( city_index, -1, PATH_SYSTEM );
+		}
+	}
 	return 0;
 }
 
@@ -1870,10 +1961,14 @@ int city_trainnum( City *pCity, BuildingBarracks *barracks )
 		corps = 2;
 
 	int base = config->value[0];
-	int tech = (int)ceil(config->value[0] * pCity->attr.train_per[corps]);
-	int buff = (int)ceil( config->value[0] * pCity->attr.trainspeed_per );
-	int vip = (int)ceil( config->value[0] * (float)(vip_attr_train( pCity )/100.0f) );
-	int total = base + tech + buff + vip;
+	int tech1 = (int)ceil(config->value[0] * pCity->attr.train_per[corps]);
+	int tech2 = (int)ceil( config->value[0] * pCity->attr.trainspeed_per );
+	int buff = 0;
+	if ( pCity->buffsec[CITY_BUFF_TRAIN] > 0 )
+	{
+		buff = (int)ceil( config->value[0] * (float)(vip_attr_train( pCity ) / 100.0f) );
+	}
+	int total = base + tech1 + tech2 + buff;
 	return total;
 }
 
@@ -2443,6 +2538,8 @@ int city_material_make( int actor_index, int id, int itemkind, int type )
 	// 预定生产
 	else
 	{
+		if ( actor_get_sflag( actor_index, ACTOR_SFLAG_MATERIAL_MAKEWILL ) == 0 )
+			return -1;
 		// 找到一个空闲位置
 		int index = -1;
 		for ( int tmpi = 0; tmpi < maxqueue; tmpi++ )
@@ -2675,7 +2772,14 @@ int city_officialhire( int actor_index, int type, int kind )
 			return -1;
 		if ( pBuilding->level < g_official_tech[kind].buildinglevel )
 			return -1;
-
+		if ( g_official_tech[kind].vip > 0 )
+		{
+			if ( actor_get_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH ) == 0 )
+			{
+				actor_notify_alert( actor_index, 2321 );
+				return -1;
+			}
+		}
 		if ( g_official_tech[kind].free == 0 || (pCity->offree[type] & (1 << kind)) )
 		{ // 无免费
 			if ( g_official_tech[kind].silver > 0 )

@@ -1,5 +1,21 @@
 -- 一次性变量
 ACTOR_SFLAG_BODY_FREEBUY	=	0	-- 首次购买体力免费
+ACTOR_SFLAG_MAPZONE_GO_ZC	=	1	-- 首次免费前往州城
+ACTOR_SFLAG_QUEST_AUTOBUILD	=	2	-- 新手任务是否领取过自动建造
+ACTOR_SFLAG_SKIPFIGHT		=	3	-- 是否可以跳过战斗
+ACTOR_SFLAG_PALACE			=	4	-- 是否开启皇宫内院
+ACTOR_SFLAG_STORYSWEEP		=	5	-- 是否开启扫荡副本
+ACTOR_SFLAG_OFFICIAL_TECH	=	6   -- 是否开启紫色研究员
+ACTOR_SFLAG_EQUPIPDRAWING	=	7	-- 是否开启装备分解获得图纸
+ACTOR_SFLAG_MATERIAL_MAKEWILL = 8   -- 是否开启作坊预设
+
+CITY_BUFF_MAX		=	6 -- buff数量
+CITY_BUFF_MARCH		=	0 -- 军曹管buff 行军耗时降低15%
+CITY_BUFF_TRAIN		=	1 -- 武卒管buff 招募耗时降低15%
+CITY_BUFF_WIND		=	2 -- 风字令buff 行军耗时降低15%
+CITY_BUFF_FIRE		=	3 -- 火字令buff 士兵攻击+5%
+CITY_BUFF_MOUNTAIN	=	4 -- 山字令buff 士兵防御+5%
+CITY_BUFF_FOREST	=	5 -- 林字令buff 在兵营中额外增加20%伤病恢复
 
 --  角色缓存信息
 local Player = class("Player");
@@ -43,6 +59,8 @@ function Player:Init()
 	self.m_sflag			=	0;
 	self.m_autobuild		=	0;
 	self.m_autobuildopen	=	0;
+	self.m_autoguard		=	0;
+	self.m_autoguardopen	=	0;
 	self.m_ptsec			=	0;
 	self.m_forgingkind		=	0;
 	self.m_forgingsec		=	0;
@@ -75,6 +93,7 @@ function Player:Init()
 	self.m_buildings_res 	=	{};
 	self.m_attr 			= 	{};
 	self.m_blacklist		= 	{};
+	self.m_buff_endtime		= 	{};
 end
 
 -- 属性变化
@@ -108,6 +127,8 @@ function Player:Set( recvValue )
 	self.m_sflag			=	recvValue.m_sflag;
 	self.m_autobuild		=	recvValue.m_autobuild;
 	self.m_autobuildopen	=	recvValue.m_autobuildopen;
+	self.m_autoguard		=	recvValue.m_autoguard;
+	self.m_autoguardopen	=	recvValue.m_autoguardopen;
 	self.m_ptsec			=	recvValue.m_ptsec;
 	self.m_forgingkind		=	recvValue.m_forgingkind;
 	self.m_forgingsec		=	recvValue.m_forgingsec;
@@ -120,6 +141,9 @@ function Player:Set( recvValue )
 	end
 	for i = 1, 3, 1 do
 		self.m_officialhire[i-1] = recvValue.m_officialhire[i]
+	end
+	for i = 1, CITY_BUFF_MAX, 1 do
+		self.m_buff_endtime[i-1] = recvValue.m_buff_endtime[i]
 	end
 end
 

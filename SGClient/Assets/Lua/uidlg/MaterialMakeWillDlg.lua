@@ -104,6 +104,10 @@ end
 -- 自定
 ----------------------------------------
 function MaterialMakeWillDlgShow()
+	if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_MATERIAL_MAKEWILL ) == 0 then
+		AlertMsg( T(2320) )
+		return
+	end
 	m_pBuilding = GetPlayer():GetBuilding( BUILDING_Craftsman );
 	MaterialMakeWillDlgOpen()
 	-- 请求信息

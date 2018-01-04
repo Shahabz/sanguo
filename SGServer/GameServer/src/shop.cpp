@@ -101,7 +101,7 @@ int shop_list( int actor_index, int type )
 		pValue.m_list[pValue.m_count].m_offset = g_shop[type].config[tmpi].index;
 		pValue.m_list[pValue.m_count].m_awardkind = g_shop[type].config[tmpi].awardkind;
 		pValue.m_list[pValue.m_count].m_awardnum = g_shop[type].config[tmpi].awardnum;
-		pValue.m_list[pValue.m_count].m_buyuse = g_shop[type].config[tmpi].buyuse;
+		pValue.m_list[pValue.m_count].m_buyuse = (char)g_shop[type].config[tmpi].buyuse;
 		if ( shop_checksale( actor_index, g_shop[type].config[tmpi].awardkind ) == 1 )
 		{
 			pValue.m_list[pValue.m_count].m_sale = g_shop[type].config[tmpi].sale;

@@ -210,6 +210,8 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 			if ( unit_index >= 0 && unit_index < g_city_maxcount )
 			{
 				sprintf( name, "%s", g_city[unit_index].name );
+				if ( g_city[unit_index].buffsec[CITY_BUFF_FOREST] > 0 )
+					pUnit->buff_forest = 1;
 			}
 		}
 		else if ( unit_type == MAPUNIT_TYPE_ARMY )
@@ -218,6 +220,8 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 			if ( pCity )
 			{
 				sprintf( name, "%s", pCity->name );
+				if ( pCity->buffsec[CITY_BUFF_FOREST] > 0 )
+					pUnit->buff_forest = 1;
 			}
 		}
 	}
@@ -496,6 +500,9 @@ int fight_start_armygroup( int group_index )
 				pCity->temp_silver = 0;
 				pCity->temp_wood = 0;
 				pCity->temp_food = 0;
+				pCity->temp_wounded_soldiers[0] = 0;
+				pCity->temp_wounded_soldiers[1] = 0;
+				pCity->temp_wounded_soldiers[2] = 0;
 			}
 		}
 		else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
@@ -1234,6 +1241,14 @@ int fight_lost_calc_single( FightUnit *pUnit )
 				//army_carry_additem( army_index, AWARDKIND_PRESTIGE, pUnit->prestige );
 			}
 
+			// ÉË±ø»Ö¸´
+			if ( pUnit->wounded_soldiers > 0 )
+			{
+				city_changesoldiers( pCity->index, pUnit->corps, pUnit->wounded_soldiers, PATH_WOUNDED_SOLDIERS );
+				if ( pUnit->corps >= 0 && pUnit->corps < 3 )
+					pCity->temp_wounded_soldiers[pUnit->corps] += pUnit->wounded_soldiers;
+			}
+
 			// ¶ÔÊØ¾üÔì³ÉµÄÉËº¦
 			if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
 			{
@@ -1286,6 +1301,14 @@ int fight_lost_calc_single( FightUnit *pUnit )
 				if ( pUnit->prestige > 0 )
 				{
 					city_changeprestige( city_index, pUnit->prestige, PATH_FIGHT );
+				}
+
+				// ÉË±ø»Ö¸´
+				if ( pUnit->wounded_soldiers > 0 )
+				{
+					city_changesoldiers( city_index, pUnit->corps, pUnit->wounded_soldiers, PATH_WOUNDED_SOLDIERS );
+					if ( pUnit->corps >= 0 && pUnit->corps < 3 )
+						pCity->temp_wounded_soldiers[pUnit->corps] += pUnit->wounded_soldiers;
 				}
 			}
 		}
@@ -1431,6 +1454,12 @@ int fight_unit2json()
 				pUnit->prestige = pUnit->maxhp - pUnit->hp;
 			}
 			sprintf( vwstr, ",\"vw\":%d", pUnit->prestige );
+
+			// ÉË±ø»Ö¸´
+			if ( pUnit->buff_forest == 1 )
+			{
+				pUnit->wounded_soldiers = (int)((pUnit->maxhp - pUnit->hp)*global.buff_forest / 100.0f);
+			}
 		}
 
 		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d%s%s,"
@@ -1552,6 +1581,12 @@ int fight_unit2json()
 				pUnit->prestige = pUnit->maxhp - pUnit->hp;
 			}
 			sprintf( vwstr, ",\"vw\":%d", pUnit->prestige );
+
+			// ÉË±ø»Ö¸´
+			if ( pUnit->buff_forest == 1 )
+			{
+				pUnit->wounded_soldiers = (int)((pUnit->maxhp - pUnit->hp)*global.buff_forest / 100.0f);
+			}
 		}
 
 		sprintf( szTmp, "%c{ \"i\":%d,\"t\":%d,\"n\":%d,\"na\":\"%s\",\"kd\":%d,\"sp\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"mhp\":%d,\"hp\":%d,\"dmg\":%d%s%s,"

@@ -62,9 +62,25 @@ typedef struct _paycountry
 	char	offset;			// 偏移值
 }PayCountry;
 
+typedef struct _paybag
+{
+	int id;
+	short goodsid;
+	int begintime;
+	int endtime;
+	int count;
+	char pushcity;
+}PayBag;
+
 int payprice_init();
 int paycountry_init();
 int paycountry_reload();
+
+// 本服务器推送的礼包
+int paybag_load();
+int paybag_insert( short goodsid, int begintime, int endtime, int count );
+int paybag_delete( int id );
+void paybag_logic();
 
 int paystore_list( int actor_index );
 int paystore_activity_list( int actor_index );

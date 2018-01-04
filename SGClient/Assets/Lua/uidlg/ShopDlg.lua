@@ -21,6 +21,10 @@ local m_uiBuyInfo = nil; --UnityEngine.GameObject
 local m_uiVipShopUseItem = nil; --UnityEngine.GameObject
 local m_uiSwitchOnBtn = nil; --UnityEngine.GameObject
 local m_uiSwitchOffBtn = nil; --UnityEngine.GameObject
+local m_uiPayBagScroll = nil; --UnityEngine.GameObject
+local m_uiPayBagContent = nil; --UnityEngine.GameObject
+local m_uiUIP_PayBagItem = nil; --UnityEngine.GameObject
+local m_uiPayBagScrollDot = nil; --UnityEngine.GameObject
 
 local m_uiCostToken = nil
 local m_uiUseNum = nil
@@ -31,11 +35,13 @@ local m_selectType = 0;
 local m_selectShopType = 0;
 local m_Cache = nil;
 local m_CacheItem = nil
+local m_PayBagRecvValue = nil;
 local m_AwardDescLayerShow = false
 
 -- 打开界面
 function ShopDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_bagdlg" );
+	ResourceManager.LoadAssetBundle( "_ab_paybag" );
 	m_Dlg = eye.uiManager:Open( "ShopDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(34), HELP_BagDlg, ShopDlgClose );
 end
@@ -48,6 +54,10 @@ function ShopDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "ShopDlg" );
+	
+	m_Cache = nil;
+	m_CacheItem = nil
+	m_PayBagRecvValue = nil;
 end
 
 -- 删除界面
@@ -55,6 +65,7 @@ function ShopDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	ResourceManager.UnloadAssetBundle( "_ab_ui_bagdlg" );
+	ResourceManager.UnloadAssetBundle( "_ab_paybag" );
 end
 
 ----------------------------------------
@@ -113,16 +124,29 @@ function ShopDlgOnEvent( nType, nControlID, value, gameObject )
 		-- VIP礼包点击购买	
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			ShopDlgVipBagBuy( nControlID-2000 )
-				
+		
+		-- 礼包点击购买	
+		elseif nControlID >= 3000 and nControlID < 4000 then
+			ShopDlgPayBagBuy( nControlID-3000 )
+					
 		-- 点击道具	
 		elseif nControlID >= 1000000 then
 			ShopDlgClickItem( nControlID-1000000, value )
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 0 then
+			ShopDlgClose()
+			ShopDlgShowByType( m_selectType )
+		end
 	elseif nType == UI_EVENT_SCROLLDRAG then
 		if nControlID == 0 then
 			if m_AwardDescLayerShow == true then
 				ShopDlgHideAwardDescLayer()
 			end
+		end
+	elseif nType == UI_EVENT_SCROLLPAGE then
+		if nControlID == 0 then
+			ShopDlgPayBagScrollSelect( value )
 		end
 	end
 end
@@ -152,6 +176,10 @@ function ShopDlgOnAwake( gameObject )
 	m_uiVipShopUseItem = objs[18];
 	m_uiSwitchOnBtn = objs[19];
 	m_uiSwitchOffBtn = objs[20];
+	m_uiPayBagScroll = objs[21];
+	m_uiPayBagContent = objs[22];
+	m_uiUIP_PayBagItem = objs[23];
+	m_uiPayBagScrollDot = objs[24];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -192,11 +220,13 @@ end
 function ShopDlgShow()
 	ShopDlgOpen()
 	ShopDlgSelectType( 1 )
+	system_askinfo( ASKINFO_PAY, "", 1 )
 end
 
 function ShopDlgShowByType( type )
 	ShopDlgOpen()
 	ShopDlgSelectType( type )
+	system_askinfo( ASKINFO_PAY, "", 1 )
 end
 
 -- 选择种类
@@ -287,6 +317,8 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	local uiIcon = objs[9]
 	local uiFree = objs[10]
 	local uiToken = objs[11]
+	local uiTimer = objs[12]
+	SetFalse( uiTimer )
 	
 	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )
 	SetImage( uiShape, sprite );
@@ -294,11 +326,14 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	if info.m_awardnum > 1 then
 		if info.m_id == 15 or info.m_id == 16 then
 			SetText( uiName, name..info.m_awardnum.."%", NameColor(c) )
+			SetText( uiNum, "" )
 		else
 			SetText( uiName, name.."x"..info.m_awardnum, NameColor(c) )
+			SetText( uiNum, "x"..info.m_awardnum )
 		end
 	else
 		SetText( uiName, name, NameColor(c) )
+		SetText( uiNum, "" )
 	end	
 	SetText( uiDesc1, F( 2280+info.m_id, info.m_awardnum ) );
 	
@@ -319,8 +354,31 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 		end
 	end
 	
-	if isuse == 0 then
-		if info.m_id ~= 15 and info.m_id ~= 16 then
+	if isuse == 0 then		
+		if info.m_id == 15 or info.m_id == 16 then
+			SetFalse( uiDesc2 )
+			SetFalse( uiRedLine )
+			SetTrue( uiPrice )
+			SetText( uiPrice, T(2276) )
+			SetText( uiToken, info.m_token )
+			if info.m_id == 15  then
+				local lefttime = GetPlayer().m_buff_endtime[CITY_BUFF_MARCH]-GetServerTime()
+				if lefttime > 0 then
+					SetTrue( uiTimer )
+					SetTimer( uiTimer, lefttime-1, lefttime, 0, T(702) )
+					SetText( uiName, name..info.m_awardnum.."%".."("..T(2324)..")", NameColor(c) )
+					SetText( uiPrice, T(2325) )
+				end
+			elseif info.m_id == 16 then
+				local lefttime = GetPlayer().m_buff_endtime[CITY_BUFF_TRAIN]-GetServerTime()
+				if lefttime > 0 then
+					SetTrue( uiTimer )
+					SetTimer( uiTimer, lefttime-1, lefttime, 0, T(702) )
+					SetText( uiName, name..info.m_awardnum.."%".."("..T(2324)..")", NameColor(c) )
+					SetText( uiPrice, T(2325) )
+				end
+			end
+		else
 			local leftnum =  info.m_vip_buynum_max-info.m_vip_buynum
 			if leftnum > 0 then
 				SetTrue( uiDesc2 )
@@ -335,11 +393,6 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 				SetFalse( uiPrice )
 				SetText( uiToken, info.m_token )
 			end
-		else
-			SetFalse( uiDesc2 )
-			SetFalse( uiRedLine )
-			SetTrue( uiPrice )
-			SetText( uiPrice, T(2276) )
 		end
 		SetTrue( uiIcon )
 		SetFalse( uiFree )
@@ -718,7 +771,36 @@ function ShopDlgItemBuy( buyuse )
 	end
 		
 	if m_selectType == 1 then
-		system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+		-- 自动建造次数询问
+		if m_CacheItem.m_awardkind == AWARDKIND_AUTOBUILD then
+			if GetPlayer().m_autobuild >= global.autobuild_max then
+				AlertMsg( T(2328) )
+				return
+			end
+			if GetPlayer().m_autobuild + m_CacheItem.m_awardnum > global.autobuild_max then
+				MsgBox( F( 2326, GetPlayer().m_autobuild, global.autobuild_max ), function()
+					system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+				end )
+			else
+				system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+			end
+		
+		-- 城防补充次数询问
+		elseif m_CacheItem.m_awardkind == AWARDKIND_CITYGUARDNUM then
+			if GetPlayer().m_autoguard >= global.autoguard_max then
+				AlertMsg( T(2329) )
+				return
+			end
+			if GetPlayer().m_autoguard + m_CacheItem.m_awardnum > global.autoguard_max then
+				MsgBox( F( 2327, GetPlayer().m_autoguard, global.autoguard_max ), function()
+					system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+				end )
+			else
+				system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+			end
+		else
+			system_askinfo( ASKINFO_VIPSHOP, "", 1, m_CacheItem.m_id, m_CacheItem.m_awardkind, m_SelectItemNum );
+		end
 			
 	elseif m_selectType == 3 or m_selectType == 4 then
 	
@@ -729,4 +811,68 @@ function ShopDlgItemBuy( buyuse )
 		end
 	end
 	ShopDlgHideBuyInfoLayer()
-end			
+end	
+
+
+-- 礼包列表
+-- m_count=0,m_list={m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},[m_count]},
+function ShopDlgPayBagRecv( recvValue )
+	local scrollPage = m_uiPayBagScroll.transform:GetComponent( typeof(UIScrollPage) )
+	scrollPage:ClearPage()
+	m_PayBagRecvValue = recvValue
+	for i=1, recvValue.m_count, 1 do
+		ShopDlgPayBagCreateItem( i, scrollPage, recvValue.m_list[i] )
+	end
+	if recvValue.m_count > 0 then
+		scrollPage:PageCountChanged()
+		scrollPage:Play()
+		SetTrue( m_uiPayBagScroll )
+	else
+		SetFalse( m_uiPayBagScroll )
+	end
+end
+function ShopDlgPayBagCreateItem( index, scrollPage, info )
+	local uiObj = GameObject.Instantiate( m_uiUIP_PayBagItem );
+	SetTrue( uiObj )
+	scrollPage:AddPage( uiObj )
+	
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiPic = objs[0];
+	local uiSale = objs[1];
+	local uiSaleText = objs[2];
+	local uiName = objs[3];
+	local uiWorth = objs[4];
+	local uiTimer = objs[5];
+	local uiBuyButton = objs[6];
+	
+	if info.m_sale > 0 then
+		SetTrue( uiSale )
+		SetText( uiSaleText, "-"..info.m_sale.."%" )
+	else
+		SetFalse( uiSale )
+	end
+	SetText( uiName, T(info.m_nameid) )
+	SetRichText( uiWorth, F(2278, info.m_worth) )
+	if info.m_bag_time > 0 then
+		SetTrue( uiTimer )
+		local lefttime = info.m_bag_time-GetServerTime()
+		SetTimer( uiTimer, lefttime-1, lefttime )
+	else
+		SetFalse( uiTimer )
+	end
+	SetText( uiBuyButton.transform:Find("Back/Text"), PayDlgGetMoneySymbol()..info.m_price )
+	SetControlID( uiBuyButton, 3000 + index  )
+end
+
+-- 当前显示的礼包
+function ShopDlgPayBagScrollSelect( page )
+	
+end
+
+-- 礼包点击购买
+function ShopDlgPayBagBuy( index )
+	if m_PayBagRecvValue[index] == nil then
+		return
+	end
+	
+end

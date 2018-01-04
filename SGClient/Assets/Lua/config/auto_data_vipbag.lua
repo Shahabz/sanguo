@@ -1,7 +1,7 @@
 g_vipbag = {
 [0] = { level=0,token=20,original_token=200,awardkind0=107,awardnum0=5,awardkind1=0,awardnum1=0,awardkind2=0,awardnum2=0,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
 [1] = { level=1,token=100,original_token=300,awardkind0=10012,awardnum0=1,awardkind1=107,awardnum1=5,awardkind2=50006,awardnum2=100,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
-[2] = { level=2,token=150,original_token=400,awardkind0=10026,awardnum0=1,awardkind1=50051,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
+[2] = { level=2,token=150,original_token=400,awardkind0=10032,awardnum0=1,awardkind1=50051,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=0,awardnum3=0,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
 [3] = { level=3,token=360,original_token=800,awardkind0=20031,awardnum0=1,awardkind1=50052,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=132,awardnum3=1,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
 [4] = { level=4,token=580,original_token=1200,awardkind0=81,awardnum0=5,awardkind1=50053,awardnum1=1,awardkind2=50006,awardnum2=100,awardkind3=172,awardnum3=1,awardkind4=0,awardnum4=0,awardkind5=0,awardnum5=0,},
 [5] = { level=5,token=880,original_token=2400,awardkind0=81,awardnum0=10,awardkind1=50054,awardnum1=1,awardkind2=441,awardnum2=5,awardkind3=50006,awardnum3=100,awardkind4=136,awardnum4=1,awardkind5=0,awardnum5=0,},

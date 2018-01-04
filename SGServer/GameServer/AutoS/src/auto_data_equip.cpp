@@ -47,7 +47,7 @@ int equipinfo_init_auto()
 	g_equipinfo = (EquipInfo *)malloc( sizeof(EquipInfo)*g_equipinfo_maxnum );
 	memset( g_equipinfo, 0, sizeof(EquipInfo)*g_equipinfo_maxnum );
 
-	sprintf( szSQL, "select `kind`,`type`,`actorlevel`,`color`,`ability`,`value`,`sec`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5`,`prestige`,`battlepower` from equip;" );
+	sprintf( szSQL, "select `kind`,`type`,`actorlevel`,`color`,`ability`,`value`,`sec`,`silver`,`material_kind0`,`material_kind1`,`material_kind2`,`material_kind3`,`material_kind4`,`material_kind5`,`material_num0`,`material_num1`,`material_num2`,`material_num3`,`material_num4`,`material_num5`,`prestige`,`battlepower`,`resolve_kind0`,`resolve_kind1`,`resolve_kind2`,`resolve_kind3`,`resolve_min0`,`resolve_min1`,`resolve_min2`,`resolve_min3`,`resolve_max0`,`resolve_max1`,`resolve_max2`,`resolve_max3` from equip;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -83,6 +83,18 @@ int equipinfo_init_auto()
 		g_equipinfo[kind].material_num[5] = atoi(row[offset++]);
 		g_equipinfo[kind].prestige = atoi(row[offset++]);
 		g_equipinfo[kind].battlepower = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_kind[0] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_kind[1] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_kind[2] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_kind[3] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_min[0] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_min[1] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_min[2] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_min[3] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_max[0] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_max[1] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_max[2] = atoi(row[offset++]);
+		g_equipinfo[kind].resolve_max[3] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	equipinfo_luatable_auto();
@@ -167,6 +179,36 @@ int equipinfo_luatable_auto()
 
 		lua_pushstring( servL, "battlepower" );
 		lua_pushinteger( servL, g_equipinfo[kind].battlepower );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "resolve_kind" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 4; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_equipinfo[kind].resolve_kind[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "resolve_min" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 4; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_equipinfo[kind].resolve_min[i] );
+			lua_rawset( servL, -3 );
+		}
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "resolve_max" );
+		lua_newtable( servL );
+		for ( int i = 0; i < 4; i++ )
+		{
+			lua_pushinteger( servL, i );
+			lua_pushinteger( servL, g_equipinfo[kind].resolve_max[i] );
+			lua_rawset( servL, -3 );
+		}
 		lua_rawset( servL, -3 );
 
 		lua_rawset( servL, 1 );

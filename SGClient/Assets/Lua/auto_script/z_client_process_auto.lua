@@ -127,6 +127,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetToken()
 	MainDlgSetVipLevel()
 	MainDlgSetAutoBuild(0)
+	MainDlgSetAutoGuard(0)
 	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather );
 end
 
@@ -529,6 +530,10 @@ function proc_changevip_C( recvValue )
 	MainDlgSetVipLevel();
 	PayDlgUpdateVip()
 	VipDlgUpdateVip()
+	
+	if recvValue.m_addexp > 0 then
+		pop( T(120)..": "..T(190).."x"..recvValue.m_addexp );
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -1061,7 +1066,7 @@ function proc_herocolorup_C( recvValue )
 	HeroColorupDlgRecv( recvValue );
 end
 
--- m_protectres_per=0,m_buildingsec_per=0,m_materialsec_per=0,m_hero_up_num=0,m_hero_row_num=0,m_everyday_body_buymax=0,m_everyday_autobuild_buynum=0,m_everyday_army_recall=0,m_ability_open_201=0,m_ability_open_203=0,m_ability_open_204=0,m_ability_open_205=0,m_ability_open_206=0,m_ability_open_207=0,
+-- m_protectres_per=0,m_buildingsec_per=0,m_materialsec_per=0,m_hero_up_num=0,m_hero_row_num=0,m_everyday_body_buymax=0,m_everyday_autobuild_buynum=0,m_everyday_army_recall=0,m_ability_open_201=0,m_ability_open_203=0,m_ability_open_204=0,
 function proc_cityattr_C( recvValue )
 	-- process.
 	GetPlayer():SetAttr( recvValue )
@@ -1766,6 +1771,7 @@ end
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},[m_count]},
 function proc_paystoreactivity_C( recvValue )
 	-- process.
+	ShopDlgPayBagRecv( recvValue )
 end
 
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
@@ -1783,5 +1789,21 @@ end
 function proc_vipbag_C( recvValue )
 	-- process.
 	ShopDlgRecvVipBag( recvValue )
+end
+
+-- m_buffkind=0,m_path=0,m_endtime=0,
+function proc_buffchange_C( recvValue )
+	-- process.
+	GetPlayer().m_buff_endtime[recvValue.m_buffkind] = recvValue.m_endtime;
+	pop( T(2400 + recvValue.m_buffkind) );
+	HeroDlgSetBuff()
+end
+
+-- m_autoguard=0,m_autoguardopen=0,m_path=0,
+function proc_changeautoguard_C( recvValue )
+	-- process.
+	GetPlayer().m_autoguard		=	recvValue.m_autoguard;
+	GetPlayer().m_autoguardopen	=	recvValue.m_autoguardopen;
+	MainDlgSetAutoGuard( recvValue.m_path )
 end
 

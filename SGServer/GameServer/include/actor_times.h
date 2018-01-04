@@ -5,6 +5,12 @@
 #define ACTOR_SFLAG_BODY_FREEBUY	0	// 首次购买体力免费
 #define ACTOR_SFLAG_MAPZONE_GO_ZC	1	// 首次免费前往州城
 #define ACTOR_SFLAG_QUEST_AUTOBUILD	2	// 新手任务是否领取过自动建造
+#define ACTOR_SFLAG_SKIPFIGHT		3	// 是否可以跳过战斗
+#define ACTOR_SFLAG_PALACE			4	// 是否开启皇宫内院
+#define ACTOR_SFLAG_STORYSWEEP		5	// 是否开启扫荡副本
+#define	ACTOR_SFLAG_OFFICIAL_TECH	6   // 是否开启紫色研究员
+#define ACTOR_SFLAG_EQUPIPDRAWING	7	// 是否开启装备分解获得图纸
+#define	ACTOR_SFLAG_MATERIAL_MAKEWILL 8 // 是否开启作坊预设
 void actor_set_sflag( int actor_index, int offset, char value );
 int actor_get_sflag( int actor_index, int offset );
 
@@ -14,6 +20,7 @@ int actor_get_sflag( int actor_index, int offset );
 #define	TODAY_CHAR_LOGINAWARD		1 // 今天登陆奖励
 #define TODAY_CHAR_WORLDBOSS		2 // 今天是否打过世界boss
 #define TODAY_CHAR_SHOP_SALEITEM	3 // 今天是否随机了打折物品
+#define TODAY_CHAR_ITEMUSE_BODY		4 // 今天使用体力道具多少次了
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );

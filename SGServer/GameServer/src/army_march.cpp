@@ -81,7 +81,6 @@ extern int g_army_maxindex;
 // 重计算部队行军所需时间
 int army_marchtime_calc( City *pCity, short from_posx, short from_posy, short to_posx, short to_posy )
 {
-	int duration = 0;
 	// 优先检查皇城区域向非皇城区域行军
 	if ( from_posx >= g_zoneinfo[13].top_left_posx && from_posx <= g_zoneinfo[13].bottom_right_posx && 
 		from_posy >= g_zoneinfo[13].top_left_posy && from_posy <= g_zoneinfo[13].bottom_right_posy )
@@ -89,14 +88,13 @@ int army_marchtime_calc( City *pCity, short from_posx, short from_posy, short to
 		if ( to_posx < g_zoneinfo[13].top_left_posx || to_posx > g_zoneinfo[13].bottom_right_posx ||
 			to_posy < g_zoneinfo[13].top_left_posy || to_posy > g_zoneinfo[13].bottom_right_posy )
 		{
-			duration = global.army_move_kingzone;
-			return duration;
+			return global.army_move_kingzone;
 		}
 	}
 
 	// 总共需要多少秒 = 距离*8s
 	int total_distance = abs( from_posx - to_posx ) + abs( from_posy - to_posy );
-	duration = total_distance*global.army_move;
+	int duration = total_distance*global.army_move;
 	if ( pCity )
 	{
 		duration = (int)ceil( duration*(1.0f - pCity->attr.movespeed_per[0])*(1.0f - pCity->attr.movespeed_per[1])*(1.0f - pCity->attr.movespeed_per[2]) );

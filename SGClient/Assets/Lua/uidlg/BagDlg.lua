@@ -679,7 +679,13 @@ function BagDlgSelectEquip( offset )
 		
 	end
 	
-	SetTrue( SellButton ); -- 分解
+	-- 分解
+	if equip_getprestige( pEquip.m_kind ) > 0 then
+		SetTrue( SellButton );
+	else
+		SetFalse( SellButton );
+	end
+	
 	SetFalse( UseButton ); -- 装备
 	SetFalse( ReplaceButton ); -- 替换
 	-- 洗炼
@@ -753,7 +759,29 @@ function BagDlgEquipResolve()
     if pEquip == nil then
         return;
     end
-	MsgBox( F( 689, T(152).."x"..equip_getprestige( pEquip.m_kind ) ), function()
+	local kind = pEquip.m_kind
+	local msg = "<color=#03de27ff>"..T(152).."x"..equip_getprestige( kind ).."</color>"
+	
+	if g_equipinfo[kind].resolve_kind0 > 0 then
+		msg = msg.." <color=#FFDE00FF>"..item_getname( g_equipinfo[kind].resolve_kind0 ).."("..g_equipinfo[kind].resolve_min0.."-"..g_equipinfo[kind].resolve_max0..")</color>"
+	end
+	if g_equipinfo[kind].resolve_kind1 > 0 then
+		msg = msg.." <color=#FFDE00FF>"..item_getname( g_equipinfo[kind].resolve_kind1 ).."("..g_equipinfo[kind].resolve_min1.."-"..g_equipinfo[kind].resolve_max1..")</color>"
+	end
+	if g_equipinfo[kind].resolve_kind2 > 0 then
+		msg = msg.." <color=#FFDE00FF>"..item_getname( g_equipinfo[kind].resolve_kind2 ).."("..g_equipinfo[kind].resolve_min2.."-"..g_equipinfo[kind].resolve_max2..")</color>"
+	end
+	if g_equipinfo[kind].resolve_kind3 > 0 then
+		msg = msg.." <color=#FFDE00FF>"..item_getname( g_equipinfo[kind].resolve_kind3 ).."("..g_equipinfo[kind].resolve_min3.."-"..g_equipinfo[kind].resolve_max3..")</color>"
+	end
+	-- 2322	50%几率返还{0}图纸
+	if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_EQUPIPDRAWING ) == 1 then
+		if g_equipinfo[kind].color > 0 then
+			msg = msg.." <color=#03de27ff>"..F( 2322, equip_getname( kind ) ).."</color>"
+		end
+	end
+	
+	MsgBox( F( 689, msg ), function()
 		system_askinfo( ASKINFO_EQUIP, "", 1, m_SelectEquipIndex - 1 );
 		BagDlgSelectEquip( -1 )
 	end )

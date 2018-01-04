@@ -16,6 +16,9 @@ struct _equipinfo {
 				short material_num[6];	//
 				int prestige;	//
 				int battlepower;	//
+				int resolve_kind[4];	//
+				short resolve_min[4];	//
+				short resolve_max[4];	//
 };
 typedef struct _equipinfo EquipInfo;
 

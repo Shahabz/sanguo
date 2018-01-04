@@ -38,6 +38,7 @@
 #define GMC_KWPOINT				(GMC_BASE+33)	// 血战积分
 #define GMC_GIVERES				(GMC_BASE+34)	// 给与一个未启用资源点
 #define GMC_AUTOBUILD			(GMC_BASE+35)	// 自动建造次数
+#define GMC_PAYBAG				(GMC_BASE+36)	// 礼包
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

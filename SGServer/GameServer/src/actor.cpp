@@ -50,6 +50,7 @@
 #include "nation.h"
 #include "world_boss.h"
 #include "king_war.h"
+#include "vip.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -792,6 +793,9 @@ int actor_entercity( int actor_index )
 
 	// 好友离线事件
 	actor_friend_loadevent( actor_index );
+
+	// VIP属性
+	vip_attr_calc( g_actors[actor_index].city_index );
 	return 0;
 }
 
@@ -1325,17 +1329,19 @@ int actor_subscribecmd_check( int actor_index, short cmd )
 	return 0;
 }
 
-// 功能获取
-int actor_function_open( int actor_index, int offset )
+// 权限
+int actor_permission_open( int actor_index, int offset )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	g_actors[actor_index].function |= (1 << offset);
+	if ( g_actors[actor_index].permission & (1 << offset) )
+		return 1;
+	g_actors[actor_index].permission |= (1 << offset);
 	return 0;
 }
-int actor_function_check( int actor_index, int offset )
+int actor_permission_check( int actor_index, int offset )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	if (g_actors[actor_index].function & (1 << offset) )
+	if ( g_actors[actor_index].permission & (1 << offset) )
 		return 1;
 	return 0;
 }

@@ -16,6 +16,7 @@ local m_uiColor = nil; --UnityEngine.GameObject
 local m_uiForgingBtn = nil; --UnityEngine.GameObject
 local m_uiForgingInfo = nil; --UnityEngine.GameObject
 local m_uiMaterialInfo = nil; --UnityEngine.GameObject
+local m_uiOfficialEffect = nil; --UnityEngine.GameObject
 
 local m_uiOfficialShape = nil; --UnityEngine.GameObject
 local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
@@ -134,6 +135,7 @@ function EquipForgingDlgOnAwake( gameObject )
 	m_uiOfficialName = objs[16];
 	m_uiOfficialDesc = objs[17];
 	m_uiMaterialInfo = objs[18];
+	m_uiOfficialEffect = objs[19];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -530,6 +532,7 @@ function EquipForgingDlgSetOfficial()
 	-- 已雇佣
 	if info.m_ofkind > 0 then
 		SetTrue( m_uiOfficialShape )
+		SetFalse( m_uiOfficialEffect )
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
@@ -548,7 +551,7 @@ function EquipForgingDlgSetOfficial()
 		-- 未雇佣
 		SetFalse( uiFreeQuickBtn )
 		SetTrue( uiQuickBtn )
-			
+		SetTrue( m_uiOfficialEffect )	
 		SetFalse( m_uiOfficialShape )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )

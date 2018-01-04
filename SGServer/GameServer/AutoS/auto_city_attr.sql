@@ -43,8 +43,5 @@ CREATE TABLE `city_attr` (
   `ability_open_202` tinyint(3) NOT NULL DEFAULT '0' COMMENT '极品装备：打造装备有概率直接获得秘技装备（开启功能）',
   `ability_open_203` tinyint(3) NOT NULL DEFAULT '0' COMMENT '改土辟地：可拆除建筑并选择指定类型建筑进行重建（开启功能）',
   `ability_open_204` tinyint(3) NOT NULL DEFAULT '0' COMMENT '自动补兵：开启自动补兵（开启功能）',
-  `ability_open_205` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扫荡副本（开启功能）',
-  `ability_open_206` tinyint(3) NOT NULL DEFAULT '0' COMMENT '跳过战斗（开启功能）',
-  `ability_open_207` tinyint(3) NOT NULL DEFAULT '0' COMMENT '开启皇宫内院（开启功能）',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

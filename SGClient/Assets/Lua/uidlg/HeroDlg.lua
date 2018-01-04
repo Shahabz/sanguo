@@ -5,6 +5,7 @@ local m_uiUIP_Hero = {nil,nil,nil,nil}; --UnityEngine.GameObject
 local m_uiInfantryNum = nil; --UnityEngine.GameObject
 local m_uiCavalryNum = nil; --UnityEngine.GameObject
 local m_uiArcherNum = nil; --UnityEngine.GameObject
+local m_uiBuffLayer = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function HeroDlgOpen()
@@ -57,6 +58,7 @@ function HeroDlgOnAwake( gameObject )
 	m_uiInfantryNum = objs[4];
 	m_uiCavalryNum = objs[5];
 	m_uiArcherNum = objs[6];
+	m_uiBuffLayer = objs[7];
 end
 
 -- 界面初始化时调用
@@ -69,6 +71,7 @@ function HeroDlgOnEnable( gameObject )
 	HeroDlgSetInfantry()
 	HeroDlgSetCavalry()
 	HeroDlgSetArcher()
+	HeroDlgSetBuff()
 	HeroDlgUpdate();
 end
 
@@ -96,6 +99,7 @@ function HeroDlgShow()
 	HeroDlgSetInfantry()
 	HeroDlgSetCavalry()
 	HeroDlgSetArcher()
+	HeroDlgSetBuff()
 	HeroDlgUpdate();
 end
 
@@ -262,4 +266,23 @@ function HeroDlgSoldiers( index )
 		end
 	end
 	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
+end
+
+-- 显示字令buff
+function HeroDlgSetBuff()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	local nowtime = GetServerTime()
+	for i=2,5,1 do
+		local uiObj = m_uiBuffLayer.transform:GetChild(i-2)
+		local lefttime = GetPlayer().m_buff_endtime[i] - nowtime
+		if i == 3 or i == 4 and GetPlayer().m_buff_endtime[i] > 0 and lefttime > 0 then
+			SetTrue( uiObj )
+			SetImage( uiObj.transform:Find("Shape"), LoadSprite("item_icon_"..(199+i)) )
+			SetTimer( uiObj.transform:Find("Timer"), lefttime-1, lefttime, 0 );
+		else
+			SetFalse( uiObj )
+		end
+	end
 end

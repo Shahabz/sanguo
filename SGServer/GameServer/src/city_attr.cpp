@@ -67,6 +67,17 @@ void city_attr_reset( City *pCity )
 			city_attr_calc( &pCity->attr, g_techinfo[kind].config[tech_level].ability, g_techinfo[kind].config[tech_level].value, 100.0f );
 		}
 	}
+
+	// buff 影响
+	if ( pCity->buffsec[CITY_BUFF_MARCH] > 0 )
+	{
+		city_attr_calc( &pCity->attr, CITY_ATTR_ABILITY_18, global.buff_train, 100.0f );
+	}
+	if ( pCity->buffsec[CITY_BUFF_WIND] > 0 )
+	{
+		city_attr_calc( &pCity->attr, CITY_ATTR_ABILITY_19, global.buff_wind, 100.0f );
+	}
+
 	city_attr_sendinfo( pCity->actor_index );
 }
 
@@ -220,15 +231,6 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 	case CITY_ATTR_ABILITY_204:// 自动补兵：开启自动补兵（开启功能）
 		pAttr->ability_open_204 = 1;
 		break;
-	case CITY_ATTR_ABILITY_205:// 扫荡副本（开启功能）
-		pAttr->ability_open_205 = 1;
-		break;
-	case CITY_ATTR_ABILITY_206:// 跳过战斗（开启功能）
-		pAttr->ability_open_206 = 1;
-		break;
-	case CITY_ATTR_ABILITY_207:// 开启皇宫内院（开启功能）
-		pAttr->ability_open_207 = 1;
-		break;
 	}
 }
 
@@ -249,15 +251,12 @@ void city_attr_sendinfo( int actor_index )
 	pValue.m_movespeed_per[2] = (short)(pCity->attr.movespeed_per[2] * 100);
 	pValue.m_hero_up_num = pCity->attr.hero_up_num;
 	pValue.m_hero_row_num = pCity->attr.hero_up_num;
-	pValue.m_everyday_body_buymax = pCity->attr.everyday_body_buymax;
+	pValue.m_everyday_body_buymax = pCity->attr.everyday_body_buymax + vip_attr_bodybuy( pCity );
 	pValue.m_everyday_autobuild_buynum = pCity->attr.everyday_autobuild_buynum;
 	pValue.m_everyday_army_recall = pCity->attr.everyday_army_recall;
 	pValue.m_ability_open_201 = pCity->attr.ability_open_201;
 	pValue.m_ability_open_203 = pCity->attr.ability_open_203;
 	pValue.m_ability_open_204 = pCity->attr.ability_open_204;
-	pValue.m_ability_open_205 = pCity->attr.ability_open_205;
-	pValue.m_ability_open_206 = pCity->attr.ability_open_206;
-	pValue.m_ability_open_207 = pCity->attr.ability_open_207;
 	netsend_cityattr_S( actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
@@ -432,4 +431,29 @@ void city_battlepower_building_calc( struct _city *pCity )
 	int old_battlepower = pCity->battlepower_building;
 	pCity->battlepower_building = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_BUILDING );
+}
+
+
+// buff
+int city_change_buff( int city_index, int index, int sec, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( index < 0 || index >= CITY_BUFF_MAX )
+		return -1;
+	g_city[city_index].buffsec[index] += sec;
+	city_attr_reset( &g_city[city_index] );
+
+	if ( index == CITY_BUFF_FIRE || index == CITY_BUFF_MOUNTAIN )
+	{
+		hero_attr_calc_all( &g_city[city_index], 0 );
+	}
+	if ( g_city[city_index].actor_index >= 0 )
+	{
+		SLK_NetS_BuffChange pValue = { 0 };
+		pValue.m_buffkind = index;
+		pValue.m_endtime = (int)time( NULL ) + g_city[city_index].buffsec[index];
+		pValue.m_path = path;
+		netsend_buffchange_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
 }

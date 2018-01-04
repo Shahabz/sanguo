@@ -31,6 +31,7 @@ local m_uiWorkerEx = nil; --UnityEngine.GameObject
 local m_uiFood = nil; --UnityEngine.GameObject
 local m_uiFoodNum = nil; --UnityEngine.GameObject
 local m_uiAutoBuild = nil; --UnityEngine.GameObject
+local m_uiAutoGuard = nil; --UnityEngine.GameObject
 local m_uiQuestText = nil; --UnityEngine.GameObject
 local ButtonTable = {}
 ButtonTable.m_uiButtonHero = nil; --UnityEngine.GameObject
@@ -243,7 +244,17 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			end
 			MainDlgSetAutoBuild( 0 );
 			system_askinfo( ASKINFO_AUTOBUILD, "", 0 );
-			
+		
+		-- 城防补充
+		elseif nControlID == 53 then
+			if GetPlayer().m_autoguardopen == 1 then
+				GetPlayer().m_autoguardopen = 0
+			else
+				GetPlayer().m_autoguardopen = 1
+			end
+			MainDlgSetAutoGuard( 0 );
+			system_askinfo( ASKINFO_AUTOBUILD, "", 2 );
+				
 		-- VIP充值充值	
 		elseif nControlID == 60 then
 			VipDlgShow()
@@ -419,6 +430,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiWarTable.m_uiUIP_WarText = objs[81];
 	m_uiWarTable.m_uiWarWarning = objs[82];
 	ButtonTable.m_uiButtonGril = objs[83];
+	m_uiAutoGuard = objs[84];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
@@ -826,6 +838,29 @@ function MainDlgSetAutoBuild( path )
 	-- 播放特效
 	if path == PATH_QUEST or path == PATH_GM then
 		local tween = m_uiAutoBuild.transform:GetComponent( "UITweenRectPosition" );
+		tween.from = Vector2.New( 315, -432 );
+		tween:Play(true);
+	end
+end
+
+-- 城防补充
+function MainDlgSetAutoGuard( path )
+	if GetPlayer().m_autoguard > 0 then
+		SetTrue( m_uiAutoGuard );
+	else
+		SetFalse( m_uiAutoGuard );
+		return
+	end
+	if GetPlayer().m_autoguardopen == 1 then
+		SetTrue( m_uiAutoGuard.transform:Find("Back/Effect") )
+	else
+		SetFalse( m_uiAutoGuard.transform:Find("Back/Effect") )
+	end
+	SetText( m_uiAutoGuard.transform:Find("Back/Num"), GetPlayer().m_autoguard )
+	
+	-- 播放特效
+	if path == PATH_QUEST or path == PATH_GM then
+		local tween = m_uiAutoGuard.transform:GetComponent( "UITweenRectPosition" );
 		tween.from = Vector2.New( 315, -432 );
 		tween:Play(true);
 	end

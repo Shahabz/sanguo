@@ -36,6 +36,8 @@ void actor_set_sflag( int actor_index, int offset, char value )
 	}
 	else
 	{
+		if ( g_actors[actor_index].sflag & (1 << offset) )
+			return;
 		g_actors[actor_index].sflag |= (1 << offset);
 	}
 	actor_notify_value( actor_index, NOTIFY_ACTORSFLAG, 1, &g_actors[actor_index].sflag, NULL );

@@ -36,9 +36,6 @@ struct _city_attr {
 				char ability_open_202;	//极品装备：打造装备有概率直接获得秘技装备（开启功能）
 				char ability_open_203;	//改土辟地：可拆除建筑并选择指定类型建筑进行重建（开启功能）
 				char ability_open_204;	//自动补兵：开启自动补兵（开启功能）
-				char ability_open_205;	//扫荡副本（开启功能）
-				char ability_open_206;	//跳过战斗（开启功能）
-				char ability_open_207;	//开启皇宫内院（开启功能）
 };
 typedef struct _city_attr CityAttr;
 

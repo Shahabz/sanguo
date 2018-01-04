@@ -416,12 +416,32 @@ function MailInfoDlgByRecvValue( recvValue )
 		local tlevel = recvValue.m_content_json["tlv"];
 		local tpos = recvValue.m_content_json["tpos"];
 		
+		-- 伤兵恢复
+		local ws0 = recvValue.m_content_json["ws0"];
+		local ws1 = recvValue.m_content_json["ws1"];
+		local ws2 = recvValue.m_content_json["ws2"];
+		local ws_str = ""
+		if ws0 ~= nil and ws1 ~= nil and ws2 ~= nil then
+			if ws0 > 0 or ws1 > 0 or ws2 > 0 then
+				ws_str = "\n"..T(5534)
+				if ws0 > 0 then
+					ws_str = ws_str..T(134).."x"..ws0.." "
+				end
+				if ws1 > 0 then
+					ws_str = ws_str..T(135).."x"..ws1.." "
+				end
+				if ws2 > 0 then
+					ws_str = ws_str..T(136).."x"..ws2.." "
+				end
+			end
+		end
+		
 		if my == 1 then -- 我是攻击方
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ), MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos )..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(nation).."]"..name;
 			m_share_d_name = "["..Nation(tnation).."]"..tname;
 		else -- 我是防御方
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ), MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos )..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(tnation).."]"..tname;
 			m_share_d_name = "["..Nation(nation).."]"..name;
 		end
@@ -442,6 +462,26 @@ function MailInfoDlgByRecvValue( recvValue )
 		local tlevel = recvValue.m_content_json["tlv"];
 		local tpos = recvValue.m_content_json["tpos"];
 		
+		-- 伤兵恢复
+		local ws0 = recvValue.m_content_json["ws0"];
+		local ws1 = recvValue.m_content_json["ws1"];
+		local ws2 = recvValue.m_content_json["ws2"];
+		local ws_str = ""
+		if ws0 ~= nil and ws1 ~= nil and ws2 ~= nil then
+			if ws0 > 0 or ws1 > 0 or ws2 > 0 then
+				ws_str = "\n"..T(5534)
+				if ws0 > 0 then
+					ws_str = ws_str..T(134).."x"..ws0.." "
+				end
+				if ws1 > 0 then
+					ws_str = ws_str..T(135).."x"..ws1.." "
+				end
+				if ws2 > 0 then
+					ws_str = ws_str..T(136).."x"..ws2.." "
+				end
+			end
+		end
+		
 		if my == 1 then -- 我是攻击方
 			local award = "";
 			if win == 1 then
@@ -451,7 +491,7 @@ function MailInfoDlgByRecvValue( recvValue )
 									T(123).."x"..knum(recvValue.m_content_json["food"]),
 									T(127).."x"..recvValue.m_content_json["people"] )
 			end
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award, MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(nation).."]"..name;
 			m_share_d_name = "["..Nation(tnation).."]"..tname;
 		else -- 我是防御方
@@ -463,7 +503,7 @@ function MailInfoDlgByRecvValue( recvValue )
 									T(123).."x"..knum(recvValue.m_content_json["food"]),
 									T(127).."x"..recvValue.m_content_json["people"] )
 			end
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ).."\n"..award, MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(tnation).."]"..tname;
 			m_share_d_name = "["..Nation(nation).."]"..name;
 		end
@@ -489,7 +529,27 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 		local tname = MapTownName( townid )
 		local tpos = g_towninfo[townid].posx..","..g_towninfo[townid].posy
-
+		
+		-- 伤兵恢复
+		local ws0 = recvValue.m_content_json["ws0"];
+		local ws1 = recvValue.m_content_json["ws1"];
+		local ws2 = recvValue.m_content_json["ws2"];
+		local ws_str = ""
+		if ws0 ~= nil and ws1 ~= nil and ws2 ~= nil then
+			if ws0 > 0 or ws1 > 0 or ws2 > 0 then
+				ws_str = "\n"..T(5534)
+				if ws0 > 0 then
+					ws_str = ws_str..T(134).."x"..ws0.." "
+				end
+				if ws1 > 0 then
+					ws_str = ws_str..T(135).."x"..ws1.." "
+				end
+				if ws2 > 0 then
+					ws_str = ws_str..T(136).."x"..ws2.." "
+				end
+			end
+		end
+			
 		if my == 1 then -- 我是攻击方
 			local awardstr = "";
 			if recvValue.m_content_json["silver"] ~= nil and recvValue.m_content_json["silver"] > 0 then
@@ -505,7 +565,7 @@ function MailInfoDlgByRecvValue( recvValue )
 			if awardstr ~= "" then
 				award = F( 5526, awardstr);
 			end
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award, MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(nation).."]"..name;
 			m_share_d_name = "["..Nation(tnation).."]"..tname;
 			
@@ -524,7 +584,7 @@ function MailInfoDlgByRecvValue( recvValue )
 			if awardstr ~= "" then
 				award = F( 5526, awardstr);
 			end
-			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award, MailOnLinkClick )
+			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(nation).."]"..name;
 			m_share_d_name = "["..Nation(tnation).."]"..tname;
 		end
@@ -573,6 +633,27 @@ function MailInfoDlgByRecvValue( recvValue )
 			local level = recvValue.m_content_json["lv"];
 			local pos = recvValue.m_content_json["pos"];
 			local tpos = recvValue.m_content_json["tpos"];
+			
+			-- 伤兵恢复
+			local ws0 = recvValue.m_content_json["ws0"];
+			local ws1 = recvValue.m_content_json["ws1"];
+			local ws2 = recvValue.m_content_json["ws2"];
+			local ws_str = ""
+			if ws0 ~= nil and ws1 ~= nil and ws2 ~= nil then
+				if ws0 > 0 or ws1 > 0 or ws2 > 0 then
+					ws_str = "\n"..T(5534)
+					if ws0 > 0 then
+						ws_str = ws_str..T(134).."x"..ws0.." "
+					end
+					if ws1 > 0 then
+						ws_str = ws_str..T(135).."x"..ws1.." "
+					end
+					if ws2 > 0 then
+						ws_str = ws_str..T(136).."x"..ws2.." "
+					end
+				end
+			end
+			
 			local enemyname = "Lv."..level.." "..T(938);
 			if win == 1 then
 				local awardstr = ""
@@ -587,9 +668,9 @@ function MailInfoDlgByRecvValue( recvValue )
 						awardstr = awardstr .. name.."x"..num.." "
 					end
 				end
-				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, pos, enemyname, tpos, awardstr ), MailOnLinkClick )
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, pos, enemyname, tpos, awardstr )..ws_str, MailOnLinkClick )
 			else
-				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, pos, enemyname, tpos ), MailOnLinkClick )
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, pos, enemyname, tpos )..ws_str, MailOnLinkClick )
 			end
 			m_share_a_name = name;
 			m_share_d_name = enemyname;

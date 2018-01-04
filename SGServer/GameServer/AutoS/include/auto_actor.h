@@ -37,11 +37,11 @@ struct _actor {
 				int sflag;	//特定标志位
 				int fdate;	//刷新的日子是哪天
 				char today_char[128];	//char类型每日次数
-				short today_short[32];	//short绫诲瀷姣忔棩娆℃暟
+				short today_short[32];	//short类型每日次数
 				int today_int[8];	//int类型每日次数
 				int cd[8];	//通用CD时间
 				char config[8];	//玩家配置
-				int function;	//功能是否开启
+				int permission;	//权限是否开启
 				short storyid;	//副本进度章节
 				char story_star[128];	//精英副本星级
 				char story_hero[32];	//招募副本

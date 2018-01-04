@@ -231,6 +231,13 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_guardnum = buffer:ReadSByte();
 	recvValue.m_guardsec = buffer:ReadShort();
 	recvValue.m_questid = buffer:ReadInt();
+	recvValue.m_permission = buffer:ReadInt();
+	recvValue.m_buff_endtime={};
+	for tmpi=1,6,1 do
+		recvValue.m_buff_endtime[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_autoguard = buffer:ReadSByte();
+	recvValue.m_autoguardopen = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1119,9 +1126,6 @@ function struct_NetS_CityAttr_recv( buffer )
 	recvValue.m_ability_open_201 = buffer:ReadSByte();
 	recvValue.m_ability_open_203 = buffer:ReadSByte();
 	recvValue.m_ability_open_204 = buffer:ReadSByte();
-	recvValue.m_ability_open_205 = buffer:ReadSByte();
-	recvValue.m_ability_open_206 = buffer:ReadSByte();
-	recvValue.m_ability_open_207 = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2209,6 +2213,22 @@ function struct_NetS_VipBag_recv( buffer )
 	local recvValue = {};
 	recvValue.m_vipbag = buffer:ReadInt();
 	recvValue.m_vipbag_count = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_BuffChange_recv( buffer )
+	local recvValue = {};
+	recvValue.m_buffkind = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_endtime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ChangeAutoGuard_recv( buffer )
+	local recvValue = {};
+	recvValue.m_autoguard = buffer:ReadSByte();
+	recvValue.m_autoguardopen = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
 	return recvValue;
 end
 

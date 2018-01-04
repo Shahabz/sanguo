@@ -292,6 +292,10 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_guardnum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_questid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_permission, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_buff_endtime, 6*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguard, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguardopen, (*psize) );
 	return 0;
 }
 
@@ -1269,9 +1273,6 @@ int struct_NetS_CityAttr_send( char **pptr, int *psize, SLK_NetS_CityAttr *pValu
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_201, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_203, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_204, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_205, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_206, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_ability_open_207, (*psize) );
 	return 0;
 }
 
@@ -2460,6 +2461,26 @@ int struct_NetS_VipBag_send( char **pptr, int *psize, SLK_NetS_VipBag *pValue )
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_vipbag, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_vipbag_count, (*psize) );
+	return 0;
+}
+
+int struct_NetS_BuffChange_send( char **pptr, int *psize, SLK_NetS_BuffChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buffkind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAutoGuard *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguard, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguardopen, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	return 0;
 }
 

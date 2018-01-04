@@ -14,6 +14,7 @@ local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
 local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
+local m_uiOfficialEffect = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_kind = 0;
@@ -105,6 +106,7 @@ function CityTechDlgOnAwake( gameObject )
 	m_uiOfficialTime = objs[8];
 	m_uiOfficialName = objs[9];
 	m_uiOfficialDesc = objs[10];
+	m_uiOfficialEffect = objs[11];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -289,6 +291,7 @@ function CityTechDlgSetOfficial()
 	-- 已雇佣
 	if info.m_ofkind > 0 then
 		SetTrue( m_uiOfficialShape )
+		SetFalse( m_uiOfficialEffect )
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
@@ -307,7 +310,7 @@ function CityTechDlgSetOfficial()
 		-- 未雇佣
 		SetFalse( FreeQuickBtn )
 		SetTrue( uiQuickBtn )
-			
+		SetTrue( m_uiOfficialEffect )	
 		SetFalse( m_uiOfficialShape )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )

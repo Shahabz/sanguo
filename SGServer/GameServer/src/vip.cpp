@@ -51,6 +51,28 @@ int vip_calclevel( int city_index )
 	return 0;
 }
 
+// vip获取的属性
+int vip_attr_calc( int city_index )
+{
+	CITY_CHECK_INDEX( city_index );
+	for ( int viplevel = 0; viplevel <= g_city[city_index].viplevel; viplevel++ )
+	{
+		if ( g_vipinfo[viplevel].skipfight > 0 )
+		{
+			actor_set_sflag( g_city[city_index].actor_index, ACTOR_SFLAG_SKIPFIGHT, 1 );
+		}
+		else if ( g_vipinfo[viplevel].palace > 0 )
+		{
+			actor_set_sflag( g_city[city_index].actor_index, ACTOR_SFLAG_PALACE, 1 );
+		}
+		else if ( g_vipinfo[viplevel].storysweep > 0 )
+		{
+			actor_set_sflag( g_city[city_index].actor_index, ACTOR_SFLAG_STORYSWEEP, 1 );
+		}
+	}
+	return 0;
+}
+
 // VIP经验升级值
 int vip_expmax_get( int level )
 {
@@ -92,7 +114,7 @@ int vip_exp( int city_index, int value, short path )
 
 	if ( isup == 1 )
 	{ // 升级了
-		city_attr_reset( &g_city[city_index] );
+		vip_attr_calc( city_index );
 	}
 	wlog( 0, LOGOP_VIPEXP, path, value, g_city[city_index].vipexp, g_city[city_index].viplevel, g_city[city_index].actorid, city_mainlevel( city_index ) );
 

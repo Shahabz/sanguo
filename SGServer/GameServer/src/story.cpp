@@ -21,6 +21,7 @@
 #include "item.h"
 #include "vip.h"
 #include "actor_notify.h"
+#include "actor_times.h"
 #include "story.h"
 #include "fight.h"
 #include "quest.h"
@@ -624,7 +625,7 @@ int story_sweep( int actor_index, int id, int herokind0, int herokind1, int hero
 		return -1;
 	if ( config->star_saveoffset < 0 || config->star_saveoffset >= STORY_STAR_OFFSETMAX )
 		return -1;
-	if ( pCity->viplevel < global.story_sweep_vip )
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_STORYSWEEP ) == 0 )
 	{ // 没到Vip等级,检查是否三星
 		if ( g_actors[actor_index].story_star[config->star_saveoffset] < 3 )
 			return -1;

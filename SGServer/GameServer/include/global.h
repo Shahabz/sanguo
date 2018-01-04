@@ -152,6 +152,12 @@ typedef struct _global
 	short hero_cabinet_guard_hp;
 	short hero_cabinet_guard_token;
 	short story_sweep_vip;
+	short buff_train;
+	short buff_wind;
+	short buff_fire;
+	short buff_mountain;
+	short buff_forest;
+	short autoguard_max;
 }Global;
 int global_init();
 void global_reload();

@@ -877,6 +877,14 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
+	// 加载推送的礼包
+	if ( paybag_load() < 0 )
+	{
+		printf_msg( "paybag_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
 	// 聊天缓存
 	chat_cache_load();
 
@@ -1255,6 +1263,7 @@ int process_logic()
 	{
 		rank_reset();
 		rank_server();
+		paybag_logic();
 	}
 
 	if ( g_speed > 108000 )

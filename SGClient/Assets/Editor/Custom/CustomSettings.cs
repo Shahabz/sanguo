@@ -195,6 +195,7 @@ public static class CustomSettings
         _GT(typeof(UISlider)),
         _GT(typeof(ScrollRect)),
         _GT(typeof(UIScrollRect)),
+		_GT(typeof(UIScrollPage)),
         _GT(typeof(UIScrollBase)),
         _GT(typeof(UIScrollRing)),
         _GT(typeof(UIScrollView)),

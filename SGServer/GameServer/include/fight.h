@@ -62,6 +62,9 @@ typedef struct _fightunit
 	int		exp;				// 战后获得经验
 	int		expmax;				// 参战时经验
 	int		town_damage;		// 对据点守军造成的伤害
+
+	char	buff_forest;	// 伤兵恢复buff
+	int		wounded_soldiers;	// 伤兵恢复数量
 }FightUnit;
 
 // 战斗结构

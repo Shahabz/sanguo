@@ -672,6 +672,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 客户端发过来的自动升级
 			building_upgrade_auto( g_actors[actor_index].city_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 2 )
+		{
+			city_autoguard_open( g_actors[actor_index].city_index );
+		}
 		break;
 	case ASKINFO_HERO_VISIT:
 		if ( pvalue[0] == 0 )

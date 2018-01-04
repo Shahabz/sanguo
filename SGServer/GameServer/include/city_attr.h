@@ -53,9 +53,6 @@
 #define CITY_ATTR_ABILITY_202		202 // 极品装备：打造装备有概率直接获得秘技装备（开启功能）
 #define CITY_ATTR_ABILITY_203		203	// 改土辟地：可拆除建筑并选择指定类型建筑进行重建（开启功能）
 #define CITY_ATTR_ABILITY_204		204	// 自动补兵：开启自动补兵（开启功能）
-#define CITY_ATTR_ABILITY_205		205 // 扫荡副本（开启功能）
-#define CITY_ATTR_ABILITY_206		206 // 跳过战斗（开启功能）
-#define CITY_ATTR_ABILITY_207		207 // 开启皇宫内院（开启功能）
 
 void city_attr_reset( City *pCity );
 void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit );
@@ -96,5 +93,17 @@ void city_battlepower_girl_calc( City *pCity );
 
 // 建筑提供战力
 void city_battlepower_building_calc( City *pCity );
+
+
+// buff
+#define CITY_BUFF_MAX		8 // buff数量
+#define CITY_BUFF_MARCH		0 // 军曹管buff 行军耗时降低15%
+#define CITY_BUFF_TRAIN		1 // 武卒管buff 招募耗时降低15%
+#define CITY_BUFF_WIND		2 // 风字令buff 行军耗时降低15%
+#define CITY_BUFF_FIRE		3 // 火字令buff 士兵攻击+5%
+#define CITY_BUFF_MOUNTAIN	4 // 山字令buff 士兵防御+5%
+#define CITY_BUFF_FOREST	5 // 林字令buff 在兵营中额外增加20%伤病恢复
+// buff
+int city_change_buff( int city_index, int index, int sec, short path );
 
 #endif

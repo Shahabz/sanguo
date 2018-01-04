@@ -34,11 +34,17 @@
 #define ITEM_ABILITY_ADDBODY		3	// 加体力
 #define ITEM_ABILITY_ADDEXP			4	// 加主公经验
 #define ITEM_ABILITY_ADDHEROEXP		5	// 加英雄经验
+#define ITEM_ABILITY_AWARDID		6	// 奖励id
 #define ITEM_ABILITY_CITYRES_SILVER 11	// 银币数量
 #define ITEM_ABILITY_CITYRES_WOOD	12	// 木材数量
 #define ITEM_ABILITY_CITYRES_FOOD	13	// 粮食数量
 #define ITEM_ABILITY_CITYRES_IRON	14	// 铁数量
 #define ITEM_ABILITY_BUFF			15	// buff
+#define ITEM_ABILITY_CITYMOVE		16	// 低级迁城
+#define ITEM_ABILITY_CORPS1			17	// 加步兵
+#define ITEM_ABILITY_CORPS2			18	// 加骑兵
+#define ITEM_ABILITY_CORPS3			19	// 加弓兵
+#define ITEM_ABILITY_VIPEXP			20	// VIP点数
 
 /* 道具操作 */ 
 #define ITEM_PROCESS_INFO		1 // 获取道具信息

@@ -14,12 +14,15 @@
 #include "item.h"
 #include "actor_notify.h"
 #include "actor_send.h"
+#include "actor_times.h"
 #include "server_netsend_auto.h"
 #include "script_auto.h"
 #include "mapunit.h"
 #include "city.h"
+#include "city_attr.h"
 #include "global.h"
 #include "building.h"
+#include "vip.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -121,6 +124,15 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 		}
 		else if ( ability1 == ITEM_ABILITY_ADDBODY )
 		{ // 加体力
+			int usetimes = actor_get_today_char_times( actor_index, TODAY_CHAR_ITEMUSE_BODY );
+			int lefttimes = 20 - usetimes;
+			true_usenum = min( true_usenum, lefttimes );
+			if ( true_usenum <= 0 )
+			{
+				actor_notify_alert( actor_index, 2323 );
+				return -1;
+			}
+			actor_set_today_char_times( actor_index, TODAY_CHAR_ITEMUSE_BODY, usetimes + true_usenum );
 			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_ITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_ADDEXP )
@@ -149,13 +161,43 @@ int item_use( int actor_index, short itemindex, short itemnum, int herokind, int
 		}
 		else if ( ability1 == ITEM_ABILITY_BUFF )
 		{ // buff
-			if ( value1 == 1 )
+			int buffsec = item_get_base_value( itemkind, 1 );
+			if ( value1 == 100 )
 			{ // 城池保护时间
-				int ptsec = item_get_base_value(itemkind, 1 );
-				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_ITEMUSE );
+				city_changeprotect( g_actors[actor_index].city_index, buffsec, PATH_ITEMUSE );
 			}
+			else if ( value1 >= 0  && value1 < CITY_BUFF_MAX )
+			{
+				city_change_buff( g_actors[actor_index].city_index, value1, buffsec, PATH_ITEMUSE );
+			}
+			
 		}
-
+		else if ( ability1 == ITEM_ABILITY_CITYMOVE )
+		{ // 低级迁城
+			return city_move_actor( actor_index, -1, -1, itemkind );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS1 )
+		{ // 加步兵
+			city_changesoldiers( g_actors[actor_index].city_index, 0, item_get_base_value( itemkind, 0 ), PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS2 )
+		{ // 加骑兵
+			city_changesoldiers( g_actors[actor_index].city_index, 1, item_get_base_value( itemkind, 0 ), PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS3 )
+		{ // 加弓兵
+			city_changesoldiers( g_actors[actor_index].city_index, 2, item_get_base_value( itemkind, 0 ), PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_VIPEXP )
+		{ // vip 点数
+			vip_exp( g_actors[actor_index].city_index, item_get_base_value( itemkind, 0 ), PATH_ITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_AWARDID )
+		{ // 奖励id
+			int awardkind = item_get_base_value( itemkind, 0 );
+			int awardnum = item_get_base_value( itemkind, 1 );
+			award_getaward( actor_index, awardkind, awardnum, -1, PATH_ITEMUSE, NULL );
+		}
 	}
 	else
 		return item_sendnotuse( actor_index, itemindex, -2 );
@@ -233,6 +275,15 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 		int value1 = item_get_base_value( itemkind, 0 );
 		if ( ability1 == ITEM_ABILITY_ADDBODY )
 		{ // 加体力
+			int usetimes = actor_get_today_char_times( actor_index, TODAY_CHAR_ITEMUSE_BODY );
+			int lefttimes = 20 - usetimes;
+			true_usenum = min( true_usenum, lefttimes );
+			if ( true_usenum <= 0 )
+			{
+				actor_notify_alert( actor_index, 2323 );
+				return -1;
+			}
+			actor_set_today_char_times( actor_index, TODAY_CHAR_ITEMUSE_BODY, usetimes + true_usenum );
 			city_changebody( g_actors[actor_index].city_index, value1*true_usenum, PATH_TOKENITEMUSE );
 		}
 		else if ( ability1 == ITEM_ABILITY_ADDEXP )
@@ -261,11 +312,41 @@ int item_use_withtoken( int actor_index, short itemkind, short itemnum, int hero
 		}
 		else if ( ability1 == ITEM_ABILITY_BUFF )
 		{ // buff
-			if ( value1 == 1 )
+			int buffsec = item_get_base_value( itemkind, 1 );
+			if ( value1 == 100 )
 			{ // 城池保护时间
-				int ptsec = item_get_base_value( itemkind, 1 );
-				city_changeprotect( g_actors[actor_index].city_index, ptsec, PATH_TOKENITEMUSE );
+				city_changeprotect( g_actors[actor_index].city_index, buffsec, PATH_TOKENITEMUSE );
 			}
+			else if ( value1 >= 0 && value1 < CITY_BUFF_MAX )
+			{
+				city_change_buff( g_actors[actor_index].city_index, value1, buffsec, PATH_TOKENITEMUSE );
+			}
+		}
+		else if ( ability1 == ITEM_ABILITY_CITYMOVE )
+		{ // 低级迁城
+			return city_move_actor( actor_index, -1, -1, itemkind );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS1 )
+		{ // 加步兵
+			city_changesoldiers( g_actors[actor_index].city_index, 0, item_get_base_value( itemkind, 0 ), PATH_TOKENITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS2 )
+		{ // 加骑兵
+			city_changesoldiers( g_actors[actor_index].city_index, 1, item_get_base_value( itemkind, 0 ), PATH_TOKENITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_CORPS3 )
+		{ // 加弓兵
+			city_changesoldiers( g_actors[actor_index].city_index, 2, item_get_base_value( itemkind, 0 ), PATH_TOKENITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_VIPEXP )
+		{ // vip 点数
+			vip_exp( g_actors[actor_index].city_index, item_get_base_value( itemkind, 0 ), PATH_TOKENITEMUSE );
+		}
+		else if ( ability1 == ITEM_ABILITY_AWARDID )
+		{ // 奖励id
+			int awardkind = item_get_base_value( itemkind, 0 );
+			int awardnum = item_get_base_value( itemkind, 1 );
+			award_getaward( actor_index, awardkind, awardnum, -1, PATH_TOKENITEMUSE, NULL );
 		}
 	}
 	else

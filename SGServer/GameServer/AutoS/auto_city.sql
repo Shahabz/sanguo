@@ -117,5 +117,8 @@ CREATE TABLE `city` (
   `bag_gid` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包',
   `bag_time` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包剩余时间',
   `bag_num` varbinary(32) NOT NULL DEFAULT '' COMMENT '推送的礼包剩余次数',
+  `buffsec` varbinary(32) NOT NULL DEFAULT '' COMMENT 'buff',
+  `atgu` tinyint(3) NOT NULL DEFAULT '0' COMMENT '城防补充次数',
+  `atgu_op` tinyint(3) NOT NULL DEFAULT '0' COMMENT '城防补充是否开启',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

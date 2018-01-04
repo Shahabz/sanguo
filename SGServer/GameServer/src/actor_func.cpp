@@ -510,6 +510,8 @@ int actor_getinfo( int actor_index )
 		info.m_sflag =  pCity->sflag;
 		info.m_autobuild = pCity->autobuild;
 		info.m_autobuildopen = pCity->autobuildopen;
+		info.m_autoguard = pCity->atgu;
+		info.m_autoguardopen = pCity->atgu_op;
 		info.m_ptsec = pCity->ptsec;
 		info.m_forgingkind = pCity->forgingkind;
 		info.m_forgingsec = pCity->forgingsec;
@@ -527,6 +529,13 @@ int actor_getinfo( int actor_index )
 			info.m_officialhire[i].m_ofsec = pCity->ofsec[i];
 			info.m_officialhire[i].m_offree = pCity->offree[i];
 			info.m_officialhire[i].m_ofquick = pCity->ofquick[i];
+		}
+		for ( int i = 0; i < 6; i++ )
+		{
+			if ( pCity->buffsec[i] > 0 )
+			{
+				info.m_buff_endtime[i] = (int)time( NULL ) + pCity->buffsec[i];
+			}
 		}
 	}
 	netsend_actorinfo_S( actor_index, SENDTYPE_ACTOR, &info );

@@ -188,7 +188,7 @@ function FightDlgShow( recvValue )
 	SetFalse( m_uiLeftHpEffect );
 	SetFalse( m_uiRightHpEffect );
 	SetFalse( m_uiResultLayer )
-	
+
 	m_playing = 0;
 	m_recvValue = recvValue;
 	local info = json.decode( m_recvValue.m_fight_content );
@@ -200,6 +200,24 @@ function FightDlgShow( recvValue )
 		SetText( m_uiTypeName, "" )
 	else
 		SetText( m_uiTypeName, T(2000+fighttype-1) )
+	end
+	
+	-- 是否可以跳过战斗
+	if fighttype == FIGHTTYPE_QUEST then
+		SetFalse( m_uiBottom )
+	elseif fighttype == FIGHTTYPE_STORY then
+		SetTrue( m_uiBottom )
+		if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_SKIPFIGHT ) == 1 then
+			SetButtonTrue( m_uiSkipBtn )
+			SetText( m_uiSkipDesc, T(2279) )
+		else
+			SetButtonFalse( m_uiSkipBtn )
+			SetText( m_uiSkipDesc, T(2280) )
+		end
+	else
+		SetTrue( m_uiBottom )
+		SetButtonTrue( m_uiSkipBtn )
+		SetText( m_uiSkipDesc, T(2279) )
 	end
 	
 	-- 显示战前信息

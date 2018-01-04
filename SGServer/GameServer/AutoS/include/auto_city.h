@@ -125,6 +125,9 @@ struct _city {
 				short bag_gid[8];	//推送的礼包
 				int bag_time[8];	//推送的礼包剩余时间
 				char bag_num[8];	//推送的礼包剩余次数
+				int buffsec[8];	//buff
+				char atgu;	//城防补充次数
+				char atgu_op;	//城防补充是否开启
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成
@@ -145,6 +148,7 @@ struct _city {
 				int rank_zone;	//区域排行榜排名
 				int rank_nation;	//国家排行榜排名
 				int battlepower_building;	//建筑提供战力
+				int temp_wounded_soldiers[3];	//临时伤兵
 };
 typedef struct _city City;
 

@@ -15,8 +15,10 @@
 #include "actor.h"
 #include "actor_send.h"
 #include "actor_notify.h"
+#include "actor_times.h"
 #include "server_netsend_auto.h"
 #include "city.h"
+#include "city_attr.h"
 #include "equip.h"
 #include "building.h"
 #include "vip.h"
@@ -530,6 +532,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind == AWARDKIND_AUTOBUILD )// 自动建造次数
 	{
+		if ( num == 0 )
+		{
+			num = vip_attr_autobuild( city_getptr( actor_index ) );
+		}
 		city_change_autobuild( g_actors[actor_index].city_index, num, path );
 	}
 	else if ( kind == AWARDKIND_LEVYNUM )// 征收次数
@@ -564,6 +570,16 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		city_change_equipwash( g_actors[actor_index].city_index, num, path );
 	}
+	else if ( kind == AWARDKIND_LOSTREBUILD ) // 高级重建次数
+	{
+		City *pCity = city_getptr( actor_index );
+		if ( pCity )
+			pCity->rb_num += num;
+	}
+	else if ( kind == AWARDKIND_CITYGUARDNUM )// 城防补充次数
+	{
+		city_change_autoguard( g_actors[actor_index].city_index, num, path );
+	}
 	else if ( kind == AWARDKIND_RES_SILVER ) // 奖励未启用资源点（民居）
 	{
 		building_giveres( g_actors[actor_index].city_index, BUILDING_Silver );
@@ -590,35 +606,47 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind == AWARDKIND_BUFF_TRAIN )// 武卒官加速N%，时间1天
 	{
-
+		city_change_buff( g_actors[actor_index].city_index, CITY_BUFF_TRAIN, 86400, path );
 	}
 	else if ( kind == AWARDKIND_BUFF_MARCH )// 行军耗时降低N%，时间1天
 	{
-
+		city_change_buff( g_actors[actor_index].city_index, CITY_BUFF_MARCH, 86400, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_SILVER )// 奖励N次银币征收量
 	{
 		int silver = city_yield_total( city_getptr( actor_index ), BUILDING_Silver );
 		if ( silver > 0 )
-			city_changesilver( g_actors[actor_index].city_index, silver, PATH_LEVY );
+			city_changesilver( g_actors[actor_index].city_index, silver, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_WOOD )// 奖励N次木材征收量
 	{
 		int wood = city_yield_total( city_getptr( actor_index ), BUILDING_Wood );
 		if ( wood > 0 )
-			city_changewood( g_actors[actor_index].city_index, wood, PATH_LEVY );
+			city_changewood( g_actors[actor_index].city_index, wood, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_FOOD ) // 奖励N次粮食征收量
 	{
 		int food = city_yield_total( city_getptr( actor_index ), BUILDING_Food );
 		if ( food > 0 )
-			city_changefood( g_actors[actor_index].city_index, food, PATH_LEVY );
+			city_changefood( g_actors[actor_index].city_index, food, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_IRON )// 奖励N次镔铁征收量
 	{
 		int iron = city_yield_total( city_getptr( actor_index ), BUILDING_Iron );
 		if ( iron > 0 )
-			city_changeiron( g_actors[actor_index].city_index, iron, PATH_LEVY );
+			city_changeiron( g_actors[actor_index].city_index, iron, path );
+	}
+	else if ( kind == AWARDKIND_PERMISSION_4 ) // 科技快研
+	{
+		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );
+	}
+	else if ( kind == AWARDKIND_PERMISSION_5 ) // 装备回收图纸
+	{
+		actor_set_sflag( actor_index, ACTOR_SFLAG_EQUPIPDRAWING, 1 );
+	}
+	else if ( kind == AWARDKIND_PERMISSION_6 ) // 作坊预设
+	{
+		actor_set_sflag( actor_index, ACTOR_SFLAG_MATERIAL_MAKEWILL, 1 );
 	}
 	else if ( kind < 0 )
 	{ // 道具组

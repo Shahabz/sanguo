@@ -51,6 +51,8 @@ int g_PayPriceCount = 0;
 PayCountry *g_PayCountry = NULL;
 int g_PayCountryCount = 0;
 
+PayBag g_paybag[CITY_BAG_MAX] = { 0 };
+
 extern PayGoods *g_paygoods;
 extern int g_paygoods_maxnum;
 
@@ -224,6 +226,166 @@ int paycountry_reload()
 	g_PayCountryCount = 0;
 	paycountry_init();
 	return 0;
+}
+
+// 本服务器推送的礼包
+int paybag_load()
+{
+	MYSQL_RES *res;
+	MYSQL_ROW  row;
+	char szSQL[512];
+	int offset = 0;
+	sprintf( szSQL, "select id, goodsid, begintime, endtime, count, pushcity from pay_baglist where '%d'>=`begintime` and '%d'<`endtime`", (int)time( NULL ), (int)time( NULL ) );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( row = mysql_fetch_row( res ) )
+	{
+		g_paybag[offset].id = atoi( row[0] );
+		g_paybag[offset].goodsid = atoi( row[1] );
+		g_paybag[offset].begintime = atoi( row[2] );
+		g_paybag[offset].endtime = atoi( row[3] );
+		g_paybag[offset].count = atoi( row[4] );
+		g_paybag[offset].pushcity = atoi( row[5] );
+		offset += 1;
+		if ( offset >= CITY_BAG_MAX )
+		{
+			break;
+		}
+	}
+	mysql_free_result( res );
+	return 0;
+}
+int paybag_insert( short goodsid, int begintime, int endtime, int count )
+{
+	char szSQL[512];
+	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+		return -1;
+	if ( begintime <= 0 || endtime <= 0 || count <= 0 )
+		return -1;
+
+	int nowtime = (int)time( NULL );
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( g_paybag[tmpi].id > 0 && nowtime >= g_paybag[tmpi].endtime )
+		{
+			memset( &g_paybag[tmpi], 0, sizeof( PayBag ) );
+		}
+	}
+
+	int offset = -1;
+	for ( offset = 0; offset < CITY_BAG_MAX; offset++ )
+	{
+		if ( g_paybag[offset].id <= 0 )
+		{
+			break;
+		}
+	}
+	if ( offset >= CITY_BAG_MAX )
+	{
+		return -1;
+	}
+
+	// 推送到缓存
+	g_paybag[offset].id = (int)mysql_insert_id( myGame );
+	g_paybag[offset].goodsid = goodsid;
+	g_paybag[offset].begintime = begintime;
+	g_paybag[offset].endtime = endtime;
+	g_paybag[offset].count = count;
+	g_paybag[offset].pushcity = 0;
+	if ( nowtime >= begintime )
+	{
+		// 给所有玩家推送
+		for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+		{
+			if ( g_city[tmpi].actorid < MINACTORID )
+				continue;
+			city_paybag_add( &g_city[tmpi], goodsid, endtime - (int)time( NULL ), count, 1 );
+		}
+		g_paybag[offset].pushcity = 1;
+	}
+
+	sprintf( szSQL, "insert into pay_baglist( goodsid, begintime, endtime, count, pushcity ) values( '%d','%d','%d','%d','%d' )", goodsid, begintime, endtime, count, g_paybag[offset].pushcity );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	return 0;
+}
+int paybag_delete( int id )
+{
+	int goodsid = 0;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( g_paybag[tmpi].id == id )
+		{
+			goodsid = g_paybag[tmpi].goodsid;
+			memset( &g_paybag[tmpi], 0, sizeof( PayBag ) );
+			break;
+		}
+	}
+	// 删除掉
+	char szSQL[256];
+	sprintf( szSQL, "delete from pay_baglist where id='%d'", id );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+	}
+
+	// 所有玩家删除这个礼包
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		city_paybag_del( &g_city[tmpi], goodsid );
+	}
+	return 0;
+}
+
+void paybag_logic()
+{
+	int nowtime = (int)time( NULL );
+	for ( int offset = 0; offset < CITY_BAG_MAX; offset++ )
+	{
+		if ( g_paybag[offset].id <= 0 )
+			continue;
+		if ( g_paybag[offset].pushcity == 1 )
+			continue;
+		if ( nowtime >= g_paybag[offset].begintime )
+		{
+			// 给所有玩家推送
+			for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+			{
+				if ( g_city[tmpi].actorid < MINACTORID )
+					continue;
+				city_paybag_add( &g_city[tmpi], g_paybag[offset].goodsid, g_paybag[offset].endtime - (int)time( NULL ), g_paybag[offset].count, 1 );
+			}
+			g_paybag[offset].pushcity = 1;
+
+			char szSQL[256];
+			sprintf( szSQL, "update pay_baglist set pushcity='%d' where id='%d'", g_paybag[offset].pushcity, g_paybag[offset].id );
+			if ( mysql_query( myGame, szSQL ) )
+			{
+				printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+				write_gamelog( "%s", szSQL );
+				if ( mysql_ping( myGame ) != 0 )
+					db_reconnect_game();
+			}
+		}
+	}
 }
 
 // 支付商店列表
@@ -1231,6 +1393,15 @@ int activity_paybag_citynew( City* pCity )
 			int cd = activity_lefttime( activityid );
 			int limitcount = g_activity_item[activityid].m_value[1];
 			city_paybag_add( pCity, goodsid, cd, limitcount, 0 );
+		}
+	}
+
+	int nowtime = (int)time( NULL );
+	for ( int tmpi = 0; tmpi <= CITY_BAG_MAX; tmpi++ )
+	{
+		if ( g_paybag[tmpi].id > 0 && nowtime >= g_paybag[tmpi].begintime && nowtime < g_paybag[tmpi].endtime )
+		{
+			city_paybag_add( pCity, g_paybag[tmpi].goodsid, g_paybag[tmpi].endtime - (int)time( NULL ), g_paybag[tmpi].count, 0 );
 		}
 	}
 	return 0;

@@ -154,11 +154,13 @@ int city_changesoldiers( int city_index, short corps, int value, short path );
 // 自动建造次数
 int city_autobuild_open( int city_index );
 int city_change_autobuild( int city_index, int value, short path );
+// 城防补充次数
+int city_autoguard_open( int city_index );
+int city_change_autoguard( int city_index, int value, short path );
 // 洗髓次数
 int city_change_herowash( int city_index, int value, short path );
 // 洗练次数
 int city_change_equipwash( int city_index, int value, short path );
-
 // 城墙守卫
 CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );

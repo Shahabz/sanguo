@@ -386,7 +386,10 @@ function OfficialHireDlgSetGov()
 	end
 	
 	-- 可雇佣
-	local index = 2;
+	local index = 3;
+	if info.m_ofkind > 0 then
+		index = 2
+	end
 	local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );
 	if pBuilding == nil then
 		return;
@@ -409,19 +412,21 @@ function OfficialHireDlgSetGov()
 						g_official_gov[kind].token, -- token
 						g_official_gov[kind].free,
 						info.m_offree ) -- token
-			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			if index == #m_uiUIP_Info then
+			if index == 2 then
 				return
-				else
-				index = index + 1;			
+			else
+				index = index - 1;			
 			end
-		
-			
-
 		end
 	end
 end
 
+local function TechVipDesc( vip )
+	if vip <= 0 or Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_OFFICIAL_TECH ) == 1 then
+		return nil;
+	end
+	return T(2321)
+end
 -- 研究员
 function OfficialHireDlgSetTech()
 	if m_Dlg == nil then
@@ -460,7 +465,10 @@ function OfficialHireDlgSetTech()
 	end
 	
 	-- 可雇佣
-	local index = 2;
+	local index = 3;
+	if info.m_ofkind > 0 then
+		index = 2
+	end
 	local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
 	if pBuilding == nil then
 		return;
@@ -473,7 +481,7 @@ function OfficialHireDlgSetTech()
 						ItemColorSprite(ptr.color), -- color
 						"Lv."..g_official_tech[kind].level.."  "..T(723), -- name
 						F(727, zhtime(g_official_tech[kind].quick) ), -- desc
-						nil,  -- otherDesc
+						TechVipDesc(g_official_tech[kind].vip),  -- otherDesc
 						nil,  -- timerDesc
 						nil, -- sec
 						T(718)..T(723), -- title
@@ -483,11 +491,10 @@ function OfficialHireDlgSetTech()
 						g_official_tech[kind].token, -- token
 						g_official_tech[kind].free,
 						info.m_offree ) -- token
-			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			if index == #m_uiUIP_Info then
+			if index == 2 then
 				return
-				else
-				index = index + 1;			
+			else
+				index = index - 1;			
 			end
 		end
 	end

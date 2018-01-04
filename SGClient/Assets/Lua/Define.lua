@@ -18,6 +18,7 @@ UI_EVENT_UIDROP             = 15;       -- UIDROP事件			dragger ID
 UI_EVENT_INPUTSUBMITEX      = 16;		-- UIInputField提交		无参
 UI_EVENT_TOGGLEVALUECHANGE	= 17;
 UI_EVENT_CLICKPOS			= 18;		-- 点击位置事件
+UI_EVENT_SCROLLPAGE			= 20;		-- UIScrollRectHelper 翻页滚动
 UI_EVENT_PUSHEVENT		    = 1000;		-- UI通用事件，不想定义新事件可用			    参数
 
 -- 可升级的普通建筑

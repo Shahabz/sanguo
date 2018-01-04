@@ -1319,9 +1319,24 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		place_attack = g_nation_place[pCity->place + 1].value;
 	}
 
+	// BUFF加成
+	int buff_attack = 0;
+	int buff_defense = 0;
+	if ( pHero->offset >= HERO_BASEOFFSET )
+	{
+		if ( pCity->buffsec[CITY_BUFF_FIRE] > 0 )
+		{
+			buff_attack = (int)(base_attack * global.buff_fire / 100.0f);
+		}
+		if ( pCity->buffsec[CITY_BUFF_MOUNTAIN] > 0 )
+		{
+			buff_defense = (int)(base_defense * global.buff_mountain / 100.0f);
+		}
+	}
+
 	// 综合计算
-	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack;
-	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense;
+	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack + buff_attack;
+	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense + buff_defense;
 	pHero->attack_increase = equip_attack_increase;
 	pHero->defense_increase = equip_defense_increase;
 	pHero->assault = equip_assault;

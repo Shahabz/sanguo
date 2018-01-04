@@ -17,6 +17,7 @@
 #include "server_netsend_auto.h"
 #include "actor_send.h"
 #include "actor_notify.h"
+#include "actor_times.h"
 #include "hero.h"
 #include "equip.h"
 #include "city.h"
@@ -348,10 +349,38 @@ int equip_resolve( int actor_index, int equipoffset )
 	if ( pequip->kind <= 0 || pequip->kind >= g_equipinfo_maxnum )
 		return -1;
 
+	int kind = pequip->kind;
 	int value = g_equipinfo[pequip->kind].prestige;
 	if ( equip_lostequip( actor_index, equipoffset, PATH_RESOLVE ) > 0 )
 	{
+		// 获取威望
 		city_changeprestige( g_actors[actor_index].city_index, value, PATH_RESOLVE );
+
+		// 返还材料
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			if ( g_equipinfo[kind].resolve_kind[tmpi] <= 0 )
+				continue;
+			item_getitem( actor_index, g_equipinfo[kind].resolve_kind[tmpi], random( g_equipinfo[kind].resolve_min[tmpi], g_equipinfo[kind].resolve_max[tmpi] ), -1, PATH_RESOLVE );
+		}
+
+		// 返还图纸
+		if ( actor_get_sflag( actor_index, ACTOR_SFLAG_EQUPIPDRAWING ) == 1 )
+		{
+			if ( rand() % 2 == 0 )
+			{
+				for ( int tmpi = 0; tmpi < 6; tmpi++ )
+				{
+					if ( g_equipinfo[kind].material_kind[tmpi] <= 0 )
+						continue;
+					if ( item_gettype( g_equipinfo[kind].material_kind[tmpi] ) == ITEM_TYPE_EQUIP_DRAWING )
+					{
+						item_getitem( actor_index, g_equipinfo[kind].material_kind[tmpi], 1, -1, PATH_RESOLVE );
+						break;
+					}
+				}
+			}
+		}
 	}
 	return 0;
 }

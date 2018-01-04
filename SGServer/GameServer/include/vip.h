@@ -5,6 +5,9 @@
 // 计算VIP等级
 int vip_calclevel( int city_index );
 
+// vip获取的属性
+int vip_attr_calc( int city_index );
+
 // VIP经验升级值
 int vip_expmax_get( int level );
 

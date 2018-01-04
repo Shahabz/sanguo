@@ -184,6 +184,10 @@ struct _slk_NetS_ActorInfo {
 	char m_guardnum;	//服务器发送玩家基本信息-守卫数量
 	short m_guardsec;	//服务器发送玩家基本信息-守卫数量
 	int m_questid;	//服务器发送玩家基本信息-主线任务id
+	int m_permission;	//服务器发送玩家基本信息-开启权限
+	int m_buff_endtime[6];	//服务器发送玩家基本信息-buff
+	char m_autoguard;	//服务器发送玩家基本信息-城防补充
+	char m_autoguardopen;	//服务器发送玩家基本信息-城防补充
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -874,9 +878,6 @@ struct _slk_NetS_CityAttr {
 	char m_ability_open_201;	//
 	char m_ability_open_203;	//
 	char m_ability_open_204;	//
-	char m_ability_open_205;	//
-	char m_ability_open_206;	//
-	char m_ability_open_207;	//
 };
 typedef struct _slk_NetS_CityAttr SLK_NetS_CityAttr;	//城池属性
 
@@ -1688,6 +1689,20 @@ struct _slk_NetS_VipBag {
 };
 typedef struct _slk_NetS_VipBag SLK_NetS_VipBag;	//vip礼包
 
+struct _slk_NetS_BuffChange {
+	char m_buffkind;	//BUFF更新
+	short m_path;	//BUFF更新
+	int m_endtime;	//BUFF更新
+};
+typedef struct _slk_NetS_BuffChange SLK_NetS_BuffChange;	//buff更新
+
+struct _slk_NetS_ChangeAutoGuard {
+	char m_autoguard;	//城防补充
+	char m_autoguardopen;	//城防补充
+	short m_path;	//城防补充
+};
+typedef struct _slk_NetS_ChangeAutoGuard SLK_NetS_ChangeAutoGuard;	//城防补充
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1871,5 +1886,7 @@ int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValu
 int struct_NetS_VipShopItem_send( char **pptr, int *psize, SLK_NetS_VipShopItem *pValue );
 int struct_NetS_VipShop_send( char **pptr, int *psize, SLK_NetS_VipShop *pValue );
 int struct_NetS_VipBag_send( char **pptr, int *psize, SLK_NetS_VipBag *pValue );
+int struct_NetS_BuffChange_send( char **pptr, int *psize, SLK_NetS_BuffChange *pValue );
+int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAutoGuard *pValue );
 
 #endif

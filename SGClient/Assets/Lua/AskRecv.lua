@@ -72,7 +72,7 @@ function RecvActorNotify(recvValue)
 	elseif msgid == NOTIFY_ACTOR then
 		-- 购买体力询问
 		if value[1] == 0 then
-			MsgBox( F( 783, value[2] ), function()
+			MsgBox( F( 783, value[3], value[4], value[2] ), function()
 				system_askinfo( ASKINFO_ACTOR, "", 0, 0 );
 			end )
 		
