@@ -1531,6 +1531,7 @@ typedef struct _slk_NetS_FriendInfo SLK_NetS_FriendInfo;	//好友信息
 struct _slk_NetS_FriendList {
 	char m_count;	//好友列表
 	SLK_NetS_FriendInfo m_list[40];	//好友列表
+	char m_op;	//好友列表
 };
 typedef struct _slk_NetS_FriendList SLK_NetS_FriendList;	//好友列表
 
@@ -1579,6 +1580,7 @@ typedef struct _slk_NetS_BlackInfo SLK_NetS_BlackInfo;	//黑名单
 struct _slk_NetS_BlackList {
 	char m_count;	//黑名单列表
 	SLK_NetS_BlackInfo m_list[50];	//黑名单列表
+	char m_op;	//黑名单列表
 };
 typedef struct _slk_NetS_BlackList SLK_NetS_BlackList;	//黑名单列表
 

@@ -191,6 +191,20 @@ function HeroDlgSetHero( index, pHero )
 	end
 	SetControlID( uiSoldiersBtn, 100 + index )
 	SetText( uiState, HeroState( pHero.m_state ) );
+	
+	-- +号
+	for i=0,5,1 do
+		if pHero.m_Equip[i].m_kind > 0 then
+			SetFalse( uiAdd )
+		else
+			-- 检查背包是否有同类型的装备
+			if GetEquip():HasByType( i+1 ) == true then
+				SetTrue( uiAdd )
+			else
+				SetFalse( uiAdd )
+			end
+		end
+	end
 end
 
 -- 步兵

@@ -283,12 +283,14 @@ function HeroInfoDlgSet( path, pHero, up )
 			SetTrue( uiShape )
 			SetFalse( uiColor )
 			SetFalse( uiWash )
-			if GetEquip():GetCountBuyType( i+1 ) > 0 then
+			SetImage( uiShape, EquipNormalSprite(i+1) )
+			
+			-- 检查背包是否有同类型的装备
+			if GetEquip():HasByType( i+1 ) == true then
 				SetTrue( uiAdd )
 			else
 				SetFalse( uiAdd )
 			end
-			SetImage( uiShape, EquipNormalSprite(i+1) )
 		end
 	end
 	

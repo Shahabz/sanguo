@@ -259,6 +259,14 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 60 then
 			VipDlgShow()
 		
+		-- 活动
+		elseif nControlID == 61 then
+			
+			
+		-- 特价礼包
+		elseif nControlID == 62 then
+			ShopDlgShowByType(1)
+		
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -269,9 +277,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 
 		elseif nControlID == 102 then
-
+		
 		elseif nControlID == 104 then
 		
+			
 		-- 点击资源
 		elseif nControlID == 201 then
 			MaterialGetDlgShow( 120 )

@@ -429,6 +429,14 @@ int actor_friend_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	SLK_NetS_FriendList pValue = { 0 };
+
+	// 开始发送
+	pValue.m_op = 1;
+	pValue.m_count = 0;
+	netsend_friendlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 发送过程
+	pValue.m_op = 2;
 	for ( int tmpi = 0; tmpi < ACTOR_FRIEND_MAXCOUNT; tmpi++ )
 	{
 		if ( g_actors[actor_index].friends[tmpi].actorid <= 0 )
@@ -464,5 +472,10 @@ int actor_friend_sendlist( int actor_index )
 	{
 		netsend_friendlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+
+	// 发送结束
+	pValue.m_op = 3;
+	pValue.m_count = 0;
+	netsend_friendlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

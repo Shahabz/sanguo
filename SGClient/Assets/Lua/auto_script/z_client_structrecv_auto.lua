@@ -1999,6 +1999,7 @@ function struct_NetS_FriendList_recv( buffer )
 		tmpValue = struct_NetS_FriendInfo_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_op = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2060,6 +2061,7 @@ function struct_NetS_BlackList_recv( buffer )
 		tmpValue = struct_NetS_BlackInfo_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_op = buffer:ReadSByte();
 	return recvValue;
 end
 

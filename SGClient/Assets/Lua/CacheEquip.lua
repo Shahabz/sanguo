@@ -328,6 +328,17 @@ function Equip:GetEquipsByType( equiptype )
 	return equips;
 end
 
+-- 根据装备类型获取所有该类型的装备集合(table)
+function Equip:HasByType( equiptype )
+	for tmpi=0, MAX_EQUIPNUM-1, 1 do
+		local pEquip = self:GetAnyEquip( tmpi );
+		if pEquip ~= nil and equip_gettype(pEquip.m_kind) == equiptype then
+			return true
+		end
+	end
+	return false;
+end
+
 -- 根据装备类型 和 最小的颜色等级获取所有该类型的装备集合(table)
 function Equip:GetEquipsByTypeWithMinColor( equiptype , mincolor , maxcolor )
 	local equips = {};

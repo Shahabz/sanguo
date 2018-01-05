@@ -2234,6 +2234,7 @@ int struct_NetS_FriendList_send( char **pptr, int *psize, SLK_NetS_FriendList *p
 	{
 		struct_NetS_FriendInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	return 0;
 }
 
@@ -2300,6 +2301,7 @@ int struct_NetS_BlackList_send( char **pptr, int *psize, SLK_NetS_BlackList *pVa
 	{
 		struct_NetS_BlackInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	return 0;
 }
 

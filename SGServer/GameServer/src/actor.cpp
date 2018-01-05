@@ -1244,6 +1244,11 @@ int actor_blacklist_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	SLK_NetS_BlackList pValue = { 0 };
+	pValue.m_op = 1;
+	pValue.m_count = 0;
+	netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	pValue.m_op = 2;
 	for ( int tmpi = 0; tmpi < ACTOR_BLACKLIST_MAX; tmpi++ )
 	{
 		if ( g_actors[actor_index].blacklist[tmpi] <= 0 )
@@ -1267,6 +1272,10 @@ int actor_blacklist_sendlist( int actor_index )
 	}
 	if ( pValue.m_count > 0 )
 		netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	pValue.m_op = 3;
+	pValue.m_count = 0;
+	netsend_blacklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

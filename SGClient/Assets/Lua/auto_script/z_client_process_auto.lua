@@ -1718,7 +1718,13 @@ end
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_ask=0,[m_count]},
 function proc_friendlist_C( recvValue )
 	-- process.
-	FriendDlgRecv( recvValue )
+	if recvValue.m_op == 1 then
+		FriendDlgFriendBeginRecv()
+	elseif recvValue.m_op == 2 then
+		FriendDlgFriendRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		FriendDlgFriendEndRecv()
+	end
 end
 
 -- m_actorid=0,m_city_index=0,m_namelen=0,m_name="[m_namelen]",m_signlen=0,m_sign="[m_signlen]",m_level=0,m_official=0,m_place=0,m_zone=0,m_nation=0,m_battlepower=0,m_killcity=0,m_herocount=0,m_hero={m_kind=0,m_color=0,m_level=0,m_pre_exp=0,m_exp=0,[m_herocount]},
@@ -1737,7 +1743,13 @@ end
 -- m_count=0,m_list={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_nation=0,[m_count]},
 function proc_blacklist_C( recvValue )
 	-- process.
-	BlackListDlgRecv( recvValue )
+	if recvValue.m_op == 1 then
+		BlackListDlgBegin()
+	elseif recvValue.m_op == 2 then
+		BlackListDlgRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		BlackListDlgEndRecv()
+	end
 end
 
 -- m_count=0,m_actorid={}[m_count],
