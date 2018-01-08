@@ -715,8 +715,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// Òø±Ò
 		atk_protect = building_store_protect( pCity, 1 );
-		def_protect = building_store_protect( pCity, 1 );
-		lost_silver = (int)ceil( abs( pTargetCity->silver - def_protect ) * global.cityfight_rob_v1 );
+		def_protect = building_store_protect( pTargetCity, 1 );
+		lost_silver = min( (int)ceil( abs( pTargetCity->silver - def_protect ) * global.cityfight_rob_v1 ), atk_protect );
 		if ( pCity->silver > atk_protect )
 		{
 			rob_silver = (int)ceil( lost_silver * global.cityfight_rob_v2 );
@@ -728,8 +728,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// Ä¾²Ä
 		atk_protect = building_store_protect( pCity, 2 );
-		def_protect = building_store_protect( pCity, 2 );
-		lost_wood = (int)ceil( abs( pTargetCity->wood - def_protect ) * global.cityfight_rob_v1 );
+		def_protect = building_store_protect( pTargetCity, 2 );
+		lost_wood = min( (int)ceil( abs( pTargetCity->wood - def_protect ) * global.cityfight_rob_v1 ), atk_protect );
 		if ( pCity->wood > atk_protect )
 		{
 			rob_wood = (int)ceil( lost_wood * global.cityfight_rob_v2 );
@@ -741,8 +741,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// Á¸Ê³
 		atk_protect = building_store_protect( pCity, 3 );
-		def_protect = building_store_protect( pCity, 3 );
-		lost_food = (int)ceil( abs( pTargetCity->food - def_protect ) * global.cityfight_rob_v1 );
+		def_protect = building_store_protect( pTargetCity, 3 );
+		lost_food = min( (int)ceil( abs( pTargetCity->food - def_protect ) * global.cityfight_rob_v1 ), atk_protect );
 		if ( pCity->food > atk_protect )
 		{
 			rob_food = (int)ceil( lost_food * global.cityfight_rob_v2 );

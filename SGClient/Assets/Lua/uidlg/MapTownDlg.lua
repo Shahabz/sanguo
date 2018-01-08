@@ -266,6 +266,22 @@ end
 -- 获取奖励
 -- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_callback_code=0,m_value
 function MapTownDlgRecvAward( recvValue )
+	-- 按照品质排序
+	table.sort( recvValue.m_list, function( a, b ) 
+		local _, _, _, a_color = AwardInfo( a.m_kind );
+		local _, _, _, b_color = AwardInfo( b.m_kind );
+		if a_color < b_color then
+			return true
+		elseif a_color == b_color then
+			if a.m_kind > b.m_kind then
+				return true
+			else
+				return false
+			end
+		else
+			return false
+		end
+	end ) 
 	m_awardCache[recvValue.m_value] = recvValue;
 	for i = 1 , recvValue.m_count do
 		local uiObj = m_ObjectPool:Get( "UIP_Award" );

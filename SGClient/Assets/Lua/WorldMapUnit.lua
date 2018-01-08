@@ -984,6 +984,7 @@ function MapUnit.createEvent( recvValue )
 	local uiEffect = objs[2];
 	local uiIcon = objs[3];
 	local uiTimer = objs[4];
+	local uiTimerIcon = objs[5];
 	
 	-- 形象
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitEventShapeList[type] );
@@ -1014,6 +1015,15 @@ function MapUnit.createEvent( recvValue )
 	if waitsec > 0 then
 		SetTrue( uiTimer )
 		SetTimer( uiTimer.transform:Find("Text"), waitsec, info.waitsec );
+		if type == 1 then
+			SetImage( uiTimerIcon, LoadSprite( "ui_opration_6" ) )
+		elseif type == 2 then
+			SetImage( uiTimerIcon, LoadSprite( "ui_opration_2" ) )
+		elseif type == 3 then
+			SetImage( uiTimerIcon, ResIcon( info.costtype ) )
+		else
+			SetImage( uiTimerIcon, LoadSprite( "ui_opration_2" ) )
+		end
 	else
 		SetFalse( uiTimer )
 	end

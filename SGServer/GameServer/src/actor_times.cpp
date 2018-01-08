@@ -225,6 +225,17 @@ int actor_loginaward( int actor_index )
 	if ( actor_get_today_char_times( actor_index, TODAY_CHAR_LOGINAWARD ) > 0 )
 		return -1;
 	actor_add_today_char_times( actor_index, TODAY_CHAR_LOGINAWARD );
-	mail_system( actor_index, g_actors[actor_index].actorid, 5001, 5501, 30, 0 );
+	if ( g_actors[actor_index].level <= 50 )
+	{
+		mail_system( actor_index, g_actors[actor_index].actorid, 5001, 5501, 131, 0 );
+	}
+	else if ( g_actors[actor_index].level <= 100 )
+	{
+		mail_system( actor_index, g_actors[actor_index].actorid, 5001, 5501, 132, 0 );
+	}
+	else
+	{
+		mail_system( actor_index, g_actors[actor_index].actorid, 5001, 5501, 133, 0 );
+	}
 	return 0;
 }
