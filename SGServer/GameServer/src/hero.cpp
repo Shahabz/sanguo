@@ -1299,17 +1299,9 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		int level = pCity->nequip_level[type - 1];
 		if ( level <= 0 || level >= g_nationequip[type].maxnum )
 			continue;
-		switch ( g_nationequip[type].config[level].ability )
-		{
-		case CITY_ATTR_ABILITY_100:
-			nequip_attack += g_nationequip[type].config[level].value;
-		case CITY_ATTR_ABILITY_110:
-			nequip_defense += g_nationequip[type].config[level].value;
-		case CITY_ATTR_ABILITY_120:
-			nequip_troops += g_nationequip[type].config[level].value;
-		default:
-			break;
-		}
+		nequip_attack += g_nationequip[type].config[level].attack;
+		nequip_defense += g_nationequip[type].config[level].defense;
+		nequip_troops += g_nationequip[type].config[level].troops;
 	}
 
 	// ¾ôÎ»¼Ó³É

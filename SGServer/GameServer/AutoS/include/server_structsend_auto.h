@@ -390,6 +390,7 @@ struct _slk_NetS_EquipGet {
 	int m_offset;	//获得一件装备
 	short m_kind;	//获得一件装备
 	short m_path;	//获得一件装备
+	short m_washid[4];	//获得一件装备
 };
 typedef struct _slk_NetS_EquipGet SLK_NetS_EquipGet;	//获得一件装备
 

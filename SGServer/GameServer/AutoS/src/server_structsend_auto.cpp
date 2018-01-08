@@ -582,6 +582,7 @@ int struct_NetS_EquipGet_send( char **pptr, int *psize, SLK_NetS_EquipGet *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_washid, 4*sizeof(short), (*psize) );
 	return 0;
 }
 

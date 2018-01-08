@@ -576,10 +576,10 @@ function proc_equiplist_C( recvValue )
 	end
 end
 
--- m_offset=0,m_kind=0,m_path=0,
+-- m_offset=0,m_kind=0,m_path=0,m_washid={[4]}
 function proc_equipget_C( recvValue )
 	-- process.
-	GetEquip():EquipGet( recvValue.m_offset, recvValue.m_kind, recvValue.m_path )
+	GetEquip():EquipGet( recvValue.m_offset, recvValue.m_kind, recvValue.m_washid, recvValue.m_path )
 end
 
 -- m_offset=0,m_kind=0,m_path=0,

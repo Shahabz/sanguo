@@ -19,6 +19,7 @@ SRC = \
 ../AutoS/src/auto_data_trainqueue.cpp \
 ../AutoS/src/auto_actor_item.cpp \
 ../AutoS/src/auto_army.cpp \
+../AutoS/src/auto_data_nation_equip_open.cpp \
 ../AutoS/src/auto_data_quest.cpp \
 ../AutoS/src/auto_map_res.cpp \
 ../AutoS/src/auto_data_nation_place.cpp \
@@ -69,6 +70,7 @@ SRC = \
 ../AutoS/src/auto_data_map_resinfo.cpp \
 ../AutoS/src/global_structrecv_auto.cpp \
 ../AutoS/src/auto_data_hero.cpp \
+../AutoS/src/auto_data_nation_equip_remake.cpp \
 ../AutoS/src/auto_data_hero_colorup.cpp \
 ../AutoS/src/server_netsend_auto.cpp \
 ../AutoS/src/auto_data_vip.cpp \
@@ -193,6 +195,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_army.o: ../AutoS/src/auto_army.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_equip_open.o: ../AutoS/src/auto_data_nation_equip_open.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_quest.o: ../AutoS/src/auto_data_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_res.o: ../AutoS/src/auto_map_res.cpp 
@@ -292,6 +296,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/global_structrecv_auto.o: ../AutoS/src/global_structrecv_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero.o: ../AutoS/src/auto_data_hero.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_equip_remake.o: ../AutoS/src/auto_data_nation_equip_remake.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero_colorup.o: ../AutoS/src/auto_data_hero_colorup.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

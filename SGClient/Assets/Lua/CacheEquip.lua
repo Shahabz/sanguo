@@ -187,7 +187,7 @@ function Equip:OnEquipChange( _EquipIndex )
 end
 
 -- 得到服务器返回的消息，得到一个装备
-function Equip:EquipGet( _EquipIndex, kind, path )
+function Equip:EquipGet( _EquipIndex, kind, washid, path )
 	local nEquipIndex = _EquipIndex + 1;
 	if kind <= 0 then
 		return;
@@ -200,6 +200,10 @@ function Equip:EquipGet( _EquipIndex, kind, path )
 	end
 	pequip.m_kind = kind;
 	pequip.m_offset = _EquipIndex;
+	pequip.m_washid[1] = washid[1]
+	pequip.m_washid[2] = washid[2]
+	pequip.m_washid[3] = washid[3]
+	pequip.m_washid[4] = washid[4]
 	self:SetEquip( _EquipIndex, pequip );
 	self:OnGetEquip( _EquipIndex, kind, path );
 end

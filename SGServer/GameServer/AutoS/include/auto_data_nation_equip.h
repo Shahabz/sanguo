@@ -6,15 +6,13 @@ struct _nationequipinfo_config {
 //--Automatically generated
 				short kind;	//
 				short level;	//
-				short actorlevel;	//
-				short itemkind;	//
-				int itemnum;	//
 				short exp;	//
-				short progress;	//
+				int maxexp;	//
 				int iron;	//
-				int sec;	//
-				short ability;	//
-				int value;	//
+				int attack;	//
+				int defense;	//
+				int troops;	//
+				short remake_progress;	//
 };
 typedef struct _nationequipinfo_config NationEquipInfoConfig;
 

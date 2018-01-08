@@ -260,9 +260,11 @@ function OfficialHireDlgSetForging()
 	SetText( m_uiText, T(715) )
 	local info = GetPlayer().m_officialhire[0];
 	-- 已雇佣
+	local haslevel = 0
 	if info.m_ofkind > 0 then
 		local kind = info.m_ofkind;
 		local ptr = g_official_forging[kind];
+		haslevel = ptr.level
 		UIP_InfoSet( m_uiUIP_Info[1], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
@@ -296,7 +298,7 @@ function OfficialHireDlgSetForging()
 	local cankind = 1;
 	for kind=#g_official_forging, 1, -1 do
 		local ptr = g_official_forging[kind];
-		if pBuilding.m_level >= ptr.buildinglevel and info.m_ofkind ~= kind then
+		if pBuilding.m_level >= ptr.buildinglevel and info.m_ofkind ~= kind and ptr.level > haslevel then
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color
@@ -326,7 +328,7 @@ function OfficialHireDlgSetForging()
 	-- 找一个即将雇佣的
 	for kind=cankind+1, #g_official_forging, 1 do
 		local ptr = g_official_forging[kind];
-		if info.m_ofkind ~= kind then
+		if info.m_ofkind ~= kind and ptr.level > haslevel then
 			UIP_InfoSet( m_uiUIP_Info[index], kind,
 						OfSprite(ptr.shape), -- shape
 						ItemColorSprite(ptr.color), -- color

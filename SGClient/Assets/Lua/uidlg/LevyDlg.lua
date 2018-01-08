@@ -171,9 +171,9 @@ end
 local function LevyAdd( value, pre )
 	if value > 0 then
 		if pre ~= nil then
-			return value
+			return knum(value)
 		else
-			return "+"..value
+			return "+"..knum(value)
 		end
 	else
 		return "-"
@@ -203,7 +203,7 @@ function LevyDlgRecv( recvValue )
 	-- 总计
 	local total = {0,0,0,0}
 	for i=1, 4, 1 do
-		total[i] = recvValue.m_base[i] + recvValue.m_tech[i] + recvValue.m_offical[i];
+		total[i] = knum( recvValue.m_base[i] + recvValue.m_tech[i] + recvValue.m_offical[i] );
 	end
 	SetText( m_uiTotalSilver, total[1] );
 	SetText( m_uiTotalWood, total[2] );

@@ -241,6 +241,35 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 	}
 
 	g_actors[actor_index].equip[offset].kind = equipkind;
+	
+	// 默认洗练属性
+	int valuenum = 0;
+	char color = g_equipinfo[equipkind].color;
+	if ( color == ITEM_COLOR_LEVEL_GREEN )
+	{ // 2个lv1属性
+		valuenum = 2;
+	}
+	else if ( color == ITEM_COLOR_LEVEL_GOLD || color == ITEM_COLOR_LEVEL_RED || color == ITEM_COLOR_LEVEL_PURPLE )
+	{ // 3个lv1属性
+		valuenum = 3;
+	}
+
+	for ( int tmpi = 0; tmpi < valuenum; tmpi++ )
+	{
+		// 原有
+		char washid = g_actors[actor_index].equip[offset].washid[tmpi] / 10;
+		if ( washid > 0 )
+			continue;
+
+		// 随机一个属性
+		char washlevel = 1;
+		char randid = random( 1, 7 ) * 10;
+		char newid = randid + washlevel;
+		if ( newid <= 0 || newid >= g_equipwash_maxnum )
+			continue;
+		g_actors[actor_index].equip[offset].washid[tmpi] = newid;
+	}
+
 	if ( pOut )
 	{
 		pOut->m_equip_kind = equipkind;
@@ -753,6 +782,10 @@ int equip_sendget( int actor_index, int offset, char path )
 	SLK_NetS_EquipGet pValue = { 0 };
 	pValue.m_offset = offset;
 	pValue.m_kind = pEquip->kind;
+	pValue.m_washid[0] = pEquip->washid[0];
+	pValue.m_washid[1] = pEquip->washid[1];
+	pValue.m_washid[2] = pEquip->washid[2];
+	pValue.m_washid[3] = pEquip->washid[3];
 	pValue.m_path = path;
 	netsend_equipget_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;

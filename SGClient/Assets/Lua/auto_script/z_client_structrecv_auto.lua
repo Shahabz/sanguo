@@ -499,6 +499,10 @@ function struct_NetS_EquipGet_recv( buffer )
 	recvValue.m_offset = buffer:ReadInt();
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_washid={};
+	for tmpi=1,4,1 do
+		recvValue.m_washid[tmpi] = buffer:ReadShort();
+	end
 	return recvValue;
 end
 
