@@ -24,6 +24,7 @@ local GMCMD_SERVER = {
 [20]="mail",
 [21]="systalk";
 [22]="vipexp",
+[23]="activity",
 [24]="tech",
 [25]="building",
 [26]="people",
@@ -36,7 +37,7 @@ local GMCMD_SERVER = {
 [33]="kwpoint",
 [34]="giveres",
 [35]="autobuild",
-[36]="paybag"
+[36]="paybag",
 }
  
 -- 发到客户端本地指令

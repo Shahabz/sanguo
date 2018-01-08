@@ -2408,6 +2408,7 @@ int struct_NetS_PayStoreActivity_send( char **pptr, int *psize, SLK_NetS_PayStor
 	{
 		struct_NetS_GoodsInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_path, (*psize) );
 	return 0;
 }
 
@@ -2483,6 +2484,29 @@ int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAu
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguard, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguardopen, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity_send( char **pptr, int *psize, SLK_NetS_Activity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_activityid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_starttime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_closetime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ActivityList_send( char **pptr, int *psize, SLK_NetS_ActivityList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
 	return 0;
 }
 

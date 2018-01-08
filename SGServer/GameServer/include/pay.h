@@ -83,7 +83,6 @@ int paybag_delete( int id );
 void paybag_logic();
 
 int paystore_list( int actor_index );
-int paystore_activity_list( int actor_index );
 
 // 通过type获取ID列表
 int paystore_goodslist_withtype( int type, int *goodsid, int count );
@@ -139,6 +138,7 @@ char city_paybag_has( struct _city *pCity, short goodsid );
 int activity_paybag_open( int activityid );
 int activity_paybag_close( int activityid );
 int activity_paybag_citynew( struct _city *pCity );
+int activity_paybag_list( int actor_index, int path );
 
 // 获取这个玩家所在国家应得的礼包
 int paygoods_getawardgroup( int actor_index, short goodsid );

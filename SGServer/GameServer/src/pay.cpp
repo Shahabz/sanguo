@@ -456,72 +456,6 @@ int paystore_list( int actor_index )
 	return 0;
 }
 
-// 活动礼包列表
-int paystore_activity_list( int actor_index )
-{
-	if ( actor_index < 0 || actor_index >= g_maxactornum )
-		return -1;
-	City *pCity = city_getptr( actor_index );
-	if ( !pCity )
-		return -1;
-	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
-	if ( coinindex < 0 || coinindex > PAYCOINMAX )
-		coinindex = 0;
-	SLK_NetS_PayStoreActivity store = { 0 };
-	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
-	{
-		short goodsid = pCity->bag_gid[tmpi];
-		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
-			continue;
-
-		int actionbag_endtime = pCity->bag_time[tmpi];
-		if ( actionbag_endtime > 0 && (int)time( NULL ) >= actionbag_endtime )
-		{
-			city_paybag_del( pCity, goodsid );
-			continue;
-		}
-
-		char actionbag_count = pCity->bag_num[tmpi];
-		if ( actionbag_count <= 0 )
-		{
-			city_paybag_del( pCity, goodsid );
-			continue;
-		}
-
-		int tier = g_paygoods[goodsid].tier;
-		if ( tier <= 0 || tier >= g_PayPriceCount )
-			continue;
-
-		store.m_list[store.m_count].m_goodsid = goodsid;
-		store.m_list[store.m_count].m_price = g_PayPrice[tier].price[coinindex];
-		store.m_list[store.m_count].m_nameid = g_paygoods[goodsid].nameid;
-		store.m_list[store.m_count].m_descid = g_paygoods[goodsid].descid;
-		store.m_list[store.m_count].m_icon = g_paygoods[goodsid].icon;
-		store.m_list[store.m_count].m_sale = g_paygoods[goodsid].sale;
-		store.m_list[store.m_count].m_worth = g_paygoods[goodsid].worth;
-		store.m_list[store.m_count].m_bag_time = actionbag_endtime;
-		store.m_list[store.m_count].m_bag_num = actionbag_count;
-		int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
-		if ( awardgroup > 0 && awardgroup < g_awardgroup_count )
-		{
-			for ( int i = 0; i < g_awardgroup[awardgroup].allcount; i++ )
-			{
-				if ( g_awardgroup[awardgroup].show[i] == 0 )
-					continue;
-				int awardcount = store.m_list[store.m_count].m_awardcount;
-				if ( awardcount >= 16 )
-					break;
-				store.m_list[store.m_count].m_award[awardcount].m_kind = g_awardgroup[awardgroup].kind[i];
-				store.m_list[store.m_count].m_award[awardcount].m_num = g_awardgroup[awardgroup].minnum[i];
-				store.m_list[store.m_count].m_awardcount += 1;
-			}
-		}
-		store.m_count += 1;
-	}
-	netsend_paystoreactivity_S( actor_index, SENDTYPE_ACTOR, &store );
-	return 0;
-}
-
 // 礼包信息
 int pay_goodsinfo( int actor_index, int type, int goodsid )
 {
@@ -1129,7 +1063,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	else if ( goodstype == PAY_GOODSTYPE_DEFAULT || goodstype == PAY_GOODSTYPE_ACTIVITY )
 	{
 		city_paybag_sub( city_getptr( actor_index ), goodsid, goodstype );
-		paystore_activity_list( actor_index );
+		activity_paybag_list( actor_index, 1 );
 	}
 
 	// 记录总充值多少钱
@@ -1385,16 +1319,16 @@ int activity_paybag_citynew( City* pCity )
 		return -1;
 	if ( pCity->actorid < MINACTORID )
 		return -1;
-	for ( int activityid = ACTIVITY_PAYBAG1; activityid <= ACTIVITY_PAYBAG5; activityid++ )
-	{
-		if ( activity_intime( activityid ) )
-		{
-			short goodsid = g_activity_item[activityid].m_value[0];
-			int cd = activity_lefttime( activityid );
-			int limitcount = g_activity_item[activityid].m_value[1];
-			city_paybag_add( pCity, goodsid, cd, limitcount, 0 );
-		}
-	}
+	//for ( int activityid = ACTIVITY_PAYBAG1; activityid <= ACTIVITY_PAYBAG5; activityid++ )
+	//{
+	//	if ( activity_intime( activityid ) )
+	//	{
+	//		short goodsid = g_activity_item[activityid].m_value[0];
+	//		int cd = activity_lefttime( activityid );
+	//		int limitcount = g_activity_item[activityid].m_value[1];
+	//		city_paybag_add( pCity, goodsid, cd, limitcount, 0 );
+	//	}
+	//}
 
 	int nowtime = (int)time( NULL );
 	for ( int tmpi = 0; tmpi <= CITY_BAG_MAX; tmpi++ )
@@ -1404,6 +1338,77 @@ int activity_paybag_citynew( City* pCity )
 			city_paybag_add( pCity, g_paybag[tmpi].goodsid, g_paybag[tmpi].endtime - (int)time( NULL ), g_paybag[tmpi].count, 0 );
 		}
 	}
+	return 0;
+}
+
+// 活动礼包列表
+int activity_paybag_list( int actor_index, int path )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	if ( coinindex < 0 || coinindex > PAYCOINMAX )
+		coinindex = 0;
+	SLK_NetS_PayStoreActivity store = { 0 };
+	store.m_path = (char)path;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		short goodsid = pCity->bag_gid[tmpi];
+		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+			continue;
+
+		int actionbag_endtime = pCity->bag_time[tmpi];
+		if ( actionbag_endtime > 0 && (int)time( NULL ) >= actionbag_endtime )
+		{
+			city_paybag_del( pCity, goodsid );
+			continue;
+		}
+
+		char actionbag_count = pCity->bag_num[tmpi];
+		if ( actionbag_count <= 0 )
+		{
+			city_paybag_del( pCity, goodsid );
+			continue;
+		}
+
+		int tier = g_paygoods[goodsid].tier;
+		if ( tier <= 0 || tier >= g_PayPriceCount )
+			continue;
+
+		store.m_list[store.m_count].m_goodsid = goodsid;
+		store.m_list[store.m_count].m_price = g_PayPrice[tier].price[coinindex];
+		store.m_list[store.m_count].m_nameid = g_paygoods[goodsid].nameid;
+		store.m_list[store.m_count].m_descid = g_paygoods[goodsid].descid;
+		store.m_list[store.m_count].m_icon = g_paygoods[goodsid].icon;
+		store.m_list[store.m_count].m_sale = g_paygoods[goodsid].sale;
+		store.m_list[store.m_count].m_worth = g_paygoods[goodsid].worth;
+		store.m_list[store.m_count].m_bag_time = actionbag_endtime;
+		store.m_list[store.m_count].m_bag_num = actionbag_count;
+
+		if ( path == 1 )
+		{
+			int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+			if ( awardgroup > 0 && awardgroup < g_awardgroup_count )
+			{
+				for ( int i = 0; i < g_awardgroup[awardgroup].allcount; i++ )
+				{
+					if ( g_awardgroup[awardgroup].show[i] == 0 )
+						continue;
+					int awardcount = store.m_list[store.m_count].m_awardcount;
+					if ( awardcount >= 16 )
+						break;
+					store.m_list[store.m_count].m_award[awardcount].m_kind = g_awardgroup[awardgroup].kind[i];
+					store.m_list[store.m_count].m_award[awardcount].m_num = g_awardgroup[awardgroup].minnum[i];
+					store.m_list[store.m_count].m_awardcount += 1;
+				}
+			}
+		}
+		store.m_count += 1;
+	}
+	netsend_paystoreactivity_S( actor_index, SENDTYPE_ACTOR, &store );
 	return 0;
 }
 

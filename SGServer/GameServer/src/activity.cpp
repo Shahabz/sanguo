@@ -16,6 +16,7 @@
 #include "gmcmd.h"
 #include "system.h"
 #include "global.h"
+#include "pay.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -79,7 +80,7 @@ int activity_init()
 // 打开活动
 int activity_settime( int activityid, int begin_min, int len_min, int value0, int value1, int value2, int value3, char *pstr )
 {
-	if( activityid >= g_activity_count )
+	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
 
 	int tmpi = 0;
@@ -337,11 +338,7 @@ int activity_onopen( int activityid )
 	{
 	case ACTIVITY_NORMAL:
 		break;
-	case ACTIVITY_PAYBAG1:
-	case ACTIVITY_PAYBAG2:
-	case ACTIVITY_PAYBAG3:
-	case ACTIVITY_PAYBAG4:
-	case ACTIVITY_PAYBAG5:
+	case ACTIVITY_PAYBAG:
 		break;
 	default:
 		sc_ActivityOnOpen( activityid );
@@ -356,11 +353,7 @@ int activity_onend( int activityid )
 		return 0;
 	switch ( activityid )
 	{
-	case ACTIVITY_PAYBAG1:
-	case ACTIVITY_PAYBAG2:
-	case ACTIVITY_PAYBAG3:
-	case ACTIVITY_PAYBAG4:
-	case ACTIVITY_PAYBAG5:
+	case ACTIVITY_PAYBAG:
 		break;
 	default:
 		sc_ActivityOnEnd( activityid );
@@ -411,7 +404,8 @@ int activity_logic()
 	{
 		if ( g_activity_item[activityid].m_starttime <= 0 )
 		{
-			activity_onwarning( activityid, time_gmcmd_getnexttime( GMC_ACTIVITY, activityid ) - timestamp );
+			g_activity_item[activityid].m_nexttime = time_gmcmd_getnexttime( GMC_ACTIVITY, activityid );
+			activity_onwarning( activityid, g_activity_item[activityid].m_nexttime - timestamp );
 			continue;
 		}
 
@@ -496,3 +490,28 @@ int activity_countdown( int activityid )
 	return statetime;
 }
 
+// 活动列表
+int activity_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_ActivityList pValue = { 0 };
+	for ( int activityid = 1; activityid < MAX_ACTIVITY_COUNT; activityid++ )
+	{
+		int starttime = g_activity_item[activityid].m_starttime;
+		if ( starttime <= 0 )
+		{
+			starttime = g_activity_item[activityid].m_nexttime;
+		}
+		if ( starttime <= 0 )
+		{
+			continue;
+		}
+		pValue.m_list[pValue.m_count].m_activityid = activityid;
+		pValue.m_list[pValue.m_count].m_starttime = starttime;
+		pValue.m_list[pValue.m_count].m_endtime = g_activity_item[activityid].m_endtime;
+		pValue.m_list[pValue.m_count].m_closetime = g_activity_item[activityid].m_closetime;
+		pValue.m_count += 1;
+	}
+	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}

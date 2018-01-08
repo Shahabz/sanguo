@@ -1650,6 +1650,7 @@ typedef struct _slk_NetS_GoodsInfo SLK_NetS_GoodsInfo;	//礼包商品信息
 struct _slk_NetS_PayStoreActivity {
 	char m_count;	//礼包列表
 	SLK_NetS_GoodsInfo m_list[8];	//礼包列表
+	char m_path;	//礼包列表
 };
 typedef struct _slk_NetS_PayStoreActivity SLK_NetS_PayStoreActivity;	//礼包列表
 
@@ -1704,6 +1705,20 @@ struct _slk_NetS_ChangeAutoGuard {
 	short m_path;	//城防补充
 };
 typedef struct _slk_NetS_ChangeAutoGuard SLK_NetS_ChangeAutoGuard;	//城防补充
+
+struct _slk_NetS_Activity {
+	short m_activityid;	//活动
+	int m_starttime;	//活动
+	int m_endtime;	//活动
+	int m_closetime;	//活动
+};
+typedef struct _slk_NetS_Activity SLK_NetS_Activity;	//活动
+
+struct _slk_NetS_ActivityList {
+	char m_count;	//活动列表
+	SLK_NetS_Activity m_list[64];	//活动列表
+};
+typedef struct _slk_NetS_ActivityList SLK_NetS_ActivityList;	//活动列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1890,5 +1905,7 @@ int struct_NetS_VipShop_send( char **pptr, int *psize, SLK_NetS_VipShop *pValue 
 int struct_NetS_VipBag_send( char **pptr, int *psize, SLK_NetS_VipBag *pValue );
 int struct_NetS_BuffChange_send( char **pptr, int *psize, SLK_NetS_BuffChange *pValue );
 int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAutoGuard *pValue );
+int struct_NetS_Activity_send( char **pptr, int *psize, SLK_NetS_Activity *pValue );
+int struct_NetS_ActivityList_send( char **pptr, int *psize, SLK_NetS_ActivityList *pValue );
 
 #endif

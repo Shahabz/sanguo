@@ -717,7 +717,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{ // 礼包列表
-			paystore_activity_list( actor_index );
+			activity_paybag_list( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 2 )
 		{ // 购买商品
@@ -757,6 +757,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 1 )
 		{
 			vipbag_buy( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_ACTIVITY:
+		if ( pvalue[0] == 0 )
+		{
+			activity_sendlist( actor_index );
 		}
 		break;
 	default:

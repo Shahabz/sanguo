@@ -261,7 +261,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 活动
 		elseif nControlID == 61 then
-			
+			ActivityDlgShow()
 			
 		-- 特价礼包
 		elseif nControlID == 62 then

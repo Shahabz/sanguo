@@ -40,6 +40,7 @@
 #define ASKINFO_PAY				35 // 支付
 #define ASKINFO_VIPSHOP			36 // VIP商店
 #define ASKINFO_VIPBAG			37 // VIP礼包
+#define ASKINFO_ACTIVITY		38 // 活动
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

@@ -546,6 +546,7 @@ function proc_changtoken_C( recvValue )
 	MainDlgSetToken()
 	DialogFrameModChangeToken()
 	BloodyBattleDlgChangeToken()
+	ActivityDlgChangeToken()
 end
 
 -- m_offset=0,m_kind=0,m_washid={[4]},
@@ -1783,7 +1784,11 @@ end
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},[m_count]},
 function proc_paystoreactivity_C( recvValue )
 	-- process.
-	ShopDlgPayBagRecv( recvValue )
+	if recvValue.m_path == 0 then
+		ShopDlgPayBagRecv( recvValue )
+	elseif recvValue.m_path == 1 then
+		Activity10ModRecv( recvValue )
+	end
 end
 
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
@@ -1817,5 +1822,11 @@ function proc_changeautoguard_C( recvValue )
 	GetPlayer().m_autoguard		=	recvValue.m_autoguard;
 	GetPlayer().m_autoguardopen	=	recvValue.m_autoguardopen;
 	MainDlgSetAutoGuard( recvValue.m_path )
+end
+
+-- m_count=0,m_list={m_activityid=0,m_starttime=0,m_endtime=0,m_closetime=0,[m_count]},
+function proc_activitylist_C( recvValue )
+	-- process.
+	ActivityDlgRecv( recvValue )
 end
 

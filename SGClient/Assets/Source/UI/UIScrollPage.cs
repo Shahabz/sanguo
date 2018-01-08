@@ -11,7 +11,7 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 	public UIMod uiMod;
 	public float smooting = 5;                          // 滑动速度  
 	public int pageCount = 1;                           // 每页显示的项目  
-	public float autoInterval = 2.0f;					// 自动翻页间隔
+	public float autoInterval = 5.0f;					// 自动翻页间隔
 
 	List<GameObject> listItem =  new List<GameObject>();                	 // scrollview item   
 	UIScrollRect srect;  
@@ -20,7 +20,7 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 	List<float> listPageValue = new List<float> { 0 };  //总页数索引比列 0-1  
 	float targetPos = 0;                                //滑动的目标位置  
 	float nowindex = 0;                                 //当前位置索引  
-
+	bool isplay = false;
 	/// <summary>  
 	/// 用于返回一个页码，页码从0开始  
 	/// </summary>  
@@ -41,6 +41,22 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 		}
 	}
 
+	void OnEnable()
+	{
+		srect.normalizedPosition = Vector2.zero;
+		srect.horizontalNormalizedPosition = 0.0f;
+		nowindex = 0;
+		targetPos = 0;
+		if (isplay)
+			Play ();
+	}
+
+	void OnDisable()
+	{
+		if (isplay)
+			Stop ();
+	}
+
 	//每页比例  
 	void ListPageValueInit()  
 	{  
@@ -52,7 +68,8 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 			{  
 				listPageValue.Add((i / pageIndex));  
 			}  
-		}  
+		} 
+		srect.horizontalNormalizedPosition = 0.0f;
 	}  
 
 	void Update()  
@@ -174,6 +191,7 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
 	public void Play()
 	{
+		isplay = true;
 		InvokeRepeating( "OnAuto", 2.0f, autoInterval );
 	}
 
@@ -182,8 +200,10 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 		CancelInvoke ("OnAuto");
 	}
 
+
 	public void OnAuto()
 	{
+		srect.horizontalNormalizedPosition =  listPageValue[Convert.ToInt32(nowindex)];
 		if (nowindex + 1 > pageIndex) {
 			nowindex = 0;
 		} else {

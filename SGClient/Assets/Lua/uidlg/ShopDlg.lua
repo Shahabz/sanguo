@@ -220,13 +220,13 @@ end
 function ShopDlgShow()
 	ShopDlgOpen()
 	ShopDlgSelectType( 1 )
-	system_askinfo( ASKINFO_PAY, "", 1 )
+	system_askinfo( ASKINFO_PAY, "", 1, 0 )
 end
 
 function ShopDlgShowByType( type )
 	ShopDlgOpen()
 	ShopDlgSelectType( type )
-	system_askinfo( ASKINFO_PAY, "", 1 )
+	system_askinfo( ASKINFO_PAY, "", 1, 0 )
 end
 
 -- 选择种类
@@ -871,8 +871,9 @@ end
 
 -- 礼包点击购买
 function ShopDlgPayBagBuy( index )
-	if m_PayBagRecvValue[index] == nil then
+	if m_PayBagRecvValue.m_list[index] == nil then
 		return
 	end
-	
+	ShopDlgClose()
+	ActivityDlgShowByID( ACTIVITY_PAYBAG ); 
 end

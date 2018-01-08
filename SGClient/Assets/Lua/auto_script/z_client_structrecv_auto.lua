@@ -2168,6 +2168,7 @@ function struct_NetS_PayStoreActivity_recv( buffer )
 		tmpValue = struct_NetS_GoodsInfo_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_path = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2231,6 +2232,27 @@ function struct_NetS_ChangeAutoGuard_recv( buffer )
 	recvValue.m_autoguard = buffer:ReadSByte();
 	recvValue.m_autoguardopen = buffer:ReadSByte();
 	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Activity_recv( buffer )
+	local recvValue = {};
+	recvValue.m_activityid = buffer:ReadShort();
+	recvValue.m_starttime = buffer:ReadInt();
+	recvValue.m_endtime = buffer:ReadInt();
+	recvValue.m_closetime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ActivityList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
 	return recvValue;
 end
 

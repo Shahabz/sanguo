@@ -32,6 +32,7 @@
 #include "actor_times.h"
 #include "king_war.h"
 #include "pay.h"
+#include "activity.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -51,7 +52,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_PAYBAG )
+	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY )
 	{
 		actorid = 0;
 	}
@@ -366,6 +367,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_ACTIVITY:// »î¶¯
+		activity_settime( pValue[0], 0, pValue[1], pValue[2], pValue[3], 0, 0, pMsg );
 		break;
 	case GMC_TECH:
 		if ( pCity )
