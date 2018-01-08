@@ -984,7 +984,10 @@ function MapUnit.createEvent( recvValue )
 	local uiEffect = objs[2];
 	local uiIcon = objs[3];
 	local uiTimer = objs[4];
-	local uiTimerIcon = objs[5];
+	local uiResIcon = objs[5];
+	local uiOpIcon = objs[6];
+	local uiEffectResIcon = objs[7];
+	local uiEffectOpIcon = objs[8];
 	
 	-- 形象
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitEventShapeList[type] );
@@ -1006,6 +1009,38 @@ function MapUnit.createEvent( recvValue )
 	-- 完成状态
 	if state == 1 then
 		SetTrue( uiEffect )
+		if type == 1 then
+			SetImage( uiEffectOpIcon, LoadSprite( "ui_opration_6" ) )
+			SetTrue( uiEffectOpIcon )
+			SetFalse( uiEffectResIcon )
+			
+		elseif type == 2 then
+			SetImage( uiEffectOpIcon, LoadSprite( "ui_opration_2" ) )
+			SetTrue( uiEffectOpIcon )
+			SetFalse( uiEffectResIcon )
+			
+		elseif type == 3 then
+			if info.awardkind == 50001 then
+				SetImage( uiEffectResIcon, ResIcon( 1 ) )
+			elseif info.awardkind == 50002 then
+				SetImage( uiEffectResIcon, ResIcon( 2 ) )
+			elseif info.awardkind == 50003 then
+				SetImage( uiEffectResIcon, ResIcon( 3 ) )
+			end
+			SetFalse( uiEffectOpIcon )
+			SetTrue( uiEffectResIcon )
+			
+		elseif type == 4 then
+			SetImage( uiEffectResIcon, ResIcon( 3 ) )
+			SetFalse( uiEffectOpIcon )
+			SetTrue( uiEffectResIcon )
+		
+		elseif type == 5 then
+			SetImage( uiEffectResIcon, LoadSprite( "ui_main_icon_bag" ) )
+			SetFalse( uiEffectOpIcon )
+			SetTrue( uiEffectResIcon )
+
+		end
 		waitsec = 0;
 	else
 		SetFalse( uiEffect )
@@ -1016,13 +1051,36 @@ function MapUnit.createEvent( recvValue )
 		SetTrue( uiTimer )
 		SetTimer( uiTimer.transform:Find("Text"), waitsec, info.waitsec );
 		if type == 1 then
-			SetImage( uiTimerIcon, LoadSprite( "ui_opration_6" ) )
+			SetImage( uiOpIcon, LoadSprite( "ui_opration_6" ) )
+			SetTrue( uiOpIcon )
+			SetFalse( uiResIcon )
+			
 		elseif type == 2 then
-			SetImage( uiTimerIcon, LoadSprite( "ui_opration_2" ) )
-		elseif type == 3 then
-			SetImage( uiTimerIcon, ResIcon( info.costtype ) )
-		else
-			SetImage( uiTimerIcon, LoadSprite( "ui_opration_2" ) )
+			SetImage( uiOpIcon, LoadSprite( "ui_opration_2" ) )
+			SetTrue( uiOpIcon )
+			SetFalse( uiResIcon )
+			
+		elseif type == 3 then 
+			if info.awardkind == 50001 then
+				SetImage( uiResIcon, ResIcon( 1 ) )
+			elseif info.awardkind == 50002 then
+				SetImage( uiResIcon, ResIcon( 2 ) )
+			elseif info.awardkind == 50003 then
+				SetImage( uiResIcon, ResIcon( 3 ) )
+			end
+			SetFalse( uiOpIcon )
+			SetTrue( uiResIcon )
+			
+		elseif type == 4 then
+			SetImage( uiResIcon, ResIcon( 3 ) )
+			SetFalse( uiOpIcon )
+			SetTrue( uiResIcon )
+			
+		elseif type == 5 then
+			SetImage( uiResIcon, LoadSprite( "ui_main_icon_bag" ) )
+			SetFalse( uiOpIcon )
+			SetTrue( uiResIcon )
+			
 		end
 	else
 		SetFalse( uiTimer )

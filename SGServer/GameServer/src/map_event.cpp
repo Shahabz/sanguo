@@ -382,6 +382,9 @@ int map_event_citylogic( int city_index )
 int map_event_gather( int actor_index, int unit_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
 		return -1;
 	MapUnit *unit = &g_mapunit[unit_index];
@@ -402,6 +405,20 @@ int map_event_gather( int actor_index, int unit_index )
 	if ( !config )
 		return -1;
 
+	int count = 0;
+	for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
+	{
+		int mapevent_index = pCity->mapevent_index[tmpi];
+		if ( mapevent_index < 0 || mapevent_index >= g_map_event_maxcount )
+			continue;
+		if ( g_map_event[mapevent_index].waitsec > 0 || g_map_event[mapevent_index].state == 1 )
+			count += 1;
+	}
+	if ( count >= 2 )
+	{
+		actor_notify_alert( actor_index, 2335 );
+		return -1;
+	}
 
 	g_map_event[unit->index].waitsec = config->waitsec;
 	if ( g_map_event[unit->index].waitsec > 0 )
@@ -420,10 +437,10 @@ int map_event_gather( int actor_index, int unit_index )
 int map_event_getaward( int actor_index, int unit_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
-		return -1;
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
+		return -1;
+	if ( unit_index < 0 || unit_index >= g_mapunit_maxcount )
 		return -1;
 	MapUnit *unit = &g_mapunit[unit_index];
 	if ( !unit )
