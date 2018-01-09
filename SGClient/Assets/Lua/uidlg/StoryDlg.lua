@@ -677,7 +677,7 @@ function StoryDlgSelect( id )
 	elseif type == STORY_TYPE_BOSS then-- 精英
 		-- 星级
 		local starlv = m_recvValue.m_story_star[storyConfig.star_saveoffset+1]
-		if starlv == 3 or Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_STORYSWEEP ) == 1 then
+		if starlv == 3 or (starlv > 0 and Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_STORYSWEEP ) == 1) then
 			-- 扫荡
 			StorySweepDlgShow( id, m_recvValue.m_sweep_herokind )
 		else

@@ -256,6 +256,9 @@ end
 
 -- 更新钻石
 function ActivityDlgChangeToken()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	SetText( m_uiTokenText, GetPlayer().m_token );
 end
 

@@ -21,8 +21,6 @@ function JumpDlgClose()
 	end
 	m_res = 0;
 	eye.uiManager:Close( "JumpDlg" );
-	
-	NationEquipDlgClose()
 end
 
 -- 删除界面

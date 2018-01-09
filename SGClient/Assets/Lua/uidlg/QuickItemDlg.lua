@@ -124,34 +124,31 @@ function QuickItemDlgSet( sec, update )
 	-- 升级加速
 	if m_op == 1 then
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
-		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level ).."->" )
-		SetText( m_uiTargetName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level+1 ) );
+		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level ).."->".. BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level+1 ) )
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 		
 	-- 募兵加速
 	elseif m_op == 2 then
-		SetImage( m_uiShape, CorpsFaceSpriteEx(m_buildingkind) );
-		SetText( m_uiName, T(605)..CorpsNameEx(m_buildingkind) )
+		SetImage( m_uiShape, CorpsFaceSpriteEx(m_buildingkind).." "..T(605)..CorpsNameEx(m_buildingkind) );
 		SetText( m_uiTargetName, "" );
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 		
 	-- 改造加速
-	elseif m_op == 3 then
+	elseif m_op == 3 then			
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
-		SetText( m_uiName, BuildingNameLv( m_buildingkind, m_buildingoffset, pBuilding.m_level )..T(1474) )
-		SetText( m_uiTargetName, "" );
+		SetText( m_uiName, BuildingNameLv( m_buildingkind, nil, pBuilding.m_level )..T(1474) )
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 	end
 	
 	for i=1, 4, 1 do
 		local kind = m_itemlist[i]
-		SetImage( m_uiUIP_QuickItem[i].transform:Find("Shape"), ItemSprite(kind) );
-		SetImage( m_uiUIP_QuickItem[i].transform:Find("Color"), ItemColorSprite(item_getcolor(kind)) );
+		SetImage( m_uiUIP_QuickItem[i].transform:Find("Back/Shape"), ItemSprite(kind) );
+		SetImage( m_uiUIP_QuickItem[i].transform:Find("Back/Color"), ItemColorSprite(item_getcolor(kind)) );
 		SetText( m_uiUIP_QuickItem[i].transform:Find("Name"), item_getname(kind) );
 		if kind == 142 then
-			SetText( m_uiUIP_QuickItem[i].transform:Find("Num"), T(125)..QuickItemDlgTokenCalc() );
+			SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..QuickItemDlgTokenCalc() );
 		else
-			SetText( m_uiUIP_QuickItem[i].transform:Find("Num"), GetItem():GetCount(kind) );
+			SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), "x"..GetItem():GetCount(kind) );
 		end
 	end
 end

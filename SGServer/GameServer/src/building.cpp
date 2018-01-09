@@ -958,12 +958,12 @@ int building_rebuild( int city_index, int kind, int offset, int rebuild_kind )
 		return -1;
 	}
 
-	if ( level >= g_building_upgrade[rebuild_kind].maxnum - 1 )
+	if ( level >= g_building_upgrade[rebuild_kind].maxnum )
 	{
 		return -1;
 	}
 
-	BuildingUpgradeConfig *config = building_getconfig( rebuild_kind, level + 1 );
+	BuildingUpgradeConfig *config = building_getconfig( rebuild_kind, level );
 	if ( !config )
 		return -1;
 
