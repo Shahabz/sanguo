@@ -125,6 +125,7 @@ army.cpp \
 account.cpp \
 shop.cpp \
 zoneunit.cpp \
+nation_equip.cpp \
 map_res.cpp \
 world_boss.cpp \
 script_reg_auto.cpp \
@@ -406,6 +407,8 @@ account.o: account.cpp
 shop.o: shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 zoneunit.o: zoneunit.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+nation_equip.o: nation_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map_res.o: map_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

@@ -35,6 +35,7 @@
 #include "world_quest.h"
 #include "quest.h"
 #include "pay.h"
+#include "nation_equip.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -685,13 +686,16 @@ void city_logic_sec( int begin, int end )
 		}
 
 		// 国器打造
-		if ( g_city[city_index].nequip_sec > 0 )
+		for ( int i = 0; i < 6; i++ )
 		{
-			g_city[city_index].nequip_sec -= 1;
-			if ( g_city[city_index].nequip_sec <= 0 )
+			if ( g_city[city_index].neq_sec[i] > 0 )
 			{
-				// 通知国器打造完毕
-				
+				g_city[city_index].neq_sec[i] -= 1;
+				if ( g_city[city_index].neq_sec[i] <= 0 )
+				{
+					// 通知国器完毕
+					nation_equip_over( &g_city[city_index], i );
+				}
 			}
 		}
 

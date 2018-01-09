@@ -927,9 +927,9 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 		end
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
 		if vw ~= nil then
-			SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+"..vw );
+			SetText( uiObj.transform:Find("Desc"), T(2336).." "..damage.." "..T(152).."+"..vw );
 		else
-			SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp.." "..T(152).."+0" );
+			SetText( uiObj.transform:Find("Desc"), T(2336).." "..damage.." "..T(152).."+0" );
 		end
 	-- 玩家城墙守卫
 	elseif type == FIGHT_UNITTYPE_GUARD then
@@ -938,7 +938,7 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
 		SetText( uiObj.transform:Find("Name"), T( 1119 ) );
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp );
+		SetText( uiObj.transform:Find("Desc"), T(2336).." "..damage );
 		
 	-- 怪物表
 	elseif type == FIGHT_UNITTYPE_MONSTER then
@@ -947,7 +947,7 @@ function MailInfoDlgSetFightUnit( uiObj, type, nation, name, kind, shape, level,
 		SetImage( uiObj.transform:Find("Corps"), CorpsSprite( corps ) );
 		SetText( uiObj.transform:Find("Name"), EnemyName( kind ) );
 		SetText( uiObj.transform:Find("Level"), "Lv."..level );
-		SetText( uiObj.transform:Find("Desc"), T(1117).." "..maxhp );
+		SetText( uiObj.transform:Find("Desc"), T(2336).." "..damage );
 	end
 end
 

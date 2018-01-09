@@ -286,6 +286,7 @@ function BattleDlgUnit( root, index, unittype, kind, name, shape, color, corps, 
 		SetTrue( uiHp )
 		SetText( uiHp, hp );
 	end
+
 	-- 玩家英雄
 	if unittype == FIGHT_UNITTYPE_HERO then
 		SetImage( uiShape, HeroHeadSprite( kind ) );
@@ -374,3 +375,6 @@ function BattleDlgFight()
 	end
 end
 
+function BattleDlgGetStoryid()
+	return m_storyid
+end

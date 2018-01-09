@@ -1592,11 +1592,13 @@ struct _slk_NetS_BlackListID {
 typedef struct _slk_NetS_BlackListID SLK_NetS_BlackListID;	//黑名单列表只发id
 
 struct _slk_NetS_NationEquip {
-	short m_nequip_level[6];	//国器信息
-	short m_nequip_exp[6];	//国器信息
-	char m_nequip_kind;	//国器信息
-	char m_nequip_pro;	//国器信息
-	int m_nequip_sec;	//国器信息
+	short m_neq_lv;	//国器信息
+	char m_neq_exp;	//国器信息
+	char m_neq_pro;	//国器信息
+	int m_neq_sec;	//国器信息
+	char m_neq_crit;	//国器信息
+	char m_neq_star;	//国器信息
+	char m_kind;	//国器信息
 };
 typedef struct _slk_NetS_NationEquip SLK_NetS_NationEquip;	//国器信息
 
@@ -1720,6 +1722,12 @@ struct _slk_NetS_ActivityList {
 	SLK_NetS_Activity m_list[64];	//活动列表
 };
 typedef struct _slk_NetS_ActivityList SLK_NetS_ActivityList;	//活动列表
+
+struct _slk_NetS_NationEquipList {
+	char m_count;	//国器列表
+	SLK_NetS_NationEquip m_list[6];	//国器列表
+};
+typedef struct _slk_NetS_NationEquipList SLK_NetS_NationEquipList;	//国器列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -1908,5 +1916,6 @@ int struct_NetS_BuffChange_send( char **pptr, int *psize, SLK_NetS_BuffChange *p
 int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAutoGuard *pValue );
 int struct_NetS_Activity_send( char **pptr, int *psize, SLK_NetS_Activity *pValue );
 int struct_NetS_ActivityList_send( char **pptr, int *psize, SLK_NetS_ActivityList *pValue );
+int struct_NetS_NationEquipList_send( char **pptr, int *psize, SLK_NetS_NationEquipList *pValue );
 
 #endif

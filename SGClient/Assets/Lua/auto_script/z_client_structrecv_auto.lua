@@ -2081,17 +2081,13 @@ end
 
 function struct_NetS_NationEquip_recv( buffer )
 	local recvValue = {};
-	recvValue.m_nequip_level={};
-	for tmpi=1,6,1 do
-		recvValue.m_nequip_level[tmpi] = buffer:ReadShort();
-	end
-	recvValue.m_nequip_exp={};
-	for tmpi=1,6,1 do
-		recvValue.m_nequip_exp[tmpi] = buffer:ReadShort();
-	end
-	recvValue.m_nequip_kind = buffer:ReadSByte();
-	recvValue.m_nequip_pro = buffer:ReadSByte();
-	recvValue.m_nequip_sec = buffer:ReadInt();
+	recvValue.m_neq_lv = buffer:ReadShort();
+	recvValue.m_neq_exp = buffer:ReadSByte();
+	recvValue.m_neq_pro = buffer:ReadSByte();
+	recvValue.m_neq_sec = buffer:ReadInt();
+	recvValue.m_neq_crit = buffer:ReadSByte();
+	recvValue.m_neq_star = buffer:ReadSByte();
+	recvValue.m_kind = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2255,6 +2251,18 @@ function struct_NetS_ActivityList_recv( buffer )
 	for tmpi=1,recvValue.m_count,1 do
 		local tmpValue={};
 		tmpValue = struct_NetS_Activity_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_NationEquipList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationEquip_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	return recvValue;

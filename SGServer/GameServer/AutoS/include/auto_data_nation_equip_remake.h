@@ -5,6 +5,7 @@
 struct _nationequipremake_config {
 //--Automatically generated
 				short kind;	//
+				short star;	//
 				short progress;	//
 				int silver;	//
 				int sec;	//

@@ -291,9 +291,9 @@ function HeroDlgSetBuff()
 	for i=2,5,1 do
 		local uiObj = m_uiBuffLayer.transform:GetChild(i-2)
 		local lefttime = GetPlayer().m_buff_endtime[i] - nowtime
-		if i == 3 or i == 4 and GetPlayer().m_buff_endtime[i] > 0 and lefttime > 0 then
+		if --[[i == 3 or i == 4 and--]] GetPlayer().m_buff_endtime[i] > 0 and lefttime > 0 then
 			SetTrue( uiObj )
-			SetImage( uiObj.transform:Find("Shape"), LoadSprite("item_icon_"..(199+i)) )
+			--SetImage( uiObj.transform:Find("Shape"), LoadSprite("item_icon_"..(199+i)) )
 			SetTimer( uiObj.transform:Find("Timer"), lefttime-1, lefttime, 0 );
 		else
 			SetFalse( uiObj )

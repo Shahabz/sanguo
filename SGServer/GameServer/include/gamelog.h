@@ -103,6 +103,7 @@
 #define PATH_VIPSHOP					74	// VIP特价商店
 #define PATH_VIPBAG						75	// VIP礼包
 #define PATH_WOUNDED_SOLDIERS			76	// 伤兵恢复
+#define PATH_NATIONEQUIP				77	// 国器
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

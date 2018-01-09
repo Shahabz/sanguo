@@ -244,7 +244,7 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 	
 	// 默认洗练属性
 	int valuenum = 0;
-	char color = g_equipinfo[equipkind].color;
+	short color = g_equipinfo[equipkind].color;
 	if ( color == ITEM_COLOR_LEVEL_GREEN )
 	{ // 2个lv1属性
 		valuenum = 2;

@@ -12,7 +12,7 @@ struct _nationequipinfo_config {
 				int attack;	//
 				int defense;	//
 				int troops;	//
-				short remake_progress;	//
+				short remake_star;	//
 };
 typedef struct _nationequipinfo_config NationEquipInfoConfig;
 

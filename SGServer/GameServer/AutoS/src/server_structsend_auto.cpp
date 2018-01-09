@@ -2320,11 +2320,13 @@ int struct_NetS_NationEquip_send( char **pptr, int *psize, SLK_NetS_NationEquip 
 {
 	int tmpi = 0;
 
-	LKSET_MEM_SEND( (*pptr), pValue->m_nequip_level, 6*sizeof(short), (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_nequip_exp, 6*sizeof(short), (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_kind, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nequip_pro, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_nequip_sec, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_neq_lv, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_neq_exp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_neq_pro, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_neq_sec, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_neq_crit, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_neq_star, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	return 0;
 }
 
@@ -2507,6 +2509,18 @@ int struct_NetS_ActivityList_send( char **pptr, int *psize, SLK_NetS_ActivityLis
 	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
 	{
 		struct_NetS_Activity_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_NationEquipList_send( char **pptr, int *psize, SLK_NetS_NationEquipList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationEquip_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	return 0;
 }

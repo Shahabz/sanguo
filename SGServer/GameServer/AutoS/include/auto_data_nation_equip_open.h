@@ -10,6 +10,7 @@ struct _nationequipopen {
 				int itemnum;	//
 				int silver;	//
 				int sec;	//
+				int storyid;	//
 };
 typedef struct _nationequipopen NationEquipOpen;
 

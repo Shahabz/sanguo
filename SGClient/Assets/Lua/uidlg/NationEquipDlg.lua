@@ -1,28 +1,13 @@
 -- 界面
 local m_Dlg = nil;
-
+local m_DialogFrameMod = nil
 --------------------------------------------------------------
 local m_uiIronNum = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_NationEquip = nil; --UnityEngine.GameObject
 local m_uiAdvance = nil; --UnityEngine.GameObject
 
-
---临时服务器数据
-local m_nation_equip={
-[1] = {level=10,progress=15},
-[2] = {level=100,progress=0,advanceprogress={0,3}},
-[3] = {level=120,progress=20,advanceprogress={1,3},time=360,tataltime=1800},
-[4] = nil,
-[5] = nil,
-[6] = nil,
-}
-
--- 国器属性类型
-CITY_ATTR_ABILITY_100 = 100	--所有武将攻击
-CITY_ATTR_ABILITY_110 = 110	--所有武将防御
-CITY_ATTR_ABILITY_120 = 120	--所有武将兵力
-
+local m_recvValue = nil;
 
 -- 打开界面
 function NationEquipDlgOpen()
@@ -34,15 +19,18 @@ end
 function NationEquipDlgClose()
 	if m_Dlg == nil then
 		return;
-	end
-	
+	end	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationEquipDlg" );
+	m_recvValue = nil
 end
 
 -- 删除界面
 function NationEquipDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_recvValue = nil;
 end
 
 ----------------------------------------
@@ -84,7 +72,7 @@ function NationEquipDlgOnAwake( gameObject )
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
-	m_ObjectPool:CreatePool("UIP_NationEquip", 2, 2, m_uiUIP_NationEquip);
+	m_ObjectPool:CreatePool("UIP_NationEquip", 6, 6, m_uiUIP_NationEquip);
 end
 
 -- 界面初始化时调用
@@ -118,18 +106,38 @@ end
 ----------------------------------------
 function NationEquipDlgShow()
 	NationEquipDlgOpen()
-	NationEquipDlgClear()
+	NationEquipDlgSetIron()
+	system_askinfo( ASKINFO_NATIONEQUIP, "", 0 )
 end
 
-function NationEquipDlgRecv( recvValue )
-	SetText( m_uiIronNum, T(124)..":"..GetPlayer().m_iron )
+-- 接收列表
+-- m_count=0,m_list={m_neq_lv=0,m_neq_exp=0,m_neq_pro=0,m_neq_sec=0,m_kind=0,[m_count]},
+function NationEquipDlgListRecv( recvValue )
+	NationEquipDlgClear()
+	m_recvValue = {}
+	for i=1, recvValue.m_count do
+		table.insert( m_recvValue, recvValue.m_list[i] )
+	end
+	
 	for i=1, #g_nation_equip do
-		NationEquipDlgCreateEquip( i )
+		local uiObj = m_ObjectPool:Get( "UIP_NationEquip" );
+		uiObj.transform:SetParent( m_uiContent.transform );
+		NationEquipDlgCreateEquip( i, uiObj, m_recvValue[i] )
 	end
 end
 
-function NationEquipDlgCreateEquip( i )
-	local uiObj = m_ObjectPool:Get( "UIP_NationEquip" );
+-- 接收单个
+-- m_neq_lv=0,m_neq_exp=0,m_neq_pro=0,m_neq_sec=0,m_kind=0,
+function NationEquipDlgRecv( recvValue )
+	local uiObj = m_recvValue[recvValue.m_kind].m_uiObj;
+	m_recvValue[recvValue.m_kind] = recvValue;
+	NationEquipDlgCreateEquip( recvValue.m_kind, uiObj, recvValue )
+end
+
+function NationEquipDlgCreateEquip( i, uiObj, info )
+	info.m_index = i
+	info.m_uiObj = uiObj;
+	
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0] ;
 	local uiStarLv = objs[1] ;
@@ -149,57 +157,66 @@ function NationEquipDlgCreateEquip( i )
 	local uiAdvanceDescText = objs[15] ;
 	local uiAdvanceProgressText = objs[16] ;
 	local uiLockDesc = objs[17] ;
+	local name = NationEquipName( i )
 	
-	uiObj.transform:SetParent( m_uiContent.transform );
-	local playerlevel = GetPlayer().m_level
-	local name = NationEquipName(i)
 	--判断此国器是否解锁
-	if playerlevel <  g_nation_equip[i][1].actorlevel then	--未解锁
-		SetTrue(uiLock)
-		SetText(uiEquipDesc,name,Hex2Color( 0x9B8869FF ))
-		SetTrue(uiLockDesc)
-		SetText(uiLockDesc,T(1744)..g_nation_equip[i][1].actorlevel..T(1747),Hex2Color( 0x9B8869FF ))
-		SetFalse(uiProgressDesc)
-		SetFalse(uiProgressBar)
-		SetFalse(uiUpgradeBtn)
-		SetFalse(uiCostIron)
-		SetFalse(uiAdvanceTimer)
-		SetFalse(uiAdvanceBtn)
-		SetFalse(uiSpeedBtn)
-		SetFalse(uiMakeCostText)
-		SetFalse(uiMakeBtn)
-		SetFalse(uiAdvanceDescText)
-		SetFalse(uiAdvanceProgressText)
+	if GetPlayer().m_level < g_nequip_open[i].actorlevel then
+		-- 未解锁
+		SetTrue( uiLock )
+		SetTrue( uiLockDesc)
+		SetFalse( uiProgressDesc )
+		SetFalse( uiProgressBar )
+		SetFalse( uiUpgradeBtn )
+		SetFalse( uiCostIron )
+		SetFalse( uiAdvanceTimer )
+		SetFalse( uiAdvanceBtn )
+		SetFalse( uiSpeedBtn )
+		SetFalse( uiMakeCostText )
+		SetFalse( uiMakeBtn )
+		SetFalse( uiAdvanceDescText )
+		SetFalse( uiAdvanceProgressText )
+		
+		SetText( uiEquipDesc, name, Hex2Color( 0x9B8869FF  ))
+		SetText( uiLockDesc, T(1744)..g_nequip_open[i].actorlevel..T(1747), Hex2Color( 0x9B8869FF ) )
 	else
-		SetFalse(uiLock)
-		SetFalse(uiLockDesc)
-		SetTrue(uiEquipDesc)
-		if m_nation_equip[i].level == 0 then--已解锁未打造
-			SetImage(uiShape, NationEquipSprite(i) )
-			SetText(uiEquipDesc,name)
-			SetFalse(uiProgressDesc)
-			SetTrue(uiMakeCostText)
-			SetFalse(uiProgressBar)
-			SetFalse(uiUpgradeBtn)
-			SetFalse(uiCostIron)
-			SetTrue(uiMakeBtn)
-			uiMakeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 100+i
-	
-		elseif m_nation_equip[i].level > 0 then	--已解锁已打造
-			SetImage(uiShape, NationEquipSprite(i) )
-			local attrname = nation_equip_getabilityname(i,m_nation_equip[i].level)
-			SetText(uiEquipDesc,"Lv."..m_nation_equip[i].level.."  "..name.."  "..attrname,Hex2Color( 0xD95DF4FF ))
-			if m_nation_equip[i].advanceprogress == nil  then		--升级中
-				SetText(uiProgressDesc,T(1748)..":"..m_nation_equip[i].progress.."%")
-				SetTrue(uiProgressBar)
-				SetProgress( uiProgressBar, m_nation_equip[i].progress/100 );
-				SetTrue(uiCostIron)
-				SetTrue(uiUpgradeBtn)
-				uiUpgradeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 200+i
-				if GetPlayer().m_iron < g_nation_equip[i][m_nation_equip[i].level].iron then 
-					SetText(uiCostIron.transform:Find("CostNum"),g_nation_equip[i][m_nation_equip[i].level].iron,Hex2Color( 0xE80017FF ))
+		SetFalse( uiLock )
+		SetFalse( uiLockDesc )
+		-- 已解锁未开启
+		if info.m_neq_lv == 0 then
+			SetTrue( uiMakeCostText )
+			SetTrue( uiMakeBtn )
+			SetFalse( uiProgressDesc )
+			SetFalse( uiProgressBar )
+			SetFalse( uiUpgradeBtn )
+			SetFalse( uiCostIron )
+			
+			SetImage( uiShape, NationEquipSprite(i) )
+			SetText( uiEquipDesc, name )
+			SetText( uiMakeCostText, T(121).."x"..g_nequip_open[i].actorlevel )
+			SetControlID( uiMakeBtn, 100+i )
+		
+		--已解锁已开启
+		elseif info.m_neq_lv > 0 then
+			SetImage( uiShape, NationEquipSprite(i) )
+			local attrname = nation_equip_getabilityname( i, info.m_neq_lv )
+			SetText( uiEquipDesc, "Lv."..info.m_neq_lv.."  "..name.."  "..attrname, Hex2Color( 0xD95DF4FF ) )
+			
+			-- 可升级
+			if info.m_neq_lv < 150 then
+				SetTrue( uiProgressDesc )
+				SetText( uiProgressDesc, T(1748)..":"..info.m_neq_exp.."%" )
+				SetTrue( uiProgressBar )
+				SetProgress( uiProgressBar, info.m_neq_exp/100 );
+				SetTrue( uiCostIron )
+				SetTrue( uiUpgradeBtn )
+				SetControlID( uiUpgradeBtn, 200+i )
+				if GetPlayer().m_iron < g_nation_equip[i][info.m_neq_lv].iron then 
+					SetText(uiCostIron.transform:Find("CostNum"), g_nation_equip[i][info.m_neq_lv].iron, Hex2Color( 0xE80017FF ) )
+				else
+					SetText(uiCostIron.transform:Find("CostNum"), g_nation_equip[i][info.m_neq_lv].iron, Hex2Color( 0xECC244FF ) )
 				end
 			
+			--[[-- 需要改造
 			elseif m_nation_equip[i].advanceprogress[1] ~= nil  then	--改造中
 				SetFalse(uiCostIron)
 				SetFalse(uiProgressDesc)
@@ -211,17 +228,26 @@ function NationEquipDlgCreateEquip( i )
 					SetText(uiAdvanceDescText,T(1743)..maxlv)
 					SetFalse(uiProgressBar)
 					SetTrue(uiAdvanceBtn)
-					uiAdvanceBtn.transform:GetComponent( typeof(UIButton) ).controlID = 300+i
-				else																				
-					SetTrue(uiAdvanceTimer)	--已经在改造中
+					SetControlID( uiAdvanceBtn, 300+i )
+				else
+					--已经在改造中
+					SetTrue(uiAdvanceTimer)
 					SetTimer( uiAdvanceTimer, m_nation_equip[i].time, m_nation_equip[i].tataltime, 1, T(1463) )
 					SetTrue(uiProgressBar)
 					SetTrue(uiSpeedBtn)
-					uiSpeedBtn.transform:GetComponent( typeof(UIButton) ).controlID = 400+i
-				end
+					SetControlID( uiSpeedBtn, 400+i )
+				end--]]
 			end
 		end
 	end
+end
+
+-- 设置当前镔铁数量
+function NationEquipDlgSetIron()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiIronNum, T(124)..":"..knum(GetPlayer().m_iron) )
 end
 
 -- 获取国器基础属性
@@ -229,15 +255,16 @@ function nation_equip_getabilityname( kind , level )
 	if g_nation_equip[kind] == nil then
 		return "";
 	end
-	local ability = g_nation_equip[kind][level].ability;
-	local value = g_nation_equip[kind][level].value;
+	local attack = g_nation_equip[kind][level].attack;
+	local defense = g_nation_equip[kind][level].defense;
+	local troops = g_nation_equip[kind][level].troops;
 	local name = nil
-	if ability == CITY_ATTR_ABILITY_100 then
-		name = T(146).."+"..value;
-	elseif ability == CITY_ATTR_ABILITY_110 then
-		name = T(147).."+"..value;
-	elseif ability == CITY_ATTR_ABILITY_120 then
-		name = T(148).."+"..value;
+	if attack > 0 then
+		name = T(146).."+"..attack;
+	elseif defense > 0 then
+		name = T(147).."+"..defense;
+	elseif troops > 0 then
+		name = T(148).."+"..troops;
 	end
 	return name
 end
@@ -256,20 +283,25 @@ function NationEquipDlgClear()
     end
 end
 
---打造国器
-function NationEquipDlgMake(kind)
+-- 开启国器
+function NationEquipDlgMake( kind )
 	if kind <= 0 then
 		return;
 	end
-	--system_askinfo( ASKINFO_NATIONEQUIPFORGING, "", 0, kind );
+	system_askinfo( ASKINFO_NATIONEQUIP, "", 1, kind );
 end
 
 --升级国器
-function NationEquipDlgUpgrade(kind)
+function NationEquipDlgUpgrade( kind )
 	if kind <= 0 then
 		return;
 	end
-	--system_askinfo( ASKINFO_NATIONEQUIPUPGRADE, "", 0, kind );
+	local level = m_recvValue[kind].m_neq_lv
+	if GetPlayer().m_iron < g_nation_equip[kind][level].iron then
+		JumpRes( 4 )
+		return
+	end
+	system_askinfo( ASKINFO_NATIONEQUIP, "", 2, kind );
 end
 
 --改造国器界面
@@ -298,7 +330,7 @@ function NationEquipDlgAdvanceShow(kind)
 end
 
 --改造加速
-function NationEquipDlgSpeed(kind)
+function NationEquipDlgSpeed( kind )
 	if kind <= 0 then
 		return;
 	end

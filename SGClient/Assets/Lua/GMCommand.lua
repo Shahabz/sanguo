@@ -124,7 +124,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 		--BlackListDlgShow();
 		RankListDlgShow();
 	elseif cmdstr == "f" then
-		FriendDlgShow();
+		JumpFightSkip()
 	end
 	
 end

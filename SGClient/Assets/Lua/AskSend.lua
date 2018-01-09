@@ -38,6 +38,7 @@ ASKINFO_PAY				=	35 -- 支付
 ASKINFO_VIPSHOP			=	36 -- VIP商店
 ASKINFO_VIPBAG			=	37 -- VIP礼包
 ASKINFO_ACTIVITY		=	38 -- 活动
+ASKINFO_NATIONEQUIP		=	39 -- 国器
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

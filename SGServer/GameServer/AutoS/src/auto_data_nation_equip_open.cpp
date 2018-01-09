@@ -47,7 +47,7 @@ int nationequipopen_init_auto()
 	g_nequip_open = (NationEquipOpen *)malloc( sizeof(NationEquipOpen)*g_nequip_open_maxnum );
 	memset( g_nequip_open, 0, sizeof(NationEquipOpen)*g_nequip_open_maxnum );
 
-	sprintf( szSQL, "select `kind`,`actorlevel`,`itemkind`,`itemnum`,`silver`,`sec` from nation_equip_open;" );
+	sprintf( szSQL, "select `kind`,`actorlevel`,`itemkind`,`itemnum`,`silver`,`sec`,`storyid` from nation_equip_open;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -67,6 +67,7 @@ int nationequipopen_init_auto()
 		g_nequip_open[kind].itemnum = atoi(row[offset++]);
 		g_nequip_open[kind].silver = atoi(row[offset++]);
 		g_nequip_open[kind].sec = atoi(row[offset++]);
+		g_nequip_open[kind].storyid = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

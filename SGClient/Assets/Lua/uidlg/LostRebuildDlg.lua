@@ -93,7 +93,7 @@ function LostRebuildDlgShow( recvValue )
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_rb_silver );
+		SetText( uiObj.transform:Find("Num"), "x"..knum(recvValue.m_rb_silver) );
 	end
 	if recvValue.m_rb_wood > 0 then
 		local sprite, color, name = AwardInfo( AWARDKIND_WOOD )
@@ -101,7 +101,7 @@ function LostRebuildDlgShow( recvValue )
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_rb_wood );
+		SetText( uiObj.transform:Find("Num"), "x"..knum(recvValue.m_rb_wood) );
 	end
 	if recvValue.m_rb_food > 0 then
 		local sprite, color, name = AwardInfo( AWARDKIND_FOOD )
@@ -109,7 +109,7 @@ function LostRebuildDlgShow( recvValue )
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_rb_food );
+		SetText( uiObj.transform:Find("Num"), "x"..knum(recvValue.m_rb_food) );
 	end
 	if recvValue.m_rb_df > 0 then
 		local sprite, color, name = AwardInfo( AWARDKIND_CITYGUARDNUM )

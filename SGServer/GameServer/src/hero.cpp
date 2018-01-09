@@ -1296,7 +1296,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	int nequip_troops = 0;
 	for ( int type = 1; type < g_nationequip_maxnum; type++ )
 	{
-		int level = pCity->nequip_level[type - 1];
+		int level = pCity->neq_lv[type - 1];
 		if ( level <= 0 || level >= g_nationequip[type].maxnum )
 			continue;
 		nequip_attack += g_nationequip[type].config[level].attack;

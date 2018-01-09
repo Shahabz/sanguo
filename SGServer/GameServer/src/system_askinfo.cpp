@@ -38,6 +38,7 @@
 #include "shop.h"
 #include "pay.h"
 #include "vip.h"
+#include "nation_equip.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -763,6 +764,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		if ( pvalue[0] == 0 )
 		{
 			activity_sendlist( actor_index );
+		}
+		break;
+	case ASKINFO_NATIONEQUIP:
+		if ( pvalue[0] == 0 )
+		{
+			nation_equip_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			nation_equip_open( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			nation_equip_upgrade( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			nation_equip_remake( actor_index, pvalue[1] );
 		}
 		break;
 	default:

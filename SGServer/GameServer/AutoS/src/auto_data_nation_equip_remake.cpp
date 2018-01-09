@@ -47,7 +47,7 @@ int nationequipremake_init_auto()
 	g_nequip_remake = (NationEquipRemake *)malloc( sizeof(NationEquipRemake)*g_nequip_remake_maxnum );
 	memset( g_nequip_remake, 0, sizeof(NationEquipRemake)*g_nequip_remake_maxnum );
 
-	sprintf( szSQL, "select `kind`, max( `progress` ) from nation_equip_remake group by `kind`;" );
+	sprintf( szSQL, "select `kind`, max( `star` ) from nation_equip_remake group by `kind`;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -66,7 +66,7 @@ int nationequipremake_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`progress`,`silver`,`sec`,`maxlevel` from nation_equip_remake;" );
+	sprintf( szSQL, "select `kind`,`star`,`progress`,`silver`,`sec`,`maxlevel` from nation_equip_remake;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -80,14 +80,15 @@ int nationequipremake_init_auto()
 		int kind = atoi( row[0] );
 		if ( kind < 0 || kind >= g_nequip_remake_maxnum  )
 			continue;
-		int progress = atoi( row[1] );
-		if ( progress < 0 || progress >= g_nequip_remake[kind].maxnum )
+		int star = atoi( row[1] );
+		if ( star < 0 || star >= g_nequip_remake[kind].maxnum )
 			continue;
-		g_nequip_remake[kind].config[progress].kind = atoi(row[offset++]);
-		g_nequip_remake[kind].config[progress].progress = atoi(row[offset++]);
-		g_nequip_remake[kind].config[progress].silver = atoi(row[offset++]);
-		g_nequip_remake[kind].config[progress].sec = atoi(row[offset++]);
-		g_nequip_remake[kind].config[progress].maxlevel = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].kind = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].star = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].progress = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].silver = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].sec = atoi(row[offset++]);
+		g_nequip_remake[kind].config[star].maxlevel = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

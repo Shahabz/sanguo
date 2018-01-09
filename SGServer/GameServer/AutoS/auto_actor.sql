@@ -63,5 +63,6 @@ CREATE TABLE `actor` (
   `charge_point` int(11) NOT NULL DEFAULT '0' COMMENT '充值积分',
   `pay_maxtier` smallint(6) NOT NULL DEFAULT '0' COMMENT '单笔付费最大级别',
   `shop_saleitem` varbinary(24) NOT NULL DEFAULT '' COMMENT '商店打折物品',
+  `neq_crit` varbinary(24) NOT NULL DEFAULT '' COMMENT '国器暴击状态',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

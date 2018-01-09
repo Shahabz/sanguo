@@ -88,6 +88,10 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             FightDlgClose();
 		
+		-- 跳过战斗提示
+		elseif nControlID == -2 then
+			JumpFightSkip()
+			
 		-- 跳过战斗
 		elseif nControlID == 1 then
 			FightDlgResultLayerShow()
@@ -206,17 +210,22 @@ function FightDlgShow( recvValue )
 	if fighttype == FIGHTTYPE_QUEST then
 		SetFalse( m_uiBottom )
 	elseif fighttype == FIGHTTYPE_STORY then
-		SetTrue( m_uiBottom )
-		if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_SKIPFIGHT ) == 1 then
-			SetButtonTrue( m_uiSkipBtn )
-			SetText( m_uiSkipDesc, T(2279) )
+		local storyid = BattleDlgGetStoryid()
+		if storyid > 0 and g_story[storyid].skip == 1 then
+			SetTrue( m_uiBottom )
+			if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_SKIPFIGHT ) == 1 then
+				SetControlID( m_uiSkipBtn, 1 )
+				SetText( m_uiSkipDesc, T(2279) )
+			else
+				SetControlID( m_uiSkipBtn, -2 )
+				SetText( m_uiSkipDesc, T(2280) )
+			end
 		else
-			SetButtonFalse( m_uiSkipBtn )
-			SetText( m_uiSkipDesc, T(2280) )
+			SetFalse( m_uiBottom )
 		end
 	else
 		SetTrue( m_uiBottom )
-		SetButtonTrue( m_uiSkipBtn )
+		SetControlID( m_uiSkipBtn, 1 )
 		SetText( m_uiSkipDesc, T(2279) )
 	end
 	
@@ -612,7 +621,6 @@ function FightDlgStart()
 		return
 	end
 	SetTrue( m_uiTop )
-	SetTrue ( m_uiBottom )
 	m_playing = 1;
 	
 	FightDlgUnitVsLayerShow()
@@ -899,7 +907,7 @@ function FightDlgSweepResult( recvValue )
 		local uiAward = m_uiAwardGrid.transform:GetChild( i )
 		SetTrue( uiAward )
 		SetImage( uiAward.transform:Find("Icon"), sprite );
-		SetText( uiAward.transform:Find("Name"), name.."x"..awardTable[i].num  )
+		SetText( uiAward.transform:Find("Name"), name.."x"..knum(awardTable[i].num) )
 	end
 	
 	-- 武将经验信息

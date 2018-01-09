@@ -187,6 +187,7 @@ int story_sendrank( int actor_index, int id )
 		pValue.m_list[pValue.m_count].m_shape = g_monster[monsterid].shape;
 		pValue.m_list[pValue.m_count].m_color = (char)g_monster[monsterid].color;
 		pValue.m_list[pValue.m_count].m_corps = (char)g_monster[monsterid].corps;
+		pValue.m_list[pValue.m_count].m_hp = g_monster[monsterid].troops;
 		pValue.m_count += 1;
 	}
 	netsend_storyrank_S( actor_index, SENDTYPE_ACTOR, &pValue );

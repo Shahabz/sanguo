@@ -5,6 +5,7 @@ local m_uiLevyButton = nil; --UnityEngine.GameObject
 local m_uiBuyButton = nil; --UnityEngine.GameObject
 local m_uiPayButton = nil; --UnityEngine.GameObject
 local m_uiFreeButton = nil; --UnityEngine.GameObject
+local m_uiCloseButton = nil; --UnityEngine.GameObject
 
 local m_res = 0;
 -- 打开界面
@@ -20,6 +21,8 @@ function JumpDlgClose()
 	end
 	m_res = 0;
 	eye.uiManager:Close( "JumpDlg" );
+	
+	NationEquipDlgClose()
 end
 
 -- 删除界面
@@ -75,6 +78,7 @@ function JumpDlgOnAwake( gameObject )
 	m_uiBuyButton = objs[2];
 	m_uiPayButton = objs[3];
 	m_uiFreeButton = objs[4];
+	m_uiCloseButton = objs[5];
 end
 
 -- 界面初始化时调用
@@ -112,6 +116,7 @@ end
 
 function JumpToken()
 	JumpDlgShow()
+	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiBuyButton );
 	SetTrue( m_uiPayButton );
@@ -121,6 +126,7 @@ end
 
 function JumpRes( res )
 	JumpDlgShow()
+	SetFalse( m_uiCloseButton )
 	SetTrue( m_uiBuyButton );
 	SetFalse( m_uiPayButton );
 	SetFalse( m_uiFreeButton )
@@ -135,6 +141,7 @@ end
 
 function JumpBody()
 	JumpDlgShow()
+	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiPayButton );
 	if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_BODY_FREEBUY ) == 1 then --首次购买
@@ -159,4 +166,14 @@ function JumpDlgBodyBuy()
 		-- 直接购买
 		system_askinfo( ASKINFO_ACTOR, "", 0, 0 );
 	end
+end
+
+function JumpFightSkip()
+	JumpDlgShow()
+	SetTrue( m_uiCloseButton )
+	SetFalse( m_uiLevyButton );
+	SetFalse( m_uiBuyButton );
+	SetTrue( m_uiPayButton );
+	SetFalse( m_uiFreeButton )
+	SetText( m_uiAlertText, T(2337) )
 end

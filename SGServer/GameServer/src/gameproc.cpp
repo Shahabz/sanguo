@@ -369,6 +369,24 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 国器初始化
+	if ( nationequipopen_init_auto() < 0 )
+	{
+		printf_msg( "nationequipopen_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 国器初始化
+	if ( nationequipremake_init_auto() < 0 )
+	{
+		printf_msg( "nationequipremake_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 爵位初始化
 	if ( nationplace_init_auto() < 0 )
 	{

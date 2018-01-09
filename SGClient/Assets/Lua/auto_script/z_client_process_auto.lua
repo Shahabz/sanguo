@@ -497,6 +497,7 @@ function proc_changeiron_C( recvValue )
 	end
 	GetPlayer().m_iron = recvValue.m_total;
 	MainDlgSetIron();
+	NationEquipDlgSetIron();
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -1759,10 +1760,7 @@ function proc_blacklistid_C( recvValue )
 	GetPlayer():SetBlacklist( recvValue )
 end
 
--- m_nequip_level={[6]},m_nequip_exp={[6]},m_nequip_kind=0,m_nequip_pro=0,m_nequip_sec=0,
-function proc_nationequip_C( recvValue )
-	-- process.
-end
+
 
 -- m_type=0,m_count=0,m_list={m_offset=0,m_awardkind=0,m_awardnum=0,m_token=0,m_sale=0,[m_count]},
 function proc_shoplist_C( recvValue )
@@ -1828,5 +1826,17 @@ end
 function proc_activitylist_C( recvValue )
 	-- process.
 	ActivityDlgRecv( recvValue )
+end
+
+-- m_neq_lv=0,m_neq_exp=0,m_neq_pro=0,m_neq_sec=0,
+function proc_nationequip_C( recvValue )
+	-- process.
+	NationEquipDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_neq_lv=0,m_neq_exp=0,m_neq_pro=0,m_neq_sec=0,[m_count]},
+function proc_nationequiplist_C( recvValue )
+	-- process.
+	NationEquipDlgListRecv( recvValue )
 end
 

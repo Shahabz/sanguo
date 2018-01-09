@@ -815,6 +815,11 @@ function netrecv_activitylist_C( buffer )
 	proc_activitylist_C( recvValue );
 end
 
+function netrecv_nationequiplist_C( buffer )
+	local recvValue = struct_NetS_NationEquipList_recv( buffer );
+	proc_nationequiplist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -979,6 +984,7 @@ Proc_Command = {
 	[CMDS_BUFFCHANGE]=netrecv_buffchange_C;
 	[CMDS_CHANGEAUTOGUARD]=netrecv_changeautoguard_C;
 	[CMDS_ACTIVITYLIST]=netrecv_activitylist_C;
+	[CMDS_NATIONEQUIPLIST]=netrecv_nationequiplist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

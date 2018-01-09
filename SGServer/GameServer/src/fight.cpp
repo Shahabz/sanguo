@@ -126,6 +126,8 @@ int fight_debug( const char *format, ... )
 // 向战场里添加一个英雄
 int fight_add_hero( int pos, char unit_type, int unit_index, char type, int index, int kind, short shape, short level, char color, char corps, int attack, int defense, int hp, int troops, short attack_increase, short defense_increase, short assault, short defend, char line, char skillid, int expmax )
 {
+	if ( hp <= 0 )
+		return -1;
 	if ( hp > troops )
 		hp = troops;
 	FightUnit *pUnit = NULL;
