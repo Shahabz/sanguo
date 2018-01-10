@@ -933,7 +933,11 @@ int equip_forging_get( int actor_index )
 	if ( kind <= 0 || kind >= g_equipinfo_maxnum )
 		return -1;
 
-	equip_getequip( actor_index, kind, PATH_EQUIP_FORGING );
+	if ( equip_getequip( actor_index, kind, PATH_EQUIP_FORGING ) < 0 )
+	{
+		actor_notify_alert( actor_index, 1758 );
+		return -1;
+	}
 
 	pCity->ofquick[0] = 0;
 	city_officialhire_sendinfo( pCity, 0 );
