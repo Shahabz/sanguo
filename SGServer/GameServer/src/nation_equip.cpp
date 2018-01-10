@@ -133,6 +133,7 @@ int nation_equip_upgrade( int actor_index, int kind )
 	{
 		pCity->neq_exp[index] = exp + addexp - 100;
 		pCity->neq_lv[index] += 1;
+		hero_attr_calc_all( pCity, 0 );
 	}
 	else
 	{
@@ -257,6 +258,7 @@ void nation_equip_over( City *pCity, int index )
 	if ( pCity->neq_lv[index] <= 0 )
 	{ // 开启完毕
 		pCity->neq_lv[index] = 1;
+		hero_attr_calc_all( pCity, 0 );
 	}
 	else
 	{ // 改造完毕
