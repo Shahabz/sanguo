@@ -238,6 +238,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	end
 	recvValue.m_autoguard = buffer:ReadSByte();
 	recvValue.m_autoguardopen = buffer:ReadSByte();
+	recvValue.m_storyid = buffer:ReadInt();
 	return recvValue;
 end
 

@@ -40,6 +40,7 @@ function FightScene.Create()
 	FightScene.m_effectRoot = FightScene.m_sceneObject.transform:Find( "Effect" );
 	MainDlgClose()
 	ChatDlgClose()
+	NationEquipDlgClose();
 	FightScene.m_mapMainDlgIsActive = MapMainDlgIsActive()
 	if FightScene.m_mapMainDlgIsActive == true then
 		MapMainDlgClose()

@@ -9,6 +9,8 @@ local m_uiMakeLayer = nil; --UnityEngine.GameObject
 local m_uiRemakeLayer = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
+local m_selectkind = 0;
+local m_selectStoryid = 0;
 
 -- 打开界面
 function NationEquipDlgOpen()
@@ -52,7 +54,21 @@ function NationEquipDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == -3  then
 			SetFalse( m_uiRemakeLayer )	
 		
-		-- 打造	
+		-- 打开副本
+		elseif nControlID == 1 then
+			SetFalse( m_uiMakeLayer )
+			StoryDlgShow( m_selectStoryid )
+			
+		-- 打造
+		elseif nControlID == 2 then
+			NationEquipDlgMake()
+			SetFalse( m_uiMakeLayer )
+		
+		-- 获取镔铁
+		elseif nControlID == 3 then
+			MaterialGetDlgShow( 123 )
+			
+		-- 打造页
 		elseif nControlID > 100 and nControlID < 200 then
 			NationEquipDlgMakeLayerShow( nControlID - 100 )
 			
@@ -64,13 +80,18 @@ function NationEquipDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID > 300 and nControlID < 400 then
 			NationEquipDlgRemakeLayerShow( nControlID - 300 )
 		
-		-- 加速按钮
+		-- 打造加速
 		elseif nControlID > 400 and nControlID < 500 then
-			NationEquipDlgSpeed( nControlID - 400 )
+			NationEquipDlgMakeQuick( nControlID - 400 )
 		
-		-- 确定改造
+		-- 改造加速
 		elseif nControlID > 500 and nControlID < 600 then
-			NationEquipDlgRemake( nControlID - 500 )
+			NationEquipDlgRemakeQuick( nControlID - 500 )
+			
+		-- 确定改造
+		elseif nControlID > 600 and nControlID < 700 then
+			NationEquipDlgRemake( nControlID - 600 )
+			
 		end
 	end
 end
@@ -117,7 +138,7 @@ end
 ----------------------------------------
 function NationEquipDlgShow()
 	NationEquipDlgOpen()
-	NationEquipDlgSetIron()
+	NationEquipDlgSetIron( 0 )
 	SetFalse( m_uiMakeLayer )
 	SetFalse( m_uiRemakeLayer )
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 0 )
@@ -174,6 +195,7 @@ function NationEquipDlgSetObj( kind, info )
 	local uiRemakeBtn = objs[17] ;
 	local uiSpeedBtn = objs[18] ;
 	local uiGetIronBtn = objs[19] ;
+	local uiFullBtn = objs[20] ;
 	local EquipName = NationEquipName( kind )
 	
 	--判断此国器是否解锁
@@ -182,6 +204,7 @@ function NationEquipDlgSetObj( kind, info )
 		SetTrue( uiLockShape )
 		SetTrue( uiLockDesc )
 		
+		SetFalse( uiStar )
 		SetFalse( uiExp )
 		SetFalse( uiExpProgress )
 		SetFalse( uiTimer )
@@ -195,6 +218,7 @@ function NationEquipDlgSetObj( kind, info )
 		SetFalse( uiRemakeBtn )
 		SetFalse( uiSpeedBtn )
 		SetFalse( uiGetIronBtn )
+		SetFalse( uiFullBtn )
 		
 		SetText( uiName, EquipName, Hex2Color( 0x9B8869FF  ) )
 		SetText( uiLockDesc, F(1744, g_nequip_open[kind].actorlevel), Hex2Color( 0x9B8869FF ) )
@@ -205,80 +229,192 @@ function NationEquipDlgSetObj( kind, info )
 		
 		-- 未打造
 		if info.m_neq_lv == 0 then
-			SetTrue( uiMakeCost )
-			SetTrue( uiMakeBtn )
-			
+			SetFalse( uiStar )
 			SetFalse( uiExp )
 			SetFalse( uiExpProgress )
-			SetFalse( uiTimer )
 			SetFalse( uiRemakeDesc )
 			SetFalse( uiRemakeProgress )
 			SetFalse( uiCost )
 			SetFalse( uiUpgradeBtn )
 			SetFalse( uiUpgradeCritBtn )
 			SetFalse( uiRemakeBtn )
-			SetFalse( uiSpeedBtn )
 			SetFalse( uiGetIronBtn )
+			SetFalse( uiFullBtn )
 			
+			if info.m_neq_sec == 0 then
+				SetTrue( uiMakeCost )
+				SetTrue( uiMakeBtn )
+				SetFalse( uiSpeedBtn )
+				SetFalse( uiTimer )
+				
+				SetText( uiMakeCost, T(121).."x"..g_nequip_open[kind].silver )
+				SetControlID( uiMakeBtn, 100+kind )
+			else
+				--已经在打造中
+				SetFalse( uiMakeCost )
+				SetFalse( uiMakeBtn )
+				SetTrue( uiSpeedBtn )
+				SetTrue( uiTimer )
+				
+				SetTimer( uiTimer, info.m_neq_sec, g_nequip_open[kind].sec, 1, T(1463) )
+				SetControlID( uiSpeedBtn, 400+kind )
+			end
+				
 			SetImage( uiShape, NationEquipSprite(kind) )
 			SetText( uiName, EquipName, Hex2Color( 0xD95DF4FF ) )
-			SetText( uiMakeCost, T(121).."x"..g_nequip_open[kind].silver )
-			SetControlID( uiMakeBtn, 100+kind )
 		
-		-- 已打造
+		-- 已经打造
 		elseif info.m_neq_lv > 0 then
 			SetImage( uiShape, NationEquipSprite(kind) )
 			local AttrName = nation_equip_getabilityname( kind, info.m_neq_lv )
 			SetText( uiName, "Lv."..info.m_neq_lv.."  "..EquipName.."  "..AttrName, Hex2Color( 0xD95DF4FF ) )
+			NationEquipSetStar( uiStar, info.m_neq_star )
+	
+			-- 已经满级
+			if g_nation_equip[kind][info.m_neq_lv].remake_star == -1 then
+				SetTrue( uiFullBtn )
+				
+				SetFalse( uiExp )
+				SetFalse( uiExpProgress )
+				SetFalse( uiTimer )
+				SetFalse( uiMakeCost )
+				SetFalse( uiMakeBtn )
+				SetFalse( uiRemakeDesc )
+				SetFalse( uiRemakeProgress )
+				SetFalse( uiCost )
+				SetFalse( uiUpgradeBtn )
+				SetFalse( uiUpgradeCritBtn )
+				SetFalse( uiRemakeBtn )
+				SetFalse( uiSpeedBtn )
+				SetFalse( uiGetIronBtn )
 			
-			-- 可升级
-			if g_nation_equip[kind][info.m_neq_lv].remake_star >= 0 then
+			-- 可升级	
+			elseif g_nation_equip[kind][info.m_neq_lv].remake_star == 0 or info.m_neq_star >= g_nation_equip[kind][info.m_neq_lv].remake_star then
 				SetTrue( uiExp )
 				SetTrue( uiExpProgress )
 				SetTrue( uiCost )
-				SetTrue( uiUpgradeBtn )
+				
+				SetFalse( uiTimer )
+				SetFalse( uiMakeCost )
+				SetFalse( uiMakeBtn )
+				SetFalse( uiRemakeDesc )
+				SetFalse( uiRemakeProgress )
+				SetFalse( uiRemakeBtn )
+				SetFalse( uiSpeedBtn )
+				SetFalse( uiGetIronBtn )
+				
+				if info.m_neq_crit > 0 then
+					SetTrue( uiUpgradeCritBtn )
+					SetFalse( uiUpgradeBtn )
+					SetText( uiUpgradeCritBtn.transform:Find("Back/Text"), F(1752,info.m_neq_crit) )
+					SetControlID( uiUpgradeCritBtn, 200+kind )
+				else
+					SetTrue( uiUpgradeBtn )
+					SetFalse( uiUpgradeCritBtn )
+					SetControlID( uiUpgradeBtn, 200+kind )
+				end
 				
 				SetText( uiExp, F(1748, info.m_neq_exp) )
 				SetProgress( uiExpProgress, info.m_neq_exp/100 );
 				if GetPlayer().m_iron < g_nation_equip[kind][info.m_neq_lv].iron then 
 					SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xE80017FF ) )
+					SetFalse( uiUpgradeBtn )
+					SetFalse( uiUpgradeCritBtn )
+					SetTrue( uiGetIronBtn )
+					SetControlID( uiGetIronBtn, 3 )
 				else
 					SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xECC244FF ) )
 				end
-				SetControlID( uiUpgradeBtn, 200+kind )
 			
-			--[[-- 需要改造
-			elseif m_nation_equip[i].advanceprogress[1] ~= nil  then	--改造中
-				SetFalse(uiCostIron)
-				SetFalse(uiProgressDesc)
-				SetTrue(uiAdvanceProgressText)
-				SetText(uiAdvanceProgressText,T(1742)..m_nation_equip[i].advanceprogress[1].."/"..m_nation_equip[i].advanceprogress[2])
-				if m_nation_equip[i].advanceprogress[1] == 0 and m_nation_equip[i].progress == 0 then	--尚未开始改造
-					SetTrue(uiAdvanceDescText)
-					local maxlv = m_nation_equip[i].level+10
-					SetText(uiAdvanceDescText,T(1743)..maxlv)
-					SetFalse(uiProgressBar)
-					SetTrue(uiAdvanceBtn)
-					SetControlID( uiAdvanceBtn, 300+i )
+			-- 需要改造
+			else
+				SetTrue( uiRemakeProgress )
+				
+				SetFalse( uiExp )
+				SetFalse( uiExpProgress )
+				SetFalse( uiMakeCost )
+				SetFalse( uiMakeBtn )
+				SetFalse( uiCost )
+				SetFalse( uiUpgradeBtn )
+				SetFalse( uiUpgradeCritBtn )
+				SetFalse( uiSpeedBtn )
+				SetFalse( uiGetIronBtn )
+				
+				local remake_star = g_nation_equip[kind][info.m_neq_lv].remake_star
+				SetText( uiRemakeProgress, T(1742)..info.m_neq_pro.."/"..g_nequip_remake[kind][remake_star].progress )
+				
+				-- 尚未开始改造
+				if info.m_neq_sec == 0 then
+					SetTrue( uiRemakeDesc )
+					SetTrue( uiRemakeBtn )
+					SetFalse( uiSpeedBtn )
+					SetFalse( uiTimer )
+					
+					SetText( uiRemakeDesc, F(1743,g_nequip_remake[kind][remake_star].maxlevel) )
+					SetControlID( uiRemakeBtn, 300+kind )
 				else
 					--已经在改造中
-					SetTrue(uiAdvanceTimer)
-					SetTimer( uiAdvanceTimer, m_nation_equip[i].time, m_nation_equip[i].tataltime, 1, T(1463) )
-					SetTrue(uiProgressBar)
-					SetTrue(uiSpeedBtn)
-					SetControlID( uiSpeedBtn, 400+i )
-				end--]]
+					SetFalse( uiRemakeDesc )
+					SetFalse( uiRemakeBtn )
+					SetTrue( uiSpeedBtn )
+					SetTrue( uiTimer )
+					
+					SetTimer( uiTimer, info.m_neq_sec, g_nequip_remake[kind][remake_star].sec, 1, T(1463) )
+					SetControlID( uiSpeedBtn, 500+kind )
+				end
 			end
 		end
 	end
 end
 
 -- 设置当前镔铁数量
-function NationEquipDlgSetIron()
+function NationEquipDlgSetIron( update )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
 	SetText( m_uiIronNum, T(124)..":"..knum(GetPlayer().m_iron) )
+	if update == 1 then
+		for kind=1, 6, 1 do
+			local uiObj = m_uiContent.transform:GetChild( kind-1 )
+			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiCostNum = objs[13] ;
+			local uiUpgradeBtn = objs[15];
+			local uiUpgradeCritBtn = objs[16];
+			local uiGetIronBtn = objs[19];
+			local info = m_recvValue[kind];
+			if info.m_neq_lv > 0 then
+				if g_nation_equip[kind][info.m_neq_lv].remake_star == 0 and info.m_neq_star >= g_nation_equip[kind][info.m_neq_lv].remake_star then
+					if GetPlayer().m_iron < g_nation_equip[kind][info.m_neq_lv].iron then 
+						SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xE80017FF ) )
+						SetFalse( uiUpgradeBtn )
+						SetFalse( uiUpgradeCritBtn )
+						SetTrue( uiGetIronBtn )
+						SetControlID( uiGetIronBtn, 3 )
+					else
+						SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xECC244FF ) )
+					end
+				end
+			end
+		end
+	end
+end
+
+-- 设置国器改造星级
+function NationEquipSetStar( uiStar, star )
+	for i=1, 5, 1 do
+		local uiLevel = uiStar.transform:GetChild(i-1).gameObject;
+		if i <= star then
+			SetTrue( uiLevel )
+			has = 1;
+		else	
+			SetFalse( uiLevel )
+		end
+	end
+	if has == 1 then
+		SetTrue( uiStar )
+	else
+		SetFalse( uiStar )
+	end
 end
 
 -- 获取国器基础属性
@@ -305,18 +441,73 @@ function NationEquipDlgMakeLayerShow( kind )
 	if kind <= 0 then
 		return;
 	end
+	m_selectkind = kind
+	m_selectStoryid = 0;
+	SetTrue( m_uiMakeLayer )
 	
+	local objs = m_uiMakeLayer.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiName = objs[1];
+	local uiDesc = objs[2];
+	local uiStoryWarn = objs[3];
+	local uiGetIronBtn = objs[4];
+	local uiMakeBtn = objs[5];
+	
+	local info = m_recvValue[kind];
+	SetImage( uiShape, NationEquipSprite( kind ) )
+	SetText( uiName, NationEquipName( kind ) )
+	
+	local itemnum = GetItem():GetCount( g_nequip_open[kind].itemkind )
+	SetText( uiDesc, F( 1753, itemnum, g_nequip_open[kind].itemnum ) )
+	
+	if itemnum < g_nequip_open[kind].itemnum then
+		SetFalse( uiMakeBtn ) 
+		if GetPlayer().m_storyid >= g_nequip_open[kind].storyid then
+			SetTrue( uiGetIronBtn ) 
+			SetFalse( uiStoryWarn ) 
+			m_selectStoryid = g_nequip_open[kind].storyid;
+		else
+			SetTrue( uiStoryWarn ) 
+			SetFalse( uiGetIronBtn )
+			SetText( uiStoryWarn, F( 1756,   StoryChapterName( g_story[g_nequip_open[kind].storyid].chapter ), NationEquipName( kind ) ) ) 
+		end
+	else
+		SetTrue( uiMakeBtn ) 
+		SetFalse( uiStoryWarn ) 
+		SetFalse( uiGetIronBtn ) 
+	end
 end
 
 -- 打造国器
-function NationEquipDlgMake( kind )
+function NationEquipDlgMake()
+	if m_selectkind <= 0 then
+		return;
+	end
+	local info = m_recvValue[m_selectkind];
+	if GetPlayer().m_silver < g_nequip_open[m_selectkind].silver then
+		JumpRes( 1 )
+		return
+	end
+	system_askinfo( ASKINFO_NATIONEQUIP, "", 1, m_selectkind );
+end
+
+-- 打造加速
+function NationEquipDlgMakeQuick( kind )
 	if kind <= 0 then
 		return;
 	end
-	system_askinfo( ASKINFO_NATIONEQUIP, "", 1, kind );
+	local uiObj = m_uiContent.transform:GetChild( kind-1 )
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiTimer = objs[7] ;
+	local left = uiTimer.transform:GetComponent( typeof(UITextTimeCountdown) ).LeftTime
+	local min = math.floor(left/60) + 1
+	local token = math.ceil( min*global.nequip_make_quick_token )
+	MsgBox( F(1754,token), function()
+		system_askinfo( ASKINFO_NATIONEQUIP, "", 4, kind, 0 );
+	end )
 end
 
---升级国器
+-- 升级国器
 function NationEquipDlgUpgrade( kind )
 	if kind <= 0 then
 		return;
@@ -329,44 +520,79 @@ function NationEquipDlgUpgrade( kind )
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 2, kind );
 end
 
---改造国器界面
-function NationEquipDlgAdvanceShow(kind)
+-- 改造国器界面
+function NationEquipDlgRemakeLayerShow( kind )
 	if kind <= 0 then
 		return;
 	end
-	SetTrue(m_uiAdvance)
-	local objs = m_uiAdvance.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local uiShape1 = objs[0] ;
-	local uiColor1 = objs[1] ;
-	local uiStarImage1 = objs[2] ;
-	local uiMaxLv1 = objs[3] ;
-	local uiShape2 = objs[4] ;
-	local uiColor2 = objs[5] ;
-	local uiStarImage2 = objs[6] ;
-	local uiMaxLv2 = objs[7] ;
-	local uiCloseBtn = objs[8] ;
-	local uiImageGroup = objs[9] ;
-	local uiCostTime = objs[10] ;
-	local uiChangeBtn = objs[11] ;
-	local uiCostText = objs[12] ;
-	SetImage(uiShape1, NationEquipSprite(kind) )
-	SetImage(uiShape2, NationEquipSprite(kind) )
-	uiChangeBtn.transform:GetComponent( typeof(UIButton) ).controlID = 500+kind
+	local info = m_recvValue[kind];
+	local remake_star = g_nation_equip[kind][info.m_neq_lv].remake_star
+	local maxlevel = g_nequip_remake[kind][remake_star].maxlevel
+	local progress = g_nequip_remake[kind][remake_star].progress
+	
+	SetTrue( m_uiRemakeLayer )
+	local objs = m_uiRemakeLayer.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiFront = objs[0];
+	local uiLater = objs[1];
+	local uiProgressText = objs[2];
+	local uiProgress = objs[3];
+	local uiCostTime = objs[4];
+	local uiCostText = objs[5];
+	local uiRemakebtn = objs[6];
+	
+	SetImage( uiFront.transform:Find("Equip/Shape"), NationEquipSprite(kind) )
+	SetImage( uiLater.transform:Find("Equip/Shape"), NationEquipSprite(kind) )
+	NationEquipSetStar( uiFront.transform:Find("Star"), info.m_neq_star )
+	NationEquipSetStar( uiLater.transform:Find("Star"), info.m_neq_star+1 )
+	SetText( uiFront.transform:Find("MaxLv"), T(1749)..info.m_neq_lv )
+	SetText( uiLater.transform:Find("MaxLv"), T(1749)..maxlevel )
+	SetText( uiProgressText, F(1746,info.m_neq_pro, progress) )
+	for i=0, 5, 1 do
+		local uiObj = uiProgress.transform:GetChild( i )
+		if i < progress then
+			SetTrue( uiObj )
+			if i < info.m_neq_pro then
+				SetTrue( uiObj.transform:Find("Image") )
+			else
+				SetFalse( uiObj.transform:Find("Image") )
+			end
+		else
+			SetFalse( uiObj )
+		end
+	end
+	SetText( uiCostTime, secnum( g_nequip_remake[kind][remake_star].sec ) )
+	SetText( uiCostText, T(121).." "..knum( g_nequip_remake[kind][remake_star].silver ) )
+	SetControlID( uiRemakebtn, 600+kind )
 end
 
---改造加速
-function NationEquipDlgSpeed( kind )
+
+-- 改造国器
+function NationEquipDlgRemake( kind )
 	if kind <= 0 then
 		return;
 	end
-	--system_askinfo( ASKINFO_NATIONEQUIPUPGRADE, "", 0, kind );	
+	SetFalse( m_uiRemakeLayer )
+	local info = m_recvValue[kind];
+	local remake_star = g_nation_equip[kind][info.m_neq_lv].remake_star
+	if GetPlayer().m_silver < g_nequip_remake[kind][remake_star].silver then
+		JumpRes( 1 )
+		return
+	end
+	system_askinfo( ASKINFO_NATIONEQUIP, "", 3, kind );
 end
 
---改造国器
-function NationEquipDlgAdvance(kind)
+-- 改造加速
+function NationEquipDlgRemakeQuick( kind )
 	if kind <= 0 then
 		return;
 	end
-	--system_askinfo( ASKINFO_NATIONEQUIPAdvance, "", 0, kind );
+	local uiObj = m_uiContent.transform:GetChild( kind-1 )
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiTimer = objs[7] ;
+	local left = uiTimer.transform:GetComponent( typeof(UITextTimeCountdown) ).LeftTime
+	local min = math.floor(left/60) + 1
+	local token = math.ceil( min*global.nequip_remake_quick_token )
+	MsgBox( F(1755,token), function()
+		system_askinfo( ASKINFO_NATIONEQUIP, "", 4, kind, 1 );
+	end )
 end
-

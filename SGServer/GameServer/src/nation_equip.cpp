@@ -80,7 +80,8 @@ int nation_equip_open( int actor_index, int kind )
 			return -1;
 	}
 	city_changesilver( pCity->index, -g_nequip_open[kind].silver, PATH_NATIONEQUIP );
-	pCity->neq_sec[index] = g_nequip_open[kind].sec;
+	pCity->neq_sec[index] = g_nequip_open[kind].sec; 
+	g_actors[actor_index].neq_crit[index] = 0;
 	nation_equip_sendinfo( actor_index, kind );
 	return 0;
 }
@@ -122,12 +123,10 @@ int nation_equip_upgrade( int actor_index, int kind )
 
 	// 增加经验
 	int addexp = g_nationequip[kind].config[level].exp;
-
-	// 国器暴击科技等级
-	int techlevel = pCity->techlevel[18];
-	if ( techlevel > 0 && techlevel < g_techinfo[18].maxnum )
+	if ( g_actors[actor_index].neq_crit[index] > 0 )
 	{
-		addexp = addexp * pCity->attr.nequip_crit;
+		addexp *= g_actors[actor_index].neq_crit[index];
+		g_actors[actor_index].neq_crit[index] = 0;
 	}
 
 	if ( exp + addexp >= 100 )
@@ -139,7 +138,44 @@ int nation_equip_upgrade( int actor_index, int kind )
 	{
 		pCity->neq_exp[index] += addexp;
 	}
-	pCity->neq_pro[index] = 0;
+	
+	// 下一轮国器暴击科技等级
+	int oddsvalue[5] = { 0 };
+	int count = 0;
+	int totalvalue = 0;
+	int techlevel = pCity->techlevel[18];
+	if ( techlevel > 0 && techlevel < g_techinfo[18].maxnum )
+	{
+		for ( int tmpi = 0; tmpi < 5; tmpi++ )
+		{
+			if ( tmpi <= techlevel )
+			{
+				oddsvalue[count] = global.nequip_crit_odds[tmpi];
+				count += 1;
+				totalvalue += global.nequip_crit_odds[tmpi];
+			}
+		}
+
+		int critlevel = 0;
+		int curvalue = 0;
+		int odds = totalvalue > 0 ? rand() % totalvalue : 0;
+		for ( int tmpi = 0; tmpi < count; tmpi++ )
+		{// 按照评价值方式随机
+			curvalue = oddsvalue[tmpi];
+			if ( curvalue > 0 && curvalue > odds )
+			{
+				critlevel = tmpi;
+				break;
+			}
+			odds -= curvalue;
+		}
+
+		if ( critlevel > 0 && critlevel < g_techinfo[18].maxnum )
+		{
+			g_actors[actor_index].neq_crit[index] = g_techinfo[18].config[critlevel].value;
+		}
+	}
+
 	nation_equip_sendinfo( actor_index, kind );
 	return 0;
 }
@@ -176,6 +212,37 @@ int nation_equip_remake( int actor_index, int kind )
 	city_changesilver( pCity->index, -g_nequip_remake[kind].config[star].silver, PATH_NATIONEQUIP );
 	pCity->neq_sec[index] = g_nequip_remake[kind].config[star].sec;
 	nation_equip_sendinfo( actor_index, kind );
+	return 0;
+}
+
+// 加速
+int nation_equip_quick( int actor_index, int kind, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( kind <= 0 || kind >= g_nationequip_maxnum )
+		return -1;
+	int index = kind - 1;
+	int level = pCity->neq_lv[index];
+	if ( pCity->neq_sec[index] <= 0 )
+		return -1;
+
+	
+	int token = 0;
+	if ( type == 0 )
+	{
+		token = ( int )ceil( (pCity->neq_sec[index] / 60 + 1) * global.nequip_make_quick_token );
+	}
+	else if ( type == 1 )
+	{
+		token = (int)ceil( (pCity->neq_sec[index] / 60 + 1) * global.nequip_remake_quick_token );
+	}
+	if ( actor_change_token( actor_index, -token, PATH_NATIONEQUIP, 0 ) < 0 )
+		return -1;
+	pCity->neq_sec[index] = 0;
+	nation_equip_over( pCity, index );
 	return 0;
 }
 

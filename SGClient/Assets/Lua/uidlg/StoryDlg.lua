@@ -9,7 +9,7 @@ local m_uiWarning = nil; --UnityEngine.GameObject
 local m_uiResResetLayer = nil; --UnityEngine.GameObject
 
 local m_chapter =0;
-
+local m_storyidAsyn = nil;
 local m_recvValue = nil
 local m_id = 0;
 local m_uiObjCache = {}
@@ -113,9 +113,10 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function StoryDlgShow()
+function StoryDlgShow( storyid )
 	StoryDlgOpen()
 	SetFalse( m_uiResResetLayer )
+	m_storyidAsyn = storyid;
 	if m_recvValue == nil then
 		system_askinfo( ASKINFO_STORY, "", 0 );
 	else
@@ -129,10 +130,22 @@ end
 function StoryDlgRecv( recvValue )
 	m_recvValue = recvValue;
 	--m_recvValue.m_storyid = 646
+	if GetPlayer().m_storyid < recvValue.m_storyid then
+		GetPlayer().m_storyid = recvValue.m_storyid;
+	end
 	
-	-- 首次打开默认最新章节
-	if m_chapter == 0 then
-		m_chapter = g_story[m_recvValue.m_storyid].chapter;
+	if m_storyidAsyn == nil or m_storyidAsyn == 0 or m_storyidAsyn > recvValue.m_storyid then
+		-- 首次打开默认最新章节
+		if m_chapter == 0 then
+			m_chapter = g_story[m_recvValue.m_storyid].chapter;
+			if m_chapter == 0 then
+				m_chapter = 1;
+			end
+		end
+		
+	else
+		-- 有选择的打开
+		m_chapter = g_story[m_storyidAsyn].chapter;
 		if m_chapter == 0 then
 			m_chapter = 1;
 		end

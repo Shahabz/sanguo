@@ -827,6 +827,7 @@ function FightDlgResultLayerShow()
 		SetFalse( m_uiCloseBtn )
 		SetTrue( m_uiReturnCityBtn )
 		SetTrue( m_uiReturnStoryBtn )
+		SetFalse( m_uiSweepBtn )
 		local star = m_recvValue.m_content_json["star"]
 		if star ~= nil and star > 0 then
 			SetTrue( m_uiStar )
@@ -841,6 +842,7 @@ function FightDlgResultLayerShow()
 		SetTrue( m_uiCloseBtn )
 		SetFalse( m_uiReturnCityBtn )
 		SetFalse( m_uiReturnStoryBtn )
+		SetFalse( m_uiSweepBtn )
 		SetFalse( m_uiStar )
 		SetFalse( m_uiStarWarn )
 	end

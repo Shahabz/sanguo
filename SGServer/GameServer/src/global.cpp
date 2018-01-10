@@ -510,6 +510,20 @@ int global_init()
 			global.buff_forest = atoi( row[1] );
 		else if ( id == 175 )
 			global.autoguard_max = atoi( row[1] );
+		else if ( id == 176 )
+			global.nequip_crit_odds[0] = atoi( row[1] );
+		else if ( id == 177 )
+			global.nequip_crit_odds[1] = atoi( row[1] );
+		else if ( id == 178 )
+			global.nequip_crit_odds[2] = atoi( row[1] );
+		else if ( id == 179 )
+			global.nequip_crit_odds[3] = atoi( row[1] );
+		else if ( id == 180 )
+			global.nequip_crit_odds[4] = atoi( row[1] );
+		else if ( id == 181 )
+			global.nequip_make_quick_token = value;
+		else if ( id == 182 )
+			global.nequip_remake_quick_token = value;
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

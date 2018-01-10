@@ -483,6 +483,7 @@ int actor_getinfo( int actor_index )
 	info.m_level = g_actors[actor_index].level;
 	info.m_token = g_actors[actor_index].token;
 	info.m_actor_sflag = g_actors[actor_index].sflag;
+	info.m_storyid = g_actors[actor_index].storyid;
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
 	City *pCity = city_getptr( actor_index );

@@ -497,8 +497,7 @@ function proc_changeiron_C( recvValue )
 	end
 	GetPlayer().m_iron = recvValue.m_total;
 	MainDlgSetIron();
-	NationEquipDlgSetIron();
-	NationEquipDlgSetList()
+	NationEquipDlgSetIron( 1 );
 end
 
 -- m_total=0,m_add=0,m_path=0,

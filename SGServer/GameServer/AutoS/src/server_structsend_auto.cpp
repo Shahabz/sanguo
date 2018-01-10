@@ -296,6 +296,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_MEM_SEND( (*pptr), pValue->m_buff_endtime, 6*sizeof(int), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguard, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguardopen, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	return 0;
 }
 

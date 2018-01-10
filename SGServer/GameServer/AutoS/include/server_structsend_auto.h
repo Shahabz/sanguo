@@ -188,6 +188,7 @@ struct _slk_NetS_ActorInfo {
 	int m_buff_endtime[6];	//服务器发送玩家基本信息-buff
 	char m_autoguard;	//服务器发送玩家基本信息-城防补充
 	char m_autoguardopen;	//服务器发送玩家基本信息-城防补充
+	int m_storyid;	//服务器发送玩家基本信息-副本进度
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

@@ -5,6 +5,7 @@
 int nation_equip_open( int actor_index, int kind );
 int nation_equip_upgrade( int actor_index, int kind );
 int nation_equip_remake( int actor_index, int kind );
+int nation_equip_quick( int actor_index, int kind, int type );
 void nation_equip_over( City *pCity, int index );
 int nation_equip_sendinfo( int actor_index, int kind );
 int nation_equip_sendlist( int actor_index );

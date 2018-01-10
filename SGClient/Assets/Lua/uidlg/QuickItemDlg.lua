@@ -129,11 +129,11 @@ function QuickItemDlgSet( sec, update )
 		
 	-- 募兵加速
 	elseif m_op == 2 then
-		SetImage( m_uiShape, CorpsFaceSpriteEx(m_buildingkind).." "..T(605)..CorpsNameEx(m_buildingkind) );
-		SetText( m_uiTargetName, "" );
+		SetImage( m_uiShape, CorpsFaceSpriteEx(m_buildingkind) );
+		SetText( m_uiName, T(605)..CorpsNameEx(m_buildingkind) );
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 		
-	-- 改造加速
+	-- 改建加速
 	elseif m_op == 3 then			
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
 		SetText( m_uiName, BuildingNameLv( m_buildingkind, nil, pBuilding.m_level )..T(1474) )

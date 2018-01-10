@@ -71,6 +71,7 @@ function Player:Init()
 	self.m_guardnum			=	0;
 	self.m_guardsec			=	0;
 	self.m_questid			=	0;
+	self.m_storyid			=	0;
 	
 	self.m_function			=	0;
 	self.m_levynum			=	0;
@@ -135,6 +136,7 @@ function Player:Set( recvValue )
 	self.m_guardnum			=	recvValue.m_guardnum
 	self.m_guardsec			=	recvValue.m_guardsec
 	self.m_questid			=	recvValue.m_questid
+	self.m_storyid			=	recvValue.m_storyid
 	for kind = 1, 40, 1 do
 		self.m_techlevel[kind-1]	=   recvValue.m_techlevel[kind];
 		self.m_techprogress[kind-1]	=	recvValue.m_techprogress[kind];

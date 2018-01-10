@@ -772,16 +772,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			nation_equip_sendlist( actor_index );
 		}
 		else if ( pvalue[0] == 1 )
-		{
+		{ // 开启
 			nation_equip_open( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 2 )
-		{
+		{ // 升级
 			nation_equip_upgrade( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 3 )
-		{
+		{ // 改造
 			nation_equip_remake( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 加速
+			nation_equip_quick( actor_index, pvalue[1], pvalue[2] );
 		}
 		break;
 	default:

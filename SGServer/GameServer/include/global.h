@@ -158,6 +158,9 @@ typedef struct _global
 	short buff_mountain;
 	short buff_forest;
 	short autoguard_max;
+	short nequip_crit_odds[5];
+	float nequip_make_quick_token;
+	float nequip_remake_quick_token;
 }Global;
 int global_init();
 void global_reload();
