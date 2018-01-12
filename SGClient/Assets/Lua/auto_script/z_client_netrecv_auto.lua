@@ -710,6 +710,11 @@ function netrecv_herovisitinfo_C( buffer )
 	proc_herovisitinfo_C( recvValue );
 end
 
+function netrecv_nationbase_C( buffer )
+	local recvValue = struct_NetS_NationBase_recv( buffer );
+	proc_nationbase_C( recvValue );
+end
+
 function netrecv_herovisitaward_C( buffer )
 	local recvValue = struct_NetS_HeroVisitAward_recv( buffer );
 	proc_herovisitaward_C( recvValue );
@@ -818,6 +823,21 @@ end
 function netrecv_nationequiplist_C( buffer )
 	local recvValue = struct_NetS_NationEquipList_recv( buffer );
 	proc_nationequiplist_C( recvValue );
+end
+
+function netrecv_nationinfo_C( buffer )
+	local recvValue = struct_NetS_NationInfo_recv( buffer );
+	proc_nationinfo_C( recvValue );
+end
+
+function netrecv_nationtown_C( buffer )
+	local recvValue = struct_NetS_NationTown_recv( buffer );
+	proc_nationtown_C( recvValue );
+end
+
+function netrecv_nationtownlist_C( buffer )
+	local recvValue = struct_NetS_NationTownList_recv( buffer );
+	proc_nationtownlist_C( recvValue );
 end
 
 Proc_Command = {
@@ -963,6 +983,7 @@ Proc_Command = {
 	[CMDS_TREASUREACTORLIST]=netrecv_treasureactorlist_C;
 	[CMDS_CHANGEAUTOBUILD]=netrecv_changeautobuild_C;
 	[CMDS_HEROVISITINFO]=netrecv_herovisitinfo_C;
+	[CMDS_NATIONBASE]=netrecv_nationbase_C;
 	[CMDS_HEROVISITAWARD]=netrecv_herovisitaward_C;
 	[CMDS_FIGHTPLAY]=netrecv_fightplay_C;
 	[CMDS_STORYSWEEPRESULT]=netrecv_storysweepresult_C;
@@ -985,6 +1006,9 @@ Proc_Command = {
 	[CMDS_CHANGEAUTOGUARD]=netrecv_changeautoguard_C;
 	[CMDS_ACTIVITYLIST]=netrecv_activitylist_C;
 	[CMDS_NATIONEQUIPLIST]=netrecv_nationequiplist_C;
+	[CMDS_NATIONINFO]=netrecv_nationinfo_C;
+	[CMDS_NATIONTOWN]=netrecv_nationtown_C;
+	[CMDS_NATIONTOWNLIST]=netrecv_nationtownlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -38,6 +38,9 @@ local GMCMD_SERVER = {
 [34]="giveres",
 [35]="autobuild",
 [36]="paybag",
+[37]="blv",
+[38]="story",
+[39]="prestige",
 }
  
 -- 发到客户端本地指令

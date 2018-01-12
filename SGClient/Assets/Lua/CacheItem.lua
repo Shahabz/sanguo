@@ -314,6 +314,7 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
     else
 		pop( F( 690, item_getname(nItemKind), num ) )
 	end
+	NationPlaceDlgRecv()
 end
 
 -- 得到服务器返回的消息，失去道具

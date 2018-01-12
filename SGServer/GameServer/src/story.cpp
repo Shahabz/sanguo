@@ -728,3 +728,14 @@ int story_sweep( int actor_index, int id, int herokind0, int herokind1, int hero
 	netsend_storysweepresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+
+// GM
+int story_gm( int actor_index, int storyid )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	g_actors[actor_index].storyid = storyid;
+	story_sendinfo( actor_index );
+	return -1;
+}

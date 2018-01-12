@@ -33,6 +33,7 @@
 #include "king_war.h"
 #include "pay.h"
 #include "activity.h"
+#include "story.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -456,6 +457,24 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		else if ( pValue[0] < 0 )
 		{
 			paybag_delete( -pValue[0] );
+		}
+		break;
+	case GMC_BUILDINGLEVEL: // 建筑等级
+		if ( pCity )
+		{
+			building_level_gm( pCity->index, pValue[0], pValue[1] );
+		}
+		break;
+	case GMC_STORY: // 副本
+		if ( pCity )
+		{
+			story_gm( pCity->actor_index, pValue[0] );
+		}
+		break;
+	case GMC_PRESTIGE: // 威望
+		if ( pCity )
+		{
+			city_changeprestige( pCity->actor_index, pValue[0], PATH_GM );
 		}
 		break;
 	default:

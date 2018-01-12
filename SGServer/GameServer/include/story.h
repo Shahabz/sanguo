@@ -37,4 +37,7 @@ int story_drawing_get( int actor_index, int id );
 
 // ¸±±¾É¨µ´
 int story_sweep( int actor_index, int id, int herokind0, int herokind1, int herokind2, int herokind3 );
+
+// GM
+int story_gm( int actor_index, int storyid );
 #endif

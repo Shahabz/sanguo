@@ -1493,6 +1493,7 @@ function struct_NetS_MapTownInfo_recv( buffer )
 	recvValue.m_maxhp = buffer:ReadInt();
 	recvValue.m_myask = buffer:ReadSByte();
 	recvValue.m_produce_num = buffer:ReadShort();
+	recvValue.m_townid = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -1885,13 +1886,12 @@ function struct_NetS_HeroVisitInfo_recv( buffer )
 	return recvValue;
 end
 
-function struct_NetS_NationInfo_recv( buffer )
+function struct_NetS_NationBase_recv( buffer )
 	local recvValue = {};
 	recvValue.m_level = buffer:ReadSByte();
 	recvValue.m_exp = buffer:ReadInt();
-	recvValue.m_exp_max = buffer:ReadInt();
-	recvValue.m_buildfree = buffer:ReadSByte();
-	recvValue.m_buildnum = buffer:ReadSByte();
+	recvValue.m_donate_num = buffer:ReadSByte();
+	recvValue.m_myrank = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -2266,6 +2266,39 @@ function struct_NetS_NationEquipList_recv( buffer )
 		tmpValue = struct_NetS_NationEquip_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	return recvValue;
+end
+
+function struct_NetS_NationInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_donate_num = buffer:ReadSByte();
+	recvValue.m_myrank = buffer:ReadInt();
+	recvValue.m_notice_len = buffer:ReadShort();
+	recvValue.m_notice = buffer:ReadStringWithLen( recvValue.m_notice_len );
+	recvValue.m_kingname_len = buffer:ReadSByte();
+	recvValue.m_kingname = buffer:ReadStringWithLen( recvValue.m_kingname_len );
+	return recvValue;
+end
+
+function struct_NetS_NationTown_recv( buffer )
+	local recvValue = {};
+	recvValue.m_info = struct_NetS_MapTownInfo_recv( buffer );
+	recvValue.m_path = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationTownList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationTown_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_op = buffer:ReadSByte();
 	return recvValue;
 end
 

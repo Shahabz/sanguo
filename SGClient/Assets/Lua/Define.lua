@@ -407,6 +407,11 @@ function PlaceName( place )
 	return Localization.text( 200+place );
 end
 
+-- 职位描述
+function PlaceDesc( place )
+	return Localization.text( 260+place );
+end
+
 -- 世界任务名称
 function WorldQuestName( questid )
 	return Localization.text_quest( 2000+questid );

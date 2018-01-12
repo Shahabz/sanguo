@@ -34,5 +34,30 @@ int nation_city_war_del( int nation, int group_index );
 int nation_town_war_add( int nation, int group_index );
 int nation_town_war_del( int nation, int group_index );
 
+// 国王名字
+void nation_kingname( char nation, char *out );
+
+// 国家经验
+int nation_exp( char nation, int exp );
+
+// 国家信息
+int nation_sendinfo( int actor_index );
+// 国家信息
+int nation_sendbase( int actor_index );
+
+// 国家建设升级
+int nation_build( int actor_index );
+
+// 国家爵位晋升
+int nation_place_upgrade( int actor_index );
+
+// 国家城池
+int nation_town_sendinfo( int actor_index, int townid, char path );
+
+// 国家城池列表
+int nation_town_sendlist( int actor_index );
+
+// 修复
+int nation_town_repair( int actor_index, int townid );
 
 #endif

@@ -20,6 +20,8 @@ struct _map_town {
 				char dev_level;	//都城开发等级
 				int dev_exp;	//都城开发经验
 				int attackcd;	//攻击倒计时
+				int total_soldier;	//守卫总数
+				int total_soldier_max;	//守卫总数上限
 				int dev_expmax;	//都城开发经验上限
 				char fightstate;	//是否有战斗
 				short pre_townid[8];	//上一级townid列表

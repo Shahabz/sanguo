@@ -79,6 +79,7 @@ int map_town_changename( int actor_index, int townid, char *pname );
 int map_town_sendaward( int actor_index, int townid );
 
 // 获取城镇信息
+void map_town_info_makestruct( SLK_NetS_MapTownInfo *pValue, MapTown *pTown, int actorid, char path );
 int map_town_sendinfo( int actor_index, int townid );
 
 // 获取都城信息

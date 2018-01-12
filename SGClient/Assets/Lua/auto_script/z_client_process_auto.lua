@@ -460,6 +460,10 @@ function proc_changesilver_C( recvValue )
 	end
 	GetPlayer().m_silver = recvValue.m_total;
 	MainDlgSetSilver();
+	if recvValue.m_add > 0 then
+		NationUpgradeDlgSetCost()
+		NationPlaceDlgRecv()
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -472,6 +476,9 @@ function proc_changewood_C( recvValue )
 	end
 	GetPlayer().m_wood = recvValue.m_total;
 	MainDlgSetWood();
+	if recvValue.m_add > 0 then
+		NationUpgradeDlgSetCost()
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -485,6 +492,9 @@ function proc_changefood_C( recvValue )
 	GetPlayer().m_food = recvValue.m_total;
 	MainDlgSetFood();
 	HeroGuardDlgSetFood()
+	if recvValue.m_add > 0 then
+		NationUpgradeDlgSetCost()
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -515,6 +525,10 @@ function proc_changeprestige_C( recvValue )
 		end
 	end
 	GetPlayer().m_prestige = recvValue.m_total;
+	NationDlgChangePrestige()
+	if recvValue.m_add > 0 then
+		NationPlaceDlgRecv()
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -1838,5 +1852,42 @@ end
 function proc_nationequiplist_C( recvValue )
 	-- process.
 	NationEquipDlgListRecv( recvValue )
+end
+
+-- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0,m_notice_len=0,m_notice="[m_notice_len]",m_kingname_len=0,m_kingname="[m_kingname_len]",
+function proc_nationinfo_C( recvValue )
+	-- process.
+	NationDlgRecv( recvValue )
+end
+
+-- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0,
+function proc_nationbase_C( recvValue )
+	-- process.
+	NationDlgRecvBase( recvValue )
+	NationUpgradeDlgShowRecv( recvValue )
+end
+
+-- m_info={m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,m_myask=0,m_produce_num=0,m_townid=0,},
+function proc_nationtown_C( recvValue )
+	-- process.
+	if recvValue.m_path == 1 then
+		TownRebuildDlgShow( recvValue.m_info.m_townid, recvValue.m_info )
+	elseif recvValue.m_path == 2 then
+		NationTownDlgUpdate( recvValue.m_info )
+	else
+		NationTownDlgUpdate( recvValue.m_info )
+	end
+end
+
+-- m_count=0,m_list={m_info={m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,m_myask=0,m_produce_num=0,m_townid=0,},[m_count]},m_op=0,
+function proc_nationtownlist_C( recvValue )
+	-- process.
+	if recvValue.m_op == 1 then
+		NationTownDlgBegin()
+	elseif recvValue.m_op == 2 then
+		NationTownDlgRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		NationTownDlgEndRecv()
+	end
 end
 

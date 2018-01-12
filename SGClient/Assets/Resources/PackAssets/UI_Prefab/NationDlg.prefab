@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 114763141687923244}
   m_Layer: 5
   m_Name: LBar
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 114625778694479982}
   m_Layer: 5
   m_Name: RBar
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1678,6 +1678,7 @@ MonoBehaviour:
   - {fileID: 1369650044217154}
   - {fileID: 1030915699343592}
   - {fileID: 1426006461595804}
+  - {fileID: 1126715912689244}
   uiName: 
   layer: 1
   autoDestroy: 1
@@ -2618,7 +2619,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u56FD\u5BB6\u5EFA\u8BBE"
-  localizeID: 1940
+  localizeID: 1759
   rtlAlignment: 0
   rtlReverseSign: 
 --- !u!114 &114476352963730902
@@ -3354,7 +3355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4475,7 +4476,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 226, y: -0.0074863}
+  m_AnchoredPosition: {x: 250, y: -0.0074863}
   m_SizeDelta: {x: 247, y: 60.015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224122714512237034
@@ -5313,7 +5314,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 226, y: 0}
+  m_AnchoredPosition: {x: 250, y: 0}
   m_SizeDelta: {x: 247, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224636156157429076
@@ -5536,7 +5537,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 226, y: 0}
+  m_AnchoredPosition: {x: 250, y: 0}
   m_SizeDelta: {x: 247, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224781840697328204

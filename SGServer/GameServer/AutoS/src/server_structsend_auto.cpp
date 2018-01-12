@@ -1658,6 +1658,7 @@ int struct_NetS_MapTownInfo_send( char **pptr, int *psize, SLK_NetS_MapTownInfo 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myask, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_produce_num, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
 	return 0;
 }
 
@@ -2105,15 +2106,14 @@ int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitI
 	return 0;
 }
 
-int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue )
+int struct_NetS_NationBase_send( char **pptr, int *psize, SLK_NetS_NationBase *pValue )
 {
 	int tmpi = 0;
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buildfree, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buildnum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_donate_num, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_myrank, (*psize) );
 	return 0;
 }
 
@@ -2523,6 +2523,45 @@ int struct_NetS_NationEquipList_send( char **pptr, int *psize, SLK_NetS_NationEq
 	{
 		struct_NetS_NationEquip_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	return 0;
+}
+
+int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_donate_num, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_myrank, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_notice_len, (*psize) );
+	if( pValue->m_notice_len > 0 && pValue->m_notice_len <= 512 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_notice, pValue->m_notice_len*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kingname_len, (*psize) );
+	if( pValue->m_kingname_len > 0 && pValue->m_kingname_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_kingname, pValue->m_kingname_len*sizeof(char), (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationTown_send( char **pptr, int *psize, SLK_NetS_NationTown *pValue )
+{
+	int tmpi = 0;
+
+	struct_NetS_MapTownInfo_send( pptr, psize, &pValue->m_info );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationTownList_send( char **pptr, int *psize, SLK_NetS_NationTownList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationTown_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	return 0;
 }
 

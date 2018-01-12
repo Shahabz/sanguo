@@ -286,6 +286,9 @@ void map_town_monster_reset( int townid, char reset )
 		}
 	}
 
+	g_map_town[townid].total_soldier = 0;
+	g_map_town[townid].total_soldier_max = 0;
+
 	// 容错
 	for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
 	{
@@ -300,6 +303,9 @@ void map_town_monster_reset( int townid, char reset )
 		{
 			g_map_town[townid].soldier[tmpi] = g_monster[monsterid].troops;
 		}
+
+		g_map_town[townid].total_soldier += g_map_town[townid].soldier[tmpi];
+		g_map_town[townid].total_soldier_max += g_monster[monsterid].troops;
 	}
 
 	// 释放内存空间
@@ -590,7 +596,7 @@ int map_town_ask_owner( int actor_index, int townid )
 		g_map_town[townid].ask_city_index[free_index] = pCity->index;
 		map_town_ask_owner_sendlist( actor_index, townid );
 	}
-
+	nation_town_sendinfo( actor_index, townid, 2 );
 	return 0;
 }
 
@@ -741,6 +747,8 @@ int map_town_soldiers_repair( int actor_index, int townid )
 
 	int maxhp = 0;
 	int hp = 0;
+	g_map_town[townid].total_soldier = 0;
+	g_map_town[townid].total_soldier_max = 0;
 	for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
 	{
 		int monsterid = g_map_town[townid].monster[tmpi];
@@ -749,6 +757,8 @@ int map_town_soldiers_repair( int actor_index, int townid )
 		maxhp += g_monster[monsterid].troops;
 		hp += g_map_town[townid].soldier[tmpi];
 	}
+	g_map_town[townid].total_soldier = hp;
+	g_map_town[townid].total_soldier_max = maxhp;
 
 	int repairhp = min( maxhp - hp, maxhp / 20 );
 	int cost_silver = (int)ceil( repairhp / (float)maxhp * g_towninfo[townid].ask_silver );
@@ -789,6 +799,20 @@ int map_town_soldiers_repair( int actor_index, int townid )
 		if ( g_map_town[townid].soldier[tmpi] > g_monster[monsterid].troops )
 			g_map_town[townid].soldier[tmpi] = g_monster[monsterid].troops;
 	}
+
+	// 最后重算一下
+	maxhp = 0;
+	hp = 0;
+	for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
+	{
+		int monsterid = g_map_town[townid].monster[tmpi];
+		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+			continue;
+		maxhp += g_monster[monsterid].troops;
+		hp += g_map_town[townid].soldier[tmpi];
+	}
+	g_map_town[townid].total_soldier = hp;
+	g_map_town[townid].total_soldier_max = maxhp;
 
 	map_town_sendinfo( actor_index, townid );
 	return 0;
@@ -1328,6 +1352,49 @@ int map_town_sendaward( int actor_index, int townid )
 	return 0;
 }
 
+void map_town_info_makestruct( SLK_NetS_MapTownInfo *pValue, MapTown *pTown, int actorid, char path )
+{
+	pValue->m_townid = pTown->townid;
+	pValue->m_protect_sec = pTown->protect_sec;
+	pValue->m_produce_sec = pTown->produce_sec;
+	pValue->m_produce_num = pTown->produce_num;
+	pValue->m_own_actorid = pTown->own_actorid;
+	if ( pTown->own_actorid > 0 )
+	{ // 已经有城主
+		int city_index = pTown->own_city_index;
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+		{
+			city_index = city_getindex_withactorid( pTown->own_actorid );
+			pTown->own_city_index = city_index;
+		}
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			strncpy( pValue->m_own_name, g_city[city_index].name, NAME_SIZE );
+			pValue->m_own_namelen = strlen( pValue->m_own_name );
+			pValue->m_own_sec = pTown->own_sec;
+		}
+
+		pValue->m_hp = pTown->total_soldier;
+		pValue->m_maxhp = pTown->total_soldier_max;
+	}
+	else
+	{ // 没城主
+		if ( path > 0 && pTown->protect_sec > 0 )
+		{ // 检查我是否在申请列表里
+			for ( int tmpi = 0; tmpi < MAP_TOWN_JOIN_MAX; tmpi++ )
+			{
+				if ( pTown->ask_actorid[tmpi] <= 0 )
+					continue;
+				if ( pTown->ask_actorid[tmpi] == actorid )
+				{
+					pValue->m_myask = 1;
+					break;
+				}
+			}
+		}
+	}
+}
+
 // 获取城镇信息
 int map_town_sendinfo( int actor_index, int townid )
 {
@@ -1338,51 +1405,7 @@ int map_town_sendinfo( int actor_index, int townid )
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
 	SLK_NetS_MapTownInfo pValue = { 0 };
-	pValue.m_protect_sec = g_map_town[townid].protect_sec;
-	pValue.m_produce_sec = g_map_town[townid].produce_sec;
-	pValue.m_produce_num = g_map_town[townid].produce_num;
-	pValue.m_own_actorid = g_map_town[townid].own_actorid;
-	if ( g_map_town[townid].own_actorid > 0 )
-	{ // 已经有城主
-		int city_index = g_map_town[townid].own_city_index;
-		if ( city_index < 0 || city_index >= g_city_maxcount )
-		{
-			city_index = city_getindex_withactorid( g_map_town[townid].own_actorid );
-			g_map_town[townid].own_city_index = city_index;
-		}
-		if ( city_index >= 0 && city_index < g_city_maxcount )
-		{
-			strncpy( pValue.m_own_name, g_city[city_index].name, NAME_SIZE );
-			pValue.m_own_namelen = strlen( pValue.m_own_name );
-			pValue.m_own_sec = g_map_town[townid].own_sec;
-		}
-
-		for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
-		{
-			int monsterid = g_map_town[townid].monster[tmpi];
-			if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
-				continue;
-			pValue.m_maxhp += g_monster[monsterid].troops;
-			pValue.m_hp += g_map_town[townid].soldier[tmpi];
-		}
-	}
-	else
-	{ // 没城主
-		if ( g_map_town[townid].protect_sec > 0 )
-		{ // 检查我是否在申请列表里
-			for ( int tmpi = 0; tmpi < MAP_TOWN_JOIN_MAX; tmpi++ )
-			{
-				if ( g_map_town[townid].ask_actorid[tmpi] <= 0 )
-					continue;
-				if ( g_map_town[townid].ask_actorid[tmpi] == pCity->actorid )
-				{
-					pValue.m_myask = 1;
-					break;
-				}
-			}
-		}
-	}
-
+	map_town_info_makestruct( &pValue, &g_map_town[townid], pCity->actorid, 1 );
 	netsend_maptowninfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

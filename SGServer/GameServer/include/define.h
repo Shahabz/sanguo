@@ -46,6 +46,7 @@
 #include "auto_data_nation_equip.h"
 #include "auto_data_nation_equip_open.h"
 #include "auto_data_nation_equip_remake.h"
+#include "auto_data_nation_upgrade.h"
 #include "auto_data_nation_place.h"
 #include "auto_data_weather.h"
 #include "auto_data_shop.h"

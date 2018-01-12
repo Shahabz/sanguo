@@ -21,6 +21,7 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_WORLDBOSS		2 // 今天是否打过世界boss
 #define TODAY_CHAR_SHOP_SALEITEM	3 // 今天是否随机了打折物品
 #define TODAY_CHAR_ITEMUSE_BODY		4 // 今天使用体力道具多少次了
+#define TODAY_CHAR_NATION_DONATE	5 // 今天国家建设次数
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
 int actor_set_today_char_times( int actor_index, int offset, char value );

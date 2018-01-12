@@ -138,4 +138,7 @@ int building_people_max( City *pCity );
 
 // GM
 int building_gm( City *pCity );
+
+// GM½¨ÖþµÈ¼¶
+int building_level_gm( int city_index, int kind, int level );
 #endif

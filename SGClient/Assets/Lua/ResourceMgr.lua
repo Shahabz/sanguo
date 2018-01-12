@@ -269,6 +269,22 @@ end
 -- 资源图标通过道具kind获取
 function ResKindIcon( kind )
 	local list = { 
+	[1]="ui_opration_item_1",
+	[2]="ui_opration_item_2",
+	[3]="ui_opration_item_3",
+	[4]="ui_opration_item_4",
+	[11]="ui_opration_item_11",
+	[12]="ui_opration_item_12",
+	[13]="ui_opration_item_13",
+	[14]="ui_opration_item_14",
+	[21]="ui_opration_item_21",
+	[22]="ui_opration_item_22",
+	[23]="ui_opration_item_23",
+	[24]="ui_opration_item_24",
+	[31]="ui_opration_item_32",
+	[32]="ui_opration_item_32",
+	[33]="ui_opration_item_33",
+	[34]="ui_opration_item_34",
 	[120]="ui_icon_res_silver", 
 	[121]="ui_icon_res_wood", 
 	[122]="ui_icon_res_food", 

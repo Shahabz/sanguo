@@ -42,6 +42,7 @@
 #define ASKINFO_VIPBAG			37 // VIP礼包
 #define ASKINFO_ACTIVITY		38 // 活动
 #define ASKINFO_NATIONEQUIP		39 // 国器
+#define ASKINFO_NATION			40 // 国家
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

@@ -22,8 +22,10 @@ local m_uiHonorBtn = nil; --UnityEngine.GameObject
 local m_uiOfficerListBtn = nil; --UnityEngine.GameObject
 local m_uiLogBtn = nil; --UnityEngine.GameObject
 local m_uiQuestInfo = nil; --UnityEngine.GameObject
+local m_uiPlaceIcon = nil; --UnityEngine.GameObject
 
-local NationInfo = { }
+local m_recvValue = nil
+
 -- 打开界面
 function NationDlgOpen()
 	m_Dlg = eye.uiManager:Open( "NationDlg" );
@@ -38,12 +40,14 @@ function NationDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationDlg" );
+	m_recvValue = nil
 end
 
 -- 删除界面
 function NationDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_recvValue = nil
 end
 
 ----------------------------------------
@@ -57,10 +61,18 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
             NationDlgClose();
 		--国家建设
 		elseif nControlID == 1 then
+			if m_recvValue.m_level >= #g_nation_upgrade then
+				pop(T(1769))
+			elseif m_recvValue.m_donate_num >= 11 then
+				pop(T(1770))
+			else
+				NationUpgradeDlgShow( m_recvValue )
+			end
 			
 		--爵位升级
 		elseif nControlID == 2 then
-		
+			NationPlaceDlgShow()
+			
 		--修改公告
 		elseif nControlID == 3 then
 		
@@ -69,7 +81,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		--国家城池
 		elseif nControlID == 5 then
-		
+			NationTownDlgShow()
+			
 		--国家战争
 		elseif nControlID == 6 then
 		
@@ -113,7 +126,7 @@ function NationDlgOnAwake( gameObject )
 	m_uiOfficerListBtn = objs[17];
 	m_uiLogBtn = objs[18];
 	m_uiQuestInfo = objs[19];
-
+	m_uiPlaceIcon = objs[20];
 end
 
 -- 界面初始化时调用
@@ -152,16 +165,48 @@ function NationDlgShow()
 	m_uiOfficerListBtn.transform:SetSiblingIndex(1002);
 	m_uiLogBtn.transform:SetSiblingIndex(1003);
 	
+	-- 获取信息
+	system_askinfo( ASKINFO_NATION, "", 0 )
+	
 	-- 国家旗帜
 	SetImage( m_uiFlag, NationFlagSprite( GetPlayer().m_nation ) )
-	
+	-- 爵位
 	NationDlgChangePlace();
+	-- 威望
 	NationDlgChangePrestige();
-	
 end
 
--- 
+-- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0,m_notice_len=0,m_notice="[m_notice_len]",m_kingname_len=0,m_kingname="[m_kingname_len]",
 function NationDlgRecv( recvValue )
+	m_recvValue = recvValue;
+	NationDlgChangeBase()
+	NationDlgChangeNotice();
+end
+
+-- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0
+function NationDlgRecvBase( recvValue )
+	m_recvValue.m_level = recvValue.m_level
+	m_recvValue.m_exp = recvValue.m_exp
+	m_recvValue.m_donate_num = recvValue.m_donate_num
+	m_recvValue.m_myrank = recvValue.m_myrank
+	NationDlgChangeBase()
+end
+
+-- 基本信息
+function NationDlgChangeBase()
+	SetText( m_uiLevel, F( 1936, m_recvValue.m_level ) )
+	if m_recvValue.m_level >= #g_nation_upgrade then
+		SetText( m_uiExp, T(1768) )
+		SetText( m_uiBuild, T(1769) )
+	else
+		SetText( m_uiExp, F( 1937, knum(m_recvValue.m_exp), knum(g_nation_upgrade[m_recvValue.m_level][1].maxexp) ) )
+		SetText( m_uiBuild, F( 1940, m_recvValue.m_donate_num, 11 ) )
+	end
+	SetText( m_uiRank, F( 1939, m_recvValue.m_myrank ) )
+end
+
+-- 公告
+function NationDlgChangeNotice()
 	
 end
 
@@ -170,7 +215,8 @@ function NationDlgChangePlace()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
-	SetText( m_uiPlace, T(1938).."：<color=#ECC244FF>"..PlaceName( GetPlayer().m_place ).."</color>" )
+	SetText( m_uiPlace, F(1938, PlaceName( GetPlayer().m_place )) )
+	SetImage( m_uiPlaceIcon, PlaceSprite( GetPlayer().m_place ) )
 end
 
 -- 我的威望
@@ -178,32 +224,6 @@ function NationDlgChangePrestige()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
-	SetText( m_uiPrestige, T(1941).."："..GetPlayer().m_prestige )
+	SetText( m_uiPrestige, F(1941, knum(GetPlayer().m_prestige)) )
 end
-
-
---[[function NationDlgFillInfo(nationInfo)
-	local leveText = string.format("<color=#ddbd88ff>:</color> %d",nationInfo.level);
-	SetText(m_uiLevelText,leveText);
-	local nationExp = string.format("<color=#ddbd88ff>:</color> %s/%s",knum(nationInfo.newexp),knum(nationInfo.sumexp));
-	SetText(m_uiExpText,nationExp);
-	local levelText = string.format("<color=#ddbd88ff>:</color> %d",nationInfo.rank);
-	SetText(m_uiRankText,levelText);
-	local nationBuild = string.format("<color=#ddbd88ff>:</color> 已建设（%d/%d）",nationInfo.newbuillding,nationInfo.sumbuillding);
-	SetText(m_uiBuildingText,nationBuild);
-	local prestigeText = string.format("<color=#ddbd88ff>:</color> %s",knum(nationInfo.prestige));
-	SetText(m_uiPrestigeText,prestigeText);
-	local officerText = string.format("<color=#d95df4ff>:</color> %s",nationInfo.officer);
-	SetText(m_uiOfficialerText,officerText);
-	local nobilityText = string.format("<color=#ddbd88ff>:</color> ");
-	SetText(m_uiNobilityText,nobilityText);
-	SetImage(m_uiFlag,NationSpriteFlag(nationInfo.nation));
-end--]]
-
-
-
-
-
-
-
 

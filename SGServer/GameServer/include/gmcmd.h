@@ -39,6 +39,9 @@
 #define GMC_GIVERES				(GMC_BASE+34)	// 给与一个未启用资源点
 #define GMC_AUTOBUILD			(GMC_BASE+35)	// 自动建造次数
 #define GMC_PAYBAG				(GMC_BASE+36)	// 礼包
+#define GMC_BUILDINGLEVEL		(GMC_BASE+37)	// 建筑等级
+#define GMC_STORY				(GMC_BASE+38)	// 打通副本
+#define GMC_PRESTIGE			(GMC_BASE+39)	// 威望
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

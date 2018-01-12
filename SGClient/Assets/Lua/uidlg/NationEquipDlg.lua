@@ -175,27 +175,28 @@ end
 function NationEquipDlgSetObj( kind, info )
 	local uiObj = m_uiContent.transform:GetChild( kind-1 )
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local uiShape = objs[0] ;
-	local uiStar = objs[1] ;
-	local uiName = objs[2] ;
-	local uiExp = objs[3] ;
-	local uiExpProgress = objs[4] ;
-	local uiLockShape = objs[5] ;
-	local uiLockDesc = objs[6] ;
-	local uiTimer = objs[7] ;
-	local uiMakeCost = objs[8] ;
-	local uiRemakeDesc = objs[9] ;
-	local uiRemakeProgress = objs[10] ;
-	local uiCost = objs[11] ;
-	local uiCostIcon = objs[12] ;
-	local uiCostNum = objs[13] ;
-	local uiMakeBtn = objs[14] ;
-	local uiUpgradeBtn = objs[15] ;
-	local uiUpgradeCritBtn = objs[16] ;
-	local uiRemakeBtn = objs[17] ;
-	local uiSpeedBtn = objs[18] ;
-	local uiGetIronBtn = objs[19] ;
-	local uiFullBtn = objs[20] ;
+	local uiShape = objs[0]
+	local uiStar = objs[1]
+	local uiName = objs[2]
+	local uiExp = objs[3]
+	local uiExpProgress = objs[4]
+	local uiLockShape = objs[5]
+	local uiLockDesc = objs[6]
+	local uiTimer = objs[7]
+	local uiMakeCost = objs[8]
+	local uiRemakeDesc = objs[9]
+	local uiRemakeProgress = objs[10]
+	local uiCost = objs[11]
+	local uiCostIcon = objs[12]
+	local uiCostNum = objs[13]
+	local uiMakeBtn = objs[14]
+	local uiUpgradeBtn = objs[15]
+	local uiUpgradeCritBtn = objs[16]
+	local uiRemakeBtn = objs[17]
+	local uiSpeedBtn = objs[18]
+	local uiGetIronBtn = objs[19]
+	local uiFullBtn = objs[20];
+	local uiTimerProgress = objs[21] ;
 	local EquipName = NationEquipName( kind )
 	
 	--判断此国器是否解锁
@@ -208,6 +209,7 @@ function NationEquipDlgSetObj( kind, info )
 		SetFalse( uiExp )
 		SetFalse( uiExpProgress )
 		SetFalse( uiTimer )
+		SetFalse( uiTimerProgress )
 		SetFalse( uiMakeCost )
 		SetFalse( uiRemakeDesc )
 		SetFalse( uiRemakeProgress )
@@ -246,6 +248,7 @@ function NationEquipDlgSetObj( kind, info )
 				SetTrue( uiMakeBtn )
 				SetFalse( uiSpeedBtn )
 				SetFalse( uiTimer )
+				SetFalse( uiTimerProgress )
 				
 				SetText( uiMakeCost, T(121).."x"..g_nequip_open[kind].silver )
 				SetControlID( uiMakeBtn, 100+kind )
@@ -255,6 +258,7 @@ function NationEquipDlgSetObj( kind, info )
 				SetFalse( uiMakeBtn )
 				SetTrue( uiSpeedBtn )
 				SetTrue( uiTimer )
+				SetTrue( uiTimerProgress )
 				
 				SetTimer( uiTimer, info.m_neq_sec, g_nequip_open[kind].sec, 1, T(1463) )
 				SetControlID( uiSpeedBtn, 400+kind )
@@ -277,6 +281,7 @@ function NationEquipDlgSetObj( kind, info )
 				SetFalse( uiExp )
 				SetFalse( uiExpProgress )
 				SetFalse( uiTimer )
+				SetFalse( uiTimerProgress )
 				SetFalse( uiMakeCost )
 				SetFalse( uiMakeBtn )
 				SetFalse( uiRemakeDesc )
@@ -295,6 +300,7 @@ function NationEquipDlgSetObj( kind, info )
 				SetTrue( uiCost )
 				
 				SetFalse( uiTimer )
+				SetFalse( uiTimerProgress )
 				SetFalse( uiMakeCost )
 				SetFalse( uiMakeBtn )
 				SetFalse( uiRemakeDesc )
@@ -349,6 +355,7 @@ function NationEquipDlgSetObj( kind, info )
 					SetTrue( uiRemakeBtn )
 					SetFalse( uiSpeedBtn )
 					SetFalse( uiTimer )
+					SetFalse( uiTimerProgress )
 					
 					SetText( uiRemakeDesc, F(1743,g_nequip_remake[kind][remake_star].maxlevel) )
 					SetControlID( uiRemakeBtn, 300+kind )
@@ -358,6 +365,7 @@ function NationEquipDlgSetObj( kind, info )
 					SetFalse( uiRemakeBtn )
 					SetTrue( uiSpeedBtn )
 					SetTrue( uiTimer )
+					SetTrue( uiTimerProgress )
 					
 					SetTimer( uiTimer, info.m_neq_sec, g_nequip_remake[kind][remake_star].sec, 1, T(1463) )
 					SetControlID( uiSpeedBtn, 500+kind )
@@ -517,7 +525,24 @@ function NationEquipDlgUpgrade( kind )
 		JumpRes( 4 )
 		return
 	end
+	if level >= GetPlayer().m_level then
+		AlertMsg( T(1767) )
+		return
+	end
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 2, kind );
+	
+	if m_recvValue[kind].m_neq_crit == 2 then
+		pop( "<color=#25c9ffff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+	elseif m_recvValue[kind].m_neq_crit == 4 then
+		pop( "<color=#03de27ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+	elseif m_recvValue[kind].m_neq_crit == 7 then
+		pop( "<color=#ffde00ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+	elseif m_recvValue[kind].m_neq_crit == 10 then
+		pop( "<color=#e80017ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+	else
+		pop( "<color=#f7f3bbff>"..F( 1771, g_nation_equip[kind][level].exp ).."</color>" )
+	end
+
 end
 
 -- 改造国器界面

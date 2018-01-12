@@ -144,6 +144,7 @@ int netsend_gotoasyn_S( int actor_index, char send_type, SLK_NetS_GotoAsyn *pVal
 int netsend_treasureactorlist_S( int actor_index, char send_type, SLK_NetS_TreasureActorList *pValue );
 int netsend_changeautobuild_S( int actor_index, char send_type, SLK_NetS_ChangeAutoBuild *pValue );
 int netsend_herovisitinfo_S( int actor_index, char send_type, SLK_NetS_HeroVisitInfo *pValue );
+int netsend_nationbase_S( int actor_index, char send_type, SLK_NetS_NationBase *pValue );
 int netsend_herovisitaward_S( int actor_index, char send_type, SLK_NetS_HeroVisitAward *pValue );
 int netsend_fightplay_S( int actor_index, char send_type, SLK_NetS_FightPlay *pValue );
 int netsend_storysweepresult_S( int actor_index, char send_type, SLK_NetS_StorySweepResult *pValue );
@@ -166,6 +167,9 @@ int netsend_buffchange_S( int actor_index, char send_type, SLK_NetS_BuffChange *
 int netsend_changeautoguard_S( int actor_index, char send_type, SLK_NetS_ChangeAutoGuard *pValue );
 int netsend_activitylist_S( int actor_index, char send_type, SLK_NetS_ActivityList *pValue );
 int netsend_nationequiplist_S( int actor_index, char send_type, SLK_NetS_NationEquipList *pValue );
+int netsend_nationinfo_S( int actor_index, char send_type, SLK_NetS_NationInfo *pValue );
+int netsend_nationtown_S( int actor_index, char send_type, SLK_NetS_NationTown *pValue );
+int netsend_nationtownlist_S( int actor_index, char send_type, SLK_NetS_NationTownList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

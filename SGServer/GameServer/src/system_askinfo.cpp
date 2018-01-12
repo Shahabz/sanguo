@@ -39,6 +39,7 @@
 #include "pay.h"
 #include "vip.h"
 #include "nation_equip.h"
+#include "nation.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -786,6 +787,32 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 4 )
 		{ // 加速
 			nation_equip_quick( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
+	case ASKINFO_NATION:
+		if ( pvalue[0] == 0 )
+		{
+			nation_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 国家建设
+			nation_build( actor_index );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 爵位晋升
+			nation_place_upgrade( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 国家城池
+			nation_town_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 重建信息
+			nation_town_sendinfo( actor_index, pvalue[1], 1 );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 修复
+			nation_town_repair( actor_index, pvalue[1] );
 		}
 		break;
 	default:

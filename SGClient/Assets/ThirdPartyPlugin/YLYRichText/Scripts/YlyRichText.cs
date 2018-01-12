@@ -44,13 +44,13 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 	[SerializeField, Tooltip("字体")]
 	static Font m_Font;
 	[SerializeField, Tooltip("字体大小")]
-	int m_FontSize = 28; //字体大小
+	int m_FontSize = 24; //字体大小
 	[SerializeField, Tooltip("行高")]
 	float m_LineHeght = 40; //行高
 	[SerializeField, Tooltip("行之间间隔")]
 	float m_LineSpacing = 0f; //行之间间隔
 	[SerializeField, Tooltip("字符之间的横向间隔")]
-	float m_OffCharX = 8; //字符之间的横向间隔;
+	float m_OffCharX = 0; //字符之间的横向间隔;
 	[SerializeField, Tooltip("最大字符数")]
 	int m_MaxChars = 1000; //最大字符数
 	[SerializeField, Tooltip("是否自定义宽度自动换行")]

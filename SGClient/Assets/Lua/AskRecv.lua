@@ -104,6 +104,11 @@ function RecvActorNotify(recvValue)
 		-- 洗练次数
 		elseif value[1] == 2 then
 			pop( T(120)..": "..T(1101).."x"..value[2] ) 
+		-- 爵位变化
+		elseif value[1] == 3 then
+			GetPlayer().m_place = value[2]
+			NationDlgChangePlace();
+			NationPlaceDlgRecv()
 		end
 	
 	-- 邮件	

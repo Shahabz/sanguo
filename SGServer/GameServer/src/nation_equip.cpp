@@ -105,6 +105,12 @@ int nation_equip_upgrade( int actor_index, int kind )
 	// 满级了
 	if ( level >= g_nationequip[kind].maxnum - 1 )
 		return -1;
+	// 不能超过主公等级
+	if ( level >= pCity->level )
+	{
+		actor_notify_alert( actor_index, 1767 );
+		return -1;
+	}
 
 	// 需要改造了
 	int star = g_nationequip[kind].config[level].remake_star;

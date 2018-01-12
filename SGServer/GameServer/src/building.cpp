@@ -1725,3 +1725,59 @@ int building_gm( City *pCity )
 
 	return 0;
 }
+
+// 建筑等级
+int building_level_gm( int city_index, int kind, int newlevel )
+{
+	CITY_CHECK_INDEX( city_index );
+	int level = 0;
+
+	if ( kind < BUILDING_Infantry )
+	{ // 普通建筑
+		Building *pBuilding = building_getptr( city_index, -1 );
+		if ( !pBuilding )
+			return -1;
+		level = pBuilding->level;
+		pBuilding->level = newlevel;
+		building_sendinfo( g_city[city_index].actor_index, kind );
+	}
+	else if ( kind < BUILDING_Silver )
+	{ // 兵营建筑
+		BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, -1 );
+		if ( !pBuilding )
+			return -1;
+		level = pBuilding->level;
+		pBuilding->level = newlevel;
+		building_sendinfo_barracks( g_city[city_index].actor_index, kind );
+	}
+	else if ( kind < BUILDING_Smithy )
+	{ // 资源建筑
+		for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+		{
+			if ( g_city[city_index].building_res[tmpi].kind != kind || g_city[city_index].building_res[tmpi].level <= 0 )
+				continue;
+			g_city[city_index].building_res[tmpi].level = newlevel;
+			building_sendinfo_res( g_city[city_index].actor_index, g_city[city_index].building[tmpi].kind );
+		}
+	}
+
+	// 仓库给予高级重建次数
+	if ( kind == BUILDING_StoreHouse )
+	{
+		g_city[city_index].rb_num += newlevel;
+	}
+	// 任务
+	quest_checkcomplete( g_city[city_index].actor_index );
+
+	// 通知客户端更新状态
+	building_action( g_city[city_index].actor_index, kind, -1, 1 );
+
+	city_battlepower_building_calc( &g_city[city_index] );
+	
+	// 检查提醒寻访
+	if ( kind == BUILDING_Main && (level + 1) == global.hero_visit_mainlevel )
+	{
+		hero_visit_snedflag( g_city[city_index].actor_index );
+	}
+	return 0;
+}

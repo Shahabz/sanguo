@@ -105,25 +105,31 @@ function MaterialGetDlgShow( itemkind )
 		m_nTabKind = { 120, 121, 122, 123 };
 		m_nContentKind = { { 101,102,103, -10000 }, { 104,105,106, -10000 },{ 107,108,109, -10000 }, { 110,111,112, -10000 }}
 		
-	elseif itemkind == 1 or itemkind == 11 or itemkind == 21 or itemkind == 31 then
+	elseif itemkind == 1 or itemkind == 11 or itemkind == 21 then -- 绿
 		SetText( m_uiText, T(775) );
-		m_nTabKind = { 1, 11, 21, 31 };
+		m_nTabKind = { 1, 11, 21 };
 		m_nContentKind = { { -1,81,91,92 }, { -11,81,91,92 },{ -21,81,91,92 }, { -31,81,91,92 }}
+		SetFalse( m_uiTabs.transform:GetChild(3).gameObject )
 		
-	elseif itemkind == 2 or itemkind == 12 or itemkind == 22 or itemkind == 32 then
+	elseif itemkind == 2 or itemkind == 12 or itemkind == 22 or itemkind == 32 then -- 金
 		SetText( m_uiText, T(776) );
 		m_nTabKind = { 2, 12, 22, 32 };
-		m_nContentKind = { { -1,83,93,94 }, { -11,83,93,94 },{ -21,83,93,94 }, { -31,83,93,94 }}
+		m_nContentKind = { { -2,83,93,94 }, { -12,83,93,94 },{ -22,83,93,94 }, { -32,83,93,94 }}
 		
-	elseif itemkind == 3 or itemkind == 13 or itemkind == 23 or itemkind == 33 then
+	elseif itemkind == 3 or itemkind == 13 or itemkind == 23 or itemkind == 33 then -- 红
 		SetText( m_uiText, T(777) );
 		m_nTabKind = { 3, 13, 23, 33 };
-		m_nContentKind = { { -1,85,95,96 }, { -11,85,95,96 },{ -21,85,95,96 }, { -31,85,95,96 }}
-		
+		m_nContentKind = { { -3,85,95,96 }, { -13,85,95,96 },{ -23,85,95,96 }, { -33,85,95,96 }}
+	
+	elseif itemkind == 4 or itemkind == 14 or itemkind == 24 or itemkind == 34 then -- 紫
+		SetText( m_uiText, T(777) );
+		m_nTabKind = { 4, 14, 24, 34 };
+		m_nContentKind = { { -4,97,95,96 }, { -14,97,95,96 },{ -24,97,95,96 }, { -34,97,95,96 }}	
 	end
 	
 	for i=1, #m_nTabKind do
 		local uiTab = m_uiTabs.transform:GetChild(i-1).gameObject;
+		SetTrue( uiTab )
 		SetControlID( uiTab, i )
 		if m_nTabKind[i] == itemkind then
 			MaterialGetDlgSelectTab( i )
@@ -250,5 +256,7 @@ function MaterialGetDlgBuy( itemkind )
         JumpToken();
 		return -1;
 	end
-	system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_BUY, itemkind, 1 );
+	MsgBox( F(1778, item_gettoken( itemkind ), item_getname( itemkind )), function() 
+		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_BUY, itemkind, 1 );
+	end )
 end

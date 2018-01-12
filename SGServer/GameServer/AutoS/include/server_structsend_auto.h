@@ -1147,6 +1147,7 @@ struct _slk_NetS_MapTownInfo {
 	int m_maxhp;	//城镇详情
 	char m_myask;	//城镇详情
 	short m_produce_num;	//城镇详情
+	short m_townid;	//城镇详情
 };
 typedef struct _slk_NetS_MapTownInfo SLK_NetS_MapTownInfo;	//城镇详情
 
@@ -1447,14 +1448,13 @@ struct _slk_NetS_HeroVisitInfo {
 };
 typedef struct _slk_NetS_HeroVisitInfo SLK_NetS_HeroVisitInfo;	//武将寻访信息
 
-struct _slk_NetS_NationInfo {
+struct _slk_NetS_NationBase {
 	char m_level;	//国家等级
-	int m_exp;	//国家进度
-	int m_exp_max;	//今天玩家建设免费
-	char m_buildfree;	//今天玩家建设免费
-	char m_buildnum;	//今天玩家建设次数
+	int m_exp;	//国家经验
+	char m_donate_num;	//今天玩家建设次数
+	int m_myrank;	//我的排名
 };
-typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
+typedef struct _slk_NetS_NationBase SLK_NetS_NationBase;	//国家信息
 
 struct _slk_NetS_HeroVisitAward {
 	short m_id[10];	//寻访获取的奖励id
@@ -1730,6 +1730,31 @@ struct _slk_NetS_NationEquipList {
 };
 typedef struct _slk_NetS_NationEquipList SLK_NetS_NationEquipList;	//国器列表
 
+struct _slk_NetS_NationInfo {
+	char m_level;	//国家信息
+	int m_exp;	//国家信息
+	char m_donate_num;	//国家信息
+	int m_myrank;	//国家信息
+	short m_notice_len;	//国家信息
+	char m_notice[512];	//国家信息
+	char m_kingname_len;	//国家信息
+	char m_kingname[32];	//国家信息
+};
+typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
+
+struct _slk_NetS_NationTown {
+	SLK_NetS_MapTownInfo m_info;	//国家城池
+	char m_path;	//国家城池
+};
+typedef struct _slk_NetS_NationTown SLK_NetS_NationTown;	//国家城池
+
+struct _slk_NetS_NationTownList {
+	char m_count;	//国家所属城镇列表
+	SLK_NetS_NationTown m_list[32];	//国家所属城镇列表
+	char m_op;	//国家所属城镇列表
+};
+typedef struct _slk_NetS_NationTownList SLK_NetS_NationTownList;	//国家城池列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1888,7 +1913,7 @@ int struct_NetS_TreasureActor_send( char **pptr, int *psize, SLK_NetS_TreasureAc
 int struct_NetS_TreasureActorList_send( char **pptr, int *psize, SLK_NetS_TreasureActorList *pValue );
 int struct_NetS_ChangeAutoBuild_send( char **pptr, int *psize, SLK_NetS_ChangeAutoBuild *pValue );
 int struct_NetS_HeroVisitInfo_send( char **pptr, int *psize, SLK_NetS_HeroVisitInfo *pValue );
-int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
+int struct_NetS_NationBase_send( char **pptr, int *psize, SLK_NetS_NationBase *pValue );
 int struct_NetS_HeroVisitAward_send( char **pptr, int *psize, SLK_NetS_HeroVisitAward *pValue );
 int struct_NetS_FightPlay_send( char **pptr, int *psize, SLK_NetS_FightPlay *pValue );
 int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySweepHero *pValue );
@@ -1918,5 +1943,8 @@ int struct_NetS_ChangeAutoGuard_send( char **pptr, int *psize, SLK_NetS_ChangeAu
 int struct_NetS_Activity_send( char **pptr, int *psize, SLK_NetS_Activity *pValue );
 int struct_NetS_ActivityList_send( char **pptr, int *psize, SLK_NetS_ActivityList *pValue );
 int struct_NetS_NationEquipList_send( char **pptr, int *psize, SLK_NetS_NationEquipList *pValue );
+int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
+int struct_NetS_NationTown_send( char **pptr, int *psize, SLK_NetS_NationTown *pValue );
+int struct_NetS_NationTownList_send( char **pptr, int *psize, SLK_NetS_NationTownList *pValue );
 
 #endif
