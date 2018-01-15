@@ -814,6 +814,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 修复
 			nation_town_repair( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 6 )
+		{ // 国家战争列表
+			nation_town_warlist( actor_index );
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 城池战争列表
+			nation_city_warlist( actor_index );
+		}
 		break;
 	default:
 		break;

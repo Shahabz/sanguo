@@ -239,6 +239,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_autoguard = buffer:ReadSByte();
 	recvValue.m_autoguardopen = buffer:ReadSByte();
 	recvValue.m_storyid = buffer:ReadInt();
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -2296,6 +2298,78 @@ function struct_NetS_NationTownList_recv( buffer )
 	for tmpi=1,recvValue.m_count,1 do
 		local tmpValue={};
 		tmpValue = struct_NetS_NationTown_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_op = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationWar_recv( buffer )
+	local recvValue = {};
+	recvValue.m_group_index = buffer:ReadInt();
+	recvValue.m_group_id = buffer:ReadInt();
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_t_nation = buffer:ReadSByte();
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_t_total = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_townid = buffer:ReadShort();
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_town_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationWarList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadShort();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationWar_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_op = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationCityWar_recv( buffer )
+	local recvValue = {};
+	recvValue.m_group_index = buffer:ReadInt();
+	recvValue.m_group_id = buffer:ReadInt();
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_t_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_t_level = buffer:ReadShort();
+	recvValue.m_name_length = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_length );
+	recvValue.m_t_name_length = buffer:ReadSByte();
+	recvValue.m_t_name = buffer:ReadStringWithLen( recvValue.m_t_name_length );
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_t_posx = buffer:ReadShort();
+	recvValue.m_t_posy = buffer:ReadShort();
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_t_actorid = buffer:ReadInt();
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_t_total = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_unit_index = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationCityWarList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationCityWar_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_op = buffer:ReadSByte();

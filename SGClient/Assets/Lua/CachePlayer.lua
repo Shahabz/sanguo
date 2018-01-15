@@ -32,6 +32,8 @@ function Player:Init()
 	self.m_actorid			=	0;	-- 角色编号
 	self.m_name				=	"";	-- 角色名称
 	self.m_nation			=	0;
+	self.m_posx				=	0;
+	self.m_posy				=	0;
 	self.m_shape			=	0;
 	self.m_level			=	0;
 	self.m_exp				=	0;
@@ -102,6 +104,8 @@ function Player:Set( recvValue )
 	self.m_actorid			=	recvValue.m_actorid;
 	self.m_name				=	recvValue.m_name;
 	self.m_nation			=	recvValue.m_nation;
+	self.m_posx				=	recvValue.m_posx;
+	self.m_posy				=	recvValue.m_posy;
 	self.m_shape			=	recvValue.m_shape;
 	self.m_level			=	recvValue.m_level;
 	self.m_exp				=	recvValue.m_exp;

@@ -85,7 +85,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		--国家战争
 		elseif nControlID == 6 then
-		
+			NationWarDlgShow()
+			
 		--国家名将
 		elseif nControlID == 7 then
 		

@@ -121,10 +121,14 @@ int armygroup_loadcb( int group_index )
 		{
 			// 添加被攻击列表
 			city_underfire_groupadd( pTargetCity, group_index );
-	
+
 			// 城战状态
 			city_setstate( pTargetCity, CITY_STATE_ARMYGROUP );
 		}
+
+		// 通知这个玩家的国家
+		nation_city_war_add( g_armygroup[group_index].from_nation, group_index );
+		nation_city_war_add( g_armygroup[group_index].to_nation, group_index );
 	}
 	else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
 	{ // 目的是城镇
@@ -298,6 +302,10 @@ int armygroup_create( char type, char from_type, int from_id, char to_type, int 
 			// 城战状态
 			city_setstate( pTargetCity, CITY_STATE_ARMYGROUP );
 		}
+
+		// 通知这个玩家的国家
+		nation_city_war_add( g_armygroup[group_index].from_nation, group_index );
+		nation_city_war_add( g_armygroup[group_index].to_nation, group_index );
 	}
 	else if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
 	{ // 目的是城镇
@@ -314,8 +322,8 @@ int armygroup_create( char type, char from_type, int from_id, char to_type, int 
 		nation_town_war_add( g_armygroup[group_index].to_nation, group_index );
 
 		// 通知客户端UI更新
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION+g_armygroup[group_index].from_nation, UI_UPDATE_NATIONFIGHT );
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION+g_armygroup[group_index].to_nation, UI_UPDATE_NATIONFIGHT );
+		ui_update( 0, SENDTYPE_NATION+g_armygroup[group_index].from_nation, UI_UPDATE_NATIONFIGHT );
+		ui_update( 0, SENDTYPE_NATION+g_armygroup[group_index].to_nation, UI_UPDATE_NATIONFIGHT );
 	}
 
 	g_armygroup_count += 1;
@@ -339,6 +347,10 @@ void armygroup_delete( int group_index )
 		{ // 删除被攻击列表
 			city_underfire_groupdel( &g_city[city_index], group_index );
 		}
+
+		// 从国家信息中删除
+		nation_city_war_del( g_armygroup[group_index].from_nation, group_index );
+		nation_city_war_del( g_armygroup[group_index].to_nation, group_index );
 	}
 	else if( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
 	{
@@ -350,8 +362,8 @@ void armygroup_delete( int group_index )
 		nation_town_war_del( g_armygroup[group_index].to_nation, group_index );
 
 		// 通知客户端UI更新
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_NATIONFIGHT );
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_NATIONFIGHT );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_NATIONFIGHT );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_NATIONFIGHT );
 	}
 	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 	{
@@ -453,8 +465,8 @@ int armygroup_addarmy( int army_index )
 	if ( index >= 0 )
 	{
 		// 通知客户端UI更新
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_FIGHTINFO );
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_FIGHTINFO );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_FIGHTINFO );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_FIGHTINFO );
 	}
 	return -1;
 }
@@ -511,8 +523,8 @@ void armygroup_delarmy( int army_index )
 	if ( index >= 0 )
 	{
 		// 通知客户端UI更新
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_FIGHTINFO );
-		ui_update( 0, SENDTYPE_WORLDMAP_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_FIGHTINFO );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_FIGHTINFO );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_FIGHTINFO );
 	}
 }
 

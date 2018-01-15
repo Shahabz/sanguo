@@ -1891,3 +1891,27 @@ function proc_nationtownlist_C( recvValue )
 	end
 end
 
+-- m_count=0,m_list={m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_total=0,m_t_total=0,m_type=0,m_townid=0,m_unit_index=0,[m_count]},m_op=0,
+function proc_nationwarlist_C( recvValue )
+	-- process.
+	if recvValue.m_op == 1 then
+		NationWarDlgNationRecvBegin()
+	elseif recvValue.m_op == 2 then
+		NationWarDlgNationRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		NationWarDlgNationRecvEnd()
+	end
+end
+
+-- m_count=0,m_list={m_group_index=0,m_group_id=0,m_attack=0,m_statetime=0,m_stateduration=0,m_nation=0,m_t_nation=0,m_level=0,m_t_level=0,m_name_length=0,m_name="[m_name_length]",m_t_name_length=0,m_t_name="[m_t_name_length]",m_posx=0,m_posy=0,m_t_posx=0,m_t_posy=0,m_actorid=0,m_t_actorid=0,m_total=0,m_t_total=0,m_type=0,m_unit_index=0,[m_count]},m_op=0,
+function proc_nationcitywarlist_C( recvValue )
+	-- process.
+	if recvValue.m_op == 1 then
+		NationWarDlgCityRecvBegin()
+	elseif recvValue.m_op == 2 then
+		NationWarDlgCityRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		NationWarDlgCityRecvEnd()
+	end
+end
+

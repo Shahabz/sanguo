@@ -297,6 +297,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguard, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_autoguardopen, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	return 0;
 }
 
@@ -2560,6 +2562,84 @@ int struct_NetS_NationTownList_send( char **pptr, int *psize, SLK_NetS_NationTow
 	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
 	{
 		struct_NetS_NationTown_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationWar_send( char **pptr, int *psize, SLK_NetS_NationWar *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_total, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_town_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationWarList_send( char **pptr, int *psize, SLK_NetS_NationWarList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationWar_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationCityWar_send( char **pptr, int *psize, SLK_NetS_NationCityWar *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_length, (*psize) );
+	if( pValue->m_name_length > 0 && pValue->m_name_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_length*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_t_name_length, (*psize) );
+	if( pValue->m_t_name_length > 0 && pValue->m_t_name_length <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_t_name, pValue->m_t_name_length*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_t_posy, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_t_total, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationCityWarList_send( char **pptr, int *psize, SLK_NetS_NationCityWarList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationCityWar_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	return 0;

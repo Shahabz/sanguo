@@ -60,4 +60,7 @@ int nation_town_sendlist( int actor_index );
 // 修复
 int nation_town_repair( int actor_index, int townid );
 
+// 国家战争列表
+int nation_town_warlist( int actor_index );
+int nation_city_warlist( int actor_index );
 #endif

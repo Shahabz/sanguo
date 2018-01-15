@@ -3146,9 +3146,6 @@ int city_underfire_groupadd( City *pCity, int group_index )
 		return -1;
 	pCity->underfire_groupindex[index] = group_index;
 
-	// 通知这个玩家的国家
-	nation_city_war_add( pCity->nation, group_index );
-
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
@@ -3196,9 +3193,6 @@ int city_underfire_groupdel( City *pCity, int group_index )
 
 	if ( tmpi >= CITY_UNDERFIRE_GROUP_MAX )
 		return -1;
-
-	// 通知这个玩家的国家
-	nation_city_war_del( pCity->nation, group_index );
 
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )

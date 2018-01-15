@@ -489,6 +489,8 @@ int actor_getinfo( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
+		info.m_posx = pCity->posx;
+		info.m_posy = pCity->posy;
 		info.m_exp = pCity->exp;
 		info.m_exp_max = g_upgradeinfo[pCity->level].exp;
 		info.m_viplevel =  pCity->viplevel;

@@ -189,6 +189,8 @@ struct _slk_NetS_ActorInfo {
 	char m_autoguard;	//服务器发送玩家基本信息-城防补充
 	char m_autoguardopen;	//服务器发送玩家基本信息-城防补充
 	int m_storyid;	//服务器发送玩家基本信息-副本进度
+	short m_posx;	//服务器发送玩家基本信息-副本进度
+	short m_posy;	//服务器发送玩家基本信息-副本进度
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1755,6 +1757,64 @@ struct _slk_NetS_NationTownList {
 };
 typedef struct _slk_NetS_NationTownList SLK_NetS_NationTownList;	//国家城池列表
 
+struct _slk_NetS_NationWar {
+	int m_group_index;	//国家界面-国战列表-集结索引
+	int m_group_id;	//国家界面-国战列表-集结id
+	char m_attack;	//国家界面-国战列表--1攻击2防御
+	int m_statetime;	//国家界面-国战列表--倒计时
+	int m_stateduration;	//国家界面-国战列表--倒计时
+	char m_nation;	//国家界面-国战列表-
+	char m_t_nation;	//国家界面-国战列表-
+	int m_total;	//国家界面-国战列表-
+	int m_t_total;	//国家界面-国战列表-
+	char m_type;	//国家界面-国战列表-
+	short m_townid;	//国家界面-国战列表-
+	int m_unit_index;	//国家界面-国战列表-
+	char m_town_nation;	//国家界面-国战列表-
+};
+typedef struct _slk_NetS_NationWar SLK_NetS_NationWar;	//国家界面-国家战争
+
+struct _slk_NetS_NationWarList {
+	short m_count;	//国家界面-国家战争列表
+	SLK_NetS_NationWar m_list[32];	//国家界面-国家战争列表
+	char m_op;	//国家界面-国家战争列表
+};
+typedef struct _slk_NetS_NationWarList SLK_NetS_NationWarList;	//国家界面-国家战争列表
+
+struct _slk_NetS_NationCityWar {
+	int m_group_index;	//国家界面-城战信息-集结索引
+	int m_group_id;	//国家界面-城战信息-集结id
+	char m_attack;	//城战信息-1攻击2防御
+	int m_statetime;	//国家界面-城战信息-倒计时
+	int m_stateduration;	//国家界面-城战信息-倒计时
+	char m_nation;	//国家界面-城战信息
+	char m_t_nation;	//国家界面-城战信息
+	short m_level;	//国家界面-城战信息
+	short m_t_level;	//国家界面-城战信息
+	char m_name_length;	//国家界面-城战信息
+	char m_name[32];	//国家界面-城战信息
+	char m_t_name_length;	//国家界面-城战信息
+	char m_t_name[32];	//国家界面-城战信息
+	short m_posx;	//国家界面-城战信息
+	short m_posy;	//国家界面-城战信息
+	short m_t_posx;	//国家界面-城战信息
+	short m_t_posy;	//国家界面-城战信息
+	int m_actorid;	//国家界面-城战信息
+	int m_t_actorid;	//国家界面-城战信息
+	int m_total;	//国家界面-城战信息
+	int m_t_total;	//国家界面-城战信息
+	char m_type;	//国家界面-城战信息
+	int m_unit_index;	//国家界面-城战信息
+};
+typedef struct _slk_NetS_NationCityWar SLK_NetS_NationCityWar;	//国家界面-城池战争
+
+struct _slk_NetS_NationCityWarList {
+	char m_count;	//国家界面-城战信息列表
+	SLK_NetS_NationCityWar m_list[16];	//国家界面-城战信息列表
+	char m_op;	//国家界面-城战信息列表
+};
+typedef struct _slk_NetS_NationCityWarList SLK_NetS_NationCityWarList;	//国家界面-城池战争
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -1946,5 +2006,9 @@ int struct_NetS_NationEquipList_send( char **pptr, int *psize, SLK_NetS_NationEq
 int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *pValue );
 int struct_NetS_NationTown_send( char **pptr, int *psize, SLK_NetS_NationTown *pValue );
 int struct_NetS_NationTownList_send( char **pptr, int *psize, SLK_NetS_NationTownList *pValue );
+int struct_NetS_NationWar_send( char **pptr, int *psize, SLK_NetS_NationWar *pValue );
+int struct_NetS_NationWarList_send( char **pptr, int *psize, SLK_NetS_NationWarList *pValue );
+int struct_NetS_NationCityWar_send( char **pptr, int *psize, SLK_NetS_NationCityWar *pValue );
+int struct_NetS_NationCityWarList_send( char **pptr, int *psize, SLK_NetS_NationCityWarList *pValue );
 
 #endif

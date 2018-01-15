@@ -238,6 +238,10 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetText( m_uiMarchTime1, T(1399) )
 		SetText( m_uiMarchTime2, "" )
 	else
+		if WorldMap.m_nMyCityPosx <= 0 or WorldMap.m_nMyCityPosy <=0 then
+			WorldMap.m_nMyCityPosx = GetPlayer().m_posx
+			WorldMap.m_nMyCityPosy = GetPlayer().m_posy
+		end
 		m_marchtime = WorldMap.MarchTime( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, posx, posy )
 		SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
 		SetText( m_uiMarchTime2, secnum(m_marchtime) )

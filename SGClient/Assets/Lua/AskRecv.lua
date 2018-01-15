@@ -255,8 +255,14 @@ function dialogupdate_recv( ui )
 	if ui == UI_UPDATE_NATIONFIGHT then
 		MapMainDlgNationLayerUpdate()
 		MapNationFightDlgUpdate()
+		NationWarDlgNationUpdate()
+		NationWarDlgCityUpdate()
+		
 	elseif ui == UI_UPDATE_FIGHTINFO then
 		MapNationFightDlgUpdate()
+		MapArmyGroupDlgUpdate()
+		NationWarDlgNationUpdate()
+		NationWarDlgCityUpdate()
 	else
 	end
 end

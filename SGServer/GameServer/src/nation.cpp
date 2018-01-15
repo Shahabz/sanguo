@@ -30,6 +30,7 @@
 #include "map_town.h"
 #include "mail.h"
 #include "city.h"
+#include "army_group.h"
 #include "nation.h"
 
 extern SConfig g_Config;
@@ -578,5 +579,200 @@ int nation_town_rebuild( int actor_index, int townid )
 {
 	map_town_ask_owner( actor_index, townid );
 	nation_town_sendinfo( actor_index, townid, 0 );
+	return 0;
+}
+
+// 国家战争列表
+int nation_town_warlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation;
+	SLK_NetS_NationWarList pValue = { 0 };
+	// 发送开始
+	pValue.m_op = 1;
+	netsend_nationwarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 发送过程
+	pValue.m_op = 2;
+	for ( int tmpi = 0; tmpi < NATION_TOWN_WAR_MAX; tmpi++ )
+	{
+		int group_index = g_nation[nation].town_war_index[tmpi];
+		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			continue;
+		if ( g_armygroup[group_index].id <= 0 )
+			continue;
+		if ( g_armygroup[group_index].to_type != MAPUNIT_TYPE_TOWN )
+			continue;
+		int townid = g_armygroup[group_index].to_id;
+		if ( townid <= 0 || townid >= g_map_town_maxcount )
+			continue;
+
+		if ( nation == g_map_town[townid].nation )
+		{ // 我看的据点属于我的国家
+
+			// 那么我属于防御方
+			pValue.m_list[pValue.m_count].m_attack = 2;
+			pValue.m_list[pValue.m_count].m_nation = g_map_town[townid].nation;
+			pValue.m_list[pValue.m_count].m_total = armygroup_to_totals( group_index );
+
+			// 攻击方信息
+			pValue.m_list[pValue.m_count].m_t_nation = g_armygroup[group_index].from_nation;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( group_index );
+		}
+		else if ( nation == g_armygroup[group_index].from_nation )
+		{ // 不是我国家的据点, 看看我是不是攻击方的
+
+			// 那么我属于攻击方
+			pValue.m_list[pValue.m_count].m_attack = 1;
+			pValue.m_list[pValue.m_count].m_nation = pCity->nation;
+			pValue.m_list[pValue.m_count].m_total = armygroup_from_totals( group_index );
+
+			pValue.m_list[pValue.m_count].m_t_nation = g_armygroup[group_index].to_nation;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( group_index );
+		}
+		else
+		{ // 第三方
+			continue;
+		}
+
+		pValue.m_list[pValue.m_count].m_group_index = group_index;
+		pValue.m_list[pValue.m_count].m_group_id = g_armygroup[group_index].id;
+		pValue.m_list[pValue.m_count].m_statetime = g_armygroup[group_index].statetime;
+		pValue.m_list[pValue.m_count].m_stateduration = g_armygroup[group_index].stateduration;
+		pValue.m_list[pValue.m_count].m_type = g_armygroup[group_index].type;
+		pValue.m_list[pValue.m_count].m_townid = townid;
+		pValue.m_list[pValue.m_count].m_town_nation = g_map_town[townid].nation;
+		pValue.m_list[pValue.m_count].m_unit_index = g_map_town[townid].unit_index;
+		pValue.m_count += 1;
+		if ( pValue.m_count > 32 )
+		{
+			pValue.m_op = 1;
+			netsend_nationwarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count = 0;
+		}
+	}
+
+	if ( pValue.m_count > 0 )
+	{
+		netsend_nationwarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+
+	pValue.m_op = 3;
+	pValue.m_count = 0;
+	netsend_nationwarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 国家城池战争列表
+int nation_city_warlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	char nation = pCity->nation;
+	SLK_NetS_NationCityWarList pValue = { 0 };
+	// 发送开始
+	pValue.m_op = 1;
+	netsend_nationcitywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	for ( int tmpi = 0; tmpi < NATION_CITY_WAR_MAX; tmpi++ )
+	{
+		int group_index = g_nation[nation].city_war_index[tmpi];
+		if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+			continue;
+		if ( g_armygroup[group_index].id <= 0 )
+			continue;
+		if ( g_armygroup[group_index].from_type != MAPUNIT_TYPE_CITY || g_armygroup[group_index].to_type != MAPUNIT_TYPE_CITY )
+			continue;
+
+		// 攻击方玩家
+		City *pAtkCity = city_indexptr( g_armygroup[group_index].from_index );
+		if ( !pAtkCity )
+			continue;
+
+		// 防御方玩家
+		City *pDefCity = city_indexptr( g_armygroup[group_index].to_index );
+		if ( !pDefCity )
+			continue;
+
+		// 我既不是攻击国也不是防御国
+		if ( pCity->nation != pAtkCity->nation && pCity->nation != pDefCity->nation )
+			continue;
+
+		if ( pCity->nation == pAtkCity->nation )
+		{ // 我属于攻击方
+			pValue.m_list[pValue.m_count].m_attack = 1;
+
+			pValue.m_list[pValue.m_count].m_nation = pAtkCity->nation;
+			pValue.m_list[pValue.m_count].m_level = city_mainlevel( pAtkCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_name, pAtkCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_name_length = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_posx = pAtkCity->posx;
+			pValue.m_list[pValue.m_count].m_posy = pAtkCity->posy;
+			pValue.m_list[pValue.m_count].m_actorid = pAtkCity->actorid;
+			pValue.m_list[pValue.m_count].m_total = armygroup_from_totals( tmpi );
+
+			pValue.m_list[pValue.m_count].m_t_nation = pDefCity->nation;
+			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pDefCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_t_name, pDefCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_t_name_length = strlen( pValue.m_list[pValue.m_count].m_t_name );
+			pValue.m_list[pValue.m_count].m_t_posx = pDefCity->posx;
+			pValue.m_list[pValue.m_count].m_t_posy = pDefCity->posy;
+			pValue.m_list[pValue.m_count].m_t_actorid = pDefCity->actorid;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_to_totals( tmpi );
+		}
+		else
+		{ // 我属于防御方
+			pValue.m_list[pValue.m_count].m_attack = 2;
+
+			pValue.m_list[pValue.m_count].m_nation = pDefCity->nation;
+			pValue.m_list[pValue.m_count].m_level = city_mainlevel( pDefCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_name, pDefCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_name_length = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_posx = pDefCity->posx;
+			pValue.m_list[pValue.m_count].m_posy = pDefCity->posy;
+			pValue.m_list[pValue.m_count].m_actorid = pDefCity->actorid;
+			pValue.m_list[pValue.m_count].m_total = armygroup_to_totals( tmpi );
+
+			pValue.m_list[pValue.m_count].m_t_nation = pAtkCity->nation;
+			pValue.m_list[pValue.m_count].m_t_level = city_mainlevel( pAtkCity->index );
+			strncpy( pValue.m_list[pValue.m_count].m_t_name, pAtkCity->name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_t_name_length = strlen( pValue.m_list[pValue.m_count].m_t_name );
+			pValue.m_list[pValue.m_count].m_t_posx = pAtkCity->posx;
+			pValue.m_list[pValue.m_count].m_t_posy = pAtkCity->posy;
+			pValue.m_list[pValue.m_count].m_t_actorid = pAtkCity->actorid;
+			pValue.m_list[pValue.m_count].m_t_total = armygroup_from_totals( tmpi );
+		}
+
+		pValue.m_list[pValue.m_count].m_group_index = tmpi;
+		pValue.m_list[pValue.m_count].m_group_id = g_armygroup[tmpi].id;
+		pValue.m_list[pValue.m_count].m_statetime = g_armygroup[tmpi].statetime;
+		pValue.m_list[pValue.m_count].m_stateduration = g_armygroup[tmpi].stateduration;
+		pValue.m_list[pValue.m_count].m_type = g_armygroup[tmpi].type;
+		pValue.m_list[pValue.m_count].m_unit_index = pDefCity->unit_index;
+
+		pValue.m_count += 1;
+		if ( pValue.m_count >= 12 )
+		{
+			pValue.m_op = 2;
+			netsend_nationcitywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+			pValue.m_count = 0;
+		}
+	}
+
+	if ( pValue.m_count > 0 )
+	{
+		pValue.m_op = 2;
+		netsend_nationcitywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		pValue.m_count = 0;
+	}
+
+	pValue.m_op = 3;
+	pValue.m_count = 0;
+	netsend_nationcitywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
