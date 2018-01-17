@@ -530,6 +530,16 @@ int global_init()
 			global.nation_quest_timer[1] = atoi( row[1] );
 		else if ( id == 185 )
 			global.nation_quest_timer[2] = atoi( row[1] );
+		else if ( id == 186 )
+			global.nation_rank_vote[0] = atoi( row[1] );
+		else if ( id == 187 )
+			global.nation_rank_vote[1] = atoi( row[1] );
+		else if ( id == 188 )
+			global.nation_rank_vote[2] = atoi( row[1] );
+		else if ( id == 189 )
+			global.nation_rank_vote[3] = atoi( row[1] );
+		else if ( id == 190 )
+			global.nation_rank_vote[4] = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

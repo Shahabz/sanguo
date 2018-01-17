@@ -130,6 +130,9 @@ struct _city {
 				char atgu_op;	//城防补充是否开启
 				short nation_qv[3];	//国家任务数值
 				short nation_rankv[3];	//国家每周的排行榜数值
+				short vote;	//选票数
+				int ballot;	//被投票数
+				short tokenballot;	//元宝拉票票数
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

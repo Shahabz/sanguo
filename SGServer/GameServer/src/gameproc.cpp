@@ -946,6 +946,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 118 );
 
+	// 国家荣誉排行榜
+	if ( nation_rank_calc() < 0 )
+	{
+		printf_msg( "nation_rank_calc Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 118 );
+
 	// 数据库多线程启动
 	if ( dbwork_start() >= 0 )
 		printf_msg( "dbwork Module ready!" );
@@ -1160,6 +1169,12 @@ int process_oclock_process( int hour )
 		paycard_give();
 		// 刷新国家荣誉任务
 		nation_mission_update();
+
+		// 刷新国家荣誉排行榜
+		if ( system_getweek() == 5 )
+		{
+			nation_rank_update();
+		}
 	}
 	else if ( hour == 1 )
 	{

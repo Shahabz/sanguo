@@ -1517,6 +1517,33 @@ int city_change_equipwash( int city_index, int value, short path )
 	return 0;
 }
 
+// ѡƱ
+int city_changevote( int city_index, int value, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].vote > SHRT_MAX - value )
+		g_city[city_index].vote = SHRT_MAX;
+	else
+		g_city[city_index].vote += value;
+	if ( g_city[city_index].vote < 0 )
+		g_city[city_index].vote = 0;
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
+// ��ѡƱ
+int city_changeballot( int city_index, int value, int actorid, short path )
+{
+	CITY_CHECK_INDEX( city_index );
+	if ( value > 0 && g_city[city_index].ballot > INT_MAX - value )
+		g_city[city_index].ballot = INT_MAX;
+	else
+		g_city[city_index].ballot += value;
+	if ( g_city[city_index].ballot < 0 )
+		g_city[city_index].ballot = 0;
+	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
+	return 0;
+}
+
 CityGuardInfoConfig *city_guard_config( int monsterid, int color )
 {
 	if ( monsterid <= 0 || monsterid >= g_cityguardinfo_maxnum )

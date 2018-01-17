@@ -12,6 +12,7 @@ local m_uiRankScroll = nil; --UnityEngine.GameObject
 local m_uiRankContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Mission = nil; --UnityEngine.GameObject
 local m_uiAwardInfo = nil; --UnityEngine.GameObject
+local m_uiWarn = nil; --UnityEngine.GameObject
 
 local m_MissionRecvValue = nil
 local m_MissionPage = 0;
@@ -90,6 +91,7 @@ function NationHonorDlgOnAwake( gameObject )
 	m_uiRankContent = objs[7];
 	m_uiUIP_Mission = objs[8];
 	m_uiAwardInfo = objs[9];
+	m_uiWarn = objs[10];
 end
 
 -- 界面初始化时调用
@@ -156,16 +158,19 @@ function NationHonorDlgMissionCreate( index, scrollPage, info )
 	
 	-- 已经领取
 	if info.m_isget == 1 then
+		SetFalse( uiAwardEffect )
 		SetTrue( uiWarn )
 		SetText( uiWarn.transform:Find("Text"), T(1109) )
 		SetControlID( uiAwardButton, 100+index )
 		
 	-- 目标达成
 	elseif info.m_value[1] >= info.m_needvalue[1] and info.m_value[2] >= info.m_needvalue[2] and info.m_value[3] >= info.m_needvalue[3] then
+		SetTrue( uiAwardEffect )
 		SetTrue( uiWarn )
 		SetText( uiWarn.transform:Find("Text"), T(1801) )
 		SetControlID( uiAwardButton, 200+index )
 	else
+		SetFalse( uiAwardEffect )
 		SetFalse( uiWarn )
 		SetControlID( uiAwardButton, 100+index )
 	end
@@ -249,4 +254,54 @@ end
 -- 获取奖励
 function NationHonorDlgMissionAwardGet( index )
 	system_askinfo( ASKINFO_NATION, "", 11, index )
+end
+
+-- 排行榜接收
+-- m_buildrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},m_cityrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},m_townrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},
+function NationHonorDlgRankRecv( recvValue )
+	SetText( m_uiWarn, F(1810, recvValue.m_vote) )
+	local title ={ 1803, 1804, 1802 }
+	local titlenum ={ 1807, 1808, 1806 }
+	local uiObj = {}
+	local uiList = {}
+	for i=0,2,1 do	
+		uiObj[i] = m_uiRankContent.transform:GetChild(i)
+		SetText( uiObj[i].transform:Find("Title/TitleText"), T(title[i+1]) )
+		
+		uiList[i] = uiObj[i].transform:Find("List")
+		local uiTitle = uiList[i].transform:GetChild(0);
+		SetText( uiTitle.transform:Find("Rank"), T(1906) )
+		SetText( uiTitle.transform:Find("Name"), T(1805) )
+		SetText( uiTitle.transform:Find("Num"), T(titlenum[i+1]) )
+		SetText( uiTitle.transform:Find("Award"), T(1809) )
+	end
+	for i=1, 5, 1 do
+		NationHonorDlgRankCreate( uiList[0], i, recvValue.m_cityrank[i] )
+	end
+	for i=1, 5, 1 do
+		NationHonorDlgRankCreate( uiList[1], i, recvValue.m_townrank[i] )
+	end
+	for i=1, 5, 1 do
+		NationHonorDlgRankCreate( uiList[2], i, recvValue.m_buildrank[i] )
+	end
+end
+
+-- 创建数据
+function NationHonorDlgRankCreate( uiList, index, info )
+	local uiRow = uiList.transform:GetChild(index);
+	SetText( uiRow.transform:Find("Rank"), index )
+	SetText( uiRow.transform:Find("Name"), info.m_name )
+	SetText( uiRow.transform:Find("Num"), info.m_value )
+	
+	if index == 1 then
+		SetText( uiRow.transform:Find("Award"), global.nation_rank_vote1 )
+	elseif index == 2 then
+		SetText( uiRow.transform:Find("Award"), global.nation_rank_vote2 )
+	elseif index == 3 then
+		SetText( uiRow.transform:Find("Award"), global.nation_rank_vote3 )
+	elseif index == 4 then
+		SetText( uiRow.transform:Find("Award"), global.nation_rank_vote4 )
+	elseif index == 5 then
+		SetText( uiRow.transform:Find("Award"), global.nation_rank_vote5 )
+	end
 end

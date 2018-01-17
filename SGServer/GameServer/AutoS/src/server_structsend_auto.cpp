@@ -2698,3 +2698,34 @@ int struct_NetS_NationMissionList_send( char **pptr, int *psize, SLK_NetS_Nation
 	return 0;
 }
 
+int struct_NetS_NationRankMember_send( char **pptr, int *psize, SLK_NetS_NationRankMember *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_name_len, (*psize) );
+	if( pValue->m_name_len > 0 && pValue->m_name_len <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_len*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationRankList_send( char **pptr, int *psize, SLK_NetS_NationRankList *pValue )
+{
+	int tmpi = 0;
+
+	for( tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		struct_NetS_NationRankMember_send( pptr, psize, &pValue->m_buildrank[tmpi] );
+	}
+	for( tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		struct_NetS_NationRankMember_send( pptr, psize, &pValue->m_cityrank[tmpi] );
+	}
+	for( tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		struct_NetS_NationRankMember_send( pptr, psize, &pValue->m_townrank[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_vote, (*psize) );
+	return 0;
+}
+

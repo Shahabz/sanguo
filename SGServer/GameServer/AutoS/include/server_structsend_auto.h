@@ -1850,6 +1850,21 @@ struct _slk_NetS_NationMissionList {
 };
 typedef struct _slk_NetS_NationMissionList SLK_NetS_NationMissionList;	//国家荣誉任务列表
 
+struct _slk_NetS_NationRankMember {
+	char m_name_len;	//国家荣誉排行榜成员
+	char m_name[32];	//国家荣誉排行榜成员
+	int m_value;	//国家荣誉排行榜成员
+};
+typedef struct _slk_NetS_NationRankMember SLK_NetS_NationRankMember;	//国家荣誉排行榜
+
+struct _slk_NetS_NationRankList {
+	SLK_NetS_NationRankMember m_buildrank[5];	//国家荣誉排行榜
+	SLK_NetS_NationRankMember m_cityrank[5];	//国家荣誉排行榜
+	SLK_NetS_NationRankMember m_townrank[5];	//国家荣誉排行榜
+	short m_vote;	//国家荣誉排行榜
+};
+typedef struct _slk_NetS_NationRankList SLK_NetS_NationRankList;	//国家荣誉排行榜
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2049,5 +2064,7 @@ int struct_NetS_NationQuest_send( char **pptr, int *psize, SLK_NetS_NationQuest 
 int struct_NetS_NationQuestList_send( char **pptr, int *psize, SLK_NetS_NationQuestList *pValue );
 int struct_NetS_NationMission_send( char **pptr, int *psize, SLK_NetS_NationMission *pValue );
 int struct_NetS_NationMissionList_send( char **pptr, int *psize, SLK_NetS_NationMissionList *pValue );
+int struct_NetS_NationRankMember_send( char **pptr, int *psize, SLK_NetS_NationRankMember *pValue );
+int struct_NetS_NationRankList_send( char **pptr, int *psize, SLK_NetS_NationRankList *pValue );
 
 #endif

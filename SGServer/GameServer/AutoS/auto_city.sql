@@ -122,5 +122,8 @@ CREATE TABLE `city` (
   `atgu_op` tinyint(3) NOT NULL DEFAULT '0' COMMENT '城防补充是否开启',
   `nation_qv` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务数值',
   `nation_rankv` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家每周的排行榜数值',
+  `vote` smallint(6) NOT NULL DEFAULT '0' COMMENT '选票数',
+  `ballot` int(11) NOT NULL DEFAULT '0' COMMENT '被投票数',
+  `tokenballot` smallint(6) NOT NULL DEFAULT '0' COMMENT '元宝拉票票数',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

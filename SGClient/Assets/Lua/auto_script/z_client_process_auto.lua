@@ -1927,3 +1927,9 @@ function proc_nationmissionlist_C( recvValue )
 	NationHonorDlgMissionRecv( recvValue )
 end
 
+-- m_buildrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},m_cityrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},m_townrank={m_name_len=0,m_name="[m_name_len]",m_value=0,[5]},
+function proc_nationranklist_C( recvValue )
+	-- process.
+	NationHonorDlgRankRecv( recvValue )
+end
+

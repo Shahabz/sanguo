@@ -2449,3 +2449,35 @@ function struct_NetS_NationMissionList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_NationRankMember_recv( buffer )
+	local recvValue = {};
+	recvValue.m_name_len = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_len );
+	recvValue.m_value = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationRankList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_buildrank = {};
+	for tmpi=1,5,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationRankMember_recv( buffer );
+		table.insert( recvValue.m_buildrank, tmpValue );
+	end
+	recvValue.m_cityrank = {};
+	for tmpi=1,5,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationRankMember_recv( buffer );
+		table.insert( recvValue.m_cityrank, tmpValue );
+	end
+	recvValue.m_townrank = {};
+	for tmpi=1,5,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationRankMember_recv( buffer );
+		table.insert( recvValue.m_townrank, tmpValue );
+	end
+	recvValue.m_vote = buffer:ReadShort();
+	return recvValue;
+end
+

@@ -54,7 +54,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY )
+	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK )
 	{
 		actorid = 0;
 	}
@@ -482,6 +482,8 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			nation_mission_addvalue( pCity->nation, pValue[0], pValue[1] );
+			// 国家荣誉排行
+			nation_rank_addvalue( pCity, pValue[0], pValue[1] );
 		}
 		break;
 	case GMC_NATIONQUEST:// 国家任务
@@ -489,6 +491,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			nation_quest_addvalue( pCity, pValue[0], pValue[1] );
 		}
+		break;
+	case GMC_NATIONRANK:// 国家荣誉排行
+		if ( pValue[0] == 0 )
+			nation_rank_update();
+		else if ( pValue[0] == 1 )
+			nation_rank_calc();
 		break;
 	default:
 		break;

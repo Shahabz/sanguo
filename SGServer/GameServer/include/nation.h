@@ -23,6 +23,21 @@
 #define NATION_RANK_CITY		2	// 国家荣誉任务-城战
 #define NATION_RANK_TOWN		3	// 国家荣誉任务-国战
 
+#define NATION_RANK_MEMBERNUM	5	// 国家荣誉任务-选择人数
+
+// 国家荣誉排行榜
+typedef struct _nation_rank_member
+{
+	int actorid;
+	int city_index;
+}NationRankMember;
+
+// 国家荣誉排行榜
+typedef struct _nation_rank
+{
+	NationRankMember member[NATION_RANK_MAX][NATION_RANK_MEMBERNUM];
+}NationRank;
+
 int nation_load();
 int nation_save( FILE *fp );
 Nation *nation_getptr( int nation );
@@ -90,4 +105,10 @@ int nation_mission_sendlist( int actor_index );
 int nation_mission_addvalue( char nation, char kind, int value );
 int nation_mission_update();
 int nation_mission_getaward( int actor_index, int baglevel );
+
+// 国家荣誉排行榜
+int nation_rank_sendlist( int actor_index );
+void nation_rank_addvalue( City *pCity, char kind, int value );
+int nation_rank_calc();
+void nation_rank_update();
 #endif

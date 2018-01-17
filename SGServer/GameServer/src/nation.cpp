@@ -71,6 +71,7 @@ extern NationMission *g_nation_mission;
 extern int g_nation_mission_maxnum;
 
 Nation g_nation[NATION_MAX] = { 0 };
+NationRank g_nation_rank[NATION_MAX] = { 0 };
 
 // 读档完毕的回调
 int nation_loadcb( int nation )
@@ -97,6 +98,15 @@ int nation_loadcb( int nation )
 		for ( int tmpi = 0; tmpi < NATION_MISSION_MAX; tmpi++ )
 		{
 			g_nation[nation].missionvalue[tmpi] = 0;
+		}
+	}
+	// 国家荣誉排行榜
+	for ( int tmpi = 0; tmpi < NATION_RANK_MAX; tmpi++ )
+	{
+		for ( int i = 0; i < NATION_RANK_MEMBERNUM; i++ )
+		{
+			g_nation_rank[nation].member[tmpi][i].actorid = 0;
+			g_nation_rank[nation].member[tmpi][i].city_index = -1;
 		}
 	}
 	return 0;
@@ -503,6 +513,9 @@ int nation_build( int actor_index )
 
 	// 国家荣誉任务
 	nation_mission_addvalue( pCity->nation, NATION_MISSIONKIND_BUILD, 1 );
+
+	// 国家荣誉排行
+	nation_rank_addvalue( pCity, NATION_RANK_BUILD, 1 );
 	return 0;
 }
 
@@ -1087,4 +1100,156 @@ int nation_mission_getaward( int actor_index, int baglevel )
 	actor_add_today_char_times( actor_index, baglevel + TODAY_CHAR_NATION_MISSION_AWARD1 );
 	nation_mission_sendlist( actor_index );
 	return 0;
+}
+
+// 国家荣誉排行榜
+int nation_rank_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	NationRank *pRank = &g_nation_rank[pCity->nation];
+	SLK_NetS_NationRankList pValue = { 0 };
+	pValue.m_vote = pCity->vote;
+	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	{
+		int city_index = pRank->member[NATION_RANK_BUILD - 1][tmpi].city_index;
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+			continue;
+		strncpy( pValue.m_buildrank[tmpi].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
+		pValue.m_buildrank[tmpi].m_name_len = strlen( pValue.m_buildrank[tmpi].m_name );
+		pValue.m_buildrank[tmpi].m_value = g_city[city_index].nation_rankv[0];
+	}
+
+	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	{
+		int city_index = pRank->member[NATION_RANK_CITY - 1][tmpi].city_index;
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+			continue;
+		strncpy( pValue.m_cityrank[tmpi].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
+		pValue.m_cityrank[tmpi].m_name_len = strlen( pValue.m_cityrank[tmpi].m_name );
+		pValue.m_cityrank[tmpi].m_value = g_city[city_index].nation_rankv[1];
+	}
+
+	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	{
+		int city_index = pRank->member[NATION_RANK_TOWN - 1][tmpi].city_index;
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+			continue;
+		strncpy( pValue.m_townrank[tmpi].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
+		pValue.m_townrank[tmpi].m_name_len = strlen( pValue.m_townrank[tmpi].m_name );
+		pValue.m_townrank[tmpi].m_value = g_city[city_index].nation_rankv[2];
+	}
+	netsend_nationranklist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 添加数值并排序
+void nation_rank_addvalue( City *pCity, char kind, int value )
+{
+	if ( !pCity )
+		return;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return;
+	NationRank *pRank = &g_nation_rank[pCity->nation];
+	int index = kind - 1;
+	if ( index < 0 || index >= NATION_RANK_MAX )
+		return;
+	pCity->nation_rankv[index] += value;
+	if ( pCity->nation_rankv[index] == 0 )
+		return;
+	int replace_tmpi = -1;
+	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	{
+		int value = 0;
+		int city_index = pRank->member[index][tmpi].city_index;
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			value = g_city[city_index].nation_rankv[index];
+		}
+
+		if ( pCity->nation_rankv[index] > value )
+		{
+			replace_tmpi = tmpi;
+			break;
+		}
+	}
+
+	if ( replace_tmpi < 0 || replace_tmpi >= NATION_RANK_MEMBERNUM )
+	{
+		return;
+	}
+
+	if ( replace_tmpi < NATION_RANK_MEMBERNUM - 1 )
+	{
+		memmove( &pRank->member[index][replace_tmpi + 1], &pRank->member[index][replace_tmpi], sizeof( NationRankMember ) * (NATION_RANK_MEMBERNUM - 1 - replace_tmpi) );
+	}
+	pRank->member[index][replace_tmpi].city_index = pCity->index;
+	pRank->member[index][replace_tmpi].actorid = pCity->actorid;
+}
+
+// 重新计算排名
+int nation_rank_calc()
+{
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		nation_rank_addvalue( &g_city[city_index], NATION_RANK_BUILD, 0 );
+		nation_rank_addvalue( &g_city[city_index], NATION_RANK_CITY, 0 );
+		nation_rank_addvalue( &g_city[city_index], NATION_RANK_TOWN, 0 );
+	}
+	return 0;
+}
+
+// 发奖励并且更新数据
+void nation_rank_update()
+{
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
+	{
+		NationRank *pRank = &g_nation_rank[nation];
+		for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+		{
+			int city_index = pRank->member[NATION_RANK_BUILD - 1][tmpi].city_index;
+			if ( city_index < 0 || city_index >= g_city_maxcount )
+				continue;
+			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+			pRank->member[NATION_RANK_BUILD - 1][tmpi].actorid = 0;
+			pRank->member[NATION_RANK_BUILD - 1][tmpi].city_index = -1;
+		}
+
+		for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+		{
+			int city_index = pRank->member[NATION_RANK_CITY - 1][tmpi].city_index;
+			if ( city_index < 0 || city_index >= g_city_maxcount )
+				continue;
+			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+			pRank->member[NATION_RANK_CITY - 1][tmpi].actorid = 0;
+			pRank->member[NATION_RANK_CITY - 1][tmpi].city_index = -1;
+		}
+
+		for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+		{
+			int city_index = pRank->member[NATION_RANK_TOWN - 1][tmpi].city_index;
+			if ( city_index < 0 || city_index >= g_city_maxcount )
+				continue;
+			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+			pRank->member[NATION_RANK_TOWN - 1][tmpi].actorid = 0;
+			pRank->member[NATION_RANK_TOWN - 1][tmpi].city_index = -1;
+		}
+	}
+
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		g_city[city_index].nation_rankv[0] = 0;
+		g_city[city_index].nation_rankv[1] = 0;
+		g_city[city_index].nation_rankv[2] = 0;
+	}	
 }

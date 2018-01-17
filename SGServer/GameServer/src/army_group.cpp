@@ -897,6 +897,9 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 			// 国家任务
 			nation_quest_addvalue( pArmyCity, NATION_QUESTKIND_CITY, 1 );
+
+			// 国家荣誉排行
+			nation_rank_addvalue( pArmyCity, NATION_RANK_CITY, 1 );
 		}
 
 		// 国家荣誉任务
@@ -1194,6 +1197,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 
 			// 国家任务
 			nation_quest_addvalue( pTmp, NATION_QUESTKIND_TOWN, 1 );
+
+			// 国家荣誉排行
+			nation_rank_addvalue( pTmp, NATION_RANK_TOWN, 1 );
 		}
 
 		// 国家荣誉任务

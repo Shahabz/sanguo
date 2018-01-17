@@ -833,6 +833,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 10 )
 		{ // 国家荣誉
 			nation_mission_sendlist( actor_index );
+			nation_rank_sendlist( actor_index );
 		}
 		else if ( pvalue[0] == 11 )
 		{ // 国家荣誉任务奖励领取

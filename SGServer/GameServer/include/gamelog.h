@@ -108,6 +108,7 @@
 #define PATH_NATIONPLACE				79	// 爵位晋升
 #define PATH_NATIONQUEST				80	// 国家任务
 #define PATH_NATIONMISSION				81	// 国家荣誉任务
+#define PATH_NATIONRANK					82	// 国家荣誉榜
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );
