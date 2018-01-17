@@ -33,6 +33,7 @@
 #include "king_war.h"
 #include "pay.h"
 #include "activity.h"
+#include "nation.h"
 #include "story.h"
 
 extern Global global;
@@ -475,6 +476,18 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			city_changeprestige( pCity->actor_index, pValue[0], PATH_GM );
+		}
+		break;
+	case GMC_NATIONMISSION:// 国家荣誉任务
+		if ( pCity )
+		{
+			nation_mission_addvalue( pCity->nation, pValue[0], pValue[1] );
+		}
+		break;
+	case GMC_NATIONQUEST:// 国家任务
+		if ( pCity )
+		{
+			nation_quest_addvalue( pCity, pValue[0], pValue[1] );
 		}
 		break;
 	default:

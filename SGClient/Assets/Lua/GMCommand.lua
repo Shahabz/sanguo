@@ -41,6 +41,8 @@ local GMCMD_SERVER = {
 [37]="blv",
 [38]="story",
 [39]="prestige",
+[40]="nationmission",
+[41]="nationquest",
 }
  
 -- 发到客户端本地指令

@@ -83,7 +83,7 @@ int nation_city_warlist( int actor_index );
 int nation_quest_sendlist( int actor_index );
 int nation_quest_update();
 int nation_quest_addvalue( City *pCity, char kind, int value );
-int nation_quest_getaward( int actor_index, int index );
+int nation_quest_getaward( int actor_index, int kind );
 
 // 国家荣誉任务
 int nation_mission_sendlist( int actor_index );

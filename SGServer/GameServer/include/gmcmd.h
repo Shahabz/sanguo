@@ -42,6 +42,8 @@
 #define GMC_BUILDINGLEVEL		(GMC_BASE+37)	// 建筑等级
 #define GMC_STORY				(GMC_BASE+38)	// 打通副本
 #define GMC_PRESTIGE			(GMC_BASE+39)	// 威望
+#define GMC_NATIONMISSION		(GMC_BASE+40)	// 国家荣誉任务
+#define GMC_NATIONQUEST			(GMC_BASE+41)	// 国家任务
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

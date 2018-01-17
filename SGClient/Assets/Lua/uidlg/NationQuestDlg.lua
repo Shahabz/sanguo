@@ -163,16 +163,16 @@ function NationQuestDlgCreate( index, info )
 	end
 	
 	-- 奖励
-	local index = 0
+	local step = 0
 	for i=1, 5, 1 do
 		if info.m_awardkind[i] > 0 then
 			local sprite, color, name = AwardInfo( info.m_awardkind[i] )
-			local awardObj = uiAwardList.transform:GetChild(index);
+			local awardObj = uiAwardList.transform:GetChild(step);
 			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			SetText( awardObj.transform:Find("Name"), name );
 			SetText( awardObj.transform:Find("Num"), info.m_awardnum[i] );
-			index = index + 1
+			step = step + 1
 		end
 	end
 	

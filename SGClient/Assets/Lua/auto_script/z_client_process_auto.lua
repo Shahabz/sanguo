@@ -1924,5 +1924,6 @@ end
 -- m_count=0,m_list={m_value={[3]},m_needvalue={[3]},m_awardkind={[2]},m_awardnum={[2]},m_isget=0,[m_count]},
 function proc_nationmissionlist_C( recvValue )
 	-- process.
+	NationHonorDlgMissionRecv( recvValue )
 end
 

@@ -909,7 +909,7 @@ int nation_quest_addvalue( City *pCity, char kind, int value )
 		return -1;
 
 	char index = kind - 1;
-	if ( index <= 0 || index >= NATION_QUEST_MAX )
+	if ( index < 0 || index >= NATION_QUEST_MAX )
 		return -1;
 
 	char questlevel = pNation->questlevel[index];
@@ -933,7 +933,7 @@ int nation_quest_addvalue( City *pCity, char kind, int value )
 }
 
 // 领取奖励
-int nation_quest_getaward( int actor_index, int index )
+int nation_quest_getaward( int actor_index, int kind )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -941,8 +941,9 @@ int nation_quest_getaward( int actor_index, int index )
 		return -1;
 	Nation *pNation = nation_getptr( pCity->nation );
 	if ( !pNation )
-		return -1;
-	if ( index <= 0 || index >= NATION_QUEST_MAX )
+		return -1; 
+	char index = kind - 1;
+	if ( index < 0 || index >= NATION_QUEST_MAX )
 		return -1;
 
 	char questlevel = pNation->questlevel[index];
@@ -994,8 +995,8 @@ int nation_mission_sendlist( int actor_index )
 	SLK_NetS_NationMissionList pValue = { 0 };
 	for ( int tmpi = 0; tmpi < 3; tmpi++ )
 	{
-		char baglevel = tmpi + 1;
-		if ( baglevel <= 0 || baglevel >= g_nation_mission[misssionlevel].maxnum )
+		char baglevel = tmpi;
+		if ( baglevel < 0 || baglevel >= g_nation_mission[misssionlevel].maxnum )
 			continue;
 
 		pValue.m_list[pValue.m_count].m_value[0] = pNation->missionvalue[0];
@@ -1027,7 +1028,7 @@ int nation_mission_addvalue( char nation, char kind, int value )
 	if ( !pNation )
 		return -1;
 	char index = kind - 1;
-	if ( index <= 0 || index >= NATION_MISSION_MAX )
+	if ( index < 0 || index >= NATION_MISSION_MAX )
 		return -1;	
 	pNation->missionvalue[index] += value;
 	return 0;
@@ -1057,7 +1058,8 @@ int nation_mission_getaward( int actor_index, int baglevel )
 	Nation *pNation = nation_getptr( pCity->nation );
 	if ( !pNation )
 		return -1;
-	if ( baglevel <= 0 || baglevel > 3 )
+	baglevel -= 1;
+	if ( baglevel < 0 || baglevel >= 3 )
 		return -1;
 	char misssionlevel = pNation->missionlevel;
 	if ( misssionlevel <= 0 || misssionlevel >= g_nation_mission_maxnum )
@@ -1071,7 +1073,7 @@ int nation_mission_getaward( int actor_index, int baglevel )
 		}
 	}
 
-	if ( actor_get_today_char_times( actor_index, baglevel - 1 + TODAY_CHAR_NATION_MISSION_AWARD1 ) > 0 )
+	if ( actor_get_today_char_times( actor_index, baglevel + TODAY_CHAR_NATION_MISSION_AWARD1 ) > 0 )
 		return -1;
 
 	// 给与基础奖励
@@ -1082,7 +1084,7 @@ int nation_mission_getaward( int actor_index, int baglevel )
 		award_getaward( actor_index, g_nation_mission[misssionlevel].config[baglevel].awardkind[tmpi], g_nation_mission[misssionlevel].config[baglevel].awardnum[tmpi], -1, PATH_NATIONMISSION, NULL );
 	}
 
-	actor_add_today_char_times( actor_index, baglevel - 1 + TODAY_CHAR_NATION_MISSION_AWARD1 );
+	actor_add_today_char_times( actor_index, baglevel + TODAY_CHAR_NATION_MISSION_AWARD1 );
 	nation_mission_sendlist( actor_index );
 	return 0;
 }

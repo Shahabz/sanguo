@@ -94,7 +94,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		--国家荣誉
 		elseif nControlID == 8 then
-		
+			NationHonorDlgShow()
+			
 		--国家官员
 		elseif nControlID == 9 then
 		
