@@ -2281,6 +2281,14 @@ function struct_NetS_NationInfo_recv( buffer )
 	recvValue.m_notice = buffer:ReadStringWithLen( recvValue.m_notice_len );
 	recvValue.m_kingname_len = buffer:ReadSByte();
 	recvValue.m_kingname = buffer:ReadStringWithLen( recvValue.m_kingname_len );
+	recvValue.m_questvalue={};
+	for tmpi=1,3,1 do
+		recvValue.m_questvalue[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_questvalue_max={};
+	for tmpi=1,3,1 do
+		recvValue.m_questvalue_max[tmpi] = buffer:ReadShort();
+	end
 	return recvValue;
 end
 
@@ -2373,6 +2381,71 @@ function struct_NetS_NationCityWarList_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_op = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationQuest_recv( buffer )
+	local recvValue = {};
+	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_value = buffer:ReadInt();
+	recvValue.m_needvalue = buffer:ReadInt();
+	recvValue.m_awardkind={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardkind[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardnum={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_other_awardkind = buffer:ReadInt();
+	recvValue.m_other_awardnum = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationQuestList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationQuest_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_NationMission_recv( buffer )
+	local recvValue = {};
+	recvValue.m_value={};
+	for tmpi=1,3,1 do
+		recvValue.m_value[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_needvalue={};
+	for tmpi=1,3,1 do
+		recvValue.m_needvalue[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardkind={};
+	for tmpi=1,2,1 do
+		recvValue.m_awardkind[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardnum={};
+	for tmpi=1,2,1 do
+		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_isget = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationMissionList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationMission_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
 	return recvValue;
 end
 

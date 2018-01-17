@@ -822,6 +822,22 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 城池战争列表
 			nation_city_warlist( actor_index );
 		}
+		else if ( pvalue[0] == 8 )
+		{ // 国家任务
+			nation_quest_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 9 )
+		{ // 国家任务领取
+			nation_quest_getaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 10 )
+		{ // 国家荣誉
+			nation_mission_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 11 )
+		{ // 国家荣誉任务奖励领取
+			nation_mission_getaward( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

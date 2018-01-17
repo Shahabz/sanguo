@@ -18,8 +18,8 @@ void armygroup_delete( int group_index );
 void armygroup_alllogic();
 void armygroup_logic( int group_index );
 
-int armygroup_addarmy( int army_index );
-void armygroup_delarmy( int army_index );
+int armygroup_addarmy( int army_index, char zone );
+void armygroup_delarmy( int army_index, char zone );
 void armygroup_setleader( int group_index, int army_index );
 int armygroup_dismiss( int army_index );
 int armygroup_statetime( int group_index );

@@ -900,7 +900,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			g_army[army_index].group_id = g_armygroup[group_index].id;
 		}
 		// 加入集结列表
-		armygroup_addarmy( army_index );
+		armygroup_addarmy( army_index, map_zone_getid( g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy ) );
 	}
 
 	// 添加到出征队列
@@ -1063,7 +1063,7 @@ void army_delete( int army_index )
 	city_underfire_del_equal( army_getcityptr( army_index ), army_index );
 	city_underfire_del( army_getcityptr_target( army_index ), army_index );
 	city_helparmy_del( army_getcityptr_target( army_index ), army_index );
-	armygroup_delarmy( army_index );
+	armygroup_delarmy( army_index, map_zone_getid( g_army[army_index].posx, g_army[army_index].posy ) );
 
 	if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )
 	{

@@ -421,6 +421,11 @@ int city_new( City *pCity )
 		g_city_maxindex = city_index + 1;
 	}
 
+	// 国家任务
+	g_city[city_index].nation_qv[0] = 0;
+	g_city[city_index].nation_qv[1] = 0;
+	g_city[city_index].nation_qv[2] = 0;
+
 	// 活动礼包
 	activity_paybag_citynew( &g_city[city_index] );
 

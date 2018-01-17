@@ -181,3 +181,6 @@ global.nequip_crit_odds4 = 6 --国器暴击权重
 global.nequip_crit_odds5 = 4 --国器暴击权重
 global.nequip_make_quick_token = 1.000000 --国器打造冷却加速折算钻石系数（每60秒）
 global.nequip_remake_quick_token = 1.000000 --国器改造冷却加速折算钻石系数（每60秒）
+global.nation_quest_timer1 = 0 --国家任务刷新时间
+global.nation_quest_timer2 = 12 --国家任务刷新时间
+global.nation_quest_timer3 = 18 --国家任务刷新时间

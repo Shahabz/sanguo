@@ -85,7 +85,7 @@ int nation_sendmsg( int zone, int nation, int datasize, char *databuf )
 
 			if ( zone > 0 )
 			{// 指定区域了
-				if ( pCity->zone == zone && pCity->nation == nation )
+				if ( pCity->nation == nation && (pCity->zone == zone || g_actors[tmpi].view_zoneid == zone) )
 				{
 					sendtoclient( tmpi, databuf, datasize + sizeof( short ) );
 				}

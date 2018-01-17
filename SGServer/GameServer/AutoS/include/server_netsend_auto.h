@@ -172,6 +172,8 @@ int netsend_nationtown_S( int actor_index, char send_type, SLK_NetS_NationTown *
 int netsend_nationtownlist_S( int actor_index, char send_type, SLK_NetS_NationTownList *pValue );
 int netsend_nationwarlist_S( int actor_index, char send_type, SLK_NetS_NationWarList *pValue );
 int netsend_nationcitywarlist_S( int actor_index, char send_type, SLK_NetS_NationCityWarList *pValue );
+int netsend_nationquestlist_S( int actor_index, char send_type, SLK_NetS_NationQuestList *pValue );
+int netsend_nationmissionlist_S( int actor_index, char send_type, SLK_NetS_NationMissionList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

@@ -98,8 +98,9 @@ int quest_gm_reset( int actor_index );
 
 // 数据记录
 #define DATA_RECORD_MAXNUM						16
-#define DATA_RECORD_KILLENEMY					0	// 杀流寇数量
-#define DATA_RECORD_KILLCITY					1	// 杀城池数量
+#define DATA_RECORD_KILLENEMY					0	// 流寇数量
+#define DATA_RECORD_KILLCITY					1	// 城战数量
+#define DATA_RECORD_KILLTOWN					2	// 国战数量
 int data_record_addvalue( struct _city *pCity, int offset, int value );
 int data_record_setvalue( struct _city *pCity, int offset, int value );
 int data_record_getvalue( struct _city *pCity, int offset );

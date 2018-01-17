@@ -2542,6 +2542,8 @@ int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *p
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kingname_len, (*psize) );
 	if( pValue->m_kingname_len > 0 && pValue->m_kingname_len <= 32 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_kingname, pValue->m_kingname_len*sizeof(char), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_questvalue, 3*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_questvalue_max, 3*sizeof(short), (*psize) );
 	return 0;
 }
 
@@ -2642,6 +2644,57 @@ int struct_NetS_NationCityWarList_send( char **pptr, int *psize, SLK_NetS_Nation
 		struct_NetS_NationCityWar_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationQuest_send( char **pptr, int *psize, SLK_NetS_NationQuest *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_other_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_other_awardnum, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationQuestList_send( char **pptr, int *psize, SLK_NetS_NationQuestList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationQuest_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_NationMission_send( char **pptr, int *psize, SLK_NetS_NationMission *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_value, 3*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_needvalue, 3*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 2*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 2*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isget, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationMissionList_send( char **pptr, int *psize, SLK_NetS_NationMissionList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationMission_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
 	return 0;
 }
 

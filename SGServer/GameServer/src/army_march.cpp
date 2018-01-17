@@ -33,6 +33,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map.h"
+#include "map_zone.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -653,7 +654,7 @@ int actor_army_return( int actor_index, int army_index, int unit_index )
 	
 	if ( g_army[army_index].state == ARMY_STATE_GROUP_END )
 	{ // 已经到达集结地点
-		armygroup_delarmy( army_index );
+		armygroup_delarmy( army_index, map_zone_getid( g_army[army_index].posx, g_army[army_index].posy ) );
 	}
 
 	g_army[army_index].reback = ARMY_REBACK_RETURN;
@@ -726,11 +727,11 @@ int actor_army_callback( int actor_index, int army_index, int itemkind )
 		// 删除集结列表
 		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK || g_army[army_index].action == ARMY_ACTION_GROUP_DEFENSE )
 		{
-			armygroup_delarmy( army_index );
+			armygroup_delarmy( army_index, map_zone_getid( g_army[army_index].posx, g_army[army_index].posy ) );
 		}
 		else if ( g_army[army_index].action == ARMY_ACTION_NATION_ATTACK || g_army[army_index].action == ARMY_ACTION_NATION_DEFENSE )
 		{
-			armygroup_delarmy( army_index );
+			armygroup_delarmy( army_index, map_zone_getid( g_army[army_index].posx, g_army[army_index].posy ) );
 		}
 
 		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )

@@ -1741,6 +1741,8 @@ struct _slk_NetS_NationInfo {
 	char m_notice[512];	//国家信息
 	char m_kingname_len;	//国家信息
 	char m_kingname[32];	//国家信息
+	short m_questvalue[3];	//国家信息
+	short m_questvalue_max[3];	//国家信息
 };
 typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
 
@@ -1814,6 +1816,39 @@ struct _slk_NetS_NationCityWarList {
 	char m_op;	//国家界面-城战信息列表
 };
 typedef struct _slk_NetS_NationCityWarList SLK_NetS_NationCityWarList;	//国家界面-城池战争
+
+struct _slk_NetS_NationQuest {
+	char m_level;	//国家任务
+	char m_kind;	//国家任务
+	int m_value;	//国家任务
+	int m_needvalue;	//国家任务
+	int m_awardkind[5];	//国家任务奖励
+	int m_awardnum[5];	//国家任务奖励
+	int m_other_awardkind;	//国家任务奖励
+	int m_other_awardnum;	//国家任务奖励
+};
+typedef struct _slk_NetS_NationQuest SLK_NetS_NationQuest;	//国家任务
+
+struct _slk_NetS_NationQuestList {
+	char m_count;	//国家任务列表
+	SLK_NetS_NationQuest m_list[3];	//国家任务列表
+};
+typedef struct _slk_NetS_NationQuestList SLK_NetS_NationQuestList;	//国家任务列表
+
+struct _slk_NetS_NationMission {
+	int m_value[3];	//国家荣誉任务
+	int m_needvalue[3];	//国家荣誉任务
+	int m_awardkind[2];	//国家荣誉任务
+	int m_awardnum[2];	//国家荣誉任务
+	char m_isget;	//国家荣誉任务
+};
+typedef struct _slk_NetS_NationMission SLK_NetS_NationMission;	//国家荣誉任务
+
+struct _slk_NetS_NationMissionList {
+	char m_count;	//国家荣誉任务列表
+	SLK_NetS_NationMission m_list[4];	//国家荣誉任务列表
+};
+typedef struct _slk_NetS_NationMissionList SLK_NetS_NationMissionList;	//国家荣誉任务列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -2010,5 +2045,9 @@ int struct_NetS_NationWar_send( char **pptr, int *psize, SLK_NetS_NationWar *pVa
 int struct_NetS_NationWarList_send( char **pptr, int *psize, SLK_NetS_NationWarList *pValue );
 int struct_NetS_NationCityWar_send( char **pptr, int *psize, SLK_NetS_NationCityWar *pValue );
 int struct_NetS_NationCityWarList_send( char **pptr, int *psize, SLK_NetS_NationCityWarList *pValue );
+int struct_NetS_NationQuest_send( char **pptr, int *psize, SLK_NetS_NationQuest *pValue );
+int struct_NetS_NationQuestList_send( char **pptr, int *psize, SLK_NetS_NationQuestList *pValue );
+int struct_NetS_NationMission_send( char **pptr, int *psize, SLK_NetS_NationMission *pValue );
+int struct_NetS_NationMissionList_send( char **pptr, int *psize, SLK_NetS_NationMissionList *pValue );
 
 #endif

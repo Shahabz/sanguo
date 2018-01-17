@@ -524,6 +524,12 @@ int global_init()
 			global.nequip_make_quick_token = value;
 		else if ( id == 182 )
 			global.nequip_remake_quick_token = value;
+		else if ( id == 183 )
+			global.nation_quest_timer[0] = atoi( row[1] );
+		else if ( id == 184 )
+			global.nation_quest_timer[1] = atoi( row[1] );
+		else if ( id == 185 )
+			global.nation_quest_timer[2] = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

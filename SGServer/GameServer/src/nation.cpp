@@ -64,6 +64,12 @@ extern int g_nation_upgrade_maxnum;
 extern NationPlace *g_nation_place;
 extern int g_nation_place_maxnum;
 
+extern NationQuest *g_nation_quest;
+extern int g_nation_quest_maxnum;
+
+extern NationMission *g_nation_mission;
+extern int g_nation_mission_maxnum;
+
 Nation g_nation[NATION_MAX] = { 0 };
 
 // 读档完毕的回调
@@ -72,7 +78,27 @@ int nation_loadcb( int nation )
 	if ( nation <= 0 || nation >= NATION_MAX )
 		return -1;
 	if ( g_nation[nation].level < 1 )
+	{
 		g_nation[nation].level = 1;
+	}
+	// 国家任务检查
+	for ( int tmpi = 0; tmpi < NATION_QUEST_MAX; tmpi++ )
+	{
+		if ( g_nation[nation].questlevel[tmpi] == 0 )
+		{
+			g_nation[nation].questlevel[tmpi] = g_nation[nation].level;
+		}
+		g_nation[nation].questkind[tmpi] = tmpi + 1;
+	}
+	// 国家荣誉任务检查
+	if ( g_nation[nation].missionlevel == 0 )
+	{
+		g_nation[nation].missionlevel = 1;
+		for ( int tmpi = 0; tmpi < NATION_MISSION_MAX; tmpi++ )
+		{
+			g_nation[nation].missionvalue[tmpi] = 0;
+		}
+	}
 	return 0;
 }
 
@@ -385,6 +411,26 @@ int nation_sendinfo( int actor_index )
 	pValue.m_notice_len = strlen( pValue.m_notice );
 	nation_kingname( pCity->nation, pValue.m_kingname );
 	pValue.m_kingname_len = strlen( pValue.m_kingname );
+
+	for ( int tmpi = 0; tmpi < NATION_QUEST_MAX; tmpi++ )
+	{
+		char questlevel = pNation->questlevel[tmpi];
+		if ( questlevel <= 0 || questlevel >= g_nation_quest_maxnum )
+			continue;
+		char questkind = pNation->questkind[tmpi];
+		if ( questkind <= 0 || questkind >= g_nation_quest[questlevel].maxnum )
+			continue;
+		if ( pCity->nation_qv[tmpi] > g_nation_quest[questlevel].config[questkind].needvalue )
+		{
+			pValue.m_questvalue[tmpi] = g_nation_quest[questlevel].config[questkind].needvalue;
+		}
+		else
+		{
+			pValue.m_questvalue[tmpi] = pCity->nation_qv[tmpi];
+		}
+		pValue.m_questvalue_max[tmpi] = g_nation_quest[questlevel].config[questkind].needvalue;
+	}
+
 	netsend_nationinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -454,6 +500,9 @@ int nation_build( int actor_index )
 	// 添加次数
 	actor_add_today_char_times( actor_index, TODAY_CHAR_NATION_DONATE ); 
 	nation_sendbase( actor_index );
+
+	// 国家荣誉任务
+	nation_mission_addvalue( pCity->nation, NATION_MISSIONKIND_BUILD, 1 );
 	return 0;
 }
 
@@ -543,6 +592,8 @@ int nation_town_sendlist( int actor_index )
 			continue;
 		if ( g_map_town[townid].nation != pCity->nation )
 			continue;
+		if ( g_map_town[townid].zoneid != pCity->zone )
+			continue;
 		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
 			continue;
 
@@ -608,6 +659,8 @@ int nation_town_warlist( int actor_index )
 			continue;
 		int townid = g_armygroup[group_index].to_id;
 		if ( townid <= 0 || townid >= g_map_town_maxcount )
+			continue;
+		if ( g_map_town[townid].zoneid != pCity->zone )
 			continue;
 
 		if ( nation == g_map_town[townid].nation )
@@ -702,6 +755,10 @@ int nation_city_warlist( int actor_index )
 		// 我既不是攻击国也不是防御国
 		if ( pCity->nation != pAtkCity->nation && pCity->nation != pDefCity->nation )
 			continue;
+		
+		// 防守方不在我的地图
+		if ( pCity->zone != pDefCity->zone )
+			continue;
 
 		if ( pCity->nation == pAtkCity->nation )
 		{ // 我属于攻击方
@@ -774,5 +831,258 @@ int nation_city_warlist( int actor_index )
 	pValue.m_op = 3;
 	pValue.m_count = 0;
 	netsend_nationcitywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 国家任务
+int nation_quest_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	SLK_NetS_NationQuestList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < NATION_QUEST_MAX; tmpi++ )
+	{
+		char questlevel = pNation->questlevel[tmpi];
+		if ( questlevel <= 0 || questlevel >= g_nation_quest_maxnum )
+			continue;
+		char questkind = pNation->questkind[tmpi];
+		if ( questkind <= 0 || questkind >= g_nation_quest[questlevel].maxnum )
+			continue;
+		pValue.m_list[pValue.m_count].m_level = questlevel;
+		pValue.m_list[pValue.m_count].m_kind = questkind;
+		if ( pCity->nation_qv[tmpi] > g_nation_quest[questlevel].config[questkind].needvalue )
+		{
+			pValue.m_list[pValue.m_count].m_value = g_nation_quest[questlevel].config[questkind].needvalue;
+		}
+		else
+		{
+			pValue.m_list[pValue.m_count].m_value = pCity->nation_qv[tmpi];
+		}
+		pValue.m_list[pValue.m_count].m_needvalue = g_nation_quest[questlevel].config[questkind].needvalue;
+
+		for ( int i = 0; i < 5; i++ )
+		{
+			pValue.m_list[pValue.m_count].m_awardkind[i] = g_nation_quest[questlevel].config[questkind].awardkind[i];
+			pValue.m_list[pValue.m_count].m_awardnum[i] = g_nation_quest[questlevel].config[questkind].awardnum[i];
+		}
+		pValue.m_count += 1;
+	}
+	netsend_nationquestlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 刷新国家任务
+int nation_quest_update()
+{
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
+	{
+		for ( int tmpi = 0; tmpi < NATION_QUEST_MAX; tmpi++ )
+		{
+			g_nation[nation].questlevel[tmpi] = g_nation[nation].level;
+			g_nation[nation].questkind[tmpi] = tmpi + 1;
+		}
+	}
+
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		g_city[city_index].nation_qv[0] = 0;
+		g_city[city_index].nation_qv[1] = 0;
+		g_city[city_index].nation_qv[2] = 0;
+	}
+	return 0;
+}
+
+// 任务数值
+int nation_quest_addvalue( City *pCity, char kind, int value )
+{
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+
+	char index = kind - 1;
+	if ( index <= 0 || index >= NATION_QUEST_MAX )
+		return -1;
+
+	char questlevel = pNation->questlevel[index];
+	if ( questlevel <= 0 || questlevel >= g_nation_quest_maxnum )
+		return -1;
+	char questkind = pNation->questkind[index];
+	if ( questkind <= 0 || questkind >= g_nation_quest[questlevel].maxnum )
+		return -1;
+	if ( pCity->nation_qv[index] == -1 ) // 代表已经领取奖励
+		return -1;
+	if ( pCity->nation_qv[index] >= g_nation_quest[questlevel].config[questkind].needvalue )
+		return -1;
+
+	pCity->nation_qv[index] += value;
+	if ( pCity->nation_qv[index] >= g_nation_quest[questlevel].config[questkind].needvalue )
+	{ // 完成
+
+	}
+
+	return 0;
+}
+
+// 领取奖励
+int nation_quest_getaward( int actor_index, int index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	if ( index <= 0 || index >= NATION_QUEST_MAX )
+		return -1;
+
+	char questlevel = pNation->questlevel[index];
+	if ( questlevel <= 0 || questlevel >= g_nation_quest_maxnum )
+		return -1;
+	char questkind = pNation->questkind[index];
+	if ( questkind <= 0 || questkind >= g_nation_quest[questlevel].maxnum )
+		return -1;
+	if ( pCity->nation_qv[index] == -1 ) // 代表已经领取奖励
+		return -1;
+	if ( pCity->nation_qv[index] < g_nation_quest[questlevel].config[questkind].needvalue )
+		return -1;
+
+	// 给与基础奖励
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( g_nation_quest[questlevel].config[questkind].awardkind[tmpi] == 0 )
+			continue;
+		award_getaward( actor_index, g_nation_quest[questlevel].config[questkind].awardkind[tmpi], g_nation_quest[questlevel].config[questkind].awardnum[tmpi], -1, PATH_NATIONQUEST, NULL );
+	}
+
+	// 给与额外奖励
+	if ( rand() % 100 <= g_nation_quest[questlevel].config[questkind].other_awardodds )
+	{
+		award_getaward( actor_index, g_nation_quest[questlevel].config[questkind].other_awardkind, g_nation_quest[questlevel].config[questkind].other_awardnum, -1, PATH_NATIONQUEST, NULL );
+	}
+
+	pCity->nation_qv[index] = -1;
+	nation_quest_sendlist( actor_index );
+	return 0;
+}
+
+// 国家荣誉任务列表
+int nation_mission_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	char misssionlevel = pNation->missionlevel;
+	if ( misssionlevel <= 0 || misssionlevel >= g_nation_mission_maxnum )
+	{
+		pNation->missionlevel = 1;
+		misssionlevel = 1;
+	}
+	SLK_NetS_NationMissionList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		char baglevel = tmpi + 1;
+		if ( baglevel <= 0 || baglevel >= g_nation_mission[misssionlevel].maxnum )
+			continue;
+
+		pValue.m_list[pValue.m_count].m_value[0] = pNation->missionvalue[0];
+		pValue.m_list[pValue.m_count].m_needvalue[0] = g_nation_mission[misssionlevel].config[baglevel].needvalue[0];
+
+		pValue.m_list[pValue.m_count].m_value[1] = pNation->missionvalue[1];
+		pValue.m_list[pValue.m_count].m_needvalue[1] = g_nation_mission[misssionlevel].config[baglevel].needvalue[1];
+
+		pValue.m_list[pValue.m_count].m_value[2] = pNation->missionvalue[2];
+		pValue.m_list[pValue.m_count].m_needvalue[2] = g_nation_mission[misssionlevel].config[baglevel].needvalue[2];
+
+		for ( int i = 0; i < 2; i++ )
+		{
+			pValue.m_list[pValue.m_count].m_awardkind[i] = g_nation_mission[misssionlevel].config[baglevel].awardkind[i];
+			pValue.m_list[pValue.m_count].m_awardnum[i] = g_nation_mission[misssionlevel].config[baglevel].awardnum[i];
+		}
+
+		pValue.m_list[pValue.m_count].m_isget = actor_get_today_char_times( actor_index, tmpi + TODAY_CHAR_NATION_MISSION_AWARD1 );
+		pValue.m_count += 1;
+	}
+	netsend_nationmissionlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 国家荣誉任务
+int nation_mission_addvalue( char nation, char kind, int value )
+{
+	Nation *pNation = nation_getptr( nation );
+	if ( !pNation )
+		return -1;
+	char index = kind - 1;
+	if ( index <= 0 || index >= NATION_MISSION_MAX )
+		return -1;	
+	pNation->missionvalue[index] += value;
+	return 0;
+}
+
+// 刷新国家荣誉任务
+int nation_mission_update()
+{
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
+	{
+		g_nation[nation].missionlevel = g_nation[nation].level;
+		for ( int tmpi = 0; tmpi < NATION_MISSION_MAX; tmpi++ )
+		{
+			g_nation[nation].missionvalue[tmpi] = 0;
+		}
+	}
+	return 0;
+}
+
+// 国家荣誉任务奖励
+int nation_mission_getaward( int actor_index, int baglevel )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	if ( baglevel <= 0 || baglevel > 3 )
+		return -1;
+	char misssionlevel = pNation->missionlevel;
+	if ( misssionlevel <= 0 || misssionlevel >= g_nation_mission_maxnum )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < NATION_MISSION_MAX; tmpi++ )
+	{
+		if ( pNation->missionvalue[tmpi] < g_nation_mission[misssionlevel].config[baglevel].needvalue[tmpi] )
+		{
+			return -1;
+		}
+	}
+
+	if ( actor_get_today_char_times( actor_index, baglevel - 1 + TODAY_CHAR_NATION_MISSION_AWARD1 ) > 0 )
+		return -1;
+
+	// 给与基础奖励
+	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		if ( g_nation_mission[misssionlevel].config[baglevel].awardkind[tmpi] == 0 )
+			continue;
+		award_getaward( actor_index, g_nation_mission[misssionlevel].config[baglevel].awardkind[tmpi], g_nation_mission[misssionlevel].config[baglevel].awardnum[tmpi], -1, PATH_NATIONMISSION, NULL );
+	}
+
+	actor_add_today_char_times( actor_index, baglevel - 1 + TODAY_CHAR_NATION_MISSION_AWARD1 );
+	nation_mission_sendlist( actor_index );
 	return 0;
 }

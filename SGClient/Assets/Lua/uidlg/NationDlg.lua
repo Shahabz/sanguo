@@ -25,6 +25,7 @@ local m_uiQuestInfo = nil; --UnityEngine.GameObject
 local m_uiPlaceIcon = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil
+local m_curQuestKind = 1;
 
 -- 打开界面
 function NationDlgOpen()
@@ -41,6 +42,7 @@ function NationDlgClose()
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationDlg" );
 	m_recvValue = nil
+	m_curQuestKind = 1;
 end
 
 -- 删除界面
@@ -48,6 +50,7 @@ function NationDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	m_recvValue = nil
+	m_curQuestKind = 1;
 end
 
 ----------------------------------------
@@ -63,8 +66,6 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 1 then
 			if m_recvValue.m_level >= #g_nation_upgrade then
 				pop(T(1769))
-			elseif m_recvValue.m_donate_num >= 11 then
-				pop(T(1770))
 			else
 				NationUpgradeDlgShow( m_recvValue )
 			end
@@ -78,7 +79,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		--国家任务
 		elseif nControlID == 4 then
-		
+			NationQuestDlgShow()
+			
 		--国家城池
 		elseif nControlID == 5 then
 			NationTownDlgShow()
@@ -100,6 +102,10 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 10 then
 		
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 1 then
+			NationDlgSetQuest()
+		end	
 	end
 end
 
@@ -182,6 +188,7 @@ function NationDlgRecv( recvValue )
 	m_recvValue = recvValue;
 	NationDlgChangeBase()
 	NationDlgChangeNotice();
+	NationDlgSetQuest()
 end
 
 -- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0
@@ -209,6 +216,32 @@ end
 -- 公告
 function NationDlgChangeNotice()
 	
+end
+
+-- 国家任务
+function NationDlgSetQuest()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetTrue( m_uiQuestInfo.transform:Find("Timer") )
+	SetTimer( m_uiQuestInfo.transform:Find("Timer"), 6, 6, 1 );
+	local kind = m_curQuestKind
+	local value = m_recvValue.m_questvalue[kind];
+	local maxvalue = m_recvValue.m_questvalue_max[kind];
+	if value == -1 then
+		value = maxvalue
+	end
+	if kind == 1 then
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1787, value, value, maxvalue) );
+	elseif kind == 2 then
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1788, value, value, maxvalue) );
+	elseif kind == 3 then
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1789, value, value, maxvalue) );
+	end
+	m_curQuestKind = m_curQuestKind + 1;
+	if m_curQuestKind > 3 then
+		m_curQuestKind = 1
+	end
 end
 
 -- 我的爵位

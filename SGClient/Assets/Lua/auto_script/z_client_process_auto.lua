@@ -1915,3 +1915,14 @@ function proc_nationcitywarlist_C( recvValue )
 	end
 end
 
+-- m_count=0,m_list={m_level=0,m_kind=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_other_awardkind=0,m_other_awardnum=0,[m_count]},
+function proc_nationquestlist_C( recvValue )
+	-- process.
+	NationQuestDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_value={[3]},m_needvalue={[3]},m_awardkind={[2]},m_awardnum={[2]},m_isget=0,[m_count]},
+function proc_nationmissionlist_C( recvValue )
+	-- process.
+end
+

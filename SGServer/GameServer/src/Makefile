@@ -12,6 +12,7 @@ SRC = \
 ../AutoS/src/server_netrecv_auto.cpp \
 ../AutoS/src/auto_data_hero_visit.cpp \
 ../AutoS/src/auto_city_building.cpp \
+../AutoS/src/auto_data_nation_quest.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_map_town.cpp \
 ../AutoS/src/auto_data_official_forging.cpp \
@@ -182,6 +183,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_hero_visit.o: ../AutoS/src/auto_data_hero_visit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building.o: ../AutoS/src/auto_city_building.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_quest.o: ../AutoS/src/auto_data_nation_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_upgrade.o: ../AutoS/src/auto_data_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

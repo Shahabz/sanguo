@@ -1379,6 +1379,7 @@ public class YlyRichText : MaskableGraphic, ILayoutElement, IPointerClickHandler
 					go.AddComponent<RectTransform>();
 					Image img = go.AddComponent<Image>();
 					img.sprite = m_Lines[i].assetDatas[j].obj as Sprite;
+					img.raycastTarget = false;
 				}
 				if(go != null){
 					go.AddComponent<YlyAssetIdentify>();

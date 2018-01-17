@@ -8,6 +8,21 @@
 #define NATION_TOWN_WAR_MAX	256		// 国战数量
 #define NATION_CITY_WAR_MAX	1024	// 城战数量
 
+#define NATION_QUEST_MAX		3
+#define NATION_QUESTKIND_TOWN	1	// 国家任务-国战
+#define NATION_QUESTKIND_CITY	2	// 国家任务-城战
+#define NATION_QUESTKIND_ENEMY	3	// 国家任务-流寇
+
+#define NATION_MISSION_MAX			3
+#define NATION_MISSIONKIND_BUILD	1	// 国家荣誉任务-建设
+#define NATION_MISSIONKIND_CITY		2	// 国家荣誉任务-城战
+#define NATION_MISSIONKIND_TOWN		3	// 国家荣誉任务-国战
+
+#define NATION_RANK_MAX			3
+#define NATION_RANK_BUILD		1	// 国家荣誉任务-建设
+#define NATION_RANK_CITY		2	// 国家荣誉任务-城战
+#define NATION_RANK_TOWN		3	// 国家荣誉任务-国战
+
 int nation_load();
 int nation_save( FILE *fp );
 Nation *nation_getptr( int nation );
@@ -63,4 +78,16 @@ int nation_town_repair( int actor_index, int townid );
 // 国家战争列表
 int nation_town_warlist( int actor_index );
 int nation_city_warlist( int actor_index );
+
+// 国家任务
+int nation_quest_sendlist( int actor_index );
+int nation_quest_update();
+int nation_quest_addvalue( City *pCity, char kind, int value );
+int nation_quest_getaward( int actor_index, int index );
+
+// 国家荣誉任务
+int nation_mission_sendlist( int actor_index );
+int nation_mission_addvalue( char nation, char kind, int value );
+int nation_mission_update();
+int nation_mission_getaward( int actor_index, int baglevel );
 #endif

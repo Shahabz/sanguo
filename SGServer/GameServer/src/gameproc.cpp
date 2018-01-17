@@ -405,6 +405,24 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 国家任务初始化-个人
+	if ( nationquest_init_auto() < 0 )
+	{
+		printf_msg( "nationquest_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 国家任务初始化-集体
+	if ( nationmission_init_auto() < 0 )
+	{
+		printf_msg( "nationmission_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 英兵种相克数据初始化
 	if ( herocorpsmulinfo_init_auto() < 0 )
 	{
@@ -1140,15 +1158,16 @@ int process_oclock_process( int hour )
 	if ( hour == 0 )
 	{ // 月卡发放
 		paycard_give();
+		// 刷新国家荣誉任务
+		nation_mission_update();
 	}
 	else if ( hour == 1 )
 	{
 	}
-	else if ( hour == 2 )
-	{	
-	}
-	else if ( hour == 3 )
-	{
+
+	if ( hour == global.nation_quest_timer[0] || hour == global.nation_quest_timer[1] || hour == global.nation_quest_timer[2] )
+	{ // 刷新国家任务
+		nation_quest_update();
 	}
 
 	if ( hour == global.town_owner_award )

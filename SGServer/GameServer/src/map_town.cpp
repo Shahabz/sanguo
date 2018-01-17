@@ -246,6 +246,14 @@ char map_town_getnation( int townid )
 	return g_map_town[townid].nation;
 }
 
+// 获取所在区域
+char map_town_getzone( int townid )
+{
+	if ( townid <= 0 || townid >= g_map_town_maxcount )
+		return 0;
+	return g_map_town[townid].zoneid;
+}
+
 // 重置守军
 void map_town_monster_reset( int townid, char reset )
 {
@@ -1139,7 +1147,7 @@ int map_town_attack( int townid )
 		g_army[army_index].group_index = group_index;
 		g_army[army_index].group_id = g_armygroup[group_index].id;
 		// 加入集结列表
-		armygroup_addarmy( army_index );
+		armygroup_addarmy( army_index, map_zone_getid( g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy ) );
 	}
 	return 0;
 }

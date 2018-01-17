@@ -31,6 +31,9 @@ void map_town_getpos( int index, short *posx, short *posy );
 // 获取国家
 char map_town_getnation( int townid );
 
+// 获取所在区域
+char map_town_getzone( int townid );
+
 // 重置守军
 void map_town_monster_reset( int townid, char reset );
 

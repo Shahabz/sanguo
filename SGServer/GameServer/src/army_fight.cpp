@@ -35,6 +35,7 @@
 #include "map_res.h"
 #include "map.h"
 #include "mail.h"
+#include "nation.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -158,6 +159,9 @@ int army_vs_enemy( int army_index, Fight *pFight )
 		// 数据统计
 		data_record_addvalue( pCity, DATA_RECORD_KILLENEMY, 1 );
 		worldquest_checkcomplete( pCity->actor_index, 0 );
+
+		// 国家任务
+		nation_quest_addvalue( pCity, NATION_QUESTKIND_ENEMY, 1 );
 
 		// 如果是都城范围,添加开发经验
 		short range_townid = map_tile_gettownid( enemy->posx, enemy->posy );

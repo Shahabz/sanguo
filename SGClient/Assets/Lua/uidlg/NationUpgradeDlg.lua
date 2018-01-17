@@ -7,6 +7,8 @@ local m_uiLevel = nil; --UnityEngine.GameObject
 local m_uiExpProgress = nil; --UnityEngine.GameObject
 local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiAward = nil; --UnityEngine.GameObject
+local m_uiUpgradeBtn = nil; --UnityEngine.GameObject
+local m_uiWarn = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil
 
@@ -57,6 +59,8 @@ function NationUpgradeDlgOnAwake( gameObject )
 	m_uiExpProgress = objs[3];
 	m_uiCost = objs[4];
 	m_uiAward = objs[5];
+	m_uiUpgradeBtn = objs[6];
+	m_uiWarn = objs[7];
 end
 
 -- 界面初始化时调用
@@ -106,16 +110,24 @@ function NationUpgradeDlgShowRecv( recvValue )
 		return
 	end
 	
-	if m_recvValue.m_donate_num >= 11 then
-		NationUpgradeDlgClose()
-		return
-	end
-	
 	SetImage( m_uiNationFlag, NationFlagSprite( GetPlayer().m_nation ) )
 
 	SetText( m_uiLevelDesc.transform:Find("Text"), F(1761,m_recvValue.m_level+1,m_recvValue.m_level+1) );
 	SetText( m_uiLevel, F(1762, m_recvValue.m_level, m_recvValue.m_exp, g_nation_upgrade[m_recvValue.m_level][1].maxexp) );
 	SetProgress( m_uiExpProgress, m_recvValue.m_exp/g_nation_upgrade[m_recvValue.m_level][1].maxexp )
+	-- 今日次数已经用尽
+	if m_recvValue.m_donate_num >= 11 then
+		SetFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiCost )
+		SetFalse( m_uiAward )
+		SetTrue( m_uiWarn )
+		return
+	end
+	
+	SetTrue( m_uiUpgradeBtn )
+	SetTrue( m_uiCost )
+	SetTrue( m_uiAward )
+	SetFalse( m_uiWarn )
 	
 	-- 消耗
 	NationUpgradeDlgSetCost()
