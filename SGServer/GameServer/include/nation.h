@@ -4,7 +4,7 @@
 
 #define NATION_MAX			4		// 算群雄4个国家
 #define NATION_NOTICE_MAX	512		// 公告
-#define NATION_OFFICIAL_MAX	16		// 官员个数
+#define NATION_OFFICIAL_MAX	11		// 官员个数
 #define NATION_TOWN_WAR_MAX	256		// 国战数量
 #define NATION_CITY_WAR_MAX	1024	// 城战数量
 

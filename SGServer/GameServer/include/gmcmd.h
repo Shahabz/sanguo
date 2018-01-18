@@ -45,6 +45,7 @@
 #define GMC_NATIONMISSION		(GMC_BASE+40)	// 国家荣誉任务
 #define GMC_NATIONQUEST			(GMC_BASE+41)	// 国家任务
 #define GMC_NATIONRANK			(GMC_BASE+42)	// 国家荣誉排行榜
+#define GMC_NATIONEXP			(GMC_BASE+43)	// 国家经验
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

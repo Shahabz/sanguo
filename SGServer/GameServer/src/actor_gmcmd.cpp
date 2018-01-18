@@ -498,6 +498,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		else if ( pValue[0] == 1 )
 			nation_rank_calc();
 		break;
+	case GMC_NATIONEXP: // 国家经验
+		if ( pCity )
+		{
+			nation_exp( pCity->nation, pValue[0] );
+		}
+		break;
 	default:
 		break;
 	}
