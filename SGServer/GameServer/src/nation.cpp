@@ -1210,6 +1210,10 @@ int nation_rank_calc()
 // 发奖励并且更新数据
 void nation_rank_update()
 {
+	char v1[64] = { 0 };
+	char v2[64] = { 0 };
+	char v3[64] = { 0 };
+
 	for ( int nation = 1; nation < NATION_MAX; nation++ )
 	{
 		NationRank *pRank = &g_nation_rank[nation];
@@ -1219,6 +1223,12 @@ void nation_rank_update()
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+
+			sprintf( v1, "%d", tmpi+1 );
+			sprintf( v2, "%d", global.nation_rank_vote[tmpi] );
+			sprintf( v3, "%d", g_city[city_index].vote );
+			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5038, 5535, v1, v2, v3, "", 0 );
+
 			pRank->member[NATION_RANK_BUILD - 1][tmpi].actorid = 0;
 			pRank->member[NATION_RANK_BUILD - 1][tmpi].city_index = -1;
 		}
@@ -1229,6 +1239,12 @@ void nation_rank_update()
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+
+			sprintf( v1, "%d", tmpi + 1 );
+			sprintf( v2, "%d", global.nation_rank_vote[tmpi] );
+			sprintf( v3, "%d", g_city[city_index].vote );
+			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5039, 5536, v1, v2, v3, "", 0 );
+
 			pRank->member[NATION_RANK_CITY - 1][tmpi].actorid = 0;
 			pRank->member[NATION_RANK_CITY - 1][tmpi].city_index = -1;
 		}
@@ -1239,6 +1255,12 @@ void nation_rank_update()
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			city_changevote( city_index, global.nation_rank_vote[tmpi], PATH_NATIONRANK );
+
+			sprintf( v1, "%d", tmpi + 1 );
+			sprintf( v2, "%d", global.nation_rank_vote[tmpi] );
+			sprintf( v3, "%d", g_city[city_index].vote );
+			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5040, 5537, v1, v2, v3, "", 0 );
+
 			pRank->member[NATION_RANK_TOWN - 1][tmpi].actorid = 0;
 			pRank->member[NATION_RANK_TOWN - 1][tmpi].city_index = -1;
 		}
