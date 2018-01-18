@@ -9,9 +9,9 @@ struct _nationquest_config {
 				int needvalue;	//
 				int awardkind[5];	//
 				int awardnum[5];	//
-				int other_awardkind;	//
-				int other_awardnum;	//
-				int other_awardodds;	//
+				int other_awardkind[6];	//
+				int other_awardnum[6];	//
+				int other_awardodds[6];	//
 };
 typedef struct _nationquest_config NationQuestConfig;
 

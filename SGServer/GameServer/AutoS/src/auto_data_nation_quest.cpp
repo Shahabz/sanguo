@@ -66,7 +66,7 @@ int nationquest_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `level`,`kind`,`needvalue`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`other_awardkind`,`other_awardnum`,`other_awardodds` from nation_quest;" );
+	sprintf( szSQL, "select `level`,`kind`,`needvalue`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`other_awardkind0`,`other_awardkind1`,`other_awardkind2`,`other_awardkind3`,`other_awardkind4`,`other_awardkind5`,`other_awardnum0`,`other_awardnum1`,`other_awardnum2`,`other_awardnum3`,`other_awardnum4`,`other_awardnum5`,`other_awardodds0`,`other_awardodds1`,`other_awardodds2`,`other_awardodds3`,`other_awardodds4`,`other_awardodds5` from nation_quest;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -96,9 +96,24 @@ int nationquest_init_auto()
 		g_nation_quest[level].config[kind].awardnum[2] = atoi(row[offset++]);
 		g_nation_quest[level].config[kind].awardnum[3] = atoi(row[offset++]);
 		g_nation_quest[level].config[kind].awardnum[4] = atoi(row[offset++]);
-		g_nation_quest[level].config[kind].other_awardkind = atoi(row[offset++]);
-		g_nation_quest[level].config[kind].other_awardnum = atoi(row[offset++]);
-		g_nation_quest[level].config[kind].other_awardodds = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[0] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[1] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[2] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[3] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[4] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardkind[5] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[0] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[1] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[2] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[3] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[4] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardnum[5] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[0] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[1] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[2] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[3] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[4] = atoi(row[offset++]);
+		g_nation_quest[level].config[kind].other_awardodds[5] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

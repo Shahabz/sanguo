@@ -338,7 +338,7 @@ function MapMainDlgBattleSet( root, index, info )
 	SetControlID( uiGpsBtn, CONTROLOFFSET_GPS+info.m_army_index )
 	
 	-- 状态名称
-	print (  info.m_state..",".. info.m_action ..",".. info.m_to_type)
+	--print (  info.m_state..",".. info.m_action ..",".. info.m_to_type)
 	if info.m_state == ARMY_STATE_MARCH or info.m_state == ARMY_STATE_GROUP_END then
 		if info.m_action == ARMY_ACTION_FIGHT then
 			if info.m_to_type == MAPUNIT_TYPE_CITY then

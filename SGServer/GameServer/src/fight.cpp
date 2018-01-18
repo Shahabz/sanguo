@@ -195,6 +195,8 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 	{ // 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 		if ( pUnit->troops == pUnit->maxhp )
 			pUnit->line_hp = line_troops;
+		else if ( pUnit->troops - pUnit->maxhp >= line_troops )
+			pUnit->line_hp = line_troops;
 		else
 			pUnit->line_hp = (pUnit->troops - pUnit->maxhp) % line_troops;
 	}
@@ -1072,6 +1074,8 @@ int fight_changehp( int pos, FightUnit *pTargetUnit, int damage )
 			if ( pTargetUnit->line_left == 1 )
 			{ // 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 				if ( pTargetUnit->troops == pTargetUnit->maxhp )
+					pTargetUnit->line_hp = line_troops;
+				else if ( pTargetUnit->troops - pTargetUnit->maxhp >= line_troops )
 					pTargetUnit->line_hp = line_troops;
 				else
 					pTargetUnit->line_hp = (pTargetUnit->troops - pTargetUnit->maxhp) % line_troops;

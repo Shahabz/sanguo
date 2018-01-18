@@ -150,11 +150,11 @@ function NationQuestDlgCreate( index, info )
 		value = info.m_needvalue
 	end
 	if info.m_kind == 1 then
-		SetText( uiName, F(1787, value, value, info.m_needvalue) );
+		SetText( uiName, F(1787, info.m_needvalue, value, info.m_needvalue) );
 	elseif info.m_kind == 2 then
-		SetText( uiName, F(1788, value, value, info.m_needvalue) );
+		SetText( uiName, F(1788, info.m_needvalue, value, info.m_needvalue) );
 	elseif info.m_kind == 3 then
-		SetText( uiName, F(1789, value, value, info.m_needvalue) );
+		SetText( uiName, F(1789, info.m_needvalue, value, info.m_needvalue) );
 	end
 	
 	-- 先隐藏

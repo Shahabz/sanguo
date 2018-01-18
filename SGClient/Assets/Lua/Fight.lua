@@ -167,6 +167,8 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 		-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 		if pUnit.troops == pUnit.maxhp then
 			pUnit.line_hp = line_troops;
+		elseif (pUnit.troops - pUnit.maxhp) >= line_troops then
+			pUnit.line_hp = line_troops;
 		else
 			pUnit.line_hp = (pUnit.troops - pUnit.maxhp) % line_troops;
 		end
@@ -174,6 +176,7 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 		-- 其余排的兵力都等于每排兵力
 		pUnit.line_hp = line_troops;
 	end
+	--print( "fight_add_unit-".."line_troops:"..line_troops..",pUnit.line_left:"..pUnit.line_left..",pUnit.line_hp:"..pUnit.line_hp..",pUnit.troops:"..pUnit.troops..",pUnit.maxhp:"..pUnit.maxhp )
 	return 0;
 end
 
@@ -646,6 +649,8 @@ function fight_changehp( pos, pTargetUnit, damage )
 			if pTargetUnit.line_left == 1 then
 				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
 				if pTargetUnit.troops == pTargetUnit.maxhp then
+					pTargetUnit.line_hp = line_troops;
+				elseif (pTargetUnit.troops - pTargetUnit.maxhp) >= line_troops then
 					pTargetUnit.line_hp = line_troops;
 				else
 					pTargetUnit.line_hp = (pTargetUnit.troops - pTargetUnit.maxhp) % line_troops;

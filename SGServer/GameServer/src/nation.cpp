@@ -430,14 +430,7 @@ int nation_sendinfo( int actor_index )
 		char questkind = pNation->questkind[tmpi];
 		if ( questkind <= 0 || questkind >= g_nation_quest[questlevel].maxnum )
 			continue;
-		if ( pCity->nation_qv[tmpi] > g_nation_quest[questlevel].config[questkind].needvalue )
-		{
-			pValue.m_questvalue[tmpi] = g_nation_quest[questlevel].config[questkind].needvalue;
-		}
-		else
-		{
-			pValue.m_questvalue[tmpi] = pCity->nation_qv[tmpi];
-		}
+		pValue.m_questvalue[tmpi] = pCity->nation_qv[tmpi];
 		pValue.m_questvalue_max[tmpi] = g_nation_quest[questlevel].config[questkind].needvalue;
 	}
 
@@ -868,14 +861,7 @@ int nation_quest_sendlist( int actor_index )
 			continue;
 		pValue.m_list[pValue.m_count].m_level = questlevel;
 		pValue.m_list[pValue.m_count].m_kind = questkind;
-		if ( pCity->nation_qv[tmpi] > g_nation_quest[questlevel].config[questkind].needvalue )
-		{
-			pValue.m_list[pValue.m_count].m_value = g_nation_quest[questlevel].config[questkind].needvalue;
-		}
-		else
-		{
-			pValue.m_list[pValue.m_count].m_value = pCity->nation_qv[tmpi];
-		}
+		pValue.m_list[pValue.m_count].m_value = pCity->nation_qv[tmpi];
 		pValue.m_list[pValue.m_count].m_needvalue = g_nation_quest[questlevel].config[questkind].needvalue;
 
 		for ( int i = 0; i < 5; i++ )
@@ -979,13 +965,31 @@ int nation_quest_getaward( int actor_index, int kind )
 	}
 
 	// 给与额外奖励
-	if ( rand() % 100 <= g_nation_quest[questlevel].config[questkind].other_awardodds )
+	int allvalue = 0;
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
 	{
-		award_getaward( actor_index, g_nation_quest[questlevel].config[questkind].other_awardkind, g_nation_quest[questlevel].config[questkind].other_awardnum, -1, PATH_NATIONQUEST, NULL );
+		allvalue += g_nation_quest[questlevel].config[questkind].other_awardodds[tmpi];
+	}
+	if ( allvalue == 0 )
+		return -1;
+
+	int curvalue = 0;
+	int odds = allvalue > 0 ? rand() % allvalue : 0;
+	for ( int tmpi = 0; tmpi < 6; tmpi++ )
+	{
+		// 按照评价值方式随机
+		curvalue = g_nation_quest[questlevel].config[questkind].other_awardodds[tmpi];
+		if ( curvalue > 0 && curvalue > odds )
+		{
+			award_getaward( actor_index, g_nation_quest[questlevel].config[questkind].other_awardkind[tmpi], g_nation_quest[questlevel].config[questkind].other_awardnum[tmpi], -1, PATH_NATIONQUEST, NULL );
+			break;
+		}
+		odds -= curvalue;
 	}
 
 	pCity->nation_qv[index] = -1;
 	nation_quest_sendlist( actor_index );
+	nation_sendinfo( actor_index );
 	return 0;
 }
 

@@ -226,6 +226,16 @@ function NationDlgSetQuest()
 	end
 	SetTrue( m_uiQuestInfo.transform:Find("Timer") )
 	SetTimer( m_uiQuestInfo.transform:Find("Timer"), 6, 6, 1 );
+	
+	-- 检查是否有优先显示的
+	for i=1, 3, 1 do
+		local value = m_recvValue.m_questvalue[i];
+		local maxvalue = m_recvValue.m_questvalue_max[i];
+		if value >= maxvalue then
+			m_curQuestKind = i;
+		end
+	end
+	
 	local kind = m_curQuestKind
 	local value = m_recvValue.m_questvalue[kind];
 	local maxvalue = m_recvValue.m_questvalue_max[kind];
@@ -233,11 +243,11 @@ function NationDlgSetQuest()
 		value = maxvalue
 	end
 	if kind == 1 then
-		SetText( m_uiQuestInfo.transform:Find("Text"), F(1787, value, value, maxvalue) );
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1787, maxvalue, value, maxvalue) );
 	elseif kind == 2 then
-		SetText( m_uiQuestInfo.transform:Find("Text"), F(1788, value, value, maxvalue) );
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1788, maxvalue, value, maxvalue) );
 	elseif kind == 3 then
-		SetText( m_uiQuestInfo.transform:Find("Text"), F(1789, value, value, maxvalue) );
+		SetText( m_uiQuestInfo.transform:Find("Text"), F(1789, maxvalue, value, maxvalue) );
 	end
 	m_curQuestKind = m_curQuestKind + 1;
 	if m_curQuestKind > 3 then

@@ -189,3 +189,5 @@ global.nation_rank_vote2 = 15 --国家荣誉排行榜奖励选票数
 global.nation_rank_vote3 = 12 --国家荣誉排行榜奖励选票数
 global.nation_rank_vote4 = 10 --国家荣誉排行榜奖励选票数
 global.nation_rank_vote5 = 8 --国家荣誉排行榜奖励选票数
+global.nation_official_term = 15 --国家官员任期
+global.nation_official_term = 1 --国家官员选举期
