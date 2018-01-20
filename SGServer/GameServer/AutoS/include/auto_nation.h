@@ -8,7 +8,7 @@ struct _nation {
 				char level;	//等级
 				int exp;	//经验
 				char notice[512];	//国家公告
-				int official_actorid[11];	//官员id，索引0是国王
+				int official_actorid[10];	//官员id，索引0是国王
 				int tiance_point;	//天策府统领点数
 				char questlevel[3];	//国家任务
 				char questkind[3];	//国家任务

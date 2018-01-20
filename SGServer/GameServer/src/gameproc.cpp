@@ -405,6 +405,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 官职初始化
+	if ( nationofficial_init_auto() < 0 )
+	{
+		printf_msg( "nationofficial_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 国家任务初始化-个人
 	if ( nationquest_init_auto() < 0 )
 	{
@@ -1301,6 +1310,7 @@ int process_logic()
 	else if ( tick == 6 )
 	{
 		kingwar_activity_logic();
+		nation_official_logic();
 	}
 	
 	// 1分钟一次逻辑

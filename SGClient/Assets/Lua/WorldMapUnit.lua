@@ -760,7 +760,6 @@ function MapUnit.RefreshTargetEnemy( recvValue )
                 local objs 		= unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 				local uiTarget = objs[3];
 				if recvValue ~= nil and recvValue.m_to_posx == posx and recvValue.m_to_posy == posy then
-					print("zxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 					if uiTarget == nil then
 						uiTarget = GameObject.Instantiate( LoadPrefab( "Zdtb" ) )
 						uiTarget.transform:SetParent( unitObj.transform );
@@ -768,6 +767,7 @@ function MapUnit.RefreshTargetEnemy( recvValue )
 						objs[3] = uiTarget;
 					end
 					SetTrue( uiTarget )
+					break
 				else
 					if uiTarget ~= nil then
 						SetFalse( uiTarget )

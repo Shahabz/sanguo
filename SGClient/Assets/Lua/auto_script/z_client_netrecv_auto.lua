@@ -865,6 +865,26 @@ function netrecv_nationranklist_C( buffer )
 	proc_nationranklist_C( recvValue );
 end
 
+function netrecv_nationofficiallist_C( buffer )
+	local recvValue = struct_NetS_NationOfficialList_recv( buffer );
+	proc_nationofficiallist_C( recvValue );
+end
+
+function netrecv_nationcandidatelist_C( buffer )
+	local recvValue = struct_NetS_NationCandidateList_recv( buffer );
+	proc_nationcandidatelist_C( recvValue );
+end
+
+function netrecv_worlddataopen_C( buffer )
+	local recvValue = struct_NetS_WorldDataOpen_recv( buffer );
+	proc_worlddataopen_C( recvValue );
+end
+
+function netrecv_nationreplacelist_C( buffer )
+	local recvValue = struct_NetS_NationReplaceList_recv( buffer );
+	proc_nationreplacelist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1039,6 +1059,10 @@ Proc_Command = {
 	[CMDS_NATIONQUESTLIST]=netrecv_nationquestlist_C;
 	[CMDS_NATIONMISSIONLIST]=netrecv_nationmissionlist_C;
 	[CMDS_NATIONRANKLIST]=netrecv_nationranklist_C;
+	[CMDS_NATIONOFFICIALLIST]=netrecv_nationofficiallist_C;
+	[CMDS_NATIONCANDIDATELIST]=netrecv_nationcandidatelist_C;
+	[CMDS_WORLDDATAOPEN]=netrecv_worlddataopen_C;
+	[CMDS_NATIONREPLACELIST]=netrecv_nationreplacelist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

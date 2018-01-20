@@ -8,6 +8,7 @@ typedef struct _actor_rank
 	int battlepower;
 	short level;
 	char place;
+	char official;
 }ActorRank;
 
 int rank_init();

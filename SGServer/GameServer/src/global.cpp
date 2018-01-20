@@ -540,6 +540,16 @@ int global_init()
 			global.nation_rank_vote[3] = atoi( row[1] );
 		else if ( id == 190 )
 			global.nation_rank_vote[4] = atoi( row[1] );
+		else if ( id == 191 )
+			global.nation_place_max = atoi( row[1] );
+		else if ( id == 192 )
+			global.nation_official_term = atoi( row[1] );
+		else if ( id == 193 )
+			global.nation_official_select = atoi( row[1] );
+		else if ( id == 194 )
+			global.nation_vote_actorlevel = atoi( row[1] );
+		else if ( id == 195 )
+			global.nation_vote_basenum = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

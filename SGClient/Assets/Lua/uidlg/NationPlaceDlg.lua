@@ -5,6 +5,7 @@ local m_uiNextPlaceName = nil; --UnityEngine.GameObject
 local m_uiPlaceDesc = nil; --UnityEngine.GameObject
 local m_uiPlaceAttr = nil; --UnityEngine.GameObject
 local m_uiCondGroup = nil; --UnityEngine.GameObject
+local m_uiUpgradeBtn = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function NationPlaceDlgOpen()
@@ -52,6 +53,7 @@ function NationPlaceDlgOnAwake( gameObject )
 	m_uiPlaceDesc = objs[2];
 	m_uiPlaceAttr = objs[3];
 	m_uiCondGroup = objs[4];
+	m_uiUpgradeBtn = objs[5];
 end
 
 -- 界面初始化时调用
@@ -96,14 +98,19 @@ function NationPlaceDlgRecv()
 	local nextplace = GetPlayer().m_place+1
 	SetRichText( m_uiPlaceName, F(1773, PlaceRichText( place ), PlaceName( place )) )
 	-- 满级
-	if place >= 15 then
+	if place >= global.nation_place_max then
 		SetRichText( m_uiNextPlaceName, F(1772, T(1757), "") )
 		SetText( m_uiPlaceDesc, PlaceDesc(place) )
 		SetRichText( m_uiPlaceAttr, F( 1776, g_nation_place[place].value ) )
+		SetFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiCondGroup )
+		return
 	else
 		SetRichText( m_uiNextPlaceName, F(1772, PlaceRichText( nextplace ), PlaceName( nextplace )) )
 		SetText( m_uiPlaceDesc, PlaceDesc(nextplace) )
 		SetRichText( m_uiPlaceAttr,  F( 1776, g_nation_place[place].value ).."<icon=arrow>"..g_nation_place[nextplace].value )
+		SetTrue( m_uiUpgradeBtn )
+		SetTrue( m_uiCondGroup )
 	end
 	
 	-- 消耗

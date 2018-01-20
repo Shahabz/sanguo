@@ -299,6 +299,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
 	return 0;
 }
 
@@ -2726,6 +2728,100 @@ int struct_NetS_NationRankList_send( char **pptr, int *psize, SLK_NetS_NationRan
 		struct_NetS_NationRankMember_send( pptr, psize, &pValue->m_townrank[tmpi] );
 	}
 	LKSET_WORD_SEND( (*pptr), &pValue->m_vote, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationOfficial_send( char **pptr, int *psize, SLK_NetS_NationOfficial *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_official, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zone, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationOfficialList_send( char **pptr, int *psize, SLK_NetS_NationOfficialList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationOfficial_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationCandidate_send( char **pptr, int *psize, SLK_NetS_NationCandidate *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_ballot, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationCandidateList_send( char **pptr, int *psize, SLK_NetS_NationCandidateList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationCandidate_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_myvote, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isballot, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_tokenballot, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WorldDataOpen_send( char **pptr, int *psize, SLK_NetS_WorldDataOpen *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationReplace_send( char **pptr, int *psize, SLK_NetS_NationReplace *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_official, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationReplaceList_send( char **pptr, int *psize, SLK_NetS_NationReplaceList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationReplace_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
 	return 0;
 }
 

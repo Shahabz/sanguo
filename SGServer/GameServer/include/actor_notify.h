@@ -2,7 +2,7 @@
 #define __ACTOR_NOTIFY_H
 #include "server_structsend_auto.h"
 
-#define POP( actor_index, msgid ) actor_system_pop( actor_index, msgid )
+#define POP( actor_index, msgid ) actor_notify_pop( actor_index, msgid )
 #define SUBSCRIBE_CMD_KINGWARDLG	1
 
 #define NOTIFY_NORMAL		0	
@@ -36,7 +36,8 @@ int actor_notify( int actor_index, short msgid, const char *msg );
 int actor_notify_value( int actor_index, short msgid, char count, const int *data, const char *msg );
 
 // 发消息提示，通过消息ID
-int actor_system_pop( int actor_index, int textid );
+int actor_notify_pop( int actor_index, int textid );
+int actor_notify_pop_v( int actor_index, int textid, char *v1, char *v2 );
 
 // npc说话
 int npc_talk( int actor_index, int textid, int btntextid );
@@ -64,5 +65,6 @@ int actor_notify_msgbox_callback( int actor_index, int msgid, int value1, int va
 // 通知UI更新
 #define UI_UPDATE_NATIONFIGHT		1 // 国战城镇有变化
 #define UI_UPDATE_FIGHTINFO			2 // 战斗信息变化
+#define UI_UPDATE_NATIONOFFICIAL	3 // 官员状态变化
 void ui_update( int actor_index, char send_type, char ui );
 #endif

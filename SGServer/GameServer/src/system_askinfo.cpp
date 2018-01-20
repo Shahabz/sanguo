@@ -839,6 +839,26 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 国家荣誉任务奖励领取
 			nation_mission_getaward( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 12 )
+		{ // 国家官员列表
+			nation_official_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 13 )
+		{ // 国家官员投票
+			nation_official_ballot( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 14 )
+		{ // 国家官员替换列表
+			nation_official_replace_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 15 )
+		{ // 国家官员任免
+			nation_official_replace_up( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 16 )
+		{ // 国家官员罢免
+			nation_official_replace_down( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

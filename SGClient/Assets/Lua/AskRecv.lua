@@ -109,6 +109,10 @@ function RecvActorNotify(recvValue)
 			GetPlayer().m_place = value[2]
 			NationDlgChangePlace();
 			NationPlaceDlgRecv()
+		-- 官职变化
+		elseif value[1] == 4 then
+			GetPlayer().m_official = value[2]
+			NationDlgChangeOfficial()
 		end
 	
 	-- 邮件	
@@ -214,7 +218,27 @@ function RecvActorNotify(recvValue)
 		
 	-- 弹出消息，无框
 	elseif msgid == NOTIFY_POP then
-		pop(T(value[1]))
+		if recvValue.m_msg_length > 1 then
+			local json = require "cjson"
+			local msgjson = json.decode( recvValue.m_msg );
+			local msg = "";
+			if msgjson["v1"] ~= nil and msgjson["v2"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				local v2_str = GetMail():GetString( msgjson["v2"] );
+				msg = F( value[1], v1_str, v2_str )
+			
+			elseif msgjson["v1"] ~= nil then
+				local v1_str = GetMail():GetString( msgjson["v1"] );
+				msg = F( value[1], v1_str )
+				
+			else
+				msg = T(value[1])
+			end
+			pop( msg )
+		else
+			pop( T(value[1]) )
+		end
+		
 	
 	-- 建筑完成	
 	elseif msgid == NOTIFY_BUILDINGFINISH then
@@ -251,6 +275,7 @@ end
 -- UI更新
 UI_UPDATE_NATIONFIGHT = 1 -- 国战相关
 UI_UPDATE_FIGHTINFO	  = 2 -- 战斗信息变化
+UI_UPDATE_NATIONOFFICIAL = 3 -- 官员系统状态变化
 function dialogupdate_recv( ui )
 	if ui == UI_UPDATE_NATIONFIGHT then
 		MapMainDlgNationLayerUpdate()
@@ -263,6 +288,8 @@ function dialogupdate_recv( ui )
 		MapArmyGroupDlgUpdate()
 		NationWarDlgNationUpdate()
 		NationWarDlgCityUpdate()
-	else
+		
+	elseif ui == UI_UPDATE_NATIONOFFICIAL then
+		NationOfficialDlgUpdate()
 	end
 end

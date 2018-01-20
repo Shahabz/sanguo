@@ -50,6 +50,7 @@
 #include "auto_data_nation_place.h"
 #include "auto_data_nation_quest.h"
 #include "auto_data_nation_mission.h"
+#include "auto_data_nation_official.h"
 #include "auto_data_weather.h"
 #include "auto_data_shop.h"
 #include "auto_data_story.h"

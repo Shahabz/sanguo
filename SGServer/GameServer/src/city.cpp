@@ -1530,19 +1530,6 @@ int city_changevote( int city_index, int value, short path )
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	return 0;
 }
-// 被选票
-int city_changeballot( int city_index, int value, int actorid, short path )
-{
-	CITY_CHECK_INDEX( city_index );
-	if ( value > 0 && g_city[city_index].ballot > INT_MAX - value )
-		g_city[city_index].ballot = INT_MAX;
-	else
-		g_city[city_index].ballot += value;
-	if ( g_city[city_index].ballot < 0 )
-		g_city[city_index].ballot = 0;
-	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
-	return 0;
-}
 
 CityGuardInfoConfig *city_guard_config( int monsterid, int color )
 {
@@ -1568,7 +1555,7 @@ int city_guard_call( int city_index )
 	CITY_CHECK_INDEX( city_index );
 	if ( g_city[city_index].guardsec > 0 )
 	{
-		actor_system_pop( g_city[city_index].actor_index, 795 );
+		actor_notify_pop( g_city[city_index].actor_index, 795 );
 		return -1;
 	}
 	Building *pBuilding = building_getptr_kind( city_index, BUILDING_Wall );
@@ -3454,7 +3441,7 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 	{
 		if ( pCity->hero[tmpi].state > 0 )
 		{
-			actor_system_pop( pCity->actor_index, 1001 ); // 召回在外征战的武将
+			actor_notify_pop( pCity->actor_index, 1001 ); // 召回在外征战的武将
 			return -1;
 		}
 	}

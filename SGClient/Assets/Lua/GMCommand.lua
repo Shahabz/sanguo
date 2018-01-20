@@ -45,6 +45,7 @@ local GMCMD_SERVER = {
 [41]="nationquest",
 [42]="nationrank",
 [43]="nationexp",
+[44]="nationof",
 }
  
 -- 发到客户端本地指令

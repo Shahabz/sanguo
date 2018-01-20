@@ -3,7 +3,7 @@ CREATE TABLE `nation` (
   `level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '等级',
   `exp` int(11) NOT NULL DEFAULT '0' COMMENT '经验',
   `notice` varbinary(512) NOT NULL DEFAULT '' COMMENT '国家公告',
-  `official_actorid` varbinary(44) NOT NULL DEFAULT '' COMMENT '官员id，索引0是国王',
+  `official_actorid` varbinary(40) NOT NULL DEFAULT '' COMMENT '官员id，索引0是国王',
   `tiance_point` int(11) NOT NULL DEFAULT '0' COMMENT '天策府统领点数',
   `questlevel` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务',
   `questkind` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务',

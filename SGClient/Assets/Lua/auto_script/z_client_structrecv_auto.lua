@@ -241,6 +241,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_storyid = buffer:ReadInt();
 	recvValue.m_posx = buffer:ReadShort();
 	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_open_town6 = buffer:ReadSByte();
+	recvValue.m_open_townking = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2478,6 +2480,89 @@ function struct_NetS_NationRankList_recv( buffer )
 		table.insert( recvValue.m_townrank, tmpValue );
 	end
 	recvValue.m_vote = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_NationOfficial_recv( buffer )
+	local recvValue = {};
+	recvValue.m_official = buffer:ReadSByte();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_zone = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationOfficialList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationOfficial_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_endtime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationCandidate_recv( buffer )
+	local recvValue = {};
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_ballot = buffer:ReadInt();
+	recvValue.m_actorid = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationCandidateList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationCandidate_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_endtime = buffer:ReadInt();
+	recvValue.m_myvote = buffer:ReadShort();
+	recvValue.m_isballot = buffer:ReadSByte();
+	recvValue.m_tokenballot = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_WorldDataOpen_recv( buffer )
+	local recvValue = {};
+	recvValue.m_open_town6 = buffer:ReadSByte();
+	recvValue.m_open_townking = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationReplace_recv( buffer )
+	local recvValue = {};
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_battlepower = buffer:ReadInt();
+	recvValue.m_place = buffer:ReadSByte();
+	recvValue.m_official = buffer:ReadSByte();
+	recvValue.m_actorid = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationReplaceList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationReplace_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_op = buffer:ReadSByte();
 	return recvValue;
 end
 

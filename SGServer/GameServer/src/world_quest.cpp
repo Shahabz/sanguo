@@ -20,6 +20,7 @@
 #include "world_quest.h"
 #include "map_zone.h"
 #include "king_war.h"
+#include "nation.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -160,6 +161,11 @@ int worldquest_setvalue( int questid, int value )
 				worldquest_sendinfo( tmpi );
 			}
 		}
+
+		if ( questid == WORLDQUEST_WORLDBOSS2 )
+		{ // 皇城开启
+			worldquest_updateopen();
+		}
 	}
 	else
 	{
@@ -170,6 +176,12 @@ int worldquest_setvalue( int questid, int value )
 			{
 				worldquest_checkcomplete( tmpi, 1 );
 			}
+		}
+
+		if ( questid == WORLDQUEST_ID9 )
+		{ // 州城开放时开放官员系统
+			nation_official_open();
+			worldquest_updateopen();
 		}
 	}
 	return 0;
@@ -373,5 +385,14 @@ int worldquest_getaward( int actor_index, int questid )
 	worldquest_setcomplete( actor_index, questid );
 	worldquest_give( actor_index );
 	worldquest_sendinfo( actor_index );
+	return 0;
+}
+
+int worldquest_updateopen()
+{
+	SLK_NetS_WorldDataOpen pValue = { 0 };
+	pValue.m_open_town6 = worldquest_check_server( WORLDQUEST_ID9 );
+	pValue.m_open_townking = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
+	netsend_worlddataopen_S( 0, SENDTYPE_WORLD, &pValue );
 	return 0;
 }

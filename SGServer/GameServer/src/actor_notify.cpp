@@ -51,9 +51,31 @@ int actor_notify_value( int actor_index, short msgid, char count, const int *dat
 }
 
 // 发消息提示，通过消息ID
-int actor_system_pop( int actor_index, int textid )
+int actor_notify_pop( int actor_index, int textid )
 {
 	actor_notify_value( actor_index, NOTIFY_POP, 1, &textid, NULL );
+	return 0;
+}
+
+int actor_notify_pop_v( int actor_index, int textid, char *v1, char *v2 )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	char content[128] = { 0 };
+	if ( v1 && v2 )
+	{
+		sprintf( content, "{\"v1\":\"%s\",\"v2\":\"%s\"}", v1, v2 );
+		actor_notify_value( actor_index, NOTIFY_POP, 1, &textid, content );
+	}
+	else if ( v1 )
+	{
+		sprintf( content, "{\"v1\":\"%s\"}", v1 );
+		actor_notify_value( actor_index, NOTIFY_POP, 1, &textid, content );
+	}
+	else
+	{
+		actor_notify_value( actor_index, NOTIFY_POP, 1, &textid, NULL );
+	}
 	return 0;
 }
 

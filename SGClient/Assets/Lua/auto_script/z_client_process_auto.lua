@@ -1933,3 +1933,35 @@ function proc_nationranklist_C( recvValue )
 	NationHonorDlgRankRecv( recvValue )
 end
 
+
+-- m_count=0,m_list={m_official=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_zone=0,[m_count]},m_endtime=0,
+function proc_nationofficiallist_C( recvValue )
+	-- process.
+	NationOfficialDlgOfficialRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_ballot=0,m_actorid=0,[m_count]},m_endtime=0,m_myvote=0,m_isballot=0,m_tokenballot=0,
+function proc_nationcandidatelist_C( recvValue )
+	-- process.
+	NationOfficialDlgCandidateRecv( recvValue )
+end
+
+-- m_open_town6=0,m_open_townking=0,
+function proc_worlddataopen_C( recvValue )
+	-- process.
+	GetPlayer().m_open_town6 = recvValue.m_open_town6
+	GetPlayer().m_open_townking = recvValue.m_open_townking
+end
+
+-- m_count=0,m_list={m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_place=0,m_official=0,m_actorid=0,[m_count]},m_op=0,
+function proc_nationreplacelist_C( recvValue )
+	-- process.
+	if recvValue.m_op == 1 then
+		NationOfficialReplaceDlgRecvBegin()
+	elseif recvValue.m_op == 2 then
+		NationOfficialReplaceDlgRecv( recvValue )
+	elseif recvValue.m_op == 3 then
+		NationOfficialReplaceDlgRecvEnd()
+	end
+end
+

@@ -16,6 +16,7 @@
 #include "award.h"
 #include "rank.h"
 #include "map_zone.h"
+#include "nation.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -41,7 +42,6 @@ int g_rank_zone_count[MAPZONE_MAXNUM] = { 0 };
 // ¹ú¼ÒÅÅÃû
 ActorRank *g_rank_nation[3] = { NULL };
 int g_rank_nation_count[3] = { 0 };
-
 
 int rank_init()
 {
@@ -98,6 +98,7 @@ int rank_reset()
 		g_rank_server[tmpi].level = g_city[tmpi].level;
 		g_rank_server[tmpi].place = g_city[tmpi].place;
 		g_rank_server[tmpi].battlepower = g_city[tmpi].battlepower;
+		g_rank_server[tmpi].official = g_city[tmpi].official;
 	}
 	return 0;
 }

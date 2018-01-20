@@ -163,8 +163,6 @@ int city_change_herowash( int city_index, int value, short path );
 int city_change_equipwash( int city_index, int value, short path );
 // 选票
 int city_changevote( int city_index, int value, short path );
-// 被选票
-int city_changeballot( int city_index, int value, int actorid, short path );
 // 城墙守卫
 CityGuardInfoConfig *city_guard_config( int monsterid, int color );
 CityGuard *city_guard_getptr( int city_index, int offset );

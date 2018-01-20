@@ -127,7 +127,12 @@ function FightScene.UnitCreate( pos, unit )
 				-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
 				local line_troops = math.floor( unit.troops / unit.line );
 				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
-				local line_hp = (unit.troops - unit.maxhp) % line_troops;
+				local line_hp
+				if unit.troops - unit.maxhp >= line_troops then
+					line_hp = line_troops;
+				else
+					line_hp = (unit.troops - unit.maxhp) % line_troops;
+				end
 				-- 战斗中最后一排士兵个数=最后一排兵力/每排兵力*9，结果向上取整
 				unitcount =  math.floor( line_hp/line_troops*9 )
 			end
@@ -152,7 +157,12 @@ function FightScene.UnitCreate( pos, unit )
 				-- 战斗中武将每排兵力=武将兵力属性值/武将总带兵排数,结果向下取整
 				local line_troops = math.floor( unit.troops / unit.line );
 				-- 最后一排兵力=（可带兵力-实际参战兵力）% 每排兵力
-				local line_hp = (unit.troops - unit.maxhp) % line_troops;
+				local line_hp
+				if unit.troops - unit.maxhp >= line_troops then
+					line_hp = line_troops;
+				else
+					line_hp = (unit.troops - unit.maxhp) % line_troops;
+				end
 				-- 战斗中最后一排士兵个数=最后一排兵力/每排兵力*9，结果向上取整
 				unitcount =  math.floor( line_hp/line_troops*9 )
 			end

@@ -743,7 +743,7 @@ int mail_share_getcontent( int actor_index, i64 mailid )
 	else
 	{
 		// 发送一个已经不存在的消息
-		actor_system_pop( actor_index, 1176 );
+		actor_notify_pop( actor_index, 1176 );
 		mysql_free_result( res );
 		return -1;
 	}
@@ -805,7 +805,7 @@ int mail_share_getfightcontent( int actor_index, i64 mailid )
 	else
 	{
 		// 发送一个已经不存在的消息
-		actor_system_pop( actor_index, 1176 );
+		actor_notify_pop( actor_index, 1176 );
 		mysql_free_result( res );
 		return -1;
 	}

@@ -98,6 +98,7 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		--国家官员
 		elseif nControlID == 9 then
+			NationOfficialDlgShow()
 		
 		--国家战争
 		elseif nControlID == 10 then
@@ -178,6 +179,9 @@ function NationDlgShow()
 	
 	-- 国家旗帜
 	SetImage( m_uiFlag, NationFlagSprite( GetPlayer().m_nation ) )
+
+	-- 官职
+	NationDlgChangeOfficial();
 	-- 爵位
 	NationDlgChangePlace();
 	-- 威望
@@ -272,3 +276,10 @@ function NationDlgChangePrestige()
 	SetText( m_uiPrestige, F(1941, knum(GetPlayer().m_prestige)) )
 end
 
+-- 我的官职
+function NationDlgChangeOfficial()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetText( m_uiOfficialer, T(1943)..":"..OfficialName(GetPlayer().m_official) )
+end

@@ -5,7 +5,7 @@ local m_Dlg = nil;
 -- 打开界面
 function #NAME#Open()
 	m_Dlg = eye.uiManager:Open( "#NAME#" );
-	--m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(0), nil, #NAME#Close() );
+	--m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(0), nil, #NAME#Close );
 end
 
 -- 隐藏界面

@@ -54,7 +54,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK )
+	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF )
 	{
 		actorid = 0;
 	}
@@ -504,6 +504,9 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			nation_exp( pCity->nation, pValue[0] );
 		}
 		break;
+	case GMC_NATIONOF: // 国家官员系统
+		extern int g_nation_official_statetime;
+		g_nation_official_statetime = (int)time( NULL ) + 30;
 	default:
 		break;
 	}

@@ -191,6 +191,8 @@ struct _slk_NetS_ActorInfo {
 	int m_storyid;	//服务器发送玩家基本信息-副本进度
 	short m_posx;	//服务器发送玩家基本信息-副本进度
 	short m_posy;	//服务器发送玩家基本信息-副本进度
+	char m_open_town6;	//服务器发送玩家基本信息-州城开启
+	char m_open_townking;	//服务器发送玩家基本信息-皇城开启
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1865,6 +1867,67 @@ struct _slk_NetS_NationRankList {
 };
 typedef struct _slk_NetS_NationRankList SLK_NetS_NationRankList;	//国家荣誉排行榜
 
+struct _slk_NetS_NationOfficial {
+	char m_official;	//国家官员信息
+	char m_namelen;	//国家官员信息
+	char m_name[32];	//国家官员信息
+	short m_level;	//国家官员信息
+	int m_battlepower;	//国家官员信息
+	char m_zone;	//国家官员信息
+};
+typedef struct _slk_NetS_NationOfficial SLK_NetS_NationOfficial;	//国家官员
+
+struct _slk_NetS_NationOfficialList {
+	char m_count;	//国家官员列表
+	SLK_NetS_NationOfficial m_list[12];	//国家官员列表
+	int m_endtime;	//国家官员列表
+};
+typedef struct _slk_NetS_NationOfficialList SLK_NetS_NationOfficialList;	//国家官员列表
+
+struct _slk_NetS_NationCandidate {
+	char m_namelen;	//候选人
+	char m_name[32];	//候选人
+	short m_level;	//候选人
+	int m_battlepower;	//候选人
+	int m_ballot;	//候选人
+	int m_actorid;	//候选人
+};
+typedef struct _slk_NetS_NationCandidate SLK_NetS_NationCandidate;	//国家官员候选人
+
+struct _slk_NetS_NationCandidateList {
+	char m_count;	//候选人列表
+	SLK_NetS_NationCandidate m_list[10];	//候选人列表
+	int m_endtime;	//候选人列表
+	short m_myvote;	//候选人列表
+	char m_isballot;	//候选人列表
+	short m_tokenballot;	//候选人列表
+};
+typedef struct _slk_NetS_NationCandidateList SLK_NetS_NationCandidateList;	//国家官员候选人列表
+
+struct _slk_NetS_WorldDataOpen {
+	char m_open_town6;	//州城是否开放
+	char m_open_townking;	//皇城是否开放
+};
+typedef struct _slk_NetS_WorldDataOpen SLK_NetS_WorldDataOpen;	//世界数据开放
+
+struct _slk_NetS_NationReplace {
+	char m_namelen;	//将军任命
+	char m_name[32];	//将军任命
+	short m_level;	//将军任命
+	int m_battlepower;	//将军任命
+	char m_place;	//将军任命
+	char m_official;	//将军任命
+	int m_actorid;	//将军任命
+};
+typedef struct _slk_NetS_NationReplace SLK_NetS_NationReplace;	//官员替换
+
+struct _slk_NetS_NationReplaceList {
+	char m_count;	//将军任命列表
+	SLK_NetS_NationReplace m_list[30];	//将军任命列表
+	char m_op;	//将军任命列表
+};
+typedef struct _slk_NetS_NationReplaceList SLK_NetS_NationReplaceList;	//官员替换列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2066,5 +2129,12 @@ int struct_NetS_NationMission_send( char **pptr, int *psize, SLK_NetS_NationMiss
 int struct_NetS_NationMissionList_send( char **pptr, int *psize, SLK_NetS_NationMissionList *pValue );
 int struct_NetS_NationRankMember_send( char **pptr, int *psize, SLK_NetS_NationRankMember *pValue );
 int struct_NetS_NationRankList_send( char **pptr, int *psize, SLK_NetS_NationRankList *pValue );
+int struct_NetS_NationOfficial_send( char **pptr, int *psize, SLK_NetS_NationOfficial *pValue );
+int struct_NetS_NationOfficialList_send( char **pptr, int *psize, SLK_NetS_NationOfficialList *pValue );
+int struct_NetS_NationCandidate_send( char **pptr, int *psize, SLK_NetS_NationCandidate *pValue );
+int struct_NetS_NationCandidateList_send( char **pptr, int *psize, SLK_NetS_NationCandidateList *pValue );
+int struct_NetS_WorldDataOpen_send( char **pptr, int *psize, SLK_NetS_WorldDataOpen *pValue );
+int struct_NetS_NationReplace_send( char **pptr, int *psize, SLK_NetS_NationReplace *pValue );
+int struct_NetS_NationReplaceList_send( char **pptr, int *psize, SLK_NetS_NationReplaceList *pValue );
 
 #endif

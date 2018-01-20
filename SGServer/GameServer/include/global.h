@@ -163,6 +163,11 @@ typedef struct _global
 	float nequip_remake_quick_token;
 	char nation_quest_timer[3];
 	char nation_rank_vote[5];
+	char nation_place_max;
+	char nation_official_term;
+	char nation_official_select;
+	short nation_vote_actorlevel;
+	short nation_vote_basenum;
 }Global;
 int global_init();
 void global_reload();

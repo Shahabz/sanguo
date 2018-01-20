@@ -23,6 +23,7 @@
 #include "vip.h"
 #include "quest.h"
 #include "actor_times.h"
+#include "world_quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -299,7 +300,7 @@ int actor_changename( int actor_index, char *pname, int type )
 	{
 		if ( atoi( row[0] ) >= 1 )
 		{
-			actor_system_pop( actor_index, 787 ); // 该名字已经有人使用
+			actor_notify_pop( actor_index, 787 ); // 该名字已经有人使用
 			mysql_free_result( res );
 			return -1;
 		}
@@ -486,6 +487,8 @@ int actor_getinfo( int actor_index )
 	info.m_storyid = g_actors[actor_index].storyid;
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
+	info.m_open_town6 = worldquest_check_server( WORLDQUEST_ID9 );
+	info.m_open_townking = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{

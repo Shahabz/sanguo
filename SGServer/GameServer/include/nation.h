@@ -4,7 +4,7 @@
 
 #define NATION_MAX			4		// 算群雄4个国家
 #define NATION_NOTICE_MAX	512		// 公告
-#define NATION_OFFICIAL_MAX	11		// 官员个数
+#define NATION_OFFICIAL_MAX	10		// 官员个数
 #define NATION_TOWN_WAR_MAX	256		// 国战数量
 #define NATION_CITY_WAR_MAX	1024	// 城战数量
 
@@ -25,6 +25,18 @@
 
 #define NATION_RANK_MEMBERNUM	5	// 国家荣誉任务-选择人数
 
+#define NATION_OFFICIAL_STATE_OPEN		0 // 首次开启
+#define NATION_OFFICIAL_STATE_SELECT	1 // 选举期
+#define NATION_OFFICIAL_STATE_TERM		2 // 任期
+
+#define NATION_CANDIDATE_MAX	10 // 候选人数
+#define NATION_OFFICIAL_R1	1 // 魏王
+#define NATION_OFFICIAL_R2	2 // 蜀王
+#define NATION_OFFICIAL_R3	3 // 吴王
+#define NATION_OFFICIAL_R4	4 // 丞相
+#define NATION_OFFICIAL_R5	5 // 军事
+#define NATION_OFFICIAL_R6	6 // 将军
+
 // 国家荣誉排行榜
 typedef struct _nation_rank_member
 {
@@ -37,6 +49,14 @@ typedef struct _nation_rank
 {
 	NationRankMember member[NATION_RANK_MAX][NATION_RANK_MEMBERNUM];
 }NationRank;
+
+// 国家官员候选人列表
+typedef struct _nation_candidate
+{
+	int actorid;
+	int city_index;
+	int ballot;
+}NationCandidate;
 
 int nation_load();
 int nation_save( FILE *fp );
@@ -111,4 +131,15 @@ int nation_rank_sendlist( int actor_index );
 void nation_rank_addvalue( City *pCity, char kind, int value );
 int nation_rank_calc();
 void nation_rank_update();
+
+// 官员功能
+int nation_official_open();
+void nation_official_logic();
+int nation_official_candidate_create();
+int nation_official_create();
+int nation_official_ballot( int actor_index, int target_actorid, int istoken );
+int nation_official_sendlist( int actor_index );
+int nation_official_replace_sendlist( int actor_index );
+int nation_official_replace_up( int actor_index, int target_actorid );
+int nation_official_replace_down( int actor_index, int target_actorid );
 #endif

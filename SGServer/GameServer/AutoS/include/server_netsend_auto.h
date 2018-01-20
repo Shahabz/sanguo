@@ -175,6 +175,10 @@ int netsend_nationcitywarlist_S( int actor_index, char send_type, SLK_NetS_Natio
 int netsend_nationquestlist_S( int actor_index, char send_type, SLK_NetS_NationQuestList *pValue );
 int netsend_nationmissionlist_S( int actor_index, char send_type, SLK_NetS_NationMissionList *pValue );
 int netsend_nationranklist_S( int actor_index, char send_type, SLK_NetS_NationRankList *pValue );
+int netsend_nationofficiallist_S( int actor_index, char send_type, SLK_NetS_NationOfficialList *pValue );
+int netsend_nationcandidatelist_S( int actor_index, char send_type, SLK_NetS_NationCandidateList *pValue );
+int netsend_worlddataopen_S( int actor_index, char send_type, SLK_NetS_WorldDataOpen *pValue );
+int netsend_nationreplacelist_S( int actor_index, char send_type, SLK_NetS_NationReplaceList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );
