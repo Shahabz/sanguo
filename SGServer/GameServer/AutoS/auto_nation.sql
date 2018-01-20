@@ -9,5 +9,7 @@ CREATE TABLE `nation` (
   `questkind` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务',
   `missionlevel` tinyint(3) NOT NULL DEFAULT '0' COMMENT '国家荣誉任务等级',
   `missionvalue` varbinary(16) NOT NULL DEFAULT '' COMMENT '国家荣誉任务次数',
+  `candidate_actorid` varbinary(40) NOT NULL DEFAULT '' COMMENT '候选人id',
+  `candidate_ballot` varbinary(40) NOT NULL DEFAULT '' COMMENT '候选人选票',
   PRIMARY KEY (`nation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -586,6 +586,16 @@ int world_data_init()
 		if ( index >= 0 && index < WORLD_DATA_MAX )
 		{
 			g_world_data[index] = atoi( row[1] );
+			if ( index == WORLD_DATA_NATION_OFFICIAL_STATE )
+			{
+				extern char g_nation_official_state;
+				g_nation_official_state = g_world_data[index];
+			}
+			else if ( index == WORLD_DATA_NATION_OFFICIAL_STATETIME )
+			{
+				extern int g_nation_official_statetime;
+				g_nation_official_statetime = g_world_data[index];
+			}
 		}
 	}
 	mysql_free_result( res );

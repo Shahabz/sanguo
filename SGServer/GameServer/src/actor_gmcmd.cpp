@@ -507,6 +507,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_NATIONOF: // 国家官员系统
 		extern int g_nation_official_statetime;
 		g_nation_official_statetime = (int)time( NULL ) + 30;
+		world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 	default:
 		break;
 	}

@@ -75,6 +75,7 @@ extern int g_nation_mission_maxnum;
 extern ActorRank *g_rank_nation[3];
 extern int g_rank_nation_count[3];
 
+// 国家信息
 Nation g_nation[NATION_MAX] = { 0 };
 
 // 荣誉排行榜
@@ -83,9 +84,6 @@ NationRank g_nation_rank[NATION_MAX] = { 0 };
 // 官员系统状态时间
 char g_nation_official_state = 0;
 int g_nation_official_statetime = 0;
-
-// 候选人
-NationCandidate g_nation_candidate[3][NATION_CANDIDATE_MAX] = { 0 };
 
 // 读档完毕的回调
 int nation_loadcb( int nation )
@@ -123,6 +121,22 @@ int nation_loadcb( int nation )
 			g_nation_rank[nation].member[tmpi][i].city_index = -1;
 		}
 	}
+	// 官员索引
+	for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
+	{
+		if ( g_nation[nation].official_actorid[tmpi] > 0 )
+		{
+			g_nation[nation].official_city_index[tmpi] = city_getindex_withactorid( g_nation[nation].official_actorid[tmpi] );
+		}
+	}
+	// 候选人
+	for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
+	{
+		if ( g_nation[nation].candidate_actorid[tmpi] > 0 )
+		{
+			g_nation[nation].candidate_city_index[tmpi] = city_getindex_withactorid( g_nation[nation].candidate_actorid[tmpi] );
+		}
+	}
 	return 0;
 }
 
@@ -136,6 +150,11 @@ int nation_load()
 		for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 		{
 			g_nation[nation].official_city_index[tmpi] = -1;
+		}
+
+		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
+		{
+			g_nation[nation].candidate_city_index[tmpi] = -1;
 		}
 
 		for ( int tmpi = 0; tmpi < NATION_TOWN_WAR_MAX; tmpi++ )
@@ -1370,6 +1389,7 @@ int nation_official_open()
 	BeginTm.tm_sec = 59;
 	// 重新生成时间戳
 	g_nation_official_statetime = (int)mktime( &BeginTm ) + 1;
+	world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 	return 0;
 }
 
@@ -1384,6 +1404,8 @@ void nation_official_logic()
 		{ // 待首次开启->选举期
 			g_nation_official_state = 1;
 			g_nation_official_statetime = g_nation_official_statetime + global.nation_official_select * 3600 - 1;
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATE, g_nation_official_state, NULL, NULL );
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 			nation_official_candidate_create();
 			mail_sendall( 5041, 5538, NULL, NULL, NULL, "" );
 			ui_update( 0, SENDTYPE_WORLD, UI_UPDATE_NATIONOFFICIAL );
@@ -1392,6 +1414,8 @@ void nation_official_logic()
 		{ // 选举期->任期
 			g_nation_official_state = 2;
 			g_nation_official_statetime = g_nation_official_statetime + global.nation_official_term * 86400 - 1;
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATE, g_nation_official_state, NULL, NULL );
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 			nation_official_create();
 			mail_sendall( 5043, 5540, NULL, NULL, NULL, "" );
 			ui_update( 0, SENDTYPE_WORLD, UI_UPDATE_NATIONOFFICIAL );
@@ -1400,6 +1424,8 @@ void nation_official_logic()
 		{ // 任期->选举期
 			g_nation_official_state = 1;
 			g_nation_official_statetime = g_nation_official_statetime + global.nation_official_select * 3600 - 1;
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATE, g_nation_official_state, NULL, NULL );
+			world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 			nation_official_candidate_create();
 			mail_sendall( 5042, 5539, NULL, NULL, NULL, "" );
 			ui_update( 0, SENDTYPE_WORLD, UI_UPDATE_NATIONOFFICIAL );
@@ -1418,9 +1444,9 @@ int nation_official_candidate_create()
 			int city_index = g_rank_nation[nation][tmpi].city_index;
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
-			g_nation_candidate[nation][tmpi].city_index = city_index;
-			g_nation_candidate[nation][tmpi].actorid = g_city[city_index].actorid;
-			g_nation_candidate[nation][tmpi].ballot = 0;
+			g_nation[nation + 1].candidate_city_index[tmpi] = city_index;
+			g_nation[nation + 1].candidate_actorid[tmpi] = g_city[city_index].actorid;
+			g_nation[nation + 1].candidate_ballot[tmpi] = 0;
 		}
 	}
 
@@ -1463,37 +1489,58 @@ int nation_official_candidate_create()
 }
 
 // 排序函数
-int nation_official_sortfunc( const void* a, const void* b )
+int nation_official_sort( char nation )
 {
-	NationCandidate* pa = (NationCandidate*)a;
-	NationCandidate* pb = (NationCandidate*)b;
-	if ( pa == NULL || pb == NULL )
-		return -1;
-	return (pb->ballot - pa->ballot);
+	for ( int i = 0; i < NATION_CANDIDATE_MAX; i++ )
+	{
+		for ( int j = i; j < NATION_CANDIDATE_MAX - i; j++ )
+		{
+			if ( g_nation[nation].candidate_ballot[j] < g_nation[nation].candidate_ballot[j + 1] )
+			{
+				int temp_actorid;
+				int temp_city_index;
+				int temp_ballot;
+
+				temp_actorid = g_nation[nation].candidate_actorid[j];
+				temp_city_index = g_nation[nation].candidate_city_index[j];
+				temp_ballot = g_nation[nation].candidate_ballot[j];
+
+				g_nation[nation].candidate_actorid[j] = g_nation[nation].candidate_actorid[j+1];
+				g_nation[nation].candidate_city_index[j] = g_nation[nation].candidate_city_index[j+1];
+				g_nation[nation].candidate_ballot[j] = g_nation[nation].candidate_ballot[j+1];
+
+				g_nation[nation].candidate_actorid[j + 1] = temp_actorid;
+				g_nation[nation].candidate_city_index[j + 1] = temp_city_index;
+				g_nation[nation].candidate_ballot[j + 1] = temp_ballot;
+			}
+		}
+		
+	}
+	return 0;
 }
 
 // 官员创建
 int nation_official_create()
 {
 	// 创建官员
-	for ( int nation = 0; nation < 3; nation++ )
+	for ( int nation = 0; nation < NATION_MAX; nation++ )
 	{
-		qsort( g_nation_candidate[nation], NATION_CANDIDATE_MAX, sizeof( NationCandidate ), nation_official_sortfunc );
+		nation_official_sort( nation );
 		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 		{
-			int city_index = g_nation_candidate[nation][tmpi].city_index;
+			int city_index = g_nation[nation].candidate_city_index[tmpi];
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
-			g_nation[nation+1].official_actorid[tmpi] = g_city[city_index].actorid;
-			g_nation[nation+1].official_city_index[tmpi] = city_index;
+			g_nation[nation].official_actorid[tmpi] = g_city[city_index].actorid;
+			g_nation[nation].official_city_index[tmpi] = city_index;
 
 			if ( tmpi == 0 )
 			{
-				if ( nation == 0 )
+				if ( nation == 1 )
 					g_city[city_index].official = NATION_OFFICIAL_R1;
-				else if ( nation == 1 )
-					g_city[city_index].official = NATION_OFFICIAL_R2;
 				else if ( nation == 2 )
+					g_city[city_index].official = NATION_OFFICIAL_R2;
+				else if ( nation == 3 )
 					g_city[city_index].official = NATION_OFFICIAL_R3;
 			}
 			else if ( tmpi == 1 )
@@ -1521,13 +1568,13 @@ int nation_official_create()
 	}
 
 	// 清空候选人
-	for ( int nation = 0; nation < 3; nation++ )
+	for ( int nation = 0; nation < NATION_MAX; nation++ )
 	{
 		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 		{
-			g_nation_candidate[nation][tmpi].city_index = -1;
-			g_nation_candidate[nation][tmpi].actorid = 0;
-			g_nation_candidate[nation][tmpi].ballot = 0;
+			g_nation[nation].candidate_city_index[tmpi] = -1;
+			g_nation[nation].candidate_actorid[tmpi] = 0;
+			g_nation[nation].candidate_ballot[tmpi] = 0;
 		}
 	}
 
@@ -1563,10 +1610,10 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 	}
 
 	int tmpi = -1;
-	char nation = pCity->nation - 1;
+	char nation = pCity->nation;
 	for ( tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 	{
-		if ( g_nation_candidate[nation][tmpi].actorid == target_actorid )
+		if ( g_nation[nation].candidate_actorid[tmpi] == target_actorid )
 		{
 			break;
 		}
@@ -1578,7 +1625,7 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 	if ( istoken == 0 )
 	{
 		ballot = pCity->vote;
-		g_nation_candidate[nation][tmpi].ballot += pCity->vote;
+		g_nation[nation].candidate_ballot[tmpi] += pCity->vote;
 		city_changevote( pCity->index, -pCity->vote, PATH_NATIONBALLOT );
 		pCity->ballot = 1;
 	}
@@ -1588,14 +1635,14 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 		if ( actor_change_token( actor_index, -costtoken, PATH_NATIONBALLOT, 0 ) < 0 )
 			return -1;
 		ballot = 1;
-		g_nation_candidate[nation][tmpi].ballot += 1;
+		g_nation[nation].candidate_ballot[tmpi] += 1;
 		pCity->tokenballot += 1;
 		if ( pCity->tokenballot >= 30000 )
 			pCity->tokenballot = 30000;
 	}
 	nation_official_sendlist( actor_index );
 
-	int city_index = g_nation_candidate[nation][tmpi].city_index;
+	int city_index = g_nation[nation].candidate_city_index[tmpi];
 	if ( city_index >= 0 && city_index < g_city_maxcount )
 	{
 		char v1[32] = { 0 };
@@ -1631,7 +1678,7 @@ int nation_official_sendlist( int actor_index )
 		SLK_NetS_NationCandidateList pValue = { 0 };
 		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 		{
-			int city_index = g_nation_candidate[pCity->nation-1][tmpi].city_index;
+			int city_index = g_nation[pCity->nation].candidate_city_index[tmpi];
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
@@ -1639,7 +1686,7 @@ int nation_official_sendlist( int actor_index )
 			pValue.m_list[pValue.m_count].m_battlepower = g_city[city_index].battlepower;
 			strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
 			pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
-			pValue.m_list[pValue.m_count].m_ballot = g_nation_candidate[pCity->nation-1][tmpi].ballot;
+			pValue.m_list[pValue.m_count].m_ballot = g_nation[pCity->nation].candidate_ballot[tmpi];
 			pValue.m_count += 1;
 		}
 		pValue.m_endtime = g_nation_official_statetime;

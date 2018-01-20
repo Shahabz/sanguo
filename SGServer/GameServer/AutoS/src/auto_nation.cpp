@@ -18,7 +18,7 @@ int nation_load_auto( LPCB_GETNATION pCB_GetNation, LPCB_LOADNATION pCB_LoadNati
 	Nation *pNation;
 	int nation = 0;
 
-	sprintf( szSQL, "select `nation`,`level`,`exp`,`notice`,`official_actorid`,`tiance_point`,`questlevel`,`questkind`,`missionlevel`,`missionvalue` from %s ", pTab );
+	sprintf( szSQL, "select `nation`,`level`,`exp`,`notice`,`official_actorid`,`tiance_point`,`questlevel`,`questkind`,`missionlevel`,`missionvalue`,`candidate_actorid`,`candidate_ballot` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -45,6 +45,8 @@ int nation_load_auto( LPCB_GETNATION pCB_GetNation, LPCB_LOADNATION pCB_LoadNati
 		memcpy( pNation->questkind, row[offset++], sizeof(char)*3 );
 		pNation->missionlevel = atoi(row[offset++]);
 		memcpy( pNation->missionvalue, row[offset++], sizeof(int)*4 );
+		memcpy( pNation->candidate_actorid, row[offset++], sizeof(int)*10 );
+		memcpy( pNation->candidate_ballot, row[offset++], sizeof(int)*10 );
 		if( pCB_LoadNation )
 			pCB_LoadNation( pNation->nation );
 		nation = pNation->nation;
@@ -68,8 +70,10 @@ int nation_save_auto( Nation *pNation, const char *pTab, FILE *fp )
 	char szText_questlevel[sizeof(char)*3*2+1]={0};
 	char szText_questkind[sizeof(char)*3*2+1]={0};
 	char szText_missionvalue[sizeof(int)*4*2+1]={0};
+	char szText_candidate_actorid[sizeof(int)*10*2+1]={0};
+	char szText_candidate_ballot[sizeof(int)*10*2+1]={0};
 RE_NATION_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`nation`,`level`,`exp`,`notice`,`official_actorid`,`tiance_point`,`questlevel`,`questkind`,`missionlevel`,`missionvalue`) Values('%d','%d','%d','%s','%s','%d','%s','%s','%d','%s')",pTab,pNation->nation,pNation->level,pNation->exp,db_escape((const char *)pNation->notice,szText_notice,0),db_escape((const char *)pNation->official_actorid,szText_official_actorid,sizeof(int)*10),pNation->tiance_point,db_escape((const char *)pNation->questlevel,szText_questlevel,sizeof(char)*3),db_escape((const char *)pNation->questkind,szText_questkind,sizeof(char)*3),pNation->missionlevel,db_escape((const char *)pNation->missionvalue,szText_missionvalue,sizeof(int)*4));
+	sprintf( szSQL, "REPLACE INTO %s (`nation`,`level`,`exp`,`notice`,`official_actorid`,`tiance_point`,`questlevel`,`questkind`,`missionlevel`,`missionvalue`,`candidate_actorid`,`candidate_ballot`) Values('%d','%d','%d','%s','%s','%d','%s','%s','%d','%s','%s','%s')",pTab,pNation->nation,pNation->level,pNation->exp,db_escape((const char *)pNation->notice,szText_notice,0),db_escape((const char *)pNation->official_actorid,szText_official_actorid,sizeof(int)*10),pNation->tiance_point,db_escape((const char *)pNation->questlevel,szText_questlevel,sizeof(char)*3),db_escape((const char *)pNation->questkind,szText_questkind,sizeof(char)*3),pNation->missionlevel,db_escape((const char *)pNation->missionvalue,szText_missionvalue,sizeof(int)*4),db_escape((const char *)pNation->candidate_actorid,szText_candidate_actorid,sizeof(int)*10),db_escape((const char *)pNation->candidate_ballot,szText_candidate_ballot,sizeof(int)*10));
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );

@@ -14,6 +14,8 @@ struct _nation {
 				char questkind[3];	//国家任务
 				char missionlevel;	//国家荣誉任务等级
 				int missionvalue[4];	//国家荣誉任务次数
+				int candidate_actorid[10];	//候选人id
+				int candidate_ballot[10];	//候选人选票
 				short tiance_level;	//天策府统领等级
 				int people;	//国家总人口
 				int people_famous;	//名城人口
@@ -21,7 +23,8 @@ struct _nation {
 				short capital_townid;	//都城id
 				int town_war_index[256];	//国家战争
 				int city_war_index[1024];	//城池战争
-				int official_city_index[11];	//官员索引，索引0是国王
+				int official_city_index[10];	//官员索引，索引0是国王
+				int candidate_city_index[10];	//候选人索引
 };
 typedef struct _nation Nation;
 

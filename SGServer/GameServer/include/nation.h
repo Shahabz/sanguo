@@ -50,14 +50,6 @@ typedef struct _nation_rank
 	NationRankMember member[NATION_RANK_MAX][NATION_RANK_MEMBERNUM];
 }NationRank;
 
-// 国家官员候选人列表
-typedef struct _nation_candidate
-{
-	int actorid;
-	int city_index;
-	int ballot;
-}NationCandidate;
-
 int nation_load();
 int nation_save( FILE *fp );
 Nation *nation_getptr( int nation );
