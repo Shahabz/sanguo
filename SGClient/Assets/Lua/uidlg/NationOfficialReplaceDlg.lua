@@ -183,7 +183,6 @@ function NationOfficialReplaceDlgDown( index )
 	if info == nil then
 		return
 	end
-		print( index )
 	system_askinfo( ASKINFO_NATION, "", 16, info.m_actorid )
 end
 

@@ -37,6 +37,16 @@
 #define NATION_OFFICIAL_R5	5 // 军事
 #define NATION_OFFICIAL_R6	6 // 将军
 
+// 官员权限
+#define NATION_OFFICIAL_RIGHT_DISMISSAL			1	//
+#define NATION_OFFICIAL_RIGHT_FIGHT				2	//
+#define NATION_OFFICIAL_RIGHT_ONLINE_NOTIFY		3	//
+#define NATION_OFFICIAL_RIGHT_NOTIFY			4	//
+#define NATION_OFFICIAL_RIGHT_CITYFIGHT_BODY	5	//
+#define NATION_OFFICIAL_RIGHT_CALLNUM			6	//
+#define NATION_OFFICIAL_RIGHT_YIELD				7	//
+#define NATION_OFFICIAL_RIGHT_BUILDQUICK		8	//
+
 // 国家荣誉排行榜
 typedef struct _nation_rank_member
 {
@@ -78,6 +88,12 @@ int nation_town_war_del( int nation, int group_index );
 
 // 国王名字
 void nation_kingname( char nation, char *out );
+
+// 修改国家公告
+int nation_notice( int actor_index, char *pMsg );
+
+// 上限提醒
+int nation_online_notify( int actor_index );
 
 // 国家经验
 int nation_exp( char nation, int exp );
@@ -134,4 +150,5 @@ int nation_official_sendlist( int actor_index );
 int nation_official_replace_sendlist( int actor_index );
 int nation_official_replace_up( int actor_index, int target_actorid );
 int nation_official_replace_down( int actor_index, int target_actorid );
+int nation_official_right( char official, char right );
 #endif

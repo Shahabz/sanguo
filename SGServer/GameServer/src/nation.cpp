@@ -30,6 +30,7 @@
 #include "map_town.h"
 #include "mail.h"
 #include "city.h"
+#include "chat.h"
 #include "army_group.h"
 #include "rank.h"
 #include "nation.h"
@@ -70,6 +71,10 @@ extern int g_nation_quest_maxnum;
 
 extern NationMission *g_nation_mission;
 extern int g_nation_mission_maxnum;
+
+extern NationOfficial *g_nation_official;
+extern int g_nation_official_maxnum;
+
 
 // 国家排名
 extern ActorRank *g_rank_nation[3];
@@ -392,6 +397,74 @@ void nation_kingname( char nation, char *out )
 		strncpy( out, g_city[city_index].name, NAME_SIZE );
 	}
 	return;
+}
+
+// 修改国家公告
+int nation_notice( int actor_index, char *pMsg )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	if ( !pMsg )
+		return -1;
+	if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_NOTIFY ) == 0 )
+		return -1;
+	if ( (int)time( NULL ) - pNation->notice_change_stamp < global.nation_change_notice_sec )
+	{
+		actor_notify_alert( actor_index, 1844 );
+		return -1;
+	}
+	strncpy( pNation->notice, pMsg, sizeof( char )*NATION_NOTICE_MAX );
+	nation_sendinfo( actor_index );
+
+	// 滚动公告
+	char v1[32] = { 0 };
+	strncpy( v1, pCity->name, NAME_SIZE );
+	system_talkjson( 0, pCity->nation, 6013, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+	return 0;
+}
+
+// 上限提醒
+int nation_online_notify( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->official == 0 || pCity->official == NATION_OFFICIAL_R6 )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+
+	char v1[32] = { 0 };
+	char v2[32] = { 0 };
+	sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+	strncpy( v2, pCity->name, NAME_SIZE );
+
+	if ( pCity->official >= NATION_OFFICIAL_R1 && pCity->official <= NATION_OFFICIAL_R3 )
+	{ // 国王上线提醒
+		if ( (int)time( NULL ) - pNation->online_notify_king_stamp < global.nation_online_notify_sec )
+			return -1;
+		system_talkjson( 0, pCity->nation, 6014, v1, v2, NULL, NULL, NULL, NULL, 1 );
+	}
+	else if ( pCity->official == NATION_OFFICIAL_R4 )
+	{ // 丞相上线提醒
+		if ( (int)time( NULL ) - pNation->online_notify_r4_stamp < global.nation_online_notify_sec )
+			return -1;
+		system_talkjson( 0, pCity->nation, 6015, v1, v2, NULL, NULL, NULL, NULL, 1 );
+	}
+	else if ( pCity->official >= NATION_OFFICIAL_R5 )
+	{ // 军师上线提醒
+		if ( (int)time( NULL ) - pNation->online_notify_r5_stamp < global.nation_online_notify_sec )
+			return -1;
+		system_talkjson( 0, pCity->nation, 6016, v1, v2, NULL, NULL, NULL, NULL, 1 );
+	}
+	return 0;
 }
 
 // 国家升级
@@ -1610,10 +1683,9 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 	}
 
 	int tmpi = -1;
-	char nation = pCity->nation;
 	for ( tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 	{
-		if ( g_nation[nation].candidate_actorid[tmpi] == target_actorid )
+		if ( pNation->candidate_actorid[tmpi] == target_actorid )
 		{
 			break;
 		}
@@ -1625,7 +1697,7 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 	if ( istoken == 0 )
 	{
 		ballot = pCity->vote;
-		g_nation[nation].candidate_ballot[tmpi] += pCity->vote;
+		pNation->candidate_ballot[tmpi] += pCity->vote;
 		city_changevote( pCity->index, -pCity->vote, PATH_NATIONBALLOT );
 		pCity->ballot = 1;
 	}
@@ -1635,14 +1707,14 @@ int nation_official_ballot( int actor_index, int target_actorid, int istoken )
 		if ( actor_change_token( actor_index, -costtoken, PATH_NATIONBALLOT, 0 ) < 0 )
 			return -1;
 		ballot = 1;
-		g_nation[nation].candidate_ballot[tmpi] += 1;
+		pNation->candidate_ballot[tmpi] += 1;
 		pCity->tokenballot += 1;
 		if ( pCity->tokenballot >= 30000 )
 			pCity->tokenballot = 30000;
 	}
 	nation_official_sendlist( actor_index );
 
-	int city_index = g_nation[nation].candidate_city_index[tmpi];
+	int city_index = pNation->candidate_city_index[tmpi];
 	if ( city_index >= 0 && city_index < g_city_maxcount )
 	{
 		char v1[32] = { 0 };
@@ -1678,7 +1750,7 @@ int nation_official_sendlist( int actor_index )
 		SLK_NetS_NationCandidateList pValue = { 0 };
 		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
 		{
-			int city_index = g_nation[pCity->nation].candidate_city_index[tmpi];
+			int city_index = pNation->candidate_city_index[tmpi];
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
@@ -1686,7 +1758,7 @@ int nation_official_sendlist( int actor_index )
 			pValue.m_list[pValue.m_count].m_battlepower = g_city[city_index].battlepower;
 			strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
 			pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
-			pValue.m_list[pValue.m_count].m_ballot = g_nation[pCity->nation].candidate_ballot[tmpi];
+			pValue.m_list[pValue.m_count].m_ballot = pNation->candidate_ballot[tmpi];
 			pValue.m_count += 1;
 		}
 		pValue.m_endtime = g_nation_official_statetime;
@@ -1700,7 +1772,7 @@ int nation_official_sendlist( int actor_index )
 		SLK_NetS_NationOfficialList pValue = { 0 };
 		for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 		{
-			int city_index = g_nation[pCity->nation].official_city_index[tmpi];
+			int city_index = pNation->official_city_index[tmpi];
 			if ( city_index < 0 || city_index >= g_city_maxcount )
 				continue;
 			pValue.m_list[pValue.m_count].m_official = g_city[city_index].official;
@@ -1740,7 +1812,7 @@ int nation_official_replace_sendlist( int actor_index )
 	// 先发送10个官员
 	for ( int tmpi = 3; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 	{
-		int city_index = g_nation[pCity->nation].official_city_index[tmpi];
+		int city_index = pNation->official_city_index[tmpi];
 		if ( city_index < 0 || city_index >= g_city_maxcount )
 			continue;
 		pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
@@ -1796,13 +1868,13 @@ int nation_official_replace_up( int actor_index, int target_actorid )
 	Nation *pNation = nation_getptr( pCity->nation );
 	if ( !pNation )
 		return -1;
-	if ( pCity->official < NATION_OFFICIAL_R1 || pCity->official > NATION_OFFICIAL_R3 )
+	if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_DISMISSAL ) == 0 )
 		return -1;
 
 	int offset = -1;
 	for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 	{
-		if ( g_nation[pCity->nation].official_actorid[tmpi] <= 0 )
+		if ( pNation->official_actorid[tmpi] <= 0 )
 		{
 			offset = tmpi;
 			break;
@@ -1820,8 +1892,8 @@ int nation_official_replace_up( int actor_index, int target_actorid )
 	
 	if ( g_city[city_index].official > 0 )
 		return -1;
-	g_nation[pCity->nation].official_actorid[offset] = target_actorid;
-	g_nation[pCity->nation].official_city_index[offset] = city_index;
+	pNation->official_actorid[offset] = target_actorid;
+	pNation->official_city_index[offset] = city_index;
 	g_city[city_index].official = NATION_OFFICIAL_R6;
 	// 如果玩家在线，通知更新
 	if ( g_city[city_index].actor_index >= 0 )
@@ -1845,13 +1917,13 @@ int nation_official_replace_down( int actor_index, int target_actorid )
 	Nation *pNation = nation_getptr( pCity->nation );
 	if ( !pNation )
 		return -1;
-	if ( pCity->official < NATION_OFFICIAL_R1 || pCity->official > NATION_OFFICIAL_R3 )
+	if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_DISMISSAL ) == 0 )
 		return -1;
 
 	int offset = -1;
 	for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 	{
-		if ( g_nation[pCity->nation].official_actorid[tmpi] == target_actorid )
+		if ( pNation->official_actorid[tmpi] == target_actorid )
 		{
 			offset = tmpi;
 			break;
@@ -1869,8 +1941,8 @@ int nation_official_replace_down( int actor_index, int target_actorid )
 
 	if ( g_city[city_index].official != NATION_OFFICIAL_R6 )
 		return -1;
-	g_nation[pCity->nation].official_actorid[offset] = 0;
-	g_nation[pCity->nation].official_city_index[offset] = -1;
+	pNation->official_actorid[offset] = 0;
+	pNation->official_city_index[offset] = -1;
 	g_city[city_index].official = 0;
 	// 如果玩家在线，通知更新
 	if ( g_city[city_index].actor_index >= 0 )
@@ -1882,4 +1954,42 @@ int nation_official_replace_down( int actor_index, int target_actorid )
 	}
 	nation_official_replace_sendlist( actor_index );
 	return 0;
+}
+
+// 获取权限
+int nation_official_right( char official, char right )
+{
+	if ( official <= 0 || official >=  g_nation_official_maxnum )
+		return 0;
+	int v = 0;
+	switch ( right )
+	{
+	case NATION_OFFICIAL_RIGHT_DISMISSAL:
+		v = g_nation_official[official].dismissal;
+		break;
+	case NATION_OFFICIAL_RIGHT_FIGHT:
+		v = g_nation_official[official].fight;
+		break;
+	case NATION_OFFICIAL_RIGHT_ONLINE_NOTIFY:
+		v = g_nation_official[official].online_notify;
+		break;
+	case NATION_OFFICIAL_RIGHT_NOTIFY:
+		v = g_nation_official[official].notify;
+		break;
+	case NATION_OFFICIAL_RIGHT_CITYFIGHT_BODY:
+		v = g_nation_official[official].cityfight_body;
+		break;
+	case NATION_OFFICIAL_RIGHT_CALLNUM:
+		v = g_nation_official[official].callnum;
+		break;
+	case NATION_OFFICIAL_RIGHT_YIELD:
+		v = g_nation_official[official].yield;
+		break;
+	case NATION_OFFICIAL_RIGHT_BUILDQUICK:
+		v = g_nation_official[official].buildquick;
+		break;
+	default:
+		break;
+	}
+	return v;
 }

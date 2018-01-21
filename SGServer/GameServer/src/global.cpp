@@ -550,6 +550,10 @@ int global_init()
 			global.nation_vote_actorlevel = atoi( row[1] );
 		else if ( id == 195 )
 			global.nation_vote_basenum = atoi( row[1] );
+		else if ( id == 196 )
+			global.nation_change_notice_sec = atoi( row[1] );
+		else if ( id == 197 )
+			global.nation_online_notify_sec = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

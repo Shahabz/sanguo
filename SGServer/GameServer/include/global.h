@@ -168,6 +168,8 @@ typedef struct _global
 	char nation_official_select;
 	short nation_vote_actorlevel;
 	short nation_vote_basenum;
+	short nation_change_notice_sec;
+	int nation_online_notify_sec;
 }Global;
 int global_init();
 void global_reload();

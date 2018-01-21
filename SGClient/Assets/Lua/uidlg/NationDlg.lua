@@ -23,6 +23,9 @@ local m_uiOfficerListBtn = nil; --UnityEngine.GameObject
 local m_uiLogBtn = nil; --UnityEngine.GameObject
 local m_uiQuestInfo = nil; --UnityEngine.GameObject
 local m_uiPlaceIcon = nil; --UnityEngine.GameObject
+local m_uiChangeNoticeBtn = nil; --UnityEngine.GameObject
+local m_uiNoticeLayer = nil; --UnityEngine.GameObject
+local m_uiContentField = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil
 local m_curQuestKind = 1;
@@ -62,6 +65,10 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             NationDlgClose();
+			
+		elseif nControlID == -2 then
+			NationDlgHideNoticeLayer()
+			
 		--国家建设
 		elseif nControlID == 1 then
 			if m_recvValue.m_level >= #g_nation_upgrade then
@@ -76,7 +83,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		--修改公告
 		elseif nControlID == 3 then
-		
+			NationDlgShowNoticeLayer()
+			
 		--国家任务
 		elseif nControlID == 4 then
 			NationQuestDlgShow()
@@ -103,11 +111,23 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		--国家战争
 		elseif nControlID == 10 then
 		
+		-- 公告重新编辑
+		elseif nControlID == 101 then
+			NationDlgNoticeLayerReset()
+			
+		-- 公告确认发布
+		elseif nControlID == 102 then
+			NationDlgNoticeLayerSend()
+		
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
 			NationDlgSetQuest()
 		end	
+	
+	elseif nType == UI_EVENT_INPUTVALUECHANGED then
+		SetRichText( m_uiContentField.transform:Find( "RichText" ), m_uiContentField:GetComponent("UIInputField").text )
+		
 	end
 end
 
@@ -136,6 +156,9 @@ function NationDlgOnAwake( gameObject )
 	m_uiLogBtn = objs[18];
 	m_uiQuestInfo = objs[19];
 	m_uiPlaceIcon = objs[20];
+	m_uiChangeNoticeBtn = objs[21];
+	m_uiNoticeLayer = objs[22];
+	m_uiContentField = objs[23];
 end
 
 -- 界面初始化时调用
@@ -220,7 +243,12 @@ end
 
 -- 公告
 function NationDlgChangeNotice()
-	
+	SetText( m_uiNotice, m_recvValue.m_notice )
+	if m_recvValue.m_kingname_len > 0 then
+		SetText( m_uiKingName, OfficialName(GetPlayer().m_nation)..":"..m_recvValue.m_kingname )
+	else
+		SetText( m_uiKingName, OfficialName(GetPlayer().m_nation)..":"..T(240) )
+	end
 end
 
 -- 国家任务
@@ -282,4 +310,53 @@ function NationDlgChangeOfficial()
 		return;
 	end
 	SetText( m_uiOfficialer, T(1943)..":"..OfficialName(GetPlayer().m_official) )
+	if GetPlayer().m_official == 1 or GetPlayer().m_official == 2 or GetPlayer().m_official == 3 then
+		SetTrue( m_uiChangeNoticeBtn )
+	else
+		SetFalse( m_uiChangeNoticeBtn )
+	end
+end
+
+-- 显示修改公告
+function NationDlgShowNoticeLayer()
+	SetTrue( m_uiNoticeLayer )
+	m_uiNoticeLayer.transform:SetSiblingIndex(1010);
+	if m_recvValue.m_notice_len > 0 then
+		m_uiContentField.transform:Find( "RichText" ):GetComponent( typeof(YlyRichText) ).text = m_recvValue.m_notice
+		m_uiContentField.transform:Find( "Hint" ):GetComponent( typeof(UIText) ).text = "";
+	else
+		m_uiContentField.transform:Find( "RichText" ):GetComponent( typeof(YlyRichText) ).text = ""
+		m_uiContentField.transform:Find( "Hint" ):GetComponent( typeof(UIText) ).text = T(1849)
+	end
+end
+
+-- 隐藏修改公告
+function NationDlgHideNoticeLayer()
+	SetFalse( m_uiNoticeLayer )
+end
+
+-- 重新编辑
+function NationDlgNoticeLayerReset()
+	m_uiContentField.transform:Find( "RichText" ):GetComponent( typeof(YlyRichText) ).text = ""
+	m_uiContentField.transform:Find( "Hint" ):GetComponent( typeof(UIText) ).text = T(1849)
+end
+
+-- 确认发布
+function NationDlgNoticeLayerSend()
+	local content = m_uiContentField.transform:Find( "RichText" ):GetComponent( typeof(YlyRichText) ).text;
+	local len = string.len( content )
+	if len < 4 or len >= 400 then
+		pop(T(1850))
+		return;
+	end
+	if string.checksign( content ) == false then
+		pop(T(788))
+		return
+	end
+	if Utils.MaskWordCheck( content ) == false then
+		pop(T(789))
+		return;
+	end
+	system_askinfo( ASKINFO_NATION, content, 17 )
+	NationDlgHideNoticeLayer()
 end

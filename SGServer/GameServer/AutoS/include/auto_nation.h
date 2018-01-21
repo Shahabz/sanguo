@@ -25,6 +25,10 @@ struct _nation {
 				int city_war_index[1024];	//城池战争
 				int official_city_index[10];	//官员索引，索引0是国王
 				int candidate_city_index[10];	//候选人索引
+				int notice_change_stamp;	//上次修改公告时间
+				int online_notify_king_stamp;	//上次国王上线时间
+				int online_notify_r4_stamp;	//上次丞相上线时间
+				int online_notify_r5_stamp;	//上次军师上线时间
 };
 typedef struct _nation Nation;
 

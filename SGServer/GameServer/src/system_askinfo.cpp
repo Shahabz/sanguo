@@ -859,6 +859,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 国家官员罢免
 			nation_official_replace_down( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 17 )
+		{ // 修改国家公告
+			nation_notice( actor_index, pstr );
+		}
 		break;
 	default:
 		break;
