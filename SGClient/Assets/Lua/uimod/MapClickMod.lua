@@ -59,6 +59,7 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 召唤
 		elseif nControlID == 8 then
+			system_askinfo( ASKINFO_WORLDMAP, "", 11 );
 			
 		-- 城镇信息
 		elseif nControlID == 11 then
@@ -215,8 +216,16 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 		SetFalse( m_uiHelpBtn )
 		SetTrue( m_uiEnterBtn )
 		SetFalse( m_uiMyFightBtn )
-		local buttonList = { m_uiEnterBtn };
-		MapClickModButton( buttonList );
+		
+		if GetPlayer().m_official > 0 then
+			SetTrue( m_uiCallBtn )
+			local buttonList = { m_uiEnterBtn, m_uiCallBtn };
+			MapClickModButton( buttonList );
+		else
+			SetFalse( m_uiCallBtn )
+			local buttonList = { m_uiEnterBtn };
+			MapClickModButton( buttonList );
+		end
 	
 	-- 我国城池
 	elseif nation == GetPlayer().m_nation then

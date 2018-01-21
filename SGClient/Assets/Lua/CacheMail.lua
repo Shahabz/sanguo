@@ -28,6 +28,7 @@ TAG_AWARD		= "$A"  -- 标记 标记为奖励
 TAG_KINGWAR		= "$K"	-- 标记--标记为皇城战据点
 TAG_HERO		= "$R"  -- 标记--标记为武将
 TAG_COLOR		= "$C"	-- 标记--标记为颜色
+TAG_OFFICIAL	= "$O"	-- 标记--标记为官职
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -367,8 +368,17 @@ function Mail:GetString( v )
 			str = NameColorStr( textid )
 		else
 			str = v
-		end	
+		end
 		
+	-- 官职	
+	elseif self:IsTag( v, TAG_OFFICIAL ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_OFFICIAL) + 1));
+		if textid ~= nil then
+			str = OfficialName( textid )
+		else
+			str = v
+		end
+			
 	-- 日期	
 	elseif self:IsTag( v, TAG_DATE ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_DATE) + 1));
@@ -377,7 +387,7 @@ function Mail:GetString( v )
 		else
 			str = v
 		end		
-
+	
 	else
 		str = v;
 	end

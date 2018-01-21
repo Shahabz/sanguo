@@ -174,7 +174,9 @@ function NationOfficialReplaceDlgUp( index )
 	if info == nil then
 		return
 	end
-	system_askinfo( ASKINFO_NATION, "", 15, info.m_actorid )
+	MsgBox( F(1854,info.m_name), function() 
+		system_askinfo( ASKINFO_NATION, "", 15, info.m_actorid )
+	end)
 end
 
 -- 罢免
@@ -183,6 +185,8 @@ function NationOfficialReplaceDlgDown( index )
 	if info == nil then
 		return
 	end
-	system_askinfo( ASKINFO_NATION, "", 16, info.m_actorid )
+	MsgBox( F(1853,info.m_name), function() 
+		system_askinfo( ASKINFO_NATION, "", 16, info.m_actorid )
+	end)
 end
 

@@ -50,6 +50,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "map_call.h"
 #include "nation.h"
 #include "king_war.h"
 #include "rank.h"
@@ -931,6 +932,15 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
+	// 加载地图召唤
+	if ( map_call_load() < 0 )
+	{
+		printf_msg( "map_call_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 116 );
+
 	// 加载推送的礼包
 	if ( paybag_load() < 0 )
 	{
@@ -1037,6 +1047,10 @@ void process_close()
 
 	// 所有随机事件点保存
 	map_event_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有召唤保存
+	map_call_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有世界boss

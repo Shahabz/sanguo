@@ -330,6 +330,7 @@ function MapUnit.createCity( recvValue )
 	local level 	= recvValue.m_char_value[1];
 	local nation	= recvValue.m_char_value[2];
 	local ptbuff	= recvValue.m_char_value[3];
+	local mapcall	= recvValue.m_char_value[4];
 	local unitindex = recvValue.m_unit_index;
 		
 	-- 先搜索缓存，如果缓存有，那么就更新
@@ -364,6 +365,7 @@ function MapUnit.createCity( recvValue )
 	local uiRange = objs[2];
 	local uiEffectProtect = objs[3];
 	local uiArmyGroup = objs[4];
+	local CityMapCallMod = objs[5];
 	
 	-- 形象
     uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
@@ -399,6 +401,21 @@ function MapUnit.createCity( recvValue )
 		uiArmyGroup.transform:GetComponent( typeof(UIButton) ).controlID = unitindex;
 	else
 		SetFalse( uiArmyGroup )
+	end
+	
+	-- 召唤
+	if mapcall > 0 and GetPlayer().m_nation == nation then
+		print("xxxxxxxxxxxxx")
+		SetTrue( CityMapCallMod )
+		local uiCallTimer = objs[6];
+		local uiCallNum = objs[7];
+		local sec		= recvValue.m_short_value[1];
+		local num		= recvValue.m_short_value[2];
+		local maxnum	= recvValue.m_short_value[3];
+		local ShareData = CityMapCallMod.transform:GetComponent("ShareData");
+		ShareData.intValue[0] = recvValue.m_unit_index;
+	else
+		SetFalse( CityMapCallMod )
 	end
 	
 	return unitObj;

@@ -450,7 +450,7 @@ int nation_online_notify( int actor_index )
 	{ // 国王上线提醒
 		if ( (int)time( NULL ) - pNation->online_notify_king_stamp < global.nation_online_notify_sec )
 			return -1;
-		system_talkjson( 0, pCity->nation, 6014, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		system_talkjson_world( 6014, v1, v2, NULL, NULL, NULL, NULL, 1 );
 	}
 	else if ( pCity->official == NATION_OFFICIAL_R4 )
 	{ // 丞相上线提醒
@@ -1088,6 +1088,10 @@ int nation_quest_getaward( int actor_index, int kind )
 		if ( curvalue > 0 && curvalue > odds )
 		{
 			award_getaward( actor_index, g_nation_quest[questlevel].config[questkind].other_awardkind[tmpi], g_nation_quest[questlevel].config[questkind].other_awardnum[tmpi], -1, PATH_NATIONQUEST, NULL );
+			// 公告
+			char v1[32] = { 0 };
+			strncpy( v1, pCity->name, NAME_SIZE );
+			system_talkjson( 0, pCity->nation, 6021, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			break;
 		}
 		odds -= curvalue;
@@ -1595,8 +1599,10 @@ int nation_official_sort( char nation )
 // 官员创建
 int nation_official_create()
 {
+	char v1[32] = { 0 };
+	char v2[32] = { 0 };
 	// 创建官员
-	for ( int nation = 0; nation < NATION_MAX; nation++ )
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
 	{
 		nation_official_sort( nation );
 		for ( int tmpi = 0; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
@@ -1615,18 +1621,31 @@ int nation_official_create()
 					g_city[city_index].official = NATION_OFFICIAL_R2;
 				else if ( nation == 3 )
 					g_city[city_index].official = NATION_OFFICIAL_R3;
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				sprintf( v2, "%s%d", TAG_NATION, nation );
+				system_talkjson_world( 6017, v1, v2, NULL, NULL, NULL, NULL, 1 );
 			}
 			else if ( tmpi == 1 )
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R4;
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6018, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 			else if ( tmpi == 2 )
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R5;
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6019, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 			else
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R6;
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6020, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 
 			// 如果玩家在线，通知更新

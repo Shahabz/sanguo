@@ -1486,6 +1486,14 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 		return -1;
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+	{
+		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
+		{
+			actor_notify_alert( actor_index, 1852 );
+			return -1;
+		}
+	}
 	if ( pCity->level < global.nationfight_actorlevel )
 	{
 		char v1[32] = { 0 };

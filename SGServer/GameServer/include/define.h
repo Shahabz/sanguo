@@ -74,6 +74,7 @@
 #include "auto_map_enemy.h"
 #include "auto_map_res.h"
 #include "auto_map_event.h"
+#include "auto_map_call.h"
 #include "auto_nation.h"
 #include "auto_world_boss.h"
 #include "auto_kingwar_town.h"

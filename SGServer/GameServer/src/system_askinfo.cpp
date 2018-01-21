@@ -32,6 +32,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "map_call.h"
 #include "army_march.h"
 #include "army_group.h"
 #include "king_war.h"
@@ -478,6 +479,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 10 )
 		{ // 发皇城地区的范围归属
 			map_zone_center_townlist( actor_index );
+		}
+		else if ( pvalue[0] == 11 )
+		{ // 地图召唤
+			map_call( actor_index, pvalue[1] );
 		}
 		break;
 	case ASKINFO_MAP_EVENT:

@@ -346,7 +346,16 @@ void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr )
 	{
 		pAttr->m_char_value[2] = 1;
 	}
-	pAttr->m_char_value_count = 3;
+	// µØÍ¼ÕÙ»½
+	pAttr->m_char_value[3] = pCity->mapcall;
+	pAttr->m_char_value_count = 4;
+	if ( pCity->mapcall > 0 )
+	{
+		pAttr->m_short_value[0] = 3600;
+		pAttr->m_short_value[1] = 1;
+		pAttr->m_short_value[2] = 3;
+		pAttr->m_short_value_count = 3;
+	}
 }
 
 void city_makezoneunit( int city_index, SLK_NetS_ZoneUnit *pAttr )

@@ -47,6 +47,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "map_call.h"
 #include "nation.h"
 #include "world_boss.h"
 #include "king_war.h"
@@ -206,6 +207,8 @@ void actors_on_core()
 	map_res_save( fp );
 	// 所有随机事件点保存
 	map_event_save( fp );
+	// 所有召唤保存
+	map_call_save( fp );
 	// 所有世界boss
 	world_boss_save( fp );
 	// 所有血战皇城据点保存

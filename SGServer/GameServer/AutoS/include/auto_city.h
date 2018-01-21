@@ -154,6 +154,7 @@ struct _city {
 				int rank_nation;	//国家排行榜排名
 				int battlepower_building;	//建筑提供战力
 				int temp_wounded_soldiers[3];	//临时伤兵
+				char mapcall;	//地图召唤
 };
 typedef struct _city City;
 

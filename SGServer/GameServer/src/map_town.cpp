@@ -1273,7 +1273,11 @@ int map_town_changename( int actor_index, int townid, char *pname )
 		return -1;
 	
 	// È¨ÏÞ²»×ã
-
+	if ( pCity->official == 0 )
+	{
+		actor_notify_alert( actor_index, 1851 );
+		return -1;
+	}
 
 	int namelen = (int)strlen( pname );
 	if ( namelen <= 0 || namelen >= NAME_SIZE )

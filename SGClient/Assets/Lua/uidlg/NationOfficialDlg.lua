@@ -258,6 +258,9 @@ end
 -- 接收官员
 -- m_count=0,m_list={m_official=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_zone=0,[m_count]},m_endtime=0,
 function NationOfficialDlgOfficialRecv( recvValue )
+	if recvValue.m_count == 0 then
+		return
+	end
 	SetText( m_uiFlag1.transform:Find("Name"), recvValue.m_list[1].m_name )
  	SetText( m_uiFlag2.transform:Find("Name"), recvValue.m_list[2].m_name )
 	SetText( m_uiFlag3.transform:Find("Name"), recvValue.m_list[3].m_name )

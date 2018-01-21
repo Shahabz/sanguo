@@ -92,7 +92,7 @@ void nation_kingname( char nation, char *out );
 // 修改国家公告
 int nation_notice( int actor_index, char *pMsg );
 
-// 上限提醒
+// 上线提醒
 int nation_online_notify( int actor_index );
 
 // 国家经验
@@ -151,4 +151,5 @@ int nation_official_replace_sendlist( int actor_index );
 int nation_official_replace_up( int actor_index, int target_actorid );
 int nation_official_replace_down( int actor_index, int target_actorid );
 int nation_official_right( char official, char right );
+
 #endif

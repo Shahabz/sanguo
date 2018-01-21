@@ -235,7 +235,11 @@ function MapTownExDlgRecvValue( recvValue )
 				SetFalse( m_uiTimerButton )
 				SetTrue( m_uiUpgradeButton )
 			end
-			SetTrue( m_uiChangeNameBtn )
+			if GetPlayer().m_official > 0 then
+				SetTrue( m_uiChangeNameBtn )
+			else
+				SetFalse( m_uiChangeNameBtn )
+			end
 		else
 			-- 他国占领
 			SetTrue( m_uiLayer2.transform:Find("Warn3") )
@@ -261,6 +265,10 @@ end
 
 -- 国战
 function MapTownExDlgNationFight()
+	if GetPlayer().m_official == 0 or GetPlayer().m_official == 6 then
+		AlertMsg( T(1852) )
+		return
+	end
 	MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
 	MapTownExDlgClose()
 end
