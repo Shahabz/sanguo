@@ -37,6 +37,7 @@
 #include "map.h"
 #include "map_zone.h"
 #include "king_war.h"
+#include "nation.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -513,13 +514,24 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				else
 					return -1;
 
-				// 消耗
-				int itemkind = 486;
-				if ( item_lost( pCity->actor_index, itemkind, cost_item, PATH_FIGHT ) < 0 )
+				// 官员减体力
+				if ( pCity->official > 0 )
 				{
-					if ( pCity->body < cost_body )
-						return -1;
-					city_changebody( pCity->index, -cost_body, PATH_FIGHT );
+					cost_body -= nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_CITYFIGHT_BODY );
+					if ( cost_body < 0 )
+						cost_body = 0;
+				}
+
+				// 消耗
+				if ( cost_body > 0 )
+				{
+					int itemkind = 486;
+					if ( item_lost( pCity->actor_index, itemkind, cost_item, PATH_FIGHT ) < 0 )
+					{
+						if ( pCity->body < cost_body )
+							return -1;
+						city_changebody( pCity->index, -cost_body, PATH_FIGHT );
+					}
 				}
 
 				// 创建集结战场

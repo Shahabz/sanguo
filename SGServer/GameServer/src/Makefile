@@ -33,6 +33,7 @@ SRC = \
 ../AutoS/src/server_process_auto.cpp \
 ../AutoS/src/auto_data_kingwar_towninfo.cpp \
 ../AutoS/src/auto_data_monster.cpp \
+../AutoS/src/auto_data_nation_official.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
@@ -48,6 +49,7 @@ SRC = \
 ../AutoS/src/auto_data_paystore.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_shop.cpp \
+../AutoS/src/auto_map_call.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_army_group.cpp \
@@ -105,6 +107,7 @@ building.cpp \
 actor.cpp \
 dbredis.cpp \
 actor_func.cpp \
+map_call.cpp \
 item.cpp \
 actor_send.cpp \
 map_event.cpp \
@@ -227,6 +230,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_official.o: ../AutoS/src/auto_data_nation_official.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_structrecv_auto.o: ../AutoS/src/server_structrecv_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
@@ -256,6 +261,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_call.o: ../AutoS/src/auto_map_call.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_upgrade.o: ../AutoS/src/auto_data_nation_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -370,6 +377,8 @@ actor.o: actor.cpp
 dbredis.o: dbredis.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 actor_func.o: actor_func.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_call.o: map_call.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 item.o: item.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

@@ -117,21 +117,36 @@ function MapCityFightDlgShow( recvValue )
 	SetText( m_uiMarchTime1, F(953, secnum(m_marchtime) ) )
 	SetText( m_uiMarchTime2, secnum(m_marchtime) )
 	
+	-- 官员减体力
+	local subbody = 0;
+	if GetPlayer().m_official > 0 and GetPlayer().m_official <= 6 then
+		subbody = g_nation_official[GetPlayer().m_official].cityfight_body;
+	end
+				
 	-- 城战令
 	local itemkind = 486
 	local itemnum = GetItem():GetCount( itemkind )
-	
+				
 	-- 行军时间≤5分钟可使用闪电战
 	if m_marchtime <= global.cityfight_sec_limit1 then
 		SetTrue( m_uiUIP_Type1.transform:Find("MarchTime") )
 		SetFalse( m_uiUIP_Type1.transform:Find("MarchWarn") )
 		SetTrue( m_uiUIP_Type1.transform:Find("BodyIcon") )
 		SetTrue( m_uiUIP_Type1.transform:Find("BodyText") )
-		-- 有城战令
-		if itemnum >= global.cityfight_item_cost1 then
-			SetText( m_uiUIP_Type1.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost1 )
+		
+		local costbody = global.cityfight_body_cost1 - subbody
+		if global.cityfight_body_cost1 - subbody > 0 then
+			-- 有城战令
+			if itemnum >= global.cityfight_item_cost1 then
+				SetText( m_uiUIP_Type1.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost1 )
+			else
+				SetText( m_uiUIP_Type1.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost1 )
+			end
 		else
-			SetText( m_uiUIP_Type1.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost1 )
+			if costbody < 0 then
+				costbody = 0
+			end
+			SetText( m_uiUIP_Type1.transform:Find("BodyText"), T(126).."x"..costbody )
 		end
 		SetFalse( m_uiUIP_Type1.transform:Find("BodyWarn") )
 		SetText( m_uiUIP_Type1.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime ) )
@@ -152,11 +167,20 @@ function MapCityFightDlgShow( recvValue )
 		SetFalse( m_uiUIP_Type2.transform:Find("MarchWarn") )
 		SetTrue( m_uiUIP_Type2.transform:Find("BodyIcon") )
 		SetTrue( m_uiUIP_Type2.transform:Find("BodyText") )
-		-- 有城战令
-		if itemnum >= global.cityfight_item_cost2 then
-			SetText( m_uiUIP_Type2.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost2 )
+		
+		local costbody = global.cityfight_body_cost2 - subbody
+		if costbody > 0 then
+			-- 有城战令
+			if itemnum >= global.cityfight_item_cost2 then
+				SetText( m_uiUIP_Type2.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost2 )
+			else
+				SetText( m_uiUIP_Type2.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost2 )
+			end
 		else
-			SetText( m_uiUIP_Type2.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost2 )
+			if costbody < 0 then
+				costbody = 0
+			end
+			SetText( m_uiUIP_Type2.transform:Find("BodyText"), T(126).."x"..costbody )
 		end
 		SetFalse( m_uiUIP_Type2.transform:Find("BodyWarn") )
 		if m_marchtime < global.cityfight_sec_group2 then
@@ -181,12 +205,22 @@ function MapCityFightDlgShow( recvValue )
 		SetFalse( m_uiUIP_Type3.transform:Find("MarchWarn") )
 		SetTrue( m_uiUIP_Type3.transform:Find("BodyIcon") )
 		SetTrue( m_uiUIP_Type3.transform:Find("BodyText") )
-		-- 有城战令
-		if itemnum >= global.cityfight_item_cost3 then
-			SetText( m_uiUIP_Type3.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost3 )
+		
+		local costbody = global.cityfight_body_cost3 - subbody
+		if costbody > 0 then
+			-- 有城战令
+			if itemnum >= global.cityfight_item_cost3 then
+				SetText( m_uiUIP_Type3.transform:Find("BodyText"), item_getname(itemkind).."x"..global.cityfight_item_cost3 )
+			else
+				SetText( m_uiUIP_Type3.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost3 )
+			end
 		else
-			SetText( m_uiUIP_Type3.transform:Find("BodyText"), T(126).."x"..global.cityfight_body_cost3 )
+			if costbody < 0 then
+				costbody = 0
+			end
+			SetText( m_uiUIP_Type3.transform:Find("BodyText"), T(126).."x"..costbody )
 		end
+		
 		SetFalse( m_uiUIP_Type3.transform:Find("BodyWarn") )
 		if m_marchtime < global.cityfight_sec_group3 then
 			SetText( m_uiUIP_Type3.transform:Find("MarchTime"), T(1251).." "..secnum_min( m_marchtime + global.cityfight_sec_group3 ) )

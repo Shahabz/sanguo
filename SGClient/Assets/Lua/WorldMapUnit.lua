@@ -405,7 +405,6 @@ function MapUnit.createCity( recvValue )
 	
 	-- 召唤
 	if mapcall > 0 and GetPlayer().m_nation == nation then
-		print("xxxxxxxxxxxxx")
 		SetTrue( CityMapCallMod )
 		local uiCallTimer = objs[6];
 		local uiCallNum = objs[7];
