@@ -47,7 +47,7 @@ int nationofficial_init_auto()
 	g_nation_official = (NationOfficial *)malloc( sizeof(NationOfficial)*g_nation_official_maxnum );
 	memset( g_nation_official, 0, sizeof(NationOfficial)*g_nation_official_maxnum );
 
-	sprintf( szSQL, "select `official`,`dismissal`,`fight`,`online_notify`,`notify`,`cityfight_body`,`callnum`,`yield`,`buildquick` from nation_official;" );
+	sprintf( szSQL, "select `official`,`dismissal`,`fight`,`online_notify`,`notify`,`cityfight_body`,`callnum`,`callactornum`,`yield`,`buildquick` from nation_official;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -68,6 +68,7 @@ int nationofficial_init_auto()
 		g_nation_official[official].notify = atoi(row[offset++]);
 		g_nation_official[official].cityfight_body = atoi(row[offset++]);
 		g_nation_official[official].callnum = atoi(row[offset++]);
+		g_nation_official[official].callactornum = atoi(row[offset++]);
 		g_nation_official[official].yield = atoi(row[offset++]);
 		g_nation_official[official].buildquick = atoi(row[offset++]);
 	}

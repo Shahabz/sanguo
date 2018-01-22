@@ -11,6 +11,7 @@ struct _nationofficial {
 				short notify;	//
 				short cityfight_body;	//
 				short callnum;	//
+				short callactornum;	//
 				short yield;	//
 				short buildquick;	//
 };

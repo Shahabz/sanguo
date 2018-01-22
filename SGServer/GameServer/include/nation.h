@@ -46,6 +46,7 @@
 #define NATION_OFFICIAL_RIGHT_CALLNUM			6	//
 #define NATION_OFFICIAL_RIGHT_YIELD				7	//
 #define NATION_OFFICIAL_RIGHT_BUILDQUICK		8	//
+#define NATION_OFFICIAL_RIGHT_CALLACTORNUM			9	//
 
 // π˙º“»Ÿ”˛≈≈––∞Ò
 typedef struct _nation_rank_member

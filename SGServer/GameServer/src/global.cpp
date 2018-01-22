@@ -554,6 +554,10 @@ int global_init()
 			global.nation_change_notice_sec = atoi( row[1] );
 		else if ( id == 197 )
 			global.nation_online_notify_sec = atoi( row[1] );
+		else if ( id == 198 )
+			global.mapcall_range = atoi( row[1] );
+		else if ( id == 199 )
+			global.mapcall_nearby = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

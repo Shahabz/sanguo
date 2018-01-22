@@ -484,6 +484,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 地图召唤
 			map_call( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 12 )
+		{ // 响应召唤
+			map_call_response( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 13 )
+		{  // 召唤公告
+			map_call_notify( actor_index );
+		}
+		else if ( pvalue[0] == 14 )
+		{  // 召唤信息
+			map_call_sendinfo( actor_index );
+		}
 		break;
 	case ASKINFO_MAP_EVENT:
 		if ( pvalue[0] == 1 )

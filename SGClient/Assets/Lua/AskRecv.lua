@@ -22,6 +22,7 @@ NOTIFY_POP			=	19	-- 弹出消息，无框
 NOTIFY_BUILDINGFINISH = 20  -- 建筑完成
 NOTIFY_CITYGUARDNUM	  = 21	-- 城防军数量
 NOTIFY_HERO_VISIT	  =	22	-- 武将寻访
+NOTIFY_MAPCALL		  =	23	-- 地图召唤
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -267,6 +268,12 @@ function RecvActorNotify(recvValue)
 			elseif value[2] == 2 then
 				City.HeroVisitMod( nil, true, 2 )
 			end
+		end
+		
+	-- 地图召唤	
+	elseif msgid == NOTIFY_MAPCALL then
+		if value[1] == 0 then
+			MapCallDlgRecv( value[2], value[3], value[4] )
 		end
     end
 end

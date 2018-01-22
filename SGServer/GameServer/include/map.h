@@ -72,6 +72,9 @@ int map_canmove( short posX, short posY );
 // 跳转坐标
 int map_goto_withpos( int actor_index, char op, short posx, short posy );
 
+// 距离
+int map_distance( short fposx, short fposy, short tposx, short tposy );
+
 // dump地图数据
 void map_tile_dump();
 #endif

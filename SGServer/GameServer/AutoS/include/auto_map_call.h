@@ -6,13 +6,12 @@ struct _map_call {
 //--Automatically generated
 				char index;	//召唤事件索引
 				int actorid;	//属于玩家
-				short posx;	//位置
-				short posy;	//位置
+				short limitlevel;	//绛夌骇闄愬埗
 				int endtimestamp;	//结束时间
 				char num;	//当前召唤人数
 				char maxnum;	//召唤人数上限
-				char invite;	//邀请次数
 				char city_index;	//玩家索引
+				int notifycd;	//邀请公告cd
 };
 typedef struct _map_call MapCall;
 

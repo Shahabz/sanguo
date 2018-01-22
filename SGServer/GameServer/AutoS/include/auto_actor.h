@@ -68,6 +68,7 @@ struct _actor {
 				short pay_maxtier;	//单笔付费最大级别
 				short shop_saleitem[6];	//商店打折物品
 				char neq_crit[6];	//国器暴击状态
+				char mapcallfree;	//免费召唤次数
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

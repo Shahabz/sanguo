@@ -59,9 +59,14 @@ end
 function CityMapCallModClick( gameObject )
 	local ShareData = gameObject.transform:GetComponent("ShareData");
 	local unit_index = ShareData.intValue[0];
-	local recvValue = WorldMap.m_nMapUnitList[unit_index];
-	if recvValue == nil then
-		return;
+	local index = ShareData.intValue[1];
+	if unit_index == WorldMap.m_nMyCityUnitIndex then
+		MsgBox( T(1866), function() 
+			system_askinfo( ASKINFO_WORLDMAP, "", 13 );
+		end )
+	else
+		MsgBox( T(1867), function() 
+			system_askinfo( ASKINFO_WORLDMAP, "", 12, index );
+		end )
 	end
-	system_askinfo( ASKINFO_WORLDMAP, "", 12 );
 end

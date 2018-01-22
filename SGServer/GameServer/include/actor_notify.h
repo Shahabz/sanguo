@@ -28,6 +28,7 @@
 #define NOTIFY_BUILDINGFINISH	20	// 建筑完成
 #define NOTIFY_CITYGUARDNUM		21	// 城防军数量
 #define NOTIFY_HERO_VISIT		22	// 武将寻访
+#define NOTIFY_MAPCALL			23	// 地图召唤
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

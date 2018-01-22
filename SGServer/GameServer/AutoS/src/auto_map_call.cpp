@@ -20,7 +20,7 @@ int map_call_load_auto( LPCB_GETMAPCALL pCB_GetMapCall, LPCB_LOADMAPCALL pCB_Loa
 	MapCall *pMapCall;
 	int index = 0;
 
-	sprintf( szSQL, "select `index`,`actorid`,`posx`,`posy`,`endtimestamp`,`num`,`maxnum`,`invite` from %s ", pTab );
+	sprintf( szSQL, "select `index`,`actorid`,`limitlevel`,`endtimestamp`,`num`,`maxnum` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -39,12 +39,10 @@ int map_call_load_auto( LPCB_GETMAPCALL pCB_GetMapCall, LPCB_LOADMAPCALL pCB_Loa
 			continue;
 		pMapCall->index = atoi(row[offset++]);
 		pMapCall->actorid = atoi(row[offset++]);
-		pMapCall->posx = atoi(row[offset++]);
-		pMapCall->posy = atoi(row[offset++]);
+		pMapCall->limitlevel = atoi(row[offset++]);
 		pMapCall->endtimestamp = atoi(row[offset++]);
 		pMapCall->num = atoi(row[offset++]);
 		pMapCall->maxnum = atoi(row[offset++]);
-		pMapCall->invite = atoi(row[offset++]);
 		if( pCB_LoadMapCall )
 			pCB_LoadMapCall( pMapCall->index );
 		index = pMapCall->index;
@@ -64,7 +62,7 @@ int map_call_save_auto( MapCall *pMapCall, const char *pTab, FILE *fp )
 		return -1;
 
 RE_MAPCALL_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`index`,`actorid`,`posx`,`posy`,`endtimestamp`,`num`,`maxnum`,`invite`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pMapCall->index,pMapCall->actorid,pMapCall->posx,pMapCall->posy,pMapCall->endtimestamp,pMapCall->num,pMapCall->maxnum,pMapCall->invite);
+	sprintf( szSQL, "REPLACE INTO %s (`index`,`actorid`,`limitlevel`,`endtimestamp`,`num`,`maxnum`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapCall->index,pMapCall->actorid,pMapCall->limitlevel,pMapCall->endtimestamp,pMapCall->num,pMapCall->maxnum);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -122,11 +120,11 @@ RE_MAPCALL_TRUNCATE:
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`actorid`,`posx`,`posy`,`endtimestamp`,`num`,`maxnum`,`invite`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pMapCall[index].index,pMapCall[index].actorid,pMapCall[index].posx,pMapCall[index].posy,pMapCall[index].endtimestamp,pMapCall[index].num,pMapCall[index].maxnum,pMapCall[index].invite);
+			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`actorid`,`limitlevel`,`endtimestamp`,`num`,`maxnum`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapCall[index].index,pMapCall[index].actorid,pMapCall[index].limitlevel,pMapCall[index].endtimestamp,pMapCall[index].num,pMapCall[index].maxnum);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",pMapCall[index].index,pMapCall[index].actorid,pMapCall[index].posx,pMapCall[index].posy,pMapCall[index].endtimestamp,pMapCall[index].num,pMapCall[index].maxnum,pMapCall[index].invite);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d')",pMapCall[index].index,pMapCall[index].actorid,pMapCall[index].limitlevel,pMapCall[index].endtimestamp,pMapCall[index].num,pMapCall[index].maxnum);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

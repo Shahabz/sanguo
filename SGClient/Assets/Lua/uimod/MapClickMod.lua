@@ -59,8 +59,8 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 召唤
 		elseif nControlID == 8 then
-			system_askinfo( ASKINFO_WORLDMAP, "", 11 );
-			
+			MapCallDlgShow()
+	
 		-- 城镇信息
 		elseif nControlID == 11 then
 			if m_towntype == MAPUNIT_TYPE_TOWN_TYPE8 then
@@ -203,6 +203,7 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 	local posy 		= recvValue.m_posy;
 	local level 	= recvValue.m_char_value[1];
 	local nation	= recvValue.m_char_value[2];
+	local mapcall	= recvValue.m_char_value[4];
 	
 	SetText( m_uiCityInfo.transform:Find("Pos"), "["..posx..","..posy.."]" )
 	SetText( m_uiCityInfo.transform:Find("Level"), "Lv."..level..T(995) )
@@ -217,7 +218,7 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 		SetTrue( m_uiEnterBtn )
 		SetFalse( m_uiMyFightBtn )
 		
-		if GetPlayer().m_official > 0 then
+		if GetPlayer().m_official > 0 and mapcall <= 0 then
 			SetTrue( m_uiCallBtn )
 			local buttonList = { m_uiEnterBtn, m_uiCallBtn };
 			MapClickModButton( buttonList );
@@ -234,6 +235,7 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 		SetTrue( m_uiHelpBtn )
 		SetFalse( m_uiEnterBtn )
 		SetFalse( m_uiMyFightBtn )
+		SetFalse( m_uiCallBtn )
 		local buttonList = { m_uiInfoBtn, m_uiHelpBtn, m_uiFightBtn };
 		MapClickModButton( buttonList );
 		
@@ -244,6 +246,7 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 		SetFalse( m_uiHelpBtn )
 		SetFalse( m_uiEnterBtn )
 		SetFalse( m_uiMyFightBtn )
+		SetFalse( m_uiCallBtn )
 		local buttonList = { m_uiInfoBtn, m_uiFightBtn };
 		MapClickModButton( buttonList );
 	end

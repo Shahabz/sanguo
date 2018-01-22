@@ -170,6 +170,8 @@ typedef struct _global
 	short nation_vote_basenum;
 	short nation_change_notice_sec;
 	int nation_online_notify_sec;
+	char mapcall_range;
+	char mapcall_nearby;
 }Global;
 int global_init();
 void global_reload();

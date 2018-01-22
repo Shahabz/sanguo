@@ -1325,6 +1325,7 @@ int process_logic()
 	{
 		kingwar_activity_logic();
 		nation_official_logic();
+		map_call_logic();
 	}
 	
 	// 1∑÷÷”“ª¥Œ¬ﬂº≠

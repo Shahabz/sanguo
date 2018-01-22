@@ -548,6 +548,7 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 	short findlistx[256] = { 0 };
 	short findlisty[256] = { 0 };
 	short offset = 0;
+	int zoneid = map_zone_getid( posx, posy );
 	for ( int tmpi = -range; tmpi <= range; tmpi++ )
 	{
 		for ( int tmpj = -range; tmpj <= range; tmpj++ )
@@ -557,6 +558,8 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
 				continue;
 			if ( g_map.m_aTileData[x][y].unit_type > 0 )
+				continue;
+			if ( map_zone_getid( x, y ) != zoneid )
 				continue;
 			//if ( map_addobject( type, x, y ) < 0 )
 			//	continue;
@@ -692,6 +695,12 @@ bool ptInLine( Pos point, Pos lineStartPoint, Pos lineEndPoint, double fToleranc
 	}
 
 	return bResult;
+}
+
+// ¾àÀë
+int map_distance( short fposx, short fposy, short tposx, short tposy )
+{
+	return (int)sqrt( (float)((fposx - tposx)*(fposx - tposx)) + (float)((fposy - tposy)*(fposy - tposy)) );
 }
 
 // dumpµØÍ¼Êý¾Ý

@@ -25,6 +25,7 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_NATION_MISSION_AWARD1	6 // 今天是否领取国家荣誉任务奖励
 #define TODAY_CHAR_NATION_MISSION_AWARD2	7 // 今天是否领取国家荣誉任务奖励
 #define TODAY_CHAR_NATION_MISSION_AWARD3	8 // 今天是否领取国家荣誉任务奖励
+#define TODAY_CHAR_MAPCALLNUM		9	// 今天召唤次数	
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );

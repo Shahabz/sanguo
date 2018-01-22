@@ -30,6 +30,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "map_call.h"
 #include "mail.h"
 #include "nation.h"
 #include "world_quest.h"
@@ -351,10 +352,15 @@ void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr )
 	pAttr->m_char_value_count = 4;
 	if ( pCity->mapcall > 0 )
 	{
-		pAttr->m_short_value[0] = 3600;
-		pAttr->m_short_value[1] = 1;
-		pAttr->m_short_value[2] = 3;
-		pAttr->m_short_value_count = 3;
+		MapCall * pMapCall = map_call_getptr( pCity->mapcall );
+		if ( pMapCall )
+		{
+			pAttr->m_short_value[0] = pMapCall->endtimestamp - (int)time(NULL);
+			pAttr->m_short_value[1] = pMapCall->num;
+			pAttr->m_short_value[2] = pMapCall->maxnum;
+			pAttr->m_short_value[3] = pMapCall->limitlevel;
+			pAttr->m_short_value_count = 4;
+		}
 	}
 }
 

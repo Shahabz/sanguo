@@ -2007,6 +2007,9 @@ int nation_official_right( char official, char right )
 	case NATION_OFFICIAL_RIGHT_BUILDQUICK:
 		v = g_nation_official[official].buildquick;
 		break;
+	case NATION_OFFICIAL_RIGHT_CALLACTORNUM:
+		v = g_nation_official[official].callactornum;
+		break;
 	default:
 		break;
 	}

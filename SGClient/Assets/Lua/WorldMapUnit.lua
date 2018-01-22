@@ -405,14 +405,22 @@ function MapUnit.createCity( recvValue )
 	
 	-- 召唤
 	if mapcall > 0 and GetPlayer().m_nation == nation then
-		SetTrue( CityMapCallMod )
 		local uiCallTimer = objs[6];
 		local uiCallNum = objs[7];
 		local sec		= recvValue.m_short_value[1];
 		local num		= recvValue.m_short_value[2];
 		local maxnum	= recvValue.m_short_value[3];
-		local ShareData = CityMapCallMod.transform:GetComponent("ShareData");
-		ShareData.intValue[0] = recvValue.m_unit_index;
+		local limitlevel= recvValue.m_short_value[4];
+		if GetPlayer().m_level >= limitlevel then
+			SetTrue( CityMapCallMod )
+			SetTimer( uiCallTimer, sec-1, sec, 0, T(1856) )
+			SetText( uiCallNum, num.."/"..maxnum )
+			local ShareData = CityMapCallMod.transform:GetComponent("ShareData");
+			ShareData.intValue[0] = unitindex;
+			ShareData.intValue[1] = mapcall;
+		else
+			SetFalse( CityMapCallMod )
+		end
 	else
 		SetFalse( CityMapCallMod )
 	end
