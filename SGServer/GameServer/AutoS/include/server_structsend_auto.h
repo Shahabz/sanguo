@@ -1928,6 +1928,22 @@ struct _slk_NetS_NationReplaceList {
 };
 typedef struct _slk_NetS_NationReplaceList SLK_NetS_NationReplaceList;	//官员替换列表
 
+struct _slk_NetS_NationLog {
+	char m_type;	//国家日志
+	short m_townid;	//国家日志
+	char m_namelen;	//国家日志
+	char m_name[22];	//国家日志
+	char m_target_nation;	//国家日志
+	int m_optime;	//国家日志
+};
+typedef struct _slk_NetS_NationLog SLK_NetS_NationLog;	//国家日志
+
+struct _slk_NetS_NationLogList {
+	char m_count;	//国家日志列表
+	SLK_NetS_NationLog m_list[10];	//国家日志列表
+};
+typedef struct _slk_NetS_NationLogList SLK_NetS_NationLogList;	//国家日志列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2136,5 +2152,7 @@ int struct_NetS_NationCandidateList_send( char **pptr, int *psize, SLK_NetS_Nati
 int struct_NetS_WorldDataOpen_send( char **pptr, int *psize, SLK_NetS_WorldDataOpen *pValue );
 int struct_NetS_NationReplace_send( char **pptr, int *psize, SLK_NetS_NationReplace *pValue );
 int struct_NetS_NationReplaceList_send( char **pptr, int *psize, SLK_NetS_NationReplaceList *pValue );
+int struct_NetS_NationLog_send( char **pptr, int *psize, SLK_NetS_NationLog *pValue );
+int struct_NetS_NationLogList_send( char **pptr, int *psize, SLK_NetS_NationLogList *pValue );
 
 #endif

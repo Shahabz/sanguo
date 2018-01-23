@@ -2566,3 +2566,26 @@ function struct_NetS_NationReplaceList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_NationLog_recv( buffer )
+	local recvValue = {};
+	recvValue.m_type = buffer:ReadSByte();
+	recvValue.m_townid = buffer:ReadShort();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_target_nation = buffer:ReadSByte();
+	recvValue.m_optime = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_NationLogList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationLog_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

@@ -40,6 +40,7 @@ ASKINFO_VIPBAG			=	37 -- VIP礼包
 ASKINFO_ACTIVITY		=	38 -- 活动
 ASKINFO_NATIONEQUIP		=	39 -- 国器
 ASKINFO_NATION			=	40 -- 国家
+ASKINFO_NATIONLOG		=	41 -- 国家日志
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

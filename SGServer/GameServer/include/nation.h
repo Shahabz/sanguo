@@ -7,6 +7,7 @@
 #define NATION_OFFICIAL_MAX	10		// 官员个数
 #define NATION_TOWN_WAR_MAX	256		// 国战数量
 #define NATION_CITY_WAR_MAX	1024	// 城战数量
+#define NATION_LOG_CACHE_QUEUE_COUNT		200		// 国家日志
 
 #define NATION_QUEST_MAX		3
 #define NATION_QUESTKIND_TOWN	1	// 国家任务-国战
@@ -47,6 +48,13 @@
 #define NATION_OFFICIAL_RIGHT_YIELD				7	//
 #define NATION_OFFICIAL_RIGHT_BUILDQUICK		8	//
 #define NATION_OFFICIAL_RIGHT_CALLACTORNUM			9	//
+
+#define NATION_LOG_TYPE_DEFENSE_LOSE	1 //1870	我国区域{ 0 }{1}[{2}], 被{ 3 }的{ 4 }占领
+#define NATION_LOG_TYPE_DEFENSE_WIN		2 //1871	我国区域{ 0 }{1}[{2}], 成功的抵御了来自{ 3 }的{ 4 }的进攻
+#define NATION_LOG_TYPE_REBUILD			3 //1872	{0}重建了{ 1 }的{ 2 }[{3}]
+#define NATION_LOG_TYPE_LEAVE			4 //1873	{0}深明大义，撤离了{ 1 }{2}[{3}]
+#define NATION_LOG_TYPE_ATTACK_GIVEUP	5 //1874	{0}{1}[{2}]，由我国的{ 3 }率众攻破，因为我国占领皇城城池已到7座上限，故放弃占领，该城归群雄势力所有
+#define NATION_LOG_TYPE_ATTACK_WIN		6 //1875	{0}{1}[{3}]，由我国的{ 3 }率众攻破
 
 // 国家荣誉排行榜
 typedef struct _nation_rank_member
@@ -153,4 +161,11 @@ int nation_official_replace_up( int actor_index, int target_actorid );
 int nation_official_replace_down( int actor_index, int target_actorid );
 int nation_official_right( char official, char right );
 
+// 国家日志
+int nationlog_cache_queue_add( SLK_NetS_NationLog *pCache, SLK_NetS_NationLog *pValue );
+int nationlog_cache_queue_add_db( char nation, SLK_NetS_NationLog *pValue );
+int nationlog_cache_loaddb( SLK_NetS_NationLog *pCache, char nation );
+int nationlog_cache_load();
+void nationlog_add( char nation, int type, int townid, char *name, char target_nation );
+int nationlog_sendlist( int actor_index, int id );
 #endif

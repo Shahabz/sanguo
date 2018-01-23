@@ -75,7 +75,6 @@ extern int g_nation_mission_maxnum;
 extern NationOfficial *g_nation_official;
 extern int g_nation_official_maxnum;
 
-
 // 国家排名
 extern ActorRank *g_rank_nation[3];
 extern int g_rank_nation_count[3];
@@ -89,6 +88,9 @@ NationRank g_nation_rank[NATION_MAX] = { 0 };
 // 官员系统状态时间
 char g_nation_official_state = 0;
 int g_nation_official_statetime = 0;
+
+// 国家日志
+SLK_NetS_NationLog g_nation_log[3][NATION_LOG_CACHE_QUEUE_COUNT] = { 0 };
 
 // 读档完毕的回调
 int nation_loadcb( int nation )
@@ -1621,31 +1623,18 @@ int nation_official_create()
 					g_city[city_index].official = NATION_OFFICIAL_R2;
 				else if ( nation == 3 )
 					g_city[city_index].official = NATION_OFFICIAL_R3;
-				// 公告
-				strncpy( v1, g_city[city_index].name, NAME_SIZE );
-				sprintf( v2, "%s%d", TAG_NATION, nation );
-				system_talkjson_world( 6017, v1, v2, NULL, NULL, NULL, NULL, 1 );
 			}
 			else if ( tmpi == 1 )
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R4;
-				// 公告
-				strncpy( v1, g_city[city_index].name, NAME_SIZE );
-				system_talkjson( 0, nation, 6018, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 			else if ( tmpi == 2 )
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R5;
-				// 公告
-				strncpy( v1, g_city[city_index].name, NAME_SIZE );
-				system_talkjson( 0, nation, 6019, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 			else
 			{
 				g_city[city_index].official = NATION_OFFICIAL_R6;
-				// 公告
-				strncpy( v1, g_city[city_index].name, NAME_SIZE );
-				system_talkjson( 0, nation, 6020, v1, NULL, NULL, NULL, NULL, NULL, 1 );
 			}
 
 			// 如果玩家在线，通知更新
@@ -1658,6 +1647,45 @@ int nation_official_create()
 			}
 		}
 	}
+
+	// 发公告
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
+	{// 优先国王
+		int city_index = g_nation[nation].official_city_index[0];
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+			continue;
+		strncpy( v1, g_city[city_index].name, NAME_SIZE );
+		sprintf( v2, "%s%d", TAG_NATION, nation );
+		system_talkjson_world( 6017, v1, v2, NULL, NULL, NULL, NULL, 1 );
+	}
+	for ( int nation = 1; nation < NATION_MAX; nation++ )
+	{ // 其次其他职位
+		for ( int tmpi = 1; tmpi < NATION_CANDIDATE_MAX; tmpi++ )
+		{
+			int city_index = g_nation[nation].official_city_index[tmpi];
+			if ( city_index < 0 || city_index >= g_city_maxcount )
+				continue;
+			if ( tmpi == 1 )
+			{
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6018, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+			}
+			else if ( tmpi == 2 )
+			{
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6019, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+			}
+			else
+			{
+				// 公告
+				strncpy( v1, g_city[city_index].name, NAME_SIZE );
+				system_talkjson( 0, nation, 6020, v1, NULL, NULL, NULL, NULL, NULL, 1 );
+			}
+		}
+	}
+
 
 	// 清空候选人
 	for ( int nation = 0; nation < NATION_MAX; nation++ )
@@ -2014,4 +2042,127 @@ int nation_official_right( char official, char right )
 		break;
 	}
 	return v;
+}
+
+
+// 添加国家日志缓存队列
+int nationlog_cache_queue_add( SLK_NetS_NationLog *pCache, SLK_NetS_NationLog *pValue )
+{
+	int tmpi = 0;
+	for ( tmpi = 0; tmpi < NATION_LOG_CACHE_QUEUE_COUNT; tmpi++ )
+	{
+		if ( pCache[tmpi].m_type <= 0 )
+		{
+			memcpy( &pCache[tmpi], pValue, sizeof( SLK_NetS_NationLog ) );
+			break;
+		}
+	}
+	if ( tmpi >= NATION_LOG_CACHE_QUEUE_COUNT )
+	{
+		memmove( &pCache[0], &pCache[1], sizeof( SLK_NetS_NationLog )*(NATION_LOG_CACHE_QUEUE_COUNT - 1) );
+		memcpy( &pCache[NATION_LOG_CACHE_QUEUE_COUNT - 1], pValue, sizeof( SLK_NetS_NationLog ) );
+	}
+	return 0;
+}
+
+// 添加国家日志到数据库
+int nationlog_cache_queue_add_db( char nation, SLK_NetS_NationLog *pValue )
+{
+	char szSQL[2048] = { 0 };
+	char szText_name[NAME_SIZE * 2 + 1] = { 0 };
+	db_escape( pValue->m_name, szText_name, 0 );
+	sprintf( szSQL, "INSERT INTO `nation_log` ( `nation`,`type`,`townid`,`name`,`target_nation`,`optime` ) VALUES ('%d','%d','%d','%s','%d','%d')",
+		nation, pValue->m_type, pValue->m_townid, szText_name, pValue->m_target_nation, pValue->m_optime );
+	dbwork_addsql( szSQL, DBWORK_CMD_NORMAL, 0 );
+	return 0;
+}
+
+// 读取国家日志
+int nationlog_cache_loaddb( char nation, SLK_NetS_NationLog *pCache )
+{
+	MYSQL_RES	*res;
+	MYSQL_ROW	row;
+	char	szSQL[1024];
+	sprintf( szSQL, "SELECT `nation`,`type`,`townid`,`name`,`target_nation`,`optime` FROM nation_log WHERE nation='%d' ORDER BY optime DESC LIMIT %d;", nation, NATION_LOG_CACHE_QUEUE_COUNT );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	while ( (row = mysql_fetch_row( res )) )
+	{
+		int index = 0;
+		SLK_NetS_NationLog info = { 0 };
+		nation = atoi( row[index++] );
+		info.m_type = atoi( row[index++] );
+		info.m_townid = atoi( row[index++] );
+		strncpy( info.m_name, row[index++], NAME_SIZE );
+		info.m_namelen = strlen( info.m_name );
+		info.m_target_nation = atoi( row[index++] );
+		info.m_optime = atoi( row[index++] );
+		nationlog_cache_queue_add( pCache, &info );
+	}
+	mysql_free_result( res );
+	return 0;
+}
+int nationlog_cache_load()
+{
+	nationlog_cache_loaddb( 1, g_nation_log[0] );
+	nationlog_cache_loaddb( 2, g_nation_log[1] );
+	nationlog_cache_loaddb( 3, g_nation_log[2] );
+	return 0;
+}
+
+// 记录国家日志
+void nationlog_add( char nation, int type, int townid, char *name, char target_nation )
+{
+	nation = nation - 1;
+	if ( nation < 0 || nation >= 3 )
+		return;
+	SLK_NetS_NationLog info = { 0 };
+	info.m_type = type;
+	info.m_townid = townid;
+	strncpy( info.m_name, name, NAME_SIZE );
+	info.m_namelen = strlen( info.m_name );
+	info.m_target_nation = target_nation;
+	info.m_optime = (int)time(NULL);
+	nationlog_cache_queue_add( g_nation_log[nation], &info );
+	nationlog_cache_queue_add_db( nation, &info );
+}
+
+int nationlog_sendlist( int actor_index, int page )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int beginindex = page * 9;
+	int endindex = beginindex + 9;
+	if ( endindex > NATION_LOG_CACHE_QUEUE_COUNT )
+		endindex = NATION_LOG_CACHE_QUEUE_COUNT;
+
+	char nation = pCity->nation - 1;
+	SLK_NetS_NationLogList pValue = { 0 };
+	for ( int tmpi = beginindex; tmpi < endindex; tmpi++ )
+	{
+		if ( g_nation_log[nation][tmpi].m_type == 0 )
+			continue;
+		pValue.m_list[pValue.m_count].m_type = g_nation_log[nation][tmpi].m_type;
+		pValue.m_list[pValue.m_count].m_townid = g_nation_log[nation][tmpi].m_townid;
+		strncpy( pValue.m_list[pValue.m_count].m_name, g_nation_log[nation][tmpi].m_name, NAME_SIZE );
+		pValue.m_list[pValue.m_count].m_namelen = g_nation_log[nation][tmpi].m_namelen;
+		pValue.m_list[pValue.m_count].m_target_nation = g_nation_log[nation][tmpi].m_target_nation;
+		pValue.m_list[pValue.m_count].m_optime = g_nation_log[nation][tmpi].m_optime;
+		pValue.m_count += 1;
+		if ( pValue.m_count >= 9 )
+		{
+			break;
+		}
+	}
+	netsend_nationloglist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
 }

@@ -881,6 +881,9 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			nation_notice( actor_index, pstr );
 		}
 		break;
+	case ASKINFO_NATIONLOG:
+		nationlog_sendlist( actor_index, pvalue[0] );
+		break;
 	default:
 		break;
 	}

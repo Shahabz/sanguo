@@ -196,3 +196,5 @@ global.nation_vote_actorlevel = 50 --国家选举给与免费票数等级
 global.nation_vote_basenum = 3 --国家选举与免费票数
 global.nation_change_notice_sec = 60 --国家修改公告间隔
 global.nation_online_notify_sec = 7200 --国家上限提醒间隔
+global.mapcall_range = 6 --召唤随机范围
+global.mapcall_nearby = 20 --召唤判断附近

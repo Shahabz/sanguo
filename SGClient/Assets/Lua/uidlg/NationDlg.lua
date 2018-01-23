@@ -108,9 +108,10 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 9 then
 			NationOfficialDlgShow()
 		
-		--国家战争
+		--国家日志
 		elseif nControlID == 10 then
-		
+			NationLogDlgShow()
+			
 		-- 公告重新编辑
 		elseif nControlID == 101 then
 			NationDlgNoticeLayerReset()

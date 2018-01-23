@@ -2825,3 +2825,29 @@ int struct_NetS_NationReplaceList_send( char **pptr, int *psize, SLK_NetS_Nation
 	return 0;
 }
 
+int struct_NetS_NationLog_send( char **pptr, int *psize, SLK_NetS_NationLog *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_townid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 22 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_target_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationLogList_send( char **pptr, int *psize, SLK_NetS_NationLogList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationLog_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

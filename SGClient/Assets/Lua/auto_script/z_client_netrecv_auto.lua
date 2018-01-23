@@ -885,6 +885,11 @@ function netrecv_nationreplacelist_C( buffer )
 	proc_nationreplacelist_C( recvValue );
 end
 
+function netrecv_nationloglist_C( buffer )
+	local recvValue = struct_NetS_NationLogList_recv( buffer );
+	proc_nationloglist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1063,6 +1068,7 @@ Proc_Command = {
 	[CMDS_NATIONCANDIDATELIST]=netrecv_nationcandidatelist_C;
 	[CMDS_WORLDDATAOPEN]=netrecv_worlddataopen_C;
 	[CMDS_NATIONREPLACELIST]=netrecv_nationreplacelist_C;
+	[CMDS_NATIONLOGLIST]=netrecv_nationloglist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

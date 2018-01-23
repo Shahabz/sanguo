@@ -952,6 +952,9 @@ int process_init( int max_connection )
 	// 聊天缓存
 	chat_cache_load();
 
+	// 国家日志缓存
+	nationlog_cache_load();
+
 	// 刷地图
 	sc_OnWorldMapBrush();
 	serv_setstat( 117 );

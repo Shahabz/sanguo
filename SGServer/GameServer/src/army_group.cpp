@@ -1087,6 +1087,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+
+		// 国家日志
+		nationlog_add( pTown->nation, NATION_LOG_TYPE_DEFENSE_WIN, pTown->townid, attackName, attackNation );
 	}
 
 	// 发送邮件完毕再设置
@@ -1134,6 +1137,10 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			if ( nation_town_num( attackNation, MAPUNIT_TYPE_TOWN_TYPE7 ) >= 7 )
 			{
 				system_talkjson( 0, attackNation, 6002, v1, v2, v3, v4, NULL, NULL, 1 );
+
+				// 国家日志
+				nationlog_add( attackNation, NATION_LOG_TYPE_ATTACK_GIVEUP, pTown->townid, attackName, pTown->nation );
+				nationlog_add( pTown->nation, NATION_LOG_TYPE_DEFENSE_LOSE, pTown->townid, attackName, attackNation );
 				notify = 1;
 				attackNation = 0;
 			}
@@ -1168,6 +1175,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		if ( notify == 0 )
 		{
 			system_talkjson( 0, attackNation, 6000, v1, v2, v3, v4, NULL, NULL, 1 );
+			// 国家日志
+			nationlog_add( attackNation, NATION_LOG_TYPE_ATTACK_WIN, pTown->townid, attackName, pTown->nation );
+			nationlog_add( pTown->nation, NATION_LOG_TYPE_DEFENSE_LOSE, pTown->townid, attackName, attackNation );
 		}
 
 		pTown->nation = attackNation;

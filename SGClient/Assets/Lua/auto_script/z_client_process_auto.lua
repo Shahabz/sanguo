@@ -1965,3 +1965,9 @@ function proc_nationreplacelist_C( recvValue )
 	end
 end
 
+-- m_count=0,m_list={m_type=0,m_townid=0,m_namelen=0,m_name="[m_namelen]",m_target_nation=0,m_optime=0,[m_count]},
+function proc_nationloglist_C( recvValue )
+	-- process.
+	NationLogDlgRecv( recvValue )
+end
+
