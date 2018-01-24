@@ -114,7 +114,7 @@ int struct_NetS_Notify_send( char **pptr, int *psize, SLK_NetS_Notify *pValue )
 	if( pValue->m_valuenum > 0 && pValue->m_valuenum <= 10 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_value, pValue->m_valuenum*sizeof(int), (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_msg_length, (*psize) );
-	if( pValue->m_msg_length > 0 && pValue->m_msg_length <= 256 )
+	if( pValue->m_msg_length > 0 && pValue->m_msg_length <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msg_length*sizeof(char), (*psize) );
 	return 0;
 }

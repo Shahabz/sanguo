@@ -40,7 +40,7 @@ struct _slk_NetC_AskInfo {
 	short m_valuenum;	//客户端发送-短请求参数个数
 	int m_value[10];	//客户端发送-短请求参数
 	short m_msg_length;	//客户端发送-短请求字符串长度
-	char m_msg[256];	//客户端发送-短请求字符串
+	char m_msg[1024];	//客户端发送-短请求字符串
 };
 typedef struct _slk_NetC_AskInfo SLK_NetC_AskInfo;	//客户端发送短请求
 

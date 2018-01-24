@@ -453,18 +453,21 @@ int nation_online_notify( int actor_index )
 		if ( (int)time( NULL ) - pNation->online_notify_king_stamp < global.nation_online_notify_sec )
 			return -1;
 		system_talkjson_world( 6014, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		pNation->online_notify_king_stamp = (int)time( NULL );
 	}
 	else if ( pCity->official == NATION_OFFICIAL_R4 )
 	{ // 丞相上线提醒
 		if ( (int)time( NULL ) - pNation->online_notify_r4_stamp < global.nation_online_notify_sec )
 			return -1;
 		system_talkjson( 0, pCity->nation, 6015, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		pNation->online_notify_r4_stamp = (int)time( NULL );
 	}
 	else if ( pCity->official >= NATION_OFFICIAL_R5 )
 	{ // 军师上线提醒
 		if ( (int)time( NULL ) - pNation->online_notify_r5_stamp < global.nation_online_notify_sec )
 			return -1;
 		system_talkjson( 0, pCity->nation, 6016, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		pNation->online_notify_r5_stamp = (int)time( NULL );
 	}
 	return 0;
 }

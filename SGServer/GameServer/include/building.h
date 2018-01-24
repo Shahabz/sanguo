@@ -42,7 +42,7 @@
 #define	BUILDING_OP_UPGRADE	2	// 升级
 #define	BUILDING_OP_DELETE	3	// 拆除
 #define	BUILDING_OP_REBUILD	4	// 改建
-#define	BUILDING_TRAIN_MAXNUM	8	// 兵营最多8个招募队列	
+#define	BUILDING_TRAIN_MAXNUM	8	// 兵营最多8个招募队列
 
 // 获取建筑指针
 Building* building_getptr( int city_index, int offset );

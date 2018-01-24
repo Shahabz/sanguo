@@ -65,7 +65,7 @@ struct _slk_NetS_Notify {
 	short m_valuenum;	//服务器发送-短消息参数个数
 	int m_value[10];	//服务器发送-短消息数值参数
 	short m_msg_length;	//服务器发送-短消息字符串消息长度
-	char m_msg[256];	//服务器发送-短消息字符串参数
+	char m_msg[1024];	//服务器发送-短消息字符串参数
 };
 typedef struct _slk_NetS_Notify SLK_NetS_Notify;	//通用短消息
 

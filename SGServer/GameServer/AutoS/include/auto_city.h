@@ -97,6 +97,7 @@ struct _city {
 				short guardsec;	//城墙守卫冷却时间
 				CityGuard guard[30];	//城墙守卫
 				Hero hero[12];	//上阵英雄
+				NationHero nation_hero[15];	//国家名将信息
 				Building building[6];	//普通建筑
 				BuildingBarracks building_barracks[4];	//兵营建筑
 				BuildingRes building_res[64];	//资源建筑

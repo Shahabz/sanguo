@@ -117,14 +117,24 @@ function NationUpgradeDlgShowRecv( recvValue )
 	SetProgress( m_uiExpProgress, m_recvValue.m_exp/g_nation_upgrade[m_recvValue.m_level][1].maxexp )
 	-- 今日次数已经用尽
 	if m_recvValue.m_donate_num >= 11 then
-		SetFalse( m_uiUpgradeBtn )
+		SetButtonFalse( m_uiUpgradeBtn )
 		SetFalse( m_uiCost )
 		SetFalse( m_uiAward )
 		SetTrue( m_uiWarn )
+		SetText( m_uiWarn, T(1770) )
+		return
+		
+	-- 还没开启皇城
+	elseif m_recvValue.m_level == 3 and m_recvValue.m_exp >= g_nation_upgrade[m_recvValue.m_level][1].maxexp and GetPlayer().m_open_townking == 0 then
+		SetButtonFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiCost )
+		SetFalse( m_uiAward )
+		SetTrue( m_uiWarn )
+		SetText( m_uiWarn, T(1891) )
 		return
 	end
 	
-	SetTrue( m_uiUpgradeBtn )
+	SetButtonTrue( m_uiUpgradeBtn )
 	SetTrue( m_uiCost )
 	SetTrue( m_uiAward )
 	SetFalse( m_uiWarn )

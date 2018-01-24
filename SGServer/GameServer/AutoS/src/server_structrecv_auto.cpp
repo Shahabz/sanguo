@@ -114,7 +114,7 @@ int struct_NetC_AskInfo_recv( char **pptr, int *psize, SLK_NetC_AskInfo *pValue 
 		return -1;
 	LKSET_MEM_RECV( pValue->m_value, (*pptr), pValue->m_valuenum*sizeof(int), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_msg_length, (*pptr), (*psize) );
-	if( pValue->m_msg_length < 0 || pValue->m_msg_length > (*psize)*(int)sizeof(char) || pValue->m_msg_length > 256 )
+	if( pValue->m_msg_length < 0 || pValue->m_msg_length > (*psize)*(int)sizeof(char) || pValue->m_msg_length > 1024 )
 		return -1;
 	LKSET_MEM_RECV( pValue->m_msg, (*pptr), pValue->m_msg_length*sizeof(char), (*psize) );
 	return 0;

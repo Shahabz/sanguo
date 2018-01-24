@@ -99,7 +99,8 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		--国家名将
 		elseif nControlID == 7 then
-		
+			NationHeroDlgShow()
+			
 		--国家荣誉
 		elseif nControlID == 8 then
 			NationHonorDlgShow()
@@ -127,6 +128,12 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		end	
 	
 	elseif nType == UI_EVENT_INPUTVALUECHANGED then
+		local content = m_uiContentField:GetComponent("UIInputField").text;
+		if content == "" then
+			m_uiContentField.transform:Find( "Hint" ):GetComponent( typeof(UIText) ).text = T(1849)
+		else
+			m_uiContentField.transform:Find( "Hint" ):GetComponent( typeof(UIText) ).text = ""
+		end
 		SetRichText( m_uiContentField.transform:Find( "RichText" ), m_uiContentField:GetComponent("UIInputField").text )
 		
 	end
@@ -356,6 +363,10 @@ function NationDlgNoticeLayerSend()
 	end
 	if Utils.MaskWordCheck( content ) == false then
 		pop(T(789))
+		return;
+	end
+	if m_recvValue.m_notice == content then
+		pop(T(1882))
 		return;
 	end
 	system_askinfo( ASKINFO_NATION, content, 17 )

@@ -1,9 +1,15 @@
 -- 界面
 local m_Dlg = nil;
+local m_DialogFrameMod = nil;
+
+local m_uiNowText = nil; --UnityEngine.GameObject
+local m_uiScrollView = nil; --UnityEngine.GameObject
+local m_uiContent = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function NationHeroDlgOpen()
 	m_Dlg = eye.uiManager:Open( "NationHeroDlg" );
+	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(1539), HELP_NationDlg, NationHeroDlgClose );
 end
 
 -- 隐藏界面
@@ -11,7 +17,8 @@ function NationHeroDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	DialogFrameModClose( m_DialogFrameMod );
+	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationHeroDlg" );
 end
 
@@ -38,6 +45,9 @@ end
 function NationHeroDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
+	m_uiNowText = objs[0];
+	m_uiScrollView = objs[1];
+	m_uiContent = objs[2];
 end
 
 -- 界面初始化时调用
@@ -71,4 +81,5 @@ end
 ----------------------------------------
 function NationHeroDlgShow()
 	NationHeroDlgOpen()
+	
 end
