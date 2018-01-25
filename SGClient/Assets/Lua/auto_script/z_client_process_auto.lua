@@ -188,7 +188,18 @@ function proc_buildinglist_C( recvValue )
 	end
 	-- Ãñ±øÓª
 	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_Militiaman ) == 1 then
-		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
+		local has = 0;
+		for i=1, recvValue.m_barracks_count, 1 do
+			if recvValue.m_barracks[i].m_kind == BUILDING_Militiaman_Infantry or 
+			   recvValue.m_barracks[i].m_kind == BUILDING_Militiaman_Cavalry or 
+			   recvValue.m_barracks[i].m_kind == BUILDING_Militiaman_Archer then
+				has = 1;
+				break;
+			end
+		end
+		if has == 0 then
+			City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
+		end
 	end
 	MainDlgSetButtons( -1 );
 	GetPlayer():SetBuildingWorker( recvValue )
@@ -1969,5 +1980,12 @@ end
 function proc_nationloglist_C( recvValue )
 	-- process.
 	NationLogDlgRecv( recvValue )
+end
+
+
+-- m_count=0,m_list={m_kind=0,m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_posx=0,m_posy=0,m_buypos=0,m_state=0,m_forever=0,m_nation=0,[m_count]},m_nationlevel=0,
+function proc_nationherolist_C( recvValue )
+	-- process.
+	NationHeroDlgRecv( recvValue )
 end
 

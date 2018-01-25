@@ -41,6 +41,7 @@
 #include "vip.h"
 #include "nation_equip.h"
 #include "nation.h"
+#include "nation_hero.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -883,6 +884,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_NATIONLOG:
 		nationlog_sendlist( actor_index, pvalue[0] );
+		break;
+	case ASKINFO_NATIONHERO:
+		if ( pvalue[0] == 0 )
+		{ // 国家名将列表
+			nation_hero_sendlist( actor_index );
+		}
 		break;
 	default:
 		break;

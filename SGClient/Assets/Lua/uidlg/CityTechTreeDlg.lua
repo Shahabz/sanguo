@@ -193,7 +193,7 @@ function CityTechTreeDlgShow()
 		if prekind > 0 then
 			SetTrue( uiLine );
 			local offsetx = g_citytech_tree[kind].x - g_citytech_tree[prekind].x;
-			uiLine.transform.sizeDelta = Vector2.New( uiLine.transform.sizeDelta.x, 38 + 250*(offsetx-1) );
+			uiLine.transform.sizeDelta = Vector2.New( uiLine.transform.sizeDelta.x, 38 + 220*(offsetx-1) );
 		else
 			SetFalse( uiLine );
 		end

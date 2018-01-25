@@ -23,6 +23,7 @@
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -98,6 +99,9 @@ int mapunit_getattr( int unit_index, SLK_NetS_AddMapUnit *pAttr )
 	case MAPUNIT_TYPE_EVENT: // 事件
 		map_event_makeunit( pMapUnit->index, pAttr, pMapUnit->actorid );
 		break;
+	case MAPUNIT_TYPE_NATIONHERO: // 国家名将
+		nation_hero_makeunit( pMapUnit->index, pAttr );
+		break;
 	default:
 		return -1;
 	}
@@ -129,6 +133,9 @@ int mapunit_getpos( int unit_index, short *posx, short *posy )
 		break;
 	case MAPUNIT_TYPE_EVENT: // 事件
 		map_event_getpos( pMapUnit->index, posx, posy );
+		break;
+	case MAPUNIT_TYPE_NATIONHERO: // 国家名将
+		nation_hero_getpos( pMapUnit->index, posx, posy );
 		break;
 	default:
 		break;
@@ -525,6 +532,9 @@ int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int 
 			break;
 		case MAPUNIT_TYPE_EVENT: // 事件
 			map_event_getpos( pMapUnit->index, &target_posx, &target_posy );
+			break;
+		case MAPUNIT_TYPE_NATIONHERO: // 国家名将
+			nation_hero_getpos( pMapUnit->index, &target_posx, &target_posy );
 			break;
 		default:
 			break;

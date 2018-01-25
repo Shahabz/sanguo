@@ -23,6 +23,7 @@ NOTIFY_BUILDINGFINISH = 20  -- 建筑完成
 NOTIFY_CITYGUARDNUM	  = 21	-- 城防军数量
 NOTIFY_HERO_VISIT	  =	22	-- 武将寻访
 NOTIFY_MAPCALL		  =	23	-- 地图召唤
+NOTIFY_HEROBACK		  = 24	-- 武将回城
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -275,6 +276,23 @@ function RecvActorNotify(recvValue)
 		if value[1] == 0 then
 			MapCallDlgRecv( value[2], value[3], value[4] )
 		end
+		
+	-- 武将回城
+	elseif msgid == NOTIFY_HEROBACK then
+		local str = ""
+		if value[1] > 0 then
+			str = str..HeroName( value[1] )
+		end
+		if value[2] > 0 then
+			str = str.."/"..HeroName( value[2] )
+		end
+		if value[3] > 0 then
+			str = str.."/"..HeroName( value[3] )
+		end
+		if value[4] > 0 then
+			str = str.."/"..HeroName( value[4] )
+		end
+		pop( F( 983, str ) )
     end
 end
 

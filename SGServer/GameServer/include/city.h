@@ -86,6 +86,9 @@ int city_getindex_withactorname( const char *actorname );
 // 获取国家
 char city_getnation( int city_index );
 
+// 获取国家名称
+char* city_getname( int city_index );
+
 // 显示单元属性
 void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr );
 void city_makezoneunit( int city_index, SLK_NetS_ZoneUnit *pAttr );
@@ -210,6 +213,7 @@ int city_officialhire_sendinfo( City *pCity, int type );
 
 // 获取士兵数量
 int city_soldiers( int city_index, short corps );
+int city_soldiers_withkind( int city_index, short kind );
 
 // 加入出征队列
 int city_battlequeue_add( City *pCity, int army_index );

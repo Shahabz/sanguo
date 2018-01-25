@@ -890,6 +890,11 @@ function netrecv_nationloglist_C( buffer )
 	proc_nationloglist_C( recvValue );
 end
 
+function netrecv_nationherolist_C( buffer )
+	local recvValue = struct_NetS_NationHeroList_recv( buffer );
+	proc_nationherolist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1069,6 +1074,7 @@ Proc_Command = {
 	[CMDS_WORLDDATAOPEN]=netrecv_worlddataopen_C;
 	[CMDS_NATIONREPLACELIST]=netrecv_nationreplacelist_C;
 	[CMDS_NATIONLOGLIST]=netrecv_nationloglist_C;
+	[CMDS_NATIONHEROLIST]=netrecv_nationherolist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

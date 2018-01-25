@@ -78,6 +78,7 @@
 #include "auto_map_event.h"
 #include "auto_map_call.h"
 #include "auto_nation.h"
+#include "auto_nation_hero.h"
 #include "auto_world_boss.h"
 #include "auto_kingwar_town.h"
 #include "actor_send.h"
@@ -104,9 +105,11 @@
 #define MAX_DEFAULT_EQUIPNUM	30
 #define MAX_ACTOR_EQUIPNUM		150
 
-#define HERO_ACTOR_MAX				128	// 未上英雄
+#define HERO_ACTOR_MAX				80	// 未上英雄
 #define HERO_CITY_MAX				12	// 上阵英雄
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
+#define NATIONHERO_BASEOFFSET		2000	// 国家名将索引起始
+#define NATIONHERO_MAX				15		// 国家名将数量
 #define SHAPE_MAX					64		// 形象
 #define ACTOR_BLACKLIST_MAX			50		// 黑名单
 #define FIGHT_JSON_MAX	16384	// 战斗json数据长度

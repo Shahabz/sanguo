@@ -3,7 +3,6 @@ CREATE TABLE `city_building_barracks` (
   `offset` tinyint(3) NOT NULL DEFAULT '0' COMMENT '',
   `kind` tinyint(3) NOT NULL DEFAULT '0' COMMENT '兵营种类',
   `level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '兵营等级',
-  `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '本营兵力',
   `trainnum` int(11) NOT NULL DEFAULT '0' COMMENT '当前训练士兵数',
   `trainsec` int(11) NOT NULL DEFAULT '0' COMMENT '当前训练剩余时间(秒)',
   `trainsec_need` int(11) NOT NULL DEFAULT '0' COMMENT '当前训练需要时间(秒)',

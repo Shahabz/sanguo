@@ -6,7 +6,6 @@ struct _city_building_barracks {
 //--Automatically generated
 				char kind;	//兵营种类
 				char level;	//兵营等级
-				int soldiers;	//本营兵力
 				int trainnum;	//当前训练士兵数
 				int trainsec;	//当前训练剩余时间(秒)
 				int trainsec_need;	//当前训练需要时间(秒)

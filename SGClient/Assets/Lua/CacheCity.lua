@@ -59,13 +59,35 @@ function City.BuildingSelect( transform )
 	end
 	
 	-- 打开加速界面	
-	if GetPlayer().m_worker_kind == building.kind and GetPlayer().m_worker_offset == building.offset or 
-		GetPlayer().m_worker_kind_ex == building.kind and GetPlayer().m_worker_offset_ex == building.offset then
-		if GetPlayer().m_worker_kind == building.kind then
+	if GetPlayer().m_worker_kind == building.kind then
+		if building.kind >= BUILDING_Silver and building.kind <= BUILDING_Iron then
+			if GetPlayer().m_worker_offset == building.offset then
+				if GetPlayer().m_worker_op == 4 then
+					QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec );
+				else
+					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+				end
+				return
+			end
+		else
 			if GetPlayer().m_worker_op == 4 then
 				QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec );
 			else
 				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+			end
+			return
+		end
+	end
+		
+	if GetPlayer().m_worker_kind_ex == building.kind then
+		if building.kind >= BUILDING_Silver and building.kind <= BUILDING_Iron then
+			if GetPlayer().m_worker_offset_ex == building.offset then
+				if GetPlayer().m_worker_op_ex == 4 then
+					QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+				else
+					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+				end
+				return
 			end
 		else
 			if GetPlayer().m_worker_op_ex == 4 then
@@ -73,62 +95,64 @@ function City.BuildingSelect( transform )
 			else
 				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
 			end
-		end
-	else
-		BuildingOpratorModShow( false, 0, -1, nil );
-		if building.kind == BUILDING_Smithy then -- 铁匠铺
-			-- 打造有完成的，直接领取
-			if GetPlayer():BuildingOverValue( building.kind ) > 0 then
-				City.BuildingHideOver( building.kind )
-				system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
-			else
-				EquipForgingDlgShow();
-			end
-		elseif building.kind == BUILDING_Wash then -- 洗炼铺
-			EquipWashDlgShow();
-		elseif building.kind == BUILDING_Fangshi then -- 坊市
-			
-		elseif building.kind == BUILDING_Shop then -- 商店
-			ShopDlgShow()
-			
-		elseif building.kind == BUILDING_Hero then -- 聚贤馆
-			HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
-			
-		elseif building.kind == BUILDING_Wishing then -- 聚宝盆
-
-		elseif building.kind == BUILDING_Help then -- 帮助
-			HelpDlgShow();
-		else
-			-- 科技有完成的，直接领取
-			if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
-				City.BuildingHideOver( building.kind )
-				system_askinfo( ASKINFO_TECH, "", 4 );
-			
-			-- 材料工坊有完成的，直接领取
-			elseif building.kind == BUILDING_Craftsman and GetPlayer():BuildingOverValue( building.kind ) > 0 then
-				system_askinfo( ASKINFO_MATERIALMAKE, "", 4 );
-				
- 			-- 募兵有完成的，直接领取
-			elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
-				City.BuildingHideOver( building.kind )
-				system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
-						
-			else
-		
-				if building.kind == BUILDING_Wood and GetPlayer().m_questid == QUEST_MAINID_MADAI then
-					BuildingQuestModHide()
-					QuestTalkAsk( 5 )
-					return
-				elseif building.kind == BUILDING_Silver and GetPlayer().m_questid == QUEST_MAINID_LIUKOU then
-					BuildingQuestModHide()
-					QuestTalkAsk( 14 )
-					return
-				end
-	
-				BuildingOpratorModShow( true, building.kind, building.offset, transform );
-			end
+			return
 		end
 	end
+	
+	BuildingOpratorModShow( false, 0, -1, nil );
+	if building.kind == BUILDING_Smithy then -- 铁匠铺
+		-- 打造有完成的，直接领取
+		if GetPlayer():BuildingOverValue( building.kind ) > 0 then
+			City.BuildingHideOver( building.kind )
+			system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
+		else
+			EquipForgingDlgShow();
+		end
+	elseif building.kind == BUILDING_Wash then -- 洗炼铺
+		EquipWashDlgShow();
+	elseif building.kind == BUILDING_Fangshi then -- 坊市
+		
+	elseif building.kind == BUILDING_Shop then -- 商店
+		ShopDlgShow()
+		
+	elseif building.kind == BUILDING_Hero then -- 聚贤馆
+		HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
+		
+	elseif building.kind == BUILDING_Wishing then -- 聚宝盆
+
+	elseif building.kind == BUILDING_Help then -- 帮助
+		HelpDlgShow();
+	else
+		-- 科技有完成的，直接领取
+		if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+			City.BuildingHideOver( building.kind )
+			system_askinfo( ASKINFO_TECH, "", 4 );
+		
+		-- 材料工坊有完成的，直接领取
+		elseif building.kind == BUILDING_Craftsman and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+			system_askinfo( ASKINFO_MATERIALMAKE, "", 4 );
+			
+		-- 募兵有完成的，直接领取
+		elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
+			City.BuildingHideOver( building.kind )
+			system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
+					
+		else
+	
+			if building.kind == BUILDING_Wood and GetPlayer().m_questid == QUEST_MAINID_MADAI then
+				BuildingQuestModHide()
+				QuestTalkAsk( 5 )
+				return
+			elseif building.kind == BUILDING_Silver and GetPlayer().m_questid == QUEST_MAINID_LIUKOU then
+				BuildingQuestModHide()
+				QuestTalkAsk( 14 )
+				return
+			end
+
+			BuildingOpratorModShow( true, building.kind, building.offset, transform );
+		end
+	end
+
 end
 
 -- 点击空地块

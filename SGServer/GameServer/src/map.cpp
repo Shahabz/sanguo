@@ -164,6 +164,9 @@ inline int map_getobject_grid( int type, int index )
 	case MAPUNIT_TYPE_EVENT: // 事件
 		grid = 1;
 		break;
+	case MAPUNIT_TYPE_NATIONHERO: // 国家名将
+		grid = 1;
+		break;
 	default:
 		return 1;
 	}

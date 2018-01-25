@@ -102,9 +102,6 @@ int building_awardquick_get( int actor_index, int kind, int offset );
 // 购买商用建造队列
 int building_workerbuy( int actor_index, int type );
 
-// 获取士兵数量
-int building_soldiers_total( int city_index, char kind );
-
 // 铁匠铺信息
 int building_smithy_send( int city_index );
 

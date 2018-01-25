@@ -117,6 +117,23 @@ Hero* city_hero_getptr( int city_index, int offset )
 	return &g_city[city_index].hero[hero_index];
 }
 
+Hero* city_hero_getptr_withkind( int city_index, int herokind )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return NULL;
+	int index = -1;
+	if ( herokind == 0 )
+		return NULL;
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( g_city[city_index].hero[tmpi].kind == herokind )
+		{
+			return &g_city[city_index].hero[tmpi];
+		}
+	}
+	return NULL;
+}
+
 Hero *hero_getptr( int actor_index, int herokind )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )

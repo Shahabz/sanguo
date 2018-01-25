@@ -12,6 +12,7 @@ Hero* actor_hero_getptr( int actor_index, int offset );
 
 int city_hero_getindex( int city_index, int herokind );
 Hero* city_hero_getptr( int city_index, int offset );
+Hero* city_hero_getptr_withkind( int city_index, int herokind );
 
 Hero *hero_getptr( int actor_index, int herokind );
 char hero_getcolor( City *pCity, int herokind );

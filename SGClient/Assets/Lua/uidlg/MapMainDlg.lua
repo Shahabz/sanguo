@@ -227,6 +227,15 @@ function MapMainDlgBattleRecv( recvValue )
 		return;
 	end
 	
+	for i = 0, 3, 1 do
+		local UIP_BattleInfo = m_uiHeroLayerGrid.transform:GetChild(i).gameObject
+		SetFalse( UIP_BattleInfo )
+	end
+	for i = 0, 3, 1 do
+		local UIP_BattleInfo = m_uiGatherLayerGrid.transform:GetChild(i).gameObject
+		SetFalse( UIP_BattleInfo )
+	end
+	
 	-- 刷新目标流寇
 	g_targetEnemyPos = {};
 	MapUnit.RefreshTargetEnemy( nil );
@@ -304,6 +313,9 @@ end
 
 -- 更新
 function MapMainDlgBattleUpdate( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	for i=1, m_recvValue.m_count, 1 do
 		if m_recvValue.m_list[i].m_army_index == recvValue.m_army_index then
 			m_recvValue.m_list[i] = recvValue;

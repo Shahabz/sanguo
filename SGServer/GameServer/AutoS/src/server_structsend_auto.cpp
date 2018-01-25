@@ -2851,3 +2851,35 @@ int struct_NetS_NationLogList_send( char **pptr, int *psize, SLK_NetS_NationLogL
 	return 0;
 }
 
+int struct_NetS_NationHero_send( char **pptr, int *psize, SLK_NetS_NationHero *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buypos, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_forever, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	return 0;
+}
+
+int struct_NetS_NationHeroList_send( char **pptr, int *psize, SLK_NetS_NationHeroList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_NationHero_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_MEM_SEND( (*pptr), pValue->m_nationlevel, 3*sizeof(short), (*psize) );
+	return 0;
+}
+

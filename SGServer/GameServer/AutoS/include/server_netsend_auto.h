@@ -180,6 +180,7 @@ int netsend_nationcandidatelist_S( int actor_index, char send_type, SLK_NetS_Nat
 int netsend_worlddataopen_S( int actor_index, char send_type, SLK_NetS_WorldDataOpen *pValue );
 int netsend_nationreplacelist_S( int actor_index, char send_type, SLK_NetS_NationReplaceList *pValue );
 int netsend_nationloglist_S( int actor_index, char send_type, SLK_NetS_NationLogList *pValue );
+int netsend_nationherolist_S( int actor_index, char send_type, SLK_NetS_NationHeroList *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

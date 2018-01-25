@@ -9,15 +9,15 @@
 extern MYSQL *myGame;
 extern char g_batchsql[BATCHSQL_MAXSIZE];
 
-int city_nation_hero_load_auto( int actorid, int city_index, LPCB_GETNATIONHERO pCB_GetNationHero, const char *pTab )
+int city_nation_hero_load_auto( int actorid, int city_index, LPCB_GETCITYNATIONHERO pCB_GetCityNationHero, const char *pTab )
 {
 	MYSQL_RES	*res;
 	MYSQL_ROW	row;
 	char	szSQL[8192] = {0};
 	int offset = 0;
-	NationHero *pNationHero;
+	CityNationHero *pCityNationHero;
 
-	sprintf( szSQL, "select `actorid`,`offset`,`herokind`,`state`,`forever`,`loyal` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -31,28 +31,31 @@ int city_nation_hero_load_auto( int actorid, int city_index, LPCB_GETNATIONHERO 
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		pNationHero = pCB_GetNationHero( city_index, atoi(row[1]) );
-		if( pNationHero == NULL )
+		pCityNationHero = pCB_GetCityNationHero( city_index, atoi(row[1]) );
+		if( pCityNationHero == NULL )
 			continue;
 		offset++;
 		offset++;
-		pNationHero->herokind = atoi(row[offset++]);
-		pNationHero->state = atoi(row[offset++]);
-		pNationHero->forever = atoi(row[offset++]);
-		pNationHero->loyal = atoi(row[offset++]);
+		pCityNationHero->herokind = atoi(row[offset++]);
+		pCityNationHero->state = atoi(row[offset++]);
+		pCityNationHero->forever = atoi(row[offset++]);
+		pCityNationHero->loyal = atoi(row[offset++]);
+		pCityNationHero->buypos = atoi(row[offset++]);
+		pCityNationHero->posx = atoi(row[offset++]);
+		pCityNationHero->posy = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
 }
-int city_nation_hero_save_auto( int actorid, int offset, NationHero *pNationHero, const char *pTab, FILE *fp )
+int city_nation_hero_save_auto( int actorid, int offset, CityNationHero *pCityNationHero, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
 	char reconnect_flag = 0;
-	if ( pNationHero == NULL )
+	if ( pCityNationHero == NULL )
 		return -1;
 
-RE_NATIONHERO_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`) Values('%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pNationHero->herokind,pNationHero->state,pNationHero->forever,pNationHero->loyal);
+RE_CITYNATIONHERO_UPDATE:
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pCityNationHero->herokind,pCityNationHero->state,pCityNationHero->forever,pCityNationHero->loyal,pCityNationHero->buypos,pCityNationHero->posx,pCityNationHero->posy);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -67,32 +70,32 @@ RE_NATIONHERO_UPDATE:
 		{
 			db_reconnect_game();
 			reconnect_flag = 1;
-			goto RE_NATIONHERO_UPDATE;
+			goto RE_CITYNATIONHERO_UPDATE;
 		}
 		return -1;
 	}
 	return 0;
 }
 
-int city_nation_hero_batch_save_auto( int actorid, NationHero *pNationHero, int maxcount, const char *pTab, FILE *fp )
+int city_nation_hero_batch_save_auto( int actorid, CityNationHero *pCityNationHero, int maxcount, const char *pTab, FILE *fp )
 {
 	char	szSQL[8192] = {0};
-	if ( pNationHero == NULL )
+	if ( pCityNationHero == NULL )
 		return -1;
 
 	int count = 0;
 	memset( g_batchsql, 0, sizeof(char)*BATCHSQL_MAXSIZE );
 	for ( int index = 0; index < maxcount; index++ )
 	{
-		if ( pNationHero[index].herokind <= 0 )
+		if ( pCityNationHero[index].herokind <= 0 )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`) Values('%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pNationHero[index].herokind,pNationHero[index].state,pNationHero[index].forever,pNationHero[index].loyal);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pCityNationHero[index].herokind,pCityNationHero[index].state,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos,pCityNationHero[index].posx,pCityNationHero[index].posy);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d')",actorid,index,pNationHero[index].herokind,pNationHero[index].state,pNationHero[index].forever,pNationHero[index].loyal);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pCityNationHero[index].herokind,pCityNationHero[index].state,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos,pCityNationHero[index].posx,pCityNationHero[index].posy);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

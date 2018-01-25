@@ -38,6 +38,7 @@
 #include "map_zone.h"
 #include "king_war.h"
 #include "nation.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1013,6 +1014,12 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 		g_army[army_index].to_index = index;
 		map_res_getpos( index, &g_army[army_index].to_posx, &g_army[army_index].to_posy );
 	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
+	{ // 目的是国家名将
+		int index = g_army[army_index].to_id;
+		g_army[army_index].to_index = index;
+		nation_hero_getpos( index, &g_army[army_index].to_posx, &g_army[army_index].to_posy );
+	}
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
 	{ // 目的是血战皇城据点
 		int index = g_army[army_index].to_id;
@@ -1137,11 +1144,16 @@ int army_tocity( int army_index )
 		return -1;
 
 	// 英雄状态
+	int value[ARMY_HERO_MAX] = { 0 };
 	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
 	{
 		hero_changestate( pCity->index, g_army[army_index].herokind[tmpi], HERO_STATE_NORMAL );
+		value[tmpi] = g_army[army_index].herokind[tmpi];
 	}
-	actor_notify_pop( pCity->actor_index, 983 );
+	if ( pCity->actor_index >= 0 )
+	{
+		actor_notify_value( pCity->actor_index, NOTIFY_HEROBACK, ARMY_HERO_MAX, value, NULL );
+	}
 	
 	// 途径
 	char path = PATH_SYSTEM;

@@ -7,12 +7,13 @@ struct _nationheroinfo {
 				short herokind;	//
 				short nation;	//
 				short nationlevel;	//
+				short offset;	//
 				short visit_token;	//
 				short other_visit_token;	//
-				short catch_odds;	//
-				short catch_visit_odds;	//
-				short run_loyal[10];	//
-				short run_odds[10];	//
+				float catch_odds;	//
+				float other_catch_odds;	//
+				float rob_odds;	//
+				float other_rob_odds;	//
 				int awardgroup;	//
 				short monsterid[4];	//
 };

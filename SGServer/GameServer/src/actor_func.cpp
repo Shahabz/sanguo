@@ -509,9 +509,9 @@ int actor_getinfo( int actor_index )
 		info.m_wood =  pCity->wood;
 		info.m_food =  pCity->food;
 		info.m_iron =  pCity->iron;
-		info.m_infantry_num =  building_soldiers_total( pCity->index, BUILDING_Infantry );
-		info.m_cavalry_num = building_soldiers_total( pCity->index, BUILDING_Cavalry );
-		info.m_archer_num = building_soldiers_total( pCity->index, BUILDING_Archer );
+		info.m_infantry_num = pCity->soldiers[0];
+		info.m_cavalry_num = pCity->soldiers[1];
+		info.m_archer_num = pCity->soldiers[2];
 		info.m_mokilllv =  pCity->mokilllv;
 		info.m_sflag =  pCity->sflag;
 		info.m_autobuild = pCity->autobuild;

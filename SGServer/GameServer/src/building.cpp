@@ -1058,7 +1058,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 	{
 		if ( kind < BUILDING_Infantry )
 		{ // 普通建筑
-			Building *pBuilding = building_getptr( city_index, offset );
+			Building *pBuilding = building_getptr_kind( city_index, kind );
 			if ( !pBuilding )
 				return -1;
 			level = pBuilding->level;
@@ -1067,7 +1067,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 		}
 		else if ( kind < BUILDING_Silver )
 		{ // 兵营建筑
-			BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
+			BuildingBarracks *pBuilding = buildingbarracks_getptr_kind( city_index, kind );
 			if ( !pBuilding )
 				return -1;
 			level = pBuilding->level;
@@ -1110,7 +1110,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 	{
 		if ( kind == BUILDING_Militiaman_Infantry || kind == BUILDING_Militiaman_Cavalry || kind == BUILDING_Militiaman_Archer )
 		{ // 民兵营建筑
-			BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
+			BuildingBarracks *pBuilding = buildingbarracks_getptr_kind( city_index, kind );
 			if ( !pBuilding )
 				return -1;
 			pBuilding->level = 0;
@@ -1130,7 +1130,7 @@ int building_finish( int city_index, int op, int kind, int offset )
 	{
 		if ( kind == BUILDING_Militiaman_Infantry || kind == BUILDING_Militiaman_Cavalry || kind == BUILDING_Militiaman_Archer )
 		{ // 民兵营建筑
-			BuildingBarracks *pBuilding = buildingbarracks_getptr( city_index, offset );
+			BuildingBarracks *pBuilding = buildingbarracks_getptr_kind( city_index, kind );
 			if ( !pBuilding )
 				return -1;
 		}
@@ -1176,77 +1176,20 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
+	if ( pCity->worker_kind == kind )
 	{
-		pCity->worker_sec -= sec;
-		if ( pCity->worker_sec <= 0 )
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
 		{
-			pCity->worker_sec = 0;
-			building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
-			pCity->worker_op = 0;
-			pCity->worker_sec = 0;
-			pCity->wnsec = 0;
-			pCity->wnquick = 0;
-			pCity->worker_kind = 0;
-			pCity->worker_offset = -1;
-			building_sendworker( pCity->actor_index );
-
-			// 自动建造
-			building_upgrade_autocheck( pCity->index );
+			if ( pCity->worker_offset != offset )
+			{
+				hasquick = 0;
+			}
 		}
-		else
+		
+		if ( hasquick == 1 )
 		{
-			building_sendinfo( pCity->actor_index, kind );
-			building_sendworker( pCity->actor_index );
-		}
-	}
-	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
-	{
-		pCity->worker_sec_ex -= sec;
-		if ( pCity->worker_sec_ex <= 0 )
-		{
-			pCity->worker_sec_ex = 0;
-			building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
-			pCity->worker_op_ex = 0;
-			pCity->worker_sec_ex = 0;
-			pCity->wnsec_ex = 0;
-			pCity->wnquick_ex = 0;
-			pCity->worker_kind_ex = 0;
-			pCity->worker_offset_ex = -1;
-			building_sendworker( pCity->actor_index );
-
-			// 自动建造
-			building_upgrade_autocheck( pCity->index );
-		}
-		else
-		{
-			building_sendinfo( pCity->actor_index, kind );
-			building_sendworker( pCity->actor_index );
-		}
-	}
-
-	return 0;
-}
-
-// 免费加速
-int building_workerfree( int actor_index, int kind, int offset )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	City *pCity = city_getptr( actor_index );
-	if ( !pCity )
-		return -1;
-	int freetime = pCity->attr.free_sec + vip_attr_buildfree( pCity )*60;
-	if ( freetime < global.worker_freetime )
-	{
-		freetime = global.worker_freetime;
-	}
-	
-	if ( pCity->worker_kind == kind && pCity->worker_offset == offset )
-	{
-		if ( pCity->worker_free == 1 )
-		{
-			pCity->worker_free = 0;
-			pCity->worker_sec -= freetime;
+			pCity->worker_sec -= sec;
 			if ( pCity->worker_sec <= 0 )
 			{
 				pCity->worker_sec = 0;
@@ -1267,15 +1210,24 @@ int building_workerfree( int actor_index, int kind, int offset )
 				building_sendinfo( pCity->actor_index, kind );
 				building_sendworker( pCity->actor_index );
 			}
-
+			return 0;
 		}
 	}
-	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset )
+
+	if ( pCity->worker_kind_ex == kind )
 	{
-		if ( pCity->worker_free_ex == 1 )
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
 		{
-			pCity->worker_free_ex = 0;
-			pCity->worker_sec_ex -= freetime;
+			if ( pCity->worker_offset_ex != offset )
+			{
+				hasquick = 0;
+			}
+		}
+
+		if ( hasquick == 1 )
+		{
+			pCity->worker_sec_ex -= sec;
 			if ( pCity->worker_sec_ex <= 0 )
 			{
 				pCity->worker_sec_ex = 0;
@@ -1296,6 +1248,108 @@ int building_workerfree( int actor_index, int kind, int offset )
 				building_sendinfo( pCity->actor_index, kind );
 				building_sendworker( pCity->actor_index );
 			}
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
+// 免费加速
+int building_workerfree( int actor_index, int kind, int offset )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int freetime = pCity->attr.free_sec + vip_attr_buildfree( pCity )*60;
+	if ( freetime < global.worker_freetime )
+	{
+		freetime = global.worker_freetime;
+	}
+	
+	if ( pCity->worker_kind == kind )
+	{
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
+		{
+			if ( pCity->worker_offset != offset )
+			{
+				hasquick = 0;
+			}
+		}
+
+		if ( hasquick == 1 )
+		{
+			if ( pCity->worker_free == 1 )
+			{
+				pCity->worker_free = 0;
+				pCity->worker_sec -= freetime;
+				if ( pCity->worker_sec <= 0 )
+				{
+					pCity->worker_sec = 0;
+					building_finish( pCity->index, pCity->worker_op, pCity->worker_kind, pCity->worker_offset );
+					pCity->worker_op = 0;
+					pCity->worker_sec = 0;
+					pCity->wnsec = 0;
+					pCity->wnquick = 0;
+					pCity->worker_kind = 0;
+					pCity->worker_offset = -1;
+					building_sendworker( pCity->actor_index );
+
+					// 自动建造
+					building_upgrade_autocheck( pCity->index );
+				}
+				else
+				{
+					building_sendinfo( pCity->actor_index, kind );
+					building_sendworker( pCity->actor_index );
+				}
+
+			}
+			return 0;
+		}
+	}
+
+	if ( pCity->worker_kind_ex == kind )
+	{
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
+		{
+			if ( pCity->worker_offset_ex != offset )
+			{
+				hasquick = 0;
+			}
+		}
+
+		if ( hasquick == 1 )
+		{
+			if ( pCity->worker_free_ex == 1 )
+			{
+				pCity->worker_free_ex = 0;
+				pCity->worker_sec_ex -= freetime;
+				if ( pCity->worker_sec_ex <= 0 )
+				{
+					pCity->worker_sec_ex = 0;
+					building_finish( pCity->index, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_offset_ex );
+					pCity->worker_op_ex = 0;
+					pCity->worker_sec_ex = 0;
+					pCity->wnsec_ex = 0;
+					pCity->wnquick_ex = 0;
+					pCity->worker_kind_ex = 0;
+					pCity->worker_offset_ex = -1;
+					building_sendworker( pCity->actor_index );
+
+					// 自动建造
+					building_upgrade_autocheck( pCity->index );
+				}
+				else
+				{
+					building_sendinfo( pCity->actor_index, kind );
+					building_sendworker( pCity->actor_index );
+				}
+			}
+			return 0;
 		}
 	}
 	return 0;
@@ -1349,15 +1403,42 @@ int building_awardquick_get( int actor_index, int kind, int offset )
 	if ( !pCity )
 		return -1;
 	int quicksec = 0;
-	if ( pCity->worker_kind == kind && pCity->worker_offset == offset && pCity->wnquick > 0 )
+	if ( pCity->worker_kind == kind && pCity->wnquick > 0 )
 	{
-		building_workerquick( actor_index, kind, offset, pCity->wnquick );
-		pCity->wnquick = 0;
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
+		{
+			if ( pCity->worker_offset != offset )
+			{
+				hasquick = 0;
+			}
+		}
+
+		if ( hasquick == 1 )
+		{
+			building_workerquick( actor_index, kind, offset, pCity->wnquick );
+			pCity->wnquick = 0;
+			return 0;
+		}
 	}
-	else if ( pCity->worker_kind_ex == kind && pCity->worker_offset_ex == offset && pCity->wnquick_ex > 0 )
+
+	if ( pCity->worker_kind_ex == kind && pCity->wnquick_ex > 0 )
 	{
-		building_workerquick( actor_index, kind, offset, pCity->wnquick_ex );
-		pCity->wnquick_ex = 0;
+		char hasquick = 1;
+		if ( kind >= BUILDING_Silver && kind <= BUILDING_Iron )
+		{
+			if ( pCity->worker_offset_ex != offset )
+			{
+				hasquick = 0;
+			}
+		}
+
+		if ( hasquick == 1 )
+		{
+			building_workerquick( actor_index, kind, offset, pCity->wnquick_ex );
+			pCity->wnquick_ex = 0;
+			return 0;
+		}
 	}
 	return 0;
 }
@@ -1391,22 +1472,6 @@ int building_workerbuy( int actor_index, int type )
 	// 自动建造检查
 	building_upgrade_autocheck( pCity->index );
 	return 0;
-}
-
-// 获取士兵数量
-int building_soldiers_total( int city_index, char kind )
-{
-	CITY_CHECK_INDEX( city_index );
-	int total = 0;
-	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
-	{
-		if ( g_city[city_index].building_barracks[tmpi].kind == kind || 
-			g_city[city_index].building_barracks[tmpi].kind == kind + 3 )
-		{
-			total += g_city[city_index].building_barracks[tmpi].soldiers;
-		}
-	}
-	return total;
 }
 
 // 铁匠铺信息

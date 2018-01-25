@@ -52,6 +52,7 @@
 #include "map_event.h"
 #include "map_call.h"
 #include "nation.h"
+#include "nation_hero.h"
 #include "king_war.h"
 #include "rank.h"
 #include "pay.h"
@@ -898,6 +899,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 112 );
 
+	// 加载国家名将（严格顺序要求，不允许改变）
+	if ( nation_hero_load() < 0 )
+	{
+		printf_msg( "nation_hero_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 111 );
+
 	// 加载皇城血战据点（严格顺序要求，不允许改变）
 	if ( kingwar_town_load() < 0 )
 	{
@@ -1063,6 +1073,10 @@ void process_close()
 
 	// 所有召唤保存
 	map_call_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有国家名将保存
+	nation_hero_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有世界boss

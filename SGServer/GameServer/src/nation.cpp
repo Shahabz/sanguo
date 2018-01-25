@@ -33,6 +33,7 @@
 #include "chat.h"
 #include "army_group.h"
 #include "rank.h"
+#include "world_quest.h"
 #include "nation.h"
 
 extern SConfig g_Config;
@@ -584,6 +585,15 @@ int nation_build( int actor_index )
 	int donatenum = actor_get_today_char_times( actor_index, TODAY_CHAR_NATION_DONATE );
 	if ( donatenum >= g_nation_upgrade[pNation->level].maxnum )
 		return -1;
+	if ( pNation->level == 3 && pNation->exp >= g_nation_upgrade[pNation->level].config[1].maxexp )
+	{
+		if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+		{// 需要击杀董卓后升级
+			actor_notify_alert( actor_index, 1891 );
+			return -1;
+		}
+	}
+
 	int silver = g_nation_upgrade[pNation->level].config[donatenum].silver;
 	int wood = g_nation_upgrade[pNation->level].config[donatenum].wood;
 	int food = g_nation_upgrade[pNation->level].config[donatenum].food;

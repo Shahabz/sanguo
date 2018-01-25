@@ -2589,3 +2589,35 @@ function struct_NetS_NationLogList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_NationHero_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_buypos = buffer:ReadSByte();
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_forever = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_NationHeroList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_NationHero_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_nationlevel={};
+	for tmpi=1,3,1 do
+		recvValue.m_nationlevel[tmpi] = buffer:ReadShort();
+	end
+	return recvValue;
+end
+

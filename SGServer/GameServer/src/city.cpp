@@ -322,6 +322,14 @@ char city_getnation( int city_index )
 	return g_city[city_index].nation;
 }
 
+// 获取国家名称
+char* city_getname( int city_index )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+		return "";
+	return g_city[city_index].name;
+}
+
 // 显示单元属性
 void city_makeunit( int city_index, SLK_NetS_AddMapUnit *pAttr )
 {
@@ -1328,57 +1336,20 @@ int city_changeprotect( int city_index, int value, short path )
 int city_changesoldiers( int city_index, short corps, int value, short path )
 {
 	CITY_CHECK_INDEX( city_index );
-	int total;
-	int kind[2] = { 0 };
-	if ( corps == 0 )
-	{
-		kind[0] = BUILDING_Infantry;
-		kind[1] = BUILDING_Militiaman_Infantry;
-	}
-	else if ( corps == 1 )
-	{
-		kind[0] = BUILDING_Cavalry;
-		kind[1] = BUILDING_Militiaman_Cavalry;
-	}
-	else if ( corps == 2 )
-	{
-		kind[0] = BUILDING_Archer;
-		kind[1] = BUILDING_Militiaman_Archer;
-	}
-	
-	if ( value < 0 )
-	{
-		int sub = -value;
-		for ( int tmpi = 0; tmpi < 2; tmpi++ )
-		{
-			BuildingBarracks *barracks = buildingbarracks_getptr_kind( city_index, kind[tmpi] );
-			if ( !barracks )
-				continue;
-			barracks->soldiers -= sub;
-			if ( barracks->soldiers < 0 )
-			{
-				sub = barracks->soldiers;
-				barracks->soldiers = 0;
-			}
-			else
-			{
-				sub = 0;
-				break;
-			}
-		}
-	}
+	if ( corps < 0 || corps > 2 )
+		return -1;
+
+	if ( value > 0 && g_city[city_index].soldiers[corps] > INT_MAX - value )
+		g_city[city_index].soldiers[corps] = INT_MAX;
 	else
-	{
-		BuildingBarracks *barracks = buildingbarracks_getptr_kind( city_index, kind[0] );
-		if ( !barracks )
-			return -1;
-		barracks->soldiers += value;
-	}
+		g_city[city_index].soldiers[corps] += value;
+	if ( g_city[city_index].soldiers[corps] < 0 )
+		g_city[city_index].soldiers[corps] = 0;
 
 	SLK_NetS_Soldiers pValue = { 0 };
 	pValue.m_corps = (char)corps;
 	pValue.m_add = value;
-	pValue.m_soldiers = city_soldiers( city_index, corps );
+	pValue.m_soldiers = g_city[city_index].soldiers[corps];
 	pValue.m_path = path;
 	netsend_soldiers_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
@@ -2032,7 +2003,45 @@ int city_trainsoldiersmax( City *pCity, BuildingBarracks *barracks )
 	if ( !config )
 		return 0;
 	int maxnum = config->value[1] + barracks->queue * 3000;
-	return maxnum;
+	
+	// 容量要相加
+	BuildingBarracks *pOther = NULL;
+	if ( barracks->kind == BUILDING_Infantry )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Militiaman_Infantry );
+	}
+	else if ( barracks->kind == BUILDING_Cavalry )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Militiaman_Cavalry );
+	}
+	else if ( barracks->kind == BUILDING_Archer )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Militiaman_Archer );
+	}
+	else if ( barracks->kind == BUILDING_Militiaman_Infantry )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Infantry );
+	}
+	else if ( barracks->kind == BUILDING_Militiaman_Cavalry )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Cavalry );
+	}
+	else if ( barracks->kind == BUILDING_Militiaman_Archer )
+	{
+		pOther = buildingbarracks_getptr_kind( pCity->index, BUILDING_Archer );
+	}
+
+	int other_maxnum = 0;
+	if ( pOther )
+	{
+		BuildingUpgradeConfig *pOtherConfig = building_getconfig( pOther->kind, pOther->level );
+		if ( config )
+		{
+			other_maxnum = pOtherConfig->value[1] + pOther->queue * 3000;
+		}
+	}
+
+	return maxnum + other_maxnum;
 }
 
 
@@ -2049,7 +2058,9 @@ int city_train( int actor_index, int kind, int trainsec )
 	BuildingUpgradeConfig *config = building_getconfig( kind, barracks->level );
 	if ( !config )
 		return -1;
-	if ( barracks->soldiers >= city_trainsoldiersmax( pCity, barracks ) )
+
+	int soldiers = city_soldiers_withkind( pCity->index, kind );
+	if ( soldiers >= city_trainsoldiersmax( pCity, barracks ) )
 		return -1;
 
 	int v = trainsec / 300;
@@ -2208,9 +2219,11 @@ int city_train_get( int actor_index, int kind )
 	{
 		corps = 2;
 	}
+	else
+		return -1;
 
 	int overnum = barracks->overnum;
-	barracks->soldiers += barracks->overnum;
+	pCity->soldiers[corps] += barracks->overnum;
 	barracks->overnum = 0;
 	// 事件
 	city_event_add( pCity->index, CITY_EVENT_TRAIN, corps, overnum );
@@ -2219,7 +2232,7 @@ int city_train_get( int actor_index, int kind )
 	SLK_NetS_Soldiers pValue = { 0 };
 	pValue.m_corps = corps;
 	pValue.m_add = overnum;
-	pValue.m_soldiers = barracks->soldiers;
+	pValue.m_soldiers = pCity->soldiers[corps];
 	netsend_soldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 
 	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_GET, kind, overnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
@@ -2290,7 +2303,7 @@ int city_train_sendinfo( int actor_index, int kind )
 		return -1;
 
 	SLK_NetS_TrainInfo pValue = { 0 };
-	pValue.m_soldiers = barracks->soldiers;
+	pValue.m_soldiers = city_soldiers_withkind( pCity->index, kind );
 	pValue.m_soldiers_max = city_trainsoldiersmax( pCity, barracks );
 	pValue.m_trainnum = barracks->trainnum;
 	pValue.m_trainsec = barracks->trainsec;
@@ -2879,15 +2892,25 @@ int city_officialhire_sendinfo( City *pCity, int type )
 int city_soldiers( int city_index, short corps )
 {
 	CITY_CHECK_INDEX( city_index );
-	int kind = 0;
+	int total = 0;
 	if ( corps == 0 )
-		kind = BUILDING_Infantry;
+		total = g_city[city_index].soldiers[0];
 	else if ( corps == 1 )
-		kind = BUILDING_Cavalry;
-	else
-		kind = BUILDING_Archer;
-
-	int total = building_soldiers_total( city_index, kind );
+		total = g_city[city_index].soldiers[1];
+	else if ( corps == 2 )
+		total = g_city[city_index].soldiers[2];
+	return total;
+}
+int city_soldiers_withkind( int city_index, short kind )
+{
+	CITY_CHECK_INDEX( city_index );
+	int total = 0;
+	if ( kind == BUILDING_Infantry || kind == BUILDING_Militiaman_Infantry )
+		total = g_city[city_index].soldiers[0];
+	else if ( kind == BUILDING_Cavalry || kind == BUILDING_Militiaman_Cavalry )
+		total = g_city[city_index].soldiers[1];
+	else if ( kind == BUILDING_Archer || kind == BUILDING_Militiaman_Archer )
+		total = g_city[city_index].soldiers[2];
 	return total;
 }
 
@@ -3839,9 +3862,9 @@ int city_spy( int actor_index, int unit_index, int type )
 				walllv = pWall->level;
 			// 兵营库存
 			int corps[3] = { 0 };
-			corps[0] = city_soldiers( pTargetCity->index, 0 );
-			corps[1] = city_soldiers( pTargetCity->index, 1 );
-			corps[2] = city_soldiers( pTargetCity->index, 2 );
+			corps[0] = pTargetCity->soldiers[0];
+			corps[1] = pTargetCity->soldiers[1];
+			corps[2] = pTargetCity->soldiers[2];
 			snprintf( szTmp, 255, ",\"walllv\":%d,\"bp\":%d,\"cp1\":%d,\"cp2\":%d,\"cp3\":%d,\"hsu\":%d}", walllv, pTargetCity->battlepower, corps[0], corps[1], corps[2], hero_success );
 			strcat( content, szTmp );
 		}

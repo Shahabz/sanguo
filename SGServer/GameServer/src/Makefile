@@ -24,6 +24,7 @@ SRC = \
 ../AutoS/src/auto_data_quest.cpp \
 ../AutoS/src/auto_map_res.cpp \
 ../AutoS/src/auto_data_nation_place.cpp \
+../AutoS/src/auto_data_nation_heroinfo.cpp \
 ../AutoS/src/auto_data_equip.cpp \
 ../AutoS/src/auto_data_equip_washrule.cpp \
 ../AutoS/src/auto_data_nation_mission.cpp \
@@ -36,6 +37,7 @@ SRC = \
 ../AutoS/src/auto_data_nation_official.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
+../AutoS/src/auto_city_nation_hero.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
@@ -50,6 +52,7 @@ SRC = \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_map_call.cpp \
+../AutoS/src/auto_nation_hero.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_army_group.cpp \
@@ -118,6 +121,7 @@ pay.cpp \
 activity.cpp \
 rank.cpp \
 map.cpp \
+nation_hero.cpp \
 city.cpp \
 mapunit.cpp \
 global_netprocess.cpp \
@@ -212,6 +216,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_place.o: ../AutoS/src/auto_data_nation_place.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_nation_heroinfo.o: ../AutoS/src/auto_data_nation_heroinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip.o: ../AutoS/src/auto_data_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_washrule.o: ../AutoS/src/auto_data_equip_washrule.cpp 
@@ -235,6 +241,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/server_structrecv_auto.o: ../AutoS/src/server_structrecv_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_city_nation_hero.o: ../AutoS/src/auto_city_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -263,6 +271,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_call.o: ../AutoS/src/auto_map_call.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_nation_hero.o: ../AutoS/src/auto_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_upgrade.o: ../AutoS/src/auto_data_nation_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -399,6 +409,8 @@ activity.o: activity.cpp
 rank.o: rank.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 map.o: map.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+nation_hero.o: nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 city.o: city.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

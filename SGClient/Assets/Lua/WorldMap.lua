@@ -712,6 +712,12 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			MapClickEffect.gameObject:SetActive( false );
 			MapEventDlgShow( recvValue )
 			return
+		
+		-- 国家名将	
+		elseif recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
+			MapClickEffect.gameObject:SetActive( false );
+			MapNationHeroDlgShow( recvValue )
+			return
 		end
 	end
 	

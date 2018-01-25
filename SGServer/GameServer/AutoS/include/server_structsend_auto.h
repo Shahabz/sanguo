@@ -1944,6 +1944,28 @@ struct _slk_NetS_NationLogList {
 };
 typedef struct _slk_NetS_NationLogList SLK_NetS_NationLogList;	//国家日志列表
 
+struct _slk_NetS_NationHero {
+	short m_kind;	//国家名将
+	int m_actorid;	//国家名将
+	char m_namelen;	//国家名将
+	char m_name[32];	//国家名将
+	short m_level;	//国家名将
+	short m_posx;	//国家名将
+	short m_posy;	//国家名将
+	char m_buypos;	//国家名将
+	char m_state;	//国家名将
+	char m_forever;	//国家名将
+	char m_nation;	//国家名将
+};
+typedef struct _slk_NetS_NationHero SLK_NetS_NationHero;	//国家名将
+
+struct _slk_NetS_NationHeroList {
+	char m_count;	//国家名将列表
+	SLK_NetS_NationHero m_list[16];	//国家名将列表
+	short m_nationlevel[3];	//国家名将列表
+};
+typedef struct _slk_NetS_NationHeroList SLK_NetS_NationHeroList;	//国家名将列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2154,5 +2176,7 @@ int struct_NetS_NationReplace_send( char **pptr, int *psize, SLK_NetS_NationRepl
 int struct_NetS_NationReplaceList_send( char **pptr, int *psize, SLK_NetS_NationReplaceList *pValue );
 int struct_NetS_NationLog_send( char **pptr, int *psize, SLK_NetS_NationLog *pValue );
 int struct_NetS_NationLogList_send( char **pptr, int *psize, SLK_NetS_NationLogList *pValue );
+int struct_NetS_NationHero_send( char **pptr, int *psize, SLK_NetS_NationHero *pValue );
+int struct_NetS_NationHeroList_send( char **pptr, int *psize, SLK_NetS_NationHeroList *pValue );
 
 #endif

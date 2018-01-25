@@ -388,10 +388,28 @@ int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, 
 		if ( value1 == -1 )
 		{
 			int sec = 0;
-			if ( pCity->worker_kind == buildingkind && pCity->worker_offset == buildingoffset )
+			if ( pCity->worker_kind == buildingkind )
+			{
 				sec = pCity->worker_sec;
-			else if ( pCity->worker_kind_ex == buildingkind && pCity->worker_offset_ex == buildingoffset )
+				if ( buildingkind >= BUILDING_Silver && buildingkind <= BUILDING_Iron )
+				{
+					if ( pCity->worker_offset != buildingoffset )
+					{
+						sec = 0;
+					}
+				}
+			}
+			if ( pCity->worker_kind_ex == buildingkind )
+			{
 				sec = pCity->worker_sec_ex;
+				if ( buildingkind >= BUILDING_Silver && buildingkind <= BUILDING_Iron )
+				{
+					if ( pCity->worker_offset_ex != buildingoffset )
+					{
+						sec = 0;
+					}
+				}
+			}
 			int token = (int)ceil( (sec / 60 + 1) * global.upgradequick_token );
 			if ( actor_change_token( actor_index, -token, PATH_BUILDING_UPGRADE, 0 ) < 0 )
 				return -1;
