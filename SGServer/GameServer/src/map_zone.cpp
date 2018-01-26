@@ -289,14 +289,16 @@ int map_zone_setnation( int zoneid, char nation )
 }
 
 // 指定地区随机一个空坐标
-int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
+int map_zone_randpos( short zoneid, short *pPosx, short *pPosy, int scope )
 {
 	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 		return -1;
-	int step = 0;
-
-	short findlistx[256] = { 0 };
-	short findlisty[256] = { 0 };
+	if ( scope > 4096 )
+	{
+		scope = 4096;
+	}
+	short findlistx[4096] = { 0 };
+	short findlisty[4096] = { 0 };
 	short offset = 0;
 	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
 	{
@@ -312,10 +314,10 @@ int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
 			findlistx[offset] = x;
 			findlisty[offset] = y;
 			offset += 1;
-			if ( offset >= 256 )
+			if ( offset >= scope )
 				break;
 		}
-		if ( offset >= 256 )
+		if ( offset >= scope )
 			break;
 	}
 
@@ -334,12 +336,14 @@ int map_zone_randpos( short zoneid, short *pPosx, short *pPosy )
 }
 
 // 指定地区和国家领土随机一个空坐标
-int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy )
+int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope )
 {
-	int step = 0;
-
-	short findlistx[256] = { 0 };
-	short findlisty[256] = { 0 };
+	if ( scope > 4096 )
+	{
+		scope = 4096;
+	}
+	short findlistx[4096] = { 0 };
+	short findlisty[4096] = { 0 };
 	short offset = 0;
 	for ( int tmpi = g_zoneinfo[MAPZONE_CENTERID].top_left_posx; tmpi <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx; tmpi++ )
 	{
@@ -357,10 +361,10 @@ int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy )
 			findlistx[offset] = x;
 			findlisty[offset] = y;
 			offset += 1;
-			if ( offset >= 256 )
+			if ( offset >= scope )
 				break;
 		}
-		if ( offset >= 256 )
+		if ( offset >= scope )
 			break;
 	}
 
@@ -662,7 +666,7 @@ int map_zone_goto_zc( int actor_index )
 		actor_notify_alert_v( actor_index, 1367, v1, NULL );
 		return -1;
 	}
-	map_zone_randpos( goto_zoneid, &move_posx, &move_posy );
+	map_zone_randpos( goto_zoneid, &move_posx, &move_posy, 4096 );
 	if ( map_canmove( move_posx, move_posy ) == 0 )
 		return -1;
 	city_move( pCity, move_posx, move_posy );

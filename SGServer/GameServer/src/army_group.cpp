@@ -858,20 +858,20 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				int odds = rand() % 100;
 				if ( odds < 85 )
 				{
-					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy, 4096 );
 				}
 				else
 				{
-					map_zone_randpos( zoneid, &move_posx, &move_posy );
+					map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 				}
 			}
 			else
 			{
-				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 			}
 			if ( map_canmove( move_posx, move_posy ) == 0 )
 			{
-				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 			}
 			if ( map_canmove( move_posx, move_posy ) == 1 )
 			{

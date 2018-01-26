@@ -3594,20 +3594,20 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			int odds = rand() % 100;
 			if ( odds < 85 )
 			{
-				map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+				map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy, 4096 );
 			}
 			else if ( odds < 90 )
 			{
-				map_zone_randpos( MAPZONE_CENTERID, &move_posx, &move_posy );
+				map_zone_randpos( MAPZONE_CENTERID, &move_posx, &move_posy, 4096 );
 			}
 			else
 			{
-				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 			}
 		}
 		else
 		{ // 不在皇城，暂时随机
-			map_zone_randpos( zoneid, &move_posx, &move_posy );
+			map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 		}
 		if ( map_canmove( move_posx, move_posy ) == 0 )
 			return -1;
@@ -3674,20 +3674,20 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 				int odds = rand() % 100;
 				if ( odds < 85 )
 				{
-					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy );
+					map_zone_nation_randpos( pCity->nation, &move_posx, &move_posy, 4096 );
 				}
 				else
 				{
-					map_zone_randpos( zoneid, &move_posx, &move_posy );
+					map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 				}
 			}
 			else
 			{
-				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 			}
 			if ( map_canmove( move_posx, move_posy ) == 0 )
 			{
-				map_zone_randpos( zoneid, &move_posx, &move_posy );
+				map_zone_randpos( zoneid, &move_posx, &move_posy, 4096 );
 				if ( map_canmove( move_posx, move_posy ) == 0 )
 					return -1;
 				return -1;

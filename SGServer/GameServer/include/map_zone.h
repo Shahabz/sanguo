@@ -30,10 +30,10 @@ char map_zone_checksame( short posx, short posy, short tposx, short tposy );
 int map_zone_setnation( int zoneid, char nation );
 
 // 指定地区随机一个空坐标
-int map_zone_randpos( short zoneid, short *pPosx, short *pPosy );
+int map_zone_randpos( short zoneid, short *pPosx, short *pPosy, int scope );
 
 // 指定地区和国家领土随机一个空坐标
-int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy );
+int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope );
 
 // 地区切换
 void map_zone_change( int actor_index, short posx, short posy );

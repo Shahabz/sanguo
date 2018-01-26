@@ -99,7 +99,11 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		--国家名将
 		elseif nControlID == 7 then
-			NationHeroDlgShow()
+			if m_recvValue.m_level < 3 then
+				AlertMsg( F(1895, 3) )
+			else
+				NationHeroDlgShow()
+			end
 			
 		--国家荣誉
 		elseif nControlID == 8 then

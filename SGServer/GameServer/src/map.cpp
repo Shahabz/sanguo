@@ -615,8 +615,8 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 			continue;
 		}
 
-		short findlistx[256] = { 0 };
-		short findlisty[256] = { 0 };
+		short findlistx[4096] = { 0 };
+		short findlisty[4096] = { 0 };
 		short offset = 0;
 		for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
 		{
@@ -632,10 +632,10 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 				findlistx[offset] = x;
 				findlisty[offset] = y;
 				offset += 1;
-				if ( offset >= 256 )
+				if ( offset >= 4096 )
 					break;
 			}
-			if ( offset >= 256 )
+			if ( offset >= 4096 )
 				break;
 		}
 
@@ -663,6 +663,31 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 		}
 	}
 	
+	return 0;
+}
+
+// Ëæ»ú×ø±ê
+int map_getrandpos_withtype( int type, short *pPosx, short *pPosy )
+{
+	static short s_zoneidlist0[8] = { 1, 3, 5, 11, 15, 21, 23, 25 };
+	static short s_zoneidlist1[12] = { 1, 3, 5, 11, 15, 21, 23, 25, 7, 9, 17, 19 };
+	static short s_zoneidlist2[13] = { 1, 3, 5, 11, 15, 21, 23, 25, 7, 9, 17, 19, 13 };
+	short zoneid = 0;
+	if ( type == 0 )
+	{
+		zoneid = s_zoneidlist0[random( 0, 7 )];
+	}
+	else if ( type == 1 )
+	{
+		zoneid = s_zoneidlist1[random( 0, 11 )];
+	}
+	else if ( type == 2 )
+	{
+		zoneid = s_zoneidlist1[random( 0, 12 )];
+	}
+	if ( zoneid == 0 )
+		return -1;
+	map_zone_randpos( zoneid, pPosx, pPosy, 4096 );
 	return 0;
 }
 

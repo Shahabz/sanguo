@@ -167,6 +167,52 @@ void nation_hero_getpos( int kind, short *posx, short *posy )
 	*posy = g_nation_hero[kind].posy;
 }
 
+// 国家升级，检查是否需要出现名将
+void nation_hero_check( char nation )
+{
+	Nation *pNation = nation_getptr( nation );
+	if ( !pNation )
+		return;
+	for ( int tmpi = 0; tmpi < g_nation_heroinfo_maxnum; tmpi++ )
+	{
+		short kind = g_nation_heroinfo[tmpi].herokind;
+		if ( kind <= 0 )
+			continue;
+		if ( pNation->level >= g_nation_heroinfo[tmpi].nationlevel )
+		{
+			nation_hero_showmap( kind );
+		}
+	}
+}
+
+// 名将出现在地图
+void nation_hero_showmap( int kind )
+{
+	if ( kind <= 0 || kind >= g_nation_hero_maxcount )
+		return;
+	if ( g_nation_hero[kind].actorid > 0 )
+		return;
+	if ( g_nation_hero[kind].unit_index >= 0 && g_nation_hero[kind].posx >= 0 && g_nation_hero[kind].posy >= 0 )
+		return;
+
+	// 随机坐标
+	int step = 0;
+	while ( true )
+	{
+		if ( map_getrandpos_withtype( 3, &g_nation_hero[kind].posx, &g_nation_hero[kind].posy ) >= 0 )
+			break;
+		step += 1;
+		if ( step >= 10 )
+			return;
+	}
+
+	// 添加到地图显示单元
+	g_nation_hero[kind].unit_index = mapunit_add( MAPUNIT_TYPE_NATIONHERO, kind );
+
+	// 占地块信息添加到世界地图
+	map_addobject( MAPUNIT_TYPE_NATIONHERO, kind, g_nation_hero[kind].posx, g_nation_hero[kind].posy );
+}
+
 // 更新属性
 void nation_hero_attrcalc( int kind, Hero *pHero )
 {

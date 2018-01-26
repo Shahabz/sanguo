@@ -111,8 +111,12 @@ function NationUpgradeDlgShowRecv( recvValue )
 	end
 	
 	SetImage( m_uiNationFlag, NationFlagSprite( GetPlayer().m_nation ) )
-
-	SetText( m_uiLevelDesc.transform:Find("Text"), F(1761,m_recvValue.m_level+1,m_recvValue.m_level+1) );
+	
+	if m_recvValue.m_level >= 4 then
+		SetText( m_uiLevelDesc.transform:Find("Text"), F(1761,m_recvValue.m_level+1,m_recvValue.m_level+1) );
+	else
+		SetText( m_uiLevelDesc.transform:Find("Text"), F(1761,4,4) );
+	end
 	SetText( m_uiLevel, F(1762, m_recvValue.m_level, m_recvValue.m_exp, g_nation_upgrade[m_recvValue.m_level][1].maxexp) );
 	SetProgress( m_uiExpProgress, m_recvValue.m_exp/g_nation_upgrade[m_recvValue.m_level][1].maxexp )
 	-- 今日次数已经用尽

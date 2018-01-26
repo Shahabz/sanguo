@@ -146,6 +146,7 @@ function NationHeroDlgSetHero( i, info )
 	SetImage( uiShape, HeroHeadSprite( info.m_kind ) )
 	-- 哪国名将
 	SetText( uiNation, T( 1884 + g_nation_heroinfo[info.m_kind].nation ) )
+	SetText( uiLevel, HeroNameLv( info.m_kind, info.m_level ) )
 	
 	-- 等级不足
 	if m_recvValue.m_nationlevel[nation] < level then

@@ -35,6 +35,7 @@
 #include "rank.h"
 #include "world_quest.h"
 #include "nation.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -481,6 +482,13 @@ int nation_upgrade( char nation )
 		return -1;
 	if ( pNation->level >= g_nation_upgrade_maxnum - 1 )
 		return -1;
+	if ( pNation->level == 3 )
+	{
+		if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+		{// 需要击杀董卓后升级
+			return -1;
+		}
+	}
 	pNation->level += 1;
 	return 0;
 }
@@ -508,8 +516,8 @@ int nation_exp( char nation, int exp )
 	}
 
 	if ( isup == 1 )
-	{
-
+	{ // 检查是否出现国家名将
+		nation_hero_check( nation );
 	}
 	return 0;
 }

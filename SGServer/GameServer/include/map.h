@@ -58,13 +58,16 @@ short map_tile_gettownid( short posx, short posy );
 int map_getcanmovenearest( short *pPosx, short *pPosy );
 
 // 随机一个空白点
-int map_getrandpos( int type, short *pPosx, short *pPosy );
+int map_getrandpos( int grid, short *pPosx, short *pPosy );
 
 // 根据指定点的范围获取一个可用坐标点
 int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, short *pPosy );
 
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy );
+
+// 随机坐标
+int map_getrandpos_withtype( int type, short *pPosx, short *pPosy );
 
 // 判定这个地点是否能迁城
 int map_canmove( short posX, short posY );

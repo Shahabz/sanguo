@@ -1707,7 +1707,7 @@ int kingwar_treasure_buypos( int actor_index )
 		return -1;
 
 	short posx = -1, posy = -1;
-	map_zone_randpos( MAPZONE_CENTERID, &posx, &posy );
+	map_zone_randpos( MAPZONE_CENTERID, &posx, &posy, 4096 );
 	pCity->kw_px = posx;
 	pCity->kw_py = posy;
 	pCity->kw_tn += 1;
