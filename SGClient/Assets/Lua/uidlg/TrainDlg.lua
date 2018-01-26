@@ -461,11 +461,11 @@ function TrainDlgQueue()
 		
 		SetRichText( uiBefore.transform:Find("Text1"), T(637)..":"..TrainDlgQueueStar(m_recvValue.m_queue) )
 		SetText( uiBefore.transform:Find("Text2"), T(639)..":<color=#25c9ff>"..(m_recvValue.m_queue+1).."</color>" )
-		SetText( uiBefore.transform:Find("Text3"), T(639)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color>" )
+		SetText( uiBefore.transform:Find("Text3"), T(623)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color>" )
 		
 		SetRichText( uiAfter.transform:Find("Text1"), T(638)..":"..TrainDlgQueueStar(m_recvValue.m_queue+1) )
 		SetText( uiAfter.transform:Find("Text2"), T(639)..":<color=#25c9ff>"..(m_recvValue.m_queue+1).."</color><color=#ecc244>".."+1</color>" )
-		SetText( uiAfter.transform:Find("Text3"), T(639)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color><color=#ecc244>".."+3000</color>" )
+		SetText( uiAfter.transform:Find("Text3"), T(623)..":<color=#25c9ff>"..m_recvValue.m_soldiers_max.."</color><color=#ecc244>".."+3000</color>" )
 		
 		SetText( uiBuyBtnText, knum(g_trainqueue[m_recvValue.m_queue+1].token) );
 	end

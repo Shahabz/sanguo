@@ -407,9 +407,9 @@ function CityTechDlgSelect( kind )
 	if value > 0 then
 		SetTrue( uiSilver );
 		if GetPlayer().m_silver > value then
-			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_silver.."</color>" )
+			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/"..knum(GetPlayer().m_silver).."</color>" )
 		else
-			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_silver.."</color>" )
+			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_silver).."</color>" )
 			m_canUpgrade = 1;
 		end
 	else
@@ -420,9 +420,9 @@ function CityTechDlgSelect( kind )
 	if value > 0 then
 		SetTrue( uiWood );
 		if GetPlayer().m_wood > value then
-			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_wood.."</color>" )
+			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/"..knum(GetPlayer().m_wood).."</color>" )
 		else
-			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_wood.."</color>" )
+			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_wood).."</color>" )
 			m_canUpgrade = 2;
 		end
 	else
@@ -433,9 +433,9 @@ function CityTechDlgSelect( kind )
 	if g_techinfo[kind][uplevel].food > 0 then
 		SetTrue( uiFood );
 		if GetPlayer().m_food > value then
-			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/"..GetPlayer().m_food.."</color>" )
+			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/"..knum(GetPlayer().m_food).."</color>" )
 		else
-			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_food.."</color>" )
+			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_food).."</color>" )
 			m_canUpgrade = 3;
 		end
 	else

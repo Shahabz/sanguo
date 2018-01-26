@@ -225,8 +225,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_forgingsec = buffer:ReadInt();
 	recvValue.m_actor_sflag = buffer:ReadInt();
 	recvValue.m_bodysec = buffer:ReadShort();
-	recvValue.m_game_day = buffer:ReadShort();
-	recvValue.m_game_weather = buffer:ReadShort();
+	recvValue.m_game_day = buffer:ReadSByte();
+	recvValue.m_game_weather = buffer:ReadSByte();
 	recvValue.m_state = buffer:ReadSByte();
 	recvValue.m_guardnum = buffer:ReadSByte();
 	recvValue.m_guardsec = buffer:ReadShort();
@@ -243,6 +243,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_posy = buffer:ReadShort();
 	recvValue.m_open_town6 = buffer:ReadSByte();
 	recvValue.m_open_townking = buffer:ReadSByte();
+	recvValue.m_game_day_loop = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1350,8 +1351,9 @@ end
 
 function struct_NetS_WeatherChange_recv( buffer )
 	local recvValue = {};
-	recvValue.m_game_day = buffer:ReadShort();
-	recvValue.m_game_weather = buffer:ReadShort();
+	recvValue.m_game_day = buffer:ReadSByte();
+	recvValue.m_game_weather = buffer:ReadSByte();
+	recvValue.m_game_day_loop = buffer:ReadSByte();
 	return recvValue;
 end
 

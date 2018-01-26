@@ -1885,7 +1885,42 @@ int city_yield_total( City *pCity, int kind )
 	int base_yield = city_yield_base( pCity, kind );
 	int tech_yield = (int)ceil( base_yield * (city_yield_tech( pCity, kind ) / 100.0f) );
 	int official_yield = (int)ceil( base_yield * (city_yield_official( pCity, kind )/100.0f) );
-	int yield = base_yield + tech_yield + official_yield;
+
+	int weather_yield = 0;
+	int ability = weather_attr_ability();
+	int value = weather_attr_value();
+
+	switch ( kind )
+	{
+	case BUILDING_Silver:
+		if ( ability == 1 )
+		{
+			weather_yield = (int)ceil( base_yield * (value / 100.0f) );
+		}
+		break;
+	case BUILDING_Wood:
+		if ( ability == 2 )
+		{
+			weather_yield = (int)ceil( base_yield * (value / 100.0f) );
+		}
+		break;
+	case BUILDING_Food:
+		if ( ability == 3 )
+		{
+			weather_yield = (int)ceil( base_yield * (value / 100.0f) );
+		}
+		break;
+	case BUILDING_Iron:
+		if ( ability == 4 )
+		{
+			weather_yield = (int)ceil( base_yield * (value / 100.0f) );
+		}
+		break;
+	default:
+		break;
+	}
+
+	int yield = base_yield + tech_yield + official_yield + weather_yield;
 	return yield;
 }
 
@@ -1940,8 +1975,16 @@ int city_levy_sendinfo( int actor_index )
 	pValue.m_tech[2] = (int)ceil( pValue.m_base[2] * (city_yield_tech( pCity, BUILDING_Food ) / 100.0f) );
 	pValue.m_tech[3] = (int)ceil( pValue.m_base[3] * (city_yield_tech( pCity, BUILDING_Iron ) / 100.0f) );
 
-		//pValue.m_weather[4]
-		//pValue.m_activity[4]
+	int ability = weather_attr_ability();
+	int value = weather_attr_value();
+	if ( ability == 1 )
+		pValue.m_weather[0] = (int)ceil( pValue.m_base[0] * (value / 100.0f) );
+	else if ( ability == 2 )
+		pValue.m_weather[1] = (int)ceil( pValue.m_base[1] * (value / 100.0f) );
+	else if ( ability == 3 )
+		pValue.m_weather[2] = (int)ceil( pValue.m_base[2] * (value / 100.0f) );
+	else if ( ability == 4 )
+		pValue.m_weather[3] = (int)ceil( pValue.m_base[3] * (value / 100.0f) );
 
 	pValue.m_offical[0] = (int)ceil( pValue.m_base[0] * (city_yield_official( pCity, BUILDING_Silver ) / 100.0f) );
 	pValue.m_offical[1] = (int)ceil( pValue.m_base[1] * (city_yield_official( pCity, BUILDING_Wood ) / 100.0f) );
@@ -1977,7 +2020,15 @@ int city_trainnum( City *pCity, BuildingBarracks *barracks )
 	{
 		buff = (int)ceil( config->value[0] * (float)(vip_attr_train( pCity ) / 100.0f) );
 	}
-	int total = base + tech1 + tech2 + buff;
+
+	int weather = 0;
+	int ability = weather_attr_ability();
+	int value = weather_attr_value();
+	if ( ability == 5 )
+	{
+		weather = (int)ceil( config->value[0] * (float)(value / 100.0f) );
+	}
+	int total = base + tech1 + tech2 + buff + weather;
 	return total;
 }
 

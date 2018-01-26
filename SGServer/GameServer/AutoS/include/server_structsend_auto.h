@@ -178,8 +178,8 @@ struct _slk_NetS_ActorInfo {
 	int m_forgingsec;	//服务器发送玩家基本信息-打造
 	int m_actor_sflag;	//服务器发送玩家基本信息-玩家结构标志
 	short m_bodysec;	//服务器发送玩家基本信息-体力恢复时间
-	short m_game_day;	//服务器发送玩家基本信息-游戏虚拟日期
-	short m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
+	char m_game_day;	//服务器发送玩家基本信息-游戏虚拟日期
+	char m_game_weather;	//服务器发送玩家基本信息-游戏虚拟天气
 	char m_state;	//服务器发送玩家基本信息-城池状态
 	char m_guardnum;	//服务器发送玩家基本信息-守卫数量
 	short m_guardsec;	//服务器发送玩家基本信息-守卫数量
@@ -193,6 +193,7 @@ struct _slk_NetS_ActorInfo {
 	short m_posy;	//服务器发送玩家基本信息-副本进度
 	char m_open_town6;	//服务器发送玩家基本信息-州城开启
 	char m_open_townking;	//服务器发送玩家基本信息-皇城开启
+	char m_game_day_loop;	//服务器发送玩家基本信息-天气
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1030,8 +1031,9 @@ struct _slk_NetS_MapResInfo {
 typedef struct _slk_NetS_MapResInfo SLK_NetS_MapResInfo;	//资源点详情
 
 struct _slk_NetS_WeatherChange {
-	short m_game_day;	//天气系统
-	short m_game_weather;	//天气系统
+	char m_game_day;	//天气系统
+	char m_game_weather;	//天气系统
+	char m_game_day_loop;	//天气系统
 };
 typedef struct _slk_NetS_WeatherChange SLK_NetS_WeatherChange;	//天气改变
 

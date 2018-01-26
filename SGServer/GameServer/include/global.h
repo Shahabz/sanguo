@@ -181,6 +181,8 @@ void global_reload();
 #define WORLD_DATA_BRUSH_RES_TIMER		2		// 刷新资源点计时
 #define WORLD_DATA_GAME_DAY				3		// 游戏虚拟日期
 #define WORLD_DATA_GAME_WEATHER			4		// 游戏虚拟天气
+#define WORLD_DATA_GAME_DAY_LOOP		5		// 游戏虚拟日期循环用
+#define WORLD_DATA_GAME_FDAY			6		// 游戏切换日期使用
 #define WORLD_DATA_NATION_OFFICIAL_STATE		8 // 官员
 #define WORLD_DATA_NATION_OFFICIAL_STATETIME	9 // 官员
 #define WORLD_DATA_WORLDQUEST_BASE		10		// 世界任务起始

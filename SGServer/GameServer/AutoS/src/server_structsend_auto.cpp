@@ -286,8 +286,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_forgingsec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_actor_sflag, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_bodysec, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_guardnum, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_guardsec, (*psize) );
@@ -301,6 +301,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
 	return 0;
 }
 
@@ -1491,8 +1492,9 @@ int struct_NetS_WeatherChange_send( char **pptr, int *psize, SLK_NetS_WeatherCha
 {
 	int tmpi = 0;
 
-	LKSET_WORD_SEND( (*pptr), &pValue->m_game_day, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_weather, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
 	return 0;
 }
 

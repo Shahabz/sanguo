@@ -1,9 +1,9 @@
 g_weather = {
 [1] = 
 { 
-	[0] = { day=1,weather=0,name="春1日-晴天",ability=1,value=30,nextday=2,nameid=1031,descid=1031,},
-	[1] = { day=1,weather=1,name="春1日-阴天",ability=1,value=20,nextday=2,nameid=1031,descid=1031,},
-	[2] = { day=1,weather=2,name="春1日-雨天",ability=1,value=10,nextday=2,nameid=1031,descid=1031,},
+	[0] = { day=1,weather=0,name="春1日-晴天",ability=1,value=30,nextday=2,nameid=1041,descid=1031,},
+	[1] = { day=1,weather=1,name="春1日-阴天",ability=1,value=20,nextday=2,nameid=1041,descid=1031,},
+	[2] = { day=1,weather=2,name="春1日-雨天",ability=1,value=10,nextday=2,nameid=1041,descid=1031,},
 },
 [2] = 
 { 
@@ -67,9 +67,9 @@ g_weather = {
 },
 [33] = 
 { 
-	[0] = { day=33,weather=0,name="冬3日-晴天",ability=4,value=30,nextday=34,nameid=1073,descid=1034,},
-	[1] = { day=33,weather=1,name="冬3日-阴天",ability=4,value=20,nextday=34,nameid=1073,descid=1034,},
-	[2] = { day=33,weather=2,name="冬3日-雨天",ability=4,value=10,nextday=34,nameid=1073,descid=1034,},
+	[0] = { day=33,weather=0,name="冬3日-晴天",ability=4,value=30,nextday=1,nameid=1073,descid=1034,},
+	[1] = { day=33,weather=1,name="冬3日-阴天",ability=4,value=20,nextday=1,nameid=1073,descid=1034,},
+	[2] = { day=33,weather=2,name="冬3日-雨天",ability=4,value=10,nextday=1,nameid=1073,descid=1034,},
 },
 [50] = 
 { 

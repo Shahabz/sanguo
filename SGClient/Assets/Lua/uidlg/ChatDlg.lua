@@ -403,9 +403,6 @@ end
 -- 接收消息
 -- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
 function ChatDlgRecv( recvValue )
-	if GetPlayer():CheckBlacklist( recvValue.m_actorid ) == true then
-		return
-	end
 	-- 缓存
 	if m_ChatCacheCount >= 100 then
 		table.remove( m_ChatCache, 1 );

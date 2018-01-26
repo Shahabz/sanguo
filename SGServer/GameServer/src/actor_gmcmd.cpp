@@ -178,6 +178,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			worldquest_setvalue( pValue[1], 1 );
 		}
+		else if ( pValue[0] == 8 )
+		{ // 开启天气系统
+			weather_open();
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );

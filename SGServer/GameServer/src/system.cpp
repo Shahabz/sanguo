@@ -26,9 +26,11 @@ extern SConfig g_Config;
 static int s_begin_time = -1;
 static int s_open_time = -1;
 
+char g_game_day_loop = 0;
 char g_game_day = 0;
 char g_game_weather = 0;
 int g_game_weather_fday = 0;
+
 extern WeatherInfo *g_weather;
 extern int g_weather_maxnum;
 
@@ -237,6 +239,8 @@ int weather_load()
 {
 	g_game_day = world_data_get( WORLD_DATA_GAME_DAY, NULL );
 	g_game_weather = world_data_get( WORLD_DATA_GAME_WEATHER, NULL );
+	g_game_day_loop = world_data_get( WORLD_DATA_GAME_DAY_LOOP, NULL );
+	g_game_weather_fday = world_data_get( WORLD_DATA_GAME_FDAY, NULL );
 	return 0;
 }
 // 开启天气
@@ -253,10 +257,9 @@ void weather_logic()
 	if ( g_game_weather_fday != fday )
 	{
 		g_game_weather_fday = fday;
-		if ( g_game_day >= g_weather_maxnum )
-			g_game_day = 1;
-
-		weather_change( (char)g_weather[g_game_day].config[0].nextday, rand() % 3 );
+		if ( g_game_day_loop <= 0 || g_game_day_loop >= g_weather_maxnum )
+			g_game_day_loop = 1;
+		weather_change( (char)g_weather[g_game_day_loop].config[0].nextday, rand() % 3 );
 	}
 }
 // 变化天气
@@ -264,17 +267,48 @@ int weather_change( char day, char weather )
 {
 	if ( day <= 0 || day >= g_weather_maxnum )
 		return -1;
-	g_game_day = day;
-	g_game_weather = weather;
 
+	g_game_day_loop = day;
+	if ( system_getweek() == 5 )
+	{ // 周五，固定招募天气
+		g_game_day = 50;
+		g_game_weather = weather;
+	}
+	else
+	{ // 其他随机
+		g_game_day = day;
+		g_game_weather = weather;
+	}
+	g_game_weather_fday = system_getfday();
+	world_data_set( WORLD_DATA_GAME_FDAY, g_game_weather_fday, NULL, NULL );
 	world_data_set( WORLD_DATA_GAME_DAY, g_game_day, NULL, NULL );
 	world_data_set( WORLD_DATA_GAME_WEATHER, g_game_weather, NULL, NULL );
+	world_data_set( WORLD_DATA_GAME_DAY_LOOP, g_game_day_loop, NULL, NULL );
 
 	SLK_NetS_WeatherChange pValue = { 0 };
 	pValue.m_game_day = g_game_day;
 	pValue.m_game_weather = g_game_weather;
+	pValue.m_game_day_loop = g_game_day_loop;
 	netsend_weatherchange_S( 0, SENDTYPE_WORLD, &pValue );
 	return 0;
+}
+
+// 天气附加属性
+int weather_attr_ability()
+{
+	if ( g_game_day <= 0 || g_game_day >= g_weather_maxnum )
+		return 0;
+	if ( g_game_weather < 0 || g_game_weather >= g_weather[g_game_day].maxnum )
+		return 0;
+	return g_weather[g_game_day].config[g_game_weather].ability;
+}
+int weather_attr_value()
+{
+	if ( g_game_day <= 0 || g_game_day >= g_weather_maxnum )
+		return 0;
+	if ( g_game_weather < 0 || g_game_weather >= g_weather[g_game_day].maxnum )
+		return 0;
+	return g_weather[g_game_day].config[g_game_weather].value;
 }
 
 /* 自定义随机 */

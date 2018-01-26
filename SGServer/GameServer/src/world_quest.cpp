@@ -16,6 +16,7 @@
 #include "actor_notify.h"
 #include "award.h"
 #include "server_netsend_auto.h"
+#include "system.h"
 #include "quest.h"
 #include "world_quest.h"
 #include "map_zone.h"
@@ -179,9 +180,12 @@ int worldquest_setvalue( int questid, int value )
 		}
 
 		if ( questid == WORLDQUEST_ID9 )
-		{ // 州城开放时开放官员系统
+		{ // 州城开放
+			// 开放官员系统
 			nation_official_open();
 			worldquest_updateopen();
+			// 开启天气系统
+			weather_open();
 		}
 	}
 	return 0;

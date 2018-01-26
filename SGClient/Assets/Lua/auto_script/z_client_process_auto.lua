@@ -128,7 +128,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetVipLevel()
 	MainDlgSetAutoBuild(0)
 	MainDlgSetAutoGuard(0)
-	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather );
+	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather, recvValue.m_game_day_loop );
 end
 
 -- m_count=0,m_building={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_barracks={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_res={m_kind=0,m_level=0,m_offset=0,[m_count]},m_levynum=0,m_worker_kind=0,m_worker_offset=0,m_worker_sec=0,m_worker_kind_ex=0,m_worker_offset_ex=0,m_worker_sec_ex=0,m_worker_expire_ex=0,
@@ -979,6 +979,9 @@ end
 -- m_actorid=0,m_shape=0,m_level=0,m_namelen=0,m_name="[m_namelen]",m_frame=0,m_zone=0,m_place=0,m_msglen=0,m_msg="[m_msglen]",m_optime=0,m_channel=0,m_nation=0,
 function proc_chat_C( recvValue )
 	-- process.
+	if GetPlayer():CheckBlacklist( recvValue.m_actorid ) == true then
+		return
+	end
 	ChatDlgRecv( recvValue );
 	MainDlgSetChat( recvValue );
 	BloodyBattleDlgSetChat( recvValue );
@@ -988,10 +991,12 @@ end
 function proc_chatlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
-		ChatDlgRecv( recvValue.m_list[i] );
-		if i == recvValue.m_count then
-			MainDlgSetChat( recvValue.m_list[i] );
-			BloodyBattleDlgSetChat( recvValue.m_list[i] );
+		if GetPlayer():CheckBlacklist( recvValue.m_list[i].m_actorid ) == false then
+			ChatDlgRecv( recvValue.m_list[i] );
+			if i == recvValue.m_count then
+				MainDlgSetChat( recvValue.m_list[i] );
+				BloodyBattleDlgSetChat( recvValue.m_list[i] );
+			end
 		end
 	end
 end
@@ -1204,6 +1209,7 @@ end
 -- m_game_day=0,m_game_weather=0,
 function proc_weatherchange_C( recvValue )
 	-- process.
+	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather, recvValue.m_game_day_loop )
 end
 
 -- m_mailid=0,m_type=0,m_title_len=0,m_title="[m_title_len]",m_content_len=0,m_content="[m_content_len]",m_attach_len=0,m_attach="[m_attach_len]",m_attachget=0,m_read=0,m_recvtime=0,m_fightid=0,
