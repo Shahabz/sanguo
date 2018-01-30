@@ -744,6 +744,7 @@ function HeroInfoDlgAddLoyal()
 	local loyal = GetHero().m_NationHero[offset].m_loyal
 	if loyal >= 100 then
 		pop( T(2356) )
+		return
 	end
 		
 	local itemlist = {}
@@ -763,6 +764,10 @@ function HeroInfoDlgAddLoyal()
 	local itemname = item_getname(itemkind)
 	local cost = itemname.."x"..g_nation_heroinfo[kind].loyal_itemnum
 	MsgBox( F(2355, cost), function() 
+		if GetItem():GetCount( itemkind ) < g_nation_heroinfo[kind].loyal_itemnum then
+			pop( T(1777)..":"..item_getname(itemkind).."x"..g_nation_heroinfo[kind].loyal_itemnum )
+			return
+		end
 		system_askinfo( ASKINFO_NATIONHERO, "", 4, kind, itemkind )
 	end )
 end

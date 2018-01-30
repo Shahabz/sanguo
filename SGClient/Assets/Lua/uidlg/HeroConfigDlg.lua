@@ -245,8 +245,10 @@ function HeroConfigDlgSetOwner()
 		return
 	end
 	
+	SetFalse( m_uiOwnerWarn )
+	SetTrue( m_uiOwner )
 	if m_recvValue.m_actorid > 0 then
-		SetText( m_uiOwner.transform:Find("Name"), "<color="..NationColorStr(recvValue.m_nation)..">["..Nation( recvValue.m_nation ).."]</color>"..recvValue.m_name )
+		SetText( m_uiOwner.transform:Find("Name"), "<color=#"..NationColorStr(m_recvValue.m_nation)..">["..Nation( m_recvValue.m_nation ).."]</color>"..m_recvValue.m_name )
 		SetTrue( m_uiOwner.transform:Find("ViewBtn") )
 	else
 		SetText( m_uiOwner.transform:Find("Name"), T(2069) )
@@ -259,4 +261,5 @@ function HeroConfigDlgViewActor()
 	if m_recvValue.m_actorid <= 0 then
 		return
 	end
+	ActorSearchDlgShow( m_recvValue.m_actorid )
 end

@@ -25,6 +25,7 @@ int nation_hero_run( City *pCity, int kind );
 void nation_hero_logic();
 int nation_hero_call( int actor_index, int kind );
 int nation_hero_addloyal( int actor_index, int kind, int itemkind );
+void nation_hero_subloyal();
 int nation_hero_rob( City *pAttackCity, City *pCity );
 
 void nation_hero_attrcalc( int kind ); 

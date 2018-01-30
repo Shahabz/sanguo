@@ -1237,6 +1237,13 @@ int process_oclock_process( int hour )
 	else if ( hour == 1 )
 	{
 	}
+	
+	
+	// 减忠诚
+	if ( hour == 4 || hour == 8 || hour == 12 || hour == 16 || hour == 20 )
+	{
+		nation_hero_subloyal();
+	}
 
 	if ( hour == global.nation_quest_timer[0] || hour == global.nation_quest_timer[1] || hour == global.nation_quest_timer[2] )
 	{ // 刷新国家任务

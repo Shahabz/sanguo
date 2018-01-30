@@ -372,6 +372,7 @@ int nation_hero_catch( City *pCity, int kind )
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
 		hero_gethero( pCity->actor_index, kind, PATH_NATIONHERO );
+		nation_hero_attrupdate( hero_getptr( pCity->actor_index, kind ) );
 	}
 	else
 	{
@@ -411,6 +412,7 @@ int nation_hero_get( City *pCity, int kind )
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
 		hero_gethero( pCity->actor_index, kind, PATH_NATIONHERO );
+		nation_hero_attrupdate( hero_getptr( pCity->actor_index, kind ) );
 	}
 	else
 	{
@@ -598,7 +600,10 @@ int nation_hero_call( int actor_index, int kind )
 			return -1;
 	}
 
-	hero_attr_calc( pCity, hero_getptr( actor_index, kind ) );
+	Hero *pHero = hero_getptr( actor_index, kind );
+	hero_attr_calc( pCity, pHero );
+	nation_hero_attrupdate( pHero );
+
 	pCity->nation_hero[offset].state = NATIONHERO_STATE_EMPLOY;
 	pCity->nation_hero[offset].loyal = 100;
 	g_nation_hero[kind].runsec = 0;
@@ -652,6 +657,27 @@ int nation_hero_addloyal( int actor_index, int kind, int itemkind )
 
 	item_lost( actor_index, g_nation_heroinfo[kind].call_itemkind[itemoffset], g_nation_heroinfo[kind].loyal_itemnum, PATH_NATIONHERO );
 	return 0;
+}
+
+// 定时减少忠诚
+void nation_hero_subloyal()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		for ( int offset = 0; offset < NATIONHERO_MAX; offset++ )
+		{
+			short kind = g_city[tmpi].nation_hero[offset].kind;
+			if ( kind <= 0 || kind >= g_nation_heroinfo_maxnum )
+				continue;
+			if ( g_city[tmpi].nation_hero[offset].state != NATIONHERO_STATE_EMPLOY )
+				continue;
+			g_city[tmpi].nation_hero[offset].loyal -= 2;
+			if ( g_city[tmpi].nation_hero[offset].loyal < 0 )
+				g_city[tmpi].nation_hero[offset].loyal = 0;
+		}
+	}
 }
 
 // 掠夺
@@ -923,6 +949,7 @@ int nation_hero_view( int actor_index, int kind )
 	pValue.m_attr.m_defense_increase = g_nation_hero[kind].defense_increase;
 	if ( g_nation_hero[kind].actorid > 0 )
 	{ // 已经有主人
+		pValue.m_open = 1;
 		pValue.m_actorid = g_nation_hero[kind].actorid;
 		int city_index = g_nation_hero[kind].city_index;
 		if ( city_index >= 0 && city_index < g_city_maxcount )

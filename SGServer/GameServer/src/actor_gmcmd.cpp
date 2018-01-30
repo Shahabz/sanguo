@@ -532,7 +532,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 					nation_hero_cityinfo( pCity->actor_index, kind );
 				}
 			}
-			else if ( pValue[1] == -2 )
+			else if ( pValue[0] == -2 )
 			{ // ÷“≥œ∂»ΩµµÕ10
 				for ( int tmpi = 0; tmpi < NATIONHERO_MAX; tmpi++ )
 				{
