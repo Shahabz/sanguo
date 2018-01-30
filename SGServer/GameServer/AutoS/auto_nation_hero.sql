@@ -4,5 +4,17 @@ CREATE TABLE `nation_hero` (
   `posx` smallint(6) NOT NULL DEFAULT '0' COMMENT '位置',
   `posy` smallint(6) NOT NULL DEFAULT '0' COMMENT '位置',
   `runsec` int(11) NOT NULL DEFAULT '0' COMMENT '逃跑倒计时',
+  `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '等级',
+  `color` tinyint(3) NOT NULL DEFAULT '0' COMMENT '颜色',
+  `exp` int(11) NOT NULL DEFAULT '0' COMMENT '经验',
+  `soldiers` int(11) NOT NULL DEFAULT '0' COMMENT '当前兵力',
+  `attack_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓攻击资质',
+  `defense_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓防御资质',
+  `troops_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓兵力资质',
+  `attack` int(11) NOT NULL DEFAULT '0' COMMENT '攻击',
+  `defense` int(11) NOT NULL DEFAULT '0' COMMENT '防御',
+  `troops` int(11) NOT NULL DEFAULT '0' COMMENT '兵力',
+  `attack_increase` smallint(6) NOT NULL DEFAULT '0' COMMENT '攻击增强',
+  `defense_increase` smallint(6) NOT NULL DEFAULT '0' COMMENT '防御增强',
   PRIMARY KEY (`kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

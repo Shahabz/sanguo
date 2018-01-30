@@ -25,6 +25,7 @@
 #include "actor_notify.h"
 #include "fight.h"
 #include "world_boss.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -81,6 +82,8 @@ extern int g_armygroup_maxcount;
 
 extern WorldBoss *g_world_boss;
 extern int g_world_boss_maxcount;
+
+extern int g_nation_heroinfo_maxnum;
 
 Fight g_fight;
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
@@ -356,6 +359,27 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
 		g_fight.type = FIGHTTYPE_RES;
 
+	}
+	// 防御方为国家名将
+	else if ( defense_type == MAPUNIT_TYPE_NATIONHERO )
+	{
+		if ( defense_index < 0 || defense_index >= g_nation_heroinfo_maxnum )
+			return -1;
+		NationHeroInfo *config = nation_hero_getconfig( defense_index );
+		if ( !config )
+			return -1;
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			short monsterid = config->monsterid[tmpi];
+			if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+				continue;
+			MonsterInfo *pMonster = &g_monster[monsterid];
+			if ( !pMonster )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_NATIONHERO, defense_index, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
+				pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
+		}
+		g_fight.type = FIGHTTYPE_ENEMY;
 	}
 	// 防御方为部队（血战皇城使用）
 	else if ( defense_type == MAPUNIT_TYPE_KINGWAR_TOWN )
@@ -1509,7 +1533,7 @@ int fight_unit2json()
 			DefenseNation = g_map_town[townid].nation;
 		}
 	}
-	else if ( g_fight.defense_type == MAPUNIT_TYPE_ENEMY )
+	else if ( g_fight.defense_type == MAPUNIT_TYPE_ENEMY || g_fight.defense_type == MAPUNIT_TYPE_NATIONHERO )
 	{
 		FightUnit *pUnit = &g_fight.defense_unit[0];
 

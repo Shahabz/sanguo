@@ -358,6 +358,8 @@ function proc_awardinfolist_C( recvValue )
 		MapTownDlgRecvAward( recvValue )
 	elseif recvValue.m_callback_code == 3 then
 		WorldQuestInfoDlgRecvAward( recvValue )
+	elseif recvValue.m_callback_code == 4 then
+		MapNationHeroDlgRecvAward( recvValue )
 	end
 end
 
@@ -781,6 +783,8 @@ function proc_heroget_C( recvValue )
 	pHero:Set( recvValue.m_hero );
 	GetHero():SetHero( recvValue.m_hero.m_offset, pHero );
 	if recvValue.m_path == PATH_HEROVISIT then
+	elseif recvValue.m_path == PATH_NATIONHERO then
+		NationHeroGetDlgShow( recvValue.m_kind )
 	else
 		HeroGetDlgShow( recvValue.m_hero );
 	end
@@ -1993,5 +1997,37 @@ end
 function proc_nationherolist_C( recvValue )
 	-- process.
 	NationHeroDlgRecv( recvValue )
+end
+
+-- m_state=0,m_kind=0,m_forever=0,m_loyal=0,m_runstamp=0,
+function proc_citynationhero_C( recvValue )
+	-- process.
+	local offset = g_nation_heroinfo[recvValue.m_kind].offset;
+	if offset >= 0 and offset < NATIONHERO_MAX then
+		GetHero().m_NationHero[offset]:Set( recvValue )
+	end
+	HeroListDlgCreateNationHeroVisit()
+	HeroListDlgLoadHero();
+	HeroInfoDlgUpdate( recvValue.m_kind )
+end
+
+-- m_count=0,m_list={m_state=0,m_kind=0,m_forever=0,m_loyal=0,m_runstamp=0,[m_count]},
+function proc_citynationherolist_C( recvValue )
+	-- process.
+	for i=1,recvValue.m_count,1 do
+		local kind = recvValue.m_list[i].m_kind
+		local offset = g_nation_heroinfo[kind].offset;
+		if offset >= 0 and offset < NATIONHERO_MAX then
+			GetHero().m_NationHero[offset]:Set( recvValue.m_list[i] )
+		end
+	end
+	HeroListDlgCreateNationHeroVisit()
+	HeroListDlgLoadHero();
+end
+
+-- m_attr={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_attack_increase=0,m_defense_increase=0,m_offset=0,m_god=0,},m_namelen=0,m_name="[m_namelen]",m_actorid=0,m_open=0,
+function proc_nationheroattr_C( recvValue )
+	-- process.
+	HeroConfigDlgRecv( recvValue )
 end
 

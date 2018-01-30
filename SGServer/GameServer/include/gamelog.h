@@ -111,6 +111,7 @@
 #define PATH_NATIONRANK					82	// 国家荣誉榜
 #define PATH_NATIONBALLOT				83	// 国家选举
 #define PATH_MAPCALL					84	// 地图召唤
+#define PATH_NATIONHERO					85	// 国家名将
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

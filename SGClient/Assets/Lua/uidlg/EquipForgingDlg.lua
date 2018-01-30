@@ -23,6 +23,7 @@ local m_uiOfficialTimeBack = nil; --UnityEngine.GameObject
 local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
+local m_uiOfficialBtn = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiEquipObj = {};
@@ -136,6 +137,7 @@ function EquipForgingDlgOnAwake( gameObject )
 	m_uiOfficialDesc = objs[17];
 	m_uiMaterialInfo = objs[18];
 	m_uiOfficialEffect = objs[19];
+	m_uiOfficialBtn = objs[20];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -536,8 +538,12 @@ function EquipForgingDlgSetOfficial()
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
-		SetText( m_uiOfficialName, T(719).."Lv."..g_official_forging[info.m_ofkind].level..T(721) )
-		SetText( m_uiOfficialDesc, F(769, zhtime(g_official_forging[info.m_ofkind].quick) ) )
+		if g_official_forging[info.m_ofkind].token > 0 then
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_forging[info.m_ofkind].level..T(721), Hex2Color(0xD95DF4FF) )
+		else
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_forging[info.m_ofkind].level..T(721), Hex2Color(0xF7F3BBFF) )
+		end
+		SetText( m_uiOfficialDesc, F(769, zhtime(g_official_forging[info.m_ofkind].quick) ), Hex2Color(0x25C9FFFF) )
 		SetImage( m_uiOfficialShape, OfSprite( g_official_forging[info.m_ofkind].shape ) )
 		
 		if info.m_ofquick >= 0 then
@@ -551,7 +557,6 @@ function EquipForgingDlgSetOfficial()
 		-- 未雇佣
 		SetFalse( uiFreeQuickBtn )
 		SetTrue( uiQuickBtn )
-		SetTrue( m_uiOfficialEffect )	
 		SetFalse( m_uiOfficialShape )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )
@@ -561,16 +566,23 @@ function EquipForgingDlgSetOfficial()
 		end
 		if pBuilding.m_level < g_official_forging[1].buildinglevel then
 			-- 级解锁Lv.1铁匠
-			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Main), g_official_forging[1].buildinglevel, g_official_forging[1].level, T(721) ) )
-			SetText( m_uiOfficialDesc, F(769, zhtime(g_official_forging[1].quick) ) )
+			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Main), g_official_forging[1].buildinglevel, g_official_forging[1].level, T(721) ), Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, F(769, zhtime(g_official_forging[1].quick) ), Hex2Color(0x8A8A8AFF) )
+			SetFalse( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
 		else
+			SetTrue( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+			SetText( m_uiOfficialName, T(721).."("..T(2338)..")", Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, T(2341), Hex2Color(0x8A8A8AFF) )
 			-- 可雇佣
-			for kind=#g_official_forging, 1, -1 do
+--[[			for kind=#g_official_forging, 1, -1 do
 				if pBuilding.m_level >= g_official_forging[kind].buildinglevel then
 					SetText( m_uiOfficialName, T(718).."Lv."..g_official_forging[kind].level..T(721) )
 					SetText( m_uiOfficialDesc, F(769, zhtime(g_official_forging[kind].quick) ) )
+					break
 				end
-			end
+			end--]]
 		end
 	end
 

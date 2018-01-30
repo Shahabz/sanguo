@@ -1135,7 +1135,8 @@ function MapUnit.createNationHero( recvValue )
 	local name 		= recvValue.m_name;
 	local posx 		= recvValue.m_posx;
 	local posy 		= recvValue.m_posy;
-	local level 	= recvValue.m_short_value[1];
+	local kind 		= recvValue.m_short_value[1];
+	local level 	= recvValue.m_short_value[2];
 	
 	-- 先搜索缓存，如果缓存有，那么就更新
 	local unitObj = MapUnit.cache[recvValue.m_unit_index];

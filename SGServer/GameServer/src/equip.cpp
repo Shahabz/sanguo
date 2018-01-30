@@ -31,6 +31,7 @@ extern MYSQL *myGame;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
+extern Actor g_temp_actor[2];
 
 extern int g_city_maxindex;
 extern City *g_city;
@@ -63,9 +64,31 @@ Equip *actor_equip_getptr( int actor_index, int offset )
 		int herokind = offset / EQUIP_BASEOFFSET;
 		int equip_offset = offset % EQUIP_BASEOFFSET;
 		int hero_index = actor_hero_getindex( actor_index, herokind );
-		if ( hero_index >= 0 && hero_index < HERO_ACTOR_MAX && equip_offset >= 0 && equip_offset < MAX_ACTOR_EQUIPNUM )
-		{ // 只读物未上阵的
+		if ( hero_index >= 0 && hero_index < HERO_ACTOR_MAX && equip_offset >= 0 && equip_offset < 6 )
+		{ // 只读未上阵的
 			return &g_actors[actor_index].hero[hero_index].equip[equip_offset];
+		}
+	}
+	return NULL;
+}
+
+// 玩家背包和未上阵英雄的装备
+Equip *actor_equip_getptr_temp( int actor_index, int offset )
+{
+	if ( actor_index < 0 || actor_index >= 2 )
+		return NULL;
+	if ( offset >= 0 && offset < MAX_ACTOR_EQUIPNUM )
+	{ // 装备栏
+		return &g_temp_actor[actor_index].equip[offset];
+	}
+	else if ( offset >= EQUIP_BASEOFFSET )
+	{ // 未上阵英雄身上的装备 例：1002 kind=1 equip=2 装备预留3位
+		int herokind = offset / EQUIP_BASEOFFSET;
+		int equip_offset = offset % EQUIP_BASEOFFSET;
+		int hero_index = actor_hero_getindex( actor_index, herokind );
+		if ( hero_index >= 0 && hero_index < HERO_ACTOR_MAX && equip_offset >= 0 && equip_offset < 6 )
+		{ // 只读物未上阵的
+			return &g_temp_actor[actor_index].hero[hero_index].equip[equip_offset];
 		}
 	}
 	return NULL;
@@ -232,9 +255,12 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 		return -1;
 	if ( equipkind <= 0 || equipkind >= g_equipinfo_maxnum )
 		return -1;
+	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
+	if ( max_equipnum > MAX_EXT_EQUIPNUM )
+		max_equipnum = MAX_EXT_EQUIPNUM;
 
 	int offset = equip_freeindex( actor_index );
-	if ( offset < 0 )
+	if ( offset < 0 || offset >= max_equipnum )
 	{
 		// 装备栏已满
 		return -2;
@@ -290,6 +316,8 @@ int equip_getequip( int actor_index, int equipkind, char path )
 		return -1;
 	Actor *pActor = &g_actors[actor_index];
 	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
+	if ( max_equipnum > MAX_EXT_EQUIPNUM )
+		max_equipnum = MAX_EXT_EQUIPNUM;
 
 	// 创建道具
 	EquipOut pOut;
@@ -420,7 +448,7 @@ int equip_buyext( int actor_index )
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	Actor *pActor = &g_actors[actor_index];
-	if ( pActor->equipext >= MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
+	if ( pActor->equipext >= MAX_EXT_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
 	{
 		return -1;
 	}
@@ -431,9 +459,9 @@ int equip_buyext( int actor_index )
 	}
 
 	pActor->equipext += 10;
-	if ( pActor->equipext > MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
+	if ( pActor->equipext > MAX_EXT_EQUIPNUM - MAX_DEFAULT_EQUIPNUM )
 	{
-		pActor->equipext = MAX_ACTOR_EQUIPNUM - MAX_DEFAULT_EQUIPNUM;
+		pActor->equipext = MAX_EXT_EQUIPNUM - MAX_DEFAULT_EQUIPNUM;
 	}
 
 	// 发更新
@@ -552,8 +580,8 @@ int equip_down( int actor_index, short herokind, int index )
 		return -1;
 
 	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
-	if ( max_equipnum > MAX_ACTOR_EQUIPNUM )
-		max_equipnum = MAX_ACTOR_EQUIPNUM;
+	if ( max_equipnum > MAX_EXT_EQUIPNUM )
+		max_equipnum = MAX_EXT_EQUIPNUM;
 
 	// 找到一个空位
 	int free_offset = equip_freeindex( actor_index );
@@ -616,6 +644,181 @@ int equip_down( int actor_index, short herokind, int index )
 
 	// 更新英雄信息
 	hero_sendinfo( actor_index, pHero );
+	return 0;
+}
+
+// 卸一个武将身上的所有装备到背包
+int equip_down_all( int actor_index, short herokind )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	// 获取英雄
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+
+	int max_equipnum = MAX_DEFAULT_EQUIPNUM + g_actors[actor_index].equipext;
+	if ( max_equipnum > MAX_ACTOR_EQUIPNUM )
+		max_equipnum = MAX_ACTOR_EQUIPNUM;
+
+	for ( int index = 0; index < 6; index++ )
+	{
+		// 获取英雄装备
+		Equip *pHeroEquip = &pHero->equip[index];
+		if ( pHeroEquip->kind <= 0 )
+			continue;
+		int oldoffset = pHeroEquip->offset;
+
+		// 找到一个空位
+		int free_offset = equip_freeindex( actor_index );
+		if ( free_offset < 0 || free_offset >= max_equipnum )
+		{ // 装备栏已满
+			break;
+		}
+		Equip *pFreeEquip = &g_actors[actor_index].equip[free_offset];
+
+		// 卸下
+		memcpy( pFreeEquip, pHeroEquip, sizeof( Equip ) );
+		memset( pHeroEquip, 0, sizeof( Equip ) );
+		pFreeEquip->offset = free_offset;
+
+		// 发送变更
+		equip_sendget( actor_index, free_offset, PATH_EQUIP_DOWN );
+		equip_sendlost( actor_index, pFreeEquip->kind, oldoffset, PATH_EQUIP_DOWN );
+	}
+
+	// 重算英雄属性
+	hero_attr_calc( pCity, pHero );
+	// 重算装备战力
+	city_battlepower_equip_calc( pCity );
+	// 重算英雄战力
+	city_battlepower_hero_calc( pCity );
+
+	// 脱卸装备产生的兵力损耗会回到兵营
+	int oldsoldiers = pHero->soldiers;
+	int troops = pHero->troops;
+	if ( oldsoldiers > troops )
+	{
+		HeroInfoConfig *config = hero_getconfig( herokind, pHero->color );
+		if ( config )
+		{
+			pHero->soldiers -= (oldsoldiers - troops);
+			if ( pHero->offset >= HERO_BASEOFFSET + 8 && pHero->offset < HERO_BASEOFFSET + 12 )
+			{ // 御林卫武将
+				city_changefood( pCity->index, (int)((oldsoldiers - troops)*global.trainfood), PATH_HERO_SOLDIERS_EQUIP );
+			}
+			else
+			{
+				city_changesoldiers( pCity->index, config->corps, (oldsoldiers - troops), PATH_HERO_SOLDIERS_EQUIP );
+			}
+		}
+	}
+
+	// 更新英雄信息
+	hero_sendinfo( actor_index, pHero );
+	return 0;
+}
+
+// 卸一个武将身上的所有装备到背包-离线情况
+int equip_down_all_offline( int city_index, int actorid, short herokind )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+	{
+		city_index = city_getindex_withactorid( actorid );
+	}
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+	{
+		return -1;
+	}
+
+	City *pCity = city_indexptr( city_index );
+	if ( !pCity )
+		return -1;
+	memset( &g_temp_actor[0], 0, sizeof( Actor ) );
+
+	// 读取未上阵英雄
+	actor_hero_load_auto( actorid, 0, actor_hero_getptr_temp, "actor_hero" );
+
+	// 读取装备数据
+	actor_equip_load_auto( actorid, 0, actor_equip_getptr_temp, "actor_equip" );
+
+	// 找到这个武将
+	Hero *pHero = NULL;
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind == herokind )
+		{
+			pHero = &pCity->hero[tmpi];
+			break;
+		}
+	}
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_temp_actor[0].hero[tmpi].kind == herokind )
+		{
+			pHero = &g_temp_actor[0].hero[tmpi];
+			break;;
+		}
+	}
+	if ( !pHero )
+		return -1;
+
+	// 卸装备，返回到装备栏
+	for ( int index = 0; index < 6; index++ )
+	{
+		// 获取英雄装备
+		Equip *pHeroEquip = &pHero->equip[index];
+		if ( pHeroEquip->kind <= 0 )
+			continue;
+		int oldoffset = pHeroEquip->offset;
+
+		// 找到一个空位
+		int free_offset = -1;
+		for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+		{
+			if ( g_temp_actor[0].equip[tmpi].kind <= 0 )
+			{
+				free_offset = tmpi;
+				break;
+			}
+		}
+
+		if ( free_offset < 0 )
+		{ // 装备栏已满
+			break;
+		}
+
+		Equip *pFreeEquip = &g_temp_actor[0].equip[free_offset];
+
+		// 卸下
+		memcpy( pFreeEquip, pHeroEquip, sizeof( Equip ) );
+		memset( pHeroEquip, 0, sizeof( Equip ) );
+		pFreeEquip->offset = free_offset;
+	}
+
+	// 存档
+	// 未上阵英雄装备保存
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_temp_actor[0].hero[tmpi].id <= 0 )
+			continue;
+		actor_equip_batch_save_auto( g_temp_actor[0].hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", NULL );
+	}
+
+	// 装备栏
+	actor_equip_batch_save_auto( g_temp_actor[0].equip, MAX_ACTOR_EQUIPNUM, "actor_equip", NULL );
+
+	// 装备
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", NULL );
+	}
 	return 0;
 }
 

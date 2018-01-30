@@ -17,7 +17,7 @@ int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero
 	int offset = 0;
 	Hero *pHero;
 
-	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup`,`god` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -46,6 +46,7 @@ int actor_hero_load_auto( int actorid, int actor_index, LPCB_GETHERO pCB_GetHero
 		pHero->defense_wash = atoi(row[offset++]);
 		pHero->troops_wash = atoi(row[offset++]);
 		pHero->colorup = atoi(row[offset++]);
+		pHero->god = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -59,7 +60,7 @@ int actor_hero_save_auto( Hero *pHero, const char *pTab, FILE *fp )
 
 	char sz64_id[21]={0};
 RE_HERO_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pHero->id,sz64_id,10 ),pHero->actorid,pHero->offset,pHero->kind,pHero->color,pHero->level,pHero->exp,pHero->soldiers,pHero->attack_wash,pHero->defense_wash,pHero->troops_wash,pHero->colorup);
+	sprintf( szSQL, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup`,`god`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pHero->id,sz64_id,10 ),pHero->actorid,pHero->offset,pHero->kind,pHero->color,pHero->level,pHero->exp,pHero->soldiers,pHero->attack_wash,pHero->defense_wash,pHero->troops_wash,pHero->colorup,pHero->god);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -96,11 +97,11 @@ int actor_hero_batch_save_auto( Hero *pHero, int maxcount, const char *pTab, FIL
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pHero[index].id,sz64_id,10 ),pHero[index].actorid,pHero[index].offset,pHero[index].kind,pHero[index].color,pHero[index].level,pHero[index].exp,pHero[index].soldiers,pHero[index].attack_wash,pHero[index].defense_wash,pHero[index].troops_wash,pHero[index].colorup);
+			sprintf( g_batchsql, "REPLACE INTO %s (`id`,`actorid`,`offset`,`kind`,`color`,`level`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`colorup`,`god`) Values('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,lltoa(pHero[index].id,sz64_id,10 ),pHero[index].actorid,pHero[index].offset,pHero[index].kind,pHero[index].color,pHero[index].level,pHero[index].exp,pHero[index].soldiers,pHero[index].attack_wash,pHero[index].defense_wash,pHero[index].troops_wash,pHero[index].colorup,pHero[index].god);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pHero[index].id,sz64_id,10 ),pHero[index].actorid,pHero[index].offset,pHero[index].kind,pHero[index].color,pHero[index].level,pHero[index].exp,pHero[index].soldiers,pHero[index].attack_wash,pHero[index].defense_wash,pHero[index].troops_wash,pHero[index].colorup);
+			sprintf( szSQL, ",('%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",lltoa(pHero[index].id,sz64_id,10 ),pHero[index].actorid,pHero[index].offset,pHero[index].kind,pHero[index].color,pHero[index].level,pHero[index].exp,pHero[index].soldiers,pHero[index].attack_wash,pHero[index].defense_wash,pHero[index].troops_wash,pHero[index].colorup,pHero[index].god);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

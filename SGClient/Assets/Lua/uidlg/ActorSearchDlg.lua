@@ -169,10 +169,32 @@ function ActorSearchDlgShowHero()
 		if pHero.m_kind > 0 then
 			local uiHero = m_uiHeroGrid.transform:GetChild( i-1 )
 			SetTrue( uiHero )
-			SetImage( uiHero.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind ) )
-			SetImage( uiHero.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )
-			SetImage( uiHero.transform:Find("Corps"), CorpsSprite( g_heroinfo[pHero.m_kind][pHero.m_color].corps ) )
-			SetText( uiHero.transform:Find("Name"), HeroNameLv( pHero.m_kind, pHero.m_level ) )
+			local objs = uiHero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiShape = objs[0];
+			local uiColor = objs[1];
+			local uiCorps = objs[2];
+			local uiName = objs[3];
+			local uiType = objs[4];
+		
+			SetImage( uiShape, HeroHeadSprite( pHero.m_kind ) )
+			SetImage( uiColor, ItemColorSprite( pHero.m_color ) )
+			SetImage( uiCorps, CorpsSprite( g_heroinfo[pHero.m_kind][pHero.m_color].corps ) )
+			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
+			
+			-- 是否无双，神将，无双神将
+			if pHero.m_type == 1 then
+				SetTrue( uiType )
+				SetText( uiType, T(2357) )
+			elseif pHero.m_type == 2 then
+				SetTrue( uiType )
+				SetText( uiType, T(2358) )
+			elseif pHero.m_type == 3 then
+				SetTrue( uiType )
+				SetText( uiType, T(2359) )
+			else
+				SetFalse( uiType )
+			end
+			
 		end
 	end
 end

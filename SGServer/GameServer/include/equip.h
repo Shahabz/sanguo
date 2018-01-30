@@ -29,6 +29,7 @@ typedef struct _equipout
 
 // 将offset转换成对应的属性结构
 Equip *actor_equip_getptr( int actor_index, int offset );
+Equip *actor_equip_getptr_temp( int actor_index, int offset );
 Equip *city_equip_getptr( int city_index, int offset );
 Equip *equip_getptr( int actor_index, int offset );
 int equip_load( int actor_index );
@@ -46,6 +47,9 @@ int equip_buyext( int actor_index ); // 购买扩展栏
 
 int equip_up( int actor_index, short herokind, int equip_offset ); // 装备上,带有替换效果
 int equip_down( int actor_index, short herokind, int index ); // 卸身上的装备
+
+int equip_down_all( int actor_index, short herokind ); // 卸一个武将身上的所有装备到背包
+int equip_down_all_offline( int city_index, int actorid, short herokind ); // 卸一个武将身上的所有装备到背包
 
 int equip_list( int actor_index ); // 发送装备列表
 int equip_sendbag( int actor_index, int offset ); // 更新背包里的装备

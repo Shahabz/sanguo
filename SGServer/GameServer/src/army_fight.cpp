@@ -15,6 +15,7 @@
 #include "area.h"
 #include "actor_send.h"
 #include "actor_times.h"
+#include "chat.h"
 #include "server_netsend_auto.h"
 #include "mapunit.h"
 #include "fight.h"
@@ -36,6 +37,7 @@
 #include "map.h"
 #include "mail.h"
 #include "nation.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -72,6 +74,12 @@ extern int g_map_res_maxcount;
 
 extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
+
+extern NationHeroInfo *g_nation_heroinfo;
+extern int g_nation_heroinfo_maxnum;
+
+extern NationHero *g_nation_hero;
+extern int g_nation_hero_maxcount;
 
 extern Map g_map;
 
@@ -272,3 +280,116 @@ int army_vs_res( int army_index, Fight *pFight )
 	return 0;
 }
 
+// 与国家名将战斗结果
+int army_vs_nationhero( int army_index, Fight *pFight )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	NationHero *nhero = nation_hero_getptr( g_army[army_index].to_index );
+	if ( !nhero )
+		return -1;
+	NationHeroInfo *config = nation_hero_getconfig( nhero->kind );
+	if ( !config )
+		return -1;
+	City *pCity = army_getcityptr( army_index );
+	if ( !pCity )
+		return -1;
+	i64 mailid = 0;
+
+	// 玩家胜利
+	if ( pFight->result == FIGHT_WIN )
+	{
+		// 获得的奖励
+		AwardGetInfo awardinfo = { 0 };
+		awardgroup_withid( pCity->actorid, config->awardgroup, PATH_NATIONHERO, &awardinfo );
+
+		// 发送胜利邮件
+		char title[MAIL_TITLE_MAXSIZE] = { 0 };
+		sprintf( title, "%s%d", TAG_TEXTID, 5044 );
+
+		// 奖励展示不是附件的
+		char attach[MAIL_ATTACH_MAXSIZE] = { 0 };
+		if ( awardinfo.count > 0 )
+		{
+			for ( int tmpi = 0; tmpi < awardinfo.count; tmpi++ )
+			{
+				if ( awardinfo.kind[tmpi] <= 0 )
+					continue;
+				char tempitem[32] = { 0 };
+				sprintf( tempitem, "%d,%d@", awardinfo.kind[tmpi], awardinfo.num[tmpi] );
+				strcat( attach, tempitem );
+			}
+		}
+
+		// 内容
+		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":1,\"name\":\"%s\",\"kind\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\"}",
+			TAG_TEXTID, 5502, pCity->name, nhero->kind, nhero->level, pCity->posx, pCity->posy, nhero->posx, nhero->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2], attach );
+
+		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_FIGHT_NATIONHERO, title, content, "", 0, 0 );
+
+		char v1[32] = { 0 };
+		char v2[32] = { 0 };
+		sprintf( v1, "%s%d", TAG_HERO, config->herokind );
+		strncpy( v2, pCity->name, NAME_SIZE );
+
+		// 抓捕几率=（1-等级/100）* 系数
+		float v = 0.0f;
+		if ( config->nation == pCity->nation )
+		{
+			v = config->catch_odds;
+		}
+		else
+		{
+			v = config->other_catch_odds;
+		}
+
+		char success = 0;
+		int odds = (int)(((1.0f - (float)nhero->level / 100.0f) * v) * 100);
+		int rm = rand() % 100;
+		if ( rm <= odds )
+		{ // 抓捕成功
+			success = 1;
+			if ( nation_hero_catch( pCity, config->herokind ) < 0 ) // 此步骤有可能失败
+				success = 0;
+		}
+		else
+		{ // 抓捕失败
+			success = 0;
+		}
+
+		if ( success == 1 )
+		{
+			system_talkjson_world( 6025, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		}
+		else
+		{
+			nhero->level -= 5;
+			if ( nhero->level < 1 )
+				nhero->level = 1;
+			nation_hero_attrcalc( config->herokind );
+			nation_hero_changepos( config->herokind );
+			system_talkjson_world( 6024, v1, v2, NULL, NULL, NULL, NULL, 1 );
+		}
+	}
+	else
+	{
+		// 发送失败邮件
+		char title[MAIL_TITLE_MAXSIZE] = { 0 };
+		sprintf( title, "%s%d", TAG_TEXTID, 5045 );
+
+		// 内容
+		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":0,\"name\":\"%s\",\"kind\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+			TAG_TEXTID, 5503, pCity->name, nhero->kind, nhero->level, pCity->posx, pCity->posy, nhero->posx, nhero->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2] );
+
+		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_FIGHT_NATIONHERO, title, content, "", 0, 0 );
+	}
+
+	// 插入战斗详情邮件
+	if ( mailid > 0 )
+	{
+		mail_fight( mailid, pCity->actorid, pFight->unit_json );
+	}
+	return 0;
+}

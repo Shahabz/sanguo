@@ -12,6 +12,7 @@ local m_uiGrid = nil; --UnityEngine.GameObject
 local m_uiUIP_HeroHead = nil; --UnityEngine.GameObject
 local m_uiTimer = nil; --UnityEngine.GameObject
 local m_uiColorBack = nil; --UnityEngine.GameObject
+local m_uiType = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 
@@ -89,6 +90,7 @@ function HeroWashDlgOnAwake( gameObject )
 	m_uiUIP_HeroHead = objs[9];
 	m_uiTimer = objs[10];
 	m_uiColorBack = objs[11];
+	m_uiType = objs[12];
 	
 	SetFalse( m_uiNum );
 	SetFalse( m_uiTimer );
@@ -165,9 +167,11 @@ function HeroWashDlgSetHero()
 		for offset = 0, MAX_HERONUM-1, 1 do
 			local pHero = GetHero().m_Hero[offset];
 			if pHero ~= nil and pHero.m_kind > 0 and pHero.m_color > 0 then
-				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
-				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
-				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
+				if GetHero():IsCanUse( pHero.m_kind ) == true then
+					local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+					local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+					table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
+				end
 			end
 		end
 		
@@ -201,6 +205,7 @@ function HeroWashDlgSetHero()
 		local uiCorps = objs[2];
 		local uiName = objs[3];
 		local uiSelect = objs[4];
+		local uiType = objs[5];
 		SetTrue( uiShape )
 		SetTrue( uiColor )
 		SetTrue( uiCorps )
@@ -212,6 +217,19 @@ function HeroWashDlgSetHero()
 		SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 		SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
 		
+		local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+		if only == true and pHero.m_god == 1 then
+			SetTrue( uiType )
+			SetText( uiType, T(2359) )
+		elseif only == true then
+			SetTrue( uiType )
+			SetText( uiType, T(2357) )
+		elseif pHero.m_god == 1 then
+			SetTrue( uiType )
+			SetText( uiType, T(2358) )
+		else
+			SetFalse( uiType )
+		end
 		m_CacheHeroList[pHero.m_kind] = uiHeroObj;	
 	end
 end
@@ -239,6 +257,20 @@ function HeroWashDlgSelectHero( kind )
 			SetImage( m_uiCorps,  CorpsSprite( pHero.m_corps )  );
 			SetImage( m_uiColorBack, HeroColorSprite( pHero.m_color ) )
 			
+			local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+			if only == true and pHero.m_god == 1 then
+				SetTrue( m_uiType )
+				SetText( m_uiType, T(2359) )
+			elseif only == true then
+				SetTrue( m_uiType )
+				SetText( m_uiType, T(2357) )
+			elseif pHero.m_god == 1 then
+				SetTrue( m_uiType )
+				SetText( m_uiType, T(2358) )
+			else
+				SetFalse( m_uiType )
+			end
+		
 			local config = g_heroinfo[pHero.m_kind][pHero.m_color];
 			
 			-- 总资质

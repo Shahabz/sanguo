@@ -701,9 +701,9 @@ function HeroVisitDlgSelect( colickid )
 	local kindid = g_hero_visit[colickid].kind ;
 	if kindid >= 20000 then
 		if i_controlID	== 2 then
-			HeroConfigDlgShow( g_heroinfo[kindid-20000][3]);
+			HeroConfigDlgShow( g_heroinfo[kindid-20000][3], 0 );
 		else
-			HeroConfigDlgShow( g_heroinfo[kindid-20000][2]);	
+			HeroConfigDlgShow( g_heroinfo[kindid-20000][2], 0 );	
 		end				
 	end	
 end

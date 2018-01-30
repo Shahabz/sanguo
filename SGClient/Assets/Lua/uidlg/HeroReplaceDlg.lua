@@ -117,6 +117,7 @@ function HeroReplaceDlgSetHero()
 		local uiCorps = objs[2];
 		local uiName = objs[3];
 		local uiSelect = objs[4];
+		local uiType = objs[5];
 			
 		if pHero.m_kind > 0 then		
 			SetTrue( uiShape )
@@ -129,6 +130,20 @@ function HeroReplaceDlgSetHero()
 			SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
 			SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
+			
+			local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+			if only == true and pHero.m_god == 1 then
+				SetTrue( uiType )
+				SetText( uiType, T(2359) )
+			elseif only == true then
+				SetTrue( uiType )
+				SetText( uiType, T(2357) )
+			elseif pHero.m_god == 1 then
+				SetTrue( uiType )
+				SetText( uiType, T(2358) )
+			else
+				SetFalse( uiType )
+			end
 	
 		else
 			SetTrue( uiShape )

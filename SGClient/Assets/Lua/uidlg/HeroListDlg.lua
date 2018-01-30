@@ -11,6 +11,7 @@ local m_uiCloseInfoBtu = nil; --UnityEngine.GameObject 隐藏资质
 local m_uiRankWayText = nil; --UnityEngine.GameObjec 显示排序方法的Text
 local m_uiEmptyHeroContent = nil; --UnityEngine.GameObject
 local m_uiHeoVisitEnter = nil; --UnityEngine.GameObject
+local m_uiUIP_NationHeroVisit = {nil,nil,nil,nil}; --UnityEngine.GameObject
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 local m_SelectHeroKind = 0;
@@ -56,27 +57,39 @@ function HeroListDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             HeroListDlgClose();
 			HeroListDlgSelectCloseToggle();
+			
 		elseif nControlID == -2 then
 			HeroListDlgSelectCloseToggle();
+			
 		elseif nControlID == 1 then
 			HeroListDlgSelectRankWay(nControlID);
 			HeroListDlgRankWay(nControlID);
+			
 		elseif nControlID == 2 then
 			HeroListDlgSelectRankWay(nControlID);
 			HeroListDlgRankWay(nControlID);
+			
 		elseif nControlID == 3 then
 			HeroListDlgSelectRankWay(nControlID);
 			HeroListDlgRankWay(nControlID);	
+			
 		elseif nControlID == 4 then
 			HeroListDlgCloseInfo();
 			HeroListDlgSelectCloseToggle();
+			
 		elseif nControlID == 5 then
 			HeroListDlgOpenInfo();
 			HeroListDlgSelectCloseToggle();
+			
 		--武将寻访
 		elseif nControlID == 6 then
 			HeroListDlgClose()
 			HeroVisitDlgShow()
+		
+		-- 国家名将招募
+		elseif nControlID >= 1000 and nControlID < 1500 then
+			HeroListDlgNationHeroCall( nControlID-1000 )
+			
 		elseif nControlID >= 10000 then
 		 	HeroListDlgSelect(nControlID-10000);
 			HeroListDlgSelectCloseToggle();
@@ -106,6 +119,10 @@ function HeroListDlgOnAwake( gameObject )
 	m_uiRankWayText = objs[7];
 	m_uiEmptyHeroContent = objs[8];
 	m_uiHeoVisitEnter = objs[9];
+	m_uiUIP_NationHeroVisit[1] = objs[10];
+	m_uiUIP_NationHeroVisit[2] = objs[11];
+	m_uiUIP_NationHeroVisit[3] = objs[12];
+	m_uiUIP_NationHeroVisit[4] = objs[13];
 end
 
 -- 界面初始化时调用
@@ -144,6 +161,7 @@ end
 function HeroListDlgShow( path )
 	m_path = path
 	HeroListDlgOpen()
+	HeroListDlgCreateNationHeroVisit()
 	HeroListDlgLoadHero();
 end
 
@@ -251,14 +269,16 @@ function HeroListDlgLoadHero()
     for offset = 0, MAX_HERONUM-1, 1 do
         local pHero = GetHero().m_Hero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-			local base = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
-			local wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset,
-			m_qualtiy = base, 
-			m_washqualtiy = wash,
-			m_attack = pHero.m_attack_base + pHero.m_attack_wash,
-			m_defense = pHero.m_defense_base + pHero.m_defense_wash,
-			m_troops = pHero.m_troops_base + pHero.m_troops_wash} );
+			if GetHero():IsCanUse( pHero.m_kind ) == true then
+				local base = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
+				local wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset,
+				m_qualtiy = base, 
+				m_washqualtiy = wash,
+				m_attack = pHero.m_attack_base + pHero.m_attack_wash,
+				m_defense = pHero.m_defense_base + pHero.m_defense_wash,
+				m_troops = pHero.m_troops_base + pHero.m_troops_wash} );
+			end
         end
     end
 
@@ -273,7 +293,7 @@ function HeroListDlgLoadHero()
 	end
 
     -- 创建上阵对象
-	local upHeroRow = m_uiContent.transform:GetChild(1).gameObject;
+	local upHeroRow = m_uiContent.transform:Find("UIP_HeroRow").gameObject;
 	HeroListDlgClearHeroRow(upHeroRow,true);
 
 	local tmpCache = {};
@@ -453,6 +473,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 	local uiShape = objs[1];
 	local uiColor = objs[2];
 	local uiCorps = objs[3];
+	local uiType = objs[4];
 	local uiName = objs[5];
 	local uiBack = objs[6]
 	local uiHidBack = objs[7];
@@ -539,6 +560,21 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 	SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
 	SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 	SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
+	
+	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+	if only == true and pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2359) )
+	elseif only == true then
+		SetTrue( uiType )
+		SetText( uiType, T(2357) )
+	elseif pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2358) )
+	else
+		SetFalse( uiType )
+	end
+	
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
 	SetText( uiQualtiyText,F(1930,pHero.m_qualtiy,pHero.m_washqualtiy) );
 	SetText( uiAttackText, pHero.m_attack );
@@ -659,4 +695,60 @@ function HeroListDlgCloseInfo()
 		SetFalse(obj);
 		SetTrue(uiCorps);
 	end
+end
+
+-- 创建国家名将寻访
+function HeroListDlgCreateNationHeroVisit()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	SetFalse( m_uiUIP_NationHeroVisit[1] )
+	SetFalse( m_uiUIP_NationHeroVisit[2] )
+	SetFalse( m_uiUIP_NationHeroVisit[3] )
+	SetFalse( m_uiUIP_NationHeroVisit[4] )
+	
+	local index = 1;
+	for i=0,NATIONHERO_MAX-1,1 do
+		local info = GetHero().m_NationHero[i];
+		if info.m_state == NATIONHERO_STATE_CATCH then
+			local uiObj = m_uiUIP_NationHeroVisit[index]
+			SetTrue( m_uiUIP_NationHeroVisit[1] )
+			local kind = info.m_kind
+			local pHero = GetHero():GetPtr( kind )
+			if pHero ~= nil then
+				SetControlID( uiObj.transform:Find("CallBtn"), 1000+kind )
+				SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite(kind) )
+				SetImage( uiObj.transform:Find("Corps"), CorpsSprite( hero_getcorps(kind) ) )
+				SetImage( uiObj.transform:Find("Color"), ItemColorSprite(pHero.m_color) )
+				SetText( uiObj.transform:Find("Name"), "Lv."..pHero.m_level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind) )
+				
+				local cost = T(2350)
+				if g_nation_heroinfo[kind].call_silver > 0 then
+					cost = cost .. T(121).."x"..g_nation_heroinfo[kind].call_silver;
+				end
+				if g_nation_heroinfo[kind].call_itemkind0 > 0 then
+					cost = cost .. "" ..item_getname(g_nation_heroinfo[kind].call_itemkind0).."x"..g_nation_heroinfo[kind].call_itemnum;
+				end
+				if g_nation_heroinfo[kind].call_itemkind1 > 0 then
+					cost = cost .. "," ..item_getname(g_nation_heroinfo[kind].call_itemkind1).."x"..g_nation_heroinfo[kind].call_itemnum;
+				end
+				if g_nation_heroinfo[kind].call_itemkind2 > 0 then
+					cost = cost .. "," ..item_getname(g_nation_heroinfo[kind].call_itemkind2).."x"..g_nation_heroinfo[kind].call_itemnum;
+				end
+				if g_nation_heroinfo[kind].call_itemkind3 > 0 then
+					cost = cost .. "," ..item_getname(g_nation_heroinfo[kind].call_itemkind3).."x"..g_nation_heroinfo[kind].call_itemnum;
+				end
+				SetText( uiObj.transform:Find("Cost"), cost )
+				
+				local left = info.m_runstamp-GetServerTime()
+				SetTimer( uiObj.transform:Find("Timer"), left, left, 0, T(2349) )
+				index = index + 1;
+			end
+		end
+	end 
+end
+
+-- 国家名将招募
+function HeroListDlgNationHeroCall( kind )
+	NationHeroCallDlgShow( kind )
 end

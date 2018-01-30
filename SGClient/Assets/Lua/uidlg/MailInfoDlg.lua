@@ -626,8 +626,8 @@ function MailInfoDlgByRecvValue( recvValue )
 		elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
 			SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
 			
-		-- 流寇
-		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
+		-- 流寇或国家名将
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO then
 			local win = recvValue.m_content_json["win"];
 			local name = recvValue.m_content_json["name"];
 			local level = recvValue.m_content_json["lv"];
@@ -655,6 +655,10 @@ function MailInfoDlgByRecvValue( recvValue )
 			end
 			
 			local enemyname = "Lv."..level.." "..T(938);
+			if recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO then
+				local kind = recvValue.m_content_json["kind"];
+				enemyname = "Lv."..level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind)
+			end
 			if win == 1 then
 				local awardstr = ""
 				local award = recvValue.m_content_json["award"];
@@ -723,7 +727,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	end
 	
 	-- 获取战斗信息
-	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or recvValue.m_type == MAIL_TYPE_GATHER_FIGHT or ( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
+	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO or recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or recvValue.m_type == MAIL_TYPE_GATHER_FIGHT or ( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
 		-- 没缓存，去服务器拿
 		if recvValue.m_fight_content == nil or recvValue.m_fight_content == "" then
 			-- 自己看自己的邮件
@@ -898,7 +902,7 @@ function MailInfoDlgSetFightMainUnit( uiObj, type, name, shape, nation, maxhp, h
 		SetText( uiObj.transform:Find("Name"), EnemyName( tonumber(name) ) );
 		
 	-- 流寇
-	elseif type == MAPUNIT_TYPE_ENEMY then
+	elseif type == MAPUNIT_TYPE_ENEMY or type == MAPUNIT_TYPE_NATIONHERO then
 		SetImage( uiObj.transform:Find("Shape"), EnemyHeadSprite( shape ) );
 		SetText( uiObj.transform:Find("Name"), EnemyName( tonumber(name) ) );
 	end
@@ -1176,7 +1180,10 @@ function MailInfoDlgSpyArmyState( pHero )
 				else
 					toname = "Lv."..info.level..T(MapUnitResNameList[info.type])
 				end
-				
+			
+			elseif pHero["totype"] == MAPUNIT_TYPE_NATIONHERO then
+				return  T(1183); -- 未知
+					
 			end
 			
 			name = F( 1180, math.ceil( pHero["armytime"]/60 ), toname );

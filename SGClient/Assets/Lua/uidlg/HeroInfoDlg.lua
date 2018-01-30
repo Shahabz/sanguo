@@ -28,6 +28,8 @@ local m_uiAttackIncrease = nil; --UnityEngine.GameObject
 local m_uiDefenseIncreaseIcon = nil; --UnityEngine.GameObject
 local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
 local m_uiDownBtn = nil; --UnityEngine.GameObject
+local m_uiLoyal = nil; --UnityEngine.GameObject
+local m_uiGodBtn = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
@@ -98,6 +100,14 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroInfoDlgClose();
 			HeroDlgClose()
 		
+		-- 添加忠诚度
+		elseif nControlID == 7 then
+			HeroInfoDlgAddLoyal();
+		
+		-- 神级突破
+		elseif nControlID == 8 then
+			
+				
 		-- 卸下装备
 		elseif nControlID >= 10 and nControlID < 20 then
 			HeroInfoDlgEquipDown( nControlID-10 )
@@ -156,6 +166,8 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiDefenseIncreaseIcon = objs[28];
 	m_uiDefenseIncrease = objs[29];
 	m_uiDownBtn = objs[30];
+	m_uiLoyal = objs[31];
+	m_uiGodBtn = objs[32];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -312,7 +324,7 @@ function HeroInfoDlgSet( path, pHero, up )
 			if pHero ~= nil and pHero.m_kind > 0 then
 				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
 				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
-				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset, m_qualtiy = base, m_washqualtiy = wash });
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset, m_qualtiy = base, m_washqualtiy = wash });
 			end
 		end
 	end
@@ -322,9 +334,11 @@ function HeroInfoDlgSet( path, pHero, up )
 		for offset = 0, MAX_HERONUM-1, 1 do
 			local pHero = GetHero().m_Hero[offset];
 			if pHero ~= nil and pHero.m_kind > 0 then
-				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
-				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
-				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 1000+offset, m_qualtiy = base, m_washqualtiy = wash });
+				if GetHero():IsCanUse( pHero.m_kind ) == true then
+					local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+					local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+					table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = 1000+offset, m_qualtiy = base, m_washqualtiy = wash });
+				end
 			end
 		end	
 		-- 当前排序类型
@@ -353,6 +367,7 @@ function HeroInfoDlgSet( path, pHero, up )
 			local uiCorps = objs[2];
 			local uiName = objs[3];
 			local uiSelect = objs[4];
+			local uiType = objs[5];
 			
 			if pHero.m_kind == m_pCacheHero.m_kind then
 				SetTrue( uiSelect )
@@ -364,6 +379,20 @@ function HeroInfoDlgSet( path, pHero, up )
 			SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 			SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
 			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
+			
+			local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+			if only == true and pHero.m_god == 1 then
+				SetTrue( uiType )
+				SetText( uiType, T(2359) )
+			elseif only == true then
+				SetTrue( uiType )
+				SetText( uiType, T(2357) )
+			elseif pHero.m_god == 1 then
+				SetTrue( uiType )
+				SetText( uiType, T(2358) )
+			else
+				SetFalse( uiType )
+			end
 			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
 		end
 	end
@@ -415,6 +444,26 @@ function HeroInfoDlgSet( path, pHero, up )
 		SetFalse( m_uiGoldBtn );
 	else
 		SetTrue( m_uiGoldBtn );
+	end
+	
+	-- 神级突破
+	if pHero.m_color == 5 and pHero.m_god == 0 then
+		SetTrue( m_uiGodBtn )
+	else
+		SetFalse( m_uiGodBtn )
+	end
+	
+	-- 忠诚度
+	-- 是否名将
+	if GetHero():IsNationHero( pHero.m_kind ) == true then
+		SetTrue( m_uiLoyal )
+		local offset = g_nation_heroinfo[pHero.m_kind].offset;
+		local loyal = GetHero().m_NationHero[offset].m_loyal
+		local maxloyal = 100;
+		SetProgress( m_uiLoyal.transform:Find("Progress"), loyal/maxloyal );
+		SetText( m_uiLoyal.transform:Find("Progress/Text"), loyal.."/"..maxloyal )
+	else
+		SetFalse( m_uiLoyal )
 	end
 end
 
@@ -683,6 +732,39 @@ function HeroInfoDlgHeroDown()
 	end
 	system_askinfo( ASKINFO_HERO, "", 9, m_pCacheHero.m_kind );
 	HeroInfoDlgClose();
+end
+
+-- 添加忠诚度
+function HeroInfoDlgAddLoyal()
+	if m_pCacheHero == nil or m_pCacheHero.m_kind <= 0 then
+		return
+	end
+	local kind = m_pCacheHero.m_kind;
+	local offset = g_nation_heroinfo[kind].offset;
+	local loyal = GetHero().m_NationHero[offset].m_loyal
+	if loyal >= 100 then
+		pop( T(2356) )
+	end
+		
+	local itemlist = {}
+	if g_nation_heroinfo[kind].call_itemkind0 > 0 then
+		table.insert( itemlist, g_nation_heroinfo[kind].call_itemkind0 )
+	end
+	if g_nation_heroinfo[kind].call_itemkind1 > 0 then
+		table.insert( itemlist, g_nation_heroinfo[kind].call_itemkind1 )
+	end
+	if g_nation_heroinfo[kind].call_itemkind2 > 0 then
+		table.insert( itemlist, g_nation_heroinfo[kind].call_itemkind2 )
+	end
+	if g_nation_heroinfo[kind].call_itemkind3 > 0 then
+		table.insert( itemlist, g_nation_heroinfo[kind].call_itemkind3 )
+	end
+	local itemkind = itemlist[math.random(1,#itemlist)]
+	local itemname = item_getname(itemkind)
+	local cost = itemname.."x"..g_nation_heroinfo[kind].loyal_itemnum
+	MsgBox( F(2355, cost), function() 
+		system_askinfo( ASKINFO_NATIONHERO, "", 4, kind, itemkind )
+	end )
 end
 
 function HeroInfoDlgUpdate( herokind )

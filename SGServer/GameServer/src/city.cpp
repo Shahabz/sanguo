@@ -37,6 +37,7 @@
 #include "quest.h"
 #include "pay.h"
 #include "nation_equip.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -149,6 +150,9 @@ int city_loadcb( int city_index )
 	// 读取上阵英雄的装备
 	actor_equip_load_auto( g_city[city_index].actorid, city_index, city_equip_getptr, "actor_equip" );
 
+	// 读取国家名将信息
+	city_nation_hero_load_auto( g_city[city_index].actorid, city_index, city_nation_hero_getptr, "city_nation_hero" );
+
 	// 读取城墙守卫
 	city_guard_load_auto( g_city[city_index].actorid, city_index, city_guard_getptr, "city_guard" );
 
@@ -240,6 +244,9 @@ int city_single_save( City *pCity, FILE *fp )
 			continue;
 		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", fp );
 	}
+
+	// 国家名将
+	city_nation_hero_batch_save_auto( pCity->actorid, pCity->nation_hero, NATIONHERO_MAX, "city_nation_hero", fp );
 
 	// 城墙守卫
 	db_delete( pCity->actorid, "city_guard", fp );
@@ -3983,6 +3990,11 @@ int city_spy( int actor_index, int unit_index, int type )
 								kind = res->kind;
 							}
 							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, kind );
+						}
+						else if ( pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
+						{
+							// 未知
+							sprintf( szInfo, "\"armystate\":%d", pArmy->state );
 						}
 						else
 						{

@@ -301,6 +301,7 @@ end
 UI_UPDATE_NATIONFIGHT = 1 -- 国战相关
 UI_UPDATE_FIGHTINFO	  = 2 -- 战斗信息变化
 UI_UPDATE_NATIONOFFICIAL = 3 -- 官员系统状态变化
+UI_UPDATE_NATIONHEROPOS	 = 4 -- 名将位置变化
 function dialogupdate_recv( ui )
 	if ui == UI_UPDATE_NATIONFIGHT then
 		MapMainDlgNationLayerUpdate()
@@ -316,5 +317,9 @@ function dialogupdate_recv( ui )
 		
 	elseif ui == UI_UPDATE_NATIONOFFICIAL then
 		NationOfficialDlgUpdate()
+		
+	elseif ui == UI_UPDATE_NATIONHEROPOS then
+		NationHeroDlgUpdate()
+		
 	end
 end

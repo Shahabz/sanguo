@@ -617,7 +617,7 @@ function ShopDlgClickItem( awardkind, uiObj )
 	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
 		local herokind = awardkind - AWARDKIND_HEROBASE
 		local color = hero_getnormalcolor( herokind )
-		HeroConfigDlgShow( g_heroinfo[herokind][color]);
+		HeroConfigDlgShow( g_heroinfo[herokind][color], 0 );
 	else
 		m_uiAwardDescLayer.transform:SetParent( uiObj.transform )
 		m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 200 )

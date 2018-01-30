@@ -555,6 +555,7 @@ function struct_NetS_Hero_recv( buffer )
 	recvValue.m_attack_increase = buffer:ReadInt();
 	recvValue.m_defense_increase = buffer:ReadInt();
 	recvValue.m_offset = buffer:ReadShort();
+	recvValue.m_god = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1926,6 +1927,7 @@ function struct_NetS_StorySweepHero_recv( buffer )
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_pre_exp = buffer:ReadInt();
 	recvValue.m_exp = buffer:ReadInt();
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2620,6 +2622,39 @@ function struct_NetS_NationHeroList_recv( buffer )
 	for tmpi=1,3,1 do
 		recvValue.m_nationlevel[tmpi] = buffer:ReadShort();
 	end
+	return recvValue;
+end
+
+function struct_NetS_CityNationHero_recv( buffer )
+	local recvValue = {};
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_forever = buffer:ReadSByte();
+	recvValue.m_loyal = buffer:ReadSByte();
+	recvValue.m_runstamp = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_CityNationHeroList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_CityNationHero_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_NationHeroAttr_recv( buffer )
+	local recvValue = {};
+	recvValue.m_attr = struct_NetS_Hero_recv( buffer );
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_actorid = buffer:ReadInt();
+	recvValue.m_open = buffer:ReadSByte();
+	recvValue.m_nation = buffer:ReadSByte();
 	return recvValue;
 end
 

@@ -435,6 +435,7 @@ struct _slk_NetS_Hero {
 	int m_attack_increase;	//
 	int m_defense_increase;	//
 	short m_offset;	//
+	char m_god;	//
 };
 typedef struct _slk_NetS_Hero SLK_NetS_Hero;	//英雄信息
 
@@ -1481,6 +1482,7 @@ struct _slk_NetS_StorySweepHero {
 	short m_level;	//扫荡武将信息
 	int m_pre_exp;	//扫荡武将信息
 	int m_exp;	//扫荡武将信息
+	char m_type;	//扫荡武将信息
 };
 typedef struct _slk_NetS_StorySweepHero SLK_NetS_StorySweepHero;	//扫荡武将
 
@@ -1968,6 +1970,31 @@ struct _slk_NetS_NationHeroList {
 };
 typedef struct _slk_NetS_NationHeroList SLK_NetS_NationHeroList;	//国家名将列表
 
+struct _slk_NetS_CityNationHero {
+	char m_state;	//国家名将缓存
+	short m_kind;	//国家名将缓存
+	char m_forever;	//国家名将缓存
+	char m_loyal;	//国家名将缓存
+	int m_runstamp;	//国家名将缓存
+};
+typedef struct _slk_NetS_CityNationHero SLK_NetS_CityNationHero;	//国家名将缓存
+
+struct _slk_NetS_CityNationHeroList {
+	char m_count;	//国家名将缓存列表
+	SLK_NetS_CityNationHero m_list[16];	//国家名将缓存列表
+};
+typedef struct _slk_NetS_CityNationHeroList SLK_NetS_CityNationHeroList;	//国家名将缓存列表
+
+struct _slk_NetS_NationHeroAttr {
+	SLK_NetS_Hero m_attr;	//国家名将属性
+	char m_namelen;	//国家名将属性
+	char m_name[32];	//国家名将属性
+	int m_actorid;	//国家名将属性
+	char m_open;	//国家名将属性
+	char m_nation;	//国家名将属性
+};
+typedef struct _slk_NetS_NationHeroAttr SLK_NetS_NationHeroAttr;	//国家名将属性
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2180,5 +2207,8 @@ int struct_NetS_NationLog_send( char **pptr, int *psize, SLK_NetS_NationLog *pVa
 int struct_NetS_NationLogList_send( char **pptr, int *psize, SLK_NetS_NationLogList *pValue );
 int struct_NetS_NationHero_send( char **pptr, int *psize, SLK_NetS_NationHero *pValue );
 int struct_NetS_NationHeroList_send( char **pptr, int *psize, SLK_NetS_NationHeroList *pValue );
+int struct_NetS_CityNationHero_send( char **pptr, int *psize, SLK_NetS_CityNationHero *pValue );
+int struct_NetS_CityNationHeroList_send( char **pptr, int *psize, SLK_NetS_CityNationHeroList *pValue );
+int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHeroAttr *pValue );
 
 #endif

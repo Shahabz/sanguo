@@ -1,7 +1,11 @@
 -- 英雄缓存信息
 MAX_HERONUM			= 128 -- 英雄数量
 MAX_CITYHERONUM		= 12 -- 上阵英雄数量
+NATIONHERO_MAX		= 15 -- 国家名将信息
 HERO_BASEOFFSET 	= 1000
+
+NATIONHERO_STATE_CATCH	= 1	-- 被抓捕
+NATIONHERO_STATE_EMPLOY	= 2	-- 归顺
 
 HERO_STATE_NORMAL	=	0	-- 闲
 HERO_STATE_FIGHT	=	1	-- 战
@@ -24,6 +28,7 @@ function SLK_Hero:empty()
 	self.m_exp_max		=	0;-- 经验上限
 	self.m_soldiers		=	0;-- 当前兵力
 	self.m_state		=	0;-- 当前
+	self.m_god			=	0;-- 神突
 	
 	self.m_attack_base	=	0;--基础攻击资质
 	self.m_attack_wash	=	0;--洗髓攻击资质
@@ -59,6 +64,7 @@ function SLK_Hero:Set( recvValue )
 	self.m_exp_max		=	recvValue.m_exp_max;-- 经验上限
 	self.m_soldiers		=	recvValue.m_soldiers;-- 当前兵力
 	self.m_state		=	recvValue.m_state;-- 当前
+	self.m_god			=	recvValue.m_god;-- 神突
 	
 	self.m_attack_base	=	recvValue.m_attack_base;--基础攻击资质
 	self.m_attack_wash	=	recvValue.m_attack_wash;--洗髓攻击资质
@@ -72,6 +78,27 @@ function SLK_Hero:Set( recvValue )
 	self.m_troops			=	recvValue.m_troops;-- 兵力
 	self.m_attack_increase 	= 	recvValue.m_attack_increase;-- 强攻
 	self.m_defense_increase	=	recvValue.m_defense_increase;-- 强防
+end
+
+-- 国家名将部分信息结构
+SLK_NationHero = class("SLK_NationHero")
+function SLK_NationHero:ctor()
+	self:empty();
+end
+function SLK_NationHero:empty()
+	self.m_kind			= 	0
+	self.m_state  		= 	0;-- 状态1已经抓捕，2已经招募
+	self.m_forever		=	0;-- 0无双，1非无双
+	self.m_loyal		=	0;-- 忠诚度
+	self.m_runstamp		=	0;-- 逃跑时间戳
+	return self;
+end
+function SLK_NationHero:Set( recvValue )
+	self.m_kind  		= 	recvValue.m_kind;
+	self.m_state  		= 	recvValue.m_state;-- 状态1已经抓捕，2已经招募
+	self.m_forever		=	recvValue.m_forever;-- 0无双，1非无双
+	self.m_loyal		=	recvValue.m_loyal;-- 忠诚度
+	self.m_runstamp		=	recvValue.m_runstamp;-- 逃跑时间戳
 end
 
 -- 英雄部分客户端缓存
@@ -93,6 +120,12 @@ function Hero:ResetAll()
 	self.m_Hero = {};
 	for i=0,MAX_HERONUM-1,1 do
 		self.m_Hero[i] = SLK_Hero.new();
+	end
+	
+	-- 国家名将列表（服务端这个表是优先发送的）
+	self.m_NationHero = {};
+	for i=0,NATIONHERO_MAX-1,1 do
+		self.m_NationHero[i] = SLK_NationHero.new();
 	end
 end
 
@@ -235,6 +268,44 @@ function Hero:UpdateEquip( herokind, equipoffset, pEquip )
 	end
 end
 
+-- 是否国家名将
+function Hero:IsNationHero( kind )
+	if g_nation_heroinfo[kind] == nil then
+		return false
+	end
+	return true;
+end
+
+-- 是否无双名将
+function Hero:IsNationHeroOnly( kind )
+	if g_nation_heroinfo[kind] == nil then
+		return false
+	end
+	local offset = g_nation_heroinfo[kind].offset;
+	if offset < 0 or offset >= NATIONHERO_MAX then
+		return false
+	end
+	if self.m_NationHero[offset].m_forever == 1 then
+		return false
+	end
+	return true;
+end
+
+-- 是否可以使用
+function Hero:IsCanUse( kind )
+	if g_nation_heroinfo[kind] == nil then
+		return true -- 不是名将
+	end
+	local offset = g_nation_heroinfo[kind].offset;
+	if offset < 0 or offset >= NATIONHERO_MAX then
+		return true -- 是名将，数据非法
+	end
+	if self.m_NationHero[offset].m_state == NATIONHERO_STATE_EMPLOY then
+		return true -- 是名将，已经劝降
+	end
+	return false;
+end
+
 -- 清空所有的New标示
 function Hero:ClearAllNew()
 	for tmpi=0, MAX_HERONUM-1, 1 do
@@ -293,4 +364,10 @@ function hero_getnormalcolor( kind )
 		end
 	end
 	return minlevel;
+end
+
+-- 兵种
+function hero_getcorps( kind )
+	local color = hero_getnormalcolor( kind )
+	return g_heroinfo[kind][color].corps
 end

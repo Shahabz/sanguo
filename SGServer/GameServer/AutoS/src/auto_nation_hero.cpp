@@ -20,7 +20,7 @@ int nation_hero_load_auto( LPCB_GETNATIONHERO pCB_GetNationHero, LPCB_LOADNATION
 	NationHero *pNationHero;
 	int kind = 0;
 
-	sprintf( szSQL, "select `kind`,`actorid`,`posx`,`posy`,`runsec` from %s ", pTab );
+	sprintf( szSQL, "select `kind`,`actorid`,`posx`,`posy`,`runsec`,`level`,`color`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`attack`,`defense`,`troops`,`attack_increase`,`defense_increase` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -42,6 +42,18 @@ int nation_hero_load_auto( LPCB_GETNATIONHERO pCB_GetNationHero, LPCB_LOADNATION
 		pNationHero->posx = atoi(row[offset++]);
 		pNationHero->posy = atoi(row[offset++]);
 		pNationHero->runsec = atoi(row[offset++]);
+		pNationHero->level = atoi(row[offset++]);
+		pNationHero->color = atoi(row[offset++]);
+		pNationHero->exp = atoi(row[offset++]);
+		pNationHero->soldiers = atoi(row[offset++]);
+		pNationHero->attack_wash = atoi(row[offset++]);
+		pNationHero->defense_wash = atoi(row[offset++]);
+		pNationHero->troops_wash = atoi(row[offset++]);
+		pNationHero->attack = atoi(row[offset++]);
+		pNationHero->defense = atoi(row[offset++]);
+		pNationHero->troops = atoi(row[offset++]);
+		pNationHero->attack_increase = atoi(row[offset++]);
+		pNationHero->defense_increase = atoi(row[offset++]);
 		if( pCB_LoadNationHero )
 			pCB_LoadNationHero( pNationHero->kind );
 		kind = pNationHero->kind;
@@ -61,7 +73,7 @@ int nation_hero_save_auto( NationHero *pNationHero, const char *pTab, FILE *fp )
 		return -1;
 
 RE_NATIONHERO_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`kind`,`actorid`,`posx`,`posy`,`runsec`) Values('%d','%d','%d','%d','%d')",pTab,pNationHero->kind,pNationHero->actorid,pNationHero->posx,pNationHero->posy,pNationHero->runsec);
+	sprintf( szSQL, "REPLACE INTO %s (`kind`,`actorid`,`posx`,`posy`,`runsec`,`level`,`color`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`attack`,`defense`,`troops`,`attack_increase`,`defense_increase`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pNationHero->kind,pNationHero->actorid,pNationHero->posx,pNationHero->posy,pNationHero->runsec,pNationHero->level,pNationHero->color,pNationHero->exp,pNationHero->soldiers,pNationHero->attack_wash,pNationHero->defense_wash,pNationHero->troops_wash,pNationHero->attack,pNationHero->defense,pNationHero->troops,pNationHero->attack_increase,pNationHero->defense_increase);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -119,11 +131,11 @@ RE_NATIONHERO_TRUNCATE:
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`kind`,`actorid`,`posx`,`posy`,`runsec`) Values('%d','%d','%d','%d','%d')",pTab,pNationHero[index].kind,pNationHero[index].actorid,pNationHero[index].posx,pNationHero[index].posy,pNationHero[index].runsec);
+			sprintf( g_batchsql, "REPLACE INTO %s (`kind`,`actorid`,`posx`,`posy`,`runsec`,`level`,`color`,`exp`,`soldiers`,`attack_wash`,`defense_wash`,`troops_wash`,`attack`,`defense`,`troops`,`attack_increase`,`defense_increase`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pNationHero[index].kind,pNationHero[index].actorid,pNationHero[index].posx,pNationHero[index].posy,pNationHero[index].runsec,pNationHero[index].level,pNationHero[index].color,pNationHero[index].exp,pNationHero[index].soldiers,pNationHero[index].attack_wash,pNationHero[index].defense_wash,pNationHero[index].troops_wash,pNationHero[index].attack,pNationHero[index].defense,pNationHero[index].troops,pNationHero[index].attack_increase,pNationHero[index].defense_increase);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d')",pNationHero[index].kind,pNationHero[index].actorid,pNationHero[index].posx,pNationHero[index].posy,pNationHero[index].runsec);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",pNationHero[index].kind,pNationHero[index].actorid,pNationHero[index].posx,pNationHero[index].posy,pNationHero[index].runsec,pNationHero[index].level,pNationHero[index].color,pNationHero[index].exp,pNationHero[index].soldiers,pNationHero[index].attack_wash,pNationHero[index].defense_wash,pNationHero[index].troops_wash,pNationHero[index].attack,pNationHero[index].defense,pNationHero[index].troops,pNationHero[index].attack_increase,pNationHero[index].defense_increase);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

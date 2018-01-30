@@ -9,6 +9,7 @@
 
 int actor_hero_getindex( int actor_index, int herokind );
 Hero* actor_hero_getptr( int actor_index, int offset );
+Hero* actor_hero_getptr_temp( int actor_index, int offset );
 
 int city_hero_getindex( int city_index, int herokind );
 Hero* city_hero_getptr( int city_index, int offset );
@@ -23,7 +24,8 @@ HeroInfoConfig *hero_getconfig( int kind, int color );
 int hero_gethero( int actor_index, int kind, short path );
 int hero_up_auto( int actor_index, int offset );
 int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, char uptype );
-int hero_down( int actor_index, int kind );
+int hero_down( int actor_index, int kind, char equip_down );
+int hero_down_offline( int city_index, int actorid, int kind, char equip_down );
 int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list );
 
 int hero_useexpitem( int actor_index, int herokind, int itemkind );

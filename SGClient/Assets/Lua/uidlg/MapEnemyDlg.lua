@@ -10,7 +10,7 @@ local m_uiLevelWarn = nil; --UnityEngine.GameObject
 local m_uiBattleButton = nil; --UnityEngine.GameObject
 
 local m_unit_index = -1;
-local m_recvValue = {};
+local m_recvValue = nil
 local m_awardCache = {};
 local m_cankill = true;
 
@@ -24,14 +24,15 @@ function MapEnemyDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
 	eye.uiManager:Close( "MapEnemyDlg" );
+	m_recvValue = nil
 end
 
 -- 删除界面
 function MapEnemyDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_recvValue = nil
 end
 
 ----------------------------------------

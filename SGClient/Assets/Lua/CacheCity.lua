@@ -119,7 +119,7 @@ function City.BuildingSelect( transform )
 		HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
 		
 	elseif building.kind == BUILDING_Wishing then -- 聚宝盆
-
+		WishingDlgShow();
 	elseif building.kind == BUILDING_Help then -- 帮助
 		HelpDlgShow();
 	else

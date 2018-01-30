@@ -19,6 +19,7 @@
 #define MAIL_TYPE_FIGHT_NATION		12	// 国战
 #define MAIL_TYPE_CITY_SPY			13	// 侦察
 #define MAIL_TYPE_CITY_BESPY		14	// 被侦察
+#define MAIL_TYPE_FIGHT_NATIONHERO	15	// 国家名将
 #define MAIL_TYPE_GATHER			20	// 采集
 #define MAIL_TYPE_GATHER_FIGHT		21	// 采集战斗
 

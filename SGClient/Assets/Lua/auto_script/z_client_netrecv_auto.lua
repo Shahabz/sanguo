@@ -895,6 +895,21 @@ function netrecv_nationherolist_C( buffer )
 	proc_nationherolist_C( recvValue );
 end
 
+function netrecv_citynationhero_C( buffer )
+	local recvValue = struct_NetS_CityNationHero_recv( buffer );
+	proc_citynationhero_C( recvValue );
+end
+
+function netrecv_citynationherolist_C( buffer )
+	local recvValue = struct_NetS_CityNationHeroList_recv( buffer );
+	proc_citynationherolist_C( recvValue );
+end
+
+function netrecv_nationheroattr_C( buffer )
+	local recvValue = struct_NetS_NationHeroAttr_recv( buffer );
+	proc_nationheroattr_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1075,6 +1090,9 @@ Proc_Command = {
 	[CMDS_NATIONREPLACELIST]=netrecv_nationreplacelist_C;
 	[CMDS_NATIONLOGLIST]=netrecv_nationloglist_C;
 	[CMDS_NATIONHEROLIST]=netrecv_nationherolist_C;
+	[CMDS_CITYNATIONHERO]=netrecv_citynationhero_C;
+	[CMDS_CITYNATIONHEROLIST]=netrecv_citynationherolist_C;
+	[CMDS_NATIONHEROATTR]=netrecv_nationheroattr_C;
 }
 
 function in_proc_command_C( cmd, buffer )

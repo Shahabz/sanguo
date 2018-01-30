@@ -15,6 +15,7 @@ local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_uiOfficialEffect = nil; --UnityEngine.GameObject
+local m_uiOfficialBtn = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_kind = 0;
@@ -107,6 +108,7 @@ function CityTechDlgOnAwake( gameObject )
 	m_uiOfficialName = objs[9];
 	m_uiOfficialDesc = objs[10];
 	m_uiOfficialEffect = objs[11];
+	m_uiOfficialBtn = objs[12];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -295,8 +297,12 @@ function CityTechDlgSetOfficial()
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
-		SetText( m_uiOfficialName, T(719).."Lv."..g_official_tech[info.m_ofkind].level..T(723) )
-		SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[info.m_ofkind].quick) ) )
+		if g_official_tech[info.m_ofkind].token > 0 then
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_tech[info.m_ofkind].level..T(723), Hex2Color(0xD95DF4FF) )
+		else
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_tech[info.m_ofkind].level..T(723), Hex2Color(0xF7F3BBFF) )
+		end
+		SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[info.m_ofkind].quick) ), Hex2Color(0x25C9FFFF) )
 		SetImage( m_uiOfficialShape, OfSprite( g_official_tech[info.m_ofkind].shape ) )
 		
 		if info.m_ofquick >= 0 then
@@ -309,8 +315,7 @@ function CityTechDlgSetOfficial()
 	else
 		-- 未雇佣
 		SetFalse( FreeQuickBtn )
-		SetTrue( uiQuickBtn )
-		SetTrue( m_uiOfficialEffect )	
+		SetTrue( uiQuickBtn )	
 		SetFalse( m_uiOfficialShape )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )
@@ -320,16 +325,23 @@ function CityTechDlgSetOfficial()
 		end
 		if pBuilding.m_level < g_official_tech[1].buildinglevel then
 			-- 太学院6级解锁Lv.1研究员
-			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Tech), g_official_tech[1].buildinglevel, g_official_tech[1].level, T(723) ) )
-			SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[1].quick) ) )
+			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Tech), g_official_tech[1].buildinglevel, g_official_tech[1].level, T(723) ), Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[1].quick) ), Hex2Color(0x8A8A8AFF) )
+			SetFalse( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
 		else
+			SetTrue( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+			SetText( m_uiOfficialName, T(723).."("..T(2338)..")", Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, T(2340), Hex2Color(0x8A8A8AFF) )
 			-- 可雇佣
-			for kind=#g_official_tech, 1, -1 do
+		--[[	for kind=#g_official_tech, 1, -1 do
 				if pBuilding.m_level >= g_official_tech[kind].buildinglevel then
 					SetText( m_uiOfficialName, T(718).."Lv."..g_official_tech[kind].level..T(723) )
 					SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[kind].quick) ) )
+					break;
 				end
-			end
+			end--]]
 		end
 	end
 

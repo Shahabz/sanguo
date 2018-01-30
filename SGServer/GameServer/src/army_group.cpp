@@ -38,6 +38,7 @@
 #include "mail.h"
 #include "chat.h"
 #include "nation.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -904,6 +905,9 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// 国家荣誉任务
 		nation_mission_addvalue( pCity->nation, NATION_MISSIONKIND_CITY, 1 );
+
+		// 名将掠夺
+		nation_hero_rob( pCity, pTargetCity );
 	}
 	else
 	{

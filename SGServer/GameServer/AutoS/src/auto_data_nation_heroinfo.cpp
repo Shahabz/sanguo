@@ -47,7 +47,7 @@ int nationheroinfo_init_auto()
 	g_nation_heroinfo = (NationHeroInfo *)malloc( sizeof(NationHeroInfo)*g_nation_heroinfo_maxnum );
 	memset( g_nation_heroinfo, 0, sizeof(NationHeroInfo)*g_nation_heroinfo_maxnum );
 
-	sprintf( szSQL, "select `herokind`,`nation`,`nationlevel`,`offset`,`visit_token`,`other_visit_token`,`catch_odds`,`other_catch_odds`,`rob_odds`,`other_rob_odds`,`awardgroup`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3` from nation_heroinfo;" );
+	sprintf( szSQL, "select `herokind`,`nation`,`nationlevel`,`offset`,`visit_token`,`other_visit_token`,`catch_odds`,`other_catch_odds`,`rob_odds`,`other_rob_odds`,`awardgroup`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3`,`call_silver`,`call_itemkind0`,`call_itemkind1`,`call_itemkind2`,`call_itemkind3`,`call_itemnum`,`loyal_itemnum` from nation_heroinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -76,6 +76,13 @@ int nationheroinfo_init_auto()
 		g_nation_heroinfo[herokind].monsterid[1] = atoi(row[offset++]);
 		g_nation_heroinfo[herokind].monsterid[2] = atoi(row[offset++]);
 		g_nation_heroinfo[herokind].monsterid[3] = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_silver = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_itemkind[0] = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_itemkind[1] = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_itemkind[2] = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_itemkind[3] = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].call_itemnum = atoi(row[offset++]);
+		g_nation_heroinfo[herokind].loyal_itemnum = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

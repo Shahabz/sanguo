@@ -4,13 +4,11 @@
 
 struct _city_nation_hero {
 //--Automatically generated
-				short herokind;	//名将英雄
 				char state;	//1关押,2已经劝降
+				short kind;	//
 				char forever;	//是否永久拥有
 				char loyal;	//忠诚度
 				char buypos;	//购买坐标次数
-				short posx;	//购买的坐标
-				short posy;	//购买的坐标
 };
 typedef struct _city_nation_hero CityNationHero;
 

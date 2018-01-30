@@ -248,8 +248,8 @@ function FightInfoDlgGetName( type, name )
 	elseif type == MAPUNIT_TYPE_TOWN then
 		return EnemyName( tonumber(name) )
 		
-	-- 流寇
-	elseif type == MAPUNIT_TYPE_ENEMY then
+	-- 流寇或国家名将
+	elseif type == MAPUNIT_TYPE_ENEMY or type == MAPUNIT_TYPE_NATIONHERO then
 		return EnemyName( tonumber(name) )
 	end
 	return ""

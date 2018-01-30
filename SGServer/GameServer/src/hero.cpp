@@ -19,6 +19,7 @@
 #include "actor_notify.h"
 #include "city_attr.h"
 #include "actor_times.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -31,6 +32,7 @@ extern Map g_map;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
+extern Actor g_temp_actor[2];
 
 extern int g_city_maxindex;
 extern City *g_city;
@@ -60,6 +62,9 @@ extern int g_hero_colorup_maxnum;
 extern HeroVisit *g_hero_visit;
 extern int g_hero_visit_maxnum;
 
+extern int g_nation_heroinfo_maxnum;
+extern int g_nation_hero_maxcount;
+
 HeroVisitAwardGroup g_herovisit_awardgroup[HERO_VISIT_AWARDGROUPMAX];
 i64 g_maxheroid;
 
@@ -87,6 +92,15 @@ Hero* actor_hero_getptr( int actor_index, int offset )
 	return &g_actors[actor_index].hero[offset];
 }
 
+// 临时场景，主要获取离线玩家数据
+Hero* actor_hero_getptr_temp( int actor_index, int offset )
+{
+	if ( actor_index < 0 || actor_index >= 2 )
+		return NULL;
+	if ( offset < 0 || offset >= HERO_ACTOR_MAX )
+		return NULL;
+	return &g_temp_actor[actor_index].hero[offset];
+}
 
 int city_hero_getindex( int city_index, int herokind )
 {
@@ -254,8 +268,7 @@ int hero_gethero( int actor_index, int kind, short path )
 	// 检查是否已经有这个武将了
 	Hero *pHasHero = hero_getptr( actor_index, kind );
 	if ( pHasHero )
-	{
-		
+	{	
 		// 寻访即使获得了，也要发过去，界面需要显示
 		char color = hero_defaultcolor( kind );
 		HeroInfoConfig *config = hero_getconfig( kind, color );
@@ -272,7 +285,6 @@ int hero_gethero( int actor_index, int kind, short path )
 		}
 		hero_makestruct( city_getptr( actor_index ), pHasHero->offset, pHasHero, &pValue.m_hero );
 		netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
-		
 		return -1;
 	}
 
@@ -304,6 +316,14 @@ int hero_gethero( int actor_index, int kind, short path )
 	g_actors[actor_index].hero[offset].defense_wash = config->defense_wash;	//洗髓防御资质
 	g_actors[actor_index].hero[offset].troops_wash = config->troops_wash;	//洗髓兵力资质
 	g_actors[actor_index].hero[offset].soldiers = 0;
+	if ( path == PATH_NATIONHERO )
+	{ // 国家名将
+		NationHero *nhero = nation_hero_getptr( kind );
+		if ( nhero->kind == kind )
+		{
+			g_actors[actor_index].hero[offset].level = nhero->level;
+		}
+	}
 
 	// 重算英雄属性
 	hero_attr_calc( pCity, &g_actors[actor_index].hero[offset] );
@@ -315,7 +335,8 @@ int hero_gethero( int actor_index, int kind, short path )
 	netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 上阵
-	hero_up_auto( actor_index, offset );
+	if ( path != PATH_NATIONHERO )
+		hero_up_auto( actor_index, offset );
 
 	// 重算英雄战力
 	city_battlepower_hero_calc( pCity );
@@ -540,7 +561,7 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 }
 
 // 下阵
-int hero_down( int actor_index, int kind )
+int hero_down( int actor_index, int kind, char equip_down )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -606,6 +627,7 @@ int hero_down( int actor_index, int kind )
 				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
 				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
 				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+				pCity->hero[tmpi + 1].offset = -1;
 			}
 		}
 
@@ -655,6 +677,7 @@ int hero_down( int actor_index, int kind )
 				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
 				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
 				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+				pCity->hero[tmpi + 1].offset = -1;
 			}
 		}
 
@@ -698,8 +721,190 @@ int hero_down( int actor_index, int kind )
 	
 	// 更新英雄信息
 	hero_sendinfo( actor_index, &g_actors[actor_index].hero[offset] );
+
+	// 脱装备
+	if ( equip_down == 1 )
+	{
+		equip_down_all( actor_index, kind );
+	}
 	return 0;
 }
+
+// 玩家离线状态下，武将下阵
+int hero_down_offline( int city_index, int actorid, int kind, char equip_down )
+{
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+	{
+		city_index = city_getindex_withactorid( actorid );
+	}
+	if ( city_index < 0 || city_index >= g_city_maxcount )
+	{
+		return -1;
+	}
+
+	City *pCity = city_indexptr( city_index );
+	if ( !pCity )
+		return -1;
+	memset( &g_temp_actor[0], 0, sizeof( Actor ) );
+
+	// 读取未上阵英雄
+	actor_hero_load_auto( actorid, 0, actor_hero_getptr_temp, "actor_hero" );
+
+	// 读取装备数据
+	actor_equip_load_auto( actorid, 0, actor_equip_getptr_temp, "actor_equip" );
+
+	int heroindex = city_hero_getindex( city_index, kind );
+	Hero *pHero = city_hero_getptr( city_index, HERO_BASEOFFSET + heroindex );
+	if ( !pHero )
+		return -1;
+
+	// 脱卸装备，返回到装备栏
+	if ( equip_down == 1 )
+	{
+		for ( int index = 0; index < 6; index++ )
+		{
+			// 获取英雄装备
+			Equip *pHeroEquip = &pHero->equip[index];
+			if ( pHeroEquip->kind <= 0 )
+				continue;
+			int oldoffset = pHeroEquip->offset;
+
+			// 找到一个空位
+			int free_offset = -1;
+			for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+			{
+				if ( g_temp_actor[0].equip[tmpi].kind <= 0 )
+				{
+					free_offset = tmpi;
+					break;
+				}
+			}
+
+			if ( free_offset < 0 )
+			{ // 装备栏已满
+				break;
+			}
+
+			Equip *pFreeEquip = &g_temp_actor[0].equip[free_offset];
+
+			// 卸下
+			memcpy( pFreeEquip, pHeroEquip, sizeof( Equip ) );
+			memset( pHeroEquip, 0, sizeof( Equip ) );
+			pFreeEquip->offset = free_offset;
+		}
+	}
+
+	// 玩家英雄栏找到一个空位
+	int offset = -1;
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_temp_actor[0].hero[tmpi].id <= 0 )
+		{
+			offset = tmpi;
+			break;
+		}
+	}
+	if ( offset < 0 )
+		return -1;
+	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+	if ( !config )
+		return -1;
+
+	// 下阵武将，兵力回营
+	if ( heroindex >= 0 && heroindex < 4 )
+	{ // 上阵武将
+		city_changesoldiers( city_index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+	}
+	else if ( heroindex >= 4 && heroindex < 8 )
+	{ // 财赋署武将
+		city_changesoldiers( city_index, config->corps, pHero->soldiers, PATH_HERO_DOWN );
+	}
+	else if ( heroindex >= 8 && heroindex < 12 )
+	{ // 御林卫武将
+		city_changefood( city_index, (int)(pHero->soldiers*global.trainfood), PATH_HERO_DOWN );
+	}
+	pHero->soldiers = 0;
+	memset( &g_temp_actor[0].hero[offset], 0, sizeof( Hero ) );
+	memcpy( &g_temp_actor[0].hero[offset], pHero, sizeof( Hero ) );
+	g_temp_actor[0].hero[offset].offset = offset;
+	memset( pHero, 0, sizeof( Hero ) );
+	pHero->offset = -1;
+
+	// 后面的英雄往前移动
+	char send = 0;
+	if ( heroindex >= 0 && heroindex < 3 )
+	{ // 主力武将武将
+		for ( int tmpi = 0; tmpi < 3; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+			{
+				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+				pCity->hero[tmpi + 1].offset = -1;
+			}
+		}
+	}
+	else if ( heroindex >= 4 && heroindex < 7 )
+	{ // 财赋署武将
+		for ( int tmpi = 4; tmpi < 7; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+			{
+				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+				pCity->hero[tmpi + 1].offset = -1;
+			}
+		}
+	}
+	else if ( heroindex >= 8 && heroindex < 11 )
+	{ // 御林卫武将
+		for ( int tmpi = 8; tmpi < 11; tmpi++ )
+		{
+			if ( pCity->hero[tmpi].kind <= 0 )
+			{
+				memcpy( &pCity->hero[tmpi], &pCity->hero[tmpi + 1], sizeof( Hero ) );
+				pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
+				memset( &pCity->hero[tmpi + 1], 0, sizeof( Hero ) );
+				pCity->hero[tmpi + 1].offset = -1;
+			}
+		}
+	}
+
+	// 重算装备战力
+	city_battlepower_equip_calc( pCity );
+	// 重算英雄战力
+	city_battlepower_hero_calc( pCity );
+
+	// 存档
+	// 未上阵英雄保存
+	actor_hero_batch_save_auto( g_temp_actor[0].hero, HERO_ACTOR_MAX, "actor_hero", NULL );
+	
+	// 未上阵英雄装备保存
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_temp_actor[0].hero[tmpi].id <= 0 )
+			continue;
+		actor_equip_batch_save_auto( g_temp_actor[0].hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip", NULL );
+	}
+
+	// 装备栏
+	actor_equip_batch_save_auto( g_temp_actor[0].equip, MAX_ACTOR_EQUIPNUM, "actor_equip", NULL );
+
+	// 英雄
+	actor_hero_batch_save_auto( pCity->hero, HERO_CITY_MAX, "actor_hero", NULL );
+
+	// 装备
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		actor_equip_batch_save_auto( pCity->hero[tmpi].equip, EQUIP_TYPE_MAX, "actor_equip",  NULL );
+	}
+	return 0;
+}
+
 // 武将顺序
 int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list )
 {
@@ -876,6 +1081,8 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 		city_battlepower_hero_calc( pCity );
 		hero_sendinfo( pCity->actor_index, pHero );
 	}
+
+	nation_hero_attrupdate( pHero );
 	return 0;
 }
 
@@ -925,6 +1132,7 @@ int hero_addsoldiers( int actor_index, int herokind, char path )
 	netsend_herosoldiers_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	city_changesoldiers( pCity->index, config->corps, -add, path );
+	nation_hero_attrupdate( pHero );
 	return pHero->soldiers;
 }
 
@@ -959,6 +1167,7 @@ int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path )
 		pValue.m_path = PATH_HERO_ADDSOLDIERS;
 		netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
+	nation_hero_attrupdate( pHero );
 	return 0;
 }
 
@@ -992,6 +1201,7 @@ void hero_guard_soldiers_auto( City *pCity )
 				pValue.m_path = PATH_HERO_GUARD_AUTO;
 				netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 			}
+			nation_hero_attrupdate( &pCity->hero[i] );
 			pCity->food -= food;
 			foodtotal -= food;
 			foodchange = 1;
@@ -1030,6 +1240,7 @@ int hero_guard_soldiers_token( int actor_index, int herokind )
 	pValue.m_soldiers_max = pHero->troops;
 	pValue.m_path = PATH_HERO_GUARD;
 	netsend_herosoldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	nation_hero_attrupdate( pHero );
 	return 0;
 }
 
@@ -1406,6 +1617,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		float bp_tech_troops = (tech_troops / 4) * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
 		pHero->bp_tech = (int)ceil( bp_tech_attack + bp_tech_defense + bp_tech_troops );
 	}
+	nation_hero_attrupdate( pHero );
 	return 0;
 }
 int hero_attr_calc_all( City *pCity, char path )
@@ -1473,6 +1685,7 @@ void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValu
 	pValue->m_troops = pHero->troops;
 	pValue->m_attack_increase = pHero->attack_increase;
 	pValue->m_defense_increase = pHero->defense_increase;
+	pValue->m_god = pHero->god;
 	pValue->m_offset = offset;
 }
 
@@ -1494,6 +1707,9 @@ int hero_list( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+
+	// 国家名将信息
+	nation_hero_citylist( actor_index );
 
 	// 上阵英雄
 	{

@@ -119,6 +119,7 @@ function HeroGatherDlgSetHero( index, pHero )
 	local uiStateBack = objs[10];
 	local uiAdd = objs[11];
 	local uiShapeBack1 = objs[12];
+	local uiType = objs[13];
 	SetControlID( m_uiUIP_Hero[index], index )
 	
 	if pHero == nil or pHero.m_kind <= 0 then
@@ -183,11 +184,27 @@ function HeroGatherDlgSetHero( index, pHero )
 	SetTrue( uiSoldiersText )
 	SetTrue( uiState )
 	SetTrue( uiStateBack )
+	SetFalse( uiAdd )
 	
 	SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
 	SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
 	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
+	
+	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+	if only == true and pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2359) )
+	elseif only == true then
+		SetTrue( uiType )
+		SetText( uiType, T(2357) )
+	elseif pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2358) )
+	else
+		SetFalse( uiType )
+	end
+			
 	SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
 	SetText( uiSoldiersText, pHero.m_soldiers.."/"..pHero.m_troops );
 	if pHero.m_soldiers < pHero.m_troops then

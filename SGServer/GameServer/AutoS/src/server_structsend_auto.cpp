@@ -639,6 +639,7 @@ int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack_increase, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense_increase, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_god, (*psize) );
 	return 0;
 }
 
@@ -2152,6 +2153,7 @@ int struct_NetS_StorySweepHero_send( char **pptr, int *psize, SLK_NetS_StorySwee
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_pre_exp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 
@@ -2882,6 +2884,44 @@ int struct_NetS_NationHeroList_send( char **pptr, int *psize, SLK_NetS_NationHer
 		struct_NetS_NationHero_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_MEM_SEND( (*pptr), pValue->m_nationlevel, 3*sizeof(short), (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityNationHero_send( char **pptr, int *psize, SLK_NetS_CityNationHero *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_forever, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_loyal, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_runstamp, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityNationHeroList_send( char **pptr, int *psize, SLK_NetS_CityNationHeroList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_CityNationHero_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHeroAttr *pValue )
+{
+	int tmpi = 0;
+
+	struct_NetS_Hero_send( pptr, psize, &pValue->m_attr );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	return 0;
 }
 

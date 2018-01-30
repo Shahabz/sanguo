@@ -102,8 +102,9 @@
 #define MAX_ACTOR_ITEMNUM	300
 
 /* 装备最大数量*/
-#define MAX_DEFAULT_EQUIPNUM	30
-#define MAX_ACTOR_EQUIPNUM		150
+#define MAX_DEFAULT_EQUIPNUM	30  // 缺省格子数
+#define MAX_EXT_EQUIPNUM		150	// 允许开到多少格子
+#define MAX_ACTOR_EQUIPNUM		180	// 装备栏上限
 
 #define HERO_ACTOR_MAX				80	// 未上英雄
 #define HERO_CITY_MAX				12	// 上阵英雄

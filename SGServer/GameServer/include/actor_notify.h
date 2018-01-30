@@ -68,5 +68,6 @@ int actor_notify_msgbox_callback( int actor_index, int msgid, int value1, int va
 #define UI_UPDATE_NATIONFIGHT		1 // 国战城镇有变化
 #define UI_UPDATE_FIGHTINFO			2 // 战斗信息变化
 #define UI_UPDATE_NATIONOFFICIAL	3 // 官员状态变化
+#define UI_UPDATE_NATIONHEROPOS		4 // 名将位置变化
 void ui_update( int actor_index, char send_type, char ui );
 #endif

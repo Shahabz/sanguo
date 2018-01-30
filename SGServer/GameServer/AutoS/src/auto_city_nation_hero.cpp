@@ -17,7 +17,7 @@ int city_nation_hero_load_auto( int actorid, int city_index, LPCB_GETCITYNATIONH
 	int offset = 0;
 	CityNationHero *pCityNationHero;
 
-	sprintf( szSQL, "select `actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`offset`,`state`,`kind`,`forever`,`loyal`,`buypos` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -36,13 +36,11 @@ int city_nation_hero_load_auto( int actorid, int city_index, LPCB_GETCITYNATIONH
 			continue;
 		offset++;
 		offset++;
-		pCityNationHero->herokind = atoi(row[offset++]);
 		pCityNationHero->state = atoi(row[offset++]);
+		pCityNationHero->kind = atoi(row[offset++]);
 		pCityNationHero->forever = atoi(row[offset++]);
 		pCityNationHero->loyal = atoi(row[offset++]);
 		pCityNationHero->buypos = atoi(row[offset++]);
-		pCityNationHero->posx = atoi(row[offset++]);
-		pCityNationHero->posy = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -55,7 +53,7 @@ int city_nation_hero_save_auto( int actorid, int offset, CityNationHero *pCityNa
 		return -1;
 
 RE_CITYNATIONHERO_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pCityNationHero->herokind,pCityNationHero->state,pCityNationHero->forever,pCityNationHero->loyal,pCityNationHero->buypos,pCityNationHero->posx,pCityNationHero->posy);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`offset`,`state`,`kind`,`forever`,`loyal`,`buypos`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,offset,pCityNationHero->state,pCityNationHero->kind,pCityNationHero->forever,pCityNationHero->loyal,pCityNationHero->buypos);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -87,19 +85,19 @@ int city_nation_hero_batch_save_auto( int actorid, CityNationHero *pCityNationHe
 	memset( g_batchsql, 0, sizeof(char)*BATCHSQL_MAXSIZE );
 	for ( int index = 0; index < maxcount; index++ )
 	{
-		if ( pCityNationHero[index].herokind <= 0 )
+		if ( pCityNationHero[index].kind <= 0 )
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`herokind`,`state`,`forever`,`loyal`,`buypos`,`posx`,`posy`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pCityNationHero[index].herokind,pCityNationHero[index].state,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos,pCityNationHero[index].posx,pCityNationHero[index].posy);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`offset`,`state`,`kind`,`forever`,`loyal`,`buypos`) Values('%d','%d','%d','%d','%d','%d','%d')",pTab,actorid,index,pCityNationHero[index].state,pCityNationHero[index].kind,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d')",actorid,index,pCityNationHero[index].herokind,pCityNationHero[index].state,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos,pCityNationHero[index].posx,pCityNationHero[index].posy);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d')",actorid,index,pCityNationHero[index].state,pCityNationHero[index].kind,pCityNationHero[index].forever,pCityNationHero[index].loyal,pCityNationHero[index].buypos);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;
-		if ( count > 16 )
+		if ( count > 15 )
 		{
 			count = 0;
 			db_query( fp, g_batchsql );

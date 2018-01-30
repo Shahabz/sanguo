@@ -214,7 +214,21 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 按钮名称
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
 		SetTrue( m_uiAttackDesc )
-		
+	
+	elseif recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then -- 国家名将
+		local kind	= recvValue.m_short_value[1];
+		local level = recvValue.m_short_value[2];
+		-- 标题
+		SetText( m_uiTitle.transform:Find("Text"), T(2344) )
+		-- 形象
+		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_nationhero")
+		-- 名字+位置
+		SetText( m_uiName, "Lv."..level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind) )
+		--SetText( m_uiName, F(955, level, posx, posy) )
+		-- 按钮名称
+		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
+		SetTrue( m_uiAttackDesc )
+			
 	elseif recvValue.m_type == MAPUNIT_TYPE_KINGWAR_TOWN then-- 皇城血战
 		townid = 500
 		-- 标题
@@ -300,6 +314,7 @@ function MapBattleDlgHero( index, pHero )
 	local uiMoveLayer = objs[14];
 	local uiSoldiersText = objs[15];
 	local uiStateTitle3 = objs[16];
+	local uiType = objs[17];
 	
 	if pHero == nil or pHero.m_kind <= 0 then
 		SetControlID( UIP_Hero, 0 )
@@ -331,6 +346,20 @@ function MapBattleDlgHero( index, pHero )
 	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
 	SetText( uiSort, index );
+	
+	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
+		if only == true and pHero.m_god == 1 then
+			SetTrue( uiType )
+			SetText( uiType, T(2359) )
+		elseif only == true then
+			SetTrue( uiType )
+			SetText( uiType, T(2357) )
+		elseif pHero.m_god == 1 then
+			SetTrue( uiType )
+			SetText( uiType, T(2358) )
+		else
+			SetFalse( uiType )
+		end
 	
 	-- 兵力
 	SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
@@ -439,7 +468,7 @@ function MapBattleDlgSetCost()
 		SetText( m_uiCost, "" )
 	
 	-- 流寇
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY then
+	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
 		m_cost_food = math.ceil(global.army_march_food_v1*total + global.army_march_food_v2*(m_marchtime*m_marchtime) + global.army_march_food_v3*m_marchtime)
 		if m_cost_food > GetPlayer().m_food then
 			SetText( m_uiCost, F(965, total, knum(m_cost_food), knum(GetPlayer().m_food) ) )
@@ -538,7 +567,7 @@ function MapBattleDlgBattle()
 	
 		
 	-- 流寇	
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY then
+	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
 		if m_cost_food > GetPlayer().m_food then
 			JumpRes(3)
 			return

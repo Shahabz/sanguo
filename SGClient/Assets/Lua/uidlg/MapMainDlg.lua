@@ -251,7 +251,7 @@ function MapMainDlgBattleRecv( recvValue )
 			index = index + 1;
 		end
 		
-		if m_recvValue.m_list[i].m_to_type == MAPUNIT_TYPE_ENEMY then
+		if m_recvValue.m_list[i].m_to_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_list[i].m_to_type == MAPUNIT_TYPE_NATIONHERO then
 			if recvValue.m_list[i].m_state == ARMY_STATE_MARCH or recvValue.m_list[i].m_state == ARMY_STATE_FIGHT then
 				-- 刷新目标流寇
 				MapUnit.RefreshTargetEnemy( m_recvValue.m_list[i] );
@@ -362,7 +362,7 @@ function MapMainDlgBattleSet( root, index, info )
 			elseif info.m_to_type == MAPUNIT_TYPE_TOWN then
 				SetText( uiState, T(969) )
 				SetTrue( uiGpsBtn )
-			elseif info.m_to_type == MAPUNIT_TYPE_ENEMY then
+			elseif info.m_to_type == MAPUNIT_TYPE_ENEMY or info.m_to_type == MAPUNIT_TYPE_NATIONHERO then
 				SetText( uiState, T(974) )
 				SetTrue( uiQuickBtn )
 			elseif info.m_to_type == MAPUNIT_TYPE_RES then

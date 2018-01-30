@@ -7,6 +7,7 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_NationEquip = nil; --UnityEngine.GameObject
 local m_uiMakeLayer = nil; --UnityEngine.GameObject
 local m_uiRemakeLayer = nil; --UnityEngine.GameObject
+local m_uiPopCrit = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_selectkind = 0;
@@ -74,7 +75,7 @@ function NationEquipDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 升级按钮
 		elseif nControlID > 200 and nControlID < 300 then
-			NationEquipDlgUpgrade( nControlID - 200 )
+			NationEquipDlgUpgrade( nControlID - 200, value )
 			
 		-- 改造界面显示
 		elseif nControlID > 300 and nControlID < 400 then
@@ -93,6 +94,10 @@ function NationEquipDlgOnEvent( nType, nControlID, value, gameObject )
 			NationEquipDlgRemake( nControlID - 600 )
 			
 		end
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 0 then
+			SetFalse( m_uiPopCrit )
+		end
 	end
 end
 
@@ -105,6 +110,7 @@ function NationEquipDlgOnAwake( gameObject )
 	m_uiUIP_NationEquip = objs[2];
 	m_uiMakeLayer = objs[3];
 	m_uiRemakeLayer = objs[4];
+	m_uiPopCrit = objs[5];
 end
 
 -- 界面初始化时调用
@@ -141,6 +147,7 @@ function NationEquipDlgShow()
 	NationEquipDlgSetIron( 0 )
 	SetFalse( m_uiMakeLayer )
 	SetFalse( m_uiRemakeLayer )
+	SetFalse( m_uiPopCrit )
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 0 )
 end
 
@@ -516,7 +523,7 @@ function NationEquipDlgMakeQuick( kind )
 end
 
 -- 升级国器
-function NationEquipDlgUpgrade( kind )
+function NationEquipDlgUpgrade( kind, uiButton )
 	if kind <= 0 then
 		return;
 	end
@@ -533,16 +540,33 @@ function NationEquipDlgUpgrade( kind )
 	
 	if m_recvValue[kind].m_neq_crit == 2 then
 		pop( "<color=#25c9ffff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+		NationEquipDlgPopCritShow( uiButton, m_recvValue[kind].m_neq_crit, Hex2Color(0x25c9ffff) )
+		
 	elseif m_recvValue[kind].m_neq_crit == 4 then
 		pop( "<color=#03de27ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+		NationEquipDlgPopCritShow( uiButton, m_recvValue[kind].m_neq_crit, Hex2Color(0x03de27ff) )
+		
 	elseif m_recvValue[kind].m_neq_crit == 7 then
 		pop( "<color=#ffde00ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+		NationEquipDlgPopCritShow( uiButton, m_recvValue[kind].m_neq_crit, Hex2Color(0xffde00ff) )
+		
 	elseif m_recvValue[kind].m_neq_crit == 10 then
 		pop( "<color=#e80017ff>"..F( 1771, g_nation_equip[kind][level].exp * m_recvValue[kind].m_neq_crit ).."</color>" )
+		NationEquipDlgPopCritShow( uiButton, m_recvValue[kind].m_neq_crit, Hex2Color(0xe80017ff) )
+		
 	else
 		pop( "<color=#f7f3bbff>"..F( 1771, g_nation_equip[kind][level].exp ).."</color>" )
 	end
 
+end
+
+-- 显示暴击
+function NationEquipDlgPopCritShow( uiButton, crit, color )
+	SetTrue( m_uiPopCrit )
+	m_uiPopCrit.transform:SetParent( uiButton.transform )
+	m_uiPopCrit.transform.anchoredPosition = Vector2( -uiButton.transform.anchoredPosition.x, uiButton.transform.anchoredPosition.y+60 )
+	m_uiPopCrit.transform:SetParent( m_Dlg.transform )
+	SetText( m_uiPopCrit.transform:Find("Text"), F(1752, crit), color )
 end
 
 -- 改造国器界面

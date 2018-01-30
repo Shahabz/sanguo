@@ -125,6 +125,10 @@ int army_loadcb( int army_index )
 		}
 		hero_state = HERO_STATE_GATHER;
 	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
+	{ // 目的是国家名将
+		g_army[army_index].to_index = g_army[army_index].to_id;
+	}
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
 	{ // 目的是血战皇城
 		g_army[army_index].to_index = g_army[army_index].to_id;
@@ -301,13 +305,13 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 			pAttr->m_short_value[3] = pArmy->to_posy;
 
 			// 出发格子
-			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES )
+			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->from_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[1] = 1;
 			else if ( pArmy->from_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[1] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->from_index);
 
 			// 目的格子
-			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES )
+			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[3] = 1;
 			else if ( pArmy->to_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[3] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->to_index );
@@ -328,13 +332,13 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 			pAttr->m_short_value[3] = pArmy->from_posy;
 
 			// 出发格子
-			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES )
+			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[1] = 1;
 			else if ( pArmy->to_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[1] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->to_index );
 
 			// 目的格子
-			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES )
+			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[3] = 1;
 			else if ( pArmy->from_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[3] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->from_index );
@@ -837,6 +841,22 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			to_id = g_mapunit[info->m_to_unit_index].index;
 			hero_state = HERO_STATE_GATHER;
 		}
+		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_NATIONHERO )
+		{ // 国家名将
+			// 是否超过4个名将
+			if ( nation_hero_checklimit( pCity ) == 0 )
+			{
+				actor_notify_alert( pCity->actor_index, 2348 );
+				return -1;
+			}
+			// 消耗粮食
+			if ( cost_food > pCity->food )
+				return -1;
+			city_changefood( pCity->index, -cost_food, PATH_MARCH );
+
+			to_type = MAPUNIT_TYPE_NATIONHERO;
+			to_id = g_mapunit[info->m_to_unit_index].index;
+		}
 	}
 	else
 	{	
@@ -862,7 +882,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		else if ( info->m_action != ARMY_ACTION_OCCUPY )
 		{
 			write_gamelog( "[BATTLE_INVALID]_actorid:%d_action:%d_info->unit_index:%d", pCity->actorid, info->m_action, info->m_to_unit_index );
-			//actor_notify_pop( pCity->actor_index, 34 );  // 目标不合法，请重新选取!
+			actor_notify_pop( pCity->actor_index, 450 );  // 目标已经消失
 			return -1;
 		}
 		else
@@ -1819,7 +1839,11 @@ void army_fight( int army_index )
 			{
 				army_vs_res( army_index, &g_fight );
 			}
-
+			// 防御方是国家名将
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
+			{
+				army_vs_nationhero( army_index, &g_fight );
+			}
 		}
 
 		//	// 通知：战斗结果

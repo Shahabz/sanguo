@@ -34,6 +34,7 @@
 #include "map_res.h"
 #include "map.h"
 #include "map_zone.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -342,6 +343,22 @@ void army_arrived( int army_index )
 				}
 			}
 		}
+		else if ( pUnit->type == MAPUNIT_TYPE_NATIONHERO )
+		{ // 目标是国家名将
+			NationHero *pNationHero = nation_hero_getptr( pUnit->index );
+			if ( !pNationHero )
+			{
+				army_setstate( army_index, ARMY_STATE_REBACK );
+				return;
+			}
+			if ( pNationHero->actorid > 0 )
+			{
+				army_setstate( army_index, ARMY_STATE_REBACK );
+				return;
+			}
+
+			army_setstate( army_index, ARMY_STATE_FIGHT );
+		}
 	}
 	else
 	{
@@ -425,6 +442,10 @@ int army_marchroute_makeinfo( int army_index, SLK_NetS_AddMarchRoute *pValue )
 			pValue->m_to_actorid = army_getcityid( target_armyindex );
 			pValue->m_to_nation = army_getnation( target_armyindex );
 		}
+	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
+	{ // 目的是国家名将
+		pValue->m_to_grid = 1;
 	}
 	return 0;
 }

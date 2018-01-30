@@ -69,6 +69,8 @@ int g_actornum = 0;
 int g_maxactorid = 0;
 int g_nation_actornum[3] = { 0 };
 
+Actor g_temp_actor[2];
+
 extern UpgradeInfo *g_upgradeinfo;
 extern int g_upgradeinfo_maxnum;
 

@@ -11,6 +11,7 @@ CREATE TABLE `actor_hero` (
   `defense_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓防御资质',
   `troops_wash` smallint(6) NOT NULL DEFAULT '0' COMMENT '洗髓兵力资质',
   `colorup` smallint(6) NOT NULL DEFAULT '0' COMMENT '良将突破值',
+  `god` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否神级突破',
   PRIMARY KEY (`id`)
   KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -417,6 +417,20 @@ function MailDlgSetMail( recvValue )
 				SetRichText( uiContent, F(1111, name, enemyname ) )
 			end
 		
+		-- 国家名将
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO then
+			local win = recvValue.m_content_json["win"];
+			local name = recvValue.m_content_json["name"];
+			local kind = recvValue.m_content_json["kind"];
+			local level = recvValue.m_content_json["lv"];
+			local pos = recvValue.m_content_json["pos"];
+			local tpos = recvValue.m_content_json["tpos"];
+			local heroname = "Lv."..level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind)
+			if win == 1 then
+				SetRichText( uiContent, F(1110, name, heroname ) )
+			else
+				SetRichText( uiContent, F(1111, name, heroname ) )
+			end
 		end
 	end
 

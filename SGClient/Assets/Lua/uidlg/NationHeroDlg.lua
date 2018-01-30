@@ -7,10 +7,12 @@ local m_uiScrollView = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Info = nil; --UnityEngine.GameObject
 local m_uiUIP_Visit = nil; --UnityEngine.GameObject
+local m_uiPosMsgLayer = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiInfoObjs = nil
 local m_recvValue = nil;
+local m_buyindex = 0;
 
 -- 打开界面
 function NationHeroDlgOpen()
@@ -28,6 +30,7 @@ function NationHeroDlgClose()
 	eye.uiManager:Close( "NationHeroDlg" );
 	m_uiInfoObjs = nil
 	m_recvValue = nil;
+	m_buyindex = 0;
 end
 
 -- 删除界面
@@ -36,6 +39,7 @@ function NationHeroDlgDestroy()
 	m_Dlg = nil;
 	m_uiInfoObjs = nil
 	m_recvValue = nil;
+	m_buyindex = 0;
 end
 
 ----------------------------------------
@@ -47,8 +51,14 @@ function NationHeroDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             NationHeroDlgClose();
+		elseif nControlID == -2 then
+            SetFalse( m_uiPosMsgLayer )
 		elseif nControlID >= 1000 and nControlID < 2000 then
-			NationHeroDlgHeroView( nControlID )
+			NationHeroDlgHeroView( nControlID - 1000 )
+		elseif nControlID >= 2000 and nControlID < 3000 then
+			NationHeroDlgHeroVisit( nControlID - 2000 )
+		elseif nControlID >= 3000 and nControlID < 4000 then
+			NationHeroDlgHeroGoto( nControlID - 3000 )
         end
 	end
 end
@@ -62,6 +72,8 @@ function NationHeroDlgOnAwake( gameObject )
 	m_uiContent = objs[2];
 	m_uiUIP_Info = objs[3];
 	m_uiUIP_Visit = objs[4];
+	m_uiPosMsgLayer = objs[5];
+	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Info", 5, 5, m_uiUIP_Info);
@@ -99,17 +111,26 @@ end
 ----------------------------------------
 function NationHeroDlgShow()
 	NationHeroDlgOpen()
-	NationHeroDlgClear()
+	SetFalse( m_uiPosMsgLayer )
+	m_buyindex = 0;
 	system_askinfo( ASKINFO_NATIONHERO, "", 0 )
-	
-	m_uiInfoObjs = {};
-	for i=0,4,1 do
-		m_uiInfoObjs[i] = NationHeroDlgCreateInfo( i );
+end
+
+function NationHeroDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
 	end
+	system_askinfo( ASKINFO_NATIONHERO, "", 0 )
 end
 
 -- m_count=0,m_list={m_kind=0,m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_posx=0,m_posy=0,m_buypos=0,m_state=0,m_forever=0,m_nation=0,[m_count]},m_nationlevel=0,
 function NationHeroDlgRecv( recvValue )
+	NationHeroDlgClear()
+	m_uiInfoObjs = {};
+	for i=0,4,1 do
+		m_uiInfoObjs[i] = NationHeroDlgCreateInfo( i );
+	end
+	
 	m_recvValue = recvValue;
 	for i=1, recvValue.m_count, 1 do
 		NationHeroDlgSetHero( i, recvValue.m_list[i] )
@@ -144,6 +165,7 @@ function NationHeroDlgSetHero( i, info )
 	
 	SetControlID( uiHero, 1000 + i )
 	SetImage( uiShape, HeroHeadSprite( info.m_kind ) )
+	SetImage( uiCorps, CorpsSprite( g_heroinfo[info.m_kind][5].corps ) )
 	-- 哪国名将
 	SetText( uiNation, T( 1884 + g_nation_heroinfo[info.m_kind].nation ) )
 	SetText( uiLevel, HeroNameLv( info.m_kind, info.m_level ) )
@@ -161,6 +183,7 @@ function NationHeroDlgSetHero( i, info )
 		if info.m_forever > 0 then
 			SetTrue( uiOwner )
 			SetText( uiOwner, T(1893) )
+			SetFalse( uiVisitBtn )
 			
 		-- 无双名将有主人
 		elseif info.m_actorid > 0 then
@@ -170,17 +193,49 @@ function NationHeroDlgSetHero( i, info )
 			
 		-- 没获得
 		else
-			SetTrue( uiOwner )
-			SetText( uiOwner, T(1894) )
-			SetTrue( uiVisitBtn )
-			-- 寻访所需钻石
-			if g_nation_heroinfo[info.m_kind].nation == GetPlayer().m_nation then
-				SetText( uiVisitBtn.transform:Find("Back/Text"),g_nation_heroinfo[info.m_kind].visit_token  )
+			
+			-- 购买了位置
+			if info.m_buypos > 0 then
+				SetTrue( uiOwner )
+				SetText( uiOwner, T(1890) )
+				SetFalse( uiVisitBtn )
+				NationHeroDlgCreateVisit( i, info, uiObj )
+				
+				if m_buyindex == i then
+					NationHeroDlgPosMsgLayer( i )
+				end
 			else
-				SetText( uiVisitBtn.transform:Find("Back/Text"),g_nation_heroinfo[info.m_kind].other_visit_token  )
+				SetTrue( uiOwner )
+				SetText( uiOwner, T(1894) )
+				SetTrue( uiVisitBtn )
+				SetControlID( uiVisitBtn, 2000 + i )
+				-- 寻访所需钻石
+				if g_nation_heroinfo[info.m_kind].nation == GetPlayer().m_nation then
+					SetText( uiVisitBtn.transform:Find("Back/Text"),g_nation_heroinfo[info.m_kind].visit_token..T(1889)  )
+				else
+					SetText( uiVisitBtn.transform:Find("Back/Text"),g_nation_heroinfo[info.m_kind].other_visit_token..T(1889)  )
+				end
 			end
 		end
 	end
+end
+
+-- 创建一个坐标信息
+function NationHeroDlgCreateVisit( index, info, uiInfoObj )
+	local uiObj = m_ObjectPool:Get( "UIP_Visit" );
+	uiObj.transform:SetParent( m_uiContent.transform );
+	SetText( uiObj.transform:Find("Pos"), F(1897, HeroName(info.m_kind), info.m_posx, info.m_posy) )
+	SetText( uiObj.transform:Find("BuyPos"), F(1898, info.m_buypos) )
+	SetText( uiObj.transform:Find("Warn"), T(1899) )
+	SetControlID( uiObj.transform:Find("GotoBtn"), 3000 + index )
+	
+	local siblingIndex = uiInfoObj.transform:GetSiblingIndex();
+    if uiObj.transform:GetSiblingIndex() < siblingIndex then
+        uiObj.transform:SetSiblingIndex(siblingIndex);
+    else
+        uiObj.transform:SetSiblingIndex(siblingIndex + 1);
+    end
+    uiObj:SetActive(true);
 end
 
 -- 清空
@@ -199,10 +254,57 @@ function NationHeroDlgClear()
     end
 end
 
--- 查看武将
-function NationHeroDlgHeroView( index )
-	local info = recvValue.m_list[index]
+-- 购买后显示确定框
+function NationHeroDlgPosMsgLayer( index )
+	local info = m_recvValue.m_list[index]
 	if info == nil then
 		return
+	end
+	SetTrue( m_uiPosMsgLayer )
+	SetText( m_uiPosMsgLayer.transform:Find("Text"), F(1900, info.m_posx, info.m_posy, HeroName( info.m_kind )) )	
+	SetControlID( m_uiPosMsgLayer.transform:Find("Ok"), 3000 + index )
+	m_buyindex = 0;
+end
+
+-- 查看武将
+function NationHeroDlgHeroView( index )
+	local info = m_recvValue.m_list[index]
+	if info == nil then
+		return
+	end
+	local pHero = {}
+	pHero.kind = info.m_kind
+	HeroConfigDlgShow( pHero, 1 );
+end
+
+-- 寻访
+function NationHeroDlgHeroVisit( index )
+	local info = m_recvValue.m_list[index]
+	if info == nil then
+		return
+	end
+	local token = 0;
+	if g_nation_heroinfo[info.m_kind].nation == GetPlayer().m_nation then
+		token = g_nation_heroinfo[info.m_kind].visit_token
+	else
+		token = g_nation_heroinfo[info.m_kind].other_visit_token
+	end
+	local name = T( 1884 + g_nation_heroinfo[info.m_kind].nation )
+	MsgBox( F(2342,token, name), function() 
+		m_buyindex = index;
+		system_askinfo( ASKINFO_NATIONHERO, "", 1, info.m_kind )
+	end )
+end
+
+-- 前往
+function NationHeroDlgHeroGoto( index )
+	local info = m_recvValue.m_list[index]
+	if info == nil then
+		return
+	end	
+	if info.m_posx >= 0 and info.m_posy >= 0 then 
+		NationHeroDlgClose()
+		NationDlgClose()
+		WorldMap.GotoCoor( info.m_posx, info.m_posy )
 	end
 end

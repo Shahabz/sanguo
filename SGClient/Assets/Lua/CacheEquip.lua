@@ -1,7 +1,8 @@
 -- 装备缓存信息
 -- 函数参数名称带有"_"的都是服务器真实的offset，0开始
 MAX_DEFAULT_EQUIPNUM	= 30   -- 缺省装备数量
-MAX_EQUIPNUM			= 150  -- 装备最大数量
+MAX_EXT_EQUIPNUM		= 150  -- 允许开到多少格子
+MAX_EQUIPNUM			= 180  -- 装备最大数量
 EQUIP_ABILITY_NUM		= 4  -- 道具最多有4个可变属性
 
 EQUIP_PROCESS_EQUIP		    = 1 -- 装备穿上

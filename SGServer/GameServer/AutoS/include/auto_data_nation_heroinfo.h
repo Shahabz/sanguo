@@ -16,6 +16,10 @@ struct _nationheroinfo {
 				float other_rob_odds;	//
 				int awardgroup;	//
 				short monsterid[4];	//
+				int call_silver;	//
+				short call_itemkind[4];	//
+				short call_itemnum;	//
+				short loyal_itemnum;	//
 };
 typedef struct _nationheroinfo NationHeroInfo;
 

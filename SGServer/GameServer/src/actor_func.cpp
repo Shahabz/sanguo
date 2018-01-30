@@ -24,6 +24,7 @@
 #include "quest.h"
 #include "actor_times.h"
 #include "world_quest.h"
+#include "nation_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -678,11 +679,26 @@ int actor_search( int actor_index, int target_actorid, int target_city_index )
 	pValue.m_killcity = data_record_getvalue( &g_city[target_city_index], DATA_RECORD_KILLCITY );
 	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
-		if ( g_city[target_city_index].hero[tmpi].kind > 0 )
+		short kind = g_city[target_city_index].hero[tmpi].kind;
+		if ( kind > 0 )
 		{
-			pValue.m_hero[pValue.m_herocount].m_kind = g_city[target_city_index].hero[tmpi].kind;
+			pValue.m_hero[pValue.m_herocount].m_kind = kind;
 			pValue.m_hero[pValue.m_herocount].m_color = g_city[target_city_index].hero[tmpi].color;
 			pValue.m_hero[pValue.m_herocount].m_level = g_city[target_city_index].hero[tmpi].level;
+
+			NationHeroInfo *config = nation_hero_getconfig( kind );
+			if ( config )
+			{ // ÊÇÃû½«
+				if ( config->herokind > 0 && config->offset >= 0 && config->offset < NATIONHERO_MAX )
+				{
+					if ( g_city[target_city_index].nation_hero[config->offset].forever == 0 && g_city[target_city_index].hero[tmpi].god == 1 )
+						pValue.m_hero[pValue.m_herocount].m_type = 3;
+					else if ( g_city[target_city_index].nation_hero[config->offset].forever == 0 )
+						pValue.m_hero[pValue.m_herocount].m_type = 1;
+					else
+						pValue.m_hero[pValue.m_herocount].m_type = 2;
+				}
+			}
 			pValue.m_herocount += 1;
 		}
 	}

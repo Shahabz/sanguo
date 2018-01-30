@@ -733,7 +733,6 @@ function BagDlgSelectHeroEquip( index )
 			if GetHero().m_CityHero[i].m_kind <= 0 or GetHero().m_CityHero[i].m_Equip[m_equiptype].m_kind <= 0 then
 				SetText( uiTips.transform:Find( "Name" ), T(822) )
 				SetText( uiTips.transform:Find( "Ability" ) )
-				SetFalse( uiTips.transform:Find( "Wash" ) )
 				SetFalse( uiTips.transform:Find( "WashLevel" ) )
 				SetFalse( ReplaceButton ); -- 替换
 				SetTrue( UseButton ); -- 装备
@@ -814,7 +813,7 @@ end
 -- 装备容量
 function BagDlgEquipExtSet()	
 	SetText( m_uiEquipExt, T(683) .." ".. GetEquip():GetTotal() .."/" ..(GetPlayer().m_equipext+MAX_DEFAULT_EQUIPNUM) )
-	if GetPlayer().m_equipext >= (MAX_EQUIPNUM-MAX_DEFAULT_EQUIPNUM) then
+	if GetPlayer().m_equipext >= (MAX_EXT_EQUIPNUM-MAX_DEFAULT_EQUIPNUM) then
 		SetFalse( m_uiEquipExtButton );
 	else
 		SetTrue( m_uiEquipExtButton )

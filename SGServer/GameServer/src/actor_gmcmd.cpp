@@ -34,6 +34,7 @@
 #include "pay.h"
 #include "activity.h"
 #include "nation.h"
+#include "nation_hero.h"
 #include "story.h"
 
 extern Global global;
@@ -512,6 +513,42 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		extern int g_nation_official_statetime;
 		g_nation_official_statetime = (int)time( NULL ) + 30;
 		world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
+		break;
+	case GMC_NHERO: // 国家名将
+		if ( pCity )
+		{
+			extern NationHero *g_nation_hero;
+			extern int g_nation_hero_maxcount;
+			if ( pValue[0] == -1 )
+			{ // 抓捕离开时间
+				for ( int tmpi = 0; tmpi < NATIONHERO_MAX; tmpi++ )
+				{
+					int kind = pCity->nation_hero[tmpi].kind;
+					if ( kind <= 0 || kind >= g_nation_hero_maxcount )
+						continue;
+					if ( pCity->nation_hero[tmpi].state != NATIONHERO_STATE_CATCH )
+						continue;
+					g_nation_hero[kind].runsec = 30;
+					nation_hero_cityinfo( pCity->actor_index, kind );
+				}
+			}
+			else if ( pValue[1] == -2 )
+			{ // 忠诚度降低10
+				for ( int tmpi = 0; tmpi < NATIONHERO_MAX; tmpi++ )
+				{
+					int kind = pCity->nation_hero[tmpi].kind;
+					if ( kind <= 0 || kind >= g_nation_hero_maxcount )
+						continue;
+					if ( pCity->nation_hero[tmpi].state != NATIONHERO_STATE_EMPLOY )
+						continue;
+					pCity->nation_hero[tmpi].loyal -= 10;
+					if ( pCity->nation_hero[tmpi].loyal < 0 )
+						pCity->nation_hero[tmpi].loyal = 0;
+					nation_hero_cityinfo( pCity->actor_index, kind );
+				}
+			}
+		}
+		break;
 	default:
 		break;
 	}

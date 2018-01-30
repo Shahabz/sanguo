@@ -16,6 +16,7 @@ struct _actor_hero {
 				short defense_wash;	//洗髓防御资质
 				short troops_wash;	//洗髓兵力资质
 				short colorup;	//良将突破值
+				char god;	//是否神级突破
 				Equip equip[6];	//装备
 				int attack;	//攻击
 				int defense;	//防御

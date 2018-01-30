@@ -310,7 +310,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 9 )
 		{// 下阵
-			hero_down( actor_index, pvalue[1] );
+			hero_down( actor_index, pvalue[1], 0 );
 		}
 		else if ( pvalue[0] == 10 )
 		{ // 补充御林卫士兵
@@ -889,6 +889,26 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		if ( pvalue[0] == 0 )
 		{ // 国家名将列表
 			nation_hero_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 购买名将坐标
+			nation_hero_buypos( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 奖励
+			nation_hero_sendaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 招募
+			nation_hero_call( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 补充忠诚度
+			nation_hero_addloyal( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 查看信息
+			nation_hero_view( actor_index, pvalue[1] );
 		}
 		break;
 	default:

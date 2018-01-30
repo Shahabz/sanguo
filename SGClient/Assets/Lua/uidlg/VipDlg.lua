@@ -274,7 +274,7 @@ function VipDlgClickAward( awardkind, uiObj )
 	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
 		local herokind = awardkind - AWARDKIND_HEROBASE
 		local color = hero_getnormalcolor( herokind )
-		HeroConfigDlgShow( g_heroinfo[herokind][color]);
+		HeroConfigDlgShow( g_heroinfo[herokind][color], 0 );
 	else
 		local _, _, name, c, desc = AwardInfo( awardkind )
 		local uiDesc = uiObj.transform:Find("Desc")

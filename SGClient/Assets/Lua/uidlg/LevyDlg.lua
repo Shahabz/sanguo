@@ -36,6 +36,7 @@ local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_uiOfficialEffect = nil; --UnityEngine.GameObject
+local m_uiOfficialBtn = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function LevyDlgOpen()
@@ -130,6 +131,7 @@ function LevyDlgOnAwake( gameObject )
 	m_uiOfficialName = objs[31];
 	m_uiOfficialDesc = objs[32];
 	m_uiOfficialEffect = objs[33];
+	m_uiOfficialBtn = objs[34];
 end
 
 -- 界面初始化时调用
@@ -194,6 +196,18 @@ function LevyDlgRecv( recvValue )
 	SetText( m_uiTechFood, LevyAdd( recvValue.m_tech[3] ) );
 	SetText( m_uiTechIron, LevyAdd( recvValue.m_tech[4] ) );
 	
+	-- 季节
+	SetText( m_uiWeatherSilver, LevyAdd( recvValue.m_weather[1] ) );
+	SetText( m_uiWeatherWood, LevyAdd( recvValue.m_weather[2] ) );
+	SetText( m_uiWeatherFood, LevyAdd( recvValue.m_weather[3] ) );
+	SetText( m_uiWeatherIron, LevyAdd( recvValue.m_weather[4] ) );
+	
+	-- 活动
+	SetText( m_uiActivitySilver, LevyAdd( recvValue.m_activity[1] ) );
+	SetText( m_uiActivityWood, LevyAdd( recvValue.m_activity[2] ) );
+	SetText( m_uiActivityFood, LevyAdd( recvValue.m_activity[3] ) );
+	SetText( m_uiActivityIron, LevyAdd( recvValue.m_activity[4] ) );
+	
 	-- 官职
 	SetText( m_uiOfficialSilver, LevyAdd( recvValue.m_offical[1] ) );
 	SetText( m_uiOfficialWood, LevyAdd( recvValue.m_offical[2] ) );
@@ -203,7 +217,7 @@ function LevyDlgRecv( recvValue )
 	-- 总计
 	local total = {0,0,0,0}
 	for i=1, 4, 1 do
-		total[i] = knum( recvValue.m_base[i] + recvValue.m_tech[i] + recvValue.m_offical[i] );
+		total[i] = knum( recvValue.m_base[i] + recvValue.m_tech[i] + recvValue.m_weather[i] + recvValue.m_activity[i] + recvValue.m_offical[i] );
 	end
 	SetText( m_uiTotalSilver, total[1] );
 	SetText( m_uiTotalWood, total[2] );
@@ -244,13 +258,16 @@ function LevyDlgSetOfficial()
 		SetTrue( m_uiOfficialTimeBack )
 		SetTrue( m_uiOfficialTime )
 		SetTimer( m_uiOfficialTime, info.m_ofsec, info.m_ofsec, 2 )
-		SetText( m_uiOfficialName, T(719).."Lv."..g_official_gov[info.m_ofkind].level..T(722) )
-		SetText( m_uiOfficialDesc, F(732, g_official_gov[info.m_ofkind].produce ) )
+		if g_official_gov[info.m_ofkind].token > 0 then
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_gov[info.m_ofkind].level..T(722), Hex2Color(0xD95DF4FF) )
+		else
+			SetText( m_uiOfficialName, T(719).."Lv."..g_official_gov[info.m_ofkind].level..T(722), Hex2Color(0xF7F3BBFF) )
+		end
+		SetText( m_uiOfficialDesc, F(732, g_official_gov[info.m_ofkind].produce ), Hex2Color(0x25C9FFFF) )
 		SetImage( m_uiOfficialShape, OfSprite( g_official_gov[info.m_ofkind].shape ) )
 	else
 		-- 未雇佣
 		SetFalse( m_uiOfficialShape )
-		SetTrue( m_uiOfficialEffect )
 		SetFalse( m_uiOfficialTimeBack )
 		SetFalse( m_uiOfficialTime )
 		local pBuilding = GetPlayer():GetBuilding( BUILDING_Main, -1 );
@@ -259,16 +276,23 @@ function LevyDlgSetOfficial()
 		end
 		if pBuilding.m_level < g_official_gov[1].buildinglevel then
 			-- 官府N级解锁Lv.1内政官
-			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Main), g_official_gov[1].buildinglevel, g_official_gov[1].level, T(722) ) )
-			SetText( m_uiOfficialDesc, F(732, g_official_gov[1].produce ) )
+			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Main), g_official_gov[1].buildinglevel, g_official_gov[1].level, T(722) ), Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, F(732, g_official_gov[1].produce ), Hex2Color(0x8A8A8AFF) )
+			SetFalse( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
 		else
+			SetTrue( m_uiOfficialEffect )
+			SetImage( m_uiOfficialBtn.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+			SetText( m_uiOfficialName, T(722).."("..T(2338)..")", Hex2Color(0x8A8A8AFF) )
+			SetText( m_uiOfficialDesc, T(2339), Hex2Color(0x8A8A8AFF) )
 			-- 可雇佣
-			for kind=#g_official_gov, 1, -1 do
+			--[[for kind=#g_official_gov, 1, -1 do
 				if pBuilding.m_level >= g_official_gov[kind].buildinglevel then
-					SetText( m_uiOfficialName, T(718).."Lv."..g_official_gov[kind].level..T(722) )
-					SetText( m_uiOfficialDesc, F(732, g_official_gov[kind].produce ) )
+					SetText( m_uiOfficialName, T(718).."Lv."..g_official_gov[kind].level..T(722), Hex2Color(0x8A8A8AFF) )
+					SetText( m_uiOfficialDesc, F(732, g_official_gov[kind].produce ), Hex2Color(0x8A8A8AFF) )
+					break;
 				end
-			end
+			end--]]
 		end
 	end
 
