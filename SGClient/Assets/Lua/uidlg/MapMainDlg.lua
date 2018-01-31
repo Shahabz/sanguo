@@ -77,7 +77,8 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 掉落
 		elseif nControlID == 3 then
-		
+			MapMainDlgHeroAward()
+			
 		-- 武将状态信息收起
 		elseif nControlID == 4 then
 			MapMainDlgHeroLayerHide();
@@ -218,6 +219,8 @@ function MapMainDlgShow()
 	system_askinfo( ASKINFO_WORLDMAP, "", 2 );
 	-- 请求世界任务
 	system_askinfo( ASKINFO_QUEST, "", 10 );
+	-- 掉落
+	MapMainDlgSetAward()
 end
 
 -- 接收出征队列信息
@@ -651,6 +654,21 @@ function MapMainDlgNationGoto( townid )
 	local posx 	= g_towninfo[townid].posx
 	local posy 	= g_towninfo[townid].posy
 	WorldMap.GotoCoor( posx, posy )
+end
+
+-- 设置掉落
+function MapMainDlgSetAward()
+	if int64.equals(GetPlayer().m_award_mailid, 0) then
+		SetFalse( m_uiAward )
+	else
+		SetTru( m_uiAward )
+	end
+end
+
+-- 显示奖励
+function MapMainDlgHeroAward()
+	GetPlayer().m_award_mailid = 0;
+	MapMainDlgSetAward()
 end
 
 -- 设置世界任务

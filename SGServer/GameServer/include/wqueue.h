@@ -47,6 +47,8 @@ int exec_queue_fetch();
 
 // 刷流寇队列，每帧执行1个区域
 #define	BRUSH_ENEMY_QUEUE_MAXNUM	64
+#define	BRUSH_ENEMY_QUEUE_ENEMY		0
+#define	BRUSH_ENEMY_QUEUE_RES		1
 
 // 创建队列防止同一帧做太多事情
 typedef struct _brush_enemy_queue
@@ -56,7 +58,7 @@ typedef struct _brush_enemy_queue
 }BrushEnemyQueue;
 
 int brush_enemy_queue_init();
-int brush_enemy_queue_add( char zoneid );
+int brush_enemy_queue_add( char type, char zoneid );
 int brush_enemy_queue_fetch();
 
 #endif

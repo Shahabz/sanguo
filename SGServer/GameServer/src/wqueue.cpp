@@ -4,6 +4,11 @@
 #include "wqueue.h"
 #include "utils.h"
 #include "script_auto.h"
+#include "map_zone.h"
+
+extern char g_open_town3;
+extern char g_open_town6;
+extern char g_open_townking;
 
 // 队列
 SWQueue *g_wqueue[2];
@@ -171,8 +176,8 @@ int brush_enemy_queue_init()
 	return 0;
 }
 
-int brush_enemy_queue_add( char zoneid )
-{
+int brush_enemy_queue_add( char type, char zoneid )
+{	
 	// 获取尾部
 	int queue_tail = g_nBrushEnemyQueueTail + 1;
 	if ( queue_tail >= BRUSH_ENEMY_QUEUE_MAXNUM )
@@ -186,6 +191,7 @@ int brush_enemy_queue_add( char zoneid )
 		return -1;
 	}
 
+	g_brushenemy_queue[g_nBrushEnemyQueueTail].type = type;
 	g_brushenemy_queue[g_nBrushEnemyQueueTail].zoneid = zoneid;
 
 	// 尾部步进
@@ -201,9 +207,17 @@ int brush_enemy_queue_fetch()
 	}
 
 	// 从队列中取出一项
+	char type = g_brushenemy_queue[g_nBrushEnemyQueueHead].type;
 	char zoneid = g_brushenemy_queue[g_nBrushEnemyQueueHead].zoneid;
-	sc_Script_Exec( 1, zoneid, 0 );
-
+	if ( type == BRUSH_ENEMY_QUEUE_ENEMY )
+	{
+		sc_Script_Exec( 1, zoneid, 0 );
+	}
+	else if ( type == BRUSH_ENEMY_QUEUE_RES )
+	{
+		sc_Script_Exec( 2, zoneid, 0 );
+	}
+	
 	// 头部步进
 	g_nBrushEnemyQueueHead++;
 	if ( g_nBrushEnemyQueueHead >= BRUSH_ENEMY_QUEUE_MAXNUM )

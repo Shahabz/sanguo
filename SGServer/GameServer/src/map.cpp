@@ -67,6 +67,7 @@ int map_init()
 		area_initqueue( &g_map.m_aArea[tmpi] );
 	}
 
+
 	// 坐标格子数据
 	g_map.m_aTileData = (Tile **)malloc( sizeof( Tile * )* g_map.m_nMaxWidth );
 	for ( int tmpi = 0; tmpi < g_map.m_nMaxWidth; tmpi++ )
@@ -122,7 +123,7 @@ void map_sendinfo( int actor_index, short tposx, short tposy )
 }
 
 // 区域信息
-void map_areaenter( int actor_index, int areaindex, short posx, short posy )
+void map_areaenter( int actor_index, int areaindex, short posx, short posy, char areaupdate )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return;
@@ -130,12 +131,15 @@ void map_areaenter( int actor_index, int areaindex, short posx, short posy )
 		return;
 	if ( g_actors[actor_index].view_areaindex != areaindex )
 	{
-		map_zone_change( actor_index, posx, posy );
-		view_area_change( actor_index, areaindex );
-		if ( areaindex < 0 )
-			g_actors[actor_index].view_areaindex = -1;
-		else
-			g_actors[actor_index].view_areaindex = areaindex;
+		map_zone_change( actor_index, posx, posy, areaupdate );
+		if ( areaupdate == 1 )
+		{
+			view_area_change( actor_index, areaindex );
+			if ( areaindex < 0 )
+				g_actors[actor_index].view_areaindex = -1;
+			else
+				g_actors[actor_index].view_areaindex = areaindex;
+		}
 	}
 }
 

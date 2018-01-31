@@ -368,6 +368,12 @@ end
 
 -- 采集
 function MapResDlgGather()
+	-- 不在同一区域
+	if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, m_recvValue.m_posx, m_recvValue.m_posy ) == 0 then
+		AlertMsg(T(1322))
+		MapResDlgClose()
+		return
+	end
 	if m_cost_food > GetPlayer().m_food then
 		JumpRes(3)
 		return
@@ -395,6 +401,12 @@ end
 
 -- 占领采集出击
 function MapResDlgBattle()
+	-- 不在同一区域
+	if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, m_recvValue.m_posx, m_recvValue.m_posy ) == 0 then
+		AlertMsg(T(1322))
+		MapResDlgClose()
+		return
+	end
 	if m_cost_food > GetPlayer().m_food then
 		JumpRes(3)
 		return

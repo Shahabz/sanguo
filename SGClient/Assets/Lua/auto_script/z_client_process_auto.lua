@@ -139,6 +139,11 @@ function proc_buildinglist_C( recvValue )
 		proc_building_C( recvValue.m_building[i] );	
 	end
 	
+	-- 如果没有获得城墙
+	if GetPlayer():GetBuilding( BUILDING_Wall, -1 ) == nil then
+		City.BuildingLandShow( BUILDING_Wall, -1 )
+	end
+	
 	for i=1, recvValue.m_barracks_count, 1 do
 		proc_buildingbarracks_C( recvValue.m_barracks[i] )
 	end
@@ -229,7 +234,18 @@ function proc_building_C( recvValue )
 		if recvValue.m_sec <= 0 then
 			CityTechDlgClose();
 		end
+	
+	elseif recvValue.m_kind == BUILDING_Wall then
+		if Utils.byteAndOp( GetPlayer().m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
+			-- 着火
+			City.BuildingSetShape( {m_kind=BUILDING_Wall,m_offset=-1}, "building_kind2_fire" )
+			SetTrue( City.m_Fires )
+		else
+			City.BuildingSetShape( {m_kind=BUILDING_Wall,m_offset=-1}, "building_kind2" )
+			SetFalse( City.m_Fires )
+		end
 	end
+	
 end
 
 -- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
@@ -1163,8 +1179,12 @@ function proc_mapzonechange_C( recvValue )
 		MainDlgSetZoneName( name )
 		MapZoneTipsModShow( name, recvValue.m_nation )
 	else
+		if recvValue.m_open == -1 then
+			AlertMsg( T(2369) )
+		else
+			AlertMsg( T(937) )
+		end
 		MainDlgSetZoneName( name.."("..T(936)..")" )
-		AlertMsg( T(937) )
 	end
 	WorldMap.m_nZoneID = recvValue.m_zoneid;
 	MapMainDlgMiniMapChangeZone()
@@ -1276,12 +1296,18 @@ end
 -- m_state=0,m_change=0,
 function proc_citystate_C( recvValue )
 	-- process.
+	GetPlayer().m_state = recvValue.m_state
 	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
 		-- 着火
+		City.BuildingSetShape( {m_kind=BUILDING_Wall,m_offset=-1}, "building_kind2_fire" )
+		SetTrue( City.m_Fires )
+	else
+		City.BuildingSetShape( {m_kind=BUILDING_Wall,m_offset=-1}, "building_kind2" )
+		SetFalse( City.m_Fires )
 	end
 	
 	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_ARMYGROUP ) == CITY_STATE_ARMYGROUP then
-		-- 警告条
+		-- 国战告条
 	end
 end
 
@@ -1970,6 +1996,7 @@ end
 -- m_open_town6=0,m_open_townking=0,
 function proc_worlddataopen_C( recvValue )
 	-- process.
+	GetPlayer().m_open_town3 = recvValue.m_open_town3
 	GetPlayer().m_open_town6 = recvValue.m_open_town6
 	GetPlayer().m_open_townking = recvValue.m_open_townking
 end

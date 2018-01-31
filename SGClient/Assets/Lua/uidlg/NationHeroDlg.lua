@@ -13,6 +13,8 @@ local m_ObjectPool = nil;
 local m_uiInfoObjs = nil
 local m_recvValue = nil;
 local m_buyindex = 0;
+local m_openNationHeroCount = 0;
+local m_catchNationHeroCount = 0;
 
 -- 打开界面
 function NationHeroDlgOpen()
@@ -126,6 +128,8 @@ end
 -- m_count=0,m_list={m_kind=0,m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_posx=0,m_posy=0,m_buypos=0,m_state=0,m_forever=0,m_nation=0,[m_count]},m_nationlevel=0,
 function NationHeroDlgRecv( recvValue )
 	NationHeroDlgClear()
+	m_openNationHeroCount = 0;
+	m_catchNationHeroCount = 0;
 	m_uiInfoObjs = {};
 	for i=0,4,1 do
 		m_uiInfoObjs[i] = NationHeroDlgCreateInfo( i );
@@ -135,6 +139,8 @@ function NationHeroDlgRecv( recvValue )
 	for i=1, recvValue.m_count, 1 do
 		NationHeroDlgSetHero( i, recvValue.m_list[i] )
 	end
+	
+	SetText( m_uiNowText, F(1883, m_catchNationHeroCount, m_openNationHeroCount ) )
 end
 
 -- 创建一个等级信息
@@ -190,6 +196,7 @@ function NationHeroDlgSetHero( i, info )
 			SetTrue( uiOwner )
 			SetText( uiOwner, "["..Nation(info.m_nation).."]"..info.m_name )
 			SetFalse( uiVisitBtn )
+			m_catchNationHeroCount = m_catchNationHeroCount + 1;
 			
 		-- 没获得
 		else
@@ -217,6 +224,8 @@ function NationHeroDlgSetHero( i, info )
 				end
 			end
 		end
+		
+		m_openNationHeroCount = m_openNationHeroCount + 1;
 	end
 end
 

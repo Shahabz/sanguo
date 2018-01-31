@@ -165,6 +165,7 @@ int struct_NetC_WorldMapAreaIndex_recv( char **pptr, int *psize, SLK_NetC_WorldM
 	LKSET_DWORD_RECV( &pValue->m_areaindex, (*pptr), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_posx, (*pptr), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_posy, (*pptr), (*psize) );
+	LKSET_SBYTE_RECV( &pValue->m_areaupdate, (*pptr), (*psize) );
 	return 0;
 }
 

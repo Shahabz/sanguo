@@ -62,6 +62,10 @@ extern int g_towninfo_maxnum;
 extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 
+extern char g_open_town3;
+extern char g_open_town6;
+extern char g_open_townking;
+
 extern KingWarConfig *g_kingwar_config;
 extern int g_kingwar_config_maxnum;
 
@@ -688,7 +692,7 @@ int kingwar_activity_save( FILE *fp )
 // 活动逻辑，每秒
 void kingwar_activity_logic()
 {
-	if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+	if ( g_open_townking == 0 )
 	{ // 世界任务董卓
 		return;
 	}
@@ -917,7 +921,7 @@ int kingwar_activity_inttime()
 int kingwar_activity_sendinfo( int actor_index )
 {
 	// 世界任务董卓
-	if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+	if ( g_open_townking == 0 )
 		return -1;
 
 	time_t t;

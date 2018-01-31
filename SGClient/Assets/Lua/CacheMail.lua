@@ -210,6 +210,8 @@ function Mail:Insert( recvValue )
 	
 	-- 排序
 	self:Sort();
+	
+	print( recvValue.m_content )
 end
 
 -- 排序

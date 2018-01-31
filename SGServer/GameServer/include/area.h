@@ -12,6 +12,7 @@ typedef struct _area
 	int unit_head;
 	int unit_tail;
 	short sendcount;
+	char zoneid;						// 该区域在哪个地区
 	int pos;							// 确定那个消息需要发送
     char actor_msg[2][MAX_AREAMSGSIZE];	// 当前要发送的消息缓冲,一个是背面缓冲
 	int actor_size[2];

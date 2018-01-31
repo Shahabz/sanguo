@@ -72,6 +72,7 @@ struct _slk_NetC_WorldMapAreaIndex {
 	int m_areaindex;	//逻辑区域索引
 	short m_posx;	//逻辑区域坐标
 	short m_posy;	//逻辑区域坐标
+	char m_areaupdate;	//逻辑区域是否刷新
 };
 typedef struct _slk_NetC_WorldMapAreaIndex SLK_NetC_WorldMapAreaIndex;	//世界地图逻辑区域索引
 

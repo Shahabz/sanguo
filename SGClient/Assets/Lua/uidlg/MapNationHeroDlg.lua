@@ -147,12 +147,12 @@ end
 
 -- 选择武将界面
 function MapNationHeroDlgBattle()
---[[	-- 不在同一区域
+	-- 不在同一区域
 	if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, m_recvValue.m_posx, m_recvValue.m_posy ) == 0 then
 		AlertMsg(T(1322))
 		MapNationHeroDlgClose();
 		return
-	end--]]
+	end
 		
 	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT, -1 )
 	MapNationHeroDlgClose();

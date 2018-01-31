@@ -10,6 +10,7 @@ City.m_BuildingOverMod = nil;
 City.m_BuildingQuestMod = nil;
 City.m_BuildingQuickMod = nil;
 City.m_BuildingWorkerQuickMod = nil;
+City.m_Fires = nil
 City.m_Buildings = {};
 City.m_Buildings_res = {};
 
@@ -24,6 +25,7 @@ function City.Init()
 	City.m_BuildingQuestMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingQuestMod" );
 	City.m_BuildingQuickMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingQuickMod" );
 	City.m_BuildingWorkerQuickMod = GameManager.MainCity.transform:Find( "BuildingUI/BuildingWorkerQuickMod" );
+	City.m_Fires = GameManager.MainCity.transform:Find( "Content/Fires" );
 end
 
 -- 所有建筑父节点
@@ -332,7 +334,6 @@ function City.BuildingLandShow( kind, offset )
 	end
 end
 
-
 -- 刷新
 function City.BuildingRefurbish( info ) 
 	City.BuildingSetName( info );
@@ -343,6 +344,7 @@ end
 function City.BuildingSetName( info )
 	local kind = info.m_kind;
 	local offset = info.m_offset;
+	local unitObj = nil;
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		unitObj = City.m_Buildings_res[kind][offset];
 	else
@@ -367,6 +369,19 @@ function City.BuildingSetName( info )
 	else
 		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind)
 	end
+end
+
+-- 设置建筑形象
+function City.BuildingSetShape( info, shape )
+	local kind = info.m_kind;
+	local offset = info.m_offset;
+	local unitObj = nil;
+	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+		unitObj = City.m_Buildings_res[kind][offset];
+	else
+		unitObj = City.m_Buildings[kind];
+	end
+	SetSprite( unitObj:Find("shape"), LoadSprite(shape) );
 end
 
 -- 设置建筑不启用

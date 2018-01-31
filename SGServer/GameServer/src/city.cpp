@@ -1608,6 +1608,11 @@ int city_guard_call( int city_index )
 	city_guard_send( g_city[city_index].actor_index, offset );
 	city_guard_sendsec( g_city[city_index].actor_index );
 	g_city[city_index].guardnum += 1;
+	// 着火
+	if ( g_city[city_index].state | CITY_STATE_FIRE )
+	{
+		city_delstate( &g_city[city_index], CITY_STATE_FIRE );
+	}
 	return 0;
 }
 
@@ -3769,7 +3774,7 @@ int city_move( City *pCity, short posx, short posy )
 
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-		if ( g_zoneinfo[pCity->zone].type == MAPZONE_TYPE1 )
+		if ( map_zone_gettype( pCity->zone ) == MAPZONE_TYPE1 )
 		{
 			if ( actor_get_sflag( pCity->actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC ) == 0 )
 			{
@@ -3781,14 +3786,15 @@ int city_move( City *pCity, short posx, short posy )
 		}
 
 		// 通知客户端更新缓存
-		int value[6] = { 0 };
+		int value[7] = { 0 };
 		value[0] = 1;
 		value[1] = pCity->unit_index;
 		value[2] = pCity->posx;
 		value[3] = pCity->posy;
 		value[4] = lastposx;
 		value[5] = lastposy;
-		actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 6, value, NULL );
+		value[6] = pCity->zone;
+		actor_notify_value( pCity->actor_index, NOTIFY_WORLDMAP, 7, value, NULL );
 	}
 	return 0;
 }

@@ -62,6 +62,10 @@ extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 extern int g_map_town_maxindex;
 
+extern char g_open_town3;
+extern char g_open_town6;
+extern char g_open_townking;
+
 extern NationUpgrade *g_nation_upgrade;
 extern int g_nation_upgrade_maxnum;
 
@@ -484,7 +488,7 @@ int nation_upgrade( char nation )
 		return -1;
 	if ( pNation->level == 3 )
 	{
-		if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+		if ( g_open_townking == 0 )
 		{// 需要击杀董卓后升级
 			return -1;
 		}
@@ -595,7 +599,7 @@ int nation_build( int actor_index )
 		return -1;
 	if ( pNation->level == 3 && pNation->exp >= g_nation_upgrade[pNation->level].config[1].maxexp )
 	{
-		if ( worldquest_check_server( WORLDQUEST_WORLDBOSS2 ) == 0 )
+		if ( g_open_townking == 0 )
 		{// 需要击杀董卓后升级
 			actor_notify_alert( actor_index, 1891 );
 			return -1;

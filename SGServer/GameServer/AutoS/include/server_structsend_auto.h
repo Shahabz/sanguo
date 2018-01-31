@@ -194,6 +194,7 @@ struct _slk_NetS_ActorInfo {
 	char m_open_town6;	//服务器发送玩家基本信息-州城开启
 	char m_open_townking;	//服务器发送玩家基本信息-皇城开启
 	char m_game_day_loop;	//服务器发送玩家基本信息-天气
+	char m_open_town3;	//服务器发送玩家基本信息-攻克郡城
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1909,6 +1910,7 @@ struct _slk_NetS_NationCandidateList {
 typedef struct _slk_NetS_NationCandidateList SLK_NetS_NationCandidateList;	//国家官员候选人列表
 
 struct _slk_NetS_WorldDataOpen {
+	char m_open_town3;	//是否攻占郡城
 	char m_open_town6;	//州城是否开放
 	char m_open_townking;	//皇城是否开放
 };

@@ -244,6 +244,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_open_town6 = buffer:ReadSByte();
 	recvValue.m_open_townking = buffer:ReadSByte();
 	recvValue.m_game_day_loop = buffer:ReadSByte();
+	recvValue.m_open_town3 = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2540,6 +2541,7 @@ end
 
 function struct_NetS_WorldDataOpen_recv( buffer )
 	local recvValue = {};
+	recvValue.m_open_town3 = buffer:ReadSByte();
 	recvValue.m_open_town6 = buffer:ReadSByte();
 	recvValue.m_open_townking = buffer:ReadSByte();
 	return recvValue;

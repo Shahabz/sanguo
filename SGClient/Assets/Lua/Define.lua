@@ -608,3 +608,7 @@ function SetSpriteGray( transform, gray )
 		transform:GetComponent( "SpriteRenderer" ).material = ResourceManager.LoadMaterial( "UI_Mat_SpriteDefault" );
 	end
 end
+
+function SetSprite( transform, sprite )
+	transform:GetComponent( "SpriteRenderer" ).sprite = sprite;
+end

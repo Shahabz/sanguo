@@ -38,7 +38,7 @@ typedef struct _pos
 int map_init();
 void map_logic();
 void map_sendinfo( int actor_index, short tposx, short tposy );
-void map_areaenter( int actor_index, int areaindex, short posx, short posy );
+void map_areaenter( int actor_index, int areaindex, short posx, short posy, char areaupdate );
 
 // ÃÌº”∂‘œÛ
 int map_addobject( int type, int index, short posx, short posy );

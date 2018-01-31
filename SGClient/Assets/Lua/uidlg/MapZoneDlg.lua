@@ -6,6 +6,8 @@ local m_uiZoneName = nil; --UnityEngine.GameObject
 local m_uiNation = nil; --UnityEngine.GameObject
 local m_uiShowBtn = nil; --UnityEngine.GameObject
 local m_uiHideBtn = nil; --UnityEngine.GameObject
+local m_uiGlobalBtn = nil; --UnityEngine.GameObject
+local m_uiWarn = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function MapZoneDlgOpen()
@@ -43,8 +45,12 @@ function MapZoneDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 世界地图
 		elseif nControlID == 1 then
-			MapZoneDlgClose()
-			MapGlobalDlgShow()
+			if GetPlayer().m_open_town3 > 0 then
+				MapZoneDlgClose()
+				MapGlobalDlgShow()
+			else
+				WorldMapThumb.Alert( T(2367) )
+			end
 			
 		-- 显示玩家
 		elseif nControlID == 10 then
@@ -69,6 +75,8 @@ function MapZoneDlgOnAwake( gameObject )
 	m_uiNation = objs[1];
 	m_uiShowBtn = objs[2];
 	m_uiHideBtn = objs[3];
+	m_uiGlobalBtn = objs[4];
+	m_uiWarn = objs[5];
 end
 
 -- 界面初始化时调用
@@ -107,13 +115,30 @@ function MapZoneDlgShow( zoneid )
 	end
 	local name = MapZoneName( zoneid )
 	SetText( m_uiZoneName.transform:Find("Text"), name )
+	
 	-- 显示缩略图
 	WorldMapThumb.Create( zoneid );
+	
+	-- 郡城被攻克
+	if GetPlayer().m_open_town3 > 0 then
+		SetGray( m_uiGlobalBtn.transform:Find("Back"), false )
+		SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(1004) )
+	else
+		SetGray( m_uiGlobalBtn.transform:Find("Back"), true )
+		SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(601) )
+	end
 end
 -- 设置所属国家
 function MapZoneDlgSetNation( nation )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return
 	end
-	SetImage( m_uiNation.transform:Find("Icon"), NationSprite(nation) )
+	if nation == 0 then
+		SetFalse( m_uiNation )
+		SetTrue( m_uiWarn )
+		SetText( m_uiWarn, T(2368) )
+	else
+		SetTrue( m_uiNation )
+		SetImage( m_uiNation.transform:Find("Icon"), NationSprite(nation) )
+	end
 end

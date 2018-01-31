@@ -881,6 +881,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				// 给城主发送击飞邮件
 				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "", 0 );
 			}
+			// 着火
+			city_setstate( pTargetCity, CITY_STATE_FIRE );
 		}
 
 		//  数据记录杀城池数量
@@ -1500,6 +1502,40 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 		return -1;
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
+
+	char zonetype = map_zone_gettype( pCity->zone );
+	char target_zonetype = map_zone_gettype( (char)g_towninfo[townid].zoneid );
+	if ( zonetype == MAPZONE_TYPE0 )
+	{ // 我在郡城
+		if ( pCity->zone != g_towninfo[townid].zoneid )
+		{
+			actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
+			return -1;
+		}
+	}
+	else if ( zonetype == MAPZONE_TYPE1 )
+	{ // 我在州城
+		if ( target_zonetype != MAPZONE_TYPE1 )
+		{ // 对方不在州城
+			if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
+			{
+				actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
+				return -1;
+			}
+		}
+	}
+	else if ( zonetype == MAPZONE_TYPE1 )
+	{ // 我在皇城
+		if ( target_zonetype == MAPZONE_TYPE0 || target_zonetype == MAPZONE_TYPE1 )
+		{
+			if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
+			{
+				actor_notify_alert( actor_index, 2366 );// 需要官员特殊战事权才可对该地图据点宣战
+				return -1;
+			}
+		}
+	}
+
 	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
 	{
 		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )

@@ -31,6 +31,7 @@ function Player:Init()
 	
 	self.m_actorid			=	0;	-- 角色编号
 	self.m_name				=	"";	-- 角色名称
+	self.m_state			=	0;
 	self.m_nation			=	0;
 	self.m_posx				=	0;
 	self.m_posy				=	0;
@@ -97,14 +98,19 @@ function Player:Init()
 	self.m_attr 			= 	{};
 	self.m_blacklist		= 	{};
 	self.m_buff_endtime		= 	{};
+	self.m_open_town3		=	0;
 	self.m_open_town6		=	0;
 	self.m_open_townking	=	0;
+	
+	self.m_view_zoneid		=	0;
+	self.m_award_mailid		=	int64.new(0);
 end
 
 -- 属性变化
 function Player:Set( recvValue )
 	self.m_actorid			=	recvValue.m_actorid;
 	self.m_name				=	recvValue.m_name;
+	self.m_state			=	recvValue.m_state;
 	self.m_nation			=	recvValue.m_nation;
 	self.m_posx				=	recvValue.m_posx;
 	self.m_posy				=	recvValue.m_posy;
@@ -153,6 +159,7 @@ function Player:Set( recvValue )
 	for i = 1, CITY_BUFF_MAX, 1 do
 		self.m_buff_endtime[i-1] = recvValue.m_buff_endtime[i]
 	end
+	self.m_open_town3		=	recvValue.m_open_town3;
 	self.m_open_town6		=	recvValue.m_open_town6;
 	self.m_open_townking	=	recvValue.m_open_townking;
 end

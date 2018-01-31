@@ -46,10 +46,13 @@ extern int g_nation_actornum[3];
 extern City *g_city;
 extern int g_city_maxcount;
 
-
 extern char g_game_day;
 extern char g_game_weather;
 extern char g_game_day_loop;
+
+extern char g_open_town3;
+extern char g_open_town6;
+extern char g_open_townking;
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
 // 函数说明: 根据索引获取用户id
@@ -490,11 +493,13 @@ int actor_getinfo( int actor_index )
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
 	info.m_game_day_loop = g_game_day_loop;
-	info.m_open_town6 = worldquest_check_server( WORLDQUEST_ID9 );
-	info.m_open_townking = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
+	info.m_open_town3 = g_open_town3;
+	info.m_open_town6 = g_open_town6;
+	info.m_open_townking = g_open_townking;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
+		info.m_state = pCity->state;
 		info.m_posx = pCity->posx;
 		info.m_posy = pCity->posy;
 		info.m_exp = pCity->exp;

@@ -16,6 +16,10 @@ char map_zone_inrange( int zoneid, short posx, short posy );
 
 // 获取地区id
 char map_zone_getid( short posx, short posy );
+char map_zone_gettype( char zoneid );
+
+// 是否是当前地图的可移动地图
+char map_zone_ismovezone( char zoneid, char movezoneid );
 
 // 将显示单元添加到地区
 int map_zone_addunit( int unit_index, int zoneid );
@@ -36,7 +40,7 @@ int map_zone_randpos( short zoneid, short *pPosx, short *pPosy, int scope );
 int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope );
 
 // 地区切换
-void map_zone_change( int actor_index, short posx, short posy );
+void map_zone_change( int actor_index, short posx, short posy, char areaupdate );
 
 // 地区玩家列表
 int map_zone_citylist( int actor_index, int zoneid );

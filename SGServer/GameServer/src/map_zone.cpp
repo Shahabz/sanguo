@@ -42,6 +42,10 @@ extern int g_towninfo_maxnum;
 extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 
+extern char g_open_town3;
+extern char g_open_town6;
+extern char g_open_townking;
+
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
 
@@ -58,6 +62,20 @@ int map_zone_loadcb( int zoneid )
 {
 	if ( zoneid <= 0 || zoneid >= g_map_zone_maxcount )
 		return -1;
+
+	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+	{// 把地区id赋值到区域里
+		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+		{
+			short x = tmpi;
+			short y = tmpj;
+			int area_index = area_getindex( x, y );
+			if ( area_index < 0 || area_index >= g_map.m_nAreaMaxCount )
+				continue;
+			g_map.m_aArea[area_index].zoneid = map_zone_getid( x, y );
+		}
+	}
+
 	return 0;
 }
 
@@ -120,6 +138,31 @@ char map_zone_getid( short posx, short posy )
 	zonex = (posx) / 100;
 	zoney = (posy) / 100;
 	return zoney*(5) + zonex + 1;
+}
+
+// 获取地图类型
+char map_zone_gettype( char zoneid )
+{
+	if ( zoneid < 0 || zoneid >= g_zoneinfo_maxnum )
+		return 0;
+	return (char)g_zoneinfo[zoneid].type;
+}
+
+// 是否是当前地图的可移动地图
+char map_zone_ismovezone( char zoneid, char movezoneid )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return 0;
+	if ( movezoneid <= 0 || movezoneid >= g_zoneinfo_maxnum )
+		return 0;
+	for ( short tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		if ( g_zoneinfo[zoneid].move_zoneid[tmpi] == movezoneid )
+		{
+			return 1;
+		}
+	}
+	return 0;
 }
 
 // 检查区域链表，这个区域的单元坐标位置是否真的属于这个区域，有可能区域发生变化吗
@@ -383,7 +426,7 @@ int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope 
 }
 
 //地图地区进入
-void map_zone_change( int actor_index, short posx, short posy )
+void map_zone_change( int actor_index, short posx, short posy, char areaupdate )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return;
@@ -403,11 +446,23 @@ void map_zone_change( int actor_index, short posx, short posy )
 	if ( !pZone )
 		return;
 	pValue.m_zoneid = zoneid;
-	pValue.m_open = pZone->allow;
+
+	if ( pZone->allow == 0 )
+	{
+		pValue.m_open = 0;
+	}
+	else
+	{
+		if ( areaupdate == 0 )
+			pValue.m_open = -1;
+		else
+			pValue.m_open = pZone->allow;
+	}
+
 	pValue.m_nation = pZone->nation;
 	netsend_mapzonechange_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
-	if ( pZone->allow == 1 )
+	if ( pZone->allow == 1 && areaupdate == 1 )
 	{
 		// 发送玩家列表
 		map_zone_citylist( actor_index, zoneid );

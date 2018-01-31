@@ -67,6 +67,7 @@ function struct_NetC_WorldMapAreaIndex_send( buf, sendValue )
 	buf:WriteInt( sendValue.m_areaindex );
 	buf:WriteShort( sendValue.m_posx );
 	buf:WriteShort( sendValue.m_posy );
+	buf:WriteSByte( sendValue.m_areaupdate );
 end
 
 function struct_NetC_MapBattle_send( buf, sendValue )

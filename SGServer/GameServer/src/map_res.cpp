@@ -195,6 +195,7 @@ int map_res_create( short kind, short posx, short posy )
 	g_map_res[index].posx = posx;
 	g_map_res[index].posy = posy;
 	g_map_res[index].num = config->num;
+	g_map_res[index].idlesec = random( 160, 240 ); // 控制在160分钟到240分钟
 	g_map_res[index].army_index = -1;
 	g_map_res[index].unit_index = mapunit_add( MAPUNIT_TYPE_RES, index );
 	map_addobject( MAPUNIT_TYPE_RES, index, posx, posy );
@@ -239,10 +240,18 @@ int map_res_logic()
 			continue;
 		if ( g_map_res[tmpi].army_index < 0 )
 		{
-			g_map_res[tmpi].idlesec += 60;
-			if ( g_map_res[tmpi].idlesec >= 10800 )
-			{// 闲置超过3小时，删除
+			g_map_res[tmpi].idlesec -= 1;
+			if ( g_map_res[tmpi].idlesec == 0 )
+			{// 闲置超过规定时间，删除，重刷
+				short kind = g_map_res[tmpi].kind;
+				short oldposx = g_map_res[tmpi].posx;
+				short oldposy = g_map_res[tmpi].posy;
 				map_res_delete( tmpi );
+
+				short posx = -1;
+				short posy = -1;
+				map_getrandpos_withrange( oldposx, oldposy, 20, &posx, &posy );
+				map_res_create( kind, posx, posy );
 			}
 		}
 	}

@@ -19,6 +19,8 @@ local ThumbCityRoot			= nil;	-- 地图显示层
 local ThumbCamera			= nil;	-- 地图摄像机
 local ThumbDisplayTownPrefab = nil;
 local ThumbDisplayCityPrefab = nil;
+local ThumbUIMod = nil;
+
 -- 只是显示隐藏 
 function WorldMapThumb.Show( bShow )
 	if WorldMapThumbObject ~= nil then
@@ -50,6 +52,7 @@ function WorldMapThumb.Delete()
 	ThumbDisplayPrefab	= nil;
 	ThumbCityRoot		= nil;
 	ThumbCamera			= nil;
+	ThumbUIMod = nil;
 	WorldMapThumb.clickEffectObj = nil;
 	if GameManager.WorldMap ~= nil then
 		GameManager.WorldMap.gameObject:SetActive( true );
@@ -69,6 +72,8 @@ function WorldMapThumb.Start( Prefab )
 	ThumbDisplayPrefab	= WorldMapThumbPrefab:GetComponent("Transform"):Find( "Display" );
 	ThumbCityRoot		= WorldMapThumbPrefab:GetComponent("Transform"):Find( "CityRoot" );
 	ThumbCamera			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "ThumbCamera" );
+	ThumbUIMod			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "MapThumbUIMod" );
+	SetFalse( ThumbUIMod )
 	
 	-- 点击特效
 	if WorldMapThumb.clickEffectObj == nil then
@@ -330,4 +335,19 @@ function WorldMapThumb.MaskVisible( visible )
 	if ThumbMaskPrefab then
 		ThumbMaskPrefab.gameObject:SetActive( visible );
 	end
+end
+
+function WorldMapThumb.Alert( text )
+	if ThumbUIMod == nil then
+		return
+	end
+	SetTrue( ThumbUIMod )
+	SetText( ThumbUIMod.transform:Find("Alert/Text"), text )
+end
+
+function WorldMapThumb.AlertClose()
+	if ThumbUIMod == nil then
+		return
+	end
+	SetFalse( ThumbUIMod )
 end

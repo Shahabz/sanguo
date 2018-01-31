@@ -977,6 +977,15 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
+	// 全局数据
+	if ( world_data_init() < 0 )
+	{
+		printf_msg( "TalkCacheLoad Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 122 );
+
 	// 聊天缓存
 	chat_cache_load();
 
@@ -1015,16 +1024,6 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 119 );
-
-	
-	// 全局数据
-	if ( world_data_init() < 0 )
-	{
-		printf_msg( "TalkCacheLoad Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	serv_setstat( 122 );
 	return 0;
 }
 

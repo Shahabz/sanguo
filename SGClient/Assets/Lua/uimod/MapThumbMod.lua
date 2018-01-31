@@ -5,12 +5,19 @@
 -- 所属按钮点击时调用
 function MapThumbModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		
+		if nControlID == -1 then
+			
+		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
 			
 		elseif value == 1 then
 			
+		end
+	
+	elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 0 then
+			WorldMapThumb.AlertClose()
 		end
 	end
 end

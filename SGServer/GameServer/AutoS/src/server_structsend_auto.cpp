@@ -302,6 +302,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town3, (*psize) );
 	return 0;
 }
 
@@ -2796,6 +2797,7 @@ int struct_NetS_WorldDataOpen_send( char **pptr, int *psize, SLK_NetS_WorldDataO
 {
 	int tmpi = 0;
 
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town3, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
 	return 0;

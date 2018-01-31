@@ -78,7 +78,22 @@ function BrushEnemy()
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
 		if g_zoneinfo[zoneid].open == 1 then
-			c_brush_enemy_queue_add( zoneid )
+			local brush = 1;
+			if g_zoneinfo[zoneid].type == 2 then
+				if c_get_open_townking() == 0 then
+					-- 皇城没开
+					brush = 0;
+				end
+			end
+			if g_zoneinfo[zoneid].type == 1 then
+				if c_get_open_town6() == 0 then
+					-- 州城没开
+					brush = 0;
+				end
+			end
+			if brush == 1 then
+				c_brush_enemy_queue_add( 0, zoneid )
+			end
 		end
 	end
 end
@@ -148,7 +163,22 @@ function BrushRes()
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
 		if g_zoneinfo[zoneid].open == 1 then
-			BrushResWithZone( zoneid );
+			local brush = 1;
+			if g_zoneinfo[zoneid].type == 2 then
+				if c_get_open_townking() == 0 then
+					-- 皇城没开
+					brush = 0;
+				end
+			end
+			if g_zoneinfo[zoneid].type == 1 then
+				if c_get_open_town6() == 0 then
+					-- 州城没开
+					brush = 0;
+				end
+			end
+			if brush == 1 then
+				c_brush_enemy_queue_add( 1, zoneid )
+			end
 		end
 	end
 end

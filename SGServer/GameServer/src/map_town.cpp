@@ -587,6 +587,9 @@ int map_town_ask_owner( int actor_index, int townid )
 		sprintf( v3, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 		sprintf( v4, "%s", pCity->name );
 		system_talkjson( 0, pCity->nation, 6003, v1, v2, v3, v4, NULL, NULL, 1 );
+
+		// 国家日志
+		nationlog_add( pCity->nation, NATION_LOG_TYPE_REBUILD, townid, pCity->name, 0 );
 	}
 	else
 	{

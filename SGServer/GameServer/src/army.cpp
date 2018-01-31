@@ -37,6 +37,7 @@
 #include "map.h"
 #include "map_zone.h"
 #include "king_war.h"
+#include "world_quest.h"
 #include "nation.h"
 #include "nation_hero.h"
 
@@ -409,6 +410,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	int group_index = -1;
 	// 总兵力
 	int totalsoldiers = 0;
+
 	// 英雄状态检查
 	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
 	{
@@ -440,6 +442,31 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			City *pTargetCity = &g_city[city_index];
 			if ( !pTargetCity )
 				return -1;
+
+			//1，如果我在皇城区域就是随意打，没有任何限制
+			//2，如果我在州城，可以打四个州和两个对应君城
+			//3，如果我在君城，只能打对应君城
+			if ( pCity->zone != MAPZONE_CENTERID && pCity->zone != pTargetCity->zone )
+			{// 不是皇城，也不在自己的地图，那么需要判断
+				char zonetype = map_zone_gettype( pCity->zone );
+				char target_zonetype = map_zone_gettype( pTargetCity->zone );
+				if ( zonetype == MAPZONE_TYPE0 )
+				{ // 我在郡城
+					actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
+					return -1;
+				}
+				else if ( zonetype == MAPZONE_TYPE1 )
+				{ // 我在州城
+					if ( zonetype != target_zonetype )
+					{ // 对方不在州城
+						if ( map_zone_ismovezone( pCity->zone, pTargetCity->zone ) == 0 )
+						{
+							actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
+							return -1;
+						}
+					}
+				}
+			}
 
 			if ( info->m_action == ARMY_ACTION_HELP_TROOP )
 			{
@@ -665,6 +692,29 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			MapTown *pTown = map_town_getptr( townid );
 			if ( !pTown )
 				return -1;
+
+			char zonetype = map_zone_gettype( pCity->zone );
+			char target_zonetype = map_zone_gettype( pTown->zoneid );
+			if ( zonetype == MAPZONE_TYPE0 )
+			{ // 我在郡城
+				if ( pCity->zone != pTown->zoneid )
+				{
+					actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
+					return -1;
+				}
+			}
+			else if ( zonetype == MAPZONE_TYPE1 )
+			{ // 我在州城
+				if ( target_zonetype != MAPZONE_TYPE1 )
+				{ // 对方不在州城
+					if ( map_zone_ismovezone( pCity->zone, pTown->zoneid ) == 0 )
+					{
+						actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
+						return -1;
+					}
+				}
+			}
+
 			if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
 			{
 				if ( pTown->nation > 0 )
@@ -755,6 +805,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			MapEnemy *enemy = map_enemy_getptr( g_mapunit[info->m_to_unit_index].index );
 			if ( !enemy )
 				return -1;
+			if ( pCity->zone != map_zone_getid( enemy->posx, enemy->posy ) )
+			{// 不在同一区域
+				actor_notify_alert( pCity->actor_index, 1322 );
+				return -1;
+			}
 			MapEnemyInfo *config = map_enemy_getconfig( enemy->kind );
 			if ( !config )
 				return -1;
@@ -792,6 +847,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			MapRes *res = map_res_getptr( g_mapunit[info->m_to_unit_index].index );
 			if ( !res )
 				return -1;
+			if ( pCity->zone != map_zone_getid( res->posx, res->posy ) )
+			{// 不在同一区域
+				actor_notify_alert( pCity->actor_index, 1322 );
+				return -1;
+			}
 			MapResInfo *config = map_res_getconfig( res->kind );
 			if ( !config )
 				return -1;
@@ -843,6 +903,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		}
 		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_NATIONHERO )
 		{ // 国家名将
+			if ( pCity->zone != map_zone_getid( info->m_to_posx, info->m_to_posy ) )
+			{// 不在同一区域
+				actor_notify_alert( pCity->actor_index, 1322 );
+				return -1;
+			}
 			// 是否超过4个名将
 			if ( nation_hero_checklimit( pCity ) == 0 )
 			{

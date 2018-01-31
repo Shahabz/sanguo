@@ -169,11 +169,47 @@ end
 
 -- 发送客户端当前区域索引
 function WorldMap.SendAreaIndex( areaindex, posx, posy )
+	if areaindex == -1 then
+		GetPlayer().m_view_zoneid = 0;
+		local sendValue = {};
+		sendValue.m_areaindex = areaindex;
+		sendValue.m_posx = posx;
+		sendValue.m_posy = posy;
+		sendValue.m_areaupdate = 1;
+		netsend_worldmapareaindex_C( sendValue );
+		return
+	end
+	
+	-- 获取单元
+	local areaupdate = 1;
+	
+	-- 当前屏幕所在区域
+	local zoneid = map_zone_getid( posx, posy );
+	GetPlayer().m_view_zoneid = zoneid;
+	
+	-- 如果皇城开启，哪都可以看到
+	if GetPlayer().m_open_townking <= 0 then
+		-- 如果州城开启，只能看见四个州城和对应郡城
+		if GetPlayer().m_open_town6 > 0 then
+			if g_zoneinfo[zoneid].type ~= 1 then
+				if map_zone_ismovezone( GetPlayer().m_zone, zoneid ) == 0 then
+					areaupdate = 0
+				end
+			end
+		else
+			-- 只能看见自己的郡城
+			if GetPlayer().m_zone ~= zoneid then
+				areaupdate = 0
+			end
+		end
+	end
+	
 	-- m_areaindex=0,
 	local sendValue = {};
 	sendValue.m_areaindex = areaindex;
 	sendValue.m_posx = posx;
 	sendValue.m_posy = posy;
+	sendValue.m_areaupdate = areaupdate;
 	netsend_worldmapareaindex_C( sendValue );
 end
 
@@ -1045,7 +1081,7 @@ function WorldMap.OnCityMoved( unit_index, gameCoorX, gameCoorY )
 		WorldMap.UpdateArrow();
 		GetPlayer().m_posx = gameCoorX;
 		GetPlayer().m_posy = gameCoorY;
-
+		
         -- 特效
         --local obj = GameObject.Instantiate( LoadPrefab( "Effect_City_Change_Position_Smoke" ) );
         --obj.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WorldMap.m_nMyCityCameraY );
@@ -1089,6 +1125,24 @@ function map_zone_checksame( posx, posy, tposx, tposy )
 	local n = map_zone_getid( posx, posy );
 	local m = map_zone_getid( tposx, tposy );
 	if n == m then
+		return 1;
+	end
+	return 0;
+end
+
+-- 是否是当前地图的可移动地图
+function map_zone_ismovezone( zoneid, movezoneid )
+	if zoneid <= 0 then
+		return 0;
+	end
+	if movezoneid <= 0 then
+		return 0;
+	end
+	
+	if movezoneid == move_zoneid0 then
+		return 1;
+	end
+	if movezoneid == move_zoneid1 then
 		return 1;
 	end
 	return 0;

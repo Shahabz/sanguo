@@ -151,7 +151,7 @@ void proc_worldmapask_S( int client_index, SLK_NetC_WorldMapAsk *pValue )
 void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pValue )
 {
 	// process.
-	map_areaenter( client_index, pValue->m_areaindex, pValue->m_posx, pValue->m_posy );
+	map_areaenter( client_index, pValue->m_areaindex, pValue->m_posx, pValue->m_posy, pValue->m_areaupdate );
 }
 
 void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )

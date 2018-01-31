@@ -96,7 +96,7 @@ function netsend_worldmapask_C( sendValue )
 	eye.networkManager:SendMessage(buf);
 end
 
--- m_areaindex=0,m_posx=0,m_posy=0,
+-- m_areaindex=0,m_posx=0,m_posy=0,m_areaupdate=0,
 function netsend_worldmapareaindex_C( sendValue )
 	local buf = ByteBuffer.New();
 	buf:WriteShort( CMDC_WORLDMAPAREAINDEX );
