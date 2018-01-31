@@ -252,7 +252,7 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		local posx = recvValue.m_list[tmpi].m_posx
 		local posy = recvValue.m_list[tmpi].m_posy
 		local nation = recvValue.m_list[tmpi].m_nation
-		local level = recvValue.m_list[tmpi].level
+		local level = recvValue.m_list[tmpi].m_level
 
 		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
 		if ThumbDisplayCityPrefab == nil then
@@ -261,6 +261,14 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		local thumbObj = GameObject.Instantiate( ThumbDisplayCityPrefab );
 		thumbObj.transform:SetParent( ThumbCityRoot );
 		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
+		
+		if level <= 10 then
+			thumbObj.transform.localScale = Vector3( 0.15, 0.15, 0.15 );
+		elseif level <= 20 then
+			thumbObj.transform.localScale = Vector3( 0.3, 0.3, 0.3 );
+		else
+			thumbObj.transform.localScale = Vector3( 0.4, 0.4, 0.4 );
+		end
 		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
 	end
 end

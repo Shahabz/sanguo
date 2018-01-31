@@ -2924,6 +2924,7 @@ int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHer
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_loyal, (*psize) );
 	return 0;
 }
 

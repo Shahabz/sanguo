@@ -3754,10 +3754,17 @@ int city_move( City *pCity, short posx, short posy )
 	{
 		pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
+
 	if ( pCity->zoneunit_index < 0 )
 	{
 		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
+	else
+	{
+		zoneunit_del( MAPUNIT_TYPE_CITY, pCity->index, pCity->unit_index );
+		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+	}
+
 	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
 	pCity->zone = map_zone_getid( pCity->posx, pCity->posy );
 

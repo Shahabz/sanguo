@@ -957,6 +957,7 @@ int nation_hero_view( int actor_index, int kind )
 			strncpy( pValue.m_name, city_getname( g_nation_hero[kind].city_index ), NAME_SIZE );
 			pValue.m_namelen = strlen( pValue.m_name );
 			pValue.m_nation = g_city[city_index].nation;
+			pValue.m_loyal = g_city[city_index].nation_hero[offset].loyal;
 		}
 	}
 	else

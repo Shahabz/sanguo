@@ -2657,6 +2657,7 @@ function struct_NetS_NationHeroAttr_recv( buffer )
 	recvValue.m_actorid = buffer:ReadInt();
 	recvValue.m_open = buffer:ReadSByte();
 	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_loyal = buffer:ReadSByte();
 	return recvValue;
 end
 

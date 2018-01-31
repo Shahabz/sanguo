@@ -1994,6 +1994,7 @@ struct _slk_NetS_NationHeroAttr {
 	int m_actorid;	//国家名将属性
 	char m_open;	//国家名将属性
 	char m_nation;	//国家名将属性
+	char m_loyal;	//国家名将属性
 };
 typedef struct _slk_NetS_NationHeroAttr SLK_NetS_NationHeroAttr;	//国家名将属性
 

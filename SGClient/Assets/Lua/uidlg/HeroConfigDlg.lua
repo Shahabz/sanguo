@@ -19,6 +19,7 @@ local m_uiAttackIncreaseIcon = nil; --UnityEngine.GameObject
 local m_uiAttackIncrease = nil; --UnityEngine.GameObject
 local m_uiDefenseIncreaseIcon = nil; --UnityEngine.GameObject
 local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
+local m_uiLoyal = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 
@@ -91,6 +92,7 @@ function HeroConfigDlgOnAwake( gameObject )
 	m_uiAttackIncrease = objs[15];
 	m_uiDefenseIncreaseIcon = objs[16];
 	m_uiDefenseIncrease = objs[17];
+	m_uiLoyal = objs[18];
 end
 
 -- 界面初始化时调用
@@ -226,6 +228,7 @@ function HeroConfigDlgSetBase( pHero )
 	
 	SetFalse( m_uiOwnerWarn )
 	SetFalse( m_uiOwner )
+	SetFalse( m_uiLoyal )
 end
 
 function HeroConfigDlgSetOther( pHero )
@@ -250,9 +253,18 @@ function HeroConfigDlgSetOwner()
 	if m_recvValue.m_actorid > 0 then
 		SetText( m_uiOwner.transform:Find("Name"), "<color=#"..NationColorStr(m_recvValue.m_nation)..">["..Nation( m_recvValue.m_nation ).."]</color>"..m_recvValue.m_name )
 		SetTrue( m_uiOwner.transform:Find("ViewBtn") )
+		
+		-- 忠诚度
+		local loyal = m_recvValue.m_loyal
+		local maxloyal = 100;
+		SetProgress( m_uiLoyal.transform:Find("Progress"), loyal/maxloyal );
+		SetText( m_uiLoyal.transform:Find("Progress/Text"), loyal.."/"..maxloyal )
+		SetTrue( m_uiLoyal )
+	
 	else
 		SetText( m_uiOwner.transform:Find("Name"), T(2069) )
 		SetFalse( m_uiOwner.transform:Find("ViewBtn") )
+		SetFalse( m_uiLoyal )
 	end
 end
 
