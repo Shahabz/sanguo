@@ -563,6 +563,13 @@ int global_init()
 			global.mapcall_range = atoi( row[1] );
 		else if ( id == 199 )
 			global.mapcall_nearby = atoi( row[1] );
+
+		if ( id == 200 )
+			global.hero_god_troops = atoi( row[1] );
+		else if ( id == 201 )
+			global.hero_god_attack = atoi( row[1] );
+		else if ( id == 202 )
+			global.hero_god_defense = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

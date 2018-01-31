@@ -172,6 +172,9 @@ typedef struct _global
 	int nation_online_notify_sec;
 	char mapcall_range;
 	char mapcall_nearby;
+	short hero_god_troops;
+	short hero_god_attack;
+	short hero_god_defense;
 }Global;
 int global_init();
 void global_reload();

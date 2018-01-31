@@ -106,7 +106,7 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 神级突破
 		elseif nControlID == 8 then
-			
+			HeroGodDlgShow( m_pCacheHero )
 				
 		-- 卸下装备
 		elseif nControlID >= 10 and nControlID < 20 then

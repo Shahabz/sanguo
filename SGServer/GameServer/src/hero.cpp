@@ -1554,9 +1554,20 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		}
 	}
 
+	// 神突加成
+	int god_troops = 0;
+	int god_attack = 0;
+	int god_defense = 0;
+	if ( pHero->god == 1 )
+	{
+		god_troops = global.hero_god_troops;
+		god_attack = global.hero_god_attack;
+		god_defense = global.hero_god_defense;
+	}
+
 	// 综合计算
-	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack + buff_attack;
-	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense + buff_defense;
+	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack + buff_attack + god_attack;
+	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense + buff_defense + god_defense;
 	pHero->attack_increase = equip_attack_increase;
 	pHero->defense_increase = equip_defense_increase;
 	pHero->assault = equip_assault;
@@ -1568,7 +1579,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	float bp_troops = 0;
 
 	// 兵力特殊，需要分类计算
-	int hero_troops = base_troops + (tech_troops + equip_troops + nequip_troops) / 4;
+	int hero_troops = base_troops + (tech_troops + equip_troops + nequip_troops + god_troops) / 4;
 	if ( pHero->offset < HERO_BASEOFFSET )
 	{ // 无职务武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );

@@ -198,3 +198,6 @@ global.nation_change_notice_sec = 60 --国家修改公告间隔
 global.nation_online_notify_sec = 7200 --国家上限提醒间隔
 global.mapcall_range = 6 --召唤随机范围
 global.mapcall_nearby = 20 --召唤判断附近
+global.hero_god_troops = 1600 --神突增加兵力
+global.hero_god_attack = 1000 --神突增加攻击
+global.hero_god_defense = 600 --神突增加防御
