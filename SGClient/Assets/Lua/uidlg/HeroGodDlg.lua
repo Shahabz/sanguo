@@ -210,5 +210,6 @@ function HeroGodDlgUp()
 			return
 		end
 	end
-	system_askinfo( ASKINFO_HERO, "", 11, pHero.m_kind );
+	system_askinfo( ASKINFO_HERO, "", 11, m_pHero.m_kind );
+	HeroGodDlgClose()
 end

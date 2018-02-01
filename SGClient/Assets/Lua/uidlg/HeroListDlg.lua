@@ -256,7 +256,7 @@ function HeroListDlgLoadHero()
         if pHero ~= nil and pHero.m_kind > 0 then
 			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
 			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
-            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = offset,
+            table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset,
 			m_qualtiy = base, 
 			m_washqualtiy = wash,
 			m_attack = pHero.m_attack_base + pHero.m_attack_wash,
@@ -272,7 +272,7 @@ function HeroListDlgLoadHero()
 			if GetHero():IsCanUse( pHero.m_kind ) == true then
 				local base = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
 				local wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash
-				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_offset = 10000+offset,
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = 10000+offset,
 				m_qualtiy = base, 
 				m_washqualtiy = wash,
 				m_attack = pHero.m_attack_base + pHero.m_attack_wash,
