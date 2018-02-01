@@ -175,6 +175,7 @@ typedef struct _global
 	short hero_god_troops;
 	short hero_god_attack;
 	short hero_god_defense;
+	short hero_god_level;
 }Global;
 int global_init();
 void global_reload();

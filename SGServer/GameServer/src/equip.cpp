@@ -1422,3 +1422,27 @@ int equip_gm_getall( int actor_index )
 	equip_getequip( actor_index, 54, PATH_GM );
 	return 0;
 }
+
+int equip_gm_getherogod( int actor_index )
+{
+	short hero_godup_equip[6] = { 5, 15, 25, 35, 45, 55 };
+	short hero_godup_washid[6] = { 15, 15, 25, 25, 75, 75 };
+	for ( int index = 0; index < 6; index++ )
+	{
+		equip_getequip( actor_index, hero_godup_equip[index], PATH_GM );
+		for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+		{
+			if ( g_actors[actor_index].equip[tmpi].kind <= 0 )
+				continue;
+			if ( g_actors[actor_index].equip[tmpi].kind == hero_godup_equip[index] )
+			{
+				g_actors[actor_index].equip[tmpi].washid[0] = hero_godup_washid[index];
+				g_actors[actor_index].equip[tmpi].washid[1] = hero_godup_washid[index];
+				g_actors[actor_index].equip[tmpi].washid[2] = hero_godup_washid[index];
+				g_actors[actor_index].equip[tmpi].washid[3] = hero_godup_washid[index];
+				break;
+			}
+		}
+	}
+	return 0;
+}

@@ -24,6 +24,7 @@ NOTIFY_CITYGUARDNUM	  = 21	-- 城防军数量
 NOTIFY_HERO_VISIT	  =	22	-- 武将寻访
 NOTIFY_MAPCALL		  =	23	-- 地图召唤
 NOTIFY_HEROBACK		  = 24	-- 武将回城
+NOTIFY_HEROGOD		  =	25	-- 神突成功
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -295,6 +296,12 @@ function RecvActorNotify(recvValue)
 			str = str.."/"..HeroName( value[4] )
 		end
 		pop( F( 983, str ) )
+	
+	-- 神突成功
+	elseif msgid == NOTIFY_HEROGOD then
+		if value[1] == 0 then
+			
+		end
     end
 end
 

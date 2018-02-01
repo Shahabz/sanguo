@@ -316,6 +316,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 补充御林卫士兵
 			hero_guard_soldiers_token( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 11 )
+		{ // 神级突破
+			hero_godup( actor_index, pvalue[1] );
+		}
 		
 		break;
 	case ASKINFO_TECH:

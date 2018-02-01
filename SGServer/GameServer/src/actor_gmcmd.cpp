@@ -269,6 +269,11 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			equip_gm_getall( pCity->actor_index );
 			break;
 		}
+		else if ( pCity && pValue[0] == -101 )
+		{
+			equip_gm_getherogod( pCity->actor_index );
+			break;
+		}
 
 		if ( pCity )
 		{

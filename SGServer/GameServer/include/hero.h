@@ -61,6 +61,9 @@ int hero_colorup_sendinfo( int actor_index, int herokind );
 int hero_colorup_reset( int actor_index );
 int hero_colorup( int actor_index, int herokind );
 
+// Éñ¼¶Í»ÆÆ
+int hero_godup( int actor_index, int herokind );
+
 // Îä½«Ñ°·Ã
 #define HERO_VISIT_AWARDMAX			32
 #define HERO_VISIT_AWARDGROUPMAX	5

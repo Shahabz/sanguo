@@ -18,7 +18,9 @@
 #include "server_netsend_auto.h"
 #include "actor_notify.h"
 #include "city_attr.h"
+#include "chat.h"
 #include "actor_times.h"
+#include "mail.h"
 #include "nation_hero.h"
 
 extern SConfig g_Config;
@@ -2031,6 +2033,90 @@ int hero_colorup( int actor_index, int herokind )
 	pValue.m_value = pHero->colorup;
 	pValue.m_isup = isup;
 	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 神级突破
+static short s_hero_godup_equip[6] = { 5, 15, 25, 35, 45, 55 };
+static short s_hero_godup_washid[6] = { 15, 15, 25, 25, 75, 75 };
+int hero_godup( int actor_index, int herokind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->state != HERO_STATE_NORMAL )
+	{
+		POP( actor_index, 845 );
+		return -1;
+	}
+	if ( pHero->level < global.hero_god_level )
+		return -1;
+	if ( pHero->color < ITEM_COLOR_LEVEL_PURPLE )
+		return -1;
+	if ( pHero->god == 1 )
+		return -1;
+	char addequip_offset[6] = { -1, -1, -1, -1, -1, -1 };
+	
+	// 收集装备
+	for ( int index = 0; index < 6; index++ )
+	{
+		for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+		{
+			if ( g_actors[actor_index].equip[tmpi].kind <= 0 )
+				continue;
+			if ( g_actors[actor_index].equip[tmpi].kind == s_hero_godup_equip[index] )
+			{
+				if ( g_actors[actor_index].equip[tmpi].washid[0] == s_hero_godup_washid[index] && 
+					 g_actors[actor_index].equip[tmpi].washid[1] == s_hero_godup_washid[index] &&
+					 g_actors[actor_index].equip[tmpi].washid[2] == s_hero_godup_washid[index] &&
+					 g_actors[actor_index].equip[tmpi].washid[3] == s_hero_godup_washid[index] )
+				{
+					addequip_offset[index] = tmpi;
+					break;
+				}
+			}
+		}
+	}
+
+	// 检查是否齐全
+	for ( int index = 0; index < 6; index++ )
+	{
+		if ( addequip_offset[index] < 0 )
+			return -1;
+	}
+
+	// 扣除装备
+	for ( int index = 0; index < 6; index++ )
+	{
+		equip_lostequip( actor_index, addequip_offset[index], PATH_HERO_GOD );
+	}
+
+	pHero->god = 1;
+	// 重算英雄属性
+	hero_attr_calc( pCity, pHero );
+	// 重算战力
+	city_battlepower_hero_calc( pCity );
+	// 更新英雄
+	hero_sendinfo( actor_index, pHero );
+	// 通知客户端突破成功
+	int value[2] = { 0 };
+	value[0] = 0;
+	value[1] = pHero->kind;
+	actor_notify_value( actor_index, NOTIFY_HEROGOD, 2, value, NULL );
+
+	// 公告
+	char v1[32] = { 0 };
+	char v2[32] = { 0 };
+	char v3[32] = { 0 };
+	sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+	sprintf( v2, "%s", pCity->name );
+	sprintf( v3, "%s%d", TAG_HERO, pHero->kind );
+	system_talkjson_world( 6026, v1, v2, v3, NULL, NULL, NULL, 1 );
 	return 0;
 }
 

@@ -201,3 +201,4 @@ global.mapcall_nearby = 20 --召唤判断附近
 global.hero_god_troops = 1600 --神突增加兵力
 global.hero_god_attack = 1000 --神突增加攻击
 global.hero_god_defense = 600 --神突增加防御
+global.hero_god_level = 100 --神将突破等级限制

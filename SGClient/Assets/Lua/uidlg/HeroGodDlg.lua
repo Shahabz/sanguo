@@ -116,6 +116,10 @@ end
 -- 自定
 ----------------------------------------
 function HeroGodDlgShow( pHero )
+	if pHero.m_level < global.hero_god_level then
+		AlertMsg( F( 2384, global.hero_god_level ) )
+		return
+	end	
 	HeroGodDlgOpen()
 	m_pHero = pHero
 	SetImage( m_uiBack, HeroColorSprite( pHero.m_color ) )
@@ -200,5 +204,11 @@ end
 
 -- 开始突破
 function HeroGodDlgUp()
-	
+	for i=1,6,1 do
+		if m_AddEquip[i] == 0 then
+			pop( T(2385) )
+			return
+		end
+	end
+	system_askinfo( ASKINFO_HERO, "", 11, pHero.m_kind );
 end

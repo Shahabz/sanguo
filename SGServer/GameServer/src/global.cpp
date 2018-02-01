@@ -570,6 +570,8 @@ int global_init()
 			global.hero_god_attack = atoi( row[1] );
 		else if ( id == 202 )
 			global.hero_god_defense = atoi( row[1] );
+		else if ( id == 203 )
+			global.hero_god_level = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );
