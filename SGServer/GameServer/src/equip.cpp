@@ -1440,6 +1440,7 @@ int equip_gm_getherogod( int actor_index )
 				g_actors[actor_index].equip[tmpi].washid[1] = hero_godup_washid[index];
 				g_actors[actor_index].equip[tmpi].washid[2] = hero_godup_washid[index];
 				g_actors[actor_index].equip[tmpi].washid[3] = hero_godup_washid[index];
+				equip_sendbag( actor_index, tmpi );
 				break;
 			}
 		}
