@@ -46,13 +46,21 @@ function BagDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "BagDlg" );
-	coroutine.stop( BagDlgCreateItem )
+	--coroutine.stop( BagDlgCreateItem )
+	m_CacheItemCache = nil;
+    m_CacheItemList = nil;
+	m_CacheItemList = nil;
+	m_CacheEquipList = nil;
 end
 
 -- 删除界面
 function BagDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_CacheItemCache = nil;
+    m_CacheItemList = nil;
+	m_CacheItemList = nil;
+	m_CacheEquipList = nil;
 end
 
 ----------------------------------------
@@ -235,6 +243,9 @@ end
 -- 清空道具对象
 function BagDlgClearItem()
     if m_uiItemContent ~= nil then
+		for i = 0, 5, 1 do
+			BagDlgClearItemRow( m_uiItemContent.transform:GetChild(i):Find("Content").gameObject )
+		end
         local childCount = m_uiItemContent.transform.childCount;
         for i = 6, childCount - 1, 1 do
             local child = m_uiItemContent.transform:GetChild(i).gameObject;
@@ -255,6 +266,11 @@ function BagDlgClearEquip()
             child:SetActive(false);
         end
     end--]]
+	local childCount = m_uiEquipContent.transform.childCount;
+	for i = 0, childCount - 1, 1 do
+		local child = m_uiEquipContent.transform:GetChild(i).gameObject;
+		BagDlgClearEquipRow(m_uiEquipContent.transform:GetChild(i).gameObject)
+	end
     m_CacheEquipCache = { };
     m_CacheEquipList = { };
 end
@@ -297,14 +313,14 @@ end
 
 -- 读取缓存道具
 function BagDlgLoadItem()
-	if m_Dlg == nil then
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
+	
 	if IsActive( m_uiItemScroll ) == false then
 		return;
 	end
     BagDlgClearItem()
-
     -- 先放进临时缓存
     for nItemIndex = 1, MAX_ITEMNUM, 1 do
         local pItem = GetItem().m_Item[nItemIndex];
@@ -315,17 +331,16 @@ function BagDlgLoadItem()
 	
 	-- 一个道具都没有
 	if #m_CacheItemCache == 0 then
-		BagDlgClearItemRow(m_uiItemContent.transform:GetChild(0):Find("Content").gameObject)
 		return;
 	end
 	
     -- 排序
     table.sort(m_CacheItemCache, BagDlgItemCacheSort);
 	
-	coroutine.stop( BagDlgCreateItem )
-	coroutine.start( BagDlgCreateItem )
+	--coroutine.stop( BagDlgCreateItem )
+	--coroutine.start( BagDlgCreateItem )
 	-- 创建
-	--BagDlgCreateItem()
+	BagDlgCreateItem()
 end
 
 function BagDlgCreateItem()
@@ -343,7 +358,7 @@ function BagDlgCreateItem()
                     currItemRow.transform:SetParent(m_uiItemContent.transform);
                     currItemRow.transform.localScale = Vector3.one;
                     currItemRow:SetActive(true);
-					coroutine.wait(0.03) -- 此处等待
+					--coroutine.wait(0.03) -- 此处等待
                 else
                     currItemRow = m_uiItemContent.transform:GetChild(rowCount).gameObject;
                     currItemRow:SetActive(true);
@@ -398,7 +413,6 @@ function BagDlgLoadEquip()
 	
 	-- 一个装备都没有
 	if #m_CacheEquipCache == 0 then
-		BagDlgClearEquipRow(m_uiEquipContent.transform:GetChild(0).gameObject)
 		return;
 	end
 	

@@ -32,6 +32,8 @@ local m_uiFreeItemBtnGroup = nil; --UnityEngine.GameObject
 local m_uiFreeItemText = nil; --UnityEngine.GameObject
 local m_uiFreeItemBtn = nil; --UnityEngine.GameObject
 local m_uiGodDot = nil; --UnityEngine.GameObject
+
+local m_recvValue = nil;
 local m_cacheAward = nil;
 local m_tokenObjectArray = {};
 local m_heroObjectArray = {};
@@ -280,7 +282,8 @@ function HeroVisitDlgShow()
 end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
-function HeroVisitDlgRecv( recvValue )	
+function HeroVisitDlgRecv( recvValue )
+	m_recvValue = recvValue;
 	i_goodTimesNum = recvValue.m_hv_low_num ;
 	i_godTimesNum = recvValue.m_hv_high_num ;
 	if	recvValue.m_hv_free_cd == 0 then
@@ -318,6 +321,18 @@ end
 -- 良将寻访
 function HeroVisitDlgLow()
 	-- 关键条件判断
+	-- 
+	-- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
+	if m_recvValue.m_hv_free_cd <= 0 then
+		i_TimesNum = i_TimesNum -1 ;
+		if i_TimesNum == 0 then
+			i_TimesNum = 10 ;
+		end
+		SetText(m_uiTimesText,F(1963,i_TimesNum));
+		system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
+		return
+	end
+	
 	local token = global.hero_visit_low_token
 	MsgBox(F(1978,token,1),function()
 		if GetPlayer().m_token < token then
@@ -328,7 +343,6 @@ function HeroVisitDlgLow()
 				i_TimesNum = 10 ;
 			end
 			SetText(m_uiTimesText,F(1963,i_TimesNum));
-			-- 发送信息
 			system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
 		end
 	end);

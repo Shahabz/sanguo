@@ -2928,3 +2928,30 @@ int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHer
 	return 0;
 }
 
+int struct_NetS_WishingShopItem_send( char **pptr, int *psize, SLK_NetS_WishingShopItem *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_costkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_costnum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_WishingShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_openstamp, (*psize) );
+	return 0;
+}
+

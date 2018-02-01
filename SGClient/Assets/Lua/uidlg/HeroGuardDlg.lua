@@ -89,7 +89,6 @@ end
 -- 自定
 ----------------------------------------
 function HeroGuardDlgShow()
-	CabinetDlgClose();
 	HeroGuardDlgOpen()
 	m_uiReplaceBtn.transform:SetSiblingIndex(1000);
 	HeroGuardDlgSetFood()

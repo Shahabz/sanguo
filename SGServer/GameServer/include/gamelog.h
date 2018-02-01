@@ -113,6 +113,7 @@
 #define PATH_MAPCALL					84	// 地图召唤
 #define PATH_NATIONHERO					85	// 国家名将
 #define PATH_HERO_GOD					86	// 英雄神突
+#define PATH_WISHINGSHOP				87	// 聚宝盆
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

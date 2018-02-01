@@ -2403,6 +2403,17 @@ int hero_visit_high( int actor_index )
 	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+
+		if ( getinfo.kind[tmpi] > AWARDKIND_HEROBASE && getinfo.kind[tmpi] < AWARDKIND_BUILDINGBASE )
+		{ // 武将公告
+			char v1[32] = { 0 };
+			char v2[32] = { 0 };
+			char v3[32] = { 0 };
+			sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+			sprintf( v2, "%s", pCity->name );
+			sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
+			system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
+		}
 	}
 	// 发送获取的奖励ID
 	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );
@@ -2456,6 +2467,17 @@ int hero_visit_high10( int actor_index )
 	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
 	{
 		award_getaward( actor_index, getinfo.kind[tmpi], getinfo.num[tmpi], -1, PATH_HEROVISIT, NULL );
+
+		if ( getinfo.kind[tmpi] > AWARDKIND_HEROBASE && getinfo.kind[tmpi] < AWARDKIND_BUILDINGBASE )
+		{ // 武将公告
+			char v1[32] = { 0 };
+			char v2[32] = { 0 };
+			char v3[32] = { 0 };
+			sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+			sprintf( v2, "%s", pCity->name );
+			sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
+			system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
+		}
 	}
 	// 发送获取的奖励ID
 	netsend_herovisitaward_S( actor_index, SENDTYPE_ACTOR, &netAward );

@@ -87,7 +87,6 @@ end
 -- 自定
 ----------------------------------------
 function HeroGatherDlgShow()
-	CabinetDlgClose();
 	HeroGatherDlgOpen();
 	m_uiReplaceBtn.transform:SetSiblingIndex(1000);
 	HeroGatherDlgUpdate();

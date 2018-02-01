@@ -56,6 +56,7 @@
 #include "king_war.h"
 #include "rank.h"
 #include "pay.h"
+#include "wishing.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -795,6 +796,24 @@ int process_init( int max_connection )
 	if ( weatherinfo_init_auto() < 0 )
 	{
 		printf_msg( "weatherinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 聚宝盆
+	if ( wishingshop_init_auto() < 0 )
+	{
+		printf_msg( "wishingshop_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// 聚宝盆-换宝
+	if ( wishingchange_init_auto() < 0 )
+	{
+		printf_msg( "wishingchange_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

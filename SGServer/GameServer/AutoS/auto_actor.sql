@@ -65,5 +65,9 @@ CREATE TABLE `actor` (
   `shop_saleitem` varbinary(24) NOT NULL DEFAULT '' COMMENT '商店打折物品',
   `neq_crit` varbinary(24) NOT NULL DEFAULT '' COMMENT '国器暴击状态',
   `mapcallfree` tinyint(3) NOT NULL DEFAULT '0' COMMENT '免费召唤次数',
+  `wishingid` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具列表',
+  `wishingday` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆道具哪天的',
+  `wishingopen` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具开启',
+  `wishingcd` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆寻宝冷却',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

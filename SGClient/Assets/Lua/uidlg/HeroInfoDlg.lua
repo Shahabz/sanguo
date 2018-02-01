@@ -314,7 +314,7 @@ function HeroInfoDlgSet( path, pHero, up )
 		baseoffset = 4
 		
 	elseif pHero.m_offset >= 1008 and pHero.m_offset < 1012 then -- 御林卫武将
-		baseoffset = 8			
+		baseoffset = 8
 	end
 
 	-- 先放进临时缓存

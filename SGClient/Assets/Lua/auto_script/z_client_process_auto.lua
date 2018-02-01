@@ -650,7 +650,7 @@ function proc_hero_C( recvValue )
 	HeroGatherDlgUpdate();
 	HeroGuardDlgUpdate();
 	HeroInfoDlgUpdate( recvValue.m_kind );
-	HeroListDlgLoadHero();
+	HeroListDlgUpdate();
 	HeroWashDlgUpdate();
 end
 
@@ -2056,5 +2056,11 @@ end
 function proc_nationheroattr_C( recvValue )
 	-- process.
 	HeroConfigDlgRecv( recvValue )
+end
+
+-- m_count=0,m_list={m_id=0,m_color=0,m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_open=0,[m_count]},m_openstamp=0,
+function proc_wishingshop_C( recvValue )
+	-- process.
+	WishinggDlgRecv( recvValue )
 end
 

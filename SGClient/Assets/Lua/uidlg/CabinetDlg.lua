@@ -53,6 +53,10 @@ function CabinetDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 御林卫
 		elseif nControlID == 2 then
 			HeroGuardDlgShow()
+			
+		-- 天策府
+		elseif nControlID == 3 then
+			HeroLevyDlgShow()
         end
 	end
 end

@@ -42,6 +42,7 @@
 #include "nation_equip.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "wishing.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -913,6 +914,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 5 )
 		{ // 查看信息
 			nation_hero_view( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_WISHING:
+		if ( pvalue[0] == 0 )
+		{ // 聚宝盆信息
+			wishing_shop_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 聚宝盆打开
+			wishing_shop_open( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 聚宝盆购买
+			wishing_shop_buy( actor_index, pvalue[1] );
 		}
 		break;
 	default:

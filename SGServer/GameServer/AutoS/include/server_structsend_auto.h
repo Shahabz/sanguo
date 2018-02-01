@@ -1998,6 +1998,24 @@ struct _slk_NetS_NationHeroAttr {
 };
 typedef struct _slk_NetS_NationHeroAttr SLK_NetS_NationHeroAttr;	//π˙º“√˚Ω´ Ù–‘
 
+struct _slk_NetS_WishingShopItem {
+	short m_id;	//æ€±¶≈Ë±¶ŒÔ
+	char m_color;	//æ€±¶≈Ë±¶ŒÔ
+	int m_awardkind;	//æ€±¶≈Ë±¶ŒÔ
+	int m_awardnum;	//æ€±¶≈Ë±¶ŒÔ
+	int m_costkind;	//æ€±¶≈Ë±¶ŒÔ
+	int m_costnum;	//æ€±¶≈Ë±¶ŒÔ
+	char m_open;	//æ€±¶≈Ë±¶ŒÔ
+};
+typedef struct _slk_NetS_WishingShopItem SLK_NetS_WishingShopItem;	//æ€±¶≈Ëµ¿æﬂ
+
+struct _slk_NetS_WishingShop {
+	char m_count;	//æ€±¶≈Ë
+	SLK_NetS_WishingShopItem m_list[9];	//æ€±¶≈Ë
+	int m_openstamp;	//æ€±¶≈Ë
+};
+typedef struct _slk_NetS_WishingShop SLK_NetS_WishingShop;	//æ€±¶≈Ë
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2213,5 +2231,7 @@ int struct_NetS_NationHeroList_send( char **pptr, int *psize, SLK_NetS_NationHer
 int struct_NetS_CityNationHero_send( char **pptr, int *psize, SLK_NetS_CityNationHero *pValue );
 int struct_NetS_CityNationHeroList_send( char **pptr, int *psize, SLK_NetS_CityNationHeroList *pValue );
 int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHeroAttr *pValue );
+int struct_NetS_WishingShopItem_send( char **pptr, int *psize, SLK_NetS_WishingShopItem *pValue );
+int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop *pValue );
 
 #endif

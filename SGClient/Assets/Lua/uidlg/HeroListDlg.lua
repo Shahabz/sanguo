@@ -20,6 +20,8 @@ local b_OpenCloseInfo = false;
 
 local m_rankType = 1;
 local m_path = 0;
+local m_isUpdate = 0;
+
 HEROLIST_PATH_HERO			= 0
 HEROLIST_PATH_HERO_GATHER	= 1
 HEROLIST_PATH_HERO_GUARD	= 2
@@ -39,6 +41,8 @@ function HeroListDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "HeroListDlg" );
+	m_SelectHeroKind = 0;
+	m_isUpdate = 0;
 end
 
 -- 删除界面
@@ -131,11 +135,10 @@ function HeroListDlgOnStart( gameObject )
 end
 
 -- 界面显示时调用
-function HeroListDlgOnEnable( gameObject )
-	if ( GetPlayer().m_level >= global.hero_visit_actorlevel and GetPlayer():CityLevel() >= global.hero_visit_mainlevel ) then
-		SetTrue(m_uiHeoVisitEnter);
-	else
-		SetFalse(m_uiHeoVisitEnter);
+function HeroListDlgOnEnable( gameObject )	
+	if m_isUpdate == 1 then
+		m_isUpdate = 0;
+		HeroListDlgLoadHero()
 	end
 end
 
@@ -161,8 +164,20 @@ end
 function HeroListDlgShow( path )
 	m_path = path
 	HeroListDlgOpen()
+	if GetPlayer().m_level >= global.hero_visit_actorlevel and GetPlayer():CityLevel() >= global.hero_visit_mainlevel then
+		SetTrue( m_uiHeoVisitEnter );
+	else
+		SetFalse( m_uiHeoVisitEnter );
+	end
+	
 	HeroListDlgCreateNationHeroVisit()
 	HeroListDlgLoadHero();
+end
+
+function HeroListDlgUpdate()
+	if m_SelectHeroKind > 0 then
+		m_isUpdate = 1;
+	end
 end
 
 -- 缓存排序
@@ -609,6 +624,7 @@ function HeroListDlgSelect( offset )
 	if m_SelectHeroKind <= 0 then
 		return
 	end
+	m_isUpdate = 0;
 	HeroInfoDlgShow( m_path, pHero, up )
 end
 

@@ -910,6 +910,11 @@ function netrecv_nationheroattr_C( buffer )
 	proc_nationheroattr_C( recvValue );
 end
 
+function netrecv_wishingshop_C( buffer )
+	local recvValue = struct_NetS_WishingShop_recv( buffer );
+	proc_wishingshop_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1093,6 +1098,7 @@ Proc_Command = {
 	[CMDS_CITYNATIONHERO]=netrecv_citynationhero_C;
 	[CMDS_CITYNATIONHEROLIST]=netrecv_citynationherolist_C;
 	[CMDS_NATIONHEROATTR]=netrecv_nationheroattr_C;
+	[CMDS_WISHINGSHOP]=netrecv_wishingshop_C;
 }
 
 function in_proc_command_C( cmd, buffer )
