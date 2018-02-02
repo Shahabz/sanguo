@@ -346,6 +346,28 @@ int wishing_pack_sendinfo( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+
+	int idlist[3] = { 0 };
+	idlist[0] = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_SILVER ) + 1;
+	idlist[1] = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_WOOD ) + 21;
+	idlist[2] = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_FOOD ) + 41;
+
+	SLK_NetS_WishingPack pValue = { 0 };
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		int id = idlist[tmpi];
+		if ( id <= 0 || id >= g_wishing_pack_maxnum )
+			continue;
+		pValue.m_list[pValue.m_count].m_id = id;
+		pValue.m_list[pValue.m_count].m_awardkind = g_wishing_pack[id].awardkind;
+		pValue.m_list[pValue.m_count].m_awardnum = g_wishing_pack[id].awardnum;
+		pValue.m_list[pValue.m_count].m_costkind = g_wishing_pack[id].costkind;
+		pValue.m_list[pValue.m_count].m_costnum = g_wishing_pack[id].costnum;
+		pValue.m_list[pValue.m_count].m_token = g_wishing_pack[id].token;
+		pValue.m_count += 1;
+	}
+
+	netsend_wishingpack_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -359,35 +381,49 @@ int wishing_pack_buy( int actor_index, int id )
 	if ( id <= 0 || id >= g_wishing_pack_maxnum )
 		return -1;
 
-	if ( g_actors[actor_index].token < g_wishing_pack[id].token )
-	{
-		return -1;
-	}
-
 	// ÏûºÄ¼ì²é
 	if ( g_wishing_pack[id].costkind == AWARDKIND_SILVER ) // Òø±Ò
 	{
+		int num = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_SILVER );
+		int nowid = num + 1;
+		if ( nowid != id )
+			return -1;
+		if ( g_actors[actor_index].token < g_wishing_pack[id].token )
+			return -1;
 		if ( pCity->silver < g_wishing_pack[id].costnum )
 			return -1;
 		city_changesilver( pCity->index, -g_wishing_pack[id].costnum, PATH_WISHINGPACK );
+		if ( num < global.wishing_pack_maxnum )
+			actor_add_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_SILVER );
+
 	}
 	else if ( g_wishing_pack[id].costkind == AWARDKIND_WOOD ) // Ä¾²Ä
 	{
+		int num = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_WOOD );
+		int nowid = num + 21;
+		if ( nowid != id )
+			return -1;
+		if ( g_actors[actor_index].token < g_wishing_pack[id].token )
+			return -1;
 		if ( pCity->wood < g_wishing_pack[id].costnum )
 			return -1;
 		city_changewood( pCity->index, -g_wishing_pack[id].costnum, PATH_WISHINGPACK );
+		if ( num < global.wishing_pack_maxnum )
+			actor_add_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_WOOD );
 	}
 	else if ( g_wishing_pack[id].costkind == AWARDKIND_FOOD ) // Á¸Ê³
 	{
+		int num = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_FOOD );
+		int nowid = num + 41;
+		if ( nowid != id )
+			return -1;
+		if ( g_actors[actor_index].token < g_wishing_pack[id].token )
+			return -1;
 		if ( pCity->food < g_wishing_pack[id].costnum )
 			return -1;
 		city_changefood( pCity->index, -g_wishing_pack[id].costnum, PATH_WISHINGPACK );
-	}
-	else if ( g_wishing_pack[id].costkind == AWARDKIND_IRON ) // ïÙÌú
-	{
-		if ( pCity->iron < g_wishing_pack[id].costnum )
-			return -1;
-		city_changeiron( pCity->index, -g_wishing_pack[id].costnum, PATH_WISHINGPACK );
+		if ( num < global.wishing_pack_maxnum )
+			actor_add_today_char_times( actor_index, TODAY_CHAR_WISHINGPACK_FOOD );
 	}
 	else
 		return -1;
@@ -396,5 +432,6 @@ int wishing_pack_buy( int actor_index, int id )
 
 	// ¸øÓë½±Àø
 	award_getaward( actor_index, g_wishing_pack[id].awardkind, g_wishing_pack[id].awardnum, -1, PATH_WISHINGPACK, NULL );
+	wishing_pack_sendinfo( actor_index );
 	return 0;
 }

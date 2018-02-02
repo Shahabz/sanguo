@@ -2069,3 +2069,8 @@ function proc_wishingchange_C( recvValue )
 	-- process.
 end
 
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_id=0,m_token=0,[m_count]},
+function proc_wishingpack_C( recvValue )
+	-- process.
+end
+

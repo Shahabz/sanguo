@@ -592,6 +592,8 @@ int global_init()
 			global.wishing_change_cd = atoi( row[1] );
 		else if ( id == 213 )
 			global.wishing_change_cdmax = atoi( row[1] );
+		else if ( id == 214 )
+			global.wishing_pack_maxnum = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

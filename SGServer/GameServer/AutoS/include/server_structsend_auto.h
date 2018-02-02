@@ -2031,6 +2031,22 @@ struct _slk_NetS_WishingChange {
 };
 typedef struct _slk_NetS_WishingChange SLK_NetS_WishingChange;	//聚宝盆兑换
 
+struct _slk_NetS_WishingPackItem {
+	int m_awardkind;	//聚宝盆打包资源
+	int m_awardnum;	//聚宝盆打包资源
+	int m_costkind;	//聚宝盆打包资源
+	int m_costnum;	//聚宝盆打包资源
+	short m_id;	//聚宝盆打包资源
+	int m_token;	//聚宝盆打包资源
+};
+typedef struct _slk_NetS_WishingPackItem SLK_NetS_WishingPackItem;	//聚宝盆打包道具
+
+struct _slk_NetS_WishingPack {
+	char m_count;	//聚宝盆打包
+	SLK_NetS_WishingPackItem m_list[3];	//聚宝盆打包
+};
+typedef struct _slk_NetS_WishingPack SLK_NetS_WishingPack;	//聚宝盆打包
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2249,5 +2265,7 @@ int struct_NetS_NationHeroAttr_send( char **pptr, int *psize, SLK_NetS_NationHer
 int struct_NetS_WishingShopItem_send( char **pptr, int *psize, SLK_NetS_WishingShopItem *pValue );
 int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop *pValue );
 int struct_NetS_WishingChange_send( char **pptr, int *psize, SLK_NetS_WishingChange *pValue );
+int struct_NetS_WishingPackItem_send( char **pptr, int *psize, SLK_NetS_WishingPackItem *pValue );
+int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack *pValue );
 
 #endif

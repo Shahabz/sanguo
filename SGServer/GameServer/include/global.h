@@ -186,6 +186,7 @@ typedef struct _global
 	char wishing_green_to_draw;
 	short wishing_change_cd;
 	int wishing_change_cdmax;
+	char wishing_pack_maxnum;
 }Global;
 int global_init();
 void global_reload();

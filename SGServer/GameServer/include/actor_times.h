@@ -27,6 +27,9 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_NATION_MISSION_AWARD3	8 // 今天是否领取国家荣誉任务奖励
 #define TODAY_CHAR_MAPCALLNUM		9	// 今天召唤次数	
 #define TODAY_CHAR_WISHINGSHOP_TODAYBUY		10	// 聚宝盆今天是否已经购买	
+#define TODAY_CHAR_WISHINGPACK_SILVER	11	// 聚宝盆打包，今天银币打包次数
+#define TODAY_CHAR_WISHINGPACK_WOOD		12	// 聚宝盆打包，今天木材打包次数
+#define TODAY_CHAR_WISHINGPACK_FOOD 	13	// 聚宝盆打包，今天粮食打包次数
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );

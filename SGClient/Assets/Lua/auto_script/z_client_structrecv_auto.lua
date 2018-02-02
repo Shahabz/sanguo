@@ -2702,3 +2702,26 @@ function struct_NetS_WishingChange_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_WishingPackItem_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_awardnum = buffer:ReadInt();
+	recvValue.m_costkind = buffer:ReadInt();
+	recvValue.m_costnum = buffer:ReadInt();
+	recvValue.m_id = buffer:ReadShort();
+	recvValue.m_token = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_WishingPack_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_WishingPackItem_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

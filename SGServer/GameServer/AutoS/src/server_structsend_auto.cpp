@@ -2973,3 +2973,28 @@ int struct_NetS_WishingChange_send( char **pptr, int *psize, SLK_NetS_WishingCha
 	return 0;
 }
 
+int struct_NetS_WishingPackItem_send( char **pptr, int *psize, SLK_NetS_WishingPackItem *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_costkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_costnum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	return 0;
+}
+
+int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_WishingPackItem_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
