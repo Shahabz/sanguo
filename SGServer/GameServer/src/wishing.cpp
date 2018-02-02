@@ -119,6 +119,7 @@ int wishing_shop_sendinfo( int actor_index )
 		int id = g_actors[actor_index].wishingid[tmpi];
 		if ( id > 0 && id < g_wishing_shop_maxnum )
 		{
+			pValue.m_list[pValue.m_count].m_id = id;
 			pValue.m_list[pValue.m_count].m_open = g_actors[actor_index].wishingopen[tmpi];
 			pValue.m_list[pValue.m_count].m_color = (char)g_wishing_shop[id].color;
 			pValue.m_list[pValue.m_count].m_awardkind = g_wishing_shop[id].awardkind;
