@@ -2952,6 +2952,7 @@ int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop 
 		struct_NetS_WishingShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_openstamp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_todaybuy, (*psize) );
 	return 0;
 }
 

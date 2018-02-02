@@ -221,10 +221,11 @@ function HeroConfigDlgSetBase( pHero )
 	SetTrue( m_uiAbilityArea )
 
 	-- 能力范围图
+	local config = g_heroinfo[pHero.kind][hero_getnormalcolor( pHero.kind )];
 	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
-	uiPolygonChart.VerticesDistances[0] = pHero.attack_base/total
-	uiPolygonChart.VerticesDistances[1] = pHero.defense_base/total
-	uiPolygonChart.VerticesDistances[2] = pHero.troops_base/total
+	uiPolygonChart.VerticesDistances[0] = (pHero.attack_base+pHero.attack_wash)/(pHero.attack_base+config.attack_wash_limit)
+	uiPolygonChart.VerticesDistances[1] = (pHero.defense_base+pHero.defense_wash)/(pHero.defense_base+config.defense_wash_limit)
+	uiPolygonChart.VerticesDistances[2] = (pHero.troops_base+pHero.troops_wash)/(pHero.troops_base+config.troops_wash_limit)
 	
 	SetFalse( m_uiOwnerWarn )
 	SetFalse( m_uiOwner )

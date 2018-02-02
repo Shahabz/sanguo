@@ -268,11 +268,13 @@ function HeroInfoDlgSet( path, pHero, up )
 	
 	SetFalse( m_uiAbilityArea )
 	SetTrue( m_uiAbilityArea )
+	
 	-- 能力范围图
+	local config = g_heroinfo[pHero.m_kind][pHero.m_color];
 	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
-	uiPolygonChart.VerticesDistances[0] = pHero.m_attack_base/total
-	uiPolygonChart.VerticesDistances[1] = pHero.m_defense_base/total
-	uiPolygonChart.VerticesDistances[2] = pHero.m_troops_base/total
+	uiPolygonChart.VerticesDistances[0] = (pHero.m_attack_base+pHero.m_attack_wash)/(pHero.m_attack_base+config.attack_wash_limit)
+	uiPolygonChart.VerticesDistances[1] = (pHero.m_defense_base+pHero.m_defense_wash)/(pHero.m_defense_base+config.defense_wash_limit)
+	uiPolygonChart.VerticesDistances[2] = (pHero.m_troops_base+pHero.m_troops_wash)/(pHero.m_troops_base+config.troops_wash_limit)
 	
 	-- 装备
 	for i=0,5,1 do

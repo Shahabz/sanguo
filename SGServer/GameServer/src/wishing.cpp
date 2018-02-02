@@ -49,7 +49,7 @@ int wishing_shop_update( int actor_index )
 			continue;
 		if ( g_actors[actor_index].level < g_wishing_shop[id].level )
 			continue;
-		char color = g_wishing_shop[id].color;
+		char color = (char)g_wishing_shop[id].color;
 		if ( color <= 0 || color >= 6 )
 			continue;
 		int index = kindnum[color];
@@ -83,6 +83,7 @@ int wishing_shop_sendinfo( int actor_index )
 
 	SLK_NetS_WishingShop pValue = { 0 };
 	pValue.m_openstamp = g_actors[actor_index].wishingcd;
+	pValue.m_todaybuy = actor_get_today_char_times( actor_index, TODAY_CHAR_WISHINGSHOP_TODAYBUY );
 	for ( int tmpi = 0; tmpi < WISHINGSHOP_ITEM_MAX; tmpi++ )
 	{
 		int id = g_actors[actor_index].wishingid[tmpi];
@@ -194,6 +195,7 @@ int wishing_shop_buy( int actor_index, int id )
 
 	// 刷新明天的宝物
 	wishing_shop_update( actor_index );
+	actor_add_today_char_times( actor_index, TODAY_CHAR_WISHINGSHOP_TODAYBUY );
 	g_actors[actor_index].wishingday = system_getfday() + 1;
 	wishing_shop_sendinfo( actor_index );
 	return 0;

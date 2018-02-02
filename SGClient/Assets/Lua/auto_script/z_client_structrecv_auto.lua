@@ -2683,6 +2683,7 @@ function struct_NetS_WishingShop_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_openstamp = buffer:ReadInt();
+	recvValue.m_todaybuy = buffer:ReadSByte();
 	return recvValue;
 end
 

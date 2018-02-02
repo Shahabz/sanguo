@@ -2013,6 +2013,7 @@ struct _slk_NetS_WishingShop {
 	char m_count;	//พÛฑฆล่
 	SLK_NetS_WishingShopItem m_list[9];	//พÛฑฆล่
 	int m_openstamp;	//พÛฑฆล่
+	char m_todaybuy;	//พÛฑฆล่
 };
 typedef struct _slk_NetS_WishingShop SLK_NetS_WishingShop;	//พÛฑฆล่
 
