@@ -482,14 +482,39 @@ function MailInfoDlgByRecvValue( recvValue )
 			end
 		end
 		
+		-- 损失获得
+		local getstr = ""
+		if recvValue.m_content_json["silver"] > 0 then
+			getstr = getstr..T(121).."x"..knum(recvValue.m_content_json["silver"]).." "
+		end
+		if recvValue.m_content_json["wood"] > 0 then
+			getstr = getstr..T(122).."x"..knum(recvValue.m_content_json["wood"]).." "
+		end
+		if recvValue.m_content_json["food"] > 0 then
+			getstr = getstr..T(123).."x"..knum(recvValue.m_content_json["food"]).." "
+		end
+		if recvValue.m_content_json["people"] > 0 then
+			getstr = getstr..T(127).."x"..knum(recvValue.m_content_json["people"]).." "
+		end
+		
+		-- 名将忠诚
+		local nherostr = ""
+		local nhero = recvValue.m_content_json["nhero"];
+		if #nhero > 0 then
+			local tid = 2386;
+			if my == 1 then
+				tid = 2387
+			end
+			for i=1,#nhero do
+				nherostr = nherostr..F( tid, HeroName(nhero[i].k), nhero[i].n ).."\n"
+			end
+		end
+		getstr = getstr.."\n"..nherostr
+		
 		if my == 1 then -- 我是攻击方
 			local award = "";
-			if win == 1 then
-				award = F( 5520, name, 
-									T(121).."x"..knum(recvValue.m_content_json["silver"]),
-									T(122).."x"..knum(recvValue.m_content_json["wood"]),
-									T(123).."x"..knum(recvValue.m_content_json["food"]),
-									T(127).."x"..recvValue.m_content_json["people"] )
+			if win == 1 then				
+				award = F( 5520, name, getstr )
 			end
 			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(nation), name, pos, Nation(tnation), tname, tpos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(nation).."]"..name;
@@ -497,11 +522,7 @@ function MailInfoDlgByRecvValue( recvValue )
 		else -- 我是防御方
 			local award = "";
 			if win == 0 then
-				award = F( 5519, name, 
-									T(121).."x"..knum(recvValue.m_content_json["silver"]),
-									T(122).."x"..knum(recvValue.m_content_json["wood"]),
-									T(123).."x"..knum(recvValue.m_content_json["food"]),
-									T(127).."x"..recvValue.m_content_json["people"] )
+				award = F( 5519, name, getstr )
 			end
 			SetRichText( m_uiMailContent.transform:Find("Text"), F(5518, Nation(tnation), tname, tpos, Nation(nation), name, pos ).."\n"..award..ws_str, MailOnLinkClick )
 			m_share_a_name = "["..Nation(tnation).."]"..tname;

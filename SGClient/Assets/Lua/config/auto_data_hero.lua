@@ -2,46 +2,57 @@ g_heroinfo = {
 [1] = 
 { 
 	[0] = { kind=1,color=0,name="Âíá·",corps=0,attack_base=39,attack_wash=0,attack_wash_limit=0,defense_base=30,defense_wash=0,defense_wash_limit=0,troops_base=21,troops_wash=0,troops_wash_limit=0,total_wash=0,attack=88,defense=54,troops=97,skillid=1,itemnum=0,},
+	[5] = { kind=1,color=5,name="Âíá·",corps=0,attack_base=39,attack_wash=0,attack_wash_limit=161,defense_base=30,defense_wash=0,defense_wash_limit=124,troops_base=21,troops_wash=0,troops_wash_limit=87,total_wash=324,attack=213,defense=135,troops=503,skillid=1,itemnum=0,},
 },
 [2] = 
 { 
 	[0] = { kind=2,color=0,name="ÕÅÁº",corps=0,attack_base=18,attack_wash=0,attack_wash_limit=0,defense_base=30,defense_wash=0,defense_wash_limit=0,troops_base=42,troops_wash=0,troops_wash_limit=0,total_wash=0,attack=60,defense=54,troops=138,skillid=1,itemnum=0,},
+	[5] = { kind=2,color=5,name="ÕÅÁº",corps=0,attack_base=18,attack_wash=0,attack_wash_limit=75,defense_base=30,defense_wash=0,defense_wash_limit=124,troops_base=42,troops_wash=0,troops_wash_limit=174,total_wash=324,attack=158,defense=135,troops=667,skillid=1,itemnum=0,},
 },
 [3] = 
 { 
 	[0] = { kind=3,color=0,name="ºÂÕÑ",corps=1,attack_base=15,attack_wash=0,attack_wash_limit=0,defense_base=36,defense_wash=0,defense_wash_limit=0,troops_base=39,troops_wash=0,troops_wash_limit=0,total_wash=0,attack=56,defense=60,troops=132,skillid=2,itemnum=0,},
+	[5] = { kind=3,color=5,name="ºÂÕÑ",corps=1,attack_base=15,attack_wash=0,attack_wash_limit=62,defense_base=36,defense_wash=0,defense_wash_limit=149,troops_base=39,troops_wash=0,troops_wash_limit=161,total_wash=324,attack=150,defense=146,troops=643,skillid=2,itemnum=0,},
 },
 [4] = 
 { 
 	[0] = { kind=4,color=0,name="ÕÅÕÑ",corps=2,attack_base=18,attack_wash=0,attack_wash_limit=0,defense_base=42,defense_wash=0,defense_wash_limit=0,troops_base=30,troops_wash=0,troops_wash_limit=0,total_wash=0,attack=60,defense=66,troops=114,skillid=3,itemnum=0,},
+	[5] = { kind=4,color=5,name="ÕÅÕÑ",corps=2,attack_base=18,attack_wash=0,attack_wash_limit=75,defense_base=42,defense_wash=0,defense_wash_limit=174,troops_base=30,troops_wash=0,troops_wash_limit=124,total_wash=324,attack=158,defense=158,troops=573,skillid=3,itemnum=0,},
 },
 [11] = 
 { 
 	[1] = { kind=11,color=1,name="Áõ±í",corps=1,attack_base=23,attack_wash=6,attack_wash_limit=10,defense_base=35,defense_wash=10,defense_wash_limit=16,troops_base=47,troops_wash=14,troops_wash_limit=21,total_wash=41,attack=93,defense=82,troops=207,skillid=2,itemnum=0,},
+	[5] = { kind=11,color=5,name="Áõ±í",corps=1,attack_base=29,attack_wash=0,attack_wash_limit=79,defense_base=45,defense_wash=0,defense_wash_limit=123,troops_base=61,troops_wash=0,troops_wash_limit=167,total_wash=321,attack=187,defense=163,troops=815,skillid=2,itemnum=0,},
 },
 [12] = 
 { 
 	[1] = { kind=12,color=1,name="ÕÅ½Ç",corps=0,attack_base=46,attack_wash=15,attack_wash_limit=22,defense_base=25,defense_wash=8,defense_wash_limit=12,troops_base=22,troops_wash=7,troops_wash_limit=10,total_wash=38,attack=136,defense=69,troops=138,skillid=1,itemnum=0,},
+	[5] = { kind=12,color=5,name="ÕÅ½Ç",corps=0,attack_base=61,attack_wash=0,attack_wash_limit=171,defense_base=33,defense_wash=0,defense_wash_limit=92,troops_base=29,troops_wash=0,troops_wash_limit=81,total_wash=299,attack=270,defense=141,troops=565,skillid=1,itemnum=0,},
 },
 [13] = 
 { 
 	[1] = { kind=13,color=1,name="ÁÎ»¯",corps=1,attack_base=39,attack_wash=13,attack_wash_limit=18,defense_base=27,defense_wash=9,defense_wash_limit=13,troops_base=24,troops_wash=8,troops_wash_limit=11,total_wash=37,attack=123,defense=72,troops=144,skillid=2,itemnum=0,},
+	[5] = { kind=13,color=5,name="ÁÎ»¯",corps=1,attack_base=52,attack_wash=0,attack_wash_limit=146,defense_base=36,defense_wash=0,defense_wash_limit=101,troops_base=32,troops_wash=0,troops_wash_limit=90,total_wash=292,attack=247,defense=146,troops=588,skillid=2,itemnum=0,},
 },
 [14] = 
 { 
 	[1] = { kind=14,color=1,name="²Ü°º",corps=1,attack_base=40,attack_wash=13,attack_wash_limit=17,defense_base=25,defense_wash=8,defense_wash_limit=10,troops_base=28,troops_wash=9,troops_wash_limit=12,total_wash=34,attack=125,defense=69,troops=155,skillid=2,itemnum=0,},
+	[5] = { kind=14,color=5,name="²Ü°º",corps=1,attack_base=53,attack_wash=0,attack_wash_limit=134,defense_base=33,defense_wash=0,defense_wash_limit=83,troops_base=37,troops_wash=0,troops_wash_limit=93,total_wash=270,attack=249,defense=141,troops=628,skillid=2,itemnum=0,},
 },
 [15] = 
 { 
 	[1] = { kind=15,color=1,name="ÀÖ½ø",corps=2,attack_base=17,attack_wash=5,attack_wash_limit=7,defense_base=47,defense_wash=15,defense_wash_limit=20,troops_base=32,troops_wash=10,troops_wash_limit=14,total_wash=36,attack=81,defense=98,troops=166,skillid=3,itemnum=0,},
+	[5] = { kind=15,color=5,name="ÀÖ½ø",corps=2,attack_base=22,attack_wash=0,attack_wash_limit=58,defense_base=62,defense_wash=0,defense_wash_limit=163,troops_base=42,troops_wash=0,troops_wash_limit=110,total_wash=288,attack=169,defense=195,troops=667,skillid=3,itemnum=0,},
 },
 [16] = 
 { 
 	[1] = { kind=16,color=1,name="»ªĞÛ",corps=2,attack_base=47,attack_wash=15,attack_wash_limit=22,defense_base=20,defense_wash=6,defense_wash_limit=9,troops_base=29,troops_wash=9,troops_wash_limit=14,total_wash=39,attack=138,defense=62,troops=157,skillid=3,itemnum=0,},
+	[5] = { kind=16,color=5,name="»ªĞÛ",corps=2,attack_base=62,attack_wash=0,attack_wash_limit=173,defense_base=26,defense_wash=0,defense_wash_limit=73,troops_base=38,troops_wash=0,troops_wash_limit=106,total_wash=306,attack=273,defense=128,troops=635,skillid=3,itemnum=0,},
 },
 [17] = 
 { 
 	[1] = { kind=17,color=1,name="Àîµä",corps=0,attack_base=34,attack_wash=11,attack_wash_limit=15,defense_base=16,defense_wash=5,defense_wash_limit=7,troops_base=43,troops_wash=14,troops_wash_limit=19,total_wash=36,attack=113,defense=57,troops=196,skillid=1,itemnum=0,},
+	[5] = { kind=17,color=5,name="Àîµä",corps=0,attack_base=45,attack_wash=0,attack_wash_limit=121,defense_base=21,defense_wash=0,defense_wash_limit=57,troops_base=57,troops_wash=0,troops_wash_limit=153,total_wash=288,attack=229,defense=118,troops=784,skillid=1,itemnum=0,},
 },
 [21] = 
 { 
@@ -214,56 +225,56 @@ g_heroinfo = {
 [58] = 
 { 
 	[3] = { kind=58,color=3,name="¸ßÀÀ",corps=0,attack_base=40,attack_wash=33,attack_wash_limit=58,defense_base=43,defense_wash=36,defense_wash_limit=63,troops_base=26,troops_wash=22,troops_wash_limit=38,total_wash=139,attack=196,defense=145,troops=501,skillid=0,itemnum=100,},
-	[4] = { kind=58,color=4,name="¸ßÀÀ",corps=0,attack_base=51,attack_wash=33,attack_wash_limit=78,defense_base=55,defense_wash=36,defense_wash_limit=84,troops_base=33,troops_wash=22,troops_wash_limit=51,total_wash=185,attack=235,defense=175,troops=573,skillid=0,itemnum=0,},
-	[5] = { kind=58,color=5,name="¸ßÀÀ",corps=0,attack_base=62,attack_wash=33,attack_wash_limit=117,defense_base=67,defense_wash=36,defense_wash_limit=127,troops_base=40,troops_wash=22,troops_wash_limit=76,total_wash=278,attack=273,defense=204,troops=651,skillid=0,itemnum=0,},
+	[4] = { kind=58,color=4,name="¸ßÀÀ",corps=0,attack_base=51,attack_wash=33,attack_wash_limit=78,defense_base=55,defense_wash=36,defense_wash_limit=84,troops_base=33,troops_wash=22,troops_wash_limit=51,total_wash=185,attack=235,defense=175,troops=573,skillid=0,itemnum=100,},
+	[5] = { kind=58,color=5,name="¸ßÀÀ",corps=0,attack_base=62,attack_wash=33,attack_wash_limit=117,defense_base=67,defense_wash=36,defense_wash_limit=127,troops_base=40,troops_wash=22,troops_wash_limit=76,total_wash=278,attack=273,defense=204,troops=651,skillid=0,itemnum=100,},
 },
 [59] = 
 { 
 	[3] = { kind=59,color=3,name="µË°¬",corps=0,attack_base=43,attack_wash=36,attack_wash_limit=61,defense_base=30,defense_wash=25,defense_wash_limit=43,troops_base=36,troops_wash=30,troops_wash_limit=51,total_wash=135,attack=203,defense=124,troops=569,skillid=0,itemnum=100,},
-	[4] = { kind=59,color=4,name="µË°¬",corps=0,attack_base=55,attack_wash=36,attack_wash_limit=82,defense_base=38,defense_wash=25,defense_wash_limit=57,troops_base=46,troops_wash=30,troops_wash_limit=68,total_wash=180,attack=245,defense=144,troops=671,skillid=0,itemnum=0,},
-	[5] = { kind=59,color=5,name="µË°¬",corps=0,attack_base=67,attack_wash=36,attack_wash_limit=123,defense_base=46,defense_wash=25,defense_wash_limit=85,troops_base=56,troops_wash=30,troops_wash_limit=103,total_wash=270,attack=286,defense=165,troops=776,skillid=0,itemnum=0,},
+	[4] = { kind=59,color=4,name="µË°¬",corps=0,attack_base=55,attack_wash=36,attack_wash_limit=82,defense_base=38,defense_wash=25,defense_wash_limit=57,troops_base=46,troops_wash=30,troops_wash_limit=68,total_wash=180,attack=245,defense=144,troops=671,skillid=0,itemnum=100,},
+	[5] = { kind=59,color=5,name="µË°¬",corps=0,attack_base=67,attack_wash=36,attack_wash_limit=123,defense_base=46,defense_wash=25,defense_wash_limit=85,troops_base=56,troops_wash=30,troops_wash_limit=103,total_wash=270,attack=286,defense=165,troops=776,skillid=0,itemnum=100,},
 },
 [60] = 
 { 
 	[3] = { kind=60,color=3,name="²ÜØ§",corps=0,attack_base=53,attack_wash=44,attack_wash_limit=75,defense_base=24,defense_wash=19,defense_wash_limit=33,troops_base=33,troops_wash=27,troops_wash_limit=46,total_wash=134,attack=226,defense=114,troops=549,skillid=0,itemnum=100,},
-	[4] = { kind=60,color=4,name="²ÜØ§",corps=0,attack_base=68,attack_wash=44,attack_wash_limit=100,defense_base=30,defense_wash=19,defense_wash_limit=44,troops_base=42,troops_wash=27,troops_wash_limit=61,total_wash=178,attack=277,defense=130,troops=641,skillid=0,itemnum=0,},
-	[5] = { kind=60,color=5,name="²ÜØ§",corps=0,attack_base=83,attack_wash=44,attack_wash_limit=150,defense_base=36,defense_wash=19,defense_wash_limit=65,troops_base=51,troops_wash=27,troops_wash_limit=92,total_wash=267,attack=328,defense=146,troops=737,skillid=0,itemnum=0,},
+	[4] = { kind=60,color=4,name="²ÜØ§",corps=0,attack_base=68,attack_wash=44,attack_wash_limit=100,defense_base=30,defense_wash=19,defense_wash_limit=44,troops_base=42,troops_wash=27,troops_wash_limit=61,total_wash=178,attack=277,defense=130,troops=641,skillid=0,itemnum=100,},
+	[5] = { kind=60,color=5,name="²ÜØ§",corps=0,attack_base=83,attack_wash=44,attack_wash_limit=150,defense_base=36,defense_wash=19,defense_wash_limit=65,troops_base=51,troops_wash=27,troops_wash_limit=92,total_wash=267,attack=328,defense=146,troops=737,skillid=0,itemnum=100,},
 },
 [61] = 
 { 
 	[3] = { kind=61,color=3,name="ÅÓµÂ",corps=1,attack_base=24,attack_wash=19,attack_wash_limit=33,defense_base=60,defense_wash=49,defense_wash_limit=83,troops_base=26,troops_wash=22,troops_wash_limit=36,total_wash=132,attack=160,defense=173,troops=501,skillid=0,itemnum=100,},
-	[4] = { kind=61,color=4,name="ÅÓµÂ",corps=1,attack_base=30,attack_wash=19,attack_wash_limit=43,defense_base=76,defense_wash=49,defense_wash_limit=110,troops_base=33,troops_wash=22,troops_wash_limit=49,total_wash=176,attack=182,defense=212,troops=573,skillid=0,itemnum=0,},
-	[5] = { kind=61,color=5,name="ÅÓµÂ",corps=1,attack_base=36,attack_wash=19,attack_wash_limit=64,defense_base=92,defense_wash=49,defense_wash_limit=165,troops_base=40,troops_wash=22,troops_wash_limit=73,total_wash=263,attack=205,defense=251,troops=651,skillid=0,itemnum=0,},
+	[4] = { kind=61,color=4,name="ÅÓµÂ",corps=1,attack_base=30,attack_wash=19,attack_wash_limit=43,defense_base=76,defense_wash=49,defense_wash_limit=110,troops_base=33,troops_wash=22,troops_wash_limit=49,total_wash=176,attack=182,defense=212,troops=573,skillid=0,itemnum=100,},
+	[5] = { kind=61,color=5,name="ÅÓµÂ",corps=1,attack_base=36,attack_wash=19,attack_wash_limit=64,defense_base=92,defense_wash=49,defense_wash_limit=165,troops_base=40,troops_wash=22,troops_wash_limit=73,total_wash=263,attack=205,defense=251,troops=651,skillid=0,itemnum=100,},
 },
 [62] = 
 { 
 	[3] = { kind=62,color=3,name="²ÜÕÃ",corps=1,attack_base=50,attack_wash=41,attack_wash_limit=63,defense_base=34,defense_wash=27,defense_wash_limit=42,troops_base=26,troops_wash=22,troops_wash_limit=33,total_wash=121,attack=219,defense=130,troops=501,skillid=0,itemnum=100,},
-	[4] = { kind=62,color=4,name="²ÜÕÃ",corps=1,attack_base=64,attack_wash=41,attack_wash_limit=85,defense_base=43,defense_wash=27,defense_wash_limit=56,troops_base=33,troops_wash=22,troops_wash_limit=44,total_wash=161,attack=267,defense=153,troops=573,skillid=0,itemnum=0,},
-	[5] = { kind=62,color=5,name="²ÜÕÃ",corps=1,attack_base=78,attack_wash=41,attack_wash_limit=127,defense_base=52,defense_wash=27,defense_wash_limit=85,troops_base=40,troops_wash=22,troops_wash_limit=66,total_wash=242,attack=315,defense=176,troops=651,skillid=0,itemnum=0,},
+	[4] = { kind=62,color=4,name="²ÜÕÃ",corps=1,attack_base=64,attack_wash=41,attack_wash_limit=85,defense_base=43,defense_wash=27,defense_wash_limit=56,troops_base=33,troops_wash=22,troops_wash_limit=44,total_wash=161,attack=267,defense=153,troops=573,skillid=0,itemnum=100,},
+	[5] = { kind=62,color=5,name="²ÜÕÃ",corps=1,attack_base=78,attack_wash=41,attack_wash_limit=127,defense_base=52,defense_wash=27,defense_wash_limit=85,troops_base=40,troops_wash=22,troops_wash_limit=66,total_wash=242,attack=315,defense=176,troops=651,skillid=0,itemnum=100,},
 },
 [63] = 
 { 
 	[3] = { kind=63,color=3,name="ÓÚ¼ª",corps=1,attack_base=53,attack_wash=44,attack_wash_limit=65,defense_base=24,defense_wash=19,defense_wash_limit=29,troops_base=33,troops_wash=27,troops_wash_limit=40,total_wash=116,attack=226,defense=114,troops=549,skillid=0,itemnum=100,},
-	[4] = { kind=63,color=4,name="ÓÚ¼ª",corps=1,attack_base=68,attack_wash=44,attack_wash_limit=86,defense_base=30,defense_wash=19,defense_wash_limit=38,troops_base=42,troops_wash=27,troops_wash_limit=53,total_wash=154,attack=277,defense=130,troops=641,skillid=0,itemnum=0,},
-	[5] = { kind=63,color=5,name="ÓÚ¼ª",corps=1,attack_base=83,attack_wash=44,attack_wash_limit=130,defense_base=36,defense_wash=19,defense_wash_limit=56,troops_base=51,troops_wash=27,troops_wash_limit=80,total_wash=231,attack=328,defense=146,troops=737,skillid=0,itemnum=0,},
+	[4] = { kind=63,color=4,name="ÓÚ¼ª",corps=1,attack_base=68,attack_wash=44,attack_wash_limit=86,defense_base=30,defense_wash=19,defense_wash_limit=38,troops_base=42,troops_wash=27,troops_wash_limit=53,total_wash=154,attack=277,defense=130,troops=641,skillid=0,itemnum=100,},
+	[5] = { kind=63,color=5,name="ÓÚ¼ª",corps=1,attack_base=83,attack_wash=44,attack_wash_limit=130,defense_base=36,defense_wash=19,defense_wash_limit=56,troops_base=51,troops_wash=27,troops_wash_limit=80,total_wash=231,attack=328,defense=146,troops=737,skillid=0,itemnum=100,},
 },
 [64] = 
 { 
 	[3] = { kind=64,color=3,name="Ô¬Êõ",corps=2,attack_base=30,attack_wash=25,attack_wash_limit=36,defense_base=57,defense_wash=46,defense_wash_limit=68,troops_base=23,troops_wash=19,troops_wash_limit=28,total_wash=114,attack=173,defense=168,troops=481,skillid=0,itemnum=100,},
-	[4] = { kind=64,color=4,name="Ô¬Êõ",corps=2,attack_base=38,attack_wash=25,attack_wash_limit=48,defense_base=72,defense_wash=46,defense_wash_limit=90,troops_base=29,troops_wash=19,troops_wash_limit=37,total_wash=152,attack=202,defense=205,troops=543,skillid=0,itemnum=0,},
-	[5] = { kind=64,color=5,name="Ô¬Êõ",corps=2,attack_base=46,attack_wash=25,attack_wash_limit=72,defense_base=87,defense_wash=46,defense_wash_limit=135,troops_base=35,troops_wash=19,troops_wash_limit=55,total_wash=227,attack=231,defense=241,troops=612,skillid=0,itemnum=0,},
+	[4] = { kind=64,color=4,name="Ô¬Êõ",corps=2,attack_base=38,attack_wash=25,attack_wash_limit=48,defense_base=72,defense_wash=46,defense_wash_limit=90,troops_base=29,troops_wash=19,troops_wash_limit=37,total_wash=152,attack=202,defense=205,troops=543,skillid=0,itemnum=100,},
+	[5] = { kind=64,color=5,name="Ô¬Êõ",corps=2,attack_base=46,attack_wash=25,attack_wash_limit=72,defense_base=87,defense_wash=46,defense_wash_limit=135,troops_base=35,troops_wash=19,troops_wash_limit=55,total_wash=227,attack=231,defense=241,troops=612,skillid=0,itemnum=100,},
 },
 [65] = 
 { 
 	[3] = { kind=65,color=3,name="ÁèÍ³",corps=2,attack_base=66,attack_wash=44,attack_wash_limit=63,defense_base=39,defense_wash=25,defense_wash_limit=36,troops_base=31,troops_wash=21,troops_wash_limit=30,total_wash=112,attack=255,defense=138,troops=535,skillid=0,itemnum=100,},
-	[4] = { kind=65,color=4,name="ÁèÍ³",corps=2,attack_base=81,attack_wash=44,attack_wash_limit=84,defense_base=47,defense_wash=25,defense_wash_limit=48,troops_base=38,troops_wash=21,troops_wash_limit=39,total_wash=149,attack=310,defense=160,troops=610,skillid=0,itemnum=0,},
-	[5] = { kind=65,color=5,name="ÁèÍ³",corps=2,attack_base=72,attack_wash=44,attack_wash_limit=135,defense_base=42,defense_wash=25,defense_wash_limit=78,troops_base=18,troops_wash=21,troops_wash_limit=45,total_wash=224,attack=299,defense=158,troops=479,skillid=0,itemnum=0,},
+	[4] = { kind=65,color=4,name="ÁèÍ³",corps=2,attack_base=81,attack_wash=44,attack_wash_limit=84,defense_base=47,defense_wash=25,defense_wash_limit=48,troops_base=38,troops_wash=21,troops_wash_limit=39,total_wash=149,attack=310,defense=160,troops=610,skillid=0,itemnum=100,},
+	[5] = { kind=65,color=5,name="ÁèÍ³",corps=2,attack_base=72,attack_wash=44,attack_wash_limit=135,defense_base=42,defense_wash=25,defense_wash_limit=78,troops_base=18,troops_wash=21,troops_wash_limit=45,total_wash=224,attack=299,defense=158,troops=479,skillid=0,itemnum=100,},
 },
 [66] = 
 { 
 	[3] = { kind=66,color=3,name="¾ÚÊÚ",corps=2,attack_base=69,attack_wash=47,attack_wash_limit=66,defense_base=40,defense_wash=27,defense_wash_limit=38,troops_base=23,troops_wash=16,troops_wash_limit=22,total_wash=110,attack=262,defense=140,troops=481,skillid=0,itemnum=100,},
-	[4] = { kind=66,color=4,name="¾ÚÊÚ",corps=2,attack_base=8,attack_wash=47,attack_wash_limit=40,defense_base=93,defense_wash=27,defense_wash_limit=88,troops_base=39,troops_wash=16,troops_wash_limit=40,total_wash=147,attack=127,defense=243,troops=618,skillid=0,itemnum=0,},
-	[5] = { kind=66,color=5,name="¾ÚÊÚ",corps=2,attack_base=15,attack_wash=47,attack_wash_limit=60,defense_base=109,defense_wash=27,defense_wash_limit=132,troops_base=46,troops_wash=16,troops_wash_limit=60,total_wash=220,attack=150,defense=282,troops=698,skillid=0,itemnum=0,},
+	[4] = { kind=66,color=4,name="¾ÚÊÚ",corps=2,attack_base=8,attack_wash=47,attack_wash_limit=40,defense_base=93,defense_wash=27,defense_wash_limit=88,troops_base=39,troops_wash=16,troops_wash_limit=40,total_wash=147,attack=127,defense=243,troops=618,skillid=0,itemnum=100,},
+	[5] = { kind=66,color=5,name="¾ÚÊÚ",corps=2,attack_base=15,attack_wash=47,attack_wash_limit=60,defense_base=109,defense_wash=27,defense_wash_limit=132,troops_base=46,troops_wash=16,troops_wash_limit=60,total_wash=220,attack=150,defense=282,troops=698,skillid=0,itemnum=100,},
 },
 [71] = 
 { 
@@ -308,56 +319,56 @@ g_heroinfo = {
 [91] = 
 { 
 	[2] = { kind=91,color=2,name="·¨Õı",corps=0,attack_base=37,attack_wash=18,attack_wash_limit=42,defense_base=23,defense_wash=12,defense_wash_limit=27,troops_base=60,troops_wash=30,troops_wash_limit=69,total_wash=120,attack=146,defense=85,troops=463,skillid=0,itemnum=500,},
-	[4] = { kind=91,color=4,name="·¨Õı",corps=0,attack_base=55,attack_wash=18,attack_wash_limit=84,defense_base=35,defense_wash=12,defense_wash_limit=54,troops_base=90,troops_wash=30,troops_wash_limit=138,total_wash=240,attack=245,defense=139,troops=1001,skillid=0,itemnum=0,},
-	[5] = { kind=91,color=5,name="·¨Õı",corps=0,attack_base=64,attack_wash=18,attack_wash_limit=126,defense_base=41,defense_wash=12,defense_wash_limit=81,troops_base=105,troops_wash=30,troops_wash_limit=207,total_wash=360,attack=278,defense=156,troops=1159,skillid=0,itemnum=0,},
+	[4] = { kind=91,color=4,name="·¨Õı",corps=0,attack_base=55,attack_wash=18,attack_wash_limit=84,defense_base=35,defense_wash=12,defense_wash_limit=54,troops_base=90,troops_wash=30,troops_wash_limit=138,total_wash=240,attack=245,defense=139,troops=1001,skillid=0,itemnum=500,},
+	[5] = { kind=91,color=5,name="·¨Õı",corps=0,attack_base=64,attack_wash=18,attack_wash_limit=126,defense_base=41,defense_wash=12,defense_wash_limit=81,troops_base=105,troops_wash=30,troops_wash_limit=207,total_wash=360,attack=278,defense=156,troops=1159,skillid=0,itemnum=500,},
 },
 [92] = 
 { 
 	[2] = { kind=92,color=2,name="ĞíñÒ",corps=0,attack_base=57,attack_wash=28,attack_wash_limit=65,defense_base=37,defense_wash=18,defense_wash_limit=42,troops_base=27,troops_wash=13,troops_wash_limit=31,total_wash=120,attack=186,defense=105,troops=313,skillid=0,itemnum=500,},
-	[4] = { kind=92,color=4,name="ĞíñÒ",corps=0,attack_base=85,attack_wash=28,attack_wash_limit=130,defense_base=55,defense_wash=18,defense_wash_limit=84,troops_base=40,troops_wash=13,troops_wash_limit=61,total_wash=240,attack=320,defense=175,troops=625,skillid=0,itemnum=0,},
-	[5] = { kind=92,color=5,name="ĞíñÒ",corps=0,attack_base=99,attack_wash=28,attack_wash_limit=195,defense_base=64,defense_wash=18,defense_wash_limit=126,troops_base=47,troops_wash=13,troops_wash_limit=92,total_wash=360,attack=370,defense=199,troops=706,skillid=0,itemnum=0,},
+	[4] = { kind=92,color=4,name="ĞíñÒ",corps=0,attack_base=85,attack_wash=28,attack_wash_limit=130,defense_base=55,defense_wash=18,defense_wash_limit=84,troops_base=40,troops_wash=13,troops_wash_limit=61,total_wash=240,attack=320,defense=175,troops=625,skillid=0,itemnum=500,},
+	[5] = { kind=92,color=5,name="ĞíñÒ",corps=0,attack_base=99,attack_wash=28,attack_wash_limit=195,defense_base=64,defense_wash=18,defense_wash_limit=126,troops_base=47,troops_wash=13,troops_wash_limit=92,total_wash=360,attack=370,defense=199,troops=706,skillid=0,itemnum=500,},
 },
 [93] = 
 { 
 	[2] = { kind=93,color=2,name="ÖÜÌ©",corps=0,attack_base=30,attack_wash=15,attack_wash_limit=35,defense_base=62,defense_wash=33,defense_wash_limit=75,troops_base=23,troops_wash=12,troops_wash_limit=28,total_wash=120,attack=133,defense=140,troops=295,skillid=0,itemnum=500,},
-	[4] = { kind=93,color=4,name="ÖÜÌ©",corps=0,attack_base=45,attack_wash=15,attack_wash_limit=70,defense_base=95,defense_wash=33,defense_wash_limit=150,troops_base=35,troops_wash=12,troops_wash_limit=55,total_wash=240,attack=220,defense=246,troops=588,skillid=0,itemnum=0,},
-	[5] = { kind=93,color=5,name="ÖÜÌ©",corps=0,attack_base=53,attack_wash=15,attack_wash_limit=106,defense_base=111,defense_wash=33,defense_wash_limit=225,troops_base=41,troops_wash=12,troops_wash_limit=83,total_wash=360,attack=249,defense=286,troops=659,skillid=0,itemnum=0,},
+	[4] = { kind=93,color=4,name="ÖÜÌ©",corps=0,attack_base=45,attack_wash=15,attack_wash_limit=70,defense_base=95,defense_wash=33,defense_wash_limit=150,troops_base=35,troops_wash=12,troops_wash_limit=55,total_wash=240,attack=220,defense=246,troops=588,skillid=0,itemnum=500,},
+	[5] = { kind=93,color=5,name="ÖÜÌ©",corps=0,attack_base=53,attack_wash=15,attack_wash_limit=106,defense_base=111,defense_wash=33,defense_wash_limit=225,troops_base=41,troops_wash=12,troops_wash_limit=83,total_wash=360,attack=249,defense=286,troops=659,skillid=0,itemnum=500,},
 },
 [94] = 
 { 
 	[2] = { kind=94,color=2,name="Ô¬ÉÜ",corps=1,attack_base=37,attack_wash=18,attack_wash_limit=42,defense_base=30,defense_wash=15,defense_wash_limit=35,troops_base=53,troops_wash=27,troops_wash_limit=61,total_wash=120,attack=146,defense=95,troops=431,skillid=0,itemnum=500,},
-	[4] = { kind=94,color=4,name="Ô¬ÉÜ",corps=1,attack_base=55,attack_wash=18,attack_wash_limit=84,defense_base=45,defense_wash=15,defense_wash_limit=69,troops_base=80,troops_wash=27,troops_wash_limit=123,total_wash=240,attack=245,defense=157,troops=926,skillid=0,itemnum=0,},
-	[5] = { kind=94,color=5,name="Ô¬ÉÜ",corps=1,attack_base=64,attack_wash=18,attack_wash_limit=126,defense_base=53,defense_wash=15,defense_wash_limit=104,troops_base=93,troops_wash=27,troops_wash_limit=184,total_wash=360,attack=278,defense=178,troops=1065,skillid=0,itemnum=0,},
+	[4] = { kind=94,color=4,name="Ô¬ÉÜ",corps=1,attack_base=55,attack_wash=18,attack_wash_limit=84,defense_base=45,defense_wash=15,defense_wash_limit=69,troops_base=80,troops_wash=27,troops_wash_limit=123,total_wash=240,attack=245,defense=157,troops=926,skillid=0,itemnum=500,},
+	[5] = { kind=94,color=5,name="Ô¬ÉÜ",corps=1,attack_base=64,attack_wash=18,attack_wash_limit=126,defense_base=53,defense_wash=15,defense_wash_limit=104,troops_base=93,troops_wash=27,troops_wash_limit=184,total_wash=360,attack=278,defense=178,troops=1065,skillid=0,itemnum=500,},
 },
 [95] = 
 { 
 	[2] = { kind=95,color=2,name="ÂÀ²¼",corps=1,attack_base=63,attack_wash=32,attack_wash_limit=73,defense_base=33,defense_wash=17,defense_wash_limit=38,troops_base=23,troops_wash=12,troops_wash_limit=27,total_wash=120,attack=198,defense=99,troops=295,skillid=0,itemnum=500,},
-	[4] = { kind=95,color=4,name="ÂÀ²¼",corps=1,attack_base=95,attack_wash=32,attack_wash_limit=145,defense_base=50,defense_wash=17,defense_wash_limit=77,troops_base=35,troops_wash=12,troops_wash_limit=54,total_wash=240,attack=345,defense=166,troops=588,skillid=0,itemnum=0,},
-	[5] = { kind=95,color=5,name="ÂÀ²¼",corps=1,attack_base=111,attack_wash=32,attack_wash_limit=218,defense_base=58,defense_wash=17,defense_wash_limit=115,troops_base=41,troops_wash=12,troops_wash_limit=81,total_wash=360,attack=401,defense=187,troops=659,skillid=0,itemnum=0,},
+	[4] = { kind=95,color=4,name="ÂÀ²¼",corps=1,attack_base=95,attack_wash=32,attack_wash_limit=145,defense_base=50,defense_wash=17,defense_wash_limit=77,troops_base=35,troops_wash=12,troops_wash_limit=54,total_wash=240,attack=345,defense=166,troops=588,skillid=0,itemnum=500,},
+	[5] = { kind=95,color=5,name="ÂÀ²¼",corps=1,attack_base=111,attack_wash=32,attack_wash_limit=218,defense_base=58,defense_wash=17,defense_wash_limit=115,troops_base=41,troops_wash=12,troops_wash_limit=81,total_wash=360,attack=401,defense=187,troops=659,skillid=0,itemnum=500,},
 },
 [96] = 
 { 
 	[2] = { kind=96,color=2,name="ÕÔÔÆ",corps=1,attack_base=50,attack_wash=25,attack_wash_limit=58,defense_base=50,defense_wash=25,defense_wash_limit=58,troops_base=20,troops_wash=10,troops_wash_limit=23,total_wash=120,attack=172,defense=123,troops=282,skillid=0,itemnum=500,},
-	[4] = { kind=96,color=4,name="ÕÔÔÆ",corps=1,attack_base=75,attack_wash=25,attack_wash_limit=115,defense_base=75,defense_wash=25,defense_wash_limit=115,troops_base=30,troops_wash=10,troops_wash_limit=46,total_wash=240,attack=295,defense=211,troops=550,skillid=0,itemnum=0,},
-	[5] = { kind=96,color=5,name="ÕÔÔÆ",corps=1,attack_base=88,attack_wash=25,attack_wash_limit=173,defense_base=88,defense_wash=25,defense_wash_limit=173,troops_base=35,troops_wash=10,troops_wash_limit=69,total_wash=360,attack=341,defense=243,troops=612,skillid=0,itemnum=0,},
+	[4] = { kind=96,color=4,name="ÕÔÔÆ",corps=1,attack_base=75,attack_wash=25,attack_wash_limit=115,defense_base=75,defense_wash=25,defense_wash_limit=115,troops_base=30,troops_wash=10,troops_wash_limit=46,total_wash=240,attack=295,defense=211,troops=550,skillid=0,itemnum=500,},
+	[5] = { kind=96,color=5,name="ÕÔÔÆ",corps=1,attack_base=88,attack_wash=25,attack_wash_limit=173,defense_base=88,defense_wash=25,defense_wash_limit=173,troops_base=35,troops_wash=10,troops_wash_limit=69,total_wash=360,attack=341,defense=243,troops=612,skillid=0,itemnum=500,},
 },
 [97] = 
 { 
 	[2] = { kind=97,color=2,name="ĞìÊü",corps=2,attack_base=40,attack_wash=20,attack_wash_limit=46,defense_base=23,defense_wash=12,defense_wash_limit=27,troops_base=57,troops_wash=28,troops_wash_limit=65,total_wash=120,attack=152,defense=85,troops=450,skillid=0,itemnum=500,},
-	[4] = { kind=97,color=4,name="ĞìÊü",corps=2,attack_base=60,attack_wash=20,attack_wash_limit=92,defense_base=35,defense_wash=12,defense_wash_limit=54,troops_base=85,troops_wash=28,troops_wash_limit=130,total_wash=240,attack=257,defense=139,troops=963,skillid=0,itemnum=0,},
-	[5] = { kind=97,color=5,name="ĞìÊü",corps=2,attack_base=70,attack_wash=20,attack_wash_limit=138,defense_base=41,defense_wash=12,defense_wash_limit=81,troops_base=99,troops_wash=28,troops_wash_limit=195,total_wash=360,attack=294,defense=156,troops=1112,skillid=0,itemnum=0,},
+	[4] = { kind=97,color=4,name="ĞìÊü",corps=2,attack_base=60,attack_wash=20,attack_wash_limit=92,defense_base=35,defense_wash=12,defense_wash_limit=54,troops_base=85,troops_wash=28,troops_wash_limit=130,total_wash=240,attack=257,defense=139,troops=963,skillid=0,itemnum=500,},
+	[5] = { kind=97,color=5,name="ĞìÊü",corps=2,attack_base=70,attack_wash=20,attack_wash_limit=138,defense_base=41,defense_wash=12,defense_wash_limit=81,troops_base=99,troops_wash=28,troops_wash_limit=195,total_wash=360,attack=294,defense=156,troops=1112,skillid=0,itemnum=500,},
 },
 [98] = 
 { 
 	[2] = { kind=98,color=2,name="¹ù¼Î",corps=2,attack_base=57,attack_wash=28,attack_wash_limit=65,defense_base=43,defense_wash=22,defense_wash_limit=50,troops_base=20,troops_wash=10,troops_wash_limit=23,total_wash=120,attack=186,defense=113,troops=282,skillid=0,itemnum=500,},
-	[4] = { kind=98,color=4,name="¹ù¼Î",corps=2,attack_base=85,attack_wash=28,attack_wash_limit=130,defense_base=65,defense_wash=22,defense_wash_limit=100,troops_base=30,troops_wash=10,troops_wash_limit=46,total_wash=240,attack=320,defense=193,troops=550,skillid=0,itemnum=0,},
-	[5] = { kind=98,color=5,name="¹ù¼Î",corps=2,attack_base=99,attack_wash=28,attack_wash_limit=195,defense_base=76,defense_wash=22,defense_wash_limit=150,troops_base=35,troops_wash=10,troops_wash_limit=69,total_wash=360,attack=370,defense=221,troops=612,skillid=0,itemnum=0,},
+	[4] = { kind=98,color=4,name="¹ù¼Î",corps=2,attack_base=85,attack_wash=28,attack_wash_limit=130,defense_base=65,defense_wash=22,defense_wash_limit=100,troops_base=30,troops_wash=10,troops_wash_limit=46,total_wash=240,attack=320,defense=193,troops=550,skillid=0,itemnum=500,},
+	[5] = { kind=98,color=5,name="¹ù¼Î",corps=2,attack_base=99,attack_wash=28,attack_wash_limit=195,defense_base=76,defense_wash=22,defense_wash_limit=150,troops_base=35,troops_wash=10,troops_wash_limit=69,total_wash=360,attack=370,defense=221,troops=612,skillid=0,itemnum=500,},
 },
 [99] = 
 { 
 	[2] = { kind=99,color=2,name="»ªÙ¢",corps=2,attack_base=20,attack_wash=10,attack_wash_limit=23,defense_base=63,defense_wash=32,defense_wash_limit=73,troops_base=37,troops_wash=18,troops_wash_limit=42,total_wash=120,attack=113,defense=141,troops=359,skillid=0,itemnum=500,},
-	[4] = { kind=99,color=4,name="»ªÙ¢",corps=2,attack_base=30,attack_wash=10,attack_wash_limit=46,defense_base=95,defense_wash=32,defense_wash_limit=146,troops_base=55,troops_wash=18,troops_wash_limit=84,total_wash=240,attack=182,defense=246,troops=738,skillid=0,itemnum=0,},
-	[5] = { kind=99,color=5,name="»ªÙ¢",corps=2,attack_base=35,attack_wash=10,attack_wash_limit=69,defense_base=111,defense_wash=32,defense_wash_limit=219,troops_base=64,troops_wash=18,troops_wash_limit=126,total_wash=360,attack=202,defense=286,troops=839,skillid=0,itemnum=0,},
+	[4] = { kind=99,color=4,name="»ªÙ¢",corps=2,attack_base=30,attack_wash=10,attack_wash_limit=46,defense_base=95,defense_wash=32,defense_wash_limit=146,troops_base=55,troops_wash=18,troops_wash_limit=84,total_wash=240,attack=182,defense=246,troops=738,skillid=0,itemnum=500,},
+	[5] = { kind=99,color=5,name="»ªÙ¢",corps=2,attack_base=35,attack_wash=10,attack_wash_limit=69,defense_base=111,defense_wash=32,defense_wash_limit=219,troops_base=64,troops_wash=18,troops_wash_limit=126,total_wash=360,attack=202,defense=286,troops=839,skillid=0,itemnum=500,},
 },
 [111] = 
 { 

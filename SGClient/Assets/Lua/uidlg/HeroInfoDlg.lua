@@ -271,10 +271,12 @@ function HeroInfoDlgSet( path, pHero, up )
 	
 	-- 能力范围图
 	local config = g_heroinfo[pHero.m_kind][pHero.m_color];
+	local maxconfig = g_heroinfo[pHero.m_kind][5];
 	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
-	uiPolygonChart.VerticesDistances[0] = (pHero.m_attack_base+pHero.m_attack_wash)/(pHero.m_attack_base+config.attack_wash_limit)
-	uiPolygonChart.VerticesDistances[1] = (pHero.m_defense_base+pHero.m_defense_wash)/(pHero.m_defense_base+config.defense_wash_limit)
-	uiPolygonChart.VerticesDistances[2] = (pHero.m_troops_base+pHero.m_troops_wash)/(pHero.m_troops_base+config.troops_wash_limit)
+	local m_maxtotal = math.max((pHero.m_attack_base+maxconfig.attack_wash_limit),(pHero.m_defense_base+maxconfig.defense_wash_limit),(pHero.m_troops_base+maxconfig.troops_wash_limit))
+	uiPolygonChart.VerticesDistances[0] = (pHero.m_attack_base+pHero.m_attack_wash)/m_maxtotal
+	uiPolygonChart.VerticesDistances[1] = (pHero.m_defense_base+pHero.m_defense_wash)/m_maxtotal
+	uiPolygonChart.VerticesDistances[2] = (pHero.m_troops_base+pHero.m_troops_wash)/m_maxtotal
 	
 	-- 装备
 	for i=0,5,1 do

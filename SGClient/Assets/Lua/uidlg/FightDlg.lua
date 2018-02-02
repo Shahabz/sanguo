@@ -620,6 +620,11 @@ function FightDlgStart()
 	if m_playing == 1 then
 		return
 	end
+	-- 防御方没人参加
+	if g_fight.defense_total_maxhp <= 0 then
+		FightDlgResultLayerShow()
+		return
+	end
 	SetTrue( m_uiTop )
 	m_playing = 1;
 	

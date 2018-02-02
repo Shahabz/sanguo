@@ -584,7 +584,11 @@ end
 function proc_changtoken_C( recvValue )
 	-- process.
 	if recvValue.m_add > 0 then
-		pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+		if recvValue.m_path == PATH_WISHINGSHOP then
+			ItemGetDlgShow( 124, recvValue.m_add )
+		else
+			pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+		end
 	end
 	GetPlayer().m_token = recvValue.m_total;
 	MainDlgSetToken()
@@ -705,6 +709,12 @@ function proc_heroexp_C( recvValue )
 	end
 	HeroInfoDlgUpdate( recvValue.m_kind );
 	HeroExpDlgUpdate();
+	
+	if recvValue.m_add > 0 then
+		if recvValue.m_path == PATH_ITEMUSE or recvValue.m_path == PATH_TOKENITEMUSE then
+			pop( HeroName(recvValue.m_kind)..T(128).."+"..recvValue.m_add )
+		end
+	end
 end
 
 -- m_kind=0,m_add=0,m_soldiers=0,m_soldiers_max=0,m_path=0,
@@ -2061,7 +2071,7 @@ end
 -- m_count=0,m_list={m_id=0,m_color=0,m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_open=0,[m_count]},m_openstamp=0,
 function proc_wishingshop_C( recvValue )
 	-- process.
-	WishinggDlgRecv( recvValue )
+	WishingDlgRecv( recvValue )
 end
 
 -- m_silver=0,m_wood=0,m_silver_to_wood=0,m_wood_to_silver=0,m_silver_to_food=0,m_wood_to_food=0,m_food=0,m_food_to_silver=0,m_food_to_wood=0,m_cd=0

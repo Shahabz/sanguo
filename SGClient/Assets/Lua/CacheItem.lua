@@ -306,7 +306,7 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 		BagDlgItemChange( _ItemIndex )
 	end
 	
-	if path == PATH_MATERIALMAKE then
+	if path == PATH_MATERIALMAKE or path == PATH_WISHINGSHOP then
 		ItemGetDlgShow( nItemKind, num )
 	elseif path == PATH_STORY or path == PATH_STORY_SWEEP then
 	elseif path == PATH_HEROVISIT then

@@ -832,10 +832,14 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			}
 		}
 
+		// 名将掠夺
+		char nhjson[256] = { 0 };
+		nation_hero_rob( pCity, pTargetCity, nhjson );
+
 		// 进攻成功邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5019 );// 城战进攻胜利
-		sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
-			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, rob_silver, rob_wood, rob_food, rob_people, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2] );
+		sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"nhero\":[%s]}",
+			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, rob_silver, rob_wood, rob_food, rob_people, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2], nhjson );
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
@@ -843,8 +847,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// 防守失败邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5022 );// 城战防守失败
-		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
-			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, lost_silver, lost_wood, lost_food, lost_people, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2] );
+		sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tna\":\"%s\",\"tn\":%d,\"tlv\":%d,\"tpos\":\"%d,%d\",\"silver\":%d,\"wood\":%d,\"food\":%d,\"people\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"nhero\":[%s]}",
+			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, lost_silver, lost_wood, lost_food, lost_people, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], nhjson );
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
@@ -907,9 +911,6 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// 国家荣誉任务
 		nation_mission_addvalue( pCity->nation, NATION_MISSIONKIND_CITY, 1 );
-
-		// 名将掠夺
-		nation_hero_rob( pCity, pTargetCity );
 	}
 	else
 	{

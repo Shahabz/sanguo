@@ -681,15 +681,16 @@ void nation_hero_subloyal()
 }
 
 // ÂÓ¶á
-int nation_hero_rob( City *pAttackCity, City *pCity )
-{
+int nation_hero_rob( City *pAttackCity, City *pCity, char *json )
+{	
 	int nowstamp = (int)time( NULL );
-	if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
+	if ( !pCity || nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
 	{
 		return -1;
 	}
-	if ( !pCity )
-		return -1;
+
+	char szTmp[32] = { 0 };
+	char first = 0;
 	// ¼õÖÒ³Ï¶È
 	for ( int offset = 0; offset < NATIONHERO_MAX; offset++ )
 	{
@@ -704,6 +705,17 @@ int nation_hero_rob( City *pAttackCity, City *pCity )
 			v = 5;
 		else
 			v = 10;
+
+		if ( first == 0 )
+		{
+			sprintf( szTmp, "{\"k\":%d,\"n\":%d}", kind, -v );
+			first = 1;
+		}
+		else
+		{
+			sprintf( szTmp, ",{\"k\":%d,\"n\":%d}", kind, -v );
+		}
+		strcat( json, szTmp );
 
 		pCity->nation_hero[offset].loyal -= v;
 		if ( pCity->nation_hero[offset].loyal < 0 )

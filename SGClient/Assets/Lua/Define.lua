@@ -176,6 +176,9 @@ PATH_HERO_GUARD					=	67	-- 御林卫
 PATH_HERO_GUARD_AUTO			=	68	-- 御林卫自动
 PATH_STORY_SWEEP				=   72	-- 副本扫荡途径
 PATH_NATIONHERO					=	85	-- 国家名将
+PATH_WISHINGSHOP				=	87	-- 聚宝盆
+PATH_WISHINGCHANGE				=	88	-- 聚宝盆兑换
+PATH_WISHINGPACK				=	89	-- 聚宝盆打包
 
 -- 文字表
 -- 获取本地化文字

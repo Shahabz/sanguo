@@ -77,6 +77,99 @@ function io.filesize(path)
 end
 
 -------------------------------
+-- 输出table
+function TableToString(tab) --enterindex加入回车的层级 index 不传
+    local lua = ""  
+    local t = type(tab)  
+    if t == "number" then  
+        lua = lua .. tab  
+    elseif t == "boolean" then  
+        lua = lua .. tostring(tab)  
+    elseif t == "string" then  
+        lua = lua .. string.format("%q", tab)  
+    elseif t == "userdata" or t == "function" or t == "thread" or t == "proto" or t == "upval" or t.class == t then  
+    elseif t == "table" then
+        lua = lua .. "{"  
+
+        for k, v in pairs(tab) do  
+            local szkey = type(k)=="number" and "[" .. k .. "]=" or k.."="
+            lua = lua .. szkey .. TableToString(v) .. "," 
+        end  
+
+        lua = lua .. "}"  
+
+    elseif t == "nil" then  
+        return nil  
+    else  
+        error("can not serialize a " .. t .. " type.")  
+    end  
+    return lua
+end 
+
+function serialize(tab) --enterindex加入回车的层级 index 不传
+    local lua = ""  
+    local t = type(tab)  
+    if t == "number" then  
+        lua = lua .. tab  
+    elseif t == "boolean" then  
+        lua = lua .. tostring(tab)  
+    elseif t == "string" then  
+        lua = lua .. string.format("%q", tab) 
+    elseif t == "userdata" or t == "function" or t == "thread" or t == "proto" or t == "upval" or t.class == t then   
+    elseif t == "table" then
+        lua = lua .. "\n{\n"  
+
+        for k, v in pairs(tab) do  
+            local szkey = type(k)=="number" and "  [" .. k .. "]=" or k.."="
+            lua = lua .. szkey .. TableToString(v) .. ",\n" 
+        end  
+
+        lua = lua .. "}"  
+
+    elseif t == "nil" then  
+        return nil  
+    else  
+        error("can not serialize a " .. t .. " type.")  
+    end  
+    return lua
+end 
+function PrintTable(tab,str)
+    if str == nil then 
+        log(serialize(tab));
+    else
+        log(string.format("%s  %s",str,serialize(tab)))
+    end	
+end
+-------------------------------
+--随机数table
+function table.shuffle(starNum, endNum, count)  
+    local shuffleNum = {}  
+    local function isExist(num)  
+        for key, var in pairs(shuffleNum) do  
+            if var == num then  
+                return true  
+            end            
+        end  
+          return false  
+   end                     
+    -- 生成随机数  
+    local function generateShuffle()  
+        local number = math.random(starNum, endNum)  
+        if isExist(number) then  
+            -- 如果存在,则继续随机  
+            generateShuffle()  
+        else  
+            -- 不存在,加入到随机数表中  
+            table.insert(shuffleNum, number)  
+            if #shuffleNum < count then  
+                generateShuffle()  
+            end  
+        end  
+    end   
+    generateShuffle()   
+	return shuffleNum;
+end 
+-------------------------------
 -- 计算表格包含的字段数量
 -- @function [parent=#table] nums
 -- @param table t 要检查的表格

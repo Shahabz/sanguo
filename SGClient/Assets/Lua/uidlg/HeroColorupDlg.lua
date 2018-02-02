@@ -106,22 +106,27 @@ function HeroColorupDlgShow( pHero )
 	HeroColorupDlgOpen()
 	system_askinfo( ASKINFO_HERO, "", 7, pHero.m_kind );
 	
+	-- 将领
+	HeroColorupDlgSetItem()
+	-- 当前
+	HeroColorupDlgSetHero( m_uiWashInfoPre, pHero, pHero.m_color )
+	-- 突破后
+	HeroColorupDlgSetHero( m_uiWashInfoNext, pHero, config.nextcolor )
+	SetText( m_uiWarn, F( 852, ColorName(config.nextcolor) ) )
+end
+
+-- 设置道具
+function HeroColorupDlgSetItem()
+	local config = g_hero_colorup[m_pHero.m_color];
 	local itemname = item_getname( config.itemkind )
 	m_hasitemnum = GetItem():GetCount( config.itemkind )
 	SetText( m_uiMyItemNum, T(848)..itemname.." "..knum(m_hasitemnum) )
-	SetText( m_uiColorDesc, F( 853, ColorName(pHero.m_color), HeroName(pHero.m_kind), ColorName(config.nextcolor) ) )
+	SetText( m_uiColorDesc, F( 853, ColorName(m_pHero.m_color), HeroName(m_pHero.m_kind), ColorName(config.nextcolor) ) )
 	if m_hasitemnum >= config.itemnum then
 		SetText( m_uiCoatValue, T(850)..itemname..":<color=#03de27ff>"..config.itemnum.."</color><color=#03de27ff>/"..m_hasitemnum.."</color>" )
 	else
 		SetText( m_uiCoatValue, T(850)..itemname..":<color=#03de27ff>"..config.itemnum.."</color><color=#e80017ff>/"..m_hasitemnum.."</color>" )
 	end
-	SetText( m_uiWarn, F( 852, ColorName(config.nextcolor) ) )
-	
-	-- 当前
-	HeroColorupDlgSetHero( m_uiWashInfoPre, pHero, pHero.m_color )
-	
-	-- 突破后
-	HeroColorupDlgSetHero( m_uiWashInfoNext, pHero, config.nextcolor )
 end
 
 -- 设置英雄信息
@@ -172,6 +177,7 @@ function HeroColorupDlgRecv( recvValue )
 	end
 	SetText( m_uiUpValue, T(849)..":"..recvValue.m_value )
 	SetProgress( m_uiProgress, recvValue.m_value/config.needvalue )
+	HeroColorupDlgSetItem();
 end
 
 -- 请求关闭

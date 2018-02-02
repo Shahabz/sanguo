@@ -95,11 +95,37 @@ function WorldMapThumb.Start( Prefab )
 		WorldMapThumb.SetCurPos( 0, 0 );
 	end
 	
-	-- 获取玩家信息
-	system_askinfo( ASKINFO_MAPZONE, "", 0, WorldMapThumb.m_nZoneID );
+	-- 获取单元
+	local areaupdate = 1;
+	-- 当前所在区域
+	local zoneid = WorldMapThumb.m_nZoneID
 	
-	-- 获取城镇信息
-	system_askinfo( ASKINFO_MAPZONE, "", 1, WorldMapThumb.m_nZoneID );
+	-- 如果皇城开启，哪都可以看到
+	if GetPlayer().m_open_townking <= 0 then
+		-- 如果州城开启，只能看见四个州城和对应郡城
+		if GetPlayer().m_open_town6 > 0 then
+			if g_zoneinfo[zoneid].type ~= 1 then
+				if map_zone_ismovezone( GetPlayer().m_zone, zoneid ) == 0 then
+					areaupdate = 0
+				end
+			end
+		else
+			-- 只能看见自己的郡城
+			if GetPlayer().m_zone ~= zoneid then
+				areaupdate = 0
+			end
+		end
+	end
+	
+	if areaupdate == 1 then
+		-- 获取玩家信息
+		system_askinfo( ASKINFO_MAPZONE, "", 0, WorldMapThumb.m_nZoneID );
+		
+		-- 获取城镇信息
+		system_askinfo( ASKINFO_MAPZONE, "", 1, WorldMapThumb.m_nZoneID );
+	else
+		WorldMapThumb.Alert( T(2369) )
+	end
 end
 
 -- 缩略图坐标（摄像机）=》地区地图坐标(菱形格)

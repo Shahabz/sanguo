@@ -222,10 +222,12 @@ function HeroConfigDlgSetBase( pHero )
 
 	-- 能力范围图
 	local config = g_heroinfo[pHero.kind][hero_getnormalcolor( pHero.kind )];
+	local maxconfig = g_heroinfo[pHero.kind][5];
 	local uiPolygonChart = m_uiAbilityArea.transform:GetComponent( typeof(UIPolygonChart) );
-	uiPolygonChart.VerticesDistances[0] = (pHero.attack_base+pHero.attack_wash)/(pHero.attack_base+config.attack_wash_limit)
-	uiPolygonChart.VerticesDistances[1] = (pHero.defense_base+pHero.defense_wash)/(pHero.defense_base+config.defense_wash_limit)
-	uiPolygonChart.VerticesDistances[2] = (pHero.troops_base+pHero.troops_wash)/(pHero.troops_base+config.troops_wash_limit)
+	local m_maxtotal = math.max((pHero.attack_base+maxconfig.attack_wash_limit),(pHero.defense_base+maxconfig.defense_wash_limit),(pHero.troops_base+maxconfig.troops_wash_limit))
+	uiPolygonChart.VerticesDistances[0] = (pHero.attack_base+pHero.attack_wash)/m_maxtotal
+	uiPolygonChart.VerticesDistances[1] = (pHero.defense_base+pHero.defense_wash)/m_maxtotal
+	uiPolygonChart.VerticesDistances[2] = (pHero.troops_base+pHero.troops_wash)/m_maxtotal
 	
 	SetFalse( m_uiOwnerWarn )
 	SetFalse( m_uiOwner )
