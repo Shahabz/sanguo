@@ -51,11 +51,11 @@ SRC = \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
-../AutoS/src/auto_data_wishing_change.cpp \
 ../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_map_call.cpp \
 ../AutoS/src/auto_nation_hero.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
+../AutoS/src/auto_data_wishing_pack.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
 ../AutoS/src/auto_army_group.cpp \
 ../AutoS/src/auto_kingwar_town.cpp \
@@ -273,8 +273,6 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
-../AutoS/src/auto_data_wishing_change.o: ../AutoS/src/auto_data_wishing_change.cpp 
-	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_call.o: ../AutoS/src/auto_map_call.cpp 
@@ -282,6 +280,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_nation_hero.o: ../AutoS/src/auto_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_upgrade.o: ../AutoS/src/auto_data_nation_upgrade.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_wishing_pack.o: ../AutoS/src/auto_data_wishing_pack.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor_hero.o: ../AutoS/src/auto_actor_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

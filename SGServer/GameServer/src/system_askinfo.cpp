@@ -929,6 +929,22 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // ¾Û±¦Åè¹ºÂò
 			wishing_shop_buy( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // ¾Û±¦Åè¶Ò»»
+			wishing_change_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // ¾Û±¦Åè¶Ò»»
+			wishing_change_buy( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // ¾Û±¦Åè´ò°ü
+			wishing_pack_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // ¾Û±¦Åè´ò°ü
+			wishing_pack_buy( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

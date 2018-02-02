@@ -48,7 +48,8 @@ int actor_set_today_int_times( int actor_index, int offset, int value );
 
 // CD时间
 #define USELIMIT_CD_MAXCOUNT 8
-#define USELIMIT_CD_TOWN_DEV	0 // 都城开发冷却
+#define USELIMIT_CD_TOWN_DEV		0 // 都城开发冷却
+#define USELIMIT_CD_WISHING_CHANGE	1 // 聚宝盆兑换冷却
 int actor_set_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_add_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_check_uselimit_cd( int actor_index, char index );

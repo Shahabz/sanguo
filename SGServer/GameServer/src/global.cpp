@@ -572,6 +572,26 @@ int global_init()
 			global.hero_god_defense = atoi( row[1] );
 		else if ( id == 203 )
 			global.hero_god_level = atoi( row[1] );
+		else if ( id == 204 )
+			global.wishing_opencd = atoi( row[1] );
+		else if ( id == 205 )
+			global.wishing_silver_to_wood = value;
+		else if ( id == 206 )
+			global.wishing_silver_to_food = value;
+		else if ( id == 207 )
+			global.wishing_wood_to_silver = value;
+		else if ( id == 208 )
+			global.wishing_wood_to_food = value;
+		else if ( id == 209 )
+			global.wishing_food_to_silver = value;
+		else if ( id == 210 )
+			global.wishing_food_to_wood = value;
+		else if ( id == 211 )
+			global.wishing_green_to_draw = atoi( row[1] );
+		else if ( id == 212 )
+			global.wishing_change_cd = atoi( row[1] );
+		else if ( id == 213 )
+			global.wishing_change_cdmax = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

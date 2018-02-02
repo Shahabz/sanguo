@@ -810,10 +810,10 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
-	// æ€±¶≈Ë-ªª±¶
-	if ( wishingchange_init_auto() < 0 )
+	// æ€±¶≈Ë-¥Ú∞¸
+	if ( wishingpack_init_auto() < 0 )
 	{
-		printf_msg( "wishingchange_init_auto Module Error!" );
+		printf_msg( "wishingpack_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

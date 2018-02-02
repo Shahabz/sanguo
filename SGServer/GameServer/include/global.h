@@ -176,6 +176,16 @@ typedef struct _global
 	short hero_god_attack;
 	short hero_god_defense;
 	short hero_god_level;
+	int wishing_opencd;
+	float wishing_silver_to_wood;
+	float wishing_silver_to_food;
+	float wishing_wood_to_silver;
+	float wishing_wood_to_food;
+	float wishing_food_to_silver;
+	float wishing_food_to_wood;
+	char wishing_green_to_draw;
+	short wishing_change_cd;
+	int wishing_change_cdmax;
 }Global;
 int global_init();
 void global_reload();

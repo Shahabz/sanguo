@@ -408,15 +408,6 @@
     <ClCompile Include="AutoS\src\auto_data_kingwar.cpp">
       <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_building_res_unlock.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_hero_visit.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_quest_talk.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\rank.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -465,35 +456,44 @@
     <ClCompile Include="AutoS\src\auto_data_nation_mission.cpp">
       <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_nation_official.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_map_call.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\map_call.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_nation_heroinfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\nation_hero.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_city_nation_hero.cpp">
+    <ClCompile Include="src\wishing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AutoS\src\auto_nation_hero.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="AutoS\src\auto_data_wishing_change.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="AutoS\src\auto_city_nation_hero.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_building_res_unlock.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_hero_visit.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_nation_heroinfo.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_nation_official.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_quest_talk.cpp">
+      <Filter>源文件\Auto</Filter>
     </ClCompile>
     <ClCompile Include="AutoS\src\auto_data_wishing_shop.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Auto</Filter>
     </ClCompile>
-    <ClCompile Include="src\wishing.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="AutoS\src\auto_map_call.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_data_wishing_pack.cpp">
+      <Filter>源文件\Auto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -869,15 +869,6 @@
     <ClInclude Include="AutoS\include\auto_data_kingwar.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_building_res_unlock.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_hero_visit.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_quest_talk.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\rank.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -926,32 +917,41 @@
     <ClInclude Include="AutoS\include\auto_data_nation_mission.h">
       <Filter>头文件\Auto</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_nation_official.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_map_call.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\map_call.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\nation_hero.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="AutoS\include\auto_city_nation_hero.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_nation_hero.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_wishing_change.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoS\include\auto_data_wishing_shop.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\wishing.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_city_nation_hero.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_building_res_unlock.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_hero_visit.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_nation_official.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_quest_talk.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_wishing_shop.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_map_call.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_nation_hero.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_data_wishing_pack.h">
+      <Filter>头文件\Auto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

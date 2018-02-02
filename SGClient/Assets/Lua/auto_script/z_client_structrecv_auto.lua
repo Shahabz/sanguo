@@ -2687,3 +2687,18 @@ function struct_NetS_WishingShop_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_WishingChange_recv( buffer )
+	local recvValue = {};
+	recvValue.m_silver = buffer:ReadInt();
+	recvValue.m_wood = buffer:ReadInt();
+	recvValue.m_silver_to_wood = buffer:ReadInt();
+	recvValue.m_wood_to_silver = buffer:ReadInt();
+	recvValue.m_silver_to_food = buffer:ReadInt();
+	recvValue.m_wood_to_food = buffer:ReadInt();
+	recvValue.m_food = buffer:ReadInt();
+	recvValue.m_food_to_silver = buffer:ReadInt();
+	recvValue.m_food_to_wood = buffer:ReadInt();
+	recvValue.m_cd = buffer:ReadInt();
+	return recvValue;
+end
+

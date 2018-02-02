@@ -114,6 +114,8 @@
 #define PATH_NATIONHERO					85	// 国家名将
 #define PATH_HERO_GOD					86	// 英雄神突
 #define PATH_WISHINGSHOP				87	// 聚宝盆
+#define PATH_WISHINGCHANGE				88	// 聚宝盆兑换
+#define PATH_WISHINGPACK				89	// 聚宝盆打包
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

@@ -2064,3 +2064,8 @@ function proc_wishingshop_C( recvValue )
 	WishinggDlgRecv( recvValue )
 end
 
+-- m_silver=0,m_wood=0,m_silver_to_wood=0,m_wood_to_silver=0,m_silver_to_food=0,m_wood_to_food=0,m_food=0,m_food_to_silver=0,m_food_to_wood=0,m_cd=0
+function proc_wishingchange_C( recvValue )
+	-- process.
+end
+

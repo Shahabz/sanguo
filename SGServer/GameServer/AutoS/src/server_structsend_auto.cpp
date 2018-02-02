@@ -2956,3 +2956,20 @@ int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop 
 	return 0;
 }
 
+int struct_NetS_WishingChange_send( char **pptr, int *psize, SLK_NetS_WishingChange *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver_to_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wood_to_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_silver_to_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_wood_to_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_food, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_food_to_silver, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_food_to_wood, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_cd, (*psize) );
+	return 0;
+}
+

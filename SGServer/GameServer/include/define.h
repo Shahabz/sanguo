@@ -54,7 +54,7 @@
 #include "auto_data_nation_heroinfo.h"
 #include "auto_data_weather.h"
 #include "auto_data_wishing_shop.h"
-#include "auto_data_wishing_change.h"
+#include "auto_data_wishing_pack.h"
 #include "auto_data_shop.h"
 #include "auto_data_story.h"
 #include "auto_data_world_bossinfo.h"
