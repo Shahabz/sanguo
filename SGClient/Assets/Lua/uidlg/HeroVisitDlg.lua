@@ -760,7 +760,7 @@ function HeroVisitDlgCloseHeroGetEvent()
 end
 --判段是否已经拥有此英雄
 function HeroVisitDlgIsHaveHero( ikind )
-	for key, value in ipairs(t_getHero) do  
+	for key, value in pairs(t_getHero) do  
 		if value == ikind then
 			return true;
 		end

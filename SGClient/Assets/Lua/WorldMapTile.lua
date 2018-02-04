@@ -6,9 +6,13 @@ MapTile = {};
 -- 格子数据
 MapTile.data = {};
 
+MapTile.tiledMap = {};
+MapTile.forest = nil
+
 -- 初始化
 function MapTile.init()
-	
+	MapTile.tiledMap = require("config/conf_worldmap");
+	MapTile.forest = {}
 end
 
 -- 向格子里添加数据
@@ -44,6 +48,11 @@ function MapTile.add( recvValue )
 		end
 		MapTile.data[x][y]["unit_type"] = recvValue.m_type
 		MapTile.data[x][y]["unit_index"] = recvValue.m_unit_index;
+		
+		-- 格子添加对象就删除这个格子的森林
+		if recvValue.m_unit_index >= 0 then
+			MapTile.DelForest( x, y )
+		end
 	
 	-- 占2*2格子的情况
 	elseif grid == 2 then
@@ -60,6 +69,11 @@ function MapTile.add( recvValue )
 			MapTile.data[x][y]["unit_type"] = recvValue.m_type
 			MapTile.data[x][y]["unit_index"] = recvValue.m_unit_index;
 			--print( "x:"..x..",y:"..y..",recvValue.m_unit_index:"..recvValue.m_unit_index )
+			
+			-- 格子添加对象就删除这个格子的森林
+			if recvValue.m_unit_index >= 0 then
+				MapTile.DelForest( x, y )
+			end
 		end
 		
 	-- 占3*3格子的情况
@@ -76,6 +90,11 @@ function MapTile.add( recvValue )
 			end
 			MapTile.data[x][y]["unit_type"] = recvValue.m_type
 			MapTile.data[x][y]["unit_index"] = recvValue.m_unit_index;
+			
+			-- 格子添加对象就删除这个格子的森林
+			if recvValue.m_unit_index >= 0 then
+				MapTile.DelForest( x, y )
+			end
 		end
 	end
 end
@@ -93,6 +112,7 @@ end
 -- 清空数据
 function MapTile.clear()
 	MapTile.data = {};
+	MapTile.forest = nil
 end
 
 -- 获取点击的格子数据
@@ -117,3 +137,73 @@ function MapTile.block( posx, posy )
 	end
 	return 0;
 end
+
+-- 获取森林池对象
+function MapTile.GetForestObj( id )
+	local offset = id - 21;
+	return MapForestRootObjectPool:Get( "MapForest"..offset );
+end
+
+-- 获取森林池对象
+function MapTile.ReleaseForestObj( id, unitObj )
+	local offset = id - 21;
+	MapForestRootObjectPool:Release( "MapForest"..offset, unitObj );
+end
+
+-- 创建森林
+function MapTile.AddForest( posx, posy )
+	-- 先转换成一小块地图的坐标，因为地图是N*N的拼起来的
+	local localposx = math.floor( math.mod( posx, TMX_WIDTH ) );
+	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
+	local index = localposx + localposy*TMX_HEIGHT + 1;
+	
+	local id = MapTile.tiledMap.layers[3].data[index];
+	if id == 0 then
+		return
+	end
+	
+	if MapTile.forest[posx] ~= nil and MapTile.forest[posx][posy] ~= nil then
+		return
+	end
+	
+	local unitObj = MapTile.GetForestObj( id )
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	local x, y = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( x, y, 0 );
+	unitObj.transform:SetParent( MapForestRoot.transform );
+	unitObj.transform.localScale = Vector3.one;
+	unitObj.gameObject:SetActive( true );
+	
+	-- 缓存起来
+	if MapTile.forest[posx] == nil then
+		MapTile.forest[posx] = {};
+	end
+	if MapTile.forest[posx][posy] == nil then 
+		MapTile.forest[posx][posy] = nil;
+	end
+			
+	MapTile.forest[posx][posy] = unitObj;
+end
+
+-- 删除森林
+function MapTile.DelForest( posx, posy )
+	local localposx = math.floor( math.mod( posx, TMX_WIDTH ) );
+	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
+	local index = localposx + localposy*TMX_HEIGHT + 1;
+	
+	local id = MapTile.tiledMap.layers[3].data[index];
+	if id == 0 then
+		return
+	end
+	
+	if MapTile.forest[posx] == nil or MapTile.forest[posx][posy] == nil then
+		return
+	end
+
+	MapTile.ReleaseForestObj( id, MapTile.forest[posx][posy] )
+	MapTile.forest[posx][posy] = nil;
+end
+
+

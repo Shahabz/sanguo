@@ -72,6 +72,8 @@ m_uiWarTable.m_uiWarScroll = nil;
 m_uiWarTable.m_uiWarContent = nil
 m_uiWarTable.m_uiUIP_WarText = nil; --UnityEngine.GameObject
 m_uiWarTable.m_uiWarWarning = nil; --UnityEngine.GameObject
+local m_uiCutScenes = nil; --UnityEngine.GameObject
+
 m_uiWarTable.m_cache = {}
 m_uiWarTable.m_cacheObj = {}
 
@@ -339,6 +341,9 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			m_uiBuildingName[2]:SetActive(false);
 			m_uiBuildingTimerUITweenScale[2]:Play(true);
 			m_uiBuildingTimerUITweenScale1[2]:Play(true);
+		
+		elseif nControlID == 20 then
+			MainDlgStopCutScenes()
 		end
 		
 	elseif nType == UI_EVENT_TIMECOUNTEND then
@@ -440,6 +445,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiWarTable.m_uiWarWarning = objs[82];
 	ButtonTable.m_uiButtonGril = objs[83];
 	m_uiAutoGuard = objs[84];
+	m_uiCutScenes = objs[85];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
@@ -1182,3 +1188,12 @@ function MainDlgClearWarObj()
     end
 end
 
+-- 播放城内城外切换动画
+function MainDlgPlayCutScenes()
+	m_uiCutScenes.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform )
+	SetTrue( m_uiCutScenes )
+end
+
+function MainDlgStopCutScenes()
+	SetFalse( m_uiCutScenes )
+end

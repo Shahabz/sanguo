@@ -54,6 +54,7 @@ local m_MoveType = 0;
 
 -- 地图区域
 Area = {}
+Area.forest = {};
 -- 根据世界坐标获取区域编号
 function Area.GetIndex( posx, posy )
 	local areax, areay;
@@ -76,6 +77,116 @@ function Area.GetIndex( posx, posy )
 	return math.modf( areay*(WorldMap.m_nAreaXNum) + areax );
 end
 
+-- 获取区域二位素组索引
+function Area.GetPos( area_index )
+	if area_index <= 0 then
+		return 0, 0;
+	end
+	local px = math.modf( area_index % WorldMap.m_nAreaXNum );
+	local py = math.modf( area_index / WorldMap.m_nAreaXNum );
+	return px, py;
+end
+
+function Area.GetIndexFromGrid( areax, areay )
+	return areay*(WorldMap.m_nAreaXNum) + areax;
+end
+
+-- 区域检测
+function Area.ViewChange( old_area_index, new_area_index, gameCoorX, gameCoorY )
+	local leave_area = {};
+	local enter_area = {};
+	local reset_area = {};
+	
+	-- 离开区域列表
+	if old_area_index >= 0 then
+		local areax, areay = Area.GetPos( old_area_index );
+		for tmpx = areax - 1, areax + 1, 1 do
+			if tmpx >= 0 and tmpx < WorldMap.m_nAreaXNum then
+				for tmpy = areay - 1, areay + 1, 1 do
+					if tmpy >= 0 and tmpy < WorldMap.m_nAreaYNum then
+						local index = Area.GetIndexFromGrid( tmpx, tmpy )
+						table.insert( leave_area, index );
+					end
+				end
+			end
+		end
+	end
+	
+	-- 进入区域列表
+	local areax, areay = Area.GetPos( new_area_index );
+	for tmpx = areax - 1, areax + 1, 1 do
+		if tmpx >= 0 and tmpx < WorldMap.m_nAreaXNum then
+			for tmpy = areay - 1, areay + 1, 1 do
+				if tmpy >= 0 and tmpy < WorldMap.m_nAreaYNum then
+					local index = Area.GetIndexFromGrid( tmpx, tmpy )
+					table.insert( enter_area, index );
+				end
+			end
+		end
+	end
+	
+	--过滤重复区域
+	for tmpi = 1, #leave_area, 1 do
+		for tmpj = 1, #enter_area, 1 do
+			if leave_area[tmpi] == enter_area[tmpj] then
+				leave_area[tmpi] = -1;
+				enter_area[tmpj] = -1;
+			end
+		end
+	end
+
+	for tmpi = 1, #leave_area, 1 do
+		if leave_area[tmpi] ~= -1 then
+			Area.Leave( leave_area[tmpi] )
+		end
+	end
+
+	for tmpi = 1, #enter_area, 1 do
+		if enter_area[tmpi] ~= -1 then
+			Area.Enter( enter_area[tmpi] )
+		end
+	end
+end
+
+-- 区域离开
+function Area.Leave( area_index )
+	-- 清除这个区域的森林
+	--local forests = Area.forest[area_index]
+	--if forests ~= nil then
+		local areax, areay = Area.GetPos( area_index );
+		local beginx = areax * 5
+		local beginy = areay * 5
+		for i=beginx, beginx + 5, 1 do
+			for j=beginy, beginy + 5, 1 do
+				MapTile.DelForest( i, j )
+			end
+		end
+		--for k, v in pairs( forests ) do
+			--MapTile.DelForest( k.posx, k.posy )
+		--end
+	--end
+end
+
+-- 区域进入
+function Area.Enter( area_index )
+	-- 添加这个区域的森林
+	--local forests = Area.forest[area_index]
+	--if forests ~= nil then
+		local areax, areay = Area.GetPos( area_index );
+		local beginx = areax * 5
+		local beginy = areay * 5
+		for i=beginx, beginx + 5, 1 do
+			for j=beginy, beginy + 5, 1 do
+				MapTile.AddForest( i, j )
+			end
+		end
+		--for k, v in pairs( forests ) do
+			--MapTile.AddForest( k.posx, k.posy )
+		--end
+	--end
+end
+
+
 -- 显示单元创建队列
 local procQueue = Queue.new();
 -- 部队单拿出来一个队列
@@ -85,6 +196,14 @@ local m_updateWaitFrame = 0;
 -- 地图对象组件
 local WorldMapPrefab	= nil;	-- 地图根
 local MapTmxRoot		= nil;	-- tmx地图根节点
+MapForestRoot			= nil;  -- 森林节点单独拿出来
+MapForestRootObjectPool = nil;	-- 森林内存池
+MapForest1 				= nil;
+MapForest2 				= nil;
+MapForest3				= nil;
+MapForest4 				= nil;
+MapForest5 				= nil;
+MapForest6 				= nil;
 MapUnitRoot				= nil;	-- 所有显示对象的根节点
 MapArmyRoot				= nil;	-- 部队单独拿出
 local MapLineRoot		= nil;	-- 所有线根节点
@@ -150,6 +269,7 @@ end
 
 -- 前往世界地图
 function WorldMap.GotoWorldMap( posx, posy )
+	MainDlgPlayCutScenes()
 	-- m_to_posx=0,m_to_posy=0,
 	local sendValue = {};
 	sendValue.m_to_posx = posx;
@@ -159,6 +279,7 @@ end
 
 -- 返回城池
 function WorldMap.ReturnCity()
+	MainDlgPlayCutScenes()
 	GameManager.ChangeScence( "city" )
 	TmxLastList = { 0, 0, 0, 0 };
 	WorldMap.Clear()
@@ -301,6 +422,7 @@ function WorldMap.Start( Prefab )
 
 	-- 获取组件
 	MapTmxRoot				= WorldMapPrefab.transform:Find( "MapTmxRoot" );
+	MapForestRoot			= WorldMapPrefab.transform:Find( "MapForestRoot" );
 	MapUnitRoot				= WorldMapPrefab.transform:Find( "MapUnitRoot" );
 	MapLineRoot				= WorldMapPrefab.transform:Find( "MapLineRoot" );
 	MapArmyRoot				= WorldMapPrefab.transform:Find( "MapArmyRoot" );
@@ -331,6 +453,21 @@ function WorldMap.Start( Prefab )
 		MapTmx[i].transform.localScale = Vector3.one;
         MapTmx[i].gameObject:SetActive( false );
     end
+	
+	-- 创建森林
+	MapForest1 		= LoadPrefab("MapForest1");
+	MapForest2 		= LoadPrefab("MapForest2");
+	MapForest3 		= LoadPrefab("MapForest3");
+	MapForest4 		= LoadPrefab("MapForest4");
+	MapForest5 		= LoadPrefab("MapForest5");
+	MapForest6		= LoadPrefab("MapForest6");
+	MapForestRootObjectPool = MapForestRoot:GetComponent( typeof(ObjectPoolManager) );		
+	MapForestRootObjectPool:CreatePool("MapForest1", 20, 20, MapForest1 );
+	MapForestRootObjectPool:CreatePool("MapForest2", 20, 20, MapForest2 );
+	MapForestRootObjectPool:CreatePool("MapForest3", 20, 20, MapForest3 );
+	MapForestRootObjectPool:CreatePool("MapForest4", 20, 20, MapForest4 );
+	MapForestRootObjectPool:CreatePool("MapForest5", 20, 20, MapForest5 );
+	MapForestRootObjectPool:CreatePool("MapForest6", 20, 20, MapForest6 );
     	
 	-- 设置摄像机初始位置为我的城池
 	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
@@ -528,6 +665,7 @@ function WorldMap.ViewChangeSec()
 	if now_areaindex < 0 or now_areaindex == WorldMap.m_nLastAreaIndex then
 		return
 	end
+	Area.ViewChange( WorldMap.m_nLastAreaIndex, now_areaindex, gameCoorX, gameCoorY )
 	
 	WorldMap.m_nLastAreaIndex = now_areaindex;
 	WorldMap.SendAreaIndex( now_areaindex, gameCoorX, gameCoorY )
