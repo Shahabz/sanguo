@@ -296,6 +296,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 	local uiCount = objs[8];
 	local uiToken = objs[9];
 	local uiShapeBack = objs[10];
+	local uiEffect = objs[11];
 	SetTrue( uiObj )
 	SetFalse( uiFlag );
 	SetFalse( uiNew );
@@ -304,6 +305,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 	SetFalse( uiTimer );
 	SetFalse( uiCount );
 	SetFalse( uiToken );
+	SetFalse( uiEffect );
 	
 	local color = NameColor( storyConfig.color )
 	local type = storyConfig.type;
@@ -326,6 +328,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiShapeBack )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
+			SetTrue( uiEffect );
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			
 		-- 尚未通关
@@ -358,6 +361,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiShapeBack )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiFlag );
+
 			-- 星级
 			local starlv = m_recvValue.m_story_star[storyConfig.star_saveoffset+1]
 			StoryDlgStar( uiStar, starlv )
@@ -373,6 +377,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiShapeBack )
 			SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
+			SetTrue( uiEffect );
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			showWarning = 1;
 				
@@ -427,7 +432,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetFalse( uiObj )
 			return
 		end
-		
+		SetTrue( uiEffect );
 		-- 已经通关
 		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
@@ -505,6 +510,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetFalse( uiObj )
 			return
 		end
+		SetTrue( uiEffect );
 		-- 已经通关
 		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
@@ -526,7 +532,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			SetTrue( uiCount )
-			SetText( uiCount, F( 2029, num, storyConfig.itemnum )  )
+			SetText( uiCount, F( 2029, num, storyConfig.itemnum ) )
 				
 		-- 尚未通关
 		else
@@ -573,7 +579,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 				return
 			end
 		end
-		
+		SetTrue( uiEffect );
 		-- 已经通关
 		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )
@@ -620,7 +626,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetFalse( uiObj )
 			return		
 		end
-		
+		SetTrue( uiEffect );
 		-- 已经通关
 		if m_recvValue.m_storyid > storyConfig.id or m_recvValue.m_storyid > storyConfig.preid then
 			SetControlID( uiObj, 10000+storyConfig.id )

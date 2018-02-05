@@ -842,7 +842,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, rob_silver, rob_wood, rob_food, rob_people, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2], nhjson );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pTargetCity->name );
 
 
 		// 防守失败邮件
@@ -851,7 +851,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, lost_silver, lost_wood, lost_food, lost_people, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], nhjson );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pCity->name );
 
 		// 随机迁移城主地图
 		char zoneid = map_zone_getid( pTargetCity->posx, pTargetCity->posy );
@@ -922,7 +922,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2] );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+		armygroup_mail( group_index, 1, NULL, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pCity->name );
 
 		// 防守成功邮件
 		sprintf( title, "%s%d", TAG_TEXTID, 5021 );// 城战防守胜利
@@ -930,7 +930,11 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			pTargetCity->name, pTargetCity->nation, pTargetCity->level, g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, pCity->name, pCity->nation, pCity->level, pCity->posx, pCity->posy, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2] );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pTargetCity->name );
+
+		// 事件
+		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_ASSAULT, pTargetCity->name, 0, mailid );
+		city_battle_event_add( pTargetCity->index, CITY_BATTLE_EVENT_DEFEND, pCity->name, 1, mailid );
 	}
 
 	if ( pTargetCity )
@@ -984,6 +988,8 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 	else
 		return -1;
 
+	char v1[16] = { 0 };
+	sprintf( v1, "%d", pTown->townid );
 
 	if ( pFight->result == FIGHT_WIN )
 	{
@@ -1031,6 +1037,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				actorid_list[actorid_count] = pArmyCity->actorid;
 				actorid_count += 1;
 			}
+
+			// 事件
+			city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_NATION_ASSAULT, v1, pFight->result, mailid );
 		}
 
 		// 防守失败邮件
@@ -1039,7 +1048,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			attackName, attackNation, posx, posy, pTown->townid, pTown->nation, 0, 0, 0, 0, 0, 0 );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight, v1 );
 	}
 	else
 	{
@@ -1087,6 +1096,9 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				actorid_list[actorid_count] = pArmyCity->actorid;
 				actorid_count += 1;
 			}
+
+			// 事件
+			city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_NATION_ASSAULT, v1, pFight->result, mailid );
 		}
 
 		// 防守成功邮件
@@ -1095,7 +1107,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			attackName, attackNation, posx, posy, pTown->townid, pTown->nation, 0, 0, 0, 0, 0, 0 );
 
 		// 集结所有人发送邮件
-		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight );
+		armygroup_mail( group_index, 2, NULL, MAIL_TYPE_FIGHT_NATION, title, content, "", pFight, v1 );
 
 		// 国家日志
 		nationlog_add( pTown->nation, NATION_LOG_TYPE_DEFENSE_WIN, pTown->townid, attackName, attackNation );
@@ -1765,7 +1777,7 @@ int armygroup_askhelp( int actor_index, int group_index, int group_id )
 }
 
 // 集结所有人发送邮件
-int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight )
+int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight, char *name )
 {
 	int *pArmyIndex = NULL;
 	if ( attack == 1 )
@@ -1805,7 +1817,26 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 			if ( fight )
 			{
 				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+				if ( type == MAIL_TYPE_FIGHT_CITY )
+				{ // 城战
+					if ( attack == 1 )
+					{
+						city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_ASSAULT, name, fight->result, mailid );
+					}
+					else if ( attack == 2 )
+					{
+						city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_DEFEND, name, fight->result, mailid );
+					}
+				}
+				if ( type == MAIL_TYPE_FIGHT_NATION )
+				{ // 国战
+					if ( attack == 2 )
+					{
+						city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_NATION_DEFEND, name, fight->result, mailid );
+					}
+				}
 			}
+
 			actorid_list[actorid_count] = pArmyCity->actorid;
 			actorid_count += 1;
 		}
@@ -1817,6 +1848,10 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 		if ( fight )
 		{
 			mail_fight( mailid, defenseCity->actorid, fight->unit_json );
+			if ( type == MAIL_TYPE_FIGHT_CITY )
+			{ // 城战
+				city_battle_event_add( defenseCity->index, CITY_BATTLE_EVENT_DEFEND, name, fight->result, mailid );
+			}
 		}
 	}
 	return 0;

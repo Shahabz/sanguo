@@ -3,11 +3,19 @@ local m_Dlg = nil;
 local m_uiText = nil; --UnityEngine.GameObject
 local m_uiTabs = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiBuyInfo = nil; --UnityEngine.GameObject
 
 local m_nTabKind = {}
 local m_nContentKind = {}
 local m_index = 0;
 
+local m_buytoken = 0;
+local m_SelectItemNum = 0;
+local m_SelectItem = 0;
+
+local m_uiCostToken = nil;
+local m_uiUseNum = nil;
+	
 -- 打开界面
 function MaterialGetDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MaterialGetDlg" );
@@ -37,6 +45,8 @@ function MaterialGetDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             MaterialGetDlgClose();
+		elseif nControlID == -3 then
+			MaterialGetDlgHideBuyInfoLayer()
 			
 		-- 选择页签
 		elseif nControlID >= 1 and nControlID <= 4 then
@@ -46,6 +56,26 @@ function MaterialGetDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 10 then
 			LevyDlgShow()
 			MaterialGetDlgClose();
+			
+		-- 减10
+		elseif nControlID == 11 then
+			MaterialGetDlgBuyItemSetNum( -10 )
+					
+		-- 减1
+		elseif nControlID == 12 then
+			MaterialGetDlgBuyItemSetNum( -1 )
+			
+		-- 加1
+		elseif nControlID == 13 then
+			MaterialGetDlgBuyItemSetNum( 1 )
+		
+		-- 加10
+		elseif nControlID == 14 then
+			MaterialGetDlgBuyItemSetNum( 10 )
+			
+		-- 购买
+		elseif nControlID == 15 then
+			MaterialGetDlgItemBuy( 0 )
 		
 		-- 使用指定道具
 		elseif nControlID > 1000 and nControlID < 2000 then
@@ -53,7 +83,7 @@ function MaterialGetDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 购买指定道具
 		elseif nControlID > 2000 and nControlID < 3000 then
-			MaterialGetDlgBuy( nControlID-2000 )
+			MaterialGetDlgBuyAsk( nControlID-2000 )
         end
 	end
 end
@@ -65,6 +95,7 @@ function MaterialGetDlgOnAwake( gameObject )
 	m_uiText = objs[0];
 	m_uiTabs = objs[1];
 	m_uiContent = objs[2];
+	m_uiBuyInfo = objs[3];
 end
 
 -- 界面初始化时调用
@@ -250,13 +281,72 @@ function MaterialGetDlgUse( itemkind )
 	GetItem():Use( itemkind )
 end
 
--- 购买道具
-function MaterialGetDlgBuy( itemkind )
-	if GetPlayer().m_token < item_gettoken( itemkind ) then
-        JumpToken();
-		return -1;
+-- 购买确定框
+function  MaterialGetDlgBuyAsk( itemkind )	
+	m_SelectItem = itemkind
+	SetTrue( m_uiBuyInfo )
+	
+	local objs = m_uiBuyInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local ItemObj = objs[0];
+	local ItemName = objs[1];
+	local ItemDesc = objs[2];
+	local UseNum = objs[3];
+	local BuyButton = objs[4];
+	local UseButton = objs[5];
+	local NumSelect = objs[6];
+	local CostToken = objs[7];
+	m_uiCostToken = CostToken;
+	m_uiUseNum = UseNum;
+	m_SelectItemNum = 1;
+		
+	local sprite, color, name, c, desc = AwardInfo( m_SelectItem )
+	SetImage( ItemObj.transform:Find("Shape"), sprite )
+	SetImage( ItemObj.transform:Find("Color"), color )
+	SetText( ItemObj.transform:Find("Num"), "" );
+	SetText( ItemName, name, NameColor(c) );
+	SetText( ItemDesc, desc )
+	SetText( m_uiUseNum, m_SelectItemNum );
+	
+	m_buytoken = item_gettoken( m_SelectItem );
+	local cost = m_SelectItemNum*m_buytoken
+	if GetPlayer().m_token < cost then
+		SetRichText( CostToken, F( 2274, cost ) )
+	else
+		SetRichText( CostToken, F( 2273, cost ) )
 	end
-	MsgBox( F(1778, item_gettoken( itemkind ), item_getname( itemkind )), function() 
-		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_BUY, itemkind, 1 );
+	SetFalse( UseButton )
+end
+
+-- 隐藏购买确定页
+function MaterialGetDlgHideBuyInfoLayer()
+	SetFalse( m_uiBuyInfo )
+end
+
+-- 设置数量
+function MaterialGetDlgBuyItemSetNum( num )
+	m_SelectItemNum = m_SelectItemNum + num
+	if m_SelectItemNum <= 0 then
+		m_SelectItemNum = 1;
+	end
+	
+	SetText( m_uiUseNum, m_SelectItemNum );
+	local cost = m_SelectItemNum*m_buytoken
+	if GetPlayer().m_token < cost then
+		SetRichText( m_uiCostToken, F( 2274, cost ) )
+	else
+		SetRichText( m_uiCostToken, F( 2273, cost ) )
+	end
+end
+		
+-- 购买
+function MaterialGetDlgItemBuy()
+	local cost = m_SelectItemNum*m_buytoken
+	if GetPlayer().m_token < cost then
+		JumpToken()
+		return
+	end
+
+	MsgBox( F(1778, cost, item_getname( m_SelectItem ), m_SelectItemNum ), function() 
+		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_BUY, m_SelectItem, m_SelectItemNum );
 	end )
 end

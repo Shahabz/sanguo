@@ -53,5 +53,5 @@ int armygroup_nation_sendlist( int actor_index );
 int armygroup_askhelp( int actor_index, int group_index, int group_id );
 
 // 集结所有人发送邮件
-int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight );
+int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight, char *name );
 #endif

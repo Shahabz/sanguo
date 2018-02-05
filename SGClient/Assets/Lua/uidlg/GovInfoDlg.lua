@@ -186,17 +186,41 @@ end
 local function type2text_b( type, name, value )
 	if type == 1 then
 		return F( 742, name, T(1177+value) )
+		
 	elseif type == 2 then
 		return F( 743, name, T(1177+value) )
-	elseif type == 3 then
-		return F( 744, name, T(1177+value) )
-	elseif type == 4 then
-		return F( 745, name, T(1177+value) )
-	elseif type == 5 then
-		return F( 746, name, T(1177+value) )
-	elseif type == 6 then
-		return F( 747, name, T(1177+value) )
+		
+	elseif type == 3 then -- 城战进攻
+		if value == 1 then -- 进攻胜利
+			return F( 744, name, T(1178) )
+		elseif value == 2 then -- 进攻失败
+			return F( 744, name, T(1177) )
+		end
+		
+	elseif type == 4 then -- 城战防守
+		if value == 1 then -- 防守失败
+			return F( 745, name, T(1177) )
+		elseif value == 2 then -- 防守胜利
+			return F( 745, name, T(1178) )
+		end
+		
+		
+	elseif type == 5 then -- 国战进攻
+		if value == 1 then -- 进攻胜利
+			return F( 746, TownName(tonumber(name)), T(1178) )
+		elseif value == 2 then -- 进攻失败
+			return F( 746, TownName(tonumber(name)), T(1177) )
+		end
+		
+		
+	elseif type == 6 then -- 国战防守
+		if value == 1 then -- 防守失败
+			return F( 747, TownName(tonumber(name)), T(1177) )
+		elseif value == 2 then -- 防守胜利
+			return F( 747, TownName(tonumber(name)), T(1178) )
+		end	
 	end
+	return ""
 end
 -- -- m_cevent_count=0,m_cevent_list={m_type=0,m_kind=0,m_value=0,m_optime=0,[m_cevent_count]},m_bevent_count=0,m_bevent_list={m_type=0,m_name="[22]",m_value=0,m_optime=0,[m_bevent_count]},
 function GovInfoDlgRecv( recvValue )
