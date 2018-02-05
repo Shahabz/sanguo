@@ -287,12 +287,12 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 		if ( to_kind == AWARDKIND_WOOD )
 		{
 			int silver_to_wood = (int)ceil( silver * global.wishing_silver_to_wood );
-			city_changesilver( pCity->index, silver_to_wood, PATH_WISHINGCHANGE );
+			city_changewood( pCity->index, silver_to_wood, PATH_WISHINGCHANGE );
 		}
 		else if ( to_kind == AWARDKIND_FOOD )
 		{
 			int silver_to_food = (int)ceil( silver * global.wishing_silver_to_food );
-			city_changesilver( pCity->index, silver_to_food, PATH_WISHINGCHANGE );
+			city_changefood( pCity->index, silver_to_food, PATH_WISHINGCHANGE );
 		}
 	}
 	else if ( kind == AWARDKIND_WOOD )
@@ -304,12 +304,12 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 		if ( to_kind == AWARDKIND_SILVER )
 		{
 			int wood_to_silver = (int)ceil( wood * global.wishing_wood_to_silver );
-			city_changewood( pCity->index, wood_to_silver, PATH_WISHINGCHANGE );
+			city_changesilver( pCity->index, wood_to_silver, PATH_WISHINGCHANGE );
 		}
 		else if ( to_kind == AWARDKIND_FOOD )
 		{
 			int wood_to_food = (int)ceil( wood * global.wishing_wood_to_food );
-			city_changewood( pCity->index, wood_to_food, PATH_WISHINGCHANGE );
+			city_changefood( pCity->index, wood_to_food, PATH_WISHINGCHANGE );
 		}
 	}
 	else if ( kind == AWARDKIND_FOOD )
@@ -321,12 +321,12 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 		if ( to_kind == AWARDKIND_SILVER )
 		{
 			int food_to_silver = (int)ceil( food * global.wishing_food_to_silver );
-			city_changefood( pCity->index, food_to_silver, PATH_WISHINGCHANGE );
+			city_changesilver( pCity->index, food_to_silver, PATH_WISHINGCHANGE );
 		}
 		else if ( to_kind == AWARDKIND_WOOD )
 		{
 			int food_to_wood = (int)ceil( food * global.wishing_food_to_wood );
-			city_changefood( pCity->index, food_to_wood, PATH_WISHINGCHANGE );
+			city_changewood( pCity->index, food_to_wood, PATH_WISHINGCHANGE );
 		}
 	}
 	else if ( kind == 1 || kind == 11 || kind == 21 )
