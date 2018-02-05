@@ -30,6 +30,7 @@ SRC = \
 ../AutoS/src/auto_data_nation_mission.cpp \
 ../AutoS/src/auto_nation.cpp \
 ../AutoS/src/auto_actor.cpp \
+../AutoS/src/auto_data_tiance_quest.cpp \
 ../AutoS/src/global_process_auto.cpp \
 ../AutoS/src/server_process_auto.cpp \
 ../AutoS/src/auto_data_kingwar_towninfo.cpp \
@@ -230,6 +231,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_nation.o: ../AutoS/src/auto_nation.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor.o: ../AutoS/src/auto_actor.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_tiance_quest.o: ../AutoS/src/auto_data_tiance_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/global_process_auto.o: ../AutoS/src/global_process_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
