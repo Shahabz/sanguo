@@ -348,5 +348,6 @@ function MaterialGetDlgItemBuy()
 
 	MsgBox( F(1778, cost, item_getname( m_SelectItem ), m_SelectItemNum ), function() 
 		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_BUY, m_SelectItem, m_SelectItemNum );
+		MaterialGetDlgHideBuyInfoLayer()
 	end )
 end
