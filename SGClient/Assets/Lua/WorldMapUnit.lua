@@ -394,9 +394,9 @@ function MapUnit.createCity( recvValue )
 	
 	-- 保护BUFF
 	if ptbuff > 0 then
-		--SetTrue( uiEffectProtect )
+		SetTrue( uiEffectProtect )
 	else
-		--SetFalse( uiEffectProtect )
+		SetFalse( uiEffectProtect )
 	end
 	
 	-- 着火

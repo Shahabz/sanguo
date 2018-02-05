@@ -361,6 +361,12 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		else
 			SetFalse( Range )
 		end
+		-- 保护状态
+		if recvValue.m_list[tmpi].m_protect_sec > 0 then
+			SetTrue( thumbObj.transform:Find( "Protect" ) )
+		else
+			SetFalse( thumbObj.transform:Find( "Protect" ) )
+		end
 	end
 end
 

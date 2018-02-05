@@ -1888,13 +1888,6 @@ int hero_wash_token( int actor_index, int herokind )
 	else
 	{
 		// ¹¥·À·ÖÅä±ÈÀý
-		//short hero_wash_ratio_down = (short)ceil( 50 - config->troops_wash_limit / (float)config->total_wash * 50 );
-		//short attack_ratio = random( hero_wash_ratio_down, global.hero_wash_ratio_up );
-		//short defense_ratio = random( hero_wash_ratio_down, global.hero_wash_ratio_up );
-		//pHero->attack_wash = (short)min( config->attack_wash_limit, (total_wash*attack_ratio / 100.0f) );
-		//pHero->defense_wash = (short)min( config->defense_wash_limit, (total_wash*defense_ratio / 100.0f) );
-
-		// ¹¥·À·ÖÅä±ÈÀý
 		int attack_min = (int)max( 0, (int)ceil( (total_wash - config->defense_wash_limit - config->troops_wash_limit) / (float)total_wash * 100 + 1 ) );
 		int attack_max = (int)(min( 1.0, config->attack_wash_limit / (float)total_wash ) * 100 - 1);
 		int attack_ratio = random( attack_min, attack_max );

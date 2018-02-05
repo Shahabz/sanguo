@@ -177,7 +177,7 @@ int global_init()
 		else if ( id == 44 )
 			global.hero_wash_token_rand = atoi( row[1] );
 		else if ( id == 45 )
-			global.hero_wash_ratio_down = atoi( row[1] );
+			global.fight_protect = atoi( row[1] );
 		else if ( id == 46 )
 			global.hero_wash_ratio_up = atoi( row[1] );
 		else if ( id == 47 )

@@ -888,6 +888,8 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 			// 着火
 			city_setstate( pTargetCity, CITY_STATE_FIRE );
 		}
+		// 给与保护时间
+		city_changeprotect( pTargetCity->index, global.fight_protect, PATH_FIGHT );
 
 		//  数据记录杀城池数量
 		for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )

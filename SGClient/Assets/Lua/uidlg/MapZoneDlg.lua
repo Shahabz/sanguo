@@ -139,6 +139,7 @@ function MapZoneDlgSetNation( nation )
 		SetText( m_uiWarn, T(2368) )
 	else
 		SetTrue( m_uiNation )
+		SetFalse( m_uiWarn )
 		SetImage( m_uiNation.transform:Find("Icon"), NationSprite(nation) )
 	end
 end

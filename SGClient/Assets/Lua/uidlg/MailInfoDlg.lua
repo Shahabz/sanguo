@@ -484,23 +484,23 @@ function MailInfoDlgByRecvValue( recvValue )
 		
 		-- 损失获得
 		local getstr = ""
-		if recvValue.m_content_json["silver"] > 0 then
+		if recvValue.m_content_json["silver"] ~= nil and recvValue.m_content_json["silver"] > 0 then
 			getstr = getstr..T(121).."x"..knum(recvValue.m_content_json["silver"]).." "
 		end
-		if recvValue.m_content_json["wood"] > 0 then
+		if recvValue.m_content_json["wood"] ~= nil and recvValue.m_content_json["wood"] > 0 then
 			getstr = getstr..T(122).."x"..knum(recvValue.m_content_json["wood"]).." "
 		end
-		if recvValue.m_content_json["food"] > 0 then
+		if recvValue.m_content_json["food"] ~= nil and recvValue.m_content_json["food"] > 0 then
 			getstr = getstr..T(123).."x"..knum(recvValue.m_content_json["food"]).." "
 		end
-		if recvValue.m_content_json["people"] > 0 then
+		if recvValue.m_content_json["people"] ~= nil and recvValue.m_content_json["people"] > 0 then
 			getstr = getstr..T(127).."x"..knum(recvValue.m_content_json["people"]).." "
 		end
 		
 		-- 名将忠诚
 		local nherostr = ""
 		local nhero = recvValue.m_content_json["nhero"];
-		if #nhero > 0 then
+		if nhero ~= nil and #nhero > 0 then
 			local tid = 2386;
 			if my == 1 then
 				tid = 2387

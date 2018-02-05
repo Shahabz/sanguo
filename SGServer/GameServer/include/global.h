@@ -44,7 +44,7 @@ typedef struct _global
 	short hero_wash_token;
 	short hero_wash_free_rand;
 	short hero_wash_token_rand;
-	short hero_wash_ratio_down;
+	int fight_protect;
 	short hero_wash_ratio_up;
 	short hero_wash_token_full_base;
 	short hero_wash_token_full_odds;

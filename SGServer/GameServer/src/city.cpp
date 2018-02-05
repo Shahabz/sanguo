@@ -3761,7 +3761,6 @@ int city_move( City *pCity, short posx, short posy )
 	}
 	else
 	{
-		zoneunit_del( MAPUNIT_TYPE_CITY, pCity->index, pCity->unit_index );
 		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
 

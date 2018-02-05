@@ -64,17 +64,13 @@ function WishingDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             WishingDlgClose();
 		elseif nControlID == -2 then
-            WishingDlgGetShow(false);
-		elseif nControlID == -3 then
             WishingDlgCheckGrid(-1);
 		elseif nControlID >= 1 and nControlID <= 4 then
 			WishingDlgSelectType( nControlID );
-		elseif nControlID > 100 and nControlID < 200 then			-- 获取物品
-			WishingDlgGetGrid( nControlID  - 100 );
-		elseif nControlID > 200 and nControlID < 300 then			-- 打开物品
-			WishingDlgOpenGrid( nControlID - 200 );
-		elseif nControlID > 300 and nControlID < 400 then			-- 直接购买物品
-			WishingDlgBuyGrid( nControlID - 300 );
+		elseif nControlID > 100 and nControlID < 200 then			-- 点击物品
+			WishingDlgClickGrid( nControlID  - 100 );
+		elseif nControlID > 200 and nControlID < 300 then			-- 直接购买物品
+			WishingDlgBuyGrid( nControlID - 200 );
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
@@ -106,7 +102,6 @@ function WishingDlgOnAwake( gameObject )
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );		
 	m_ObjectPool:CreatePool("UIP_AwardGrid", 9, 9, m_uiUIP_AwardGrid);	
-
 
 end
 
@@ -185,6 +180,15 @@ function WishingDlgGetRealIndex(index)
 	return RealIndex;
 end
 
+--获取是否是已经打开宝箱
+function WishingDlgIsOpenGrid(index)
+	local RealIndex = WishingDlgGetRealIndex(index);
+	if m_recvValue.m_list[RealIndex].m_open == 1 then 
+		return true ;
+	end
+	return false;
+end
+
 --获取是否可开启下一个宝箱
 function WishingDlgIsCanOpenNext()
 	if m_LastOpenStamp - GetServerTime() <= 0 then 
@@ -210,8 +214,7 @@ function WishingDlgSetGrid(index, data)
 	
 	if data.m_open == 1 then 
 		SetTrue(uiOpen);		
-		SetFalse(uiNoOpen);
-		
+		SetFalse(uiNoOpen);		
 		SetImage(uiBack, HeroColorSprite(data.m_color)); 		
 		local sprite, color, name, c, desc = AwardInfo( data.m_awardkind );			
 		SetImage( uiOpenItemIcon, sprite );
@@ -220,46 +223,39 @@ function WishingDlgSetGrid(index, data)
 		SetText(uiOpenItemNum,"x"..data.m_awardnum);		
 		SetImage( uiOpenCostIcon, ResIcon(data.m_costkind - 50000) );		
 		SetText( uiOpenCostNum, data.m_costnum);
-		SetControlID( uiObj, 100 + index );
 	else
 		SetTrue(uiNoOpen);		
 		SetFalse(uiOpen);	
-		SetControlID( uiObj, 200 + index );	
 	end
+	SetControlID( uiObj, 100 + index );
 	SetText(uiIndex,index);
 end
 
--- 打开某一个聚宝盆物品
-function WishingDlgOpenGrid( index )
-	-- 时间不足打开提示框
-	if WishingDlgIsCanOpenNext() == false then 
-		WishingDlgCheckGrid(index);
-		return ;
-	end
-	system_askinfo( ASKINFO_WISHING, "", 1, m_recvValue.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物打开	
-end
-
--- 点击获取某一个聚宝盆物品
-function WishingDlgGetGrid( index )
-	--今天已购买，提示
+-- 点击某一个聚宝盆物品
+function WishingDlgClickGrid( index )
+	-- 今天已购买，提示
 	if m_recvValue.m_todaybuy > 0 then 
 		pop(T(3007));
 		return ;
 	end 
-	system_askinfo( ASKINFO_WISHING, "", 2, m_recvValue.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物获取
-end
-
--- 获取聚宝物品
-function WishingDlgGetShow(bShow,index)
-	if bShow == false then 			
-		SetFalse(m_uiWishingGet);
-		return	
+	
+	-- 是否是已打开的物品
+	if WishingDlgIsOpenGrid(index) == true then 
+		system_askinfo( ASKINFO_WISHING, "", 2, m_recvValue.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物获取
+		return 
 	end
-	SetTrue(m_uiWishingGet);
-	SetFalse(m_uiWishingInfo);
+	
+	-- 开启时间不足打开查看框
+	if WishingDlgIsCanOpenNext() == false then 
+		WishingDlgCheckGrid(index);
+		return ;
+	end	
+	
+	-- 打开某一个聚宝盆物品
+	system_askinfo( ASKINFO_WISHING, "", 1, m_recvValue.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物打开		
 end
 
--- 选择宝箱
+-- 查看宝箱
 function WishingDlgCheckGrid( index )
 	if index <= 0 then 
 		SetFalse(m_uiWishingInfo);
@@ -278,7 +274,7 @@ function WishingDlgInfoView(index)
 			WishingDlgCreateInfoGrid(m_recvValue.m_list[tab[i]]);
 		end
 	end
-	SetControlID( m_uiBuyBtn, 300 + index );
+	SetControlID( m_uiBuyBtn, 200 + index );
 end
 
 --直接购买宝箱
