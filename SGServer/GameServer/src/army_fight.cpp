@@ -135,6 +135,36 @@ int army_vs_enemy( int army_index, Fight *pFight )
 			awardgroup_withid( pCity->actorid, config->awardgroup, PATH_ENEMY, &awardinfo );
 		}
 
+		if ( config->type == 1 )
+		{ // 点兵
+			if ( enemy->actorid > 0 )
+			{
+				int city_index = city_getindex_withactorid( enemy->actorid );
+				if ( city_index >= 0 && city_index < g_city_maxcount )
+				{
+					if ( g_city[city_index].nation == pCity->nation )
+					{ // 本国的
+						tiance_quest_addnum( &g_city[city_index] );
+						awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT;
+						awardinfo.num[awardinfo.count] = 1;
+						awardinfo.count += 1;
+					}
+					else
+					{ // 他国的
+						tiance_quest_addnum( &g_city[city_index] );
+						if ( g_city[city_index].nation == 1 )
+							awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT_1;
+						else if ( g_city[city_index].nation == 2 )
+							awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT_2;
+						else if ( g_city[city_index].nation == 3 )
+							awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT_3;
+						awardinfo.num[awardinfo.count] = 1;
+						awardinfo.count += 1;
+					}
+				}
+			}
+		}
+
 		// 发送胜利邮件
 		char title[MAIL_TITLE_MAXSIZE] = { 0 };
 		sprintf( title, "%s%d", TAG_TEXTID, 5002 );
@@ -155,8 +185,8 @@ int army_vs_enemy( int army_index, Fight *pFight )
 
 		// 内容
 		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
-		sprintf( content, "{\"text\":\"%s%d\",\"win\":1,\"name\":\"%s\",\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\"}",
-			TAG_TEXTID, 5502, pCity->name, config->level, pCity->posx, pCity->posy, enemy->posx, enemy->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2], attach );
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":1,\"name\":\"%s\",\"kind\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\"}",
+			TAG_TEXTID, 5502, pCity->name, config->kind, config->level, pCity->posx, pCity->posy, enemy->posx, enemy->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2], attach );
 
 		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_FIGHT_ENEMY, title, content, "", 0, 0 );
 
@@ -194,8 +224,8 @@ int army_vs_enemy( int army_index, Fight *pFight )
 
 		// 内容
 		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
-		sprintf( content, "{\"text\":\"%s%d\",\"win\":0,\"name\":\"%s\",\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
-			TAG_TEXTID, 5503, pCity->name, config->level, pCity->posx, pCity->posy, enemy->posx, enemy->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2] );
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":0,\"name\":\"%s\",\"kind\":%d,\"lv\":%d,\"pos\":\"%d,%d\",\"tpos\":\"%d,%d\",\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+			TAG_TEXTID, 5503, pCity->name, config->kind, config->level, pCity->posx, pCity->posy, enemy->posx, enemy->posy, pCity->temp_wounded_soldiers[0], pCity->temp_wounded_soldiers[1], pCity->temp_wounded_soldiers[2] );
 
 		mailid = mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_FIGHT_ENEMY, title, content, "", 0, 0 );
 	}

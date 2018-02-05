@@ -18,7 +18,7 @@ void map_res_getpos( int index, short *posx, short *posy );
 int map_res_create( short kind, short posx, short posy );
 
 // 删除一个资源点
-int map_res_delete( int index );
+int map_res_delete( int index, char checkarmy );
 
 // 资源点数量
 int map_res_num( int zoneid, int kind );

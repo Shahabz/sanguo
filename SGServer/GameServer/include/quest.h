@@ -105,4 +105,10 @@ int data_record_addvalue( struct _city *pCity, int offset, int value );
 int data_record_setvalue( struct _city *pCity, int offset, int value );
 int data_record_getvalue( struct _city *pCity, int offset );
 
+// 天策府任务
+int tiance_quest_sendinfo( int actor_index );
+int tiance_quest_get( int actor_index, short kind );
+int tiance_quest_addnum( City *pCity );
+int tiance_quest_complete( int actor_index, short kind );
+int tiance_quest_tech_activate( int actor_index, short kind );
 #endif

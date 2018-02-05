@@ -49,6 +49,9 @@ extern City * g_city;
 extern int g_city_maxcount;
 extern int g_city_maxindex;
 
+extern UpgradeInfo *g_upgradeinfo;
+extern int g_upgradeinfo_maxnum;
+
 extern MonsterInfo *g_monster;
 extern int g_monster_maxnum;
 
@@ -522,6 +525,23 @@ int nation_exp( char nation, int exp )
 	if ( isup == 1 )
 	{ // 检查是否出现国家名将
 		nation_hero_check( nation );
+	}
+	return 0;
+}
+
+// 天策府统领点数
+int nation_tiance_point( char nation, int value )
+{
+	Nation *pNation = nation_getptr( nation );
+	if ( !pNation )
+		return -1;
+	pNation->tiance_point += value;
+	if ( pNation->level >= 8 )
+		return -1;
+	if ( pNation->tiance_point > g_upgradeinfo[pNation->level+1].tiance_point )
+	{
+		pNation->tiance_point -= g_upgradeinfo[pNation->level + 1].tiance_point;
+		pNation->level += 1;
 	}
 	return 0;
 }

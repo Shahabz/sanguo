@@ -126,5 +126,9 @@ CREATE TABLE `city` (
   `ballot` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否投票',
   `tokenballot` smallint(6) NOT NULL DEFAULT '0' COMMENT '元宝拉票票数',
   `soldiers` varbinary(12) NOT NULL DEFAULT '' COMMENT '兵力',
+  `tc_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '天策府点兵任务状态',
+  `tc_kind` tinyint(3) NOT NULL DEFAULT '0' COMMENT '当前领取天策府点兵任务',
+  `tc_num` tinyint(3) NOT NULL DEFAULT '0' COMMENT '当前领取天策府点兵任务',
+  `tc_tech` smallint(6) NOT NULL DEFAULT '0' COMMENT '天策府点兵科技',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

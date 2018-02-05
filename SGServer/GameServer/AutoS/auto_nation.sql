@@ -5,6 +5,7 @@ CREATE TABLE `nation` (
   `notice` varbinary(512) NOT NULL DEFAULT '' COMMENT '国家公告',
   `official_actorid` varbinary(40) NOT NULL DEFAULT '' COMMENT '官员id，索引0是国王',
   `tiance_point` int(11) NOT NULL DEFAULT '0' COMMENT '天策府统领点数',
+  `tiance_level` tinyint(3) NOT NULL DEFAULT '0' COMMENT '天策府统领等级',
   `questlevel` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务',
   `questkind` varbinary(12) NOT NULL DEFAULT '' COMMENT '国家任务',
   `missionlevel` tinyint(3) NOT NULL DEFAULT '0' COMMENT '国家荣誉任务等级',

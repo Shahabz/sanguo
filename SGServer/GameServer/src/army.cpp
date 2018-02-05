@@ -1773,7 +1773,7 @@ int army_gather_calc( int army_index )
 			}
 		}
 
-		map_res_delete( index );
+		map_res_delete( index, 0 );
 	}
 	else
 	{ // 结算完毕，资源点关联部队取消

@@ -10,6 +10,7 @@ struct _upgradeinfo {
 				int battlepower;	//
 				int awardgroup;	//
 				int login_award;	//
+				int tiance_point;	//
 };
 typedef struct _upgradeinfo UpgradeInfo;
 

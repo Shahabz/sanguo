@@ -106,6 +106,7 @@ int nation_online_notify( int actor_index );
 
 // 国家经验
 int nation_exp( char nation, int exp );
+int nation_tiance_point( char nation, int value );
 
 // 国家信息
 int nation_sendinfo( int actor_index );

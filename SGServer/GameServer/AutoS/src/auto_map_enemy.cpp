@@ -20,7 +20,7 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 	MapEnemy *pMapEnemy;
 	int index = 0;
 
-	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind`,`deltime` from %s ", pTab );
+	sprintf( szSQL, "select `index`,`posx`,`posy`,`kind`,`deltime`,`actorid` from %s ", pTab );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -42,6 +42,7 @@ int map_enemy_load_auto( LPCB_GETMAPENEMY pCB_GetMapEnemy, LPCB_LOADMAPENEMY pCB
 		pMapEnemy->posy = atoi(row[offset++]);
 		pMapEnemy->kind = atoi(row[offset++]);
 		pMapEnemy->deltime = atoi(row[offset++]);
+		pMapEnemy->actorid = atoi(row[offset++]);
 		if( pCB_LoadMapEnemy )
 			pCB_LoadMapEnemy( pMapEnemy->index );
 		index = pMapEnemy->index;
@@ -61,7 +62,7 @@ int map_enemy_save_auto( MapEnemy *pMapEnemy, const char *pTab, FILE *fp )
 		return -1;
 
 RE_MAPENEMY_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`) Values('%d','%d','%d','%d','%d')",pTab,pMapEnemy->index,pMapEnemy->posx,pMapEnemy->posy,pMapEnemy->kind,pMapEnemy->deltime);
+	sprintf( szSQL, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`,`actorid`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapEnemy->index,pMapEnemy->posx,pMapEnemy->posy,pMapEnemy->kind,pMapEnemy->deltime,pMapEnemy->actorid);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -119,11 +120,11 @@ RE_MAPENEMY_TRUNCATE:
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`) Values('%d','%d','%d','%d','%d')",pTab,pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime);
+			sprintf( g_batchsql, "REPLACE INTO %s (`index`,`posx`,`posy`,`kind`,`deltime`,`actorid`) Values('%d','%d','%d','%d','%d','%d')",pTab,pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime,pMapEnemy[index].actorid);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d')",pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d')",pMapEnemy[index].index,pMapEnemy[index].posx,pMapEnemy[index].posy,pMapEnemy[index].kind,pMapEnemy[index].deltime,pMapEnemy[index].actorid);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

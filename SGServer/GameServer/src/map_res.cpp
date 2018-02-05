@@ -203,10 +203,15 @@ int map_res_create( short kind, short posx, short posy )
 }
 
 // 删除一个资源点
-int map_res_delete( int index )
+int map_res_delete( int index, char checkarmy )
 {
 	if ( index < 0 || index >= g_map_res_maxcount )
 		return -1;
+	if ( checkarmy == 1 )
+	{
+		if ( g_map_res[index].army_index >= 0 )
+			return -1;
+	}
 	mapunit_del( MAPUNIT_TYPE_RES, index, g_map_res[index].unit_index );
 	map_delobject( MAPUNIT_TYPE_RES, index, g_map_res[index].posx, g_map_res[index].posy );
 	memset( &g_map_res[index], 0, sizeof( MapRes ) );
@@ -246,7 +251,7 @@ int map_res_logic()
 				short kind = g_map_res[tmpi].kind;
 				short oldposx = g_map_res[tmpi].posx;
 				short oldposy = g_map_res[tmpi].posy;
-				map_res_delete( tmpi );
+				map_res_delete( tmpi, 1 );
 
 				short posx = -1;
 				short posy = -1;

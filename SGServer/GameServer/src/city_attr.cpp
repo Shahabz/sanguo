@@ -20,6 +20,7 @@
 #include "army.h"
 #include "vip.h"
 #include "hero.h"
+#include "nation.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -46,6 +47,9 @@ extern int g_nationequip_maxnum;
 
 extern NationPlace *g_nation_place;
 extern int g_nation_place_maxnum;
+
+extern TianceQuest *g_tiance_quest;
+extern int g_tiance_quest_maxnum;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -76,6 +80,18 @@ void city_attr_reset( City *pCity )
 	if ( pCity->buffsec[CITY_BUFF_WIND] > 0 )
 	{
 		city_attr_calc( &pCity->attr, CITY_ATTR_ABILITY_19, global.buff_wind, 100.0f );
+	}
+
+	// 天策府带兵排数
+	for ( short kind = 1; kind < g_tiance_quest_maxnum; kind++ )
+	{
+		if ( g_tiance_quest[kind].ability == 0 )
+			continue;
+		if ( pCity->tc_tech & (1 << kind) )
+		{ // 激活了这个科技
+			city_attr_calc( &pCity->attr, g_tiance_quest[kind].ability, g_tiance_quest[kind].value, 100.0f );
+		}
+
 	}
 
 	city_attr_sendinfo( pCity->actor_index );
@@ -213,7 +229,7 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 	case CITY_ATTR_ABILITY_137:// 每日免费行军召回（固定数值）
 		pAttr->everyday_army_recall += value;
 		break;
-	case CITY_ATTR_ABILITY_138:// 增加武将带兵排数（固定数值）（内阁上阵）
+	case CITY_ATTR_ABILITY_138:// 增加武将带兵排数（固定数值）（上阵）
 		pAttr->hero_row_fight += value;
 		break;
 	case CITY_ATTR_ABILITY_139:// 增加武将带兵排数（固定数值）（内阁采集）

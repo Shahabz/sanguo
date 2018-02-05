@@ -2998,3 +2998,16 @@ int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack 
 	return 0;
 }
 
+int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_tc_state, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_tc_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_tc_num, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_tc_tech, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation_tiance_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_nation_tiance_point, (*psize) );
+	return 0;
+}
+

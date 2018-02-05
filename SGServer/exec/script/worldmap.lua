@@ -66,7 +66,7 @@ function BrushEnemy()
 	local nowtime = os.time();
 	for index = 0, g_map_enemy_maxcount-1, 1 do
 		local level, posx, posy, deltime, selected_count, kind = c_map_enemy_info( index );
-		if kind > 0 and selected_count <= 0 then
+		if kind > 0 and kind <= 40 and selected_count <= 0 then
 			if deltime <= 0 then
 				c_map_enemy_delete( index );
 			elseif nowtime >= deltime then
@@ -143,7 +143,7 @@ function BrushEnemyWithZone( zoneid )
 					break;
 				end
 				--local randidx = math.random( 1, #emptylist );
-				c_map_enemy_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy, 0 );
+				c_map_enemy_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy, 0, 0 );
 				indexcount = indexcount + 1;
 				--table.remove( emptylist, randidx ); -- 此方法效率非常低
 			end

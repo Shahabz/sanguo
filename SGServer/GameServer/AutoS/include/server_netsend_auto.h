@@ -187,6 +187,7 @@ int netsend_nationheroattr_S( int actor_index, char send_type, SLK_NetS_NationHe
 int netsend_wishingshop_S( int actor_index, char send_type, SLK_NetS_WishingShop *pValue );
 int netsend_wishingchange_S( int actor_index, char send_type, SLK_NetS_WishingChange *pValue );
 int netsend_wishingpack_S( int actor_index, char send_type, SLK_NetS_WishingPack *pValue );
+int netsend_tiancequest_S( int actor_index, char send_type, SLK_NetS_TianceQuest *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

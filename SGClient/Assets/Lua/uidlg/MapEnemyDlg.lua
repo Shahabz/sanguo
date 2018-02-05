@@ -117,7 +117,12 @@ function MapEnemyDlgShow( recvValue )
 	-- 形象
 	m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
 	-- 名字
-	SetText( m_uiName, "Lv."..level.." "..T(938) )
+	if g_enemyinfo[kind].nameid > 0 then
+		SetText( m_uiName, "Lv."..level.." "..T(g_enemyinfo[kind].nameid) )
+	else
+		SetText( m_uiName, "Lv."..level.." "..T(938) )
+	end
+
 	-- 位置
 	SetText( m_uiPos, F(950, posx, posy) ) 
 	-- 所属

@@ -946,6 +946,12 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			wishing_pack_buy( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_TIANCEQUEST:
+		if ( pvalue[0] == 0 )
+		{
+			tiance_quest_sendinfo( actor_index );
+		}
+		break;
 	default:
 		break;
 	}

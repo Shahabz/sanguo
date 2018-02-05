@@ -980,7 +980,7 @@ static int lua_c_map_enemy_maxcount( lua_State *servL )
 static int lua_c_map_enemy_create( lua_State *servL )
 {
 	int num = lua_gettop(servL);
-	if ( num != 4 )
+	if ( num != 5 )
 	{
 		char szErrorMsg[128];
 		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
@@ -992,8 +992,9 @@ static int lua_c_map_enemy_create( lua_State *servL )
 	short posx = (short )lua_tointeger( servL, 2 );
 	short posy = (short )lua_tointeger( servL, 3 );
 	int deltime = (int )lua_tointeger( servL, 4 );
+	int actorid = (int)lua_tointeger( servL, 5 );
 	//--Process script
-	map_enemy_create( kind, posx, posy, deltime );
+	map_enemy_create( kind, posx, posy, deltime, actorid );
 	return 0;
 }
 
@@ -1104,7 +1105,7 @@ static int lua_c_map_res_delete( lua_State *servL )
 	}
 	int index = (int )lua_tointeger( servL, 1 );
 	//--Process script
-	map_res_delete( index );
+	map_res_delete( index, 1 );
 	return 0;
 }
 

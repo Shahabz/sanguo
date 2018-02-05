@@ -858,10 +858,14 @@ function MapUnit.createEnemy( recvValue )
 	local uiQuest = objs[2];
 	local uiTarget = objs[3];
 	-- 名字
-	if level > GetPlayer().m_mokilllv+1 then
-		SetText( uiName, "Lv."..level.." "..T(938), Color.red )
+	if g_enemyinfo[kind].nameid > 0 then
+		SetText( uiName, "Lv."..level.." "..T(g_enemyinfo[kind].nameid), Color.yellow )
 	else
-		SetText( uiName, "Lv."..level.." "..T(938), Color.white )
+		if level > GetPlayer().m_mokilllv+1 then
+			SetText( uiName, "Lv."..level.." "..T(938), Color.red )
+		else
+			SetText( uiName, "Lv."..level.." "..T(938), Color.white )
+		end
 	end
 	
 	local shape = g_enemyinfo[kind].shape

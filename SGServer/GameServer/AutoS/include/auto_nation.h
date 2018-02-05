@@ -10,13 +10,13 @@ struct _nation {
 				char notice[512];	//国家公告
 				int official_actorid[10];	//官员id，索引0是国王
 				int tiance_point;	//天策府统领点数
+				char tiance_level;	//天策府统领等级
 				char questlevel[3];	//国家任务
 				char questkind[3];	//国家任务
 				char missionlevel;	//国家荣誉任务等级
 				int missionvalue[4];	//国家荣誉任务次数
 				int candidate_actorid[10];	//候选人id
 				int candidate_ballot[10];	//候选人选票
-				short tiance_level;	//天策府统领等级
 				int people;	//国家总人口
 				int people_famous;	//名城人口
 				int people_capital;	//都城人口

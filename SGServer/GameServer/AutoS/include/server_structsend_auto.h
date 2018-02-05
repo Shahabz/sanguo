@@ -2047,6 +2047,16 @@ struct _slk_NetS_WishingPack {
 };
 typedef struct _slk_NetS_WishingPack SLK_NetS_WishingPack;	//聚宝盆打包
 
+struct _slk_NetS_TianceQuest {
+	short m_tc_state;	//天策府任务
+	char m_tc_kind;	//天策府任务
+	char m_tc_num;	//天策府任务
+	short m_tc_tech;	//天策府任务
+	char m_nation_tiance_level;	//天策府任务
+	int m_nation_tiance_point;	//天策府任务
+};
+typedef struct _slk_NetS_TianceQuest SLK_NetS_TianceQuest;	//天策府任务
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2267,5 +2277,6 @@ int struct_NetS_WishingShop_send( char **pptr, int *psize, SLK_NetS_WishingShop 
 int struct_NetS_WishingChange_send( char **pptr, int *psize, SLK_NetS_WishingChange *pValue );
 int struct_NetS_WishingPackItem_send( char **pptr, int *psize, SLK_NetS_WishingPackItem *pValue );
 int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack *pValue );
+int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest *pValue );
 
 #endif

@@ -2725,3 +2725,14 @@ function struct_NetS_WishingPack_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_TianceQuest_recv( buffer )
+	local recvValue = {};
+	recvValue.m_tc_state = buffer:ReadShort();
+	recvValue.m_tc_kind = buffer:ReadSByte();
+	recvValue.m_tc_num = buffer:ReadSByte();
+	recvValue.m_tc_tech = buffer:ReadShort();
+	recvValue.m_nation_tiance_level = buffer:ReadSByte();
+	recvValue.m_nation_tiance_point = buffer:ReadInt();
+	return recvValue;
+end
+

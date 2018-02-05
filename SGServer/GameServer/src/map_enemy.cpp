@@ -163,7 +163,7 @@ int map_enemy_getfreeindex()
 }
 
 // 创建一个流寇
-int map_enemy_create( short kind, short posx, short posy, int deltime )
+int map_enemy_create( short kind, short posx, short posy, int deltime, int actorid )
 {
 	if ( kind <= 0 || kind >= g_enemyinfo_maxnum )
 		return -1;
@@ -175,6 +175,7 @@ int map_enemy_create( short kind, short posx, short posy, int deltime )
 	g_map_enemy[index].posx = posx;
 	g_map_enemy[index].posy = posy;
 	g_map_enemy[index].deltime = deltime;
+	g_map_enemy[index].actorid = actorid;
 	g_map_enemy[index].unit_index = mapunit_add( MAPUNIT_TYPE_ENEMY, index );
 	map_addobject( MAPUNIT_TYPE_ENEMY, index, posx, posy );
 	return g_map_enemy[index].unit_index;
@@ -209,7 +210,7 @@ int map_enemy_num( int zoneid, int kind )
 }
 
 // 根据一个点的范围进行生成
-int map_enemy_rang_brush( short kind, short posx, short posy, int range, int deltime )
+int map_enemy_range_brush( short kind, short posx, short posy, int range, int deltime, int actorid )
 {
 	short pPosx = -1;
 	short pPosy = -1;
@@ -225,7 +226,7 @@ int map_enemy_rang_brush( short kind, short posx, short posy, int range, int del
 	}
 	if ( pPosx >= 0 && pPosy >= 0 )
 	{
-		map_enemy_create( kind, pPosx, pPosy, deltime );
+		map_enemy_create( kind, pPosx, pPosy, deltime, actorid );
 	}
 	return -1;
 }

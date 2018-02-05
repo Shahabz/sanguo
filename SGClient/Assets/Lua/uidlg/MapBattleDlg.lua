@@ -210,7 +210,11 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 形象
 		m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
 		-- 名字+位置
-		SetText( m_uiName, F(955, level, posx, posy) )
+		if g_enemyinfo[kind].nameid > 0 then
+			SetText( m_uiName, F(2388, T(g_enemyinfo[kind].nameid), level, posx, posy) )
+		else
+			SetText( m_uiName, F(955, level, posx, posy) )
+		end
 		-- 按钮名称
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
 		SetTrue( m_uiAttackDesc )

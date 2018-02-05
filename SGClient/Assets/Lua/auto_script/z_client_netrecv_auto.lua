@@ -925,6 +925,11 @@ function netrecv_wishingpack_C( buffer )
 	proc_wishingpack_C( recvValue );
 end
 
+function netrecv_tiancequest_C( buffer )
+	local recvValue = struct_NetS_TianceQuest_recv( buffer );
+	proc_tiancequest_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1111,6 +1116,7 @@ Proc_Command = {
 	[CMDS_WISHINGSHOP]=netrecv_wishingshop_C;
 	[CMDS_WISHINGCHANGE]=netrecv_wishingchange_C;
 	[CMDS_WISHINGPACK]=netrecv_wishingpack_C;
+	[CMDS_TIANCEQUEST]=netrecv_tiancequest_C;
 }
 
 function in_proc_command_C( cmd, buffer )

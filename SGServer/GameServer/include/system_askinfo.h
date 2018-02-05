@@ -46,6 +46,7 @@
 #define ASKINFO_NATIONLOG		41 // 国家日志
 #define ASKINFO_NATIONHERO		42 // 国家名将
 #define ASKINFO_WISHING			43 // 聚宝盆
+#define ASKINFO_TIANCEQUEST		44 // 天策府任务
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

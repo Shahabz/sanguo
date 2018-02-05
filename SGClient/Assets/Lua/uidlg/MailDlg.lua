@@ -407,10 +407,20 @@ function MailDlgSetMail( recvValue )
 		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
 			local win = recvValue.m_content_json["win"];
 			local name = recvValue.m_content_json["name"];
+			local kind = recvValue.m_content_json["kind"];
 			local level = recvValue.m_content_json["lv"];
 			local pos = recvValue.m_content_json["pos"];
 			local tpos = recvValue.m_content_json["tpos"];
-			local enemyname = "Lv."..level.." "..T(938);
+			local enemyname = ""
+			if kind ~= nil then
+				if g_enemyinfo[kind].nameid > 0 then
+					enemyname = "Lv."..level.." "..T(g_enemyinfo[kind].nameid);
+				else
+					enemyname = "Lv."..level.." "..T(938);
+				end
+			else
+				enemyname = "Lv."..level.." "..T(938);
+			end
 			if win == 1 then
 				SetRichText( uiContent, F(1110, name, enemyname ) )
 			else

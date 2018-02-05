@@ -9,6 +9,7 @@ struct _map_enemy {
 				short posy;	//位置
 				short kind;	//种类
 				int deltime;	//删除时间
+				int actorid;	//属于角色
 				char selected_count;	//被选定的次数
 				int unit_index;	//显示索引
 };

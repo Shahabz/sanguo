@@ -142,6 +142,7 @@ function proc_buildinglist_C( recvValue )
 	-- 如果没有获得城墙
 	if GetPlayer():GetBuilding( BUILDING_Wall, -1 ) == nil then
 		City.BuildingLandShow( BUILDING_Wall, -1 )
+		SetFalse( City.m_Fires )
 	end
 	
 	for i=1, recvValue.m_barracks_count, 1 do
@@ -2081,6 +2082,11 @@ end
 
 -- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_id=0,m_token=0,[m_count]},
 function proc_wishingpack_C( recvValue )
+	-- process.
+end
+
+-- m_tc_state=0,m_tc_kind=0,m_tc_num=0,m_tc_tech=0,m_nation_tiance_level=0,m_nation_tiance_point=0,
+function proc_tiancequest_C( recvValue )
 	-- process.
 end
 

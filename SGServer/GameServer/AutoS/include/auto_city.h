@@ -135,6 +135,10 @@ struct _city {
 				char ballot;	//是否投票
 				short tokenballot;	//元宝拉票票数
 				int soldiers[3];	//兵力
+				short tc_state;	//天策府点兵任务状态
+				char tc_kind;	//当前领取天策府点兵任务
+				char tc_num;	//当前领取天策府点兵任务
+				short tc_tech;	//天策府点兵科技
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

@@ -675,10 +675,20 @@ function MailInfoDlgByRecvValue( recvValue )
 				end
 			end
 			
-			local enemyname = "Lv."..level.." "..T(938);
 			if recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO then
 				local kind = recvValue.m_content_json["kind"];
 				enemyname = "Lv."..level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind)
+			else
+				local kind = recvValue.m_content_json["kind"];
+				if kind ~= nil then
+					if g_enemyinfo[kind].nameid > 0 then
+						enemyname = "Lv."..level.." "..T(g_enemyinfo[kind].nameid);
+					else
+						enemyname = "Lv."..level.." "..T(938);
+					end
+				else
+					enemyname = "Lv."..level.." "..T(938);
+				end
 			end
 			if win == 1 then
 				local awardstr = ""
@@ -691,6 +701,14 @@ function MailInfoDlgByRecvValue( recvValue )
 						local num = tonumber(awardinfo[2]);
 						local sprite, color, name = AwardInfo( kind )
 						awardstr = awardstr .. name.."x"..num.." "
+						
+						if kind == AWARDKIND_TIANCE_POINT_1 then -- 天策府点数魏国
+							awardstr = awardstr..T(2389)
+						elseif kind == AWARDKIND_TIANCE_POINT_2 then -- 天策府点数蜀国
+							awardstr = awardstr..T(2390)
+						elseif kind == AWARDKIND_TIANCE_POINT_3 then -- 天策府点数吴国
+							awardstr = awardstr..T(2391)
+						end
 					end
 				end
 				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, pos, enemyname, tpos, awardstr )..ws_str, MailOnLinkClick )
