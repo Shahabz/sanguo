@@ -842,6 +842,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			}
 			if ( gather_count >= 4 )
 			{
+				actor_notify_alert( pCity->actor_index, 2413 );
 				return -1;
 			}
 			MapRes *res = map_res_getptr( g_mapunit[info->m_to_unit_index].index );
@@ -884,7 +885,6 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			// 消耗粮食
 			if ( cost_food > pCity->food )
 				return -1;
-			city_changefood( pCity->index, -cost_food, PATH_MARCH );
 
 			// 如果已经有人占领
 			int army_index = map_res_getarmy( g_mapunit[info->m_to_unit_index].index );
@@ -896,12 +896,13 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 					int city_index = g_army[army_index].from_index;
 					if ( pCity->nation == g_city[city_index].nation )
 					{
-						//actor_notify_pop( pCity->actor_index, 71 );
+						actor_notify_alert( pCity->actor_index, 2412 );
 						return -1;
 					}
 					city_changeprotect( pCity->index, -pCity->ptsec, PATH_FIGHT );
 				}
 			}
+			city_changefood( pCity->index, -cost_food, PATH_MARCH );
 			to_type = MAPUNIT_TYPE_RES;
 			to_id = g_mapunit[info->m_to_unit_index].index;
 			hero_state = HERO_STATE_GATHER;
