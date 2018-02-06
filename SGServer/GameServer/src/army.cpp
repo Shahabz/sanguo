@@ -410,7 +410,8 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	int group_index = -1;
 	// 总兵力
 	int totalsoldiers = 0;
-
+	// 自动补兵
+	int autohp = city_function_check( pCity, CITY_FUNCTION_BATTLE_ADDHP );
 	// 英雄状态检查
 	for ( int tmpi = 0; tmpi < ARMY_HERO_MAX; tmpi++ )
 	{
@@ -419,6 +420,27 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		{
 			if ( pCity->hero[hero_index].state > HERO_STATE_NORMAL )
 				return -1;
+
+			if ( autohp == 1 )
+			{
+				int troops = pCity->hero[hero_index].troops;
+				int add = troops - pCity->hero[hero_index].soldiers;
+				if ( add > 0 )
+				{
+					HeroInfoConfig *config = hero_getconfig( info->m_herokind[tmpi], pCity->hero[hero_index].color );
+					if ( config )
+					{
+						int has = city_soldiers( pCity->index, config->corps );
+						if ( has > 0 )
+						{
+							if ( add > has )
+								add = has;
+							hero_changesoldiers( pCity, &pCity->hero[hero_index], add, PATH_BATTLEAUTOHP );
+							city_changesoldiers( pCity->index, config->corps, -add, PATH_BATTLEAUTOHP );
+						}
+					}
+				}
+			}
 			totalsoldiers += pCity->hero[hero_index].soldiers;
 		}
 	}
@@ -1325,6 +1347,8 @@ int army_tocity( int army_index )
 			
 		}
 	}
+	// 自动补兵
+	hero_addsoldiers_audo( pCity );
 	return 0;
 }
 

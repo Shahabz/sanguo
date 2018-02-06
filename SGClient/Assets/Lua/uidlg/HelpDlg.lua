@@ -39,10 +39,10 @@ HELP_ChatDlg = 1535--聊天
 HELP_NationDlg = 1537--国家主界面
 --HELP_BattleDlg = 1538--国家日志
 --HELP_BattleDlg = 1539--国家名将
---HELP_BattleDlg = 1540--采集
+HELP_MapResDlg = 1540--采集
 --HELP_BattleDlg = 1541--皇城血战
 --HELP_BattleDlg = 1542--皇城
---HELP_BattleDlg = 1543--流寇
+HELP_MapBattleDlg = 1543--流寇
 --HELP_BattleDlg = 1544--NPC城池
 
 --一级菜单

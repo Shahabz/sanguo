@@ -19,9 +19,12 @@ local m_HeroList = {};
 local m_recvValue = {};
 local m_infoRecvValue = {};
 local m_SelectHeroKind = 0;
+local m_reskind = 0;
+local m_defaultSelect = 0;
 
 -- 打开界面
 function MapResDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_mapbattledlg" );
 	m_Dlg = eye.uiManager:Open( "MapResDlg" );
 end
 
@@ -38,7 +41,7 @@ end
 function MapResDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
-	
+	ResourceManager.UnloadAssetBundle( "_ab_ui_mapbattledlg" );
 	m_unit_index = -1;
 	m_marchtime = 0;
 	m_cost_food = 0;
@@ -68,6 +71,10 @@ function MapResDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 占领采集出击
 		elseif nControlID == 3 then
 			MapResDlgBattle()
+		
+		-- 采集帮助
+		elseif nControlID == 1000 then
+			HelpDlgShowBySystem( HELP_MapResDlg )
 			
 		elseif nControlID > 10000 and nControlID < 20000 then
 			 MapResDlgSelectHero( nControlID-10000 );
@@ -124,6 +131,7 @@ end
 function MapResDlgShow( recvValue )
 	MapResDlgOpen()
 	m_SelectHeroKind = 0;
+	m_defaultSelect = 0;
 	for i = 0 ,m_uiContent.transform.childCount - 1 do
 		SetFalse( m_uiContent.transform:GetChild(i).gameObject )
 	end
@@ -137,11 +145,12 @@ function MapResDlgShow( recvValue )
 	local posy 		= recvValue.m_posy;
 	local restype	= recvValue.m_char_value[1];
 	local level		= recvValue.m_char_value[2];
+	m_reskind		= recvValue.m_short_value[1];
 	
 	system_askinfo( ASKINFO_WORLDMAP, "", 7, recvValue.m_unit_index );
 	
 	-- 形象
-	m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
+	SetImage( m_uiShape, LoadSprite( MapUnitResShapeList[restype] ) );
 	-- 名字+位置
 	SetText( m_uiName, F(986, level, T(MapUnitResNameList[restype]), posx, posy) )
 		
@@ -161,6 +170,7 @@ function MapResDlgHeroLayer()
 	SetTrue( m_uiScroll )
 	-- 英雄放到缓存
 	m_HeroList = {};
+	m_defaultSelect = 0;
 	
 	-- 已经出阵的包括财赋署的
 	for i=0,7,1 do
@@ -209,10 +219,20 @@ function MapResDlgHero( index, pHero )
 			SetFalse( uiSelect )
 			SetControlID( UIP_Hero, 0 )
 		else
-			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
-			SetTrue( uiSelect )
-			SetImage( uiSelect, LoadSprite("ui_button_select1") )
-			SetControlID( UIP_Hero, 10000+index )
+			if m_reskind > 0 and pHero.m_level < g_resinfo[m_reskind].herolevel then
+				SetText( uiName, F(2423,g_resinfo[m_reskind].herolevel) );
+				SetFalse( uiSelect )
+				SetControlID( UIP_Hero, 0 )
+			else
+				SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
+				SetTrue( uiSelect )
+				SetImage( uiSelect, LoadSprite("ui_button_select1") )
+				SetControlID( UIP_Hero, 10000+index )
+				if m_defaultSelect == 0 then
+					MapResDlgSelectHero( index )
+					m_defaultSelect = 1
+				end
+			end
 		end
 	end
 	

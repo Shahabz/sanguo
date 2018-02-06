@@ -66,6 +66,12 @@ public class UIProgress : MonoBehaviour
 			value = 0.0f;
 		} 
 
+		if (_playing)
+		{
+			if (value > _endvalue)
+				value = _endvalue;
+		}
+
 		if (fullProgress != null) 
 		{
 			if (value >= 0.99999f) {
@@ -145,24 +151,36 @@ public class UIProgress : MonoBehaviour
 	public void Update()
 	{
 		if (_playing) {
-			if (_playcount > 0) {
-				if (_playcount == 1) {
-					if (_lastvalue < _endvalue) {
+			if (_playcount > 0) 
+			{
+				if (_playcount == 1) 
+				{
+					if (_lastvalue < _endvalue) 
+					{
 						SetValue (_lastvalue + Time.deltaTime*_speed);
-					} else {
+					} 
+					else 
+					{
 						_playcount--;
 					}
-				} else {
-					if (_lastvalue < 1) {
-						SetValue (_lastvalue + Time.deltaTime*_speed);
-					} else {
+				} 
+				else 
+				{
+					if (_lastvalue < 1)
+					{
+						SetValue (_lastvalue + Time.deltaTime * _speed);
+					} 
+					else 
+					{
 						_playcount--;
 						SetValue (0);
 						if ( callback != null )
 							callback (null);
 					}
 				}
-			} else { 
+			} 
+			else 
+			{ 
 				_playing = false;
 					OverPlay (); 
 			}

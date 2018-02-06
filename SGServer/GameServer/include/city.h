@@ -37,6 +37,9 @@
 #define CITY_FUNCTION_WARKEREX		19	// 商业建造队
 #define CITY_FUNCTION_Militiaman	20	// 民兵营
 
+#define CITY_FUNCTION_AUTO_ADDHP	25	// 自动补兵开启关闭
+#define CITY_FUNCTION_BATTLE_ADDHP	26	// 战前补兵开启关闭
+
 #define CITY_EVENT_BUILDING			1	// 建筑升级
 #define CITY_EVENT_TRAIN			2	// 募兵
 #define CITY_EVENT_FORGING			3	// 装备打造
@@ -117,6 +120,7 @@ int city_get_sflag( City *pCity, int offset );
 
 // 功能获取
 void city_function_open( City *pCity, int offset );
+void city_function_close( City *pCity, int offset );
 int city_function_check( City *pCity, int offset );
 
 // 事件

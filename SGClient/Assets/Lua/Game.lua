@@ -32,6 +32,8 @@ function GameManager.OnStart()
 	if GameManager.userini:ReadValue("LASTSERVERID", "") == "" then
 		GameManager.userini:WriteValue("LASTSERVERID", 0);
 	end
+	-- 初始化系统设置
+	SettingInit()
 	
 	-- 读取平台渠道信息
 	local platini = IniUtil.New();

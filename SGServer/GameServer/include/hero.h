@@ -31,6 +31,7 @@ int hero_guard_sort( int actor_index, SLK_NetC_HeroGuardSort *list );
 int hero_useexpitem( int actor_index, int herokind, int itemkind );
 int hero_addexp( City *pCity, Hero *pHero, int exp, short path );
 int hero_addsoldiers( int actor_index, int herokind, char path );
+int hero_addsoldiers_audo( City *pCity );
 int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path );
 void hero_guard_soldiers_auto( City *pCity );
 int hero_guard_soldiers_token( int actor_index, int herokind );

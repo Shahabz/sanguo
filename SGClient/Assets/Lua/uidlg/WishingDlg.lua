@@ -22,12 +22,20 @@ local m_uiRankCostBtn = nil;
 local m_uiToglGroup = nil; 
 local m_uiRankCostName = nil;
 local m_uiChangeContent = nil;
+local m_uiPackScroll = nil; 
+local m_uiPackChange = nil;
+local m_uiPackInfo = nil;
+local m_uiPackContent = nil;
+local m_uiPackBtn = nil;
+local m_uiPackGrid = nil; 
+local m_uiPackToGrid = nil; 
 
 local m_ObjectPool = nil;
 local m_LastOpenStamp = nil;
 local m_ChangeCD = nil;
 local m_SelectType = nil;
 local m_ChangeType = 1;
+local m_PackType = nil;
 local m_ChangeTab = {};
 local m_recvValue = nil;
 local m_IsCanOpen = nil;
@@ -75,27 +83,33 @@ function WishingDlgOnEvent( nType, nControlID, value, gameObject )
 			WishingDlgSelectCloseToggle();
 		elseif nControlID == -2 then
             WishingDlgCheckGrid(-1);
-		elseif nControlID >= 1 and nControlID <= 3 then
+		elseif nControlID >= 1 and nControlID <= 3 then			--标签页
 			WishingDlgSelectType( nControlID );
 			WishingDlgSelectCloseToggle();
-		elseif nControlID == 11 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID == 12 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID == 13 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID == 14 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID == 15 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID == 16 then
-			WishingDlgSelectRankCost( nControlID - 10 );
-		elseif nControlID > 20 and nControlID < 30 then
-			WishingDlgOnBtnChange( nControlID - 20 );
-		elseif nControlID > 100 and nControlID < 200 then			-- 点击物品
-			WishingDlgClickGrid( nControlID  - 100 );
-		elseif nControlID > 200 and nControlID < 300 then			-- 直接购买物品
-			WishingDlgBuyGrid( nControlID - 200 );
+		elseif nControlID > 10 and nControlID < 20 then			-- 点击物品
+			WishingDlgClickGrid( nControlID  - 10 );
+		elseif nControlID > 20 and nControlID < 30 then			-- 直接购买物品
+			WishingDlgBuyGrid( nControlID - 20 );
+		elseif nControlID == 101 then							-- 切换兑换资源
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID == 102 then
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID == 103 then
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID == 104 then
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID == 105 then
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID == 106 then
+			WishingDlgSelectRankCost( nControlID - 100 );
+		elseif nControlID > 110 and nControlID < 120 then		-- 点击兑换资源
+			WishingDlgOnBtnChange( nControlID - 110 );		
+		elseif nControlID >= 201 and nControlID <= 203 then		-- 选择打包类型资源
+			WishingDlgPackInfoView( nControlID - 200 )
+		elseif nControlID == 204 then							-- 重新选择打包资源
+			WishingDlgBackPackChange();
+		elseif nControlID == 205 then
+			WishingDlgOnBtnPack();
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
@@ -135,6 +149,13 @@ function WishingDlgOnAwake( gameObject )
 	m_uiToglGroup = objs[16];
 	m_uiRankCostName = objs[17];
 	m_uiChangeContent = objs[18];
+	m_uiPackScroll = objs[19];
+	m_uiPackChange = objs[20];
+	m_uiPackInfo = objs[21];
+	m_uiPackContent = objs[22];
+	m_uiPackBtn = objs[23];
+	m_uiPackGrid = objs[24];
+	m_uiPackToGrid = objs[25];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );		
@@ -269,7 +290,7 @@ function WishingDlgSetGrid(index, data)
 		SetTrue(uiNoOpen);		
 		SetFalse(uiOpen);	
 	end
-	SetControlID( uiObj, 100 + index );
+	SetControlID( uiObj, 10 + index );
 end
 
 -- 点击某一个聚宝盆物品
@@ -315,7 +336,7 @@ function WishingDlgInfoView(index)
 			WishingDlgCreateInfoGrid(m_recvValue.m_list[tab[i]]);
 		end
 	end
-	SetControlID( m_uiBuyBtn, 200 + index );
+	SetControlID( m_uiBuyBtn, 20 + index );
 end
 
 --直接购买宝箱
@@ -377,7 +398,8 @@ function WishingDlgSelectType( type )
 	-- 聚宝盆
 	if type == 1 then
 		SetTrue(m_uiWishingScroll);
-		SetFalse(m_uiChangeresScroll); 		
+		SetFalse(m_uiChangeresScroll); 	
+		SetFalse(m_uiPackScroll);
 		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
 		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
@@ -388,6 +410,7 @@ function WishingDlgSelectType( type )
 	elseif type == 2 then
 		SetFalse(m_uiWishingScroll);
 		SetTrue(m_uiChangeresScroll);
+		SetFalse(m_uiPackScroll);
 		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
 		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
@@ -399,11 +422,13 @@ function WishingDlgSelectType( type )
 	elseif type == 3 then
 		SetFalse(m_uiWishingScroll);
 		SetFalse(m_uiChangeresScroll); 
+		SetTrue(m_uiPackScroll);
 		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
 		SetText( m_uiTitle, T(3006));
-		--system_askinfo( ASKINFO_SHOP, "", 0, 1 );
+		system_askinfo( ASKINFO_WISHING, "", 5 ); 
+		m_PackType = nil;
 	end
 	m_SelectType = type;
 end
@@ -418,7 +443,7 @@ end
 --设置兑换标题或时间
 function WishingDlgSetChangeTitle()
 	if m_ChangeCD > 0 then 
-		if m_ChangeCD > 4*60*60 then 
+		if m_ChangeCD > global.wishing_change_cdmax then 
 			SetTimer( m_uiTimer, m_ChangeCD , GetServerTime() + m_ChangeCD, m_SelectType,T(3010));
 		else
 			SetTimer( m_uiTimer, m_ChangeCD , GetServerTime() + m_ChangeCD, m_SelectType,T(3011));
@@ -473,6 +498,7 @@ function WishingDlgChangeView()
 		table.insert(m_ChangeTab,{m_kind = 41, m_Sprite = 41, m_Num = 1});	
 		m_ChangeTab.Count = 1;
 	end
+	--设置可兑换资源的数量颜色
 	if WishingDlgIsCanChangeByStuff() == false then 
 		SetTextColor( m_uiCostText, Hex2Color(0xE80017FF))
 	else
@@ -510,7 +536,7 @@ function WishingDlgSetChangeRes(index,data,bShow)
 		SetText(uiNum,"x1");
 	end	
 	SetTrue(uiObj);
-	SetControlID( uiBtnChang, 20 + index );
+	SetControlID( uiBtnChang, 110 + index );
 end
 -- 选择消耗的兑换资源
 function WishingDlgSelectRankCost(number)	
@@ -577,7 +603,7 @@ end
 
 --获取兑换时间是否充足
 function WishingDlgIsCanChangeByTime()
-	if m_ChangeCD < 4*60*60 then 
+	if m_ChangeCD < global.wishing_change_cdmax then 
 		return true ;
 	end
 	return false;
@@ -611,4 +637,136 @@ function WishingDlgIsCanChangeByStuff()
 		return true;
 	end
 	return false;
+end
+
+--接收打包信息
+function WishingDlgPackRecv(recvValue)
+	PrintTable(recvValue,"打包信息")
+	m_recvValue = recvValue;
+	WishingDlgPackChangeView()
+end
+
+--打包选择界面
+function WishingDlgPackChangeView()
+	if m_PackType ~= nil then 
+		WishingDlgPackInfoView(m_PackType)
+	else
+		SetTrue(m_uiPackChange);
+		SetFalse(m_uiPackInfo);
+		for i = 0, table.nums(m_recvValue.m_list)-1 ,1 do 
+			WishingDlgSetPackChangeGrid(i,m_recvValue.m_list[i+1]);
+		end
+	end	
+end
+
+--返回打包选择界面
+function WishingDlgBackPackChange()
+	m_PackType = nil;
+	WishingDlgPackChangeView();
+end
+
+--设置打包选择资源
+function WishingDlgSetPackChangeGrid(index,data)
+	local uiObj = m_uiPackContent.transform:GetChild( index );
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiItemIcon = objs[1];
+	local uiName = objs[2];
+	
+	local sprite, color, name, c, desc = AwardInfo( data.m_costkind - 50000 +119 );		
+	SetImage(uiItemIcon,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);
+end
+
+--打包信息界面
+function WishingDlgPackInfoView(index)
+	m_PackType = index;
+	SetFalse(m_uiPackChange);
+	SetTrue(m_uiPackInfo);
+	local data = m_recvValue.m_list[m_PackType];
+	warn("m_PackType:"..m_PackType)
+	PrintTable(data,"data")
+	WishingDlgSetPackGrid(data);
+	WishingDlgSetPackToGrid(data);
+end
+--设置打包前资源
+function WishingDlgSetPackGrid(data)
+	local objs = m_uiPackGrid.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiItemIcon = objs[1];
+	local uiName = objs[2];	
+	local uiCostIcon = objs[3];
+	local uiCostNum = objs[4];
+	
+	local sprite, color, name, c, desc = AwardInfo( data.m_costkind - 50000 +119 );		
+	SetImage(uiItemIcon,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);
+	
+	SetImage(uiCostIcon,ResIcon(data.m_costkind-50000));
+	local bHave,Have =  WishingDlgIsCanPackByStuff(data.m_costkind-50000,data.m_costnum);
+	SetText(uiCostNum,knum(data.m_costnum).."/"..knum(Have));	
+	if bHave == false then 
+		SetTextColor( uiCostNum, Hex2Color(0xE80017FF))
+	else
+		SetTextColor( uiCostNum, Hex2Color(0x03DE27FF))
+	end
+end
+
+--设置打包后资源
+function WishingDlgSetPackToGrid(data)
+	local objs = m_uiPackToGrid.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiItemIcon = objs[1];
+	local uiItemNum = objs[2];
+	local uiName = objs[3];
+	local uiCostNum = objs[4];
+	
+	local sprite, color, name, c, desc = AwardInfo( data.m_awardkind );		
+	SetImage(uiItemIcon,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);
+	SetText(uiItemNum,"x"..knum(data.m_awardnum));		
+	SetText(uiCostNum,knum(data.m_token));	
+	--设置资源的数量颜色
+	if data.m_token > GetPlayer().m_token then 
+		SetTextColor( uiCostNum, Hex2Color(0xE80017FF))
+	else
+		SetTextColor( uiCostNum, Hex2Color(0xF7F3BBFF))
+	end
+end
+
+--获取打包材料是否充足
+function WishingDlgIsCanPackByStuff(kind,Need)
+	local Have = nil;
+	if kind == 1 then 
+		Have = GetPlayer().m_silver;
+	elseif kind == 2 then 
+		Have = GetPlayer().m_wood;
+	elseif kind == 3 then 
+		Have = GetPlayer().m_food;
+	end
+	
+	if Have >= Need then
+		return true,Have;
+	end
+	return false,Have;
+end
+
+function WishingDlgOnBtnPack()
+	local data = m_recvValue.m_list[m_PackType];
+	--判断资源
+	local bHave,Have = WishingDlgIsCanPackByStuff(m_PackType,data.m_costnum);
+	if bHave == false then 
+		pop(T(3015));
+		return;
+	end
+	--判断元宝
+	if data.m_token > GetPlayer().m_token then 
+		pop(T(3015));
+		return;
+	end
+	
+	system_askinfo( ASKINFO_WISHING, "", 6, data.m_id ); -- 打包
 end

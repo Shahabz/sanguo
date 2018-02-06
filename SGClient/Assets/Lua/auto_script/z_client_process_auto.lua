@@ -109,6 +109,7 @@ function proc_actorinfo_C( recvValue )
 	-- process.
 	-- 打开主界面
 	MainDlgOpen();
+	MainDlgCutScenesInit();
 	
 	GetPlayer():Set( recvValue );
 	MainDlgSetHead()
@@ -210,6 +211,13 @@ function proc_buildinglist_C( recvValue )
 	MainDlgSetButtons( -1 );
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )
+	
+	-- 战前补兵开启关闭
+	if Utils.get_int_sflag( recvValue.m_function, CITY_FUNCTION_BATTLE_ADDHP ) == 1 then
+		GameManager.writeini( "SETTING_AUTOSUPPLY", 1 )
+	else
+		GameManager.writeini( "SETTING_AUTOSUPPLY", 0 )
+	end
 	
 	-- 关闭加载面板
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
@@ -761,6 +769,7 @@ function proc_heroreplace_C( recvValue )
 		local tmp = clone( GetHero().m_CityHero[up_offset] )
 		GetHero().m_CityHero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
 		GetHero().m_CityHero[down_offset] = tmp;
+		HeroListDlgLoadHero();
 		return;
 	end
 	
@@ -769,6 +778,7 @@ function proc_heroreplace_C( recvValue )
 		local tmp = clone( GetHero().m_Hero[up_offset] )
 		GetHero().m_Hero[up_offset] = clone( GetHero().m_Hero[down_offset] )
 		GetHero().m_Hero[down_offset] = tmp;
+		HeroListDlgLoadHero();
 		return;
 	end
 	
@@ -781,6 +791,7 @@ function proc_heroreplace_C( recvValue )
 		local tmp = clone( GetHero().m_Hero[up_offset] )
 		GetHero().m_Hero[up_offset] = clone( GetHero().m_CityHero[down_offset] )
 		GetHero().m_CityHero[down_offset] = tmp;
+		HeroListDlgLoadHero();
 		return;
 	end
 	
@@ -799,8 +810,8 @@ function proc_heroreplace_C( recvValue )
 		end
 		GetHero().m_Hero[offset] = clone( GetHero().m_CityHero[down_offset] )
 		GetHero().m_CityHero[down_offset] = GetHero().m_CityHero[down_offset]:empty();
+		HeroListDlgLoadHero();
 	end
-
 end
 
 -- m_kind=0,m_path=0,m_itemnum=0,m_hero={m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
@@ -2072,17 +2083,19 @@ end
 -- m_count=0,m_list={m_id=0,m_color=0,m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_open=0,[m_count]},m_openstamp=0,
 function proc_wishingshop_C( recvValue )
 	-- process.
-	WishingDlgRecv( recvValue )
+	WishingDlgWishingRecv( recvValue )
 end
 
 -- m_silver=0,m_wood=0,m_silver_to_wood=0,m_wood_to_silver=0,m_silver_to_food=0,m_wood_to_food=0,m_food=0,m_food_to_silver=0,m_food_to_wood=0,m_cd=0
 function proc_wishingchange_C( recvValue )
 	-- process.
+	WishingDlgChangeRecv( recvValue )
 end
 
 -- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_id=0,m_token=0,[m_count]},
 function proc_wishingpack_C( recvValue )
 	-- process.
+	WishingDlgPackRecv( recvValue )
 end
 
 -- m_tc_state=0,m_tc_kind=0,m_tc_num=0,m_tc_tech=0,m_nation_tiance_level=0,m_nation_tiance_point=0,

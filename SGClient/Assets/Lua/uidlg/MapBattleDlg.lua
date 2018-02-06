@@ -76,7 +76,8 @@ function MapBattleDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 帮助
 		elseif nControlID == 1000 then
-		
+			HelpDlgShowBySystem( HELP_MapBattleDlg )
+			
 		-- 出击
 		elseif nControlID == 1001 then
 			MapBattleDlgBattle()
@@ -130,7 +131,6 @@ end
 ----------------------------------------
 function MapBattleDlgShow( recvValue, action, group_index )
 	MapBattleDlgOpen()
-	m_uiShape.transform.localScale = Vector3.New( 100, 100, 100 );
 	SetTrue( m_uiCost )
 	
 	m_appdata = 0;
@@ -172,7 +172,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 			SetText( m_uiTitle.transform:Find("Text"), "" )
 		end
 		-- 形象
-		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
+		SetImage( m_uiShape, LoadSprite( MapUnitCityShapeList[level].."_"..nation ) );
 		-- 名字
 		SetText( m_uiName, F(1228, level, name, posx, posy) )
 		
@@ -197,7 +197,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		
 		-- 形象
 		local type 	= g_towninfo[townid].type
-		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitTownShapeList[type].."_"..nation )
+		SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..nation ) )
 		
 		-- 名字
 		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )
@@ -208,7 +208,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 标题
 		SetText( m_uiTitle.transform:Find("Text"), T(954) )
 		-- 形象
-		m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
+		SetImage( m_uiShape, EnemySprite( g_enemyinfo[kind].shape, 1 ) )
 		-- 名字+位置
 		if g_enemyinfo[kind].nameid > 0 then
 			SetText( m_uiName, F(2388, T(g_enemyinfo[kind].nameid), level, posx, posy) )
@@ -225,7 +225,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 标题
 		SetText( m_uiTitle.transform:Find("Text"), T(2344) )
 		-- 形象
-		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite("mapunit_nationhero")
+		SetImage( m_uiShape, LoadSprite("mapunit_nationhero") )
 		-- 名字+位置
 		SetText( m_uiName, "Lv."..level.." "..Nation( g_nation_heroinfo[kind].nation ).."·"..HeroName(kind) )
 		--SetText( m_uiName, F(955, level, posx, posy) )
@@ -241,8 +241,8 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1296) );
 		-- 形象
 		local type 	= g_towninfo[townid].type
-		m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitTownShapeList[type].."_"..recvValue.m_nation )
-		m_uiShape.transform.localScale = Vector3.New( 48, 48, 48 );
+		SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..recvValue.m_nation ) )
+		--m_uiShape.transform.localScale = Vector3.New( 48, 48, 48 );
 		-- 名字
 		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )	
 		-- 按钮名称
@@ -491,6 +491,13 @@ function MapBattleDlgClick( index )
 	local objs = UIP_Hero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiMoveLayer = objs[14];
 	
+	-- 低于20%不能出征
+	if math.floor( pHero.m_soldiers/pHero.m_troops *100 ) < global.hero_battle_minhp then
+		pop( F(2421,global.hero_battle_minhp) )
+		return
+	end
+		
+	
 	if m_uiMoveLayerPlay[index] == false then
 		uiMoveLayer.transform:GetComponent( "UITweenRectPosition" ):Play( true );
 		m_uiMoveLayerPlay[index] = true;
@@ -506,10 +513,34 @@ end
 
 -- 补兵
 function MapBattleDlgSoldiers( index )
-	if m_HeroList[index] == nil then
+	local pHero = m_HeroList[index];
+	if pHero == nil then
 		return;
 	end
-	system_askinfo( ASKINFO_HERO, "", 1, m_HeroList[index].m_kind );
+	
+	local left = pHero.m_troops - pHero.m_soldiers;
+	if left == 0 then
+		return
+	end
+	
+	if pHero.m_corps == 0 then
+		if GetPlayer().m_infantry_num == 0 then
+			pop(T(2414))
+			return
+		end
+	elseif pHero.m_corps == 1 then
+		if GetPlayer().m_cavalry_num == 0 then
+			pop(T(2415))
+			return
+		end
+	elseif pHero.m_corps == 2 then
+		if GetPlayer().m_archer_num == 0 then
+			pop(T(2416))
+			return
+		end
+	end
+	
+	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
 end
 
 -- 更新血量
@@ -593,9 +624,70 @@ function MapBattleDlgBattle()
 		end
 	end
 	if sendValue.m_herokind[1] <= 0 then
+		pop( T(1000) )
 		return
 	end
-	netsend_mapbattle_C( sendValue )
-	MapBattleDlgClose()
+	
+	-- 战前补兵，客户端先行处理
+	local has = 0;
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_BATTLE_ADDHP ) == 1 then
+		local infantry_num = GetPlayer().m_infantry_num;
+		local cavalry_num = GetPlayer().m_cavalry_num;
+		local archer_num = GetPlayer().m_archer_num;
+		for i=1,4,1 do
+			if m_HeroList[i].m_battle == 1 then
+				local pHero = m_HeroList[i];
+				local add = pHero.m_troops - pHero.m_soldiers;
+				if add > 0 then
+					if pHero.m_corps == 0 then
+						if add > infantry_num then
+							add = infantry_num
+						else
+							infantry_num = infantry_num - add
+						end
+					elseif pHero.m_corps == 1 then
+						if add > cavalry_num then
+							add = cavalry_num
+						else
+							cavalry_num = cavalry_num - add
+						end
+					elseif pHero.m_corps == 2 then
+						if add > archer_num then
+							add = archer_num
+						else
+							archer_num = archer_num - add
+						end
+					end
+				end
+				
+				if add > 0 then
+					has = 1;
+					local UIP_Hero = m_uiContent.transform:GetChild(i-1).gameObject
+					local objs = UIP_Hero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+					local uiSoldiersProgress = objs[12];
+					local uiSoldiersText = objs[15];
+					
+					local beginvalue = pHero.m_soldiers/pHero.m_troops;
+					local endvalue = (pHero.m_soldiers+add)/pHero.m_troops;
+					SetProgressPlay( uiSoldiersProgress, beginvalue, endvalue, 3, 1, function() 
+						pHero.m_soldiers = pHero.m_soldiers+add
+						SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
+						SetText( uiSoldiersText, pHero.m_soldiers.."/"..pHero.m_troops )
+					end )
+				end
+			end
+		end
+	end
+	
+	if has == 0 then			
+		netsend_mapbattle_C( sendValue )
+		MapBattleDlgClose()
+	else
+			
+		Invoke( function() 
+			netsend_mapbattle_C( sendValue )
+			MapBattleDlgClose()
+		end, 0.5, nil, "MapBattleDlgBattle" );
+	end
 end
 

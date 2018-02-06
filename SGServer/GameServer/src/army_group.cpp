@@ -938,7 +938,13 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 	}
 
 	if ( pTargetCity )
+	{
+		// ³ÇÇ½ÊØÎÀ
 		city_guard_sendnum( pTargetCity->actor_index );
+
+		// ×Ô¶¯²¹±ø
+		hero_addsoldiers_audo( pTargetCity );
+	}
 	return 0;
 }
 

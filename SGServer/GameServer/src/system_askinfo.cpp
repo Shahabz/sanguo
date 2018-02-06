@@ -384,6 +384,26 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 黑名单删除
 			actor_blacklist_del( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 6 )
+		{ // 开启关闭
+			if ( pvalue[1] == CITY_FUNCTION_AUTO_ADDHP )
+			{ // 自动补兵
+				if ( pvalue[2] == 0 )
+					city_function_close( city_getptr( actor_index ), CITY_FUNCTION_AUTO_ADDHP );
+				else if ( pvalue[2] == 1 )
+				{
+					city_function_open( city_getptr( actor_index ), CITY_FUNCTION_AUTO_ADDHP );
+					hero_addsoldiers_audo( city_getptr( actor_index ) );
+				}
+			}
+			else if ( pvalue[1] == CITY_FUNCTION_BATTLE_ADDHP )
+			{ // 战前自动补兵
+				if ( pvalue[2] == 0 )
+					city_function_close( city_getptr( actor_index ), CITY_FUNCTION_BATTLE_ADDHP );
+				else if ( pvalue[2] == 1 )
+					city_function_open( city_getptr( actor_index ), CITY_FUNCTION_BATTLE_ADDHP );
+			}
+		}
 		break;
 	case ASKINFO_MATERIALMAKE:
 		if ( pvalue[0] == 0 )

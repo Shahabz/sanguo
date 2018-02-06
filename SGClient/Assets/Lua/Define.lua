@@ -70,6 +70,8 @@ CITY_FUNCTION_HEROBUTTON	=17	-- 武将
 CITY_FUNCTION_CHAT			=18	-- 聊天
 CITY_FUNCTION_WARKEREX		=19	-- 商业建造队
 CITY_FUNCTION_Militiaman	=20	-- 民兵营
+CITY_FUNCTION_AUTO_ADDHP	=25	-- 自动补兵开启关闭
+CITY_FUNCTION_BATTLE_ADDHP	=26	-- 战前补兵开启关闭
 
 BuildingPrefab={
 [BUILDING_Main] = { prefab = "BUILDING_Main", land="BuildingLand0" },
@@ -326,8 +328,10 @@ end
 function HeroState( state )
 	if state == 0 then
 		return T(141);
-	elseif state == 1 then
+	elseif state == 1 or state == 3 then
 		return T(142);
+	elseif state == 2 then
+		return T(299);
 	end
 end
 

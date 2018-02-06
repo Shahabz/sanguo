@@ -6,6 +6,7 @@ local m_uiInfantryNum = nil; --UnityEngine.GameObject
 local m_uiCavalryNum = nil; --UnityEngine.GameObject
 local m_uiArcherNum = nil; --UnityEngine.GameObject
 local m_uiBuffLayer = nil; --UnityEngine.GameObject
+local m_uiAutoSoldier = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function HeroDlgOpen()
@@ -38,8 +39,20 @@ function HeroDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             HeroDlgClose();
+			
 		elseif nControlID >= 1 and nControlID <= 4 then
 			HeroDlgSelect( nControlID )
+			
+		-- 关闭自动补兵
+		elseif nControlID == 21 then
+			system_askinfo( ASKINFO_ACTOR, "", 6, CITY_FUNCTION_AUTO_ADDHP, 0 );
+			HeroDlgAutoSoldierShow( 0 )
+			
+		-- 开启自动补兵
+		elseif nControlID == 22 then
+			system_askinfo( ASKINFO_ACTOR, "", 6, CITY_FUNCTION_AUTO_ADDHP, 1 );
+			HeroDlgAutoSoldierShow( 1 )
+			
 		elseif nControlID >= 100 and nControlID <= 200 then
 			HeroDlgSoldiers( nControlID-100 )
         end
@@ -59,6 +72,7 @@ function HeroDlgOnAwake( gameObject )
 	m_uiCavalryNum = objs[5];
 	m_uiArcherNum = objs[6];
 	m_uiBuffLayer = objs[7];
+	m_uiAutoSoldier = objs[8];
 end
 
 -- 界面初始化时调用
@@ -100,7 +114,8 @@ function HeroDlgShow()
 	HeroDlgSetCavalry()
 	HeroDlgSetArcher()
 	HeroDlgSetBuff()
-	HeroDlgUpdate();
+	HeroDlgUpdate()
+	HeroDlgAutoSoldier()
 end
 
 function HeroDlgUpdate()
@@ -314,5 +329,34 @@ function HeroDlgSetBuff()
 		else
 			SetFalse( uiObj )
 		end
+	end
+end
+
+-- 自动补兵
+function HeroDlgAutoSoldier()
+	-- 自动补兵科技尚未开启
+	if GetPlayer().m_attr.m_ability_open_204 == 0 then
+		SetFalse( m_uiAutoSoldier )
+	else
+		SetTrue( m_uiAutoSoldier )
+	end
+	
+	-- 自动补兵开启关闭				
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_AUTO_ADDHP ) == 0 then
+		HeroDlgAutoSoldierShow( 0 )
+	else
+		HeroDlgAutoSoldierShow( 1 )
+	end
+end
+
+function HeroDlgAutoSoldierShow( isopen )
+	if isopen == 0 then
+		SetText( m_uiAutoSoldier.transform:Find("Desc"), T(2418)..T(2420) )
+		SetTrue( m_uiAutoSoldier.transform:Find("SwitchOffBtn") )
+		SetFalse( m_uiAutoSoldier.transform:Find("SwitchOnBtn") )
+	else
+		SetText( m_uiAutoSoldier.transform:Find("Desc"), T(2418)..T(2419) )
+		SetTrue( m_uiAutoSoldier.transform:Find("SwitchOnBtn") )
+		SetFalse( m_uiAutoSoldier.transform:Find("SwitchOffBtn") )
 	end
 end

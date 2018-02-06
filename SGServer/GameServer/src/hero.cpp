@@ -1138,6 +1138,38 @@ int hero_addsoldiers( int actor_index, int herokind, char path )
 	return pHero->soldiers;
 }
 
+// ×Ô¶¯²¹±ø
+int hero_addsoldiers_audo( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	if ( city_function_check( pCity, CITY_FUNCTION_AUTO_ADDHP ) == 0 )
+		return -1;
+	for ( int i = 0; i < 8; i++ )
+	{
+		if ( pCity->hero[i].kind <= 0 )
+			continue;
+		if ( pCity->hero[i].state != HERO_STATE_NORMAL )
+			continue;
+		if ( pCity->hero[i].soldiers >= pCity->hero[i].troops )
+			continue;
+		HeroInfoConfig *config = hero_getconfig( pCity->hero[i].kind, pCity->hero[i].color );
+		if ( !config )
+			continue;
+		int troops = pCity->hero[i].troops;
+		int add = troops - pCity->hero[i].soldiers;
+		int has = city_soldiers( pCity->index, config->corps );
+		if ( has > 0 )
+		{
+			if ( add > has )
+				add = has;
+			hero_changesoldiers( pCity, &pCity->hero[i], add, PATH_BATTLEAUTOHP );
+			city_changesoldiers( pCity->index, config->corps, -add, PATH_BATTLEAUTOHP );
+		}
+	}
+	return 0;
+}
+
 int hero_changesoldiers( City *pCity, Hero *pHero, int value, short path )
 {
 	if ( !pCity )

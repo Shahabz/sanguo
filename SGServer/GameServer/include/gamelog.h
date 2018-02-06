@@ -116,6 +116,7 @@
 #define PATH_WISHINGSHOP				87	// ¾Û±¦Åè
 #define PATH_WISHINGCHANGE				88	// ¾Û±¦Åè¶Ò»»
 #define PATH_WISHINGPACK				89	// ¾Û±¦Åè´ò°ü
+#define PATH_BATTLEAUTOHP				90	// ³öÕ÷×Ô¶¯²¹±ø
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

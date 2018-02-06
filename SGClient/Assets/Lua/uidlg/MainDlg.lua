@@ -1188,9 +1188,18 @@ function MainDlgClearWarObj()
     end
 end
 
+-- 初始化切换场景
+function MainDlgCutScenesInit()
+	if m_Dlg == nil then
+		return;
+	end
+	SetTrue( m_uiCutScenes )
+	SetFalse( m_uiCutScenes )
+	m_uiCutScenes.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform )
+end
+
 -- 播放城内城外切换动画
 function MainDlgPlayCutScenes()
-	m_uiCutScenes.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform )
 	SetTrue( m_uiCutScenes )
 end
 

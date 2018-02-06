@@ -880,6 +880,18 @@ void city_function_open( City *pCity, int offset )
 	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
+// 功能关闭
+void city_function_close( City *pCity, int offset )
+{
+	if ( pCity == NULL )
+		return;
+	pCity->function &= ~(1 << offset);
+	SLK_NetS_Function pValue = { 0 };
+	pValue.m_function = pCity->function;
+	pValue.m_openoffset = offset;
+	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+}
+
 int city_function_check( City *pCity, int offset )
 {
 	if ( pCity == NULL )
@@ -2269,7 +2281,7 @@ int city_train_get( int actor_index, int kind )
 		return -1;
 	if ( barracks->overnum <= 0 )
 		return -1;
-	int corps = 0;
+	char corps = 0;
 	if ( kind == BUILDING_Infantry || kind == BUILDING_Militiaman_Infantry )
 	{
 		corps = 0;	
@@ -2299,6 +2311,9 @@ int city_train_get( int actor_index, int kind )
 	netsend_soldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 
 	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_GET, kind, overnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );
+
+	// 自动补兵
+	hero_addsoldiers_audo( pCity );
 	return 0;
 }
 

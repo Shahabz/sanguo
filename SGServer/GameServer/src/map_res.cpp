@@ -121,6 +121,8 @@ void map_res_makeunit( int index, SLK_NetS_AddMapUnit *pAttr )
 	pAttr->m_char_value[0] = (char)config->type;
 	pAttr->m_char_value[1] = (char)config->level;
 	pAttr->m_char_value_count = 2;
+	pAttr->m_short_value[0] = config->kind;
+	pAttr->m_short_value_count = 1;
 	if ( g_map_res[index].army_index >= 0 )
 	{
 		City *pCity = army_getcityptr( g_map_res[index].army_index );
