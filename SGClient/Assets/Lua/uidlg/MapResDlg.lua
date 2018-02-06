@@ -123,6 +123,7 @@ end
 ----------------------------------------
 function MapResDlgShow( recvValue )
 	MapResDlgOpen()
+	m_SelectHeroKind = 0;
 	for i = 0 ,m_uiContent.transform.childCount - 1 do
 		SetFalse( m_uiContent.transform:GetChild(i).gameObject )
 	end
@@ -379,7 +380,7 @@ function MapResDlgGather()
 		return
 	end
 	if m_SelectHeroKind <= 0 then
-		pop(T(1000))
+		AlertMsg(T(1000))
 		return
 	end
 		
@@ -412,7 +413,7 @@ function MapResDlgBattle()
 		return
 	end
 	if m_SelectHeroKind <= 0 then
-		pop(T(1000))
+		AlertMsg(T(1000))
 		return
 	end
 		

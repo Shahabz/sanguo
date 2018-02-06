@@ -861,7 +861,7 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				if ( g_towninfo[tile_townid].range_gather == 1 )
 				{
 					char tile_nation = map_tile_getnation( res->posx, res->posy );
-					if ( tile_nation >= 0 && tile_nation != pCity->nation )
+					if ( tile_nation > 0 && tile_nation != pCity->nation )
 					{ // 非本国占领区域，不可贸然前往
 						actor_notify_alert( pCity->actor_index, 1323 );
 						return -1;
@@ -874,7 +874,12 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
 				return -1;
 			if ( pCity->hero[hero_index].level < config->herolevel )
+			{ // 需要武将等级{0}级
+				char v1[16] = { 0 };
+				sprintf( v1, "%d", config->herolevel );
+				actor_notify_alert_v( pCity->actor_index, 2411, v1, NULL );
 				return -1;
+			}
 
 			// 消耗粮食
 			if ( cost_food > pCity->food )
