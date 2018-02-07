@@ -20,7 +20,7 @@ public class LaunchLoad : MonoBehaviour {
         LogUtil.GetInstance().WriteGame( "LocalPath:" + PathUtil.LocalPath() );
 		LogUtil.GetInstance().WriteGame( "ConfigPath:" + PathUtil.ConfigPath() );
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             AssetBundleInfo abinfo = ResourceManager.GetLoadedAssetBundle( "launchload" );
             if ( abinfo == null )

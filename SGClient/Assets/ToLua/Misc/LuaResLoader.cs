@@ -98,8 +98,11 @@ public class LuaResLoader : LuaFileUtils
 
         byte[] buffer = null;
         string path = "Lua/" + fileName;
+#if UNITY_EDITOR
+		TextAsset text = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>( path );
+#else
         TextAsset text = Resources.Load(path, typeof(TextAsset)) as TextAsset;
-
+#endif
         if (text != null)
         {
             buffer = text.bytes;

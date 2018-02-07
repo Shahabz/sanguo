@@ -58,7 +58,7 @@ public class ResourceManager : MonoBehaviour
     {
         LogUtil.GetInstance().WriteGame( "ResourceManager.OnDestroy" );
         m_LoadRequests.Clear();
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             for ( int tmpi = 0; tmpi < m_AssetBundleNameList.Length; tmpi++ )
             {
@@ -134,7 +134,7 @@ public class ResourceManager : MonoBehaviour
     public void Initialize( Action callback )
     {
         // 读取所有assetbundle名和依赖
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             LoadAssetAsyn<AssetBundleManifest>( "StreamingAssets", "AssetBundleManifest", delegate ( UnityEngine.Object objs )
             {
@@ -159,7 +159,7 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     static public AssetBundleInfo LoadAB_NoDependencies( string assetBundleName )
     {
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
             if ( bundle == null )
@@ -195,7 +195,7 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     static public AssetBundleInfo LoadAssetBundle( string assetBundleName )
     {
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             AssetBundleInfo bundle = GetLoadedAssetBundle( assetBundleName );
             if ( bundle == null )
@@ -288,7 +288,7 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     public void LoadAllAssetBundle()
     {
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             for ( int tmpi = 0; tmpi < m_AssetBundleNameList.Length; tmpi++ )
             {
@@ -424,7 +424,7 @@ public class ResourceManager : MonoBehaviour
             return null;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             return Load( m_resmap_sprite[reskeyname][1], m_resmap_sprite[reskeyname][2], typeof( Sprite ) ) as Sprite;
         }
@@ -449,13 +449,17 @@ public class ResourceManager : MonoBehaviour
             LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
             return null;
         }
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             return Load( m_resmap_prefab[reskeyname][1], m_resmap_prefab[reskeyname][2], typeof( GameObject ) ) as GameObject;
         }
         else
         {
+#if UNITY_EDITOR
+			return UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>( m_resmap_prefab[reskeyname][0] );
+#else
             return Resources.Load<GameObject>( m_resmap_prefab[reskeyname][0] );
+#endif
         }
     }
 
@@ -479,13 +483,17 @@ public class ResourceManager : MonoBehaviour
             return null;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             return Load( m_resmap_object[reskeyname][1], m_resmap_object[reskeyname][2], typeof( UnityEngine.Object ) ) as UnityEngine.Object;
         }
         else
         {
+#if UNITY_EDITOR
+			return UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( m_resmap_object[reskeyname][0] );
+#else
             return Resources.Load( m_resmap_object[reskeyname][0] );
+#endif
         }
     }
 
@@ -515,13 +523,17 @@ public class ResourceManager : MonoBehaviour
             return default( T );
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             return (T)Load( m_resmap_object[reskeyname][1], m_resmap_object[reskeyname][2], typeof( T ) ) as T;
         }
         else
         {
+#if UNITY_EDITOR
+			return UnityEditor.AssetDatabase.LoadAssetAtPath<T>( m_resmap_object[reskeyname][0] );
+#else
             return Resources.Load<T>( m_resmap_object[reskeyname][0] );
+#endif
         }
     }
 
@@ -537,7 +549,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             UnloadAssetBundle( m_resmap_sprite[reskeyname][1] );
         }
@@ -559,7 +571,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             UnloadAssetBundle( m_resmap_prefab[reskeyname][1] );
         }
@@ -579,7 +591,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             UnloadAssetBundle( m_resmap_object[reskeyname][1] );
         }
@@ -737,6 +749,19 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     IEnumerator OnResourceLoad<T>( string path, Action<UnityEngine.Object> action = null, LuaFunction func = null ) where T : UnityEngine.Object
     {
+#if UNITY_EDITOR
+		UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( path );
+		if ( action != null )
+		{
+			action( obj );
+		}
+		if ( func != null )
+		{
+			func.Call( obj );
+			func.Dispose();
+		}
+		yield break;
+#else
         ResourceRequest resourceRequest = Resources.LoadAsync<GameObject>( path );
         while ( !resourceRequest.isDone )
         {
@@ -752,6 +777,7 @@ public class ResourceManager : MonoBehaviour
             func.Call( resourceRequest.asset );
             func.Dispose();
         }
+#endif
     }
 
     /// <summary>
@@ -766,7 +792,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             LoadAssetAsyn<Sprite>( m_resmap_sprite[reskeyname][1], m_resmap_sprite[reskeyname][2], func );
         }
@@ -788,7 +814,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             LoadAssetAsyn<Sprite>( m_resmap_sprite[reskeyname][1], m_resmap_sprite[reskeyname][2], null, func );
         }
@@ -810,7 +836,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             LoadAssetAsyn<GameObject>( m_resmap_prefab[reskeyname][1], m_resmap_prefab[reskeyname][2], func );
         }
@@ -832,7 +858,7 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             LoadAssetAsyn<GameObject>( m_resmap_prefab[reskeyname][1], m_resmap_prefab[reskeyname][2], null, func );
         }
@@ -845,7 +871,7 @@ public class ResourceManager : MonoBehaviour
 	// 读取角色动画，因为数量巨大所以单独提出来，写死了
 	static public AnimationClip LoadCharactorAnime( string anime, string dirName, string abname )
 	{
-		if ( Const.ResourceMode == "assetbundle" )
+		if ( Const.ResourceMode == 1 )
 		{
 			if (abname == string.Empty) {
 				return Load (dirName.ToLower(), anime, typeof(AnimationClip)) as UnityEngine.AnimationClip;
@@ -855,7 +881,11 @@ public class ResourceManager : MonoBehaviour
 		}
 		else
 		{
+#if UNITY_EDITOR
+			return UnityEditor.AssetDatabase.LoadAssetAtPath<AnimationClip>( "Assets/PackAssets/Character/" + dirName + "/" + anime+".anim" );
+#else
 			return Resources.Load<AnimationClip>( "PackAssets/Character/" + dirName + "/" + anime );
+#endif
 		}
 	}
 

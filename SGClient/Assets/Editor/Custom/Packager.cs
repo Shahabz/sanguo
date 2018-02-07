@@ -88,7 +88,7 @@ public class Packager
         clearDirectory( streamingAssetsPath );
         clearDirectory( StreamingAssetsPathUpload );
 
-        //if ( Const.ResourceMode == "assetbundle" )
+        //if ( Const.ResourceMode == 1 )
         //{
             BuildPipeline.BuildAssetBundles( StreamingAssetsPathUpload, BuildAssetBundleOptions.ChunkBasedCompression, target );
         //}
@@ -120,7 +120,7 @@ public class Packager
         files.Clear();
 
         // 配置文件源路径
-        string sourceTxtPath = Application.dataPath + "/Resources/PackAssets/Data/";
+        string sourceTxtPath = Application.dataPath + "/PackAssets/Data/";
 
         // 递归遍历所有文件文件夹
         Recursive( sourceTxtPath );

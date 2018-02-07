@@ -7,27 +7,27 @@ using System.IO;
 // 应用程序全局变量
 public class Const {   
     public static bool DebugMode = true;                        // 调试模式-用于内部测试
-	static string _ResourceMode = "";
-	public static string ResourceMode
+	static int _ResourceMode = 0;
+	public static int ResourceMode
 	{
 		set{
-			_ResourceMode = "";
+			_ResourceMode = 0;
 		}
 		get{
 #if UNITY_EDITOR
 			string signfilePath = Application.dataPath + "/" + ".develop.mode";
 			if (File.Exists (signfilePath))
 			{
-				_ResourceMode = "resource";
+				_ResourceMode = 0;//"resource"
 			}
 			else
 			{
-				_ResourceMode = "assetbundle";
+				_ResourceMode = 1;//"assetbundle"
 			}
 #elif UNITY_STANDALONE
-			_ResourceMode = "resource";
+			_ResourceMode = 0;
 #else
-			_ResourceMode = "assetbundle";
+			_ResourceMode = 1;
 #endif
 			return _ResourceMode;
 		}

@@ -145,7 +145,7 @@ public class UpdateManager : MonoBehaviour
         // 读取本地的资源版本文件
         m_pLocalResverIni.OpenFromTXT( PathUtil.ConfigPath() + m_szResverTxt );
 
-        if ( Const.ResourceMode == "assetbundle" )
+        if ( Const.ResourceMode == 1 )
         {
             // 其它模式先检查源
             CheckResource();

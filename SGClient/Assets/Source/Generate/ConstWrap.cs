@@ -627,7 +627,7 @@ public class ConstWrap
 	{
 		try
 		{
-			LuaDLL.lua_pushstring(L, Const.ResourceMode);
+			LuaDLL.lua_pushinteger(L, Const.ResourceMode);
 			return 1;
 		}
 		catch(Exception e)
@@ -1226,7 +1226,7 @@ public class ConstWrap
 	{
 		try
 		{
-			string arg0 = ToLua.CheckString(L, 2);
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			Const.ResourceMode = arg0;
 			return 0;
 		}

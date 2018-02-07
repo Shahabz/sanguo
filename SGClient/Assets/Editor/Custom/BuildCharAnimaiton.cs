@@ -9,7 +9,7 @@ using UnityEditorInternal;
 public class BuildCharAnimaiton : Editor
 {    //美术给的原始图片路径
 	private static string ImagePath = Application.dataPath + "/Sprites/Character";
-	private static string AnimePath = Application.dataPath + "/Resources/PackAssets/Character";
+	private static string AnimePath = Application.dataPath + "/PackAssets/Character";
 
 	static string[] IgnoreList = { "Char_Shape_OgreMan0", "Char_Shape_OgreMan1", "Char_Shape_Mud", "Char_Shape_DragonIce", "Char_Shape_KingTower" };
 
@@ -52,48 +52,48 @@ public class BuildCharAnimaiton : Editor
                 {
                     name = name.Substring( 0, name.Length - 1 ) + "7";
 				    AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-                        dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+                        dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 				    AssetDatabase.SaveAssets();
                 }
                 else if( name.Substring( name.Length - 1 ) == "2" )
                 {
                     name = name.Substring( 0, name.Length - 1 ) + "6";
 				    AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-                        dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+                        dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 				    AssetDatabase.SaveAssets();
                 }
                 else if( name.Substring( name.Length - 1 ) == "3" )
                 {
                     name = name.Substring( 0, name.Length - 1 ) + "5";
 				    AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-                        dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+                        dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 				    AssetDatabase.SaveAssets();
                 }
 				else if( name.Substring( name.Length - 1 ) == "5" )
 				{
 					name = name.Substring( 0, name.Length - 1 ) + "3";
 					AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+						dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 					AssetDatabase.SaveAssets();
 				}
 				else if( name.Substring( name.Length - 1 ) == "6" )
 				{
 					name = name.Substring( 0, name.Length - 1 ) + "2";
 					AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+						dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 					AssetDatabase.SaveAssets();
 				}
 				else if( name.Substring( name.Length - 1 ) == "7" )
 				{
 					name = name.Substring( 0, name.Length - 1 ) + "1";
 					AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, name ),
-						dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + name + ".anim" );
+						dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + name + ".anim" );
 					AssetDatabase.SaveAssets();
 				}
 
 
 				AssetDatabase.CreateAsset( BuildAnimationClip( dictoryAnimations, dictoryAnimations.Name ),
-                    dictoryPath.Replace( "Sprites", "Resources/PackAssets" ) + "/" + dictoryAnimations.Name + ".anim" );
+                    dictoryPath.Replace( "Sprites", "PackAssets" ) + "/" + dictoryAnimations.Name + ".anim" );
 				AssetDatabase.SaveAssets();
 			}
 		}

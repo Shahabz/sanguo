@@ -45,7 +45,6 @@ namespace SG
             }
             else
             {
-                //GameObject pb = Resources.Load<GameObject>(poolName);
 				if (prefab == null)
                 {
                     Debug.LogError("[ResourceManager] Invalide prefab name for pooling :" + poolName);

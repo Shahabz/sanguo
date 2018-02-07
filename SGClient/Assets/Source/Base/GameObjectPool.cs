@@ -67,7 +67,7 @@ public class GameObjectPool
         {
             AddObjectToPool(NewObjectInstance());
             go = availableObjStack.Pop();
-			Debug.LogWarning("No object available & cannot grow pool: " + poolName);
+			//Debug.LogWarning("No object available & cannot grow pool: " + poolName);
 		}
         go.SetActive(true);
         return go;

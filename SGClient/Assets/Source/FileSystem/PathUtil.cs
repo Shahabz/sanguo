@@ -133,10 +133,10 @@ public static class PathUtil
     /// </summary>
     public static string LocalDataPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return LocalPath() + "/Data/";
         else
-            return Application.dataPath + "/Resources/PackAssets/Data/";
+            return Application.dataPath + "/PackAssets/Data/";
     }
 
     /// <summary>
@@ -144,10 +144,10 @@ public static class PathUtil
     /// </summary>
     public static string PackageDataPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.streamingAssetsPath + "/Data/";
         else
-            return Application.dataPath + "/Resources/PackAssets/Data/";
+            return Application.dataPath + "/PackAssets/Data/";
     }
 
     /// <summary>
@@ -155,7 +155,7 @@ public static class PathUtil
     /// </summary>
     public static string LocalLuaPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return LocalPath() + "/Lua/";
         else
             return Application.dataPath + "/Lua/";         
@@ -184,7 +184,7 @@ public static class PathUtil
     /// </summary>
     public static string PackageLuaPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return StreamingAssetsPath() + "Lua/";
         else
             return Application.dataPath + "/Lua/";          
@@ -213,7 +213,7 @@ public static class PathUtil
     /// </summary>
     public static string LogPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.temporaryCachePath + "/Log/";
         else
             return Application.dataPath + "/../Log/";
@@ -224,7 +224,7 @@ public static class PathUtil
     /// </summary>
     public static string RecPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.temporaryCachePath + "/Recode/";
         else
             return Application.dataPath + "/../Recode/";
@@ -235,7 +235,7 @@ public static class PathUtil
     /// </summary>
     public static string PatchDownloadPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.temporaryCachePath + "/Patch/";
         else
             return Application.dataPath + "/../Patch/";
@@ -246,7 +246,7 @@ public static class PathUtil
     /// </summary>
     public static string HeadPath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.temporaryCachePath + "/Head/";
         else
             return Application.dataPath + "/../Head/";
@@ -257,7 +257,7 @@ public static class PathUtil
 	/// </summary>
 	public static string GameCachePath()
 	{
-		if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+		if ( Const.ResourceMode == 1 || !Application.isEditor )
 			return Application.temporaryCachePath + "/GameCache/";
 		else
 			return Application.dataPath + "/../GameCache/";
@@ -268,7 +268,7 @@ public static class PathUtil
     /// </summary>
     public static string ImagePath()
     {
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.persistentDataPath + "/Image/";
         else
             return Application.dataPath + "/../Image/";
@@ -280,7 +280,7 @@ public static class PathUtil
     public static string ConfigPath()
     {
         // 配置文件读取要在所有逻辑开始之前
-        if ( Const.ResourceMode == "assetbundle" || !Application.isEditor )
+        if ( Const.ResourceMode == 1 || !Application.isEditor )
             return Application.persistentDataPath + "/Config/";
         else
             return Application.dataPath + "/../Config/";

@@ -43,7 +43,7 @@ class ProjectBuild : Editor{
 	{
 		Packager.BuildAssets( BuildTarget.iOS );
 /*
-		if (Directory.Exists (Application.dataPath + "/Resources/PackAssets"))
+		if (Directory.Exists (Application.dataPath + "/PackAssets"))
 		{
 			if (Directory.Exists (Application.dataPath + "/Resources/.PackAssets"))
 			{
