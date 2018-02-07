@@ -127,6 +127,13 @@ function MapZoneDlgShow( zoneid )
 		SetGray( m_uiGlobalBtn.transform:Find("Back"), true )
 		SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(601) )
 	end
+	
+	-- 如果未开放
+	if g_zoneinfo[zoneid].open == 0 then
+		SetFalse( m_uiNation )
+		SetTrue( m_uiWarn )
+		SetText( m_uiWarn, T(937) )	
+	end
 end
 -- 设置所属国家
 function MapZoneDlgSetNation( nation )

@@ -896,6 +896,9 @@ end
 
 -- 检测可升级箭头
 function City.UpgradeArrow()
+	if Const.NetStatus < 3 then
+        return;
+    end
 	-- 普通建筑
 	for k, v in pairs( GetPlayer().m_buildings ) do
 		if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
