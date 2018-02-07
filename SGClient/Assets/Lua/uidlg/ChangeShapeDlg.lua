@@ -8,7 +8,23 @@ local m_uiChangeNameItem = nil; --UnityEngine.GameObject
 local m_uiChangeNameUseBtn = nil; --UnityEngine.GameObject
 local m_uiChangeNameBuyBtn = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiUIP_PlayerHead = nil; --UnityEngine.GameObject
+
 local m_SelectShape = -1;
+
+-- 头像
+local m_shapeList = {
+{ shape=0, tips=0 },
+{ shape=1, tips=0 },
+{ shape=2, tips=0 },
+{ shape=3, tips=0 },
+{ shape=4, tips=0 },
+{ shape=5, tips=0 },
+{ shape=6, tips=2425 },
+{ shape=7, tips=2425 },
+{ shape=8, tips=2425 },
+{ shape=9, tips=2426 },
+}
 
 -- 打开界面
 function ChangeShapeDlgOpen()
@@ -63,15 +79,16 @@ end
 function ChangeShapeDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
-	
 	m_uiShape = objs[0];
 	m_uiNameInput = objs[1];
 	m_uiChangeNameItem = objs[2];
 	m_uiChangeNameUseBtn = objs[3];
 	m_uiChangeNameBuyBtn = objs[4];
 	m_uiContent = objs[5];
-
-
+	m_uiUIP_PlayerHead = objs[6];
+	-- 对象池
+	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );		
+	m_ObjectPool:CreatePool("UIP_PlayerHead", 10, 10, m_uiUIP_PlayerHead);	
 end
 
 -- 界面初始化时调用
@@ -105,7 +122,6 @@ end
 ----------------------------------------
 function ChangeShapeDlgShow()
 	ChangeShapeDlgOpen()
-	ChangeShapeDlgSelect( GetPlayer().m_shape );
 	m_uiNameInput:GetComponent( "UIInputField" ).text = GetPlayer().m_name
 	
 	local itemkind = 172
@@ -119,6 +135,42 @@ function ChangeShapeDlgShow()
 	SetImage( m_uiChangeNameItem.transform:Find("Shape"), ItemSprite(itemkind) )
 	SetImage( m_uiChangeNameItem.transform:Find("Color"), ItemColorSprite(item_getcolor(itemkind)) )
 	SetText( m_uiChangeNameItem.transform:Find("Name"), item_getname(itemkind), NameColor(item_getcolor(itemkind)) )
+	
+	-- 创建头像列表
+	ChangeShapeDlgClear()
+	for k, v in ipairs(m_shapeList) do
+		ChangeShapeDlgCreateHead( v )
+	end
+	ChangeShapeDlgSelect( GetPlayer().m_shape );
+end
+
+-- 创建头像
+function ChangeShapeDlgCreateHead( info )
+	local uiObj = m_ObjectPool:Get( "UIP_PlayerHead" );
+	SetImage( uiObj.transform:Find("Shape"), PlayerHeadSprite( info.shape ) );
+	SetControlID( uiObj, info.shape )
+	uiObj.transform:SetParent( m_uiContent.transform );
+	uiObj.transform.localScale = Vector3.one;
+	uiObj.gameObject:SetActive( true );
+	if Utils.get_int_sflag( GetPlayer().m_shape_bag, info.shape ) == 1 then
+		SetGray( uiObj.transform:Find("Shape"), false )
+	else
+		SetGray( uiObj.transform:Find("Shape"), true )
+	end
+end
+
+-- 清空
+function ChangeShapeDlgClear()
+	local objs = {};
+	for i=0,m_uiContent.transform.childCount-1 do
+		table.insert(objs,m_uiContent.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_PlayerHead(Clone)" then
+			m_ObjectPool:Release( "UIP_PlayerHead", obj );
+		end
+	end
 end
 
 -- 选择形象
@@ -133,6 +185,22 @@ function ChangeShapeDlgSelect( shape )
 			SetFalse( obj.transform:Find("Select") )
 		end
     end
+	
+	if Utils.get_int_sflag( GetPlayer().m_shape_bag, shape ) == 0 then
+		ChangeShapeDlgShowTips( shape )
+	end
+end
+
+-- 显示获取来源
+function ChangeShapeDlgShowTips( shape )
+	for k, v in ipairs(m_shapeList) do
+		if v.shape == shape then
+			if v.tips > 0 then
+				pop( T(v.tips) )
+			end
+			break;
+		end
+	end
 end
 
 -- 改形象

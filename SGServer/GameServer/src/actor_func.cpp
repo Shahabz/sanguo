@@ -438,10 +438,14 @@ int actor_changeshape( int actor_index, char shape )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
-
 	if ( shape < 0 || shape >= SHAPE_MAX )
 		return -1;
-
+	if ( (g_actors[actor_index].shape_bag & (1 << shape)) == 0 )
+	{
+		actor_notify_pop( actor_index, 2424 );
+		return -1;
+	}
+	
 	g_actors[actor_index].shape = shape;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
@@ -455,6 +459,23 @@ int actor_changeshape( int actor_index, char shape )
 		actor_notify_value( actor_index, NOTIFY_CHANGESHAPE, 2, value, NULL );
 	}
 	return 0;
+}
+
+// 头像获得
+void actor_change_open( int actor_index, char shape )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return;
+	if ( shape < 0 || shape >= SHAPE_MAX )
+		return;
+
+	g_actors[actor_index].shape_bag |= (1 << shape);
+	
+	// 发更新
+	int value[2] = { 0 };
+	value[0] = 1;
+	value[1] = g_actors[actor_index].shape_bag;
+	actor_notify_value( actor_index, NOTIFY_CHANGESHAPE, 2, value, NULL );
 }
 
 // 修改签名
@@ -490,6 +511,7 @@ int actor_getinfo( int actor_index )
 	info.m_token = g_actors[actor_index].token;
 	info.m_actor_sflag = g_actors[actor_index].sflag;
 	info.m_storyid = g_actors[actor_index].storyid;
+	info.m_shape_bag = g_actors[actor_index].shape_bag;
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
 	info.m_game_day_loop = g_game_day_loop;
@@ -724,3 +746,7 @@ int actor_search( int actor_index, int target_actorid, int target_city_index )
 	return 0;
 }
 
+// 功能获取
+void city_function_open( City *pCity, int offset );
+void city_function_close( City *pCity, int offset );
+int city_function_check( City *pCity, int offset );

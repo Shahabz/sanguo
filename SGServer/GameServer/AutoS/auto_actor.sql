@@ -69,5 +69,6 @@ CREATE TABLE `actor` (
   `wishingday` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆道具哪天的',
   `wishingopen` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具开启',
   `wishingcd` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆寻宝冷却',
+  `shape_bag` int(11) NOT NULL DEFAULT '0' COMMENT '形象背包',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

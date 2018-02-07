@@ -467,6 +467,12 @@ end
 
 -- 单个道具刷新
 function BagDlgItemChange( offset )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if IsActive( m_uiItemScroll ) == false then
+		return;
+	end
 	-- 获取道具
     local pItem = GetItem():GetAnyItem( offset );
     if pItem == nil then

@@ -15,6 +15,7 @@ local m_canSelect = { 0,0,0 }
 
 -- 打开界面
 function MapCityFightDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_mapbattledlg" );
 	m_Dlg = eye.uiManager:Open( "MapCityFightDlg" );
 end
 
@@ -31,6 +32,7 @@ end
 function MapCityFightDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_mapbattledlg" );
 end
 
 ----------------------------------------

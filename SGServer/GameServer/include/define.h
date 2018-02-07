@@ -114,7 +114,7 @@
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
 #define NATIONHERO_BASEOFFSET		2000	// 国家名将索引起始
 #define NATIONHERO_MAX				15		// 国家名将数量
-#define SHAPE_MAX					64		// 形象
+#define SHAPE_MAX					32		// 形象
 #define ACTOR_BLACKLIST_MAX			50		// 黑名单
 #define FIGHT_JSON_MAX	16384	// 战斗json数据长度
 

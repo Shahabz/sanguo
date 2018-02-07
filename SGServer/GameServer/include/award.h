@@ -49,6 +49,14 @@
 #define AWARDKIND_PERMISSION_5	50055 // 装备回收图纸
 #define AWARDKIND_PERMISSION_6	50056 // 作坊预设
 
+#define AWARDKIND_SHAPE_0		51000 // 男1
+#define AWARDKIND_SHAPE_1		51001 // 男2
+#define AWARDKIND_SHAPE_2		51002 // 男3
+#define AWARDKIND_SHAPE_20		51020 // 女1
+#define AWARDKIND_SHAPE_21		51021 // 女2
+#define AWARDKIND_SHAPE_22		51022 // 女3
+#define AWARDKIND_SHAPE_END		51100 // 头像结束
+
 #define AWARDKIND_RES_SILVER	60001 // 奖励未启用资源点（民居）
 #define AWARDKIND_RES_WOOD		60002 // 奖励未启用资源点（木材厂）
 #define AWARDKIND_RES_FOOD		60003 // 奖励未启用资源点（农田）

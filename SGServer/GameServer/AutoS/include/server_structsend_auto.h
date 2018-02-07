@@ -195,6 +195,7 @@ struct _slk_NetS_ActorInfo {
 	char m_open_townking;	//服务器发送玩家基本信息-皇城开启
 	char m_game_day_loop;	//服务器发送玩家基本信息-天气
 	char m_open_town3;	//服务器发送玩家基本信息-攻克郡城
+	int m_shape_bag;	//服务器发送玩家基本信息-头像背包
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

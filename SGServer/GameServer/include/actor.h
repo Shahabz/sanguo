@@ -125,6 +125,7 @@ int actor_changename_gm( int actorid, char *pname );
 
 // 修改头像
 int actor_changeshape( int actor_index, char shape );
+void actor_change_open( int actor_index, char shape );
 
 // 修改签名
 int actor_changsign( int actor_index, char *sign );

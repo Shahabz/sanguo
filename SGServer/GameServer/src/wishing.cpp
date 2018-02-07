@@ -341,7 +341,7 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 	{
 		if ( item_lost( actor_index, kind, global.wishing_green_to_draw, PATH_WISHINGCHANGE ) < 0 )
 			return -1;
-		item_getitem( actor_index, 41, 1, -1, PATH_WISHINGCHANGE );
+		item_getitem( actor_index, 42, 1, -1, PATH_WISHINGCHANGE );
 	}
 	actor_add_uselimit_cd( actor_index, USELIMIT_CD_WISHING_CHANGE, global.wishing_change_cd );
 	wishing_change_sendinfo( actor_index );

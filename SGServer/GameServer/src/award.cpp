@@ -648,6 +648,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		actor_set_sflag( actor_index, ACTOR_SFLAG_MATERIAL_MAKEWILL, 1 );
 	}
+	else if ( kind >= AWARDKIND_SHAPE_0 && kind < AWARDKIND_SHAPE_END ) // 形象
+	{
+		actor_change_open( actor_index, kind - AWARDKIND_SHAPE_0 );
+	}
 	else if ( kind < 0 )
 	{ // 道具组
 		awardgroup_withindex( actor_index, -kind, city_mainlevel( g_actors[actor_index].city_index ), path, getinfo );

@@ -245,6 +245,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_open_townking = buffer:ReadSByte();
 	recvValue.m_game_day_loop = buffer:ReadSByte();
 	recvValue.m_open_town3 = buffer:ReadSByte();
+	recvValue.m_shape_bag = buffer:ReadInt();
 	return recvValue;
 end
 

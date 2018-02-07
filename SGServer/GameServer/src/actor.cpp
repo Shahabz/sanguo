@@ -922,6 +922,12 @@ int actor_new( int actor_index )
 	// 初始信息
 	g_actors[actor_index].level = 1;
 	g_actors[actor_index].token = 0;
+	g_actors[actor_index].shape_bag |= (1 << 0);
+	g_actors[actor_index].shape_bag |= (1 << 1);
+	g_actors[actor_index].shape_bag |= (1 << 2);
+	g_actors[actor_index].shape_bag |= (1 << 3);
+	g_actors[actor_index].shape_bag |= (1 << 4);
+	g_actors[actor_index].shape_bag |= (1 << 5);
 
 	// 给这个玩家创建一个城池
 	City city = { 0 };

@@ -101,6 +101,7 @@ function Player:Init()
 	self.m_open_town3		=	0;
 	self.m_open_town6		=	0;
 	self.m_open_townking	=	0;
+	self.m_shape_bag		=	0;
 	
 	self.m_view_zoneid		=	0;
 	self.m_award_mailid		=	int64.new(0);
@@ -162,6 +163,7 @@ function Player:Set( recvValue )
 	self.m_open_town3		=	recvValue.m_open_town3;
 	self.m_open_town6		=	recvValue.m_open_town6;
 	self.m_open_townking	=	recvValue.m_open_townking;
+	self.m_shape_bag		=	recvValue.m_shape_bag;
 end
 
 --

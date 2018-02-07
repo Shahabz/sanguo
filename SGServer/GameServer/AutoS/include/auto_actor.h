@@ -73,6 +73,7 @@ struct _actor {
 				int wishingday;	//聚宝盆道具哪天的
 				char wishingopen[9];	//聚宝盆道具开启
 				int wishingcd;	//聚宝盆寻宝冷却
+				int shape_bag;	//形象背包
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

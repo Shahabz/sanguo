@@ -52,9 +52,13 @@ function RecvActorNotify(recvValue)
 	
 	-- 头像改变
 	elseif msgid == NOTIFY_CHANGESHAPE then
-		GetPlayer().m_shape = value[2];
-		MainDlgSetHead();
-		PlayerDlgSet();
+		if value[1] == 0 then
+			GetPlayer().m_shape = value[2];
+			MainDlgSetHead();
+			PlayerDlgSet();
+		elseif value[1] == 1 then
+			GetPlayer().m_shape_bag	= value[2];
+		end
 	
 	-- NPC对话	
 	elseif msgid == NOTIFY_NPCTALK then
