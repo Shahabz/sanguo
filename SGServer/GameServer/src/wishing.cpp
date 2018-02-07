@@ -91,13 +91,21 @@ int wishing_shop_update( int actor_index )
 	g_actors[actor_index].wishingid[0] = wishing_shop_random( kindlist[5], kindnum[5], &allvalue[5] );
 	g_actors[actor_index].wishingopen[0] = 1;
 	g_actors[actor_index].wishingid[1] = wishing_shop_random( kindlist[4], kindnum[4], &allvalue[4] );
+	g_actors[actor_index].wishingopen[1] = 0;
 	g_actors[actor_index].wishingid[2] = wishing_shop_random( kindlist[4], kindnum[4], &allvalue[4] );
+	g_actors[actor_index].wishingopen[2] = 0;
 	g_actors[actor_index].wishingid[3] = wishing_shop_random( kindlist[3], kindnum[3], &allvalue[3] );
+	g_actors[actor_index].wishingopen[3] = 0;
 	g_actors[actor_index].wishingid[4] = wishing_shop_random( kindlist[3], kindnum[3], &allvalue[3] );
+	g_actors[actor_index].wishingopen[4] = 0;
 	g_actors[actor_index].wishingid[5] = wishing_shop_random( kindlist[2], kindnum[2], &allvalue[2] );
+	g_actors[actor_index].wishingopen[5] = 0;
 	g_actors[actor_index].wishingid[6] = wishing_shop_random( kindlist[2], kindnum[2], &allvalue[2] );
+	g_actors[actor_index].wishingopen[6] = 0;
 	g_actors[actor_index].wishingid[7] = wishing_shop_random( kindlist[2], kindnum[2], &allvalue[2] );
+	g_actors[actor_index].wishingopen[7] = 0;
 	g_actors[actor_index].wishingid[8] = wishing_shop_random( kindlist[2], kindnum[2], &allvalue[2] );
+	g_actors[actor_index].wishingopen[8] = 0;
 	return 0;
 }
 
@@ -109,6 +117,7 @@ int wishing_shop_sendinfo( int actor_index )
 	{ // 宝物已经过期了
 		wishing_shop_update( actor_index );
 		g_actors[actor_index].wishingday = nowday;
+		g_actors[actor_index].wishingcd = 0;
 	}
 
 	SLK_NetS_WishingShop pValue = { 0 };
@@ -120,7 +129,10 @@ int wishing_shop_sendinfo( int actor_index )
 		if ( id > 0 && id < g_wishing_shop_maxnum )
 		{
 			pValue.m_list[pValue.m_count].m_id = id;
-			pValue.m_list[pValue.m_count].m_open = g_actors[actor_index].wishingopen[tmpi];
+			if ( pValue.m_todaybuy == 1 )
+				pValue.m_list[pValue.m_count].m_open = 1;
+			else
+				pValue.m_list[pValue.m_count].m_open = g_actors[actor_index].wishingopen[tmpi];
 			pValue.m_list[pValue.m_count].m_color = (char)g_wishing_shop[id].color;
 			pValue.m_list[pValue.m_count].m_awardkind = g_wishing_shop[id].awardkind;
 			pValue.m_list[pValue.m_count].m_awardnum = g_wishing_shop[id].awardnum;
@@ -218,12 +230,8 @@ int wishing_shop_buy( int actor_index, int id )
 	// 给与奖励
 	award_getaward( actor_index, g_wishing_shop[id].awardkind, g_wishing_shop[id].awardnum, -1, PATH_WISHINGSHOP, NULL );
 	
-	// 全部打开
+	// 重置
 	g_actors[actor_index].wishingcd = 0;
-	for ( int tmpi = 0; tmpi < WISHINGSHOP_ITEM_MAX; tmpi++ )
-	{
-		g_actors[actor_index].wishingopen[tmpi] = 1;
-	}
 
 	// 刷新明天的宝物
 	wishing_shop_update( actor_index );
