@@ -197,6 +197,46 @@ function WishingDlgShow()
 	WishingDlgSelectType( 1 );
 end
 
+-- 选择分页
+function WishingDlgSelectType( type )
+	if type == m_SelectType then return end 
+	-- 聚宝盆
+	if type == 1 then
+		SetTrue(m_uiWishingScroll);
+		SetFalse(m_uiChangeresScroll); 	
+		SetFalse(m_uiPackScroll);
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetText( m_uiTitle, T(3004));
+		system_askinfo( ASKINFO_WISHING, "", 0 );
+		
+	-- 换宝
+	elseif type == 2 then
+		SetFalse(m_uiWishingScroll);
+		SetTrue(m_uiChangeresScroll);
+		SetFalse(m_uiPackScroll);
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetText( m_uiTitle, T(3005));
+		m_ChangeType = 1;
+		system_askinfo( ASKINFO_WISHING, "", 3 ); 
+		
+	-- 打包
+	elseif type == 3 then
+		SetFalse(m_uiWishingScroll);
+		SetFalse(m_uiChangeresScroll); 
+		SetTrue(m_uiPackScroll);
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
+		SetText( m_uiTitle, T(3006));
+		m_PackType = nil;
+		system_askinfo( ASKINFO_WISHING, "", 5 ); 		
+	end
+	m_SelectType = type;
+end
 
 -- m_count=0,m_list={m_id=0,m_color=0,m_awardkind=0,m_awardnum=0,m_costkind=0,m_costnum=0,m_open=0,[m_count]},m_openstamp=0,
 -- system_askinfo( ASKINFO_WISHING, "", 0 ); -- 获取宝物信息
@@ -211,7 +251,7 @@ end
 function WishingDlgWishingRecv( recvValue )
 	m_recvValue = recvValue;		
 	--设置数据
-	for i = 1, 9, 1 do
+	for i = 1, m_recvValue.m_count, 1 do
 		local index = WishingDlgGetRealIndex(i);
 		WishingDlgSetGrid( i, m_recvValue.m_list[index]);
 	end
@@ -345,6 +385,7 @@ function WishingDlgBuyGrid(index)
 	WishingDlgBuyWishing(index,false);
 end
 
+--购买宝箱
 function WishingDlgBuyWishing(index,IsOpen)
 	local RealIndex = WishingDlgGetRealIndex(index);
 	local CostNum = m_recvValue.m_list[RealIndex].m_costnum;
@@ -362,6 +403,7 @@ function WishingDlgBuyWishing(index,IsOpen)
 		end)
 	end
 end
+
 -- 创建查看物品数据
 function WishingDlgCreateInfoGrid(data)
 	local uiObj = m_ObjectPool:Get( "UIP_AwardGrid" );
@@ -379,6 +421,7 @@ function WishingDlgCreateInfoGrid(data)
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
 end
+
 -- 清空查看物品数据
 function WishingDlgClearInfoGrid()
 	local objs = {};
@@ -392,46 +435,7 @@ function WishingDlgClearInfoGrid()
 		end
 	end
 end
--- 选择分页
-function WishingDlgSelectType( type )
-	if type == m_SelectType then return end 
-	-- 聚宝盆
-	if type == 1 then
-		SetTrue(m_uiWishingScroll);
-		SetFalse(m_uiChangeresScroll); 	
-		SetFalse(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetText( m_uiTitle, T(3004));
-		system_askinfo( ASKINFO_WISHING, "", 0 );
-		
-	-- 换宝
-	elseif type == 2 then
-		SetFalse(m_uiWishingScroll);
-		SetTrue(m_uiChangeresScroll);
-		SetFalse(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetText( m_uiTitle, T(3005));
 
-		system_askinfo( ASKINFO_WISHING, "", 3 ); 
-		
-	-- 打包
-	elseif type == 3 then
-		SetFalse(m_uiWishingScroll);
-		SetFalse(m_uiChangeresScroll); 
-		SetTrue(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
-		SetText( m_uiTitle, T(3006));
-		system_askinfo( ASKINFO_WISHING, "", 5 ); 
-		m_PackType = nil;
-	end
-	m_SelectType = type;
-end
 
 --接收兑换信息
 function WishingDlgChangeRecv( recvValue )
@@ -440,6 +444,7 @@ function WishingDlgChangeRecv( recvValue )
 	m_ChangeCD = m_recvValue.m_cd;
 	WishingDlgSetChangeTitle()
 end
+
 --设置兑换标题或时间
 function WishingDlgSetChangeTitle()
 	if m_ChangeCD > 0 then 
@@ -455,6 +460,7 @@ function WishingDlgSetChangeTitle()
 		SetTrue(m_uiTitle);
 	end
 end
+
 -- 兑换界面View
 function WishingDlgChangeView()	
 	m_ChangeTab = {};	
@@ -483,19 +489,19 @@ function WishingDlgChangeView()
 		SetImage(m_uiChangeRes,ItemSprite(1));
 		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(1));
-		table.insert(m_ChangeTab,{m_kind = 41, m_Sprite = 41, m_Num = 1});	
+		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;
 	elseif m_ChangeType == 5 then 		--碎石兑换	
 		SetImage(m_uiChangeRes,ItemSprite(11));
 		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(11));
-		table.insert(m_ChangeTab,{m_kind = 41, m_Sprite = 41, m_Num = 1});	
+		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;	
 	elseif m_ChangeType == 6 then 		--朽木兑换
 		SetImage(m_uiChangeRes,ItemSprite(21));
 		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(21));
-		table.insert(m_ChangeTab,{m_kind = 41, m_Sprite = 41, m_Num = 1});	
+		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;
 	end
 	--设置可兑换资源的数量颜色
@@ -538,19 +544,25 @@ function WishingDlgSetChangeRes(index,data,bShow)
 	SetTrue(uiObj);
 	SetControlID( uiBtnChang, 110 + index );
 end
+
 -- 选择消耗的兑换资源
 function WishingDlgSelectRankCost(number)	
+	m_ChangeType = number;
+	WishingDlgRankCostView();
+	WishingDlgChangeView();
+	WishingDlgSelectCloseToggle();
+end
+
+-- 设置选择兑换的资源选中状态
+function WishingDlgRankCostView()
 	for i = 1,m_uiToglGroup.transform.childCount,1 do
 		local obj = m_uiToglGroup.transform:GetChild(i-1):Find("TogGround");
-		if i == number then
+		if i == m_ChangeType then
 			SetTrue(obj);
 		else
 			SetFalse(obj);
 		end
 	end	
-	m_ChangeType = number;
-	WishingDlgChangeView();
-	WishingDlgSelectCloseToggle();
 end
 
 --设置ToggleGroup的隐藏显示
@@ -558,11 +570,13 @@ function WishingDlgSetTogGroup()
 	local b_toggle = m_uiRankCostBtn.transform:GetComponent( "UIToggle" ).isOn;
 	if b_toggle == true then
 		SetTrue(m_uiToglGroup);
+		WishingDlgRankCostView();
 	else
 		SetFalse(m_uiToglGroup);
 	end
 end
 
+--隐藏ToggleGroup的
 function WishingDlgSelectCloseToggle()
 	local b_toggle = m_uiRankCostBtn.transform:GetComponent( "UIToggle");
 	if b_toggle.isOn == true then
@@ -641,7 +655,6 @@ end
 
 --接收打包信息
 function WishingDlgPackRecv(recvValue)
-	PrintTable(recvValue,"打包信息")
 	m_recvValue = recvValue;
 	WishingDlgPackChangeView()
 end
@@ -685,8 +698,6 @@ function WishingDlgPackInfoView(index)
 	SetFalse(m_uiPackChange);
 	SetTrue(m_uiPackInfo);
 	local data = m_recvValue.m_list[m_PackType];
-	warn("m_PackType:"..m_PackType)
-	PrintTable(data,"data")
 	WishingDlgSetPackGrid(data);
 	WishingDlgSetPackToGrid(data);
 end
@@ -764,7 +775,7 @@ function WishingDlgOnBtnPack()
 	end
 	--判断元宝
 	if data.m_token > GetPlayer().m_token then 
-		pop(T(3015));
+		JumpToken();
 		return;
 	end
 	

@@ -193,7 +193,7 @@ function Player:SetBuildingRes( kind, offset, info, active )
 		self.m_buildings_res[kind] = {};
 	end
 	self.m_buildings_res[kind][offset] = info;
-	--
+	-- 
 	local unitObj = City.BuildingAdd( info, active );
 	return unitObj;
 end
@@ -223,15 +223,170 @@ function Player:SetBuildingLevy( levynum )
 	local old 				= 	self.m_levynum;
 	self.m_levynum			=	levynum;
 	
-	if old > levynum then
-		local changenum = old - levynum;
-		for i=1, changenum, 1 do
-			City.BuildingSubLevy();
+	--[[征收次数=12时，所有的资源田（100%）上方都悬浮一个金色气泡
+征收次数=11时，所有的资源田（90%）显示为金色气泡，10%显示绿色气泡
+征收次数=10时，所有的资源田（80%）显示为金色气泡，20%显示绿色气泡
+征收次数=9时，所有的资源田（70%）显示为金色气泡，30%显示绿色气泡
+征收次数=8时，所有的资源田（60%）显示为金色气泡，40%显示绿色气泡
+征收次数=7时，所有的资源田（50%）显示为金色气泡，50%显示绿色气泡
+征收次数=6时，所有的资源田（40%）显示为金色气泡，60%显示绿色气泡
+征收次数=5时，所有的资源田（0%）显示为金色气泡，40%显示绿色气泡
+征收次数=4时，每种资源田各有4个绿色泡泡
+征收次数=3时，每种资源田各有3个绿色泡泡
+征收次数=2时，每种资源田各有2个绿色泡泡
+征收次数=1时，每种资源田各有1个绿色泡泡--]]
+	
+	-- 获取每种建筑数量
+	local total = 0
+	local res_goldnum = {}
+	local res_greennum = {}
+	local resnum = {}
+	for i=21, 24, 1 do
+		if self.m_buildings_res[i] then
+			resnum[i] = 0
+			res_goldnum[i] = 0
+			res_greennum[i] = 0;
+			for k, v in pairs( self.m_buildings_res[i] ) do
+				total = total + 1
+				resnum[i] = resnum[i] + 1
+			end
+		end
+	end
+	
+	local goldnum = 0
+	local greennum = 0
+	if levynum >= 12 then
+		goldnum = total
+		greennum = total - goldnum
+		
+	elseif levynum == 11 then
+		goldnum = math.floor(total*0.9)
+		greennum = total - goldnum
+
+	elseif levynum == 10 then
+		goldnum = math.floor(total*0.8)
+		greennum = total - goldnum
+		
+	elseif levynum == 9 then
+		goldnum = math.floor(total*0.7)
+		greennum = total - goldnum
+		
+	elseif levynum == 8 then
+		goldnum = math.floor(total*0.6)
+		greennum = total - goldnum
+		
+	elseif levynum == 7 then
+		goldnum = math.floor(total*0.5)
+		greennum = total - goldnum
+		
+	elseif levynum == 6 then
+		goldnum = math.floor(total*0.4)
+		greennum = total - goldnum
+		
+	elseif levynum == 5 then
+		goldnum = 0
+		greennum = math.floor(total*0.4)
+	
+	elseif levynum == 4 then
+		goldnum = 0
+		greennum = 4
+		
+	elseif levynum == 3 then
+		goldnum = 0
+		greennum = 3
+		
+	elseif levynum == 2 then
+		goldnum = 0
+		greennum = 2
+		
+	elseif levynum == 1 then
+		goldnum = 0
+		greennum = 1
+	else
+		goldnum = 0
+		greennum = 0
+	end
+	
+	-- 计算每一种资源金色数量
+	local temp = goldnum
+	for tmpi=1, goldnum do
+		for i=21, 24, 1 do
+			if res_goldnum[i] then
+				res_goldnum[i] = res_goldnum[i] + 1
+				temp = temp - 1
+				if temp <= 0 then
+					break
+				end
+			end
+		end
+		if temp <= 0 then
+			break
+		end
+	end
+	
+	-- 计算每一种资源绿色数量
+	if levynum > 4 then
+		local temp = greennum
+		for tmpi=1, greennum do
+			for i=21, 24, 1 do
+				if res_greennum[i] then
+					res_greennum[i] = res_greennum[i] + 1
+					temp = temp - 1
+					if temp <= 0 then
+						break
+					end
+				end
+			end
+			if temp <= 0 then
+				break
+			end
 		end
 	else
-		local changenum = levynum - old;
-		for i=1, changenum, 1 do
-			City.BuildingAddLevy();
+		for i=21, 24, 1 do
+			if res_greennum[i] then
+				res_greennum[i] = greennum
+			end
+		end
+	end
+		
+	-- 先全部隐藏
+	for i=21, 24, 1 do
+		if City.m_Buildings_res[i] then
+			for k, v in pairs( City.m_Buildings_res[i] ) do
+				local obj = v:Find("LevyMod").gameObject;
+				if obj and obj.activeSelf == true then
+					obj:SetActive( false );
+				end
+			end
+		end
+	end
+	
+	-- 根据数量进行显示
+	for i=21, 24, 1 do
+		if City.m_Buildings_res[i] then
+			for k, v in pairs( City.m_Buildings_res[i] ) do
+				local obj = v:Find("LevyMod").gameObject;
+				local drawingObj = v:Find("ResDrawingMod").gameObject;
+				if drawingObj == nil or drawingObj.activeSelf == false then
+					if obj then
+						
+						if res_goldnum[i] > 0 then
+							obj:SetActive( true );
+							res_goldnum[i] = res_goldnum[i] - 1
+							SetTrue( obj.transform:Find("Back/Gold") )
+							SetFalse( obj.transform:Find("Back/Green") )
+						elseif res_greennum[i] > 0 then
+							obj:SetActive( true );
+							res_greennum[i] = res_greennum[i] - 1
+							SetFalse( obj.transform:Find("Back/Gold") )
+							SetTrue( obj.transform:Find("Back/Green") )
+						else
+							obj:SetActive( false );
+						end
+						
+					end
+				end
+			end
 		end
 	end
 end

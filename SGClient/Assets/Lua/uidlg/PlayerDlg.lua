@@ -51,12 +51,14 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 			SettingDlgShow();
 		-- 反馈
 		elseif nControlID == 12 then
-		
+			pop( T(579) )
 		-- vip
 		elseif nControlID == 13 then
-		
+			VipDlgShow()
+			
 		-- 充值
 		elseif nControlID == 14 then
+			PayDlgShow()
 		
 		-- 购买体力
 		elseif nControlID == 15 then

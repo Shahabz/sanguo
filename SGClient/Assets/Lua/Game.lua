@@ -74,8 +74,9 @@ end
 -- 主逻辑秒
 GameManager.LastGameLogicTime = 0;
 GameManager.HeartTime = 0;
+GameManager.CityUpgradeTime = 0;
 function GameManager.GameLogic()
-	gamelog( "GameLogic:"..os.time() )
+	--gamelog( "GameLogic:"..os.time() )
 	-- 建造队列
 	if GetPlayer().m_worker_sec > 0 then
 		GetPlayer().m_worker_sec = GetPlayer().m_worker_sec - 1;
@@ -140,6 +141,13 @@ function GameManager.GameLogic()
 		sendValue.m_value = 0;
 		netsend_heart_C( sendValue )
 		GameManager.HeartTime = 0;
+	end
+	
+	-- 可升级箭头
+	GameManager.CityUpgradeTime = GameManager.CityUpgradeTime + 1
+	if GameManager.CityUpgradeTime > 60 then
+		City.UpgradeArrow()
+		GameManager.CityUpgradeTime = 0
 	end
 end
 

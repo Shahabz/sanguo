@@ -268,6 +268,11 @@ function City.BuildingAdd( info, active )
 		unitObj:GetComponent("CityBuilding").offset = offset;
 	end
 	
+	local arrow = unitObj.transform:Find("arrow")
+	if arrow ~= nil then
+		SetFalse( arrow )
+	end
+	
 	City.BuildingSetName( info );
 	City.BuildingSetTimer( info );
 	City.BuildingHideFree( kind, offset )
@@ -681,39 +686,6 @@ function City.BuildingHideQuick( kind )
 	quickObj.gameObject:SetActive(false);
 end
 
--- 征收次数
-function City.BuildingAddLevy()	
-	for i=21, 24, 1 do
-		if City.m_Buildings_res[i] then
-			for k, v in pairs( City.m_Buildings_res[i] ) do
-				local obj = v:Find("LevyMod").gameObject;
-				local drawingObj = v:Find("ResDrawingMod").gameObject;
-				if drawingObj == nil or drawingObj.activeSelf == false then
-					if obj and obj.activeSelf == false then
-						obj:SetActive( true );
-						break;
-					end
-				end
-			end
-		end
-	end
-end
-
--- 征收次数
-function City.BuildingSubLevy()
-	for i=21, 24, 1 do
-		if City.m_Buildings_res[i] then
-			for k, v in pairs( City.m_Buildings_res[i] ) do
-				local obj = v:Find("LevyMod").gameObject;
-				if obj and obj.activeSelf == true then
-					obj:SetActive( false );
-					break;
-				end
-			end
-		end
-	end
-end
-
 -- 城墙-补充城防头
 function City.GuardCallMod( unitObj, show )
 	if show == true then
@@ -921,3 +893,98 @@ function City.BuildingQuestMod( questid )
 	local ShareData = City.m_BuildingQuestMod.transform:GetComponent("ShareData");
 	ShareData.intValue[0] = questid;
 end
+
+-- 检测可升级箭头
+function City.UpgradeArrow()
+	-- 普通建筑
+	for k, v in pairs( GetPlayer().m_buildings ) do
+		if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
+			local unitObj = City.m_Buildings[v.m_kind]
+			local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
+			if unitObj ~= nil and buildingConfig ~= nil then
+				local arrow = unitObj.transform:Find("arrow")
+				-- 满足升级
+				if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+					GetPlayer().m_level >= buildingConfig.actorlevel and
+					GetPlayer().m_silver >= buildingConfig.silver and
+					GetPlayer().m_wood >= buildingConfig.wood and
+					GetPlayer().m_food >= buildingConfig.food and
+					GetPlayer().m_iron >= buildingConfig.iron then
+
+					if arrow ~= nil then
+						SetTrue( arrow )
+					end
+			
+				-- 不满足升级
+				else
+					if arrow ~= nil then
+						SetFalse( arrow )
+					end
+				end
+			end
+		end
+	end
+	
+	-- 资源建筑
+	for kind=BUILDING_Silver, BUILDING_Iron do
+		for k, v in pairs( GetPlayer().m_buildings_res[kind] ) do
+			if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
+				local unitObj = City.m_Buildings_res[v.m_kind][v.m_offset]
+				local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
+				if unitObj ~= nil and buildingConfig ~= nil then
+					local arrow = unitObj.transform:Find("arrow")
+					-- 满足升级
+					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+						GetPlayer().m_level >= buildingConfig.actorlevel and
+						GetPlayer().m_silver >= buildingConfig.silver and
+						GetPlayer().m_wood >= buildingConfig.wood and
+						GetPlayer().m_food >= buildingConfig.food and
+						GetPlayer().m_iron >= buildingConfig.iron then
+			
+						if arrow ~= nil then
+							SetTrue( arrow )
+						end
+				
+					-- 不满足升级
+					else
+						if arrow ~= nil then
+							SetFalse( arrow )
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	-- 正在升级的，不显示箭头
+	local kind = GetPlayer().m_worker_kind
+	local offset = GetPlayer().m_worker_offset
+	if kind > 0 then
+		local unitObj = nil
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			unitObj = City.m_Buildings_res[kind][offset]
+		else
+			unitObj = City.m_Buildings[kind]
+		end
+		local arrow = unitObj.transform:Find("arrow")
+		if arrow ~= nil then
+			SetFalse( arrow )
+		end
+	end
+	
+	kind = GetPlayer().m_worker_kind_ex
+	offset = GetPlayer().m_worker_offset_ex
+	if kind > 0 then
+		local unitObj = nil
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			unitObj = City.m_Buildings_res[kind][offset]
+		else
+			unitObj = City.m_Buildings[kind]
+		end
+		local arrow = unitObj.transform:Find("arrow")
+		if arrow ~= nil then
+			SetFalse( arrow )
+		end
+	end
+end
+

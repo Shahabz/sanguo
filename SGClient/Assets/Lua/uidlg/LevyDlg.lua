@@ -76,7 +76,8 @@ function LevyDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 购买资源
 		elseif nControlID == 2 then
-		
+			ShopDlgShow()
+			
 		-- 内政总览
 		elseif nControlID == 3 then
 			GovInfoDlgShow()

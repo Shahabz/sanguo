@@ -171,17 +171,17 @@ MapUnitEventNameList = {
 -- 范围颜色
 MapUnitRangeColor = {
 [0] = 0xecc244ff,
-[1] = 0x25c9ffff,
-[2] = 0xa01515ff,
-[3] = 0x03de27ff,
+[1] = 0x49def9ff,
+[2] = 0xf01735ff,
+[3] = 0x38f62eff,
 }
 
 -- 范围颜色
 MapUnitRangeColorA = {
 [0] = 0xecc24432,
-[1] = 0x25c9ff32,
-[2] = 0xa0151532,
-[3] = 0x03de2732,
+[1] = 0x49def932,
+[2] = 0xf9494932,
+[3] = 0x38f62e32,
 }
 
 -- 军队状态名称

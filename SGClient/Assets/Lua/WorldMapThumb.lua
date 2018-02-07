@@ -297,6 +297,7 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		end
 		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
 	end
+
 end
 
 -- 设置城镇的位置

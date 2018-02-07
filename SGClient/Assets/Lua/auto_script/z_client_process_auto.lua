@@ -219,6 +219,9 @@ function proc_buildinglist_C( recvValue )
 		GameManager.writeini( "SETTING_AUTOSUPPLY", 0 )
 	end
 	
+	-- 可升级箭头
+	City.UpgradeArrow()
+	
 	-- 关闭加载面板
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();
