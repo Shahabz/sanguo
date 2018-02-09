@@ -221,7 +221,8 @@ public class ResourceManager : MonoBehaviour
                 else
                 {
                     // 读到了就添加缓存
-                    m_LoadedAssetBundles.Add( assetBundleName, new AssetBundleInfo( assetBundle ) );
+					bundle = new AssetBundleInfo( assetBundle );
+					m_LoadedAssetBundles.Add( assetBundleName, bundle );
                 }
             }
             return bundle;
@@ -345,6 +346,9 @@ public class ResourceManager : MonoBehaviour
         if ( bundleInfo != null && bundleInfo.m_AssetBundle != null )
         {
             UnityEngine.Object loadedobj = bundleInfo.m_AssetBundle.LoadAsset( assetName, type );
+			if (loadedobj == null) {
+				LogUtil.GetInstance().WriteGame( "loadedobj == null:"+assetName );
+			}
             return loadedobj;
         }
 
@@ -357,6 +361,9 @@ public class ResourceManager : MonoBehaviour
 
         // 读取assetbundle里的这个文件
         UnityEngine.Object loadobj = bundleInfo.m_AssetBundle.LoadAsset( assetName, type );
+		if (loadobj == null) {
+			LogUtil.GetInstance().WriteGame( "loadobj == null:"+assetName );
+		}
         return loadobj;
     }
 
@@ -478,8 +485,8 @@ public class ResourceManager : MonoBehaviour
     {
         if ( m_resmap_object == null || m_resmap_object.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
-            LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
+			Debug.Log( "LoadObject:"+reskeyname + " is not found" );
+			LogUtil.GetInstance().WriteGame( "LoadObject:"+ reskeyname + " is not found" );
             return null;
         }
 
@@ -518,8 +525,8 @@ public class ResourceManager : MonoBehaviour
 #endif
         if ( m_resmap_object == null || m_resmap_object.ContainsKey( reskeyname ) == false )
         {
-            Debug.Log( reskeyname + " is not found" );
-            LogUtil.GetInstance().WriteGame( reskeyname + " is not found" );
+			Debug.Log( "LoadAny:"+reskeyname + " is not found" );
+			LogUtil.GetInstance().WriteGame( "LoadAny:"+reskeyname + " is not found" );
             return default( T );
         }
 

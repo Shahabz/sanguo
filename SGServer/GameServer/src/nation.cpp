@@ -1996,6 +1996,7 @@ int nation_official_replace_up( int actor_index, int target_actorid )
 		actor_notify_value( g_city[city_index].actor_index, NOTIFY_VALUECHANGE, 2, pValue, NULL );
 	}
 	nation_official_replace_sendlist( actor_index );
+	nation_official_sendlist( actor_index );
 	return 0;
 }
 
@@ -2045,6 +2046,7 @@ int nation_official_replace_down( int actor_index, int target_actorid )
 		actor_notify_value( g_city[city_index].actor_index, NOTIFY_VALUECHANGE, 2, pValue, NULL );
 	}
 	nation_official_replace_sendlist( actor_index );
+	nation_official_sendlist( actor_index );
 	return 0;
 }
 

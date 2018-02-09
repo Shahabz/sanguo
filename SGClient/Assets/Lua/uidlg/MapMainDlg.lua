@@ -16,6 +16,11 @@ local m_uiActivity1 = nil; --UnityEngine.GameObject
 local m_uiActivity2 = nil; --UnityEngine.GameObject
 local m_uiGatherLayer = nil; --UnityEngine.GameObject
 local m_uiGatherLayerGrid = nil; --UnityEngine.GameObject
+local m_uiMiniMapLayer = nil; --UnityEngine.GameObject
+local m_uiZoneList = nil; --UnityEngine.GameObject
+local m_uiCityList = nil; --UnityEngine.GameObject
+local m_uiUIP_City = nil; --UnityEngine.GameObject
+local m_uiMyPosFlag = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
@@ -27,11 +32,13 @@ local m_WorldQuestCache = {}
 local m_bHeroLayerShow = false;
 local m_bNationLayerShow = false;
 local m_TreasureActivity = {};
+local m_show = 0
 g_targetEnemyPos = {}
 
 -- 打开界面
 function MapMainDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MapMainDlg" );
+	m_show = 1
 end
 
 -- 隐藏界面
@@ -39,7 +46,7 @@ function MapMainDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+
 	m_uiLeftButton.transform:GetComponent( "UITweenRectPosition" ):ToInit();
 	m_uiHeroLayer.transform:GetComponent( "UITweenRectPosition" ):ToInit();
 	m_bHeroLayerShow = false;
@@ -49,12 +56,14 @@ function MapMainDlgClose()
 	m_bNationLayerShow = false
 	
 	eye.uiManager:Close( "MapMainDlg" );
+	m_show = 0
 end
 
 -- 删除界面
 function MapMainDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_show = 0
 end
 
 ----------------------------------------
@@ -117,6 +126,10 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 			else
 				TreasureAwardDlgShow();
 			end
+		
+		-- 区域地图
+		elseif nControlID == 100 then
+			MapZoneDlgShow();
 			
 		-- 撤回
 		elseif nControlID >= CONTROLOFFSET_REBACK and nControlID < CONTROLOFFSET_QUICK then
@@ -161,10 +174,16 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiActivity2 = objs[13];
 	m_uiGatherLayer = objs[14];
 	m_uiGatherLayerGrid = objs[15];
-	
+	m_uiMiniMapLayer = objs[16];
+	m_uiZoneList = objs[17];
+	m_uiCityList = objs[18];
+	m_uiUIP_City = objs[19];
+	m_uiMyPosFlag = objs[20];
+
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_TownInfo", 4, 4, m_uiUIP_TownInfo);
+	m_ObjectPool:CreatePool("UIP_City", 10, 10, m_uiUIP_City);
 end
 
 -- 界面初始化时调用
@@ -799,48 +818,83 @@ function MapMainDlgActivityTreasureEndStamp()
 	end
 	return m_TreasureActivity.m_endstamp;
 end
-
+	
 -- 小地图
-function MainDlgMiniMapInit()
-	for j=1, 5, 1 do
-		for i=1, 5, 1 do
-			local tmx = GameObject.Instantiate( m_uiMiniMap.m_uiUIP_MiniTmx );
-			tmx.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
-			tmx.transform.localScale = Vector3.one;
-			tmx.transform.localPosition = Vector3.New( (WorldMap.m_nMaxWidth*1024)/2/100 + (i-1)*TMX_WIDTH*1024/2/100 - (j-1)*TMX_WIDTH*1024/2/100,
-												   -(i-1)*TMX_HEIGHT*512/2/100 - (j-1)*TMX_HEIGHT*512/2/100, 0 );
-			SetTrue( tmx )
+function MapMainDlgMiniMapChangeZone( zoneid, open )
+	-- 切换地区先都隐藏
+	for i = 0 ,m_uiZoneList.transform.childCount - 1 do
+		SetFalse( m_uiZoneList.transform:GetChild(i).gameObject )
+	end
+	MapMainDlgMiniMapClearCity()
+	local objname = "Zone"..zoneid
+	if open == 1 then
+		for i = 0 ,m_uiZoneList.transform.childCount - 1 do
+			local obj = m_uiZoneList.transform:GetChild(i).gameObject
+			if obj.name == objname then
+				SetTrue( obj )
+			end
 		end
 	end
-	-- 对象池
-	m_uiMiniMap.m_ObjectPool = m_uiMiniMap.m_uiMoveLayer.transform.parent:GetComponent( typeof(ObjectPoolManager) );
-	m_uiMiniMap.m_ObjectPool:CreatePool("m_uiUIP_ZoneUnit", 100, 100, m_uiMiniMap.m_uiUIP_ZoneUnit);
+	MapMainDlgMiniMapCreateMyPos()
 end
-function MapMainDlgMiniMapChangeZone()
-	--MainDlgMiniMapClearUnit()
-	--m_uiMoveLayer
-	--m_uiMiniMap.m_uiMoveLayer.transform:Find( "MapBorder" ):GetComponent("MapBorder"):SetSize( 110 );
-end
-function MapMainDlgMiniMapMove()
 
+-- 移动
+function MapMainDlgMiniMapMove( cameraPosX, cameraPosY )
+	if m_show == 0 then
+		return
+	end
+	m_uiMiniMapLayer.transform.localPosition = Vector2( (cameraPosX-640)*5, -(cameraPosY+320)*5 )
 end
-function MapMainDlgMiniMapClearUnit()
+
+-- 清空城池
+function MapMainDlgMiniMapClearCity()
 	local objs = {};
-	for i = 0 ,m_uiMiniMap.m_uiMoveLayer.transform.childCount - 1 do
-		table.insert( objs, m_uiMiniMap.m_uiMoveLayer.transform:GetChild(i).gameObject )
+	for i = 0, m_uiCityList.transform.childCount - 1 do
+		table.insert( objs, m_uiCityList.transform:GetChild(i).gameObject )
     end
 	for k, v in pairs(objs) do
-		local obj = v;
-		if obj.name == "m_uiUIP_ZoneUnit(Clone)" then
-			m_ObjectPool:Release( "m_uiUIP_ZoneUnit", obj );
-		end
+		m_ObjectPool:Release( "UIP_City", v );
     end
 end
+
+-- 创建城池
 -- {m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]}
-function MapMainDlgMiniMapAddUnit( recvValue )
-	--print( recvValue.m_posx..","..recvValue.m_posy )
-	--local uiObj = m_uiMiniMap.m_ObjectPool:Get( "m_uiUIP_ZoneUnit" );
-	--uiObj.transform:SetParent( m_uiMiniMap.m_uiMoveLayer.transform );
-	--uiObj.transform.localScale = Vector3.one;
-	--uiObj.transform.localPosition = Vector3.New( recvValue.m_posx, recvValue.m_posy )
+function MapMainDlgMiniMapAddCity( recvValue )
+	if m_show == 0 then
+		return
+	end
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
+	local x = 0-(cameraPosX-640)*5
+	local y = (cameraPosY+320)*5
+	
+	local uiObj = m_ObjectPool:Get( "UIP_City" );
+	uiObj.transform:SetParent( m_uiCityList.transform );
+	uiObj.transform.localScale = Vector3.one;
+	uiObj.transform.localPosition = Vector2( x, y )
+	uiObj.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColor[recvValue.m_nation] )
+	--uiObj.transform:GetComponent( typeof(Image) ).color = MapUnitRangeColorB[recvValue.m_nation]
+end
+
+-- 创建我的城池
+function MapMainDlgMiniMapCreateMyPos()
+	if m_show == 0 then
+		return
+	end
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
+	local x = 0-(cameraPosX-640)*5
+	local y = (cameraPosY+320)*5
+	m_uiMyPosFlag.transform.localPosition = Vector2( x, y )
+end
+
+-- 区域范围
+-- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
+function MapMainDlgMiniMapSetTown( recvValue )
+	if WorldMap.m_nZoneID ~= 13 then
+		return
+	end
+	local uiZone13 = m_uiZoneList.transform:Find("Zone13")
+	for i=1, recvValue.m_count, 1 do
+		local uiTown = uiZone13.transform:Find( "Town"..recvValue.m_list[i].m_townid )
+		uiTown.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColorA[recvValue.m_list[i].m_nation] )
+	end
 end

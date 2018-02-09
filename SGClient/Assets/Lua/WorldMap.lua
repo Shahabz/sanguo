@@ -262,8 +262,6 @@ function WorldMap.Clear()
     
     m_LastPosX = nil;
     m_LastPosY = nil;
-	
-	WorldMapMini.Delete()
 	--collectgarbage("collect");
 end
 
@@ -500,9 +498,6 @@ function WorldMap.Start( Prefab )
 	-- 显示世界地图界面
 	MainDlgShowMap();
 	
-	-- 显示小地图
-	WorldMapMini.Create()
-	
 	-- 任务检查
 	QuestClickCheck( 2 )
 	
@@ -705,6 +700,9 @@ function WorldMap.ViewChangeFrame()
 			WorldMap.OnClickClose();
 		end
 	end
+	
+	-- 小地图更新
+	MapMainDlgMiniMapMove( cameraPosX, cameraPosY )
 	
 	-- 操作界面更新坐标
 	--MapClickModCoordinate( gameCoorX, gameCoorY );
@@ -1219,7 +1217,7 @@ function WorldMap.OnCityMoved( unit_index, gameCoorX, gameCoorY )
 		WorldMap.UpdateArrow();
 		GetPlayer().m_posx = gameCoorX;
 		GetPlayer().m_posy = gameCoorY;
-		
+		MapMainDlgMiniMapCreateMyPos()
         -- 特效
         --local obj = GameObject.Instantiate( LoadPrefab( "Effect_City_Change_Position_Smoke" ) );
         --obj.transform.position = Vector3.New( WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY, WorldMap.m_nMyCityCameraY );

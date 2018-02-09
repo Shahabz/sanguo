@@ -971,6 +971,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			tiance_quest_sendinfo( actor_index );
 		}
+		else if ( pvalue[0] == 1 )
+		{
+			tiance_quest_get( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			tiance_quest_complete( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			tiance_quest_tech_activate( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

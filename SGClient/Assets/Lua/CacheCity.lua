@@ -13,6 +13,7 @@ City.m_BuildingWorkerQuickMod = nil;
 City.m_Fires = nil
 City.m_Buildings = {};
 City.m_Buildings_res = {};
+City.m_InitOver = 0;
 
 -- 初始化
 function City.Init()
@@ -899,40 +900,14 @@ function City.UpgradeArrow()
 	if Const.NetStatus < 3 then
         return;
     end
-	-- 普通建筑
-	for k, v in pairs( GetPlayer().m_buildings ) do
-		if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
-			local unitObj = City.m_Buildings[v.m_kind]
-			local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
-			if unitObj ~= nil and buildingConfig ~= nil then
-				local arrow = unitObj.transform:Find("arrow")
-				-- 满足升级
-				if GetPlayer():CityLevel() >= buildingConfig.citylevel and
-					GetPlayer().m_level >= buildingConfig.actorlevel and
-					GetPlayer().m_silver >= buildingConfig.silver and
-					GetPlayer().m_wood >= buildingConfig.wood and
-					GetPlayer().m_food >= buildingConfig.food and
-					GetPlayer().m_iron >= buildingConfig.iron then
-
-					if arrow ~= nil then
-						SetTrue( arrow )
-					end
-			
-				-- 不满足升级
-				else
-					if arrow ~= nil then
-						SetFalse( arrow )
-					end
-				end
-			end
-		end
+	if City.m_InitOver == 0 then
+		return
 	end
-	
-	-- 资源建筑
-	for kind=BUILDING_Silver, BUILDING_Iron do
-		for k, v in pairs( GetPlayer().m_buildings_res[kind] ) do
+	-- 普通建筑
+	if GetPlayer().m_buildings then
+		for k, v in pairs( GetPlayer().m_buildings ) do
 			if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
-				local unitObj = City.m_Buildings_res[v.m_kind][v.m_offset]
+				local unitObj = City.m_Buildings[v.m_kind]
 				local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
 				if unitObj ~= nil and buildingConfig ~= nil then
 					local arrow = unitObj.transform:Find("arrow")
@@ -943,7 +918,7 @@ function City.UpgradeArrow()
 						GetPlayer().m_wood >= buildingConfig.wood and
 						GetPlayer().m_food >= buildingConfig.food and
 						GetPlayer().m_iron >= buildingConfig.iron then
-			
+
 						if arrow ~= nil then
 							SetTrue( arrow )
 						end
@@ -952,6 +927,41 @@ function City.UpgradeArrow()
 					else
 						if arrow ~= nil then
 							SetFalse( arrow )
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	-- 资源建筑
+	if GetPlayer().m_buildings_res then
+		for kind=BUILDING_Silver, BUILDING_Iron do
+			if GetPlayer().m_buildings_res[kind] then
+				for k, v in pairs( GetPlayer().m_buildings_res[kind] ) do
+					if g_building_upgrade[v.m_kind] ~= nil and v.m_level < #g_building_upgrade[v.m_kind] then
+						local unitObj = City.m_Buildings_res[v.m_kind][v.m_offset]
+						local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
+						if unitObj ~= nil and buildingConfig ~= nil then
+							local arrow = unitObj.transform:Find("arrow")
+							-- 满足升级
+							if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+								GetPlayer().m_level >= buildingConfig.actorlevel and
+								GetPlayer().m_silver >= buildingConfig.silver and
+								GetPlayer().m_wood >= buildingConfig.wood and
+								GetPlayer().m_food >= buildingConfig.food and
+								GetPlayer().m_iron >= buildingConfig.iron then
+					
+								if arrow ~= nil then
+									SetTrue( arrow )
+								end
+						
+							-- 不满足升级
+							else
+								if arrow ~= nil then
+									SetFalse( arrow )
+								end
+							end
 						end
 					end
 				end

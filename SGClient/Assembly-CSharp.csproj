@@ -321,7 +321,6 @@
      <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
      <Compile Include="Assets\Source\Generate\UtilsWrap.cs" />
      <Compile Include="Assets\Source\Generate\WorldMapCameraWrap.cs" />
-     <Compile Include="Assets\Source\Generate\WorldMapMiniCameraWrap.cs" />
      <Compile Include="Assets\Source\Generate\WorldMapThumbCameraWrap.cs" />
      <Compile Include="Assets\Source\Generate\YlyAssetIdentifyWrap.cs" />
      <Compile Include="Assets\Source\Generate\YlyDelegateUtilWrap.cs" />
@@ -346,8 +345,6 @@
      <Compile Include="Assets\Source\Map\MapUnitMove.cs" />
      <Compile Include="Assets\Source\Map\WorldMap.cs" />
      <Compile Include="Assets\Source\Map\WorldMapCamera.cs" />
-     <Compile Include="Assets\Source\Map\WorldMapMini.cs" />
-     <Compile Include="Assets\Source\Map\WorldMapMiniCamera.cs" />
      <Compile Include="Assets\Source\Map\WorldMapThumb.cs" />
      <Compile Include="Assets\Source\Map\WorldMapThumbCamera.cs" />
      <Compile Include="Assets\Source\Net\ByteBuffer.cs" />
@@ -524,7 +521,6 @@
      <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
      <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
-     <None Include="Assets\StreamingAssets\android_files.txt" />
      <None Include="Assets\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\PackAssets\Data\audio.txt" />
      <None Include="Assets\PackAssets\Shader\UIRenderTexture.shader" />
@@ -545,6 +541,7 @@
      <None Include="Assets\PackAssets\Tiled2Unity\Shaders\shaDepth.shader" />
      <None Include="Assets\PackAssets\Shader\ImageSoftMask.shader" />
      <None Include="Assets\PackAssets\Shader\UI-Default.shader" />
+     <None Include="Assets\StreamingAssets\osx_files.txt" />
      <None Include="Assets\PackAssets\Shader\SpriteMask.shader" />
      <None Include="Assets\PackAssets\Shader\ParticleMask&amp;Scaler_Additive.shader" />
      <None Include="Assets\PackAssets\Shader\ImageMask.shader" />

@@ -114,7 +114,6 @@
      <Compile Include="Assets\ToLua\Editor\ToLuaExport.cs" />
      <Compile Include="Assets\ToLua\Editor\ToLuaMenu.cs" />
      <Compile Include="Assets\ToLua\Editor\ToLuaTree.cs" />
-     <None Include="Assets\StreamingAssets\android_files.txt" />
      <None Include="Assets\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\PackAssets\Data\audio.txt" />
      <None Include="Assets\PackAssets\Shader\UIRenderTexture.shader" />
@@ -135,6 +134,7 @@
      <None Include="Assets\PackAssets\Tiled2Unity\Shaders\shaDepth.shader" />
      <None Include="Assets\PackAssets\Shader\ImageSoftMask.shader" />
      <None Include="Assets\PackAssets\Shader\UI-Default.shader" />
+     <None Include="Assets\StreamingAssets\osx_files.txt" />
      <None Include="Assets\PackAssets\Shader\SpriteMask.shader" />
      <None Include="Assets\PackAssets\Shader\ParticleMask&amp;Scaler_Additive.shader" />
      <None Include="Assets\PackAssets\Shader\ImageMask.shader" />
@@ -297,10 +297,6 @@
  <Reference Include="UnityEditor.iOS.Extensions.Common">
  <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{B27AE1C6-3D69-624C-ACFA-08F8EF6C961B}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

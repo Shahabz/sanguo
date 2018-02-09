@@ -218,7 +218,7 @@ function proc_buildinglist_C( recvValue )
 	else
 		GameManager.writeini( "SETTING_AUTOSUPPLY", 0 )
 	end
-	
+	City.m_InitOver = 1;
 	-- ¿ÉÉý¼¶¼ýÍ·
 	City.UpgradeArrow()
 	
@@ -1212,16 +1212,17 @@ function proc_mapzonechange_C( recvValue )
 		MainDlgSetZoneName( name.."("..T(936)..")" )
 	end
 	WorldMap.m_nZoneID = recvValue.m_zoneid;
-	MapMainDlgMiniMapChangeZone()
+	MapMainDlgMiniMapChangeZone( recvValue.m_zoneid, recvValue.m_open )
 end
 
 -- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
 function proc_mapzoneunitlist_C( recvValue )
 	-- process.
-	for i=1, recvValue.m_count, 1 do
-		MapMainDlgMiniMapAddUnit( recvValue )
+	if WorldMapThumb.SetCityInfo( recvValue ) == false then
+		for i=1, recvValue.m_count, 1 do
+			MapMainDlgMiniMapAddCity( recvValue.m_list[i] )
+		end
 	end
-	WorldMapThumb.SetCityInfo( recvValue )
 end
 
 -- m_posx=0,m_posy=0,m_nation=0,m_level=0,
@@ -1566,7 +1567,9 @@ end
 -- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
 function proc_mapzonetownlist_C( recvValue )
 	-- process.
-	WorldMapThumb.SetTownInfo( recvValue )
+	if WorldMapThumb.SetTownInfo( recvValue ) == false then
+		MapMainDlgMiniMapSetTown( recvValue )
+	end
 end
 
 -- m_townid=0,m_nation=0,

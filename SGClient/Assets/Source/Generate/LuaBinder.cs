@@ -94,7 +94,6 @@ public static class LuaBinder
 		MapBorderWrap.Register(L);
 		MapUnitMoveWrap.Register(L);
 		WorldMapCameraWrap.Register(L);
-		WorldMapMiniCameraWrap.Register(L);
 		WorldMapThumbCameraWrap.Register(L);
 		ScreenBlurWrap.Register(L);
 		UIPrimitiveBaseWrap.Register(L);

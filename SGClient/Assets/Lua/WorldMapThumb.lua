@@ -271,7 +271,7 @@ end
 -- m_count=0,m_list={m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]},
 function WorldMapThumb.SetCityInfo( recvValue )
 	if ThumbCityRoot == nil then
-		return;
+		return false;
 	end
 
 	for tmpi=1, recvValue.m_count, 1 do
@@ -297,18 +297,18 @@ function WorldMapThumb.SetCityInfo( recvValue )
 		end
 		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
 	end
-
+	return true
 end
 
 -- 设置城镇的位置
 -- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
 function WorldMapThumb.SetTownInfo( recvValue )
 	if ThumbDisplayPrefab == nil then
-		return;
+		return false;
 	end
 	if recvValue == nil then
 		system_askinfo( ASKINFO_MAPZONE, "", 1 );
-		return;
+		return true;
 	end
 	if recvValue.m_zoneid == 13 then
 		SetFalse( ThumbDisplayPrefab.transform:Find("Back1") )
@@ -369,6 +369,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 			SetFalse( thumbObj.transform:Find( "Protect" ) )
 		end
 	end
+	return true
 end
 
 -- 显示关闭蒙版

@@ -184,6 +184,13 @@ MapUnitRangeColorA = {
 [3] = 0x38f62e32,
 }
 
+MapUnitRangeColorB = {
+[0] = Color.yellow,
+[1] = Color.blue,
+[2] = Color.red,
+[3] = Color.green,
+}
+
 -- 军队状态名称
 MapUnitArmyStateNameList = {
 [ARMY_STATE_READY]              = 2779,

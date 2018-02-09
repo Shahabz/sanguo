@@ -258,6 +258,11 @@ end
 -- 接收官员
 -- m_count=0,m_list={m_official=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_zone=0,[m_count]},m_endtime=0,
 function NationOfficialDlgOfficialRecv( recvValue )
+	for i=0, 9, 1 do
+		local uiObj = m_uiOfficialContent.transform:GetChild( i )
+		SetFalse( uiObj )
+	end
+	
 	if recvValue.m_count == 0 then
 		return
 	end
