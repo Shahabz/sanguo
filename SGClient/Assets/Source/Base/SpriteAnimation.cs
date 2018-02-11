@@ -13,7 +13,9 @@ public class SpriteAnimation : MonoBehaviour
 
 	private float mDelta = 0;
 
-	public float FPS = 1/10;
+	public float FPS = 0.1f;
+	public float MinFPS = 0.0f;
+	public float MaxFPS = 0.0f;
 
 	public List<Sprite> SpriteFrames;
 
@@ -33,6 +35,10 @@ public class SpriteAnimation : MonoBehaviour
 
 	void Awake ()
 	{
+		if ( MinFPS > 0.0 && MaxFPS > 0 )
+		{
+			FPS = Random.Range(MinFPS, MaxFPS);
+		}
 		_spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
 

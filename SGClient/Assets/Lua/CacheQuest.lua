@@ -27,7 +27,8 @@ QUEST_DATATYPE_WISHING				=	31	-- 聚宝盆N次 datatype=21 datakind=0 needvalue
 QUEST_DATATYPE_CITYFIGHT			=	32	-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
 QUEST_DATATYPE_EQUIP_UP				=	33	-- 给N武将穿N装备 datatype=33 datakind=武将kind dataoffset=装备编号
 QUEST_DATATYPE_BUILDING_UPGRADE		=	34	-- 升级操作 datatype=34 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
-
+QUEST_DATATYPE_TRAIN_OP				=	35	-- 操作-募兵N兵种N数量 datatype=24 datakind=兵种（1，2，3） needvalue=数量
+QUEST_DATATYPE_TRAINCOUNT_OP		=	36	-- 操作-募兵N次 datatype=25 datakind=0 needvalue=数量
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -90,9 +91,9 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 94 )
 	elseif datatype == QUEST_DATATYPE_EQUIP_COLORWASH then-- 将N品质装备的属性洗炼至满级 datatype=13 datakind=颜色 needvalue=1
 		typename = Localization.text_quest( 94 )
-	elseif datatype == QUEST_DATATYPE_TRAIN then-- 募兵N兵种N数量 datatype=14 datakind=兵种（1，2，3） needvalue=数量
+	elseif datatype == QUEST_DATATYPE_TRAIN or datatype == QUEST_DATATYPE_TRAIN_OP then-- 募兵N兵种N数量 datatype=14 datakind=兵种（1，2，3） needvalue=数量
 		typename = Localization.text_quest( 93 )
-	elseif datatype == QUEST_DATATYPE_TRAINCOUNT then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
+	elseif datatype == QUEST_DATATYPE_TRAINCOUNT or datatype == QUEST_DATATYPE_TRAINCOUNT_OP then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
 		typename = Localization.text_quest( 93 )
 	elseif datatype == QUEST_DATATYPE_CITY_TECH then-- 研究N科技N级 datatype=16 datakind=科技ID needvalue=等级
 		typename = Localization.text_quest( 96 )
@@ -164,9 +165,9 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 12, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_EQUIP_COLORWASH then-- 将N品质装备的属性洗炼至满级 datatype=13 datakind=颜色 needvalue=1
 		name = name..FQUEST( 13, datakind );
-	elseif datatype == QUEST_DATATYPE_TRAIN then-- 募兵N兵种N数量 datatype=14 datakind=兵种（1，2，3） needvalue=数量
+	elseif datatype == QUEST_DATATYPE_TRAIN or datatype == QUEST_DATATYPE_TRAIN_OP then-- 募兵N兵种N数量 datatype=14 datakind=兵种（1，2，3） needvalue=数量
 		name = name..FQUEST( 14, CorpsName(datakind-1), value, needvalue );
-	elseif datatype == QUEST_DATATYPE_TRAINCOUNT then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
+	elseif datatype == QUEST_DATATYPE_TRAINCOUNT or datatype == QUEST_DATATYPE_TRAINCOUNT_OP then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
 		name = name..FQUEST( 15, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_CITY_TECH then-- 研究N科技N级 datatype=16 datakind=科技ID needvalue=等级
 		name = name..FQUEST( 16, TechName(datakind), value, needvalue );

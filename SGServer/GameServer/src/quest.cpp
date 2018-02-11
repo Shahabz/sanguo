@@ -73,6 +73,13 @@ int quest_give_main( int actor_index, int questid )
 		return 0;
 	if ( pCity->questid[0] == questid )
 		return 0;
+	QuestInfo *questinfo = quest_config( questid );
+	if ( !questinfo )
+		return 0;
+	if ( questinfo->brushlevel > 0 )
+	{
+		map_enemy_range_brush( questinfo->brushlevel, pCity->posx, pCity->posy, questinfo->brushrange, (int)time(NULL)*600, 0 );
+	}
 	pCity->questid[0] = questid;
 	pCity->questvalue[0] = 0;
 	wlog( 0, LOGOP_QUEST, 0, 0, questid, 0, pCity->actorid, pCity->building[0].level );

@@ -2170,6 +2170,17 @@ int city_train( int actor_index, int kind, int trainsec )
 	city_train_sendinfo( actor_index, kind );
 	building_sendinfo_barracks( actor_index, kind ); 
 	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN, kind, trainnum, 0, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
+
+	// 任务
+	char corps = 0;
+	if ( kind == BUILDING_Infantry || kind == BUILDING_Militiaman_Infantry )
+		corps = 1;
+	else if ( kind == BUILDING_Cavalry || kind == BUILDING_Militiaman_Cavalry )
+		corps = 2;
+	else if ( kind == BUILDING_Archer || kind == BUILDING_Militiaman_Archer )
+		corps = 3;
+	quest_addvalue( pCity, QUEST_DATATYPE_TRAIN_OP, corps, 0, trainnum );
+	quest_addvalue( pCity, QUEST_DATATYPE_TRAINCOUNT_OP, corps, 0, trainnum );
 	return 0;
 }
 
@@ -2314,6 +2325,10 @@ int city_train_get( int actor_index, int kind )
 
 	// 自动补兵
 	hero_addsoldiers_audo( pCity );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_TRAIN, corps + 1, 0, overnum );
+	quest_addvalue( pCity, QUEST_DATATYPE_TRAINCOUNT, corps + 1, 0, overnum );
 	return 0;
 }
 

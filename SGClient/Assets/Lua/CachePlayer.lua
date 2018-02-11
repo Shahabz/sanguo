@@ -357,6 +357,11 @@ function Player:SetBuildingLevy( levynum )
 				if obj and obj.activeSelf == true then
 					obj:SetActive( false );
 				end
+				
+				local effect = v:Find("Effect").gameObject;
+				if effect then
+					effect:SetActive( false );
+				end
 			end
 		end
 	end
@@ -375,11 +380,14 @@ function Player:SetBuildingLevy( levynum )
 							res_goldnum[i] = res_goldnum[i] - 1
 							SetTrue( obj.transform:Find("Back/Gold") )
 							SetFalse( obj.transform:Find("Back/Green") )
+							SetTrue( v.transform:Find("Effect") )
+							
 						elseif res_greennum[i] > 0 then
 							obj:SetActive( true );
 							res_greennum[i] = res_greennum[i] - 1
 							SetFalse( obj.transform:Find("Back/Gold") )
 							SetTrue( obj.transform:Find("Back/Green") )
+							SetFalse( v.transform:Find("Effect") )
 						else
 							obj:SetActive( false );
 						end
