@@ -268,11 +268,14 @@ end
 -- 前往世界地图
 function WorldMap.GotoWorldMap( posx, posy )
 	MainDlgPlayCutScenes()
-	-- m_to_posx=0,m_to_posy=0,
-	local sendValue = {};
-	sendValue.m_to_posx = posx;
-	sendValue.m_to_posy = posy;
-	netsend_worldmapask_C( sendValue )
+	
+	Invoke( function() 
+		-- m_to_posx=0,m_to_posy=0,
+		local sendValue = {};
+		sendValue.m_to_posx = posx;
+		sendValue.m_to_posy = posy;
+		netsend_worldmapask_C( sendValue )
+	end, 0.3 );
 end
 
 -- 返回城池

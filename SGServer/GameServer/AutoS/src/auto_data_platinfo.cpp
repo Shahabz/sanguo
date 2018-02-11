@@ -47,7 +47,7 @@ int platinfo_init_auto()
 	g_platinfo = (PlatInfo *)malloc( sizeof(PlatInfo)*g_platinfo_maxnum );
 	memset( g_platinfo, 0, sizeof(PlatInfo)*g_platinfo_maxnum );
 
-	sprintf( szSQL, "select `platid`,`userhost`,`userport`,`allow` from platinfo;" );
+	sprintf( szSQL, "select `platid`,`userhost`,`userport` from platinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -64,7 +64,6 @@ int platinfo_init_auto()
 		g_platinfo[platid].platid = atoi(row[offset++]);
 		memcpy( g_platinfo[platid].userhost, row[offset++], 64 ); g_platinfo[platid].userhost[63]=0;
 		g_platinfo[platid].userport = atoi(row[offset++]);
-		g_platinfo[platid].allow = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	platinfo_luatable_auto();
@@ -101,10 +100,6 @@ int platinfo_luatable_auto()
 
 		lua_pushstring( servL, "userport" );
 		lua_pushinteger( servL, g_platinfo[platid].userport );
-		lua_rawset( servL, -3 );
-
-		lua_pushstring( servL, "allow" );
-		lua_pushinteger( servL, g_platinfo[platid].allow );
 		lua_rawset( servL, -3 );
 
 		lua_rawset( servL, 1 );

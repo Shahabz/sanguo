@@ -113,7 +113,7 @@ void login_reconnect( int client_index )
 	g_login_socket = INVALID_SOCKET;
 	while( 1 )
 	{
-		if ( platid == 0 || g_platinfo[platid].allow == 0 )
+		if ( platid == 0 )
 		{ // 连接默认配置文件里配置的
 			g_login_socket = HttpConnect( g_Config.user_host, g_Config.user_port );
 			write_netlog( "login_connect:host[%s:%d]", g_Config.user_host, g_Config.user_port );

@@ -201,8 +201,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 19 then
 			MsgBox( "重新创建角色吗？",function()
 				system_askinfo( ASKINFO_ACTOR, "", 1 );
-				GameManager.Restart();
-				GameManager.Logout( 1 );
+				Invoke( function() 
+					GameManager.Restart();
+					GameManager.Logout( 1 );
+				end, 0.3 );
 			end )
 			
 		-- 聊天

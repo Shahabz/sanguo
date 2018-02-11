@@ -48,6 +48,7 @@
 #define GMC_NATIONEXP			(GMC_BASE+43)	// 国家经验
 #define GMC_NATIONOF			(GMC_BASE+44)	// 国家官员系统
 #define GMC_NHERO				(GMC_BASE+45)	// 国家名将
+#define GMC_DB					(GMC_BASE+46)	// 数据库重置
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

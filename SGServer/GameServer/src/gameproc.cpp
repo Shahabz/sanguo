@@ -1600,6 +1600,36 @@ int process_dbreload()
 	platinfo_reload_auto();
 	itemkind_reload();
 
+	bodytokeninfo_reload_auto();
+	buildingresunlock_reload_auto();
+	buildingupgrade_reload_auto();
+	cityguardinfo_reload_auto();
+	techinfo_reload_auto();
+	equipinfo_reload_auto();
+	equipwashinfo_reload_auto();
+	equipwashrule_reload_auto();
+	heroinfo_reload_auto();
+	herocolorupinfo_reload_auto();
+	herocorpsmulinfo_reload_auto();
+	heroskillinfo_reload_auto();
+	herovisit_reload_auto();
+	mapenemyinfo_reload_auto();
+	mapeventinfo_reload_auto();
+	mapresinfo_reload_auto();
+	maptowninfo_reload_auto();
+	monsterinfo_reload_auto();
+	paygoods_reload_auto();
+	paystore_reload_auto();
+	questinfo_reload_auto();
+	questtalk_reload_auto();
+	shop_reload_auto();
+	storyinfo_reload_auto();
+	upgradeinfo_reload_auto();
+	vipbag_reload_auto();
+	vipshop_reload_auto();
+	worldbossinfo_reload_auto();
+	worldquestinfo_reload_auto();
+
 	db_closedata();
 	return 0;
 }

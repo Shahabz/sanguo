@@ -737,6 +737,18 @@ function City.HeroVisitMod( unitObj, show, type )
 	modObj.gameObject:SetActive( show );
 end
 
+-- 闲置睡觉
+function City.Sleep()
+	-- 步兵营
+	
+	-- 骑兵营
+	-- 工兵营
+	-- 民兵营
+	-- 太学院
+	-- 铁匠铺
+	-- 作坊
+end
+
 
 -- 点击建造队列
 function City.GoToWorker()

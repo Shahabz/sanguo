@@ -54,6 +54,7 @@
      <Compile Include="Assets\Editor\Custom\LuaUITemplate.cs" />
      <Compile Include="Assets\Editor\Custom\Packager.cs" />
      <Compile Include="Assets\Editor\Custom\ProjectBuild.cs" />
+     <Compile Include="Assets\Editor\Custom\SpriteChecker.cs" />
      <Compile Include="Assets\PackAssets\Tiled2Unity\Scripts\Editor\CustomTiledImporterAttribute.cs" />
      <Compile Include="Assets\PackAssets\Tiled2Unity\Scripts\Editor\ICustomTiledImporter.cs" />
      <Compile Include="Assets\PackAssets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Material.cs" />
@@ -117,6 +118,7 @@
      <None Include="Assets\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
      <None Include="Assets\PackAssets\Data\audio.txt" />
      <None Include="Assets\PackAssets\Shader\UIRenderTexture.shader" />
+     <None Include="Assets\StreamingAssets\android_files.txt" />
      <None Include="Assets\PackAssets\Shader\StandardAssetsShader\SunShaftsComposite.shader" />
      <None Include="Assets\PackAssets\Data\en-us\localize.txt" />
      <None Include="Assets\PackAssets\Data\zh-cn\localize_item.txt" />
@@ -134,7 +136,6 @@
      <None Include="Assets\PackAssets\Tiled2Unity\Shaders\shaDepth.shader" />
      <None Include="Assets\PackAssets\Shader\ImageSoftMask.shader" />
      <None Include="Assets\PackAssets\Shader\UI-Default.shader" />
-     <None Include="Assets\StreamingAssets\osx_files.txt" />
      <None Include="Assets\PackAssets\Shader\SpriteMask.shader" />
      <None Include="Assets\PackAssets\Shader\ParticleMask&amp;Scaler_Additive.shader" />
      <None Include="Assets\PackAssets\Shader\ImageMask.shader" />
@@ -145,7 +146,6 @@
      <None Include="Assets\ThirdPartyPlugin\YLYRichText\Shaders\YlyUISeqFrameAni.shader" />
      <None Include="Assets\PackAssets\Tiled2Unity\Shaders\shaColorKey-Instanced.shader" />
      <None Include="Assets\PackAssets\Data\MaskWord.txt" />
-     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\PackAssets\Shader\ParticleMask_Additive(Soft).shader" />
      <None Include="Assets\PackAssets\Tiled2Unity\Shaders\shaDefault.shader" />
      <None Include="Assets\PackAssets\Data\localization_language.txt" />
@@ -195,6 +195,7 @@
      <None Include="Assets\PackAssets\Shader\ImageBlur.shader" />
      <None Include="Assets\StreamingAssets\Data\audio.txt" />
      <None Include="Assets\StreamingAssets\Data\en-us\localize_quest.txt" />
+     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\PackAssets\Tiled2Unity\Tiled2Unity.export.txt" />
      <None Include="Assets\PackAssets\Shader\SpriteGray.shader" />
      <None Include="Assets\PackAssets\Shader\AnimationAdditive_Cull.shader" />
@@ -297,6 +298,10 @@
  <Reference Include="UnityEditor.iOS.Extensions.Common">
  <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{B27AE1C6-3D69-624C-ACFA-08F8EF6C961B}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

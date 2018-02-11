@@ -72,6 +72,8 @@ end
 -- 界面初始化时调用
 function Activity10ModOnStart( gameObject )
 	system_askinfo( ASKINFO_PAY, "", 1, 1 )
+	ResourceManager.LoadAssetBundle( "_ab_activity_back_6" )
+	ResourceManager.LoadAssetBundle( "_ab_activity_pic_8" )
 	SetImage( m_uiBack, LoadSprite("activity_pic_8") )
 	SetImage( m_uiTitleBack, LoadSprite("activity_back_6") )
 end

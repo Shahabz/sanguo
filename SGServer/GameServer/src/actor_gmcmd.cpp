@@ -554,6 +554,9 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			}
 		}
 		break;
+	case GMC_DB: //  ˝æ›ø‚÷ÿ÷√
+		process_dbreload();
+		break;
 	default:
 		break;
 	}
