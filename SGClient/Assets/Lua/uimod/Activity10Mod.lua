@@ -72,6 +72,7 @@ end
 -- 界面初始化时调用
 function Activity10ModOnStart( gameObject )
 	system_askinfo( ASKINFO_PAY, "", 1, 1 )
+	ResourceManager.LoadAssetBundle( "_ab_paybag" );
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_6" )
 	ResourceManager.LoadAssetBundle( "_ab_activity_pic_8" )
 	SetImage( m_uiBack, LoadSprite("activity_pic_8") )
@@ -94,6 +95,7 @@ function Activity10ModOnDestroy( gameObject )
 	Invoke( function() 
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_6" )
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_8" )
+		ResourceManager.UnloadAssetBundleImmediately( "_ab_paybag" );
 	end, 0.3 );
 end
 

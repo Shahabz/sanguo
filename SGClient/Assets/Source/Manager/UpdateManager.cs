@@ -425,6 +425,12 @@ public class UpdateManager : MonoBehaviour
                 }
             }
 
+			if (isUpdate) 
+			{
+				if ( updateFileName.Equals ("app.txt") || updateFileName.Equals ("plat.txt") )
+					isUpdate = false;
+			}
+
             // 如果需要更新
             if ( isUpdate )
             {

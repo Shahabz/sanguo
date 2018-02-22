@@ -136,6 +136,7 @@ function HeroGuardDlgSetHero( index, pHero )
 		SetFalse( uiState )
 		SetFalse( uiStateBack )
 		SetFalse( uiAdd )
+		SetFalse( uiType )
 		if index == 1 then
 			if GetPlayer().m_level < global.hero_cabinet_level1 then -- 等级0开放
 				SetTrue( uiUnLockText )

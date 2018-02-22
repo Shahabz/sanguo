@@ -782,6 +782,7 @@ int actor_entercity( int actor_index )
 	quest_newplayer( actor_index );
 	quest_sendlist( actor_index );
 	quest_talk_check( actor_index );
+	quest_checkcomplete( actor_index );
 	quest_changename( actor_index );
 
 	// 世界任务相关（不发）

@@ -62,22 +62,22 @@ class ProjectBuild : Editor{
 			{
 				string[] args = arg.Split ("-"[0]);
 				_projectName = args[1];
-				PlayerSettings.applicationIdentifier = args[2].ToString();
-				PlayerSettings.productName = args[3].ToString();
-				PlayerSettings.companyName = args[4].ToString();
-				PlayerSettings.Android.keystoreName = args[5].ToString();
-				PlayerSettings.Android.keystorePass = args[6].ToString();
-				PlayerSettings.Android.keyaliasName = args[7].ToString();
-				PlayerSettings.Android.keyaliasPass = args[8].ToString();
+				PlayerSettings.productName = args[2].ToString();
+				PlayerSettings.applicationIdentifier = args[3].ToString();
+				PlayerSettings.Android.keystoreName = args[4].ToString();
+				PlayerSettings.Android.keystorePass = args[5].ToString();
+				PlayerSettings.Android.keyaliasName = args[6].ToString();
+				PlayerSettings.Android.keyaliasPass = args[7].ToString();
+				PlayerSettings.bundleVersion 		= args[8].ToString();
+				PlayerSettings.Android.bundleVersionCode = Convert.ToInt32( args[9] );
 
 				Debug.LogError (_projectName);
-				Debug.LogError (PlayerSettings.applicationIdentifier);
 				Debug.LogError (PlayerSettings.productName);
-				Debug.LogError (PlayerSettings.companyName);
-				Debug.LogError (PlayerSettings.Android.keystoreName);
-				Debug.LogError (PlayerSettings.Android.keystorePass);
-				Debug.LogError (PlayerSettings.Android.keyaliasName);
-				Debug.LogError (PlayerSettings.Android.keyaliasPass);
+				Debug.LogError (PlayerSettings.applicationIdentifier);
+				Debug.LogError (PlayerSettings.Android.keystoreName+"-"+PlayerSettings.Android.keystorePass);
+				Debug.LogError (PlayerSettings.Android.keyaliasName+"-"+PlayerSettings.Android.keyaliasPass);
+				Debug.LogError (PlayerSettings.bundleVersion);
+				Debug.LogError (PlayerSettings.Android.bundleVersionCode.ToString());
 				break;
 			}
 		}
@@ -88,11 +88,15 @@ class ProjectBuild : Editor{
 		BuildPipeline.BuildPlayer(GetBuildScenes(), _projectName, BuildTarget.Android, BuildOptions.None);
 	}
 
-	// 打包-缺省包
-	static void BuildForAndroid_default()
+	// 打包-在野SDK
+	static void BuildForAndroid_zaya()
 	{
-		PlayerSettings.productName = "三国志";
-	
+		PlayerSettings.productName = "在野三国志";
+		PlayerSettings.applicationIdentifier = "com.zaya.sgzaya";
+		PlayerSettings.Android.keystoreName = "/Users/jiazhi/Documents/GitHub/sanguo_publish/SDK_Zaya/sanguozaya.keystore";
+		PlayerSettings.Android.keystorePass = "4159217";
+		PlayerSettings.Android.keyaliasName = "sanguozaya";
+		PlayerSettings.Android.keyaliasPass = "4159217";
 		//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, "USE_SHARE");
 		BuildPipeline.BuildPlayer(GetBuildScenes(), projectName, BuildTarget.Android, BuildOptions.None);
 	}

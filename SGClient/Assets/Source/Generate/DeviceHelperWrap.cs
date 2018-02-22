@@ -10,6 +10,7 @@ public class DeviceHelperWrap
 		L.RegFunction("getCountry", getCountry);
 		L.RegFunction("getLanguage", getLanguage);
 		L.RegFunction("GetDeviceDesc", GetDeviceDesc);
+		L.RegVar("AndroidPackageName", get_AndroidPackageName, null);
 		L.EndStaticLibs();
 	}
 
@@ -53,6 +54,20 @@ public class DeviceHelperWrap
 			ToLua.CheckArgsCount(L, 0);
 			string o = DeviceHelper.GetDeviceDesc();
 			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_AndroidPackageName(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, DeviceHelper.AndroidPackageName);
 			return 1;
 		}
 		catch(Exception e)

@@ -295,6 +295,7 @@ public static class CustomSettings
 		_GT(typeof(WorldMapCamera)),
 		_GT(typeof(WorldMapThumbCamera)),
 		_GT(typeof(ScreenBlur)),
+		_GT(typeof(ChannelSDK)),
 
     };
 

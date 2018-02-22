@@ -166,6 +166,12 @@ function MapTile.AddForest( posx, posy )
 		return
 	end
 	
+	if MapTile.data[posx] and MapTile.data[posx][posy] then
+		if MapTile.data[posx][posy]["unit_index"] >= 0 then
+			return
+		end
+	end
+	
 	local unitObj = MapTile.GetForestObj( id )
 	
 	-- 位置

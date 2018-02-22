@@ -180,12 +180,11 @@ function Network.OnConnectFail( buffer )
 	local msg = buffer:ReadString();
 	netlog("[OnConnectFail] error:"..err.." msg:"..msg);
 	if Const.NetStatus < 2 then
---[[		if Const.platid > 10 then
-			LoginModOpenSDKLoginActive( true );
+		if Const.platid > 10 then
+			LoginModOpenSDKLogin();
 		else
 			LoginModOpenTestLogin();
-		end--]]
-		LoginModOpenTestLogin()
+		end
 	end
 
 	Const.NetStatus = 0;	

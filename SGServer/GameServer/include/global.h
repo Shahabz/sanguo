@@ -187,6 +187,7 @@ typedef struct _global
 	short wishing_change_cd;
 	int wishing_change_cdmax;
 	char wishing_pack_maxnum;
+	short take_teacher_maxlevel;
 }Global;
 int global_init();
 void global_reload();

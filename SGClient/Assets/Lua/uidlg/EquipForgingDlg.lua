@@ -174,6 +174,10 @@ end
 -- 自定
 ----------------------------------------
 function EquipForgingDlgShow()
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_SMITHY ) == 0 then
+		AlertMsg( T(2427) )
+		return
+	end
 	HeroInfoDlgClose();
 	HeroListDlgClose();
 	EquipForgingDlgOpen();

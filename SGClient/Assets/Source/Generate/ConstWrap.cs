@@ -48,6 +48,8 @@ public class ConstWrap
 		L.RegVar("sdk_channelId", get_sdk_channelId, set_sdk_channelId);
 		L.RegVar("sdk_channelLable", get_sdk_channelLable, set_sdk_channelLable);
 		L.RegVar("sdk_isnewuser", get_sdk_isnewuser, set_sdk_isnewuser);
+		L.RegVar("sdk_token", get_sdk_token, set_sdk_token);
+		L.RegVar("sdk_isverify", get_sdk_isverify, set_sdk_isverify);
 		L.RegVar("ResourceMode", get_ResourceMode, set_ResourceMode);
 		L.EndClass();
 	}
@@ -614,6 +616,34 @@ public class ConstWrap
 		try
 		{
 			LuaDLL.lua_pushstring(L, Const.sdk_isnewuser);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_sdk_token(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, Const.sdk_token);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_sdk_isverify(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, Const.sdk_isverify);
 			return 1;
 		}
 		catch(Exception e)
@@ -1213,6 +1243,36 @@ public class ConstWrap
 		{
 			string arg0 = ToLua.CheckString(L, 2);
 			Const.sdk_isnewuser = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_sdk_token(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			Const.sdk_token = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_sdk_isverify(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			Const.sdk_isverify = arg0;
 			return 0;
 		}
 		catch(Exception e)

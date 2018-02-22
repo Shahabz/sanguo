@@ -1,6 +1,7 @@
 -- 界面
 local m_Dlg = nil;
 local m_uiNoticeText = nil; --UnityEngine.GameObject
+local m_uiTogButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function NoticeDlgOpen()
@@ -50,6 +51,7 @@ function NoticeDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
 	m_uiNoticeText = objs[0];
+	m_uiTogButton = objs[1];
 end
 
 -- 界面初始化时调用

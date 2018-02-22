@@ -5,13 +5,37 @@ using System.Collections;
 using System;
 public static class DeviceHelper 
 {
+	public static string AndroidPackageName
+	{
+		get
+		{
+			if (Application.platform == RuntimePlatform.Android) 
+			{
+				using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))  
+				{  
+					using (AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))  
+					{  
+						using (AndroidJavaObject assetManager = activity.Call<AndroidJavaObject>("getApplicationContext"))  
+						{  
+							string pname = assetManager.Call<string>("getPackageName");  
+							LogUtil.GetInstance().WriteGame( "AndroidPackageName:"+pname );
+							return pname;  
+						}  
+					}  
+				}  
+				return "";
+			} else {
+				return "";
+			}
+		}
+	}
+
     public static string getCountry()
     {
         if ( Application.isEditor )
             return "cn";
         string Country = string.Empty;
-        AndroidJavaClass jc = new AndroidJavaClass( "com.guohegame.unityplugins.LocaleHelper" );
-        if ( jc != null ) 
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName+".LocaleHelper" ) )
         {
             Country = jc.CallStatic<string>( "getCurrentCountry" );
         }
@@ -23,8 +47,8 @@ public static class DeviceHelper
         if ( Application.isEditor )
             return "zh";
         string Language = string.Empty;
-        AndroidJavaClass jc = new AndroidJavaClass( "com.guohegame.unityplugins.LocaleHelper" );
-        if ( jc != null )
+		string classname = DeviceHelper.AndroidPackageName + ".LocaleHelper";
+		using ( AndroidJavaClass jc = new AndroidJavaClass( classname ) )
         {
             Language = jc.CallStatic<string>( "getCurrentLanguage" );
         }
@@ -39,7 +63,7 @@ public static class DeviceHelper
         if ( Application.isEditor )
             return "2|CC:3A:61:D0:B7:DE|357748052440339|1080*1920|GT-I9508|android 4.4.2|Wi-Fi|中国联通";
 		string rtn;
-        using ( AndroidJavaClass jc = new AndroidJavaClass( "com.ghgame.ghpluslib.GhFunc" ) )
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName+".SdkFun" ) )
         {
 			rtn = jc.CallStatic<string>("getDeviceDesc");
         }

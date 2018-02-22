@@ -8,15 +8,13 @@ function proc_login_C( recvValue )
 		-- 登陆失败
 		print( "Login Result:"..recvValue.m_result );
 		eye.networkManager:Logout();
---[[		if Const.platid > 10 then
-			LoginModOpenSDKLoginActive( true );
+		if Const.platid > 10 then
+			LoginModOpenSDKLogin();
 		else
 			LoginModOpenTestLogin();
-		end--]]	
-		LoginModOpenTestLogin();
+		end
 		if recvValue.m_result == -10000 then
 			-- 队列满了的情况
-			LoginModOpenTestLogin();
 			LoginModWarning( T(500) );
 		else
 			if recvValue.m_result == -1 or recvValue.m_result == -2 then
@@ -34,9 +32,13 @@ function proc_login_C( recvValue )
 		GetPlayer().m_usertype = recvValue.m_usertype;
 		
 		-- GM号启动FPS
---[[		if GetPlayer().m_usertype >= 100 then
-			FPSObject():SetActive( true );
-		end--]]
+		if GetPlayer().m_usertype >= 100 then
+			SetTrue( GameObject.FindWithTag("UIRoot").transform:Find( "FPS" ) )
+			SetTrue( GameObject.FindWithTag("UIRoot").transform:Find( "Mem" ) )
+		else
+			SetFalse( GameObject.FindWithTag("UIRoot").transform:Find( "FPS" ) )
+			SetFalse( GameObject.FindWithTag("UIRoot").transform:Find( "Mem" ) )
+		end
 	
 		-- 启动loading
 		LoginModOpenLoading();
@@ -2107,5 +2109,6 @@ end
 -- m_tc_state=0,m_tc_kind=0,m_tc_num=0,m_tc_tech=0,m_nation_tiance_level=0,m_nation_tiance_point=0,
 function proc_tiancequest_C( recvValue )
 	-- process.
+	HeroLevyDlgRecv( recvValue )
 end
 

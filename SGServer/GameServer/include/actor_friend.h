@@ -2,6 +2,7 @@
 #define _ACTOR_FRIEND_H_
 #include "define.h"
 #define ACTOR_FRIEND_MAXCOUNT		100 // 好友数量
+#define ACTOR_STUDENT_MAXCOUNT		30  // 徒弟数量
 
 #define ACTOR_FRIEND_EVENT_ASK			1	// 对方请求添加我为好友
 #define ACTOR_FRIEND_EVENT_AGREE		2	// 对方同意添加我为好友
@@ -34,5 +35,13 @@ int actor_friend_delete( int actor_index, int target_actorid, int target_city_in
 int actor_friend_delete_db( int actorid, int target_actorid );
 // 好友列表
 int actor_friend_sendlist( int actor_index );
+
+
+// 师徒
+// 徒弟列表
+int actor_student_sendlist( int actor_index );
+
+// 拜师
+int actor_take_teacher( int actor_index, int teacher_actorid );
 
 #endif // !_ACTOR_FRIEND_H_

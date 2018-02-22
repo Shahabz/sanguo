@@ -83,6 +83,9 @@ public class Const {
     public static string sdk_channelLable   = string.Empty;
     public static string sdk_isnewuser      = "0";
 
+	public static string sdk_token   	= string.Empty; //  token
+	public static string sdk_isverify   = string.Empty; // 实名认证
+
     //public static void setnetkey()
     //{
     //    fruit.networkManager.SendNetKey( Const.SendKey, Const.RecvKey );

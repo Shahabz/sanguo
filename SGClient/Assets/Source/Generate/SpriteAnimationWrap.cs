@@ -16,6 +16,8 @@ public class SpriteAnimationWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("FPS", get_FPS, set_FPS);
+		L.RegVar("MinFPS", get_MinFPS, set_MinFPS);
+		L.RegVar("MaxFPS", get_MaxFPS, set_MaxFPS);
 		L.RegVar("SpriteFrames", get_SpriteFrames, set_SpriteFrames);
 		L.RegVar("IsPlaying", get_IsPlaying, set_IsPlaying);
 		L.RegVar("Foward", get_Foward, set_Foward);
@@ -159,6 +161,44 @@ public class SpriteAnimationWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MinFPS(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			SpriteAnimation obj = (SpriteAnimation)o;
+			float ret = obj.MinFPS;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index MinFPS on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MaxFPS(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			SpriteAnimation obj = (SpriteAnimation)o;
+			float ret = obj.MaxFPS;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index MaxFPS on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_SpriteFrames(IntPtr L)
 	{
 		object o = null;
@@ -288,6 +328,44 @@ public class SpriteAnimationWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index FPS on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_MinFPS(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			SpriteAnimation obj = (SpriteAnimation)o;
+			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			obj.MinFPS = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index MinFPS on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_MaxFPS(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			SpriteAnimation obj = (SpriteAnimation)o;
+			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			obj.MaxFPS = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index MaxFPS on a nil value" : e.Message);
 		}
 	}
 
