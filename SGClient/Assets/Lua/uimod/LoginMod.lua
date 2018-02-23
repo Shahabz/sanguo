@@ -188,7 +188,7 @@ function LoginModOnAwake( gameObject )
 	-- 版本号
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	-- 平台
-	if Const.platid > 10 then
+	if Const.platid > 11 then
 		SDK.init()
 		LoginModOpenSDKLogin();
 	else
@@ -370,7 +370,7 @@ function LoginModCloseServerList()
 	end
 	m_uiGroupCache = {}
 	
-	if Const.platid > 10 then
+	if Const.platid > 11 then
 		m_uiGameEnter.gameObject:SetActive( true );
 	else
 		m_uiFastEnter.gameObject:SetActive( true );
@@ -510,6 +510,9 @@ end
 function LoginModSelectServer( id )
 	local serverinfo = LoginModGetServerInfo( id )
 	if serverinfo == nil then
+		serverinfo= LoginModGetNewServer();
+		id = serverinfo["sid"]
+		LoginModSelectServer( id );	
 		return;
 	end
 	

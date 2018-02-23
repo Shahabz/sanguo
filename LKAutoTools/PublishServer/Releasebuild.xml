@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="release" basedir=".">
+	
+	<!-- 开始编译打包任务 -->
+	<target name="release" depends ="checksql_game, sdata, s1">
+			
+					 
+	</target>
+	
+	<!-- 执行比较game表的批处理,将有变化的数据取出来 -->
+	<target name="checksql_game">  
+    		<exec dir="../PublishSQL/CompareGame" executable="cmd.exe">
+						<arg line="/c test_check_online.bat" />
+        		<arg line="/c exit" />
+    		</exec> 
+
+				<move file="../PublishSQL/CompareGame/sg_game_patch.sql" todir="./" />
+	</target>
+	
+	<!-- 更新data数据库和基础game表 -->
+	<target name="sdata">
+			
+		<scp todir="root:zaya20180112!@39.108.103.129:/data/sanguo" port="22" trust="true">
+		   <fileset file="./sgsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:zaya20180112!@39.108.103.129:/data/sanguo/sql" port="22" trust="true">
+		   <fileset file="./sg_game_patch.sql"/>
+		</scp>
+
+		<sshexec host="39.108.103.129"  port="22" username="root"  password="zaya20180112!"  
+         		trust="true" command="cd /data/sanguo;./sql_shell"/>
+         		
+	</target>
+	
+	<!-- 上传到外网服务器 -->
+	<target name="s1">
+			
+		<scp todir="root:zaya20180112!@120.79.161.85:/data/sanguo/" port="22" trust="true">
+		   <fileset file="./sgserver.tar.gz"/>
+		</scp>
+
+		<scp todir="root:zaya20180112!@120.79.161.85:/data/sanguo/" port="22" trust="true">
+		   <fileset file="./sgsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:zaya20180112!@120.79.161.85:/data/sanguo/sql" port="22" trust="true">
+		   <fileset file="./sg_game_patch.sql"/>
+		</scp>
+		 
+		<sshexec host="120.79.161.85"  port="22" username="root"  password="zaya20180112!"
+         		trust="true" command="cd /data/sanguo;./sql_shell"/>
+         		
+	</target>
+
+
+</project>

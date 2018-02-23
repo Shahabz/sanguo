@@ -90,7 +90,7 @@ function Network.OnSocket(cmd, buffer)
 			Const.SendKey = m_send_key;
 			
 			-- 请求登陆验证
-			if Const.platid > 10 then
+			if Const.platid > 11 then
 				LoginModSDKLoginProc();
 			else
 				LoginModTestLoginProc()
@@ -180,7 +180,7 @@ function Network.OnConnectFail( buffer )
 	local msg = buffer:ReadString();
 	netlog("[OnConnectFail] error:"..err.." msg:"..msg);
 	if Const.NetStatus < 2 then
-		if Const.platid > 10 then
+		if Const.platid > 11 then
 			LoginModOpenSDKLogin();
 		else
 			LoginModOpenTestLogin();
