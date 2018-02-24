@@ -9,7 +9,7 @@ struct _questinfo {
 				short nameid;	//
 				int descid;	//
 				int nextid;	//
-				int unlock_branch[2];	//
+				int unlock_branch[4];	//
 				int datatype;	//
 				int datakind;	//
 				short dataoffset;	//

@@ -83,7 +83,7 @@ end
 ----------------------------------------
 function NpcTalk( talk, callback )
 	NpcTalkDlgOpen();
-	--m_uiShape:GetComponent( "Image" ).sprite = shape;
+	m_uiShape:GetComponent( "Image" ).sprite = LoadSprite("playerhead_01_face");
 	--m_uiName:GetComponent( "UIText" ).text = name;
 	m_uiTalk:GetComponent( "UIText" ).text = talk;
 	m_WaitCallback = callback;

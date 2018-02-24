@@ -134,6 +134,7 @@ global.kingwar_dead_cd = 60 --血战皇城武将死亡倒计时
 global.kingwar_token_def = 10 --血战皇城武将回防消耗钻石
 global.kingwar_token_sneak = 10 --血战皇城武将偷袭消耗钻石
 global.kingwar_token_pk = 10 --血战皇城武将单挑消耗钻石
+global.take_teacher_maxlevel = 49 --拜师最大等级
 global.hero_visit_low_token = 200 --良将寻访钻石
 global.hero_visit_high_sec = 259200 --神将寻访解锁时长
 global.hero_visit_free_cd = 86400 --武将寻访免费倒计时

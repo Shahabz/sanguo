@@ -267,6 +267,10 @@ int quest_check( int actor_index, int questid, int *value )
 			{
 				return 1;
 			}
+			if ( !value )
+			{// 更新一下
+				quest_sendlist( actor_index );
+			}
 		}
 		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_WOOD )
 		{ // 伐木场达N级N数量
@@ -281,6 +285,10 @@ int quest_check( int actor_index, int questid, int *value )
 			if ( buildingnum >= questinfo->needvalue )
 			{
 				return 1;
+			}
+			if ( !value )
+			{// 更新一下
+				quest_sendlist( actor_index );
 			}
 		}
 		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_FOOD )
@@ -297,6 +305,10 @@ int quest_check( int actor_index, int questid, int *value )
 			{
 				return 1;
 			}
+			if ( !value )
+			{// 更新一下
+				quest_sendlist( actor_index );
+			}
 		}
 		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_IRON )
 		{ // 矿场达N级N数量
@@ -311,6 +323,10 @@ int quest_check( int actor_index, int questid, int *value )
 			if ( buildingnum >= questinfo->needvalue )
 			{
 				return 1;
+			}
+			if ( !value )
+			{// 更新一下
+				quest_sendlist( actor_index );
 			}
 		}
 		else if ( questinfo->datatype == QUEST_DATATYPE_CITY_TECH )
@@ -382,7 +398,7 @@ int quest_getaward( int actor_index, int questid )
 	}
 
 	// 解锁支线任务
-	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
 		if ( questinfo->unlock_branch[tmpi] > 0 )
 		{

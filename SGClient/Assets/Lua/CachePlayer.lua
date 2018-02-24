@@ -223,6 +223,9 @@ function Player:SetBuildingLevy( levynum )
 	local old 				= 	self.m_levynum;
 	self.m_levynum			=	levynum;
 	
+	if GetPlayer().m_questid < 110 then
+		return
+	end
 	--[[征收次数=12时，所有的资源田（100%）上方都悬浮一个金色气泡
 征收次数=11时，所有的资源田（90%）显示为金色气泡，10%显示绿色气泡
 征收次数=10时，所有的资源田（80%）显示为金色气泡，20%显示绿色气泡

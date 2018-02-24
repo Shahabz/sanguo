@@ -1035,6 +1035,13 @@ function MainDlgSetButtons( openoffset )
 		SetParent( ButtonTable.m_uiButtonRestart, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
+	
+	-- 聊天
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_CHAT ) == 1 then
+		SetTrue( m_uiChat )
+		if openoffset == CITY_FUNCTION_CHAT then
+		end
+	end	
 end
 
 -- 播放获得功能按钮特效

@@ -81,6 +81,7 @@ end
 ----------------------------------------
 function NpcTalkOne( talk, buttonText, callback )
 	NpcTalkOneDlgOpen();
+	m_uiShape:GetComponent( "Image" ).sprite = LoadSprite("playerhead_01_face");
 	SetText( m_uiTalk, talk );
 	SetText( m_uiButtonText, buttonText );
 	m_callback = callback;
