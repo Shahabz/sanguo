@@ -39,6 +39,7 @@
 #define	QUEST_DATATYPE_BRANCH_QUEST			37	// 完成任意N个支线任务 datatype=37 datakind=0 needvalue=数量
 #define	QUEST_DATATYPE_EQUIP_FORGING_QUICK	38	// 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
 #define	QUEST_DATATYPE_HERO_UP				39	// 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
+#define	QUEST_DATATYPE_SMITHYOFFHIRE		40	// 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
 
 // 任务类型
 enum 

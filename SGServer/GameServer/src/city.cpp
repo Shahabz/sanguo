@@ -2872,6 +2872,9 @@ int city_officialhire( int actor_index, int type, int kind )
 		pCity->ofkind[type] = kind;
 		pCity->ofsec[type] += g_official_gov[kind].duration; // 时间叠加
 		pCity->ofquick[type] = 0;
+
+		// 任务
+		quest_addvalue( pCity, QUEST_DATATYPE_SMITHYOFFHIRE, 0, 0, kind );
 	}
 	else if ( type == 1 )
 	{

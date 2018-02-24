@@ -238,7 +238,7 @@ function FightDlgShow( recvValue )
 	FightScene.Create()
 	
 	-- 战场初始化
-	fight_init( info["randspeed"] );
+	fight_init( info["randspeed"], fighttype );
 	
 	-- 我是攻击方，攻击方显示左面
 	local my = m_recvValue.m_content_json["my"];

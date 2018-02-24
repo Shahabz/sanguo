@@ -175,8 +175,16 @@ int fight_add_hero( int pos, char unit_type, int unit_index, char type, int inde
 	pUnit->troops = troops;
 	pUnit->attack_increase = attack_increase;
 	pUnit->defense_increase = defense_increase;
-	pUnit->assault = assault;
-	pUnit->defend = defend;
+	if ( g_fight.type == FIGHTTYPE_CITY || g_fight.type == FIGHTTYPE_NATION || g_fight.type == FIGHTTYPE_KINGWAR )
+	{
+		pUnit->assault = assault;
+		pUnit->defend = defend;
+	}
+	else
+	{
+		pUnit->assault = assault;
+		pUnit->defend = defend;
+	}
 	pUnit->line = line;
 	pUnit->skillid_init = skillid;
 	pUnit->skillid = skillid;
@@ -296,6 +304,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 	// 防御方为流寇
 	if ( defense_type == MAPUNIT_TYPE_ENEMY )
 	{
+		g_fight.type = FIGHTTYPE_ENEMY;
 		if ( defense_index < 0 || defense_index >= g_map_enemy_maxcount )
 			return -1;
 		MapEnemyInfo *config = map_enemy_getconfig( g_map_enemy[defense_index].kind );
@@ -312,11 +321,11 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ENEMY, defense_index, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 				pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
 		}
-		g_fight.type = FIGHTTYPE_ENEMY;
 	}
 	// 防御方为资源点的部队
 	else if ( defense_type == MAPUNIT_TYPE_RES )
 	{
+		g_fight.type = FIGHTTYPE_RES;
 		int army_index = map_res_getarmy( defense_index );
 		if ( army_index < 0 || army_index >= g_army_maxcount )
 		{
@@ -357,12 +366,11 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		}
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
-		g_fight.type = FIGHTTYPE_RES;
-
 	}
 	// 防御方为国家名将
 	else if ( defense_type == MAPUNIT_TYPE_NATIONHERO )
 	{
+		g_fight.type = FIGHTTYPE_ENEMY;
 		if ( defense_index < 0 || defense_index >= g_nation_heroinfo_maxnum )
 			return -1;
 		NationHeroInfo *config = nation_hero_getconfig( defense_index );
@@ -379,11 +387,11 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_NATIONHERO, defense_index, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 				pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
 		}
-		g_fight.type = FIGHTTYPE_ENEMY;
 	}
 	// 防御方为部队（血战皇城使用）
 	else if ( defense_type == MAPUNIT_TYPE_KINGWAR_TOWN )
 	{
+		g_fight.type = FIGHTTYPE_KINGWAR;
 		int army_index = defense_index;
 		if ( army_index < 0 || army_index >= g_army_maxcount )
 		{
@@ -424,7 +432,6 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		}
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_KINGWAR ), (char)config->skillid, pHero->exp );
-		g_fight.type = FIGHTTYPE_KINGWAR;
 
 	}
 	else
@@ -561,6 +568,7 @@ int fight_start_armygroup( int group_index )
 	// 防御方为玩家城池
 	if ( g_fight.defense_type == MAPUNIT_TYPE_CITY )
 	{
+		g_fight.type = FIGHTTYPE_CITY;
 		if ( g_fight.defense_index < 0 || g_fight.defense_index >= g_city_maxcount )
 			return -1;
 		City *pCity = &g_city[g_fight.defense_index];
@@ -661,11 +669,11 @@ int fight_start_armygroup( int group_index )
 
 			}
 		}
-		g_fight.type = FIGHTTYPE_CITY;
 	}
 	// 防御方为城镇
 	else if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
 	{
+		g_fight.type = FIGHTTYPE_NATION;
 		// 守军
 		MapTown *pTown = map_town_getptr( g_armygroup[group_index].to_id );
 		if ( pTown )
@@ -716,7 +724,6 @@ int fight_start_armygroup( int group_index )
 
 			}
 		}
-		g_fight.type = FIGHTTYPE_NATION;
 	}
 
 	// 战斗回合
@@ -773,6 +780,15 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue )
 	fight_debug( "\n\n============================================== STORY FIGHT START ==============================================" );
 	int result = 0;
 
+	if ( pValue->m_storyid < 10 )
+	{
+		g_fight.type = FIGHTTYPE_QUEST;
+	}
+	else
+	{
+		g_fight.type = FIGHTTYPE_STORY;
+	}
+
 	// 玩家出战英雄
 	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
@@ -801,14 +817,6 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue )
 			continue;
 		fight_add_hero( FIGHT_DEFENSE, 0, -1, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 			pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
-	}
-	if ( pValue->m_storyid < 10 )
-	{
-		g_fight.type = FIGHTTYPE_QUEST;
-	}
-	else
-	{
-		g_fight.type = FIGHTTYPE_STORY;
 	}
 
 	// 战斗回合
@@ -866,7 +874,7 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 
 	fight_debug( "\n\n============================================== WORLDBOSS FIGHT START ==============================================" );
 	int result = 0;
-
+	g_fight.type = FIGHTTYPE_WORLDBOSS;
 	// 玩家出战英雄
 	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
@@ -896,7 +904,6 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 		fight_add_hero( FIGHT_DEFENSE, 0, -1, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
 			pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
 	}
-	g_fight.type = FIGHTTYPE_WORLDBOSS;
 
 	// 战斗回合
 	for ( int tmpi = 0; tmpi < FIGHT_TURNS_MAX; tmpi++ )

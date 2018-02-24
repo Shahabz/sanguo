@@ -132,6 +132,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetAutoBuild(0)
 	MainDlgSetAutoGuard(0)
 	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather, recvValue.m_game_day_loop );
+	SDK.setExtendData()
 end
 
 -- m_count=0,m_building={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_barracks={m_kind=0,m_level=0,m_sec=0,m_quick=0,[m_count]},m_count=0,m_res={m_kind=0,m_level=0,m_offset=0,[m_count]},m_levynum=0,m_worker_kind=0,m_worker_offset=0,m_worker_sec=0,m_worker_kind_ex=0,m_worker_offset_ex=0,m_worker_sec_ex=0,m_worker_expire_ex=0,

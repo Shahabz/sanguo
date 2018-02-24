@@ -32,6 +32,7 @@ QUEST_DATATYPE_TRAINCOUNT_OP		=	36	-- 操作-募兵N次 datatype=25 datakind=0 n
 QUEST_DATATYPE_BRANCH_QUEST			=	37	-- 完成任意N个支线任务 datatype=37 datakind=0 needvalue=数量
 QUEST_DATATYPE_EQUIP_FORGING_QUICK	=	38	-- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
 QUEST_DATATYPE_HERO_UP				=	39	-- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
+QUEST_DATATYPE_SMITHYOFFHIRE		=	40	-- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -120,6 +121,8 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 94 )
 	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_SMITHYOFFHIRE	then -- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
+		typename = Localization.text_quest( 94 )
 	end
 	return typename;
 end
@@ -200,6 +203,8 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 26, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 		name = name..FQUEST( 27, HeroName(datakind) );
+	elseif datatype == QUEST_DATATYPE_SMITHYOFFHIRE	then -- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
+		name = name..FQUEST( 28, needvalue );
 	else
 		name = ""
 	end

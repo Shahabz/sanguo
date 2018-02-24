@@ -66,7 +66,12 @@ g_fight.frame = 0;
 g_fight.frame_max = 0
 g_fight.frame_append = 0;
 
-function fight_init( randspeed )
+function fight_init( randspeed, type )
+	if type == nil then
+		g_fight.type = 0;
+	else
+		g_fight.type = type;
+	end
 	g_fight.turns = 0;
 	g_fight.randspeed = randspeed;
 	g_fight.frame = 0;
@@ -148,8 +153,13 @@ function fight_add_unit( pos, offset, type, kind, shape, level, color, corps, at
 	pUnit.troops = troops;
 	pUnit.attack_increase = attack_increase;
 	pUnit.defense_increase = defense_increase;
-	pUnit.assault = assault;
-	pUnit.defend = defend;
+	if g_fight.type == FIGHTTYPE_CITY or g_fight.type == FIGHTTYPE_NATION or g_fight.type == FIGHTTYPE_KINGWAR then
+		pUnit.assault = assault;
+		pUnit.defend = defend;
+	else
+		pUnit.assault = 0;
+		pUnit.defend = 0;
+	end
 	pUnit.line = line;
 	pUnit.skillid_init = skillid
 	pUnit.skillid = skillid;

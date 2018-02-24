@@ -46,8 +46,7 @@ end
 function SDK.onLogout( jsonResult )
 	Const.sdk_uid 		= "";
 	Const.sdk_token 	= "";
-	GameManager.restart = true;
-	GameManager.Logout( 0 );
+	SDK.login()
 end
 
 -- 切换账号回调
@@ -59,6 +58,17 @@ end
 
 -- 传额外参数
 function SDK.setExtendData()
-	
+	if Const.platid == 12 then -- 在野
+		local json = require "cjson"
+		local info = {}
+		info["actorname"] = GetPlayer().m_name
+		info["actorid"] = GetPlayer().m_actorid
+		info["actorlevel"]= GetPlayer().m_level
+		info["serverid"] = Const.serverid
+		info["servername"] = "s"..Const.serverid
+		local jsonMsg = json.encode( info );   
+		ChannelSDK.Instance:setExtendData( jsonMsg );
+	else
+	end
 end
 
