@@ -196,7 +196,7 @@ int map_zone_checklist( int zoneid )
 	}
 	if ( tail >= 0 )
 	{
-		mapunit_getpos( tail, &posx, &posy );
+		zoneunit_getpos( tail, &posx, &posy );
 		tmpid = map_zone_getid( posx, posy );
 		if ( tmpid != zoneid )
 		{
@@ -521,7 +521,6 @@ int map_zone_citylist( int actor_index, int zoneid )
 		loopnum += 1;
 		if ( loopnum >= 60000 )
 		{// ·ÀÖ¹ËÀÑ­»·
-			system_talkto( actor_index, "loopnum >= 60000", 0 );
 			break;
 		}
 		int next_index = g_zoneunit[cur_index].next_index;
@@ -549,7 +548,6 @@ int map_zone_citylist( int actor_index, int zoneid )
 				pValue.m_count = 0;
 			}
 		}
-		system_talkto( actor_index, "cur_index = next_index", 0 );
 		cur_index = next_index;
 	}
 	if ( pValue.m_count > 0 )

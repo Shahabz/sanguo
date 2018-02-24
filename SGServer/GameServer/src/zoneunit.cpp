@@ -59,6 +59,7 @@ int zoneunit_init()
 	memset( g_zoneunit, 0, sizeof( ZoneUnit )*g_zoneunit_maxcount );
 	for ( int tmpi = 0; tmpi < g_zoneunit_maxcount; tmpi++ )
 	{
+		g_zoneunit[tmpi].index = -1;
 		g_zoneunit[tmpi].lastadd_zoneid = -1;
 		g_zoneunit[tmpi].pre_index = -1;
 		g_zoneunit[tmpi].next_index = -1;

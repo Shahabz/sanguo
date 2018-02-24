@@ -30,6 +30,9 @@ end
 
 -- 创建
 function WorldMapThumb.Create( zoneid )
+	if WorldMapThumbObject ~= nil then
+		return
+	end
 	WorldMapThumb.m_nZoneID = zoneid
 	WorldMapThumbObject = GameObject.Instantiate( LoadPrefab("WorldMapThumb") );
 	if GameManager.WorldMap ~= nil then
