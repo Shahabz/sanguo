@@ -539,7 +539,7 @@ int map_zone_citylist( int actor_index, int zoneid )
 				pValue.m_list[pValue.m_count].m_posx = pCity->posx;
 				pValue.m_list[pValue.m_count].m_posy = pCity->posy;
 				pValue.m_list[pValue.m_count].m_nation = pCity->nation;
-				pValue.m_list[pValue.m_count].m_level = (char)pCity->level;
+				pValue.m_list[pValue.m_count].m_level = (char)pCity->building[0].level;
 				pValue.m_count += 1;
 			}
 			if ( pValue.m_count >= 128 )
