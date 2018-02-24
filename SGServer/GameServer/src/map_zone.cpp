@@ -24,6 +24,7 @@
 #include "map_town.h"
 #include "army_group.h"
 #include "world_quest.h"
+#include "chat.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -254,7 +255,7 @@ int map_zone_delunit( int unit_index )
 	if ( unit_index < 0 || unit_index >= g_zoneunit_maxcount )
 		return -1;
 	lastadd_zoneid = g_zoneunit[unit_index].lastadd_zoneid;
-	if ( lastadd_zoneid < 0 || lastadd_zoneid >= g_zoneunit_maxcount )
+	if ( lastadd_zoneid < 0 || lastadd_zoneid >= g_zoneinfo_maxnum )
 		return -1;
 
 	// 之前所在区域
@@ -265,7 +266,7 @@ int map_zone_delunit( int unit_index )
 	// 获取当前所在的区域
 	zoneunit_getpos( unit_index, &posx, &posy );
 	zone_id_cur = map_zone_getid( posx, posy );
-	if ( zone_id_cur >= 0 && zone_id_cur < g_zoneunit_maxcount )
+	if ( zone_id_cur >= 0 && zone_id_cur < g_zoneinfo_maxnum )
 		pZoneCur = &g_map_zone[zone_id_cur];
 
 	// 将它前面的单元和它后面的单元连上
@@ -518,8 +519,9 @@ int map_zone_citylist( int actor_index, int zoneid )
 	while ( cur_index >= 0 )
 	{
 		loopnum += 1;
-		if ( loopnum >= 10000 )
+		if ( loopnum >= 60000 )
 		{// 防止死循环
+			system_talkto( actor_index, "loopnum >= 60000", 0 );
 			break;
 		}
 		int next_index = g_zoneunit[cur_index].next_index;
@@ -529,8 +531,6 @@ int map_zone_citylist( int actor_index, int zoneid )
 			continue;
 		}
 		ZoneUnit *pZoneUnit = &g_zoneunit[cur_index];
-		short target_posx = -1;
-		short target_posy = -1;
 		if ( pZoneUnit->type == MAPUNIT_TYPE_CITY )
 		{
 			pCity = city_indexptr( pZoneUnit->index );
@@ -541,14 +541,15 @@ int map_zone_citylist( int actor_index, int zoneid )
 				pValue.m_list[pValue.m_count].m_posy = pCity->posy;
 				pValue.m_list[pValue.m_count].m_nation = pCity->nation;
 				pValue.m_list[pValue.m_count].m_level = (char)pCity->level;
+				pValue.m_count += 1;
 			}
-			pValue.m_count += 1;
 			if ( pValue.m_count >= 128 )
 			{
 				netsend_mapzoneunitlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 				pValue.m_count = 0;
 			}
 		}
+		system_talkto( actor_index, "cur_index = next_index", 0 );
 		cur_index = next_index;
 	}
 	if ( pValue.m_count > 0 )

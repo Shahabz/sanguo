@@ -3788,19 +3788,19 @@ int city_move( City *pCity, short posx, short posy )
 	{
 		pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
-
-	if ( pCity->zoneunit_index < 0 )
-	{
-		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
-	}
 	
-
 	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
 	pCity->zone = map_zone_getid( pCity->posx, pCity->posy );
 
 	mapunit_area_change( pCity->unit_index, pCity->posx, pCity->posy, 1 );
 	city_attr_reset( pCity );
 	
+	// 通知地区
+	if ( pCity->zoneunit_index < 0 )
+	{
+		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+	}
+
 	// 我的随机事件也要更新位置
 	for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
 	{

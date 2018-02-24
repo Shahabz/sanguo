@@ -181,6 +181,7 @@ int zoneunit_del( char type, int index, int unit_index )
 	map_zone_delunit( unit_index );
 	memset( &g_zoneunit[unit_index], 0, sizeof( ZoneUnit ) );
 	g_zoneunit[unit_index].lastadd_zoneid = -1;
+	g_zoneunit[unit_index].index = -1;
 	g_zoneunit[unit_index].pre_index = -1;
 	g_zoneunit[unit_index].next_index = -1;
 	return 0;
