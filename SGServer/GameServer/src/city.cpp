@@ -2678,6 +2678,9 @@ int city_material_make( int actor_index, int id, int itemkind, int type )
 		// 更新建筑信息
 		city_material_updatebuilding( pCity );
 		building_sendinfo( pCity->actor_index, BUILDING_Craftsman );
+
+		// 任务
+		quest_addvalue( pCity, QUEST_DATATYPE_MATERIAL_MAKE, 0, 0, 1 );
 	}
 	// 预定生产
 	else

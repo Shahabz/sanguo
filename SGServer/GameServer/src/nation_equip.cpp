@@ -83,6 +83,9 @@ int nation_equip_open( int actor_index, int kind )
 	pCity->neq_sec[index] = g_nequip_open[kind].sec; 
 	g_actors[actor_index].neq_crit[index] = 0;
 	nation_equip_sendinfo( actor_index, kind );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_NEQUIP_FORGING, kind, 0, 1 );
 	return 0;
 }
 
@@ -184,6 +187,9 @@ int nation_equip_upgrade( int actor_index, int kind )
 	}
 
 	nation_equip_sendinfo( actor_index, kind );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_NEQUIP_LEVELNUM, 0, 0, 1 );
 	return 0;
 }
 

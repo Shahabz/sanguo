@@ -566,6 +566,12 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 	equip_heroupdate( actor_index, pUpHero );
 
 	city_battlepower_hero_calc( pCity );
+
+	// 任务
+	if ( uptype == 2 )
+	{
+		quest_addvalue( pCity, QUEST_DATATYPE_HEROGUARD_UP, 0, 0, 1 );
+	}
 	return 0;
 }
 
@@ -2356,6 +2362,9 @@ int hero_visit_low( int actor_index )
 	}
 	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal );
 	hero_visit_sendinfo( actor_index );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_VISIT, 0, 0, 1 );
 	return 0;
 }
 
@@ -2398,6 +2407,8 @@ int hero_visit_low10( int actor_index )
 	actor_change_token( actor_index, -global.hero_visit_low_token10, PATH_HEROVISIT, 0 );
 	hero_visit_setprogress( actor_index, global.hero_visit_progress_normal*10 );
 	hero_visit_sendinfo( actor_index );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_VISIT, 0, 0, 1 );
 	return 0;
 }
 
