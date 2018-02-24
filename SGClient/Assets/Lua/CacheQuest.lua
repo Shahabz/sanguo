@@ -33,6 +33,11 @@ QUEST_DATATYPE_BRANCH_QUEST			=	37	-- 完成任意N个支线任务 datatype=37 d
 QUEST_DATATYPE_EQUIP_FORGING_QUICK	=	38	-- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
 QUEST_DATATYPE_HERO_UP				=	39	-- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 QUEST_DATATYPE_SMITHYOFFHIRE		=	40	-- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
+QUEST_DATATYPE_NEQUIP_FORGING		=	41	-- 打造国器N datatype=41 datakind=国器kind needvalue=1
+QUEST_DATATYPE_NEQUIP_LEVELNUM		=	42	-- 国器升级N次 datatype=42 datakind=0 needvalue=次数
+QUEST_DATATYPE_MATERIAL_MAKE		=	43	-- 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
+QUEST_DATATYPE_HEROGUARD_UP			=	44	-- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
+QUEST_DATATYPE_HERO_VISIT			=	45	-- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -123,6 +128,16 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 95 )
 	elseif datatype == QUEST_DATATYPE_SMITHYOFFHIRE	then -- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
 		typename = Localization.text_quest( 94 )
+	elseif datatype == QUEST_DATATYPE_NEQUIP_FORGING then -- 打造国器N datatype=41 datakind=国器kind needvalue=1
+		typename = Localization.text_quest( 89 )
+	elseif datatype == QUEST_DATATYPE_NEQUIP_LEVELNUM then -- 国器升级N次 datatype=42 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 89 )
+	elseif datatype == QUEST_DATATYPE_MATERIAL_MAKE then -- 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
+		typename = Localization.text_quest( 98 )
+	elseif datatype == QUEST_DATATYPE_HEROGUARD_UP then -- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
+		typename = Localization.text_quest( 95 )
 	end
 	return typename;
 end
@@ -205,6 +220,16 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 27, HeroName(datakind) );
 	elseif datatype == QUEST_DATATYPE_SMITHYOFFHIRE	then -- 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
 		name = name..FQUEST( 28, needvalue );
+	elseif datatype == QUEST_DATATYPE_NEQUIP_FORGING then -- 打造国器N datatype=41 datakind=国器kind needvalue=1
+		name = name..FQUEST( 29, NationEquipName(datakind) );
+	elseif datatype == QUEST_DATATYPE_NEQUIP_LEVELNUM then -- 国器升级N次 datatype=42 datakind=0 needvalue=次数
+		name = name..FQUEST( 30, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_MATERIAL_MAKE then -- 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
+		name = name..FQUEST( 31, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_HEROGUARD_UP then -- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
+		name = name..FQUEST( 32, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
+		name = name..FQUEST( 33, value, needvalue );
 	else
 		name = ""
 	end
@@ -341,7 +366,22 @@ function QuestGoto( index )
 		City.Move( BUILDING_Smithy, -1, true );
 	
 	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
-		City.Move( BUILDING_Hero, -1, true );	
+		City.Move( BUILDING_Hero, -1, true );
+		
+	elseif datatype == QUEST_DATATYPE_NEQUIP_FORGING then -- 打造国器N datatype=41 datakind=国器kind needvalue=1
+		NationEquipDlgShow()
+		
+	elseif datatype == QUEST_DATATYPE_NEQUIP_LEVELNUM then -- 国器升级N次 datatype=42 datakind=0 needvalue=次数
+		NationEquipDlgShow()
+		
+	elseif datatype == QUEST_DATATYPE_MATERIAL_MAKE then -- 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
+		City.Move( BUILDING_Craftsman, -1, true );
+		
+	elseif datatype == QUEST_DATATYPE_HEROGUARD_UP then -- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
+		City.Move( BUILDING_Cabinet, -1, true );
+		
+	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
+		City.Move( BUILDING_Hero, -1, true );
 	end
 end
 

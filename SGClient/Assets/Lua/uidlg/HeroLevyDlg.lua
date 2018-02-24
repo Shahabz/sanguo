@@ -387,7 +387,8 @@ end
 
 -- 点击按钮：开启任务
 function HeroLevyDlgOnBtnOpenTask()
-	system_askinfo( ASKINFO_TIANCEQUEST, "", 1, m_RecvValue.m_tc_kind ); -- 领取开启一个任务
+	local OpenIndex = m_RecvValue.m_tc_kind+1;
+	system_askinfo( ASKINFO_TIANCEQUEST, "", 1, OpenIndex ); -- 领取开启一个任务
 end
 
 -- 点击按钮：前往任务

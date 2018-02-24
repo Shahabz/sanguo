@@ -40,6 +40,11 @@
 #define	QUEST_DATATYPE_EQUIP_FORGING_QUICK	38	// 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
 #define	QUEST_DATATYPE_HERO_UP				39	// 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 #define	QUEST_DATATYPE_SMITHYOFFHIRE		40	// 铁匠铺内雇佣N级或更高级铁匠 datatype=40 datakind=0 needvalue=等级
+#define	QUEST_DATATYPE_NEQUIP_FORGING		41	// 打造国器N datatype=41 datakind=国器kind needvalue=1
+#define	QUEST_DATATYPE_NEQUIP_LEVELNUM		42	// 国器升级N次 datatype=42 datakind=0 needvalue=次数
+#define	QUEST_DATATYPE_MATERIAL_MAKE		43	// 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
+#define	QUEST_DATATYPE_HEROGUARD_UP			44	// 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
+#define	QUEST_DATATYPE_HERO_VISIT			45	// 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 
 // 任务类型
 enum 
