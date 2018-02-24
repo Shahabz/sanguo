@@ -22,6 +22,7 @@
 #include "actor_times.h"
 #include "mail.h"
 #include "nation_hero.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -287,6 +288,9 @@ int hero_gethero( int actor_index, int kind, short path )
 		}
 		hero_makestruct( city_getptr( actor_index ), pHasHero->offset, pHasHero, &pValue.m_hero );
 		netsend_heroget_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+		// 任务
+		quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL, kind, 0, 1 );
 		return -1;
 	}
 
@@ -342,6 +346,9 @@ int hero_gethero( int actor_index, int kind, short path )
 
 	// 重算英雄战力
 	city_battlepower_hero_calc( pCity );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL, kind, 0, 1 );
 	return 0;
 }
 
@@ -1862,6 +1869,8 @@ int hero_wash_free( int actor_index, int herokind )
 	city_battlepower_hero_calc( pCity );
 	// 更新英雄
 	hero_sendinfo( actor_index, pHero );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_WASHCOUNT, 0, 0, 1 );
 
 	pCity->hero_washnum -= 1;
 	if ( pCity->hero_washsec <= 0 )
@@ -1938,6 +1947,8 @@ int hero_wash_token( int actor_index, int herokind )
 	city_battlepower_hero_calc( pCity );
 	// 更新英雄
 	hero_sendinfo( actor_index, pHero );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_WASHCOUNT, 0, 0, 1 );
 	return 0;
 }
 

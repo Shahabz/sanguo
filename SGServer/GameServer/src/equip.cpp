@@ -1077,6 +1077,9 @@ int equip_forging_quick( int actor_index )
 	pCity->forgingsec = 0;
 	building_smithy_send( pCity->index );
 	wlog( 0, LOGOP_FORGING, PATH_FORGING_QUICK, kind, sec, pCity->ofkind[0], pCity->actorid, city_mainlevel( pCity->index ) );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_FORGING_QUICK, 0, 0, 1 );
 	return 0;
 }
 
@@ -1260,6 +1263,9 @@ int equip_wash_free( int actor_index, int offset )
 	if ( pCity->equip_washsec <= 0 )
 		pCity->equip_washsec = global.equip_wash_sec;
 	equip_wash_sendinfo( actor_index );
+
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
 	return 0;
 }
 
@@ -1331,6 +1337,8 @@ int equip_wash_token( int actor_index, int offset )
 	{
 		equip_sendbag( actor_index, offset );
 	}
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
 	return 0;
 }
 
@@ -1395,6 +1403,8 @@ int equip_wash_super( int actor_index, int offset )
 	{
 		equip_sendbag( actor_index, offset );
 	}
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
 	return 0;
 }
 

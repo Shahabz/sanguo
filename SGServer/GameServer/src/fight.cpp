@@ -1034,10 +1034,14 @@ int fight_damage( int pos, FightUnit *pUnit, FightUnit *pTargetUnit )
 	{
 		// 2.计算基础伤害
 		// 基础伤害=（攻方攻击力-防方防御力）*（0.5+0.5*攻方当前兵力/防方当前兵力）*兵种克制系数*战斗节奏控制系数+攻方强攻-防方强防+攻方攻城-防方守城
-		damage = (int)ceil( (pUnit->attack - pTargetUnit->defense) * ((global.fight_v1 / FIGHT_FLOAT) + (global.fight_v2 / FIGHT_FLOAT) * pUnit->line_hp / (float)pTargetUnit->line_hp) * (_corpsmul( pUnit->corps, pTargetUnit->corps ) / FIGHT_FLOAT) * (global.fight_control_value / FIGHT_FLOAT) );
-		damage += (pUnit->attack_increase - pTargetUnit->defense_increase);
-		damage += (pUnit->assault - pTargetUnit->defend);
-
+		damage = (int)ceil( ( 
+			(pUnit->attack - pTargetUnit->defense) 
+			* ((global.fight_v1 / FIGHT_FLOAT) + (global.fight_v2 / FIGHT_FLOAT) * pUnit->line_hp / (float)pTargetUnit->line_hp) 
+			+ pUnit->attack_increase - pTargetUnit->defense_increase 
+			+ pUnit->assault - pTargetUnit->defend) 
+			* (_corpsmul( pUnit->corps, pTargetUnit->corps ) / FIGHT_FLOAT) 
+			* (global.fight_control_value / FIGHT_FLOAT) );
+		
 		// 3.设定保底伤害
 		// 基础保底伤害 = Max（攻方攻击 * 5 % ，基础伤害）
 		damage = max( (int)ceil( pUnit->attack * (global.fight_attackmin_value / FIGHT_FLOAT) ), damage );

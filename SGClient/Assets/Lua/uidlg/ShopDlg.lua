@@ -355,13 +355,14 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	end
 	
 	if isuse == 0 then		
-		if info.m_id == 15 or info.m_id == 16 then
+		if info.m_id == 15 or (info.m_id >= 16 and info.m_id <= 20) then
 			SetFalse( uiDesc2 )
 			SetFalse( uiRedLine )
 			SetTrue( uiPrice )
 			SetText( uiPrice, T(2276) )
 			SetText( uiToken, info.m_token )
-			if info.m_id == 15  then
+			SetText( uiNum, "" )
+			if info.m_id == 15 then
 				local lefttime = GetPlayer().m_buff_endtime[CITY_BUFF_MARCH]-GetServerTime()
 				if lefttime > 0 then
 					SetTrue( uiTimer )
@@ -369,13 +370,14 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 					SetText( uiName, name..info.m_awardnum.."%".."("..T(2324)..")", NameColor(c) )
 					SetText( uiPrice, T(2325) )
 				end
-			elseif info.m_id == 16 then
+			elseif (info.m_id >= 16 and info.m_id <= 20) then
 				local lefttime = GetPlayer().m_buff_endtime[CITY_BUFF_TRAIN]-GetServerTime()
 				if lefttime > 0 then
 					SetTrue( uiTimer )
 					SetTimer( uiTimer, lefttime-1, lefttime, 0, T(702) )
 					SetText( uiName, name..info.m_awardnum.."%".."("..T(2324)..")", NameColor(c) )
 					SetText( uiPrice, T(2325) )
+					SetText( uiDesc1, F( 2280+16, info.m_awardnum ) );
 				end
 			end
 		else

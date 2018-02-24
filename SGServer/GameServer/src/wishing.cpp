@@ -17,6 +17,7 @@
 #include "server_netsend_auto.h"
 #include "system.h"
 #include "item.h"
+#include "quest.h"
 #include "wishing.h"
 
 extern SConfig g_Config;
@@ -169,6 +170,8 @@ int wishing_shop_open( int actor_index, int id )
 	g_actors[actor_index].wishingcd = (int)time( NULL ) + global.wishing_opencd;
 	g_actors[actor_index].wishingopen[offset] = 1;
 	wishing_shop_sendinfo( actor_index );
+	// хннЯ
+	quest_addvalue( city_getptr( actor_index ), QUEST_DATATYPE_WISHING, 0, 0, 1 );
 	return 0;
 }
 

@@ -118,14 +118,34 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 			continue;
 		if ( questinfo->datatype != datatype )
 			continue;
-		if ( questinfo->datakind > 0 && questinfo->datakind == datakind || questinfo->datakind == 0 )
+		if ( questinfo->datatype == QUEST_DATATYPE_EQUIP_UP )
+		{ // 给穿装备的任务特殊处理
+			if ( questinfo->datakind > 0 && questinfo->datakind == datakind || questinfo->datakind == 0 )
+			{
+				if ( questinfo->dataoffset == dataoffset )
+				{
+					pCity->questvalue[tmpi] += value;
+					if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
+					{
+						if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+						{ // 任务完成，通知领奖
+							quest_sendawardinfo( pCity->actor_index, questid );
+						}
+					}
+				}
+			}
+		}
+		else
 		{
-			pCity->questvalue[tmpi] += value;
-			if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
-			{ 
-				if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
-				{ // 任务完成，通知领奖
-					quest_sendawardinfo( pCity->actor_index, questid );
+			if ( questinfo->datakind > 0 && questinfo->datakind == datakind || questinfo->datakind == 0 )
+			{
+				pCity->questvalue[tmpi] += value;
+				if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
+				{
+					if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+					{ // 任务完成，通知领奖
+						quest_sendawardinfo( pCity->actor_index, questid );
+					}
 				}
 			}
 		}
@@ -431,6 +451,12 @@ int quest_getaward( int actor_index, int questid )
 	}
 	quest_sendlist( actor_index );
 	quest_checkcomplete( actor_index );
+
+	// 任务
+	if ( questinfo->type == QUEST_TYPE_BRANCH )
+	{
+		quest_addvalue( city_getptr( actor_index ), QUEST_DATATYPE_BRANCH_QUEST, 0, 0, 1 );
+	}
 	return 0;
 }
 

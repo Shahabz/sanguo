@@ -309,12 +309,14 @@ function MailDlgSetMail( recvValue )
 		local from_actorid = recvValue.m_content_json["fromid"];
 		local msg = recvValue.m_content_json["msg"];
 		SetRichText( uiContent, msg )
-	
+		SetImage( uiShape, LoadSprite("ui_mail_icon_1") )
+		
 	-- 采集
 	elseif recvValue.m_type == MAIL_TYPE_GATHER then
 		local restype = recvValue.m_content_json["res"];
 		local resnum = recvValue.m_content_json["num"];
 		SetRichText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
+		SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
 	
 	-- 采集战斗
 	elseif recvValue.m_type == MAIL_TYPE_GATHER_FIGHT then
@@ -326,6 +328,7 @@ function MailDlgSetMail( recvValue )
 		else
 			SetRichText( uiContent, F(1111, name, tname ) )
 		end
+		SetImage( uiShape, LoadSprite("ui_mail_icon_8") )
 		
 	-- 侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_SPY then
@@ -335,7 +338,8 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
 		SetRichText( uiContent, F( 5511, Nation(nation), level, name, pos ) );
-	
+		SetImage( uiShape, LoadSprite("ui_mail_icon_3") )
+		
 	-- 被侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_BESPY then
 		local flag = recvValue.m_content_json["flag"];
@@ -344,6 +348,7 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
 		SetRichText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
+		SetImage( uiShape, LoadSprite("ui_mail_icon_3") )
 	
 	-- 城战
 	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
@@ -352,8 +357,10 @@ function MailDlgSetMail( recvValue )
 		local tname = recvValue.m_content_json["tna"];
 		if win == 1 then
 			SetRichText( uiContent, F(1110, name, tname ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_6") )
 		else
 			SetRichText( uiContent, F(1111, name, tname ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_3") )
 		end
 		
 	-- 国战
@@ -364,8 +371,10 @@ function MailDlgSetMail( recvValue )
 		local tn = recvValue.m_content_json["tn"];
 		if win == 1 then
 			SetRichText( uiContent, F(1110, name, "["..Nation(tn).."]"..MapTownName(townid) ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_4") )
 		else
 			SetRichText( uiContent, F(1111, name, "["..Nation(tn).."]"..MapTownName(townid) ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_7") )
 		end
 	else
 		-- 解析内容
@@ -398,10 +407,12 @@ function MailDlgSetMail( recvValue )
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
 			SetRichText( uiContent, T(contentid) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
 			
 		-- 每日登录
 		elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
 			SetRichText( uiContent, T(contentid) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_1") )
 			
 		-- 流寇
 		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY then
@@ -426,6 +437,7 @@ function MailDlgSetMail( recvValue )
 			else
 				SetRichText( uiContent, F(1111, name, enemyname ) )
 			end
+			SetImage( uiShape, LoadSprite("ui_mail_icon_5") )
 		
 		-- 国家名将
 		elseif recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO then
@@ -441,6 +453,7 @@ function MailDlgSetMail( recvValue )
 			else
 				SetRichText( uiContent, F(1111, name, heroname ) )
 			end
+			SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
 		end
 	end
 

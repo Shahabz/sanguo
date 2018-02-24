@@ -22,13 +22,16 @@ QUEST_DATATYPE_CITY_TECH			=	26	-- 研究N科技N级 datatype=16 datakind=科技
 QUEST_DATATYPE_CITY_TECHONE			=	27	-- 研究一次N科技 datatype=17 datakind=科技ID needvalue=1
 QUEST_DATATYPE_HERO_WASHCOUNT		=	28	-- 武将洗髓N次 datatype=18 datakind=0 needvalue=次数
 QUEST_DATATYPE_HERO_COLORWASH		=	29	-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
-QUEST_DATATYPE_HERO_CALL			=	30	-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
+QUEST_DATATYPE_HERO_CALL			=	30	-- 招募武将 datatype=20 datakind=kind needvalue=1
 QUEST_DATATYPE_WISHING				=	31	-- 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
 QUEST_DATATYPE_CITYFIGHT			=	32	-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
 QUEST_DATATYPE_EQUIP_UP				=	33	-- 给N武将穿N装备 datatype=33 datakind=武将kind dataoffset=装备编号
 QUEST_DATATYPE_BUILDING_UPGRADE		=	34	-- 升级操作 datatype=34 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
 QUEST_DATATYPE_TRAIN_OP				=	35	-- 操作-募兵N兵种N数量 datatype=24 datakind=兵种（1，2，3） needvalue=数量
 QUEST_DATATYPE_TRAINCOUNT_OP		=	36	-- 操作-募兵N次 datatype=25 datakind=0 needvalue=数量
+QUEST_DATATYPE_BRANCH_QUEST			=	37	-- 完成任意N个支线任务 datatype=37 datakind=0 needvalue=数量
+QUEST_DATATYPE_EQUIP_FORGING_QUICK	=	38	-- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
+QUEST_DATATYPE_HERO_UP				=	39	-- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -103,7 +106,7 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 95 )
 	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
 		typename = Localization.text_quest( 95 )
-	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
+	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募武将 datatype=20 datakind=kind needvalue=1
 		typename = Localization.text_quest( 95 )
 	elseif datatype == QUEST_DATATYPE_WISHING then	-- 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
 		typename = Localization.text_quest( 99 )
@@ -111,6 +114,12 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 93 )
 	elseif datatype == QUEST_DATATYPE_EQUIP_UP then-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
 		typename = Localization.text_quest( 93 )
+	elseif datatype == QUEST_DATATYPE_BRANCH_QUEST then -- 完成N个支线任务
+		typename = Localization.text_quest( 97 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_QUICK then -- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
+		typename = Localization.text_quest( 94 )
+	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
+		typename = Localization.text_quest( 95 )
 	end
 	return typename;
 end
@@ -177,14 +186,20 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 18, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
 		name = name..FQUEST( 19, datakind );
-	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
-		name = name..FQUEST( 20, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募武将 datatype=20 datakind=kind needvalue=1
+		name = name..FQUEST( 20, HeroName(datakind) );
 	elseif datatype == QUEST_DATATYPE_WISHING then	-- 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
 		name = name..FQUEST( 21, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_CITYFIGHT then-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
 		name = name..FQUEST( 22, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_EQUIP_UP then-- 成功击败N名敌国玩家 datatype=22 datakind=0 needvalue=次数
 		name = name..FQUEST( 24, HeroName(datakind), EquipName(dataoffset) );
+	elseif datatype == QUEST_DATATYPE_BRANCH_QUEST then -- 完成N个支线任务
+		name = name..FQUEST( 25, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_QUICK then -- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
+		name = name..FQUEST( 26, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
+		name = name..FQUEST( 27, HeroName(datakind) );
 	else
 		name = ""
 	end
@@ -315,6 +330,13 @@ function QuestGoto( index )
 	elseif datatype == QUEST_DATATYPE_EQUIP_UP then-- 给N武将穿N装备 datatype=33 datakind=武将kind dataoffset=装备编号
 		HeroDlgShow()
 		
+	elseif datatype == QUEST_DATATYPE_BRANCH_QUEST then -- 完成N个支线任务
+	
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_QUICK then -- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
+		City.Move( BUILDING_Smithy, -1, true );
+	
+	elseif datatype == QUEST_DATATYPE_HERO_UP then -- 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
+		City.Move( BUILDING_Hero, -1, true );	
 	end
 end
 

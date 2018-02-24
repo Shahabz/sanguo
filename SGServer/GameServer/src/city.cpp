@@ -3776,6 +3776,7 @@ int city_move( City *pCity, short posx, short posy )
 	short lastposy = pCity->posy;
 	map_delobject( MAPUNIT_TYPE_CITY, pCity->index, lastposx, lastposy );
 	zoneunit_del( MAPUNIT_TYPE_CITY, pCity->index, pCity->zoneunit_index );
+	pCity->zoneunit_index = -1;
 	pCity->posx = posx;
 	pCity->posy = posy;
 
@@ -3789,10 +3790,7 @@ int city_move( City *pCity, short posx, short posy )
 	{
 		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
 	}
-	else
-	{
-		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
-	}
+	
 
 	map_addobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
 	pCity->zone = map_zone_getid( pCity->posx, pCity->posy );

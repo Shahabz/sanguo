@@ -274,10 +274,6 @@ int vipshop_list( int actor_index )
 		{ // 自动建造
 			pValue.m_list[pValue.m_count].m_awardnum = g_vipinfo[viplevel].autobuild;
 		}
-		else if ( g_vipshop[tmpi].id == 16 )
-		{ // 武卒官
-			pValue.m_list[pValue.m_count].m_awardnum = g_vipinfo[viplevel].train;
-		}
 		else
 		{
 			pValue.m_list[pValue.m_count].m_awardnum = g_vipshop[tmpi].awardnum;

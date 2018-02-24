@@ -94,7 +94,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 切换账号
 		elseif nControlID == 4 then
-			SDK.login()
+			SDK.logout()
 			
 		-- 游戏公告
 		elseif nControlID == 5 then

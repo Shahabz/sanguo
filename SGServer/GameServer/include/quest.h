@@ -29,13 +29,16 @@
 #define	QUEST_DATATYPE_CITY_TECHONE			27	// 研究一次N科技 datatype=27 datakind=科技ID needvalue=1
 #define	QUEST_DATATYPE_HERO_WASHCOUNT		28	// 武将洗髓N次 datatype=28 datakind=0 needvalue=次数
 #define	QUEST_DATATYPE_HERO_COLORWASH		29	// 将一名N品质的武将属性洗满 datatype=29 datakind=颜色 needvalue=1
-#define	QUEST_DATATYPE_HERO_CALL			30	// 招募N名武将 datatype=30 datakind=0 needvalue=数量
+#define	QUEST_DATATYPE_HERO_CALL			30	// 招募武将 datatype=30 datakind=kind needvalue=1
 #define	QUEST_DATATYPE_WISHING				31	// 聚宝盆N次 datatype=31 datakind=0 needvalue=次数
 #define	QUEST_DATATYPE_CITYFIGHT			32	// 成功击败N名敌国玩家 datatype=32 datakind=0 needvalue=次数
 #define	QUEST_DATATYPE_EQUIP_UP				33	// 给N武将穿N装备 datatype=33 datakind=武将kind dataoffset=装备编号
 #define	QUEST_DATATYPE_BUILDING_UPGRADE		34	// 操作-升级 datatype=34 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
 #define	QUEST_DATATYPE_TRAIN_OP				35	// 操作-募兵N兵种N数量 datatype=24 datakind=兵种（1，2，3） needvalue=数量
 #define	QUEST_DATATYPE_TRAINCOUNT_OP		36	// 操作-募兵N次 datatype=25 datakind=0 needvalue=数量
+#define	QUEST_DATATYPE_BRANCH_QUEST			37	// 完成任意N个支线任务 datatype=37 datakind=0 needvalue=数量
+#define	QUEST_DATATYPE_EQUIP_FORGING_QUICK	38	// 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
+#define	QUEST_DATATYPE_HERO_UP				39	// 前往聚贤馆让N上阵 datatype=39 datakind=武将kind needvalue=1
 
 // 任务类型
 enum 

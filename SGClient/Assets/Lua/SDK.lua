@@ -25,7 +25,7 @@ end
 -- SDK登陆回调
 function SDK.onLogin( jsonResult )
 	local json = require "cjson"
-	local info = json.decode( msg );   
+	local info = json.decode( jsonResult );   
 	
 	local result 	    = info["result"];
 	if result == "1" then
