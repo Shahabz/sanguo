@@ -48,6 +48,7 @@ local GMCMD_SERVER = {
 [44]="nationof",
 [45]="nhero",
 [46]="db",
+[48]="buffclear",
 }
  
 -- 发到客户端本地指令

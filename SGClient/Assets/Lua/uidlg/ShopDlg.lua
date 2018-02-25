@@ -298,6 +298,13 @@ function ShopDlgRecvVipShop( recvValue )
 	end
 end
 function ShopDlgCreateVipShopItem( index, info, useitem )
+	if info.m_id >= 16 and info.m_id <= 20 then
+		if GetPlayer().m_bufftrain > 0 then
+			if GetPlayer().m_bufftrain ~= info.m_awardnum then
+				return
+			end
+		end
+	end
 	local uiObj = m_ObjectPool:Get( "UIP_VipShopItem" );
 	uiObj.transform:SetParent( m_uiVipShopContent.transform );
 	uiObj.transform.localScale = Vector3.one;
@@ -324,7 +331,7 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	SetImage( uiShape, sprite );
 	SetImage( uiColor, color );
 	if info.m_awardnum > 1 then
-		if info.m_id == 15 or info.m_id == 16 then
+		if info.m_id == 15 or (info.m_id >= 16 and info.m_id <= 20)  then
 			SetText( uiName, name..info.m_awardnum.."%", NameColor(c) )
 			SetText( uiNum, "" )
 		else

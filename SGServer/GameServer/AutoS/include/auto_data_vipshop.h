@@ -11,6 +11,7 @@ struct _vipshop {
 				short itemkind;	//
 				short actorlevel;	//
 				short viplevel;	//
+				short viplevel_max;	//
 				short vipbaglevel;	//
 				short fun;	//
 				short vip_token[16];	//

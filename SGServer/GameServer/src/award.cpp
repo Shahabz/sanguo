@@ -606,6 +606,11 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind == AWARDKIND_BUFF_TRAIN )// 武卒官加速N%，时间1天
 	{
+		City *pCity = city_getptr( actor_index );
+		if ( pCity->buffsec[CITY_BUFF_TRAIN] <= 0 )
+		{
+			pCity->bufftrain = num;
+		}
 		city_change_buff( g_actors[actor_index].city_index, CITY_BUFF_TRAIN, 86400, path );
 	}
 	else if ( kind == AWARDKIND_BUFF_MARCH )// 行军耗时降低N%，时间1天

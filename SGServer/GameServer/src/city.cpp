@@ -2042,7 +2042,7 @@ int city_trainnum( City *pCity, BuildingBarracks *barracks )
 	int buff = 0;
 	if ( pCity->buffsec[CITY_BUFF_TRAIN] > 0 )
 	{
-		buff = (int)ceil( config->value[0] * (float)(vip_attr_train( pCity ) / 100.0f) );
+		buff = (int)ceil( config->value[0] * (float)(pCity->bufftrain / 100.0f) );
 	}
 
 	int weather = 0;

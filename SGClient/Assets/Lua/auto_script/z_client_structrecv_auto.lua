@@ -246,6 +246,7 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_game_day_loop = buffer:ReadSByte();
 	recvValue.m_open_town3 = buffer:ReadSByte();
 	recvValue.m_shape_bag = buffer:ReadInt();
+	recvValue.m_bufftrain = buffer:ReadShort();
 	return recvValue;
 end
 
@@ -2233,8 +2234,9 @@ end
 function struct_NetS_BuffChange_recv( buffer )
 	local recvValue = {};
 	recvValue.m_buffkind = buffer:ReadSByte();
-	recvValue.m_path = buffer:ReadShort();
 	recvValue.m_endtime = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_bufftrain = buffer:ReadShort();
 	return recvValue;
 end
 

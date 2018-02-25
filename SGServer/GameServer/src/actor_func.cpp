@@ -573,6 +573,7 @@ int actor_getinfo( int actor_index )
 				info.m_buff_endtime[i] = (int)time( NULL ) + pCity->buffsec[i];
 			}
 		}
+		info.m_bufftrain = pCity->bufftrain;
 	}
 	netsend_actorinfo_S( actor_index, SENDTYPE_ACTOR, &info );
 	return 0;

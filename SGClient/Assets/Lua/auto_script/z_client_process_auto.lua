@@ -1884,6 +1884,7 @@ end
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function proc_payorder_C( recvValue )
 	-- process.
+	SDK.pay( recvValue )
 end
 
 -- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_token=0,m_itemkind=0,m_vip_token=0,m_vip_buynum=0,m_vip_buynum_max=0,[m_count]},m_useitem=0,
@@ -1902,7 +1903,10 @@ end
 function proc_buffchange_C( recvValue )
 	-- process.
 	GetPlayer().m_buff_endtime[recvValue.m_buffkind] = recvValue.m_endtime;
-	pop( T(2400 + recvValue.m_buffkind) );
+	GetPlayer().m_bufftrain = recvValue.m_bufftrain;
+	if recvValue.m_endtime > 0 then
+		pop( T(2400 + recvValue.m_buffkind) );
+	end
 	HeroDlgSetBuff()
 end
 

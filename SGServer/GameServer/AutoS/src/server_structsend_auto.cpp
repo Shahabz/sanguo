@@ -304,6 +304,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town3, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_shape_bag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_bufftrain, (*psize) );
 	return 0;
 }
 
@@ -2486,8 +2487,9 @@ int struct_NetS_BuffChange_send( char **pptr, int *psize, SLK_NetS_BuffChange *p
 	int tmpi = 0;
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buffkind, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_bufftrain, (*psize) );
 	return 0;
 }
 

@@ -22,12 +22,8 @@ extern SConfig g_Config;
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
 {
 	// process.
-	// 角色列表
-	client_setwait( client_index, 0 );
-	SLK_NetS_List ListValue = { 0 };
-	actor_getlist( client_getplatid( client_index ), client_getuserid( client_index ), &ListValue );
-	netsend_list_S( client_index, SENDTYPE_ACTOR, &ListValue );
-	write_gamelog( "[Serv_List]_idx:%d", client_index );
+	user_awarded( pValue->m_client_index, pValue->m_authid, pValue->m_cdkey_index, pValue->m_awardgroup, pValue->m_result, pValue->m_cardnumber );
+	write_gamelog( "[SERV_USERAWARDED]_idx:%d", client_index );
 }
 
 void proc_gmlocalcmd_S( int client_index, SLK_NetU_Gmlocalcmd *pValue )
@@ -39,6 +35,7 @@ void proc_gmlocalcmd_S( int client_index, SLK_NetU_Gmlocalcmd *pValue )
 		int gm_set_result( int client_index, int value );
 		gm_set_result( client_index, result );
 	}
+	write_gamelog( "[SERV_GMLOCALCMD]_idx:%d", client_index );
 }
 
 void proc_logined_S( int client_index, SLK_NetU_Logined *pValue )
@@ -57,6 +54,7 @@ void proc_logined_S( int client_index, SLK_NetU_Logined *pValue )
 		strncpy( ClientInfo.refresh_token, pValue->m_refresh_token, 65 );
 	}
 	user_logined( pValue->m_client_index, pValue->m_authid, &ClientInfo );
+	write_gamelog( "[SERV_LOGINED]_idx:%d", client_index );
 }
 
 void proc_timer_S( int client_index, char *pValue )
@@ -116,6 +114,7 @@ void proc_gmcmd_S( int client_index, SLK_NetC_Gmcmd *pValue )
 {
 	// process.
 	actor_command( client_index, pValue->m_cmd, pValue->m_value, pValue->m_msg );
+	write_gamelog( "[Serv_gmcmd]_idx:%d", client_index );
 }
 
 void proc_askinfo_S( int client_index, SLK_NetC_AskInfo *pValue )
@@ -128,30 +127,35 @@ void proc_entercity_S( int client_index, SLK_NetC_EnterCity *pValue )
 {
 	// process.
 	actor_entercity( client_index );
+	write_gamelog( "[Serv_entercity]_idx:%d", client_index );
 }
 
 void proc_chat_S( int client_index, SLK_NetC_Chat *pValue )
 {
 	// process.
 	chat_actortalk( client_index, pValue->m_channel, CHAT_MSGTYPE_ACTORCHAT, pValue->m_msg );
+	write_gamelog( "[Serv_chat]_idx:%d", client_index );
 }
 
 void proc_storybattle_S( int client_index, SLK_NetC_StoryBattle *pValue )
 {
 	// process.
 	story_battle( client_index, pValue );
+	write_gamelog( "[Serv_battle]_idx:%d", client_index );
 }
 
 void proc_worldmapask_S( int client_index, SLK_NetC_WorldMapAsk *pValue )
 {
 	// process.
 	map_sendinfo( client_index, pValue->m_to_posx, pValue->m_to_posy );
+	write_gamelog( "[Serv_worldmapask]_idx:%d", client_index );
 }
 
 void proc_worldmapareaindex_S( int client_index, SLK_NetC_WorldMapAreaIndex *pValue )
 {
 	// process.
 	map_areaenter( client_index, pValue->m_areaindex, pValue->m_posx, pValue->m_posy, pValue->m_areaupdate );
+	write_gamelog( "[Serv_worldmapareaindex]_idx:%d", client_index );
 }
 
 void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
@@ -177,12 +181,14 @@ void proc_mapbattle_S( int client_index, SLK_NetC_MapBattle *pValue )
 	{
 		army_battle( city_getptr( client_index ), pValue );
 	}
+	write_gamelog( "[Serv_mapbattle]_idx:%d", client_index );
 }
 
 void proc_mailask_S( int client_index, SLK_NetC_MailAsk *pValue )
 {
 	// process.
 	mail_getlist( client_index, pValue->m_op, pValue->m_minid, pValue->m_maxid );
+	write_gamelog( "[Serv_mailask]_idx:%d", client_index );
 }
 
 void proc_mailop_S( int client_index, SLK_NetC_MailOp *pValue )
@@ -224,42 +230,49 @@ void proc_mailop_S( int client_index, SLK_NetC_MailOp *pValue )
 	{ // 获取分享他内容的战斗信息
 		mail_share_getfightcontent( client_index, pValue->m_mailid );
 	}
+	write_gamelog( "[Serv_mailop]_idx:%d", client_index );
 }
 
 void proc_mailalldel_S( int client_index, SLK_NetC_MailAllDel *pValue )
 {
 	// process.
 	mail_delete_all( client_index, pValue );
+	write_gamelog( "[Serv_mailalldel]_idx:%d", client_index );
 }
 
 void proc_mailshare_S( int client_index, SLK_NetS_MailShare *pValue )
 {
 	// process.
 	mail_share( client_index, pValue );
+	write_gamelog( "[Serv_mailshare]_idx:%d", client_index );
 }
 
 void proc_mailsend_S( int client_index, SLK_NetC_MailSend *pValue )
 {
 	// process.
 	mail_actor_send( client_index, pValue );
+	write_gamelog( "[Serv_mailsend]_idx:%d", client_index );
 }
 
 void proc_mailreply_S( int client_index, SLK_NetC_MailReply *pValue )
 {
 	// process.
 	mail_actor_reply( client_index, pValue );
+	write_gamelog( "[Serv_mailreply]_idx:%d", client_index );
 }
 
 void proc_worldbossbattle_S( int client_index, SLK_NetC_WorldBossBattle *pValue )
 {
 	// process.
 	worldboss_battle( client_index, pValue );
+	write_gamelog( "[Serv_worldbossbattle]_idx:%d", client_index );
 }
 
 void proc_heroguardsort_S( int client_index, SLK_NetC_HeroGuardSort *pValue )
 {
 	// process.
 	hero_guard_sort( client_index, pValue );
+	write_gamelog( "[Serv_heroguardsort]_idx:%d", client_index );
 }
 
 void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue )
@@ -273,6 +286,7 @@ void proc_questtalknext_S( int client_index, SLK_NetC_QuestTalkNext *pValue )
 	{
 		quest_talk_client_ask( client_index, pValue->m_talkid );
 	}
+	write_gamelog( "[Serv_questtalknext]_idx:%d", client_index );
 }
 
 void proc_ranklistask_S( int client_index, SLK_NetC_RankAsk *pValue )
@@ -290,6 +304,7 @@ void proc_ranklistask_S( int client_index, SLK_NetC_RankAsk *pValue )
 	{
 		rank_nation_sendlist( client_index, pValue->m_page, pValue->m_myrange );
 	}
+	write_gamelog( "[Serv_ranklistask]_idx:%d", client_index );
 }
 
 void proc_friendop_S( int client_index, SLK_NetC_FriendOp *pValue )
@@ -315,5 +330,6 @@ void proc_friendop_S( int client_index, SLK_NetC_FriendOp *pValue )
 	{ // 删除
 		actor_friend_delete( client_index, pValue->m_target_actorid, pValue->m_target_cityindex );
 	}
+	write_gamelog( "[Serv_friendop]_idx:%d", client_index );
 }
 

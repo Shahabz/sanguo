@@ -36,6 +36,7 @@
 #include "nation.h"
 #include "nation_hero.h"
 #include "story.h"
+#include "city_attr.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -556,6 +557,75 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		break;
 	case GMC_DB: // Êı¾İ¿âÖØÖÃ
 		process_dbreload();
+		break;
+	case GMC_PAY:
+	{
+		if ( pMsg == NULL )
+		{
+			break;
+		}
+		char *pOrderID = NULL;
+		char *pMoney;
+		char *pCurrency;
+
+		int tmpi = 0;
+		char *strp;
+		char *str = pMsg;
+		char sign = '|';
+		strp = str;
+		while ( *str )
+		{
+			if ( *str == sign )
+			{
+				if ( tmpi == 0 )
+					pOrderID = strp;
+				else if ( tmpi == 1 )
+					pMoney = strp;
+				else if ( tmpi == 2 )
+					pCurrency = strp;
+				*str = 0;
+				str++;
+				strp = str;
+				tmpi++;
+				if ( tmpi >= 3 )
+					break;
+			}
+			else
+				str++;
+		}
+		if ( tmpi == 0 )
+			pOrderID = strp;
+		else if ( tmpi == 1 )
+			pMoney = strp;
+		else if ( tmpi == 2 )
+			pCurrency = strp;
+		tmpi++;
+		if ( tmpi == 1 )
+		{
+			pMoney = strp;
+			pCurrency = strp;
+		}
+		else if ( tmpi == 2 )
+		{
+			pCurrency = strp;
+		}
+
+		actor_pay( pValue[0], pValue[1], pOrderID, pMoney, pCurrency );
+	}
+	break;
+	case GMC_BUFFCLEAR:
+		if ( pCity )
+		{
+			short kind = pValue[0];
+			if ( kind >= 0 && kind < CITY_BUFF_MAX )
+			{
+				if ( pValue[1] == 0 )
+					pCity->buffsec[kind] = 1;
+				else
+					pCity->buffsec[kind] = pValue[1];
+				city_change_buff( pCity->index, kind, 0, PATH_GM );
+			}
+		}
 		break;
 	default:
 		break;

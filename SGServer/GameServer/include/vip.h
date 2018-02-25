@@ -26,7 +26,7 @@ int vip_attr_autobuild( City *pCity );
 // 每日免费行军召回次数
 int vip_attr_marchcall( City *pCity );
 
-// 武卒官加速募兵
+// 武卒官加速募兵(无用)
 int vip_attr_train( City *pCity );
 
 // VIP礼包

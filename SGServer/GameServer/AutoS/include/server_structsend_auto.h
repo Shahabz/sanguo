@@ -196,6 +196,7 @@ struct _slk_NetS_ActorInfo {
 	char m_game_day_loop;	//服务器发送玩家基本信息-天气
 	char m_open_town3;	//服务器发送玩家基本信息-攻克郡城
 	int m_shape_bag;	//服务器发送玩家基本信息-头像背包
+	short m_bufftrain;	//服务器发送玩家基本信息-武卒官加速
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -1708,8 +1709,9 @@ typedef struct _slk_NetS_VipBag SLK_NetS_VipBag;	//vip礼包
 
 struct _slk_NetS_BuffChange {
 	char m_buffkind;	//BUFF更新
-	short m_path;	//BUFF更新
 	int m_endtime;	//BUFF更新
+	short m_path;	//BUFF更新
+	short m_bufftrain;	//BUFF更新
 };
 typedef struct _slk_NetS_BuffChange SLK_NetS_BuffChange;	//buff更新
 

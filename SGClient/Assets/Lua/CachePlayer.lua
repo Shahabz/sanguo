@@ -98,6 +98,7 @@ function Player:Init()
 	self.m_attr 			= 	{};
 	self.m_blacklist		= 	{};
 	self.m_buff_endtime		= 	{};
+	self.m_bufftrain		= 	{};
 	self.m_open_town3		=	0;
 	self.m_open_town6		=	0;
 	self.m_open_townking	=	0;
@@ -160,6 +161,7 @@ function Player:Set( recvValue )
 	for i = 1, CITY_BUFF_MAX, 1 do
 		self.m_buff_endtime[i-1] = recvValue.m_buff_endtime[i]
 	end
+	self.m_bufftrain		= 	recvValue.m_bufftrain
 	self.m_open_town3		=	recvValue.m_open_town3;
 	self.m_open_town6		=	recvValue.m_open_town6;
 	self.m_open_townking	=	recvValue.m_open_townking;

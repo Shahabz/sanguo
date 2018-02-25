@@ -258,6 +258,8 @@ int vipshop_list( int actor_index )
 			continue;
 		if ( pCity->viplevel < g_vipshop[tmpi].viplevel )
 			continue;
+		if ( g_vipshop[tmpi].viplevel_max > 0 && pCity->viplevel >= g_vipshop[tmpi].viplevel_max )
+			continue;
 		if ( g_vipshop[tmpi].vipbaglevel > 0 )
 		{
 			if ( vipbag_check( actor_index, g_vipshop[tmpi].vipbaglevel ) == 0 )

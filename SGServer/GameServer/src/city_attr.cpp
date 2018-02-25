@@ -458,8 +458,14 @@ int city_change_buff( int city_index, int index, int sec, short path )
 		return -1;
 	g_city[city_index].buffsec[index] += sec;
 	city_attr_reset( &g_city[city_index] );
-
-	if ( index == CITY_BUFF_FIRE || index == CITY_BUFF_MOUNTAIN )
+	if ( index == CITY_BUFF_TRAIN )
+	{
+		if ( sec <= 0 )
+		{
+			g_city[city_index].bufftrain = 0;
+		}
+	}
+	else if ( index == CITY_BUFF_FIRE || index == CITY_BUFF_MOUNTAIN )
 	{
 		hero_attr_calc_all( &g_city[city_index], 0 );
 	}
@@ -467,7 +473,15 @@ int city_change_buff( int city_index, int index, int sec, short path )
 	{
 		SLK_NetS_BuffChange pValue = { 0 };
 		pValue.m_buffkind = index;
-		pValue.m_endtime = (int)time( NULL ) + g_city[city_index].buffsec[index];
+		if ( g_city[city_index].buffsec[index] == 0 )
+		{
+			pValue.m_endtime = 0;
+		}
+		else
+		{
+			pValue.m_endtime = (int)time( NULL ) + g_city[city_index].buffsec[index];
+		}
+		pValue.m_bufftrain = g_city[city_index].bufftrain;
 		pValue.m_path = path;
 		netsend_buffchange_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 	}
