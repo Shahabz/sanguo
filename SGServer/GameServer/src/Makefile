@@ -30,6 +30,7 @@ SRC = \
 ../AutoS/src/auto_data_nation_mission.cpp \
 ../AutoS/src/auto_nation.cpp \
 ../AutoS/src/auto_actor.cpp \
+../AutoS/src/auto_data_teacher_award.cpp \
 ../AutoS/src/auto_data_tiance_quest.cpp \
 ../AutoS/src/global_process_auto.cpp \
 ../AutoS/src/server_process_auto.cpp \
@@ -47,6 +48,7 @@ SRC = \
 ../AutoS/src/auto_map_event.cpp \
 ../AutoS/src/auto_data_building_upgrade.cpp \
 ../AutoS/src/auto_data_item.cpp \
+../AutoS/src/auto_data_teacher_shop.cpp \
 ../AutoS/src/auto_data_city_tech.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
@@ -232,6 +234,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor.o: ../AutoS/src/auto_actor.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_teacher_award.o: ../AutoS/src/auto_data_teacher_award.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_tiance_quest.o: ../AutoS/src/auto_data_tiance_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/global_process_auto.o: ../AutoS/src/global_process_auto.cpp 
@@ -265,6 +269,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_building_upgrade.o: ../AutoS/src/auto_data_building_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_teacher_shop.o: ../AutoS/src/auto_data_teacher_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_city_tech.o: ../AutoS/src/auto_data_city_tech.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

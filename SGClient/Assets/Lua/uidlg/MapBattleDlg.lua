@@ -211,7 +211,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetImage( m_uiShape, EnemySprite( g_enemyinfo[kind].shape, 1 ) )
 		-- 名字+位置
 		if g_enemyinfo[kind].nameid > 0 then
-			SetText( m_uiName, F(2388, T(g_enemyinfo[kind].nameid), level, posx, posy) )
+			SetText( m_uiName, F(2388, level, T(g_enemyinfo[kind].nameid), posx, posy) )
 		else
 			SetText( m_uiName, F(955, level, posx, posy) )
 		end
