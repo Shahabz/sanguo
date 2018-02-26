@@ -45,4 +45,8 @@ int actor_student_sendlist( int actor_index );
 int actor_take_teacher( int actor_index, int teacher_actorid );
 int actor_take_teacher_awardget( int actor_index );
 int actor_studentlevel_awardget( int actor_index, int id );
+
+// 徒弟等级奖励次数
+void actor_studentlevelup( int teacher_actorid, int level );
+int actor_studentlevel_awardadd( int actor_index, int id );
 #endif // !_ACTOR_FRIEND_H_

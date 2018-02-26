@@ -3040,8 +3040,8 @@ int struct_NetS_StudentList_send( char **pptr, int *psize, SLK_NetS_StudentList 
 	{
 		struct_NetS_Student_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
-	LKSET_MEM_SEND( (*pptr), pValue->m_awardhas, 10*sizeof(char), (*psize) );
-	LKSET_MEM_SEND( (*pptr), pValue->m_studentnum, 10*sizeof(char), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_te_award, 10*sizeof(char), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_te_awarded, 10*sizeof(char), (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_teacheraward_count, (*psize) );
 	for( tmpi = 0; tmpi < pValue->m_teacheraward_count; tmpi++ )
 	{

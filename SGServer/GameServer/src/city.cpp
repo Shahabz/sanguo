@@ -38,6 +38,7 @@
 #include "pay.h"
 #include "nation_equip.h"
 #include "nation_hero.h"
+#include "actor_friend.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1120,6 +1121,8 @@ int city_actorupgrade( int city_index, short path, AwardGetInfo *getinfo )
 		return -1;
 	int lastlevel = g_city[city_index].level;
 	g_city[city_index].level += 1;
+	// 师徒升级奖励
+	actor_studentlevelup( g_city[city_index].teacherid, g_city[city_index].level );
 	wlog( 0, LOGOP_UPGRADE, path, 0, g_city[city_index].level, 0, g_city[city_index].actorid, city_mainlevel( city_index ) );
 
 	// 同步更新到玩家身上

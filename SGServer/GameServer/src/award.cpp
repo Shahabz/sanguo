@@ -24,6 +24,7 @@
 #include "vip.h"
 #include "hero.h"
 #include "quest.h"
+#include "actor_friend.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -640,6 +641,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 		int iron = city_yield_total( city_getptr( actor_index ), BUILDING_Iron );
 		if ( iron > 0 )
 			city_changeiron( g_actors[actor_index].city_index, iron, path );
+	}
+	else if ( kind == AWARDKIND_TEACHERAWARDNUM ) // 师徒奖励次数
+	{
+		actor_studentlevel_awardadd( actor_index, num );
 	}
 	else if ( kind == AWARDKIND_PERMISSION_4 ) // 科技快研
 	{

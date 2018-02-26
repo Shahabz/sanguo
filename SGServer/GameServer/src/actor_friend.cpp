@@ -17,6 +17,7 @@
 #include "award.h"
 #include "rank.h"
 #include "map_zone.h"
+#include "actor_times.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -28,6 +29,12 @@ extern Actor g_temp_actor[2];
 
 extern City *g_city;
 extern int g_city_maxcount;
+
+extern TeacherAward *g_teacher_award;
+extern int g_teacher_award_maxnum;
+
+extern TeacherShop *g_teacher_shop;
+extern int g_teacher_shop_maxnum;
 
 ActorFriend *actor_friend_getptr( int actor_index, int offset )
 {
@@ -486,7 +493,69 @@ int actor_friend_sendlist( int actor_index )
 int actor_student_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_StudentList pValue = { 0 };
+	// 师父
+	if ( pCity->teacherid > 0 )
+	{ 
+		int city_index = city_getindex_withactorid( pCity->teacherid );
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
+			pValue.m_list[pValue.m_count].m_city_index = city_index;
+			pValue.m_list[pValue.m_count].m_shape = g_city[city_index].shape;
+			pValue.m_list[pValue.m_count].m_place = g_city[city_index].place;
+			pValue.m_list[pValue.m_count].m_level = g_city[city_index].level;
+			pValue.m_list[pValue.m_count].m_battlepower = g_city[city_index].battlepower;
+			strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_isteacher = 1;
+			pValue.m_count += 1;
+		}
+	}
 
+	// 徒弟
+	for ( int tmpi = 0; tmpi < ACTOR_STUDENT_MAXCOUNT; tmpi++ )
+	{
+		if ( g_actors[actor_index].student[tmpi] <= 0 )
+			continue;
+		int city_index = city_getindex_withactorid( g_actors[actor_index].student[tmpi] );
+		if ( city_index < 0 || city_index >= g_city_maxcount )
+			continue;
+		pValue.m_list[pValue.m_count].m_actorid = g_city[city_index].actorid;
+		pValue.m_list[pValue.m_count].m_city_index = city_index;
+		pValue.m_list[pValue.m_count].m_shape = g_city[city_index].shape;
+		pValue.m_list[pValue.m_count].m_place = g_city[city_index].place;
+		pValue.m_list[pValue.m_count].m_level = g_city[city_index].level;
+		pValue.m_list[pValue.m_count].m_battlepower = g_city[city_index].battlepower;
+		strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, sizeof( char )*NAME_SIZE );
+		pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+		pValue.m_count += 1;
+	}
+
+	// 可领取和已经领取次数
+	for ( int tmpi = 0; tmpi < 10; tmpi++ )
+	{
+		pValue.m_te_award[tmpi] = g_actors[actor_index].te_award[tmpi];
+		pValue.m_te_awarded[tmpi] = g_actors[actor_index].te_awarded[tmpi];
+	}
+
+	// 拜师奖励
+	if ( pCity->teacherid > 0 && actor_get_sflag( actor_index, ACTOR_SFLAG_TEACHERAWARD ) == 0 )
+	{
+		for ( int tmpi = 0; tmpi < 5; tmpi++ )
+		{
+			if ( g_teacher_award[0].awardkind[tmpi] <= 0 )
+				continue;
+			pValue.m_teacheraward[pValue.m_teacheraward_count].m_kind = g_teacher_award[0].awardkind[tmpi];
+			pValue.m_teacheraward[pValue.m_teacheraward_count].m_num = g_teacher_award[0].awardnum[tmpi];
+			pValue.m_teacheraward_count += 1;
+		}
+	}
+
+	netsend_studentlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -494,6 +563,9 @@ int actor_student_sendlist( int actor_index )
 int actor_take_teacher( int actor_index, int teacher_actorid )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	int teacher_actor_index = actor_getindex_withid( teacher_actorid );
 	if ( teacher_actor_index >= 0 && teacher_actor_index < g_maxactornum )
 	{ // 在线
@@ -512,7 +584,7 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 			return -1;
 		}
 		g_actors[teacher_actor_index].student[free_index] = g_actors[actor_index].actorid;
-		g_actors[actor_index].teacher = teacher_actorid;
+		pCity->teacherid = teacher_actorid;
 	}
 	else
 	{ // 不在线
@@ -533,7 +605,8 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 			return -1;
 		}
 		g_temp_actor[0].student[free_index] = g_actors[actor_index].actorid;
-		g_actors[actor_index].teacher = teacher_actorid;
+		pCity->teacherid = teacher_actorid;
+		actor_save_auto( &g_temp_actor[0], "actor", NULL );
 	}
 
 	return 0;
@@ -543,6 +616,20 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 int actor_take_teacher_awardget( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->teacherid <= 0 )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_TEACHERAWARD ) == 1 )
+		return -1;
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( g_teacher_award[0].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_teacher_award[0].awardkind[tmpi], g_teacher_award[0].awardnum[tmpi], -1, PATH_TEACHER, NULL );
+	}
+	actor_set_sflag( actor_index, ACTOR_SFLAG_TEACHERAWARD, 1 );
 	return 0;
 }
 
@@ -550,5 +637,61 @@ int actor_take_teacher_awardget( int actor_index )
 int actor_studentlevel_awardget( int actor_index, int id )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	if ( id <= 0 || id >= g_teacher_award_maxnum )
+		return -1;
+	 
+	if ( g_actors[actor_index].te_award[id] <= 0 )
+		return -1;
+	if ( g_actors[actor_index].te_awarded[id] >= g_teacher_award[id].maxnum )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( g_teacher_award[id].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_teacher_award[id].awardkind[tmpi], g_teacher_award[id].awardnum[tmpi], -1, PATH_TEACHER, NULL );
+	}
+	g_actors[actor_index].te_award[id] -= 1;
+	g_actors[actor_index].te_awarded[id] += 1;
+	return 0;
+}
+
+// 徒弟等级奖励次数
+void actor_studentlevelup( int teacher_actorid, int level )
+{
+	if ( teacher_actorid <= 0 )
+		return;
+	int id = 0;
+	for ( int tmpi = 1; tmpi < g_teacher_award_maxnum; tmpi++ )
+	{
+		if ( level == g_teacher_award[tmpi].student_level )
+		{
+			id = tmpi;
+			break;
+		}
+	}
+	if ( id == 0 )
+		return;
+
+	int teacher_actor_index = actor_getindex_withid( teacher_actorid );
+	if ( teacher_actor_index >= 0 && teacher_actor_index < g_maxactornum )
+	{ // 在线
+		award_getaward( teacher_actor_index, AWARDKIND_TEACHERAWARDNUM, id, -1, PATH_TEACHER, NULL );
+	}
+	else
+	{ // 不在线
+		gift( teacher_actorid, AWARDKIND_TEACHERAWARDNUM, id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, PATH_TEACHER );
+	}
+	return;
+}
+
+int actor_studentlevel_awardadd( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( id <= 0 || id >= g_teacher_award_maxnum )
+		return -1;
+	if ( g_actors[actor_index].te_award[id] >= ACTOR_STUDENT_MAXCOUNT )
+		return -1;
+	g_actors[actor_index].te_award[id] += 1;
 	return 0;
 }

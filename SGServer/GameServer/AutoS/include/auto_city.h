@@ -140,6 +140,7 @@ struct _city {
 				char tc_num;	//当前领取天策府点兵任务
 				short tc_tech;	//天策府点兵科技
 				short bufftrain;	//武卒官加速值
+				int teacherid;	//师父
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

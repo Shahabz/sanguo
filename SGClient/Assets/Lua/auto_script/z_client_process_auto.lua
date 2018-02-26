@@ -2117,7 +2117,7 @@ function proc_tiancequest_C( recvValue )
 	HeroLevyDlgRecv( recvValue )
 end
 
--- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_isteacher=0,[m_count]},
+-- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_isteacher=0,[m_count]},m_te_award="[10]",m_te_awarded="[10]",m_teacheraward_count=0,m_teacheraward={m_kind=0,m_num=0,[m_teacheraward_count]},
 function proc_studentlist_C( recvValue )
 	-- process.
 end
