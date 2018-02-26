@@ -44,7 +44,7 @@ ASKINFO_NATIONLOG		=	41 -- 国家日志
 ASKINFO_NATIONHERO		=   42 -- 国家名将
 ASKINFO_WISHING			=	43 -- 聚宝盆
 ASKINFO_TIANCEQUEST		=	44 -- 天策府任务
-
+ASKINFO_TEACHER			=	45 -- 师徒
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议
 	if Const.NetStatus < 3 then

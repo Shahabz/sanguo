@@ -43,6 +43,7 @@
 #include "nation.h"
 #include "nation_hero.h"
 #include "wishing.h"
+#include "actor_friend.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -982,6 +983,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 3 )
 		{
 			tiance_quest_tech_activate( actor_index, pvalue[1] );
+		}
+		break;
+	case ASKINFO_TEACHER:
+		if ( pvalue[0] == 0 )
+		{ // 师徒列表
+			actor_student_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 拜师
+			actor_take_teacher( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 拜师奖励领取
+			actor_take_teacher_awardget( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 徒弟等级奖励领取
+			actor_studentlevel_awardget( actor_index, pvalue[1] );
 		}
 		break;
 	default:

@@ -2060,6 +2060,29 @@ struct _slk_NetS_TianceQuest {
 };
 typedef struct _slk_NetS_TianceQuest SLK_NetS_TianceQuest;	//天策府任务
 
+struct _slk_NetS_Student {
+	int m_actorid;	//师徒信息
+	int m_city_index;	//师徒信息
+	char m_shape;	//师徒信息
+	char m_namelen;	//师徒信息
+	char m_name[32];	//师徒信息
+	short m_level;	//师徒信息
+	char m_place;	//师徒信息
+	int m_battlepower;	//师徒信息
+	char m_isteacher;	//师徒信息
+};
+typedef struct _slk_NetS_Student SLK_NetS_Student;	//师徒列表
+
+struct _slk_NetS_StudentList {
+	char m_count;	//师徒信息列表
+	SLK_NetS_Student m_list[31];	//师徒信息列表
+	char m_awardhas[10];	//8个等级是否有可领取的奖励
+	char m_studentnum[10];	//8个等级的徒弟数量
+	char m_teacheraward_count;	//是否有拜师奖励
+	SLK_NetS_AwardInfo m_teacheraward[8];	//是否有拜师奖励
+};
+typedef struct _slk_NetS_StudentList SLK_NetS_StudentList;	//
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2281,5 +2304,7 @@ int struct_NetS_WishingChange_send( char **pptr, int *psize, SLK_NetS_WishingCha
 int struct_NetS_WishingPackItem_send( char **pptr, int *psize, SLK_NetS_WishingPackItem *pValue );
 int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack *pValue );
 int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest *pValue );
+int struct_NetS_Student_send( char **pptr, int *psize, SLK_NetS_Student *pValue );
+int struct_NetS_StudentList_send( char **pptr, int *psize, SLK_NetS_StudentList *pValue );
 
 #endif

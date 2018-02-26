@@ -47,7 +47,7 @@ int teachershop_init_auto()
 	g_teacher_shop = (TeacherShop *)malloc( sizeof(TeacherShop)*g_teacher_shop_maxnum );
 	memset( g_teacher_shop, 0, sizeof(TeacherShop)*g_teacher_shop_maxnum );
 
-	sprintf( szSQL, "select `id`,`itemkind`,`itemnum`,`showlevel`,`buylevel`,`point` from teacher_shop;" );
+	sprintf( szSQL, "select `id`,`awardkind`,`awardnum`,`showlevel`,`buylevel`,`point` from teacher_shop;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -62,8 +62,8 @@ int teachershop_init_auto()
 		if ( id < 0 || id >= g_teacher_shop_maxnum  )
 			continue;
 		g_teacher_shop[id].id = atoi(row[offset++]);
-		g_teacher_shop[id].itemkind = atoi(row[offset++]);
-		g_teacher_shop[id].itemnum = atoi(row[offset++]);
+		g_teacher_shop[id].awardkind = atoi(row[offset++]);
+		g_teacher_shop[id].awardnum = atoi(row[offset++]);
 		g_teacher_shop[id].showlevel = atoi(row[offset++]);
 		g_teacher_shop[id].buylevel = atoi(row[offset++]);
 		g_teacher_shop[id].point = atoi(row[offset++]);

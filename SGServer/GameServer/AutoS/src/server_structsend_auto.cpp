@@ -3014,3 +3014,39 @@ int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest 
 	return 0;
 }
 
+int struct_NetS_Student_send( char **pptr, int *psize, SLK_NetS_Student *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_city_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_place, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_battlepower, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isteacher, (*psize) );
+	return 0;
+}
+
+int struct_NetS_StudentList_send( char **pptr, int *psize, SLK_NetS_StudentList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Student_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardhas, 10*sizeof(char), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_studentnum, 10*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_teacheraward_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_teacheraward_count; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_teacheraward[tmpi] );
+	}
+	return 0;
+}
+

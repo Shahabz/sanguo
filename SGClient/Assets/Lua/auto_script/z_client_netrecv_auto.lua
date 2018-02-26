@@ -930,6 +930,11 @@ function netrecv_tiancequest_C( buffer )
 	proc_tiancequest_C( recvValue );
 end
 
+function netrecv_studentlist_C( buffer )
+	local recvValue = struct_NetS_StudentList_recv( buffer );
+	proc_studentlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1117,6 +1122,7 @@ Proc_Command = {
 	[CMDS_WISHINGCHANGE]=netrecv_wishingchange_C;
 	[CMDS_WISHINGPACK]=netrecv_wishingpack_C;
 	[CMDS_TIANCEQUEST]=netrecv_tiancequest_C;
+	[CMDS_STUDENTLIST]=netrecv_studentlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -45,8 +45,8 @@ struct _actor {
 				short storyid;	//副本进度章节
 				char story_star[128];	//精英副本星级
 				char story_hero[32];	//招募副本
-				char story_resnum[32];	//资源副本次数
 				int story_restime[32];	//资源副本时间
+				char story_resnum[32];	//资源副本次数
 				char story_resreset[32];	//资源副本重置次数
 				char story_itemnum[64];	//道具副本掉落次数
 				char story_drawing[16];	//装备图纸副本是否购买
@@ -70,12 +70,14 @@ struct _actor {
 				char neq_crit[6];	//国器暴击状态
 				char mapcallfree;	//免费召唤次数
 				short wishingid[9];	//聚宝盆道具列表
-				char wishingopen[9];	//聚宝盆道具开启
 				int wishingday;	//聚宝盆道具哪天的
+				char wishingopen[9];	//聚宝盆道具开启
 				int wishingcd;	//聚宝盆寻宝冷却
 				int shape_bag;	//形象背包
 				int student[30];	//徒弟
 				int teacher;	//师父
+				char teacheraward[10];	//师徒奖励
+				int teachershop;	//师徒商店
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

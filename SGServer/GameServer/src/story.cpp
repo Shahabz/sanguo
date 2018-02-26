@@ -154,6 +154,8 @@ int story_sendinfo( int actor_index )
 
 	// É¨µ´Îä½«
 	int maxhero = 2 + pCity->attr.hero_up_num;
+	if ( maxhero > 4 )
+		maxhero = 4;
 	for ( int tmpi = 0; tmpi < maxhero; tmpi++ )
 	{
 		if ( g_actors[actor_index].story_sweephero[tmpi] == 0 )

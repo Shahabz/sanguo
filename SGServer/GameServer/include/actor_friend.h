@@ -43,5 +43,6 @@ int actor_student_sendlist( int actor_index );
 
 // °ÝÊ¦
 int actor_take_teacher( int actor_index, int teacher_actorid );
-
+int actor_take_teacher_awardget( int actor_index );
+int actor_studentlevel_awardget( int actor_index, int id );
 #endif // !_ACTOR_FRIEND_H_

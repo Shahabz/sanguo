@@ -427,7 +427,7 @@ g_techinfo = {
 },
 [25] = 
 { 
-	[1] = { kind=25,level=1,name="中级统帅力：增加上阵武将数量2个",buildinglevel=5,prekind=20,prelevel=1,progress=1,sec=10800,silver=150000,wood=45000,food=0,iron=0,ability=130,value=2,},
+	[1] = { kind=25,level=1,name="中级统帅力：增加上阵武将数量2个",buildinglevel=5,prekind=20,prelevel=1,progress=1,sec=10800,silver=150000,wood=45000,food=0,iron=0,ability=130,value=1,},
 },
 [26] = 
 { 
@@ -435,7 +435,7 @@ g_techinfo = {
 },
 [27] = 
 { 
-	[1] = { kind=27,level=1,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=1,progress=1,sec=43200,silver=480000,wood=140000,food=0,iron=0,ability=131,value=2,},
+	[1] = { kind=27,level=1,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=1,progress=1,sec=43200,silver=480000,wood=140000,food=0,iron=0,ability=131,value=1,},
 },
 [28] = 
 { 

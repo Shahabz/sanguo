@@ -24,6 +24,7 @@ extern MYSQL *myData;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
+extern Actor g_temp_actor[2];
 
 extern City *g_city;
 extern int g_city_maxcount;
@@ -477,5 +478,77 @@ int actor_friend_sendlist( int actor_index )
 	pValue.m_op = 3;
 	pValue.m_count = 0;
 	netsend_friendlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 师徒
+// 徒弟列表
+int actor_student_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	return 0;
+}
+
+// 拜师
+int actor_take_teacher( int actor_index, int teacher_actorid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int teacher_actor_index = actor_getindex_withid( teacher_actorid );
+	if ( teacher_actor_index >= 0 && teacher_actor_index < g_maxactornum )
+	{ // 在线
+		int free_index = -1;
+		for ( int tmpi = 0; tmpi < ACTOR_STUDENT_MAXCOUNT; tmpi++ )
+		{
+			if ( g_actors[teacher_actor_index].student[tmpi] <= 0 )
+			{
+				free_index = tmpi;
+			}
+		}
+		if ( free_index >= ACTOR_STUDENT_MAXCOUNT )
+		{
+			// 2428	对方徒弟人数已满
+			actor_notify_alert( actor_index, 2428 );
+			return -1;
+		}
+		g_actors[teacher_actor_index].student[free_index] = g_actors[actor_index].actorid;
+		g_actors[actor_index].teacher = teacher_actorid;
+	}
+	else
+	{ // 不在线
+		memset( &g_temp_actor[0], 0, sizeof( Actor ) );
+		actor_load_auto( teacher_actorid, &g_temp_actor[0], "actor" );
+		int free_index = -1;
+		for ( int tmpi = 0; tmpi < ACTOR_STUDENT_MAXCOUNT; tmpi++ )
+		{
+			if ( g_temp_actor[0].student[tmpi] <= 0 )
+			{
+				free_index = tmpi;
+			}
+		}
+		if ( free_index >= ACTOR_STUDENT_MAXCOUNT )
+		{
+			// 2428	对方徒弟人数已满
+			actor_notify_alert( actor_index, 2428 );
+			return -1;
+		}
+		g_temp_actor[0].student[free_index] = g_actors[actor_index].actorid;
+		g_actors[actor_index].teacher = teacher_actorid;
+	}
+
+	return 0;
+}
+
+// 获取拜师奖励
+int actor_take_teacher_awardget( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	return 0;
+}
+
+// 徒弟等级奖励
+int actor_studentlevel_awardget( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
 	return 0;
 }

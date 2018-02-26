@@ -80,9 +80,9 @@ function PopTextModPoolShow( text )
 		if unit then
 			local unitTween = PopTextList[i].transform:GetComponent( "UITweenMove" );
 			local unitRect = PopTextList[i].transform:GetComponent( "RectTransform" );
-			unitRect.localPosition = Vector3( unitRect.localPosition.x, unitRect.localPosition.y + 30, 0 );
+			unitRect.localPosition = Vector3( unitRect.localPosition.x, unitRect.localPosition.y + 40, 0 );
 			unitTween.from = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y )
-			unitTween.to = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + unitRect.sizeDelta.y )
+			unitTween.to = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + 300 )
 			unitTween:Play(true);
 		end
 	end
@@ -90,8 +90,9 @@ function PopTextModPoolShow( text )
 	local unitTween = obj.transform:GetComponent( "UITweenMove" );
 	local unitRect = obj.transform:GetComponent( "RectTransform" );
 	unitTween.from = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y )
-	unitTween.to = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + unitRect.sizeDelta.y )
+	unitTween.to = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + 300 )
 	unitTween:Play(true);
+	
 	table.insert( PopTextList, obj );
 end
 
