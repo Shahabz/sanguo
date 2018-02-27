@@ -846,11 +846,11 @@ int actor_load( int actor_index, int actorid )
 	}
 
 	// 城已经满了，或者地图没有地方了
-	if ( newfail == 1 )
+	if ( newfail == -1 )
 	{
 		int value[1] = { 0 };
 		value[0] = 8;
-		//actor_notify_value( actor_index, NOTIFY_CITY, 1, value, NULL );
+		actor_notify_alert( actor_index, 524 );
 		return -1;
 	}
 

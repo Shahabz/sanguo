@@ -121,6 +121,9 @@ end
 -- 自定
 ----------------------------------------
 function BuildingGetDlgShow( recvValue )
+	if GameManager.currentScence ~= "city" then
+		WorldMap.ReturnCity()
+	end
 	BuildingGetDlgOpen();
 	table.insert( m_kind, recvValue.m_kind );
 	table.insert( m_offset, recvValue.m_offset );
@@ -139,6 +142,11 @@ function BuildingGetDlgShow( recvValue )
 	m_uiName:GetComponent( "UIText" ).text = T(50).." <color=#ECC244>["..T( recvValue.m_kind ).."]</color>";
 	SetTrue(m_uiDesc)
 	SetText(m_uiDesc,T(recvValue.m_kind+50))
+	
+	-- 关闭部分界面
+	StoryDlgClose()
+	FightDlgClose()
+	LevyDlgClose()
 end
 
 function BuildingGetDlgMove()

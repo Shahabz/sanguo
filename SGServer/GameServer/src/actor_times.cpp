@@ -65,6 +65,7 @@ void _check_fday( int actor_index )
 		memset( g_actors[actor_index].today_char, 0, MAX_TODAY_COUNT + 1 );
 		memset( g_actors[actor_index].today_short, 0, sizeof( short )*MAX_TODAY_SHORT_COUNT );
 		memset( g_actors[actor_index].today_int, 0, sizeof( int )*MAX_TODAY_INTNUM );
+		actor_set_sflag( actor_index, ACTOR_SFLAG_BODY_FREEBUY, 0 );
 		hero_colorup_reset( actor_index );
 		write_gamelog( "[reset fdate:%d] %d", g_actors[actor_index].fdate, g_actors[actor_index].actorid );
 	}

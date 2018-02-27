@@ -357,9 +357,6 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 		char award_content[256] = { 0 };
 		awardgroup_makestr( &getinfo, award_content );
 		sprintf( content, "{\"star\":%d,\"exp\":%d,\"silver\":%d,\"award\":\"%s\"}", star, config->exp, config->silver, award_content );
-
-		// 任务
-		quest_addvalue( pCity, QUEST_DATATYPE_STORY, pValue->m_storyid, 0, 1 );
 	}
 	else
 	{ // 失败
@@ -383,6 +380,11 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 
 	// 播放战斗
 	fight_play( actor_index, g_fight.unit_json, content );
+	if ( g_fight.result == FIGHT_WIN )
+	{
+		// 任务
+		quest_addvalue( pCity, QUEST_DATATYPE_STORY, pValue->m_storyid, 0, 1 );
+	}
 	return 0;
 }
 

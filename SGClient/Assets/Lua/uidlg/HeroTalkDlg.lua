@@ -82,7 +82,7 @@ end
 function HeroTalk( herokind, text, callback )
 	HeroTalkDlgOpen();
 	if herokind == 999 then
-		m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( 3 );
+		m_uiShape:GetComponent( "Image" ).sprite = PlayerFaceSprite( 1 );
 		m_uiName:GetComponent( "UIText" ).text = T(439);
 	else
 		m_uiShape:GetComponent( "Image" ).sprite = HeroFaceSprite( herokind );

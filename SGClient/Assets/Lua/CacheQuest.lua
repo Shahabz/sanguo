@@ -88,7 +88,7 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 91 )
 	elseif datatype == QUEST_DATATYPE_LEVYNUM then-- 征收次数 datatype=7 datakind=0 needvalue=数量
 		typename = Localization.text_quest( 91 )
-	elseif datatype == QUEST_DATATYPE_HISTORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
+	elseif datatype == QUEST_DATATYPE_STORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
 		typename = Localization.text_quest( 92 )
 	elseif datatype == QUEST_DATATYPE_KILLMONSTER then-- 打流寇N次 datatype=9 datakind=0 needvalue=数量
 		typename = Localization.text_quest( 93 )
@@ -180,7 +180,7 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 6, value, needvalue, datakind );
 	elseif datatype == QUEST_DATATYPE_LEVYNUM then-- 征收次数 datatype=7 datakind=0 needvalue=数量
 		name = name..FQUEST( 7, value, needvalue );
-	elseif datatype == QUEST_DATATYPE_HISTORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
+	elseif datatype == QUEST_DATATYPE_STORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
 		name = name..FQUEST( 8, StoryRankName( datakind ) );
 	elseif datatype == QUEST_DATATYPE_KILLMONSTER then-- 打流寇N次 datatype=9 datakind=0 needvalue=数量
 		name = name..FQUEST( 9, value, needvalue );
@@ -303,7 +303,7 @@ function QuestGoto( index )
 	elseif datatype == QUEST_DATATYPE_LEVYNUM then-- 征收次数 datatype=7 datakind=0 needvalue=数量
 		City.Move( BUILDING_Main, 0, true )
 	
-	elseif datatype == QUEST_DATATYPE_HISTORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
+	elseif datatype == QUEST_DATATYPE_STORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
 		StoryDlgShow()
 		
 	elseif datatype == QUEST_DATATYPE_KILLMONSTER then-- 打流寇N次 datatype=9 datakind=0 needvalue=数量
