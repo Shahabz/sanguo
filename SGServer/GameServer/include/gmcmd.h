@@ -19,7 +19,7 @@
 #define GMC_IRON				(GMC_BASE+14)	// 镔铁
 #define GMC_BODY				(GMC_BASE+15)	// 体力
 #define GMC_LEVY				(GMC_BASE+16)	// 收割次数
-#define GMC_AWARD				(GMC_BASE+17)	// 奖励
+#define GMC_AWARDGROUP			(GMC_BASE+17)	// 奖励组
 #define GMC_QUEST				(GMC_BASE+18)	// 任务
 #define GMC_ROLLMSG				(GMC_BASE+19)	// 跑马灯
 #define GMC_MAIL				(GMC_BASE+20)	// 邮件
@@ -51,6 +51,7 @@
 #define GMC_DB					(GMC_BASE+46)	// 数据库重置
 #define GMC_PAY					(GMC_BASE+47)	// 支付 
 #define GMC_BUFFCLEAR			(GMC_BASE+48)	// buff清除 
+#define GMC_AWARD				(GMC_BASE+49)	// 奖励 
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

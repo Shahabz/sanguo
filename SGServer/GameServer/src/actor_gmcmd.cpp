@@ -345,7 +345,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			city_changelevy( pCity->index, pValue[0], PATH_GM );
 		}
 		break;
-	case GMC_AWARD:// ½±Àø
+	case GMC_AWARDGROUP:// ½±Àø
 		if ( pCity )
 		{
 			awardgroup_withid( pCity->actorid, pValue[0], PATH_GM, NULL );
@@ -624,6 +624,19 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				else
 					pCity->buffsec[kind] = pValue[1];
 				city_change_buff( pCity->index, kind, 0, PATH_GM );
+			}
+		}
+		break;
+	case GMC_AWARD:// ½±Àø
+		if ( pCity )
+		{
+			if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+			{
+				award_getaward( pCity->actor_index, pValue[0], pValue[1], -1, PATH_GM, NULL );
+			}
+			else
+			{
+				gift( pCity->actorid, pValue[0], pValue[1], -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, PATH_GM );
 			}
 		}
 		break;

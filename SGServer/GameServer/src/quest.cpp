@@ -360,6 +360,15 @@ int quest_check( int actor_index, int questid, int *value )
 				return 1;
 			}
 		}
+		if ( questinfo->datatype == QUEST_DATATYPE_STORY )
+		{ // ¸±±¾
+			if ( value )
+				*value = g_actors[actor_index].storyid;
+			if ( g_actors[actor_index].storyid >= questinfo->datakind )
+			{
+				return 1;
+			}
+		}
 		else
 		{
 			for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )

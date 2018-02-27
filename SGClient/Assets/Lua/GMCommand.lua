@@ -18,7 +18,7 @@ local GMCMD_SERVER = {
 [14]="iron",
 [15]="body",
 [16]="levy",
-[17]="award",
+[17]="awardgroup",
 [18]="quest",
 [19]="rollmsg",
 [20]="mail",
@@ -49,6 +49,7 @@ local GMCMD_SERVER = {
 [45]="nhero",
 [46]="db",
 [48]="buffclear",
+[49]="award",
 }
  
 -- 发到客户端本地指令

@@ -403,6 +403,7 @@ function MailDlgSetMail( recvValue )
 			else
 				SetRichText( uiContent, T(contentid) )
 			end
+			SetImage( uiShape, LoadSprite("ui_mail_icon_1") )
 			
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
