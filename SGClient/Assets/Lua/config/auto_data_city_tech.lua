@@ -1,7 +1,7 @@
 g_techinfo = {
 [1] = 
 { 
-	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=60,silver=250,wood=200,food=0,iron=0,ability=1,value=5,},
+	[1] = { kind=1,level=1,name="安抚民众：提升银币每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=3,silver=250,wood=200,food=0,iron=0,ability=1,value=5,},
 	[2] = { kind=1,level=2,name="安抚民众：提升银币每小时产量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=180,silver=870,wood=870,food=0,iron=0,ability=1,value=10,},
 	[3] = { kind=1,level=3,name="安抚民众：提升银币每小时产量",buildinglevel=5,prekind=0,prelevel=0,progress=1,sec=300,silver=560,wood=560,food=0,iron=0,ability=1,value=15,},
 	[4] = { kind=1,level=4,name="安抚民众：提升银币每小时产量",buildinglevel=6,prekind=0,prelevel=0,progress=1,sec=720,silver=0,wood=0,food=0,iron=0,ability=1,value=20,},
@@ -34,7 +34,7 @@ g_techinfo = {
 },
 [2] = 
 { 
-	[1] = { kind=2,level=1,name="砍伐技巧：提升木材每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=60,silver=250,wood=200,food=0,iron=0,ability=2,value=5,},
+	[1] = { kind=2,level=1,name="砍伐技巧：提升木材每小时产量",buildinglevel=1,prekind=0,prelevel=0,progress=1,sec=6,silver=250,wood=200,food=0,iron=0,ability=2,value=5,},
 	[2] = { kind=2,level=2,name="砍伐技巧：提升木材每小时产量",buildinglevel=3,prekind=0,prelevel=0,progress=1,sec=180,silver=870,wood=870,food=0,iron=0,ability=2,value=10,},
 	[3] = { kind=2,level=3,name="砍伐技巧：提升木材每小时产量",buildinglevel=5,prekind=0,prelevel=0,progress=1,sec=300,silver=560,wood=560,food=0,iron=0,ability=2,value=15,},
 	[4] = { kind=2,level=4,name="砍伐技巧：提升木材每小时产量",buildinglevel=6,prekind=0,prelevel=0,progress=1,sec=720,silver=0,wood=0,food=0,iron=0,ability=2,value=20,},

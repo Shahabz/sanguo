@@ -3925,6 +3925,8 @@ int city_spy( int actor_index, int unit_index, int type )
 
 	// 最终侦查成功概率 = 初始侦查成功概率 + 侦查方式增加概率 + 科技增加概率 + （被侦查方主城等级 - 侦查方主城等级） * 5% 
 	int baseodds = typeodds + g_techinfo[19].config[techlevel].value + (target_mainlevel - mainlevel) * 5;
+	if ( baseodds < 0 )
+		baseodds = 0;
 	// 1侦察资源情况
 	int odds = global.spy_res_odds + baseodds;
 	if ( rand() % 100 <= odds )
@@ -4112,6 +4114,8 @@ int city_spy( int actor_index, int unit_index, int type )
 		// 事件
 		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_SPY, pTargetCity->name, 1, mailid );
 		city_battle_event_add( pTargetCity->index, CITY_BATTLE_EVENT_BESPY, pCity->name, 1, mailid );
+
+		actor_notify_pop( actor_index, 2429 );
 	}
 	else
 	{ // 侦察失败
@@ -4125,6 +4129,7 @@ int city_spy( int actor_index, int unit_index, int type )
 		//sprintf( be_title, "%s%d", TAG_TEXTID, 5014 );
 		//snprintf( be_content, MAIL_CONTENT_MAXSIZE, "{\"fromid\":%d,\"msg\":\"%s\",\"reply\":\"%s\",\"t\":%d,\"n\":%d,\"na\":\"%s\"}", pCity->actorid, pValue->m_content, pValue->m_reply, pValue->m_reply_recvtime, pTargetCity->nation, pTargetCity->name );
 		//mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_CITY_BESPY, be_title, be_content, "", 0 );
+		actor_notify_pop( actor_index, 2430 );
 	}
 
 	return 0;
