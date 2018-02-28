@@ -2076,8 +2076,8 @@ typedef struct _slk_NetS_Student SLK_NetS_Student;	//师徒列表
 struct _slk_NetS_StudentList {
 	char m_count;	//师徒信息列表
 	SLK_NetS_Student m_list[31];	//师徒信息列表
-	char m_te_award[10];	//8个等级是可领取的奖励次数
-	char m_te_awarded[10];	//8个等级的奖励已经领取次数
+	short m_te_award[10];	//8个等级是可领取的奖励次数
+	short m_te_awarded[10];	//8个等级的奖励已经领取次数
 	char m_teacheraward_count;	//是否有拜师奖励
 	SLK_NetS_AwardInfo m_teacheraward[8];	//是否有拜师奖励
 };

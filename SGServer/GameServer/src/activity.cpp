@@ -17,6 +17,7 @@
 #include "system.h"
 #include "global.h"
 #include "pay.h"
+#include "actor_times.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -513,5 +514,41 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 出师大宴活动
+int activity_body_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int value[4] = { 0 };
+	value[0] = ACTIVITY_11;
+	value[1] = 0;
+	value[2] = actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 );
+	value[3] = actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 );
+	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 4, value, NULL );
+	return 0;
+}
+
+int activity_body_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	time_t t;
+	time( &t );
+	struct tm *nowtime = localtime( &t );
+
+	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 )
+	{ // 午宴
+		awardgroup_withindex( actor_index, 163, -1, PATH_ACTIVITY, NULL );
+		actor_add_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 );
+	}
+	else if ( nowtime->tm_hour >= 18 && nowtime->tm_hour <= 20 )
+	{ // 晚宴
+		awardgroup_withindex( actor_index, 163, -1, PATH_ACTIVITY, NULL );
+		actor_add_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 );
+	}
+	else
+		return -1;
+	activity_body_sendinfo( actor_index );
 	return 0;
 }

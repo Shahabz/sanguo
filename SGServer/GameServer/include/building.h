@@ -76,7 +76,7 @@ int building_upgrade( int city_index, int kind, int offset );
 
 // 建筑自动升级
 int building_upgrade_auto( int city_index, int kind, int offset );
-void building_upgrade_autocheck( int city_index );
+int building_upgrade_autocheck( int city_index );
 
 // 建筑拆除
 int building_delete( int city_index, int kind, int offset );

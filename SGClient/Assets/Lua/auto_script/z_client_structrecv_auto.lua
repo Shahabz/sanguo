@@ -2762,8 +2762,14 @@ function struct_NetS_StudentList_recv( buffer )
 		tmpValue = struct_NetS_Student_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
-	recvValue.m_te_award = buffer:ReadStringWithLen( 10 );
-	recvValue.m_te_awarded = buffer:ReadStringWithLen( 10 );
+	recvValue.m_te_award={};
+	for tmpi=1,10,1 do
+		recvValue.m_te_award[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_te_awarded={};
+	for tmpi=1,10,1 do
+		recvValue.m_te_awarded[tmpi] = buffer:ReadShort();
+	end
 	recvValue.m_teacheraward_count = buffer:ReadSByte();
 	recvValue.m_teacheraward = {};
 	for tmpi=1,recvValue.m_teacheraward_count,1 do

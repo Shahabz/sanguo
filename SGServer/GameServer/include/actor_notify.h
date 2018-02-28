@@ -31,6 +31,7 @@
 #define NOTIFY_MAPCALL			23	// 地图召唤
 #define NOTIFY_HEROBACK			24	// 武将回城
 #define NOTIFY_HEROGOD			25	// 神突成功
+#define NOTIFY_ACTIVITY			26	// 活动
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

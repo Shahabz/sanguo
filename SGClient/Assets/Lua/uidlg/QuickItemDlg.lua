@@ -134,7 +134,7 @@ function QuickItemDlgSet( sec, update )
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 		
 	-- 改建加速
-	elseif m_op == 3 then			
+	elseif m_op == 3 then
 		SetImage( m_uiShape, BuildingSprite(m_buildingkind) );
 		SetText( m_uiName, BuildingNameLv( m_buildingkind, nil, pBuilding.m_level )..T(1474) )
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
@@ -148,7 +148,12 @@ function QuickItemDlgSet( sec, update )
 		if kind == 142 then
 			SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..QuickItemDlgTokenCalc() );
 		else
-			SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), "x"..GetItem():GetCount(kind) );
+			local itemnum = GetItem():GetCount(kind)
+			if itemnum > 0 then
+				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), "x"..itemnum );
+			else
+				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..item_gettoken(kind) );
+			end
 		end
 	end
 end
@@ -182,10 +187,23 @@ function QuickItemDlgSelect( index )
 			JumpToken();
 			return
 		end
+		MsgBox( F(2431,token), function() 
+			system_askinfo( ASKINFO_QUICK, "", 0, kind, m_op, m_buildingkind, m_buildingoffset );
+		end )
 	else
 		if GetItem():GetCount(kind) <= 0 then
-			return
+			local token = item_gettoken(kind)
+			if GetPlayer().m_token < token then
+				-- 跳转
+				JumpToken();
+				return
+			end
+			MsgBox( F(754,token,item_getname(kind)), function() 
+				system_askinfo( ASKINFO_QUICK, "", 0, kind, m_op, m_buildingkind, m_buildingoffset );
+			end )
+		
+		else
+			system_askinfo( ASKINFO_QUICK, "", 0, kind, m_op, m_buildingkind, m_buildingoffset );
 		end
 	end
-	system_askinfo( ASKINFO_QUICK, "", 0, kind, m_op, m_buildingkind, m_buildingoffset );
 end

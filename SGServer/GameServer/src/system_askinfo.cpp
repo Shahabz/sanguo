@@ -810,6 +810,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			activity_sendlist( actor_index );
 		}
+		else if ( pvalue[0] == ACTIVITY_11 )
+		{ // ³öÊ¦´óÑç
+			if ( pvalue[1] == 0 )
+			{
+				activity_body_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_body_get( actor_index );
+			}
+		}
 		break;
 	case ASKINFO_NATIONEQUIP:
 		if ( pvalue[0] == 0 )

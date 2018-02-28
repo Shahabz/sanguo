@@ -1391,7 +1391,8 @@ int city_autobuild_open( int city_index )
 	}
 
 	// 自动建造
-	building_upgrade_autocheck( city_index );
+	if ( building_upgrade_autocheck( city_index ) < 0 )
+		actor_notify_pop( g_city[city_index].actor_index, 2432 );
 
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
 	SLK_NetS_ChangeAutoBuild pValue = { 0 };

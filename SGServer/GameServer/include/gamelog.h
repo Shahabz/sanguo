@@ -118,6 +118,7 @@
 #define PATH_WISHINGPACK				89	// 聚宝盆打包
 #define PATH_BATTLEAUTOHP				90	// 出征自动补兵
 #define PATH_TEACHER					91	// 师徒
+#define PATH_ACTIVITY					92	// 活动
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

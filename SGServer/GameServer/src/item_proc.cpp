@@ -417,8 +417,12 @@ int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, 
 		}
 		else
 		{
-			if ( item_lost( actor_index, itemkind, 1, PATH_TRAIN ) < 0 )
-				return -1;
+			if ( item_lost( actor_index, itemkind, 1, PATH_BUILDING_UPGRADE ) < 0 )
+			{
+				int token = item_gettoken( itemkind );
+				if ( actor_change_token( actor_index, -token, PATH_BUILDING_UPGRADE, 0 ) < 0 )
+					return -1;
+			}
 			building_workerquick( actor_index, buildingkind, buildingoffset, value1 );
 		}
 	}

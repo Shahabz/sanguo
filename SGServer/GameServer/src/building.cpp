@@ -649,16 +649,16 @@ int building_upgrade_auto( int city_index, int kind, int offset )
 }
 
 // 自动建造检查
-void building_upgrade_autocheck( int city_index )
+int building_upgrade_autocheck( int city_index )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
-		return;
+		return -1;
 	if ( g_city[city_index].autobuildopen == 0 )
-		return;
+		return -1;
 	if ( g_city[city_index].autobuild <= 0 )
 	{
 		g_city[city_index].autobuildopen = 0;
-		return;
+		return -1;
 	}
 
 	// 空闲建造队是否满足
@@ -673,7 +673,7 @@ void building_upgrade_autocheck( int city_index )
 	}
 
 	if ( worker == 0 )
-		return;
+		return -1;
 
 	char kind = 0;
 	char offset = -1;
@@ -781,6 +781,9 @@ void building_upgrade_autocheck( int city_index )
 		building_upgrade( city_index, kind, offset );
 		city_change_autobuild( city_index, -1, PATH_SYSTEM );
 	}
+	else
+		return -1;
+	return 0;
 }
 
 // 建筑拆除

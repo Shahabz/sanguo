@@ -244,7 +244,7 @@ int quest_check( int actor_index, int questid, int *value )
 				return 1;
 			}
 		}
-		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_LEVEL )
+		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_LEVEL || questinfo->datatype == QUEST_DATATYPE_BUILDING_UPGRADE )
 		{ // 建筑等级
 			if ( questinfo->dataoffset > 100 )
 			{ // 升级资源1和2，3和4，这类的特殊处理
@@ -349,7 +349,7 @@ int quest_check( int actor_index, int questid, int *value )
 				quest_sendlist( actor_index );
 			}
 		}
-		else if ( questinfo->datatype == QUEST_DATATYPE_CITY_TECH )
+		else if ( questinfo->datatype == QUEST_DATATYPE_CITY_TECH || questinfo->datatype == QUEST_DATATYPE_CITY_TECHONE )
 		{ // 研究N科技N级
 			if ( questinfo->datakind < 0 || questinfo->datakind >= CITY_TECH_MAX )
 				return 0;

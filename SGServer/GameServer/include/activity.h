@@ -100,4 +100,8 @@ int activity_countdown( int activityid );
 
 // 活动列表
 int activity_sendlist( int actor_index );
+
+// 出师大宴活动
+int activity_body_sendinfo( int actor_index );
+int activity_body_get( int actor_index );
 #endif

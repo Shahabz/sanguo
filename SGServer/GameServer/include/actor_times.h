@@ -31,6 +31,8 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_WISHINGPACK_SILVER	11	// 聚宝盆打包，今天银币打包次数
 #define TODAY_CHAR_WISHINGPACK_WOOD		12	// 聚宝盆打包，今天木材打包次数
 #define TODAY_CHAR_WISHINGPACK_FOOD 	13	// 聚宝盆打包，今天粮食打包次数
+#define TODAY_CHAR_ACTIVITY_BODYGET1	14	// 午宴
+#define TODAY_CHAR_ACTIVITY_BODYGET2	15	// 晚宴
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
