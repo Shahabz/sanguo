@@ -608,7 +608,7 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 		pCity->teacherid = teacher_actorid;
 		actor_save_auto( &g_temp_actor[0], "actor", NULL );
 	}
-
+	actor_student_sendlist( actor_index );
 	return 0;
 }
 
