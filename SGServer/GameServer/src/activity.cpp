@@ -514,9 +514,7 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 	// 攻城略地
-	if (  )
-	{
-	}
+
 	
 	// 出师大宴
 	pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_11;
