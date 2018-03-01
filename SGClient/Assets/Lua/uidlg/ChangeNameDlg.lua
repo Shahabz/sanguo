@@ -82,6 +82,7 @@ end
 -- 自定
 ----------------------------------------
 function ChangeNameDlgShow()
+	math.randomseed(tostring(math.sin(os.time())):sub(4, 12))
 	ChangeNameDlgOpen();
 	ChangeNameDlgRandom();
 end

@@ -828,6 +828,23 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// ʦͽ
+	if ( teacheraward_init_auto() < 0 )
+	{
+		printf_msg( "teacheraward_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// ʦͽ
+	if ( teachershop_init_auto() < 0 )
+	{
+		printf_msg( "teachershop_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
 
 	activity_init();
 	time_gmcmd_init();

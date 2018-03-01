@@ -2162,7 +2162,6 @@ g_firstName = {
 }
 
 function random_name()
-	math.randomseed(tostring(math.sin(os.time())):sub(4, 12))
 	local i = math.random(1, #g_lastName);
 	local j = math.random(1, #g_firstName);
 	return g_lastName[i]..g_firstName[j]
