@@ -29,18 +29,24 @@ SRC = \
 ../AutoS/src/auto_data_equip_washrule.cpp \
 ../AutoS/src/auto_data_nation_mission.cpp \
 ../AutoS/src/auto_nation.cpp \
+../AutoS/src/auto_data_activity_03.cpp \
 ../AutoS/src/auto_actor.cpp \
 ../AutoS/src/auto_data_teacher_award.cpp \
 ../AutoS/src/auto_data_tiance_quest.cpp \
 ../AutoS/src/global_process_auto.cpp \
+../AutoS/src/auto_data_activity_02.cpp \
 ../AutoS/src/server_process_auto.cpp \
 ../AutoS/src/auto_data_kingwar_towninfo.cpp \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_nation_official.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
+../AutoS/src/auto_data_activity_05.cpp \
 ../AutoS/src/auto_city_nation_hero.cpp \
 ../AutoS/src/auto_data_wishing_shop.cpp \
+../AutoS/src/auto_data_activity_04.cpp \
+../AutoS/src/auto_data_activity_10.cpp \
+../AutoS/src/auto_data_activity_06.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
@@ -54,6 +60,7 @@ SRC = \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
+../AutoS/src/auto_data_activity_08.cpp \
 ../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_map_call.cpp \
 ../AutoS/src/auto_nation_hero.cpp \
@@ -232,6 +239,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_nation.o: ../AutoS/src/auto_nation.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_03.o: ../AutoS/src/auto_data_activity_03.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor.o: ../AutoS/src/auto_actor.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_teacher_award.o: ../AutoS/src/auto_data_teacher_award.cpp 
@@ -239,6 +248,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_tiance_quest.o: ../AutoS/src/auto_data_tiance_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/global_process_auto.o: ../AutoS/src/global_process_auto.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_02.o: ../AutoS/src/auto_data_activity_02.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_process_auto.o: ../AutoS/src/server_process_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -252,9 +263,17 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_05.o: ../AutoS/src/auto_data_activity_05.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_nation_hero.o: ../AutoS/src/auto_city_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_wishing_shop.o: ../AutoS/src/auto_data_wishing_shop.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_04.o: ../AutoS/src/auto_data_activity_04.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_10.o: ../AutoS/src/auto_data_activity_10.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_06.o: ../AutoS/src/auto_data_activity_06.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -281,6 +300,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_08.o: ../AutoS/src/auto_data_activity_08.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
