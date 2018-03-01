@@ -49,4 +49,8 @@ int actor_studentlevel_awardget( int actor_index, int id );
 // 徒弟等级奖励次数
 void actor_studentlevelup( int teacher_actorid, int level );
 int actor_studentlevel_awardadd( int actor_index, int id );
+
+// 师徒商店
+int teacher_shoplist( int actor_index );
+int teacher_shopbuy( int actor_index, int id );
 #endif // !_ACTOR_FRIEND_H_

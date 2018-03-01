@@ -4,7 +4,9 @@
 
 struct _activityinfo03 {
 //--Automatically generated
-				int Id;	//
+				int id;	//
+				int nameid;	//
+				short needvalue;	//
 };
 typedef struct _activityinfo03 ActivityInfo03;
 

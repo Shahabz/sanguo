@@ -2780,3 +2780,25 @@ function struct_NetS_StudentList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_TeacherShopItem_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_buylevel = buffer:ReadShort();
+	recvValue.m_point = buffer:ReadInt();
+	recvValue.m_id = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_TeacherShopList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_TeacherShopItem_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_mypoint = buffer:ReadInt();
+	return recvValue;
+end
+

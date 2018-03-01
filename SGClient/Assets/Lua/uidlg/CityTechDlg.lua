@@ -36,6 +36,7 @@ function CityTechDlgClose()
 	CityTechDlgClear()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
+	if IsGuiding() then HideGuideFinger() end;
 	eye.uiManager:Close( "CityTechDlg" );
 end
 
@@ -89,6 +90,12 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			CityTechDlgSetOfficial()
 		end
+	end
+	
+	if IsGuiding() and GetCurrentGuideType()==GUIDE_TECH_SURE then
+		if nControlID - 1000 == 1 then
+			GuideNext();
+		end 
 	end
 end
 
@@ -256,6 +263,7 @@ function CityTechDlgOnSet()
 					SetTrue( uiUpgradeBtn );
 					SetFalse( uiViewBtn );
 					SetFalse( uiContinueBtn );
+					if kind ==1 then GuideSet(uiUpgradeBtn.transform.position) end ;
 				end
 				
 				-- 首选科技
@@ -265,7 +273,6 @@ function CityTechDlgOnSet()
 				else
 					SetFalse( uiSelect )
 				end
-				
 			end
 		end
 	end
@@ -277,6 +284,12 @@ function CityTechDlgOnSet()
 	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
 	CityTechDlgSetOfficial();
+end
+
+function GuideSet(pos)
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TECH_SURE then
+		FindCmdTpye(pos);
+	end
 end
 
 -- 设置雇佣官

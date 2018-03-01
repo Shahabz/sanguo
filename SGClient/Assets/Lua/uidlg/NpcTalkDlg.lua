@@ -21,6 +21,11 @@ function NpcTalkDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TALK then 
+		
+	GuideNext() 
+	HideGuideFinger()	
+	end;
 	eye.uiManager:Close( "NpcTalkDlg" );
 end
 

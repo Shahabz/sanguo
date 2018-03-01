@@ -15,7 +15,7 @@ function NpcTalkOneDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TALKCLICK then GuideNext() end;
 	eye.uiManager:Close( "NpcTalkOneDlg" );
 end
 
@@ -52,7 +52,7 @@ end
 
 -- 界面初始化时调用
 function NpcTalkOneDlgOnStart( gameObject )
-	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TALKCLICK then FindCmdTpye(m_uiButtonText.transform.position) end;
 end
 
 -- 界面显示时调用

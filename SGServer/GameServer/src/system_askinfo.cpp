@@ -1013,6 +1013,14 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 徒弟等级奖励领取
 			actor_studentlevel_awardget( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 4 )
+		{ // 师徒商店列表
+			teacher_shoplist( actor_index );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 师徒商店购买
+			teacher_shopbuy( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

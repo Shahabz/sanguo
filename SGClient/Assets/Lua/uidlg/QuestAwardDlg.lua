@@ -24,6 +24,7 @@ function QuestAwardDlgClose()
 	for k, v in pairs(objs) do
 		m_ObjectPool:Release( "m_uiUIP_Award", v );
     end
+	if IsGuiding() then HideGuideFinger() end;
 	eye.uiManager:Close( "QuestAwardDlg" );
 end
 
@@ -54,6 +55,7 @@ function QuestAwardDlgOnAwake( gameObject )
 	m_uiQuestName = objs[0];
 	m_uiContent = objs[1];
 	m_uiUIP_Award = objs[2];
+	m_uiGetBtn = objs[3];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -62,7 +64,7 @@ end
 
 -- 界面初始化时调用
 function QuestAwardDlgOnStart( gameObject )
-	
+	if IsGuiding() then FindCmdTpye(m_uiGetBtn.transform.position) end;
 end
 
 -- 界面显示时调用
@@ -126,5 +128,10 @@ end
 -- 领取奖励
 function QuestAwardDlgGet()
 	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
+	if IsGuiding() then GuideNext() end;
 	QuestAwardDlgClose();
+end
+
+function GetQuestAwardBtn()
+	return m_uiGetBtn..transform.position;
 end

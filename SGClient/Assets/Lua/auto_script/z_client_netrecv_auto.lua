@@ -935,6 +935,11 @@ function netrecv_studentlist_C( buffer )
 	proc_studentlist_C( recvValue );
 end
 
+function netrecv_teachershoplist_C( buffer )
+	local recvValue = struct_NetS_TeacherShopList_recv( buffer );
+	proc_teachershoplist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1123,6 +1128,7 @@ Proc_Command = {
 	[CMDS_WISHINGPACK]=netrecv_wishingpack_C;
 	[CMDS_TIANCEQUEST]=netrecv_tiancequest_C;
 	[CMDS_STUDENTLIST]=netrecv_studentlist_C;
+	[CMDS_TEACHERSHOPLIST]=netrecv_teachershoplist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

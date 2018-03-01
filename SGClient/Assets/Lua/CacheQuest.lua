@@ -241,6 +241,8 @@ function QuestGoto( index )
 	if CacheQuest == nil or CacheQuest.m_list[index] == nil then
 		return
 	end
+	
+	if IsGuiding() then GuideNext() end
 
 	local datatype = CacheQuest.m_list[index].m_datatype;
 	local datakind = CacheQuest.m_list[index].m_datakind;

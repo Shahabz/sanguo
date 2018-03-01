@@ -71,4 +71,5 @@ function BuildingOverModClick( gameObject )
 		
 	end
 	gameObject:SetActive(false);
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TEACH_GET then GuideNext() end;
 end

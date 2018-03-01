@@ -9,6 +9,7 @@ local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiTitle = nil; --UnityEngine.GameObject
 local m_uiBattleButton = nil; --UnityEngine.GameObject
 local m_uiAttackDesc = nil; --UnityEngine.GameObject
+local m_uiSoldiersBtn = nil; --UnityEngine.GameObject
 
 local m_action = 0;
 local m_unit_index = -1;
@@ -98,11 +99,16 @@ function MapBattleDlgOnAwake( gameObject )
 	m_uiTitle = objs[6];
 	m_uiBattleButton = objs[7];
 	m_uiAttackDesc = objs[8];
+	m_uiSoldiersBtn = objs[9];
 end
 
 -- 界面初始化时调用
 function MapBattleDlgOnStart( gameObject )
-	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_ADD_ARMY then FindCmdTpye(m_uiSoldiersBtn.transform.position)
+		elseif 	GetCurrentGuideType() == GUIDE_HERO_ATTACK then FindCmdTpye(m_uiSoldiersBtn.transform.position)
+		end
+	end
 end
 
 -- 界面显示时调用
@@ -541,6 +547,10 @@ function MapBattleDlgSoldiers( index )
 	end
 	
 	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_ADD_ARMY then 
+		GuideNext() 
+		FindCmdTpye(m_uiBattleButton.transform.position);
+	end;
 end
 
 -- 更新血量
@@ -690,4 +700,3 @@ function MapBattleDlgBattle()
 		end, 0.5, nil, "MapBattleDlgBattle" );
 	end
 end
-

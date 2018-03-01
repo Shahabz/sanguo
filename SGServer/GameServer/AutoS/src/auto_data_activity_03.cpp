@@ -22,7 +22,7 @@ int activityinfo03_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(`Id`) from activity_03;" );
+	sprintf( szSQL, "select max(`id`) from activity_03;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int activityinfo03_init_auto()
 	g_activity_03 = (ActivityInfo03 *)malloc( sizeof(ActivityInfo03)*g_activity_03_maxnum );
 	memset( g_activity_03, 0, sizeof(ActivityInfo03)*g_activity_03_maxnum );
 
-	sprintf( szSQL, "select `Id` from activity_03;" );
+	sprintf( szSQL, "select `id`,`nameid`,`needvalue` from activity_03;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -58,10 +58,12 @@ int activityinfo03_init_auto()
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		int Id = atoi( row[0] );
-		if ( Id < 0 || Id >= g_activity_03_maxnum  )
+		int id = atoi( row[0] );
+		if ( id < 0 || id >= g_activity_03_maxnum  )
 			continue;
-		g_activity_03[Id].Id = atoi(row[offset++]);
+		g_activity_03[id].id = atoi(row[offset++]);
+		g_activity_03[id].nameid = atoi(row[offset++]);
+		g_activity_03[id].needvalue = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

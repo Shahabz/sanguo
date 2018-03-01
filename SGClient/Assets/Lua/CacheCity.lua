@@ -212,6 +212,7 @@ function City.Move( kind, offset, select )
 	if select == true then
 		Invoke( function() 
 			City.BuildingSelect( unitObj )
+			BuildingOpratorModEffectShow(kind)
 		end, 0.3 );
 	end
 end

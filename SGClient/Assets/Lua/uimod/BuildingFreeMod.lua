@@ -60,4 +60,5 @@ function BuildingFreeModClick( gameObject )
 	local offset = ShareData.intValue[1];
 	system_askinfo( ASKINFO_BUILDING, "", 2, kind, offset );
 	gameObject:SetActive(false);
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_FREE then GuideNext() end;
 end

@@ -2081,7 +2081,22 @@ struct _slk_NetS_StudentList {
 	char m_teacheraward_count;	//是否有拜师奖励
 	SLK_NetS_AwardInfo m_teacheraward[8];	//是否有拜师奖励
 };
-typedef struct _slk_NetS_StudentList SLK_NetS_StudentList;	//
+typedef struct _slk_NetS_StudentList SLK_NetS_StudentList;	//师徒列表
+
+struct _slk_NetS_TeacherShopItem {
+	int m_awardkind;	//师徒商店商品
+	short m_buylevel;	//师徒商店商品
+	int m_point;	//师徒商店商品
+	short m_id;	//师徒商店商品
+};
+typedef struct _slk_NetS_TeacherShopItem SLK_NetS_TeacherShopItem;	//师徒商店
+
+struct _slk_NetS_TeacherShopList {
+	char m_count;	//师徒商店
+	SLK_NetS_TeacherShopItem m_list[64];	//师徒商店
+	int m_mypoint;	//师徒商店
+};
+typedef struct _slk_NetS_TeacherShopList SLK_NetS_TeacherShopList;	//师徒商店
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -2306,5 +2321,7 @@ int struct_NetS_WishingPack_send( char **pptr, int *psize, SLK_NetS_WishingPack 
 int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest *pValue );
 int struct_NetS_Student_send( char **pptr, int *psize, SLK_NetS_Student *pValue );
 int struct_NetS_StudentList_send( char **pptr, int *psize, SLK_NetS_StudentList *pValue );
+int struct_NetS_TeacherShopItem_send( char **pptr, int *psize, SLK_NetS_TeacherShopItem *pValue );
+int struct_NetS_TeacherShopList_send( char **pptr, int *psize, SLK_NetS_TeacherShopList *pValue );
 
 #endif

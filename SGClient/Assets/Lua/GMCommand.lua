@@ -61,6 +61,7 @@ local GMCMD_CLIENT = {
 [5]="dump",
 [6]="t",
 [7]="f",
+[8]="guide",
 }
 
 -- 检查GM指令
@@ -137,6 +138,8 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 		RankListDlgShow();
 	elseif cmdstr == "f" then
 		JumpFightSkip()
+	elseif cmdstr == "guide" then
+		Guide(7,1,false);
 	end
 	
 end

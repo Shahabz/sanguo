@@ -30,8 +30,12 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
     if nType == UI_EVENT_CLICK then
 		-- 升级
         if nControlID == 1 then
-			BuildingUpgradeDlgShow( m_kind, m_offset, 0 )
-		
+			if IsGuiding() then 
+				if GetCurrentGuideType() == GUIDE_UPGRADE then
+					GuideNext() 
+				end
+			end
+			BuildingUpgradeDlgShow( m_kind, m_offset, 0 )		
 		-- 进入
         elseif nControlID == 2 then
 			if m_kind == BUILDING_Main then
@@ -41,6 +45,11 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			elseif m_kind == BUILDING_StoreHouse then
 				StoreDlgShow()
 			elseif m_kind == BUILDING_Tech then
+				if IsGuiding() then 
+					if GetCurrentGuideType() == GUIDE_TECH then
+						GuideNext() 
+					end
+				end
 				CityTechDlgOnShow();
 			elseif m_kind == BUILDING_Craftsman then
 				MaterialMakeDlgShow();
@@ -321,6 +330,27 @@ function BuildingOpratorModShow( show, kind, offset, parent )
                 end, 0.2 );---]]
         end
     end
+end
+
+function BuildingOpratorModEffectShow(kind)
+	BuildingOpratorModHideAllEffect()
+	
+	if kind == BUILDING_Silver 
+		or kind == 1
+		or kind == QUEST_DATATYPE_BUILDING_LEVEL 
+		or kind == QUEST_DATATYPE_BUILDING_UPGRADE
+		or kind == QUEST_DATATYPE_ACTOR_LEVEL then SetTrue(m_uiUpgrade.transform:Find("Effect"));
+	elseif kind == BUILDING_Tech then SetTrue(m_uiEnter.transform:Find("Effect"));
+	elseif kind == BUILDING_Hero then SetTrue(m_uiTrain.transform:Find("Effect"));
+	elseif kind == BUILDING_Smithy then SetTrue(m_uiSpeed.transform:Find("Effect"));
+	end
+end
+
+function BuildingOpratorModHideAllEffect()
+	SetFalse(m_uiUpgrade.transform:Find("Effect"));
+	SetFalse(m_uiEnter.transform:Find("Effect"));
+	SetFalse(m_uiTrain.transform:Find("Effect"));
+	SetFalse(m_uiSpeed.transform:Find("Effect"));
 end
 
 function BuildingOpratorModIsOpen()

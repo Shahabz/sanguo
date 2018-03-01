@@ -711,3 +711,48 @@ int actor_studentlevel_awardadd( int actor_index, int id )
 	g_actors[actor_index].te_award[id] += 1;
 	return 0;
 }
+
+// й╕м╫ил╣Й
+int teacher_shoplist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_TeacherShopList pValue = { 0 };
+	pValue.m_mypoint = pCity->friendship;
+	for ( int id = 1; id < g_teacher_shop_maxnum ; id++ )
+	{
+		if ( pCity->level < g_teacher_shop[id].showlevel )
+			continue;
+		if ( g_actors[actor_index].te_shop & (1 << id) == 0 )
+			continue;
+		pValue.m_list[pValue.m_count].m_id = id;
+		pValue.m_list[pValue.m_count].m_awardkind = g_teacher_shop[id].awardkind;
+		pValue.m_list[pValue.m_count].m_buylevel = g_teacher_shop[id].buylevel;
+		pValue.m_list[pValue.m_count].m_point = g_teacher_shop[id].point;
+		pValue.m_count += 1;
+	}
+	netsend_teachershoplist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int teacher_shopbuy( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id <= 0 || id >= g_teacher_shop_maxnum || id > 30 )
+		return -1;
+	if ( pCity->level < g_teacher_shop[id].buylevel )
+		return -1;
+	if ( g_actors[actor_index].te_shop & (1 << id) )
+		return -1;
+	if ( pCity->friendship < g_teacher_shop[id].point )
+		return -1;
+	award_getaward( actor_index, g_teacher_shop[id].awardkind, g_teacher_shop[id].awardnum, PATH_TEACHERSHOP, -1, NULL );
+	city_changefriendship( pCity->index, -g_teacher_shop[id].point, PATH_TEACHERSHOP );
+	teacher_shoplist( actor_index );
+	return 0;
+}

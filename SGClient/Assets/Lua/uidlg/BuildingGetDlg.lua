@@ -85,6 +85,7 @@ function BuildingGetDlgOnAwake( gameObject )
 	m_uiDesc = objs[2];
 	m_uiNormalPanel = objs[3];
 	m_uiMovePanel = objs[4];
+	m_uiGetBtn = objs[5];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -267,7 +268,7 @@ function BuildingGetDlgMove()
 		end
 		
 	end
-
+	if IsGuiding() then GuideNext() end
 end
 
 function BuildingGetDlgIsShow()

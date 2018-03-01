@@ -38,6 +38,7 @@ function HeroGetDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_GETHERO then GuideNext() end;
 end
 
 -- 删除界面
@@ -80,7 +81,7 @@ end
 
 -- 界面初始化时调用
 function HeroGetDlgOnStart( gameObject )
-	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_GETHERO then FindCmdTpye(m_uiCloseBtn.transform.position) end;
 end
 
 -- 界面显示时调用

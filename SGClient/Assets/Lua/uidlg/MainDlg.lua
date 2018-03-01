@@ -1215,3 +1215,12 @@ end
 function MainDlgStopCutScenes()
 	SetFalse( m_uiCutScenes )
 end
+
+-- 得到点击区域位置
+function GetQuestDlgPos()
+	return m_uiQuest.transform.position
+end
+
+function GetWorldPos()
+	return m_uiButtonBack[4].transform.position
+end
