@@ -22,6 +22,7 @@
 extern SConfig g_Config;
 extern MYSQL *myGame;
 extern MYSQL *myData;
+extern Global global;
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -566,6 +567,17 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	City *pTeacherCity = city_getptr_withactorid( teacher_actorid );
+	if ( !pTeacherCity )
+		return -1;
+	if ( pCity->level > global.take_teacher_maxlevel )
+	{
+		return -1;
+	}
+	if ( pTeacherCity->level <= global.take_teacher_maxlevel )
+	{
+		return -1;
+	}
 	int teacher_actor_index = actor_getindex_withid( teacher_actorid );
 	if ( teacher_actor_index >= 0 && teacher_actor_index < g_maxactornum )
 	{ // ÔÚÏß
@@ -608,6 +620,7 @@ int actor_take_teacher( int actor_index, int teacher_actorid )
 		pCity->teacherid = teacher_actorid;
 		actor_save_auto( &g_temp_actor[0], "actor", NULL );
 	}
+	actor_studentlevelup( teacher_actorid, pCity->level );
 	actor_student_sendlist( actor_index );
 	return 0;
 }
@@ -630,6 +643,7 @@ int actor_take_teacher_awardget( int actor_index )
 		award_getaward( actor_index, g_teacher_award[0].awardkind[tmpi], g_teacher_award[0].awardnum[tmpi], -1, PATH_TEACHER, NULL );
 	}
 	actor_set_sflag( actor_index, ACTOR_SFLAG_TEACHERAWARD, 1 );
+	actor_student_sendlist( actor_index );
 	return 0;
 }
 
@@ -653,6 +667,7 @@ int actor_studentlevel_awardget( int actor_index, int id )
 	}
 	g_actors[actor_index].te_award[id] -= 1;
 	g_actors[actor_index].te_awarded[id] += 1;
+	actor_student_sendlist( actor_index );
 	return 0;
 }
 

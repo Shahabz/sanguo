@@ -594,6 +594,8 @@ int global_init()
 			global.wishing_change_cdmax = atoi( row[1] );
 		else if ( id == 214 )
 			global.wishing_pack_maxnum = atoi( row[1] );
+		else if ( id == 215 )
+			global.take_teacher_maxlevel = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );
