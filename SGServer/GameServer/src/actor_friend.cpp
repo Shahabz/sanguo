@@ -9,6 +9,7 @@
 #include "db.h"
 #include "define.h"
 #include "city.h"
+#include "global.h"
 #include "building.h"
 #include "actor.h"
 #include "actor_send.h"
