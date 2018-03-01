@@ -25,6 +25,7 @@ NOTIFY_HERO_VISIT	  =	22	-- 武将寻访
 NOTIFY_MAPCALL		  =	23	-- 地图召唤
 NOTIFY_HEROBACK		  = 24	-- 武将回城
 NOTIFY_HEROGOD		  =	25	-- 神突成功
+NOTIFY_ACTIVITY		  =	26	-- 活动
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -305,6 +306,12 @@ function RecvActorNotify(recvValue)
 	elseif msgid == NOTIFY_HEROGOD then
 		if value[1] == 0 then
 			
+		end
+	
+	-- 活动	
+	elseif msgid == NOTIFY_ACTIVITY then
+		if value[1] == ACTIVITY_11 then
+			Activity11ModRecv( value[3], value[4] )
 		end
     end
 end

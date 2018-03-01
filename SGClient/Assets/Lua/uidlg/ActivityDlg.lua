@@ -165,7 +165,7 @@ function ActivityDlgRecv( recvValue )
 	end
 	for i=1, #m_recvValue do
 		ActivityDlgSetObj( i, m_recvValue[i] )
-	end
+	end	
 end
 
 -- 设置活动

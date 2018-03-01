@@ -513,6 +513,13 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_closetime = g_activity_item[activityid].m_closetime;
 		pValue.m_count += 1;
 	}
+	// ³öÊ¦´óÑç
+	pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_11;
+	pValue.m_list[pValue.m_count].m_starttime = 0;
+	pValue.m_list[pValue.m_count].m_endtime = 0;
+	pValue.m_list[pValue.m_count].m_closetime = 0;
+	pValue.m_count += 1;
+
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
