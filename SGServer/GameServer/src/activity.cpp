@@ -524,9 +524,9 @@ int activity_sendlist( int actor_index )
 
 	// ¹¥³ÇÂÔµØ
 	char activity03_over = 1;
-	for ( int tmpi = 1; tmpi < g_activity_03_maxnum; tmpi++ )
+	for ( int id = 1; id < g_activity_03_maxnum; id++ )
 	{
-		if ( data_record_getvalue( pCity, g_activity_03[tmpi].record_offset ) < g_activity_03[tmpi].needvalue )
+		if ( (g_actors[actor_index].act03_state & (1 << id)) == 0 )
 		{
 			activity03_over = 0;
 			break;
