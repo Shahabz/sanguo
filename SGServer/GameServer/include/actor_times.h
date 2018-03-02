@@ -12,6 +12,7 @@
 #define ACTOR_SFLAG_EQUPIPDRAWING	7	// 是否开启装备分解获得图纸
 #define	ACTOR_SFLAG_MATERIAL_MAKEWILL 8 // 是否开启作坊预设
 #define	ACTOR_SFLAG_TEACHERAWARD	9 // 是否领取拜师奖励
+#define	ACTOR_SFLAG_ACTIVITY08_OPEN	10 // 是否开启成长计划
 void actor_set_sflag( int actor_index, int offset, char value );
 int actor_get_sflag( int actor_index, int offset );
 

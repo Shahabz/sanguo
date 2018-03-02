@@ -122,6 +122,16 @@ function JumpToken()
 	SetText( m_uiAlertText, F(764, T(125)) )
 end
 
+function JumpVip( viplevel )
+	JumpDlgShow()
+	SetFalse( m_uiCloseButton )
+	SetFalse( m_uiLevyButton );
+	SetFalse( m_uiBuyButton );
+	SetTrue( m_uiPayButton );
+	SetFalse( m_uiFreeButton )
+	SetText( m_uiAlertText, F(2461, viplevel) )
+end
+
 function JumpRes( res )
 	JumpDlgShow()
 	SetFalse( m_uiCloseButton )

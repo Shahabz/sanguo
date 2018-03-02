@@ -821,6 +821,21 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_03_get( actor_index, pvalue[2] );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_8 )
+		{ // 成长计划
+			if ( pvalue[1] == 0 )
+			{
+				activity_08_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_08_open( actor_index );
+			}
+			else if ( pvalue[1] == 2 )
+			{
+				activity_08_get( actor_index, pvalue[2] );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_11 )
 		{ // 出师大宴
 			if ( pvalue[1] == 0 )

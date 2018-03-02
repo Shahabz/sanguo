@@ -156,7 +156,7 @@ function AwardInfo( awardkind )
 		color = ItemColorSprite( 0 );
 		
 	elseif awardkind == AWARDKIND_PEOPLE then	-- 人口
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_488" );
 		color = ItemColorSprite( 2 );
 		name = T(127)
 		c = 2

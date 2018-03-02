@@ -848,6 +848,7 @@ int process_init( int max_connection )
 
 	// »î¶¯
 	activityinfo03_init_auto();
+	activityinfo08_init_auto();
 
 	activity_init();
 	time_gmcmd_init();

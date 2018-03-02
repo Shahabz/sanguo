@@ -214,3 +214,5 @@ global.wishing_green_to_draw = 40 --聚宝盆绿材料兑换绿图纸
 global.wishing_change_cd = 2400 --聚宝盆兑换一次cd
 global.wishing_change_cdmax = 14400 --聚宝盆兑换cd上限
 global.wishing_pack_maxnum = 10 --聚宝盆每日打包次数
+global.activity08_viplevel = 4 --活动成长计划VIP等级
+global.activity08_token = 1000 --活动成长计划开启钻石

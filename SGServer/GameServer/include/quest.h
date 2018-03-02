@@ -112,8 +112,8 @@ int quest_gm_reset( int actor_index );
 #define DATA_RECORD_KILLENEMY					0	// 流寇数量
 #define DATA_RECORD_KILLCITY					1	// 城战数量
 #define DATA_RECORD_KILLTOWN					2	// 国战数量
-#define DATA_RECORD_KILLTOWNTYPE1				3	// 成功攻打郡县次数
-#define DATA_RECORD_KILLTOWNTYPE2				4	// 成功攻打营地次数
+#define DATA_RECORD_KILLTOWNTYPE1				3	// 成功攻打营地次数
+#define DATA_RECORD_KILLTOWNTYPE2				4	// 成功攻打城门次数
 #define DATA_RECORD_KILLTOWNTYPE3				5	// 成功攻打郡城次数
 #define DATA_RECORD_KILLTOWNTYPE4				6	// 成功攻打州郡次数
 #define DATA_RECORD_KILLTOWNTYPE5				7	// 成功攻打州府次数

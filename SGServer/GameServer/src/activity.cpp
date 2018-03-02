@@ -35,6 +35,9 @@ int g_activity_count = MAX_ACTIVITY_COUNT;
 extern ActivityInfo03 *g_activity_03;
 extern int g_activity_03_maxnum;
 
+extern ActivityInfo08 *g_activity_08;
+extern int g_activity_08_maxnum;
+
 // 系统初始化
 int activity_init()
 {
@@ -541,6 +544,24 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 	
+	// 成长计划
+	char activity08_over = 1;
+	for ( int id = 1; id < g_activity_08_maxnum; id++ )
+	{
+		if ( (g_actors[actor_index].act08_state & (1 << id)) == 0 )
+		{
+			activity08_over = 0;
+			break;
+		}
+	}
+	if ( activity08_over == 0 )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_8;
+		pValue.m_list[pValue.m_count].m_starttime = 0;
+		pValue.m_list[pValue.m_count].m_endtime = 0;
+		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_count += 1;
+	}
 	
 	// 出师大宴
 	pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_11;
@@ -591,6 +612,57 @@ int activity_03_get( int actor_index, int id )
 	}
 	g_actors[actor_index].act03_state |= (1 << id);
 	activity_03_sendinfo( actor_index );
+	return 0;
+}
+
+// 成长计划活动
+int activity_08_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int value[4] = { 0 };
+	value[0] = ACTIVITY_8;
+	value[1] = 0;
+	value[2] = actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY08_OPEN );
+	value[3] = g_actors[actor_index].act08_state;
+	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 4, value, NULL );
+	return 0;
+}
+int activity_08_open( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY08_OPEN ) == 1 )
+		return -1;
+	if ( pCity->viplevel < global.activity08_viplevel )
+		return -1;
+	if ( actor_change_token( actor_index, -global.activity08_token, PATH_ACTIVITY, 0 ) < 0 )
+		return -1;
+	actor_set_sflag( actor_index, ACTOR_SFLAG_ACTIVITY08_OPEN, 1 );
+	activity_08_sendinfo( actor_index );
+	return 0;
+}
+int activity_08_get( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id <= 0 || id >= g_activity_08_maxnum )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY08_OPEN ) == 0 )
+		return -1;
+	if ( g_actors[actor_index].act08_state & (1 << id) )
+		return -1;
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( g_activity_08[id].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_activity_08[id].awardkind[tmpi], g_activity_08[id].awardnum[tmpi], -1, PATH_ACTIVITY, NULL );
+	}
+	g_actors[actor_index].act08_state |= (1 << id);
+	activity_08_sendinfo( actor_index );
 	return 0;
 }
 

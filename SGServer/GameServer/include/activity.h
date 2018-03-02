@@ -105,6 +105,11 @@ int activity_sendlist( int actor_index );
 int activity_03_sendinfo( int actor_index );
 int activity_03_get( int actor_index, int id );
 
+// 成长计划活动
+int activity_08_sendinfo( int actor_index );
+int activity_08_open( int actor_index );
+int activity_08_get( int actor_index, int id );
+
 // 出师大宴活动
 int activity_body_sendinfo( int actor_index );
 int activity_body_get( int actor_index );

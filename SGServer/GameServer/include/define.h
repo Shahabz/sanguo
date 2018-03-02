@@ -65,6 +65,7 @@
 #include "auto_data_teacher_award.h"
 #include "auto_data_teacher_shop.h"
 #include "auto_data_activity_03.h"
+#include "auto_data_activity_08.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_actor_friend.h"

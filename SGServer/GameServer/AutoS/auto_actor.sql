@@ -75,5 +75,6 @@ CREATE TABLE `actor` (
   `te_awarded` varbinary(40) NOT NULL DEFAULT '' COMMENT '师徒奖励已经领取次数',
   `te_shop` int(11) NOT NULL DEFAULT '0' COMMENT '师徒商店',
   `act03_state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '攻城掠地活动领取奖励',
+  `act08_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '成长计划活动领取奖励',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

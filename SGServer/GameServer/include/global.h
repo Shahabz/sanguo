@@ -188,6 +188,8 @@ typedef struct _global
 	int wishing_change_cdmax;
 	char wishing_pack_maxnum;
 	short take_teacher_maxlevel;
+	char activity08_viplevel;
+	short activity08_token;
 }Global;
 int global_init();
 void global_reload();
