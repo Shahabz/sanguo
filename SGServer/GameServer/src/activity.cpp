@@ -18,6 +18,8 @@
 #include "global.h"
 #include "pay.h"
 #include "actor_times.h"
+#include "city.h"
+#include "quest.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -29,6 +31,9 @@ extern int g_command_count;
 
 ActivityItem *g_activity_item;
 int g_activity_count = MAX_ACTIVITY_COUNT;
+
+extern ActivityInfo03 *g_activity_03;
+extern int g_activity_03_maxnum;
 
 // 系统初始化
 int activity_init()
@@ -495,6 +500,9 @@ int activity_countdown( int activityid )
 int activity_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	SLK_NetS_ActivityList pValue = { 0 };
 	for ( int activityid = 1; activityid < MAX_ACTIVITY_COUNT; activityid++ )
 	{
@@ -513,8 +521,26 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_closetime = g_activity_item[activityid].m_closetime;
 		pValue.m_count += 1;
 	}
-	// 攻城略地
 
+	// 攻城略地
+	char activity03_over = 1;
+	for ( int tmpi = 1; tmpi < g_activity_03_maxnum; tmpi++ )
+	{
+		if ( data_record_getvalue( pCity, g_activity_03[tmpi].record_offset ) < g_activity_03[tmpi].needvalue )
+		{
+			activity03_over = 0;
+			break;
+		}
+	}
+	if ( activity03_over == 0 )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_3;
+		pValue.m_list[pValue.m_count].m_starttime = 0;
+		pValue.m_list[pValue.m_count].m_endtime = 0;
+		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_count += 1;
+	}
+	
 	
 	// 出师大宴
 	pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_11;
@@ -524,6 +550,47 @@ int activity_sendlist( int actor_index )
 	pValue.m_count += 1;
 
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 攻城略地活动
+int activity_03_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Activity03List pValue = { 0 };
+	for ( int id = 1; id < g_activity_03_maxnum; id++ )
+	{
+		pValue.m_list[pValue.m_count].m_value = data_record_getvalue( pCity, g_activity_03[id].record_offset );
+		pValue.m_list[pValue.m_count].m_state = (g_actors[actor_index].act03_state & (1 << id));
+		pValue.m_count += 1;
+	}
+	netsend_activity03list_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int activity_03_get( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id <= 0 || id >= g_activity_03_maxnum )
+		return -1;
+	if ( data_record_getvalue( pCity, g_activity_03[id].record_offset ) < g_activity_03[id].needvalue )
+		return -1;
+	if ( g_actors[actor_index].act03_state & (1 << id) )
+		return -1;
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( g_activity_03[id].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_activity_03[id].awardkind[tmpi], g_activity_03[id].awardnum[tmpi], -1, PATH_ACTIVITY, NULL );
+	}
+	g_actors[actor_index].act03_state |= (1 << id);
+	activity_03_sendinfo( actor_index );
 	return 0;
 }
 

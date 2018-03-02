@@ -3074,3 +3074,24 @@ int struct_NetS_TeacherShopList_send( char **pptr, int *psize, SLK_NetS_TeacherS
 	return 0;
 }
 
+int struct_NetS_Activity03Info_send( char **pptr, int *psize, SLK_NetS_Activity03Info *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity03List_send( char **pptr, int *psize, SLK_NetS_Activity03List *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity03Info_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

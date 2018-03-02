@@ -6,7 +6,10 @@ struct _activityinfo03 {
 //--Automatically generated
 				int id;	//
 				int nameid;	//
+				short record_offset;	//
 				short needvalue;	//
+				int awardkind[5];	//
+				int awardnum[5];	//
 };
 typedef struct _activityinfo03 ActivityInfo03;
 

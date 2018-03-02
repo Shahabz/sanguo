@@ -2127,3 +2127,9 @@ function proc_teachershoplist_C( recvValue )
 	-- process.
 end
 
+-- m_count=0,m_list={m_value=0,m_state=0,[m_count]},
+function proc_activity03list_C( recvValue )
+	-- process.
+	Activity3ModRecv( recvValue )
+end
+

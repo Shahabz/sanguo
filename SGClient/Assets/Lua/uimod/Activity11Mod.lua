@@ -57,7 +57,11 @@ end
 
 -- 界面删除时调用
 function Activity11ModOnDestroy( gameObject )
-	
+	Invoke( function() 
+		ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_npc3" )
+		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_15" )
+		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_3" );
+	end, 0.3 );
 end
 
 -- 每帧调用

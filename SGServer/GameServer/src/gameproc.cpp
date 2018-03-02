@@ -846,6 +846,9 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// »î¶¯
+	activityinfo03_init_auto();
+
 	activity_init();
 	time_gmcmd_init();
 	db_closedata();

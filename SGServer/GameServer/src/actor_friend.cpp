@@ -725,7 +725,7 @@ int teacher_shoplist( int actor_index )
 	{
 		if ( pCity->level < g_teacher_shop[id].showlevel )
 			continue;
-		if ( g_actors[actor_index].te_shop & (1 << id) == 0 )
+		if ( (g_actors[actor_index].te_shop & (1 << id)) == 0 )
 			continue;
 		pValue.m_list[pValue.m_count].m_id = id;
 		pValue.m_list[pValue.m_count].m_awardkind = g_teacher_shop[id].awardkind;
@@ -753,6 +753,7 @@ int teacher_shopbuy( int actor_index, int id )
 		return -1;
 	award_getaward( actor_index, g_teacher_shop[id].awardkind, g_teacher_shop[id].awardnum, PATH_TEACHERSHOP, -1, NULL );
 	city_changefriendship( pCity->index, -g_teacher_shop[id].point, PATH_TEACHERSHOP );
+	g_actors[actor_index].te_shop |= (1 << id);
 	teacher_shoplist( actor_index );
 	return 0;
 }

@@ -141,7 +141,7 @@ function AwardInfo( awardkind )
 		name = T(128)
 		
 	elseif awardkind == AWARDKIND_VIPEXP then	-- VIP经验
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_482" );
 		color = ItemColorSprite( 0 );
 		name = T(190)
 		

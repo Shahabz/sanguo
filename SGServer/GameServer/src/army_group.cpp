@@ -1033,6 +1033,12 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, MAIL_TYPE_FIGHT_NATION, title, content, "", 0, 0 );
 				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
 
+				// ¼ÇÂ¼
+				if ( g_towninfo[townid].type >= MAPUNIT_TYPE_TOWN_TYPE1 && g_towninfo[townid].type <= MAPUNIT_TYPE_TOWN_TYPE7 )
+				{
+					data_record_addvalue( pArmyCity, 2+g_towninfo[townid].type, 1 );
+				}
+
 				pArmyCity->temp_silver = 0;
 				pArmyCity->temp_wood = 0;
 				pArmyCity->temp_food = 0;

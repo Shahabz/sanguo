@@ -2098,6 +2098,18 @@ struct _slk_NetS_TeacherShopList {
 };
 typedef struct _slk_NetS_TeacherShopList SLK_NetS_TeacherShopList;	//师徒商店
 
+struct _slk_NetS_Activity03Info {
+	int m_value;	//活动-攻城掠地
+	char m_state;	//活动-攻城掠地
+};
+typedef struct _slk_NetS_Activity03Info SLK_NetS_Activity03Info;	//活动攻城掠地
+
+struct _slk_NetS_Activity03List {
+	char m_count;	//活动-攻城掠地
+	SLK_NetS_Activity03Info m_list[10];	//活动-攻城掠地
+};
+typedef struct _slk_NetS_Activity03List SLK_NetS_Activity03List;	//活动攻城掠地
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2323,5 +2335,7 @@ int struct_NetS_Student_send( char **pptr, int *psize, SLK_NetS_Student *pValue 
 int struct_NetS_StudentList_send( char **pptr, int *psize, SLK_NetS_StudentList *pValue );
 int struct_NetS_TeacherShopItem_send( char **pptr, int *psize, SLK_NetS_TeacherShopItem *pValue );
 int struct_NetS_TeacherShopList_send( char **pptr, int *psize, SLK_NetS_TeacherShopList *pValue );
+int struct_NetS_Activity03Info_send( char **pptr, int *psize, SLK_NetS_Activity03Info *pValue );
+int struct_NetS_Activity03List_send( char **pptr, int *psize, SLK_NetS_Activity03List *pValue );
 
 #endif

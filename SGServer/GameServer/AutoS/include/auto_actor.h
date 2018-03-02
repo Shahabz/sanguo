@@ -78,7 +78,7 @@ struct _actor {
 				char te_award[10];	//师徒奖励可领取次数
 				char te_awarded[10];	//师徒奖励已经领取次数
 				int te_shop;	//师徒商店
-				 ;	//
+				char act03_state;	//攻城掠地活动领取奖励
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

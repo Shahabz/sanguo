@@ -810,6 +810,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			activity_sendlist( actor_index );
 		}
+		else if ( pvalue[0] == ACTIVITY_3 )
+		{ // 攻城掠地
+			if ( pvalue[1] == 0 )
+			{
+				activity_03_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_03_get( actor_index, pvalue[2] );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_11 )
 		{ // 出师大宴
 			if ( pvalue[1] == 0 )

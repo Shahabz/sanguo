@@ -47,7 +47,7 @@ int activityinfo03_init_auto()
 	g_activity_03 = (ActivityInfo03 *)malloc( sizeof(ActivityInfo03)*g_activity_03_maxnum );
 	memset( g_activity_03, 0, sizeof(ActivityInfo03)*g_activity_03_maxnum );
 
-	sprintf( szSQL, "select `id`,`nameid`,`needvalue` from activity_03;" );
+	sprintf( szSQL, "select `id`,`nameid`,`record_offset`,`needvalue`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4` from activity_03;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,7 +63,18 @@ int activityinfo03_init_auto()
 			continue;
 		g_activity_03[id].id = atoi(row[offset++]);
 		g_activity_03[id].nameid = atoi(row[offset++]);
+		g_activity_03[id].record_offset = atoi(row[offset++]);
 		g_activity_03[id].needvalue = atoi(row[offset++]);
+		g_activity_03[id].awardkind[0] = atoi(row[offset++]);
+		g_activity_03[id].awardkind[1] = atoi(row[offset++]);
+		g_activity_03[id].awardkind[2] = atoi(row[offset++]);
+		g_activity_03[id].awardkind[3] = atoi(row[offset++]);
+		g_activity_03[id].awardkind[4] = atoi(row[offset++]);
+		g_activity_03[id].awardnum[0] = atoi(row[offset++]);
+		g_activity_03[id].awardnum[1] = atoi(row[offset++]);
+		g_activity_03[id].awardnum[2] = atoi(row[offset++]);
+		g_activity_03[id].awardnum[3] = atoi(row[offset++]);
+		g_activity_03[id].awardnum[4] = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
