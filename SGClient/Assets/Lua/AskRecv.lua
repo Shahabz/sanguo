@@ -310,7 +310,9 @@ function RecvActorNotify(recvValue)
 	
 	-- 活动	
 	elseif msgid == NOTIFY_ACTIVITY then
-		if value[1] == ACTIVITY_3 then
+		if value[1] == ACTIVITY_2 then
+			Activity2ModRecv( value[3] )
+		elseif value[1] == ACTIVITY_3 then
 			Activity3ModRecv( value[3], value[4], value[5], value[6] )
 		elseif value[1] == ACTIVITY_8 then
 			Activity8ModRecv( value[3], value[4] )

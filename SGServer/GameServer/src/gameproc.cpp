@@ -847,6 +847,7 @@ int process_init( int max_connection )
 	serv_setstat( 19 );
 
 	// »î¶¯
+	activityinfo02_init_auto();
 	activityinfo03_init_auto();
 	activityinfo08_init_auto();
 

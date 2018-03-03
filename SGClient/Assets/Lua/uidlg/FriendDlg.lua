@@ -17,12 +17,26 @@ local m_uiApprenticeLayer = nil;
 local m_uiTeacherTitle = nil;
 local m_uiTeacherListBtn = nil;
 local m_uiTeacherShopBtn = nil;
-
+local m_uiTeacherShop = nil;
+local m_uiTeacherList = nil;
+local m_uiTeacherTaskLayer = nil;
+local m_uiUIP_ShopGrid = nil;
+local m_uiUIP_TaskGrid = nil;
+local m_uiTaskContent = nil;
+local m_uiSelectTeacherLayer = nil;
+local m_uiUIP_SelectGrid = nil;
+local m_uiSelectListContent = nil;
+local m_uiUIP_TeacherGrid = nil;
+local m_ShopRecvValue = nil;
+	
 local m_ObjectPool = nil
 local m_recvValue = nil
 local m_selectRecvActor = nil
 local m_SelectType = nil;
 local m_TeacherType = nil;
+local m_TeacherRecvValue = nil
+local m_TeacherSelectData = nil;
+
 
 -- m_op=0,m_target_actorid=0,m_target_cityindex=0,m_target_namelen=0,m_target_name="[m_target_namelen]",
 local sendValue = {};
@@ -64,63 +78,69 @@ end
 function FriendDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-            FriendDlgClose();
-		
+            FriendDlgClose();		
 		-- 关闭添加好友页	
 		elseif nControlID == -2 then
-            FriendDlgAddFriendLayerHide();
-		
+            FriendDlgAddFriendLayerHide();		
 		-- 关闭好友操作页	
 		elseif nControlID == -3 then 
 			FriendDlgOpLayerHide();
-		
+		-- 关闭选择拜师页
+		elseif nControlID == -4 then 
+			FriendDlgSelectTeacherLayerShow(false);
 		-- 查看好友信息	
 		elseif nControlID == 1 then
 			FriendDlgOpView();
 		-- 发送邮件 	
 		elseif nControlID == 2 then
-			FriendDlgOpSendMail();
-		
+			FriendDlgOpSendMail();		
 		-- 删除好友	
 		elseif nControlID == 3 then
-			FriendDlgOpDelete();
-		
+			FriendDlgOpDelete();		
 		-- 好友列表	
 		elseif nControlID == 4 then
-			FriendDlgAskList();
-		
+			FriendDlgAskList();		
 		-- 师徒列表	
 		elseif nControlID == 5 then
-			FriendDlgAskTeacherList();
-				
+			FriendDlgAskTeacherList();				
 		-- 打开添加好友页
 		elseif nControlID == 6 then
-			FriendDlgAddFriendLayerShow();
-		
+			FriendDlgAddFriendLayerShow();		
 		-- 添加好友		
 		elseif nControlID == 7 then
-			FriendDlgAddFriend();
-		
+			FriendDlgAddFriend();		
 		-- 师徒商店
 		elseif nControlID == 50 then
-			
+			FriendDlgTeacherShopShow(true);
 		-- 选择好友拜师		
 		elseif nControlID == 51 then
-
+			FriendDlgSelectTeacherLayerShow(true);
 		-- 领取拜师奖励		
 		elseif nControlID == 52 then	
-		
+			FriendDlgGetApprenticeAward();
 		-- 师徒列表
 		elseif nControlID == 53 then
-			
+			FriendDlgTeacherListShow();
+		-- 师徒商店关闭按钮
+		elseif nControlID == 54 then
+			FriendDlgTeacherShopShow(false);			
+		-- 师徒奖励获取按钮
+		elseif nControlID > 100 and nControlID < 200 then
+			FriendDlgOnBtnTeacherTask( nControlID - 100 );
+		elseif nControlID == 200 then
+			pop(T(3318));
+		-- 拜师操作按钮
+		elseif nControlID > 200 and nControlID < 300 then
+			FriendDlgOnBtnTeacherSelect(nControlID - 200);
+		-- 师徒商店购买按钮
+		elseif nControlID > 300 and nControlID < 400 then
+			FriendDlgOnBtnTeacherShop(nControlID - 300);
 		-- 显示操作页	
 		elseif nControlID >= 1000 and nControlID < 2000 then
-			FriendDlgOpLayerShow( nControlID-1000, value );
-		
+			FriendDlgOpLayerShow( nControlID-1000, value );		
 		-- 接受
 		elseif nControlID >= 2000 and nControlID < 3000 then
-			FriendDlgAccept( nControlID - 2000 );
-		
+			FriendDlgAccept( nControlID - 2000 );		
 		-- 拒绝	
 		elseif nControlID >= 3000 and nControlID < 4000 then
 			FriendDlgRefuse( nControlID - 3000 );
@@ -154,10 +174,27 @@ function FriendDlgOnAwake( gameObject )
 	m_uiTeacherTitle = objs[12];
 	m_uiTeacherListBtn = objs[13];
 	m_uiTeacherShopBtn = objs[14];
+	m_uiTeacherShop = objs[15];
+	m_uiTeacherList = objs[16];
+	m_uiTeacherTaskLayer = objs[17];
+	m_uiUIP_ShopGrid = objs[18];
+	m_uiUIP_TaskGrid = objs[19];
+	m_uiTaskContent = objs[20];
+	m_uiSelectTeacherLayer = objs[21];
+	m_uiUIP_SelectGrid = objs[22];
+	m_uiSelectListContent = objs[23];
+	m_uiUIP_TeacherGrid = objs[24];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
-	m_ObjectPool:CreatePool("UIP_Friend", 6, 6, m_uiUIP_Friend);
+	m_ObjectPool:CreatePool("UIP_Friend", 6, 6, m_uiUIP_Friend);	
+	m_ObjectPool:CreatePool("UIP_ShopGrid", 9, 9, m_uiUIP_ShopGrid);	
+	m_ObjectPool:CreatePool("UIP_TaskGrid", 8, 8, m_uiUIP_TaskGrid);	
+	m_ObjectPool:CreatePool("UIP_SelectGrid", 6, 6, m_uiUIP_SelectGrid);	
+	m_ObjectPool:CreatePool("UIP_TeacherGrid", 6, 6, m_uiUIP_TeacherGrid);
+
+
+	
 end
 
 -- 界面初始化时调用
@@ -218,12 +255,14 @@ function FriendDlgSetSelectType(index)
 		SetImage( m_uiTeacherBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetTrue(m_uiFriendScroll);
 		SetFalse(m_uiTeacherScroll);
+		SetFalse(m_uiTeacherList);
 		SetFalse(m_uiTeacherShopBtn);
 	elseif index == 2 then 
 		SetImage( m_uiFriendBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
 		SetImage( m_uiTeacherBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
 		SetTrue(m_uiTeacherScroll);
 		SetFalse(m_uiFriendScroll);
+		SetFalse(m_uiTeacherList);
 		SetTrue(m_uiTeacherShopBtn);
 	end
 	m_SelectType = index;
@@ -488,21 +527,49 @@ end
 -- 师徒界面
 function FriendDlgAskTeacherList()
 	FriendDlgSetSelectType(2);
-	m_TeacherType = 1;
+	system_askinfo( ASKINFO_TEACHER, "", 0 );
+end
+
+--system_askinfo( ASKINFO_TEACHER, "", 0 ); —获取师徒列表
+--system_askinfo( ASKINFO_TEACHER, "", 1,teacher_actorid ); —拜师
+--system_askinfo( ASKINFO_TEACHER, "", 2 ); —领取拜师奖励
+--system_askinfo( ASKINFO_TEACHER, "", 3, id ); —徒弟等级奖励领取
+--system_askinfo( ASKINFO_TEACHER, "", 4 ); —师徒商店列表 
+--system_askinfo( ASKINFO_TEACHER, "", 5, id ); —师徒商店购买
+--师徒界面消息
+function FriendDlgTeacherRecv(recvValue)
+	m_TeacherRecvValue = recvValue;
+	PrintTable(m_TeacherRecvValue,"m_TeacherRecvValue")
 	FriendDlgSetTeacherView();
 end
 
 -- 设置师徒界面
 function FriendDlgSetTeacherView()
-	if m_TeacherType == 1 or m_TeacherType == 2 then 		--未拜师
+	if GetPlayer().m_level >= 50 then 
+		m_TeacherType = 4;
+	else
+		if m_TeacherRecvValue.m_count > 0 then
+			if m_TeacherRecvValue.m_teacheraward_count > 0 then 
+				m_TeacherType = 2;
+			else
+				m_TeacherType = 3;
+			end
+		else
+			m_TeacherType = 1;
+		end
+	end
+	if m_TeacherType == 1 or m_TeacherType == 2 then 			--未拜师或拜师未领取奖励
 		SetTrue(m_uiApprenticeLayer);
+		SetFalse(m_uiTeacherTaskLayer);
 		SetFalse(m_uiTeacherTitle);
 		SetFalse(m_uiTeacherListBtn);
 		FriendDlgApprenticeView(m_TeacherType);
-	elseif m_TeacherType == 3 then 							--拜师
+	elseif m_TeacherType == 3 or m_TeacherType == 4 then 		--已拜师或者可收徒
 		SetFalse(m_uiApprenticeLayer);
+		SetTrue(m_uiTeacherTaskLayer);
 		SetTrue(m_uiTeacherTitle);
 		SetTrue(m_uiTeacherListBtn);		
+		FriendDlgTeacherTaskView();
 	end
 end
 
@@ -528,16 +595,331 @@ function FriendDlgApprenticeView(Type)
 	end
 	
 -- 奖励
-	for i = 1 ,4 ,1 do
-		FriendDlgApprenticeAward(i,AwardList);
+	local AwardData = m_TeacherRecvValue.m_teacheraward;
+	for i = 0 ,4 ,1 do
+		local key = "awardkind"..i;
+		if AwardData[key] ~= 0 and AwardData[key] ~= nil then
+			FriendDlgApprenticeAward(i,AwardList,AwardData);
+		end	
 	end
 	
 end
-function FriendDlgApprenticeAward(index,Content)
-	local uiObj = Content.transform:GetChild( index - 1 );
+
+--拜师奖励子控件绘制
+function FriendDlgApprenticeAward(index,Content,AwardData)
+	local uiObj = Content.transform:GetChild( index );
+	SetTrue(uiObj);
 	local obj = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiColor = obj[0];
 	local uiIcon = obj[1];
 	local uiName= obj[2];
 	local uiNum = obj[3];	
+	
+	local KeyKind = "awardkind"..index;	
+	local KeyNum = "awardnum"..index;
+	local sprite, color, name, c, desc = AwardInfo( AwardData[KeyKind] );			
+	SetImage( uiIcon, sprite );
+	SetImage( uiColor, color );
+	SetText( uiName, name );		
+	SetText(uiNum,"x"..AwardData[KeyNum]);
+end
+
+--选择拜师界面
+function FriendDlgSelectTeacherLayerShow(bShow)
+	if bShow == false then SetFalse(m_uiSelectTeacherLayer)  return end	
+	SetTrue(m_uiSelectTeacherLayer)
+	FriendDlgClearSelectTeacherGrid();
+	m_TeacherSelectData = FriendDlgGetCanSelectTeacherData();
+	PrintTable(m_TeacherSelectData,"可拜师好友列表数据")
+	for i = 1 , table.nums(m_TeacherSelectData) do 
+		FriendDlgSelectTeacherGridView(i);
+	end
+	
+end
+
+--获取可拜师好友数据
+function FriendDlgGetCanSelectTeacherData()
+	local Data = {};	
+	for k,v in pairs(m_recvValue) do 
+		if v.m_level >= 50 then 
+			table.insert(Data,v);
+		end
+	end
+	return Data;
+end
+
+--清空选择好友拜师子控件
+function FriendDlgClearSelectTeacherGrid()
+	local objs = {};
+	for i=0,m_uiSelectListContent.transform.childCount-1 do
+		table.insert(objs,m_uiSelectListContent.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_SelectGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_SelectGrid", obj );
+		end
+	end
+end
+
+--选择好友拜师子控件绘制
+function FriendDlgSelectTeacherGridView(index)
+	local uiObj = m_ObjectPool:Get( "UIP_SelectGrid" );
+	uiObj.transform:SetParent( m_uiSelectListContent.transform );	
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];	
+	local uiBtnSelect = objs[1];
+	local uiName = objs[2];
+	local uiPower = objs[3];
+
+	SetText(uiName,m_TeacherSelectData[index].m_name)	
+	SetText(uiPower,m_TeacherSelectData[index].m_battlepower)
+	SetImage( uiShape, PlayerHeadSprite(m_TeacherSelectData[index].m_shape) );
+	SetControlID(uiBtnSelect,200 + index)
+end
+
+--发送拜师请求
+function FriendDlgOnBtnTeacherSelect(index)
+	local Data = m_TeacherSelectData[index];
+	system_askinfo( ASKINFO_TEACHER, "", 1,Data.m_actorid ); 
+	SetFalse(m_uiSelectTeacherLayer)
+end
+
+--领取拜师奖励请求
+function FriendDlgGetApprenticeAward()
+	system_askinfo( ASKINFO_TEACHER, "", 2 ); 
+end
+
+--师徒商店
+function FriendDlgTeacherShopShow(bOpen)
+	if bOpen == true then 		
+		SetTrue(m_uiTeacherShop);
+		system_askinfo( ASKINFO_TEACHER, "", 4 );
+	else
+		SetFalse(m_uiTeacherShop);
+	end
+end
+
+--接收师徒商店数据
+function FriendDlgTeacherShopRecv(recvValue)
+	m_ShopRecvValue = recvValue;	
+	FriendDlgTeacherShopView();
+end
+--师徒商店绘制
+function FriendDlgTeacherShopView()
+	PrintTable(m_ShopRecvValue,"接收师徒商店数据")
+	local objs = m_uiTeacherShop.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiPoint = objs[0];
+	local uiContent = objs[1];
+	
+	SetText(uiPoint,m_ShopRecvValue.m_mypoint);
+	FriendDlgClearTeacherShopGrid(uiContent)
+	
+	for i = 1 ,m_ShopRecvValue.m_count ,1 do 
+		FriendDlgTeacherShopGridView(i,uiContent,m_ShopRecvValue.m_list[i])
+	end	
+end
+
+
+--师徒商店子控件绘制
+function FriendDlgTeacherShopGridView(index,Parent,Data)
+	local uiObj = m_ObjectPool:Get( "UIP_ShopGrid" );
+	uiObj.transform:SetParent( Parent.transform );	
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiIcon = objs[1];
+	local uiName = objs[2];
+	local uiBtnBuy = objs[3];
+	local uiPoint = objs[4];
+	local uiLockTip = objs[5];
+	
+	local sprite, color, name, c, desc = AwardInfo( Data.m_awardkind );	
+	SetImage( uiIcon, sprite );
+	SetImage( uiColor, color );
+	SetText( uiName, name );
+	if GetPlayer().m_level < Data.m_buylevel then
+		SetTrue(uiLockTip);
+		SetText(uiLockTip,F(3309,Data.m_buylevel))
+		SetFalse(uiBtnBuy);
+	else
+		SetFalse(uiLockTip);
+		SetText(uiPoint,F(3310,knum(Data.m_point)))
+		if Data.m_point > m_ShopRecvValue.m_mypoint then 
+			
+			SetTextColor(uiPoint,Hex2Color(0xE80017FF));
+		else
+			SetTextColor(uiPoint,Hex2Color(0x03DE27FF));
+		end
+		SetTrue(uiBtnBuy);
+		SetControlID(uiBtnBuy,index + 300)
+	end
+end
+
+-- 清空师徒商店数据
+function FriendDlgClearTeacherShopGrid(Content)
+	local objs = {};
+	for i=0,Content.transform.childCount-1 do
+		table.insert(objs,Content.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_ShopGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_ShopGrid", obj );
+		end
+	end
+end
+
+--师徒商店购买按钮
+function FriendDlgOnBtnTeacherShop(index)
+	if m_ShopRecvValue.m_mypoint < m_ShopRecvValue.m_list[index].m_point then
+		pop(T(3319))
+	else
+		system_askinfo( ASKINFO_TEACHER, "", 5, m_ShopRecvValue.m_list[index].m_id );
+	end	
+end
+
+--师徒任务奖励列表
+function FriendDlgTeacherTaskView()
+	FriendDlgClearTeacherTaskGrid();
+	local Data = g_teacher_award;
+	for i = 1 , table.nums(Data)-1 do 
+		FriendDlgTeacherTaskGridView(i,Data)
+	end
+end
+
+----师徒任务奖励子控件绘制
+function FriendDlgTeacherTaskGridView(index,Data)
+	local uiObj = m_ObjectPool:Get( "UIP_TaskGrid" );
+	uiObj.transform:SetParent( m_uiTaskContent.transform );	
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiTitle = objs[0];
+	local uiContent = objs[1];
+	local uiCount = objs[2];
+	local uiGetBtn = objs[3];
+	local uiBtnText = objs[4];
+	
+	SetText(uiTitle,F(3311,Data[index].student_level))
+	SetText(uiCount,F(3312,m_TeacherRecvValue.m_te_awarded[index+1],Data[index].maxnum))
+	
+	if m_TeacherRecvValue.m_te_award[index+1] == 1 then 
+		SetText(uiBtnText,T(3314))
+		SetControlID(uiGetBtn,100+ index);
+		SetImage(uiGetBtn.transform:Find("Back"),LoadSprite("ui_button_3"))
+	else
+		SetText(uiBtnText,T(3313))
+		SetControlID(uiGetBtn,200);
+		SetImage(uiGetBtn.transform:Find("Back"),LoadSprite("ui_button_13"))
+	end
+--奖励绘制
+	for i = 0 ,uiContent.transform.childCount-1 do 
+		local uiObj = uiContent.transform:GetChild( i );
+		local key = "awardkind"..i;
+		if Data[index][key] ~= 0 then 
+			SetTrue(uiObj);
+			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiColor = objs[0];
+			local uiIcon = objs[1];
+			local uiNum = objs[2];
+			local sprite, color, name, c, desc = AwardInfo( Data[index][key] );	
+			SetImage( uiIcon, sprite );
+			SetImage( uiColor, color );
+			local keyNum = "awardnum"..i;
+			SetText( uiNum, Data[index][keyNum] );		
+		else
+			SetFalse(uiObj);
+		end
+	end
+end
+
+-- 清空师徒任务数据
+function FriendDlgClearTeacherTaskGrid()
+	local objs = {};
+	for i=0,m_uiTaskContent.transform.childCount-1 do
+		table.insert(objs,m_uiTaskContent.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_TaskGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_TaskGrid", obj );
+		end
+	end
+end
+
+--师徒任务完成领取
+function FriendDlgOnBtnTeacherTask( index )
+	system_askinfo( ASKINFO_TEACHER, "", 3, index );
+end
+
+--师徒列表
+function FriendDlgTeacherListShow()	
+	if m_SelectType == 3 then return end;	
+	SetTrue(m_uiTeacherList);
+	SetFalse(m_uiTeacherScroll);
+	m_SelectType = 3 ;	
+	FriendDlgTeacherListView();
+end
+
+--师徒列表绘制
+function FriendDlgTeacherListView()
+	local objs = m_uiTeacherList.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiContent = objs[0];
+	local uiTitle = objs[1];
+	
+	FriendDlgClearTeacherListGrid(uiContent);
+	
+	SetText(uiTitle,F(3315,FriendDlgGetApprenticeNum()));
+	
+	for i = 1, table.nums(m_TeacherRecvValue.m_list) do 
+		FriendDlgTeacherListGridView(i, uiContent, m_TeacherRecvValue.m_list[i]);
+	end
+end
+
+-- 清空师徒列表子控件数据
+function FriendDlgClearTeacherListGrid(Content)
+	local objs = {};
+	for i=0,Content.transform.childCount-1 do
+		table.insert(objs,Content.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_TeacherGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_TeacherGrid", obj );
+		end
+	end
+end
+
+--师徒列表子控件绘制
+function FriendDlgTeacherListGridView(index,Content,Data)
+	local uiObj = m_ObjectPool:Get( "UIP_TeacherGrid" );
+	uiObj.transform:SetParent( Content.transform );	
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0]	
+	local uiPlace = objs[1]
+	local uiName = objs[2]
+	local uiBattlePower = objs[3]	
+	local uiLabel = objs[4]
+	
+	SetImage( uiShape, PlayerHeadSprite(Data.m_shape) );
+	SetImage( uiPlace, PlaceSprite(Data.m_place) );
+	SetLevel( uiName, Data.m_level.." "..Data.m_name );
+	SetText( uiBattlePower, F(1990,Data.m_battlepower) );
+	
+	if Data.m_isteacher == 1 then 
+		SetText(uiLabel,T(3316))
+		SetTextColor(uiLabel,Hex2Color(0xD95DF4FF))
+	else
+		SetText(uiLabel,T(3317))
+		SetTextColor(uiLabel,Hex2Color(0x03DE27FF))
+	end
+end
+
+--获取徒弟数量
+function FriendDlgGetApprenticeNum()
+	local num = 0;
+	for k,v in pairs(m_TeacherRecvValue.m_list) do 
+		if v.m_isteacher == 0 then 
+			num = num + 1;
+		end
+	end
+	return num;
 end

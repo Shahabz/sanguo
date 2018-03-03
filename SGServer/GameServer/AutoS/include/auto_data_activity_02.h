@@ -4,7 +4,18 @@
 
 struct _activityinfo02 {
 //--Automatically generated
-				int Id;	//
+				int id;	//
+				short level;	//
+				int unlock_nameid;	//
+				int unlock_descid;	//
+				short cond_kind;	//
+				short cond_level;	//
+				short actor_level;	//
+				int awardkind[3];	//
+				int awardnum[3];	//
+				short sprite_buildingkind;	//
+				short sprite_techkind;	//
+				short sprite_color;	//
 };
 typedef struct _activityinfo02 ActivityInfo02;
 

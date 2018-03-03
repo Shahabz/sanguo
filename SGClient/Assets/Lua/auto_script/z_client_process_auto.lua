@@ -2120,11 +2120,13 @@ end
 -- m_count=0,m_list={m_actorid=0,m_city_index=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_place=0,m_battlepower=0,m_isteacher=0,[m_count]},m_te_award={[10]},m_te_awarded={[10]},m_teacheraward_count=0,m_teacheraward={m_kind=0,m_num=0,[m_teacheraward_count]},
 function proc_studentlist_C( recvValue )
 	-- process.
+	FriendDlgTeacherRecv(recvValue)
 end
 
 -- m_count=0,m_list={m_awardkind=0,m_buylevel=0,m_point=0,m_id=0,[m_count]},m_mypoint=0,
 function proc_teachershoplist_C( recvValue )
 	-- process.
+	FriendDlgTeacherShopRecv(recvValue)
 end
 
 -- m_count=0,m_list={m_value=0,m_state=0,[m_count]},

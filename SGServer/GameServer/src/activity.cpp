@@ -32,6 +32,9 @@ extern int g_command_count;
 ActivityItem *g_activity_item;
 int g_activity_count = MAX_ACTIVITY_COUNT;
 
+extern ActivityInfo02 *g_activity_02;
+extern int g_activity_02_maxnum;
+
 extern ActivityInfo03 *g_activity_03;
 extern int g_activity_03_maxnum;
 
@@ -525,6 +528,25 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 
+	// 主城等级
+	char activity02_over = 1;
+	for ( int id = 1; id < g_activity_02_maxnum; id++ )
+	{
+		if ( (g_actors[actor_index].act02_state & (1 << id)) == 0 )
+		{
+			activity02_over = 0;
+			break;
+		}
+	}
+	if ( activity02_over == 0 )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_2;
+		pValue.m_list[pValue.m_count].m_starttime = 0;
+		pValue.m_list[pValue.m_count].m_endtime = 0;
+		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_count += 1;
+	}
+
 	// 攻城略地
 	char activity03_over = 1;
 	for ( int id = 1; id < g_activity_03_maxnum; id++ )
@@ -571,6 +593,41 @@ int activity_sendlist( int actor_index )
 	pValue.m_count += 1;
 
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 主城等级活动
+int activity_02_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int value[3] = { 0 };
+	value[0] = ACTIVITY_2;
+	value[1] = 0;
+	value[2] = g_actors[actor_index].act02_state;
+	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 3, value, NULL );
+	return 0;
+}
+int activity_02_get( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id <= 0 || id >= g_activity_02_maxnum )
+		return -1;
+	if ( g_actors[actor_index].act02_state & (1 << id) )
+		return -1;
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		if ( g_activity_02[id].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_activity_02[id].awardkind[tmpi], g_activity_02[id].awardnum[tmpi], -1, PATH_ACTIVITY, NULL );
+	}
+	g_actors[actor_index].act02_state |= (1 << id);
+	activity_02_sendinfo( actor_index );
 	return 0;
 }
 

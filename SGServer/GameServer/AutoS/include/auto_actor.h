@@ -70,14 +70,15 @@ struct _actor {
 				char neq_crit[6];	//国器暴击状态
 				char mapcallfree;	//免费召唤次数
 				short wishingid[9];	//聚宝盆道具列表
-				int wishingday;	//聚宝盆道具哪天的
 				char wishingopen[9];	//聚宝盆道具开启
+				int wishingday;	//聚宝盆道具哪天的
 				int wishingcd;	//聚宝盆寻宝冷却
 				int shape_bag;	//形象背包
 				int student[30];	//徒弟
 				char te_award[10];	//师徒奖励可领取次数
 				char te_awarded[10];	//师徒奖励已经领取次数
 				int te_shop;	//师徒商店
+				int act02_state;	//主城等级活动领取奖励
 				char act03_state;	//攻城掠地活动领取奖励
 				short act08_state;	//成长计划活动领取奖励
 				int talkspeed_frame;	//说话延迟
