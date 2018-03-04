@@ -793,7 +793,18 @@ int activity_05_sendinfo( int actor_index )
 		{
 			pValue.m_list[pValue.m_count].m_awardkind = g_activity_05[id].awardkind;
 			pValue.m_list[pValue.m_count].m_awardnum = g_activity_05[id].awardnum;
-			pValue.m_list[pValue.m_count].m_token = g_activity_05[id].token;
+			int token = g_activity_05[id].token;
+			if ( g_actors[actor_index].act05_buynum == 1 )
+				token = (int)(g_activity_05[id].token*0.9f);
+			else if ( g_actors[actor_index].act05_buynum == 2 )
+				token = (int)(g_activity_05[id].token*0.8f);
+			else if ( g_actors[actor_index].act05_buynum == 3 )
+				token = (int)(g_activity_05[id].token*0.7f);
+			else if ( g_actors[actor_index].act05_buynum == 4 )
+				token = (int)(g_activity_05[id].token*0.6f);
+			else if ( g_actors[actor_index].act05_buynum >= 5 )
+				token = (int)(g_activity_05[id].token*0.5f);
+			pValue.m_list[pValue.m_count].m_token = token;
 			if ( g_actors[actor_index].act05_isbuy & (1 << tmpi) )
 				pValue.m_list[pValue.m_count].m_isbuy = 1;
 			else
