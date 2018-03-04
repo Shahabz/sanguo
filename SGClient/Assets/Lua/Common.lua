@@ -662,6 +662,21 @@ function getDateStringByInterval_zh(time)
     return year .. T(441) .. month .. T(442) .. day .. T(443);
 end
 
+function getMonthDayHourMinStringByInterval_zh(time)
+    local tab = os.date("*t", time);
+    local min= tostring(tab.min);
+    local hour = tostring(tab.hour);
+    local day = tostring(tab.day);
+	local month = tostring(tab.month);
+	if tab.min < 10 then
+       min = '0'..min;
+    end
+    if tab.hour < 10 then
+       hour = '0'..hour;
+    end
+    return month .. T(442) .. day .. T(443).. hour ..":"..min;
+end
+
 function getHourStringByInterval(time)
     local tab = os.date("*t", time);
     local sec = tostring(tab.sec);

@@ -80,6 +80,7 @@ end
 
 -- 界面删除时调用
 function Activity2ModOnDestroy( gameObject )
+	m_Mod = nil
 	Invoke( function() 
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_3" )
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_0" )
@@ -100,6 +101,9 @@ end
 -- 自定
 ----------------------------------------
 function Activity2ModRecv( state )
+	if m_Mod == nil then
+		return
+	end
 	local scrollPage = m_uiScrollView.transform:GetComponent( typeof(UIScrollPage) )
 	scrollPage:ClearPage()
 	m_state = state
@@ -223,7 +227,7 @@ function Activity2ModScrollPage( page )
 			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..awardnum[i] );
+				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
 			else
 				SetText( awardObj.transform:Find("Num"), "" );
 			end

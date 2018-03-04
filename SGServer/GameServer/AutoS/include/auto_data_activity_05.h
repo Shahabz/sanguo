@@ -4,7 +4,11 @@
 
 struct _activityinfo05 {
 //--Automatically generated
-				int Id;	//
+				int id;	//
+				int awardkind;	//
+				int awardnum;	//
+				int token;	//
+				int weight;	//
 };
 typedef struct _activityinfo05 ActivityInfo05;
 

@@ -80,6 +80,12 @@ struct _actor {
 				int te_shop;	//师徒商店
 				int act02_state;	//主城等级活动领取奖励
 				char act03_state;	//攻城掠地活动领取奖励
+				short act05_item[6];	//七星拜将活动-道具列表
+				char act05_isbuy;	//七星拜将活动-道具是否购买
+				char act05_buynum;	//七星拜将活动-道具购买次数
+				char act05_xw;	//七星拜将活动-信物
+				char act05_upnum;	//七星拜将活动-剩余刷新次数
+				int act05_upstamp;	//七星拜将活动-刷新时间
 				short act08_state;	//成长计划活动领取奖励
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待

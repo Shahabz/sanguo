@@ -832,6 +832,25 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_03_get( actor_index, pvalue[2] );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_5 )
+		{ // 七星拜将
+			if ( pvalue[1] == 0 )
+			{
+				activity_05_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_05_buy( actor_index, pvalue[2] );
+			}
+			else if ( pvalue[1] == 2 )
+			{
+				activity_05_update( actor_index );
+			}
+			else if ( pvalue[1] == 3 )
+			{ 
+				activity_05_callhero( actor_index );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_8 )
 		{ // 成长计划
 			if ( pvalue[1] == 0 )

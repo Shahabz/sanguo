@@ -64,6 +64,7 @@ end
 
 -- 界面删除时调用
 function Activity8ModOnDestroy( gameObject )
+	m_Mod = nil
 	m_recvIsOpen = nil;
 	m_recvState = nil
 	Invoke( function() 
@@ -84,6 +85,9 @@ end
 -- 自定
 ----------------------------------------
 function Activity8ModRecv( isopen, state )
+	if m_Mod == nil then
+		return
+	end
 	if isopen == 0 then
 		SetTrue( m_uiActivityVip )
 		SetTrue( m_uiActivityOpenBtn )
@@ -144,7 +148,7 @@ function Activity8ModCreate( info, state )
 			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..awardnum[i] );
+				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
 			else
 				SetText( awardObj.transform:Find("Num"), "" );
 			end

@@ -39,7 +39,7 @@ end
 
 -- 界面删除时调用
 function #NAME#OnDestroy( gameObject )
-	
+	m_Mod = nil
 end
 
 -- 每帧调用

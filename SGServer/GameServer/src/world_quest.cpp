@@ -215,6 +215,11 @@ int worldquest_setvalue( int questid, int value )
 				}
 			}
 		}
+		else if ( questid == WORLDQUEST_WORLDBOSS2 )
+		{ // »÷É±¶­×¿¡¢
+			// ¿ªÆôÑªÕ½»Ê³Ç
+			kingwar_activity_open();
+		}
 	}
 	return 0;
 }

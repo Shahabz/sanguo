@@ -57,6 +57,7 @@ end
 
 -- 界面删除时调用
 function Activity11ModOnDestroy( gameObject )
+	m_Mod = nil
 	Invoke( function() 
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_npc3" )
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_15" )
@@ -76,6 +77,9 @@ end
 -- 自定
 ----------------------------------------
 function Activity11ModRecv( isget1, isget2 )
+	if m_Mod == nil then
+		return
+	end
 	local textid = 0
 	local nowtime = GetServerTime()
 	local t = os.date( "*t", nowtime )

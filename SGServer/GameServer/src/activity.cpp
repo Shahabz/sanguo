@@ -20,6 +20,7 @@
 #include "actor_times.h"
 #include "city.h"
 #include "quest.h"
+#include "hero.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -37,6 +38,9 @@ extern int g_activity_02_maxnum;
 
 extern ActivityInfo03 *g_activity_03;
 extern int g_activity_03_maxnum;
+
+extern ActivityInfo05 *g_activity_05;
+extern int g_activity_05_maxnum;
 
 extern ActivityInfo08 *g_activity_08;
 extern int g_activity_08_maxnum;
@@ -505,6 +509,7 @@ int activity_countdown( int activityid )
 // 活动列表
 int activity_sendlist( int actor_index )
 {
+	int endtime = 0;
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
@@ -563,6 +568,17 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_count += 1;
+	}
+
+	// 七星拜将
+	endtime = g_actors[actor_index].createtime + 3 * 86400;
+	if ( (int)time( NULL ) < endtime || (actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL ) == 0 && g_actors[actor_index].act05_xw >=7 ) )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_5;
+		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
+		pValue.m_list[pValue.m_count].m_endtime = endtime;
+		pValue.m_list[pValue.m_count].m_closetime = endtime;
 		pValue.m_count += 1;
 	}
 	
@@ -642,7 +658,10 @@ int activity_03_sendinfo( int actor_index )
 	for ( int id = 1; id < g_activity_03_maxnum; id++ )
 	{
 		pValue.m_list[pValue.m_count].m_value = data_record_getvalue( pCity, g_activity_03[id].record_offset );
-		pValue.m_list[pValue.m_count].m_state = (g_actors[actor_index].act03_state & (1 << id));
+		if ( g_actors[actor_index].act03_state & (1 << id))
+			pValue.m_list[pValue.m_count].m_state = 1;
+		else
+			pValue.m_list[pValue.m_count].m_state = 0;
 		pValue.m_count += 1;
 	}
 	netsend_activity03list_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -669,6 +688,205 @@ int activity_03_get( int actor_index, int id )
 	}
 	g_actors[actor_index].act03_state |= (1 << id);
 	activity_03_sendinfo( actor_index );
+	return 0;
+}
+
+// 七星拜将活动
+int activity_05_item_random( int *kindlist, int kindnum, int *totalvalue )
+{
+	int outid = 0;
+	int allvalue = *totalvalue;
+	int curvalue = 0;
+	int odds = allvalue > 0 ? rand() % allvalue : 0;
+	for ( int tmpi = 0; tmpi < kindnum; tmpi++ )
+	{
+		// 按照评价值方式随机
+		int id = kindlist[tmpi];
+		if ( id <= 0 || id >= g_activity_05_maxnum )
+			continue;
+		curvalue = g_activity_05[id].weight;
+		if ( curvalue > 0 && curvalue > odds )
+		{
+			outid = id;
+			kindlist[tmpi] = 0;
+			*totalvalue -= curvalue;
+			break;
+		}
+		odds -= curvalue;
+	}
+	return outid;
+}
+int activity_05_item_update( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	int kindlist[64] = { 0 };
+	int kindnum = 0;
+	int allvalue = 0;
+	for ( int id = 1; id < g_activity_05_maxnum; id++ )
+	{
+		int awardkind = g_activity_05[id].awardkind;
+		if ( awardkind <= 0 )
+			continue;
+		kindlist[kindnum] = id;
+		kindnum++;
+		allvalue += g_activity_05[id].weight;
+	}
+
+	g_actors[actor_index].act05_item[0] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	g_actors[actor_index].act05_item[1] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	g_actors[actor_index].act05_item[2] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	g_actors[actor_index].act05_item[3] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	g_actors[actor_index].act05_item[4] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL ) == 1 || g_actors[actor_index].act05_xw >= 7 )
+	{
+		g_actors[actor_index].act05_item[5] = activity_05_item_random( kindlist, kindnum, &allvalue );
+	}
+	else
+		g_actors[actor_index].act05_item[5] = 1;
+	g_actors[actor_index].act05_buynum = 0;
+	g_actors[actor_index].act05_isbuy = 0;
+	return 0;
+}
+int activity_05_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	// 第一次刷新
+	if ( g_actors[actor_index].act05_item[0] == 0 )
+	{
+		activity_05_item_update( actor_index );
+		g_actors[actor_index].act05_upnum = 4;
+		g_actors[actor_index].act05_upstamp = 0;
+	}
+
+	if ( g_actors[actor_index].act05_upstamp > 0 )
+	{
+		if ( (int)time( NULL ) > g_actors[actor_index].act05_upstamp )
+		{ // 倒计时
+			int add = 0;
+			int spacetime = (int)time( NULL ) - g_actors[actor_index].act05_upstamp;
+			if ( spacetime >= global.activity05_update_sec * 3 )
+				add = 4;
+			else if ( spacetime >= global.activity05_update_sec * 2 )
+				add = 3;
+			else if ( spacetime >= global.activity05_update_sec * 1 )
+				add = 2;
+			else
+				add = 1;
+
+			g_actors[actor_index].act05_upnum += add;
+			g_actors[actor_index].act05_upstamp += spacetime + global.activity05_update_sec;
+			if ( g_actors[actor_index].act05_upnum >= 4 )
+			{
+				g_actors[actor_index].act05_upnum = 4;
+				g_actors[actor_index].act05_upstamp = 0;
+			}
+		}
+	}
+
+	SLK_NetS_Activity05List pValue = { 0 };
+	for ( int tmpi = 0; tmpi < 6; tmpi++ )
+	{
+		int id = g_actors[actor_index].act05_item[tmpi];
+		if ( id > 0 && id < g_activity_05_maxnum )
+		{
+			pValue.m_list[pValue.m_count].m_awardkind = g_activity_05[id].awardkind;
+			pValue.m_list[pValue.m_count].m_awardnum = g_activity_05[id].awardnum;
+			pValue.m_list[pValue.m_count].m_token = g_activity_05[id].token;
+			if ( g_actors[actor_index].act05_isbuy & (1 << tmpi) )
+				pValue.m_list[pValue.m_count].m_isbuy = 1;
+			else
+				pValue.m_list[pValue.m_count].m_isbuy = 0;
+		}
+		pValue.m_count += 1;
+	}
+	pValue.m_buynum = g_actors[actor_index].act05_buynum;
+	pValue.m_updatenum = g_actors[actor_index].act05_upnum;
+	pValue.m_updatestamp = g_actors[actor_index].act05_upstamp - (int)time(NULL);
+	pValue.m_myxw = g_actors[actor_index].act05_xw;
+	netsend_activity05list_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+int activity_05_buy( int actor_index, int index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int endtime = g_actors[actor_index].createtime + 3 * 86400;
+	if ( (int)time( NULL ) > endtime )
+	{
+		actor_notify_alert( actor_index, 2481 );//活动已经结束，请尽快领取奖励！
+		return -1;
+	}
+	if ( index < 0 || index >= 6 )
+		return -1;
+	int id = g_actors[actor_index].act05_item[index];
+	if ( id <= 0 || id >= g_activity_05_maxnum )
+		return -1;
+	if ( g_actors[actor_index].act05_isbuy & (1 << index) )
+		return -1;
+
+	int token = g_activity_05[id].token;
+	if ( g_actors[actor_index].act05_buynum == 1 )
+		token = (int)(g_activity_05[id].token*0.9f);
+	else if ( g_actors[actor_index].act05_buynum == 2 )
+		token = (int)(g_activity_05[id].token*0.8f);
+	else if ( g_actors[actor_index].act05_buynum == 3 )
+		token = (int)(g_activity_05[id].token*0.7f);
+	else if ( g_actors[actor_index].act05_buynum == 4 )
+		token = (int)(g_activity_05[id].token*0.6f);
+	else if ( g_actors[actor_index].act05_buynum >= 5 )
+		token = (int)(g_activity_05[id].token*0.5f);
+
+	if ( actor_change_token( actor_index, -token, PATH_ACTIVITY, 0 ) < 0 )
+		return -1;
+
+	award_getaward( actor_index, g_activity_05[id].awardkind, g_activity_05[id].awardnum, -1, PATH_ACTIVITY, NULL );
+	g_actors[actor_index].act05_isbuy |= (1 << index);
+	g_actors[actor_index].act05_buynum += 1;
+	activity_05_sendinfo( actor_index );
+	return 0;
+}
+int activity_05_update( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int endtime = g_actors[actor_index].createtime + 3 * 86400;
+	if ( (int)time( NULL ) > endtime )
+	{
+		actor_notify_alert( actor_index, 2481 );//活动已经结束，请尽快领取奖励！
+		return -1;
+	}
+	if ( g_actors[actor_index].act05_upnum <= 0 )
+	{
+		if ( actor_change_token( actor_index, -global.activity05_update_token, PATH_ACTIVITY, 0 ) < 0 )
+			return -1;
+		activity_05_item_update( actor_index );
+		activity_05_sendinfo( actor_index );
+		return 0;
+	}
+	activity_05_item_update( actor_index );
+	g_actors[actor_index].act05_upnum -= 1;
+	if ( g_actors[actor_index].act05_upnum < 4 && g_actors[actor_index].act05_upstamp == 0 )
+	{
+		g_actors[actor_index].act05_upstamp = (int)time(NULL) + global.activity05_update_sec;
+	}
+	activity_05_sendinfo( actor_index );
+	return 0;
+}
+int activity_05_callhero( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( g_actors[actor_index].act05_xw < 7 )
+	{
+		return -1;
+	}
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL ) == 1 )
+	{
+		return -1;
+	}
+	g_actors[actor_index].act05_xw -= 7;
+	hero_gethero( actor_index, 49, PATH_ACTIVITY );
+	actor_set_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL, 1 );
+	activity_05_sendinfo( actor_index );
 	return 0;
 }
 

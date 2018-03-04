@@ -3095,3 +3095,30 @@ int struct_NetS_Activity03List_send( char **pptr, int *psize, SLK_NetS_Activity0
 	return 0;
 }
 
+int struct_NetS_Activity05Item_send( char **pptr, int *psize, SLK_NetS_Activity05Item *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isbuy, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity05List_send( char **pptr, int *psize, SLK_NetS_Activity05List *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity05Item_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buynum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_updatenum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_updatestamp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myxw, (*psize) );
+	return 0;
+}
+

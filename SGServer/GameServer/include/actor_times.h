@@ -13,6 +13,7 @@
 #define	ACTOR_SFLAG_MATERIAL_MAKEWILL 8 // 是否开启作坊预设
 #define	ACTOR_SFLAG_TEACHERAWARD	9 // 是否领取拜师奖励
 #define	ACTOR_SFLAG_ACTIVITY08_OPEN	10 // 是否开启成长计划
+#define	ACTOR_SFLAG_ACTIVITY05_CALL	11 // 是否完成七星拜将
 void actor_set_sflag( int actor_index, int offset, char value );
 int actor_get_sflag( int actor_index, int offset );
 

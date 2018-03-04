@@ -262,6 +262,11 @@ function ActivityDlgChangeToken()
 	SetText( m_uiTokenText, GetPlayer().m_token );
 end
 
+--
+function ActivityDlgGetRecvValue()
+	return m_recvValue
+end
+
 -- 活动名
 function ActivityName( activityid )
 	return T( 2500 + activityid )

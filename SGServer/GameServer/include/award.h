@@ -43,6 +43,7 @@
 #define	AWARDKIND_TIANCE_POINT_2	50033 // 天策府点数蜀国
 #define	AWARDKIND_TIANCE_POINT_3	50034 // 天策府点数吴国
 #define	AWARDKIND_TEACHERAWARDNUM	50035 // 师徒奖励次数
+#define	AWARDKIND_ACTIVITY05_XW		50036 // 陈宫信物
 #define AWARDKIND_PERMISSION_1	50051 // 购买步兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_2	50052 // 购买骑兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_3	50053 // 购买弓兵权限（只用于显示）

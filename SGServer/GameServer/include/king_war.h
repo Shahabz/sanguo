@@ -36,6 +36,7 @@ void kingwar_town_logic();
 int kingwar_activity_load();
 int kingwar_activity_save( FILE *fp );
 void kingwar_activity_logic();
+int kingwar_activity_open();
 int kingwar_activity_onopen();
 int kingwar_activity_onclose();
 int kingwar_activity_inttime();

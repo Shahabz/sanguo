@@ -2821,3 +2821,28 @@ function struct_NetS_Activity03List_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Activity05Item_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_awardnum = buffer:ReadInt();
+	recvValue.m_token = buffer:ReadInt();
+	recvValue.m_isbuy = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_Activity05List_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity05Item_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_buynum = buffer:ReadSByte();
+	recvValue.m_updatenum = buffer:ReadSByte();
+	recvValue.m_updatestamp = buffer:ReadInt();
+	recvValue.m_myxw = buffer:ReadSByte();
+	return recvValue;
+end
+

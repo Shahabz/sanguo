@@ -60,6 +60,7 @@ end
 
 -- 界面删除时调用
 function Activity3ModOnDestroy( gameObject )
+	m_Mod = nil
 	m_recvValue = nil
 	Invoke( function() 
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_4" )
@@ -80,6 +81,9 @@ end
 ----------------------------------------
 -- m_count=0,m_list={m_value=0,m_state=0,[m_count]},
 function Activity3ModRecv( recvValue )
+	if m_Mod == nil then
+		return
+	end
 	Activity3ModClear()
 	m_recvValue = recvValue
 	for i=1, #g_activity_03, 1 do
@@ -131,7 +135,7 @@ function Activity3ModCreate( info, value, state )
 			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..awardnum[i] );
+				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
 			else
 				SetText( awardObj.transform:Find("Num"), "" );
 			end

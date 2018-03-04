@@ -76,6 +76,12 @@ CREATE TABLE `actor` (
   `te_shop` int(11) NOT NULL DEFAULT '0' COMMENT '师徒商店',
   `act02_state` int(11) NOT NULL DEFAULT '0' COMMENT '主城等级活动领取奖励',
   `act03_state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '攻城掠地活动领取奖励',
+  `act05_item` varbinary(24) NOT NULL DEFAULT '' COMMENT '七星拜将活动-道具列表',
+  `act05_isbuy` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-道具是否购买',
+  `act05_buynum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-道具购买次数',
+  `act05_xw` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-信物',
+  `act05_upnum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-剩余刷新次数',
+  `act05_upstamp` int(11) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-刷新时间',
   `act08_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '成长计划活动领取奖励',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

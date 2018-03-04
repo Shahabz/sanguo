@@ -5,6 +5,7 @@ int system_getruntime();
 int system_getopentime();
 
 int system_getfday();
+int system_getfweek();
 int system_gettoday();
 int system_getmonth();
 int system_getweek();

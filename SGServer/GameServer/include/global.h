@@ -190,6 +190,8 @@ typedef struct _global
 	short take_teacher_maxlevel;
 	char activity08_viplevel;
 	short activity08_token;
+	short activity05_update_token;
+	int activity05_update_sec;
 }Global;
 int global_init();
 void global_reload();

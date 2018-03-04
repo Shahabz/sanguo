@@ -22,7 +22,7 @@ int activityinfo05_init_auto()
 	char	szSQL[2048] = {0};
 	int offset = 0;
 
-	sprintf( szSQL, "select max(`Id`) from activity_05;" );
+	sprintf( szSQL, "select max(`id`) from activity_05;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -47,7 +47,7 @@ int activityinfo05_init_auto()
 	g_activity_05 = (ActivityInfo05 *)malloc( sizeof(ActivityInfo05)*g_activity_05_maxnum );
 	memset( g_activity_05, 0, sizeof(ActivityInfo05)*g_activity_05_maxnum );
 
-	sprintf( szSQL, "select `Id` from activity_05;" );
+	sprintf( szSQL, "select `id`,`awardkind`,`awardnum`,`token`,`weight` from activity_05;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -58,10 +58,14 @@ int activityinfo05_init_auto()
 	while( ( row = mysql_fetch_row( res ) ) )
 	{
 		offset = 0;
-		int Id = atoi( row[0] );
-		if ( Id < 0 || Id >= g_activity_05_maxnum  )
+		int id = atoi( row[0] );
+		if ( id < 0 || id >= g_activity_05_maxnum  )
 			continue;
-		g_activity_05[Id].Id = atoi(row[offset++]);
+		g_activity_05[id].id = atoi(row[offset++]);
+		g_activity_05[id].awardkind = atoi(row[offset++]);
+		g_activity_05[id].awardnum = atoi(row[offset++]);
+		g_activity_05[id].token = atoi(row[offset++]);
+		g_activity_05[id].weight = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

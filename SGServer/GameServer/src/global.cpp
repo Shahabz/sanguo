@@ -600,6 +600,10 @@ int global_init()
 			global.activity08_viplevel = atoi( row[1] );
 		else if ( id == 217 )
 			global.activity08_token = atoi( row[1] );
+		else if ( id == 218 )
+			global.activity05_update_token = atoi( row[1] );
+		else if ( id == 219 )
+			global.activity05_update_sec = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

@@ -76,6 +76,7 @@ int g_kingwar_town_maxcount = 0;
 
 int g_kingwar_lost_totalhp = 0; // 总损失兵力
 char g_kingwar_level = 1;
+int g_kingwar_activity_openweek = 0; // 活动首次启动周
 int g_kingwar_activity_beginstamp = 0; // 活动开始时间戳
 int g_kingwar_activity_endstamp = 0; // 活动结束时间戳
 int g_kingwar_activity_duration = 0; // 活动持续时间
@@ -525,7 +526,7 @@ int kingwar_activity_load()
 	char	szSQL[1024];
 
 	// 读取存档
-	sprintf( szSQL, "select open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp from kingwar_activity;" );
+	sprintf( szSQL, "select openweek,open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp from kingwar_activity;" );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -535,17 +536,18 @@ int kingwar_activity_load()
 	res = mysql_store_result( myGame );
 	if ( (row = mysql_fetch_row( res )) )
 	{
-		g_kingwar_activity_open = atoi( row[0] );
-		g_kingwar_activity_beginstamp = atoi( row[1] );
-		g_kingwar_activity_endstamp = atoi( row[2] );
-		g_kingwar_activity_duration = atoi( row[3] );
-		g_kingwar_lost_totalhp = atoi( row[4] );
-		g_kingwar_level = atoi( row[5] );
-		g_kingwar_treasure_open = atoi( row[6] );
-		g_kingwar_treasure_endstamp = atoi( row[7] );
-		memcpy( g_treasure_nationitem[0], row[8], sizeof( short ) * KINGWAR_TREASURE_MAX );
-		memcpy( g_treasure_nationitem[1], row[9], sizeof( short ) * KINGWAR_TREASURE_MAX );
-		memcpy( g_treasure_nationitem[2], row[10], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		g_kingwar_activity_openweek = atoi( row[0] );
+		g_kingwar_activity_open = atoi( row[1] );
+		g_kingwar_activity_beginstamp = atoi( row[2] );
+		g_kingwar_activity_endstamp = atoi( row[3] );
+		g_kingwar_activity_duration = atoi( row[4] );
+		g_kingwar_lost_totalhp = atoi( row[5] );
+		g_kingwar_level = atoi( row[6] );
+		g_kingwar_treasure_open = atoi( row[7] );
+		g_kingwar_treasure_endstamp = atoi( row[8] );
+		memcpy( g_treasure_nationitem[0], row[9], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		memcpy( g_treasure_nationitem[1], row[10], sizeof( short ) * KINGWAR_TREASURE_MAX );
+		memcpy( g_treasure_nationitem[2], row[11], sizeof( short ) * KINGWAR_TREASURE_MAX );
 		for ( int nation = 0; nation < 3; nation++ )
 		{
 			for ( int tmpi = 0; tmpi < KINGWAR_TREASURE_MAX; tmpi++ )
@@ -555,7 +557,12 @@ int kingwar_activity_load()
 				g_treasure_nationitem_count[nation] += 1;
 			}
 		}
-		g_kingwar_nextstamp = atoi( row[11] );
+		g_kingwar_nextstamp = atoi( row[12] );
+
+		if ( g_kingwar_nextstamp > 0 )
+		{
+			g_kingwar_activity_openweek = 1;
+		}
 	}
 	mysql_free_result( res );
 
@@ -622,8 +629,8 @@ int kingwar_activity_save( FILE *fp )
 	char nationitem3[sizeof( short ) * KINGWAR_TREASURE_MAX * 2 + 1] = { 0 };
 
 	// 保存活动估计出数据
-	sprintf( szSQL, "replace into kingwar_activity ( id,open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp ) values('1','%d','%d','%d','%d','%d','%d','%d','%d','%s','%s','%s','%d');",
-		g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp, g_kingwar_level, g_kingwar_treasure_open, g_kingwar_treasure_endstamp,
+	sprintf( szSQL, "replace into kingwar_activity ( id,openweek,open,beginstamp,endstamp,duration,lost_totalhp,level,treasure_open,treasure_endstamp,treasure_nation1,treasure_nation2,treasure_nation3,nextstamp ) values('1','%d','%d','%d','%d','%d','%d','%d','%d','%d','%s','%s','%s','%d');",
+		g_kingwar_activity_openweek,g_kingwar_activity_open, g_kingwar_activity_beginstamp, g_kingwar_activity_endstamp, g_kingwar_activity_duration, g_kingwar_lost_totalhp, g_kingwar_level, g_kingwar_treasure_open, g_kingwar_treasure_endstamp,
 		db_escape( (const char *)g_treasure_nationitem[0], nationitem1, sizeof( short ) * KINGWAR_TREASURE_MAX ),
 		db_escape( (const char *)g_treasure_nationitem[1], nationitem2, sizeof( short ) * KINGWAR_TREASURE_MAX ),
 		db_escape( (const char *)g_treasure_nationitem[2], nationitem3, sizeof( short ) * KINGWAR_TREASURE_MAX ),
@@ -703,30 +710,34 @@ void kingwar_activity_logic()
 	struct tm *nowtime = localtime( &t );
 	if ( nowtime->tm_wday == global.kingwar_activity_week )
 	{
-		// 活动开始
-		if ( nowtime->tm_hour == global.kingwar_activity_hour && nowtime->tm_min == global.kingwar_activity_minute && nowtime->tm_sec == 0 )
+		int weeknum = system_getfweek();
+		if ( weeknum >= g_kingwar_activity_openweek )
 		{
-			kingwar_activity_onopen();
-			return;
-		}
-
-		// 活动结束
-		if ( g_kingwar_activity_open == 1 && nowstamp >= g_kingwar_activity_endstamp )
-		{
-			kingwar_activity_onclose();
-			return;
-		}
-
-		// 在活动中
-		if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
-		{
-			// 城镇逻辑
-			kingwar_town_logic();
-			// 每秒发送一次
-			if ( g_kingwar_town_update == 1 )
+			// 活动开始
+			if ( nowtime->tm_hour == global.kingwar_activity_hour && nowtime->tm_min == global.kingwar_activity_minute && nowtime->tm_sec == 0 )
 			{
-				kingwar_town_sendall();
-				g_kingwar_town_update = 0;
+				kingwar_activity_onopen();
+				return;
+			}
+
+			// 活动结束
+			if ( g_kingwar_activity_open == 1 && nowstamp >= g_kingwar_activity_endstamp )
+			{
+				kingwar_activity_onclose();
+				return;
+			}
+
+			// 在活动中
+			if ( nowstamp >= g_kingwar_activity_beginstamp && nowstamp <= g_kingwar_activity_endstamp )
+			{
+				// 城镇逻辑
+				kingwar_town_logic();
+				// 每秒发送一次
+				if ( g_kingwar_town_update == 1 )
+				{
+					kingwar_town_sendall();
+					g_kingwar_town_update = 0;
+				}
 			}
 		}
 	}
@@ -736,6 +747,21 @@ void kingwar_activity_logic()
 	{
 		kingwar_treasure_onclose();
 	}
+}
+
+// 活动启动
+int kingwar_activity_open()
+{
+	int week = system_getweek();
+	if ( week == 6 && week == 0 )
+	{ // 星期六星期日不用隔周了
+		g_kingwar_activity_openweek = system_getfweek();
+	}
+	else
+	{
+		g_kingwar_activity_openweek = system_getfweek() + 1;
+	}
+	return 0;
 }
 
 // 活动开启

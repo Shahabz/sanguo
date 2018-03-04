@@ -109,6 +109,12 @@ int activity_02_get( int actor_index, int id );
 int activity_03_sendinfo( int actor_index );
 int activity_03_get( int actor_index, int id );
 
+// 七星拜将活动
+int activity_05_sendinfo( int actor_index );
+int activity_05_buy( int actor_index, int index );
+int activity_05_update( int actor_index );
+int activity_05_callhero( int actor_index );
+
 // 成长计划活动
 int activity_08_sendinfo( int actor_index );
 int activity_08_open( int actor_index );

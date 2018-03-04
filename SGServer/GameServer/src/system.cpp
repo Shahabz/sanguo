@@ -85,6 +85,12 @@ int system_getfday()
 	return thisday;
 }
 
+int system_getfweek()
+{
+	int weeknum = ((int)time( NULL ) - (int)timezone) / (86400 * 7);
+	return weeknum;
+}
+
 int system_gettoday()
 {
 	time_t t;

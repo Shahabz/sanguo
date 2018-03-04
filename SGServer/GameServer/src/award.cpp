@@ -646,6 +646,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		actor_studentlevel_awardadd( actor_index, num );
 	}
+	else if ( kind == AWARDKIND_ACTIVITY05_XW ) // 陈宫信物
+	{
+		g_actors[actor_index].act05_xw += num;
+	}
 	else if ( kind == AWARDKIND_PERMISSION_4 ) // 科技快研
 	{
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );

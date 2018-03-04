@@ -91,6 +91,7 @@ end
 
 -- 界面删除时调用
 function Activity10ModOnDestroy( gameObject )
+	m_Mod = nil
 	m_PayBagRecvValue = nil
 	Invoke( function() 
 		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_6" )
@@ -112,6 +113,9 @@ end
 ----------------------------------------
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_nameid=0,m_descid=0,m_icon=0,m_sale=0,m_worth=0,m_bag_time=0,m_bag_num=0,m_awardcount=0,m_award={m_kind=0,m_num=0,[m_awardcount]},[m_count]},
 function Activity10ModRecv( recvValue )
+	if m_Mod == nil then
+		return
+	end
 	local scrollPage = m_uiPayBagScroll.transform:GetComponent( typeof(UIScrollPage) )
 	scrollPage:ClearPage()
 	m_PayBagRecvValue = recvValue
@@ -188,7 +192,7 @@ function Activity10ModCreateAward( awardinfo )
 	SetImage( uiObj.transform:Find("Shape"), sprite )
 	SetImage( uiObj.transform:Find("Color"), color )
 	SetText( uiObj.transform:Find("Name"), name );
-	SetText( uiObj.transform:Find("Num"), "x"..awardinfo.m_num );
+	SetText( uiObj.transform:Find("Num"), "x"..knum(awardinfo.m_num) );
 end
 
 --清空
