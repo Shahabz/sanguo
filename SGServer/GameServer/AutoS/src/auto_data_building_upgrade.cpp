@@ -66,7 +66,7 @@ int buildingupgrade_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`level`,`citylevel`,`actorlevel`,`silver`,`wood`,`food`,`iron`,`sec`,`value0`,`value1`,`value2`,`value3`,`value4`,`value5`,`value6`,`value7`,`exp`,`battlepower` from building_upgrade;" );
+	sprintf( szSQL, "select `kind`,`level`,`citylevel`,`actorlevel`,`silver`,`wood`,`food`,`iron`,`sec`,`value0`,`value1`,`value2`,`value3`,`value4`,`value5`,`value6`,`value7`,`exp`,`battlepower`,`awardkind`,`awardnum` from building_upgrade;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -102,6 +102,8 @@ int buildingupgrade_init_auto()
 		g_building_upgrade[kind].config[level].value[7] = atoi(row[offset++]);
 		g_building_upgrade[kind].config[level].exp = atoi(row[offset++]);
 		g_building_upgrade[kind].config[level].battlepower = atoi(row[offset++]);
+		g_building_upgrade[kind].config[level].awardkind = atoi(row[offset++]);
+		g_building_upgrade[kind].config[level].awardnum = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

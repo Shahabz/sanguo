@@ -192,6 +192,7 @@ int netsend_studentlist_S( int actor_index, char send_type, SLK_NetS_StudentList
 int netsend_teachershoplist_S( int actor_index, char send_type, SLK_NetS_TeacherShopList *pValue );
 int netsend_activity03list_S( int actor_index, char send_type, SLK_NetS_Activity03List *pValue );
 int netsend_activity05list_S( int actor_index, char send_type, SLK_NetS_Activity05List *pValue );
+int netsend_activity01list_S( int actor_index, char send_type, SLK_NetS_Activity01List *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

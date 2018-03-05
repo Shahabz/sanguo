@@ -2141,3 +2141,9 @@ function proc_activity05list_C( recvValue )
 	Activity5ModRecv( recvValue )
 end
 
+-- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_fristpay=0,m_fristpay_award=0,
+function proc_activity01list_C( recvValue )
+	-- process.
+	Activity1ModRecv( recvValue )
+end
+

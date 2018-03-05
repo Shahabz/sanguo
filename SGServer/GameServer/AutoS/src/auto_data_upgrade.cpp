@@ -47,7 +47,7 @@ int upgradeinfo_init_auto()
 	g_upgradeinfo = (UpgradeInfo *)malloc( sizeof(UpgradeInfo)*g_upgradeinfo_maxnum );
 	memset( g_upgradeinfo, 0, sizeof(UpgradeInfo)*g_upgradeinfo_maxnum );
 
-	sprintf( szSQL, "select `level`,`exp`,`heroexp0`,`heroexp1`,`heroexp2`,`heroexp3`,`heroexp4`,`heroexp5`,`battlepower`,`awardgroup`,`login_award`,`tiance_point` from upgrade;" );
+	sprintf( szSQL, "select `level`,`exp`,`heroexp0`,`heroexp1`,`heroexp2`,`heroexp3`,`heroexp4`,`heroexp5`,`battlepower`,`awardgroup`,`login_award`,`tiance_point`,`unlock_building` from upgrade;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -73,6 +73,7 @@ int upgradeinfo_init_auto()
 		g_upgradeinfo[level].awardgroup = atoi(row[offset++]);
 		g_upgradeinfo[level].login_award = atoi(row[offset++]);
 		g_upgradeinfo[level].tiance_point = atoi(row[offset++]);
+		g_upgradeinfo[level].unlock_building = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	upgradeinfo_luatable_auto();
@@ -131,6 +132,10 @@ int upgradeinfo_luatable_auto()
 
 		lua_pushstring( servL, "tiance_point" );
 		lua_pushinteger( servL, g_upgradeinfo[level].tiance_point );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "unlock_building" );
+		lua_pushinteger( servL, g_upgradeinfo[level].unlock_building );
 		lua_rawset( servL, -3 );
 
 		lua_rawset( servL, 1 );

@@ -3122,3 +3122,17 @@ int struct_NetS_Activity05List_send( char **pptr, int *psize, SLK_NetS_Activity0
 	return 0;
 }
 
+int struct_NetS_Activity01List_send( char **pptr, int *psize, SLK_NetS_Activity01List *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_fristpay, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_fristpay_award, (*psize) );
+	return 0;
+}
+

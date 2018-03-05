@@ -533,6 +533,17 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 
+	// 首充礼包
+	endtime = g_actors[actor_index].createtime + 7 * 86400;
+	if ( (int)time( NULL ) < endtime || (city_get_sflag( pCity, CITY_SFLAG_FRISTPAY ) == 1 && actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET ) == 0) )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_1;
+		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
+		pValue.m_list[pValue.m_count].m_endtime = endtime;
+		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		pValue.m_count += 1;
+	}
+
 	// 主城等级
 	char activity02_over = 1;
 	for ( int id = 1; id < g_activity_02_maxnum; id++ )
@@ -609,6 +620,46 @@ int activity_sendlist( int actor_index )
 	pValue.m_count += 1;
 
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 首充礼包活动
+int activity_01_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Activity01List pValue = { 0 };
+	pValue.m_fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
+	pValue.m_fristpay_award = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+
+	AwardGetInfo getinfo = { 0 };
+	awardgroup_random( 164, -1, &getinfo );
+	for ( int tmpi = 0; tmpi < getinfo.count; tmpi++ )
+	{
+		pValue.m_list[pValue.m_count].m_kind = getinfo.kind[tmpi];
+		pValue.m_list[pValue.m_count].m_num = getinfo.num[tmpi];
+		pValue.m_count++;
+		if ( pValue.m_count >= 8 )
+		{
+			break;
+		}
+	}
+	netsend_activity01list_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+int activity_01_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET ) == 1 )
+		return -1;
+	awardgroup_withindex( actor_index, 164, -1, PATH_ACTIVITY, NULL );
+	actor_set_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET, 1 );
+	activity_01_sendinfo( actor_index );
 	return 0;
 }
 

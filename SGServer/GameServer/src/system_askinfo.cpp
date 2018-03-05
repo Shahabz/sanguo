@@ -810,6 +810,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			activity_sendlist( actor_index );
 		}
+		else if ( pvalue[0] == ACTIVITY_1 )
+		{ // 首充礼包
+			if ( pvalue[1] == 0 )
+			{
+				activity_01_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_01_get( actor_index );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_2 )
 		{ // 主城等级
 			if ( pvalue[1] == 0 )

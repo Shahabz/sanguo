@@ -101,6 +101,10 @@ int activity_countdown( int activityid );
 // 活动列表
 int activity_sendlist( int actor_index );
 
+// 首充礼包活动
+int activity_01_sendinfo( int actor_index );
+int activity_01_get( int actor_index );
+
 // 主城等级活动
 int activity_02_sendinfo( int actor_index );
 int activity_02_get( int actor_index, int id );

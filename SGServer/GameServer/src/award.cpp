@@ -254,6 +254,8 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 {
 	if ( level <= 0 )
 		level = 1;
+	if ( awardgroup >= g_awardgroup_count )
+		return -1;
 	// 先给必得的
 	for ( int tmpi = 0; tmpi < g_awardgroup[awardgroup].allcount; tmpi++ )
 	{

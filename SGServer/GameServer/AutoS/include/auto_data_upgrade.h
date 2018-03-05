@@ -11,6 +11,7 @@ struct _upgradeinfo {
 				int awardgroup;	//
 				int login_award;	//
 				int tiance_point;	//
+				short unlock_building;	//
 };
 typedef struct _upgradeinfo UpgradeInfo;
 

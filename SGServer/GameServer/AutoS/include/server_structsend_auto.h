@@ -2128,6 +2128,14 @@ struct _slk_NetS_Activity05List {
 };
 typedef struct _slk_NetS_Activity05List SLK_NetS_Activity05List;	//活动七星拜将
 
+struct _slk_NetS_Activity01List {
+	char m_count;	//活动-首充礼包
+	SLK_NetS_AwardInfo m_list[8];	//活动-首充礼包
+	char m_fristpay;	//活动-首充礼包
+	char m_fristpay_award;	//活动-首充礼包
+};
+typedef struct _slk_NetS_Activity01List SLK_NetS_Activity01List;	//活动首充礼包
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2357,5 +2365,6 @@ int struct_NetS_Activity03Info_send( char **pptr, int *psize, SLK_NetS_Activity0
 int struct_NetS_Activity03List_send( char **pptr, int *psize, SLK_NetS_Activity03List *pValue );
 int struct_NetS_Activity05Item_send( char **pptr, int *psize, SLK_NetS_Activity05Item *pValue );
 int struct_NetS_Activity05List_send( char **pptr, int *psize, SLK_NetS_Activity05List *pValue );
+int struct_NetS_Activity01List_send( char **pptr, int *psize, SLK_NetS_Activity01List *pValue );
 
 #endif

@@ -1086,10 +1086,22 @@ int building_finish( int city_index, int op, int kind, int offset )
 			building_sendinfo_res( g_city[city_index].actor_index, offset );
 		}
 
-		BuildingUpgradeConfig *config = building_getconfig( kind, level );
+		BuildingUpgradeConfig *config = building_getconfig( kind, level+1 );
 		if ( config )
 		{ // 给经验
 			city_actorexp( city_index, config->exp, PATH_BUILDING_UPGRADE );
+			// 主城给与其他建筑
+			if ( config->awardkind > 0 )
+			{
+				if ( g_city[city_index].actor_index >= 0 )
+				{
+					award_getaward( g_city[city_index].actor_index, config->awardkind, config->awardnum, -1, PATH_BUILDING_UPGRADE, NULL );
+				}
+				else
+				{
+					gift( g_city[city_index].actorid, config->awardkind, config->awardnum, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, PATH_BUILDING_UPGRADE );
+				}
+			}
 		}
 
 		// 仓库给予高级重建次数

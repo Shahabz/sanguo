@@ -568,6 +568,11 @@ function WorldMap.DelMapUnit( recvValue )
 	-- 如果正在显示操作界面
 	if recvValue.m_unit_index == WorldMap.m_nLastTouchUnitIndex then
 		WorldMap.OnClickClose();
+		MapEnemyDlgClose()
+		MapBattleDlgClose()
+		MapCityDlgClose()
+		MapCityFightDlgClose()
+		MapResDlgClose()
 		WorldMap.m_nLastTouchUnitIndex = -1;
 	end
 end

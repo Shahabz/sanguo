@@ -2846,3 +2846,17 @@ function struct_NetS_Activity05List_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Activity01List_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_AwardInfo_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_fristpay = buffer:ReadSByte();
+	recvValue.m_fristpay_award = buffer:ReadSByte();
+	return recvValue;
+end
+
