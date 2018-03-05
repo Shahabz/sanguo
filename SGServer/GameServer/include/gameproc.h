@@ -24,5 +24,6 @@ int process_ondestory();
 int process_set_exit( int weekday, int hour, int min, int isnotify );
 // 数据表重读
 int process_dbreload();
-
+// 服务器开服初始化
+int process_serverinit();
 #endif

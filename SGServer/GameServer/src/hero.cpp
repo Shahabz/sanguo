@@ -1581,7 +1581,7 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 
 	// ¾ôÎ»¼Ó³É
 	int place_attack = 0;
-	if ( pCity->place >= 0 && pCity->place < g_nationequip_maxnum - 1 )
+	if ( pCity->place >= 0 && pCity->place < g_nation_place_maxnum )
 	{
 		place_attack = g_nation_place[pCity->place].value;
 	}

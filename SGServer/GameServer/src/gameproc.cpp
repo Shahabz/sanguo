@@ -1273,7 +1273,10 @@ int process_set_exit( int weekday, int hour, int min, int isnotify )
 // 如果小时为-1，表示首次执行，依据情形可略过
 int process_oclock_process( int hour )
 {
-	if ( hour == 0 )
+	if ( hour == 1 )
+	{
+	}
+	else if ( hour == 0 )
 	{ // 月卡发放
 		paycard_give();
 		// 刷新国家荣誉任务
@@ -1654,5 +1657,11 @@ int process_dbreload()
 	worldquestinfo_reload_auto();
 
 	db_closedata();
+	return 0;
+}
+
+// 服务器开服初始化
+int process_serverinit()
+{
 	return 0;
 }

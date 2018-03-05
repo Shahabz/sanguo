@@ -704,7 +704,7 @@ int nation_place_upgrade( int actor_index )
 		item_lost( actor_index, config->cost_kind[tmpi], config->cost_num[tmpi], PATH_NATIONPLACE );
 	}
 	pCity->place += 1;
-	hero_attr_calc_all( pCity, 0 );
+	hero_attr_calc_all( pCity, 1 );
 
 	int pValue[2] = { 0 };
 	pValue[0] = 3;
