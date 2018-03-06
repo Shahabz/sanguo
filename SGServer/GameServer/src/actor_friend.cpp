@@ -725,7 +725,7 @@ int teacher_shoplist( int actor_index )
 	{
 		if ( pCity->level < g_teacher_shop[id].showlevel )
 			continue;
-		if ( (g_actors[actor_index].te_shop & (1 << id)) == 0 )
+		if ( (g_actors[actor_index].te_shop & (1 << id)) == 1 )
 			continue;
 		pValue.m_list[pValue.m_count].m_id = id;
 		pValue.m_list[pValue.m_count].m_awardkind = g_teacher_shop[id].awardkind;
