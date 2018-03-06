@@ -263,6 +263,12 @@ function EquipForgingDlgShow()
 		
 		-- 选择状态
 		SetFalse( uiSelect )
+		
+		if IsGuiding() and GetCurrentGuideType() == GUIDE_CHOOSE then 
+			if kind ==1 then
+				FindCmdTpye(uiObj.transform);
+			end
+		end
     end 
 	-- 任务检查
 	QuestClickCheck( 4 )
@@ -323,6 +329,16 @@ function EquipForgingDlgSelect( kind )
 	else
 		SetFalse( m_uiUnLockDesc )
 		SetTrue( m_uiForgingBtn );
+
+		if IsGuiding() and GetCurrentGuideType() == GUIDE_CHOOSE then 
+			if kind == 1 then
+				GuideNext();
+			end
+		end		
+		
+		if IsGuiding() and GetCurrentGuideType() == GUIDE_MAKE then
+			FindCmdTpye(m_uiForgingBtn.transform);
+		end
 	end
 	
 	-- 形象
@@ -495,6 +511,10 @@ function EquipForgingDlgForging()
 			return
 		end
 	end
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_MAKE then 
+		GuideNext();
+	end
+	
 	system_askinfo( ASKINFO_EQUIPFORGING, "", 0, m_selectkind );
 end
 

@@ -1221,6 +1221,10 @@ function GetQuestDlgPos()
 	return m_uiQuest.transform.position
 end
 
+function GetCopyPos()
+	return m_uiButtonBack[3].transform.position;
+end
+
 function GetWorldPos()
 	return m_uiButtonBack[4].transform.position
 end

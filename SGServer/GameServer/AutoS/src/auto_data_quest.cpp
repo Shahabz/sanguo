@@ -47,7 +47,7 @@ int questinfo_init_auto()
 	g_questinfo = (QuestInfo *)malloc( sizeof(QuestInfo)*g_questinfo_maxnum );
 	memset( g_questinfo, 0, sizeof(QuestInfo)*g_questinfo_maxnum );
 
-	sprintf( szSQL, "select `questid`,`type`,`nameid`,`descid`,`nextid`,`unlock_branch0`,`unlock_branch1`,`unlock_branch2`,`unlock_branch3`,`datatype`,`datakind`,`dataoffset`,`needvalue`,`brushlevel`,`brushnum`,`brushrange`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`trigger_kind0`,`trigger_kind1`,`trigger_num0`,`trigger_num1`,`trigger_talk` from quest;" );
+	sprintf( szSQL, "select `questid`,`type`,`nameid`,`descid`,`nextid`,`unlock_branch0`,`unlock_branch1`,`unlock_branch2`,`unlock_branch3`,`datatype`,`datakind`,`dataoffset`,`needvalue`,`brushlevel`,`brushnum`,`brushrange`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardkind4`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3`,`awardnum4`,`trigger_kind0`,`trigger_kind1`,`trigger_num0`,`trigger_num1`,`trigger_talk`,`guide` from quest;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -92,6 +92,7 @@ int questinfo_init_auto()
 		g_questinfo[questid].trigger_num[0] = atoi(row[offset++]);
 		g_questinfo[questid].trigger_num[1] = atoi(row[offset++]);
 		g_questinfo[questid].trigger_talk = atoi(row[offset++]);
+		g_questinfo[questid].guide = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

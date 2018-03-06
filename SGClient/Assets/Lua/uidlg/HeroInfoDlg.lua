@@ -286,7 +286,16 @@ function HeroInfoDlgSet( path, pHero, up )
 		local uiWash = objs[2];
 		local uiAdd = objs[4];
 		SetControlID( m_uiEquip[i], 1000+i )
-
+	
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_CLCLK_DRESS and i == 2 then
+				FindCmdTpye(uiShape.transform);
+			end
+			if GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and i == 0 then
+				FindCmdTpye(uiShape.transform);
+			end
+		end
+		
 		if pHero.m_Equip[i].m_kind > 0 then
 			SetTrue( uiShape )
 			SetTrue( uiColor )
@@ -517,6 +526,7 @@ function HeroInfoDlgSelectEquip( offset )
 		SetFalse( m_uiEquipInfo )
 		return
 	end
+	
 	SetTrue( m_uiEquipInfo );
 	
 	local kind = m_pCacheHero.m_Equip[offset].m_kind;
@@ -583,6 +593,16 @@ function HeroInfoDlgSelectEquip( offset )
 			return false
 		end
 	end )
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_CLCLK_DRESS and offset == 2 then
+			GuideNext();
+		end
+		if GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and offset == 0 then
+			GuideNext();
+		end
+	end
+	
 	-- 加入列表
 	clearChild( uiContent.transform )
 	for i=1, #m_MatchEquipList, 1 do
@@ -610,6 +630,11 @@ function HeroInfoDlgSelectEquip( offset )
 		SetTrue( uiWashLevel )
 		SetEquipWash( uiWash, pEquip );
 		SetEquipWashLevel( uiWashLevel, pEquip );	
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_DRESS and i == 1 then
+				FindCmdTpye(uiUpBtn.transform);
+			end
+		end
 	end
 	
     if #m_MatchEquipList == 0 then
@@ -620,7 +645,7 @@ function HeroInfoDlgSelectEquip( offset )
 		SetFalse( uiForgingBtn )
 		SetTrue( uiScrollBack )
 		SetFalse( uiEmpty )
-	end       
+	end      
 end
 
 -- 穿上
@@ -633,6 +658,12 @@ function HeroInfoDlgEquipUp( offset )
 	end
 	system_askinfo( ASKINFO_EQUIP, "", 2, m_pCacheHero.m_kind, offset );
 	HeroInfoDlgSelectEquip( -1 )
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_DRESS and offset == 0 then
+			GuideNext();
+		end
+	end
 end
 
 -- 卸下

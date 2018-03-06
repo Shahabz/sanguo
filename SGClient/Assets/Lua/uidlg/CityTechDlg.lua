@@ -91,12 +91,6 @@ function CityTechDlgOnEvent( nType, nControlID, value, gameObject )
 			CityTechDlgSetOfficial()
 		end
 	end
-	
-	if IsGuiding() and GetCurrentGuideType()==GUIDE_TECH_SURE then
-		if nControlID - 1000 == 1 then
-			GuideNext();
-		end 
-	end
 end
 
 -- 载入时调用
@@ -153,7 +147,8 @@ end
 ----------------------------------------
 function CityTechDlgOnShow()
 	CityTechDlgOpen()
-	m_uiTreeBtn.transform:SetSiblingIndex(1000);
+	m_uiTreeBtn.transform:SetSiblingIndex(1000);	
+	m_uiTechInfo.transform:SetSiblingIndex(1000);
 	CityTechDlgOnSet();
 end
 
@@ -263,7 +258,6 @@ function CityTechDlgOnSet()
 					SetTrue( uiUpgradeBtn );
 					SetFalse( uiViewBtn );
 					SetFalse( uiContinueBtn );
-					if kind ==1 then GuideSet(uiUpgradeBtn.transform.position) end ;
 				end
 				
 				-- 首选科技
@@ -284,12 +278,6 @@ function CityTechDlgOnSet()
 	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
 	CityTechDlgSetOfficial();
-end
-
-function GuideSet(pos)
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_TECH_SURE then
-		FindCmdTpye(pos);
-	end
 end
 
 -- 设置雇佣官
@@ -497,6 +485,10 @@ function CityTechDlgSelect( kind )
 		SetTrue( uiCloseBtn );
 		SetTrue( uiUpgradeBtn );
 	end
+	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TECH_SURE then 
+		FindCmdTpye(uiUpgradeBtn.transform);
+	end
 end
 
 -- 升级
@@ -510,6 +502,9 @@ function CityTechDlgUpgrade()
 		return
 	end
 	system_askinfo( ASKINFO_TECH, "", 1, m_kind );
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TECH_SURE then 
+		GuideNext();
+	end
 	CityTechDlgSelect( -1 )
 	m_firstKind = 0;
 end

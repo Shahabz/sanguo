@@ -65,7 +65,6 @@ function BuildingQuestClick(gameObject)
 	elseif questid == QUEST_MAINID_LIUKOU then
 		QuestTalkAsk( 14 )
 	end
-	if IsGuiding() and (GetCurrentGuideType() == GUIDE_CLCLK_HEAD or GetCurrentGuideType() == GUIDE_ATTACK) then GuideNext() end;
 	gameObject:SetActive( false );
 end
 

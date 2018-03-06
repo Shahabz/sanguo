@@ -77,10 +77,8 @@ end
 -- 界面删除时调用
 function Activity1ModOnDestroy( gameObject )
 	m_Mod = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_1" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_npc2" )
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_1" )
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc2" )
 end
 
 -- 每帧调用
@@ -96,6 +94,9 @@ end
 ----------------------------------------
 -- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_fristpay=0,m_fristpay_award=0,
 function Activity1ModRecv( recvValue )
+	if m_Mod == nil then
+		return
+	end
 	local ActivityList = ActivityDlgGetRecvValue()
 	local info = nil;
 	for i=1, #ActivityList, 1 do

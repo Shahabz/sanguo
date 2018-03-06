@@ -75,6 +75,7 @@ function Activity2ModOnStart( gameObject )
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_3" )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_3") )
+	SetImage( m_uiBack2, LoadSprite("activity_back_3") )
 end
 
 -- 界面显示时调用
@@ -90,11 +91,9 @@ end
 -- 界面删除时调用
 function Activity2ModOnDestroy( gameObject )
 	m_Mod = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_3" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_0" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_3" )
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_3" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_0" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_3" )
 	m_state = 0
 end
 

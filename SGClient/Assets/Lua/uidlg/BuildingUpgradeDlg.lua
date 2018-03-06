@@ -43,7 +43,10 @@ function BuildingUpgradeDlgClose()
 	end
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
-	if IsGuiding() then HideGuideFinger() end;
+	if IsGuiding() then 
+		GuideNext();
+		HideGuideFinger(); 
+	end;
 	eye.uiManager:Close( "BuildingUpgradeDlg" );
 end
 
@@ -279,16 +282,6 @@ function BuildingUpgradeDlgShow( kind, offset, rebuildkind )
 		recvValue.m_sec = g_building_upgrade[m_kind][nextlevel].sec
 	end
 	BuildingUpgradeDlgRecv( recvValue )
-	
-	CheakGuide()
-end
-
-function CheakGuide()
-	if IsGuiding() then 
-		if GetCurrentGuideType() == GUIDE_BUILDINGUPDATE then 
-			FindCmdTpye(m_uiUpgrade.transform.position)
-		end
-	end
 end
 
 -- 数据返回

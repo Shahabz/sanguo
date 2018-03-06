@@ -66,7 +66,7 @@ end
 
 -- 界面初始化时调用
 function MapEnemyDlgOnStart( gameObject )
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_ENEMY_ATTACK then FindCmdTpye(m_uiBattleButton.transform.position) end;
+
 end
 
 -- 界面显示时调用
@@ -170,5 +170,4 @@ function MapEnemyDlgBattle()
 		
 	MapBattleDlgShow( m_recvValue, ARMY_ACTION_FIGHT, -1 )
 	MapEnemyDlgClose();
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_ENEMY_ATTACK then GuideNext() end;
 end

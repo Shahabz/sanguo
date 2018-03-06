@@ -30,11 +30,6 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
     if nType == UI_EVENT_CLICK then
 		-- 升级
         if nControlID == 1 then
-			if IsGuiding() then 
-				if GetCurrentGuideType() == GUIDE_UPGRADE then
-					GuideNext() 
-				end
-			end
 			BuildingUpgradeDlgShow( m_kind, m_offset, 0 )		
 		-- 进入
         elseif nControlID == 2 then
@@ -45,11 +40,6 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			elseif m_kind == BUILDING_StoreHouse then
 				StoreDlgShow()
 			elseif m_kind == BUILDING_Tech then
-				if IsGuiding() then 
-					if GetCurrentGuideType() == GUIDE_TECH then
-						GuideNext() 
-					end
-				end
 				CityTechDlgOnShow();
 			elseif m_kind == BUILDING_Craftsman then
 				MaterialMakeDlgShow();

@@ -229,7 +229,8 @@ end
 function FriendDlgShow()
 	FriendDlgOpen()
 	m_uiTeacherListBtn.transform:SetSiblingIndex(1000);
-	m_uiTeacherShopBtn.transform:SetSiblingIndex(1001);
+	m_uiTeacherShopBtn.transform:SetSiblingIndex(1001);	
+	m_uiTeacherShop.transform:SetSiblingIndex(1002);
 	FriendDlgAskList()
 	FriendDlgSetTeacherBtnName()
 	m_SelectType = 1;
@@ -630,7 +631,6 @@ function FriendDlgSelectTeacherLayerShow(bShow)
 	SetTrue(m_uiSelectTeacherLayer)
 	FriendDlgClearSelectTeacherGrid();
 	m_TeacherSelectData = FriendDlgGetCanSelectTeacherData();
-	PrintTable(m_TeacherSelectData,"可拜师好友列表数据")
 	for i = 1 , table.nums(m_TeacherSelectData) do 
 		FriendDlgSelectTeacherGridView(i);
 	end
@@ -707,7 +707,6 @@ function FriendDlgTeacherShopRecv(recvValue)
 end
 --师徒商店绘制
 function FriendDlgTeacherShopView()
-	PrintTable(m_ShopRecvValue,"接收师徒商店数据")
 	local objs = m_uiTeacherShop.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiPoint = objs[0];
 	local uiContent = objs[1];
@@ -736,7 +735,8 @@ function FriendDlgTeacherShopGridView(index,Parent,Data)
 	local sprite, color, name, c, desc = AwardInfo( Data.m_awardkind );	
 	SetImage( uiIcon, sprite );
 	SetImage( uiColor, color );
-	SetText( uiName, name );
+	SetText( uiName, name, NameColor(c) );	
+
 	if GetPlayer().m_level < Data.m_buylevel then
 		SetTrue(uiLockTip);
 		SetText(uiLockTip,F(3309,Data.m_buylevel))

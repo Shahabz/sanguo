@@ -169,7 +169,7 @@ function AwardInfo( awardkind )
 		c = 2
 		
 	elseif awardkind == AWARDKIND_FRIENDSHIP then -- 友谊积分
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_487" );
 		color = ItemColorSprite( 0 );
 		name = ""
 		

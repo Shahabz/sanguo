@@ -21,12 +21,8 @@ function NpcTalkDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_TALK then 
-		
-	GuideNext() 
-	HideGuideFinger()	
-	end;
 	eye.uiManager:Close( "NpcTalkDlg" );
+	if IsGuiding() then ShowGuideFinger() end;
 end
 
 -- 删除界面
@@ -64,7 +60,7 @@ end
 
 -- 界面显示时调用
 function NpcTalkDlgOnEnable( gameObject )
-	
+	if IsGuiding() then HideGuideFinger() end;
 end
 
 -- 界面隐藏时调用

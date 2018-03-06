@@ -37,6 +37,7 @@ local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_uiOfficialEffect = nil; --UnityEngine.GameObject
 local m_uiOfficialBtn = nil; --UnityEngine.GameObject
+local m_uiLevyButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function LevyDlgOpen()
@@ -133,6 +134,7 @@ function LevyDlgOnAwake( gameObject )
 	m_uiOfficialDesc = objs[32];
 	m_uiOfficialEffect = objs[33];
 	m_uiOfficialBtn = objs[34];
+	m_uiLevyButton = objs[35];
 end
 
 -- 界面初始化时调用
@@ -169,6 +171,12 @@ function LevyDlgShow()
 	m_uiResBuyBtn.transform:SetSiblingIndex(1000);
 	m_uiInteriorBtn.transform:SetSiblingIndex(1000);
 	LevyDlgSetOfficial()
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_GET then 
+			FindCmdTpye(m_uiLevyButton.transform);
+		end
+	end
 end
 
 local function LevyAdd( value, pre )
@@ -306,4 +314,9 @@ function LevyDlgGet()
 		return
 	end
 	system_askinfo( ASKINFO_LEVY, "", 1 )
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_GET then 
+			GuideNext();
+		end
+	end
 end

@@ -101,11 +101,9 @@ end
 function Activity10ModOnDestroy( gameObject )
 	m_Mod = nil
 	m_PayBagRecvValue = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_6" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_8" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_paybag" );
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_6" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_8" )
+	ResourceManager.UnloadAssetBundle( "_ab_paybag" );
 end
 
 -- 每帧调用
@@ -149,6 +147,7 @@ function Activity10ModCreateItem( index, scrollPage, info )
 	local uiSale = objs[1];
 	local uiSaleText = objs[2];
 	local uiName = objs[3];
+	local uiNameBack = objs[4];
 	
 	if info.m_sale > 0 then
 		SetTrue( uiSale )
@@ -157,6 +156,9 @@ function Activity10ModCreateItem( index, scrollPage, info )
 		SetFalse( uiSale )
 	end
 	SetText( uiName, T(info.m_nameid) )
+	SetImage( uiPic, LoadSprite("paybag_pic_1") )
+	SetImage( uiNameBack, LoadSprite("paybag_back") )
+	SetImage( uiSale.transform:Find("Back"), LoadSprite("paybag_saleback") )
 end
 
 -- 当前显示的礼包

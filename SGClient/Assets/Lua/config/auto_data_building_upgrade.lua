@@ -69,7 +69,7 @@ g_building_upgrade = {
 { 
 	[1] = { kind=3,level=1,name="²Ö¿â",citylevel=1,actorlevel=1,silver=0,wood=0,food=0,iron=0,sec=0,value0=10000,value1=10000,value2=10000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=0,battlepower=0,awardkind=0,awardnum=0,},
 	[2] = { kind=3,level=2,name="²Ö¿â",citylevel=2,actorlevel=8,silver=110,wood=160,food=0,iron=0,sec=210,value0=15000,value1=15000,value2=15000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=25,battlepower=5,awardkind=0,awardnum=0,},
-	[3] = { kind=3,level=3,name="²Ö¿â",citylevel=3,actorlevel=10,silver=340,wood=500,food=0,iron=0,sec=300,value0=23000,value1=23000,value2=23000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=35,battlepower=10,awardkind=0,awardnum=0,},
+	[3] = { kind=3,level=3,name="²Ö¿â",citylevel=3,actorlevel=9,silver=340,wood=500,food=0,iron=0,sec=300,value0=23000,value1=23000,value2=23000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=35,battlepower=10,awardkind=0,awardnum=0,},
 	[4] = { kind=3,level=4,name="²Ö¿â",citylevel=4,actorlevel=20,silver=610,wood=860,food=0,iron=0,sec=600,value0=32000,value1=32000,value2=32000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=250,battlepower=25,awardkind=0,awardnum=0,},
 	[5] = { kind=3,level=5,name="²Ö¿â",citylevel=5,actorlevel=25,silver=1000,wood=1400,food=0,iron=0,sec=3600,value0=41000,value1=41000,value2=41000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=675,battlepower=40,awardkind=0,awardnum=0,},
 	[6] = { kind=3,level=6,name="²Ö¿â",citylevel=6,actorlevel=30,silver=2400,wood=2900,food=0,iron=0,sec=9000,value0=54000,value1=54000,value2=54000,value3=0,value4=0,value5=0,value6=0,value7=0,exp=850,battlepower=55,awardkind=0,awardnum=0,},

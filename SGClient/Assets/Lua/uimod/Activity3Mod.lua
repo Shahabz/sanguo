@@ -75,10 +75,8 @@ end
 function Activity3ModOnDestroy( gameObject )
 	m_Mod = nil
 	m_recvValue = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_4" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_5" )
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_4" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_5" )
 end
 
 -- 每帧调用

@@ -16,7 +16,6 @@ function HeroTalkDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_TALK then GuideNext() end;
 	eye.uiManager:Close( "HeroTalkDlg" );
 end
 

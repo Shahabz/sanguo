@@ -268,7 +268,6 @@ function BuildingGetDlgMove()
 		end
 		
 	end
-	if IsGuiding() then GuideNext() end
 end
 
 function BuildingGetDlgIsShow()

@@ -15,7 +15,6 @@ function ChangeNameDlgClose()
 		return;
 	end
 	
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_CREATENAME then GuideNext() end;
 	eye.uiManager:Close( "ChangeNameDlg" );
 end
 
@@ -55,7 +54,7 @@ end
 
 -- 界面初始化时调用
 function ChangeNameDlgOnStart( gameObject )
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_CREATENAME then FindCmdTpye(m_uiChangeNameBtn.transform.position) end;
+
 end
 
 -- 界面显示时调用

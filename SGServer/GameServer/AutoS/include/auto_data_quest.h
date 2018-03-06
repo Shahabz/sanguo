@@ -22,6 +22,7 @@ struct _questinfo {
 				int trigger_kind[2];	//
 				int trigger_num[2];	//
 				int trigger_talk;	//
+				short guide;	//
 };
 typedef struct _questinfo QuestInfo;
 

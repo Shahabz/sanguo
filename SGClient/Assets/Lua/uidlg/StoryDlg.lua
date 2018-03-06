@@ -124,6 +124,9 @@ function StoryDlgShow( storyid )
 	end
 	-- 任务检查
 	QuestClickCheck( 5 )
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_CPOY then
+		GuideNext();
+	end
 end
 
 -- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind[4] = 0

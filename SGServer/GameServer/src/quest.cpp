@@ -80,6 +80,12 @@ int quest_give_main( int actor_index, int questid )
 	{
 		map_enemy_range_brush( questinfo->brushlevel, pCity->posx, pCity->posy, questinfo->brushrange, (int)time(NULL)*600, 0 );
 	}
+	if ( questinfo->guide > 0 )
+	{
+		int value[1] = { 0 };
+		value[0] = questinfo->guide;
+		actor_notify_value( actor_index, NOTIFY_ACTIVITY, 1, value, NULL );
+	}
 	pCity->questid[0] = questid;
 	pCity->questvalue[0] = 0;
 	wlog( 0, LOGOP_QUEST, 0, 0, questid, 0, pCity->actorid, pCity->building[0].level );

@@ -74,10 +74,8 @@ end
 -- 界面删除时调用
 function Activity6ModOnDestroy( gameObject )
 	m_Mod = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_7" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_5" )
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_7" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_5" )
 end
 
 -- 每帧调用
@@ -96,6 +94,22 @@ function Activity6ModRecv( servpay, nationpay, state )
 		return
 	end
 	Activity6ModClear()
+	
+	local ActivityList = ActivityDlgGetRecvValue()
+	local info = nil;
+	for i=1, #ActivityList, 1 do
+		if ActivityList[i].m_activityid == ACTIVITY_6 then
+			info = ActivityList[i];
+			break
+		end
+	end
+	if info == nil then
+		return
+	end
+	-- 活动时间
+	local starttime = getMonthDayHourMinStringByInterval_zh( info.m_starttime )
+	local endtime = getMonthDayHourMinStringByInterval_zh( info.m_endtime )
+	SetText( m_uiActivityTime.transform:Find("Text"), F( 2475, starttime, endtime ) )
 	
 	-- 已完成的排序后面
 	local tmptable = {}

@@ -7,6 +7,7 @@ local m_uiItemInfo = nil; --UnityEngine.GameObject
 local m_uiShopList = nil; --UnityEngine.GameObject
 local m_uiWarnList = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_uiBack1 = nil; --UnityEngine.GameObject
 local m_recvValue = nil
 local m_AwardDescLayerShow = false
 ----------------------------------------
@@ -62,6 +63,7 @@ function Activity5ModOnAwake( gameObject )
 	m_uiShopList = objs[5];
 	m_uiWarnList = objs[6];
 	m_uiAwardDescLayer = objs[7];
+	m_uiBack1 = objs[8];
 end
 
 -- 界面初始化时调用
@@ -71,6 +73,7 @@ function Activity5ModOnStart( gameObject )
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_4" )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_6") )
+	SetImage( m_uiBack1, LoadSprite("activity_back_4") )
 	SetImage( m_uiShape, LoadSprite("heroface_49") )
 end
 
@@ -88,10 +91,8 @@ end
 function Activity5ModOnDestroy( gameObject )
 	m_Mod = nil
 	m_recvValue = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_6" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_4" )
-	end, 0.3 );
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_6" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_4" )
 end
 
 -- 每帧调用

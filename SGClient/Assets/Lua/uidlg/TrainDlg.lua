@@ -352,6 +352,12 @@ function TrainDlgSetObject( recvValue, type, index )
 		SetControlID( uiCancelBtn, 1000+index )
 	end
 	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_RECRUIT then
+		if index == 0 then
+			FindCmdTpye(uiTrainBtn.transform);
+		end
+	end
+	
 end
 
 -- 设置滑动条
@@ -394,6 +400,9 @@ function TrainDlgTrain()
 		return
 	end
 	--m_selectsec
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_RECRUIT then
+		GuideNext();
+	end
 	system_askinfo( ASKINFO_TRAIN, "", 1, m_buildingKind, m_selectsec );
 end
 

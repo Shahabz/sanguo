@@ -242,7 +242,7 @@ function QuestGoto( index )
 		return
 	end
 	
-	if IsGuiding() then GuideNext() end
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_TOCLICKTASK then GuideNext() end
 
 	local datatype = CacheQuest.m_list[index].m_datatype;
 	local datakind = CacheQuest.m_list[index].m_datakind;

@@ -26,6 +26,7 @@ NOTIFY_MAPCALL		  =	23	-- 地图召唤
 NOTIFY_HEROBACK		  = 24	-- 武将回城
 NOTIFY_HEROGOD		  =	25	-- 神突成功
 NOTIFY_ACTIVITY		  =	26	-- 活动
+NOTIFY_GUIDE		  = 27  -- 指引
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -321,6 +322,10 @@ function RecvActorNotify(recvValue)
 		elseif value[1] == ACTIVITY_11 then
 			Activity11ModRecv( value[3], value[4] )
 		end
+	
+	-- 触发指引	
+	elseif msgid ==NOTIFY_GUIDE then
+		Guide( value[1], 1, false );
     end
 end
 

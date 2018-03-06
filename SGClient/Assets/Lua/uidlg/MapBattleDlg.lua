@@ -104,11 +104,7 @@ end
 
 -- 界面初始化时调用
 function MapBattleDlgOnStart( gameObject )
-	if IsGuiding() then
-		if GetCurrentGuideType() == GUIDE_ADD_ARMY then FindCmdTpye(m_uiSoldiersBtn.transform.position)
-		elseif 	GetCurrentGuideType() == GUIDE_HERO_ATTACK then FindCmdTpye(m_uiSoldiersBtn.transform.position)
-		end
-	end
+	
 end
 
 -- 界面显示时调用
@@ -547,10 +543,6 @@ function MapBattleDlgSoldiers( index )
 	end
 	
 	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_ADD_ARMY then 
-		GuideNext() 
-		FindCmdTpye(m_uiBattleButton.transform.position);
-	end;
 end
 
 -- 更新血量

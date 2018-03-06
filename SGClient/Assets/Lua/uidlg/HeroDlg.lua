@@ -197,6 +197,8 @@ function HeroDlgSetHero( index, pHero )
 	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
 	
+	GuideShow(index,uiShape.transform);
+	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 	if only == true and pHero.m_god == 1 then
 		SetTrue( uiType )
@@ -234,6 +236,15 @@ function HeroDlgSetHero( index, pHero )
 			else
 				SetFalse( uiAdd )
 			end
+		end
+	end
+end
+
+function GuideShow(index,tran)
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
+		ShowGuideFinger();
+		if index == 1 then 
+			FindCmdTpye(tran);
 		end
 	end
 end
@@ -279,6 +290,11 @@ function HeroDlgSelect( index )
 			end
 		end
 		return;
+	end
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
+		if index == 1 then
+			GuideNext();
+		end
 	end
 	HeroInfoDlgShow( HEROLIST_PATH_HERO, GetHero().m_CityHero[index-1], true );
 end

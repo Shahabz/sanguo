@@ -79,11 +79,9 @@ end
 function Activity8ModOnDestroy( gameObject )
 	m_Mod = nil
 	m_recvIsOpen = nil;
-	m_recvState = nil
-	Invoke( function() 
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_pic_2" )
-		ResourceManager.UnloadAssetBundleImmediately( "_ab_activity_back_5" )
-	end, 0.3 );
+	m_recvState = nil 
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_2" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_5" )
 end
 
 -- 每帧调用
