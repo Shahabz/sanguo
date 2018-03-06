@@ -12,5 +12,6 @@ CREATE TABLE `nation` (
   `missionvalue` varbinary(16) NOT NULL DEFAULT '' COMMENT '国家荣誉任务次数',
   `candidate_actorid` varbinary(40) NOT NULL DEFAULT '' COMMENT '候选人id',
   `candidate_ballot` varbinary(40) NOT NULL DEFAULT '' COMMENT '候选人选票',
+  `paytoken` int(11) NOT NULL DEFAULT '0' COMMENT '国家总充值元宝（全服返利）',
   PRIMARY KEY (`nation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

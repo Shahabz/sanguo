@@ -10,6 +10,7 @@ local m_uiActivityLayer = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil
 local m_WaitSelectActivityID = 0;
+local m_SelectActivityID = 0
 local m_recvValue;
 local m_ActivityMod = nil
 
@@ -146,6 +147,7 @@ function ActivityDlgShow()
 	ActivityDlgOpen()
 	ActivityDlgChangeToken()
 	system_askinfo( ASKINFO_ACTIVITY, "", 0 )
+	m_SelectActivityID = 0
 	m_WaitSelectActivityID = 0;
 end
 
@@ -234,6 +236,9 @@ end
 
 -- 显示活动详细信息页面
 function ActivityDlgActivityModShow( activityid )
+	if activityid == m_SelectActivityID then
+		return
+	end
 	ActivityDlgActivityModHide()
 	local prefab = LoadPrefab( "Activity"..activityid.."Mod" );
 	m_ActivityMod = GameObject.Instantiate( prefab );
@@ -244,6 +249,7 @@ function ActivityDlgActivityModShow( activityid )
 	m_ActivityMod.transform.localPosition = Vector3.zero;
 	m_ActivityMod.transform.localScale = Vector3.one;
 	m_ActivityMod.transform.sizeDelta = Vector2( 0, 0 );
+	m_SelectActivityID = activityid
 end
 
 -- 隐藏活动详细信息页面

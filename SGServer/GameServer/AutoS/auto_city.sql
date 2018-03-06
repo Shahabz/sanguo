@@ -132,5 +132,6 @@ CREATE TABLE `city` (
   `tc_tech` smallint(6) NOT NULL DEFAULT '0' COMMENT '天策府点兵科技',
   `bufftrain` smallint(6) NOT NULL DEFAULT '0' COMMENT '武卒官加速值',
   `teacherid` int(11) NOT NULL DEFAULT '0' COMMENT '师父',
+  `act06_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '全服返利领取状态',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

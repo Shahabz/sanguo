@@ -15,7 +15,7 @@
 #define ACTIVITY_7	7	//	大咖带队
 #define ACTIVITY_8	8	//	成长计划
 #define ACTIVITY_9	9	//	幸运罗盘
-#define ACTIVITY_PAYBAG	10	//	特价礼包
+#define ACTIVITY_10	10	//	特价礼包
 #define ACTIVITY_11	11	//	出师大宴
 #define ACTIVITY_12	12	//	副本掉落
 #define ACTIVITY_13	13	//	流寇图纸
@@ -119,12 +119,22 @@ int activity_05_buy( int actor_index, int index );
 int activity_05_update( int actor_index );
 int activity_05_callhero( int actor_index );
 
+// 全服返利活动
+void activity_06_onopen();
+void activity_06_onend();
+void activity_06_onclose();
+int activity_06_sendinfo( int actor_index );
+int activity_06_get( int actor_index, int id );
+
 // 成长计划活动
 int activity_08_sendinfo( int actor_index );
 int activity_08_open( int actor_index );
 int activity_08_get( int actor_index, int id );
 
+// 特价礼包
+int activity_10_init();
+
 // 出师大宴活动
-int activity_body_sendinfo( int actor_index );
-int activity_body_get( int actor_index );
+int activity_11_sendinfo( int actor_index );
+int activity_11_get( int actor_index );
 #endif

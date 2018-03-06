@@ -850,7 +850,9 @@ int process_init( int max_connection )
 	activityinfo02_init_auto();
 	activityinfo03_init_auto();
 	activityinfo05_init_auto();
+	activityinfo06_init_auto();
 	activityinfo08_init_auto();
+	activityinfo10_init_auto();
 
 	activity_init();
 	time_gmcmd_init();
@@ -1076,6 +1078,9 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 119 );
+
+	// 服务器首次初始化
+	process_serverinit();
 	return 0;
 }
 
@@ -1273,10 +1278,7 @@ int process_set_exit( int weekday, int hour, int min, int isnotify )
 // 如果小时为-1，表示首次执行，依据情形可略过
 int process_oclock_process( int hour )
 {
-	if ( hour == 1 )
-	{
-	}
-	else if ( hour == 0 )
+	if ( hour == 0 )
 	{ // 月卡发放
 		paycard_give();
 		// 刷新国家荣誉任务
@@ -1663,5 +1665,12 @@ int process_dbreload()
 // 服务器开服初始化
 int process_serverinit()
 {
+	if ( world_data_getcache( WORLD_DATA_SERVERINIT ) > 0 )
+		return -1;
+	// 全服返利
+	activity_settime( ACTIVITY_6, 0, 1440*7, 0, 0, 0, 0, "" );
+	// 特价礼包
+	activity_10_init();
+	world_data_set( WORLD_DATA_SERVERINIT, (int)time(NULL), NULL, NULL );
 	return 0;
 }

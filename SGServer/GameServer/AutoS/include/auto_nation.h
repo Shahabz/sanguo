@@ -17,6 +17,7 @@ struct _nation {
 				int missionvalue[4];	//国家荣誉任务次数
 				int candidate_actorid[10];	//候选人id
 				int candidate_ballot[10];	//候选人选票
+				int paytoken;	//国家总充值元宝（全服返利）
 				int people;	//国家总人口
 				int people_famous;	//名城人口
 				int people_capital;	//都城人口

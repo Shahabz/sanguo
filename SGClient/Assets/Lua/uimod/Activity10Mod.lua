@@ -16,6 +16,8 @@ local m_uiUIP_Award = nil; --UnityEngine.GameObject
 local m_uiPrice = nil; --UnityEngine.GameObject
 local m_uiRedLine = nil; --UnityEngine.GameObject
 local m_uiBuyText = nil; --UnityEngine.GameObject
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_AwardDescLayerShow = false
 
 local m_ObjectPool = nil
 local m_PayBagRecvValue = nil;
@@ -27,8 +29,12 @@ local m_selectPage = -1;
 -- 所属按钮点击时调用
 function Activity10ModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		if nControlID == 2 then
+		if nControlID == -2 then
+			Activity10ModAwardDescLayer();
+		elseif nControlID == 2 then
 			Activity10ModBuy( nControlID )
+		elseif nControlID >= 1000000 and nControlID < 2000000 then
+			Activity10ModClickItem( nControlID-1000000, value )
 		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
@@ -38,6 +44,7 @@ function Activity10ModOnEvent( nType, nControlID, value, gameObject )
 		end
 	elseif nType == UI_EVENT_SCROLLPAGE then
 		if nControlID == 0 then
+			Activity10ModAwardDescLayer()
 			Activity10ModSelect( value )
 		end
 	end
@@ -63,6 +70,7 @@ function Activity10ModOnAwake( gameObject )
 	m_uiPrice = objs[13];
 	m_uiRedLine = objs[14];
 	m_uiBuyText = objs[15];
+	m_uiAwardDescLayer = objs[16];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -193,6 +201,7 @@ function Activity10ModCreateAward( awardinfo )
 	SetImage( uiObj.transform:Find("Color"), color )
 	SetText( uiObj.transform:Find("Name"), name );
 	SetText( uiObj.transform:Find("Num"), "x"..knum(awardinfo.m_num) );
+	SetControlID( uiObj, 1000000+awardinfo.m_kind )
 end
 
 --清空
@@ -216,4 +225,33 @@ function Activity10ModBuy()
 		return
 	end
 	PayDlgBuy( m_PayBagRecvValue.m_list[index].m_goodsid )
+end
+
+-- 奖励描述
+function Activity10ModAwardDescLayer()
+	SetFalse( m_uiAwardDescLayer )
+	m_AwardDescLayerShow = false
+end
+function Activity10ModClickItem( awardkind, uiObj )
+	Activity10ModAwardDescLayer()
+	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
+		local herokind = awardkind - AWARDKIND_HEROBASE
+		local color = hero_getnormalcolor( herokind )
+		HeroConfigDlgShow( g_heroinfo[herokind][color], 0 );
+	else
+		m_uiAwardDescLayer.transform:SetParent( uiObj.transform )
+		m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 80 )
+		m_uiAwardDescLayer.transform:SetParent( m_Mod.transform )
+		local _, _, name, c, desc = AwardInfo( awardkind )
+		SetText( m_uiAwardDescLayer.transform:Find("Name"), name, NameColor(c) )	
+		local _desc = string.split( desc, "\n")
+		if _desc ~= nil and _desc[1] ~= nil then
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), _desc[1] )
+		else
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+		end
+		SetText( m_uiAwardDescLayer.transform:Find("Warn"), "" )
+		SetTrue( m_uiAwardDescLayer )
+		m_AwardDescLayerShow = true
+	end
 end

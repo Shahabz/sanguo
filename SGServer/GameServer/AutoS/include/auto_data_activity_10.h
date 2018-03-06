@@ -4,7 +4,10 @@
 
 struct _activityinfo10 {
 //--Automatically generated
-				int Id;	//
+				int id;	//
+				short goodsid;	//
+				short buynum;	//
+				int duration;	//
 };
 typedef struct _activityinfo10 ActivityInfo10;
 

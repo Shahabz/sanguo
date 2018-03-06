@@ -64,7 +64,6 @@ typedef struct _paycountry
 
 typedef struct _paybag
 {
-	int id;
 	short goodsid;
 	int begintime;
 	int endtime;
@@ -79,7 +78,7 @@ int paycountry_reload();
 // 本服务器推送的礼包
 int paybag_load();
 int paybag_insert( short goodsid, int begintime, int endtime, int count );
-int paybag_delete( int id );
+int paybag_delete( short goodsid );
 void paybag_logic();
 
 int paystore_list( int actor_index );

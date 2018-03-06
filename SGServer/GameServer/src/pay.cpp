@@ -235,7 +235,7 @@ int paybag_load()
 	MYSQL_ROW  row;
 	char szSQL[512];
 	int offset = 0;
-	sprintf( szSQL, "select id, goodsid, begintime, endtime, count, pushcity from pay_baglist where '%d'>=`begintime` and '%d'<`endtime`", (int)time( NULL ), (int)time( NULL ) );
+	sprintf( szSQL, "select goodsid, begintime, endtime, count, pushcity from pay_baglist where '%d'>=`begintime` and '%d'<`endtime`", (int)time( NULL ), (int)time( NULL ) );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -247,12 +247,11 @@ int paybag_load()
 	res = mysql_store_result( myGame );
 	while ( row = mysql_fetch_row( res ) )
 	{
-		g_paybag[offset].id = atoi( row[0] );
-		g_paybag[offset].goodsid = atoi( row[1] );
-		g_paybag[offset].begintime = atoi( row[2] );
-		g_paybag[offset].endtime = atoi( row[3] );
-		g_paybag[offset].count = atoi( row[4] );
-		g_paybag[offset].pushcity = atoi( row[5] );
+		g_paybag[offset].goodsid = atoi( row[0] );
+		g_paybag[offset].begintime = atoi( row[1] );
+		g_paybag[offset].endtime = atoi( row[2] );
+		g_paybag[offset].count = atoi( row[3] );
+		g_paybag[offset].pushcity = atoi( row[4] );
 		offset += 1;
 		if ( offset >= CITY_BAG_MAX )
 		{
@@ -273,27 +272,39 @@ int paybag_insert( short goodsid, int begintime, int endtime, int count )
 	int nowtime = (int)time( NULL );
 	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
 	{
-		if ( g_paybag[tmpi].id > 0 && nowtime >= g_paybag[tmpi].endtime )
+		if ( g_paybag[tmpi].goodsid > 0 && nowtime >= g_paybag[tmpi].endtime )
 		{
 			memset( &g_paybag[tmpi], 0, sizeof( PayBag ) );
 		}
 	}
 
 	int offset = -1;
-	for ( offset = 0; offset < CITY_BAG_MAX; offset++ )
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
 	{
-		if ( g_paybag[offset].id <= 0 )
+		if ( g_paybag[tmpi].goodsid == goodsid )
 		{
+			offset = tmpi;
 			break;
 		}
 	}
-	if ( offset >= CITY_BAG_MAX )
+
+	if ( offset == -1 )
+	{
+		for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+		{
+			if ( g_paybag[tmpi].goodsid <= 0 )
+			{
+				offset = tmpi;
+				break;
+			}
+		}
+	}
+	if ( offset < 0 || offset >= CITY_BAG_MAX )
 	{
 		return -1;
 	}
 
 	// ÍÆËÍµ½»º´æ
-	g_paybag[offset].id = (int)mysql_insert_id( myGame );
 	g_paybag[offset].goodsid = goodsid;
 	g_paybag[offset].begintime = begintime;
 	g_paybag[offset].endtime = endtime;
@@ -311,7 +322,7 @@ int paybag_insert( short goodsid, int begintime, int endtime, int count )
 		g_paybag[offset].pushcity = 1;
 	}
 
-	sprintf( szSQL, "insert into pay_baglist( goodsid, begintime, endtime, count, pushcity ) values( '%d','%d','%d','%d','%d' )", goodsid, begintime, endtime, count, g_paybag[offset].pushcity );
+	sprintf( szSQL, "replace into pay_baglist( goodsid, begintime, endtime, count, pushcity ) values( '%d','%d','%d','%d','%d' )", goodsid, begintime, endtime, count, g_paybag[offset].pushcity );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -322,21 +333,19 @@ int paybag_insert( short goodsid, int begintime, int endtime, int count )
 	}
 	return 0;
 }
-int paybag_delete( int id )
+int paybag_delete( short goodsid )
 {
-	int goodsid = 0;
 	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
 	{
-		if ( g_paybag[tmpi].id == id )
+		if ( g_paybag[tmpi].goodsid == goodsid )
 		{
-			goodsid = g_paybag[tmpi].goodsid;
 			memset( &g_paybag[tmpi], 0, sizeof( PayBag ) );
 			break;
 		}
 	}
 	// É¾³ýµô
 	char szSQL[256];
-	sprintf( szSQL, "delete from pay_baglist where id='%d'", id );
+	sprintf( szSQL, "delete from pay_baglist where goodsid='%d'", goodsid );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -360,7 +369,7 @@ void paybag_logic()
 	int nowtime = (int)time( NULL );
 	for ( int offset = 0; offset < CITY_BAG_MAX; offset++ )
 	{
-		if ( g_paybag[offset].id <= 0 )
+		if ( g_paybag[offset].goodsid <= 0 )
 			continue;
 		if ( g_paybag[offset].pushcity == 1 )
 			continue;
@@ -376,7 +385,7 @@ void paybag_logic()
 			g_paybag[offset].pushcity = 1;
 
 			char szSQL[256];
-			sprintf( szSQL, "update pay_baglist set pushcity='%d' where id='%d'", g_paybag[offset].pushcity, g_paybag[offset].id );
+			sprintf( szSQL, "update pay_baglist set pushcity='%d' where goodsid='%d'", g_paybag[offset].pushcity, g_paybag[offset].goodsid );
 			if ( mysql_query( myGame, szSQL ) )
 			{
 				printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -1333,7 +1342,7 @@ int activity_paybag_citynew( City* pCity )
 	int nowtime = (int)time( NULL );
 	for ( int tmpi = 0; tmpi <= CITY_BAG_MAX; tmpi++ )
 	{
-		if ( g_paybag[tmpi].id > 0 && nowtime >= g_paybag[tmpi].begintime && nowtime < g_paybag[tmpi].endtime )
+		if ( g_paybag[tmpi].goodsid > 0 && nowtime >= g_paybag[tmpi].begintime && nowtime < g_paybag[tmpi].endtime )
 		{
 			city_paybag_add( pCity, g_paybag[tmpi].goodsid, g_paybag[tmpi].endtime - (int)time( NULL ), g_paybag[tmpi].count, 0 );
 		}

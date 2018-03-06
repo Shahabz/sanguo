@@ -337,7 +337,7 @@ function CityTechDlgSetOfficial()
 			return;
 		end
 		if pBuilding.m_level < g_official_tech[1].buildinglevel then
-			-- 太学院6级解锁Lv.1研究员
+			-- 太学院7级解锁Lv.1研究员
 			SetText( m_uiOfficialName, F(726, BuildingName(BUILDING_Tech), g_official_tech[1].buildinglevel, g_official_tech[1].level, T(723) ), Hex2Color(0x8A8A8AFF) )
 			SetText( m_uiOfficialDesc, F(727, zhtime(g_official_tech[1].quick) ), Hex2Color(0x8A8A8AFF) )
 			SetFalse( m_uiOfficialEffect )

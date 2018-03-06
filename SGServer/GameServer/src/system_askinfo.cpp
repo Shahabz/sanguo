@@ -862,6 +862,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_05_callhero( actor_index );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_6 )
+		{ // 全服返利
+			if ( pvalue[1] == 0 )
+			{
+				activity_06_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_06_get( actor_index, pvalue[2] );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_8 )
 		{ // 成长计划
 			if ( pvalue[1] == 0 )
@@ -881,11 +892,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 出师大宴
 			if ( pvalue[1] == 0 )
 			{
-				activity_body_sendinfo( actor_index );
+				activity_11_sendinfo( actor_index );
 			}
 			else if ( pvalue[1] == 1 )
 			{
-				activity_body_get( actor_index );
+				activity_11_get( actor_index );
 			}
 		}
 		break;

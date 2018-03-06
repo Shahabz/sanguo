@@ -84,6 +84,10 @@ int nation_people_famous_calc( int nation );
 int nation_people_capital_calc( int nation );
 int nation_people_capital_set( int nation, int people );
 
+// 国家充值量（全服返利活动）
+int nation_paytoken_add( int nation, int token );
+int nation_paytoken_get( int nation );
+
 // 该国家指定类型城池数量
 int nation_town_num( int nation, int towntype );
 

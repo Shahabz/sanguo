@@ -4,6 +4,8 @@ local m_uiActivityVip = nil; --UnityEngine.GameObject
 local m_uiActivityOpenBtn = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Mission = nil; --UnityEngine.GameObject
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_AwardDescLayerShow = false
 local m_ObjectPool = nil
 local m_recvIsOpen = nil;
 local m_recvState = nil;
@@ -14,17 +16,27 @@ local m_recvState = nil;
 -- 所属按钮点击时调用
 function Activity8ModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		--print( "Button Clicked, nControlID:" .. nControlID );
-		if nControlID == 1 then
+		print( "Button Clicked, nControlID:" .. nControlID );
+		if nControlID == -2 then
+			Activity8ModAwardDescLayer();
+		elseif nControlID == 1 then
 		   Activity8ModActivityOpen()
 		elseif nControlID >= 1000 and nControlID <= 2000 then
 			Activity8ModSelect( nControlID-1000 )
+		elseif nControlID >= 1000000 and nControlID < 2000000 then
+			Activity8ModClickItem( nControlID-1000000, value )
 		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
 			--print( "Button Pressed Down, nControlID:" .. nControlID );
 		elseif value == 1 then
 			--print( "Button Pressed UP, nControlID:" .. nControlID);
+		end
+	elseif nType == UI_EVENT_SCROLLDRAG then
+		if nControlID == 1 then
+			if m_AwardDescLayerShow == true then
+				Activity8ModAwardDescLayer()
+			end
 		end
 	end
 end
@@ -38,6 +50,7 @@ function Activity8ModOnAwake( gameObject )
 	m_uiActivityOpenBtn = objs[2];
 	m_uiContent = objs[3];
 	m_uiUIP_Mission = objs[4];
+	m_uiAwardDescLayer = objs[5];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Mission", 12, 12, m_uiUIP_Mission);
@@ -98,8 +111,23 @@ function Activity8ModRecv( isopen, state )
 	m_recvIsOpen = isopen
 	m_recvState = state
 	Activity8ModClear()
+	
+	-- 已完成的排序后面
+	local tmptable = {}
 	for i=1, #g_activity_08, 1 do
-		Activity8ModCreate( g_activity_08[i], Utils.get_int_sflag( state, i ) )
+		local state = Utils.get_int_sflag( state, i )
+		table.insert( tmptable, {state=state, rank=-1000*state-g_activity_08[i].id, info=g_activity_08[i]} )
+	end
+	table.sort( tmptable, function(a,b) 
+		if a.rank > b.rank then
+			return true
+		else
+			return false
+		end
+	end )
+
+	for i=1, #tmptable, 1 do
+		Activity8ModCreate( tmptable[i].info, tmptable[i].state )
 	end
 end
 
@@ -130,11 +158,13 @@ function Activity8ModCreate( info, state )
 		else -- 完成没有领取
 			SetText( uiStateBtn.transform:Find("Back/Text"), T(1351) )
 			SetTrue( uiStateBtn )
+			SetButtonTrue( uiStateBtn )
 			SetFalse( uiState )
 		end
 	else
 		SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )
 		SetTrue( uiStateBtn )
+		SetButtonFalse( uiStateBtn )
 		SetFalse( uiState )
 	end
 	
@@ -146,6 +176,7 @@ function Activity8ModCreate( info, state )
 		if awardkind[i] > 0 then
 			local sprite, color, name = AwardInfo( awardkind[i] )
 			SetTrue( awardObj )
+			SetControlID( awardObj, 1000000+awardkind[i] )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
 				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
@@ -195,4 +226,33 @@ function Activity8ModSelect( id )
 		return
 	end
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_8, 2, id )
+end
+
+-- 奖励描述
+function Activity8ModAwardDescLayer()
+	SetFalse( m_uiAwardDescLayer )
+	m_AwardDescLayerShow = false
+end
+function Activity8ModClickItem( awardkind, uiObj )
+	Activity8ModAwardDescLayer()
+	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
+		local herokind = awardkind - AWARDKIND_HEROBASE
+		local color = hero_getnormalcolor( herokind )
+		HeroConfigDlgShow( g_heroinfo[herokind][color], 0 );
+	else
+		m_uiAwardDescLayer.transform:SetParent( uiObj.transform )
+		m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 80 )
+		m_uiAwardDescLayer.transform:SetParent( m_Mod.transform )
+		local _, _, name, c, desc = AwardInfo( awardkind )
+		SetText( m_uiAwardDescLayer.transform:Find("Name"), name, NameColor(c) )	
+		local _desc = string.split( desc, "\n")
+		if _desc ~= nil and _desc[1] ~= nil then
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), _desc[1] )
+		else
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+		end
+		SetText( m_uiAwardDescLayer.transform:Find("Warn"), "" )
+		SetTrue( m_uiAwardDescLayer )
+		m_AwardDescLayerShow = true
+	end
 end

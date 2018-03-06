@@ -292,6 +292,21 @@ int nation_people_capital_set( int nation, int people )
 	return 0;
 }
 
+// 国家充值量（全服返利活动）
+int nation_paytoken_add( int nation, int token )
+{
+	if ( nation < 0 || nation >= NATION_MAX )
+		return 0;
+	g_nation[nation].paytoken += token;
+	return 0;
+}
+int nation_paytoken_get( int nation )
+{
+	if ( nation < 0 || nation >= NATION_MAX )
+		return 0;
+	return g_nation[nation].paytoken;
+}
+
 // 该国家指定类型城池数量
 int nation_town_num( int nation, int towntype )
 {

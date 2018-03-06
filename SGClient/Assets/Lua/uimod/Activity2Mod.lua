@@ -10,7 +10,10 @@ local m_uiAwardList = nil; --UnityEngine.GameObject
 local m_uiUnLockState = nil; --UnityEngine.GameObject
 local m_uiGetState = nil; --UnityEngine.GameObject
 local m_uiGetButton = nil; --UnityEngine.GameObject
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_AwardDescLayerShow = false
 local m_state = 0
+
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -19,7 +22,9 @@ local m_state = 0
 function Activity2ModOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
 		--print( "Button Clicked, nControlID:" .. nControlID );
-		if nControlID == 1 then
+		if nControlID == -2 then
+			Activity2ModAwardDescLayer();
+		elseif nControlID == 1 then
 			Activity2ModScrollPagePre()
 		elseif nControlID == 2 then
 			Activity2ModScrollPageNext()
@@ -27,6 +32,8 @@ function Activity2ModOnEvent( nType, nControlID, value, gameObject )
 			Activity2ModGoto( nControlID-1000 )
 		elseif nControlID >= 2000 and nControlID <= 3000 then
 			Activity2ModSelect( nControlID-2000 )
+		elseif nControlID >= 1000000 and nControlID < 2000000 then
+			Activity2ModClickItem( nControlID-1000000, value )
 		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
@@ -56,10 +63,12 @@ function Activity2ModOnAwake( gameObject )
 	m_uiUnLockState = objs[8];
 	m_uiGetState = objs[9];
 	m_uiGetButton = objs[10];
+	m_uiAwardDescLayer = objs[11];
 end
 
 -- 界面初始化时调用
 function Activity2ModOnStart( gameObject )
+	m_AwardDescLayerShow = false
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_2, 0 )
 	ResourceManager.LoadAssetBundle( "_ab_activity_pic_3" )
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_0" )
@@ -225,6 +234,7 @@ function Activity2ModScrollPage( page )
 		if awardkind[i] > 0 then
 			local sprite, color, name = AwardInfo( awardkind[i] )
 			SetTrue( awardObj )
+			SetControlID( awardObj, 1000000+awardkind[i] )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
 				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
@@ -326,5 +336,34 @@ function Activity2ModGoto( id )
 		City.Move( BUILDING_Tech, -1, true );
 	elseif id == 28 then
 		City.Move( BUILDING_Tech, -1, true );
+	end
+end
+
+-- 奖励描述
+function Activity2ModAwardDescLayer()
+	SetFalse( m_uiAwardDescLayer )
+	m_AwardDescLayerShow = false
+end
+function Activity2ModClickItem( awardkind, uiObj )
+	Activity2ModAwardDescLayer()
+	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
+		local herokind = awardkind - AWARDKIND_HEROBASE
+		local color = hero_getnormalcolor( herokind )
+		HeroConfigDlgShow( g_heroinfo[herokind][color], 0 );
+	else
+		m_uiAwardDescLayer.transform:SetParent( uiObj.transform )
+		m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 100 )
+		m_uiAwardDescLayer.transform:SetParent( m_Mod.transform )
+		local _, _, name, c, desc = AwardInfo( awardkind )
+		SetText( m_uiAwardDescLayer.transform:Find("Name"), name, NameColor(c) )	
+		local _desc = string.split( desc, "\n")
+		if _desc ~= nil and _desc[1] ~= nil then
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), _desc[1] )
+		else
+			SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+		end
+		SetText( m_uiAwardDescLayer.transform:Find("Warn"), "" )
+		SetTrue( m_uiAwardDescLayer )
+		m_AwardDescLayerShow = true
 	end
 end

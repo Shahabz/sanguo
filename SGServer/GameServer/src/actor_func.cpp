@@ -25,6 +25,8 @@
 #include "actor_times.h"
 #include "world_quest.h"
 #include "nation_hero.h"
+#include "nation.h"
+#include "activity.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -240,6 +242,20 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 
 		// vip经验
 		vip_exp( g_actors[actor_index].city_index, token, PATH_PAY );
+
+		// 全服返利活动
+		if ( activity_intime( ACTIVITY_6 ) )
+		{
+			City *pCity = city_getptr( actor_index );
+			if ( pCity )
+			{
+				// 本国玩家充值
+				nation_paytoken_add( pCity->nation, token );
+			}
+			// 全服充值
+			int serv_paytoken = world_data_getcache( WORLD_DATA_ACTIVITY06_PAYTOKEN ) + token;
+			world_data_set( WORLD_DATA_ACTIVITY06_PAYTOKEN, serv_paytoken, NULL, NULL );
+		}
 	}
 
 	if ( token > 0 )
