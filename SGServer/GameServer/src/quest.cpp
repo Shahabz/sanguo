@@ -366,13 +366,37 @@ int quest_check( int actor_index, int questid, int *value )
 				return 1;
 			}
 		}
-		if ( questinfo->datatype == QUEST_DATATYPE_STORY )
+		else if ( questinfo->datatype == QUEST_DATATYPE_STORY )
 		{ // ¸±±¾
 			if ( value )
 				*value = g_actors[actor_index].storyid;
 			if ( g_actors[actor_index].storyid > questinfo->datakind )
 			{
 				return 1;
+			}
+		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_HERO_CALL )
+		{ // ÕÐÄ¼Îä½«
+			if ( value )
+				*value = 0;
+			for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+			{
+				if ( pCity->hero[tmpi].kind == questinfo->datakind )
+				{
+					if ( value )
+						*value = 1;
+					return 1;
+				}
+			}
+
+			for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+			{
+				if ( g_actors[actor_index].hero[tmpi].kind == questinfo->datakind )
+				{
+					if ( value )
+						*value = 1;
+					return 1;
+				}
 			}
 		}
 		else
