@@ -23,6 +23,7 @@
 #include "hero.h"
 #include "nation.h"
 #include "mail.h"
+#include "activity_04.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -595,6 +596,17 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_count += 1;
+	}
+
+	// ÆßÈÕ¿ñ»¶
+	endtime = g_actors[actor_index].createtime + ACTIVITY_SEVENDAY_TIME;
+	if ( (int)time( NULL ) < endtime )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_4;
+		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
+		pValue.m_list[pValue.m_count].m_endtime = endtime;
+		pValue.m_list[pValue.m_count].m_closetime = endtime;
 		pValue.m_count += 1;
 	}
 

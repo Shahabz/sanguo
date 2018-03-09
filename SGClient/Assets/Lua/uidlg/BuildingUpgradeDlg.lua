@@ -43,10 +43,6 @@ function BuildingUpgradeDlgClose()
 	end
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
-	if IsGuiding() then 
-		GuideNext();
-		HideGuideFinger(); 
-	end;
 	eye.uiManager:Close( "BuildingUpgradeDlg" );
 end
 
@@ -359,6 +355,10 @@ function BuildingUpgradeDlgRecv( recvValue )
 		end
 		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron).." / "..knum(GetPlayer().m_iron), flag, 7 );
 	end
+	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_UPGRADE then
+		FindCmdTpye(m_uiUpgrade.transform);
+	end
 end
 
 function BuildingUpgradeDlgUpdate()
@@ -430,6 +430,10 @@ function BuildingUpgradeDlgUpgrade()
 	-- 升级
 	elseif m_op == 3 then
 		system_askinfo( ASKINFO_BUILDING, "", 1, m_kind, m_offset );
+	end
+	
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_UPGRADE then
+		GuideNext();
 	end
 	
 	BuildingUpgradeDlgClose();

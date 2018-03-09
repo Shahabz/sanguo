@@ -3136,3 +3136,25 @@ int struct_NetS_Activity01List_send( char **pptr, int *psize, SLK_NetS_Activity0
 	return 0;
 }
 
+int struct_NetS_Activity04Info_send( char **pptr, int *psize, SLK_NetS_Activity04Info *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity04List_send( char **pptr, int *psize, SLK_NetS_Activity04List *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity04Info_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myday, (*psize) );
+	return 0;
+}
+

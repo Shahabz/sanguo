@@ -40,6 +40,8 @@ local m_up = false
 local m_MatchEquipList = {};
 local m_path = 0;
 
+local m_guideShow = true;
+
 -- 打开界面
 function HeroInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroInfoDlg" );
@@ -196,7 +198,16 @@ end
 
 -- 每帧调用
 function HeroInfoDlgOnLogic( gameObject )
-	
+	if m_guideShow then
+		if IsGuiding() then
+			if GetGuideSpecialEvent() == 1 then
+				while(GetCurrentGuideType() ~= GUIDE_CHOOSE_WEAPON) do
+					GuideNext();
+				end
+				m_guideShow = false;
+			end
+		end
+	end
 end
 
 
@@ -290,8 +301,11 @@ function HeroInfoDlgSet( path, pHero, up )
 		if IsGuiding() then
 			if GetCurrentGuideType() == GUIDE_CLCLK_DRESS and i == 2 then
 				FindCmdTpye(uiShape.transform);
-			end
-			if GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and i == 0 then
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and i == 0 then
+				FindCmdTpye(uiShape.transform);
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_MA and i == 1 then
+				FindCmdTpye(uiShape.transform);
+			elseif GetCurrentGuideType() == GUIDE_DRESS_HEAD and i == 3 then
 				FindCmdTpye(uiShape.transform);
 			end
 		end
@@ -597,8 +611,11 @@ function HeroInfoDlgSelectEquip( offset )
 	if IsGuiding() then
 		if GetCurrentGuideType() == GUIDE_CLCLK_DRESS and offset == 2 then
 			GuideNext();
-		end
-		if GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and offset == 0 then
+		elseif GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and offset == 0 then
+			GuideNext();
+		elseif GetCurrentGuideType() == GUIDE_DRESS_MA and offset == 1 then
+			GuideNext();	
+		elseif GetCurrentGuideType() == GUIDE_DRESS_HEAD and offset == 3 then
 			GuideNext();
 		end
 	end

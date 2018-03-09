@@ -145,6 +145,10 @@ int system_getcurmonth_maxday()
 
 	return system_getmaxday( (1900 + newtime->tm_year), (newtime->tm_mon + 1) );
 }
+int system_getfday_withstamp( int stamp )
+{
+	return (stamp-( int )timezone) / 86400;
+}
 
 int system_timestring( int timestamp, char *out )
 {

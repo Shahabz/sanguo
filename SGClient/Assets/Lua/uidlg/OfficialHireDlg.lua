@@ -345,6 +345,12 @@ function OfficialHireDlgSetForging()
 						0,
 						info.m_offree ) -- token
 			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
+			
+			if IsGuiding() then
+				if GetCurrentGuideType() == GUIDE_MAKE_CHOOSE then
+					FindCmdTpye(m_uiUIP_Info[index].transform);
+				end
+			end
 			break;
 		end
 	end
@@ -517,6 +523,11 @@ function OfficialHireDlgBuy( kind )
 	
 	local info = GetPlayer().m_officialhire[m_type];
 	if config.free == 1 and Utils.get_int_sflag( info.m_offree, kind ) == 0 then
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_MAKE_CHOOSE then
+				GuideNext();
+			end
+		end
 		system_askinfo( ASKINFO_OFFICIALHIRE, "", 0, m_type, kind )
 		
 	elseif config.silver > 0 then

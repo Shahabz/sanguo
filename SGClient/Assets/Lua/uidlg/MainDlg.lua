@@ -1228,3 +1228,7 @@ end
 function GetWorldPos()
 	return m_uiButtonBack[4].transform.position
 end
+
+function GetBackPos()
+	return m_uiButtonBack[4].transform.position
+end

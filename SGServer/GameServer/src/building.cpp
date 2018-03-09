@@ -17,6 +17,7 @@
 #include "item.h"
 #include "hero.h"
 #include "vip.h"
+#include "quest.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -677,34 +678,153 @@ int building_upgrade_autocheck( int city_index )
 
 	char kind = 0;
 	char offset = -1;
-	// 优先普通建筑
-	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	// 优先任务建筑
+	QuestInfo *questinfo = quest_config( g_city[city_index].questid[0] );
+	if ( questinfo )
 	{
-		if ( g_city[city_index].building[tmpi].kind <= 0 )
-			continue;
-		if ( g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind_ex )
-			continue;
-		BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building[tmpi].kind, g_city[city_index].building[tmpi].level + 1 );
-		if ( config )
+		if ( questinfo->type == QUEST_DATATYPE_BUILDING_LEVEL ||
+			questinfo->type == QUEST_DATATYPE_BUILDING_UPGRADE ||
+			questinfo->type == QUEST_DATATYPE_BUILDING_SILVER ||
+			questinfo->type == QUEST_DATATYPE_BUILDING_WOOD ||
+			questinfo->type == QUEST_DATATYPE_BUILDING_FOOD ||
+			questinfo->type == QUEST_DATATYPE_BUILDING_IRON )
 		{
-			// 角色等级是否满足
-			if ( g_city[city_index].level < config->actorlevel )
+			if ( questinfo->datakind < BUILDING_Infantry )
+			{ // 普通建筑
+				for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+				{
+					if ( g_city[city_index].building[tmpi].kind <= 0 )
+						continue;
+					if ( g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind_ex )
+						continue;
+					if ( g_city[city_index].building[tmpi].kind != questinfo->datakind )
+						continue;
+					BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building[tmpi].kind, g_city[city_index].building[tmpi].level + 1 );
+					if ( config )
+					{
+						// 角色等级是否满足
+						if ( g_city[city_index].level < config->actorlevel )
+							continue;
+						// 官府等级是否满足
+						if ( city_mainlevel( city_index ) < config->citylevel )
+							continue;
+						// 资源是否满足
+						if ( g_city[city_index].silver < config->silver )
+							continue;
+						if ( g_city[city_index].wood < config->wood )
+							continue;
+						//if ( g_city[city_index].food < config->food )
+						//	continue;
+						//if ( g_city[city_index].iron < config->iron )
+						//	continue;
+						kind = g_city[city_index].building[tmpi].kind;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+			else if ( questinfo->datakind < BUILDING_Silver )
+			{ // 兵营建筑
+				for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+				{
+					if ( g_city[city_index].building_barracks[tmpi].kind <= 0 || g_city[city_index].building_barracks[tmpi].level <= 0 )
+						continue;
+					if ( g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind_ex )
+						continue;
+					if ( g_city[city_index].building_barracks[tmpi].kind != questinfo->datakind )
+						continue;
+					BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building_barracks[tmpi].kind, g_city[city_index].building_barracks[tmpi].level + 1 );
+					if ( config )
+					{
+						// 角色等级是否满足
+						if ( g_city[city_index].level < config->actorlevel )
+							continue;
+						// 官府等级是否满足
+						if ( city_mainlevel( city_index ) < config->citylevel )
+							continue;
+						// 资源是否满足
+						if ( g_city[city_index].silver < config->silver )
+							continue;
+						if ( g_city[city_index].wood < config->wood )
+							continue;
+						//if ( g_city[city_index].food < config->food )
+						//	continue;
+						//if ( g_city[city_index].iron < config->iron )
+						//	continue;
+						kind = g_city[city_index].building_barracks[tmpi].kind;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+			else if ( questinfo->datakind < BUILDING_Smithy )
+			{ // 资源建筑
+				for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+				{
+					if ( g_city[city_index].building_res[tmpi].kind <= 0 || g_city[city_index].building_res[tmpi].level <= 0 )
+						continue;
+					if ( g_city[city_index].building_res[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building_res[tmpi].kind == g_city[city_index].worker_kind_ex )
+						continue;
+					if ( g_city[city_index].building_res[tmpi].kind != questinfo->datakind )
+						continue;
+					BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building_res[tmpi].kind, g_city[city_index].building_res[tmpi].level + 1 );
+					if ( config )
+					{
+						// 角色等级是否满足
+						if ( g_city[city_index].level < config->actorlevel )
+							continue;
+						// 官府等级是否满足
+						if ( city_mainlevel( city_index ) < config->citylevel )
+							continue;
+						// 资源是否满足
+						if ( g_city[city_index].silver < config->silver )
+							continue;
+						if ( g_city[city_index].wood < config->wood )
+							continue;
+						//if ( g_city[city_index].food < config->food )
+						//	continue;
+						//if ( g_city[city_index].iron < config->iron )
+						//	continue;
+						kind = g_city[city_index].building_res[tmpi].kind;
+						offset = tmpi;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	// 优先普通建筑
+	if ( kind <= 0 )
+	{
+		for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+		{
+			if ( g_city[city_index].building[tmpi].kind <= 0 )
 				continue;
-			// 官府等级是否满足
-			if ( city_mainlevel( city_index ) < config->citylevel )
+			if ( g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building[tmpi].kind == g_city[city_index].worker_kind_ex )
 				continue;
-			// 资源是否满足
-			if ( g_city[city_index].silver < config->silver )
-				continue;
-			if ( g_city[city_index].wood < config->wood )
-				continue;
-			//if ( g_city[city_index].food < config->food )
-			//	continue;
-			//if ( g_city[city_index].iron < config->iron )
-			//	continue;
-			kind = g_city[city_index].building[tmpi].kind;
-			offset = tmpi;
-			break;
+			BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building[tmpi].kind, g_city[city_index].building[tmpi].level + 1 );
+			if ( config )
+			{
+				// 角色等级是否满足
+				if ( g_city[city_index].level < config->actorlevel )
+					continue;
+				// 官府等级是否满足
+				if ( city_mainlevel( city_index ) < config->citylevel )
+					continue;
+				// 资源是否满足
+				if ( g_city[city_index].silver < config->silver )
+					continue;
+				if ( g_city[city_index].wood < config->wood )
+					continue;
+				//if ( g_city[city_index].food < config->food )
+				//	continue;
+				//if ( g_city[city_index].iron < config->iron )
+				//	continue;
+				kind = g_city[city_index].building[tmpi].kind;
+				offset = tmpi;
+				break;
+			}
 		}
 	}
 

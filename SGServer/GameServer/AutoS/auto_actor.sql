@@ -76,6 +76,8 @@ CREATE TABLE `actor` (
   `te_shop` int(11) NOT NULL DEFAULT '0' COMMENT '师徒商店',
   `act02_state` int(11) NOT NULL DEFAULT '0' COMMENT '主城等级活动领取奖励',
   `act03_state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '攻城掠地活动领取奖励',
+  `act04_state` varbinary(512) NOT NULL DEFAULT '' COMMENT '七日狂欢活动状态',
+  `act04_value` varbinary(160) NOT NULL DEFAULT '' COMMENT '七日狂欢活动数值',
   `act05_item` varbinary(24) NOT NULL DEFAULT '' COMMENT '七星拜将活动-道具列表',
   `act05_isbuy` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-道具是否购买',
   `act05_buynum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-道具购买次数',

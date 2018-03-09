@@ -39,6 +39,7 @@
 #include "chat.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -909,6 +910,9 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 			// 国家荣誉排行
 			nation_rank_addvalue( pArmyCity, NATION_RANK_CITY, 1 );
+
+			// 七日狂欢
+			activity_04_addvalue_cityfight( pArmyCity->index, pTargetCity ->level );
 		}
 
 		// 国家荣誉任务

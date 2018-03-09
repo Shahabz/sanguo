@@ -47,6 +47,7 @@ local m_level_allfull = 1;
 local m_level_allfull_num = 0;
 local m_hassuper = 0;
 local m_super_wash_toggle = false;
+local m_showEffect = false;
 
 -- 打开界面
 function EquipWashDlgOpen()
@@ -215,6 +216,7 @@ end
 function EquipWashDlgSelectTag( index )
 	m_selectTag = index;
 	m_CacheHeroCache = {}
+	m_showEffect = false;
 	for tmpi = 1, 3, 1 do
 		if tmpi == index then
 			SetImage( m_uiTagBtn[tmpi].transform:Find("Back"), LoadSprite( "ui_button_page3" )  );
@@ -254,7 +256,7 @@ function EquipWashDlgSelectTag( index )
 		EquipWashDlgSelectHero( m_CacheHeroCache[1].m_kind );
 	else
 		EquipWashDlgSelectHero( 2000 );
-	end
+	end	
 end
 
 -- 设置英雄
@@ -276,6 +278,7 @@ function EquipWashDlgSelectHero( kind )
 		return
 	end
 	m_CacheEquipCache = {};
+	m_showEffect = false;
 	
 	-- 先全部设为未选
 	for i=1, 4, 1 do
@@ -370,6 +373,7 @@ end
 -- 选择装备
 function EquipWashDlgSelectItem( offset )
 	m_equipoffset = offset;
+	m_showEffect = false;
 	if offset == -1 then
 		EquipWashDlgClearItem()
 		SetFalse( m_uiShape )
@@ -433,7 +437,7 @@ function EquipWashDlgSelectItem( offset )
 		end
 	end
 	m_wash_count = 0;
-	m_auto_wash_toggle = false;
+	m_auto_wash_toggle = false;	
 end
 
 -- 设置洗练技能
@@ -448,6 +452,7 @@ function EquipWashDlgSetWash( pEquip )
 	if color <= ITEM_COLOR_LEVEL_WHITE then
 		return;
 	end
+	
 	m_color = color;
 	m_level_allfull = 1;
 	m_level_allfull_num = 0;
@@ -498,6 +503,9 @@ function EquipWashDlgSetWash( pEquip )
 			if i == 4 then
 				m_hassuper = 1;
 			end
+			if m_showEffect == true then 
+				EquipWashDlgUpdateEffect(uiShape);
+			end
 		else
 			SetFalse( uiShape )
 			SetFalse( uiColor )
@@ -540,6 +548,17 @@ function EquipWashDlgSetWash( pEquip )
 	if m_auto_wash_count <= 0 then
 		EquipWashDlgSetButton()
 	end
+end
+
+-- 更新特效
+function EquipWashDlgUpdateEffect(uiEffect)
+	if m_showEffect == false then 
+		return 
+	end;
+	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) );
+	effect.transform:SetParent( uiEffect.transform );
+	effect.transform.localPosition = Vector3.New( 0, 0, 0 );		
+	GameObject.Destroy(effect,1.5)
 end
 
 -- 
@@ -597,6 +616,7 @@ function EquipWashDlgUpdate( updateEquip )
 	end
 end
 
+
 -- 免费洗练
 function EquipWashDlgFree()
 	if m_recvValue.m_equip_washnum <= 0 then
@@ -611,12 +631,13 @@ function EquipWashDlgFree()
 	else
 		system_askinfo( ASKINFO_EQUIP, "", 6, m_equipoffset );
 	end
+	m_showEffect = true;
 end
 
 -- 钻石洗练
 function EquipWashDlgToken()
 	local token = m_washtoken;
-	
+	m_showEffect = true;
 	local auto = true;
 	-- 小于金色，等级全满，就不自动洗练了
 	if m_color < ITEM_COLOR_LEVEL_GOLD and m_level_allfull == 1 then
@@ -676,7 +697,8 @@ function EquipWashDlgSuper()
 				if GetPlayer().m_token < token then
 					JumpToken()
 				else
-					system_askinfo( ASKINFO_EQUIP, "", 8, m_equipoffset );
+					m_showEffect = true;
+					system_askinfo( ASKINFO_EQUIP, "", 8, m_equipoffset );				
 				end
 			end
 			m_super_wash_toggle = toggle;
@@ -696,6 +718,7 @@ function EquipWashDlgAuto()
 		JumpToken()
 		EquipWashDlgStopAuto()
 	else
+		m_showEffect = true;
 		system_askinfo( ASKINFO_EQUIP, "", 7, m_equipoffset );
 	end
 		

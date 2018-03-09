@@ -24,6 +24,7 @@ local m_uiOfficialTime = nil; --UnityEngine.GameObject
 local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_uiOfficialBtn = nil; --UnityEngine.GameObject
+local m_uiUpBtn = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiEquipObj = {};
@@ -32,6 +33,9 @@ local m_material = {};
 local m_selectmaterial = 0;
 local m_isforging = {};
 local m_scrollindex = 0;
+
+local m_ForgingEffect = nil;
+local m_guideShow = true;
 
 -- 打开界面
 function EquipForgingDlgOpen()
@@ -138,6 +142,7 @@ function EquipForgingDlgOnAwake( gameObject )
 	m_uiMaterialInfo = objs[18];
 	m_uiOfficialEffect = objs[19];
 	m_uiOfficialBtn = objs[20];
+	m_uiUpBtn = objs[21];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -151,7 +156,11 @@ end
 
 -- 界面显示时调用
 function EquipForgingDlgOnEnable( gameObject )
-	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_MAKE_UP then
+			FindCmdTpye(m_uiForgingInfo.transform);
+		end
+	end
 end
 
 -- 界面隐藏时调用
@@ -166,7 +175,14 @@ end
 
 -- 每帧调用
 function EquipForgingDlgOnLogic( gameObject )
-	
+	if m_guideShow then
+		if IsGuiding() then
+			if GetGuideSpecialEvent() == 1 and GetCurrentGuideType() == GUIDE_TOCLICKTASK then
+				GuideNext();
+				m_guideShow = false;
+			end
+		end
+	end
 end
 
 
@@ -231,7 +247,7 @@ function EquipForgingDlgShow()
 		end
 		
 		-- 是否可以打造
-		local forging = true
+		forging = true
 		-- 材料
 		local material ={}
 		table.insert( material, {kind=-1, num=g_equipinfo[kind].silver} )
@@ -264,9 +280,23 @@ function EquipForgingDlgShow()
 		-- 选择状态
 		SetFalse( uiSelect )
 		
-		if IsGuiding() and GetCurrentGuideType() == GUIDE_CHOOSE then 
-			if kind ==1 then
-				FindCmdTpye(uiObj.transform);
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_CHOOSE then 
+				if kind ==1 then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_MA then
+				if kind ==11 and forging == true then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_CLOUTH then
+				if kind ==21 and forging == true then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_HEAD then
+				if kind ==31 and forging == true then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
 			end
 		end
     end 
@@ -307,6 +337,8 @@ function EquipForgingDlgClear()
 	m_scrollindex = 0;
 	SetFalse( m_uiEquipInfo )
 	SetFalse( m_uiForgingInfo )
+	GameObject.Destroy(m_ForgingEffect)
+	m_ForgingEffect = nil;
 end
 
 -- 选择要打造的装备
@@ -330,9 +362,23 @@ function EquipForgingDlgSelect( kind )
 		SetFalse( m_uiUnLockDesc )
 		SetTrue( m_uiForgingBtn );
 
-		if IsGuiding() and GetCurrentGuideType() == GUIDE_CHOOSE then 
-			if kind == 1 then
-				GuideNext();
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_CHOOSE then 
+				if kind == 1 and forging == true then
+					GuideNext();
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_MA then 
+				if kind == 11 and forging == true then
+					GuideNext();
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_CLOUTH then 
+				if kind == 21 and forging == true then
+					GuideNext();
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_HEAD then 
+				if kind == 31 and forging == true then
+					GuideNext();
+				end
 			end
 		end		
 		
@@ -481,7 +527,9 @@ function EquipForgingDlgTimer()
 	local uiProgress = objs[4];
 	local uiTimer = objs[5];
 	local uiQuickBtn = objs[6];
-	local uiFreeQuickBtn = objs[7];
+	local uiFreeQuickBtn = objs[7];	
+	local uiEffect = objs[8];
+
 	
 	SetFalse( uiQuickBtn )
 	SetFalse( uiFreeQuickBtn )
@@ -498,6 +546,18 @@ function EquipForgingDlgTimer()
 	SetTimer( uiTimer, GetPlayer().m_forgingsec, g_equipinfo[kind].sec, 1 );
 	-- 铁匠
 	EquipForgingDlgSetOfficial()
+	-- 特效
+	EquipForgingDlgForgingEffect(uiEffect)
+end
+
+-- 特效
+function EquipForgingDlgForgingEffect(uiEffect)
+	if m_ForgingEffect == nil then 
+		m_ForgingEffect = GameObject.Instantiate( LoadPrefab( "Czdz" ) )
+		m_ForgingEffect.transform:SetParent( uiEffect.transform );
+		m_ForgingEffect.transform.localPosition = Vector3.New( 0, 0, 0 );		
+		m_ForgingEffect.transform.localScale = Vector3.New( 400, 400, 400 );
+	end
 end
 
 -- 打造
@@ -534,6 +594,12 @@ function EquipForgingDlgQuick()
 			EquipForgingDlgClose()
 		end
 	end )
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_MAKE_UP then
+			GuideNext();
+		end
+	end
 end
 
 -- 免费加速

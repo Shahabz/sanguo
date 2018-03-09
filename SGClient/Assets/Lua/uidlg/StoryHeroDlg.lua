@@ -146,6 +146,16 @@ function StoryHeroDlgShow( storyid, info )
 			SetFalse( m_uiBuyBtn )
 		end
 		
+		if IsGuiding() and GetCurrentGuideType() == GUIDE_CPOY then
+			if GetGuideSpecialEvent() == 1 then
+				GuideNext();
+			end
+		end
+		
+		if IsGuiding() and GetCurrentGuideType() == GUIDE_GET_HERO then 
+			FindCmdTpye(m_uiCallBtn.transform);
+		end
+		
 	elseif storyConfig.hero_kind1 > 0 then
 		if iscallover == 1 or iscallover == 10 then
 			-- 已经招募完毕
@@ -212,6 +222,9 @@ end
 -- 免费获取
 function StoryHeroDlgFree()
 	system_askinfo( ASKINFO_STORY, "", 4, m_storyid );
+	if IsGuiding() and GetCurrentGuideType() == GUIDE_GET_HERO then 
+		GuideNext();
+	end
 	StoryHeroDlgClose()
 end
 

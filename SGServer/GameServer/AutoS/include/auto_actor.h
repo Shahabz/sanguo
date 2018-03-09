@@ -80,6 +80,8 @@ struct _actor {
 				int te_shop;	//师徒商店
 				int act02_state;	//主城等级活动领取奖励
 				char act03_state;	//攻城掠地活动领取奖励
+				char act04_state[128];	//七日狂欢活动状态
+				int act04_value[40];	//七日狂欢活动数值
 				short act05_item[6];	//七星拜将活动-道具列表
 				char act05_isbuy;	//七星拜将活动-道具是否购买
 				char act05_buynum;	//七星拜将活动-道具购买次数

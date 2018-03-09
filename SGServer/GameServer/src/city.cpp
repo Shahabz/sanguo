@@ -39,6 +39,7 @@
 #include "nation_equip.h"
 #include "nation_hero.h"
 #include "actor_friend.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -2911,11 +2912,16 @@ int city_officialhire( int actor_index, int type, int kind )
 		{
 			pCity->offree[type] |= (1 << kind);
 		}
-
-		
+	
 		pCity->ofkind[type] = kind;
 		pCity->ofsec[type] = g_official_gov[kind].duration;
 		pCity->ofquick[type] = 0;
+
+		// ÆßÈÕ¿ñ»¶
+		if ( g_official_gov[kind].token > 0 )
+		{
+			activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE4, 1 );
+		}
 	}
 	else if ( type == 2 )
 	{
@@ -2970,6 +2976,11 @@ int city_officialhire( int actor_index, int type, int kind )
 			pCity->ofquick[type] = 0;
 		}
 
+		// ÆßÈÕ¿ñ»¶
+		if ( g_official_tech[kind].token > 0 )
+		{
+			activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE3, 1 );
+		}
 	}
 	city_officialhire_sendinfo( pCity, type );
 	return 0;

@@ -2860,3 +2860,23 @@ function struct_NetS_Activity01List_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Activity04Info_recv( buffer )
+	local recvValue = {};
+	recvValue.m_value = buffer:ReadInt();
+	recvValue.m_state = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_Activity04List_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity04Info_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_myday = buffer:ReadSByte();
+	return recvValue;
+end
+

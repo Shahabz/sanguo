@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4380800442052908}
   - component: {fileID: 198618362864639422}
   - component: {fileID: 199079631090922708}
-  m_Layer: 9
+  m_Layer: 5
   m_Name: Czdz_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,6 +53,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4934303912606946}
+  - component: {fileID: 210666727520969604}
   m_Layer: 5
   m_Name: Czdz
   m_TagString: Untagged
@@ -155,8 +156,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1327262940543592}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: 90}
-  m_LocalScale: {x: 43.27963, y: 43.279648, z: 43.279648}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 400, y: 400, z: 400}
   m_Children:
   - {fileID: 4591929062725710}
   - {fileID: 4807044557555082}
@@ -9666,3 +9667,13 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+--- !u!210 &210666727520969604
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1327262940543592}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 101

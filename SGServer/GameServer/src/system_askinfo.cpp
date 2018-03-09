@@ -44,6 +44,7 @@
 #include "nation_hero.h"
 #include "wishing.h"
 #include "actor_friend.h"
+#include "activity_04.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -841,6 +842,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			else if ( pvalue[1] == 1 )
 			{
 				activity_03_get( actor_index, pvalue[2] );
+			}
+		}
+		else if ( pvalue[0] == ACTIVITY_4 )
+		{ // ∆ﬂ»’ªÓ∂Ø
+			if ( pvalue[1] == 0 )
+			{
+				activity_04_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_04_get( actor_index, pvalue[2] );
 			}
 		}
 		else if ( pvalue[0] == ACTIVITY_5 )

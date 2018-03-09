@@ -25,6 +25,7 @@
 #include "hero.h"
 #include "quest.h"
 #include "actor_friend.h"
+#include "activity_04.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;
@@ -651,6 +652,14 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	else if ( kind == AWARDKIND_ACTIVITY05_XW ) // 陈宫信物
 	{
 		g_actors[actor_index].act05_xw += num;
+	}
+	else if ( kind == AWARDKIND_ACTIVITY04_VALUE_ADD ) // 七日数值
+	{
+		activity_04_addvalue( g_actors[actor_index].city_index, color, num );
+	}
+	else if ( kind == AWARDKIND_ACTIVITY04_VALUE_SET ) // 七日数值
+	{
+		activity_04_setvalue( g_actors[actor_index].city_index, color, num );
 	}
 	else if ( kind == AWARDKIND_PERMISSION_4 ) // 科技快研
 	{

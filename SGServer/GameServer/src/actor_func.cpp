@@ -27,6 +27,7 @@
 #include "nation_hero.h"
 #include "nation.h"
 #include "activity.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -256,6 +257,8 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 			int serv_paytoken = world_data_getcache( WORLD_DATA_ACTIVITY06_PAYTOKEN ) + token;
 			world_data_set( WORLD_DATA_ACTIVITY06_PAYTOKEN, serv_paytoken, NULL, NULL );
 		}
+		// ÆßÈÕ¿ñ»¶
+		activity_04_addvalue( g_actors[actor_index].city_index, ACTIVITY_SEVENDAY_TYPE1, token );
 	}
 
 	if ( token > 0 )

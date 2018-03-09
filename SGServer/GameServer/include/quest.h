@@ -53,7 +53,7 @@ enum
 	QUEST_TYPE_BRANCH,		// 支线任务
 	QUEST_TYPE_MAXNUM
 };
-
+QuestInfo *quest_config( int questid );
 // 第一个任务
 int quest_newplayer( int actor_index );
 
@@ -107,7 +107,7 @@ int quest_fight( int actor_index, int storyid );
 // GM重置所有任务
 int quest_gm_reset( int actor_index );
 
-// 数据记录
+// city数据记录
 #define DATA_RECORD_MAXNUM						16
 #define DATA_RECORD_KILLENEMY					0	// 流寇数量
 #define DATA_RECORD_KILLCITY					1	// 城战数量
@@ -119,7 +119,6 @@ int quest_gm_reset( int actor_index );
 #define DATA_RECORD_KILLTOWNTYPE5				7	// 成功攻打州府次数
 #define DATA_RECORD_KILLTOWNTYPE6				8	// 成功攻打州城次数
 #define DATA_RECORD_KILLTOWNTYPE7				9	// 成功攻打名城次数
-
 int data_record_addvalue( struct _city *pCity, int offset, int value );
 int data_record_setvalue( struct _city *pCity, int offset, int value );
 int data_record_getvalue( struct _city *pCity, int offset );

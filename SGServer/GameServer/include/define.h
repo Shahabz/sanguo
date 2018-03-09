@@ -66,6 +66,7 @@
 #include "auto_data_teacher_shop.h"
 #include "auto_data_activity_02.h"
 #include "auto_data_activity_03.h"
+#include "auto_data_activity_04.h"
 #include "auto_data_activity_05.h"
 #include "auto_data_activity_06.h"
 #include "auto_data_activity_08.h"

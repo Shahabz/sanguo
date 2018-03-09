@@ -59,6 +59,7 @@ function Activity6ModOnStart( gameObject )
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_5" )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_7") )
+	m_AwardDescLayerShow = false
 end
 
 -- 界面显示时调用

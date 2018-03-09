@@ -24,6 +24,7 @@
 #include "building.h"
 #include "city_attr.h"
 #include "quest.h"
+#include "activity_04.h"
 
 extern Global global;
 extern MYSQL *myData;
@@ -304,6 +305,9 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 
 	// 插入这个数据到数据库
 	equip_insert( actor_index, offset );
+
+	// 七日狂欢
+	activity_04_addvalue_equip( g_actors[actor_index].city_index, g_equipinfo[equipkind].type, g_equipinfo[equipkind].color );
 	return 0;
 }
 
@@ -1220,6 +1224,7 @@ int equip_wash_free( int actor_index, int offset )
 	if ( pEquip->washid[3] > 0 )
 		pEquip->washid[3] = 0;
 
+	char fulllevel = 0;
 	for ( int tmpi = 0; tmpi < g_equip_washrule[color].valuenum; tmpi++ )
 	{
 		// 原有
@@ -1240,6 +1245,12 @@ int equip_wash_free( int actor_index, int offset )
 		}
 		newid = randid + washlevel;
 		pEquip->washid[tmpi] = newid;
+
+		// 满级数量
+		if ( washlevel >= g_equip_washrule[color].levellimit )
+		{
+			fulllevel += 1;
+		}
 	}
 	
 	
@@ -1266,6 +1277,12 @@ int equip_wash_free( int actor_index, int offset )
 
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
+
+	// 七日狂欢
+	if ( fulllevel >= g_equip_washrule[color].valuenum )
+	{
+		activity_04_addvalue_equipwash( actor_index );
+	}
 	return 0;
 }
 
@@ -1299,6 +1316,7 @@ int equip_wash_token( int actor_index, int offset )
 	if ( actor_change_token( actor_index, -g_equip_washrule[color].token, PATH_EQUIP_WASH, 0 ) < 0 )
 		return -1;
 	
+	char fulllevel = 0;
 	for ( int tmpi = 0; tmpi < g_equip_washrule[color].valuenum; tmpi++ )
 	{
 		// 原有
@@ -1319,6 +1337,12 @@ int equip_wash_token( int actor_index, int offset )
 		}
 		newid = randid + washlevel;
 		pEquip->washid[tmpi] = newid;
+
+		// 满级数量
+		if ( washlevel >= g_equip_washrule[color].levellimit )
+		{
+			fulllevel += 1;
+		}
 	}
 
 
@@ -1339,6 +1363,12 @@ int equip_wash_token( int actor_index, int offset )
 	}
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
+
+	// 七日狂欢
+	if ( fulllevel >= g_equip_washrule[color].valuenum )
+	{
+		activity_04_addvalue_equipwash( actor_index );
+	}
 	return 0;
 }
 
@@ -1405,6 +1435,9 @@ int equip_wash_super( int actor_index, int offset )
 	}
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_WASH, 0, 0, 1 );
+
+	// 七日狂欢
+	activity_04_addvalue_equipwash( actor_index );
 	return 0;
 }
 

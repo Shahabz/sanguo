@@ -68,7 +68,6 @@ end
 
 -- 界面初始化时调用
 function Activity2ModOnStart( gameObject )
-	m_AwardDescLayerShow = false
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_2, 0 )
 	ResourceManager.LoadAssetBundle( "_ab_activity_pic_3" )
 	ResourceManager.LoadAssetBundle( "_ab_activity_back_0" )
@@ -76,6 +75,7 @@ function Activity2ModOnStart( gameObject )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_3") )
 	SetImage( m_uiBack2, LoadSprite("activity_back_3") )
+	m_AwardDescLayerShow = false
 end
 
 -- 界面显示时调用

@@ -2147,3 +2147,9 @@ function proc_activity01list_C( recvValue )
 	Activity1ModRecv( recvValue )
 end
 
+-- m_count=0,m_list={m_value=0,m_state=0,[m_count]},m_myday=0,
+function proc_activity04list_C( recvValue )
+	-- process.
+	Activity4ModRecv( recvValue )
+end
+

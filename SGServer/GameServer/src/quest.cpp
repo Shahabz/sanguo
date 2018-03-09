@@ -84,7 +84,7 @@ int quest_give_main( int actor_index, int questid )
 	{
 		int value[1] = { 0 };
 		value[0] = questinfo->guide;
-		actor_notify_value( actor_index, NOTIFY_ACTIVITY, 1, value, NULL );
+		actor_notify_value( actor_index, NOTIFY_GUIDE, 1, value, NULL );
 	}
 	pCity->questid[0] = questid;
 	pCity->questvalue[0] = 0;
@@ -370,7 +370,7 @@ int quest_check( int actor_index, int questid, int *value )
 		{ // ¸±±¾
 			if ( value )
 				*value = g_actors[actor_index].storyid;
-			if ( g_actors[actor_index].storyid >= questinfo->datakind )
+			if ( g_actors[actor_index].storyid > questinfo->datakind )
 			{
 				return 1;
 			}

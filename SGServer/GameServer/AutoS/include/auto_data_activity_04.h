@@ -4,7 +4,14 @@
 
 struct _activityinfo04 {
 //--Automatically generated
-				int Id;	//
+				int id;	//
+				int day;	//
+				short sortrank;	//
+				short title;	//
+				short type;	//
+				int value;	//
+				int awardkind[3];	//
+				int awardnum[3];	//
 };
 typedef struct _activityinfo04 ActivityInfo04;
 

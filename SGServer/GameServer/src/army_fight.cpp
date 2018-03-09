@@ -38,6 +38,7 @@
 #include "mail.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -210,6 +211,13 @@ int army_vs_enemy( int army_index, Fight *pFight )
 				map_town_dev_addexp( range_townid, global.town_dev_killenemy );
 			}
 		}
+
+		// ÆßÈÕ¿ñ»¶
+		if ( config->level >= 6 && config->level <= 10 )
+		{
+			activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE13, 1 );
+		}
+
 		// É¾³ýÁ÷¿Ü
 		map_enemy_delete( g_army[army_index].to_index );
 	}

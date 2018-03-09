@@ -23,6 +23,7 @@
 #include "mail.h"
 #include "nation_hero.h"
 #include "quest.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -349,6 +350,9 @@ int hero_gethero( int actor_index, int kind, short path )
 
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL, kind, 0, 1 );
+
+	// 七日狂欢
+	activity_04_addvalue_hero( actor_index );
 	return 0;
 }
 
@@ -1877,7 +1881,11 @@ int hero_wash_free( int actor_index, int herokind )
 	hero_sendinfo( actor_index, pHero );
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_HERO_WASHCOUNT, 0, 0, 1 );
-
+	// 七日狂欢
+	if ( (pHero->attack_wash + pHero->defense_wash + pHero->troops_wash) >= config->total_wash )
+	{
+		activity_04_addvalue_herowash( actor_index );
+	}
 	pCity->hero_washnum -= 1;
 	if ( pCity->hero_washsec <= 0 )
 		pCity->hero_washsec = global.hero_wash_sec;
@@ -1955,6 +1963,12 @@ int hero_wash_token( int actor_index, int herokind )
 	hero_sendinfo( actor_index, pHero );
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_HERO_WASHCOUNT, 0, 0, 1 );
+
+	// 七日狂欢
+	if ( (pHero->attack_wash + pHero->defense_wash + pHero->troops_wash) >= config->total_wash )
+	{
+		activity_04_addvalue_herowash( actor_index );
+	}
 	return 0;
 }
 
@@ -2075,6 +2089,12 @@ int hero_colorup( int actor_index, int herokind )
 	pValue.m_value = pHero->colorup;
 	pValue.m_isup = isup;
 	netsend_herocolorup_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	if ( isup == 1 )
+	{
+		// 七日狂欢
+		activity_04_addvalue_hero( actor_index );
+	}
 	return 0;
 }
 

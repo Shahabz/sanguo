@@ -32,6 +32,7 @@
 #include "city.h"
 #include "nation.h"
 #include "nation_equip.h"
+#include "activity_04.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -86,6 +87,9 @@ int nation_equip_open( int actor_index, int kind )
 
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_NEQUIP_FORGING, kind, 0, 1 );
+
+	// 七日活动
+	activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE34, 1 );
 	return 0;
 }
 

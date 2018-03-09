@@ -22,7 +22,9 @@
 #include "city.h"
 #include "global.h"
 #include "activity.h"
+#include "activity_04.h"
 #include "vip.h"
+#include "quest.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -1073,6 +1075,9 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	{
 		city_paybag_sub( city_getptr( actor_index ), goodsid, goodstype );
 		activity_paybag_list( actor_index, 1 );
+		// 七日狂欢
+		activity_04_addvalue( g_actors[actor_index].city_index, ACTIVITY_SEVENDAY_TYPE6, 1 );
+
 	}
 
 	// 记录总充值多少钱

@@ -27,7 +27,6 @@ function QuestAwardDlgClose()
 	eye.uiManager:Close( "QuestAwardDlg" );
 	if IsGuiding() and GetCurrentGuideType() == GUIDE_TASK_FINISH then
 		GuideNext();
-		ShowGuideFinger();
 	end
 end
 

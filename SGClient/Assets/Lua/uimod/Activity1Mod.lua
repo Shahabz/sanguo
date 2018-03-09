@@ -62,6 +62,7 @@ function Activity1ModOnStart( gameObject )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_1") )
 	SetImage( m_uiShape, LoadSprite("ui_static_npc2") )
+	m_AwardDescLayerShow = false
 end
 
 -- 界面显示时调用

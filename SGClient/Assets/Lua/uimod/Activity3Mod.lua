@@ -59,6 +59,7 @@ function Activity3ModOnStart( gameObject )
 	
 	SetImage( m_uiBack, LoadSprite("activity_pic_4") )
 	SetImage( m_uiShape, LoadSprite("heroface_119") )
+	m_AwardDescLayerShow = false
 end
 
 -- 界面显示时调用

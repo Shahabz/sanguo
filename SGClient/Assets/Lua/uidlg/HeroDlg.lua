@@ -7,7 +7,6 @@ local m_uiCavalryNum = nil; --UnityEngine.GameObject
 local m_uiArcherNum = nil; --UnityEngine.GameObject
 local m_uiBuffLayer = nil; --UnityEngine.GameObject
 local m_uiAutoSoldier = nil; --UnityEngine.GameObject
-
 -- 打开界面
 function HeroDlgOpen()
 	m_Dlg = eye.uiManager:Open( "HeroDlg" );
@@ -197,7 +196,7 @@ function HeroDlgSetHero( index, pHero )
 	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
 	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
 	
-	GuideShow(index,uiShape.transform);
+	GuideShow(index,uiColor.transform);
 	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 	if only == true and pHero.m_god == 1 then
@@ -241,10 +240,15 @@ function HeroDlgSetHero( index, pHero )
 end
 
 function GuideShow(index,tran)
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
-		ShowGuideFinger();
-		if index == 1 then 
-			FindCmdTpye(tran);
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
+			if index == 1 then 
+				FindCmdTpye(tran);
+			end
+		elseif GetCurrentGuideType() == GUIDE_CLCLK_ZL then 
+			if index == 2 then
+				FindCmdTpye(tran);
+			end
 		end
 	end
 end
@@ -291,9 +295,15 @@ function HeroDlgSelect( index )
 		end
 		return;
 	end
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
-		if index == 1 then
-			GuideNext();
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_CLCLK_HEAD then 
+			if index == 1 then
+				GuideNext();
+			end
+		elseif GetCurrentGuideType() == GUIDE_CLCLK_ZL then
+			if index == 2 then
+				GuideNext();
+			end
 		end
 	end
 	HeroInfoDlgShow( HEROLIST_PATH_HERO, GetHero().m_CityHero[index-1], true );

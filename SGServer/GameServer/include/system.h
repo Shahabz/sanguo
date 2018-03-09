@@ -10,6 +10,7 @@ int system_gettoday();
 int system_getmonth();
 int system_getweek();
 int system_getmaxday( int year, int month );
+int system_getfday_withstamp( int stamp );
 int system_getcurmonth_maxday();
 
 int system_timestring( int timestamp, char *out );

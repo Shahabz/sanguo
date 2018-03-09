@@ -1,7 +1,7 @@
 -- 引导事件
-CMD_TALK = 1         --对话，随机点击跳过（目前修改通过触发的形式出现，暂时不做处理了）
-CMD_SPECIAL = 2      --点击，同一界面上有多个的高亮，出现手指指示
-CMD_CLICK = 3        --点击，同一区域没有高亮，做高亮处理
+CMD_TALK = 1         --隐藏所有手指
+CMD_SPECIAL = 2      --主界面上的指引
+CMD_CLICK = 3        --其他页面上的指引
 
 -- 引导的类型
 GUIDE_TOCLICKTASK = 1     --指向任务按钮手指
@@ -13,13 +13,26 @@ GUIDE_DRESS = 6          --穿戴
 GUIDE_GET = 7            --征收
 GUIDE_RECRUIT = 8        --招募
 GUIDE_CHOOSE = 9         --选择古淀刀
-GUIDE_MAKE = 10          --打造古淀刀
+GUIDE_MAKE = 10          --打造
 GUIDE_CHOOSE_WEAPON = 11 --点击武器穿戴
 GUIDE_CPOY = 12          --副本按钮手指
+GUIDE_BACK = 13          --回城按钮手指
+GUIDE_UPGRADE = 14       --升级建筑
+GUIDE_CHOOSE_MA = 15     --选择马
+GUIDE_DRESS_MA = 16      --点击马穿戴
+GUIDE_GET_HERO = 17      --招募武将
+GUIDE_CLCLK_ZL = 18      --点击张良头像
+GUIDE_CHOOSE_CLOUTH = 19 --选择锁子甲
+GUIDE_CHOOSE_HEAD = 20   --选择精铁盔
+GUIDE_MAKE_CHOOSE = 21   --选择铁匠
+GUIDE_MAKE_UP = 22       --铁匠加速
+GUIDE_DRESS_HEAD = 23    --点击头盔穿戴
 
 
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
+GUIDE_END = 999          --指引结束标识
 
+local m_uiFinger = {nil,nil,nil,nil}; --UnityEngine.GameObject
 
 -- 隐藏界面
 function GuideDlgClose()
@@ -47,8 +60,10 @@ end
 function GuideDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
-	m_uiFinger = objs[0];
-	m_uiPos = objs[1];
+	m_uiFinger[1] = objs[0];
+	m_uiFinger[2] = objs[1];
+	m_uiFinger[3] = objs[2];
+	m_uiFinger[4] = objs[3];	
 end
 
 -- 界面初始化时调用
@@ -98,7 +113,7 @@ function Guide(id, step, force)
         end
 
         -- 检查引导是否完成
-        if GuideCheck( id ) and step == 999 then
+        if GuideCheck( id ) and g_guide[mId][mStep].guideType == 999 then
 			mIsGuiding = false;
             return;
         end   
@@ -122,11 +137,12 @@ function GuideNext()
 	else
 		Guide( mId, mStep + 1 );
 	end
-	HideGuideFinger();
 end
 
 function GuideCheck(id)
 	if id == table.getn(g_guide) then 
+		HideGuideFinger();
+		HideCurrentFinger();
 		return true
 	else 
 		return false
@@ -141,36 +157,48 @@ function GetCurrentGuideType()
 	return g_guide[mId][mStep].guideType
 end
 
+function GetGuideSpecialEvent()
+	return g_guide[mId][mStep].isSpecial
+end
 function HideGuideFinger()
-	SetFalse(m_uiFinger.transform);
+	for i = 1, table.getn(m_uiFinger), 1 do 
+		SetFalse(m_uiFinger[i].transform);
+	end
 end
 
-function ShowGuideFinger()
-	SetTrue(m_uiFinger.transform);
+function ShowGuideFinger(pi)
+	HideGuideFinger();
+	SetTrue(m_uiFinger[pi].transform);
 end
 
 function HideCurrentFinger()
 	if currentFinger ~= nil then
 		SetFalse(currentFinger.transform);
+		currentFinger = nil;
 	end
 end
 
 -- 设置当前指引位置
 function FindCmdTpye(tran)
 	cmd = g_guide[mId][mStep].cmd;
+	point = g_guide[mId][mStep].point;
+	deviation = Vector3.New(g_guide[mId][mStep].x,g_guide[mId][mStep].y,0);
 	HideCurrentFinger();
 	if cmd == 2 then 
 		if g_guide[mId][mStep].guideType == GUIDE_TOCLICKTASK then 
-			ShowGuideFinger();
-			m_uiFinger.transform.position = GetQuestDlgPos();
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetQuestDlgPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_CPOY then 
-			ShowGuideFinger();
-			m_uiFinger.transform.position = GetCopyPos();
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetCopyPos() + deviation;
+		elseif g_guide[mId][mStep].guideType == GUIDE_BACK then
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetBackPos() + deviation;
 		end
 	elseif cmd == 3 then
 		HideGuideFinger();
-		currentFinger = addChild(tran,m_uiFinger);
-		SetParent(currentFinger,tran);
+		currentFinger = addChild(tran,m_uiFinger[point]);
+		currentFinger.transform.position = currentFinger.transform.position + deviation;
 	elseif cmd == 1 then
 		HideGuideFinger();
 	end
