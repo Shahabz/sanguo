@@ -324,8 +324,7 @@ function RecvActorNotify(recvValue)
 		end
 	
 	-- 触发指引	
-	elseif msgid ==NOTIFY_GUIDE then
-	print( value[1] )
+	elseif msgid == NOTIFY_GUIDE then
 		Guide( value[1], 1, false );
     end
 end

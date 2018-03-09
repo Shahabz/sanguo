@@ -52,6 +52,7 @@ SRC = \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
 ../AutoS/src/auto_map_enemy.cpp \
 ../AutoS/src/auto_map_event.cpp \
+../AutoS/src/auto_data_activity_07.cpp \
 ../AutoS/src/auto_data_building_upgrade.cpp \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_teacher_shop.cpp \
@@ -99,6 +100,7 @@ SRC = \
 ../AutoS/src/auto_city_guard.cpp \
 ../AutoS/src/auto_data_fight.cpp \
 login_user.cpp \
+activity_04.cpp \
 army_march.cpp \
 wishing.cpp \
 fight.cpp \
@@ -285,6 +287,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_event.o: ../AutoS/src/auto_map_event.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_07.o: ../AutoS/src/auto_data_activity_07.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_building_upgrade.o: ../AutoS/src/auto_data_building_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_item.o: ../AutoS/src/auto_data_item.cpp 
@@ -378,6 +382,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_fight.o: ../AutoS/src/auto_data_fight.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 login_user.o: login_user.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+activity_04.o: activity_04.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 army_march.o: army_march.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

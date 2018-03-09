@@ -272,6 +272,11 @@ function Activity4ModCreate( info, value, state )
 		if info.gototype > 0 then
 			SetTrue( uiGotoBtn )
 			SetControlID( uiGotoBtn, 2000+info.gototype )
+			if info.gototype == 5 then
+				SetText( uiStateBtn.transform:Find("Back/Text"), T(763) ) -- 充值
+			else
+				SetText( uiStateBtn.transform:Find("Back/Text"), T(778) ) -- 前往
+			end
 		else
 			SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )
 			SetTrue( uiStateBtn )
@@ -324,6 +329,7 @@ function Activity4ModSelect( id )
 end
 
 function Activity4ModGoto( gototype )
+	ActivityDlgClose()
 	-- 打开科技界面
 	if gototype == 1 then
 		
