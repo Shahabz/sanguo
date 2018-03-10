@@ -98,6 +98,14 @@ int quest_give_branch( int actor_index, int questid )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return 0;
+	// 先检查之前是否有这个任务
+	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
+	{
+		if ( pCity->questid[tmpi] == questid )
+		{
+			return 0;
+		}
+	}
 	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
 	{
 		if ( pCity->questid[tmpi] <= 0 || pCity->questid[tmpi] >= g_questinfo_maxnum )
@@ -443,6 +451,9 @@ int quest_getaward( int actor_index, int questid )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	QuestInfo *questinfo = quest_config( questid );
 	if ( !questinfo )
 		return 0;
@@ -487,6 +498,14 @@ int quest_getaward( int actor_index, int questid )
 	}
 	else if ( questinfo->type == QUEST_TYPE_BRANCH )
 	{ // 给下一个支线任务
+		for ( int tmpi = 1; tmpi < CITY_QUEST_MAX; tmpi++ )
+		{
+			if ( pCity->questid[tmpi] == questid )
+			{
+				pCity->questid[tmpi] = 0;
+				break;
+			}
+		}
 		quest_give_branch( actor_index, questinfo->nextid );
 	}
 	quest_sendlist( actor_index );

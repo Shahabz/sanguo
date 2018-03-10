@@ -148,7 +148,7 @@ function QuestName( type, recvValue )
 	if type == 0 then
 		name = name.."["..T(522).."]"
 	elseif type == 1 then
-		name = name.."["..T(521).."]"
+		name = name.."["..T(523).."]"
 	end
 	
 	local datatype = recvValue.m_datatype;

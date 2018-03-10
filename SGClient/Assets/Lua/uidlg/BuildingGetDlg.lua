@@ -134,7 +134,7 @@ function BuildingGetDlgShow( recvValue )
 	m_uiMovePanel.gameObject:SetActive(false);
 	m_uiShape.gameObject:SetActive(true);
 	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( recvValue.m_kind );
-	if recvValue.m_level == 0 then
+	if recvValue.m_level == 0 and recvValue.m_kind < 30 then
 		SetGray( m_uiShape, true )
 	else
 		SetGray( m_uiShape, false )
@@ -148,6 +148,7 @@ function BuildingGetDlgShow( recvValue )
 	StoryDlgClose()
 	FightDlgClose()
 	LevyDlgClose()
+	WishingDlgClose()
 end
 
 function BuildingGetDlgMove()
@@ -185,7 +186,7 @@ function BuildingGetDlgMove()
 		uiShape[k] = m_ObjectPool:Get( "Shape" );
 		uiShape[k].transform:SetParent( m_uiMovePanel.transform );
 		uiShape[k]:GetComponent( "Image" ).sprite = BuildingSprite( m_kind[k] );
-		if m_info[k].m_level == 0 then
+		if m_info[k].m_level == 0 and m_info[k].m_kind < 30 then
 			SetGray( uiShape[k], true )
 		else
 			SetGray( uiShape[k], false )

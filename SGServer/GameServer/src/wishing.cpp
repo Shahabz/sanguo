@@ -241,6 +241,8 @@ int wishing_shop_buy( int actor_index, int id )
 	actor_add_today_char_times( actor_index, TODAY_CHAR_WISHINGSHOP_TODAYBUY );
 	g_actors[actor_index].wishingday = system_getfday() + 1;
 	wishing_shop_sendinfo( actor_index );
+	// хннЯ
+	quest_addvalue( city_getptr( actor_index ), QUEST_DATATYPE_WISHING, 0, 0, 1 );
 	return 0;
 }
 

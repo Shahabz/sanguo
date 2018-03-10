@@ -223,13 +223,13 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 收起支线任务
 		elseif nControlID == 33 then
 			SetFalse( m_uiQuestList )
-			if #CacheQuest > 1 then
+			if CacheQuest.m_count > 1 then
 				SetTrue( m_uiQuest.transform:Find("Button") )
 			end
 			
 		-- 点击支线任务导航
 		elseif nControlID >= 40 and nControlID < 50 then
-			--QuestGoto( 1 );
+			QuestGoto( nControlID-40+2 );
 					
 		-- 点击建造队列
 		elseif nControlID == 50 then

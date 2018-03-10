@@ -20,17 +20,6 @@ function QuestDlgClose()
 		return;
 	end
 	
-	local objs = {};
-	for i = 0 ,m_uiContent.transform.childCount - 1 do
-		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
-    end
-	for k, v in pairs(objs) do
-		local obj = v;
-		if obj.name == "UIP_Quest(Clone)" then
-			m_ObjectPool:Release( "UIP_Quest", obj );
-		end
-    end
-	
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "QuestDlg" );
@@ -53,6 +42,8 @@ function QuestDlgOnEvent( nType, nControlID, value, gameObject )
             QuestDlgClose();
 		elseif nControlID >= 0 and nControlID <= 10 then
 			QuestDlgGoto( nControlID )
+		elseif nControlID >= 100 and nControlID <= 200 then
+			QuestDlgGetAward( nControlID-100 )
         end
 	end
 end
@@ -101,12 +92,24 @@ end
 -- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,[m_count]},
 function QuestDlgShow()
 	QuestDlgOpen()
-	if CacheQuest == nil then
-		return
-	end
+	system_askinfo( ASKINFO_QUEST, "", 0 );
+--[[	QuestDlgClear()
 	for i=1, CacheQuest.m_count, 1 do
 		QuestDlgSetObject( i, CacheQuest.m_list[i] )
-	end
+	end--]]
+end
+
+function QuestDlgClear()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_Quest(Clone)" then
+			m_ObjectPool:Release( "UIP_Quest", obj );
+		end
+    end
 end
 
 function QuestDlgSetObject( offset, recvValue )
@@ -117,6 +120,7 @@ function QuestDlgSetObject( offset, recvValue )
 	local uiQuest = objs[1];
 	local uiAwardList = objs[2];
 	local uiGotoButton = objs[3];
+	local uiGetButton = objs[4];
 	
 	-- 任务名
 	if offset == 1 then
@@ -143,12 +147,36 @@ function QuestDlgSetObject( offset, recvValue )
 		end
 	end
 	
-	-- 前往按钮
-	SetControlID( uiGotoButton, offset );
+	if recvValue.m_value >= recvValue.m_needvalue then
+		SetTrue( uiGetButton )
+		SetFalse( uiGotoButton )
+		SetControlID( uiGetButton, 100+offset );
+	else
+		SetFalse( uiGetButton )
+		SetTrue( uiGotoButton )
+		SetControlID( uiGotoButton, offset );
+	end
+end
+
+function QuestDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	QuestDlgClear()
+	for i=1, CacheQuest.m_count, 1 do
+		QuestDlgSetObject( i, CacheQuest.m_list[i] )
+	end
 end
 
 -- 前往
 function QuestDlgGoto( index )
 	QuestGoto( index )
 	QuestDlgClose()
+end
+
+function QuestDlgGetAward( index )
+	if CacheQuest.m_list[index] == nil then
+		return
+	end
+	system_askinfo( ASKINFO_QUEST, "", 1, CacheQuest.m_list[index].m_questid );
 end

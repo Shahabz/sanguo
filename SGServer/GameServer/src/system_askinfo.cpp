@@ -95,7 +95,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		
 		break;
 	case ASKINFO_QUEST:
-		if ( pvalue[0] == 1 )
+		if ( pvalue[0] == 0 )
+		{
+			quest_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
 		{ // 获取任务奖励
 			quest_getaward( actor_index, pvalue[1] );
 		}

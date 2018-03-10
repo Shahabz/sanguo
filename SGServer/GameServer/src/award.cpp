@@ -458,20 +458,20 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{ // 道具
 		item_getitem( actor_index, kind, num, color, path );
 	}
-	else if ( kind < AWARDKIND_HEROBASE )// 装备（10000+装备编号）
+	else if ( kind >= AWARDKIND_EQUIPBASE && kind < AWARDKIND_HEROBASE )// 装备（10000+装备编号）
 	{
 		for ( int i = 0; i < num; i++ )
 			equip_getequip( actor_index, (kind - AWARDKIND_EQUIPBASE), path );
 	}
-	else if ( kind < AWARDKIND_BUILDINGBASE ) // 英雄（20000+英雄编号）
+	else if ( kind >= AWARDKIND_HEROBASE && kind < AWARDKIND_BUILDINGBASE ) // 英雄（20000+英雄编号）
 	{
 		hero_gethero( actor_index, (kind - AWARDKIND_HEROBASE), path );
 	}
-	else if ( kind < AWARDKIND_FUNCTION )// 建筑（30000+建筑编号）
+	else if ( kind >= AWARDKIND_BUILDINGBASE && kind < AWARDKIND_FUNCTION )// 建筑（30000+建筑编号）
 	{
 		building_give( g_actors[actor_index].city_index, (kind - AWARDKIND_BUILDINGBASE), num );
 	}
-	else if ( kind < AWARDKIND_VALUEBASE )// 功能（40000+功能编号）
+	else if ( kind >= AWARDKIND_FUNCTION && kind < AWARDKIND_VALUEBASE )// 功能（40000+功能编号）
 	{
 		city_function_open( city_getptr( actor_index ), (kind - AWARDKIND_FUNCTION) );
 	}
