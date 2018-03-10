@@ -2511,6 +2511,7 @@ int struct_NetS_Activity_send( char **pptr, int *psize, SLK_NetS_Activity *pValu
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_starttime, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_endtime, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_closetime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_red, (*psize) );
 	return 0;
 }
 

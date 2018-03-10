@@ -7,6 +7,7 @@ local m_uiNationPay = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_AwardDescLayerShow = false
 local m_ObjectPool = nil
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -95,7 +96,7 @@ function Activity6ModRecv( servpay, nationpay, state )
 		return
 	end
 	Activity6ModClear()
-	
+	m_red = 0;
 	local ActivityList = ActivityDlgGetRecvValue()
 	local info = nil;
 	for i=1, #ActivityList, 1 do
@@ -142,6 +143,9 @@ function Activity6ModRecv( servpay, nationpay, state )
 		SetImage( payObj.transform:Find("Nation"), NationSprite(nationpay[i].n) )
 		SetText( payObj.transform:Find("Text"), F(2484,knum(nationpay[i].v)) )
 	end
+	
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_6, m_red )
 end
 
 -- 创建
@@ -172,6 +176,7 @@ function Activity6ModCreate( info, value, state )
 			SetTrue( uiStateBtn )
 			SetButtonTrue( uiStateBtn )
 			SetFalse( uiState )
+			m_red = 1
 		end
 	else
 		SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )

@@ -162,13 +162,17 @@ function GetGuideSpecialEvent()
 end
 function HideGuideFinger()
 	for i = 1, table.getn(m_uiFinger), 1 do 
-		SetFalse(m_uiFinger[i].transform);
+		if m_uiFinger[i] then
+			SetFalse(m_uiFinger[i].transform);
+		end
 	end
 end
 
 function ShowGuideFinger(pi)
 	HideGuideFinger();
-	SetTrue(m_uiFinger[pi].transform);
+	if m_uiFinger[pi] then
+		SetTrue(m_uiFinger[pi].transform);
+	end
 end
 
 function HideCurrentFinger()

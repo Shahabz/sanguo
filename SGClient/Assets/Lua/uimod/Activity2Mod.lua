@@ -13,7 +13,7 @@ local m_uiGetButton = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_AwardDescLayerShow = false
 local m_state = 0
-
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -112,6 +112,7 @@ function Activity2ModRecv( state )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
 	local scrollPage = m_uiScrollView.transform:GetComponent( typeof(UIScrollPage) )
 	scrollPage:ClearPage()
 	m_state = state
@@ -140,6 +141,8 @@ function Activity2ModRecv( state )
 			end
 		end
 	end
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_2, m_red )
 end
 function Activity2ModCreate( info, state, scrollPage )
 	local uiObj = GameObject.Instantiate( m_uiUIP_Mission );
@@ -256,6 +259,7 @@ function Activity2ModScrollPage( page )
 			SetFalse( m_uiUnLockState )
 			SetFalse( m_uiGetState )
 			SetControlID( m_uiGetButton, 2000 + id )
+			m_red = 1
 		else
 			SetTrue( m_uiUnLockState )
 			SetText( m_uiUnLockState, F(2464,g_activity_02[id].level) )

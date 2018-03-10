@@ -11,6 +11,8 @@ local m_recvValue = nil;
 local m_selectDay = 0;
 local m_selectKind = 0;
 local m_AwardDescLayerShow = false
+local m_red = 0;
+local m_dayred = { 0,0,0,0,0,0,0 };
 local m_Activity4Title = { 
 [1] = { 2681, 2682, 2683 },
 [2] = { 2681, 2684, 2685 },
@@ -124,6 +126,8 @@ function Activity4ModRecv( recvValue )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
+	m_dayred = { 0,0,0,0,0,0,0 };
 	m_recvValue = recvValue
 	
 	if m_selectDay > 0 then
@@ -131,6 +135,19 @@ function Activity4ModRecv( recvValue )
 	else
 		Activity4ModSelectDay( recvValue.m_myday )
 	end
+	
+	-- 日期红点
+	for i=1, 7, 1 do
+		local uiButton = m_uiDay.transform:GetChild(i+1)
+		if m_dayred[i] == 1 then
+			SetTrue( uiButton.transform:Find("Back/Red") )
+			m_red = 1
+		else
+			SetFalse( uiButton.transform:Find("Back/Red") )
+		end
+	end
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_4, m_red )
 end
 
 function Activity4ModSelectDay( day )
@@ -182,6 +199,7 @@ function Activity4ModSetList( day, kind )
 		else
 			SetImage( uiButton.transform:Find("Back"), LoadSprite("ui_button_page2") )
 		end
+		SetFalse( uiButton.transform:Find("Back/Red") )
 	end
 	
 	local tmptable = {}
@@ -194,6 +212,7 @@ function Activity4ModSetList( day, kind )
 				rank = -1000 - g_activity_04[i].id
 			else -- 完成未领取
 				rank = 0
+				m_dayred[g_activity_04[i].day] = 1 -- 红点
 			end
 		else
 			rank = - g_activity_04[i].id
@@ -213,6 +232,21 @@ function Activity4ModSetList( day, kind )
 			Activity4ModCreate( tmptable[id].info, tmptable[id].value, tmptable[id].state )
 		end
 	end
+	
+	-- 分类红点
+	for i=1,3,1 do
+		local uiButton = m_uiTypeButtons.transform:GetChild(i-1)
+		local title = m_Activity4Title[day][i]
+		for id=1, #tmptable, 1 do
+			if tmptable[id].info.day == day and tmptable[id].info.title == title then
+				if tmptable[id].rank == 0 then
+					SetTrue( uiButton.transform:Find("Back/Red") )
+					break
+				end
+			end
+		end
+	end
+	
 end
 
 -- 创建
@@ -273,17 +307,17 @@ function Activity4ModCreate( info, value, state )
 			SetTrue( uiGotoBtn )
 			SetControlID( uiGotoBtn, 2000+info.gototype )
 			if info.gototype == 5 then
-				SetText( uiStateBtn.transform:Find("Back/Text"), T(763) ) -- 充值
+				SetText( uiGotoBtn.transform:Find("Back/Text"), T(763) ) -- 充值
 			else
-				SetText( uiStateBtn.transform:Find("Back/Text"), T(778) ) -- 前往
+				SetText( uiGotoBtn.transform:Find("Back/Text"), T(778) ) -- 前往
 			end
 		else
 			SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )
 			SetTrue( uiStateBtn )
 			SetButtonFalse( uiStateBtn )
-			SetFalse( uiState )
 			SetFalse( uiGotoBtn )
 		end
+		SetFalse( uiState )
 	end
 	
 	-- 奖励
@@ -326,38 +360,87 @@ end
 -- 领取奖励
 function Activity4ModSelect( id )
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_4, 1, id )
+	
+	if g_activity_04[id].type == 39 then
+		VipDlgShow()
+	end
 end
 
 function Activity4ModGoto( gototype )
-	ActivityDlgClose()
 	-- 打开科技界面
 	if gototype == 1 then
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+		if pBuilding == nil or pBuilding.m_level <= 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		City.Move( BUILDING_Tech, -1, true );
+		--CityTechDlgOnShow()
 		
 	-- 打开官府界面
 	elseif gototype == 2 then
-	
+		ActivityDlgClose()
+		City.Move( BUILDING_Main, 0, true )
+		
 	-- 打开副本界面
 	elseif gototype == 3 then
-	
+		if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_MAIL ) == 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		StoryDlgShow()
+		
 	-- 前往世界
 	elseif gototype == 4 then
+		if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WORLD ) == 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		if GameManager.currentScence == "city" then
+			WorldMap.GotoWorldMap(-1, -1)
+		end
 	
 	-- 打开充值界面
 	elseif gototype == 5 then
-	
+		ActivityDlgClose()
+		PayDlgShow()
+		
 	-- 打开铁匠铺
 	elseif gototype == 6 then
-	
+		local pBuilding = GetPlayer():GetBuilding( BUILDING_Tech, -1 );
+		if pBuilding == nil or pBuilding.m_level <= 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		City.Move( BUILDING_Smithy, -1, true );
+		
 	-- 打开武将界面
 	elseif gototype == 7 then
+		if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_HEROBUTTON ) == 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		HeroDlgShow()
 	
 	-- 打开特价礼包界面
 	elseif gototype == 8 then
+		ActivityDlgClose()
+		ActivityDlgShowByID( ACTIVITY_10 ) 
 	
 	-- 国器
 	elseif gototype == 9 then
+		if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 0 then
+			pop( T(579) )
+			return;
+		end
+		ActivityDlgClose()
+		NationEquipDlgShow()
 	end
-
 end
 	
 -- 奖励描述

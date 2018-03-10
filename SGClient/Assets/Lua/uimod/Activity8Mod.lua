@@ -9,6 +9,7 @@ local m_AwardDescLayerShow = false
 local m_ObjectPool = nil
 local m_recvIsOpen = nil;
 local m_recvState = nil;
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -100,6 +101,7 @@ function Activity8ModRecv( isopen, state )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
 	if isopen == 0 then
 		SetTrue( m_uiActivityVip )
 		SetTrue( m_uiActivityOpenBtn )
@@ -128,6 +130,9 @@ function Activity8ModRecv( isopen, state )
 	for i=1, #tmptable, 1 do
 		Activity8ModCreate( tmptable[i].info, tmptable[i].state )
 	end
+	
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_8, m_red )
 end
 
 -- 创建
@@ -159,6 +164,7 @@ function Activity8ModCreate( info, state )
 			SetTrue( uiStateBtn )
 			SetButtonTrue( uiStateBtn )
 			SetFalse( uiState )
+			m_red = 1
 		end
 	else
 		SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )

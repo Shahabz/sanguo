@@ -46,6 +46,9 @@ extern int g_activity_02_maxnum;
 extern ActivityInfo03 *g_activity_03;
 extern int g_activity_03_maxnum;
 
+extern ActivityInfo04 *g_activity_04;
+extern int g_activity_04_maxnum;
+
 extern ActivityInfo05 *g_activity_05;
 extern int g_activity_05_maxnum;
 
@@ -531,6 +534,11 @@ int activity_sendlist( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+
+	time_t t;
+	time( &t );
+	struct tm *nowtime = localtime( &t );
+
 	SLK_NetS_ActivityList pValue = { 0 };
 	for ( int activityid = 1; activityid < MAX_ACTIVITY_COUNT; activityid++ )
 	{
@@ -547,17 +555,35 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = starttime;
 		pValue.m_list[pValue.m_count].m_endtime = g_activity_item[activityid].m_endtime;
 		pValue.m_list[pValue.m_count].m_closetime = g_activity_item[activityid].m_closetime;
+		if ( activityid == ACTIVITY_6 )
+		{ // È«·þ·µÀû
+			int serv_paytoken = world_data_getcache( WORLD_DATA_ACTIVITY06_PAYTOKEN );
+			for ( int id = 1; id < g_activity_06_maxnum; id++ )
+			{
+				if ( (pCity->act06_state & (1 << id)) == 0 && serv_paytoken >= g_activity_06[id].token )
+				{
+					pValue.m_list[pValue.m_count].m_red = 1;
+					break;
+				}
+			}
+		}
 		pValue.m_count += 1;
 	}
 
 	// Ê×³äÀñ°ü
 	endtime = g_actors[actor_index].createtime + 7 * 86400;
-	if ( (int)time( NULL ) < endtime || (city_get_sflag( pCity, CITY_SFLAG_FRISTPAY ) == 1 && actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET ) == 0) )
+	int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
+	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+	if ( (int)time( NULL ) < endtime || (fristpay == 1 && fristpay_awardget == 0) )
 	{
 		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_1;
 		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
 		pValue.m_list[pValue.m_count].m_endtime = endtime;
 		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		if ( fristpay == 1 && fristpay_awardget == 0 )
+		{
+			pValue.m_list[pValue.m_count].m_red = 1;
+		}
 		pValue.m_count += 1;
 	}
 
@@ -577,6 +603,14 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		for ( int id = 1; id < g_activity_02_maxnum; id++ )
+		{
+			if ( (g_actors[actor_index].act02_state & (1 << id)) == 0 && pCity->building[0].level >= g_activity_02[id].level )
+			{
+				pValue.m_list[pValue.m_count].m_red = 1;
+				break;
+			}
+		}
 		pValue.m_count += 1;
 	}
 
@@ -596,6 +630,14 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		for ( int id = 1; id < g_activity_03_maxnum; id++ )
+		{
+			if ( (g_actors[actor_index].act03_state & (1 << id)) == 0 && data_record_getvalue( pCity, g_activity_03[id].record_offset ) >= g_activity_03[id].needvalue )
+			{
+				pValue.m_list[pValue.m_count].m_red = 1;
+				break;
+			}
+		}
 		pValue.m_count += 1;
 	}
 
@@ -606,18 +648,47 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_4;
 		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
 		pValue.m_list[pValue.m_count].m_endtime = endtime;
-		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		pValue.m_list[pValue.m_count].m_closetime = endtime; 
+		int myday = system_getfday() - system_getfday_withstamp( g_actors[actor_index].createtime ) + 1;
+		for ( int id = 1; id < g_activity_04_maxnum; id++ )
+		{
+			if ( myday >= g_activity_04[id].day && g_actors[actor_index].act04_state[id] == 0 )
+			{
+				int value = activity_04_getvalue( actor_index, g_activity_04[id].type, id );
+				if ( g_activity_04[id].type == ACTIVITY_SEVENDAY_TYPE2 )
+				{
+					if ( value > 0 )
+					{
+						pValue.m_list[pValue.m_count].m_red = 1;
+						break;
+					}
+				}
+				else
+				{
+					if ( value >= g_activity_04[id].value )
+					{
+						pValue.m_list[pValue.m_count].m_red = 1;
+						break;
+					}
+				}
+			}
+		}
 		pValue.m_count += 1;
 	}
 
 	// ÆßÐÇ°Ý½«
 	endtime = g_actors[actor_index].createtime + 3 * 86400;
-	if ( (int)time( NULL ) < endtime || (actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL ) == 0 && g_actors[actor_index].act05_xw >=7 ) )
+	int activity05_call = actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL );
+	if ( (int)time( NULL ) < endtime || (activity05_call == 0 && g_actors[actor_index].act05_xw >= 7) )
 	{
 		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_5;
 		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
 		pValue.m_list[pValue.m_count].m_endtime = endtime;
 		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		if ( activity05_call == 0 && g_actors[actor_index].act05_xw >= 7 )
+		{
+			pValue.m_list[pValue.m_count].m_red = 1;
+		}
 		pValue.m_count += 1;
 	}
 	
@@ -637,6 +708,14 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		for ( int id = 1; id < g_activity_08_maxnum; id++ )
+		{
+			if ( (g_actors[actor_index].act08_state & (1 << id)) == 0 && g_actors[actor_index].level >= g_activity_08[id].level )
+			{
+				pValue.m_list[pValue.m_count].m_red = 1;
+				break;
+			}
+		}
 		pValue.m_count += 1;
 	}
 	
@@ -665,6 +744,7 @@ int activity_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_starttime = 0;
 		pValue.m_list[pValue.m_count].m_endtime = 0;
 		pValue.m_list[pValue.m_count].m_closetime = 0;
+		pValue.m_list[pValue.m_count].m_red = 1;
 		pValue.m_count += 1;
 	}
 
@@ -673,6 +753,14 @@ int activity_sendlist( int actor_index )
 	pValue.m_list[pValue.m_count].m_starttime = 0;
 	pValue.m_list[pValue.m_count].m_endtime = 0;
 	pValue.m_list[pValue.m_count].m_closetime = 0;
+	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 ) == 0 )
+	{ // ÎçÑç
+		pValue.m_list[pValue.m_count].m_red = 1;
+	}
+	else if ( nowtime->tm_hour >= 18 && nowtime->tm_hour <= 20 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 ) == 0 )
+	{ // ÍíÑç
+		pValue.m_list[pValue.m_count].m_red = 1;
+	}
 	pValue.m_count += 1;
 
 	netsend_activitylist_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -742,6 +830,8 @@ int activity_02_get( int actor_index, int id )
 	if ( id <= 0 || id >= g_activity_02_maxnum )
 		return -1;
 	if ( g_actors[actor_index].act02_state & (1 << id) )
+		return -1;
+	if ( pCity->building[0].level < g_activity_02[id].level )
 		return -1;
 	for ( int tmpi = 0; tmpi < 3; tmpi++ )
 	{
@@ -1124,6 +1214,8 @@ int activity_08_get( int actor_index, int id )
 	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY08_OPEN ) == 0 )
 		return -1;
 	if ( g_actors[actor_index].act08_state & (1 << id) )
+		return -1;
+	if ( pCity->level < g_activity_08[id].level )
 		return -1;
 	for ( int tmpi = 0; tmpi < 5; tmpi++ )
 	{

@@ -9,6 +9,7 @@ local m_uiGetButton = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_uiHasGet = nil; --UnityEngine.GameObject
 local m_AwardDescLayerShow = false
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -98,6 +99,7 @@ function Activity1ModRecv( recvValue )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
 	local ActivityList = ActivityDlgGetRecvValue()
 	local info = nil;
 	for i=1, #ActivityList, 1 do
@@ -127,6 +129,7 @@ function Activity1ModRecv( recvValue )
 			SetFalse( m_uiPayButton )
 			SetTrue( m_uiGetButton )
 			SetFalse( m_uiHasGet )
+			m_red = 1;
 		end
 	end
 	
@@ -148,6 +151,9 @@ function Activity1ModRecv( recvValue )
 			SetFalse( awardObj )
 		end
 	end 
+	
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_1, m_red )
 end
 
 function Activity1ModGet()

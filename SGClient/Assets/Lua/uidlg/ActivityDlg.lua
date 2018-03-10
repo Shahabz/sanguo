@@ -192,7 +192,11 @@ function ActivityDlgSetObj( index, info )
 	else
 		SetFalse( uiLock )
 	end
-	SetFalse( uiWarn )
+	if info.m_red == 1 then
+		SetTrue( uiWarn )
+	else
+		SetFalse( uiWarn )
+	end
 	SetFalse( uiSelect )
 	if m_WaitSelectActivityID > 0 then
 		if m_WaitSelectActivityID == info.m_activityid then
@@ -266,6 +270,28 @@ function ActivityDlgChangeToken()
 		return;
 	end
 	SetText( m_uiTokenText, GetPlayer().m_token );
+end
+
+-- 更新活动红点
+function ActivityDlgChangeRed( activityid, show )
+	local ActivityList = ActivityDlgGetRecvValue()
+	local info = nil;
+	for i=1, #ActivityList, 1 do
+		if ActivityList[i].m_activityid == activityid then
+			info = ActivityList[i];
+			break
+		end
+	end
+	if info == nil then
+		return
+	end	
+	local objs = info.m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiWarn = objs[2]
+	if show == 1 then
+		SetTrue( uiWarn )
+	else
+		SetFalse( uiWarn )
+	end
 end
 
 --

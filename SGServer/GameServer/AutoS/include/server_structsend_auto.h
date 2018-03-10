@@ -1727,6 +1727,7 @@ struct _slk_NetS_Activity {
 	int m_starttime;	//活动
 	int m_endtime;	//活动
 	int m_closetime;	//活动
+	char m_red;	//活动
 };
 typedef struct _slk_NetS_Activity SLK_NetS_Activity;	//活动
 

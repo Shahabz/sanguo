@@ -403,12 +403,12 @@ function MapBattleDlgHero( index, pHero )
 				uiMoveLayer.transform:GetComponent( "UITweenRectPosition" ):Play( true );
 			end
 		else
+			uiMoveLayer.transform:GetComponent( "UITweenRectPosition" ):Play( false );
+			m_uiMoveLayerPlay[index] = false;
 			pHero.m_battle = 1;
 			SetFalse( uiStateTitle2 )
-			if m_uiMoveLayerPlay[index] == true then
-				m_uiMoveLayerPlay[index] = false
-				uiMoveLayer.transform:GetComponent( "UITweenRectPosition" ):Play( false );
-			end
+			--上阵特效
+			MapBattleDlgClickEffect(UIP_Hero);
 		end
 	end
 
@@ -508,9 +508,20 @@ function MapBattleDlgClick( index )
 		uiMoveLayer.transform:GetComponent( "UITweenRectPosition" ):Play( false );
 		m_uiMoveLayerPlay[index] = false;
 		pHero.m_battle = 1
+		--上阵特效
+		MapBattleDlgClickEffect(UIP_Hero);
 	end
 	MapBattleDlgSetSort()
 	MapBattleDlgSetCost()
+end
+
+--上阵特效
+function MapBattleDlgClickEffect(uiObj)
+	local effect = GameObject.Instantiate( LoadPrefab( "Fxzq" ) )
+	effect.transform:SetParent( uiObj.transform );
+	effect.transform.localPosition = Vector3.New( -74.5, 0, 0 );		
+	effect.transform.localScale = Vector3.New( 360, 360, 360 );
+	GameObject.Destroy(effect,0.5)
 end
 
 -- 补兵

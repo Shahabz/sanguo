@@ -7,6 +7,7 @@ local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_AwardDescLayerShow = false
 local m_ObjectPool = nil
 local m_recvValue = nil;
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -96,6 +97,7 @@ function Activity3ModRecv( recvValue )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
 	Activity3ModClear()
 	m_recvValue = recvValue
 	
@@ -117,6 +119,9 @@ function Activity3ModRecv( recvValue )
 	for i=1, #tmptable, 1 do
 		Activity3ModCreate( tmptable[i].info, tmptable[i].value, tmptable[i].state )
 	end
+	
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_3, m_red )
 end
 
 -- 创建
@@ -147,6 +152,7 @@ function Activity3ModCreate( info, value, state )
 			SetTrue( uiStateBtn )
 			SetButtonTrue( uiStateBtn )
 			SetFalse( uiState )
+			m_red = 1
 		end
 	else
 		SetText( uiStateBtn.transform:Find("Back/Text"), T(2452) )

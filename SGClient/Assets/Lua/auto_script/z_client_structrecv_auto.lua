@@ -2254,6 +2254,7 @@ function struct_NetS_Activity_recv( buffer )
 	recvValue.m_starttime = buffer:ReadInt();
 	recvValue.m_endtime = buffer:ReadInt();
 	recvValue.m_closetime = buffer:ReadInt();
+	recvValue.m_red = buffer:ReadSByte();
 	return recvValue;
 end
 

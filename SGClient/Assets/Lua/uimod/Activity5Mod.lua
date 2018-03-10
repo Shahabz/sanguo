@@ -112,7 +112,6 @@ function Activity5ModRecv( recvValue )
 	if m_Mod == nil then
 		return
 	end
-
 	local ActivityList = ActivityDlgGetRecvValue()
 	local info = nil;
 	for i=1, #ActivityList, 1 do

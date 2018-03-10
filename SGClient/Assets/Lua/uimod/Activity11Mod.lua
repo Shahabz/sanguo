@@ -3,6 +3,7 @@ local m_uiBack = nil; --UnityEngine.GameObject
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiBack2 = nil; --UnityEngine.GameObject
 local m_uiGetButton = nil; --UnityEngine.GameObject
+local m_red = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -78,6 +79,7 @@ function Activity11ModRecv( isget1, isget2 )
 	if m_Mod == nil then
 		return
 	end
+	m_red = 0;
 	local textid = 0
 	local nowtime = GetServerTime()
 	local t = os.date( "*t", nowtime )
@@ -94,6 +96,7 @@ function Activity11ModRecv( isget1, isget2 )
 		else
 			textid = 2439
 			SetButtonTrue( m_uiGetButton )
+			m_red = 1
 		end
 	elseif t.hour >= 15 and t.hour < 17 then
 		textid = 2436
@@ -108,10 +111,14 @@ function Activity11ModRecv( isget1, isget2 )
 		else
 			textid = 2439
 			SetButtonTrue( m_uiGetButton )
+			m_red = 1
 		end
 	else
 		textid = 2436
 		SetButtonFalse( m_uiGetButton )
 	end
 	SetText( m_uiGetButton.transform:Find("Back/Text"), T(textid) )
+	
+	-- 红点
+	ActivityDlgChangeRed( ACTIVITY_11, m_red )
 end
