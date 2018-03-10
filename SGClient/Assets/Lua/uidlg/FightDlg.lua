@@ -795,12 +795,15 @@ function FightDlgResultLayerShow()
 				local curlevel = v.lv;
 				-- 可以升级
 				if curlevel >= global.actorlevel_max then
+					
 					break
 				end
 				v.lv = v.lv + 1;
 				v.mexp = v.mexp - hero_getexp_max( curlevel, v.cr );
 				isup = isup + 1;
 				playcount = playcount + 1
+				--升级特效
+				FightDlgLevelUpEffect(uiObj)
 			end
 			local endvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
 			
@@ -922,7 +925,9 @@ function FightDlgSweepResult( recvValue )
 		local uiObj = m_uiHeroList.transform:GetChild( i-1 )
 		local pHero = recvValue.m_hero[i]
 		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind ) )
-		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )
+		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )		
+		SetText( uiObj.transform:Find("Name"),  pHero.m_name  )
+
 		SetTrue( uiObj )
 		-- 获取经验
 		SetText( uiObj.transform:Find("Exp"), "+"..pHero.m_exp )
@@ -936,13 +941,15 @@ function FightDlgSweepResult( recvValue )
 		while pHero.m_pre_exp >= hero_getexp_max( pHero.m_level, pHero.m_color ) do
 			local curlevel = pHero.m_level
 			-- 可以升级
-			if curlevel >= global.actorlevel_max then
+			if curlevel >= global.actorlevel_max then				
 				break
 			end
 			pHero.m_level = pHero.m_level + 1;
 			pHero.m_pre_exp = pHero.m_pre_exp - hero_getexp_max( curlevel, pHero.m_color );
 			isup = isup + 1;
 			playcount = playcount + 1
+			--升级特效
+			FightDlgLevelUpEffect(uiObj)
 		end
 		local endvalue = pHero.m_pre_exp/hero_getexp_max( pHero.m_level, pHero.m_color );
 		
@@ -958,6 +965,14 @@ function FightDlgSweepResult( recvValue )
 	end
 end
 
+--升级特效
+function FightDlgLevelUpEffect(uiObj)
+	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) )
+	effect.transform:SetParent( uiObj.transform );
+	effect.transform.localPosition = Vector3.New( 0, 40, 0 );		
+	effect.transform.localScale = Vector3.New( 110, 110, 110 );
+	GameObject.Destroy(effect,2)
+end
 function FightDlgIsShow()
 	if m_Dlg ~= nil then
 		return IsActive( m_Dlg )

@@ -133,7 +133,7 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 					pCity->questvalue[tmpi] += value;
 					if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
 					{
-						if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+						if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
 						{ // 任务完成，通知领奖
 							quest_sendawardinfo( pCity->actor_index, questid );
 						}
@@ -148,7 +148,7 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 				pCity->questvalue[tmpi] += value;
 				if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
 				{
-					if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
+					if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
 					{ // 任务完成，通知领奖
 						quest_sendawardinfo( pCity->actor_index, questid );
 					}
@@ -220,7 +220,8 @@ int quest_checkcomplete( int actor_index )
 			continue;
 		if ( quest_check( pCity->actor_index, questid, NULL ) == QUEST_COMPLETEFLAG_SUCCESS )
 		{
-			quest_sendawardinfo( pCity->actor_index, questid );
+			if ( tmpi == 0 )
+				quest_sendawardinfo( pCity->actor_index, questid );
 			break;
 		}
 	}
