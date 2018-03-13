@@ -126,17 +126,20 @@ function Guide(id, step, force)
 	warn(mId);
 	warn(step);
 	
-	if g_guide[mId][mStep].cmd == CMD_SPECIAL then FindCmdTpye(nil) end
+	if g_guide[mId][mStep].cmd == CMD_SPECIAL or g_guide[mId][mStep].cmd == CMD_TALK then FindCmdTpye(nil) end
 end
 
 function GuideNext()
 	if table.getn(g_guide[mId]) == mStep then
 		mStep = 0;
-		Guide( mId + 1, 1);
-	--	system_askinfo( ASKINFO_GUAID, "", mId + 1 );
 	else
 		Guide( mId, mStep + 1 );
 	end
+end
+
+function GuideNextTo()
+	system_askinfo( ASKINFO_GUAID, "", mId + 1 );
+	Guide( mId + 1, 1);
 end
 
 function GuideCheck(id)
@@ -207,3 +210,4 @@ function FindCmdTpye(tran)
 		HideGuideFinger();
 	end
 end
+

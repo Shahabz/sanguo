@@ -320,19 +320,29 @@ function BuildingOpratorModShow( show, kind, offset, parent )
                 end, 0.2 );---]]
         end
     end
+	BuildingOpratorModHideAllEffect();
+	ShowEffect();
+end
+
+function ShowEffect()
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_TECH_SURE or GetCurrentGuideType() == GUIDE_GET then
+			BuildingOpratorModEffectShow(2);
+		elseif GetCurrentGuideType() == GUIDE_UPGRADE then
+			BuildingOpratorModEffectShow(1);
+		elseif GetCurrentGuideType() == GUIDE_RECRUIT then
+			BuildingOpratorModEffectShow(3);
+		end
+	end
 end
 
 function BuildingOpratorModEffectShow(kind)
 	BuildingOpratorModHideAllEffect()
 	
-	if kind == BUILDING_Silver 
-		or kind == 1
-		or kind == QUEST_DATATYPE_BUILDING_LEVEL 
-		or kind == QUEST_DATATYPE_BUILDING_UPGRADE
-		or kind == QUEST_DATATYPE_ACTOR_LEVEL then SetTrue(m_uiUpgrade.transform:Find("Effect"));
-	elseif kind == BUILDING_Tech then SetTrue(m_uiEnter.transform:Find("Effect"));
-	elseif kind == BUILDING_Hero then SetTrue(m_uiTrain.transform:Find("Effect"));
-	elseif kind == BUILDING_Smithy then SetTrue(m_uiSpeed.transform:Find("Effect"));
+	if kind == 1 then SetTrue(m_uiUpgrade.transform:Find("Effect"));
+	elseif kind == 2 then SetTrue(m_uiEnter.transform:Find("Effect"));
+	elseif kind == 3 then SetTrue(m_uiTrain.transform:Find("Effect"));
+	elseif kind == 4 then SetTrue(m_uiSpeed.transform:Find("Effect"));
 	end
 end
 

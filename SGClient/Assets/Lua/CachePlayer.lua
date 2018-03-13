@@ -224,7 +224,6 @@ end
 function Player:SetBuildingLevy( levynum )
 	local old 				= 	self.m_levynum;
 	self.m_levynum			=	levynum;
-	
 	if GetPlayer().m_questid < 110 then
 		return
 	end

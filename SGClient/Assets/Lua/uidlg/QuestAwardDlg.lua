@@ -112,6 +112,13 @@ function QuestAwardDlgShow( recvValue )
 		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
 	end
 	
+	if IsGuiding() then 
+		if GuideCheck(id) then
+			return;
+		else
+			GuideNextTo();
+		end
+	end
 	--[["
 	if GuideCheck(id) 
 		return

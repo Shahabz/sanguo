@@ -287,8 +287,10 @@ function WorldMap.ReturnCity()
 	MainDlgShowCity()
 	-- 任务检查
 	QuestClickCheck( 3 )
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_BACK then 
-		GuideNext();
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_BACK then 
+			GuideNext();
+		end
 	end
 end
 

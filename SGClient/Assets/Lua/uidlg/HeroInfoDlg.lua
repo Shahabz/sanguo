@@ -303,7 +303,7 @@ function HeroInfoDlgSet( path, pHero, up )
 				FindCmdTpye(uiShape.transform);
 			elseif GetCurrentGuideType() == GUIDE_CHOOSE_WEAPON and i == 0 then
 				FindCmdTpye(uiShape.transform);
-			elseif GetCurrentGuideType() == GUIDE_CHOOSE_MA and i == 1 then
+			elseif GetCurrentGuideType() == GUIDE_DRESS_MA and i == 1 then
 				FindCmdTpye(uiShape.transform);
 			elseif GetCurrentGuideType() == GUIDE_DRESS_HEAD and i == 3 then
 				FindCmdTpye(uiShape.transform);

@@ -10,7 +10,7 @@ public class UITweenLocalPositionBetween : UITween
 
     private Vector3 from;
     private Vector3 to;
-
+	private bool isInit = false;
     public override void ToInit()
     {
         base.ToInit();
@@ -19,7 +19,10 @@ public class UITweenLocalPositionBetween : UITween
 
 	public override void Play( bool forward )
 	{
-        from = transform.localPosition;
+		if (isInit == false) {
+			from = transform.localPosition;
+			isInit = true;
+		}
         to = new Vector3( from.x + x, from.y + y, from.z + z );
 
         transform.localPosition = forward ? from : to;
