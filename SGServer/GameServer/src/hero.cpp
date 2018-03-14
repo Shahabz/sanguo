@@ -572,7 +572,11 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 	city_battlepower_hero_calc( pCity );
 
 	// хннЯ
-	if ( uptype == 2 )
+	if ( uptype == 0 )
+	{
+		quest_addvalue( pCity, QUEST_DATATYPE_HERO_UP, upkind, 0, 1 );
+	}
+	else if ( uptype == 2 )
 	{
 		quest_addvalue( pCity, QUEST_DATATYPE_HEROGUARD_UP, 0, 0, 1 );
 	}

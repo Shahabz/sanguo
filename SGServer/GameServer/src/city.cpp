@@ -4217,7 +4217,7 @@ int city_gm_getinfo( City *pCity )
 	g_gm_outresult[0] = '\0';
 	char json[512] = { 0 };
 
-	sprintf( json, "{\"serverid\":%d,\"posx\":%d,\"posy\":%d,\"state\":%d,\"sflag\":%d,\"level\":%d,\"exp\":%d,\"viplevel\":%d,\"vipexp\":%d,\"official\":%d,\"place\":\"%s\",\"zone\":%d,", g_Config.server_code, pCity->posx, pCity->posy, pCity->state, pCity->sflag, pCity->level, pCity->exp, pCity->viplevel, pCity->vipexp, pCity->official, pCity->place, pCity->zone );
+	sprintf( json, "{\"serverid\":%d,\"posx\":%d,\"posy\":%d,\"state\":%d,\"sflag\":%d,\"level\":%d,\"exp\":%d,\"viplevel\":%d,\"vipexp\":%d,\"official\":%d,\"place\":%d,\"zone\":%d,", g_Config.server_code, pCity->posx, pCity->posy, pCity->state, pCity->sflag, pCity->level, pCity->exp, pCity->viplevel, pCity->vipexp, pCity->official, pCity->place, pCity->zone );
 	strcat( g_gm_outresult, json );
 
 	sprintf( json, "\"bp\":%d,\"bp_hero\":%d,\"bp_equip\":%d,\"bp_tech\":%d,\"bp_nequip\":%d,\"bp_place\":%d,\"bp_girl\":%d,", pCity->battlepower, pCity->battlepower_hero, pCity->battlepower_equip, pCity->battlepower_tech, pCity->battlepower_nequip, pCity->battlepower_place, pCity->battlepower_girl );
