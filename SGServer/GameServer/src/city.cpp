@@ -4282,7 +4282,7 @@ int city_gm_getinfo( City *pCity )
 		{
 			strcat( g_gm_outresult, "," );
 		}
-		sprintf( json, "{\"kind\":%d,\"level\":%d}", pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
+		sprintf( json, "{\"kind\":%d,\"level\":%d,\"queue\":%d,\"trainlong\":%d}", pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level, pCity->building_barracks[tmpi].queue, pCity->building_barracks[tmpi].trainlong );
 		strcat( g_gm_outresult, json );
 		count += 1;
 	}
@@ -4301,7 +4301,7 @@ int city_gm_getinfo( City *pCity )
 		{
 			strcat( g_gm_outresult, "," );
 		}
-		sprintf( json, "{\"kind\":%d,\"level\":%d,\"queue\":%d,\"trainlong\":%d}", pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level, pCity->building_barracks[tmpi].queue, pCity->building_barracks[tmpi].trainlong );
+		sprintf( json, "{\"kind\":%d,\"level\":%d}", pCity->building_res[tmpi].kind, pCity->building_res[tmpi].level );
 		strcat( g_gm_outresult, json );
 		count += 1;
 	}
