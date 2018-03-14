@@ -27,7 +27,7 @@
 		   <fileset dir="../../SGServer/exec/script/"/>
 		</scp>
 		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/exec/" port="22022" trust="true">
-		   <fileset dir="../../SGServer/exec/d_list.cfg"/>
+		   <fileset file="../../SGServer/exec/d_list.cfg"/>
 		</scp>
 			
 		<scp todir="root:jiazhi198772@119.29.56.213:/root/sg/compile/project/LKNetServer/include/" port="22022" trust="true">
