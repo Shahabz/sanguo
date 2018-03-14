@@ -640,6 +640,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			}
 		}
 		break;
+	case  GMC_CITYINFO: // ≥«≥ÿœÍ«È
+		if ( pCity )
+		{
+			city_gm_getinfo( pCity );
+		}
+		break;
 	default:
 		break;
 	}

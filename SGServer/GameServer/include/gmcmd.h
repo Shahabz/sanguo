@@ -52,6 +52,7 @@
 #define GMC_PAY					(GMC_BASE+47)	// 支付 
 #define GMC_BUFFCLEAR			(GMC_BASE+48)	// buff清除 
 #define GMC_AWARD				(GMC_BASE+49)	// 奖励 
+#define GMC_CITYINFO			(GMC_BASE+50)	// 城池详情
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

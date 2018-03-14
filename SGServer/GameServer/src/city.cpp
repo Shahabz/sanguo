@@ -6,6 +6,7 @@
 #include <math.h>
 #include <limits.h>
 #include "db.h"
+#include "dserver.h"
 #include "global.h"
 #include "wqueue.h"
 #include "actor.h"
@@ -91,6 +92,8 @@ extern int g_building_upgrade_maxnum;
 
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
+
+extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 
 extern int g_city_maxindex;
 City *g_city = NULL;
@@ -4203,5 +4206,169 @@ int city_lost_rebuild_num( int actor_index )
 	value[0] = 0;
 	value[1] = pCity->rb_num;
 	actor_notify_value( actor_index, NOTIFY_LOSTREBUILD, 2, value, NULL );
+	return 0;
+}
+
+// GM获取城池信息
+int city_gm_getinfo( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	g_gm_outresult[0] = '\0';
+	char json[512] = { 0 };
+
+	sprintf( json, "{\"serverid\":%d,\"posx\":%d,\"posy\":%d,\"state\":%d,\"sflag\":%d,\"level\":%d,\"exp\":%d,\"viplevel\":%d,\"vipexp\":%d,\"official\":%d,\"place\":\"%s\",\"zone\":%d,", g_Config.server_code, pCity->posx, pCity->posy, pCity->state, pCity->sflag, pCity->level, pCity->exp, pCity->viplevel, pCity->vipexp, pCity->official, pCity->place, pCity->zone );
+	strcat( g_gm_outresult, json );
+
+	sprintf( json, "\"bp\":%d,\"bp_hero\":%d,\"bp_equip\":%d,\"bp_tech\":%d,\"bp_nequip\":%d,\"bp_place\":%d,\"bp_girl\":%d,", pCity->battlepower, pCity->battlepower_hero, pCity->battlepower_equip, pCity->battlepower_tech, pCity->battlepower_nequip, pCity->battlepower_place, pCity->battlepower_girl );
+	strcat( g_gm_outresult, json );
+
+	sprintf( json, "\"mokilllv\":%d,\"body\":%d,\"silver\":%d,\"wood\":%d,\"food\":%d,\"iron\":%d,\"levynum\":%d,\"people\":%d,\"prestige\":%d,", pCity->mokilllv, pCity->body, pCity->silver, pCity->wood, pCity->food, pCity->iron, pCity->levynum, pCity->people, pCity->prestige );
+	strcat( g_gm_outresult, json );
+
+	sprintf( json, "\"soldiers0\":%d,\"soldiers1\":%d,\"soldiers2\":%d,\"mainquestid\":%d,", pCity->soldiers[0], pCity->soldiers[1], pCity->soldiers[2], pCity->questid[0] );
+	strcat( g_gm_outresult, json );
+
+	sprintf( json, "\"worker_op\":%d,\"worker_kind\":%d,\"worker_sec\":%d,\"worker_op_ex\":%d,\"worker_kind_ex\":%d,\"worker_sec_ex\":%d,\"worker_expire_ex\":%d,", pCity->worker_op, pCity->worker_kind, pCity->worker_sec, pCity->worker_op_ex, pCity->worker_kind_ex, pCity->worker_sec_ex, pCity->worker_expire_ex );
+	strcat( g_gm_outresult, json );
+
+	// 科技列表
+	sprintf( json, "\"techlist\":[" );
+	strcat( g_gm_outresult, json );
+	int count = 0;
+	for ( int kind = 0; kind < CITY_TECH_MAX; kind++ )
+	{
+		if ( pCity->techlevel[kind] <= 0 )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"kind\":%d,\"lv\":%d,\"pro\":%d}", kind, pCity->techlevel[kind], pCity->techprogress[kind] );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 建筑列表
+	sprintf( json, "\"building\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building[tmpi].kind <= 0 )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"kind\":%d,\"level\":%d}", pCity->building[tmpi].kind, pCity->building[tmpi].level );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 兵营建筑列表
+	sprintf( json, "\"building_barracks\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < BUILDING_BARRACKS_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_barracks[tmpi].kind <= 0 )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"kind\":%d,\"level\":%d}", pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 资源建筑列表
+	sprintf( json, "\"building_res\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+	{
+		if ( pCity->building_res[tmpi].kind <= 0 || pCity->building_res[tmpi].level <= 0 )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"kind\":%d,\"level\":%d,\"queue\":%d,\"trainlong\":%d}", pCity->building_barracks[tmpi].kind, pCity->building_barracks[tmpi].level, pCity->building_barracks[tmpi].queue, pCity->building_barracks[tmpi].trainlong );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 出征列表
+	sprintf( json, "\"battlelist\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		int army_index = pCity->battle_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"ttype\":%d,\"tposx\":%d,\"tposy\":%d,\"tname\":\"%s\",\"state\":%d,\"action\":%d,\"index\":%d}", g_army[army_index].to_type, g_army[army_index].to_posx, g_army[army_index].to_posy, army_getname_target( army_index ), g_army[army_index].state, g_army[army_index].action, army_index );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 挨打列表
+	sprintf( json, "\"underfirelist\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+	{
+		int army_index = pCity->underfire_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"ftype\":%d,\"fposx\":%d,\"fposy\":%d,\"fname\":\"%s\",\"state\":%d,\"action\":%d,\"index\":%d}", g_army[army_index].from_type, g_army[army_index].from_posx, g_army[army_index].from_posy, army_getname( army_index ), g_army[army_index].state, g_army[army_index].action, army_index );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]," );
+	strcat( g_gm_outresult, json );
+
+	// 帮助列表
+	sprintf( json, "\"helplist\":[" );
+	strcat( g_gm_outresult, json );
+	count = 0;
+	for ( int tmpi = 0; tmpi < CITY_HELPDEFENSE_MAX; tmpi++ )
+	{
+		int army_index = pCity->help_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( count > 0 )
+		{
+			strcat( g_gm_outresult, "," );
+		}
+		sprintf( json, "{\"ftype\":%d,\"fposx\":%d,\"fposy\":%d,\"fname\":\"%s\",\"state\":%d,\"index\":%d}", g_army[army_index].from_type, g_army[army_index].from_posx, g_army[army_index].from_posy, army_getname( army_index ), g_army[army_index].state, army_index );
+		strcat( g_gm_outresult, json );
+		count += 1;
+	}
+	sprintf( json, "]" );
+
+
+	strcat( g_gm_outresult, json );
+	strcat( g_gm_outresult, "}" );
 	return 0;
 }
