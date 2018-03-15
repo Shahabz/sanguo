@@ -53,6 +53,9 @@
 #define GMC_BUFFCLEAR			(GMC_BASE+48)	// buff清除 
 #define GMC_AWARD				(GMC_BASE+49)	// 奖励 
 #define GMC_CITYINFO			(GMC_BASE+50)	// 城池详情
+#define GMC_MAIL_ACTOR			(GMC_BASE+51)	// 玩家邮件
+#define GMC_MAIL_SERVER			(GMC_BASE+52)	// 全服邮件
+#define GMC_MAIL_NOTICE			(GMC_BASE+53)	// 公告邮件
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

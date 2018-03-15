@@ -1,6 +1,6 @@
 g_guide = {
 [1] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 5,x = 0,y = 0,point = 2,isSpecial = 0},   --点击衣服穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
@@ -16,8 +16,9 @@ g_guide = {
 	},	
 [4] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 3,guideType = 2,x = 0,y = 0,point = 2,isSpecial = 0},   --科技研究的确认按钮
-	[3] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
+	[2] = {cmd = 1,guideType = 26,x = 0,y = 0,point = 2,isSpecial = 0},  --科技特效
+	[3] = {cmd = 3,guideType = 2,x = 0,y = 0,point = 2,isSpecial = 0},   --科技研究的确认按钮
+	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [5] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
@@ -49,7 +50,7 @@ g_guide = {
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [11] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 11,x = 0,y = 0,point = 2,isSpecial = 0},  --点击武器穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
@@ -85,7 +86,7 @@ g_guide = {
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [19] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 16,x = 0,y = 0,point = 2,isSpecial = 0},  --点击马穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
@@ -117,14 +118,14 @@ g_guide = {
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [26] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张良头像
 	[3] = {cmd = 3,guideType = 11,x = 0,y = 0,point = 2,isSpecial = 0},  --点击武器穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [27] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 1},   --点击张良头像
 	[3] = {cmd = 3,guideType = 16,x = 0,y = 0,point = 2,isSpecial = 0},  --点击马穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
@@ -189,9 +190,9 @@ g_guide = {
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [42] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张角头像
-	[3] = {cmd = 3,guideType = 5,x = 0,y = 0,point = 2,isSpecial = 0},   --点击衣服穿戴
+	[3] = {cmd = 3,guideType = 5,x = 0,y = -2.7,point = 2,isSpecial = 0},   --点击衣服穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -200,27 +201,25 @@ g_guide = {
 	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [44] = {
-	[1] = {cmd = 2,guideType = 12,x = 0,y = 0,point = 2,isSpecial = 0},  --指向副本按钮
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
+	[1] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [45] = {
-	[1] = {cmd = 2,guideType = 12,x = 0,y = 0,point = 2,isSpecial = 0},  --指向副本按钮
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
+	[1] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [46] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 3,guideType = 20,x = 0,y = 0,point = 2,isSpecial = 0},   --选择头盔
+	[2] = {cmd = 3,guideType = 20,x = 0,y = -3.6,point = 2,isSpecial = 0},   --选择头盔
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [47] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 1,point = 2,isSpecial = 1},   --指向任务框
-	[2] = {cmd = 3,guideType = 21,x = 0,y = 0,point = 2,isSpecial = 0},   --雇佣铁匠
+	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
+	[2] = {cmd = 3,guideType = 21,x = 0,y = 1.8,point = 2,isSpecial = 0},   --雇佣铁匠
 	[3] = {cmd = 3,guideType = 22,x = 0,y = 0,point = 2,isSpecial = 0},  --加速
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [48] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 1,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张角头像
 	[3] = {cmd = 3,guideType = 23,x = 0,y = 0,point = 2,isSpecial = 0},   --点击头盔穿戴
 	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴

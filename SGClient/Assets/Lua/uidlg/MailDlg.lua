@@ -378,10 +378,14 @@ function MailDlgSetMail( recvValue )
 		end
 	else
 		-- 解析内容
+		local istext = 0
 		local contentid = 0;
 		local text = recvValue.m_content_json["text"];
 		if GetMail():IsTag( text, TAG_TEXTID ) then
 			contentid = tonumber(string.sub(text, string.len(TAG_TEXTID) + 1));
+		elseif GetMail():IsTag( text, TAG_TEXT ) then
+			contentid = string.sub(text, string.len(TAG_TEXT) + 1);
+			istext = 1;
 		end
 		
 		-- 系统信息邮件
@@ -401,7 +405,11 @@ function MailDlgSetMail( recvValue )
 				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
 				SetRichText( uiContent, F(contentid, v1_str) )
 			else
-				SetRichText( uiContent, T(contentid) )
+				if istext == 0 then
+					SetRichText( uiContent, T(contentid) )
+				else
+					SetRichText( uiContent, contentid )
+				end
 			end
 			SetImage( uiShape, LoadSprite("ui_mail_icon_1") )
 			
@@ -467,14 +475,7 @@ function MailDlgSetMail( recvValue )
 		
 	else
 		-- 其它类型解析
-		if GetMail():IsTag( recvValue.m_title, TAG_TEXTID ) then
-			local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
-			if textid ~= nil then
-				title = T(textid)
-			end
-		else
-			title = recvValue.m_title;
-		end
+		title = GetMail():GetString( recvValue.m_title );
 	end
 	SetText( uiTitle, title )
 

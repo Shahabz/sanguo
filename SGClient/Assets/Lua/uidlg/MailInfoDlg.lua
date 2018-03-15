@@ -230,14 +230,7 @@ function MailInfoDlgByRecvValue( recvValue )
 	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
 		title = T(1192)	
 	else
-		if GetMail():IsTag( recvValue.m_title, TAG_TEXTID ) then
-			local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
-			if textid ~= nil then
-				title = T(textid)
-			end
-		else
-			title = recvValue.m_title;
-		end
+		title = GetMail():GetString( recvValue.m_title );
 	end
 	SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), title )
 	
@@ -613,10 +606,14 @@ function MailInfoDlgByRecvValue( recvValue )
 	else
 		SetTrue( m_uiMailContent );
 		
+		local istext = 0
 		local contentid = 0;
 		local text = recvValue.m_content_json["text"];
 		if GetMail():IsTag( text, TAG_TEXTID ) then
 			contentid = tonumber(string.sub(text, string.len(TAG_TEXTID) + 1));
+		elseif GetMail():IsTag( text, TAG_TEXT ) then
+			contentid = string.sub(text, string.len(TAG_TEXT) + 1);
+			istext = 1;
 		end
 		
 		-- 系统信息邮件
@@ -636,7 +633,11 @@ function MailInfoDlgByRecvValue( recvValue )
 				local v1_str = GetMail():GetString( recvValue.m_content_json["v1"] );
 				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, v1_str), MailOnLinkClick )
 			else
-				SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
+				if istext == 0 then
+					SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
+				else
+					SetRichText( m_uiMailContent.transform:Find("Text"), contentid )
+				end
 			end
 
 		-- 公告邮件，内容外部http服务器获取

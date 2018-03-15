@@ -227,7 +227,9 @@ function CityTechDlgOnSet()
 				local uiViewBtn = objs[4];
 				local uiUpgradeBtn = objs[5];
 				local uiContinueBtn = objs[6];
-				local uiSelect = objs[7];
+				local uiSelect = objs[7];				
+				local uiEffect = objs[8];
+
 				
 				-- 形象
 				SetImage( uiShape, TechSprite( kind ) );
@@ -278,6 +280,12 @@ function CityTechDlgOnSet()
 	m_uiScroll:GetComponent("UIScrollRect"):ResetScroll();
 	m_uiContent.transform.localPosition = Vector2.zero
 	CityTechDlgSetOfficial();
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_TECH then 
+			CityTechDlgGuideOpenEffect(true)
+		end
+	end
 end
 
 -- 设置雇佣官
@@ -486,8 +494,12 @@ function CityTechDlgSelect( kind )
 		SetTrue( uiUpgradeBtn );
 	end
 	
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_TECH_SURE then 
-		FindCmdTpye(uiUpgradeBtn.transform);
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_TECH then 
+			GuideNext();
+			CityTechDlgGuideOpenEffect(false)
+			FindCmdTpye(uiUpgradeBtn.transform);
+		end
 	end
 end
 
@@ -550,3 +562,17 @@ end
 function CityTechDlgSetFirst( firstkind )
 	m_firstKind = firstkind;
 end
+
+--指引升级科技特效开启
+function CityTechDlgGuideOpenEffect(bShow)
+	if m_Dlg == nil then return; end
+	local uiObj = m_uiContent.transform:GetChild(1);
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;	
+	local uiEffect = objs[8];
+	if bShow == true then 
+		SetTrue(uiEffect)
+	else
+		SetFalse(uiEffect);
+	end
+end
+

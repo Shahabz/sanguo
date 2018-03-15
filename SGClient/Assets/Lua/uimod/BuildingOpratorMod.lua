@@ -321,17 +321,30 @@ function BuildingOpratorModShow( show, kind, offset, parent )
         end
     end
 	BuildingOpratorModHideAllEffect();
-	ShowEffect();
+	ShowBuildingModEffect();
 end
 
-function ShowEffect()
+function ShowBuildingModEffect()
 	if IsGuiding() then
-		if GetCurrentGuideType() == GUIDE_TECH_SURE or GetCurrentGuideType() == GUIDE_GET then
+		if GetCurrentGuideType() == GUIDE_TECH or GetCurrentGuideType() == GUIDE_GET then
 			BuildingOpratorModEffectShow(2);
 		elseif GetCurrentGuideType() == GUIDE_UPGRADE then
 			BuildingOpratorModEffectShow(1);
 		elseif GetCurrentGuideType() == GUIDE_RECRUIT then
 			BuildingOpratorModEffectShow(3);
+		end
+	else
+		local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
+		if pBuilding ~= nil then
+			if m_kind >= BUILDING_Infantry and m_kind <= BUILDING_Militiaman_Archer then
+				BuildingOpratorModEffectShow(3);
+			elseif m_kind == BUILDING_Tech then
+				BuildingOpratorModEffectShow(2);
+			elseif pBuilding.m_level < #g_building_upgrade[m_kind] then
+				BuildingOpratorModEffectShow(1);
+			end
+		else
+			BuildingOpratorModEffectShow(1);
 		end
 	end
 end

@@ -23,6 +23,7 @@
 #define MAIL_TYPE_GATHER			20	// 采集
 #define MAIL_TYPE_GATHER_FIGHT		21	// 采集战斗
 
+#define TAG_TEXT			"##"// 标记--标记为文字
 #define TAG_TEXTID			"#$"// 标记--标记为文字表id
 #define TAG_ITEMKIND		"$$"// 标记--标记为道具专用
 #define TAG_EQUIPKIND		"$%"// 标记--标记为装备专用

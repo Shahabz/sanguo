@@ -108,6 +108,12 @@ end
 -- 自定
 ----------------------------------------
 function HeroDlgShow()
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_HERODLG then 
+			GuideNext();
+		end
+	end	
+	
 	HeroDlgOpen();
 	HeroDlgSetInfantry()
 	HeroDlgSetCavalry()

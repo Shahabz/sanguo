@@ -1242,3 +1242,7 @@ end
 function GetAutoBuildPos()
 	return m_uiAutoBuild.transform.position;
 end
+
+function GetHeroDlgPos()
+	return m_uiButtonBack[1].transform.position;
+end

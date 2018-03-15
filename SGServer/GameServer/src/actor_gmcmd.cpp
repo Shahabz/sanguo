@@ -43,6 +43,9 @@ extern MYSQL *myGame;
 extern Actor *g_actors;
 extern int g_actornum;
 extern int g_maxactornum;
+extern City *g_city;
+extern int g_city_maxcount;
+extern int g_city_maxindex;
 extern char g_bServerIsInit;
 extern char g_test_mod;
 
@@ -56,13 +59,13 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF )
+	if ( cmd == GMC_LUA || cmd == GMC_SC || cmd == GMC_SYSTALK || cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF || cmd == GMC_DB || cmd == GMC_MAIL_SERVER || cmd == GMC_MAIL_NOTICE )
 	{
 		actorid = 0;
 	}
 
 	// 有些指令必须玩家在线
-	if ( actorid > 0 && (cmd == GMC_SYSTALK) )
+	if ( actorid > 0 )
 	{
 		int target_index = actor_getindex_withid( actorid );
 		if ( target_index < 0 )
@@ -360,13 +363,13 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			char title[64] = { 0 };
-			sprintf( title, "%s%d", TAG_TEXTID, 5001 );
+			snprintf( title, 63, "%s%d", TAG_TEXTID, pValue[0] );
 
 			char content[128] = { 0 };
-			sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, 5501 );
+			snprintf( content, 127, "{\"text\":\"%s%d\"}", TAG_TEXTID, pValue[1] );
 
 			char attach[256] = { 0 };
-			sprintf( attach, "3,1@5001,1000@5002,2000@50010,10000" );
+			snprintf( attach, 255, "%s", pMsg );
 			mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 0 );
 		}
 		break;
@@ -648,6 +651,68 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			city_gm_getinfo( pCity );
 		}
+		break;
+	case GMC_MAIL_ACTOR:// 玩家邮件
+		if ( pCity )
+		{
+			char **pptable = NULL;
+			int groupcount = 0;
+			pptable = u_strcut_ex( pMsg, '|', &groupcount );
+			if ( groupcount > 3 )
+				break;
+		
+			char title[128] = { 0 };
+			snprintf( title, 127, "%s%s", TAG_TEXT, pptable[0] );
+
+			char content[1024] = { 0 };
+			snprintf( content, 1023, "{\"text\":\"%s%s\"}", TAG_TEXT, pptable[1] );
+
+			char attach[256] = { 0 };
+			snprintf( attach, 255, "%s", pptable[2] );
+			mail( pCity->actor_index, pCity->actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 0 );
+
+			u_free_vec( pptable );
+		}
+		break;
+	case GMC_MAIL_SERVER:// 全服邮件
+	{
+		char **pptable = NULL;
+		int groupcount = 0;
+		pptable = u_strcut_ex( pMsg, '|', &groupcount );
+		if ( groupcount > 3 )
+			break;
+		char title[128] = { 0 };
+		snprintf( title, 127, "%s%s", TAG_TEXT, pptable[0] );
+
+		char content[1024] = { 0 };
+		snprintf( content, 1023, "{\"text\":\"%s%s\"}", TAG_TEXT, pptable[1] );
+
+		char attach[256] = { 0 };
+		snprintf( attach, 255, "%s", pptable[2] );
+
+		int currtime = (int)time( NULL );
+		int offlinesec = 15 * 86400;
+		for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+		{
+			if ( g_city[tmpi].actorid <= 0 )
+				continue;
+			if ( g_city[tmpi].type == CityLairdType_Robot )
+				continue;
+			if ( (currtime - g_city[tmpi].lastlogin) >= offlinesec )
+				continue;
+			if ( g_city[tmpi].actor_index >= 0 && g_city[tmpi].actor_index < g_maxactornum )
+			{
+				mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 0 );
+			}
+			else
+			{
+				mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 1 );
+			}
+		}
+		u_free_vec( pptable );
+	}
+		break;
+	case GMC_MAIL_NOTICE:// 公告邮件
 		break;
 	default:
 		break;

@@ -521,7 +521,7 @@ function MapBattleDlgClickEffect(uiObj)
 	effect.transform:SetParent( uiObj.transform );
 	effect.transform.localPosition = Vector3.New( -540, 2, 0 );		
 	effect.transform.localScale = Vector3.New( 135, 150, 150 );
-	GameObject.Destroy(effect,0.22)
+	GameObject.Destroy(effect,0.2)
 end
 
 -- 补兵

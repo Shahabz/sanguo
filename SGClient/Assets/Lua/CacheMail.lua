@@ -13,6 +13,7 @@ MAIL_TYPE_FIGHT_NATIONHERO	=	15	-- 国家名将
 MAIL_TYPE_GATHER		=	20	-- 采集
 MAIL_TYPE_GATHER_FIGHT	=	21	-- 采集战斗
 
+TAG_TEXT		= "##"	-- 标记--标记为文字
 TAG_TEXTID 		= "#$"	-- 标记 为文字表id
 TAG_ITEMID 		= "$$"	-- 标记 标记为道具装备ID
 TAG_EQUIPKIND 	= "$%"	-- 标记 标记为装备专用
@@ -211,7 +212,7 @@ function Mail:Insert( recvValue )
 	-- 排序
 	self:Sort();
 	
-	print( recvValue.m_content )
+	--print( recvValue.m_content )
 end
 
 -- 排序
@@ -238,8 +239,17 @@ end
 function Mail:GetString( v )
 	local str = ""
 	
+	-- 文字
+	if self:IsTag( v, TAG_TEXT ) then
+		local text = string.sub(v, string.len(TAG_TEXT) + 1);
+		if text ~= nil then
+			str = text
+		else
+			str = v
+		end
+		
 	-- 文字表
-    if self:IsTag( v, TAG_TEXTID ) then
+    elseif self:IsTag( v, TAG_TEXTID ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_TEXTID) + 1));
 		if textid ~= nil then
 			str = T(textid)

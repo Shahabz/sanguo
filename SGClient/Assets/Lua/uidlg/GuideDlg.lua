@@ -28,6 +28,8 @@ GUIDE_MAKE_CHOOSE = 21   --选择铁匠
 GUIDE_MAKE_UP = 22       --铁匠加速
 GUIDE_DRESS_HEAD = 23    --点击头盔穿戴
 GUIDE_AUTOBUILDING = 24  --自动建造
+GUIDE_HERODLG = 25       --武将按钮
+GUIDE_TECH = 26          --科技特效
 
 
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
@@ -210,6 +212,9 @@ function FindCmdTpye(tran)
 		elseif g_guide[mId][mStep].guideType == GUIDE_AUTOBUILDING then
 			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetAutoBuildPos() + deviation;
+		elseif g_guide[mId][mStep].guideType == GUIDE_HERODLG then 
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetHeroDlgPos() + deviation;
 		end
 	elseif cmd == 3 then
 		if currentFinger == nil then
