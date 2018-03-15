@@ -278,35 +278,35 @@ int user_awarded( int client_index, int authid, int cdkey_index, int awardgroup,
 	{
 		// 记录cdkey
 		actor_set_cdkey( client_index, cdkey_index );
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7504" );
+		actor_notify_pop( client_index, 490 );
 	}
 	else if ( result == -3 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7498" ); // 您已经使用过该批次兑换码了
+		actor_notify_pop( client_index, 491 ); // 您已经使用过该批次兑换码了
 	}
 	else if ( result == -4 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7499" ); // 这个兑换码已经被其他人使用过了
+		actor_notify_pop( client_index, 492 ); // 这个兑换码已经被其他人使用过了
 	}
 	else if ( result == -5 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7500" ); // 这个兑换码只能在ios平台使用
+		actor_notify_pop( client_index, 493 ); // 这个兑换码只能在ios平台使用
 	}
 	else if ( result == -6 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7501" ); // 这个兑换码只能在android平台使用
+		actor_notify_pop( client_index, 494 ); // 这个兑换码只能在android平台使用
 	}
 	else if ( result == -7 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7502" ); // 这个兑换码只能在指定渠道下载的游戏中使用
+		actor_notify_pop( client_index, 495 ); // 这个兑换码只能在指定渠道下载的游戏中使用
 	}
 	else if ( result == -8 )
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7503" ); // 该兑换码已经过期
+		actor_notify_pop( client_index, 496 ); // 该兑换码已经过期
 	}
 	else
 	{
-		actor_notify( client_index, NOTIFY_TEXTTABLE, "7497" ); // 兑换码无效
+		actor_notify_pop( client_index, 497 ); // 兑换码无效
 	}
 
 	return 0;

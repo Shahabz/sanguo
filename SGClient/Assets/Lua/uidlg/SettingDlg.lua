@@ -18,7 +18,7 @@ local m_uiUIP_Setting_Option = nil; --UnityEngine.GameObject
 local m_uiUIP_Setting_Bubble = nil; --UnityEngine.GameObject
 local m_uiScroll = nil; --UnityEngine.GameObject
 local m_uiSignatureText = nil; --UnityEngine.GameObject
-local m_uiExchangeText = nil; --UnityEngine.GameObject
+local m_uiExchange = nil; --UnityEngine.GameObject
 
 m_Setting_state = 0 ; --0设置选项界面取消按钮直接关闭界面，1返回设置主界面
 
@@ -115,7 +115,7 @@ function SettingDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 5 then			--设置选项界面返回按钮
 			if m_Setting_state == 0 then
 				SettingDlgClose()
-				else
+			else
 				SettingDlgShow()
 			end
 		elseif nControlID == 6 then			--签名、气泡、兑换子界面关闭按钮
@@ -142,11 +142,11 @@ function SettingDlgOnEvent( nType, nControlID, value, gameObject )
 				SetFalse( m_uiSignature.transform:Find("Edit/Input/Hint") )
 			end
 		elseif nControlID == 1 then
-			local text = m_uiExchangeText.transform:Find("Edit/Input"):GetComponent( "UIInputField" ).text;
+			local text = m_uiExchange.transform:Find("Edit/Input"):GetComponent( "UIInputField" ).text;
 			if text == "" then
-				SetTrue( m_uiExchangeText.transform:Find("Edit/Hint") )
+				SetTrue( m_uiExchange.transform:Find("Edit/Input/Hint") )
 			else
-				SetFalse( m_uiExchangeText.transform:Find("Edit/Hint") )
+				SetFalse( m_uiExchange.transform:Find("Edit/Input/Hint") )
 			end
 		end
 	end
@@ -173,7 +173,7 @@ function SettingDlgOnAwake( gameObject )
 	m_uiUIP_Setting_Bubble = objs[14];
 	m_uiScroll = objs[15];
 	m_uiSignatureText = objs[16];
-	m_uiExchangeText = objs[17];
+	m_uiExchange = objs[17];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -401,14 +401,15 @@ end
 
 -- 发送兑换码
 function SettingDlgSendExchangeCode()	
-	local code = m_uiExchangeText.transform:GetComponent( typeof(UIText) ).text;
-	local len = string.len( code )
+	local cdkey =  m_uiExchange.transform:Find("Edit/Input"):GetComponent( "UIInputField" ).text;
+	local len = string.len( cdkey )
 	--非法检查
-	if len ~= 10  then
+	if len < 6 then
 		pop(T(1735))
-		else
-		
+		return
 	end
+	system_askinfo( ASKINFO_CDKEY, cdkey, 0 );
+	SettingDlgShow()
 end
 
 -- 初始化

@@ -2881,7 +2881,7 @@ int city_officialhire( int actor_index, int type, int kind )
 
 
 		pCity->ofkind[type] = kind;
-		pCity->ofsec[type] += g_official_gov[kind].duration; // 时间叠加
+		pCity->ofsec[type] += g_official_forging[kind].duration; // 时间叠加
 		pCity->ofquick[type] = 0;
 
 		// 任务
@@ -2907,7 +2907,7 @@ int city_officialhire( int actor_index, int type, int kind )
 			}
 			else if ( g_official_gov[kind].token > 0 )
 			{
-				if ( actor_change_token( actor_index, -g_official_tech[kind].token, PATH_HIRE_GOV, 0 ) < 0 )
+				if ( actor_change_token( actor_index, -g_official_gov[kind].token, PATH_HIRE_GOV, 0 ) < 0 )
 					return -1;
 			}
 		}

@@ -68,6 +68,8 @@ function CacheQuestSet( recvValue )
 	
 	CacheQuest = recvValue;
 	GetPlayer().m_questid = recvValue.m_list[1].m_questid
+	
+	QuestListSort(CacheQuest.m_list);
 end
 
 -- 任务类型
@@ -244,7 +246,6 @@ function QuestGoto( index )
 	
 	if IsGuiding() and GetCurrentGuideType() == GUIDE_TOCLICKTASK then 
 		GuideNext();
-		HideGuideFinger();
 	end
 
 	local datatype = CacheQuest.m_list[index].m_datatype;
@@ -253,6 +254,10 @@ function QuestGoto( index )
 	local value = CacheQuest.m_list[index].m_value;
 	local needvalue = CacheQuest.m_list[index].m_needvalue;
 	if datatype == QUEST_DATATYPE_ACTOR_LEVEL then
+	elseif datatype == QUEST_DATATYPE_CLICK then
+		if datakind == 4 then --点击事件4，查看铁匠铺
+			EquipForgingDlgShow();
+		end
 	elseif datatype == QUEST_DATATYPE_BUILDING_LEVEL or datatype == QUEST_DATATYPE_BUILDING_UPGRADE then-- 建筑等级 datatype=2 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
 				
 		if dataoffset > 100 then
@@ -355,7 +360,13 @@ function QuestGoto( index )
 	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
 		
 	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
-		City.Move( BUILDING_Hero, -1, true );
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_GET_HERO then
+				StoryDlgShow();
+			end
+		else
+			City.Move( BUILDING_Hero, -1, true );
+		end
 		
 	elseif datatype == QUEST_DATATYPE_WISHING then	-- 聚宝盆N次 datatype=21 datakind=0 needvalue=次数
 		City.Move( BUILDING_Wishing, -1, true );
@@ -366,7 +377,7 @@ function QuestGoto( index )
 		HeroDlgShow()
 		
 	elseif datatype == QUEST_DATATYPE_BRANCH_QUEST then -- 完成N个支线任务
-	
+		QuestDlgShow();
 	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_QUICK then -- 进行一次铁匠铺加速打造 datatype=38 datakind=0 needvalue=1
 		City.Move( BUILDING_Smithy, -1, true );
 	
@@ -387,6 +398,7 @@ function QuestGoto( index )
 		
 	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 		City.Move( BUILDING_Hero, -1, true );
+	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募武将
 	end
 end
 
@@ -411,3 +423,23 @@ function QuestTalkAsk( talkid )
 	sendValue.m_type = 1;
 	netsend_questtalknext_C( sendValue )
 end
+
+function QuestListSort(t)  
+    for i=1,(#t)-1 do  
+		if i == 1 then
+			if t[i].m_value >= t[i].m_needvalue then
+				break;
+			end
+		end
+		
+        local min = i  
+        for j=i+1,(#t) do  
+			if t[j].m_value >= t[j].m_needvalue then
+				min = j;
+			end
+        end  
+        if min ~= i then  
+            t[min],t[i] = t[i],t[min]  
+        end  
+    end  
+end  

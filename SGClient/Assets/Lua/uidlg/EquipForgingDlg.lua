@@ -51,6 +51,7 @@ function EquipForgingDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "EquipForgingDlg" );
+	HideSelect();
 	m_selectkind = 0;
 end
 
@@ -156,11 +157,7 @@ end
 
 -- 界面显示时调用
 function EquipForgingDlgOnEnable( gameObject )
-	if IsGuiding() then
-		if GetCurrentGuideType() == GUIDE_MAKE_UP then
-			FindCmdTpye(m_uiForgingInfo.transform);
-		end
-	end
+	
 end
 
 -- 界面隐藏时调用
@@ -175,14 +172,7 @@ end
 
 -- 每帧调用
 function EquipForgingDlgOnLogic( gameObject )
-	if m_guideShow then
-		if IsGuiding() then
-			if GetGuideSpecialEvent() == 1 and GetCurrentGuideType() == GUIDE_TOCLICKTASK then
-				GuideNext();
-				m_guideShow = false;
-			end
-		end
-	end
+	
 end
 
 
@@ -441,6 +431,14 @@ function EquipForgingDlgSelect( kind )
 			SetFalse( materialObj )
 		end
     end
+end
+
+function HideSelect()
+	if m_selectkind > 0 then
+		local objs = m_uiEquipObj[m_selectkind].transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[6];
+		SetFalse( uiSelect )
+	end
 end
 
 -- 更新

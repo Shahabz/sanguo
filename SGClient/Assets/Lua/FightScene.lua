@@ -310,16 +310,21 @@ function FightScene.PlayBeat()
 	end, 0.5, nil, "FightInvoke_PlayBeat");
 end
 
+-- ax ay 进攻方技能位置偏移量
+-- dx dy 防御方技能位置偏移量
+-- s 技能方向
+-- 步兵 jn3 骑兵 jn1 弓兵 jn2
 -- 播放技能特效
 function FightScene.PlaySkill( pos, skillid )
-	local skill = { {name="Jn1",ax=-0.09,ay=-0.67, dx=0.09,dy=-0.67},{name="Jn2",ax=0,ay=-1, dx=0,dy=-1},{name="Jn2",ax=2.4,ay=-0.51, dx=-2.4,dy=-0.51} }
+	local skill = { {name="Jn3",ax=0,ay=-0.7, dx=0,dy=-0.7,s = -1},{name="Jn1",ax=0.1,ay=0.14, dx=-0.1,dy=0.14,s = 1},{name="Jn2",ax=-0.12,ay=-0.67, dx=0.12,dy=-0.67,s = -1} }
+	PrintTable(skill,"skill")
 	local effectObj = FightScene.PoolGetEffect( skill[skillid].name )
 	if pos == FIGHT_ATTACK then
 		effectObj.transform.localPosition = Vector3.New( skill[skillid].ax, skill[skillid].ay, 0 );
-		effectObj.transform.localScale = Vector3.New( -7, 7, 7 );
+		effectObj.transform.localScale = Vector3.New( -7*skill[skillid].s, 7, 7 );
 	else
 		effectObj.transform.localPosition = Vector3.New( skill[skillid].dx, skill[skillid].dy, 0 );
-		effectObj.transform.localScale = Vector3.New( 7, 7, 7 );
+		effectObj.transform.localScale = Vector3.New( 7*skill[skillid].s, 7, 7 );
 	end
 	Invoke( function()
 		FightScene.PoolReleaseEffect( effectObj )

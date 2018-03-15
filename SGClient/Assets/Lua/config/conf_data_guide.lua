@@ -21,7 +21,7 @@ g_guide = {
 	},
 [5] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 3,guideType = 14,x = 0,y = 0,point = 2,isSpecial = 0},  --升级建筑
+	[2] = {cmd = 2,guideType = 24,x = 0,y = 0,point = 2,isSpecial = 0},  --自动建造
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [6] = {
@@ -44,7 +44,7 @@ g_guide = {
 	},
 [10] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
-	[2] = {cmd = 3,guideType = 9,x = 0,y = 0,point = 2,isSpecial = 0},   --选择古淀刀
+	[2] = {cmd = 3,guideType = 9,x = 0,y = -0.9,point = 2,isSpecial = 0},   --选择古淀刀
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造古淀刀
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -80,7 +80,7 @@ g_guide = {
 	},
 [18] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 3,guideType = 15,x = 0,y = 0,point = 2,isSpecial = 0},   --选择马
+	[2] = {cmd = 3,guideType = 15,x = 0,y = -1.8,point = 2,isSpecial = 0},   --选择马
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -106,13 +106,13 @@ g_guide = {
 	},
 [24] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 3,guideType = 9,x = 0,y = 0,point = 2,isSpecial = 0},   --选择古淀刀
+	[2] = {cmd = 3,guideType = 9,x = 0,y = -0.9,point = 2,isSpecial = 0},   --选择古淀刀
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造古淀刀
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [25] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
-	[2] = {cmd = 3,guideType = 15,x = 0,y = 0,point = 2,isSpecial = 0},   --选择马
+	[2] = {cmd = 3,guideType = 15,x = 0,y = -1.8,point = 2,isSpecial = 0},   --选择马
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -169,12 +169,10 @@ g_guide = {
 	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [37] = {
-	[1] = {cmd = 2,guideType = 12,x = 0,y = 0,point = 2,isSpecial = 0},  --指向副本按钮
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
+	[1] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [38] = {
-	[1] = {cmd = 2,guideType = 12,x = 0,y = 0,point = 2,isSpecial = 0},  --指向副本按钮
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
+	[1] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [39] = {
 	[1] = {cmd = 3,guideType = 17,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将

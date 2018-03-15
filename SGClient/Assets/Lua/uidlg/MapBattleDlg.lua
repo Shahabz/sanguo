@@ -517,11 +517,11 @@ end
 
 --上阵特效
 function MapBattleDlgClickEffect(uiObj)
-	local effect = GameObject.Instantiate( LoadPrefab( "Fxzq" ) )
+	local effect = GameObject.Instantiate( LoadPrefab( "Fxtx2" ) )
 	effect.transform:SetParent( uiObj.transform );
-	effect.transform.localPosition = Vector3.New( -74.5, 0, 0 );		
-	effect.transform.localScale = Vector3.New( 360, 360, 360 );
-	GameObject.Destroy(effect,0.5)
+	effect.transform.localPosition = Vector3.New( -540, 2, 0 );		
+	effect.transform.localScale = Vector3.New( 135, 150, 150 );
+	GameObject.Destroy(effect,0.22)
 end
 
 -- 补兵

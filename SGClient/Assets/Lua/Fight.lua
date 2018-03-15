@@ -576,7 +576,7 @@ function fight_useskill( pos, pUnit, pTargetUnit )
 	local true_damage = 0;
 	local damage = 0;
 	local skillid = pUnit.skillid;
-	if skillid > 0 and skillid < g_hero_skill_maxnum then
+	if skillid > 0 and skillid <= g_hero_skill_maxnum then
 		-- 攻击方释放武将技
 		local randomv = random_custom( g_hero_skill[skillid].randmin, g_hero_skill[skillid].randmax );
 		damage = math.ceil( ( pUnit.hp * (g_hero_skill[skillid].value / FIGHT_FLOAT) * (randomv / FIGHT_FLOAT)) );

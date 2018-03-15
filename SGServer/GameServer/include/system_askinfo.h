@@ -49,6 +49,7 @@
 #define ASKINFO_TIANCEQUEST		44 // 天策府任务
 #define ASKINFO_TEACHER			45 // 师徒
 #define ASKINFO_GUAID			46 // 引导完成
+#define	ASKINFO_CDKEY			47 // CDKEY
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

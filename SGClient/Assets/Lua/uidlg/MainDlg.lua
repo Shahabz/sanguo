@@ -858,6 +858,12 @@ function MainDlgSetAutoBuild( path )
 		tween.from = Vector2.New( 315, -432 );
 		tween:Play(true);
 	end
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_AUTOBUILDING then
+			GuideNext();
+		end
+	end
 end
 
 -- 城防补充
@@ -1231,4 +1237,8 @@ end
 
 function GetBackPos()
 	return m_uiButtonBack[4].transform.position
+end
+
+function GetAutoBuildPos()
+	return m_uiAutoBuild.transform.position;
 end

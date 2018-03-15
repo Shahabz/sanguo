@@ -25,9 +25,6 @@ function QuestAwardDlgClose()
 		m_ObjectPool:Release( "m_uiUIP_Award", v );
     end
 	eye.uiManager:Close( "QuestAwardDlg" );
-	if IsGuiding() and GetCurrentGuideType() == GUIDE_TASK_FINISH then
-		GuideNext();
-	end
 end
 
 -- 删除界面
@@ -111,21 +108,6 @@ function QuestAwardDlgShow( recvValue )
 		SetText( uiObj.transform:Find("Name"), name );
 		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
 	end
-	
-	if IsGuiding() then 
-		if GuideCheck(id) then
-			return;
-		else
-			GuideNextTo();
-		end
-	end
-	--[["
-	if GuideCheck(id) 
-		return
-	else
-		Guide(id + 1, 1, false);
-	end
-	"]]
 end
 
 -- 清空
@@ -145,6 +127,9 @@ end
 -- 领取奖励
 function QuestAwardDlgGet()
 	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
+	if IsGuiding() then 
+		ForceGuideNext();
+	end
 	QuestAwardDlgClose();
 end
 

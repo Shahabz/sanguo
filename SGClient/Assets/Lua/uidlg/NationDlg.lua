@@ -88,7 +88,7 @@ function NationDlgOnEvent( nType, nControlID, value, gameObject )
 		--国家任务
 		elseif nControlID == 4 then
 			NationQuestDlgShow()
-			
+			SetFalse(m_uiQuestInfo.transform:Find("Effect"));
 		--国家城池
 		elseif nControlID == 5 then
 			NationTownDlgShow()
@@ -296,6 +296,11 @@ function NationDlgSetQuest()
 	m_curQuestKind = m_curQuestKind + 1;
 	if m_curQuestKind > 3 then
 		m_curQuestKind = 1
+	end
+	if value == maxvalue then
+		SetTrue(m_uiQuestInfo.transform:Find("Effect"));
+	else
+		SetFalse(m_uiQuestInfo.transform:Find("Effect"));
 	end
 end
 

@@ -1116,6 +1116,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			teacher_shopbuy( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_CDKEY:
+		// ¶Ò»»Âë
+		user_award( actor_index, pstr );
+		break;
 	default:
 		break;
 	}

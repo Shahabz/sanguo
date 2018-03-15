@@ -27,6 +27,7 @@ GUIDE_CHOOSE_HEAD = 20   --选择精铁盔
 GUIDE_MAKE_CHOOSE = 21   --选择铁匠
 GUIDE_MAKE_UP = 22       --铁匠加速
 GUIDE_DRESS_HEAD = 23    --点击头盔穿戴
+GUIDE_AUTOBUILDING = 24  --自动建造
 
 
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
@@ -126,18 +127,24 @@ function Guide(id, step, force)
 	warn(mId);
 	warn(step);
 	
+	HideGuideFinger();
+	HideCurrentFinger();
+	
 	if g_guide[mId][mStep].cmd == CMD_SPECIAL or g_guide[mId][mStep].cmd == CMD_TALK then FindCmdTpye(nil) end
 end
 
 function GuideNext()
 	if table.getn(g_guide[mId]) == mStep then
 		mStep = 0;
+		system_askinfo( ASKINFO_GUAID, "", mId + 1 );
+		Guide( mId + 1, 1);
 	else
 		Guide( mId, mStep + 1 );
 	end
 end
 
-function GuideNextTo()
+function ForceGuideNext()
+	mStep = 0;
 	system_askinfo( ASKINFO_GUAID, "", mId + 1 );
 	Guide( mId + 1, 1);
 end
@@ -190,7 +197,6 @@ function FindCmdTpye(tran)
 	cmd = g_guide[mId][mStep].cmd;
 	point = g_guide[mId][mStep].point;
 	deviation = Vector3.New(g_guide[mId][mStep].x,g_guide[mId][mStep].y,0);
-	HideCurrentFinger();
 	if cmd == 2 then 
 		if g_guide[mId][mStep].guideType == GUIDE_TOCLICKTASK then 
 			ShowGuideFinger(point);
@@ -201,13 +207,17 @@ function FindCmdTpye(tran)
 		elseif g_guide[mId][mStep].guideType == GUIDE_BACK then
 			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetBackPos() + deviation;
+		elseif g_guide[mId][mStep].guideType == GUIDE_AUTOBUILDING then
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetAutoBuildPos() + deviation;
 		end
 	elseif cmd == 3 then
-		HideGuideFinger();
-		currentFinger = addChild(tran,m_uiFinger[point]);
-		currentFinger.transform.position = currentFinger.transform.position + deviation;
+		if currentFinger == nil then
+			currentFinger = addChild(tran,m_uiFinger[point]);
+			currentFinger.transform.position = currentFinger.transform.position + deviation;
+		end
 	elseif cmd == 1 then
-		HideGuideFinger();
+		
 	end
 end
 

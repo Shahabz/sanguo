@@ -178,5 +178,10 @@ function QuestDlgGetAward( index )
 	if CacheQuest.m_list[index] == nil then
 		return
 	end
+	if index == 1 then
+		if IsGuiding() then
+			ForceGuideNext();
+		end
+	end
 	system_askinfo( ASKINFO_QUEST, "", 1, CacheQuest.m_list[index].m_questid );
 end
