@@ -564,53 +564,56 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			break;
 		}
-		char *pOrderID = NULL;
-		char *pMoney;
-		char *pCurrency;
-
-		int tmpi = 0;
-		char *strp;
-		char *str = pMsg;
-		char sign = '|';
-		strp = str;
-		while ( *str )
+		if ( pCity )
 		{
-			if ( *str == sign )
+			char *pOrderID = NULL;
+			char *pMoney;
+			char *pCurrency;
+
+			int tmpi = 0;
+			char *strp;
+			char *str = pMsg;
+			char sign = '|';
+			strp = str;
+			while ( *str )
 			{
-				if ( tmpi == 0 )
-					pOrderID = strp;
-				else if ( tmpi == 1 )
-					pMoney = strp;
-				else if ( tmpi == 2 )
-					pCurrency = strp;
-				*str = 0;
-				str++;
-				strp = str;
-				tmpi++;
-				if ( tmpi >= 3 )
-					break;
+				if ( *str == sign )
+				{
+					if ( tmpi == 0 )
+						pOrderID = strp;
+					else if ( tmpi == 1 )
+						pMoney = strp;
+					else if ( tmpi == 2 )
+						pCurrency = strp;
+					*str = 0;
+					str++;
+					strp = str;
+					tmpi++;
+					if ( tmpi >= 3 )
+						break;
+				}
+				else
+					str++;
 			}
-			else
-				str++;
-		}
-		if ( tmpi == 0 )
-			pOrderID = strp;
-		else if ( tmpi == 1 )
-			pMoney = strp;
-		else if ( tmpi == 2 )
-			pCurrency = strp;
-		tmpi++;
-		if ( tmpi == 1 )
-		{
-			pMoney = strp;
-			pCurrency = strp;
-		}
-		else if ( tmpi == 2 )
-		{
-			pCurrency = strp;
-		}
+			if ( tmpi == 0 )
+				pOrderID = strp;
+			else if ( tmpi == 1 )
+				pMoney = strp;
+			else if ( tmpi == 2 )
+				pCurrency = strp;
+			tmpi++;
+			if ( tmpi == 1 )
+			{
+				pMoney = strp;
+				pCurrency = strp;
+			}
+			else if ( tmpi == 2 )
+			{
+				pCurrency = strp;
+			}
 
-		actor_pay( pValue[0], pValue[1], pOrderID, pMoney, pCurrency );
+			actor_pay( pCity->actorid, pValue[0], pOrderID, pMoney, pCurrency );
+		}
 	}
 	break;
 	case GMC_BUFFCLEAR:

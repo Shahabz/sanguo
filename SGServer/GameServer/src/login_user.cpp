@@ -17,6 +17,7 @@
 #include "http.h"
 #include "server_netsend_auto.h"
 #include "actor_notify.h"
+#include "mail.h"
 
 extern SConfig g_Config;
 extern int g_tick;
@@ -274,8 +275,15 @@ int user_awarded( int client_index, int authid, int cdkey_index, int awardgroup,
 		return -1;
 	}
 
-	if ( result == 0 )
+	if ( result == 0 && cardnumber )
 	{
+		// 直接邮件发放
+		char v1[32] = { 0 };
+		char attach[256] = { 0 };
+		sprintf( v1, "%s", cardnumber );
+		awardgroup_mail( awardgroup, 0, attach );
+		mail_system( client_index, g_actors[client_index].actorid, 5048, 5543, v1, NULL, NULL, attach, 0 );
+
 		// 记录cdkey
 		actor_set_cdkey( client_index, cdkey_index );
 		actor_notify_pop( client_index, 490 );
