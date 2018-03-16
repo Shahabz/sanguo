@@ -65,7 +65,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	}
 
 	// 有些指令必须玩家在线
-	if ( actorid > 0 )
+	if ( actorid > 0 && gm_check_online( cmd ) )
 	{
 		int target_index = actor_getindex_withid( actorid );
 		if ( target_index < 0 )
@@ -658,7 +658,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			char **pptable = NULL;
 			int groupcount = 0;
 			pptable = u_strcut_ex( pMsg, '|', &groupcount );
-			if ( groupcount > 3 )
+			if ( groupcount != 3 )
 				break;
 		
 			char title[128] = { 0 };
@@ -679,7 +679,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		char **pptable = NULL;
 		int groupcount = 0;
 		pptable = u_strcut_ex( pMsg, '|', &groupcount );
-		if ( groupcount > 3 )
+		if ( groupcount != 3 )
 			break;
 		char title[128] = { 0 };
 		snprintf( title, 127, "%s%s", TAG_TEXT, pptable[0] );

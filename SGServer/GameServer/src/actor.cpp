@@ -108,6 +108,7 @@ int actors_init()
 	// 设定不能低于最小的角色ID值
 	if ( g_maxactorid < MINACTORID )
 	{ // 只要第一次就可以了，之后都会读最大的
+		// 服务器最多2000个 玩家最多999999 = 2000999999
 		g_maxactorid = g_Config.server_code*100000 + MINACTORID;
 	}
 

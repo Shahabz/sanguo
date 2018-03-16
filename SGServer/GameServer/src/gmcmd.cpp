@@ -51,7 +51,7 @@ int gm_init()
 	g_cmdinfo = (SCmdInfo *)malloc( sizeof(SCmdInfo)*g_cmdcount );
 	memset( g_cmdinfo, 0, sizeof(SCmdInfo)*g_cmdcount );
 
-	sprintf( szSQL, "select cmd,allowgmtools from gmcmd" );
+	sprintf( szSQL, "select cmd,allowgmtools,online from gmcmd" );
 	if ( mysql_query( myData, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myData ) );
@@ -69,6 +69,7 @@ int gm_init()
 			return -1;
 		}
 		g_cmdinfo[cmdid].m_allowgmtools = atoi( row[1] );
+		g_cmdinfo[cmdid].m_online = atoi( row[2] );
 	}
 	mysql_free_result( res );
 
@@ -85,6 +86,13 @@ char gm_isallow_gmtools( short cmdid )
 	if ( cmdid < 0 || cmdid >= g_cmdcount )
 		return 0;
 	return g_cmdinfo[cmdid].m_allowgmtools;
+}
+
+char gm_check_online( short cmdid )
+{
+	if ( cmdid < 0 || cmdid >= g_cmdcount )
+		return 0;
+	return g_cmdinfo[cmdid].m_online;
 }
 
 int gm_getindex()

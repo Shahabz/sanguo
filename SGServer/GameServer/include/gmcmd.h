@@ -68,11 +68,13 @@
 
 struct _cmdinfo {
 	char m_allowgmtools;			// 是否允许GMTools访问
+	char m_online;					// 是否检查在线
 };
 typedef struct _cmdinfo SCmdInfo;
 
 int gm_init();
 char gm_isallow_gmtools( short cmdid );
+char gm_check_online( short cmdid );
 
 int gm_proc( short cmd, int arg1, int arg2, int arg3, int arg4, char *str );
 int gm_set_result( int client_index, int value );
