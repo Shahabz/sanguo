@@ -690,6 +690,8 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		char attach[256] = { 0 };
 		snprintf( attach, 255, "%s", pptable[2] );
 
+		int nation = pValue[0];
+		int level = pValue[1];
 		int currtime = (int)time( NULL );
 		int offlinesec = 15 * 86400;
 		for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
@@ -700,6 +702,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				continue;
 			if ( (currtime - g_city[tmpi].lastlogin) >= offlinesec )
 				continue;
+			if ( nation > 0 && (nation != g_city[tmpi].nation+1) )
+				continue; // 国家不同
+			if ( level > g_city[tmpi].level )
+				continue; // 等级
 			if ( g_city[tmpi].actor_index >= 0 && g_city[tmpi].actor_index < g_maxactornum )
 			{
 				mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_SYSTEM, title, content, attach, 0, 0 );
