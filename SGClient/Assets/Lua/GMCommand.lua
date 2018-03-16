@@ -51,6 +51,7 @@ local GMCMD_SERVER = {
 [48]="buffclear",
 [49]="award",
 [51]="mailactor",
+[53]="mailnotice",
 }
  
 -- 发到客户端本地指令

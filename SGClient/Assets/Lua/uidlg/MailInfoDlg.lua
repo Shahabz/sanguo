@@ -226,13 +226,28 @@ function MailInfoDlgByRecvValue( recvValue )
 	m_spy_hashero = 0;
 	
 	-- 解析标题
-	local title = "";
 	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
-		title = T(1192)	
+		SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), T(1192) )
+		
+	-- http获取
+	elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
+		local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
+		if GetMail().m_localize_text[textid] == nil then
+			HttpRequest.GetText( textid, 0, function( response )
+				local json = require "cjson"
+				local info = json.decode( response );
+				if info ~= nil then
+					SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), info["text"] )
+					GetMail().m_localize_text[textid] = info["text"]
+				end
+			end )
+		else
+			SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), GetMail().m_localize_text[textid] )
+		end
 	else
-		title = GetMail():GetString( recvValue.m_title );
+		local title = GetMail():GetString( recvValue.m_title );
+		SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), title )
 	end
-	SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), title )
 	
 	-- 接收时间
 	SetText( m_uiRecvTime, os.date( "%m-%d %H:%M", recvValue.m_recvtime ) )
@@ -642,8 +657,20 @@ function MailInfoDlgByRecvValue( recvValue )
 
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
-			SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )
-			
+			local textid = tonumber(string.sub(recvValue.m_content_json["text"], string.len(TAG_TEXTID) + 1));
+			if GetMail().m_localize_text[textid] == nil then
+				HttpRequest.GetText( textid, 0, function( response )
+					local json = require "cjson"
+					local info = json.decode( response );
+					if info ~= nil then
+						SetRichText( m_uiMailContent.transform:Find("Text"), info["text"] )
+						GetMail().m_localize_text[textid] = info["text"]
+					end
+				end )
+			else
+				SetRichText( m_uiMailContent.transform:Find("Text"), GetMail().m_localize_text[textid] )
+			end
+						
 		-- 每日登录
 		elseif recvValue.m_type == MAIL_TYPE_EVERYDAY then
 			SetRichText( m_uiMailContent.transform:Find("Text"), T(contentid) )

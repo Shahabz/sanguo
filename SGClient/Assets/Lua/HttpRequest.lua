@@ -27,14 +27,13 @@ function HttpRequest.GetServerList( callback )
 	HttpRequest.Get( paramString, callback );
 end
 
--- 获取公告
-function HttpRequest.GetNotice( callback )
-	local paramString = "c=serverinfo&m=getlist"
-	.."&uid="..Const.sdk_uid
-	.."&country="..DeviceHelper.getCountry()
-	.."&channelId="..Const.sdk_channelId
-	.."&os="..Const.sdk_sysType
-	.."&platid="..Const.platid
+-- 获取文字
+function HttpRequest.GetText( id, ext, callback )
+	local paramString = "c=serverinfo&m=gettext"
+	.."&id="..id
+	.."&lang="..DeviceHelper.getLanguage()
+	.."&cn="..DeviceHelper.getCountry()
+	.."&ext="..ext
 
 	HttpRequest.Get( paramString, callback );
 end

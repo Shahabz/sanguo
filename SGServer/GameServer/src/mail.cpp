@@ -899,3 +899,33 @@ void mail_sendall( int titleid, int contentid, char *v1, char *v2, char *v3, cha
 	}
 	//dbwork_addsql( "", DBWORK_CMD_MAIL_INSERTCOMPLETE, 0 );
 }
+
+// 给所有城池发送公告邮件
+void mail_notice( int titleid, int contentid, char *attach )
+{
+	char title[64] = { 0 };
+	sprintf( title, "%s%d", TAG_TEXTID, titleid );
+
+	char content[128] = { 0 };
+	sprintf( content, "{\"text\":\"%s%d\"}", TAG_TEXTID, contentid );
+
+	int currtime = (int)time( NULL );
+	int offlinesec = 15 * 86400;
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid <= 0 )
+			continue;
+		if ( g_city[tmpi].type == CityLairdType_Robot )
+			continue;
+		if ( (currtime - g_city[tmpi].lastlogin) >= offlinesec )
+			continue;
+		if ( g_city[tmpi].actor_index >= 0 && g_city[tmpi].actor_index < g_maxactornum )
+		{
+			mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_NOTIFY, title, content, attach, 0, 0 );
+		}
+		else
+		{
+			mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_NOTIFY, title, content, attach, 0, 1 );
+		}
+	}
+}

@@ -48,6 +48,7 @@ function Mail:Init()
 	self.m_nLastRecvMinMailID = int64.new(0);
 	self.m_bLoadNew = false;
 	self.m_bLoadAll = false;
+	self.m_localize_text = {}
 end
 
 function Mail:NewIndex()

@@ -415,7 +415,19 @@ function MailDlgSetMail( recvValue )
 			
 		-- 公告邮件，内容外部http服务器获取
 		elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
-			SetRichText( uiContent, T(contentid) )
+			local textid = tonumber(string.sub(recvValue.m_content_json["text"], string.len(TAG_TEXTID) + 1));
+			if GetMail().m_localize_text[textid] == nil then
+				HttpRequest.GetText( textid, 0, function( response )
+					local json = require "cjson"
+					local info = json.decode( response );
+					if info ~= nil then
+						SetRichText( uiContent, info["text"] )
+						GetMail().m_localize_text[textid] = info["text"]
+					end
+				end )
+			else
+				SetRichText( uiContent, GetMail().m_localize_text[textid] )
+			end
 			SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
 			
 		-- 每日登录
@@ -468,17 +480,32 @@ function MailDlgSetMail( recvValue )
 
 	
 	-- 解析标题
-	local title = "";
 	if recvValue.m_type == MAIL_TYPE_ACTOR_SEND or recvValue.m_type == MAIL_TYPE_ACTOR_REPLY then
 		local title_json = json.decode( recvValue.m_title );
-		title = F( 5004, Nation( title_json["n"] ), title_json["lv"], title_json["na"] );
+		local title = F( 5004, Nation( title_json["n"] ), title_json["lv"], title_json["na"] );
+		SetText( uiTitle, title )
 		
+	-- http获取
+	elseif recvValue.m_type == MAIL_TYPE_NOTIFY then
+		local textid = tonumber(string.sub(recvValue.m_title, string.len(TAG_TEXTID) + 1));
+		if GetMail().m_localize_text[textid] == nil then
+			HttpRequest.GetText( textid, 0, function( response )
+				local json = require "cjson"
+				local info = json.decode( response );
+				if info ~= nil then
+					SetText( uiTitle, info["text"] )
+					GetMail().m_localize_text[textid] = info["text"]
+				end
+			end )
+		else
+			SetText( uiTitle, GetMail().m_localize_text[textid] )
+		end
 	else
 		-- 其它类型解析
-		title = GetMail():GetString( recvValue.m_title );
+		local title = GetMail():GetString( recvValue.m_title );
+		SetText( uiTitle, title )
 	end
-	SetText( uiTitle, title )
-
+	
 	-- 接收时间
 	SetText( uiRecvTime, os.date( "%m-%d %H:%M", recvValue.m_recvtime ) )
 	

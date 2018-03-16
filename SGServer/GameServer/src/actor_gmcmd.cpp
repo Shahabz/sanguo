@@ -713,6 +713,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	}
 		break;
 	case GMC_MAIL_NOTICE:// ¹«¸æÓÊ¼þ
+		mail_notice( pValue[0], pValue[1], pMsg );
 		break;
 	default:
 		break;

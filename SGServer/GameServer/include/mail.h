@@ -122,4 +122,7 @@ int mail_actor_reply( int actor_index, SLK_NetC_MailReply *pValue );
 
 // 给所有城池邮件
 void mail_sendall( int titleid, int contentid, char *v1, char *v2, char *v3, char *attach );
+
+// 给所有城池发送公告邮件
+void mail_notice( int titleid, int contentid, char *attach );
 #endif
