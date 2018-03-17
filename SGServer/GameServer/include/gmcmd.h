@@ -56,6 +56,8 @@
 #define GMC_MAIL_ACTOR			(GMC_BASE+51)	// 玩家邮件
 #define GMC_MAIL_SERVER			(GMC_BASE+52)	// 全服邮件
 #define GMC_MAIL_NOTICE			(GMC_BASE+53)	// 公告邮件
+#define GMC_ACTIVITY_END		(GMC_BASE+54)	// 强制结束活动
+#define GMC_ACTIVITY_CLOSE		(GMC_BASE+55)	// 强制关闭活动
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

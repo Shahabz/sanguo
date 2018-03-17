@@ -3,7 +3,6 @@
 #include <windows.h>
 #endif
 #include <mysql.h>
-
 #include "actor.h"
 #include "actor_send.h"
 #include "actor_notify.h"
@@ -77,8 +76,7 @@ int activity_init()
 	// 分配空间
 	g_activity_item = (ActivityItem *)malloc( sizeof(ActivityItem)*g_activity_count );
 	memset( g_activity_item, 0, sizeof(ActivityItem)*g_activity_count );
-
-	sprintf( szSQL, "select activityid,starttime,endtime,closetime,value0,value1,value2,value3,strvalue,openstat,endstat from activity" );
+	sprintf( szSQL, "select activityid,warningtime,starttime,endtime,closetime,openstat,endstat from activity" );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error(myGame), __FUNCTION__, __LINE__ );
@@ -97,75 +95,37 @@ int activity_init()
 		else if( activityid >= g_activity_count )
 			continue;
 		g_activity_item[activityid].m_activityid = activityid;
-		g_activity_item[activityid].m_starttime = atoi( row[1] );
-		g_activity_item[activityid].m_endtime = atoi( row[2] );
-		g_activity_item[activityid].m_closetime = atoi( row[3] );
-		g_activity_item[activityid].m_value[0] = atoi( row[4] );
-		g_activity_item[activityid].m_value[1] = atoi( row[5] );
-		g_activity_item[activityid].m_value[2] = atoi( row[6] );
-		g_activity_item[activityid].m_value[3] = atoi( row[7] );
-		strcpy( g_activity_item[activityid].m_strvalue, row[8] );
-		g_activity_item[activityid].m_openstat = atoi( row[9] );
-		g_activity_item[activityid].m_endstat = atoi( row[10] );
+		g_activity_item[activityid].m_warningtime = atoi( row[1] );
+		g_activity_item[activityid].m_starttime = atoi( row[2] );
+		g_activity_item[activityid].m_endtime = atoi( row[3] );
+		g_activity_item[activityid].m_closetime = atoi( row[4] );
+		g_activity_item[activityid].m_openstat = atoi( row[5] );
+		g_activity_item[activityid].m_endstat = atoi( row[6] );
 	}
 	mysql_free_result( res );
 	return 0;
 }
 
-// 打开活动
-int activity_settime( int activityid, int begin_min, int len_min, int value0, int value1, int value2, int value3, char *pstr )
+// 设置活动
+int activity_set( int activityid, int warningtime, int starttime, int endtime, int closetime )
 {
 	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
-
-	int tmpi = 0;
-	int begintime;
-	int endtime;
-	int values[4] = {0};
-
-	values[0] = value0;
-	values[1] = value1;
-	values[2] = value2;
-	values[3] = value3;
-
-	if( begin_min < 0 || len_min <= 0 )
-	{
-		begintime = 0;
-		endtime = 0;
-	}
-	else
-	{
-		begintime = (int)time(NULL) + begin_min*60;
-		endtime = (int)time(NULL) + (begin_min+len_min)*60;
+	if ( activity_inclose( activityid ) )
+	{// 活动没有完全关闭，不允许设置
+		return -1;
 	}
 	g_activity_item[activityid].m_activityid = activityid;
-	g_activity_item[activityid].m_starttime = begintime;
+	g_activity_item[activityid].m_warningtime = warningtime;
+	g_activity_item[activityid].m_starttime = starttime;
 	g_activity_item[activityid].m_endtime = endtime;
-	if ( endtime > 0 && activityid == ACTIVITY_NORMAL )
-	{
-		g_activity_item[activityid].m_closetime = endtime + 12 * 3600;
-	}
-	else
-	{
-		g_activity_item[activityid].m_closetime = 0;
-	}
+	g_activity_item[activityid].m_closetime = closetime;
 	g_activity_item[activityid].m_openstat = 0;
 	g_activity_item[activityid].m_endstat = 0;
-	for( tmpi = 0; tmpi < 4; tmpi++ )
-	{
-		if( values[tmpi] > 0 )
-			g_activity_item[activityid].m_value[tmpi] = values[tmpi];
-		else if( values[tmpi] == -1 )
-			g_activity_item[activityid].m_value[tmpi] = 0;
-	}
-
-	if( pstr && strlen( pstr ) > 0 )
-	{
-		strcpy( g_activity_item[activityid].m_strvalue, pstr );
-	}
 
 	char szSQL[1024];
-	sprintf( szSQL, "replace into activity ( activityid,starttime,endtime,closetime,value0,value1,value2,value3,strvalue,openstat,endstat ) values('%d','%d','%d','%d','%d','%d','%d','%d','%s','%d','%d')", activityid, begintime, endtime, g_activity_item[activityid].m_closetime, value0, value1, value2, value3, pstr, 0, 0 );
+	sprintf( szSQL, "replace into activity ( activityid,warningtime,starttime,endtime,closetime,openstat,endstat ) values('%d','%d','%d','%d','%d','%d','%d')", 
+		activityid, g_activity_item[activityid].m_warningtime, g_activity_item[activityid].m_starttime, g_activity_item[activityid].m_endtime, g_activity_item[activityid].m_closetime, 0, 0 );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error(myGame) );
@@ -174,18 +134,18 @@ int activity_settime( int activityid, int begin_min, int len_min, int value0, in
 			db_reconnect_game();
 		return -1;
 	}
-
 	return 0;
 }
 
 // 临时改变结束时间
 int activity_setendtime( int activityid, int endtime )
 {
-	if ( activityid >= g_activity_count )
+	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
-	g_activity_item[activityid].m_endtime = endtime;
+	if ( g_activity_item[activityid].m_endstat == 1 )
+		return -1; // 已经调用过活动结束了，不允许临时改变了
 	char szSQL[256] = { 0 };
-	sprintf( szSQL, "UPDATE `activity` SET `endtime`='%d',`closetime`='%d' WHERE activityid='%d'", g_activity_item[activityid].m_endtime, g_activity_item[activityid].m_closetime, activityid );
+	sprintf( szSQL, "UPDATE `activity` SET `endtime`='%d' WHERE activityid='%d'", g_activity_item[activityid].m_endtime, activityid );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -195,28 +155,32 @@ int activity_setendtime( int activityid, int endtime )
 	return 0;
 }
 
-// 获取活动数据
-int activity_getdata( int activityid, int *value, char *pstr )
+// 活动强制结束
+int activity_force_end( int activityid )
 {
-	if( activityid >= g_activity_count )
+	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
-	if( value == NULL || pstr == NULL )
+	int nowstamp = (int)time( NULL );
+	int left = g_activity_item[activityid].m_closetime - g_activity_item[activityid].m_endtime;
+	g_activity_item[activityid].m_endtime = nowstamp;
+	g_activity_item[activityid].m_closetime = nowstamp + left;
+	activity_onend( activityid );
+	if ( nowstamp >= g_activity_item[activityid].m_closetime && g_activity_item[activityid].m_endstat == 1 )
+	{
+		activity_onclose( activityid );
+	}
+	return 0;
+}
+// 活动强制关闭
+int activity_force_close( int activityid )
+{
+	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
-	memcpy( value, g_activity_item[activityid].m_value, sizeof(int)*4 );
-	strcpy( pstr, g_activity_item[activityid].m_strvalue );
+	activity_onclose( activityid );
 	return 0;
 }
 
-// 获取活动值
-int activity_getvalue( int activityid, int index )
-{
-	if( activityid >= g_activity_count )
-		return 0;
-	if( index < 0 || index >= 4 )
-		return 0;
-	return g_activity_item[activityid].m_value[index];
-}
-
+// 设置调用过开启
 int activity_setopenstat( int activityid, int stat )
 {
 	if ( activityid >= g_activity_count )
@@ -232,6 +196,7 @@ int activity_setopenstat( int activityid, int stat )
 	return 0;
 }
 
+// 设置调用过关闭
 int activity_setendstat( int activityid, int stat )
 {
 	if ( activityid >= g_activity_count )
@@ -247,72 +212,42 @@ int activity_setendstat( int activityid, int stat )
 	return 0;
 }
 
+// 是否结束
 int activity_intime( int activityid )
 {
-	if( activityid >= g_activity_count )
+	if ( activityid >= g_activity_count )
 		return 0;
-	if( g_activity_item[activityid].m_starttime <= 0 )
+	if ( g_activity_item[activityid].m_starttime <= 0 )
 		return 0;
-
-	int timestamp = (int)time(NULL);
-	if( timestamp < g_activity_item[activityid].m_starttime || timestamp >= g_activity_item[activityid].m_endtime )
+	int timestamp = (int)time( NULL );
+	if ( timestamp < g_activity_item[activityid].m_starttime || timestamp >= g_activity_item[activityid].m_endtime )
 		return 0;
 	return 1;
 }
 
+// 是否关闭
 int activity_inclose( int activityid )
 {
 	if ( activityid >= g_activity_count )
 		return 0;
 	if ( g_activity_item[activityid].m_starttime <= 0 )
 		return 0;
-
 	int timestamp = (int)time( NULL );
 	if ( timestamp < g_activity_item[activityid].m_starttime || timestamp >= g_activity_item[activityid].m_closetime )
 		return 0;
 	return 1;
 }
 
-// 获得活动启动时间秒
-int activity_starttime( int activityid )
+// 获得活动剩余时间
+int activity_lefttime( int activityid )
 {
 	if ( activityid >= g_activity_count )
 		return 0;
 	if ( g_activity_item[activityid].m_starttime <= 0 )
 		return 0;
-	return g_activity_item[activityid].m_starttime;
-}
-
-// 活动结束时间
-int activity_endtime( int activityid )
-{
-	if ( activityid >= g_activity_count )
-		return 0;
-	if ( g_activity_item[activityid].m_endtime <= 0 )
-		return 0;
-	return g_activity_item[activityid].m_endtime;
-}
-
-// 活动关闭时间
-int activity_closetime( int activityid )
-{
-	if ( activityid >= g_activity_count )
-		return 0;
-	if ( g_activity_item[activityid].m_closetime <= 0 )
-		return 0;
-	return g_activity_item[activityid].m_closetime;
-}
-
-// 获得活动剩余时间 秒
-int activity_lefttime( int activityid )
-{
-	if( activityid >= g_activity_count )
-		return 0;
-	if( g_activity_item[activityid].m_starttime <= 0 )
-		return 0;
 
 	int lefttime = g_activity_item[activityid].m_endtime - (int)time( NULL );
-	if( lefttime < 0 )
+	if ( lefttime < 0 )
 		lefttime = 0;
 
 	return lefttime;
@@ -332,11 +267,54 @@ int activity_totaltime( int activityid )
 	return g_activity_item[activityid].m_endtime - g_activity_item[activityid].m_starttime;
 }
 
+ // 活动逻辑分钟
+int activity_logic()
+{
+	int activityid;
+	int timestamp = (int)time( NULL );
+	for ( activityid = 1; activityid < g_activity_count; activityid++ )
+	{
+		if ( timestamp < g_activity_item[activityid].m_warningtime )
+		{// 未到预热时间
+			continue;
+		}
 
+		// 已到预热时间，未到活动开启时间
+		if ( timestamp < g_activity_item[activityid].m_starttime )
+		{
+			activity_onwarning( activityid, g_activity_item[activityid].m_starttime - timestamp );
+			continue;
+		}
+
+		// 已经到开启时间，只会调用一次
+		if ( g_activity_item[activityid].m_openstat == 0 )
+		{
+			activity_onopen( activityid );
+		}
+
+		// 结束
+		if ( timestamp >= g_activity_item[activityid].m_endtime && g_activity_item[activityid].m_endstat == 0 )
+		{
+			activity_onend( activityid );
+		}
+
+		// 关闭
+		if ( timestamp >= g_activity_item[activityid].m_closetime && g_activity_item[activityid].m_endstat == 1 )
+		{
+			activity_onclose( activityid );
+			continue;
+		}
+		activity_onlogic( activityid );
+	}
+	return 0;
+}
+
+// 活动结束后删除活动
 int activity_delete( int activityid )
 {
 	if ( activityid >= g_activity_count )
 		return 0;
+	memset( &g_activity_item[activityid], 0, sizeof( ActivityItem ) );
 	char szSQL[1024];
 	sprintf( szSQL, "DELETE FROM `activity` WHERE `activityid`=%d;", activityid );
 	if ( mysql_query( myGame, szSQL ) )
@@ -350,7 +328,8 @@ int activity_delete( int activityid )
 	return 0;
 }
 
-int activity_onwarning( int activityid, int surplus )
+// 调用预热
+int activity_onwarning( int activityid, int lefttime )
 {
 	if ( activityid >= g_activity_count )
 		return 0;
@@ -364,6 +343,7 @@ int activity_onwarning( int activityid, int surplus )
 	return 0;
 }
 
+// 调用开启
 int activity_onopen( int activityid )
 {
 	if( activityid >= g_activity_count )
@@ -378,9 +358,11 @@ int activity_onopen( int activityid )
 		sc_ActivityOnOpen( activityid );
 		break;
 	}
+	activity_setopenstat( activityid, 1 );
 	return 0;
 }
 
+// 调用结束
 int activity_onend( int activityid )
 {
 	if ( activityid >= g_activity_count )
@@ -394,9 +376,11 @@ int activity_onend( int activityid )
 		sc_ActivityOnEnd( activityid );
 		break;
 	}
+	activity_setendstat( activityid, 1 );
 	return 0;
 }
 
+// 调用关闭
 int activity_onclose( int activityid )
 {
 	if( activityid >= g_activity_count )
@@ -410,9 +394,6 @@ int activity_onclose( int activityid )
 		sc_ActivityOnClose( activityid );
 		break;
 	}
-	activity_settime( activityid, -1, -1, 0, 0, 0, 0, "" );
-	activity_setopenstat( activityid, 0 );
-	activity_setendstat( activityid, 0 );
 	activity_delete( activityid );
 	return 0;
 }
@@ -430,100 +411,6 @@ int activity_onlogic( int activityid )
 		break;
 	}
 	return 0;
-}
-
-int activity_logic()
-{
-	int activityid;
-	int timestamp = (int)time(NULL);
-	for( activityid = 1; activityid < g_activity_count; activityid++ )
-	{
-		if ( g_activity_item[activityid].m_starttime <= 0 )
-		{
-			g_activity_item[activityid].m_nexttime = time_gmcmd_getnexttime( GMC_ACTIVITY, activityid );
-			activity_onwarning( activityid, g_activity_item[activityid].m_nexttime - timestamp );
-			continue;
-		}
-
-		// 活动尚未开始
-		if ( timestamp < g_activity_item[activityid].m_starttime )
-		{
-			activity_onwarning( activityid, g_activity_item[activityid].m_starttime - timestamp );
-			continue;
-		}
-
-		// 开启，只会调用一次
-		if ( g_activity_item[activityid].m_openstat == 0 )
-		{
-			activity_onopen( activityid );
-			activity_setopenstat( activityid, 1 );
-		}
-
-		// 结束
-		if ( timestamp >= g_activity_item[activityid].m_endtime && g_activity_item[activityid].m_endstat == 0 )
-		{
-			activity_onend( activityid );
-			activity_setendstat( activityid, 1 );
-		}
-
-		// 关闭
-		if( timestamp >= g_activity_item[activityid].m_closetime && g_activity_item[activityid].m_endstat == 1 )
-		{
-			activity_onclose( activityid );
-			continue;
-		}
-		activity_onlogic( activityid );
-	}
-	return 0;
-}
-
-// 设置活动参数
-int activity_setdata( int activityid, int value0, int value1, int value2, int value3, char* pstr )
-{
-	char szSQL[1024];
-
-	if( activityid < 0 || activityid >= g_activity_count )
-		return -1;
-
-	g_activity_item[activityid].m_value[0] = value0;
-	g_activity_item[activityid].m_value[1] = value1;
-	g_activity_item[activityid].m_value[2] = value2;
-	g_activity_item[activityid].m_value[3] = value3;
-	if( pstr )
-		strcpy( g_activity_item[activityid].m_strvalue, pstr );
-	else
-		g_activity_item[activityid].m_strvalue[0] = 0;
-
-	sprintf( szSQL, "replace into activity ( activityid,starttime,endtime,closetime,value0,value1,value2,value3,strvalue,openstat,endstat ) values('%d','%d','%d','%d','%d','%d','%d','%d','%s','%d','%d')", 
-		activityid, g_activity_item[activityid].m_starttime, g_activity_item[activityid].m_endtime, g_activity_item[activityid].m_closetime, value0, value1, value2, value3, pstr, g_activity_item[activityid].m_openstat, g_activity_item[activityid].m_endstat );
-	if( mysql_query( myGame, szSQL ) )
-	{
-		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
-		write_gamelog( "%s", szSQL );
-		if( mysql_ping( myGame ) != 0 )
-			db_reconnect_game();
-		return -1;
-	}
-
-	return 0;
-}
-
-// 活动倒计时
-int activity_countdown( int activityid )
-{
-	if ( activityid < 1 || activityid >= g_activity_count )
-		return -1;
-	int timestamp = (int)time( NULL );
-	int statetime = 0;
-	if ( g_activity_item[activityid].m_starttime <= 0 || activity_intime( activityid ) == 0 )
-	{
-		statetime = time_gmcmd_getnexttime( GMC_ACTIVITY, activityid ) - timestamp;
-	}
-	else if ( timestamp < g_activity_item[activityid].m_starttime )
-	{
-		statetime = g_activity_item[activityid].m_starttime - timestamp;
-	}
-	return statetime;
 }
 
 // 活动列表
@@ -544,13 +431,8 @@ int activity_sendlist( int actor_index )
 	{
 		int starttime = g_activity_item[activityid].m_starttime;
 		if ( starttime <= 0 )
-		{
-			starttime = g_activity_item[activityid].m_nexttime;
-		}
-		if ( starttime <= 0 )
-		{
 			continue;
-		}
+		
 		pValue.m_list[pValue.m_count].m_activityid = activityid;
 		pValue.m_list[pValue.m_count].m_starttime = starttime;
 		pValue.m_list[pValue.m_count].m_endtime = g_activity_item[activityid].m_endtime;

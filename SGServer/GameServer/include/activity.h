@@ -2,10 +2,9 @@
 #ifndef __ACTIVITY_H
 #define __ACTIVITY_H
 
-#define MAX_ACTIVITY_COUNT					64
+#define MAX_ACTIVITY_COUNT					48
 
 #define ACTIVITY_NORMAL						0 
-
 #define ACTIVITY_1	1	//	首充礼包
 #define ACTIVITY_2	2	//	主城等级
 #define ACTIVITY_3	3	//	攻城略地
@@ -54,49 +53,32 @@
 typedef struct _activity_item
 {
 	int m_activityid;
+	int m_warningtime;	// 活动预热时间
 	int m_starttime;	// 活动启动时间
 	int m_endtime;		// 活动结束时间
 	int m_closetime;	// 活动关闭时间，好多活动为了玩家看积分排名什么的，会有最后隐藏时间
-	int m_nexttime;		// 下次开启时间
-	int m_value[4];
-	char m_strvalue[256];
-	char m_openstat;
-	char m_endstat;
+	char m_openstat;	// 是否调用过开启函数
+	char m_endstat;		// 是否调用过结束函数
 }ActivityItem;
 
 int activity_init();
+int activity_set( int activityid, int warningtime, int starttime, int endtime, int closetime );
+int activity_setendtime( int activityid, int endtime );
+int activity_force_end( int activityid );
+int activity_force_close( int activityid );
+int activity_setopenstat( int activityid, int stat );
+int activity_setendstat( int activityid, int stat );
+int activity_intime( int activityid );
+int activity_inclose( int activityid );
+int activity_lefttime( int activityid );
+int activity_totaltime( int activityid );
 int activity_logic();
-int activity_onwarning( int activityid, int surplus );
+
+int activity_onwarning( int activityid, int lefttime );
 int activity_onopen( int activityid );
 int activity_onend( int activityid );
 int activity_onclose( int activityid );
 int activity_onlogic( int activityid );
-
-// 获得活动启动时间
-int activity_starttime( int activityid );
-
-// 活动结束时间
-int activity_endtime( int activityid );
-
-// 活动关闭时间
-int activity_closetime( int activityid );
-
-// 获得活动剩余时间
-int activity_lefttime( int activityid );
-
-// 获得活动应该持续时间
-int activity_totaltime( int activityid );
-
-int activity_intime( int activityid );
-int activity_inclose( int activityid );
-int activity_settime( int activityid, int begin_min, int len_min, int value0, int value1, int value2, int value3, char *pstr );
-int activity_setendtime( int activityid, int endtime );
-int activity_getdata( int activityid, int *value, char *pstr );
-int activity_setdata( int activityid, int value0, int value1, int value2, int value3, char* pstr );
-int activity_getvalue( int activityid, int index );
-int activity_setopenstat( int activityid, int stat );
-int activity_setendstat( int activityid, int stat );
-int activity_countdown( int activityid );
 
 // 活动列表
 int activity_sendlist( int actor_index );

@@ -1668,8 +1668,9 @@ int process_serverinit()
 {
 	if ( world_data_getcache( WORLD_DATA_SERVERINIT ) > 0 )
 		return -1;
+	int nowstamp = (int)time( NULL );
 	// 全服返利
-	activity_settime( ACTIVITY_6, 0, 1440*7, 0, 0, 0, 0, "" );
+	activity_set( ACTIVITY_6, nowstamp, nowstamp, nowstamp + 86400 * 7, nowstamp + 86400 * 14 );
 	// 特价礼包
 	activity_10_init();
 	world_data_set( WORLD_DATA_SERVERINIT, (int)time(NULL), NULL, NULL );

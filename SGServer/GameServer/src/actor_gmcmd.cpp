@@ -383,7 +383,21 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_ACTIVITY:// 活动
-		activity_settime( pValue[0], 0, pValue[1], pValue[2], pValue[3], 0, 0, pMsg );
+	{
+		char **pptable = NULL;
+		int groupcount = 0;
+		pptable = u_strcut_ex( pMsg, '|', &groupcount );
+		if ( groupcount != 4 )
+			break;
+
+		int activityid = pValue[0];
+		int warningtime = atoi( pptable[0] );
+		int starttime = atoi( pptable[1] );
+		int endtime = atoi( pptable[2] );
+		int closetime = atoi( pptable[3] );
+		activity_set( activityid, warningtime, starttime, endtime, closetime );
+		u_free_vec( pptable );
+	}
 		break;
 	case GMC_TECH:
 		if ( pCity )
@@ -702,7 +716,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				continue;
 			if ( (currtime - g_city[tmpi].lastlogin) >= offlinesec )
 				continue;
-			if ( nation > 0 && (nation != g_city[tmpi].nation+1) )
+			if ( nation > 0 && nation != g_city[tmpi].nation )
 				continue; // 国家不同
 			if ( level > g_city[tmpi].level )
 				continue; // 等级
@@ -720,6 +734,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		break;
 	case GMC_MAIL_NOTICE:// 公告邮件
 		mail_notice( pValue[0], pValue[1], pMsg );
+		break;
+	case GMC_ACTIVITY_END: // 强制结束活动
+		activity_force_end( pValue[0] );
+		break;
+	case GMC_ACTIVITY_CLOSE: // 活动强制关闭
+		activity_force_close( pValue[0] );
 		break;
 	default:
 		break;

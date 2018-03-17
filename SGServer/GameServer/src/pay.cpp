@@ -1294,19 +1294,19 @@ int activity_paybag_open( int activityid )
 	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
 
-	short goodsid = g_activity_item[activityid].m_value[0];
-	int cd = activity_lefttime( activityid );
-	int limitcount = g_activity_item[activityid].m_value[1];
+	//short goodsid = g_activity_item[activityid].m_value[0];
+	//int cd = activity_lefttime( activityid );
+	//int limitcount = g_activity_item[activityid].m_value[1];
 
-	if ( goodsid <= 0 )
-		return -1;
+	//if ( goodsid <= 0 )
+	//	return -1;
 
-	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
-	{
-		if ( g_city[tmpi].actorid < MINACTORID )
-			continue;
-		city_paybag_add( &g_city[tmpi], goodsid, cd, limitcount, 1 );
-	}
+	//for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	//{
+	//	if ( g_city[tmpi].actorid < MINACTORID )
+	//		continue;
+	//	city_paybag_add( &g_city[tmpi], goodsid, cd, limitcount, 1 );
+	//}
 	return 0;
 }
 
@@ -1316,13 +1316,13 @@ int activity_paybag_close( int activityid )
 	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
 
-	short goodsid = g_activity_item[activityid].m_value[0];
-	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
-	{
-		if ( g_city[tmpi].actorid < MINACTORID )
-			continue;
-		city_paybag_del( &g_city[tmpi], goodsid );
-	}
+	//short goodsid = g_activity_item[activityid].m_value[0];
+	//for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	//{
+	//	if ( g_city[tmpi].actorid < MINACTORID )
+	//		continue;
+	//	city_paybag_del( &g_city[tmpi], goodsid );
+	//}
 	return 0;
 }
 
