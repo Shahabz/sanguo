@@ -63,7 +63,7 @@ typedef struct _activity_item
 
 int activity_init();
 int activity_set( int activityid, int warningtime, int starttime, int endtime, int closetime );
-int activity_setendtime( int activityid, int endtime );
+int activity_setendtime( int activityid, int endtime, int closetime );
 int activity_force_end( int activityid );
 int activity_force_close( int activityid );
 int activity_setopenstat( int activityid, int stat );

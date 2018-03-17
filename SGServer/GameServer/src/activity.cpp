@@ -138,14 +138,16 @@ int activity_set( int activityid, int warningtime, int starttime, int endtime, i
 }
 
 // 临时改变结束时间
-int activity_setendtime( int activityid, int endtime )
+int activity_setendtime( int activityid, int endtime, int closetime )
 {
 	if ( activityid <= 0 || activityid >= g_activity_count )
 		return -1;
 	if ( g_activity_item[activityid].m_endstat == 1 )
 		return -1; // 已经调用过活动结束了，不允许临时改变了
+	g_activity_item[activityid].m_endtime = endtime;
+	g_activity_item[activityid].m_closetime = closetime;
 	char szSQL[256] = { 0 };
-	sprintf( szSQL, "UPDATE `activity` SET `endtime`='%d' WHERE activityid='%d'", g_activity_item[activityid].m_endtime, activityid );
+	sprintf( szSQL, "UPDATE `activity` SET `endtime`='%d',`closetime`='%d' WHERE activityid='%d'", g_activity_item[activityid].m_endtime, g_activity_item[activityid].m_closetime, activityid );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -162,8 +164,7 @@ int activity_force_end( int activityid )
 		return -1;
 	int nowstamp = (int)time( NULL );
 	int left = g_activity_item[activityid].m_closetime - g_activity_item[activityid].m_endtime;
-	g_activity_item[activityid].m_endtime = nowstamp;
-	g_activity_item[activityid].m_closetime = nowstamp + left;
+	activity_setendtime( activityid, nowstamp, nowstamp + left );
 	activity_onend( activityid );
 	if ( nowstamp >= g_activity_item[activityid].m_closetime && g_activity_item[activityid].m_endstat == 1 )
 	{
