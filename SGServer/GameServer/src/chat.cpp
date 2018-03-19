@@ -20,6 +20,7 @@
 #include "city.h"
 #include "chat.h"
 #include "item.h"
+#include "actor_notify.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -42,6 +43,11 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	if ( g_actors[actor_index].forbidtime - (int)time( NULL ) > 0 )
+	{
+		actor_notify_pop( actor_index, 525 );
+		return -1;
+	}
 	SLK_NetS_Chat pValue = { 0 };
 	pValue.m_actorid = g_actors[actor_index].actorid;
 	pValue.m_shape = pCity->shape;

@@ -661,6 +661,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	{
 		activity_04_setvalue( g_actors[actor_index].city_index, color, num );
 	}
+	else if ( kind == AWARDKIND_FORBIDTALK ) // 禁言
+	{
+		actor_forbidtalk( actor_index, num );
+	}
 	else if ( kind == AWARDKIND_PERMISSION_4 ) // 科技快研
 	{
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );

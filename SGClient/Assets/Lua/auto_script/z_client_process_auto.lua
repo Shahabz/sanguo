@@ -53,15 +53,12 @@ function proc_list_C( recvValue )
 		CreateDlgShow( recvValue.m_nation_award );
 	else
 		if recvValue.m_listinfo[1].m_lockstat == 1 then
-			Data.userini:WriteValue( "USERNAME", "" );
-			Data.userini:WriteValue( "PASSTOKEN", "" );
-			local lock_endtime = recvValue.m_listinfo[1].m_lock_endtime - os.time();
-			if lock_endtime > 0 then
-				lock_endtime = getTimeStringBySecond( lock_endtime );
-			else
-				lock_endtime = "";
-			end
-			--Alert( T(516).."\n"..lock_endtime, T(509), function() Application.Quit() end );
+			GameManager.writeini( "USERNAME", "" );
+			GameManager.writeini( "PASSTOKEN", "" );
+			Alert( F(516, getTimeStringByNormal(recvValue.m_listinfo[1].m_lock_endtime) ), T(515), function() 
+				GameManager.Restart();
+				GameManager.Logout( 1 );
+			end );
 		else
 			-- Ω¯»Î”Œœ∑
 			netsend_entergame_C( recvValue.m_listinfo[1].m_actorid );

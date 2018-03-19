@@ -1136,46 +1136,21 @@ int actor_restart_notonline( int actorid )
 }
 
 // 踢人
-int actor_kick( int actorid, int kicktime )
+int actor_kick( int actor_index )
 {
-	/*int actor_index = actor_getindex_withid( actorid );
-	int city_index = city_getindex_withactorid( actorid );
-	if ( city_index < 0 || city_index >= g_city_maxcount )
-	{
+	ACTOR_CHECK_INDEX( actor_index );
+	actor_send_remove( actor_index );
+	return 0;
+}
+
+// 锁定角色
+int actor_lock( int actorid, int locktime )
+{
+	City *pCity = city_getptr_withactorid( actorid );
+	if ( !pCity )
 		return -1;
-	}
-	City *pCity = &g_city[city_index];
-	int locktime = 0;
-	if ( kicktime > 0 )
-	{
-		locktime = kicktime*60 + (int)time( NULL );
-
-		pCity->buff_id[1] = 1;
-		pCity->buff_duration[1] = kicktime * 60;
-		city_attr_reset( pCity );
-		mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
-	}
-	else if ( kicktime == 0 )
-	{
-		locktime = 0;
-
-		pCity->buff_id[1] = 1;
-		pCity->buff_duration[1] = 3600;
-		city_attr_reset( pCity );
-		mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
-	}
-	else if ( kicktime < 0 )
-	{
-		locktime = -1;
-
-		pCity->buff_id[1] = 1;
-		pCity->buff_duration[1] = 31536000;
-		city_attr_reset( pCity );
-		mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
-	}
-
 	char szSQL[256];
-	sprintf( szSQL, "UPDATE actor_list SET lock_time='%d' WHERE actorid=%d", locktime, actorid );
+	sprintf( szSQL, "UPDATE actor_list SET lock_time='%d' WHERE actorid=%d", locktime + (int)time( NULL ), actorid );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -1184,10 +1159,29 @@ int actor_kick( int actorid, int kicktime )
 			db_reconnect_game();
 		return -1;
 	}
-	if ( actor_index >= 0 )
+	if ( pCity->actor_index >= 0 )
 	{
-		actor_send_remove( actor_index );
-	}*/
+		actor_send_remove( pCity->actor_index );
+	}
+	return 0;
+}
+
+// 解锁角色
+int actor_unlock( int actorid )
+{
+	City *pCity = city_getptr_withactorid( actorid );
+	if ( !pCity )
+		return -1;
+	char szSQL[256];
+	sprintf( szSQL, "UPDATE actor_list SET lock_time='%d' WHERE actorid=%d", 0, actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
 	return 0;
 }
 
@@ -1197,15 +1191,11 @@ int actor_forbidtalk( int actor_index, int forbidtime )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( forbidtime > 0 )
 	{
-		g_actors[actor_index].forbidtime = forbidtime*60 + (int)time( NULL );
+		g_actors[actor_index].forbidtime = forbidtime + (int)time( NULL );
 	}
-	else if ( forbidtime == 0 )
+	else if ( forbidtime <= 0 )
 	{
 		g_actors[actor_index].forbidtime = 0;
-	}
-	else if ( forbidtime < 0 )
-	{
-		g_actors[actor_index].forbidtime = -1;
 	}
 	return 0;
 }

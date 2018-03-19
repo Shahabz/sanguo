@@ -58,6 +58,11 @@
 #define GMC_MAIL_NOTICE			(GMC_BASE+53)	// 公告邮件
 #define GMC_ACTIVITY_END		(GMC_BASE+54)	// 强制结束活动
 #define GMC_ACTIVITY_CLOSE		(GMC_BASE+55)	// 强制关闭活动
+#define GMC_KICK				(GMC_BASE+56)	// 踢下线
+#define GMC_LOCKACTOR			(GMC_BASE+57)	// 锁角色
+#define GMC_LOCKUSER			(GMC_BASE+58)	// 锁账号
+#define GMC_UNLOCKACTOR			(GMC_BASE+59)	// 解锁角色
+#define GMC_UNLOCKUSER			(GMC_BASE+60)	// 解锁账户
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

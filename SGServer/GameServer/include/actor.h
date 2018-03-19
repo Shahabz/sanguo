@@ -81,8 +81,10 @@ int actor_restart( int actor_index );
 int actor_restart_notonline( int actorid );
 
 // ÌßÈË
-int actor_kick( int actorid, int kicktime );
-
+int actor_kick( int actor_index );
+// Ëø¶¨½ÇÉ«
+int actor_lock( int actorid, int locktime );
+int actor_unlock( int actorid );
 // ½ûÑÔ
 int actor_forbidtalk( int actor_index, int forbidtime );
 

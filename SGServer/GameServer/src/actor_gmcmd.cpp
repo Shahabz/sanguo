@@ -741,6 +741,28 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_ACTIVITY_CLOSE: // 活动强制关闭
 		activity_force_close( pValue[0] );
 		break;
+	case GMC_KICK: // 踢下线
+		if ( pCity )
+		{
+			actor_kick( pCity->actor_index );
+		}
+		break;
+	case GMC_LOCKACTOR: // 锁角色
+		if ( pCity )
+		{
+			actor_lock( pCity->actorid, pValue[0] );
+		}
+		break;
+	case GMC_LOCKUSER: // 锁账号
+		break;
+	case GMC_UNLOCKACTOR: // 解锁角色
+		if ( pCity )
+		{
+			actor_unlock( pCity->actorid );
+		}
+		break;
+	case GMC_UNLOCKUSER: // 解锁账户
+		break;
 	default:
 		break;
 	}
