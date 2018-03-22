@@ -45,7 +45,7 @@
 #define	QUEST_DATATYPE_MATERIAL_MAKE		43	// 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
 #define	QUEST_DATATYPE_HEROGUARD_UP			44	// 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
 #define	QUEST_DATATYPE_HERO_VISIT			45	// 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
-#define	QUEST_DATATYPE_HERO_CALL_TYPE		46	// 招募武将指定类型 datatype=46 datakind=兵种（1，2，3） needvalue=1
+#define	QUEST_DATATYPE_HERO_CALL_STORY		46	// 副本招募武将 datatype=46 datakind=副本id needvalue=1
 
 // 任务类型
 enum 

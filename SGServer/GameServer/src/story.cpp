@@ -518,6 +518,7 @@ int story_hero_free( int actor_index, int id )
 
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_STORY, id, 0, 1 );
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL_STORY, id, 0, 1 );
 	return 0;
 }
 
@@ -565,6 +566,8 @@ int story_hero_token( int actor_index, int id )
 		g_actors[actor_index].story_hero[config->hero_saveoffset] = 1;
 	}
 	story_sendrankstate( actor_index, id, 2, config->hero_saveoffset );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL_STORY, id, 0, 1 );
 	return 0;
 }
 
