@@ -185,6 +185,7 @@
      <Compile Include="Assets\Source\Generate\MapBorderWrap.cs" />
      <Compile Include="Assets\Source\Generate\MapUnitMoveWrap.cs" />
      <Compile Include="Assets\Source\Generate\NetworkManagerWrap.cs" />
+     <Compile Include="Assets\Source\Generate\NotificationManagerWrap.cs" />
      <Compile Include="Assets\Source\Generate\ObjectPoolManagerWrap.cs" />
      <Compile Include="Assets\Source\Generate\OpenUDIDPhone_OpenUDIDWrap.cs" />
      <Compile Include="Assets\Source\Generate\PathUtilWrap.cs" />
@@ -353,6 +354,11 @@
      <Compile Include="Assets\Source\Net\IPv6SupportMidleware.cs" />
      <Compile Include="Assets\Source\Net\NetWorkInfo.cs" />
      <Compile Include="Assets\Source\Net\SocketClient.cs" />
+     <Compile Include="Assets\Source\Notification\AndroidNotification.cs" />
+     <Compile Include="Assets\Source\Notification\DefaultNotification.cs" />
+     <Compile Include="Assets\Source\Notification\INotification.cs" />
+     <Compile Include="Assets\Source\Notification\IOSNotification.cs" />
+     <Compile Include="Assets\Source\Notification\NotificationManager.cs" />
      <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\CameraMotionBlur.cs" />
      <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsBase.cs" />
      <Compile Include="Assets\Source\StandardAssets\Effects\ImageEffects\PostEffectsHelper.cs" />

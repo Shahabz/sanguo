@@ -796,6 +796,26 @@ function MapUnit.RefreshQuestEnemy( targetLevel )
     end    
 end
 
+-- 刷新下流寇等级
+function MapUnit.RefreshEnemyLevel( mokilllv )
+	for index, unit in pairs( WorldMap.m_nMapUnitList ) do
+        if unit.m_type == MAPUNIT_TYPE_ENEMY then
+            local unitObj = MapUnit.cache[ unit.m_unit_index ];
+            if unitObj ~= nil then
+				local level	= unit.m_char_value[1];
+				local kind 	= unit.m_short_value[1];
+                local objs 	= unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+				local uiName = objs[1];
+				if level > GetPlayer().m_mokilllv+1 then
+					SetTextColor( uiName, Color.red )
+				else
+					SetTextColor( uiName, Color.white )
+				end
+            end
+        end
+    end
+end
+
 -- 刷新下目标战斗流寇
 function MapUnit.RefreshTargetEnemy( recvValue )
 	for index, unit in pairs( WorldMap.m_nMapUnitList ) do

@@ -984,6 +984,9 @@ int actor_new( int actor_index )
 		actor_change_token( actor_index, global.nation_award_token, PATH_SYSTEM, 0 );
 	}
 
+	// 新手保护
+	g_city[city_index].ptsec = global.newplayer_protect;
+
 	// 征收时间
 	g_city[city_index].levysec = global.levy_max;
 	// 刷事件

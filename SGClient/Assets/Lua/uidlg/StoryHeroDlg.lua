@@ -146,14 +146,13 @@ function StoryHeroDlgShow( storyid, info )
 			SetFalse( m_uiBuyBtn )
 		end
 		
-		if IsGuiding() and GetCurrentGuideType() == GUIDE_CPOY then
-			if GetGuideSpecialEvent() == 1 then
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_COPY_HERO then
 				GuideNext();
 			end
-		end
-		
-		if IsGuiding() and GetCurrentGuideType() == GUIDE_GET_HERO then 
-			FindCmdTpye(m_uiCallBtn.transform);
+			if GetCurrentGuideType() == GUIDE_GET_HERO then 
+				FindCmdTpye(m_uiCallBtn.transform);
+			end
 		end
 		
 	elseif storyConfig.hero_kind1 > 0 then

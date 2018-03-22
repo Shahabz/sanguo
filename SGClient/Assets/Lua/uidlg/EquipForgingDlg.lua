@@ -554,7 +554,7 @@ function EquipForgingDlgForgingEffect(uiEffect)
 		m_ForgingEffect = GameObject.Instantiate( LoadPrefab( "Czdz" ) )
 		m_ForgingEffect.transform:SetParent( uiEffect.transform );
 		m_ForgingEffect.transform.localPosition = Vector3.New( 0, 0, 0 );		
-		m_ForgingEffect.transform.localScale = Vector3.New( 400, 400, 400 );
+		m_ForgingEffect.transform.localScale = Vector3.New( 8, 8, 8 );
 	end
 end
 

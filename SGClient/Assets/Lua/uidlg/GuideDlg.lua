@@ -1,17 +1,17 @@
--- 引导事件
+-- cmd引导事件
 CMD_TALK = 1         --隐藏所有手指
 CMD_SPECIAL = 2      --主界面上的指引
 CMD_CLICK = 3        --其他页面上的指引
 
--- 引导的类型
-GUIDE_TOCLICKTASK = 1     --指向任务按钮手指
-GUIDE_TECH_SURE = 2      --研究科技确认
+-- guideType引导的类型
+GUIDE_TOCLICKTASK = 1    --指向任务按钮手指
+GUIDE_TECH_SURE = 2      --研究科技确认按钮
 GUIDE_GOTO_SOCIETY = 3   --世界按钮手指
 GUIDE_CLCLK_HEAD = 4     --点击马岱头像
 GUIDE_CLCLK_DRESS = 5    --点击衣服穿戴
-GUIDE_DRESS = 6          --穿戴
+GUIDE_DRESS = 6          --装备穿戴
 GUIDE_GET = 7            --征收
-GUIDE_RECRUIT = 8        --招募
+GUIDE_RECRUIT = 8        --招募士兵
 GUIDE_CHOOSE = 9         --选择古淀刀
 GUIDE_MAKE = 10          --打造
 GUIDE_CHOOSE_WEAPON = 11 --点击武器穿戴
@@ -20,7 +20,7 @@ GUIDE_BACK = 13          --回城按钮手指
 GUIDE_UPGRADE = 14       --升级建筑
 GUIDE_CHOOSE_MA = 15     --选择马
 GUIDE_DRESS_MA = 16      --点击马穿戴
-GUIDE_GET_HERO = 17      --招募武将
+GUIDE_GET_HERO = 17      --招募武将按钮
 GUIDE_CLCLK_ZL = 18      --点击张良头像
 GUIDE_CHOOSE_CLOUTH = 19 --选择锁子甲
 GUIDE_CHOOSE_HEAD = 20   --选择精铁盔
@@ -30,7 +30,12 @@ GUIDE_DRESS_HEAD = 23    --点击头盔穿戴
 GUIDE_AUTOBUILDING = 24  --自动建造
 GUIDE_HERODLG = 25       --武将按钮
 GUIDE_TECH = 26          --科技特效
-
+GUIDE_WORK = 27          --任务按钮
+GUIDE_COPY_HERO = 28     --副本武将招募手指
+GUIDE_DRESS_YIN = 29     --点击印章穿戴
+GUIDE_DRESS_FU = 30      --点击符穿戴
+GUIDE_GUOQI = 31         --打造国器1
+GUIDE_DAZAO = 32         --点击开始打造国器
 
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
 GUIDE_END = 999          --指引结束标识
@@ -116,7 +121,7 @@ function Guide(id, step, force)
         end
 
         -- 检查引导是否完成
-        if GuideCheck( id ) and g_guide[mId][mStep].guideType == 999 then
+        if GuideCheck( id ) and mStep == 999 then
 			mIsGuiding = false;
             return;
         end   
@@ -137,18 +142,19 @@ end
 
 function GuideNext()
 	if table.getn(g_guide[mId]) == mStep then
-		mStep = 0;
+		HideGuideFinger();
+		HideCurrentFinger();
 		system_askinfo( ASKINFO_GUAID, "", mId + 1 );
-		Guide( mId + 1, 1);
 	else
 		Guide( mId, mStep + 1 );
 	end
 end
 
-function ForceGuideNext()
+function GuideEnd()
+	HideGuideFinger();
+	HideCurrentFinger();
 	mStep = 0;
 	system_askinfo( ASKINFO_GUAID, "", mId + 1 );
-	Guide( mId + 1, 1);
 end
 
 function GuideCheck(id)
@@ -166,6 +172,9 @@ function IsGuiding()
 end
 
 function GetCurrentGuideType()
+	if mStep == 0 then
+		return 0;
+	end
 	return g_guide[mId][mStep].guideType
 end
 
@@ -173,9 +182,11 @@ function GetGuideSpecialEvent()
 	return g_guide[mId][mStep].isSpecial
 end
 function HideGuideFinger()
-	for i = 1, table.getn(m_uiFinger), 1 do 
-		if m_uiFinger[i] then
-			SetFalse(m_uiFinger[i].transform);
+	if m_Dlg ~= nil then
+		for i = 1, table.getn(m_uiFinger), 1 do 
+			if m_uiFinger[i] then
+				SetFalse(m_uiFinger[i].transform);
+			end
 		end
 	end
 end
@@ -206,6 +217,9 @@ function FindCmdTpye(tran)
 		elseif g_guide[mId][mStep].guideType == GUIDE_CPOY then 
 			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetCopyPos() + deviation;
+		elseif g_guide[mId][mStep].guideType == GUIDE_GOTO_SOCIETY then 
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetWorldPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_BACK then
 			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetBackPos() + deviation;
@@ -215,6 +229,9 @@ function FindCmdTpye(tran)
 		elseif g_guide[mId][mStep].guideType == GUIDE_HERODLG then 
 			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetHeroDlgPos() + deviation;
+		elseif g_guide[mId][mStep].guideType == GUIDE_WORK then 
+			ShowGuideFinger(point);
+			m_uiFinger[point].transform.position = GetWorkPos() + deviation;
 		end
 	elseif cmd == 3 then
 		if currentFinger == nil then

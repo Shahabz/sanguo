@@ -1081,9 +1081,6 @@ int equip_forging_quick( int actor_index )
 	pCity->forgingsec = 0;
 	building_smithy_send( pCity->index );
 	wlog( 0, LOGOP_FORGING, PATH_FORGING_QUICK, kind, sec, pCity->ofkind[0], pCity->actorid, city_mainlevel( pCity->index ) );
-
-	// 任务
-	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_FORGING_QUICK, 0, 0, 1 );
 	return 0;
 }
 
@@ -1125,7 +1122,8 @@ int equip_forging_freequick( int actor_index )
 		city_officialhire_sendinfo( pCity, 0 );
 		building_smithy_send( pCity->index );
 	}
-
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_FORGING_QUICK, 0, 0, 1 );
 	wlog( 0, LOGOP_FORGING, PATH_FORGING_FREEQUICK, kind, sec, pCity->ofkind[0], pCity->actorid, city_mainlevel( pCity->index ) );
 	return 0;
 }

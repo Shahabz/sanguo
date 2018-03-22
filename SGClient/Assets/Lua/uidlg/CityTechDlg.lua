@@ -570,7 +570,7 @@ function CityTechDlgGuideOpenEffect(bShow)
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;	
 	local uiEffect = objs[8];
 	if bShow == true then 
-		SetTrue(uiEffect)
+		SetTrue(uiEffect);
 	else
 		SetFalse(uiEffect);
 	end

@@ -1246,3 +1246,7 @@ end
 function GetHeroDlgPos()
 	return m_uiButtonBack[1].transform.position;
 end
+
+function GetWorkPos()
+	return m_uiButtonBack[2].transform.position;
+end

@@ -52,6 +52,7 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 反馈
 		elseif nControlID == 12 then
 			pop( T(579) )
+			push_train( 20 )
 		-- vip
 		elseif nControlID == 13 then
 			VipDlgShow()

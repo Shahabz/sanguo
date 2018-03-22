@@ -273,6 +273,12 @@ function NationEquipDlgSetObj( kind, info )
 				
 			SetImage( uiShape, NationEquipSprite(kind) )
 			SetText( uiName, EquipName, Hex2Color( 0xD95DF4FF ) )
+			
+			if IsGuiding() then
+				if GetCurrentGuideType() == GUIDE_GUOQI then
+					FindCmdTpye(uiMakeBtn.transform);
+				end
+			end
 		
 		-- 已经打造
 		elseif info.m_neq_lv > 0 then
@@ -491,6 +497,15 @@ function NationEquipDlgMakeLayerShow( kind )
 		SetFalse( uiStoryWarn ) 
 		SetFalse( uiGetIronBtn ) 
 	end
+	
+	if kind == 1 then
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_GUOQI then
+				GuideNext();
+				FindCmdTpye(uiMakeBtn.transform);
+			end
+		end
+	end
 end
 
 -- 打造国器
@@ -502,6 +517,11 @@ function NationEquipDlgMake()
 	if GetPlayer().m_silver < g_nequip_open[m_selectkind].silver then
 		JumpRes( 1 )
 		return
+	end
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_DAZAO then
+			GuideNext();
+		end
 	end
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 1, m_selectkind );
 end

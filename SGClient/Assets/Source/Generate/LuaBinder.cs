@@ -27,6 +27,7 @@ public static class LuaBinder
 		ObjectPoolManagerWrap.Register(L);
 		NetworkManagerWrap.Register(L);
 		AudioManagerWrap.Register(L);
+		NotificationManagerWrap.Register(L);
 		LocalizationWrap.Register(L);
 		DeviceHelperWrap.Register(L);
 		ArmyMoveWrap.Register(L);

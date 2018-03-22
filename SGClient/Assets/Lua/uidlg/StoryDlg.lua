@@ -591,6 +591,11 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetTrue( uiShapeBack )
 			SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
+			if IsGuiding() then
+				if GetCurrentGuideType() == GUIDE_COPY_HERO then
+					FindCmdTpye(uiFrame.transform);
+				end
+			end
 			
 		-- 当前正在打的关卡
 		elseif m_recvValue.m_storyid == storyConfig.id then

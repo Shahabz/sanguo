@@ -388,6 +388,9 @@ int hero_up_auto( int actor_index, int offset )
 
 	SLK_NetS_HeroReplace pValue = { 0 };
 	pValue.m_up_kind = pCity->hero[index].kind;
+	pValue.m_down_kind = 0;
+	pValue.m_up_offset = offset;
+	pValue.m_down_offset = index;
 	netsend_heroreplace_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 自动上阵，补满兵力

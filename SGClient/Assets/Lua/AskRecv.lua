@@ -104,7 +104,14 @@ function RecvActorNotify(recvValue)
 			
 		-- 更新击杀级别
 		elseif value[1] == 2 then
+			local oldlevel = GetPlayer().m_mokilllv;
 			GetPlayer().m_mokilllv = value[2];
+			-- 更新周边野怪
+			if oldlevel ~= GetPlayer().m_mokilllv then
+				if GameManager.currentScence == "worldmap" then
+					MapUnit.RefreshEnemyLevel( GetPlayer().m_mokilllv )
+				end
+			end
 		end
 	
 	-- 值改变	

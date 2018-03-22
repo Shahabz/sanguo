@@ -276,6 +276,12 @@ function WorldMap.GotoWorldMap( posx, posy )
 		sendValue.m_to_posy = posy;
 		netsend_worldmapask_C( sendValue )
 	end, 0.3 );
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_GOTO_SOCIETY then 
+			GuideNext();
+		end
+	end
 end
 
 -- 返回城池

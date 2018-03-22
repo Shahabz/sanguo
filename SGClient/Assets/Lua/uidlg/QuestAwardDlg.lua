@@ -92,13 +92,15 @@ end
 ----------------------------------------
 -- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,m_type=0;
 function QuestAwardDlgShow( recvValue )
+	if m_Dlg ~= nil and IsActive( m_Dlg ) == true then
+		return;
+	end
 	QuestAwardDlgOpen()
 	QuestAwardDlgClear()
 	m_questid = recvValue.m_questid;
 	
 	-- 任务名
 	SetText( m_uiQuestName, QuestName( recvValue.m_type, recvValue ) );
-	
 	-- 奖励
 	for i=1, recvValue.m_count, 1 do
 		local sprite, color, name = AwardInfo( recvValue.m_list[i].m_kind )
@@ -126,10 +128,10 @@ end
 
 -- 领取奖励
 function QuestAwardDlgGet()
-	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
-	if IsGuiding() then 
-		ForceGuideNext();
+	if IsGuiding() then
+		GuideEnd();
 	end
+	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
 	QuestAwardDlgClose();
 end
 

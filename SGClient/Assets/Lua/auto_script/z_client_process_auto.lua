@@ -788,7 +788,7 @@ function proc_heroreplace_C( recvValue )
 	-- 背包英雄和上阵英雄的交换
 	if up_type == "Hero" then
 		-- 如果是单纯上阵，没有交换行为
-		if recvValue.m_down_kind == 0 then 
+		if recvValue.m_down_kind == 0 then
 			down_offset = recvValue.m_down_offset
 		end
 		local tmp = clone( GetHero().m_Hero[up_offset] )

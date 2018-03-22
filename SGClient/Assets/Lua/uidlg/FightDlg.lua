@@ -967,7 +967,7 @@ end
 
 --升级特效
 function FightDlgLevelUpEffect(uiObj)
-	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) )
+	local effect = GameObject.Instantiate( LoadPrefab( "Jssj" ) )
 	effect.transform:SetParent( uiObj.transform );
 	effect.transform.localPosition = Vector3.New( 0, 40, 0 );		
 	effect.transform.localScale = Vector3.New( 110, 110, 110 );

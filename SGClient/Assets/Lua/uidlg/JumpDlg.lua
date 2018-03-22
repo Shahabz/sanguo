@@ -58,6 +58,7 @@ function JumpDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			JumpDlgClose();
 			PayDlgShow()
+			EquipForgingDlgClose();
 			
 		-- 购买体力
 		elseif nControlID == 4 then

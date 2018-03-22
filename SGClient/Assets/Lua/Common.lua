@@ -595,7 +595,7 @@ function getTimeStringByInterval(time)
     return year .. "-" .. month .. "-" .. day .. " " .. hour .. ":" .. min .. ':' .. sec;
 end;
 function getTimeStringByNormal(time)
-    local tab = os.date("!*t", time);
+    local tab = os.date("*t", time);
     local sec = tostring(tab.sec);
     local min= tostring(tab.min);
     local hour = tostring(tab.hour);

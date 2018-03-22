@@ -420,6 +420,7 @@ function City.BuildingSetTimer( info )
 	if timerObj ~= nil then
 		if info.m_sec <= 0 then
 			timerObj.gameObject:SetActive(false);
+			City.BuildingUpgradeEffect(unitObj);
 		else
 			timerObj.gameObject:SetActive(true);
 		end
@@ -443,6 +444,15 @@ function City.BuildingSetTimer( info )
 	end
 end
 
+-- 升级完成特效
+function City.BuildingUpgradeEffect(unitObj)
+	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) );
+	effect.transform:SetParent( unitObj.transform );
+	effect.transform.position = unitObj.transform.position;
+	effect.transform.localPosition = Vector3.New( effect.transform.localPosition.x, effect.transform.localPosition.y, 0 );
+	effect.transform.localScale = Vector3.one;	
+	GameObject.Destroy(effect,1.5)
+end
 -- 升级计时器
 function City.BuildingSetUpgradeing( kind, offset, needsec, sec, op )
 	local unitObj = nil;

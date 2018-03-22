@@ -555,7 +555,7 @@ function EquipWashDlgUpdateEffect(uiEffect)
 	if m_showEffect == false then 
 		return 
 	end;
-	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) );
+	local effect = GameObject.Instantiate( LoadPrefab( "Jssj" ) );
 	effect.transform:SetParent( uiEffect.transform );
 	effect.transform.localPosition = Vector3.New( 0, 0, 0 );		
 	GameObject.Destroy(effect,1.5)

@@ -364,6 +364,8 @@ function QuestGoto( index )
 			if GetCurrentGuideType() == GUIDE_GET_HERO then
 				StoryDlgShow();
 			end
+		elseif datakind == 2 or datakind == 12 or datakind == 11 then
+			StoryDlgShow();
 		else
 			City.Move( BUILDING_Hero, -1, true );
 		end
@@ -425,7 +427,7 @@ function QuestTalkAsk( talkid )
 end
 
 function QuestListSort(t)  
-    for i=1,(#t)-1 do  
+    for i=2,(#t)-1 do  -- 2开始，主线位置不动
 		if i == 1 then
 			if t[i].m_value >= t[i].m_needvalue then
 				break;
