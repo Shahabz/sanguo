@@ -53,6 +53,8 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 12 then
 			pop( T(579) )
 			push_train( 20 )
+			SDK.gmbug()
+			
 		-- vip
 		elseif nControlID == 13 then
 			VipDlgShow()

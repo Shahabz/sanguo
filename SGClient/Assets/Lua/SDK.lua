@@ -72,6 +72,14 @@ function SDK.pay( recvValue )
 	end
 end
 
+-- 问题提交
+function SDK.gmbug()
+	if Const.platid == 12 then -- 在野
+		ChannelSDK.Instance:gmbug( '' );
+	else
+	end
+end
+
 -- 传额外参数
 function SDK.setExtendData()
 	if Const.platid == 12 then -- 在野

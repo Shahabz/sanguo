@@ -130,6 +130,26 @@ public class ChannelSDK : MonoBehaviour
 		LuaFun.Call( "SDK.onPay", jsonResult );
 	}
 
+	// 反馈
+	public void gmbug( string jsonString )
+	{
+		if ( Application.platform == RuntimePlatform.Android )
+		{
+			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+			{
+				jc.CallStatic( "gmbug", jsonString );
+			}
+		}
+		else if ( Application.platform == RuntimePlatform.IPhonePlayer )
+		{
+
+		}
+		else
+		{
+
+		}
+	}
+
 	// 传送扩展数据
 	public void setExtendData( string jsonString )
 	{

@@ -38,6 +38,7 @@ QUEST_DATATYPE_NEQUIP_LEVELNUM		=	42	-- 国器升级N次 datatype=42 datakind=0 
 QUEST_DATATYPE_MATERIAL_MAKE		=	43	-- 材料作坊生产材料N次（操作） datatype=43 datakind=0 needvalue=次数
 QUEST_DATATYPE_HEROGUARD_UP			=	44	-- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
 QUEST_DATATYPE_HERO_VISIT			=	45	-- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
+QUEST_DATATYPE_HERO_CALL_TYPE		=	46	-- 招募武将指定类型 datatype=46 datakind=兵种（1，2，3） needvalue=1
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -140,6 +141,8 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 95 )
 	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_HERO_CALL_TYPE then -- 招募武将指定类型 datatype=46 datakind=兵种（1，2，3） needvalue=1
+		typename = Localization.text_quest( 95 )
 	end
 	return typename;
 end
@@ -232,6 +235,8 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 32, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 		name = name..FQUEST( 33, value, needvalue );
+	elseif datatype == QUEST_DATATYPE_HERO_CALL_TYPE then -- 招募武将指定类型 datatype=46 datakind=兵种（1，2，3） needvalue=1
+		name = name..FQUEST( 34, CorpsName(datakind-1) );
 	else
 		name = ""
 	end
@@ -400,7 +405,9 @@ function QuestGoto( index )
 		
 	elseif datatype == QUEST_DATATYPE_HERO_VISIT then -- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 		City.Move( BUILDING_Hero, -1, true );
-	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募武将
+	
+	elseif datatype == QUEST_DATATYPE_HERO_CALL_TYPE then -- 招募武将指定类型 datatype=46 datakind=兵种（1，2，3） needvalue=1
+		StoryDlgShow();
 	end
 end
 

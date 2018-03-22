@@ -110,7 +110,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 联系客服
 		elseif nControlID == 7 then
-			
+			SDK.gmbug()
 		
 		-- SDK进入游戏
 		elseif nControlID == 9 then	

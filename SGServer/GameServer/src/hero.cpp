@@ -350,6 +350,7 @@ int hero_gethero( int actor_index, int kind, short path )
 
 	// ÈÎÎñ
 	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL, kind, 0, 1 );
+	quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL_TYPE, config->corps+1, 0, 1 );
 
 	// ÆßÈÕ¿ñ»¶
 	activity_04_addvalue_hero( actor_index );

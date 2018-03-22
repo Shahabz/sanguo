@@ -191,6 +191,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			m_Setting_state = 0
 			SettingDlgOptionShow()
 			
+		-- 联系客服
+		elseif nControlID == 17 then
+			SDK.gmbug()
+			
 		-- 返回登录
 		elseif nControlID == 18 then
 			MsgBox( T( 518 ),function()
