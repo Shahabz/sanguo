@@ -71,10 +71,17 @@ public static class DeviceHelper
     }
 }
 
-#elif UNITY_IOS
+#elif UNITY_IPHONE || UNITY_IOS
 using System.Runtime.InteropServices;
 public static class DeviceHelper
 {
+	public static string AndroidPackageName
+	{
+		get
+		{
+			return "";		
+		}
+	}
     [DllImport("__Internal")]
     private static extern string _getCountry();
     public static string getCountry()
@@ -119,6 +126,13 @@ public static class DeviceHelper
 #else
 public static class DeviceHelper
 {
+	public static string AndroidPackageName
+	{
+		get
+		{
+		return "";		
+		}
+	}
     public static string getCountry()
     {
         return "cn";

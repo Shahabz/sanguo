@@ -52,7 +52,7 @@ class ProjectBuild : Editor{
 		Packager.BuildAssets( BuildTarget.iOS );
 	}
 
-	// 打包-开发版
+	// 打包-Android
 	static void BuildForAndroid()
 	{
 		string _projectName = string.Empty;
@@ -87,41 +87,48 @@ class ProjectBuild : Editor{
 		//参数3 打包平台
 		BuildPipeline.BuildPlayer(GetBuildScenes(), _projectName, BuildTarget.Android, BuildOptions.None);
 	}
-
-	// 打包-在野SDK
-	static void BuildForAndroid_zaya()
-	{
-		PlayerSettings.productName = "在野三国志";
-		PlayerSettings.applicationIdentifier = "com.zaya.sgzaya";
-		PlayerSettings.Android.keystoreName = "/Users/jiazhi/Documents/GitHub/sanguo_publish/SDK_Zaya/sanguozaya.keystore";
-		PlayerSettings.Android.keystorePass = "4159217";
-		PlayerSettings.Android.keyaliasName = "sanguozaya";
-		PlayerSettings.Android.keyaliasPass = "4159217";
-		//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, "USE_SHARE");
-		BuildPipeline.BuildPlayer(GetBuildScenes(), projectName, BuildTarget.Android, BuildOptions.None);
-	}
-
-
-	// 打包-IOS缺省包
+		
+	// 打包-iOS
 	static void BuildForIos()
 	{
-        //Packager.BuildAssets_ios();
 		//打包之前先设置一下 预定义标签， 我建议大家最好 做一些  91 同步推 快用 PP助手一类的标签。 这样在代码中可以灵活的开启 或者关闭 一些代码。
 		//因为 这里我是承接 上一篇文章， 我就以sharesdk做例子 ，这样方便大家学习 ，
-		PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, "USE_SHARE");
-		if(projectName == "zayasg")
+		//PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, "USE_SHARE");
+     
+		string _projectName = string.Empty;
+		foreach(string arg in System.Environment.GetCommandLineArgs()) 
 		{
-		PlayerSettings.iOS.appleEnableAutomaticSigning = false;
+			if(arg.StartsWith("project"))
+			{
+				string[] args = arg.Split ("-"[0]);
+				_projectName = args[1];
+				PlayerSettings.productName = args[2].ToString();
+				PlayerSettings.iOS.applicationDisplayName = args[2].ToString();
+				PlayerSettings.applicationIdentifier = args[3].ToString();
+				PlayerSettings.bundleVersion 		= args[4].ToString();
+				PlayerSettings.iOS.buildNumber = args[5];
+				PlayerSettings.iOS.appleDeveloperTeamID = args[6];
+				PlayerSettings.iOS.iOSManualProvisioningProfileID = args[7];
+				if ( Convert.ToInt32( args[8] ) == 1)
+					PlayerSettings.iOS.appleEnableAutomaticSigning = true;
+				else
+					PlayerSettings.iOS.appleEnableAutomaticSigning = false;
+				
+				Debug.LogError (_projectName);
+				Debug.LogError ("游戏名："+PlayerSettings.iOS.applicationDisplayName);
+				Debug.LogError (PlayerSettings.applicationIdentifier);
+				Debug.LogError (PlayerSettings.bundleVersion);
+				Debug.LogError (PlayerSettings.iOS.buildNumber);
+				Debug.LogError (PlayerSettings.iOS.appleDeveloperTeamID);
+				Debug.LogError (PlayerSettings.iOS.iOSManualProvisioningProfileID);
+				break;
+			}
 		}
-		else
-		{
-			PlayerSettings.iOS.appleEnableAutomaticSigning = true;
-		}
-        
+		PlayerSettings.iOS.allowHTTPDownload = true;
 		//这里就是构建xcode工程的核心方法了， 
 		//参数1 需要打包的所有场景
 		//参数2 需要打包的名子， 这里取到的就是 shell传进来的字符串 91
 		//参数3 打包平台
-		BuildPipeline.BuildPlayer(GetBuildScenes(), projectName, BuildTarget.iOS, BuildOptions.None);
+		BuildPipeline.BuildPlayer(GetBuildScenes(), _projectName, BuildTarget.iOS, BuildOptions.None);
 	}
 }

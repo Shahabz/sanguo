@@ -40,7 +40,7 @@ GUIDE_DAZAO = 32         --点击开始打造国器
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
 GUIDE_END = 999          --指引结束标识
 
-local m_uiFinger = {nil,nil,nil,nil}; --UnityEngine.GameObject
+local m_uiFinger = {nil,nil,nil,nil,nil,nil}; --UnityEngine.GameObject
 
 -- 隐藏界面
 function GuideDlgClose()
@@ -72,6 +72,8 @@ function GuideDlgOnAwake( gameObject )
 	m_uiFinger[2] = objs[1];
 	m_uiFinger[3] = objs[2];
 	m_uiFinger[4] = objs[3];	
+	m_uiFinger[5] = objs[4];
+	m_uiFinger[6] = objs[5];
 end
 
 -- 界面初始化时调用

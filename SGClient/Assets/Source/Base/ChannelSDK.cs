@@ -21,19 +21,16 @@ public class ChannelSDK : MonoBehaviour
 	// 初始化
 	public void init( string jsonString )
 	{
-		if (Application.platform == RuntimePlatform.Android) {
-			using (AndroidJavaClass jc = new AndroidJavaClass (DeviceHelper.AndroidPackageName+".SdkFun"))
-			{
-				jc.CallStatic ("init", jsonString);
-			}
-		}
-		else if ( Application.platform == RuntimePlatform.IPhonePlayer )
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using (AndroidJavaClass jc = new AndroidJavaClass (DeviceHelper.AndroidPackageName+".SdkFun"))
 		{
+			jc.CallStatic ("init", jsonString);
 		}
-		else 
-		{
+#elif  UNITY_IPHONE || UNITY_IOS
 
-		}
+#else
+#endif
 	}
 
 	// 初始化回调
@@ -45,22 +42,16 @@ public class ChannelSDK : MonoBehaviour
 	// 登录
 	public void login( string jsonString )
 	{
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+		{
+			jc.CallStatic( "login", jsonString );
+		}
+#elif  UNITY_IPHONE || UNITY_IOS
 
-        if ( Application.platform == RuntimePlatform.Android )
-        {
-			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-            {
-				jc.CallStatic( "login", jsonString );
-            }
-        }
-        else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-        {
-
-        }
-        else 
-        {
-         
-        }
+#else
+#endif
 	}
 
 	// 登陆回调
@@ -72,56 +63,43 @@ public class ChannelSDK : MonoBehaviour
 	// 登出
 	public void logout( string jsonString )
 	{
-
-		if ( Application.platform == RuntimePlatform.Android )
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
 		{
-			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-			{
-				jc.CallStatic( "logout", jsonString );
-			}
+			jc.CallStatic( "logout", jsonString );
 		}
-		else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-		{
+#elif  UNITY_IPHONE || UNITY_IOS
 
-		}
-		else 
-		{
-
-		}
+#else
+#endif
 	}
 
 	// 登出回调
 	void onLogout( string jsonResult )
 	{
-
 		LuaFun.Call( "SDK.onLogout", jsonResult );
 	}
 
 	// 切换账号回调
 	void onSwitchAccount( string jsonResult )
 	{
-
 		LuaFun.Call( "SDK.onSwitchAccount", jsonResult );
 	}
 
 	// 充值
 	public void pay( string jsonString )
 	{
-        if ( Application.platform == RuntimePlatform.Android )
-        {
-			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-            {
-				jc.CallStatic( "pay", jsonString );
-            }
-        }
-        else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-        {
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+		{
+			jc.CallStatic( "pay", jsonString );
+		}
+#elif  UNITY_IPHONE  || UNITY_IOS
 
-        }
-        else
-        {
-
-        }
+#else
+#endif
     }
 
 	// 充值回调
@@ -133,41 +111,31 @@ public class ChannelSDK : MonoBehaviour
 	// 反馈
 	public void gmbug( string jsonString )
 	{
-		if ( Application.platform == RuntimePlatform.Android )
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
 		{
-			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-			{
-				jc.CallStatic( "gmbug", jsonString );
-			}
+			jc.CallStatic( "gmbug", jsonString );
 		}
-		else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-		{
+#elif  UNITY_IPHONE || UNITY_IOS
 
-		}
-		else
-		{
-
-		}
+#else
+#endif
 	}
 
 	// 传送扩展数据
 	public void setExtendData( string jsonString )
 	{
-		if ( Application.platform == RuntimePlatform.Android )
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
 		{
-			using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-			{
-				jc.CallStatic( "setExtendData", jsonString );
-			}
+			jc.CallStatic( "setExtendData", jsonString );
 		}
-		else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-		{
+#elif  UNITY_IPHONE || UNITY_IOS
 
-		}
-		else
-		{
-
-		}
+#else
+#endif
 	}
 
 }

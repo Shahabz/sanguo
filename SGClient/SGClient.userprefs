@@ -1,10 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Notification/NotificationManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/XUPorter/XCodePostProcess.cs">
     <Files>
+      <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Plugins/Android/AndroidManifest.xml" Line="1" Column="1" />
-      <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIProgress.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UISystem.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollPage.cs" Line="1" Column="1" />
@@ -22,7 +22,7 @@
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Net/SocketClient.cs" Line="411" Column="53" />
       <File FileName="Assets/Source/Effect/ScreenBlur.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UITextNumCountdown.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UITextAgent.cs" Line="1" Column="1" />
@@ -59,9 +59,7 @@
       <File FileName="Assets/Source/Gizmo/GizmoBezierLine.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Gizmo/GizmoRing.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Fight/Fight.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Map/WorldMap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Map/WorldMapCamera.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIDepth.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="1" Column="1" />
@@ -97,21 +95,25 @@
       <File FileName="Assets/ToLua/Misc/LuaResLoader.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/LoopScrollRect/Scripts/Editor/SGMenuOptions.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Editor/ToLuaExport.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/ProjectBuild.cs" Line="1" Column="1" />
       <File FileName="Assets/PackAssets/Shader/ImageGray.shader" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="118" Column="55" />
       <File FileName="Assets/Source/Base/SpriteAnimation.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ChannelSDK.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/SpriteChecker.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/Localization.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ActiveDelay.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Notification/AndroidNotification.cs" Line="5" Column="1" />
-      <File FileName="Assets/Source/Notification/INotification.cs" Line="14" Column="70" />
-      <File FileName="Assets/Source/Notification/IOSNotification.cs" Line="21" Column="61" />
-      <File FileName="Assets/Source/Notification/NotificationManager.cs" Line="46" Column="20" />
-      <File FileName="Assets/Source/Notification/DefaultNotification.cs" Line="13" Column="3" />
+      <File FileName="Assets/Source/Notification/AndroidNotification.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Notification/INotification.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Notification/IOSNotification.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Notification/NotificationManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Notification/DefaultNotification.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/NotificationManagerWrap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Generate/DeviceHelperWrap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="40" Column="93" />
+      <File FileName="Assets/Editor/ProjectBuild.cs" Line="111" Column="57" />
+      <File FileName="Assets/Source/Net/IPv6SupportMidleware.cs" Line="34" Column="24" />
+      <File FileName="Assets/Editor/XUPorter/XCMod.cs" Line="106" Column="59" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -134,8 +136,6 @@
       <Breakpoint file="/Users/miya/sanguo/SGClient/Assets/Source/Base/AudioSourceAgent.cs" line="73" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/Tween/UITweenJump.cs" line="29" column="1" />
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/Tween/UITweenJump.cs" line="34" column="1" />
-      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Notification/NotificationManager.cs" line="43" column="1" />
-      <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/Notification/NotificationManager.cs" line="27" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

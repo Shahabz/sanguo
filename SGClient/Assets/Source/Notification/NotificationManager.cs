@@ -29,7 +29,7 @@ public class NotificationManager : IDisposable
 		obj = new DefaultNotification();
 #elif UNITY_ANDROID
 		obj = new AndroidNotification();
-#elif  UNITY_IPHONE
+#elif  UNITY_IPHONE || UNITY_IOS
 		obj = new IOSNotification();
 #else
 		obj = new DefaultNotification();

@@ -1,0 +1,14 @@
+{
+    "group": "deviceid",
+    "libs": [],
+    "frameworks": ["AdSupport.framework"],
+    "headerpaths": ["ios/deviceid/**"],
+    "files":   ["ios/deviceid/Func.mm",
+                "ios/deviceid/DeviceTools.m",
+                "ios/deviceid/DeviceTools.h"
+                ],
+    "folders": [],    
+    "excludes": ["^.*.meta$", "^.*.mdown$", "^.*.pdf$"],
+    "compiler_flags": [],
+    "linker_flags": []
+}

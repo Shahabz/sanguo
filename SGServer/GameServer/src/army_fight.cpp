@@ -118,9 +118,6 @@ int army_vs_enemy( int army_index, Fight *pFight )
 			pCity->mokilllv = (char)config->level;
 			first = 1;
 
-			// 获取正常奖励
-			awardgroup_withid( pCity->actorid, config->awardgroup, PATH_ENEMY, &awardinfo );
-
 			// 获取首杀奖励
 			awardgroup_withid( pCity->actorid, config->first_awardgroup, PATH_ENEMY, &awardinfo );
 
