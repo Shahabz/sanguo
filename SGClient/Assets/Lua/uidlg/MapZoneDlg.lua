@@ -115,10 +115,9 @@ function MapZoneDlgShow( zoneid )
 	end
 	local name = MapZoneName( zoneid )
 	SetText( m_uiZoneName.transform:Find("Text"), name )
-	
+
 	-- 显示缩略图
 	WorldMapThumb.Create( zoneid );
-	
 	-- 郡城被攻克
 	if GetPlayer().m_open_town3 > 0 then
 		SetGray( m_uiGlobalBtn.transform:Find("Back"), false )

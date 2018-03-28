@@ -365,11 +365,7 @@ function QuestGoto( index )
 	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
 		
 	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
-		if IsGuiding() then
-			if GetCurrentGuideType() == GUIDE_GET_HERO then
-				StoryDlgShow();
-			end
-		elseif datakind == 2 or datakind == 12 or datakind == 11 then
+		if datakind == 2 or datakind == 12 or datakind == 11 then
 			StoryDlgShow();
 		else
 			City.Move( BUILDING_Hero, -1, true );

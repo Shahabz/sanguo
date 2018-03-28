@@ -5,7 +5,6 @@ local m_uiHeroHead = nil; --UnityEngine.GameObject
 local m_uiHeroColor = nil; --UnityEngine.GameObject
 local m_uiHeroCorps = nil; --UnityEngine.GameObject
 local m_uiHeroName = nil; --UnityEngine.GameObject
-local m_uiGrowthText = nil; --UnityEngine.GameObject
 local m_uiAttack = nil; --UnityEngine.GameObject
 local m_uiDefense = nil; --UnityEngine.GameObject
 local m_uiTroops = nil; --UnityEngine.GameObject
@@ -68,7 +67,6 @@ function HeroGetDlgOnAwake( gameObject )
 	m_uiHeroColor = objs[1];
 	m_uiHeroCorps = objs[2];
 	m_uiHeroName = objs[3];
-	m_uiGrowthText = objs[4];
 	m_uiAttack = objs[5];
 	m_uiDefense = objs[6];
 	m_uiTroops = objs[7];
@@ -131,13 +129,11 @@ function HeroGetDlgShow( recvValue )
 	local troops = recvValue.m_troops_base;
 	local basegrowth = attack + defense + troops;
 	local washgrowth = recvValue.m_attack_wash + recvValue.m_defense_wash + recvValue.m_troops_wash;
-
-	SetText( m_uiGrowthText, T( 1671 ) ) -- 总资质
 	
 	if washgrowth ~= 0 then
-		SetText( m_uiGrowth, "<color=#FFFFFF>"..basegrowth.."</color> +"..washgrowth ,NameColor(recvValue.m_color) ) --洗髓资质不为0才显示
+		SetText( m_uiGrowth, T( 1671 ).."<color=#FFFFFF>"..basegrowth.."</color> +"..washgrowth ,NameColor(recvValue.m_color) ) --洗髓资质不为0才显示
 	else
-		SetText( m_uiGrowth,basegrowth)
+		SetText( m_uiGrowth, T( 1671 )..basegrowth)
 	end
 	
 	SetText( m_uiAttack, F( 138, attack+recvValue.m_attack_wash )  ) -- 攻资质

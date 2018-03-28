@@ -187,6 +187,7 @@ function GameManager.OnApplicationPause( paused )
 	
 	-- 从后台进入前台时
 	else
+		NotificationManager.Instance:ClearAll ();
 		local PauseTime = os.time() - GameManager.OnApplicationPauseTime;
 		gamelog( "PauseTime:"..PauseTime );
 		

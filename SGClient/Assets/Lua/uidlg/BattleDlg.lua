@@ -10,6 +10,8 @@ local m_uiLeftScroll = nil; --UnityEngine.GameObject
 local m_uiLeftContent = nil; --UnityEngine.GameObject
 local m_uiRightScroll = nil; --UnityEngine.GameObject
 local m_uiRightContent = nil; --UnityEngine.GameObject
+local m_uiCenterScroll = nil; --UnityEngine.GameObject
+local m_uiCenterContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
 local m_uiStoryExp = nil; --UnityEngine.GameObject
 local m_uiStoryBody = nil; --UnityEngine.GameObject
@@ -20,6 +22,8 @@ local m_battleType = 0;
 local m_storyid = 0;
 local m_bossid = 0;
 local m_HeroList = {};
+local m_EnemyData = {};
+local m_EnemyCount = 0;
 
 -- 打开界面
 function BattleDlgOpen()
@@ -71,7 +75,9 @@ function BattleDlgOnAwake( gameObject )
 	m_uiTitleText = objs[0];
 	m_uiCancelBtn = objs[1];
 	m_uiFightBtn = objs[2];
+	m_uiCenterScroll = objs[3];
 	m_uiArmyIcon = objs[4];
+	m_uiCenterContent = objs[5];
 	m_uiLeftName = objs[6];
 	m_uiRightName = objs[7];
 	m_uiLeftScroll = objs[8];
@@ -187,11 +193,13 @@ function BattleDlgStoryRecv( recvValue )
 	elseif recvValue.m_type == 1 then
 		
 	end
-	
+	m_EnemyData = recvValue.m_list;
+	m_EnemyCount = recvValue.m_count;
 	for i=1, recvValue.m_count, 1 do
 		local unit = recvValue.m_list[i]
 		BattleDlgUnit( m_uiRightContent, i, FIGHT_UNITTYPE_MONSTER, unit.m_monsterid, nil, unit.m_shape, unit.m_color, unit.m_corps, unit.m_level, unit.m_hp )
 	end
+	BattleDlgCenter()
 end
 
 -- 英雄列表
@@ -263,6 +271,7 @@ function BattleDlgHeroUp( index )
 	end
 	m_HeroList[index-1], m_HeroList[index] = m_HeroList[index], m_HeroList[index-1]
 	BattleDlgHeroList()
+	BattleDlgCenter();
 end
 
 -- 设置一个unit信息
@@ -313,6 +322,50 @@ function BattleDlgUnit( root, index, unittype, kind, name, shape, color, corps, 
 		SetText( uiName, "Lv."..level.." "..EnemyName( kind ) );
 	end
 	SetText( uiSort, index );
+end
+
+--设置兵种相克
+function BattleDlgCenter()
+	for i = 0 ,m_uiCenterContent.transform.childCount - 1 do
+		local uiObj = m_uiCenterContent.transform:GetChild(i).gameObject		
+		if i+1 > m_EnemyCount then 
+			SetFalse(uiObj);
+		else
+			SetTrue(uiObj);
+			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiBack = objs[0]
+			local EnemyCorps = m_EnemyData[i+1].m_corps;
+			local HeroCorps = m_HeroList[i+1].m_corps;
+			SetImage(uiBack,BattleDlgGetCenterImage(HeroCorps,EnemyCorps))
+		end
+	end	
+end
+
+-- 获得相克图片
+function BattleDlgGetCenterImage(HeroCorps,EnemyCorps)
+	if HeroCorps == EnemyCorps then 
+		return LoadSprite("ui_battle_icon_5")
+	else
+		if HeroCorps == 0 then 
+			if EnemyCorps == 1 then
+				return LoadSprite("ui_battle_icon_4")
+			elseif EnemyCorps == 2 then 
+				return LoadSprite("ui_battle_icon_3")
+			end
+		elseif HeroCorps == 1 then 
+			if EnemyCorps == 0 then
+				return LoadSprite("ui_battle_icon_3")
+			elseif EnemyCorps == 2 then 
+				return LoadSprite("ui_battle_icon_4")
+			end
+		elseif HeroCorps == 2 then 
+			if EnemyCorps == 0 then
+				return LoadSprite("ui_battle_icon_4")
+			elseif EnemyCorps == 1 then 
+				return LoadSprite("ui_battle_icon_3")
+			end
+		end
+	end
 end
 
 -- 清空

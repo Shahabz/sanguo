@@ -93,6 +93,9 @@ end
 function QuestDlgShow()
 	QuestDlgOpen()
 	system_askinfo( ASKINFO_QUEST, "", 0 );
+	if IsGuiding() then
+		GuideNext();
+	end
 --[[	QuestDlgClear()
 	for i=1, CacheQuest.m_count, 1 do
 		QuestDlgSetObject( i, CacheQuest.m_list[i] )

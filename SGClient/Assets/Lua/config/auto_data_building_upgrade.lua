@@ -4,7 +4,7 @@ g_building_upgrade = {
 	[1] = { kind=1,level=1,name="官府",citylevel=1,actorlevel=1,silver=0,wood=0,food=0,iron=0,sec=0,value0=700,value1=1900,value2=29,value3=1020,value4=5050,value5=0,value6=0,value7=0,exp=5,battlepower=30,awardkind=0,awardnum=0,},
 	[2] = { kind=1,level=2,name="官府",citylevel=1,actorlevel=1,silver=0,wood=0,food=0,iron=0,sec=0,value0=700,value1=1900,value2=29,value3=1080,value4=5200,value5=0,value6=0,value7=0,exp=10,battlepower=60,awardkind=0,awardnum=0,},
 	[3] = { kind=1,level=3,name="官府",citylevel=1,actorlevel=5,silver=860,wood=1300,food=0,iron=0,sec=300,value0=700,value1=1900,value2=29,value3=1180,value4=5450,value5=0,value6=0,value7=0,exp=15,battlepower=90,awardkind=30034,awardnum=1,},
-	[4] = { kind=1,level=4,name="官府",citylevel=1,actorlevel=20,silver=1500,wood=2100,food=0,iron=0,sec=480,value0=700,value1=1900,value2=29,value3=1320,value4=5800,value5=0,value6=0,value7=0,exp=20,battlepower=120,awardkind=30031,awardnum=1,},
+	[4] = { kind=1,level=4,name="官府",citylevel=1,actorlevel=20,silver=1500,wood=2100,food=0,iron=0,sec=480,value0=700,value1=1900,value2=29,value3=1320,value4=5800,value5=0,value6=0,value7=0,exp=20,battlepower=120,awardkind=0,awardnum=0,},
 	[5] = { kind=1,level=5,name="官府",citylevel=1,actorlevel=25,silver=2600,wood=3700,food=0,iron=0,sec=1500,value0=700,value1=1900,value2=29,value3=1500,value4=6250,value5=0,value6=0,value7=0,exp=25,battlepower=150,awardkind=30012,awardnum=1,},
 	[6] = { kind=1,level=6,name="官府",citylevel=1,actorlevel=30,silver=6900,wood=8400,food=0,iron=0,sec=7200,value0=700,value1=1900,value2=29,value3=1720,value4=6800,value5=0,value6=0,value7=0,exp=30,battlepower=180,awardkind=0,awardnum=0,},
 	[7] = { kind=1,level=7,name="官府",citylevel=1,actorlevel=35,silver=10000,wood=15000,food=0,iron=0,sec=14400,value0=700,value1=1900,value2=29,value3=1980,value4=7450,value5=0,value6=0,value7=0,exp=35,battlepower=210,awardkind=0,awardnum=0,},
@@ -141,8 +141,8 @@ g_building_upgrade = {
 [6] = 
 { 
 	[1] = { kind=6,level=1,name="内阁",citylevel=14,actorlevel=50,silver=600000,wood=1000000,food=0,iron=0,sec=0,value0=0,value1=0,value2=0,value3=0,value4=0,value5=0,value6=0,value7=0,exp=200,battlepower=30,awardkind=0,awardnum=0,},
-	[2] = { kind=6,level=2,name="内阁",citylevel=16,actorlevel=115,silver=1200000,wood=2300000,food=0,iron=0,sec=39300,value0=0,value1=0,value2=0,value3=0,value4=0,value5=0,value6=0,value7=0,exp=1000,battlepower=100,awardkind=0,awardnum=0,},
-	[3] = { kind=6,level=3,name="内阁",citylevel=19,actorlevel=150,silver=7000000,wood=10000000,food=0,iron=0,sec=93600,value0=0,value1=0,value2=0,value3=0,value4=0,value5=0,value6=0,value7=0,exp=8000,battlepower=200,awardkind=0,awardnum=0,},
+	[2] = { kind=6,level=2,name="内阁",citylevel=16,actorlevel=80,silver=1200000,wood=2300000,food=0,iron=0,sec=39300,value0=0,value1=0,value2=0,value3=0,value4=0,value5=0,value6=0,value7=0,exp=1000,battlepower=100,awardkind=0,awardnum=0,},
+	[3] = { kind=6,level=3,name="内阁",citylevel=19,actorlevel=95,silver=7000000,wood=10000000,food=0,iron=0,sec=93600,value0=0,value1=0,value2=0,value3=0,value4=0,value5=0,value6=0,value7=0,exp=8000,battlepower=200,awardkind=0,awardnum=0,},
 },
 [11] = 
 { 

@@ -306,7 +306,7 @@ public static class PathUtil
         if ( Application.platform == RuntimePlatform.Android )
             return "android_files.txt";
         else if ( Application.platform == RuntimePlatform.IPhonePlayer )
-            return "io_files.txts";
+            return "ios_files.txt";
         else if ( Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer )
             return "windows_files.txt";
         else if ( Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer )

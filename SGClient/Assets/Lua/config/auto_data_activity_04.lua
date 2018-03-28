@@ -100,7 +100,7 @@ g_activity_04 = {
 [99] = { id=99,day=6,name="至少1件国器40级",sortrank=0,title=2693,type=37,value=1,nameid=0,guideid=0,gototype=9,awardkind0=469,awardnum0=1,awardkind1=0,awardnum1=0,awardkind2=0,awardnum2=0,},
 [100] = { id=100,day=6,name="至少2件国器20级",sortrank=0,title=2693,type=35,value=2,nameid=0,guideid=0,gototype=9,awardkind0=50010,awardnum0=500,awardkind1=446,awardnum1=2,awardkind2=0,awardnum2=0,},
 [101] = { id=101,day=6,name="至少2件国器30级",sortrank=0,title=2693,type=36,value=2,nameid=0,guideid=0,gototype=9,awardkind0=50010,awardnum0=3000,awardkind1=447,awardnum1=2,awardkind2=0,awardnum2=0,},
-[102] = { id=102,day=7,name="登入领取高顺",sortrank=0,title=2681,type=7,value=7,nameid=0,guideid=0,gototype=0,awardkind0=50002,awardnum0=20000,awardkind1=134,awardnum1=3,awardkind2=0,awardnum2=0,},
+[102] = { id=102,day=7,name="登入领取高顺",sortrank=0,title=2681,type=7,value=7,nameid=0,guideid=0,gototype=0,awardkind0=20000,awardnum0=46,awardkind1=0,awardnum1=0,awardkind2=0,awardnum2=0,},
 [103] = { id=103,day=7,name="今日登入赠送",sortrank=0,title=2681,type=39,value=7,nameid=0,guideid=0,gototype=0,awardkind0=50002,awardnum0=30000,awardkind1=445,awardnum1=2,awardkind2=0,awardnum2=0,},
 [104] = { id=104,day=7,name="累计充值18000元宝",sortrank=0,title=2681,type=1,value=18000,nameid=0,guideid=0,gototype=5,awardkind0=50005,awardnum0=30,awardkind1=182,awardnum1=2,awardkind2=0,awardnum2=0,},
 [105] = { id=105,day=7,name="购买3个特价礼包",sortrank=0,title=2681,type=6,value=3,nameid=0,guideid=0,gototype=9,awardkind0=459,awardnum0=1,awardkind1=107,awardnum1=1,awardkind2=0,awardnum2=0,},

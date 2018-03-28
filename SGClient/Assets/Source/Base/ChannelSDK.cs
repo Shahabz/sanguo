@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 using LuaInterface;
-
+#if UNITY_IPHONE || UNITY_IOS
+using System.Runtime.InteropServices;
+#endif
 public class ChannelSDK : MonoBehaviour
 {
 	private static ChannelSDK _instance;
@@ -17,7 +19,22 @@ public class ChannelSDK : MonoBehaviour
 			return _instance;
 		}
 	}
-		
+#if UNITY_IOS
+	[DllImport("__Internal")]
+	private static extern void sdkInit( string jsonString );//初始化
+	[DllImport("__Internal")]
+	private static extern void sdkLogin( string jsonString );//登录
+	[DllImport("__Internal")]
+	private static extern void sdkLogout( string jsonString );// 登出
+	[DllImport("__Internal")]
+	private static extern void sdkPay( string jsonString );// 支付
+	[DllImport("__Internal")]
+	private static extern void sdkUserCenter( string jsonString );// 用户中心
+	[DllImport("__Internal")]
+	private static extern void sdkGmBug( string jsonString );// 反馈
+	[DllImport("__Internal")]
+	private static extern void sdkSetExtendData( string jsonString );// 数据统计
+#endif
 	// 初始化
 	public void init( string jsonString )
 	{
@@ -28,7 +45,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic ("init", jsonString);
 		}
 #elif  UNITY_IPHONE || UNITY_IOS
-
+		sdkInit( jsonString );
 #else
 #endif
 	}
@@ -49,7 +66,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic( "login", jsonString );
 		}
 #elif  UNITY_IPHONE || UNITY_IOS
-
+		sdkLogin( jsonString );
 #else
 #endif
 	}
@@ -70,7 +87,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic( "logout", jsonString );
 		}
 #elif  UNITY_IPHONE || UNITY_IOS
-
+		sdkLogout( jsonString );
 #else
 #endif
 	}
@@ -97,7 +114,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic( "pay", jsonString );
 		}
 #elif  UNITY_IPHONE  || UNITY_IOS
-
+		sdkPay( jsonString );
 #else
 #endif
     }
@@ -106,6 +123,17 @@ public class ChannelSDK : MonoBehaviour
 	void onPay( string jsonResult )
 	{
 		LuaFun.Call( "SDK.onPay", jsonResult );
+	}
+
+	// 用户中心
+	public void user_center( string jsonString )
+	{
+#if UNITY_EDITOR
+#elif UNITY_ANDROID
+#elif  UNITY_IPHONE || UNITY_IOS
+		sdkUserCenter( jsonString );
+#else
+#endif
 	}
 
 	// 反馈
@@ -118,7 +146,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic( "gmbug", jsonString );
 		}
 #elif  UNITY_IPHONE || UNITY_IOS
-
+		sdkGmBug( jsonString );
 #else
 #endif
 	}
@@ -133,7 +161,7 @@ public class ChannelSDK : MonoBehaviour
 			jc.CallStatic( "setExtendData", jsonString );
 		}
 #elif  UNITY_IPHONE || UNITY_IOS
-
+		sdkSetExtendData( jsonString );
 #else
 #endif
 	}

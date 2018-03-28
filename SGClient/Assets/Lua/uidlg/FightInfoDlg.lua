@@ -14,6 +14,7 @@ local m_uiRightScroll = nil; --UnityEngine.GameObject
 local m_uiRightContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
 local m_uiWarningText = nil; --UnityEngine.GameObject
+local m_uiCenterContent = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function FightInfoDlgOpen()
@@ -72,7 +73,9 @@ function FightInfoDlgOnAwake( gameObject )
 	m_uiRightScroll = objs[10];
 	m_uiRightContent = objs[11];
 	m_uiUIP_Unit = objs[12];
-	m_uiWarningText = objs[13];
+	m_uiWarningText = objs[13];	
+	m_uiCenterContent = objs[14];
+
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Unit", 8, 8, m_uiUIP_Unit);
 end
@@ -108,7 +111,6 @@ end
 ----------------------------------------
 function FightInfoDlgShow( info )
 	FightInfoDlgOpen()
-	
 	-- 战斗类型	
 	local fighttype = info["ft"]
 	if fighttype == nil then
@@ -116,7 +118,8 @@ function FightInfoDlgShow( info )
 		SetText( m_uiWarningText, "" )
 	else
 		SetText( m_uiTitleText, T(2000+fighttype-1) )
-		if fighttype == FIGHTTYPE_STORY then
+		if fighttype == FIGHTTYPE_STORY then			
+			SetText( m_uiTitleText, StoryChapterName( math.floor(BattleDlgGetStoryid()/10) ) )
 			SetText( m_uiWarningText, T(2019) )
 		else
 			SetText( m_uiWarningText, "" )
@@ -127,20 +130,28 @@ function FightInfoDlgShow( info )
 	local my = info["my"];
 	if my == nil or my == 1 then
 		-- 攻击方
-		SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		if info["a_type"] == 0 and info["a_name"] == "" then 
+			SetText( m_uiLeftName, T(1360) );
+		else
+			SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		end
 		if info["a_nation"] > 0 then
 			SetTrue( m_uiLeftNation )
 			SetImage( m_uiLeftNation, NationSprite( info["a_nation"] ) );
 		else
-			SetFalse( m_uiLeftNation )
+			SetFalse( m_uiLeftNation )			
 		end
 		-- 防御方
-		SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		if info["d_type"] == 0 and info["d_name"] == "" then 
+			SetText( m_uiRightName, T(1361) );
+		else
+			SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		end
 		if info["d_nation"] > 0 then
 			SetTrue( m_uiRightNation )
 			SetImage( m_uiRightNation, NationSprite( info["d_nation"] ) );
 		else
-			SetFalse( m_uiRightNation )
+			SetFalse( m_uiRightNation )			
 		end
 		
 		-- 攻击方对象
@@ -187,6 +198,8 @@ function FightInfoDlgShow( info )
 			FightInfoDlgUnit( m_uiLeftContent, i, unit["t"], unit["kd"], unit["na"], unit["sp"], unit["cr"], unit["cs"], unit["lv"], unit["mhp"], unit["hp"] )
 		end
 	end	
+	
+	FightDlgCenter(my,info["a_unit"],info["d_unit"]);
 end
 
 -- 设置一个unit信息
@@ -238,6 +251,61 @@ function FightInfoDlgUnit( root, index, unittype, kind, name, shape, color, corp
 	SetText( uiSort, index );
 end
 
+--设置兵种相克
+function FightDlgCenter(my,a_unit,d_unit)
+	local MinNum = FightDlgGetCenterNum(#a_unit,#d_unit)
+	for i = 0 ,m_uiCenterContent.transform.childCount - 1 do
+		local uiObj = m_uiCenterContent.transform:GetChild(i).gameObject		
+		if i+1 > MinNum then 
+			SetFalse(uiObj);
+		else
+			SetTrue(uiObj);
+			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+			local uiBack = objs[0]
+			local a_Corps = a_unit[i+1]["cs"];
+			local d_Corps = d_unit[i+1]["cs"];
+			SetImage(uiBack,FightDlgGetCenterImage(a_Corps,d_Corps))
+		end
+	end	
+end
+
+-- 获得兵种相克数量
+function FightDlgGetCenterNum(a_Num,d_Num)
+	if a_Num > d_Num then 
+		return d_Num
+	else
+		return a_Num
+	end
+	return a_Num
+end
+
+-- 获得兵种相克图片
+function FightDlgGetCenterImage(a_Corps,d_Corps)
+	if a_Corps == d_Corps then 
+		return LoadSprite("ui_battle_icon_5")
+	else
+		if a_Corps == 0 then 
+			if d_Corps == 1 then
+				return LoadSprite("ui_battle_icon_4")
+			elseif d_Corps == 2 then 
+				return LoadSprite("ui_battle_icon_3")
+			end
+		elseif a_Corps == 1 then 
+			if d_Corps == 0 then
+				return LoadSprite("ui_battle_icon_3")
+			elseif d_Corps == 2 then 
+				return LoadSprite("ui_battle_icon_4")
+			end
+		elseif a_Corps == 2 then 
+			if d_Corps == 0 then
+				return LoadSprite("ui_battle_icon_4")
+			elseif d_Corps == 1 then 
+				return LoadSprite("ui_battle_icon_3")
+			end
+		end
+	end
+end
+
 -- 设置双方主角信息
 function FightInfoDlgGetName( type, name )
 	-- 玩家 部队 资源点
@@ -252,6 +320,7 @@ function FightInfoDlgGetName( type, name )
 	elseif type == MAPUNIT_TYPE_ENEMY or type == MAPUNIT_TYPE_NATIONHERO then
 		return EnemyName( tonumber(name) )
 	end
+	
 	return ""
 end
 

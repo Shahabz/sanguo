@@ -51,7 +51,6 @@ function WorldMapThumb.Delete()
 		GameObject.Destroy( WorldMapThumbObject );
 		WorldMapThumbObject = nil;
 	end
-	ThumbMaskPrefab		= nil;	
 	ThumbDisplayPrefab	= nil;
 	ThumbCityRoot		= nil;
 	ThumbCamera			= nil;
@@ -72,23 +71,22 @@ end
 function WorldMapThumb.Start( Prefab )
 	-- 初始化根节点
 	WorldMapThumbPrefab	= Prefab;
-	ThumbDisplayPrefab	= WorldMapThumbPrefab:GetComponent("Transform"):Find( "Display" );
-	ThumbCityRoot		= WorldMapThumbPrefab:GetComponent("Transform"):Find( "CityRoot" );
-	ThumbCamera			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "ThumbCamera" );
-	ThumbUIMod			= WorldMapThumbPrefab:GetComponent("Transform"):Find( "MapThumbUIMod" );
+	ThumbDisplayPrefab	= WorldMapThumbPrefab.transform:Find( "Display" ).transform;
+	ThumbCityRoot		= WorldMapThumbPrefab.transform:Find( "CityRoot" );
+	ThumbCamera			= WorldMapThumbPrefab.transform:Find( "ThumbCamera" );
+	ThumbUIMod			= WorldMapThumbPrefab.transform:Find( "MapThumbUIMod" );
 	SetFalse( ThumbUIMod )
-	
+
 	-- 点击特效
 	if WorldMapThumb.clickEffectObj == nil then
 		WorldMapThumb.clickEffectObj = GameObject.Instantiate( LoadPrefab("ThumbClickEffect") );
 		WorldMapThumb.clickEffectObj.transform:SetParent( ThumbDisplayPrefab );
 	end
-	
+
 	-- 是我所在的地图，显示我的位置
 	local myzoneid =  map_zone_getid( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
 	if myzoneid == WorldMapThumb.m_nZoneID then
 		WorldMapThumb.SetMyPos();
-		
 		-- 显示当前位置
 		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nLastCameraGameX, WorldMap.m_nLastCameraGameY )
 		WorldMapThumb.SetCurPos( thumbX, thumbY );
@@ -171,6 +169,9 @@ end
 
 -- 触发点击地图
 function WorldMapThumb.OnClick( obj, touchpos )
+	if ThumbDisplayPrefab == nil then
+		return;
+	end
 	if obj == nil then
 		print("obj == nil")
 		return;
@@ -247,6 +248,9 @@ end
 
 -- 显示当前位置
 function WorldMapThumb.SetCurPos( x, y )
+	if ThumbDisplayPrefab == nil then
+		return
+	end
 	-- 点击标示
 	if WorldMapThumb.clickEffectObj == nil then
 		WorldMapThumb.clickEffectObj = GameObject.Instantiate( LoadPrefab("ThumbClickEffect") );
@@ -257,12 +261,20 @@ end
 
 -- 设置我自己的位置
 function WorldMapThumb.SetMyPos()
+	if ThumbDisplayPrefab == nil then
+		return
+	end
+
 	local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
-	local thumbObj = GameObject.Instantiate( LoadPrefab("ThumbDisplayMy") );
-	thumbObj.transform:SetParent( ThumbDisplayPrefab );
-	thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
-	thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 1 );
-		
+	local myPre = LoadPrefab("ThumbDisplayMy")
+	if myPre then
+		local thumbObj = GameObject.Instantiate( myPre );
+		if thumbObj then
+			thumbObj.transform:SetParent( ThumbDisplayPrefab );
+			thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
+			thumbObj.transform:GetComponent("ShareData"):AddValue( "PosType", 1 );
+		end
+	end
 --[[	Invoke( function()
         if ThumbCamera ~= nil then
 		    ThumbCamera:GetComponent("WorldMapThumbCamera"):TweenPosToInBound( Vector3.New( thumbX, thumbY, 0 ), 0.5 );
@@ -313,6 +325,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		system_askinfo( ASKINFO_MAPZONE, "", 1 );
 		return true;
 	end
+
 	if recvValue.m_zoneid == 13 then
 		SetFalse( ThumbDisplayPrefab.transform:Find("Back1") )
 		SetFalse( ThumbDisplayPrefab.transform:Find("Back2") )
@@ -373,13 +386,6 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		end
 	end
 	return true
-end
-
--- 显示关闭蒙版
-function WorldMapThumb.MaskVisible( visible )
-	if ThumbMaskPrefab then
-		ThumbMaskPrefab.gameObject:SetActive( visible );
-	end
 end
 
 function WorldMapThumb.Alert( text )
