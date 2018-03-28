@@ -286,6 +286,13 @@ int quest_check( int actor_index, int questid, int *value )
 				{
 					return 1;
 				}
+				else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_UPGRADE )
+				{
+					if ( pCity->questvalue[0] >= questinfo->needvalue )
+					{
+						return 1;
+					}
+				}
 			}
 		}
 		else if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_SILVER )
