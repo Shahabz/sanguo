@@ -227,7 +227,6 @@ int building_give( int city_index, int kind, int num )
 			building_makestruct( &g_city[city_index].building[offset], offset, &pValue.m_building );
 			netsend_buildingget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 			city_building_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building[offset], "city_building", NULL );
-			building_upgrade_autocheck( city_index );
 		}
 	}
 	else if ( kind < BUILDING_Silver )
@@ -239,7 +238,6 @@ int building_give( int city_index, int kind, int num )
 			building_barracks_makestruct( &g_city[city_index].building_barracks[offset], offset, &pValue.m_barracks );
 			netsend_buildingbarracksget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 			city_building_barracks_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building_barracks[offset], "city_building_barracks", NULL );
-			building_upgrade_autocheck( city_index );
 		}
 	}
 	else if ( kind < BUILDING_Smithy )
@@ -254,7 +252,6 @@ int building_give( int city_index, int kind, int num )
 				building_res_makestruct( &g_city[city_index].building_res[offset], offset, &pValue.m_res );
 				netsend_buildingresget_S( g_city[city_index].actor_index, SENDTYPE_ACTOR, &pValue );
 				city_building_res_save_auto( g_city[city_index].actorid, offset, &g_city[city_index].building_res[offset], "city_building_res", NULL );
-				building_upgrade_autocheck( city_index );
 			}
 		}
 		

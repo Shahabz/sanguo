@@ -54,6 +54,7 @@ function BuildingGetDlgClose()
 	m_WaitValue1 = nil;
 	m_WaitValue2 = nil;
 	m_WaitValue3 = nil;
+	system_askinfo( ASKINFO_AUTOBUILD, "", 3 );
 	eye.uiManager:Close( "BuildingGetDlg" );
 end
 

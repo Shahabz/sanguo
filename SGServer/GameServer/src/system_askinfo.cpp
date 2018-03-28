@@ -727,6 +727,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			city_autoguard_open( g_actors[actor_index].city_index );
 		}
+		else if ( pvalue[0] == 3 )
+		{
+			building_upgrade_autocheck( g_actors[actor_index].city_index );
+		}
 		break;
 	case ASKINFO_HERO_VISIT:
 		if ( pvalue[0] == 0 )
