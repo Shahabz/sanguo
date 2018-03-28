@@ -53,6 +53,7 @@
 #include "world_boss.h"
 #include "king_war.h"
 #include "vip.h"
+#include "pay.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -778,6 +779,9 @@ int actor_entercity( int actor_index )
 
 	// 离线奖励-用户ID
 	gift_uid_check( actor_index );
+
+	// 离线订单
+	paystore_payoffline_get( actor_index );
 
 	// 任务列表
 	quest_newplayer( actor_index );
