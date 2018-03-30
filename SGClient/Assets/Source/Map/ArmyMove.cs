@@ -17,6 +17,8 @@ public class ArmyMove : MonoBehaviour
 	public short heroCount = 1;				// 需要显示的武将数量
 	public short invokeShow = 0;			// 是否开启延迟显示
 	public float direction = 0.8f;			// 超过这个距离就显示一个
+	public float direction1 = 0.5f;			// 超过这个距离就显示一个
+	public float direction2 = 0.2f;			// 超过这个距离就显示一个
 	// Use this for initialization
 	void Start()
 	{
@@ -33,18 +35,44 @@ public class ArmyMove : MonoBehaviour
 				if (reback == 0 ) 
 				{
 					float d = (transform.localPosition - fromPosition).magnitude;
-					if (d > direction*3) {
-						invokeShow = 0;
-						for (int tmpi = 0; tmpi < heroCount; tmpi++) {
-							heroGameObject[tmpi].SetActive (true);
+					if (heroCount == 4) 
+					{
+						if (d > direction * 3) 
+						{
+							invokeShow = 0;
+							for (int tmpi = 0; tmpi < heroCount; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
+						} else if (d > direction * 2) {
+							for (int tmpi = 0; tmpi < heroCount - 1; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
+						} else if (d > direction) {
+							for (int tmpi = 0; tmpi < heroCount - 2; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
 						}
-					} else if (d > direction*2) {
-						for (int tmpi = 0; tmpi < heroCount-1; tmpi++) {
-							heroGameObject[tmpi].SetActive (true);
-						}
-					} else if (d > direction) {
-						for (int tmpi = 0; tmpi < heroCount-2; tmpi++) {
-							heroGameObject[tmpi].SetActive (true);
+					} 
+					else if (heroCount == 3) 
+					{
+						if (d > direction1 * 3) {
+							invokeShow = 0;
+							for (int tmpi = 0; tmpi < heroCount; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
+						} else if (d > direction1 * 2) {
+							for (int tmpi = 0; tmpi < heroCount - 1; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
+						} 
+					} 
+					else if (heroCount == 2) 
+					{
+						if (d > direction2 * 3) {
+							invokeShow = 0;
+							for (int tmpi = 0; tmpi < heroCount; tmpi++) {
+								heroGameObject [tmpi].SetActive (true);
+							}
 						}
 					}
 				} 	

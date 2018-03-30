@@ -909,8 +909,8 @@ function proc_questlist_C( recvValue )
 	-- process.
 	CacheQuestClear()
 	CacheQuestSet( recvValue )
-	MainDlgSetQuest()
 	QuestDlgUpdate()
+	MainDlgSetQuest()
 end
 
 -- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,

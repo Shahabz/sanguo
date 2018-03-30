@@ -1,6 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/XUPorter/XCodePostProcess.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/Custom/FindReferences.cs">
     <Files>
       <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPositionBetween.cs" Line="1" Column="1" />
@@ -20,7 +20,7 @@
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/Packager.cs" Line="34" Column="40" />
       <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/ScreenBlur.cs" Line="1" Column="1" />
@@ -38,7 +38,7 @@
       <File FileName="Assets/Source/Manager/ObjectPoolManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/SpriteGroup.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/LuaBinder.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Map/ArmyMove.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Map/ArmyMove.cs" Line="46" Column="38" />
       <File FileName="Assets/Source/Map/MapUnitMove.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/FileSystem/IniUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/City/CityLand.cs" Line="1" Column="1" />
@@ -98,8 +98,8 @@
       <File FileName="Assets/PackAssets/Shader/ImageGray.shader" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/SpriteAnimation.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/ChannelSDK.cs" Line="42" Column="20" />
-      <File FileName="Assets/Editor/Custom/SpriteChecker.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/ChannelSDK.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/SpriteChecker.cs" Line="28" Column="50" />
       <File FileName="Assets/Source/Base/Localization.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ActiveDelay.cs" Line="1" Column="1" />
@@ -110,15 +110,17 @@
       <File FileName="Assets/Source/Notification/DefaultNotification.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/NotificationManagerWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Generate/DeviceHelperWrap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="46" Column="32" />
-      <File FileName="Assets/Editor/ProjectBuild.cs" Line="40" Column="4" />
+      <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/ProjectBuild.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Net/IPv6SupportMidleware.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCMod.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCProject.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ShareData.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Map/WorldMapThumb.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XClass.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/XUPorter/XCBuildConfiguration.cs" Line="41" Column="43" />
+      <File FileName="Assets/Editor/XUPorter/XCBuildConfiguration.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/FindUnUnUsedUITexture.cs" Line="94" Column="30" />
+      <File FileName="Assets/Editor/Custom/FindReferences.cs" Line="8" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

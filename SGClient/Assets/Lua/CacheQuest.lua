@@ -39,6 +39,7 @@ QUEST_DATATYPE_MATERIAL_MAKE		=	43	-- 材料作坊生产材料N次（操作） d
 QUEST_DATATYPE_HEROGUARD_UP			=	44	-- 御林卫上阵任意武将N个 datatype=44 datakind=0 needvalue=数量
 QUEST_DATATYPE_HERO_VISIT			=	45	-- 进行良将寻访N次 datatype=45 datakind=0 needvalue=数量
 QUEST_DATATYPE_HERO_CALL_STORY		=	46	-- 副本招募武将 datatype=46 datakind=副本id needvalue=1
+QUEST_DATATYPE_EQUIP_FORGING_OP		=	47	-- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
 
 QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
@@ -71,6 +72,14 @@ function CacheQuestSet( recvValue )
 	GetPlayer().m_questid = recvValue.m_list[1].m_questid
 	
 	QuestListSort(CacheQuest.m_list);
+end
+
+function QuestTypeName(index)
+	if index == 1 then
+		return T(522);
+	else
+		return T(523);
+	end
 end
 
 -- 任务类型
@@ -143,6 +152,8 @@ function QuestType( recvValue )
 		typename = Localization.text_quest( 95 )
 	elseif datatype == QUEST_DATATYPE_HERO_CALL_STORY then -- 副本招募武将 datatype=46 datakind=副本id needvalue=1
 		typename = Localization.text_quest( 95 )
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_OP then -- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
+		typename = Localization.text_quest( 94 )
 	end
 	return typename;
 end
@@ -237,6 +248,8 @@ function QuestName( type, recvValue )
 		name = name..FQUEST( 33, value, needvalue );
 	elseif datatype == QUEST_DATATYPE_HERO_CALL_STORY then -- 副本招募武将 datatype=46 datakind=副本id needvalue=1
 		name = name..FQUEST( 34, StoryRankName(datakind-1) );
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_OP then -- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
+		name = name..FQUEST( 35, EquipName(datakind) );
 	else
 		name = ""
 	end
@@ -404,6 +417,10 @@ function QuestGoto( index )
 	
 	elseif datatype == QUEST_DATATYPE_HERO_CALL_STORY then -- 副本招募武将 datatype=46 datakind=副本id needvalue=1
 		StoryDlgShow();
+		
+	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_OP then -- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
+		City.Move( BUILDING_Smithy, -1, true );
+		
 	end
 end
 

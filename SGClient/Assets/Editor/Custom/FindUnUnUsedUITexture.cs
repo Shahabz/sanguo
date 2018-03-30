@@ -79,7 +79,7 @@ public static class FindUnUnUsedUITexture
             return;
         }
 
-        var uiPicRootDir = EditorUtility.OpenFolderPanel("选择UIPrefab目录", "Assets", "");
+        var uiPicRootDir = EditorUtility.OpenFolderPanel("选择UISprite目录", "Assets", "");
         if (string.IsNullOrEmpty(uiPicRootDir))
         {
             return;

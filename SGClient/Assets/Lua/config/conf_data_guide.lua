@@ -71,8 +71,8 @@ g_guide = {
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [15] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
+	--[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   指向任务框
+	[1] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [16] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框

@@ -73,6 +73,8 @@ m_uiWarTable.m_uiWarContent = nil
 m_uiWarTable.m_uiUIP_WarText = nil; --UnityEngine.GameObject
 m_uiWarTable.m_uiWarWarning = nil; --UnityEngine.GameObject
 local m_uiCutScenes = nil; --UnityEngine.GameObject
+local m_uiQuestTitleText = nil; --UnityEngine.GameObject
+local m_uiQuestEffect = nil; --UnityEngine.GameObject
 
 m_uiWarTable.m_cache = {}
 m_uiWarTable.m_cacheObj = {}
@@ -93,6 +95,7 @@ local m_uiBuildingTimerUITweenScale1 = {nil,nil}
 local m_uiBuildingNameUITweenScale1 = {nil,nil}
 
 local m_ObjectPool = nil;
+local m_finishTask = 0;
 
 -- 打开界面
 function MainDlgOpen()
@@ -217,8 +220,14 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 主线任务导航
 		elseif nControlID == 31 then
-			QuestGoto( 1 );
-		
+			if m_finishTask == 0 then
+				QuestGoto( 1 );
+			else
+				QuestDlgGetAward(m_finishTask);
+				m_finishTask = 0;
+				MainDlgSetQuest();
+			end
+			
 		-- 打开支线任务
 		elseif nControlID == 32 then
 			SetTrue( m_uiQuestList )
@@ -229,6 +238,12 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			SetFalse( m_uiQuestList )
 			if CacheQuest.m_count > 1 then
 				SetTrue( m_uiQuest.transform:Find("Button") )
+			end
+		
+		-- 战争警告
+		elseif nControlID == 34 then
+			if GameManager.currentScence == "city" then
+				WorldMap.GotoWorldMap(-1, -1)
 			end
 			
 		-- 点击支线任务导航
@@ -452,6 +467,8 @@ function MainDlgOnAwake( gameObject )
 	ButtonTable.m_uiButtonGril = objs[83];
 	m_uiAutoGuard = objs[84];
 	m_uiCutScenes = objs[85];
+	m_uiQuestTitleText = objs[86];
+	m_uiQuestEffect = objs[87];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
@@ -637,7 +654,8 @@ function MainDlgSetQuest()
 		return;
 	end
 	SetText( m_uiQuestText, QuestName( -1, CacheQuest.m_list[1] ) )
-	
+	SetText( m_uiQuestTitleText, QuestTypeName(1));
+	SetFalse( m_uiQuestEffect.transform);
 	-- 引导任务部分
 	local questid = CacheQuest.m_list[1].m_questid;
 	
@@ -665,6 +683,8 @@ function MainDlgSetQuest()
 			SetText( uiObj.transform:Find("QuestText"), QuestName( -1, questInfo ) )
 			questnum = questnum + 1;
 		end
+		
+		CheckQuestFinish(questInfo,i+2);
 	end
 	
 	if questnum > 0 then
@@ -674,6 +694,18 @@ function MainDlgSetQuest()
 		SetFalse( m_uiQuest.transform:Find("Button") )
 	end
 end
+
+function CheckQuestFinish(questInfo,i)
+	if questInfo ~= nil then
+		if questInfo.m_value >= questInfo.m_needvalue then
+			SetText( m_uiQuestText, QuestName( -1, questInfo ));
+			SetText( m_uiQuestTitleText, QuestTypeName(2));
+			SetTrue( m_uiQuestEffect.transform);
+			m_finishTask = i;
+		end
+	end
+end
+
 
 -- 邮件数量
 function MainDlgSetMailNum( num )

@@ -59,7 +59,7 @@ end
 -- 支付
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function SDK.pay( recvValue )
-	if Const.platid == 12  or Const.platid == 13 then -- 在野
+	if Const.platid == 12  then -- 在野android
 		local json = require "cjson"
 		local info = {}
 		info["product_id"] = recvValue.m_productid
@@ -68,7 +68,19 @@ function SDK.pay( recvValue )
 		info["product_ext"] = recvValue.m_ext		
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
-	else
+		
+	elseif Const.platid == 13 then -- 在野ios(正规苹果支付)
+		local json = require "cjson"
+		local info = {}
+		if recvValue.m_productid == 1001 then -- 后台配错了，不能删，只能换个
+			recvValue.m_productid = 1002
+		end
+		info["product_id"] = recvValue.m_productid
+		info["product_price"] = recvValue.m_price
+		info["product_orider"] = recvValue.m_orderid
+		info["product_ext"] = recvValue.m_ext		
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 

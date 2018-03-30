@@ -33,6 +33,8 @@ public static class XCodePostProcess
 		string path = Path.GetFullPath(pathToBuiltProject);
 		// ipx适配
 		EditIphoneXCode(path);
+		// www url 缓存
+		EditWWWCacheCode(path); 
 
 		//TODO implement generic settings as a module option
 		Debug.Log(projectName);
@@ -140,6 +142,14 @@ public static class XCodePostProcess
    ";
 		XClass UnityAppController = new XClass(path + "/Classes/UnityAppController.mm");
 		UnityAppController.Replace(src, dst);
+	}
+
+	// www url 缓存
+	public static void EditWWWCacheCode(string path) 
+	{
+		//插入代码
+		XClass UnityAppController = new XClass(path + "/Classes/Unity/WWWConnection.mm");
+		UnityAppController.WriteBelow("[request setAllHTTPHeaderFields: headers];","request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;\n    [request setHTTPShouldHandleCookies:NO];");
 	}
 
 	public static void Log(string message)

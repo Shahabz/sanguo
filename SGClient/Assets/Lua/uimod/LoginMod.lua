@@ -105,7 +105,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			if IsActive(m_uiServerList)	then
 				LoginModCloseServerList();
 			else
-				LoginModOpenServerList();
+				LoginModAskServerListRe()
 			end
 			
 		-- 联系客服
@@ -116,7 +116,7 @@ function LoginModOnEvent( nType, nControlID, value )
 		elseif nControlID == 9 then	
 			LoginModSDKLogin()
 			
-		-- 显示服务器列表	
+		-- 显示服务器列表
 		elseif nControlID == 10 then
 			LoginModOpenServerList();
 		
@@ -306,7 +306,7 @@ function LoginModAskServerList()
 			netlog( response );
 			return;
 		end
-		
+
 		-- 服务器分组
 		m_GroupList = info["grouplist"];
 		-- 所有服务器
@@ -328,6 +328,24 @@ function LoginModAskServerList()
 			m_LoginUsedServerList = json.decode( loginUsedServerJson )
 			LoginModSelectServer( m_LoginUsedServerList[#m_LoginUsedServerList]["sid"] );
 		end 
+	end );
+end
+
+-- 再次请求服务器列表
+function LoginModAskServerListRe()
+	-- 获取服务器列表
+	HttpRequest.GetServerList( function( response )
+		local json = require "cjson"
+		local info = json.decode( response );
+		if info == nil then
+			netlog( response );
+			return;
+		end
+		-- 服务器分组
+		m_GroupList = info["grouplist"];
+		-- 所有服务器
+		m_ServerList = info["serverlist"];	
+		LoginModOpenServerList(); 
 	end );
 end
 

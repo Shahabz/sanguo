@@ -149,15 +149,28 @@ function QuestDlgSetObject( offset, recvValue )
 			index = index + 1
 		end
 	end
-	
-	if recvValue.m_value >= recvValue.m_needvalue then
-		SetTrue( uiGetButton )
-		SetFalse( uiGotoButton )
-		SetControlID( uiGetButton, 100+offset );
+
+	-- 副本
+	if recvValue.m_datatype == QUEST_DATATYPE_STORY then
+		if recvValue.m_value > recvValue.m_datakind then
+			SetTrue( uiGetButton )
+			SetFalse( uiGotoButton )
+			SetControlID( uiGetButton, 100+offset );
+		else
+			SetFalse( uiGetButton )
+			SetTrue( uiGotoButton )
+			SetControlID( uiGotoButton, offset );
+		end
 	else
-		SetFalse( uiGetButton )
-		SetTrue( uiGotoButton )
-		SetControlID( uiGotoButton, offset );
+		if recvValue.m_value >= recvValue.m_needvalue then
+			SetTrue( uiGetButton )
+			SetFalse( uiGotoButton )
+			SetControlID( uiGetButton, 100+offset );
+		else
+			SetFalse( uiGetButton )
+			SetTrue( uiGotoButton )
+			SetControlID( uiGotoButton, offset );
+		end
 	end
 end
 

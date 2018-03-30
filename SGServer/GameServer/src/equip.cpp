@@ -1058,6 +1058,8 @@ int equip_forging( int actor_index, short kind )
 	pCity->forgingsec = g_equipinfo[kind].sec;
 	building_smithy_send( pCity->index );
 
+	// ÈÎÎñ
+	quest_addvalue( pCity, QUEST_DATATYPE_EQUIP_FORGING_OP, kind, 0, 1 );
 	wlog( 0, LOGOP_FORGING, PATH_EQUIP_FORGING, kind, 0, 0, pCity->actorid, city_mainlevel( pCity->index ) );
 	return 0;
 }
