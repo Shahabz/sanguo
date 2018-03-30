@@ -1027,11 +1027,11 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	else if ( awardgroup > 0 )
 	{
 		awardgroup_withid( actorid, awardgroup, PATH_PAY, &awardGet );
-		actor_notify_alert( actor_index, 2203 );
+		actor_notify_pop( actor_index, 2203 );
 	}
 	else if ( token > 0 )
 	{ // 通知一下
-		actor_notify_alert( actor_index, 2203 );
+		actor_notify_pop( actor_index, 2203 );
 	}
 
 	// 更新订单状态
