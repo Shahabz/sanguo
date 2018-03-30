@@ -100,14 +100,17 @@ local m_finishTask = 0;
 -- 打开界面
 function MainDlgOpen()
 	m_Dlg = eye.uiManager:Open( "MainDlg" );
+	m_Dlg.transform:SetSiblingIndex(0);
 end
 
 -- 隐藏界面
 function MainDlgClose()
+	if IsGuiding() then
+		HideGuideFinger();
+	end
 	if m_Dlg == nil then
 		return;
 	end
-	
 	eye.uiManager:Close( "MainDlg" );
 end
 
@@ -483,7 +486,7 @@ end
 
 -- 界面显示时调用
 function MainDlgOnEnable( gameObject )
-	
+	ShowGuideFinger();
 end
 
 -- 界面隐藏时调用

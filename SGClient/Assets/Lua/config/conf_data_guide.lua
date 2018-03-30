@@ -57,7 +57,7 @@ g_guide = {
 	},
 [12] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
-	[2] = {cmd = 2,guideType = 24,x = 0,y = 0,point = 2,isSpecial = 0},  --自动建造
+	[2] = {cmd = 2,guideType = 24,x = 0,y = 0,point = 1,isSpecial = 0},  --自动建造
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [13] = {
@@ -105,7 +105,7 @@ g_guide = {
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [21] = {
-	[1] = {cmd = 3,guideType = 28,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将副本按钮
+	[1] = {cmd = 3,guideType = 28,x = -0.7,y = -0.7,point = 2,isSpecial = 0},  --招募武将副本按钮
 	[2] = {cmd = 3,guideType = 17,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将按钮
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
@@ -149,7 +149,7 @@ g_guide = {
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [29] = {
-	[1] = {cmd = 3,guideType = 28,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将副本按钮
+	[1] = {cmd = 3,guideType = 28,x = -0.7,y = -0.7,point = 2,isSpecial = 0},  --招募武将副本按钮
 	[2] = {cmd = 3,guideType = 17,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将按钮
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
@@ -164,7 +164,7 @@ g_guide = {
 	},
 [32] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
-	[2] = {cmd = 3,guideType = 21,x = 0,y = -1.8,point = 2,isSpecial = 0},   --雇佣铁匠
+	[2] = {cmd = 3,guideType = 21,x = 0,y = 0,point = 2,isSpecial = 0},   --雇佣铁匠
 	[3] = {cmd = 3,guideType = 22,x = 0,y = 0,point = 2,isSpecial = 0},  --加速
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -215,7 +215,7 @@ g_guide = {
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成，作为触发标识
 	},
 [40] = {
-	[1] = {cmd = 3,guideType = 28,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将副本按钮
+	[1] = {cmd = 3,guideType = 28,x = -0.7,y = -0.7,point = 2,isSpecial = 0},  --招募武将副本按钮
 	[2] = {cmd = 3,guideType = 17,x = 0,y = 0,point = 2,isSpecial = 0},  --招募武将按钮
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},

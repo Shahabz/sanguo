@@ -593,7 +593,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			if IsGuiding() then
 				if GetCurrentGuideType() == GUIDE_COPY_HERO then
-					FindCmdTpye(uiFrame.transform);
+					FindCmdTpye(uiItem.transform);
 				end
 			end
 			

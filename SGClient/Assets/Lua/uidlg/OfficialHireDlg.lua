@@ -234,6 +234,12 @@ local function UIP_InfoSet( uiObj, kind, shape, color, name, desc, otherDesc, ti
 		SetFalse( uiButton )
 		SetTrue( uiFreeButton )
 		SetControlID( uiFreeButton, kind )
+			
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_MAKE_CHOOSE then
+				FindCmdTpye(uiFreeButton.transform);
+			end
+		end
 	else
 		SetFalse( uiFreeButton )
 		if silver <= 0 and token <= 0 then
@@ -345,12 +351,6 @@ function OfficialHireDlgSetForging()
 						0,
 						info.m_offree ) -- token
 			m_uiUIP_Info[index].transform:SetSiblingIndex(kind);
-			
-			if IsGuiding() then
-				if GetCurrentGuideType() == GUIDE_MAKE_CHOOSE then
-					FindCmdTpye(m_uiUIP_Info[index].transform);
-				end
-			end
 			break;
 		end
 	end

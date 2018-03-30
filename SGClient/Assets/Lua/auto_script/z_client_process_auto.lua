@@ -129,6 +129,7 @@ function proc_actorinfo_C( recvValue )
 	MainDlgSetAutoBuild(0)
 	MainDlgSetAutoGuard(0)
 	MainDlgSetWeather( recvValue.m_game_day, recvValue.m_game_weather, recvValue.m_game_day_loop );
+	PatrolModInit()
 	SDK.setExtendData()
 end
 

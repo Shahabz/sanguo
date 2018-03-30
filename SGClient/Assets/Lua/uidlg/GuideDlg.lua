@@ -42,6 +42,11 @@ GUIDE_END = 999          --指引结束标识
 
 local m_uiFinger = {nil,nil,nil,nil,nil,nil}; --UnityEngine.GameObject
 
+-- 打开界面
+function GuideDlgOpen()
+	m_Dlg = eye.uiManager:Open( "GuideDlg" );
+end
+
 -- 隐藏界面
 function GuideDlgClose()
 	if m_Dlg == nil then
@@ -193,10 +198,10 @@ function HideGuideFinger()
 	end
 end
 
-function ShowGuideFinger(pi)
+function ShowGuideFinger()
 	HideGuideFinger();
-	if m_uiFinger[pi] then
-		SetTrue(m_uiFinger[pi].transform);
+	if currentMainFinger ~= nil then
+		SetTrue(currentMainFinger.transform);
 	end
 end
 
@@ -209,34 +214,33 @@ end
 
 -- 设置当前指引位置
 function FindCmdTpye(tran)
+	if g_guide[mId] == nil or g_guide[mId][mStep] == nil then
+		return
+	end
 	cmd = g_guide[mId][mStep].cmd;
 	point = g_guide[mId][mStep].point;
 	deviation = Vector3.New(g_guide[mId][mStep].x,g_guide[mId][mStep].y,0);
 	if cmd == 2 then 
+		currentMainFinger = m_uiFinger[point];
+		ShowGuideFinger();
 		if g_guide[mId][mStep].guideType == GUIDE_TOCLICKTASK then 
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetQuestDlgPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_CPOY then 
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetCopyPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_GOTO_SOCIETY then 
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetWorldPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_BACK then
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetBackPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_AUTOBUILDING then
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetAutoBuildPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_HERODLG then 
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetHeroDlgPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_WORK then 
-			ShowGuideFinger(point);
 			m_uiFinger[point].transform.position = GetWorkPos() + deviation;
 		end
 	elseif cmd == 3 then
-		if currentFinger == nil then
+		currentMainFinger = nil;
+		if currentFinger == nil and m_uiFinger[point] then
 			currentFinger = addChild(tran,m_uiFinger[point]);
 			currentFinger.transform.position = currentFinger.transform.position + deviation;
 		end

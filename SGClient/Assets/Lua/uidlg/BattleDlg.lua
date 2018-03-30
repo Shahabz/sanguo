@@ -328,12 +328,12 @@ end
 function BattleDlgCenter()
 	for i = 0 ,m_uiCenterContent.transform.childCount - 1 do
 		local uiObj = m_uiCenterContent.transform:GetChild(i).gameObject		
-		if i+1 > m_EnemyCount then 
+		if i+1 > m_EnemyCount or m_EnemyData[i+1] == nil or m_HeroList[i+1] == nil then 
 			SetFalse(uiObj);
 		else
 			SetTrue(uiObj);
 			local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-			local uiBack = objs[0]
+			local uiBack = objs[0];
 			local EnemyCorps = m_EnemyData[i+1].m_corps;
 			local HeroCorps = m_HeroList[i+1].m_corps;
 			SetImage(uiBack,BattleDlgGetCenterImage(HeroCorps,EnemyCorps))
