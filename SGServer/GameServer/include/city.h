@@ -184,7 +184,7 @@ int city_guard_sendlist( int actor_index );
 int city_guard_sendnum( int actor_index );
 
 // ี๗สี
-int city_yield_total( City *pCity, int kind );
+int city_yield_total( City *pCity, int kind, int num );
 int city_levy( int actor_index );
 int city_levy_sendinfo( int actor_index );
 

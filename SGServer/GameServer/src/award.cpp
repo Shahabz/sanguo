@@ -623,25 +623,25 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	}
 	else if ( kind == AWARDKIND_LEVY_SILVER )// 奖励N次银币征收量
 	{
-		int silver = city_yield_total( city_getptr( actor_index ), BUILDING_Silver );
+		int silver = city_yield_total( city_getptr( actor_index ), BUILDING_Silver, num );
 		if ( silver > 0 )
 			city_changesilver( g_actors[actor_index].city_index, silver, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_WOOD )// 奖励N次木材征收量
 	{
-		int wood = city_yield_total( city_getptr( actor_index ), BUILDING_Wood );
+		int wood = city_yield_total( city_getptr( actor_index ), BUILDING_Wood, num );
 		if ( wood > 0 )
 			city_changewood( g_actors[actor_index].city_index, wood, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_FOOD ) // 奖励N次粮食征收量
 	{
-		int food = city_yield_total( city_getptr( actor_index ), BUILDING_Food );
+		int food = city_yield_total( city_getptr( actor_index ), BUILDING_Food, num );
 		if ( food > 0 )
 			city_changefood( g_actors[actor_index].city_index, food, path );
 	}
 	else if ( kind == AWARDKIND_LEVY_IRON )// 奖励N次镔铁征收量
 	{
-		int iron = city_yield_total( city_getptr( actor_index ), BUILDING_Iron );
+		int iron = city_yield_total( city_getptr( actor_index ), BUILDING_Iron, num );
 		if ( iron > 0 )
 			city_changeiron( g_actors[actor_index].city_index, iron, path );
 	}

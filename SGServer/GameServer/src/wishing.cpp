@@ -260,17 +260,17 @@ int wishing_change_sendinfo( int actor_index )
 	SLK_NetS_WishingChange pValue = { 0 };
 	pValue.m_cd = actor_check_uselimit_cd( actor_index, USELIMIT_CD_WISHING_CHANGE );
 
-	int silver = (int)ceil( city_yield_total( pCity, BUILDING_Silver ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+	int silver = (int)ceil( city_yield_total( pCity, BUILDING_Silver, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 	pValue.m_silver = silver;
 	pValue.m_silver_to_wood = (int)ceil( silver * global.wishing_silver_to_wood );
 	pValue.m_silver_to_food = (int)ceil( silver * global.wishing_silver_to_food );
 
-	int wood = (int)ceil( city_yield_total( pCity, BUILDING_Wood ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+	int wood = (int)ceil( city_yield_total( pCity, BUILDING_Wood, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 	pValue.m_wood = wood;
 	pValue.m_wood_to_silver = (int)ceil( wood * global.wishing_wood_to_silver );
 	pValue.m_wood_to_food = (int)ceil( wood * global.wishing_wood_to_food );
 
-	int food = (int)ceil( city_yield_total( pCity, BUILDING_Food ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+	int food = (int)ceil( city_yield_total( pCity, BUILDING_Food, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 	pValue.m_food = food;
 	pValue.m_food_to_silver = (int)ceil( food * global.wishing_food_to_silver );
 	pValue.m_food_to_wood = (int)ceil( food * global.wishing_food_to_wood );
@@ -293,7 +293,7 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 
 	if ( kind == AWARDKIND_SILVER )
 	{
-		int silver = (int)ceil( city_yield_total( pCity, BUILDING_Silver ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+		int silver = (int)ceil( city_yield_total( pCity, BUILDING_Silver, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 		if ( pCity->silver < silver )
 			return -1;
 		city_changesilver( pCity->index, -silver, PATH_WISHINGCHANGE );
@@ -310,7 +310,7 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 	}
 	else if ( kind == AWARDKIND_WOOD )
 	{
-		int wood = (int)ceil( city_yield_total( pCity, BUILDING_Wood ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+		int wood = (int)ceil( city_yield_total( pCity, BUILDING_Wood, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 		if ( pCity->wood < wood )
 			return -1;
 		city_changewood( pCity->index, -wood, PATH_WISHINGCHANGE );
@@ -327,7 +327,7 @@ int wishing_change_buy( int actor_index, int kind, int to_kind )
 	}
 	else if ( kind == AWARDKIND_FOOD )
 	{
-		int food = (int)ceil( city_yield_total( pCity, BUILDING_Food ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
+		int food = (int)ceil( city_yield_total( pCity, BUILDING_Food, 1 ) / (float)WISHINGCHANGE_V ) * WISHINGCHANGE_V;
 		if ( pCity->food < food )
 			return -1;
 		city_changefood( pCity->index, -food, PATH_WISHINGCHANGE );

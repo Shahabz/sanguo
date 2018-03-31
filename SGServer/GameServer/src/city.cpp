@@ -1910,10 +1910,12 @@ int city_yield_official( City *pCity, int kind )
 	return g_official_gov[ofkind].produce;
 }
 
-int city_yield_total( City *pCity, int kind )
+int city_yield_total( City *pCity, int kind, int num )
 {
 	if ( !pCity )
 		return 0;
+	if ( num <= 0 )
+		num = 1;
 	int base_yield = city_yield_base( pCity, kind );
 	int tech_yield = (int)ceil( base_yield * (city_yield_tech( pCity, kind ) / 100.0f) );
 	int official_yield = (int)ceil( base_yield * (city_yield_official( pCity, kind )/100.0f) );
@@ -1953,7 +1955,7 @@ int city_yield_total( City *pCity, int kind )
 	}
 
 	int yield = base_yield + tech_yield + official_yield + weather_yield;
-	return yield;
+	return yield * num;
 }
 
 // ี๗สี
@@ -1966,19 +1968,19 @@ int city_levy( int actor_index )
 	if ( pCity->levynum <= 0 )
 		return -1;
 
-	int silver = city_yield_total( pCity, BUILDING_Silver );
+	int silver = city_yield_total( pCity, BUILDING_Silver, 1 );
 	if ( silver > 0 )
 		city_changesilver( pCity->index, silver, PATH_LEVY );
 
-	int wood = city_yield_total( pCity, BUILDING_Wood );
+	int wood = city_yield_total( pCity, BUILDING_Wood, 1 );
 	if ( wood > 0 )
 		city_changewood( pCity->index, wood, PATH_LEVY );
 
-	int food = city_yield_total( pCity, BUILDING_Food );
+	int food = city_yield_total( pCity, BUILDING_Food, 1 );
 	if ( food > 0 )
 		city_changefood( pCity->index, food, PATH_LEVY );
 
-	int iron = city_yield_total( pCity, BUILDING_Iron );
+	int iron = city_yield_total( pCity, BUILDING_Iron, 1 );
 	if ( iron > 0 )
 		city_changeiron( pCity->index, iron, PATH_LEVY );
 
