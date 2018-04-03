@@ -68,7 +68,9 @@ function City.BuildingSelect( transform )
 				if GetPlayer().m_worker_op == 4 then
 					QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec );
 				else
-					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+					if GetPlayer().m_worker_free == 0 then -- 没有免费才打开
+						QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+					end
 				end
 				return
 			end
@@ -76,7 +78,9 @@ function City.BuildingSelect( transform )
 			if GetPlayer().m_worker_op == 4 then
 				QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec );
 			else
-				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+				if GetPlayer().m_worker_free == 0 then -- 没有免费才打开
+					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec );
+				end
 			end
 			return
 		end
@@ -88,7 +92,9 @@ function City.BuildingSelect( transform )
 				if GetPlayer().m_worker_op_ex == 4 then
 					QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
 				else
-					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+					if GetPlayer().m_worker_free_ex == 0 then -- 没有免费才打开
+						QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+					end
 				end
 				return
 			end
@@ -96,7 +102,9 @@ function City.BuildingSelect( transform )
 			if GetPlayer().m_worker_op_ex == 4 then
 				QuickItemDlgShow( 3, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
 			else
-				QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+				if GetPlayer().m_worker_free_ex == 0 then -- 没有免费才打开
+					QuickItemDlgShow( 1, building.kind, building.offset, GetPlayer().m_worker_sec_ex );
+				end
 			end
 			return
 		end
@@ -562,6 +570,7 @@ function City.BuildingSetFree( kind, offset )
 	ShareData.intValue[0] = kind;
 	ShareData.intValue[1] = offset;
 	freeObj.gameObject:SetActive(true);
+	BuildingOpratorModShow( false, 0, -1, nil );
 	-- 显示免费头，关闭城防补充头
 	City.GuardCallMod( unitObj, false );
 end

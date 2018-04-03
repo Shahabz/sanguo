@@ -150,6 +150,7 @@ function HeroDlgSetHero( index, pHero )
 	local uiAdd = objs[11];
 	local uiShapeBack1 = objs[12];
 	local uiType = objs[13];
+	local uiCheck = objs[14];
 	SetControlID( m_uiUIP_Hero[index], index )
 	
 	if pHero == nil or pHero.m_kind <= 0 then
@@ -164,6 +165,8 @@ function HeroDlgSetHero( index, pHero )
 		SetFalse( uiState )
 		SetFalse( uiStateBack )
 		SetFalse( uiAdd )
+		SetFalse( uiCheck )
+		
 		if index == 3 then
 			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
 				SetTrue( uiUnLockText )
@@ -230,19 +233,17 @@ function HeroDlgSetHero( index, pHero )
 	SetControlID( uiSoldiersBtn, 100 + index )
 	SetText( uiState, HeroState( pHero.m_state ) );
 	
-	-- +号
-	for i=0,5,1 do
-		if pHero.m_Equip[i].m_kind > 0 then
-			SetFalse( uiAdd )
-		else
-			-- 检查背包是否有同类型的装备
-			if GetEquip():HasByType( i+1 ) == true then
-				SetTrue( uiAdd )
-			else
-				SetFalse( uiAdd )
-			end
+	--判断是否有新装备
+	SetFalse( uiAdd )
+	SetTrue( uiCheck )
+	for i= 0,5,1 do 
+		if GetEquip():CheckByType( i+1 , pHero.m_Equip[i].m_kind ) then
+			SetTrue( uiAdd )
+			SetFalse( uiCheck )
+			break;
 		end
 	end
+	
 end
 
 function GuideShow(index,tran)

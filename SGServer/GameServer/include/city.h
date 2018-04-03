@@ -36,6 +36,7 @@
 #define CITY_FUNCTION_CHAT			18	// 聊天
 #define CITY_FUNCTION_WARKEREX		19	// 商业建造队
 #define CITY_FUNCTION_Militiaman	20	// 民兵营
+#define CITY_FUNCTION_Iron			21	// 镔铁
 
 #define CITY_FUNCTION_AUTO_ADDHP	25	// 自动补兵开启关闭
 #define CITY_FUNCTION_BATTLE_ADDHP	26	// 战前补兵开启关闭

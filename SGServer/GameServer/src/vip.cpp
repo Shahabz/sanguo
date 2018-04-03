@@ -265,6 +265,11 @@ int vipshop_list( int actor_index )
 			if ( vipbag_check( actor_index, g_vipshop[tmpi].vipbaglevel ) == 0 )
 				continue;
 		}
+		if ( g_vipshop[tmpi].awardkind == AWARDKIND_LEVY_IRON )
+		{
+			if ( city_get_sflag( pCity, CITY_FUNCTION_Iron ) == 0 )
+				continue;
+		}
 		pValue.m_list[pValue.m_count].m_id = (char)g_vipshop[tmpi].id;
 		pValue.m_list[pValue.m_count].m_awardkind = g_vipshop[tmpi].awardkind;
 		pValue.m_list[pValue.m_count].m_token = g_vipshop[tmpi].token;

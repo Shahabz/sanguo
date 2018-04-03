@@ -642,7 +642,7 @@ function FightDlgResultLayerShow()
 		FightDlgClose()
 		return
 	end
-	
+
 	eye.audioManager:Stop(202);
 	eye.audioManager:Stop(301);
 	eye.audioManager:Stop(305);
@@ -775,6 +775,14 @@ function FightDlgResultLayerShow()
 	for k, v in pairs(unitlist) do
 		if v.t == FIGHT_UNITTYPE_LEADER_HERO then
 			local uiObj = m_uiHeroList.transform:GetChild( index )
+			SetFalse( uiObj.transform:Find("Lock") )
+			SetFalse( uiObj.transform:Find("Warn") )
+			SetTrue( uiObj.transform:Find("Shape") )
+			SetTrue( uiObj.transform:Find("Color") )
+			SetTrue( uiObj.transform:Find("Exp") )
+			SetTrue( uiObj.transform:Find("Progress") )
+			SetTrue( uiObj.transform:Find("Name") )
+		
 			SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( v.kd ) )
 			SetImage( uiObj.transform:Find("Color"), ItemColorSprite( v.cr ) )
 			
@@ -805,6 +813,7 @@ function FightDlgResultLayerShow()
 				--升级特效
 				FightDlgLevelUpEffect(uiObj)
 			end
+			SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, v.lv ) )
 			local endvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
 			
 			-- 进度条SetProgressPlay( transform, beginvalue, endvalue, duration, playcount )
@@ -820,6 +829,7 @@ function FightDlgResultLayerShow()
 			else
 				SetProgress( uiObj.transform:Find("Progress"), 0 )
 			end
+
 			
 			SetTrue( uiObj )
 			index = index + 1
@@ -828,20 +838,56 @@ function FightDlgResultLayerShow()
 			end
 		end
 	end
-			
+	
+	if fighttype == FIGHTTYPE_STORY then
+		for i=index+1, 4, 1 do
+			local uiObj = m_uiHeroList.transform:GetChild( i-1 )
+			SetTrue( uiObj )
+			SetTrue( uiObj.transform:Find("Lock") )
+			SetTrue( uiObj.transform:Find("Warn") )
+			SetFalse( uiObj.transform:Find("Shape") )
+			SetFalse( uiObj.transform:Find("Color") )
+			SetFalse( uiObj.transform:Find("Exp") )
+			SetFalse( uiObj.transform:Find("Progress") )
+			SetFalse( uiObj.transform:Find("Name") )
+			if i==2 then
+				SetText( uiObj.transform:Find("Warn"), T(2490), Hex2Color(0xF7F3BBFF) )
+				SetFalse( uiObj.transform:Find("Lock") )
+				
+			elseif i == 3 then
+				if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
+					SetText( uiObj.transform:Find("Warn"), T(599), Hex2Color(0x9B8869FF) )
+					SetTrue( uiObj.transform:Find("Lock") )
+				else
+					SetText( uiObj.transform:Find("Warn"), T(2490), Hex2Color(0xF7F3BBFF) )
+					SetFalse( uiObj.transform:Find("Lock") )
+				end
+
+			elseif i == 4 then
+				if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
+					SetText( uiObj.transform:Find("Warn"), T(599), Hex2Color(0x9B8869FF) )
+					SetTrue( uiObj.transform:Find("Lock") )
+				else
+					SetText( uiObj.transform:Find("Warn"), T(2490), Hex2Color(0xF7F3BBFF) )
+					SetFalse( uiObj.transform:Find("Lock") )
+				end
+			end
+		end
+	end		
 	-- 副本战斗返回按钮
 	if fighttype == FIGHTTYPE_STORY then
-		SetFalse( m_uiWarn )
 		SetFalse( m_uiCloseBtn )
 		SetTrue( m_uiReturnCityBtn )
 		SetTrue( m_uiReturnStoryBtn )
 		SetFalse( m_uiSweepBtn )
 		local star = m_recvValue.m_content_json["star"]
 		if star ~= nil and star > 0 then
+			SetFalse( m_uiWarn )
 			SetTrue( m_uiStar )
 			SetTrue( m_uiStarWarn )
 			StoryDlgStar( m_uiStar, star )
 		else
+			SetTrue( m_uiWarn )
 			SetFalse( m_uiStar )
 			SetFalse( m_uiStarWarn )
 		end

@@ -15,7 +15,8 @@ local m_uiRightContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Unit = nil; --UnityEngine.GameObject
 local m_uiWarningText = nil; --UnityEngine.GameObject
 local m_uiCenterContent = nil; --UnityEngine.GameObject
-
+local m_uiFastBtn = nil; --UnityEngine.GameObject
+local m_start = 0;
 -- 打开界面
 function FightInfoDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_battle_back" );
@@ -52,7 +53,9 @@ function FightInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			FightInfoDlgFast();
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
-		FightInfoDlgFast();
+		if m_start == 0 then 
+			FightInfoDlgFast();
+		end
 	end
 end
 
@@ -75,6 +78,7 @@ function FightInfoDlgOnAwake( gameObject )
 	m_uiUIP_Unit = objs[12];
 	m_uiWarningText = objs[13];	
 	m_uiCenterContent = objs[14];
+	m_uiFastBtn = objs[15];
 
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Unit", 8, 8, m_uiUIP_Unit);
@@ -126,6 +130,8 @@ function FightInfoDlgShow( info )
 		end
 	end
 	SetTimer( m_uiCountDown, 10, 10, 1 )
+	m_start = 0;
+	
 	-- 我是攻击方，攻击方显示左面
 	local my = info["my"];
 	if my == nil or my == 1 then
@@ -200,11 +206,16 @@ function FightInfoDlgShow( info )
 	end	
 	
 	FightDlgCenter(my,info["a_unit"],info["d_unit"]);
+	SetTrue(m_uiFastBtn)
 end
 
 -- 设置一个unit信息
 function FightInfoDlgUnit( root, index, unittype, kind, name, shape, color, corps, level, maxhp, hp )
 	local uiObj = m_ObjectPool:Get( "UIP_Unit" );
+	if uiObj == nil then
+		gamelog( "FightInfoDlgUnit uiObj == nil" )
+		return
+	end
 	uiObj.transform:SetParent( root.transform );
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
@@ -354,6 +365,8 @@ end
 
 -- 快速开始
 function FightInfoDlgFast()
+	m_start = 1;
+	SetFalse(m_uiFastBtn)
 	FightDlgStart()
 	FightInfoDlgClose()
 end

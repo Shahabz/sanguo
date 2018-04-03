@@ -1,6 +1,7 @@
 
 local m_Mod = nil;
-local PrefabTab = {};
+local m_PrefabTab = {};
+local m_IsTalkShow = false;
 
 -- 所属按钮点击时调用
 function PatrolModOnEvent( nType, nControlID, value )
@@ -9,7 +10,12 @@ function PatrolModOnEvent( nType, nControlID, value )
     elseif nType == UI_EVENT_TWEENFINISH then
 		PatrolModWaitPlay(nControlID);		
     elseif nType == UI_EVENT_TIMECOUNTEND then
-		PatrolModRePlay(nControlID-10)
+		if nControlID >= 10 and nControlID <= 20 then 
+			PatrolModRePlay(nControlID-10)
+		elseif nControlID >= 100 and nControlID <= 110 then 
+			m_IsTalkShow = false;
+			PatrolModShowTalk(nControlID -100,m_IsTalkShow)
+		end
     end
 end
 
@@ -19,8 +25,8 @@ function PatrolModOnAwake( gameObject )
 	local objs = gameObject:GetComponent( "UIMod" ).relatedGameObject;
 	for i = 0,7 do 
 		local prefab = objs[i];
-		table.insert(PrefabTab,prefab);
-		SetFalse(PrefabTab[i+1]);
+		table.insert(m_PrefabTab,prefab);
+		SetFalse(m_PrefabTab[i+1]);
 	end
 end
 
@@ -56,8 +62,8 @@ end
 -- 切换地图场景暂停
 function PatrolModStop()
 	for i = 1,#g_patrol_path do 
-		SetFalse(PrefabTab[i]);
-		local unitTween = PrefabTab[i].transform:GetComponent( "UITweenMove" );
+		SetFalse(m_PrefabTab[i]);
+		local unitTween = m_PrefabTab[i].transform:GetComponent( "UITweenMove" );
 		unitTween:Kill(false);
 	end
 end
@@ -70,9 +76,9 @@ function PatrolModPlay()
 	end	
 end
 function PatrolModTween(PathData)
-	SetTrue(PrefabTab[PathData.id])
-	local unitTween = PrefabTab[PathData.id].transform:GetComponent( "UITweenMove" );
-	local unitRect = PrefabTab[PathData.id].transform:GetComponent( "RectTransform" );
+	SetTrue(m_PrefabTab[PathData.id])
+	local unitTween = m_PrefabTab[PathData.id].transform:GetComponent( "UITweenMove" );
+	local unitRect = m_PrefabTab[PathData.id].transform:GetComponent( "RectTransform" );
 	unitRect.localScale = Vector3.New( PathData.scale, PathData.scale, PathData.scale );
 	startPos = Vector2.New( PathData.bx, PathData.by );
 	targetPos = Vector2.New( PathData.ex, PathData.ey );
@@ -80,17 +86,21 @@ function PatrolModTween(PathData)
 	unitTween.to = targetPos;
 	unitTween.duration = PathData.sec;
 	unitTween:Play(true);
+	if m_IsTalkShow == false then 
+		PatrolModShowTalk(PathData.id);
+	end
 end
 function PatrolModRePlay(id)		
 	PatrolModTween(g_patrol_path[id].path);
 end
 function PatrolModWaitPlay(id)
-	SetFalse(PrefabTab[id]);
+	SetFalse(m_PrefabTab[id]);
 	local NextId = PatrolModGetNextID(id);	
 	local Delay = g_patrol_path[NextId].Delay;
-	SetTimer(PrefabTab[id],Delay,GetServerTime()+Delay,NextId+10);
+	SetTimer(m_PrefabTab[id],Delay,GetServerTime()+Delay,NextId+10);
 end
 
+-- 获取下一路线ID
 function PatrolModGetNextID(id )
 	local NextID = nil;
 	if id <= 2 then 
@@ -109,4 +119,33 @@ function PatrolModGetNextID(id )
 		NextId = 5;
 	end
 	return NextId;
+end
+
+--
+function PatrolModShowTalk(PathID,bShow)
+	local uiObj = m_PrefabTab[PathID];
+	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiTipWnd = objs[0];
+	local uiText = objs[1];
+	if bShow ==  false then 
+		SetFalse(uiTipWnd);
+	else
+		local TalkID = PatrolModGetTalkID();	
+		SetTrue(uiTipWnd)
+		SetText(uiText,g_patrol_talk[TalkID].str);
+		local Delay = g_patrol_talk[TalkID].sec;
+		SetTimer(uiTipWnd,Delay,GetServerTime()+Delay,PathID+100);
+		m_IsTalkShow = true;
+	end
+	
+end
+
+-- 获取对话ID
+function PatrolModGetTalkID()
+	return custom.rand( 1, #g_patrol_talk );
+end
+
+-- 是否有对话
+function PatrolModIsTalkShow()
+	return m_IsTalkShow;
 end

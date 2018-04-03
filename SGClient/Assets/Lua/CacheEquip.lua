@@ -401,6 +401,24 @@ function Equip:GetCountBuyType( equiptype )
 	return count;
 end
 
+-- 装备对比
+function Equip:CheckByType( equiptype , kind )
+	local count = 0;
+	for tmpi=0, MAX_EQUIPNUM-1, 1 do
+		local pEquip = self:GetAnyEquip( tmpi );
+		if pEquip ~= nil and equip_gettype(pEquip.m_kind) == equiptype then
+			if kind == nil then 
+				return true;
+			else
+				if pEquip.m_kind > kind then 
+					return true;
+				end
+			end
+		end
+	end
+	return false;
+end
+
 -- 获取总装备数量
 function Equip:GetTotal()
 	local count = 0;

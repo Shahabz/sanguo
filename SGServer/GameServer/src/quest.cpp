@@ -515,14 +515,15 @@ int quest_getaward( int actor_index, int questid )
 		}
 		quest_give_branch( actor_index, questinfo->nextid );
 	}
-	quest_sendlist( actor_index );
-	quest_checkcomplete( actor_index );
 
 	// ÈÎÎñ
 	if ( questinfo->type == QUEST_TYPE_BRANCH )
 	{
 		quest_addvalue( city_getptr( actor_index ), QUEST_DATATYPE_BRANCH_QUEST, 0, 0, 1 );
 	}
+
+	quest_sendlist( actor_index );
+	quest_checkcomplete( actor_index );
 	return 0;
 }
 

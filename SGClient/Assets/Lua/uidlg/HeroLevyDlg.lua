@@ -65,19 +65,14 @@ function HeroLevyDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			HeroLevyDlgTaskNext();
 		elseif nControlID == 11 then			--开启任务
-			warn("开启任务：")
 			HeroLevyDlgOnBtnOpenTask();
 		elseif nControlID == 12 then			--前往任务
-			warn("前往任务：")
 			HeroLevyDlgOnBtnGoTask();
 		elseif nControlID == 13 then			--激活兵术
-			warn("激活兵术：")
 			HeroLevyDlgOnBtnActiveTask();
 		elseif nControlID == 14 then			--下一步
-			warn("下一步：")
 			HeroLevyDlgOnBtnNextTask();
 		elseif nControlID == 15 then			--前往升级
-			warn("前往升级")
 			HeroLevyDlgOnBtnGoUpLevel();
         end
 	elseif nType == UI_EVENT_SCROLLPAGE then

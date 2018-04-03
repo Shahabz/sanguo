@@ -173,6 +173,9 @@ function BattleDlgShowByStory( storyid )
 	BattleDlgClearRightUnit()
 	system_askinfo( ASKINFO_STORY, "", 1, storyid );
 	BattleDlgHeroList()
+	
+	SetTrue( m_uiCancelBtn )
+	SetTrue( m_uiFightBtn )
 end
 
 -- 世界boss使用
@@ -417,6 +420,8 @@ end
 
 -- 战斗
 function BattleDlgFight()
+	SetFalse( m_uiCancelBtn )
+	SetFalse( m_uiFightBtn )
 	if m_battleType == 0 then	
 		-- 消耗体力
 		if GetPlayer().m_body < g_story[m_storyid].body then

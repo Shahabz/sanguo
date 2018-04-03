@@ -486,6 +486,7 @@ int building_create( int city_index, int kind, int offset )
 						break;
 					}
 				}
+				city_set_sflag( &g_city[city_index], CITY_FUNCTION_Iron, 1 );
 			}
 			
 		}
@@ -1338,6 +1339,7 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 			}
 			else
 			{
+				pCity->wnquick = 0;
 				building_sendinfo( pCity->actor_index, kind );
 				building_sendworker( pCity->actor_index );
 			}
@@ -1376,6 +1378,7 @@ int building_workerquick( int actor_index, int kind, int offset, int sec )
 			}
 			else
 			{
+				pCity->wnquick_ex = 0;
 				building_sendinfo( pCity->actor_index, kind );
 				building_sendworker( pCity->actor_index );
 			}

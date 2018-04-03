@@ -921,6 +921,7 @@ function proc_questaward_C( recvValue )
 	-- process.
 	if recvValue.m_type == 1 then
 		-- 支线任务
+		QuesAwardBranchDlgShow( recvValue )
 	else
 		if FightDlgIsShow() == true then
 			FightDlgWait( QuestAwardDlgShow, recvValue )

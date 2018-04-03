@@ -141,16 +141,16 @@ function Guide(id, step, force)
 	warn(mId);
 	warn(step);
 	
-	HideGuideFinger();
-	HideCurrentFinger();
+	GuideClear();
+	currentFinger = nil;
+	currentMainFinger = nil;
 	
 	if g_guide[mId][mStep].cmd == CMD_SPECIAL or g_guide[mId][mStep].cmd == CMD_TALK then FindCmdTpye(nil) end
 end
 
 function GuideNext()
 	if table.getn(g_guide[mId]) == mStep then
-		HideGuideFinger();
-		HideCurrentFinger();
+		GuideClear();
 		system_askinfo( ASKINFO_GUAID, "", mId + 1 );
 	else
 		Guide( mId, mStep + 1 );
@@ -158,16 +158,14 @@ function GuideNext()
 end
 
 function GuideEnd()
-	HideGuideFinger();
-	HideCurrentFinger();
+	GuideClear();
 	mStep = 0;
 	system_askinfo( ASKINFO_GUAID, "", mId + 1 );
 end
 
 function GuideCheck(id)
 	if id == table.getn(g_guide) then 
-		HideGuideFinger();
-		HideCurrentFinger();
+		GuideClear();
 		return true
 	else 
 		return false
@@ -176,6 +174,11 @@ end
 
 function IsGuiding()
 	return mIsGuiding
+end
+
+function GuideClear()
+	HideGuideFinger();
+	HideCurrentFinger();
 end
 
 function GetCurrentGuideType()
@@ -239,7 +242,6 @@ function FindCmdTpye(tran)
 			m_uiFinger[point].transform.position = GetWorkPos() + deviation;
 		end
 	elseif cmd == 3 then
-		currentMainFinger = nil;
 		if currentFinger == nil and m_uiFinger[point] then
 			currentFinger = addChild(tran,m_uiFinger[point]);
 			currentFinger.transform.position = currentFinger.transform.position + deviation;

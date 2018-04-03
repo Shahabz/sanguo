@@ -229,9 +229,8 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 			if m_finishTask == 0 then
 				QuestGoto( 1 );
 			else
-				QuestDlgGetAward(m_finishTask);
+				system_askinfo( ASKINFO_QUEST, "", 3, CacheQuest.m_list[m_finishTask].m_questid );
 				m_finishTask = 0;
-				MainDlgSetQuest();
 			end
 			
 		-- 打开支线任务
@@ -489,7 +488,7 @@ end
 
 -- 界面显示时调用
 function MainDlgOnEnable( gameObject )
-	ShowGuideFinger();
+	
 end
 
 -- 界面隐藏时调用
