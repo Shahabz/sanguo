@@ -107,6 +107,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 完成特殊类型的任务
 			quest_client_op( actor_index, pvalue[1], pvalue[2] );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // 发送奖励领取界面
+			quest_sendawardinfo( actor_index, pvalue[1], QUEST_TYPE_BRANCH );
+		}
 		else if ( pvalue[0] == 10 )
 		{ // 世界任务
 			worldquest_sendinfo( actor_index );

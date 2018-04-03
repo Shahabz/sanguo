@@ -503,6 +503,7 @@ function proc_changesilver_C( recvValue )
 	GetPlayer().m_silver = recvValue.m_total;
 	MainDlgSetSilver();
 	if recvValue.m_add > 0 then
+		BuildingUpgradeDlgUpdate()
 		NationUpgradeDlgSetCost()
 		NationPlaceDlgRecv()
 	end
@@ -519,6 +520,7 @@ function proc_changewood_C( recvValue )
 	GetPlayer().m_wood = recvValue.m_total;
 	MainDlgSetWood();
 	if recvValue.m_add > 0 then
+		BuildingUpgradeDlgUpdate()
 		NationUpgradeDlgSetCost()
 	end
 end
@@ -917,14 +919,18 @@ end
 -- m_questid=0,m_count=0,m_list={m_kind=0,m_num=0,[m_count]},m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_nameid=0,
 function proc_questaward_C( recvValue )
 	-- process.
-	if FightDlgIsShow() == true then
-		FightDlgWait( QuestAwardDlgShow, recvValue )
-	elseif HeroGetDlgIsShow() == true then
-		HeroGetDlgWait( QuestAwardDlgShow, recvValue )
-	elseif NpcTalkIsShow() == true then
-		NpcTalkWait( QuestAwardDlgShow, recvValue )
+	if recvValue.m_type == 1 then
+		-- 支线任务
 	else
-		QuestAwardDlgShow( recvValue )
+		if FightDlgIsShow() == true then
+			FightDlgWait( QuestAwardDlgShow, recvValue )
+		elseif HeroGetDlgIsShow() == true then
+			HeroGetDlgWait( QuestAwardDlgShow, recvValue )
+		elseif NpcTalkIsShow() == true then
+			NpcTalkWait( QuestAwardDlgShow, recvValue )
+		else
+			QuestAwardDlgShow( recvValue )
+		end
 	end
 end
 

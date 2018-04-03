@@ -48,6 +48,7 @@ sendValue.m_target_name = "";
 	
 -- 打开界面
 function FriendDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc3" )
 	m_Dlg = eye.uiManager:Open( "FriendDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(557), HELP_ChatDlg, FriendDlgClose );
 end
@@ -68,6 +69,9 @@ function FriendDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	m_recvValue = nil;
+	Invoke( function() 
+		ResourceManager.UnloadAssetBundleImmediately( "_ab_ui_static_npc3" )
+	end, 0.3 );
 end
 
 ----------------------------------------

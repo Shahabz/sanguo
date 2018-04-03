@@ -31,7 +31,7 @@ end
 
 -- 玩家半身像
 function PlayerFaceSprite( shape )
-	local name = string.format("heroface_%d", shape );
+	local name = string.format("playerhead_%02d_face", shape );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
 		sprite = LoadSprite( "Char_Default" );

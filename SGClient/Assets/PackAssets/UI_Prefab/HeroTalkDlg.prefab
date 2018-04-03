@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 224122905881768902}
   - component: {fileID: 222808818978325064}
   - component: {fileID: 114225307438959824}
+  - component: {fileID: 114335889626317200}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -271,6 +272,20 @@ MonoBehaviour:
   localizeID: 0
   rtlAlignment: 0
   rtlReverseSign: 
+--- !u!114 &114335889626317200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1759362863511040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114568864323541662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -435,7 +450,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 210.17, y: -460.76962}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 303.96, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224361672710554454
 RectTransform:

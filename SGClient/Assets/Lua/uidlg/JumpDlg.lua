@@ -48,7 +48,7 @@ function JumpDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 购买
 		elseif nControlID == 2 then
 			if m_res > 0 then
-				MaterialGetDlgShow( m_res+119 )
+				ShopDlgShowByType( 1 )
 			else
 				JumpDlgBodyBuy()
 			end

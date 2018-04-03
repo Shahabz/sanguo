@@ -65,13 +65,13 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
 			BuyWorkerDlgShow();
 			BuildingUpgradeDlgClose();
 		elseif nControlID == 4 then
-			MaterialGetDlgShow( 120 )
+			JumpRes( 1 )
 		elseif nControlID == 5 then
-			MaterialGetDlgShow( 121 )
+			JumpRes( 2 )
 		elseif nControlID == 6 then
-			MaterialGetDlgShow( 122 )
+			JumpRes( 3 )
 		elseif nControlID == 7 then
-			MaterialGetDlgShow( 123 )
+			JumpRes( 4 )
 		elseif nControlID == 100 then
 			BuildingUpgradeDlgUpgrade()
         end
@@ -366,6 +366,15 @@ function BuildingUpgradeDlgUpdate()
 		return;
 	end
 	clearChild( m_uiCondition )
+	-- 空闲建造队是否满足
+	local uiObj = addChild( m_uiCondition, m_uiUIP_UpgradeCond );
+	local flag = true;
+	if GetPlayer().m_worker_kind > 0 and GetPlayer().m_worker_kind_ex > 0 then
+		flag = false;
+	elseif GetPlayer().m_worker_kind > 0 and GetPlayer().m_worker_expire_ex <= 0 then
+		flag = false;
+	end
+	BuildingUpgradeCondSet( uiObj, T(607), flag, 1 )
 	BuildingUpgradeDlgRecv( m_recvValue )
 end
 

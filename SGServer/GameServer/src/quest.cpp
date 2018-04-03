@@ -61,7 +61,7 @@ int quest_newplayer( int actor_index )
 	if ( pCity->questid[0] > 1 )
 		return -1;
 	quest_give_main( actor_index, 1 );
-	quest_sendawardinfo( actor_index, 1 );
+	quest_sendawardinfo( actor_index, 1, QUEST_TYPE_MAIN );
 	return 0;
 }
 
@@ -143,7 +143,7 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 					{
 						if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
 						{ // 任务完成，通知领奖
-							quest_sendawardinfo( pCity->actor_index, questid );
+							quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
 						}
 					}
 				}
@@ -158,7 +158,7 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 				{
 					if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
 					{ // 任务完成，通知领奖
-						quest_sendawardinfo( pCity->actor_index, questid );
+						quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
 					}
 				}
 			}
@@ -184,7 +184,7 @@ int quest_main_addvalue( City *pCity, int datatype, int datakind, int dataoffset
 		{
 			if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 			{ // 任务完成，通知领奖
-				quest_sendawardinfo( pCity->actor_index, pCity->questid[0] );
+				quest_sendawardinfo( pCity->actor_index, pCity->questid[0], QUEST_TYPE_MAIN );
 			}
 		}
 	}
@@ -229,7 +229,7 @@ int quest_checkcomplete( int actor_index )
 		if ( quest_check( pCity->actor_index, questid, NULL ) == QUEST_COMPLETEFLAG_SUCCESS )
 		{
 			if ( tmpi == 0 )
-				quest_sendawardinfo( pCity->actor_index, questid );
+				quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
 			break;
 		}
 	}
@@ -571,13 +571,14 @@ int quest_sendlist( int actor_index )
 }
 
 // 发送任务奖励
-int quest_sendawardinfo( int actor_index, int questid )
+int quest_sendawardinfo( int actor_index, int questid, char type )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
 	if ( questid <= 0 || questid >= g_questinfo_maxnum )
 		return -1;
 	SLK_NetS_QuestAward pValue = { 0 };
+	pValue.m_type = type;
 	pValue.m_questid = questid;
 	pValue.m_datatype = g_questinfo[questid].datatype;
 	pValue.m_datakind = g_questinfo[questid].datakind;

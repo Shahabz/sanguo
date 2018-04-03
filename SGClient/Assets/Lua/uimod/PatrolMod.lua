@@ -19,7 +19,8 @@ function PatrolModOnAwake( gameObject )
 	local objs = gameObject:GetComponent( "UIMod" ).relatedGameObject;
 	for i = 0,7 do 
 		local prefab = objs[i];
-		table.insert(PrefabTab,prefab)
+		table.insert(PrefabTab,prefab);
+		SetFalse(PrefabTab[i+1]);
 	end
 end
 
@@ -52,6 +53,15 @@ function PatrolModInit()
 	PatrolModPlay();
 end
 
+-- ÇÐ»»µØÍ¼³¡¾°ÔÝÍ£
+function PatrolModStop()
+	for i = 1,#g_patrol_path do 
+		SetFalse(PrefabTab[i]);
+		local unitTween = PrefabTab[i].transform:GetComponent( "UITweenMove" );
+		unitTween:Kill(false);
+	end
+end
+
 function PatrolModPlay()
 	for i = 1,5 do 
 		if g_patrol_path[i].level <= GetPlayer().m_level then 
@@ -59,9 +69,11 @@ function PatrolModPlay()
 		end
 	end	
 end
-function PatrolModTween(PathData)	
+function PatrolModTween(PathData)
+	SetTrue(PrefabTab[PathData.id])
 	local unitTween = PrefabTab[PathData.id].transform:GetComponent( "UITweenMove" );
 	local unitRect = PrefabTab[PathData.id].transform:GetComponent( "RectTransform" );
+	unitRect.localScale = Vector3.New( PathData.scale, PathData.scale, PathData.scale );
 	startPos = Vector2.New( PathData.bx, PathData.by );
 	targetPos = Vector2.New( PathData.ex, PathData.ey );
 	unitTween.from = startPos;
@@ -69,8 +81,7 @@ function PatrolModTween(PathData)
 	unitTween.duration = PathData.sec;
 	unitTween:Play(true);
 end
-function PatrolModRePlay(id)	
-	SetTrue(PrefabTab[id])
+function PatrolModRePlay(id)		
 	PatrolModTween(g_patrol_path[id].path);
 end
 function PatrolModWaitPlay(id)

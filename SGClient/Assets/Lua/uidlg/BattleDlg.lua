@@ -22,6 +22,7 @@ local m_battleType = 0;
 local m_storyid = 0;
 local m_bossid = 0;
 local m_HeroList = {};
+local m_SortList = nil;
 local m_EnemyData = {};
 local m_EnemyCount = 0;
 
@@ -145,13 +146,30 @@ function BattleDlgShowByStory( storyid )
 	else
 		SetText( m_uiStoryBody.transform:Find("Text"), F(2017, g_story[storyid].body,GetPlayer().m_body ) )	
 	end
-	-- 英雄放到缓存
+	
 	m_HeroList = {};
-	for i=0,3,1 do
-		if GetHero().m_CityHero[i].m_kind > 0 then
-			table.insert( m_HeroList, clone(GetHero().m_CityHero[i]) )
+	-- 本次首次打开
+	if m_SortList == nil then
+		m_SortList = {}
+		-- 英雄放到缓存
+		for i=0,3,1 do
+			if GetHero().m_CityHero[i].m_kind > 0 then
+				table.insert( m_HeroList, clone(GetHero().m_CityHero[i]) )
+			end
+			table.insert( m_SortList, i )
+		end
+	
+	-- 第二次之后打开使用缓存排序的	
+	else
+		for i=0,3,1 do
+			local offset = m_SortList[i+1];
+			local pHero = GetHero().m_CityHero[offset];
+			if pHero and pHero.m_kind > 0 then
+				table.insert( m_HeroList, clone(pHero) )
+			end
 		end
 	end
+		
 	BattleDlgClearRightUnit()
 	system_askinfo( ASKINFO_STORY, "", 1, storyid );
 	BattleDlgHeroList()
@@ -270,6 +288,7 @@ function BattleDlgHeroUp( index )
 		return;
 	end
 	m_HeroList[index-1], m_HeroList[index] = m_HeroList[index], m_HeroList[index-1]
+	m_SortList[index-1], m_SortList[index] = m_SortList[index], m_SortList[index-1]
 	BattleDlgHeroList()
 	BattleDlgCenter();
 end

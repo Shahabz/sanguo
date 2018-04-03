@@ -51,7 +51,7 @@ ButtonTable.m_uiButtonSetting = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonGM = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonRelogin = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonRestart = nil; --UnityEngine.GameObject
-ButtonTable.m_uiButtonGril = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonGirl = nil; --UnityEngine.GameObject
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
@@ -216,6 +216,9 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 					GameManager.Logout( 1 );
 				end, 0.3 );
 			end )
+			
+		elseif nControlID == 20 then
+			GirlTrainDlgOpen();
 			
 		-- 聊天
 		elseif nControlID == 30 then
@@ -467,7 +470,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiWarTable.m_uiWarContent =  m_uiWarTable.m_uiWar.transform:Find("Scroll/Viewport/Content");
 	m_uiWarTable.m_uiUIP_WarText = objs[81];
 	m_uiWarTable.m_uiWarWarning = objs[82];
-	ButtonTable.m_uiButtonGril = objs[83];
+	ButtonTable.m_uiButtonGirl = objs[83];
 	m_uiAutoGuard = objs[84];
 	m_uiCutScenes = objs[85];
 	m_uiQuestTitleText = objs[86];
@@ -700,11 +703,21 @@ end
 
 function CheckQuestFinish(questInfo,i)
 	if questInfo ~= nil then
-		if questInfo.m_value >= questInfo.m_needvalue then
-			SetText( m_uiQuestText, QuestName( -1, questInfo ));
-			SetText( m_uiQuestTitleText, QuestTypeName(2));
-			SetTrue( m_uiQuestEffect.transform);
-			m_finishTask = i;
+		-- 副本
+		if questInfo.m_datatype == QUEST_DATATYPE_STORY then
+			if questInfo.m_value > questInfo.m_datakind then
+				SetText( m_uiQuestText, QuestName( -1, questInfo ));
+				SetText( m_uiQuestTitleText, QuestTypeName(2));
+				SetTrue( m_uiQuestEffect.transform);
+				m_finishTask = i;
+			end
+		else	
+			if questInfo.m_value >= questInfo.m_needvalue then
+				SetText( m_uiQuestText, QuestName( -1, questInfo ));
+				SetText( m_uiQuestTitleText, QuestTypeName(2));
+				SetTrue( m_uiQuestEffect.transform);
+				m_finishTask = i;
+			end
 		end
 	end
 end
@@ -1060,6 +1073,13 @@ function MainDlgSetButtons( openoffset )
 		m_hasButton[offset] = true;
 	end
 	
+	-- 女将
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( ButtonTable.m_uiButtonGirl, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
 	-- 联系客服
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
@@ -1104,6 +1124,7 @@ function MainDlgShowCity()
 	SetTrue( ButtonTable.m_uiButtonWorld )
 	SetFalse( ButtonTable.m_uiButtonCity )
 	MapMainDlgClose()
+	PatrolModPlay();
 end
 
 -- 显示外城的空间
@@ -1115,6 +1136,7 @@ function MainDlgShowMap()
 	MapMainDlgShow()
 	SetText( m_uiTopLeft.transform:Find( "Name" ), NationEx( GetPlayer().m_nation ) );
 	SetImage( m_uiTopLeft.transform:Find( "Icon" ), LoadSprite( "ui_worldmap_nation_"..GetPlayer().m_nation ) )
+	PatrolModStop();
 end
 
 -- 天气

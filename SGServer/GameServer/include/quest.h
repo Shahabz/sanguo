@@ -87,7 +87,7 @@ int quest_getaward( int actor_index, int questid );
 int quest_sendlist( int actor_index );
 
 // 发送任务奖励
-int quest_sendawardinfo( int actor_index, int questid );
+int quest_sendawardinfo( int actor_index, int questid, char type );
 
 // 任务说话
 int quest_talk( int actor_index, int talkid );

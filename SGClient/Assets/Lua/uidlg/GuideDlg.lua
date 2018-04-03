@@ -106,9 +106,9 @@ function GuideDlgOnLogic( gameObject )
 	
 end
 
-mId = 0
-mStep = 0
-mIsGuiding = false
+local mId = 0
+local mStep = 0
+local mIsGuiding = false
 
 
 -- 打开界面
