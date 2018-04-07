@@ -226,6 +226,7 @@ function proc_buildinglist_C( recvValue )
 	-- πÿ±’º”‘ÿ√Ê∞Â
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();
+	PatrolModSetSiblingIndex()
 end
 
 -- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
@@ -2157,5 +2158,35 @@ end
 function proc_activity04list_C( recvValue )
 	-- process.
 	Activity4ModRecv( recvValue )
+end
+
+-- m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,
+function proc_girl_C( recvValue )
+	-- process.
+	local pGirl = GetGirl().m_Girl[recvValue.m_kind];
+	if pGirl == nil then
+		pGirl = SLK_Girl.new();
+	end
+	pGirl:Set( recvValue );
+	GetGirl():SetGirl( recvValue.m_kind, pGirl );
+end
+
+-- m_count=0,m_list={m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,[m_count]},
+function proc_girllist_C( recvValue )
+	-- process.
+	for i=1, recvValue.m_count, 1 do
+		local pGirl = SLK_Girl.new();
+		pGirl:Set( recvValue.m_list[i] );
+		GetGirl():SetGirl( recvValue.m_list[i].m_kind, pGirl );
+	end
+end
+
+-- m_kind=0,m_path=0,m_soulnum=0,m_girl={m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,},
+function proc_girlget_C( recvValue )
+	-- process.
+	local pGirl = SLK_Girl.new();
+	pGirl:Set( recvValue.m_girl );
+	GetGirl():SetGirl( recvValue.m_girl.m_kind, pGirl );
+	GirlGetDlgShow( recvValue )
 end
 

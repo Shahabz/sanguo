@@ -54,6 +54,7 @@
 #include "king_war.h"
 #include "vip.h"
 #include "pay.h"
+#include "girl.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -753,6 +754,9 @@ int actor_entercity( int actor_index )
 	// 角色配置信息
 	actor_configinfo( actor_index );
 
+	// 女将信息
+	girl_list( actor_index );
+
 	// 英雄列表
 	hero_list( actor_index );
 
@@ -976,6 +980,7 @@ int actor_new( int actor_index )
 	// 主城
 	building_create( city_index, BUILDING_Main, -1 );
 	g_city[city_index].building[0].level = 2;
+	city_building_save_auto( g_city[city_index].actorid, 0, &g_city[city_index].building[0], "city_building", NULL );
 
 	g_city[city_index].unit_index = mapunit_add( MAPUNIT_TYPE_CITY, city_index );
 	g_city[city_index].zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, city_index );

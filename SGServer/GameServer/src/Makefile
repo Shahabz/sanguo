@@ -63,6 +63,7 @@ SRC = \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_activity_08.cpp \
 ../AutoS/src/auto_data_shop.cpp \
+../AutoS/src/auto_data_girl.cpp \
 ../AutoS/src/auto_map_call.cpp \
 ../AutoS/src/auto_nation_hero.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
@@ -95,6 +96,7 @@ SRC = \
 ../AutoS/src/auto_data_hero_colorup.cpp \
 ../AutoS/src/server_netsend_auto.cpp \
 ../AutoS/src/auto_data_vip.cpp \
+../AutoS/src/auto_actor_girl.cpp \
 ../AutoS/src/auto_data_paygoods.cpp \
 ../AutoS/src/auto_data_quest_talk.cpp \
 ../AutoS/src/auto_city_guard.cpp \
@@ -150,6 +152,7 @@ army.cpp \
 account.cpp \
 shop.cpp \
 zoneunit.cpp \
+girl.cpp \
 nation_equip.cpp \
 map_res.cpp \
 world_boss.cpp \
@@ -309,6 +312,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_shop.o: ../AutoS/src/auto_data_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_girl.o: ../AutoS/src/auto_data_girl.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_call.o: ../AutoS/src/auto_map_call.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_nation_hero.o: ../AutoS/src/auto_nation_hero.cpp 
@@ -372,6 +377,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/server_netsend_auto.o: ../AutoS/src/server_netsend_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_vip.o: ../AutoS/src/auto_data_vip.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_actor_girl.o: ../AutoS/src/auto_actor_girl.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paygoods.o: ../AutoS/src/auto_data_paygoods.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -482,6 +489,8 @@ account.o: account.cpp
 shop.o: shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 zoneunit.o: zoneunit.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+girl.o: girl.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 nation_equip.o: nation_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

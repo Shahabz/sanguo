@@ -67,7 +67,10 @@ function PatrolModStop()
 		unitTween:Kill(false);
 	end
 end
-
+-- …Ë÷√≤„º∂
+function PatrolModSetSiblingIndex()
+	m_Mod.transform:SetSiblingIndex(1001)
+end
 function PatrolModPlay()
 	for i = 1,5 do 
 		if g_patrol_path[i].level <= GetPlayer().m_level then 
@@ -95,6 +98,8 @@ function PatrolModRePlay(id)
 end
 function PatrolModWaitPlay(id)
 	SetFalse(m_PrefabTab[id]);
+	local unitTween = m_PrefabTab[id].transform:GetComponent( "UITweenMove" );
+	unitTween:Kill(false);
 	local NextId = PatrolModGetNextID(id);	
 	local Delay = g_patrol_path[NextId].Delay;
 	SetTimer(m_PrefabTab[id],Delay,GetServerTime()+Delay,NextId+10);

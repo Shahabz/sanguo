@@ -158,14 +158,16 @@ function GameManager.OnAskQuit()
     if Const.NetStatus < 3 then
         return;
     end
-
-    -- 先关闭最后打开的界面
-    if eye.uiManager:CloseLast() then
-        return;
-    end
-
+	
+	-- 非战斗状态
+	if g_fight.m_playing == false then
+		-- 先关闭最后打开的界面
+		if eye.uiManager:CloseLast() then
+			return;
+		end
+	end
     -- 
-   MsgBox( T( 518 ),function()
+    MsgBox( T( 518 ),function()
 		GameManager.Restart();
 		GameManager.Logout( 1 );
 	end )
@@ -184,10 +186,11 @@ function GameManager.OnApplicationPause( paused )
 	if paused == true then
 
 		GameManager.OnApplicationPauseTime = os.time();
-	
+		notification_register_all();
 	-- 从后台进入前台时
 	else
-		NotificationManager.Instance:ClearAll ();
+		notification_unregister_all()
+		
 		local PauseTime = os.time() - GameManager.OnApplicationPauseTime;
 		gamelog( "PauseTime:"..PauseTime );
 		

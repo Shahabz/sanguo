@@ -348,6 +348,8 @@ function HeroWashDlgWashInfo( recvValue )
 	else
 		SetFalse( m_uiTimer )
 	end
+	-- 定时通知
+	notification_set( "SETTING_PUSH_HEROWASHFULL", T(5910), (global.hero_wash_max-recvValue.m_hero_washnum)*global.hero_wash_sec )
 end
 
 function HeroWashDlgUpdate()

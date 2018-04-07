@@ -41,6 +41,7 @@
 #include "nation_hero.h"
 #include "actor_friend.h"
 #include "activity_04.h"
+#include "girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -149,6 +150,9 @@ int city_loadcb( int city_index )
 	// 读取资源建筑
 	city_building_res_load_auto( g_city[city_index].actorid, city_index, buildingres_getptr, "city_building_res" );
 
+	// 女将
+	actor_girl_load_auto( g_city[city_index].actorid, city_index, girl_getptr, "actor_girl" );
+
 	// 读取上阵英雄
 	actor_hero_load_auto( g_city[city_index].actorid, city_index, city_hero_getptr, "actor_hero" );
 
@@ -241,6 +245,9 @@ int city_single_save( City *pCity, FILE *fp )
 
 	// 英雄
 	actor_hero_batch_save_auto( pCity->hero, HERO_CITY_MAX, "actor_hero", fp );
+
+	// 女将
+	actor_girl_batch_save_auto( pCity->actorid, pCity->girl, ACTOR_GIRL_MAX, "actor_girl", fp );
 
 	// 英雄装备
 	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )

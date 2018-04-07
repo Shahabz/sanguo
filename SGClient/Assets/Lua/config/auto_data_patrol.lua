@@ -10,7 +10,7 @@ g_patrol_path = {
 [8] = { level = 1, Delay = 2,  path = { scale = 1, id=8, bx=20.63,by=-3.15, ex=23.02,ey=-4.36, sec=15} },
 }
 g_patrol_talk = {
-[1] = { str="对话1",sec=10},
+[1] = { str="起驾轿",sec=10},
 [2] = { str="对话2",sec=10},
 [3] = { str="对话3",sec=10},
 [4] = { str="对话4",sec=10},

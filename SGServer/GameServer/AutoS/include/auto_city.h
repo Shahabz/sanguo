@@ -164,6 +164,7 @@ struct _city {
 				int battlepower_building;	//建筑提供战力
 				int temp_wounded_soldiers[3];	//临时伤兵
 				char mapcall;	//地图召唤
+				Girl girl[80];	//女将
 };
 typedef struct _city City;
 

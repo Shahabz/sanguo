@@ -108,6 +108,26 @@ function HeroColorSpriteUnload()
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_colorpanel" );
 end
 
+-- 女将头像
+function GirlHeadSprite( kind )
+	local name = string.format("girlhead_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "girlhead_1" );
+	end
+	return sprite;
+end
+
+-- 女将半身像
+function GirlFaceSprite( kind )
+	local name = string.format("girlface_%d", kind );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "girlface_1" );
+	end
+	return sprite;
+end
+
 -- 守卫头像
 function GuardSprite( shape )
 	local name = string.format("guardhead_%d", shape );

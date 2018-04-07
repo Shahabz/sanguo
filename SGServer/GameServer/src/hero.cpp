@@ -292,6 +292,9 @@ int hero_gethero( int actor_index, int kind, short path )
 
 		// 任务
 		quest_addvalue( pCity, QUEST_DATATYPE_HERO_CALL, kind, 0, 1 );
+
+		// 统计log
+		wlog( 0, LOGOP_HERO, path, kind, pValue.m_itemnum, pHasHero->id, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 		return -1;
 	}
 
@@ -345,6 +348,9 @@ int hero_gethero( int actor_index, int kind, short path )
 	if ( path != PATH_NATIONHERO )
 		hero_up_auto( actor_index, offset );
 
+	// 保存
+	actor_hero_save_auto( &g_actors[actor_index].hero[offset], "actor_hero", NULL );
+
 	// 重算英雄战力
 	city_battlepower_hero_calc( pCity );
 
@@ -353,6 +359,9 @@ int hero_gethero( int actor_index, int kind, short path )
 
 	// 七日狂欢
 	activity_04_addvalue_hero( actor_index );
+
+	// 统计log
+	wlog( 0, LOGOP_HERO, path, kind, 0, g_actors[actor_index].hero[offset].id, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 	return 0;
 }
 
@@ -1755,6 +1764,7 @@ void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValu
 	pValue->m_attack_increase = pHero->attack_increase;
 	pValue->m_defense_increase = pHero->defense_increase;
 	pValue->m_god = pHero->god;
+	pValue->m_girlkind = pHero->girlkind;
 	pValue->m_offset = offset;
 }
 

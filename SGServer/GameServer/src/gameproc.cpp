@@ -57,6 +57,7 @@
 #include "rank.h"
 #include "pay.h"
 #include "wishing.h"
+#include "girl.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -358,6 +359,15 @@ int process_init( int max_connection )
 	if ( heroskillinfo_init_auto() < 0 )
 	{
 		printf_msg( "heroskillinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 女将数据初始化
+	if ( girlinfo_init_auto() < 0 )
+	{
+		printf_msg( "girlinfo_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
@@ -1658,6 +1668,15 @@ int process_dbreload()
 	vipshop_reload_auto();
 	worldbossinfo_reload_auto();
 	worldquestinfo_reload_auto();
+	girlinfo_reload_auto();
+
+	activityinfo02_reload_auto();
+	activityinfo03_reload_auto();
+	activityinfo04_reload_auto();
+	activityinfo05_reload_auto();
+	activityinfo06_reload_auto();
+	activityinfo08_reload_auto();
+	activityinfo10_reload_auto();
 
 	db_closedata();
 	return 0;

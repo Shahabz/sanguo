@@ -436,12 +436,20 @@ function City.BuildingSetTimer( info )
 		local iconname = "";
 		if kind == BUILDING_Tech then -- 太学院
 			iconname = "ui_opration_state_3"
+			notification_set( "SETTING_PUSH_TECHCOMPLETE", F(5907,TechName(info.m_value)), info.m_needsec-info.m_sec )
+			
 		elseif kind == BUILDING_Craftsman then -- 材料作坊
 			iconname = "ui_opration_item_"..info.m_value;
+			notification_set( "SETTING_PUSH_MATERIALCOMPLETE", T(5909), info.m_needsec-info.m_sec )
+			
 		elseif kind >= BUILDING_Infantry and kind <= BUILDING_Militiaman_Archer then -- 兵营
 			iconname = "ui_opration_state_2"
+			notification_set( "SETTING_PUSH_TRAIN", T(5901), info.m_needsec-info.m_sec )
+			
 		elseif kind == BUILDING_Smithy then -- 铁匠铺
 			iconname = "ui_opration_state_4"
+			notification_set( "SETTING_PUSH_EQUIPCOMPLETE", F(5906,EquipName(GetPlayer().m_forgingkind)), info.m_needsec-info.m_sec )
+			
 		end
 		timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite = LoadSprite( iconname );
 		local timer = timerObj.transform:Find( "Text" ):GetComponent( "UITextTimeCountdown" );
@@ -495,12 +503,16 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec, op )
 		if op == 1 then -- 建造
 			SetTrue( unitObj.transform:Find("shape_up") )
 			opicon = "ui_opration_3";
+			
 		elseif op == 2 then -- 升级
 			SetTrue( unitObj.transform:Find("shape_up") )
 			opicon = "ui_opration_state_1";
+			notification_set( "SETTING_PUSH_EQUIPCOMPLETE", F(5908,BuildingName(kind,offset)), needsec-sec )
+			
 		elseif op == 4 then -- 拆除
 			unitObj.transform:Find("shape"):GetComponent("SpriteRenderer").color = Hex2Color( 0xffffff7f )
 			opicon = "ui_opration_3";
+			
 		end
 		timerObj.transform:Find( "Icon" ):GetComponent( "Image" ).sprite = LoadSprite( opicon );
 		

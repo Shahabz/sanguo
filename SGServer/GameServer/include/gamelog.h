@@ -25,6 +25,7 @@
 #define LOGOP_FORGING			19	// 打造
 #define LOGOP_HEROUPGRADE		20	// 英雄升级
 #define LOGOP_KWPOINT			21	// 血战积分
+#define LOGOP_GIRL				22	// 女将
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统

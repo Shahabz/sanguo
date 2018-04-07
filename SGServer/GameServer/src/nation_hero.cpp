@@ -384,6 +384,7 @@ int nation_hero_catch( City *pCity, int kind )
 	pCity->nation_hero[offset].loyal = 100;
 	pCity->nation_hero[offset].forever = 0;
 	pCity->nation_hero[offset].buypos = 0;
+	city_nation_hero_save_auto( pCity->actorid, offset, &pCity->nation_hero[offset], "city_nation_hero", NULL );
 
 	mapunit_del( MAPUNIT_TYPE_NATIONHERO, kind, g_nation_hero[kind].unit_index );
 	map_delobject( MAPUNIT_TYPE_NATIONHERO, kind, g_nation_hero[kind].posx, g_nation_hero[kind].posy );
@@ -424,6 +425,7 @@ int nation_hero_get( City *pCity, int kind )
 	pCity->nation_hero[offset].loyal = 100;
 	pCity->nation_hero[offset].forever = 0;
 	pCity->nation_hero[offset].buypos = 0;
+	city_nation_hero_save_auto( pCity->actorid, offset, &pCity->nation_hero[offset], "city_nation_hero", NULL );
 
 	g_nation_hero[kind].unit_index = -1;
 	g_nation_hero[kind].posx = -1;
@@ -449,6 +451,7 @@ int nation_hero_leave( City *pCity, int kind )
 	pCity->nation_hero[offset].state = 0;
 	pCity->nation_hero[offset].loyal = 0;
 	pCity->nation_hero[offset].buypos = 0;
+	city_nation_hero_save_auto( pCity->actorid, offset, &pCity->nation_hero[offset], "city_nation_hero", NULL );
 
 	Hero *pHero = city_hero_getptr_withkind( pCity->index, kind );
 	if ( pHero )
@@ -607,6 +610,7 @@ int nation_hero_call( int actor_index, int kind )
 	pCity->nation_hero[offset].state = NATIONHERO_STATE_EMPLOY;
 	pCity->nation_hero[offset].loyal = 100;
 	g_nation_hero[kind].runsec = 0;
+	city_nation_hero_save_auto( pCity->actorid, offset, &pCity->nation_hero[offset], "city_nation_hero", NULL );
 	nation_hero_cityinfo( actor_index, kind );
 
 	city_changesilver( pCity->index, -g_nation_heroinfo[kind].call_silver, PATH_NATIONHERO );

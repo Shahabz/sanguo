@@ -559,6 +559,7 @@ function struct_NetS_Hero_recv( buffer )
 	recvValue.m_defense_increase = buffer:ReadInt();
 	recvValue.m_offset = buffer:ReadShort();
 	recvValue.m_god = buffer:ReadSByte();
+	recvValue.m_girlkind = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -2878,6 +2879,38 @@ function struct_NetS_Activity04List_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_myday = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_Girl_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_soul = buffer:ReadShort();
+	recvValue.m_love_level = buffer:ReadSByte();
+	recvValue.m_love_exp = buffer:ReadShort();
+	recvValue.m_love_num = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_GirlList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Girl_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_GirlGet_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadShort();
+	recvValue.m_soulnum = buffer:ReadShort();
+	recvValue.m_girl = struct_NetS_Girl_recv( buffer );
 	return recvValue;
 end
 

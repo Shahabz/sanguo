@@ -439,6 +439,7 @@ struct _slk_NetS_Hero {
 	int m_defense_increase;	//
 	short m_offset;	//
 	char m_god;	//
+	char m_girlkind;	//
 };
 typedef struct _slk_NetS_Hero SLK_NetS_Hero;	//英雄信息
 
@@ -2150,6 +2151,30 @@ struct _slk_NetS_Activity04List {
 };
 typedef struct _slk_NetS_Activity04List SLK_NetS_Activity04List;	//活动七日狂欢
 
+struct _slk_NetS_Girl {
+	char m_kind;	//女将
+	char m_color;	//女将
+	short m_soul;	//女将
+	char m_love_level;	//女将
+	short m_love_exp;	//女将
+	char m_love_num;	//女将
+};
+typedef struct _slk_NetS_Girl SLK_NetS_Girl;	//女将信息
+
+struct _slk_NetS_GirlList {
+	char m_count;	//女将列表
+	SLK_NetS_Girl m_list[80];	//女将列表
+};
+typedef struct _slk_NetS_GirlList SLK_NetS_GirlList;	//女将列表
+
+struct _slk_NetS_GirlGet {
+	char m_kind;	//女将获取
+	short m_path;	//女将获取
+	short m_soulnum;	//女将获取
+	SLK_NetS_Girl m_girl;	//女将获取
+};
+typedef struct _slk_NetS_GirlGet SLK_NetS_GirlGet;	//女将获取
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2382,5 +2407,8 @@ int struct_NetS_Activity05List_send( char **pptr, int *psize, SLK_NetS_Activity0
 int struct_NetS_Activity01List_send( char **pptr, int *psize, SLK_NetS_Activity01List *pValue );
 int struct_NetS_Activity04Info_send( char **pptr, int *psize, SLK_NetS_Activity04Info *pValue );
 int struct_NetS_Activity04List_send( char **pptr, int *psize, SLK_NetS_Activity04List *pValue );
+int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue );
+int struct_NetS_GirlList_send( char **pptr, int *psize, SLK_NetS_GirlList *pValue );
+int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue );
 
 #endif

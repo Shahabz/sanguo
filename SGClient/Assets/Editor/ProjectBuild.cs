@@ -107,17 +107,15 @@ class ProjectBuild : Editor{
 				PlayerSettings.applicationIdentifier = args[3].ToString();
 				PlayerSettings.bundleVersion 		= args[4].ToString();
 				PlayerSettings.iOS.buildNumber = args[5];
-				PlayerSettings.iOS.appleDeveloperTeamID = args[6];
-				PlayerSettings.iOS.iOSManualProvisioningProfileID = args[7];
 
-				if (Convert.ToInt32 (args [8]) == 1) {
+				if (Convert.ToInt32 (args [6]) == 1) {
 					PlayerSettings.iOS.appleEnableAutomaticSigning = true;
 				} else {
 					PlayerSettings.iOS.appleEnableAutomaticSigning = false;
 				}
 				
-				if ( args.Length == 10 ){
-					PlayerSettings.iOS.sdkVersion = (iOSSdkVersion)Enum.Parse(typeof(iOSSdkVersion), args[9]); // DeviceSDK = 988, SimulatorSDK
+				if ( args.Length == 8 ){
+					PlayerSettings.iOS.sdkVersion = (iOSSdkVersion)Enum.Parse(typeof(iOSSdkVersion), args[7]); // DeviceSDK = 988, SimulatorSDK
 				}
 
 				Debug.LogError (_projectName);
@@ -125,8 +123,6 @@ class ProjectBuild : Editor{
 				Debug.LogError (PlayerSettings.applicationIdentifier);
 				Debug.LogError (PlayerSettings.bundleVersion);
 				Debug.LogError (PlayerSettings.iOS.buildNumber);
-				Debug.LogError (PlayerSettings.iOS.appleDeveloperTeamID);
-				Debug.LogError (PlayerSettings.iOS.iOSManualProvisioningProfileID);
 				break;
 			}
 		}

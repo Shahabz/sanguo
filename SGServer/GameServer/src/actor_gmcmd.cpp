@@ -37,6 +37,7 @@
 #include "nation_hero.h"
 #include "story.h"
 #include "city_attr.h"
+#include "girl.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -763,6 +764,16 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		break;
 	case GMC_UNLOCKUSER: // 解锁账户
 		break;
+	case GMC_GIRL: // 女将
+		if ( pCity )
+		{
+			if ( pValue[0] == -100 )
+			{
+				girl_gm_getall( pCity );
+			}
+			else
+				girl_getgirl( pCity, pValue[0], pValue[1], PATH_GM );
+		}
 	default:
 		break;
 	}

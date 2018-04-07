@@ -335,6 +335,16 @@ function HeroState( state )
 	end
 end
 
+-- 获取女将名称
+function GirlName( kind )
+	return Localization.text_item(kind+3200);
+end
+
+-- 获取女将类型
+function GirlType( type )
+	return T(type+3330);
+end
+
 -- 兵种名称
 function CorpsName( corps )
 	return T(134+corps);
@@ -362,7 +372,6 @@ end
 function NationEquipName( kind )
 	return Localization.text_item(kind+2200);
 end
-
 
 -- 获取科技名称
 function TechName( kind )

@@ -52,7 +52,6 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 反馈
 		elseif nControlID == 12 then
 			pop( T(579) )
-			push_train( 20 )
 			SDK.gmbug()
 			
 		-- vip

@@ -29,6 +29,7 @@ function SLK_Hero:empty()
 	self.m_soldiers		=	0;-- 当前兵力
 	self.m_state		=	0;-- 当前
 	self.m_god			=	0;-- 神突
+	self.m_girlkind		=	0;-- 关联女将
 	
 	self.m_attack_base	=	0;--基础攻击资质
 	self.m_attack_wash	=	0;--洗髓攻击资质
@@ -65,6 +66,7 @@ function SLK_Hero:Set( recvValue )
 	self.m_soldiers		=	recvValue.m_soldiers;-- 当前兵力
 	self.m_state		=	recvValue.m_state;-- 当前
 	self.m_god			=	recvValue.m_god;-- 神突
+	self.m_girlkind		=	recvValue.m_girlkind;-- 关联女将
 	
 	self.m_attack_base	=	recvValue.m_attack_base;--基础攻击资质
 	self.m_attack_wash	=	recvValue.m_attack_wash;--洗髓攻击资质

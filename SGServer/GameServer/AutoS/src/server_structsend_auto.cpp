@@ -643,6 +643,7 @@ int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense_increase, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_god, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_girlkind, (*psize) );
 	return 0;
 }
 
@@ -3156,6 +3157,42 @@ int struct_NetS_Activity04List_send( char **pptr, int *psize, SLK_NetS_Activity0
 		struct_NetS_Activity04Info_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_myday, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_soul, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_num, (*psize) );
+	return 0;
+}
+
+int struct_NetS_GirlList_send( char **pptr, int *psize, SLK_NetS_GirlList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Girl_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_soulnum, (*psize) );
+	struct_NetS_Girl_send( pptr, psize, &pValue->m_girl );
 	return 0;
 }
 

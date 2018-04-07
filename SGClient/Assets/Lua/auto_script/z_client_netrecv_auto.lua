@@ -960,6 +960,21 @@ function netrecv_activity04list_C( buffer )
 	proc_activity04list_C( recvValue );
 end
 
+function netrecv_girl_C( buffer )
+	local recvValue = struct_NetS_Girl_recv( buffer );
+	proc_girl_C( recvValue );
+end
+
+function netrecv_girllist_C( buffer )
+	local recvValue = struct_NetS_GirlList_recv( buffer );
+	proc_girllist_C( recvValue );
+end
+
+function netrecv_girlget_C( buffer )
+	local recvValue = struct_NetS_GirlGet_recv( buffer );
+	proc_girlget_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1153,6 +1168,9 @@ Proc_Command = {
 	[CMDS_ACTIVITY05LIST]=netrecv_activity05list_C;
 	[CMDS_ACTIVITY01LIST]=netrecv_activity01list_C;
 	[CMDS_ACTIVITY04LIST]=netrecv_activity04list_C;
+	[CMDS_GIRL]=netrecv_girl_C;
+	[CMDS_GIRLLIST]=netrecv_girllist_C;
+	[CMDS_GIRLGET]=netrecv_girlget_C;
 }
 
 function in_proc_command_C( cmd, buffer )

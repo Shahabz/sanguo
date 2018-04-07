@@ -37,7 +37,11 @@ local m_SelectType = nil;
 local m_ChangeType = 1;
 local m_PackType = nil;
 local m_ChangeTab = {};
-local m_recvValue = nil;
+local m_recvWish = nil;
+local m_recvPack = nil;
+local m_recvChange = nil;
+
+
 local m_IsCanOpen = nil;
 
 -- 打开界面
@@ -55,14 +59,18 @@ function WishingDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "WishingDlg" );
-	m_recvValue = nil
+	m_recvWish = nil;
+	m_recvPack = nil;
+	m_recvChange = nil;
 end
 
 -- 删除界面
 function WishingDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
-	m_recvValue = nil
+	m_recvWish = nil;
+	m_recvPack = nil;
+	m_recvChange = nil;
 	HeroColorSpriteUnload( 0 )
 	HeroColorSpriteUnload( 1 )
 	HeroColorSpriteUnload( 2 )
@@ -248,15 +256,15 @@ end
 -- system_askinfo( ASKINFO_WISHING, "", 6, id ); — 打包
 
 -- 接收聚宝盆数据
-function WishingDlgWishingRecv( recvValue )
-	m_recvValue = recvValue;		
-	--设置数据
-	for i = 1, m_recvValue.m_count, 1 do
+function WishingDlgWishingRecv( recvValue )					
+	m_recvWish = recvValue;		                            
+	--设置数据                                              
+	for i = 1, m_recvWish.m_count, 1 do
 		local index = WishingDlgGetRealIndex(i);
-		WishingDlgSetGrid( i, m_recvValue.m_list[index]);
+		WishingDlgSetGrid( i, m_recvWish.m_list[index]);
 	end
 	--设置时间
-	m_LastOpenStamp = m_recvValue.m_openstamp;
+	m_LastOpenStamp = m_recvWish.m_openstamp;
 	WishingDlgSetWishingTitle(m_LastOpenStamp);
 end
 --设置标题或时间
@@ -270,6 +278,8 @@ function WishingDlgSetWishingTitle(EndTime)
 		SetFalse(m_uiTimer);
 		SetTrue(m_uiTitle);
 	end
+	-- 聚宝盆冷却完成通知
+	notification_set( "SETTING_PUSH_WISHING", T(5911), time )
 end
 --获取真实位置
 function WishingDlgGetRealIndex(index)
@@ -287,7 +297,7 @@ end
 --获取是否是已经打开宝箱
 function WishingDlgIsOpenGrid(index)
 	local RealIndex = WishingDlgGetRealIndex(index);
-	if m_recvValue.m_list[RealIndex].m_open == 1 then 
+	if m_recvWish.m_list[RealIndex].m_open == 1 then 
 		return true ;
 	end
 	return false;
@@ -336,7 +346,7 @@ end
 -- 点击某一个聚宝盆物品
 function WishingDlgClickGrid( index )
 	-- 今天已购买，提示
-	if m_recvValue.m_todaybuy > 0 then 
+	if m_recvWish.m_todaybuy > 0 then 
 		pop(T(3007));
 		return ;
 	end 
@@ -354,7 +364,7 @@ function WishingDlgClickGrid( index )
 	end	
 	
 	-- 打开某一个聚宝盆物品
-	system_askinfo( ASKINFO_WISHING, "", 1, m_recvValue.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物打开		
+	system_askinfo( ASKINFO_WISHING, "", 1, m_recvWish.m_list[WishingDlgGetRealIndex(index)].m_id ); -- 宝物打开		
 end
 
 -- 查看宝箱
@@ -372,8 +382,8 @@ function WishingDlgInfoView(index)
 	WishingDlgClearInfoGrid();
 	local tab = table.shuffle(1,9,9)
 	for i = 1, 9, 1 do 	
-		if m_recvValue.m_list[tab[i]].m_open ~= 1 then
-			WishingDlgCreateInfoGrid(m_recvValue.m_list[tab[i]]);
+		if m_recvWish.m_list[tab[i]].m_open ~= 1 then
+			WishingDlgCreateInfoGrid(m_recvWish.m_list[tab[i]]);
 		end
 	end
 	SetControlID( m_uiBuyBtn, 20 + index );
@@ -388,18 +398,18 @@ end
 --购买宝箱
 function WishingDlgBuyWishing(index,IsOpen)
 	local RealIndex = WishingDlgGetRealIndex(index);
-	local CostNum = m_recvValue.m_list[RealIndex].m_costnum;
-	local CostName = ResName(m_recvValue.m_list[RealIndex].m_costkind - 50000);
-	local AwardNum = "x"..m_recvValue.m_list[RealIndex].m_awardnum;		
+	local CostNum = m_recvWish.m_list[RealIndex].m_costnum;
+	local CostName = ResName(m_recvWish.m_list[RealIndex].m_costkind - 50000);
+	local AwardNum = "x"..m_recvWish.m_list[RealIndex].m_awardnum;		
 	if IsOpen == true then 
-		local sprite, color, name, c, desc = AwardInfo( m_recvValue.m_list[RealIndex].m_awardkind );	
-		local AwardNum = "x"..m_recvValue.m_list[RealIndex].m_awardnum;	
+		local sprite, color, name, c, desc = AwardInfo( m_recvWish.m_list[RealIndex].m_awardkind );	
+		local AwardNum = "x"..m_recvWish.m_list[RealIndex].m_awardnum;	
 		MsgBox( F(3008, CostNum,CostName,name,AwardNum ), function()
-			system_askinfo( ASKINFO_WISHING, "", 2, m_recvValue.m_list[RealIndex].m_id ); -- 宝物购买
+			system_askinfo( ASKINFO_WISHING, "", 2, m_recvWish.m_list[RealIndex].m_id ); -- 宝物购买
 		end)
 	else
 		MsgBox( F(3009, CostNum,CostName ), function()
-			system_askinfo( ASKINFO_WISHING, "", 2, m_recvValue.m_list[RealIndex].m_id ); -- 直接购买
+			system_askinfo( ASKINFO_WISHING, "", 2, m_recvWish.m_list[RealIndex].m_id ); -- 直接购买
 		end)
 	end
 end
@@ -439,9 +449,9 @@ end
 
 --接收兑换信息
 function WishingDlgChangeRecv( recvValue )
-	m_recvValue = recvValue;		
+	m_recvChange = recvValue;		
 	WishingDlgChangeView();	
-	m_ChangeCD = m_recvValue.m_cd;
+	m_ChangeCD = m_recvChange.m_cd;
 	WishingDlgSetChangeTitle()
 end
 
@@ -466,24 +476,24 @@ function WishingDlgChangeView()
 	m_ChangeTab = {};	
 	if m_ChangeType == 1 then 			--银币兑换
 		SetImage(m_uiChangeRes,ItemSprite(120));
-		SetText( m_uiCostText, "x"..knum(m_recvValue.m_silver));
+		SetText( m_uiCostText, "x"..knum(m_recvChange.m_silver));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvValue.m_silver_to_wood});	
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvValue.m_silver_to_food});
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvChange.m_silver_to_wood});	
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvChange.m_silver_to_food});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 2 then 		--木材兑换
 		SetImage(m_uiChangeRes,ItemSprite(121))
-		SetText( m_uiCostText, "x"..knum(m_recvValue.m_wood));
+		SetText( m_uiCostText, "x"..knum(m_recvChange.m_wood));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvValue.m_wood_to_silver});	
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvValue.m_wood_to_food});
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvChange.m_wood_to_silver});	
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvChange.m_wood_to_food});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 3 then 		--粮草兑换
 		SetImage(m_uiChangeRes,ItemSprite(122))
-		SetText( m_uiCostText, "x"..knum(m_recvValue.m_food));
+		SetText( m_uiCostText, "x"..knum(m_recvChange.m_food));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvValue.m_food_to_silver});	
-		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvValue.m_food_to_wood});
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvChange.m_food_to_silver});	
+		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvChange.m_food_to_wood});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 4 then 		--牛皮兑换
 		SetImage(m_uiChangeRes,ItemSprite(1));
@@ -628,13 +638,13 @@ function WishingDlgIsCanChangeByStuff()
 	local Have = nil;
 	local Need = nil;
 	if m_ChangeType == 1 then 
-		Need = m_recvValue.m_silver;
+		Need = m_recvChange.m_silver;
 		Have = GetPlayer().m_silver;
 	elseif m_ChangeType == 2 then 
-		Need = m_recvValue.m_wood;
+		Need = m_recvChange.m_wood;
 		Have = GetPlayer().m_wood;
 	elseif m_ChangeType == 3 then 
-		Need = m_recvValue.m_food;	
+		Need = m_recvChange.m_food;	
 		Have = GetPlayer().m_food;
 	elseif m_ChangeType == 4 then 
 		Need = global.wishing_green_to_draw;
@@ -655,7 +665,7 @@ end
 
 --接收打包信息
 function WishingDlgPackRecv(recvValue)
-	m_recvValue = recvValue;
+	m_recvPack = recvValue;
 	WishingDlgPackChangeView()
 end
 
@@ -666,8 +676,8 @@ function WishingDlgPackChangeView()
 	else
 		SetTrue(m_uiPackChange);
 		SetFalse(m_uiPackInfo);
-		for i = 0, table.nums(m_recvValue.m_list)-1 ,1 do 
-			WishingDlgSetPackChangeGrid(i,m_recvValue.m_list[i+1]);
+		for i = 0, table.nums(m_recvPack.m_list)-1 ,1 do 
+			WishingDlgSetPackChangeGrid(i,m_recvPack.m_list[i+1]);
 		end
 	end	
 end
@@ -697,7 +707,7 @@ function WishingDlgPackInfoView(index)
 	m_PackType = index;
 	SetFalse(m_uiPackChange);
 	SetTrue(m_uiPackInfo);
-	local data = m_recvValue.m_list[m_PackType];
+	local data = m_recvPack.m_list[m_PackType];
 	WishingDlgSetPackGrid(data);
 	WishingDlgSetPackToGrid(data);
 end
@@ -766,7 +776,7 @@ function WishingDlgIsCanPackByStuff(kind,Need)
 end
 
 function WishingDlgOnBtnPack()
-	local data = m_recvValue.m_list[m_PackType];
+	local data = m_recvPack.m_list[m_PackType];
 	--判断资源
 	local bHave,Have = WishingDlgIsCanPackByStuff(m_PackType,data.m_costnum);
 	if bHave == false then 

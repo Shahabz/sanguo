@@ -375,6 +375,8 @@ function CityGuardDlgChangeSec( recvValue )
 			SetTrue( m_uiCallButton );
 		end
 	end
+	-- 完成通知
+	notification_set( "SETTING_PUSH_GUARD", T(5914), recvValue.m_guardsec )
 end
 
 function CityGuardDlgSelect( index )

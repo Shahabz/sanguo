@@ -63,6 +63,7 @@
 #define GMC_LOCKUSER			(GMC_BASE+58)	// 锁账号
 #define GMC_UNLOCKACTOR			(GMC_BASE+59)	// 解锁角色
 #define GMC_UNLOCKUSER			(GMC_BASE+60)	// 解锁账户
+#define GMC_GIRL				(GMC_BASE+61)	// 女将
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功
