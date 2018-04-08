@@ -1222,9 +1222,16 @@ int building_finish( int city_index, int op, int kind, int offset )
 			}
 		}
 
-		// 仓库给予高级重建次数
-		if ( kind == BUILDING_StoreHouse )
+		// 开启坊市
+		if ( kind == BUILDING_Main )
 		{
+			if ( g_city[city_index].level >= global.fangshi_actorlevel && g_city[city_index].building[0].level >= global.fangshi_citylevel )
+			{
+				city_function_open( &g_city[city_index], CITY_FUNCTION_FANGSHI );
+			}
+		}
+		else if ( kind == BUILDING_StoreHouse )
+		{// 仓库给予高级重建次数
 			g_city[city_index].rb_num += 1;
 		}
 		// 任务

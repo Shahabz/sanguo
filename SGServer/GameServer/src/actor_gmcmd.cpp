@@ -772,8 +772,15 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				girl_gm_getall( pCity );
 			}
 			else
-				girl_getgirl( pCity, pValue[0], pValue[1], PATH_GM );
+				girl_getgirl( pCity, pValue[0], PATH_GM );
 		}
+		break;
+	case GMC_GIRLSOUL: // Å®½«ËéÆ¬
+		if ( pCity )
+		{
+			girl_getsoul( pCity, pValue[0], pValue[1], PATH_GM );
+		}
+		break;
 	default:
 		break;
 	}

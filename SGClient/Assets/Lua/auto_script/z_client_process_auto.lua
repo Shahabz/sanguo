@@ -951,6 +951,10 @@ function proc_function_C( recvValue )
 		[5] = BUILDING_Wishing }
 		local kind = kindlist[ recvValue.m_openoffset ]
 		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
+		if kind == BUILDING_Fangshi then
+			City.BuildingDel( { m_kind=kind, m_offset=0 } )
+			MainDlgSetButtons( recvValue.m_openoffset );
+		end
 		
 	elseif recvValue.m_openoffset == CITY_FUNCTION_Militiaman then
 		City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )

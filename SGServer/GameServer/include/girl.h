@@ -7,7 +7,8 @@
 Girl *girl_getptr( int city_index, int kind );
 GirlInfoConfig *girl_getconfig( int kind, int color );
 void girl_makestruct( City *pCity, Girl *pGirl, SLK_NetS_Girl *pValue );
-int girl_getgirl( City *pCity, int kind, int color, char path ); // 玩家获得女将
+int girl_getgirl( City *pCity, int kind, char path ); // 玩家获得女将
+int girl_getsoul( City *pCity, int kind, int soul, char path ); // 玩家获得女将碎片
 int girl_list( int actor_index ); // 女将列表
 void girl_gm_getall( City *pCity );
 #endif

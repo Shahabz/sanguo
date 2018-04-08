@@ -39,6 +39,7 @@
 #define TAG_AWARD			"$A"// 标记--标记为奖励
 #define TAG_KINGWAR			"$K"// 标记--标记为皇城战据点
 #define TAG_HERO			"$R"// 标记--标记为武将
+#define TAG_GIRL			"$G"// 标记--标记为女将
 #define TAG_COLOR			"$C"// 标记--标记为颜色
 #define TAG_OFFICIAL		"$O"// 标记--标记为官职
 

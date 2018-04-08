@@ -123,6 +123,13 @@ function OfficialHireDlgShow( type )
 		end
 		m_DlgName = T(723)..T(720)
 	end
+
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_MAKE_POS then
+			GuideNext();
+		end
+	end
+	
 	OfficialHireDlgOpen()
 	OfficialHireDlgSet( type )
 end

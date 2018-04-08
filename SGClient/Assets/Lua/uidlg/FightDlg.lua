@@ -70,6 +70,7 @@ function FightDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	PatrolModPlay();
 end
 
 -- 删除界面
@@ -187,6 +188,7 @@ end
 ----------------------------------------
 function FightDlgShow( recvValue )
 	FightDlgOpen()
+	PatrolModStop();
 	SetFalse( m_uiTop )
 	SetFalse( m_uiBottom )
 	SetFalse( m_uiLeftHpEffect );

@@ -6,6 +6,7 @@ struct _girlinfo_config {
 //--Automatically generated
 				int kind;	//
 				short color;	//
+				short init_color;	//
 				short type;	//
 				short attack_increase;	//
 				short defense_increase;	//

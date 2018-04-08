@@ -2,6 +2,41 @@
 local m_Mod = nil;
 local m_PrefabTab = {};
 local m_IsTalkShow = false;
+local m_IsStop = false;
+
+-- level 需要等级 ,bx起始点x ,by起始点y ,ex结束点x ,ey结束点y ,sec路程时长, Delay 等待时长
+g_patrol_path = {
+[1] = { level = 1, Delay = 2,  path = { scale = 1, id=1, bx=19.13,by=-3.57,ex=7.30, ey=-9.55,sec=50} },
+[2] = { level = 25, Delay = 2,  path = { scale = 1, id=2, bx=11.64,by=-5.96,ex=15.69,ey=-8.00,sec=25} },
+[3] = { level = 30, Delay = 2,  path = { scale = 1, id=3, bx=23.10,by=-4.81,ex=17.79,ey=-7.45,sec=25}  },
+[4] = { level = 30, Delay = 2,  path = { scale = 1, id=4, bx=1.83, by=-7.80,ex=5.08, ey=-9.45,sec=15} },
+[5] = { level = 40, Delay = 2,  path = { scale = 1, id=5, bx=15.83,by=-0.73,ex=19.06,ey=-2.35,sec=15} },
+[6] = { level = 40, Delay = 2,  path = { scale = 1, id=6, bx=16.2, by=-8.24, ex=10.04,ey=-11.31,sec=25} },
+[7] = { level = 50, Delay = 2,  path = { scale = 1, id=7, bx=6.69, by=-10.20,ex=8.96, ey=-11.34,sec=15} },
+[8] = { level = 50, Delay = 2,  path = { scale = 1, id=8, bx=20.63,by=-3.15, ex=23.02,ey=-4.36, sec=15} },
+}
+
+g_patrol_talk = {
+[1] = { id = 1 ,textid = 4901 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[2] = { id = 2 ,textid = 4902 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[3] = { id = 3 ,textid = 4903 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[4] = { id = 4 ,textid = 4904 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[5] = { id = 5 ,textid = 4905 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[6] = { id = 6 ,textid = 4906 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100},
+[7] = { id = 7 ,textid = 4907 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[8] = { id = 8 ,textid = 4908 , sec = 10, minlevel = 1, maxlevel = 150, rights = 100 },
+[9] = { id = 9 ,textid = 4909 , sec = 10, minlevel = 1, maxlevel = 30, rights = 500 },
+[10] = { id = 10 ,textid = 4910 , sec = 10, minlevel = 1, maxlevel = 50, rights = 500 },
+[11] = { id = 11 ,textid = 4911 , sec = 10, minlevel = 25, maxlevel = 80, rights = 200 },
+[12] = { id = 12 ,textid = 4912 , sec = 10, minlevel = 20, maxlevel = 80, rights = 200 },
+[13] = { id = 13 ,textid = 4913 , sec = 10, minlevel = 30, maxlevel = 100, rights = 500 },
+[14] = { id = 14 ,textid = 4914 , sec = 10, minlevel = 20, maxlevel = 50, rights = 200 },
+[15] = { id = 15 ,textid = 4915 , sec = 10, minlevel = 1, maxlevel = 50, rights = 200 },
+[16] = { id = 16 ,textid = 4916 , sec = 10, minlevel = 40, maxlevel = 100, rights = 100 },
+[17] = { id = 17 ,textid = 4917 , sec = 10, minlevel = 50, maxlevel = 100, rights = 200 },
+[18] = { id = 18 ,textid = 4918 , sec = 10, minlevel = 60, maxlevel = 100, rights = 100 },
+[19] = { id = 19 ,textid = 4919 , sec = 10, minlevel = 80, maxlevel = 150, rights = 500 },
+}
 
 -- 所属按钮点击时调用
 function PatrolModOnEvent( nType, nControlID, value )
@@ -66,17 +101,20 @@ function PatrolModStop()
 		local unitTween = m_PrefabTab[i].transform:GetComponent( "UITweenMove" );
 		unitTween:Kill(false);
 	end
+	m_IsStop = true;
 end
 -- 设置层级
 function PatrolModSetSiblingIndex()
 	m_Mod.transform:SetSiblingIndex(1001)
 end
 function PatrolModPlay()
+	if GameManager.currentScence ~= "city" then return end;
 	for i = 1,5 do 
 		if g_patrol_path[i].level <= GetPlayer().m_level then 
 			PatrolModTween(g_patrol_path[i].path);
 		end
 	end	
+	m_IsStop = false;
 end
 function PatrolModTween(PathData)
 	SetTrue(m_PrefabTab[PathData.id])
@@ -94,6 +132,7 @@ function PatrolModTween(PathData)
 	end
 end
 function PatrolModRePlay(id)		
+	if m_IsStop == true then return end;
 	PatrolModTween(g_patrol_path[id].path);
 end
 function PatrolModWaitPlay(id)
@@ -126,8 +165,9 @@ function PatrolModGetNextID(id )
 	return NextId;
 end
 
---
+-- 巡逻兵展示对话
 function PatrolModShowTalk(PathID,bShow)
+	if m_IsStop == true then return end;
 	local uiObj = m_PrefabTab[PathID];
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiTipWnd = objs[0];
@@ -137,7 +177,7 @@ function PatrolModShowTalk(PathID,bShow)
 	else
 		local TalkID = PatrolModGetTalkID();	
 		SetTrue(uiTipWnd)
-		SetText(uiText,g_patrol_talk[TalkID].str);
+		SetText(uiText,T(g_patrol_talk[TalkID].textid));
 		local Delay = g_patrol_talk[TalkID].sec;
 		SetTimer(uiTipWnd,Delay,GetServerTime()+Delay,PathID+100);
 		m_IsTalkShow = true;
@@ -147,7 +187,43 @@ end
 
 -- 获取对话ID
 function PatrolModGetTalkID()
-	return custom.rand( 1, #g_patrol_talk );
+	local TempTab = {};
+	local Level = GetPlayer().m_level;
+	for i = 1, #g_patrol_talk do 
+		local minlevel = g_patrol_talk[i].minlevel;
+		local maxlevel = g_patrol_talk[i].maxlevel;
+		if Level >= minlevel and Level <= maxlevel then 
+			table.insert(TempTab,g_patrol_talk[i]);
+		end
+	end
+	if #TempTab == 0 then 
+		return 1;
+	else
+		return PatrolModRandTalkID(TempTab)
+	end;
+	return 1;
+end
+
+-- 在适应等级中根据权重值随机选取对话id
+function PatrolModRandTalkID(tab)
+	local count = 0; 
+	for i = 1 ,#tab do 
+		count = tab[i].rights + count;
+	end
+	if count == 0 then 
+		return 1;
+	else
+		local num = custom.rand(1,count);
+		local temp = 1;
+		for i = 1 ,#tab do 
+			local lasttemp = temp;
+			temp = tab[i].rights + temp;
+			if num >= lasttemp and num < temp then 
+				return tab[i].id;
+			end
+		end
+	end;
+	return 1;	
 end
 
 -- 是否有对话

@@ -25,6 +25,7 @@ local m_uiOfficialName = nil; --UnityEngine.GameObject
 local m_uiOfficialDesc = nil; --UnityEngine.GameObject
 local m_uiOfficialBtn = nil; --UnityEngine.GameObject
 local m_uiUpBtn = nil; --UnityEngine.GameObject
+local m_uiBack = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_uiEquipObj = {};
@@ -144,6 +145,7 @@ function EquipForgingDlgOnAwake( gameObject )
 	m_uiOfficialEffect = objs[19];
 	m_uiOfficialBtn = objs[20];
 	m_uiUpBtn = objs[21];
+	m_uiBack = objs[22];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -194,7 +196,6 @@ function EquipForgingDlgShow()
 		return
 	end	
 	EquipForgingDlgSetOfficial()
-	
 	-- 
 	local EquipList = {};
 	for kind, info in pairs(g_equipinfo) do
@@ -292,6 +293,9 @@ function EquipForgingDlgShow()
     end 
 	-- 任务检查
 	QuestClickCheck( 4 )
+	
+	if IsGuiding() then
+	end
 end
 
 -- 排序
@@ -619,6 +623,12 @@ function EquipForgingDlgSetOfficial()
 	local uiFreeQuickBtn = objs[7];
 	
 	local info = GetPlayer().m_officialhire[0];
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_MAKE_POS then
+			FindCmdTpye(m_uiBack.transform);
+		end
+	end
 	-- 已雇佣
 	if info.m_ofkind > 0 then
 		SetTrue( m_uiOfficialShape )

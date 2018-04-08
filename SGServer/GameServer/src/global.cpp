@@ -606,6 +606,10 @@ int global_init()
 			global.activity05_update_sec = atoi( row[1] );
 		else if ( id == 220 )
 			global.newplayer_protect = atoi( row[1] );
+		else if ( id == 221 )
+			global.fangshi_citylevel = atoi( row[1] );
+		else if ( id == 222 )
+			global.fangshi_actorlevel = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

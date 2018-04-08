@@ -884,6 +884,8 @@ void city_function_open( City *pCity, int offset )
 {
 	if ( pCity == NULL )
 		return;
+	if ( pCity->sflag & (1 << offset) )
+		return;
 	pCity->function |= (1 << offset);
 
 	SLK_NetS_Function pValue = { 0 };
@@ -1140,6 +1142,12 @@ int city_actorupgrade( int city_index, short path, AwardGetInfo *getinfo )
 	if ( g_city[city_index].actor_index >= 0 && g_city[city_index].actor_index < g_maxactornum )
 	{
 		g_actors[g_city[city_index].actor_index].level = g_city[city_index].level;
+	}
+
+	// ¿ªÆô·»ÊÐ
+	if ( g_city[city_index].level >= global.fangshi_actorlevel && g_city[city_index].building[0].level >= global.fangshi_citylevel )
+	{
+		city_function_open( &g_city[city_index], CITY_FUNCTION_FANGSHI );
 	}
 	return 0;
 }

@@ -193,6 +193,8 @@ typedef struct _global
 	short activity05_update_token;
 	int activity05_update_sec;
 	int newplayer_protect;
+	short fangshi_citylevel;
+	short fangshi_actorlevel;
 }Global;
 int global_init();
 void global_reload();

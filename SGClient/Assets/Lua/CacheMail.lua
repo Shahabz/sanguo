@@ -29,6 +29,7 @@ TAG_NATION		= "$N"  -- 标记 标记为国家
 TAG_AWARD		= "$A"  -- 标记 标记为奖励
 TAG_KINGWAR		= "$K"	-- 标记--标记为皇城战据点
 TAG_HERO		= "$R"  -- 标记--标记为武将
+TAG_GIRL		= "$G"	-- 标记--标记为女将
 TAG_COLOR		= "$C"	-- 标记--标记为颜色
 TAG_OFFICIAL	= "$O"	-- 标记--标记为官职
 
@@ -375,6 +376,15 @@ function Mail:GetString( v )
 			str = v
 		end
 	
+	-- 女将
+	elseif self:IsTag( v, TAG_GIRL ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_GIRL) + 1));
+		if textid ~= nil then
+			str = GirlName( textid )
+		else
+			str = v
+		end
+
 	-- 颜色	
 	elseif self:IsTag( v, TAG_COLOR ) then
 		local textid = tonumber(string.sub(v, string.len(TAG_COLOR) + 1));

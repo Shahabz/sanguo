@@ -216,9 +216,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 					GameManager.Logout( 1 );
 				end, 0.3 );
 			end )
-			
+		
+		-- 女将	
 		elseif nControlID == 20 then
-			GirlTrainDlgOpen();
+			GirlDlgShow()
 			
 		-- 聊天
 		elseif nControlID == 30 then
@@ -1034,6 +1035,18 @@ function MainDlgSetButtons( openoffset )
 		end
 	end	
 	
+	-- 女将
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( ButtonTable.m_uiButtonGirl, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+		if openoffset == CITY_FUNCTION_FANGSHI then
+			MainDlgButtonPlayEffect( ButtonTable.m_uiButtonGirl )
+		end
+	end	
+	
 	-- 国器
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 1 then
 		local offset, root = MainDlgGetEmptyButton();
@@ -1069,13 +1082,6 @@ function MainDlgSetButtons( openoffset )
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
 		SetParent( ButtonTable.m_uiButtonSetting, m_uiButtonBack[offset] );
-		m_hasButton[offset] = true;
-	end
-	
-	-- 女将
-	local offset, root = MainDlgGetEmptyButton();
-	if root ~= nil then
-		SetParent( ButtonTable.m_uiButtonGirl, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	

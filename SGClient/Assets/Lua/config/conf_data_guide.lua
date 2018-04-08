@@ -243,8 +243,9 @@ g_guide = {
 	},
 [46] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框铁匠铺内雇佣3级或更高级铁匠
-	[2] = {cmd = 3,guideType = 21,x = 0,y = -1.8,point = 2,isSpecial = 0},   --雇佣铁匠
-	[3] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
+	[2] = {cmd = 3,guideType = 33,x = 0,y = 0,point = 2,isSpecial = 0},   --铁匠框
+	[3] = {cmd = 3,guideType = 21,x = 0,y = 0,point = 2,isSpecial = 0},   --雇佣铁匠
+	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [47] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务打造国器1

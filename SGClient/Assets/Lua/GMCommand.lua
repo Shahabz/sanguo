@@ -53,6 +53,7 @@ local GMCMD_SERVER = {
 [51]="mailactor",
 [53]="mailnotice",
 [61]="girl",
+[62]="girlsoul",
 }
  
 -- 发到客户端本地指令
