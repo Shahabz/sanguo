@@ -52,7 +52,7 @@ function Girl:SetGirl( nKind, pGirl )
 end
 
 -- 是否存在这个女将
-function Girl:HasHero( nKind )
+function Girl:HasGirl( nKind )
 	if nKind <= 0 or nKind >= ACTOR_GIRL_MAX then
 		return false;
 	end
@@ -68,6 +68,14 @@ function Girl:GetPtr( nKind )
 		return nil;
 	end
 	return self.m_Girl[nKind]
+end
+
+-- 是否存在这个女将
+function Girl:SetHero( nKind, nHeroKind )
+	if nKind <= 0 or nKind >= ACTOR_GIRL_MAX then
+		return;
+	end
+	self.m_Girl[nKind].m_herokind =  nHeroKind;
 end
 
 -- 全局

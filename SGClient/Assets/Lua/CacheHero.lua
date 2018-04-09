@@ -80,6 +80,10 @@ function SLK_Hero:Set( recvValue )
 	self.m_troops			=	recvValue.m_troops;-- 兵力
 	self.m_attack_increase 	= 	recvValue.m_attack_increase;-- 强攻
 	self.m_defense_increase	=	recvValue.m_defense_increase;-- 强防
+	
+	if self.m_girlkind > 0 then
+		GetGirl():SetHero( self.m_girlkind, self.m_kind )
+	end
 end
 
 -- 国家名将部分信息结构
@@ -222,6 +226,18 @@ function Hero:GetPtr( kind )
 				return self.m_Hero[tmpi];
 			end
 		end
+		for tmpi=0, MAX_CITYHERONUM-1, 1 do
+			if self.m_CityHero[tmpi].m_kind == kind then
+				return self.m_CityHero[tmpi];
+			end
+		end
+	end
+	return nil;
+end
+
+-- 根据kind获取-只检查上阵的
+function Hero:GetPtrWithCity( kind )
+	if kind > 0 then
 		for tmpi=0, MAX_CITYHERONUM-1, 1 do
 			if self.m_CityHero[tmpi].m_kind == kind then
 				return self.m_CityHero[tmpi];

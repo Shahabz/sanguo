@@ -132,6 +132,7 @@ int girl_getsoul( City *pCity, int kind, int soul, char path )
 	pCity->girl[kind].actorid = pCity->actorid;
 	pCity->girl[kind].kind = kind;
 	pCity->girl[kind].soul += soul;
+	girl_info( pCity, &pCity->girl[kind] );
 
 	char v1[32] = { 0 };
 	char v2[32] = { 0 };
@@ -139,12 +140,25 @@ int girl_getsoul( City *pCity, int kind, int soul, char path )
 	sprintf( v2, "%d", soul );
 	actor_notify_pop_v( pCity->actor_index, 3339, v1, v2 );
 
+
 	wlog( 0, LOGOP_GIRLSOUL, path, kind, soul, pCity->girl[kind].soul, pCity->actorid, city_mainlevel( pCity->index ) );
 	if ( pCity->girl[kind].color == 0 && pCity->girl[kind].soul >= g_girlinfo[kind].config[0].soul )
 	{ // 自动合成
 		pCity->girl[kind].soul -= g_girlinfo[kind].config[0].soul;
 		girl_getgirl( pCity, kind, path );
 	}
+	return 0;
+}
+
+// 女将信息
+int girl_info( City *pCity, Girl *pGirl )
+{
+	if ( !pCity || !pGirl )
+		return -1;
+	ACTOR_CHECK_INDEX( pCity->actor_index );
+	SLK_NetS_Girl pValue = { 0 };
+	girl_makestruct( pCity, pGirl, &pValue );
+	netsend_girl_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

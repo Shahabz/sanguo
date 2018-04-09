@@ -31,6 +31,8 @@ local m_uiSonAttr = nil; --UnityEngine.GameObject
 local m_uiGrowUpBtn = nil; --UnityEngine.GameObject
 local m_uiAgeProgress = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
+local m_GirlCache = nil;
+local m_SelectGirl = nil;
 
 -- 打开界面
 function GirlDlgOpen()
@@ -48,6 +50,8 @@ function GirlDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "GirlDlg" );
+	m_GirlCache = nil
+	m_SelectGirl = nil
 end
 
 -- 删除界面
@@ -67,6 +71,38 @@ function GirlDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             GirlDlgClose();
+		
+		-- 委派男将
+		elseif nControlID == 1 then
+			GirlDlgAllot()
+			
+		-- 突破
+		elseif nControlID == 2 then
+			GirlDlgColorUp()
+			
+		-- 增加亲昵度
+		elseif nControlID == 3 then
+			GirlDlgLoveItemUse()
+		
+		-- 喜结连理
+		elseif nControlID == 4 then
+			GirlDlgMarry()
+		
+		-- 亲密互动
+		elseif nControlID == 5 then
+			GirlDlgMakeLove()
+		
+		-- 下一步
+		elseif nControlID == 6 then
+			GirlDlgMakeNext()
+		
+		-- 出师
+		elseif nControlID == 7 then
+			GirlDlgSonGrowUp()
+		
+		-- 选择女将		
+		elseif nControlID > 1000 and nControlID < 2000 then
+			GirlDlgSelect( nControlID - 1000 )
         end
 	end
 end
@@ -140,5 +176,296 @@ end
 ----------------------------------------
 function GirlDlgShow()
 	GirlDlgOpen()
-	
+	GirlDlgHeadLayerCreate()
+	GirlDlgSelect( 0 )
 end
+
+function GirlDlgShowByKind( kind )
+	GirlDlgOpen()
+	GirlDlgHeadLayerCreate()
+	GirlDlgSelect( kind )
+end
+
+-- 创建女将列表
+function GirlDlgHeadLayerCreate()
+	GirlDlgHeadLayerClear()
+	m_GirlCache = {}
+	-- 遍历所有女将
+	for k, v in pairs(g_girlinfo) do
+		local kind = k
+		local actorGirl = GetGirl().m_Girl[kind];
+		if actorGirl and actorGirl.m_color > 0 then
+			local isup = 0;
+			-- 有关联武将，检查这个武将是否是上阵状态
+			if actorGirl.m_herokind > 0 then
+				if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
+					isup = 1
+				end
+			end
+			-- 已经获得这个女将，使用存档
+			table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+		else
+			-- 未获得这个女将，使用配置
+			table.insert( m_GirlCache, {m_kind=kind, m_color=v[0].init_color, m_state=-1 } )
+		end
+	end
+	-- 排序
+	table.sort( m_GirlCache, function(a,b) 
+		if a.m_state > b.m_state then
+			return true;
+		elseif a.m_state == b.m_state then
+			if a.m_color > b.m_color then 
+				return true
+			elseif a.m_color == b.m_color then
+				if a.m_kind < b.m_kind then 
+					return true
+				end
+			end
+		end
+		return false
+	end );
+	
+	-- 创建
+	for i=1, #m_GirlCache, 1 do
+		GirlDlgHeadLayerSetObj( m_GirlCache[i] )
+	end
+end
+
+-- 设置一个头像对象
+function GirlDlgHeadLayerSetObj( pGirl )
+	local uiGirlObj = m_ObjectPool:Get( "UIP_Girl" );
+	uiGirlObj.transform:SetParent( m_uiContent.transform );	
+	uiGirlObj:GetComponent("UIButton").controlID = 1000 + pGirl.m_kind;
+	pGirl.m_uiObj = uiGirlObj;
+	
+	local objs = uiGirlObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0]
+	local uiColor = objs[1]
+	local uiState1 = objs[2]
+	local uiState2 = objs[3]
+	local uiState3 = objs[4]
+	local uiName = objs[5]
+	local uiSelect = objs[6]
+	SetImage( uiShape, GirlHeadSprite(pGirl.m_kind) )
+	SetImage( uiColor, ItemColorSprite(pGirl.m_color) )
+	SetText( uiName, GirlName(pGirl.m_kind) )
+	if pGirl.m_state == -1 then
+		SetFalse( uiState1 )
+		SetFalse( uiState2 )
+		SetTrue( uiState3 )
+	elseif pGirl.m_state == 0 then
+		SetFalse( uiState1 )
+		SetTrue( uiState2 )
+		SetFalse( uiState3 )
+	elseif pGirl.m_state == 1 then
+		SetTrue( uiState1 )
+		SetFalse( uiState2 )
+		SetFalse( uiState3 )
+	end
+	SetFalse( uiSelect )
+end
+
+-- 清空
+function GirlDlgHeadLayerClear()
+	local objs = {};
+	for i = 0 ,m_uiContent.transform.childCount - 1 do
+		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
+    end
+	for k, v in pairs(objs) do
+		local obj = v;
+		m_ObjectPool:Release( "UIP_Girl", obj );
+    end
+end
+
+-- 选择女将
+function GirlDlgSelect( kind )
+	if m_SelectGirl then
+		local objs = m_SelectGirl.m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[6]
+		SetFalse( uiSelect )
+	end
+	
+	if kind == 0 then
+		local objs = m_GirlCache[1].m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[6]
+		SetTrue( uiSelect )
+		m_SelectGirl = m_GirlCache[1];
+	else
+		for i=1, #m_GirlCache, 1 do
+			if kind == m_GirlCache[i].m_kind then
+				local objs = m_GirlCache[i].m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+				local uiSelect = objs[6]
+				SetTrue( uiSelect )
+				m_SelectGirl = m_GirlCache[i];
+				break
+			end
+		end
+	end
+	GirlDlgCreateInfo( m_SelectGirl )
+end
+
+-- 创建详细信息
+function GirlDlgCreateInfo( pGirl )
+	local kind = pGirl.m_kind
+	local color = pGirl.m_color
+	local config = girlconfig( kind, color )
+	if config == nil then
+		return
+	end
+	
+	local actorGirl = GetGirl().m_Girl[kind];
+	if actorGirl and actorGirl.m_color > 0 and actorGirl.m_herokind > 0 then
+		-- 已经获得并且委派了
+		SetFalse( m_uiSingleLayer )
+		SetTrue( m_uiDoubleLayer )
+	else
+		-- 未获得 或者 未指派
+		SetTrue( m_uiSingleLayer )
+		SetFalse( m_uiDoubleLayer )
+		SetText( m_uiGirlName, GirlName( kind ) )
+		SetImage( m_uiGirlShape, GirlFaceSprite( kind ) )
+		
+		-- 属性
+		-- 强攻
+		local uiAttackIncrease = m_uiAttrList.transform:GetChild(1)
+		if config.attack_increase > 0 then
+			SetText(uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.attack_increase)
+			SetTrue(uiAttackIncrease)
+		else
+			SetFalse(uiAttackIncrease)
+		end
+		-- 强防
+		local uiDefenseIncrease = m_uiAttrList.transform:GetChild(2)
+		if config.defense_increase > 0 then
+			SetText(uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.defense_increase)
+			SetTrue(uiDefenseIncrease)
+		else
+			SetFalse(uiDefenseIncrease)
+		end
+		-- 攻击资质
+		local uiAttackGrowth = m_uiAttrList.transform:GetChild(3)
+		if config.attack_growth > 0 then
+			SetText(uiAttackGrowth.transform:Find("Text"), F(3336,config.attack_growth))
+			SetTrue(uiAttackGrowth)
+		else
+			SetFalse(uiAttackGrowth)
+		end
+		-- 防御资质
+		local uiDefenseGrowth = m_uiAttrList.transform:GetChild(4)
+		if config.defense_growth > 0 then
+			SetText(uiDefenseGrowth.transform:Find("Text"), F(3337,config.defense_growth))
+			SetTrue(uiDefenseGrowth)
+		else
+			SetFalse(uiDefenseGrowth)
+		end
+		
+		-- 特殊属性
+		if config.private_herokind > 0 then
+			SetTrue( m_uiPrivateAttrList )
+			local privateAttrHero = m_uiPrivateAttrList.transform:GetChild(0)
+			SetText(privateAttrHero.transform:Find("Text"), F(3362, HeroName(config.private_herokind)))
+			-- 强攻
+			uiAttackIncrease = m_uiPrivateAttrList.transform:GetChild(1)
+			if config.attack_increase > 0 then
+				SetText(uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.attack_increase)
+				SetTrue(uiAttackIncrease)
+			else
+				SetFalse(uiAttackIncrease)
+			end
+			-- 强防
+			uiDefenseIncrease = m_uiPrivateAttrList.transform:GetChild(2)
+			if config.defense_increase > 0 then
+				SetText(uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.defense_increase)
+				SetTrue(uiDefenseIncrease)
+			else
+				SetFalse(uiDefenseIncrease)
+			end
+			-- 攻击资质
+			uiAttackGrowth = m_uiPrivateAttrList.transform:GetChild(3)
+			if config.attack_growth > 0 then
+				SetText(uiAttackGrowth.transform:Find("Text"), F(3336,config.attack_growth))
+				SetTrue(uiAttackGrowth)
+			else
+				SetFalse(uiAttackGrowth)
+			end
+			-- 防御资质
+			uiDefenseGrowth = m_uiPrivateAttrList.transform:GetChild(4)
+			if config.defense_growth > 0 then
+				SetText(uiDefenseGrowth.transform:Find("Text"), F(3337,config.defense_growth))
+				SetTrue(uiDefenseGrowth)
+			else
+				SetFalse(uiDefenseGrowth)
+			end
+		else
+			SetFalse( m_uiPrivateAttrList )
+		end
+		
+		-- 碎片进度
+		local uiProgress = m_uiSingleLayer.transform:Find("SoulProgress")
+		local nowSoul = actorGirl.m_soul;
+		local maxSoul = 0;	
+		-- 未指派
+		if actorGirl and actorGirl.m_color > 0 then
+			SetTrue( m_uiAllotBtn )
+			maxSoul = config.soul
+		-- 未获得
+		else
+			SetFalse( m_uiAllotBtn )
+			maxSoul = girlconfig( kind, 0 ).soul
+		end
+		SetProgress( uiProgress, nowSoul/maxSoul )
+		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )
+	end
+end
+
+-- 委派男将
+function GirlDlgAllot()
+	if m_SelectGirl == nil then
+		return
+	end
+	--local kind = m_SelectGirl.m_kind
+	--local color = m_SelectGirl.m_color
+end
+
+-- 突破
+function GirlDlgColorUp()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+			
+-- 增加亲昵度
+function GirlDlgLoveItemUse()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+		
+-- 喜结连理
+function GirlDlgMarry()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+		
+-- 亲密互动
+function GirlDlgMakeLove()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+		
+-- 下一步
+function GirlDlgMakeNext()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+		
+-- 出师
+function GirlDlgSonGrowUp()
+	if m_SelectGirl == nil then
+		return
+	end
+end
+

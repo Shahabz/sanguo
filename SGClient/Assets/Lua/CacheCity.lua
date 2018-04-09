@@ -311,7 +311,9 @@ function City.BuildingDel( info )
 		landname = BuildingPrefab[kind].land;
 		unitObj = City.m_Buildings[kind];
 	end
-	GameObject.Destroy( unitObj.gameObject );
+	if unitObj ~= nil then
+		GameObject.Destroy( unitObj.gameObject );
+	end
 	
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
 		City.m_Buildings_res[kind][offset] = nil;	

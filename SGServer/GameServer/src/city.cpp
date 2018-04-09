@@ -884,7 +884,7 @@ void city_function_open( City *pCity, int offset )
 {
 	if ( pCity == NULL )
 		return;
-	if ( pCity->sflag & (1 << offset) )
+	if ( pCity->function & (1 << offset) )
 		return;
 	pCity->function |= (1 << offset);
 
