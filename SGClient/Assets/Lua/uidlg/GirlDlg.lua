@@ -186,6 +186,24 @@ function GirlDlgShowByKind( kind )
 	GirlDlgSelect( kind )
 end
 
+-- 整体刷新
+function GirlDlgShowAllot()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	local kind = m_SelectGirl.m_kind
+	GirlDlgHeadLayerCreate()
+	GirlDlgSelect( kind )
+end
+
+-- 刷新选择的女将
+function GirlDlgUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	GirlDlgCreateInfo( m_SelectGirl )
+end
+
 -- 创建女将列表
 function GirlDlgHeadLayerCreate()
 	GirlDlgHeadLayerClear()
@@ -318,6 +336,9 @@ function GirlDlgCreateInfo( pGirl )
 		-- 已经获得并且委派了
 		SetFalse( m_uiSingleLayer )
 		SetTrue( m_uiDoubleLayer )
+		GirlDlgDoubleLayerSetHero( m_uiHero, config, actorGirl.m_herokind );
+		GirlDlgDoubleLayerSetGirl( m_uiGirl, kind, color );
+		
 	else
 		-- 未获得 或者 未指派
 		SetTrue( m_uiSingleLayer )
@@ -367,7 +388,7 @@ function GirlDlgCreateInfo( pGirl )
 			-- 强攻
 			uiAttackIncrease = m_uiPrivateAttrList.transform:GetChild(1)
 			if config.attack_increase > 0 then
-				SetText(uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.attack_increase)
+				SetText(uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.private_attack_increase)
 				SetTrue(uiAttackIncrease)
 			else
 				SetFalse(uiAttackIncrease)
@@ -375,7 +396,7 @@ function GirlDlgCreateInfo( pGirl )
 			-- 强防
 			uiDefenseIncrease = m_uiPrivateAttrList.transform:GetChild(2)
 			if config.defense_increase > 0 then
-				SetText(uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.defense_increase)
+				SetText(uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.private_defense_increase)
 				SetTrue(uiDefenseIncrease)
 			else
 				SetFalse(uiDefenseIncrease)
@@ -383,7 +404,7 @@ function GirlDlgCreateInfo( pGirl )
 			-- 攻击资质
 			uiAttackGrowth = m_uiPrivateAttrList.transform:GetChild(3)
 			if config.attack_growth > 0 then
-				SetText(uiAttackGrowth.transform:Find("Text"), F(3336,config.attack_growth))
+				SetText(uiAttackGrowth.transform:Find("Text"), F(3336,config.private_attack_growth))
 				SetTrue(uiAttackGrowth)
 			else
 				SetFalse(uiAttackGrowth)
@@ -391,7 +412,7 @@ function GirlDlgCreateInfo( pGirl )
 			-- 防御资质
 			uiDefenseGrowth = m_uiPrivateAttrList.transform:GetChild(4)
 			if config.defense_growth > 0 then
-				SetText(uiDefenseGrowth.transform:Find("Text"), F(3337,config.defense_growth))
+				SetText(uiDefenseGrowth.transform:Find("Text"), F(3337,config.private_defense_growth))
 				SetTrue(uiDefenseGrowth)
 			else
 				SetFalse(uiDefenseGrowth)
@@ -408,13 +429,89 @@ function GirlDlgCreateInfo( pGirl )
 		if actorGirl and actorGirl.m_color > 0 then
 			SetTrue( m_uiAllotBtn )
 			maxSoul = config.soul
+			SetText(m_uiSingleLayer.transform:Find("Warning"), T(3346));
 		-- 未获得
 		else
 			SetFalse( m_uiAllotBtn )
 			maxSoul = girlconfig( kind, 0 ).soul
+			SetText(m_uiSingleLayer.transform:Find("Warning"), F(3347,maxSoul,GirlName(kind)));
 		end
 		SetProgress( uiProgress, nowSoul/maxSoul )
 		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )
+		SetText(m_uiSingleLayer.transform:Find("Desc"), GirlDesc( kind ));
+	end
+end
+
+-- 拼属性
+local function MakeAttrText( uiAttrText, config )
+	local msg = "";
+	if config  then
+		if config.private_herokind > 0 then
+			if config.attack_increase > 0 then
+				msg = msg.."<color=#FFDE00FF>"..T(165).."+"..(config.attack_increase+config.private_attack_increase).."</color>\n"
+			end
+			if config.defense_increase > 0 then
+				msg = msg.."<color=#25C9FFFF>"..T(166).."+"..(config.defense_increase+config.private_defense_increase).."</color>\n"
+			end
+			if config.attack_growth > 0 then
+				msg = msg.."<color=#FFDE00FF>"..F(3336,(config.attack_growth+config.private_attack_growth)).."</color>\n"
+			end
+			if config.defense_growth > 0 then
+				msg = msg.."<color=#25C9FFFF>"..F(3337,(config.defense_growth+config.defense_growth)).."</color>\n"
+			end
+		else
+			if config.attack_increase > 0 then
+				msg = msg.."<color=#FFDE00FF>"..T(165).."+"..config.attack_increase.."</color>\n"
+			end
+			if config.defense_increase > 0 then
+				msg = msg.."<color=#25C9FFFF>"..T(166).."+"..config.defense_increase.."</color>\n"
+			end
+			if config.attack_growth > 0 then
+				msg = msg.."<color=#FFDE00FF>"..F(3336,config.attack_growth).."</color>\n"
+			end
+			if config.defense_growth > 0 then
+				msg = msg.."<color=#25C9FFFF>"..F(3337,config.defense_growth).."</color>\n"
+			end
+		end
+	end
+	SetText( uiAttrText, msg )
+end
+
+-- 设置男将信息
+function GirlDlgDoubleLayerSetHero( uiHeroObj, config, herokind )
+	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiName = objs[1];
+	local uiShape = objs[2];
+	local uiAttrText = objs[3];
+	local pHero = GetHero():GetPtr( herokind )
+	if pHero == nil then
+		return
+	end
+	SetImage( uiColor, ItemColorSprite( pHero.m_color ) )
+	SetText( uiName, HeroName( herokind ) )
+	SetImage( uiShape, HeroFaceSprite( herokind ) )
+	MakeAttrText( uiAttrText, config )
+	
+end
+
+-- 设置女将信息
+function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
+	local objs = uiGirlObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiColor = objs[0];
+	local uiName = objs[1];
+	local uiShape = objs[2];
+	local uiAttrName = objs[3];
+	local uiAttrText = objs[4];
+	SetImage( uiColor, ItemColorSprite( color ) )
+	SetText( uiName, GirlName( kind ) )
+	SetImage( uiShape, GirlFaceSprite( kind ) )
+	if color >= ITEM_COLOR_LEVEL_PURPLE then
+		SetText( uiAttrName, T(3350) ) -- 突破已满
+		SetText( uiAttrText, "" )
+	else
+		SetText( uiAttrName, T(3349) ) -- 下次突破加成属性
+		MakeAttrText( uiAttrText, girlconfig( kind, color+1 ) )
 	end
 end
 
@@ -423,8 +520,9 @@ function GirlDlgAllot()
 	if m_SelectGirl == nil then
 		return
 	end
-	--local kind = m_SelectGirl.m_kind
-	--local color = m_SelectGirl.m_color
+	local kind = m_SelectGirl.m_kind
+	local color = m_SelectGirl.m_color
+	GirlSelectHeroDlgShow(kind,color);
 end
 
 -- 突破
@@ -468,4 +566,3 @@ function GirlDlgSonGrowUp()
 		return
 	end
 end
-

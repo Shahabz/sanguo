@@ -2888,8 +2888,11 @@ function struct_NetS_Girl_recv( buffer )
 	recvValue.m_color = buffer:ReadSByte();
 	recvValue.m_soul = buffer:ReadShort();
 	recvValue.m_love_level = buffer:ReadSByte();
-	recvValue.m_love_exp = buffer:ReadShort();
-	recvValue.m_love_num = buffer:ReadSByte();
+	recvValue.m_love_exp = buffer:ReadInt();
+	recvValue.m_love_today = buffer:ReadInt();
+	recvValue.m_love_today_max = buffer:ReadInt();
+	recvValue.m_sflag = buffer:ReadSByte();
+	recvValue.m_herokind = buffer:ReadShort();
 	return recvValue;
 end
 

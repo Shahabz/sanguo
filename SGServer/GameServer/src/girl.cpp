@@ -64,9 +64,12 @@ void girl_makestruct( City *pCity, Girl *pGirl, SLK_NetS_Girl *pValue )
 	pValue->m_kind = pGirl->kind;
 	pValue->m_color = pGirl->color;
 	pValue->m_soul = pGirl->soul;
+	pValue->m_sflag = pGirl->sflag;
+	pValue->m_herokind = pGirl->herokind;
 	pValue->m_love_exp = pGirl->love_exp;
 	pValue->m_love_level = pGirl->love_level;
-	pValue->m_love_num = pGirl->love_num;
+	pValue->m_love_today = pGirl->love_today;
+	pValue->m_love_today_max = pGirl->love_today;
 }
 
 // 玩家获得女将
@@ -104,10 +107,11 @@ int girl_getgirl( City *pCity, int kind, char path )
 	pCity->girl[kind].actorid = pCity->actorid;
 	pCity->girl[kind].kind = kind;
 	pCity->girl[kind].color = (char)g_girlinfo[kind].config[0].init_color;
+	pCity->girl[kind].sflag = 0;
+	pCity->girl[kind].herokind = 0;
 	pCity->girl[kind].love_level = 1;
 	pCity->girl[kind].love_exp = 0;
-	pCity->girl[kind].love_num = 0;
-	pCity->girl[kind].love_fday = 0;
+	pCity->girl[kind].love_today = 0;
 
 	SLK_NetS_GirlGet pValue = { 0 };
 	pValue.m_kind = kind;
@@ -179,6 +183,72 @@ int girl_list( int actor_index )
 		pValue.m_count += 1;
 	}
 	netsend_girllist_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+//  每天零点重置
+void girl_update()
+{
+	for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+	{
+		if ( g_city[city_index].actorid <= 0 )
+			continue;
+		for ( char kind = 1; kind < ACTOR_GIRL_MAX; kind++ )
+		{
+			if ( g_city[city_index].girl[kind].kind > 0 )
+			{
+				g_city[city_index].girl[kind].sflag &= ~(1 << GIRL_SFLAG_MAKELOVE);
+				g_city[city_index].girl[kind].love_today = 0;
+			}
+		}
+	}
+}
+
+// 委派男将
+int girl_allot( int actor_index, short herokind, short girlkind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( girlkind <= 0 || girlkind >= g_girlinfo_maxnum || girlkind >= ACTOR_GIRL_MAX )
+		return -1;
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->girlkind > 0 )
+		return -1;
+	if ( pCity->girl[girlkind].herokind > 0 )
+		return -1;
+	pHero->girlkind = (char)girlkind;
+	pCity->girl[girlkind].herokind = herokind;
+	hero_attr_calc( pCity, pHero );
+	city_battlepower_hero_calc( pCity );
+	hero_sendinfo( pCity->actor_index, pHero );
+	girl_info( pCity, &pCity->girl[girlkind] );
+	return 0;
+}
+
+// 解除委派
+int girl_unallot( int actor_index, short herokind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Hero *pHero = hero_getptr( actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	short girlkind = pHero->girlkind;
+	if ( girlkind <= 0 || girlkind >= g_girlinfo_maxnum || girlkind >= ACTOR_GIRL_MAX )
+	{
+		pHero->girlkind = 0;
+		return -1;
+	}
+	pHero->girlkind = 0;
+	pCity->girl[girlkind].herokind = 0;
+	hero_attr_calc( pCity, pHero );
+	city_battlepower_hero_calc( pCity );
+	hero_sendinfo( pCity->actor_index, pHero );
+	girl_info( pCity, &pCity->girl[girlkind] );
 	return 0;
 }
 

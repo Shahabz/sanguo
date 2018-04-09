@@ -80,10 +80,6 @@ function SLK_Hero:Set( recvValue )
 	self.m_troops			=	recvValue.m_troops;-- 兵力
 	self.m_attack_increase 	= 	recvValue.m_attack_increase;-- 强攻
 	self.m_defense_increase	=	recvValue.m_defense_increase;-- 强防
-	
-	if self.m_girlkind > 0 then
-		GetGirl():SetHero( self.m_girlkind, self.m_kind )
-	end
 end
 
 -- 国家名将部分信息结构

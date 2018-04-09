@@ -73,6 +73,7 @@
 #include "auto_data_activity_08.h"
 #include "auto_data_activity_10.h"
 #include "auto_data_girl.h"
+#include "auto_data_girl_love.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_actor_girl.h"

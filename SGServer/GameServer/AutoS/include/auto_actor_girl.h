@@ -6,12 +6,13 @@ struct _actor_girl {
 //--Automatically generated
 				int actorid;	//角色
 				char kind;	//种类
-				char love_level;	//亲密等级
-				char love_num;	//今天亲密次数
 				char color;	//颜色
+				char sflag;	//标记
+				char love_level;	//亲密等级
 				short soul;	//碎片
-				short love_exp;	//亲密度
-				int love_fday;	//亲密时间
+				int love_exp;	//亲密度
+				int love_today;	//今天获取亲密度
+				short herokind;	//关联男将
 };
 typedef struct _actor_girl Girl;
 

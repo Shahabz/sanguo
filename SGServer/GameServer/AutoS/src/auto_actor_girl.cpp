@@ -17,7 +17,7 @@ int actor_girl_load_auto( int actorid, int city_index, LPCB_GETGIRL pCB_GetGirl,
 	int offset = 0;
 	Girl *pGirl;
 
-	sprintf( szSQL, "select `actorid`,`kind`,`love_level`,`love_num`,`color`,`soul`,`love_exp`,`love_fday` from %s where actorid='%d'", pTab, actorid );
+	sprintf( szSQL, "select `actorid`,`kind`,`color`,`sflag`,`love_level`,`soul`,`love_exp`,`love_today`,`herokind` from %s where actorid='%d'", pTab, actorid );
 	if( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myGame) );
@@ -36,12 +36,13 @@ int actor_girl_load_auto( int actorid, int city_index, LPCB_GETGIRL pCB_GetGirl,
 			continue;
 		pGirl->actorid = atoi(row[offset++]);
 		pGirl->kind = atoi(row[offset++]);
-		pGirl->love_level = atoi(row[offset++]);
-		pGirl->love_num = atoi(row[offset++]);
 		pGirl->color = atoi(row[offset++]);
+		pGirl->sflag = atoi(row[offset++]);
+		pGirl->love_level = atoi(row[offset++]);
 		pGirl->soul = atoi(row[offset++]);
 		pGirl->love_exp = atoi(row[offset++]);
-		pGirl->love_fday = atoi(row[offset++]);
+		pGirl->love_today = atoi(row[offset++]);
+		pGirl->herokind = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -54,7 +55,7 @@ int actor_girl_save_auto( int actorid, int offset, Girl *pGirl, const char *pTab
 		return -1;
 
 RE_GIRL_UPDATE:
-	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`kind`,`love_level`,`love_num`,`color`,`soul`,`love_exp`,`love_fday`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pGirl->actorid,pGirl->kind,pGirl->love_level,pGirl->love_num,pGirl->color,pGirl->soul,pGirl->love_exp,pGirl->love_fday);
+	sprintf( szSQL, "REPLACE INTO %s (`actorid`,`kind`,`color`,`sflag`,`love_level`,`soul`,`love_exp`,`love_today`,`herokind`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pGirl->actorid,pGirl->kind,pGirl->color,pGirl->sflag,pGirl->love_level,pGirl->soul,pGirl->love_exp,pGirl->love_today,pGirl->herokind);
 	if( fp )
 	{
 		fprintf( fp, "%s;\n", szSQL );
@@ -90,11 +91,11 @@ int actor_girl_batch_save_auto( int actorid, Girl *pGirl, int maxcount, const ch
 			continue;
 		if ( count == 0 )
 		{
-			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`kind`,`love_level`,`love_num`,`color`,`soul`,`love_exp`,`love_fday`) Values('%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pGirl[index].actorid,pGirl[index].kind,pGirl[index].love_level,pGirl[index].love_num,pGirl[index].color,pGirl[index].soul,pGirl[index].love_exp,pGirl[index].love_fday);
+			sprintf( g_batchsql, "REPLACE INTO %s (`actorid`,`kind`,`color`,`sflag`,`love_level`,`soul`,`love_exp`,`love_today`,`herokind`) Values('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pTab,pGirl[index].actorid,pGirl[index].kind,pGirl[index].color,pGirl[index].sflag,pGirl[index].love_level,pGirl[index].soul,pGirl[index].love_exp,pGirl[index].love_today,pGirl[index].herokind);
 		}
 		else
 		{
-			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d')",pGirl[index].actorid,pGirl[index].kind,pGirl[index].love_level,pGirl[index].love_num,pGirl[index].color,pGirl[index].soul,pGirl[index].love_exp,pGirl[index].love_fday);
+			sprintf( szSQL, ",('%d','%d','%d','%d','%d','%d','%d','%d','%d')",pGirl[index].actorid,pGirl[index].kind,pGirl[index].color,pGirl[index].sflag,pGirl[index].love_level,pGirl[index].soul,pGirl[index].love_exp,pGirl[index].love_today,pGirl[index].herokind);
 			strcat( g_batchsql, szSQL );
 		}
 		count += 1;

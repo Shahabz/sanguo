@@ -9,11 +9,11 @@ local m_uiStarContent = nil;
 
 local m_upHeroCache = {};
 local m_CacheHeroCache = {};
-local isFirst = true;
-local preObj = nil;
-
-local pGirl = nil;
-local girlConifg = nil;
+local m_isFirst = true;
+local m_selectObj = nil;
+local m_girlConifg = nil;
+local m_selectHerokind = 0;
+local m_selectGirlKind = 0;
 
 -- 打开界面
 function GirlSelectHeroDlgOpen()
@@ -29,6 +29,8 @@ function GirlSelectHeroDlgClose()
 	--DialogFrameModClose( m_DialogFrameMod );
 	--m_DialogFrameMod = nil;
 	eye.uiManager:Close( "GirlSelectHeroDlg" );
+	m_selectHerokind = 0;
+	m_selectGirlKind = 0;
 end
 
 -- 删除界面
@@ -46,7 +48,10 @@ function GirlSelectHeroDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             GirlSelectHeroDlgClose();
+			
+		-- 确定委派
 		elseif nControlID == 1 then
+			GirlSelectHeroDlgAllot()
 			
 		-- 选择武将
 		elseif nControlID > 1000 and nControlID < 2000 then
@@ -82,7 +87,7 @@ end
 
 -- 界面隐藏时调用
 function GirlSelectHeroDlgOnDisable( gameObject )
-	isFirst = true;
+	m_isFirst = true;
 end
 
 -- 界面删除时调用
@@ -99,11 +104,10 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function GirlSelectHeroDlgShow(kind)
+function GirlSelectHeroDlgShow(kind,color)
 	GirlSelectHeroDlgOpen()
-	pGirl = GetGirl():GetPtr(kind);
-	local color = GetGirl():GetPtr(kind).m_color;
-	girlConifg = girlconfig(kind,color);
+	m_selectGirlKind = kind;
+	m_girlConifg = girlconfig(kind,color);
 	GirlPairHead();
 end
 
@@ -156,10 +160,10 @@ function GirlPairHead()
 		SetTrue( uiFlag )
 		SetTrue( uiName )
 		
-		if isFirst then
+		if m_isFirst then
 			SetTrue( uiSelect )
-			isFirst = false;
-			preObj = uiHeroObj;
+			m_isFirst = false;
+			m_selectObj = uiHeroObj;
 			ShowStar(pHero.m_kind);
 		else
 			SetFalse( uiSelect )
@@ -202,23 +206,24 @@ function GirlSelectHeroDlgSelectHero( kind )
 	if uiHeroObj == nil then
 		return
 	end
+	m_selectHerokind = kind;
 	
-	local preObjs = preObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local preObjs = m_selectObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local preUiSelect = preObjs[4];
 	SetFalse(preUiSelect);
 
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiSelect = objs[4];
 	SetTrue(uiSelect);
-	preObj = uiHeroObj;
+	m_selectObj = uiHeroObj;
 	ShowStar(kind);
 end
 
 function ShowStar(kind)
-	if girlConifg.m_herokind == kind then
-		InitStar(girlConifg.private_love_star);
+	if m_girlConifg.m_herokind == kind then
+		InitStar(m_girlConifg.private_love_star);
 	else
-		InitStar(girlConifg.love_star);
+		InitStar(m_girlConifg.love_star);
 	end
 end
 
@@ -235,4 +240,13 @@ function HideStar()
 		local objs = m_uiStarContent.transform:GetChild(i).gameObject
 		SetFalse( objs );
     end
+end
+
+-- 确定委派
+function GirlSelectHeroDlgAllot()
+	if m_selectHerokind <= 0 or m_selectGirlKind <= 0 then
+		return
+	end
+	system_askinfo( ASKINFO_GIRL, "", 1, m_selectHerokind, m_selectGirlKind )
+	GirlSelectHeroDlgClose()
 end

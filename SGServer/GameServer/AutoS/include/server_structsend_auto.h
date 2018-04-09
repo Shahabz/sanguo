@@ -2156,8 +2156,11 @@ struct _slk_NetS_Girl {
 	char m_color;	//女将
 	short m_soul;	//女将
 	char m_love_level;	//女将
-	short m_love_exp;	//女将
-	char m_love_num;	//女将
+	int m_love_exp;	//女将
+	int m_love_today;	//女将
+	int m_love_today_max;	//女将
+	char m_sflag;	//女将
+	short m_herokind;	//女将
 };
 typedef struct _slk_NetS_Girl SLK_NetS_Girl;	//女将信息
 

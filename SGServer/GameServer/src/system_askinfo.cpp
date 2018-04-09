@@ -45,6 +45,7 @@
 #include "wishing.h"
 #include "actor_friend.h"
 #include "activity_04.h"
+#include "girl.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -1127,6 +1128,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_CDKEY:
 		// ¶Ò»»Âë
 		user_award( actor_index, pstr );
+		break;
+	case ASKINFO_GIRL:
+		if ( pvalue[0] == 1 )
+		{ // Î¯ÅÉ
+			girl_allot( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // ½â³ýÎ¯ÅÉ
+			girl_unallot( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

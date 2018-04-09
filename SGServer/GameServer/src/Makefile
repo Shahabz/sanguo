@@ -16,6 +16,7 @@ SRC = \
 ../AutoS/src/auto_data_upgrade.cpp \
 ../AutoS/src/auto_map_town.cpp \
 ../AutoS/src/auto_data_official_forging.cpp \
+../AutoS/src/auto_data_girl_love.cpp \
 ../AutoS/src/auto_data_nation_equip.cpp \
 ../AutoS/src/auto_data_trainqueue.cpp \
 ../AutoS/src/auto_actor_item.cpp \
@@ -217,6 +218,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_map_town.o: ../AutoS/src/auto_map_town.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_forging.o: ../AutoS/src/auto_data_official_forging.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_girl_love.o: ../AutoS/src/auto_data_girl_love.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_equip.o: ../AutoS/src/auto_data_nation_equip.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

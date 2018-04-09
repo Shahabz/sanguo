@@ -9,10 +9,11 @@ end
 function SLK_Girl:empty()
 	self.m_kind  		= 	0;-- 种类
 	self.m_color		=	0;-- 颜色
+	self.m_sflag		=	0;-- 标记
 	self.m_soul			=	0;-- 当前碎片
 	self.m_love_exp		=	0;-- 亲密度
 	self.m_love_level	=	0;-- 亲密等级
-	self.m_love_num		=	0;-- 今天是否亲密过
+	self.m_love_today	=	0;-- 今天是否亲密过
 	self.m_herokind		=	0;-- 关联男武将
 	return self;
 end
@@ -20,11 +21,13 @@ end
 function SLK_Girl:Set( recvValue )
 	self.m_kind  		= 	recvValue.m_kind;-- 种类
 	self.m_color		=	recvValue.m_color;-- 颜色
+	self.m_sflag		=	recvValue.m_sflag;-- 标记
 	self.m_soul			=	recvValue.m_soul;-- 当前碎片
-	self.m_love_exp		=	recvValue.m_love_exp;-- 亲密度
+	self.m_love_exp		=	recvValue.m_love_exp;-- 当前亲密度
 	self.m_love_level	=	recvValue.m_love_level;-- 亲密等级
-	self.m_love_num		=	recvValue.m_love_num;-- 今天是否亲密过
-	self.m_herokind		=	0;-- 关联男武将
+	self.m_love_today	=	recvValue.m_love_today;-- 今天获取亲密度
+	self.m_love_today_max	=	recvValue.m_love_today_max;-- 今天亲密度上限
+	self.m_herokind		=	recvValue.m_herokind;-- 关联男武将
 end
 
 -- 女将部分客户端缓存
@@ -68,14 +71,6 @@ function Girl:GetPtr( nKind )
 		return nil;
 	end
 	return self.m_Girl[nKind]
-end
-
--- 是否存在这个女将
-function Girl:SetHero( nKind, nHeroKind )
-	if nKind <= 0 or nKind >= ACTOR_GIRL_MAX then
-		return;
-	end
-	self.m_Girl[nKind].m_herokind =  nHeroKind;
 end
 
 -- 全局

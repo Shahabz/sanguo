@@ -373,6 +373,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 女将亲昵度数据初始化
+	if ( girllove_init_auto() < 0 )
+	{
+		printf_msg( "girllove_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 国器初始化
 	if ( nationequipinfo_init_auto() < 0 )
 	{
@@ -1300,6 +1309,9 @@ int process_oclock_process( int hour )
 		{
 			nation_rank_update();
 		}
+
+		// 女将
+		girl_update();
 	}
 	else if ( hour == 1 )
 	{
@@ -1669,6 +1681,7 @@ int process_dbreload()
 	worldbossinfo_reload_auto();
 	worldquestinfo_reload_auto();
 	girlinfo_reload_auto();
+	girllove_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

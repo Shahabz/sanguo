@@ -2164,7 +2164,7 @@ function proc_activity04list_C( recvValue )
 	Activity4ModRecv( recvValue )
 end
 
--- m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,
+-- m_kind=0,m_color=0,m_soul=0,m_sflag,m_love_level=0,m_love_exp=0,m_love_today=0,m_herokind=0
 function proc_girl_C( recvValue )
 	-- process.
 	local pGirl = GetGirl().m_Girl[recvValue.m_kind];
@@ -2173,9 +2173,10 @@ function proc_girl_C( recvValue )
 	end
 	pGirl:Set( recvValue );
 	GetGirl():SetGirl( recvValue.m_kind, pGirl );
+	GirlDlgUpdate()
 end
 
--- m_count=0,m_list={m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,[m_count]},
+-- m_count=0,m_list={m_kind=0,m_color=0,m_soul=0,m_sflag,m_love_level=0,m_love_exp=0,love_today=0,m_herokind=0,[m_count]},
 function proc_girllist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
@@ -2185,7 +2186,7 @@ function proc_girllist_C( recvValue )
 	end
 end
 
--- m_kind=0,m_path=0,m_soulnum=0,m_girl={m_kind=0,m_color=0,m_soul=0,m_love_level=0,m_love_exp=0,m_love_num=0,},
+-- m_kind=0,m_path=0,m_soulnum=0,m_girl={m_kind=0,m_color=0,m_soul=0,m_sflag,m_love_level=0,m_love_exp=0,love_today=0,m_herokind=0,},
 function proc_girlget_C( recvValue )
 	-- process.
 	local pGirl = SLK_Girl.new();

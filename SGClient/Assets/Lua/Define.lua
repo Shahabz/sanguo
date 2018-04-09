@@ -345,6 +345,11 @@ function GirlType( type )
 	return T(type+3330);
 end
 
+-- 女将描述
+function GirlDesc(kind)
+	return Localization.text_item(kind+3600);
+end
+
 -- 兵种名称
 function CorpsName( corps )
 	return T(134+corps);

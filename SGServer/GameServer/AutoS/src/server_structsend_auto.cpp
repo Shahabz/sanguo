@@ -3168,8 +3168,11 @@ int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue )
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_soul, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_level, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_num, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_today, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_today_max, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sflag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
 	return 0;
 }
 

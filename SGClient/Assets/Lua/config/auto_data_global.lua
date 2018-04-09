@@ -218,4 +218,6 @@ global.activity08_viplevel = 4 --活动成长计划VIP等级
 global.activity08_token = 1000 --活动成长计划开启钻石
 global.activity05_update_token = 10 --活动七星拜将刷新钻石
 global.activity05_update_sec = 21600 --活动七星拜将刷新次数倒计时
+global.fangshi_actorlevel = 113 --坊市玩家等级限制
+global.fangshi_citylevel = 19 --坊市官府等级限制
 global.newplayer_protect = 86400 --新手保护
