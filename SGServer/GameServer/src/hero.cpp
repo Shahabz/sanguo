@@ -24,6 +24,7 @@
 #include "nation_hero.h"
 #include "quest.h"
 #include "activity_04.h"
+#include "girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -65,6 +66,9 @@ extern int g_hero_colorup_maxnum;
 
 extern HeroVisit *g_hero_visit;
 extern int g_hero_visit_maxnum;
+
+extern GirlSon *g_girlson;
+extern int g_girlson_maxnum;
 
 extern int g_nation_heroinfo_maxnum;
 extern int g_nation_hero_maxcount;
@@ -1501,9 +1505,37 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
 	if ( !config )
 		return 0;
+
+	// 女将加成
+	int girl_attack_increase = 0;
+	int girl_defense_increase = 0;
+	int girl_attack_growth = 0;
+	int	girl_defense_growth = 0;
+	if ( pHero->girlkind > 0 && pHero->girlkind < ACTOR_GIRL_MAX )
+	{
+		GirlInfoConfig *girlconfig = girl_getconfig( pCity->girl[pHero->girlkind].kind, pCity->girl[pHero->girlkind].color );
+		if ( girlconfig )
+		{
+			if ( girlconfig->private_herokind == pHero->kind )
+			{
+				girl_attack_increase = girlconfig->attack_increase + girlconfig->private_attack_increase;
+				girl_defense_increase = girlconfig->defense_increase + girlconfig->private_defense_increase;
+				girl_attack_growth = girlconfig->attack_growth + girlconfig->private_attack_growth;
+				girl_defense_growth = girlconfig->defense_growth + girlconfig->private_defense_increase;
+			}
+			else
+			{
+				girl_attack_increase = girlconfig->attack_increase;
+				girl_defense_increase = girlconfig->defense_increase;
+				girl_attack_growth = girlconfig->attack_growth;
+				girl_defense_growth = girlconfig->defense_growth;
+			}
+		}
+	}
+
 	// 基础攻击
-	int base_attack = ATTACK( pHero->level, config->attack, (config->attack_base + pHero->attack_wash) );
-	int base_defense = DEFENSE( pHero->level, config->defense, (config->defense_base + pHero->defense_wash) );
+	int base_attack = ATTACK( pHero->level, config->attack, (config->attack_base + pHero->attack_wash + girl_attack_growth) );
+	int base_defense = DEFENSE( pHero->level, config->defense, (config->defense_base + pHero->defense_wash + girl_defense_growth) );
 	int base_troops = TROOPS( pHero->level, config->troops, (config->troops_base + pHero->troops_wash) );
 
 	// 科技附加
@@ -1632,11 +1664,31 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		god_defense = global.hero_god_defense;
 	}
 
+	// 子女加成
+	int son_attack = 0;
+	int son_defense = 0;
+	int son_attack_increase = 0;
+	int son_defense_increase = 0;
+	int sonnum = pHero->sonnum > 4 ? 4 : pHero->sonnum;
+	if ( pHero->kind < g_girlson_maxnum )
+	{
+		for ( int i = 0; i < sonnum; i++ )
+		{
+			if ( i < g_girlson[pHero->kind].maxnum )
+			{
+				son_attack += g_girlson[pHero->kind].config[i].attack;
+				son_defense += g_girlson[pHero->kind].config[i].defense;
+				son_attack_increase += g_girlson[pHero->kind].config[i].attack_increase;
+				son_defense_increase += g_girlson[pHero->kind].config[i].defense_increase;
+			}
+		}
+	}
+
 	// 综合计算
-	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack + buff_attack + god_attack;
-	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense + buff_defense + god_defense;
-	pHero->attack_increase = equip_attack_increase;
-	pHero->defense_increase = equip_defense_increase;
+	pHero->attack = base_attack + tech_attack + equip_attack + nequip_attack + place_attack + buff_attack + god_attack + son_attack;
+	pHero->defense = base_defense + tech_defense + equip_defense + nequip_defense + buff_defense + god_defense + son_defense;
+	pHero->attack_increase = equip_attack_increase + girl_attack_increase + son_attack_increase;
+	pHero->defense_increase = equip_defense_increase + girl_defense_increase + son_defense_increase;
 	pHero->assault = equip_assault;
 	pHero->defend = equip_defend;
 
@@ -1765,6 +1817,8 @@ void hero_makestruct( City *pCity, int offset, Hero *pHero, SLK_NetS_Hero *pValu
 	pValue->m_defense_increase = pHero->defense_increase;
 	pValue->m_god = pHero->god;
 	pValue->m_girlkind = pHero->girlkind;
+	pValue->m_sonnum = pHero->sonnum;
+	pValue->m_sontime = pHero->sontime;
 	pValue->m_offset = offset;
 }
 
@@ -1814,7 +1868,7 @@ int hero_list( int actor_index )
 				continue;
 			hero_makestruct( pCity, tmpi, &g_actors[actor_index].hero[tmpi], &pValue.m_list[pValue.m_count] );
 			pValue.m_count += 1;
-			if ( pValue.m_count >= 30 )
+			if ( pValue.m_count >= 24 )
 			{
 				netsend_herolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 				pValue.m_count = 0;

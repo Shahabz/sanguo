@@ -30,6 +30,8 @@ function SLK_Hero:empty()
 	self.m_state		=	0;-- 当前
 	self.m_god			=	0;-- 神突
 	self.m_girlkind		=	0;-- 关联女将
+	self.m_sonnum 		= 	0;-- 子女数量
+	self.m_sontime		= 	0;-- 子女成长结束时间
 	
 	self.m_attack_base	=	0;--基础攻击资质
 	self.m_attack_wash	=	0;--洗髓攻击资质
@@ -67,6 +69,8 @@ function SLK_Hero:Set( recvValue )
 	self.m_state		=	recvValue.m_state;-- 当前
 	self.m_god			=	recvValue.m_god;-- 神突
 	self.m_girlkind		=	recvValue.m_girlkind;-- 关联女将
+	self.m_sonnum 		= 	recvValue.m_sonnum;-- 子女数量
+	self.m_sontime		= 	recvValue.m_sontime;-- 子女成长结束时间
 	
 	self.m_attack_base	=	recvValue.m_attack_base;--基础攻击资质
 	self.m_attack_wash	=	recvValue.m_attack_wash;--洗髓攻击资质

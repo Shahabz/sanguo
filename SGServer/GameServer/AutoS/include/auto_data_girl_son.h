@@ -7,7 +7,7 @@ struct _girlson_config {
 				short herokind;	//
 				short index;	//
 				short born_odds;	//
-				short grow_sec;	//
+				int grow_sec;	//
 				short girlkind;	//
 				short attack;	//
 				short defense;	//

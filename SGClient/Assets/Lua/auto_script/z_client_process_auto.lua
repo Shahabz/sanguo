@@ -2195,7 +2195,7 @@ function proc_girlget_C( recvValue )
 	GirlGetDlgShow( recvValue )
 end
 
--- m_kind=0,m_love_level=0,m_love_exp=0,m_love_today=0,m_love_today_max=0,m_add=0,m_path=0,
+-- m_kind=0,m_love_level=0,m_love_exp=0,m_love_today=0,m_add=0,m_path=0,
 function proc_girllove_C( recvValue )
 	-- process.
 	local kind = recvValue.m_kind
@@ -2203,7 +2203,6 @@ function proc_girllove_C( recvValue )
 		GetGirl().m_Girl[kind].m_love_exp			=	recvValue.m_love_exp;-- 当前亲密度
 		GetGirl().m_Girl[kind].m_love_level			=	recvValue.m_love_level;-- 亲密等级
 		GetGirl().m_Girl[kind].m_love_today			=	recvValue.m_love_today;-- 今天获取亲密度
-		GetGirl().m_Girl[kind].m_love_today_max		=	recvValue.m_love_today_max;-- 今天亲密度上限
 		GirlDlgUpdate( recvValue.m_kind )
 		pop( F(3363, GirlName(kind), HeroName(GetGirl().m_Girl[kind].m_herokind), recvValue.m_add) )
 	end

@@ -644,6 +644,8 @@ int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 	LKSET_WORD_SEND( (*pptr), &pValue->m_offset, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_god, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_girlkind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sonnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_sontime, (*psize) );
 	return 0;
 }
 
@@ -3170,7 +3172,6 @@ int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue )
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_today, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_love_today_max, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sflag, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
 	return 0;
@@ -3207,7 +3208,6 @@ int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValu
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_level, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_love_today, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_love_today_max, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_add, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	return 0;

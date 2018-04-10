@@ -46,6 +46,9 @@ extern int g_girlinfo_maxnum;
 extern GirlLove *g_girllove;
 extern int g_girllove_maxnum;
 
+extern GirlSon *g_girlson;
+extern int g_girlson_maxnum;
+
 Girl *girl_getptr( int city_index, int kind )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
@@ -81,11 +84,6 @@ void girl_makestruct( City *pCity, Girl *pGirl, SLK_NetS_Girl *pValue )
 	pValue->m_love_exp = pGirl->love_exp;
 	pValue->m_love_level = pGirl->love_level;
 	pValue->m_love_today = pGirl->love_today;
-	if ( pGirl->love_level >= 0 && pGirl->love_level < g_girllove_maxnum)
-	{
-		float speed = girl_loveexp_speed( pGirl->herokind, pGirl->kind, pGirl->color );
-		pValue->m_love_today_max = (short)ceil( g_girllove[pGirl->love_level].today_maxexp*speed );
-	}
 }
 
 // 玩家获得女将
@@ -238,6 +236,7 @@ int girl_allot( int actor_index, short herokind, short girlkind )
 	/*if ( pHero->girlkind > 0 && pGirl->herokind > 0 )
 		return -1;*/
 	pHero->girlkind = (char)girlkind;
+	pHero->sontime = 0;
 	pGirl->herokind = herokind;
 	pGirl->love_level = 1;
 	pGirl->love_exp = 0;
@@ -263,6 +262,7 @@ int girl_unallot( int actor_index, short kind )
 	if ( !pHero )
 		return -1;
 	pHero->girlkind = 0;
+	pHero->sontime = 0;
 	pGirl->herokind = 0;
 	hero_attr_calc( pCity, pHero );
 	city_battlepower_hero_calc( pCity );
@@ -381,13 +381,27 @@ int girl_makelove( int actor_index, short kind )
 	GirlLove *loveconfig = girl_love_getconfig( pGirl->love_level );
 	if ( !loveconfig )
 		return -1;
+	Hero *pHero = hero_getptr( actor_index, pGirl->herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->sontime > 0 )
+		return -1;
 
 	// 添加亲密度
 	girl_addloveexp( pCity, pGirl, loveconfig->makelove_exp, PATH_GIRLMAKELOVE );
 
-	if ( loveconfig->soncount > 0 )
+	// 生孩子
+	if ( loveconfig->soncount > 0 && pHero->sonnum < loveconfig->soncount )
 	{
-		// 1-(当前子女各个数*0.23)
+		if ( pHero->kind < g_girlson_maxnum && pHero->sonnum < 5 )
+		{
+			int odds = g_girlson[pHero->kind].config[pHero->sonnum].born_odds;
+			if ( rand()%100 < odds )
+			{
+				pHero->sontime = (int)time( NULL ) + g_girlson[pHero->kind].config[pHero->sonnum].grow_sec;
+				hero_sendinfo( pCity->actor_index, pHero );
+			}
+		}
 	}
 
 	pGirl->sflag |= (1 << GIRL_SFLAG_MAKELOVE);
@@ -519,8 +533,6 @@ int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path )
 		pValue.m_love_level = pGirl->love_level;
 		pValue.m_love_exp = pGirl->love_exp;
 		pValue.m_love_today = pGirl->love_today;
-		float speed = girl_loveexp_speed( pGirl->herokind, pGirl->kind, pGirl->color );
-		pValue.m_love_today_max = (short)ceil( g_girllove[pGirl->love_level].today_maxexp*speed );
 		pValue.m_add = exp;
 		pValue.m_path = path;
 		netsend_girllove_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );

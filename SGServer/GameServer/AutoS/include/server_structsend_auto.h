@@ -440,12 +440,14 @@ struct _slk_NetS_Hero {
 	short m_offset;	//
 	char m_god;	//
 	char m_girlkind;	//
+	char m_sonnum;	//
+	int m_sontime;	//
 };
 typedef struct _slk_NetS_Hero SLK_NetS_Hero;	//英雄信息
 
 struct _slk_NetS_HeroList {
 	short m_count;	//英雄发送数量
-	SLK_NetS_Hero m_list[32];	//英雄列表
+	SLK_NetS_Hero m_list[30];	//英雄列表
 	char m_type;	//0上阵英雄1背包英雄
 };
 typedef struct _slk_NetS_HeroList SLK_NetS_HeroList;	//英雄列表
@@ -2158,7 +2160,6 @@ struct _slk_NetS_Girl {
 	char m_love_level;	//女将
 	int m_love_exp;	//女将
 	int m_love_today;	//女将
-	int m_love_today_max;	//女将
 	char m_sflag;	//女将
 	short m_herokind;	//女将
 };
@@ -2183,7 +2184,6 @@ struct _slk_NetS_GirlLove {
 	char m_love_level;	//女将亲密度
 	short m_love_exp;	//女将亲密度
 	short m_love_today;	//女将亲密度
-	short m_love_today_max;	//女将亲密度
 	short m_add;	//女将亲密度
 	short m_path;	//女将亲密度
 };

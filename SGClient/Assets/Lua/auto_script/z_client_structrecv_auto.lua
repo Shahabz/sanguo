@@ -560,6 +560,8 @@ function struct_NetS_Hero_recv( buffer )
 	recvValue.m_offset = buffer:ReadShort();
 	recvValue.m_god = buffer:ReadSByte();
 	recvValue.m_girlkind = buffer:ReadSByte();
+	recvValue.m_sonnum = buffer:ReadSByte();
+	recvValue.m_sontime = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -2890,7 +2892,6 @@ function struct_NetS_Girl_recv( buffer )
 	recvValue.m_love_level = buffer:ReadSByte();
 	recvValue.m_love_exp = buffer:ReadInt();
 	recvValue.m_love_today = buffer:ReadInt();
-	recvValue.m_love_today_max = buffer:ReadInt();
 	recvValue.m_sflag = buffer:ReadSByte();
 	recvValue.m_herokind = buffer:ReadShort();
 	return recvValue;
@@ -2923,7 +2924,6 @@ function struct_NetS_GirlLove_recv( buffer )
 	recvValue.m_love_level = buffer:ReadSByte();
 	recvValue.m_love_exp = buffer:ReadShort();
 	recvValue.m_love_today = buffer:ReadShort();
-	recvValue.m_love_today_max = buffer:ReadShort();
 	recvValue.m_add = buffer:ReadShort();
 	recvValue.m_path = buffer:ReadShort();
 	return recvValue;

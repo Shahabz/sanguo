@@ -28,7 +28,6 @@ function SLK_Girl:Set( recvValue )
 	self.m_love_exp		=	recvValue.m_love_exp;-- 当前亲密度
 	self.m_love_level	=	recvValue.m_love_level;-- 亲密等级
 	self.m_love_today	=	recvValue.m_love_today;-- 今天获取亲密度
-	self.m_love_today_max	=	recvValue.m_love_today_max;-- 今天亲密度上限
 	self.m_herokind		=	recvValue.m_herokind;-- 关联男武将
 end
 
