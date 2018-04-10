@@ -2173,7 +2173,7 @@ function proc_girl_C( recvValue )
 	end
 	pGirl:Set( recvValue );
 	GetGirl():SetGirl( recvValue.m_kind, pGirl );
-	GirlDlgUpdate()
+	GirlDlgUpdate( recvValue.m_kind )
 end
 
 -- m_count=0,m_list={m_kind=0,m_color=0,m_soul=0,m_sflag,m_love_level=0,m_love_exp=0,love_today=0,m_herokind=0,[m_count]},

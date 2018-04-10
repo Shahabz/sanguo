@@ -37,9 +37,14 @@ extern int g_city_maxindex;
 extern City *g_city;
 extern int g_city_maxcount;
 
+extern ItemKind *g_itemkind;
+extern int g_itemkind_maxnum;
+
 extern GirlInfo *g_girlinfo;
 extern int g_girlinfo_maxnum;
-i64 g_maxgirlid;
+
+extern GirlLove *g_girllove;
+extern int g_girllove_maxnum;
 
 Girl *girl_getptr( int city_index, int kind )
 {
@@ -57,6 +62,13 @@ GirlInfoConfig *girl_getconfig( int kind, int color )
 	if ( color < 0 || color >= g_girlinfo[kind].maxnum )
 		return NULL;
 	return &g_girlinfo[kind].config[color];
+}
+
+GirlLove *girl_love_getconfig( int level )
+{
+	if ( level <= 0 || level >= g_girllove_maxnum )
+		return NULL;
+	return &g_girllove[level];
 }
 
 void girl_makestruct( City *pCity, Girl *pGirl, SLK_NetS_Girl *pValue )
@@ -144,7 +156,6 @@ int girl_getsoul( City *pCity, int kind, int soul, char path )
 	sprintf( v2, "%d", soul );
 	actor_notify_pop_v( pCity->actor_index, 3339, v1, v2 );
 
-
 	wlog( 0, LOGOP_GIRLSOUL, path, kind, soul, pCity->girl[kind].soul, pCity->actorid, city_mainlevel( pCity->index ) );
 	if ( pCity->girl[kind].color == 0 && pCity->girl[kind].soul >= g_girlinfo[kind].config[0].soul )
 	{ // 自动合成
@@ -215,41 +226,188 @@ int girl_allot( int actor_index, short herokind, short girlkind )
 	Hero *pHero = hero_getptr( actor_index, herokind );
 	if ( !pHero )
 		return -1;
-	if ( pHero->girlkind > 0 )
+	Girl *pGirl = girl_getptr( pCity->index, girlkind );
+	if ( !pGirl )
 		return -1;
-	if ( pCity->girl[girlkind].herokind > 0 )
+	if ( pHero->girlkind > 0 && pGirl->herokind > 0 )
 		return -1;
 	pHero->girlkind = (char)girlkind;
-	pCity->girl[girlkind].herokind = herokind;
+	pGirl->herokind = herokind;
+	pGirl->love_level = 1;
+	pGirl->love_exp = 1;
+	pGirl->love_today = 0;
+	pGirl->sflag = 0;
 	hero_attr_calc( pCity, pHero );
 	city_battlepower_hero_calc( pCity );
 	hero_sendinfo( pCity->actor_index, pHero );
-	girl_info( pCity, &pCity->girl[girlkind] );
+	girl_info( pCity, pGirl );
 	return 0;
 }
 
 // 解除委派
-int girl_unallot( int actor_index, short herokind )
+int girl_unallot( int actor_index, short kind )
 {
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	Hero *pHero = hero_getptr( actor_index, herokind );
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	Hero *pHero = hero_getptr( actor_index, pGirl->herokind );
 	if ( !pHero )
 		return -1;
-	short girlkind = pHero->girlkind;
-	if ( girlkind <= 0 || girlkind >= g_girlinfo_maxnum || girlkind >= ACTOR_GIRL_MAX )
-	{
-		pHero->girlkind = 0;
-		return -1;
-	}
 	pHero->girlkind = 0;
-	pCity->girl[girlkind].herokind = 0;
+	pGirl->herokind = 0;
 	hero_attr_calc( pCity, pHero );
 	city_battlepower_hero_calc( pCity );
 	hero_sendinfo( pCity->actor_index, pHero );
-	girl_info( pCity, &pCity->girl[girlkind] );
+	girl_info( pCity, pGirl );
 	return 0;
+}
+
+// 突破
+int girl_colorup( int actor_index, short kind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+		return -1;
+	GirlInfoConfig *config = girl_getconfig( kind, pGirl->color );
+	if ( !config )
+		return -1;
+	if ( config->soul <= 0 )
+		return -1;
+	if ( pGirl->soul < config->soul )
+	{
+		actor_notify_pop( actor_index, 3404 );
+		return -1;
+	}
+	pGirl->soul -= config->soul;
+	pGirl->color += 1;
+	if ( pGirl->herokind > 0 )
+	{
+		Hero *pHero = hero_getptr( actor_index, pGirl->herokind );
+		if ( pHero )
+		{
+			hero_attr_calc( pCity, pHero );
+			city_battlepower_hero_calc( pCity );
+			hero_sendinfo( pCity->actor_index, pHero );
+		}
+	}
+	wlog( 0, LOGOP_GIRLSOUL, PATH_GIRLCOLORUP, kind, -config->soul, pGirl->soul, pCity->actorid, city_mainlevel( pCity->index ) );
+	girl_info( pCity, pGirl );
+	return 0;
+}
+
+// 亲密度道具使用
+int girl_loveitemuse( int actor_index, short kind, short itemkind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( itemkind <= 0 || itemkind >= g_itemkind_maxnum )
+		return -1;
+	short ability0 = item_get_base_ability( itemkind, 0 );
+	short ability1 = item_get_base_ability( itemkind, 1 );
+	int value0 = item_get_base_value( itemkind, 0 );
+	int value1 = item_get_base_value( itemkind, 1 );
+	if ( ability0 != ITEM_ABILITY_GIRLTYPE || ability1 != ITEM_ABILITY_GIRLLOVEEXP )
+		return -1;
+
+	if ( item_lost( actor_index, itemkind, 1, PATH_ITEMUSE ) < 0 )
+	{ // 没有道具，那么使用钻石
+		int price = item_gettoken( itemkind );
+		if ( actor_change_token( actor_index, -price, PATH_ITEMUSE, itemkind ) == -2 )
+		{
+			return -1;
+		}
+	}
+
+	// 添加亲密度
+	girl_addloveexp( pCity, kind, value1, PATH_ITEMUSE );
+	girl_info( pCity, pGirl );
+	return 0;
+}
+
+// 喜结连理
+int girl_marry( int actor_index, short kind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( pGirl->love_level < global.girl_marry_lovelevel )
+		return -1;
+	pGirl->sflag |= (1 << GIRL_SFLAG_MARRY);
+	girl_info( pCity, pGirl );
+	return 0;
+}
+
+// 亲密互动
+int girl_makelove( int actor_index, short kind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( (pGirl->sflag & (1 << GIRL_SFLAG_MARRY)) == 0 )
+		return -1; // 结婚以后才能亲密互动
+	if ( (pGirl->sflag & (1 << GIRL_SFLAG_MAKELOVE)) == 1 )
+		return -1; // 今天已经亲密互动
+	if ( pGirl->love_level >= g_girllove_maxnum - 1 )
+		return -1;
+	GirlLove *loveconfig = girl_love_getconfig( pGirl->love_level );
+	if ( !loveconfig )
+		return -1;
+
+	// 添加亲密度
+	girl_addloveexp( pCity, kind, loveconfig->makelove_exp, PATH_GIRLMAKELOVE );
+
+	if ( loveconfig->soncount > 0 )
+	{
+		// 1 - （当前子女各个数*0.23）
+	}
+
+	pGirl->sflag |= (1 << GIRL_SFLAG_MAKELOVE);
+	girl_info( pCity, pGirl );
+	return 0;
+}
+
+// 添加亲昵度
+int girl_addloveexp( City *pCity, short kind, int exp, short path )
+{
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( pGirl->love_level < 0 || pGirl->love_level >= g_girllove_maxnum-1 )
+		return -1;
+	
+	char isup = 0;
+	pGirl->love_exp += exp;
+	if ( path != PATH_ITEMUSE && path != PATH_GIRLMAKELOVE )
+	{
+		pGirl->love_today += exp;
+	}
+	if ( pGirl->love_exp >= g_girllove[pGirl->love_level].exp )
+	{
+		pGirl->love_exp -= g_girllove[pGirl->love_level].exp;
+		pGirl->love_level += 1;
+		isup = 1;
+	}
+	return isup;
 }
 
 void girl_gm_getall( City *pCity )

@@ -1138,6 +1138,22 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 解除委派
 			girl_unallot( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // 突破
+			girl_colorup( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 亲密度道具使用
+			girl_loveitemuse( actor_index, pvalue[1], pvalue[2] );
+		}
+		else if ( pvalue[0] == 5 )
+		{ // 喜结连理
+			girl_marry( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 亲密互动
+			girl_makelove( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

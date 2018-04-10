@@ -9,7 +9,6 @@ local m_uiStarContent = nil;
 
 local m_upHeroCache = {};
 local m_CacheHeroCache = {};
-local m_isFirst = true;
 local m_selectObj = nil;
 local m_girlConifg = nil;
 local m_selectHerokind = 0;
@@ -87,7 +86,6 @@ end
 
 -- 界面隐藏时调用
 function GirlSelectHeroDlgOnDisable( gameObject )
-	m_isFirst = true;
 end
 
 -- 界面删除时调用
@@ -108,10 +106,10 @@ function GirlSelectHeroDlgShow(kind,color)
 	GirlSelectHeroDlgOpen()
 	m_selectGirlKind = kind;
 	m_girlConifg = girlconfig(kind,color);
-	GirlPairHead();
+	GirlSelectHeroDlgCreate();
 end
 
-function GirlPairHead()
+function GirlSelectHeroDlgCreate()
 	GirlSelectHeroDlgListClear();
 	-- 主将进入临时缓存
 	for offset = 0, 11, 1 do	
@@ -159,15 +157,7 @@ function GirlPairHead()
 		SetTrue( uiColor )
 		SetTrue( uiFlag )
 		SetTrue( uiName )
-		
-		if m_isFirst then
-			SetTrue( uiSelect )
-			m_isFirst = false;
-			m_selectObj = uiHeroObj;
-			ShowStar(pHero.m_kind);
-		else
-			SetFalse( uiSelect )
-		end
+		SetFalse( uiSelect )
 		
 		SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
 		SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
@@ -208,34 +198,36 @@ function GirlSelectHeroDlgSelectHero( kind )
 	end
 	m_selectHerokind = kind;
 	
-	local preObjs = m_selectObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local preUiSelect = preObjs[4];
-	SetFalse(preUiSelect);
-
+	if m_selectObj then
+		local objs = m_selectObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[4];
+		SetFalse(uiSelect);
+	end
+	
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiSelect = objs[4];
 	SetTrue(uiSelect);
 	m_selectObj = uiHeroObj;
-	ShowStar(kind);
+	GirlSelectShowStar(kind);
 end
 
-function ShowStar(kind)
+function GirlSelectShowStar(kind)
 	if m_girlConifg.m_herokind == kind then
-		InitStar(m_girlConifg.private_love_star);
+		GirlSelectInitStar(m_girlConifg.private_love_star);
 	else
-		InitStar(m_girlConifg.love_star);
+		GirlSelectInitStar(m_girlConifg.love_star);
 	end
 end
 
-function InitStar(count)
-	HideStar();
+function GirlSelectInitStar(count)
+	GirlSelectHideStar();
 	for i = 0 ,count - 1 do
 		local objs = m_uiStarContent.transform:GetChild(i).gameObject
 		SetTrue( objs );
     end 
 end
 
-function HideStar()
+function GirlSelectHideStar()
 	for i = 0 ,m_uiStarContent.transform.childCount - 1 do
 		local objs = m_uiStarContent.transform:GetChild(i).gameObject
 		SetFalse( objs );
@@ -245,6 +237,7 @@ end
 -- 确定委派
 function GirlSelectHeroDlgAllot()
 	if m_selectHerokind <= 0 or m_selectGirlKind <= 0 then
+		pop(T(1000))
 		return
 	end
 	system_askinfo( ASKINFO_GIRL, "", 1, m_selectHerokind, m_selectGirlKind )

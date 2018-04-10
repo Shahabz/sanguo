@@ -100,6 +100,10 @@ function GirlDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 7 then
 			GirlDlgSonGrowUp()
 		
+		-- 解除委派
+		elseif nControlID == 8 then
+			GirlDlgRelieve();
+		
 		-- 选择女将		
 		elseif nControlID > 1000 and nControlID < 2000 then
 			GirlDlgSelect( nControlID - 1000 )
@@ -191,17 +195,33 @@ function GirlDlgShowAllot()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
-	local kind = m_SelectGirl.m_kind
 	GirlDlgHeadLayerCreate()
-	GirlDlgSelect( kind )
+	GirlDlgSelect( m_SelectGirl.m_kind )
 end
 
 -- 刷新选择的女将
-function GirlDlgUpdate()
+function GirlDlgUpdate( kind )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
-	GirlDlgCreateInfo( m_SelectGirl )
+	
+	local actorGirl = GetGirl().m_Girl[kind];
+	if actorGirl and actorGirl.m_color > 0 then
+		-- 有关联武将，检查这个武将是否是上阵状态
+		local isup = 0;
+		if actorGirl.m_herokind > 0 then
+			if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
+				isup = 1
+			end
+		end
+		m_SelectGirl.m_color = actorGirl.m_color
+		m_SelectGirl.m_state = isup
+	else
+		m_SelectGirl.m_color = g_girlinfo[kind][0].init_color
+		m_SelectGirl.m_state = -1
+	end
+	GirlDlgHeadLayerSetObj( m_SelectGirl.m_uiObj, m_SelectGirl )
+	GirlDlgSelect( m_SelectGirl.m_kind )
 end
 
 -- 创建女将列表
@@ -245,17 +265,15 @@ function GirlDlgHeadLayerCreate()
 	
 	-- 创建
 	for i=1, #m_GirlCache, 1 do
-		GirlDlgHeadLayerSetObj( m_GirlCache[i] )
+		local uiGirlObj = m_ObjectPool:Get( "UIP_Girl" );
+		uiGirlObj.transform:SetParent( m_uiContent.transform );	
+		m_GirlCache[i].m_uiObj = uiGirlObj;
+		GirlDlgHeadLayerSetObj( uiGirlObj, m_GirlCache[i] )
 	end
 end
 
 -- 设置一个头像对象
-function GirlDlgHeadLayerSetObj( pGirl )
-	local uiGirlObj = m_ObjectPool:Get( "UIP_Girl" );
-	uiGirlObj.transform:SetParent( m_uiContent.transform );	
-	uiGirlObj:GetComponent("UIButton").controlID = 1000 + pGirl.m_kind;
-	pGirl.m_uiObj = uiGirlObj;
-	
+function GirlDlgHeadLayerSetObj( uiGirlObj, pGirl )
 	local objs = uiGirlObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0]
 	local uiColor = objs[1]
@@ -264,6 +282,7 @@ function GirlDlgHeadLayerSetObj( pGirl )
 	local uiState3 = objs[4]
 	local uiName = objs[5]
 	local uiSelect = objs[6]
+	uiGirlObj:GetComponent("UIButton").controlID = 1000 + pGirl.m_kind;
 	SetImage( uiShape, GirlHeadSprite(pGirl.m_kind) )
 	SetImage( uiColor, ItemColorSprite(pGirl.m_color) )
 	SetText( uiName, GirlName(pGirl.m_kind) )
@@ -338,6 +357,14 @@ function GirlDlgCreateInfo( pGirl )
 		SetTrue( m_uiDoubleLayer )
 		GirlDlgDoubleLayerSetHero( m_uiHero, config, actorGirl.m_herokind );
 		GirlDlgDoubleLayerSetGirl( m_uiGirl, kind, color );
+		
+		-- 碎片进度
+		local uiProgress = m_uiDoubleLayer.transform:Find("SoulProgress")
+		local nowSoul = actorGirl.m_soul;
+		local maxSoul = config.soul
+		SetProgress( uiProgress, nowSoul/maxSoul )
+		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )
+
 		
 	else
 		-- 未获得 或者 未指派
@@ -525,11 +552,22 @@ function GirlDlgAllot()
 	GirlSelectHeroDlgShow(kind,color);
 end
 
+-- 解除委派
+function GirlDlgRelieve()
+	if m_SelectGirl == nil then
+		return
+	end
+	MsgBox(T(3403),function() 
+		system_askinfo( ASKINFO_GIRL, "", 2, m_SelectGirl.m_kind)
+	end);
+end
+
 -- 突破
 function GirlDlgColorUp()
 	if m_SelectGirl == nil then
 		return
 	end
+	system_askinfo( ASKINFO_GIRL, "", 3, m_SelectGirl.m_kind )
 end
 			
 -- 增加亲昵度
@@ -537,6 +575,7 @@ function GirlDlgLoveItemUse()
 	if m_SelectGirl == nil then
 		return
 	end
+	--system_askinfo( ASKINFO_GIRL, "", 4, m_SelectGirl.m_kind, itemkind )
 end
 		
 -- 喜结连理
@@ -544,6 +583,7 @@ function GirlDlgMarry()
 	if m_SelectGirl == nil then
 		return
 	end
+	system_askinfo( ASKINFO_GIRL, "", 5, m_SelectGirl.m_kind )
 end
 		
 -- 亲密互动
@@ -551,6 +591,7 @@ function GirlDlgMakeLove()
 	if m_SelectGirl == nil then
 		return
 	end
+	
 end
 		
 -- 下一步
@@ -558,6 +599,7 @@ function GirlDlgMakeNext()
 	if m_SelectGirl == nil then
 		return
 	end
+	system_askinfo( ASKINFO_GIRL, "", 6, m_SelectGirl.m_kind )
 end
 		
 -- 出师

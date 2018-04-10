@@ -8,10 +8,10 @@ struct _actor_girl {
 				char kind;	//种类
 				char color;	//颜色
 				char sflag;	//标记
-				char love_level;	//亲密等级
-				short soul;	//碎片
-				int love_exp;	//亲密度
-				int love_today;	//今天获取亲密度
+				unsigned char love_level;	//亲密等级
+				unsigned short soul;	//碎片
+				unsigned short love_exp;	//亲密度
+				unsigned short love_today;	//今天获取亲密度
 				short herokind;	//关联男将
 };
 typedef struct _actor_girl Girl;

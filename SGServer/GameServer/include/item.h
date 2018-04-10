@@ -45,6 +45,8 @@
 #define ITEM_ABILITY_CORPS2			18	// 加骑兵
 #define ITEM_ABILITY_CORPS3			19	// 加弓兵
 #define ITEM_ABILITY_VIPEXP			20	// VIP点数
+#define ITEM_ABILITY_GIRLTYPE		21	// 女将类型
+#define ITEM_ABILITY_GIRLLOVEEXP	22	// 女将亲昵度
 
 /* 道具操作 */ 
 #define ITEM_PROCESS_INFO		1 // 获取道具信息

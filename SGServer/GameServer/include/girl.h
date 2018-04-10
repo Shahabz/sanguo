@@ -16,6 +16,11 @@ int girl_info( City *pCity, Girl *pGirl ); // 女将信息
 int girl_list( int actor_index ); // 女将列表
 void girl_update(); //  每天零点重置
 int girl_allot( int actor_index, short herokind, short girlkind ); // 委派男将
-int girl_unallot( int actor_index, short herokind ); // 解除委派
+int girl_unallot( int actor_index, short kind ); // 解除委派
+int girl_colorup( int actor_index, short kind ); // 突破
+int girl_loveitemuse( int actor_index, short kind, short itemkind );// 亲密度道具使用
+int girl_marry( int actor_index, short kind ); // 喜结连理
+int girl_makelove( int actor_index, short kind ); // 亲密互动
+int girl_addloveexp( City *pCity, short kind, int exp, short path ); // 添加亲昵度
 void girl_gm_getall( City *pCity );
 #endif

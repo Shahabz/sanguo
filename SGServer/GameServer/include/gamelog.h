@@ -122,6 +122,8 @@
 #define PATH_TEACHER					91	// 师徒
 #define PATH_ACTIVITY					92	// 活动
 #define PATH_TEACHERSHOP				93	// 师徒商店
+#define PATH_GIRLCOLORUP				94	// 女将突破
+#define PATH_GIRLMAKELOVE				95	// 女将亲密互动
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );
