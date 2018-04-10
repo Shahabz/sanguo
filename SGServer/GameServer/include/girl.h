@@ -21,6 +21,11 @@ int girl_colorup( int actor_index, short kind ); // 突破
 int girl_loveitemuse( int actor_index, short kind, short itemkind );// 亲密度道具使用
 int girl_marry( int actor_index, short kind ); // 喜结连理
 int girl_makelove( int actor_index, short kind ); // 亲密互动
-int girl_addloveexp( City *pCity, short kind, int exp, short path ); // 添加亲昵度
+float girl_loveexp_speed( short herokind, short kind, char color );
+int girl_addloveexp_killenemy( City *pCity, short herokind, short kind );
+int girl_addloveexp_citywar( City *pCity, short herokind, short kind );
+int girl_addloveexp_nationwar( City *pCity, short herokind, short kind );
+int girl_addloveexp_kingwar( City *pCity, short herokind, short kind );
+int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path ); // 添加亲昵度
 void girl_gm_getall( City *pCity );
 #endif

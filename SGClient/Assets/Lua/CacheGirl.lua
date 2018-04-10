@@ -1,4 +1,6 @@
 ACTOR_GIRL_MAX = 80
+GIRL_SFLAG_MARRY	=	0	-- 是否结婚
+GIRL_SFLAG_MAKELOVE	=	1	-- 今天是否亲密互动过
 
 -- 一个英雄结构
 SLK_Girl = class("SLK_Girl")

@@ -35,6 +35,7 @@
 #include "chat.h"
 #include "world_quest.h"
 #include "king_war.h"
+#include "girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1585,6 +1586,13 @@ int kingwar_army_rebirth( int actor_index, int army_index )
 	actor_change_token( actor_index, -costtoken, PATH_KINGWAR_REBIRTH, 0 );
 	city_battlequeue_sendupdate( army_index );
 	g_kingwar_town_update = 1;
+
+	// Å®½«Ç×êÇ¶È
+	Hero *pHero = city_hero_getptr_withkind( pCity->index, g_army[army_index].herokind[0] );
+	if ( pHero && pHero->girlkind > 0 )
+	{
+		girl_addloveexp_kingwar( pCity, pHero->kind, pHero->girlkind );
+	}
 	return 0;
 }
 

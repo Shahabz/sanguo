@@ -347,7 +347,7 @@ end
 
 -- 女将描述
 function GirlDesc(kind)
-	return Localization.text_item(kind+3600);
+	return Localization.text_item(kind+3400);
 end
 
 -- 兵种名称

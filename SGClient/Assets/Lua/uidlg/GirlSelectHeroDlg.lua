@@ -152,12 +152,17 @@ function GirlSelectHeroDlgCreate()
 		local uiName = objs[3];
 		local uiSelect = objs[4];
 		local uiCon = objs[5];
+		local uiAlready = objs[6];
 		SetTrue( uiCon )
 		SetTrue( uiShape )
 		SetTrue( uiColor )
 		SetTrue( uiFlag )
 		SetTrue( uiName )
 		SetFalse( uiSelect )
+		SetFalse( uiAlready);
+		if pHero.m_girlkind > 0 then
+			SetTrue(uiAlready);
+		end
 		
 		SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
 		SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
@@ -212,8 +217,10 @@ function GirlSelectHeroDlgSelectHero( kind )
 end
 
 function GirlSelectShowStar(kind)
-	if m_girlConifg.m_herokind == kind then
-		GirlSelectInitStar(m_girlConifg.private_love_star);
+	if m_girlConifg.private_herokind == kind then
+		GirlSelectInitStar(m_girlConifg.love_star);
+		local objs = m_uiStarContent.transform:GetChild(0).gameObject
+		SetTrue( objs );
 	else
 		GirlSelectInitStar(m_girlConifg.love_star);
 	end
@@ -221,7 +228,7 @@ end
 
 function GirlSelectInitStar(count)
 	GirlSelectHideStar();
-	for i = 0 ,count - 1 do
+	for i = 1 ,count do
 		local objs = m_uiStarContent.transform:GetChild(i).gameObject
 		SetTrue( objs );
     end 
@@ -240,6 +247,16 @@ function GirlSelectHeroDlgAllot()
 		pop(T(1000))
 		return
 	end
-	system_askinfo( ASKINFO_GIRL, "", 1, m_selectHerokind, m_selectGirlKind )
-	GirlSelectHeroDlgClose()
+	
+	local pHero = GetHero():GetPtr(m_selectHerokind);
+	if pHero.m_girlkind > 0 then
+		MsgBox(F(3405,HeroName(m_selectHerokind),GirlName(pHero.m_girlkind),GirlName(pHero.m_girlkind)),function()
+			system_askinfo( ASKINFO_GIRL, "", 2, pHero.m_girlkind)
+			system_askinfo( ASKINFO_GIRL, "", 1, m_selectHerokind, m_selectGirlKind )
+			GirlSelectHeroDlgClose()
+		end);
+	else
+		system_askinfo( ASKINFO_GIRL, "", 1, m_selectHerokind, m_selectGirlKind )
+		GirlSelectHeroDlgClose()
+	end
 end

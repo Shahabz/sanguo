@@ -18,6 +18,8 @@ struct _actor_hero {
 				short colorup;	//良将突破值
 				char god;	//是否神级突破
 				char girlkind;	//女将
+				char sonnum;	//当前子女数量
+				int sontime;	//当前正在成长子女结束时间
 				Equip equip[6];	//装备
 				int attack;	//攻击
 				int defense;	//防御

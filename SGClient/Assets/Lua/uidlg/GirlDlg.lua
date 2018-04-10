@@ -30,6 +30,9 @@ local m_uiSonName = nil; --UnityEngine.GameObject
 local m_uiSonAttr = nil; --UnityEngine.GameObject
 local m_uiGrowUpBtn = nil; --UnityEngine.GameObject
 local m_uiAgeProgress = nil; --UnityEngine.GameObject
+local m_uiIntimate = nil; --UnityEngine.GameObject
+local m_uiDontMarry = nil; --UnityEngine.GameObject
+local m_uiMakeLoveAlready = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_GirlCache = nil;
 local m_SelectGirl = nil;
@@ -144,6 +147,9 @@ function GirlDlgOnAwake( gameObject )
 	m_uiSonAttr = objs[26];
 	m_uiGrowUpBtn = objs[27];
 	m_uiAgeProgress = objs[28];
+	m_uiIntimate = objs[29];
+	m_uiDontMarry = objs[30];
+	m_uiMakeLoveAlready = objs[31];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Girl", 64, 64, m_uiUIP_Girl);
@@ -210,9 +216,9 @@ function GirlDlgUpdate( kind )
 		-- 有关联武将，检查这个武将是否是上阵状态
 		local isup = 0;
 		if actorGirl.m_herokind > 0 then
-			if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
+			--if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
 				isup = 1
-			end
+			--end
 		end
 		m_SelectGirl.m_color = actorGirl.m_color
 		m_SelectGirl.m_state = isup
@@ -236,9 +242,9 @@ function GirlDlgHeadLayerCreate()
 			local isup = 0;
 			-- 有关联武将，检查这个武将是否是上阵状态
 			if actorGirl.m_herokind > 0 then
-				if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
+				--if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
 					isup = 1
-				end
+				--end
 			end
 			-- 已经获得这个女将，使用存档
 			table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
@@ -364,10 +370,49 @@ function GirlDlgCreateInfo( pGirl )
 		local maxSoul = config.soul
 		SetProgress( uiProgress, nowSoul/maxSoul )
 		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )
-
+		
+		-- TODO 是否已经有孩子了
+		
+		-- 没有孩子
+		GirlDlgShowStar(actorGirl.m_herokind);
+		-- 亲密度
+		SetProgress( m_uiLoveProgress, actorGirl.m_love_exp/g_girllove[actorGirl.m_love_level].exp ); 
+		SetText( m_uiLoveProgress.transform:Find("Text"), actorGirl.m_love_exp.."/"..g_girllove[actorGirl.m_love_level].exp ) 
+		SetLevel( m_uiLoveProgress.transform:Find("Title/LoveLevel"),actorGirl.m_love_level);
+		SetTrue(m_uiLoveLayer);
+		SetFalse(m_uiDontMarry);
+		SetFalse(m_uiIntimate);
+		SetFalse(m_uiMarryBtn);
+		SetFalse(m_uiMakeLoveBtn);
+		SetFalse(m_uiMakeLoveAlready);
+		
+		-- 还不能喜结连理
+		if actorGirl.m_love_level < global.girl_marry_lovelevel then 
+			SetTrue(m_uiDontMarry);
+			SetText(m_uiDontMarry.transform:Find("Text"),T(3352));
+		else
+			
+			-- 可以喜结连理
+			if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MARRY ) == 0 then
+				SetTrue(m_uiMarryBtn);
+				
+			-- 已经喜结连理
+			else
+				--未亲密互动
+				if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MAKELOVE) == 0 then
+					SetTrue(m_uiMakeLoveBtn);
+					
+				--已经亲密互动
+				else
+					SetTrue(m_uiMakeLoveAlready);
+					SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
+				end
+			end
+		end
 		
 	else
 		-- 未获得 或者 未指派
+		SetFalse(m_uiLoveLayer);
 		SetTrue( m_uiSingleLayer )
 		SetFalse( m_uiDoubleLayer )
 		SetText( m_uiGirlName, GirlName( kind ) )
@@ -414,7 +459,7 @@ function GirlDlgCreateInfo( pGirl )
 			SetText(privateAttrHero.transform:Find("Text"), F(3362, HeroName(config.private_herokind)))
 			-- 强攻
 			uiAttackIncrease = m_uiPrivateAttrList.transform:GetChild(1)
-			if config.attack_increase > 0 then
+			if config.private_attack_increase > 0 then
 				SetText(uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.private_attack_increase)
 				SetTrue(uiAttackIncrease)
 			else
@@ -422,7 +467,7 @@ function GirlDlgCreateInfo( pGirl )
 			end
 			-- 强防
 			uiDefenseIncrease = m_uiPrivateAttrList.transform:GetChild(2)
-			if config.defense_increase > 0 then
+			if config.private_defense_increase > 0 then
 				SetText(uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.private_defense_increase)
 				SetTrue(uiDefenseIncrease)
 			else
@@ -430,7 +475,7 @@ function GirlDlgCreateInfo( pGirl )
 			end
 			-- 攻击资质
 			uiAttackGrowth = m_uiPrivateAttrList.transform:GetChild(3)
-			if config.attack_growth > 0 then
+			if config.private_attack_growth > 0 then
 				SetText(uiAttackGrowth.transform:Find("Text"), F(3336,config.private_attack_growth))
 				SetTrue(uiAttackGrowth)
 			else
@@ -438,7 +483,7 @@ function GirlDlgCreateInfo( pGirl )
 			end
 			-- 防御资质
 			uiDefenseGrowth = m_uiPrivateAttrList.transform:GetChild(4)
-			if config.defense_growth > 0 then
+			if config.private_defense_growth > 0 then
 				SetText(uiDefenseGrowth.transform:Find("Text"), F(3337,config.private_defense_growth))
 				SetTrue(uiDefenseGrowth)
 			else
@@ -575,7 +620,25 @@ function GirlDlgLoveItemUse()
 	if m_SelectGirl == nil then
 		return
 	end
-	--system_askinfo( ASKINFO_GIRL, "", 4, m_SelectGirl.m_kind, itemkind )
+	local config = girlconfig( m_SelectGirl.m_kind, m_SelectGirl.m_color )
+	if config == nil then
+		return
+	end	
+	local itemlist = {}
+	local desclist = {}
+	if config.type == 0 then
+		itemlist = { 224, 225, 226 }
+		desclist = { F(3364,g_itemkind[224].base_value1), F(3364,g_itemkind[225].base_value1), F(3364,g_itemkind[226].base_value1) }
+	elseif config.type == 1 then
+		itemlist = { 227, 228, 229 }
+		desclist = { F(3364,g_itemkind[227].base_value1), F(3364,g_itemkind[228].base_value1), F(3364,g_itemkind[229].base_value1) }
+	elseif config.type == 2 then
+		itemlist = { 221, 222, 223 }
+		desclist = { F(3364,g_itemkind[221].base_value1), F(3364,g_itemkind[222].base_value1), F(3364,g_itemkind[223].base_value1) }
+	end
+	ItemUseDlgShow( itemlist, desclist, false, function( itemkind ) 
+			system_askinfo( ASKINFO_GIRL, "", 4, m_SelectGirl.m_kind, itemkind );
+	end )
 end
 		
 -- 喜结连理
@@ -591,7 +654,8 @@ function GirlDlgMakeLove()
 	if m_SelectGirl == nil then
 		return
 	end
-	
+	SetTrue(m_uiIntimate);
+	SetText(m_uiIntimate.transform:Find("Desc"),T(3352));
 end
 		
 -- 下一步
@@ -607,4 +671,31 @@ function GirlDlgSonGrowUp()
 	if m_SelectGirl == nil then
 		return
 	end
+end
+
+-- 配对指数
+function GirlDlgShowStar(herokind)
+	local m_girlConifg = girlconfig(m_SelectGirl.m_kind,m_SelectGirl.m_color);
+	if m_girlConifg.private_herokind == herokind then
+		GirlDlgInitStar(m_girlConifg.love_star);
+		local objs = m_uiLoveStar.transform:GetChild(0).gameObject
+		SetTrue( objs );
+	else
+		GirlDlgInitStar(m_girlConifg.love_star);
+	end
+end
+
+function GirlDlgInitStar(count)
+	GirlDlgHideStar();
+	for i = 1 ,count do
+		local objs = m_uiLoveStar.transform:GetChild(i).gameObject
+		SetTrue( objs );
+    end 
+end
+
+function GirlDlgHideStar()
+	for i = 0 ,m_uiLoveStar.transform.childCount - 1 do
+		local objs = m_uiLoveStar.transform:GetChild(i).gameObject
+		SetFalse( objs );
+    end
 end

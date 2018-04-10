@@ -2178,6 +2178,17 @@ struct _slk_NetS_GirlGet {
 };
 typedef struct _slk_NetS_GirlGet SLK_NetS_GirlGet;	//女将获取
 
+struct _slk_NetS_GirlLove {
+	char m_kind;	//女将亲密度
+	char m_love_level;	//女将亲密度
+	short m_love_exp;	//女将亲密度
+	short m_love_today;	//女将亲密度
+	short m_love_today_max;	//女将亲密度
+	short m_add;	//女将亲密度
+	short m_path;	//女将亲密度
+};
+typedef struct _slk_NetS_GirlLove SLK_NetS_GirlLove;	//女将亲密度
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2413,5 +2424,6 @@ int struct_NetS_Activity04List_send( char **pptr, int *psize, SLK_NetS_Activity0
 int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue );
 int struct_NetS_GirlList_send( char **pptr, int *psize, SLK_NetS_GirlList *pValue );
 int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue );
+int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValue );
 
 #endif

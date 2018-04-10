@@ -221,3 +221,4 @@ global.activity05_update_sec = 21600 --活动七星拜将刷新次数倒计时
 global.fangshi_actorlevel = 113 --坊市玩家等级限制
 global.fangshi_citylevel = 19 --坊市官府等级限制
 global.newplayer_protect = 86400 --新手保护
+global.girl_marry_lovelevel = 5 --女将可以结婚的等级

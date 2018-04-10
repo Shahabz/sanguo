@@ -2917,3 +2917,15 @@ function struct_NetS_GirlGet_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_GirlLove_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_love_level = buffer:ReadSByte();
+	recvValue.m_love_exp = buffer:ReadShort();
+	recvValue.m_love_today = buffer:ReadShort();
+	recvValue.m_love_today_max = buffer:ReadShort();
+	recvValue.m_add = buffer:ReadShort();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+

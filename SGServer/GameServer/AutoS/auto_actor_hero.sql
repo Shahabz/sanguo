@@ -13,6 +13,8 @@ CREATE TABLE `actor_hero` (
   `colorup` smallint(6) NOT NULL DEFAULT '0' COMMENT '良将突破值',
   `god` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否神级突破',
   `girlkind` tinyint(3) NOT NULL DEFAULT '0' COMMENT '女将',
+  `sonnum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '当前子女数量',
+  `sontime` int(11) NOT NULL DEFAULT '0' COMMENT '当前正在成长子女结束时间',
   PRIMARY KEY (`id`)
   KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

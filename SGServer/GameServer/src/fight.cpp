@@ -26,6 +26,7 @@
 #include "fight.h"
 #include "world_boss.h"
 #include "nation_hero.h"
+#include "girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1288,6 +1289,23 @@ int fight_lost_calc_single( FightUnit *pUnit )
 				city_changesoldiers( pCity->index, pUnit->corps, pUnit->wounded_soldiers, PATH_WOUNDED_SOLDIERS );
 				if ( pUnit->corps >= 0 && pUnit->corps < 3 )
 					pCity->temp_wounded_soldiers[pUnit->corps] += pUnit->wounded_soldiers;
+			}
+
+			// 女将亲昵度
+			if ( pCity->hero[hero_index].girlkind > 0 )
+			{
+				if ( g_fight.type == FIGHTTYPE_ENEMY )
+				{ // 流寇
+					girl_addloveexp_killenemy( pCity, pCity->hero[hero_index].kind, pCity->hero[hero_index].girlkind );
+				}
+				else if ( g_fight.type == FIGHTTYPE_CITY && g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
+				{ // 城战
+					girl_addloveexp_citywar( pCity, pCity->hero[hero_index].kind, pCity->hero[hero_index].girlkind );
+				}
+				else if ( g_fight.type == FIGHTTYPE_NATION )
+				{ // 国战
+					girl_addloveexp_nationwar( pCity, pCity->hero[hero_index].kind, pCity->hero[hero_index].girlkind );
+				}
 			}
 
 			// 对守军造成的伤害

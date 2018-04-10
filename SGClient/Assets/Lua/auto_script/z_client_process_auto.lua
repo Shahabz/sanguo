@@ -952,7 +952,7 @@ function proc_function_C( recvValue )
 		local kind = kindlist[ recvValue.m_openoffset ]
 		BuildingGetDlgShow( { m_kind = kind, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } );
 		if kind == BUILDING_Fangshi then
-			City.BuildingDel( { m_kind=kind, m_offset=0 } )
+			City.BuildingDel( { m_kind=BUILDING_Help, m_offset=0 } )
 			MainDlgSetButtons( recvValue.m_openoffset );
 		end
 		
@@ -2193,5 +2193,19 @@ function proc_girlget_C( recvValue )
 	pGirl:Set( recvValue.m_girl );
 	GetGirl():SetGirl( recvValue.m_girl.m_kind, pGirl );
 	GirlGetDlgShow( recvValue )
+end
+
+-- m_kind=0,m_love_level=0,m_love_exp=0,m_love_today=0,m_love_today_max=0,m_add=0,m_path=0,
+function proc_girllove_C( recvValue )
+	-- process.
+	local kind = recvValue.m_kind
+	if GetGirl().m_Girl[kind] then
+		GetGirl().m_Girl[kind].m_love_exp			=	recvValue.m_love_exp;-- 当前亲密度
+		GetGirl().m_Girl[kind].m_love_level			=	recvValue.m_love_level;-- 亲密等级
+		GetGirl().m_Girl[kind].m_love_today			=	recvValue.m_love_today;-- 今天获取亲密度
+		GetGirl().m_Girl[kind].m_love_today_max		=	recvValue.m_love_today_max;-- 今天亲密度上限
+		GirlDlgUpdate( recvValue.m_kind )
+		pop( F(3363, GirlName(kind), HeroName(GetGirl().m_Girl[kind].m_herokind), recvValue.m_add) )
+	end
 end
 

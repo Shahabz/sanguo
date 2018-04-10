@@ -3199,3 +3199,17 @@ int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue 
 	return 0;
 }
 
+int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_love_level, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_love_exp, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_love_today, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_love_today_max, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+

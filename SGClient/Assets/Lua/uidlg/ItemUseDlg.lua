@@ -1,9 +1,9 @@
 -- 界面
 local m_Dlg = nil;
 local m_uiGrid = nil; --UnityEngine.GameObject
-local m_type = 0;
-local m_army_index = -1;
-
+local m_callback = nil;
+local m_autoclose = true;
+local m_useitem_toggle = false;
 -- 打开界面
 function ItemUseDlgOpen()
 	m_Dlg = eye.uiManager:Open( "ItemUseDlg" );
@@ -14,7 +14,8 @@ function ItemUseDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	m_callback = nil
+	m_useitem_toggle = false;
 	eye.uiManager:Close( "ItemUseDlg" );
 end
 
@@ -79,27 +80,16 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function ItemUseDlgShow( type, army_index )
+function ItemUseDlgShow( itemList, itemDesc, autoclose, callback )
 	ItemUseDlgOpen()
-	m_type = type;
-	m_army_index = army_index;
+	m_callback = callback;
+	m_autoclose = autoclose;
 	for i=0,2,1 do
 		SetFalse( m_uiGrid.transform:GetChild(i).gameObject )
 	end
-	local ItemList = {}
-	-- 撤回
-	if m_type == 1 then
-		ItemList = { 139, 460 }
-		ItemDesc = { 981, 982 }
-		
-	-- 加速
-	elseif m_type == 2 then
-		ItemList = { 137, 138 }
-		ItemDesc = { 979, 980 }
-		
-	end
-	for i=1, #ItemList, 1 do
-		ItemUseDlgItemSet( i, ItemList[i], T(ItemDesc[i]) )
+	
+	for i=1, #itemList, 1 do
+		ItemUseDlgItemSet( i, itemList[i], itemDesc[i] )
 	end
 end
 
@@ -118,8 +108,6 @@ function ItemUseDlgItemSet( index, kind, desc )
 	SetImage( uiShape, ItemSprite(kind) )
 	SetImage( uiColor, ItemColorSprite( item_getcolor(kind) ) )
 	SetText( uiName, item_getname(kind), NameColor( item_getcolor( kind ) ) );
-	
-	--local desc = item_getdesc(kind);
 	SetText( uiDesc, desc );
 	local num = GetItem():GetCount( kind );
 	if GetItem():GetCount( kind ) > 0 then
@@ -131,30 +119,35 @@ function ItemUseDlgItemSet( index, kind, desc )
 	else
 		SetFalse( uiNum );
 		SetTrue( uiToken );
-		SetText( uiToken, T(125)..":"..item_gettoken(kind) );
+		SetRichText( uiToken, "<icon=token>x"..item_gettoken(kind) );
 		SetText( uiUse.transform:Find("Back/Text"), T(753) )
 		SetControlID( uiUse, 20000 + kind ); 
 	end
 end
 
 function ItemUseDlgUse( itemkind )
-	if m_type == 1 then
-		system_askinfo( ASKINFO_WORLDMAP, "", 4, m_army_index, itemkind );
-	elseif m_type == 2 then
-		system_askinfo( ASKINFO_WORLDMAP, "", 5, m_army_index, itemkind );
+	if m_callback then
+		m_callback( itemkind )
 	end
 	ItemUseDlgClose();
 end
 
 function ItemUseDlgBuy( itemkind )
-	if GetPlayer().m_token < item_gettoken(itemkind) then
+	local token = item_gettoken(itemkind)
+	if GetPlayer().m_token < token then
 		JumpToken()
 		return
 	end
-	if m_type == 1 then
-		system_askinfo( ASKINFO_WORLDMAP, "", 4, m_army_index, itemkind );
-	elseif m_type == 2 then
-		system_askinfo( ASKINFO_WORLDMAP, "", 5, m_army_index, itemkind );
-	end
-	ItemUseDlgClose();
+	
+	MsgBoxEx( F(754, token, item_getname(itemkind)), function( sure, toggle )
+		if sure == 1 then
+			if m_callback then
+				m_callback( itemkind )
+			end
+			if m_autoclose == true then
+				ItemUseDlgClose();
+			end
+		end
+		m_useitem_toggle = toggle;
+	end, m_useitem_toggle )
 end

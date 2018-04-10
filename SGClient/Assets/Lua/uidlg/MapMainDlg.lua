@@ -642,7 +642,9 @@ function MapMainDlgReback( army_index )
 	end
 	
 	if value.m_state == ARMY_STATE_MARCH then
-		ItemUseDlgShow( 1, army_index )
+		ItemUseDlgShow( { 139, 460 }, { T(981), T(982) }, true, function( itemkind ) 
+			system_askinfo( ASKINFO_WORLDMAP, "", 4, army_index, itemkind );
+		end )
 	else
 		-- 已达目的点的撤回
 		MsgBox( T( 1214 ),function()
@@ -653,7 +655,9 @@ end
 		
 -- 加速
 function MapMainDlgQuick( army_index )
-	ItemUseDlgShow( 2, army_index )
+	ItemUseDlgShow( { 137, 138 }, { T(979), T(980) }, true, function( itemkind ) 
+		system_askinfo( ASKINFO_WORLDMAP, "", 5, army_index, itemkind );
+	end )
 end
 		
 -- 定位

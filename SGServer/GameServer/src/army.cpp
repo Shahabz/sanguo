@@ -40,6 +40,7 @@
 #include "world_quest.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -990,6 +991,15 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 	if ( to_type == MAPUNIT_TYPE_KINGWAR_TOWN )
 	{
 		army_index = army_create( MAPUNIT_TYPE_CITY, pCity->actorid, to_type, to_id, ARMY_STATE_KINGWAR_READY, info );
+		if ( army_index >= 0 )
+		{
+			// Å®½«Ç×êÇ¶È
+			Hero *pHero = city_hero_getptr_withkind( pCity->index, g_army[army_index].herokind[0] );
+			if ( pHero && pHero->girlkind > 0 )
+			{
+				girl_addloveexp_kingwar( pCity, pHero->kind, pHero->girlkind );
+			}
+		}
 	}
 	else
 	{
