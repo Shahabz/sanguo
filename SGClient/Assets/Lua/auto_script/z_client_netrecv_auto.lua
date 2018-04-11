@@ -980,6 +980,11 @@ function netrecv_girllove_C( buffer )
 	proc_girllove_C( recvValue );
 end
 
+function netrecv_girlloveresult_C( buffer )
+	local recvValue = struct_NetS_GirlLoveResult_recv( buffer );
+	proc_girlloveresult_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1177,6 +1182,7 @@ Proc_Command = {
 	[CMDS_GIRLLIST]=netrecv_girllist_C;
 	[CMDS_GIRLGET]=netrecv_girlget_C;
 	[CMDS_GIRLLOVE]=netrecv_girllove_C;
+	[CMDS_GIRLLOVERESULT]=netrecv_girlloveresult_C;
 }
 
 function in_proc_command_C( cmd, buffer )

@@ -1,4 +1,52 @@
 g_girlson = {
+[21] = 
+{ 
+	[0] = { herokind=21,index=0,name="º«Õı",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2631,client_shape=9,},
+	[1] = { herokind=21,index=1,name="º«Üø",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2632,client_shape=10,},
+	[2] = { herokind=21,index=2,name="º«Ñå",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2633,client_shape=1,},
+	[3] = { herokind=21,index=3,name="º«×Û",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2634,client_shape=2,},
+	[4] = { herokind=21,index=4,name="º«Ã·Ñ©",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2635,client_shape=3,},
+},
+[22] = 
+{ 
+	[0] = { herokind=22,index=0,name="ÖìĞù",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2636,client_shape=4,},
+	[1] = { herokind=22,index=1,name="ÖìÒ«",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2637,client_shape=5,},
+	[2] = { herokind=22,index=2,name="Öì¾°»Ô",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2638,client_shape=6,},
+	[3] = { herokind=22,index=3,name="Öì¼¨",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2639,client_shape=7,},
+	[4] = { herokind=22,index=4,name="ÖìÁæÁæ",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2640,client_shape=8,},
+},
+[23] = 
+{ 
+	[0] = { herokind=23,index=0,name="ÅËÀÖ",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2626,client_shape=4,},
+	[1] = { herokind=23,index=1,name="ÅË³Û",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2627,client_shape=5,},
+	[2] = { herokind=23,index=2,name="ÅË·¶",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2628,client_shape=6,},
+	[3] = { herokind=23,index=3,name="ÅËÂ¶",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2629,client_shape=7,},
+	[4] = { herokind=23,index=4,name="ÅËÆ½",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2630,client_shape=8,},
+},
+[24] = 
+{ 
+	[0] = { herokind=24,index=0,name="ÏÄºîË¶",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2621,client_shape=9,},
+	[1] = { herokind=24,index=1,name="ÏÄºîÅô",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2622,client_shape=10,},
+	[2] = { herokind=24,index=2,name="ÏÄºîÈñ",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2623,client_shape=1,},
+	[3] = { herokind=24,index=3,name="ÏÄºîºÍ",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2624,client_shape=2,},
+	[4] = { herokind=24,index=4,name="ÏÄºîÑ©",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2625,client_shape=3,},
+},
+[25] = 
+{ 
+	[0] = { herokind=25,index=0,name="²ÜÎ³",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2616,client_shape=4,},
+	[1] = { herokind=25,index=1,name="²ÜÁâ",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2617,client_shape=5,},
+	[2] = { herokind=25,index=2,name="²ÜÌ©",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2618,client_shape=6,},
+	[3] = { herokind=25,index=3,name="²Ü·¶",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2619,client_shape=7,},
+	[4] = { herokind=25,index=4,name="²Ü¿¬",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2620,client_shape=8,},
+},
+[26] = 
+{ 
+	[0] = { herokind=26,index=0,name="³ÌÓş",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2641,client_shape=9,},
+	[1] = { herokind=26,index=1,name="³Ìå¹",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2642,client_shape=10,},
+	[2] = { herokind=26,index=2,name="³ÌÓ¢",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2643,client_shape=1,},
+	[3] = { herokind=26,index=3,name="³Ììã",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2644,client_shape=2,},
+	[4] = { herokind=26,index=4,name="³ÌËØ",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2645,client_shape=3,},
+},
 [27] = 
 { 
 	[0] = { herokind=27,index=0,name="ÕÅğ©",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2306,client_shape=6,},
@@ -14,6 +62,22 @@ g_girlson = {
 	[2] = { herokind=28,index=2,name="ĞìÓş",born_odds=50,grow_sec=194400,girlkind=0,attack=100,defense=0,attack_increase=0,defense_increase=0,client_name=2303,client_shape=3,},
 	[3] = { herokind=28,index=3,name="ĞìºÆ",born_odds=30,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2304,client_shape=4,},
 	[4] = { herokind=28,index=4,name="Ğì¸Ç",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2305,client_shape=5,},
+},
+[29] = 
+{ 
+	[0] = { herokind=29,index=0,name="ÎºÔó",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2611,client_shape=9,},
+	[1] = { herokind=29,index=1,name="Îº±ş",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2612,client_shape=10,},
+	[2] = { herokind=29,index=2,name="Îºâı",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2613,client_shape=1,},
+	[3] = { herokind=29,index=3,name="ÎºĞŞ",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2614,client_shape=2,},
+	[4] = { herokind=29,index=4,name="ÎºËª",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2615,client_shape=3,},
+},
+[30] = 
+{ 
+	[0] = { herokind=30,index=0,name="¹ØÓ½",born_odds=85,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2646,client_shape=4,},
+	[1] = { herokind=30,index=1,name="¹Øİ",born_odds=65,grow_sec=194400,girlkind=0,attack=50,defense=0,attack_increase=0,defense_increase=0,client_name=2647,client_shape=5,},
+	[2] = { herokind=30,index=2,name="¹Ø†´",born_odds=50,grow_sec=194400,girlkind=0,attack=0,defense=100,attack_increase=0,defense_increase=0,client_name=2648,client_shape=6,},
+	[3] = { herokind=30,index=3,name="¹ØÕñ",born_odds=30,grow_sec=194400,girlkind=0,attack=150,defense=0,attack_increase=0,defense_increase=0,client_name=2649,client_shape=7,},
+	[4] = { herokind=30,index=4,name="¹Øê¿ÔÂ",born_odds=15,grow_sec=194400,girlkind=0,attack=0,defense=150,attack_increase=0,defense_increase=0,client_name=2650,client_shape=8,},
 },
 [31] = 
 { 

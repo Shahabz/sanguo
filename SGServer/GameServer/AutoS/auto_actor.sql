@@ -85,5 +85,8 @@ CREATE TABLE `actor` (
   `act05_upnum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-剩余刷新次数',
   `act05_upstamp` int(11) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-刷新时间',
   `act08_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '成长计划活动领取奖励',
+  `fs_visit` smallint(6) NOT NULL DEFAULT '0' COMMENT '坊市总次数',
+  `fs_step` tinyint(3) NOT NULL DEFAULT '0' COMMENT '坊市路径',
+  `fs_back` tinyint(3) NOT NULL DEFAULT '0' COMMENT '坊市路径前进后退',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

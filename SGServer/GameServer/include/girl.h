@@ -27,5 +27,6 @@ int girl_addloveexp_citywar( City *pCity, short herokind, short kind );
 int girl_addloveexp_nationwar( City *pCity, short herokind, short kind );
 int girl_addloveexp_kingwar( City *pCity, short herokind, short kind );
 int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path ); // 添加亲昵度
+int girl_son_growth( int actor_index, short kind ); // 子女出师
 void girl_gm_getall( City *pCity );
 #endif

@@ -2929,3 +2929,11 @@ function struct_NetS_GirlLove_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_GirlLoveResult_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_sflag = buffer:ReadSByte();
+	recvValue.m_born = buffer:ReadSByte();
+	return recvValue;
+end
+

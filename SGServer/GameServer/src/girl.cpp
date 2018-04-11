@@ -391,6 +391,7 @@ int girl_makelove( int actor_index, short kind )
 	girl_addloveexp( pCity, pGirl, loveconfig->makelove_exp, PATH_GIRLMAKELOVE );
 
 	// 生孩子
+	int born = 0;
 	if ( loveconfig->soncount > 0 && pHero->sonnum < loveconfig->soncount )
 	{
 		if ( pHero->kind < g_girlson_maxnum && pHero->sonnum < 5 )
@@ -400,12 +401,16 @@ int girl_makelove( int actor_index, short kind )
 			{
 				pHero->sontime = (int)time( NULL ) + g_girlson[pHero->kind].config[pHero->sonnum].grow_sec;
 				hero_sendinfo( pCity->actor_index, pHero );
+				born = 1;
 			}
 		}
 	}
-
 	pGirl->sflag |= (1 << GIRL_SFLAG_MAKELOVE);
-	girl_info( pCity, pGirl );
+	SLK_NetS_GirlLoveResult pValue = { 0 };
+	pValue.m_kind = (char)kind;
+	pValue.m_sflag = pGirl->sflag;
+	pValue.m_born = born;
+	netsend_girlloveresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -538,6 +543,36 @@ int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path )
 		netsend_girllove_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 
+	return 0;
+}
+
+// 子女出师
+int girl_son_growth( int actor_index, short kind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Girl *pGirl = girl_getptr( pCity->index, kind );
+	if ( !pGirl )
+		return -1;
+	if ( pGirl->herokind <= 0 )
+		return -1;
+	Hero *pHero = hero_getptr( actor_index, pGirl->herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->sontime <= 0 )
+		return -1;
+	if ( pHero->kind >= g_girlson_maxnum )
+		return -1;
+	if ( pHero->sonnum < g_girlson[pHero->kind].maxnum-1 )
+	{
+		pHero->sonnum += 1;
+	}
+	pHero->sontime = 0;
+	hero_attr_calc( pCity, pHero );
+	city_battlepower_hero_calc( pCity );
+	hero_sendinfo( pCity->actor_index, pHero );
+	girl_info( pCity, pGirl );
 	return 0;
 }
 

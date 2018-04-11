@@ -1154,6 +1154,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 亲密互动
 			girl_makelove( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 7 )
+		{ // 子女出师
+			girl_son_growth( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

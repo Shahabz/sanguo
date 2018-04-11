@@ -2189,6 +2189,13 @@ struct _slk_NetS_GirlLove {
 };
 typedef struct _slk_NetS_GirlLove SLK_NetS_GirlLove;	//女将亲密度
 
+struct _slk_NetS_GirlLoveResult {
+	char m_kind;	//女将亲密互动结果
+	char m_sflag;	//女将亲密互动结果
+	char m_born;	//女将亲密互动结果
+};
+typedef struct _slk_NetS_GirlLoveResult SLK_NetS_GirlLoveResult;	//女将亲密互动结果
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2425,5 +2432,6 @@ int struct_NetS_Girl_send( char **pptr, int *psize, SLK_NetS_Girl *pValue );
 int struct_NetS_GirlList_send( char **pptr, int *psize, SLK_NetS_GirlList *pValue );
 int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue );
 int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValue );
+int struct_NetS_GirlLoveResult_send( char **pptr, int *psize, SLK_NetS_GirlLoveResult *pValue );
 
 #endif

@@ -657,6 +657,24 @@ function GirlDlgMakeLove()
 	SetTrue(m_uiIntimate);
 	SetText(m_uiIntimate.transform:Find("Desc"),T(3352));
 end
+
+-- 亲密互动结果
+function GirlDlgMakeLoveResult( kind, born )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if m_SelectGirl == nil then
+		return
+	end
+	if m_SelectGirl.m_kind ~= kind then
+		return
+	end
+	if born == 1 then
+		-- 已生孩子
+	else
+		-- 未生孩子
+	end
+end
 		
 -- 下一步
 function GirlDlgMakeNext()

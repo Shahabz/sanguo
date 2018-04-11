@@ -3213,3 +3213,13 @@ int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValu
 	return 0;
 }
 
+int struct_NetS_GirlLoveResult_send( char **pptr, int *psize, SLK_NetS_GirlLoveResult *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sflag, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_born, (*psize) );
+	return 0;
+}
+
