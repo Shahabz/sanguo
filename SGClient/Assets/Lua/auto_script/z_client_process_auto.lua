@@ -2208,13 +2208,13 @@ function proc_girllove_C( recvValue )
 	end
 end
 
--- m_kind=0,m_sflag=0,m_born=0,
+-- m_kind=0,m_sflag=0,m_born=0,m_makelove_exp=0
 function proc_girlloveresult_C( recvValue )
 	-- process.
 	local kind = recvValue.m_kind
 	if GetGirl().m_Girl[kind] then
 		GetGirl().m_Girl[kind].m_sflag = recvValue.m_sflag
-		GirlDlgMakeLoveResult( kind, recvValue.m_born )
+		GirlDlgMakeLoveResult( kind, recvValue.m_born, recvValue.m_makelove_exp )
 	end
 end
 

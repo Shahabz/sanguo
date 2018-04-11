@@ -2934,6 +2934,7 @@ function struct_NetS_GirlLoveResult_recv( buffer )
 	recvValue.m_kind = buffer:ReadSByte();
 	recvValue.m_sflag = buffer:ReadSByte();
 	recvValue.m_born = buffer:ReadSByte();
+	recvValue.m_makelove_exp = buffer:ReadShort();
 	return recvValue;
 end
 

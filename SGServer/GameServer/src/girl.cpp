@@ -410,6 +410,7 @@ int girl_makelove( int actor_index, short kind )
 	pValue.m_kind = (char)kind;
 	pValue.m_sflag = pGirl->sflag;
 	pValue.m_born = born;
+	pValue.m_makelove_exp = loveconfig->makelove_exp;
 	netsend_girlloveresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -2193,6 +2193,7 @@ struct _slk_NetS_GirlLoveResult {
 	char m_kind;	//女将亲密互动结果
 	char m_sflag;	//女将亲密互动结果
 	char m_born;	//女将亲密互动结果
+	short m_makelove_exp;	//女将亲密互动结果
 };
 typedef struct _slk_NetS_GirlLoveResult SLK_NetS_GirlLoveResult;	//女将亲密互动结果
 

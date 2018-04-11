@@ -659,7 +659,7 @@ function GirlDlgMakeLove()
 end
 
 -- 亲密互动结果
-function GirlDlgMakeLoveResult( kind, born )
+function GirlDlgMakeLoveResult( kind, born, makelove_exp )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end

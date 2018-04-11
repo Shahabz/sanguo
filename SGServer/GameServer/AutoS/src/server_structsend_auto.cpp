@@ -3220,6 +3220,7 @@ int struct_NetS_GirlLoveResult_send( char **pptr, int *psize, SLK_NetS_GirlLoveR
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sflag, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_born, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_makelove_exp, (*psize) );
 	return 0;
 }
 
