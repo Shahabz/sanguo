@@ -45,6 +45,7 @@ SRC = \
 ../AutoS/src/auto_data_official_gov.cpp \
 ../AutoS/src/auto_data_activity_05.cpp \
 ../AutoS/src/auto_city_nation_hero.cpp \
+../AutoS/src/auto_data_fangshi_node.cpp \
 ../AutoS/src/auto_data_wishing_shop.cpp \
 ../AutoS/src/auto_data_activity_04.cpp \
 ../AutoS/src/auto_data_activity_10.cpp \
@@ -277,6 +278,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_activity_05.o: ../AutoS/src/auto_data_activity_05.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_nation_hero.o: ../AutoS/src/auto_city_nation_hero.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_fangshi_node.o: ../AutoS/src/auto_data_fangshi_node.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_wishing_shop.o: ../AutoS/src/auto_data_wishing_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
