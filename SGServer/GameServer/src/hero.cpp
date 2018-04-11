@@ -1676,10 +1676,13 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		{
 			if ( i < g_girlson[pHero->kind].maxnum )
 			{
-				son_attack += g_girlson[pHero->kind].config[i].attack;
-				son_defense += g_girlson[pHero->kind].config[i].defense;
-				son_attack_increase += g_girlson[pHero->kind].config[i].attack_increase;
-				son_defense_increase += g_girlson[pHero->kind].config[i].defense_increase;
+				if ( g_girlson[pHero->kind].config )
+				{
+					son_attack += g_girlson[pHero->kind].config[i].attack;
+					son_defense += g_girlson[pHero->kind].config[i].defense;
+					son_attack_increase += g_girlson[pHero->kind].config[i].attack_increase;
+					son_defense_increase += g_girlson[pHero->kind].config[i].defense_increase;
+				}
 			}
 		}
 	}

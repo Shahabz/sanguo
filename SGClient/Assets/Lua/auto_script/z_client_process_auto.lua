@@ -2222,10 +2222,12 @@ end
 -- m_freenum=0,m_nodeid=0,m_awardcount=0,m_awardlist={m_kind=0,m_num=0,[m_awardcount]},
 function proc_fsinfo_C( recvValue )
 	-- process.
+	FangshiDlgInfoRecv(recvValue);
 end
 
 -- m_freenum=0,m_count=0,m_list={m_nodeid=0,m_awardkind=0,m_awardnum=0,[m_count]},
 function proc_fsvisitresult_C( recvValue )
 	-- process.
+	FangshiDlgGetLayerResult(recvValue)
 end
 

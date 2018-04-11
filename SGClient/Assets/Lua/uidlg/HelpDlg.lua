@@ -45,6 +45,7 @@ HELP_MapResDlg = 1540--采集
 HELP_MapBattleDlg = 1543--流寇
 --HELP_BattleDlg = 1544--NPC城池
 HELP_GirlDlg = 1545 --女将
+HELP_FangshiDlg = 1546 --坊市
 
 --一级菜单
 local m_HelpMainItems = { 1500,1501,1502,1503, 1504,1505,1506,1507 }

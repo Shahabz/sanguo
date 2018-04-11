@@ -121,7 +121,9 @@ function City.BuildingSelect( transform )
 		end
 	elseif building.kind == BUILDING_Wash then -- 洗炼铺
 		EquipWashDlgShow();
+		
 	elseif building.kind == BUILDING_Fangshi then -- 坊市
+		FangshiDlgShow()
 		
 	elseif building.kind == BUILDING_Shop then -- 商店
 		ShopDlgShow()

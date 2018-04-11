@@ -96,6 +96,8 @@ int girl_getgirl( City *pCity, int kind, char path )
 		return -1;
 	if ( kind <= 0 || kind >= g_girlinfo_maxnum )
 		return -1;
+	if ( !g_girlinfo[kind].config )
+		return -1;
 
 	// 检查是否已经有这个女将了
 	Girl *pHasGirl = girl_getptr( pCity->index, kind );
@@ -149,7 +151,8 @@ int girl_getsoul( City *pCity, int kind, int soul, char path )
 		return -1;
 	if ( kind <= 0 || kind >= g_girlinfo_maxnum || kind >= ACTOR_GIRL_MAX )
 		return -1;
-
+	if ( !g_girlinfo[kind].config )
+		return -1;
 	pCity->girl[kind].actorid = pCity->actorid;
 	pCity->girl[kind].kind = kind;
 	pCity->girl[kind].soul += soul;
@@ -401,14 +404,17 @@ int girl_makelove( int actor_index, short kind )
 	int born = 0;
 	if ( loveconfig->soncount > 0 && pHero->sonnum < loveconfig->soncount )
 	{
-		if ( pHero->kind < g_girlson_maxnum && pHero->sonnum < 5 )
+		if ( pHero->kind < g_girlson_maxnum && pHero->sonnum < g_girlson[pHero->kind].maxnum )
 		{
-			int odds = g_girlson[pHero->kind].config[pHero->sonnum].born_odds;
-			if ( rand()%100 < odds )
+			if ( g_girlson[pHero->kind].config )
 			{
-				pHero->sontime = (int)time( NULL ) + g_girlson[pHero->kind].config[pHero->sonnum].grow_sec;
-				hero_sendinfo( pCity->actor_index, pHero );
-				born = 1;
+				int odds = g_girlson[pHero->kind].config[pHero->sonnum].born_odds;
+				if ( rand() % 100 < odds )
+				{
+					pHero->sontime = (int)time( NULL ) + g_girlson[pHero->kind].config[pHero->sonnum].grow_sec;
+					hero_sendinfo( pCity->actor_index, pHero );
+					born = 1;
+				}
 			}
 		}
 	}
@@ -688,6 +694,8 @@ int fangshi_visit( int actor_index, int type )
 			return -1;
 		}
 	}
+	else
+		return -1;
 
 	SLK_NetS_FsVisitResult pValue = { 0 };
 	pValue.m_freenum = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE );
