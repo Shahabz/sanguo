@@ -612,6 +612,10 @@ int global_init()
 			global.fangshi_actorlevel = atoi( row[1] );
 		else if ( id == 223 )
 			global.girl_marry_lovelevel = atoi( row[1] );
+		else if ( id == 224 )
+			global.fangshi_visit_token = atoi( row[1] );
+		else if ( id == 225 )
+			global.fangshi_visit_freenum = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

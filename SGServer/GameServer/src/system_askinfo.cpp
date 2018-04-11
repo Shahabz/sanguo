@@ -1159,6 +1159,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			girl_son_growth( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_FANGSHI:
+		if ( pvalue[0] == 0 )
+		{ // 坊市信息
+			fangshi_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 坊市寻访
+			fangshi_visit( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 坊市寻访领取奖励
+			fangshi_visit_getaward( actor_index );
+		}
+		break;
 	default:
 		break;
 	}

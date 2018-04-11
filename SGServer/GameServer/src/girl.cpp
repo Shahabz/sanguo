@@ -586,3 +586,60 @@ void girl_gm_getall( City *pCity )
 		girl_getgirl( pCity, kind, PATH_GM );
 	}
 }
+
+
+// 坊市信息
+int fangshi_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX(actor_index);
+	// 先检查前一天的奖励是否领取
+	int fday = system_getfday();
+	if ( g_actors[actor_index].fs_awardfday != fday )
+	{
+		fangshi_visit_getaward( actor_index );
+		g_actors[actor_index].fs_awardfday = fday;
+	}
+	SLK_NetS_FsInfo pValue = { 0 };
+	pValue.m_freenum = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE );
+	pValue.m_visit_direction = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_DIRECTION );
+	pValue.m_visit_step = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_STEP );
+	for ( int tmpi = 0; tmpi < FANGSHI_AWARDNUM; tmpi++ )
+	{
+		if ( g_actors[actor_index].fs_awardkind[tmpi] > 0 )
+		{
+			pValue.m_awardlist[pValue.m_awardcount].m_kind = g_actors[actor_index].fs_awardkind[tmpi];
+			pValue.m_awardlist[pValue.m_awardcount].m_num = g_actors[actor_index].fs_awardnum[tmpi];
+			pValue.m_awardcount += 1;
+		}
+	}
+	netsend_fsinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 坊市寻访
+int fangshi_visit( int actor_index, int isfree )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	
+	//direction
+	//actor_set_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_DIRECTION, 1 );
+	//actor_set_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_STEP, 1 );
+	return 0;
+}
+
+// 领取坊市寻访奖励
+int fangshi_visit_getaward( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	for ( int tmpi = 0; tmpi < FANGSHI_AWARDNUM; tmpi++ )
+	{
+		if ( g_actors[actor_index].fs_awardkind[tmpi] > 0 )
+		{
+			award_getaward( actor_index, g_actors[actor_index].fs_awardkind[tmpi], g_actors[actor_index].fs_awardnum[tmpi], -1, PATH_FANGSHI, NULL );
+			g_actors[actor_index].fs_awardkind[tmpi] = 0;
+			g_actors[actor_index].fs_awardnum[tmpi] = 0;
+		}
+	}
+	return 0;
+}

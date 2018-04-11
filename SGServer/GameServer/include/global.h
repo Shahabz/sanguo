@@ -196,6 +196,8 @@ typedef struct _global
 	short fangshi_citylevel;
 	short fangshi_actorlevel;
 	char girl_marry_lovelevel;
+	short fangshi_visit_token;
+	short fangshi_visit_freenum;
 }Global;
 int global_init();
 void global_reload();

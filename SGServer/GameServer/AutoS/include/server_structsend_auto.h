@@ -2197,6 +2197,30 @@ struct _slk_NetS_GirlLoveResult {
 };
 typedef struct _slk_NetS_GirlLoveResult SLK_NetS_GirlLoveResult;	//女将亲密互动结果
 
+struct _slk_NetS_FsInfo {
+	char m_freenum;	//坊市免费次数
+	char m_visit_direction;	//坊市方向
+	char m_visit_step;	//坊市路径
+	char m_awardcount;	//坊市奖励
+	SLK_NetS_AwardInfo m_awardlist[16];	//坊市奖励
+};
+typedef struct _slk_NetS_FsInfo SLK_NetS_FsInfo;	//坊市信息
+
+struct _slk_NetS_FsVisit {
+	char m_visit_direction;	//坊市寻访结果
+	char m_visit_step;	//坊市寻访结果
+	int m_awardkind;	//坊市寻访结果
+	int m_awardnum;	//坊市寻访结果
+};
+typedef struct _slk_NetS_FsVisit SLK_NetS_FsVisit;	//坊市寻访结果
+
+struct _slk_NetS_FsVisitResult {
+	char m_freenum;	//坊市寻访结果列表
+	char m_count;	//坊市寻访结果列表
+	SLK_NetS_FsVisit m_list[16];	//坊市寻访结果列表
+};
+typedef struct _slk_NetS_FsVisitResult SLK_NetS_FsVisitResult;	//坊市寻访结果
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2434,5 +2458,8 @@ int struct_NetS_GirlList_send( char **pptr, int *psize, SLK_NetS_GirlList *pValu
 int struct_NetS_GirlGet_send( char **pptr, int *psize, SLK_NetS_GirlGet *pValue );
 int struct_NetS_GirlLove_send( char **pptr, int *psize, SLK_NetS_GirlLove *pValue );
 int struct_NetS_GirlLoveResult_send( char **pptr, int *psize, SLK_NetS_GirlLoveResult *pValue );
+int struct_NetS_FsInfo_send( char **pptr, int *psize, SLK_NetS_FsInfo *pValue );
+int struct_NetS_FsVisit_send( char **pptr, int *psize, SLK_NetS_FsVisit *pValue );
+int struct_NetS_FsVisitResult_send( char **pptr, int *psize, SLK_NetS_FsVisitResult *pValue );
 
 #endif

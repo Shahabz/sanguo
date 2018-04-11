@@ -67,8 +67,8 @@
 #define AWARDKIND_RES_FOOD		60003 // 奖励未启用资源点（农田）
 #define AWARDKIND_RES_IRON		60004 // 奖励未启用资源点（矿厂）
 
-#define	AWARDKIND_GIRLBASE		70000 // 女将
-#define	AWARDKIND_GIRLSOULBASE	71000 // 女将碎片
+#define	AWARDKIND_GIRLBASE		70000 // 女将(70000+女将编号)
+#define	AWARDKIND_GIRLSOULBASE	71000 // 女将碎片(71000+女将编号)
 
 // 离线情况下的给予属性
 #define AWARDKIND_OTHERBASE	100000

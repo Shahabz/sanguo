@@ -89,9 +89,9 @@ struct _actor {
 				char act05_upnum;	//七星拜将活动-剩余刷新次数
 				int act05_upstamp;	//七星拜将活动-刷新时间
 				short act08_state;	//成长计划活动领取奖励
-				unsigned short fs_visit;	//坊市总次数
-				char fs_step;	//坊市路径
-				char fs_back;	//坊市路径前进后退
+				int fs_awardkind[14];	//坊市寻访奖励
+				int fs_awardnum[14];	//坊市寻访奖励
+				int fs_awardfday;	//坊市寻访奖励日期
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

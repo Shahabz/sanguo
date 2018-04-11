@@ -199,6 +199,8 @@ int netsend_girllist_S( int actor_index, char send_type, SLK_NetS_GirlList *pVal
 int netsend_girlget_S( int actor_index, char send_type, SLK_NetS_GirlGet *pValue );
 int netsend_girllove_S( int actor_index, char send_type, SLK_NetS_GirlLove *pValue );
 int netsend_girlloveresult_S( int actor_index, char send_type, SLK_NetS_GirlLoveResult *pValue );
+int netsend_fsinfo_S( int actor_index, char send_type, SLK_NetS_FsInfo *pValue );
+int netsend_fsvisitresult_S( int actor_index, char send_type, SLK_NetS_FsVisitResult *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

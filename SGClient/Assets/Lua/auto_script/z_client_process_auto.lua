@@ -2218,3 +2218,13 @@ function proc_girlloveresult_C( recvValue )
 	end
 end
 
+-- m_freenum=0,m_visit_direction=0,m_visit_step=0,m_awardcount=0,m_awardlist={m_kind=0,m_num=0,[m_awardcount]},
+function proc_fsinfo_C( recvValue )
+	-- process.
+end
+
+-- m_freenum=0,m_count=0,m_list={m_visit_direction=0,m_visit_step=0,m_awardkind=0,m_awardnum=0,[m_count]},
+function proc_fsvisitresult_C( recvValue )
+	-- process.
+end
+

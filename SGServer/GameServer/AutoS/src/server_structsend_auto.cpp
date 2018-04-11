@@ -3224,3 +3224,42 @@ int struct_NetS_GirlLoveResult_send( char **pptr, int *psize, SLK_NetS_GirlLoveR
 	return 0;
 }
 
+int struct_NetS_FsInfo_send( char **pptr, int *psize, SLK_NetS_FsInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_freenum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_visit_direction, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_visit_step, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_awardcount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_awardcount; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_awardlist[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_FsVisit_send( char **pptr, int *psize, SLK_NetS_FsVisit *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_visit_direction, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_visit_step, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	return 0;
+}
+
+int struct_NetS_FsVisitResult_send( char **pptr, int *psize, SLK_NetS_FsVisitResult *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_freenum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_FsVisit_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

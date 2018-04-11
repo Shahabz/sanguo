@@ -51,6 +51,7 @@
 #define ASKINFO_GUAID			46 // 引导完成
 #define	ASKINFO_CDKEY			47 // CDKEY
 #define	ASKINFO_GIRL			48 // 女将
+#define	ASKINFO_FANGSHI			49 // 坊市
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

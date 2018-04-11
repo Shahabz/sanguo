@@ -985,6 +985,16 @@ function netrecv_girlloveresult_C( buffer )
 	proc_girlloveresult_C( recvValue );
 end
 
+function netrecv_fsinfo_C( buffer )
+	local recvValue = struct_NetS_FsInfo_recv( buffer );
+	proc_fsinfo_C( recvValue );
+end
+
+function netrecv_fsvisitresult_C( buffer )
+	local recvValue = struct_NetS_FsVisitResult_recv( buffer );
+	proc_fsvisitresult_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1183,6 +1193,8 @@ Proc_Command = {
 	[CMDS_GIRLGET]=netrecv_girlget_C;
 	[CMDS_GIRLLOVE]=netrecv_girllove_C;
 	[CMDS_GIRLLOVERESULT]=netrecv_girlloveresult_C;
+	[CMDS_FSINFO]=netrecv_fsinfo_C;
+	[CMDS_FSVISITRESULT]=netrecv_fsvisitresult_C;
 }
 
 function in_proc_command_C( cmd, buffer )

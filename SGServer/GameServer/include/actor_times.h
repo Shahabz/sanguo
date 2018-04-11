@@ -36,7 +36,9 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_WISHINGPACK_FOOD 	13	// 聚宝盆打包，今天粮食打包次数
 #define TODAY_CHAR_ACTIVITY_BODYGET1	14	// 午宴
 #define TODAY_CHAR_ACTIVITY_BODYGET2	15	// 晚宴
-#define TODAY_CHAR_FANSHI_VISIT_FREE	16	// 坊市免费寻访次数
+#define TODAY_CHAR_FANSHI_VISIT_FREE		16	// 坊市免费寻访次数
+#define TODAY_CHAR_FANSHI_VISIT_DIRECTION	17	// 坊市寻访方向
+#define TODAY_CHAR_FANSHI_VISIT_STEP		18	// 坊市寻访节点
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );

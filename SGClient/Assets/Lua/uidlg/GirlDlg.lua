@@ -36,6 +36,7 @@ local m_uiMakeLoveAlready = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_GirlCache = nil;
 local m_SelectGirl = nil;
+local m_star = nil;
 
 -- 打开界面
 function GirlDlgOpen()
@@ -188,6 +189,7 @@ function GirlDlgShow()
 	GirlDlgOpen()
 	GirlDlgHeadLayerCreate()
 	GirlDlgSelect( 0 )
+	
 end
 
 function GirlDlgShowByKind( kind )
@@ -374,7 +376,12 @@ function GirlDlgCreateInfo( pGirl )
 		-- TODO 是否已经有孩子了
 		
 		-- 没有孩子
-		GirlDlgShowStar(actorGirl.m_herokind);
+		local m_girlConifg = girlconfig(m_SelectGirl.m_kind,m_SelectGirl.m_color);
+		if m_girlConifg ~= nil then
+			GirlDlgShowStar(actorGirl.m_herokind,m_girlConifg);
+			SetText(m_uiLoveSpeed,T(3357)..(100 * GirlDlgLoveUpSpeed()).."%");
+		end
+		
 		-- 亲密度
 		SetProgress( m_uiLoveProgress, actorGirl.m_love_exp/g_girllove[actorGirl.m_love_level].exp ); 
 		SetText( m_uiLoveProgress.transform:Find("Text"), actorGirl.m_love_exp.."/"..g_girllove[actorGirl.m_love_level].exp ) 
@@ -655,7 +662,9 @@ function GirlDlgMakeLove()
 		return
 	end
 	SetTrue(m_uiIntimate);
-	SetText(m_uiIntimate.transform:Find("Desc"),T(3352));
+	SetFalse(m_uiMakeLoveBtn);
+	
+	system_askinfo( ASKINFO_GIRL, "", 6, m_SelectGirl.m_kind )
 end
 
 -- 亲密互动结果
@@ -669,11 +678,21 @@ function GirlDlgMakeLoveResult( kind, born, makelove_exp )
 	if m_SelectGirl.m_kind ~= kind then
 		return
 	end
+	local value = 0;
 	if born == 1 then
 		-- 已生孩子
+		value = math.random(3501,3506);
 	else
 		-- 未生孩子
+		value = math.random(3507,3529);
 	end
+	
+	local actorGirl = GetGirl().m_Girl[kind];
+	local pHero = GetHero():GetPtr( actorGirl.m_kind );
+	if pHero == nil then
+		return
+	end
+	SetText(m_uiIntimate.transform:Find("Desc"),F(value,HeroName(pHero.m_kind),GirlName(m_SelectGirl.m_kind),makelove_exp));
 end
 		
 -- 下一步
@@ -681,7 +700,9 @@ function GirlDlgMakeNext()
 	if m_SelectGirl == nil then
 		return
 	end
-	system_askinfo( ASKINFO_GIRL, "", 6, m_SelectGirl.m_kind )
+	SetFalse(m_uiIntimate);
+	SetTrue(m_uiMakeLoveAlready);
+	SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
 end
 		
 -- 出师
@@ -692,14 +713,15 @@ function GirlDlgSonGrowUp()
 end
 
 -- 配对指数
-function GirlDlgShowStar(herokind)
-	local m_girlConifg = girlconfig(m_SelectGirl.m_kind,m_SelectGirl.m_color);
-	if m_girlConifg.private_herokind == herokind then
-		GirlDlgInitStar(m_girlConifg.love_star);
+function GirlDlgShowStar(herokind,girlConifg)
+	if girlConifg.private_herokind == herokind then
+		GirlDlgInitStar(girlConifg.love_star);
 		local objs = m_uiLoveStar.transform:GetChild(0).gameObject
 		SetTrue( objs );
+		m_star = girlConifg.love_star + girlConifg.private_love_star;
 	else
-		GirlDlgInitStar(m_girlConifg.love_star);
+		GirlDlgInitStar(girlConifg.love_star);
+		m_star = girlConifg.love_star;
 	end
 end
 
@@ -716,4 +738,9 @@ function GirlDlgHideStar()
 		local objs = m_uiLoveStar.transform:GetChild(i).gameObject
 		SetFalse( objs );
     end
+end
+
+-- 亲密度增长速率
+function GirlDlgLoveUpSpeed()
+	return 1 + (m_star - 1) * 0.5;
 end

@@ -6,6 +6,8 @@
 #define GIRL_SFLAG_MARRY	0	// 是否结婚
 #define GIRL_SFLAG_MAKELOVE	1	// 今天是否亲密互动过
 
+#define FANGSHI_AWARDNUM	14
+
 // 将offset转换成对应的属性结构
 Girl *girl_getptr( int city_index, int kind );
 GirlInfoConfig *girl_getconfig( int kind, int color );
@@ -29,4 +31,8 @@ int girl_addloveexp_kingwar( City *pCity, short herokind, short kind );
 int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path ); // 添加亲昵度
 int girl_son_growth( int actor_index, short kind ); // 子女出师
 void girl_gm_getall( City *pCity );
+
+int fangshi_sendinfo( int actor_index );
+int fangshi_visit( int actor_index, int isfree );
+int fangshi_visit_getaward( int actor_index );
 #endif

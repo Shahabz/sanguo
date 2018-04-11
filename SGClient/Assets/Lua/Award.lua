@@ -44,6 +44,8 @@ AWARDKIND_PERMISSION_3	=	50053 -- 购买弓兵权限（只用于显示）
 AWARDKIND_PERMISSION_4	=	50054 -- 科技快研
 AWARDKIND_PERMISSION_5	=	50055 -- 装备回收图纸
 AWARDKIND_PERMISSION_6	=	50056 -- 作坊预设
+AWARDKIND_GIRLBASE		=	70000 -- 女将(70000+女将编号)
+AWARDKIND_GIRLSOULBASE	=	71000 -- 女将碎片(71000+女将编号)
 
 -- 奖励形象
 function AwardInfo( awardkind )
@@ -285,6 +287,20 @@ function AwardInfo( awardkind )
 		name = item_getname( 489 )
 		c = 3
 		desc = item_getdesc( 489 )
+	
+	-- 女将	
+	elseif awardkind >= AWARDKIND_GIRLBASE and awardkind < AWARDKIND_GIRLSOULBASE then
+		local kind = awardkind-AWARDKIND_GIRLBASE;
+		sprite = GirlHeadSprite( kind )
+		color = ItemColorSprite( g_girlinfo[kind][0].init_color );
+		name = GirlName( kind )
+		
+	-- 女将碎片	
+	elseif awardkind >= AWARDKIND_GIRLSOULBASE and awardkind < AWARDKIND_GIRLSOULBASE+1000 then
+		local kind = awardkind-AWARDKIND_GIRLSOULBASE;
+		sprite = GirlHeadSprite( kind )
+		color = ItemColorSprite( g_girlinfo[kind][0].init_color );
+		name = GirlName( kind )	
 	end
 	
 	if sprite == nil then

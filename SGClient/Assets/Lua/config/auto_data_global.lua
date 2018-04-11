@@ -222,3 +222,5 @@ global.fangshi_actorlevel = 113 --坊市玩家等级限制
 global.fangshi_citylevel = 19 --坊市官府等级限制
 global.newplayer_protect = 86400 --新手保护
 global.girl_marry_lovelevel = 5 --女将可以结婚的等级
+global.fangshi_visit_freenum = 15 --坊市寻访每天免费次数
+global.fangshi_visit_token = 10 --坊市寻访所需元宝
