@@ -771,6 +771,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			{
 				girl_gm_getall( pCity );
 			}
+			else if ( pValue[0] == -1 )
+			{
+				girl_update();
+			}
 			else
 				girl_getgirl( pCity, pValue[0], PATH_GM );
 		}

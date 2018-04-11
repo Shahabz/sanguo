@@ -85,6 +85,7 @@ CREATE TABLE `actor` (
   `act05_upnum` tinyint(3) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-剩余刷新次数',
   `act05_upstamp` int(11) NOT NULL DEFAULT '0' COMMENT '七星拜将活动-刷新时间',
   `act08_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '成长计划活动领取奖励',
+  `fs_nodeid` tinyint(3) NOT NULL DEFAULT '0' COMMENT '坊市节点',
   `fs_awardkind` varbinary(56) NOT NULL DEFAULT '' COMMENT '坊市寻访奖励',
   `fs_awardnum` varbinary(56) NOT NULL DEFAULT '' COMMENT '坊市寻访奖励',
   `fs_awardfday` int(11) NOT NULL DEFAULT '0' COMMENT '坊市寻访奖励日期',

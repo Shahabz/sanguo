@@ -2199,16 +2199,14 @@ typedef struct _slk_NetS_GirlLoveResult SLK_NetS_GirlLoveResult;	//Å®½«Ç×ÃÜ»¥¶¯½
 
 struct _slk_NetS_FsInfo {
 	char m_freenum;	//·»ÊÐÃâ·Ñ´ÎÊý
-	char m_visit_direction;	//·»ÊÐ·½Ïò
-	char m_visit_step;	//·»ÊÐÂ·¾¶
+	char m_nodeid;	//·»ÊÐ½Úµã
 	char m_awardcount;	//·»ÊÐ½±Àø
 	SLK_NetS_AwardInfo m_awardlist[16];	//·»ÊÐ½±Àø
 };
 typedef struct _slk_NetS_FsInfo SLK_NetS_FsInfo;	//·»ÊÐÐÅÏ¢
 
 struct _slk_NetS_FsVisit {
-	char m_visit_direction;	//·»ÊÐÑ°·Ã½á¹û
-	char m_visit_step;	//·»ÊÐÑ°·Ã½á¹û
+	char m_nodeid;	//·»ÊÐÑ°·Ã½á¹û
 	int m_awardkind;	//·»ÊÐÑ°·Ã½á¹û
 	int m_awardnum;	//·»ÊÐÑ°·Ã½á¹û
 };

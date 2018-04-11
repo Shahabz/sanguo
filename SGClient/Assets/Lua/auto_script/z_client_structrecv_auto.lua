@@ -2941,8 +2941,7 @@ end
 function struct_NetS_FsInfo_recv( buffer )
 	local recvValue = {};
 	recvValue.m_freenum = buffer:ReadSByte();
-	recvValue.m_visit_direction = buffer:ReadSByte();
-	recvValue.m_visit_step = buffer:ReadSByte();
+	recvValue.m_nodeid = buffer:ReadSByte();
 	recvValue.m_awardcount = buffer:ReadSByte();
 	recvValue.m_awardlist = {};
 	for tmpi=1,recvValue.m_awardcount,1 do
@@ -2955,8 +2954,7 @@ end
 
 function struct_NetS_FsVisit_recv( buffer )
 	local recvValue = {};
-	recvValue.m_visit_direction = buffer:ReadSByte();
-	recvValue.m_visit_step = buffer:ReadSByte();
+	recvValue.m_nodeid = buffer:ReadSByte();
 	recvValue.m_awardkind = buffer:ReadInt();
 	recvValue.m_awardnum = buffer:ReadInt();
 	return recvValue;

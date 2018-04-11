@@ -75,6 +75,7 @@
 #include "auto_data_girl.h"
 #include "auto_data_girl_love.h"
 #include "auto_data_girl_son.h"
+#include "auto_data_fangshi_node.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_actor_girl.h"

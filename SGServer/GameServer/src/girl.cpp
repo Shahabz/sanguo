@@ -49,6 +49,9 @@ extern int g_girllove_maxnum;
 extern GirlSon *g_girlson;
 extern int g_girlson_maxnum;
 
+extern FangshiNode *g_fangshi_node;
+extern int g_fangshi_node_maxnum;
+
 Girl *girl_getptr( int city_index, int kind )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
@@ -213,6 +216,10 @@ void girl_update()
 				g_city[city_index].girl[kind].sflag &= ~(1 << GIRL_SFLAG_MAKELOVE);
 				g_city[city_index].girl[kind].love_today = 0;
 			}
+		}
+		if ( g_city[city_index].actor_index >= 0 )
+		{ // 在线更新
+			girl_list( g_city[city_index].actor_index );
 		}
 	}
 }
@@ -597,12 +604,12 @@ int fangshi_sendinfo( int actor_index )
 	if ( g_actors[actor_index].fs_awardfday != fday )
 	{
 		fangshi_visit_getaward( actor_index );
+		g_actors[actor_index].fs_nodeid = 0;
 		g_actors[actor_index].fs_awardfday = fday;
 	}
 	SLK_NetS_FsInfo pValue = { 0 };
 	pValue.m_freenum = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE );
-	pValue.m_visit_direction = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_DIRECTION );
-	pValue.m_visit_step = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_STEP );
+	pValue.m_nodeid = g_actors[actor_index].fs_nodeid;
 	for ( int tmpi = 0; tmpi < FANGSHI_AWARDNUM; tmpi++ )
 	{
 		if ( g_actors[actor_index].fs_awardkind[tmpi] > 0 )
@@ -616,15 +623,109 @@ int fangshi_sendinfo( int actor_index )
 	return 0;
 }
 
+// 下一节点
+char fangshi_next_nodeid( char nodeid )
+{
+	if ( nodeid < 0 || nodeid >= g_fangshi_node_maxnum )
+		return 0;
+	FangshiNode *node = &g_fangshi_node[nodeid];
+	if ( !node )
+		return 0;
+	char nextid = 0;
+	int odds = rand() % 100;
+	if ( odds < node->nextodds[0] )
+	{
+		nextid = (char)node->nextid[0];
+	}
+	else if ( odds < node->nextodds[0] + node->nextodds[1] )
+	{
+		nextid = (char)node->nextid[1];
+	}
+	else if ( odds < node->nextodds[0] + node->nextodds[1] + node->nextodds[2] )
+	{
+		nextid = (char)node->nextid[2];
+	}
+	return nextid;
+}
+
 // 坊市寻访
-int fangshi_visit( int actor_index, int isfree )
+int fangshi_visit( int actor_index, int type )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	int count = 0;
+	if ( type == 0 )
+	{ // 免费寻访
+		char freenum = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE );
+		if ( freenum >= global.fangshi_visit_freenum )
+		{
+			return -1;
+		}
+		freenum += 1;
+		actor_set_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE, freenum );
+		count = 1;
+	}
+	else if ( type == 1 )
+	{ // 元宝一次寻访
+		if ( actor_change_token( actor_index, -global.fangshi_visit_token, PATH_FANGSHI, 0 ) < 0 )
+		{
+			return -1;
+		}
+		count = 1;
+	}
+	else if ( type == 2 )
+	{ // 元宝N次寻访
+		int awardcount = 0;
+		for ( int tmpi = 0; tmpi < FANGSHI_AWARDNUM; tmpi++ )
+		{
+			if ( g_actors[actor_index].fs_awardkind[tmpi] > 0 )
+				awardcount += 1;
+		}
+		count = FANGSHI_AWARDNUM - awardcount;
+		if ( count <= 0 )
+			return -1;
+		if ( actor_change_token( actor_index, -global.fangshi_visit_token*count, PATH_FANGSHI, 0 ) < 0 )
+		{
+			return -1;
+		}
+	}
 
-	
-	//direction
-	//actor_set_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_DIRECTION, 1 );
-	//actor_set_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_STEP, 1 );
+	SLK_NetS_FsVisitResult pValue = { 0 };
+	pValue.m_freenum = actor_get_today_char_times( actor_index, TODAY_CHAR_FANSHI_VISIT_FREE );
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		// 给与当前节点奖励
+		char nodeid = g_actors[actor_index].fs_nodeid;
+		if ( nodeid < 0 || nodeid >= g_fangshi_node_maxnum )
+		{
+			nodeid = 0;
+			g_actors[actor_index].fs_nodeid = 0;
+		}
+		FangshiNode *node = &g_fangshi_node[nodeid];
+		if ( !node )
+			continue;
+
+		// 分配奖励
+		AwardGetInfo getinfo = { 0 };
+		awardgroup_random( node->awardgroup, 0, &getinfo );
+		// 放到奖励列表
+		for ( int i = 0; i < FANGSHI_AWARDNUM; i++ )
+		{
+			if ( g_actors[actor_index].fs_awardkind[i] <= 0 )
+			{
+				g_actors[actor_index].fs_awardkind[i] = getinfo.kind[0];
+				g_actors[actor_index].fs_awardnum[i] = getinfo.num[0];
+				break;
+			}
+		}
+
+		// 下一个节点
+		g_actors[actor_index].fs_nodeid = fangshi_next_nodeid( nodeid );
+		pValue.m_list[pValue.m_count].m_nodeid = g_actors[actor_index].fs_nodeid;
+		pValue.m_list[pValue.m_count].m_awardkind = getinfo.kind[0];
+		pValue.m_list[pValue.m_count].m_awardnum = getinfo.num[0];
+		pValue.m_count += 1;
+	}
+	netsend_fsvisitresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

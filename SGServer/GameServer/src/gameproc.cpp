@@ -391,6 +391,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 坊市节点数据初始化
+	if ( fangshinode_init_auto() < 0 )
+	{
+		printf_msg( "fangshinode_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 国器初始化
 	if ( nationequipinfo_init_auto() < 0 )
 	{
@@ -1692,6 +1701,7 @@ int process_dbreload()
 	girlinfo_reload_auto();
 	girllove_reload_auto();
 	girlson_reload_auto();
+	fangshinode_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

@@ -33,6 +33,6 @@ int girl_son_growth( int actor_index, short kind ); // 子女出师
 void girl_gm_getall( City *pCity );
 
 int fangshi_sendinfo( int actor_index );
-int fangshi_visit( int actor_index, int isfree );
+int fangshi_visit( int actor_index, int type );
 int fangshi_visit_getaward( int actor_index );
 #endif
