@@ -30,6 +30,7 @@ local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
 local m_uiDownBtn = nil; --UnityEngine.GameObject
 local m_uiLoyal = nil; --UnityEngine.GameObject
 local m_uiGodBtn = nil; --UnityEngine.GameObject
+local m_uiGirlPicture = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
@@ -107,7 +108,15 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 神级突破
 		elseif nControlID == 8 then
 			HeroGodDlgShow( m_pCacheHero )
-				
+			
+		-- 儿子栏
+		elseif nControlID == 9 then
+			HeroOffspringDlgShow(m_pCacheHero.m_kind);
+		
+		-- 女将栏
+		elseif nControlID == 10 then
+			GirlDlgShow();
+			
 		-- 卸下装备
 		elseif nControlID >= 10 and nControlID < 20 then
 			HeroInfoDlgEquipDown( nControlID-10 )
@@ -168,6 +177,7 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiDownBtn = objs[30];
 	m_uiLoyal = objs[31];
 	m_uiGodBtn = objs[32];
+	m_uiGirlPicture = objs[33];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -219,6 +229,12 @@ function HeroInfoDlgSet( path, pHero, up )
 	m_up = up
 	HeroInfoDlgClear()
 	
+	-- 女将图片
+	if m_pCacheHero.m_girlkind > 0 then
+		SetImage(m_uiGirlPicture,GirlHeadSprite(m_pCacheHero.m_girlkind));
+	else
+		SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
+	end
 	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
 	

@@ -2227,7 +2227,7 @@ function proc_fsinfo_C( recvValue )
 	FangshiDlgInfoRecv(recvValue);
 end
 
--- m_freenum=0,m_count=0,m_list={m_nodeid=0,m_awardkind=0,m_awardnum=0,[m_count]},
+-- m_freenum=0,m_count=0,m_list={m_nodeid=0,m_awardkind=0,m_awardnum=0,m_girlkind=0,[m_count]},
 function proc_fsvisitresult_C( recvValue )
 	-- process.
 	FangshiDlgGetLayerResult(recvValue)

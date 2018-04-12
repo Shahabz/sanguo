@@ -128,6 +128,16 @@ function GirlFaceSprite( kind )
 	return sprite;
 end
 
+-- 儿子头像
+function SonHeadSprite( shape )
+	local name = string.format("sonhead_%d", shape );
+	local sprite = LoadSprite( name );
+	if sprite == nil then
+		sprite = LoadSprite( "sonhead_1" );
+	end
+	return sprite;
+end
+
 -- 守卫头像
 function GuardSprite( shape )
 	local name = string.format("guardhead_%d", shape );

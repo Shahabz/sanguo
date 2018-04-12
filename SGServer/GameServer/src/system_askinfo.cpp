@@ -1176,6 +1176,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 坊市能获得什么奖励
 			fangshi_node_sendaward( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 4 )
+		{ // 皇宫内院
+			fangshi_palace_sendinfo( actor_index );
+		}
 		break;
 	default:
 		break;

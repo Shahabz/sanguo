@@ -350,6 +350,11 @@ function GirlDesc(kind)
 	return Localization.text_item(kind+3400);
 end
 
+-- 获取孩子名称
+function SonName( kind )
+	return Localization.text_item(kind);
+end
+
 -- 兵种名称
 function CorpsName( corps )
 	return T(134+corps);

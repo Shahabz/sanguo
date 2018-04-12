@@ -756,7 +756,23 @@ int fangshi_visit( int actor_index, int type )
 
 		// 分配奖励
 		AwardGetInfo getinfo = { 0 };
+		char girlkind = 0;
 		awardgroup_random( node->awardgroup, 0, &getinfo );
+		if ( getinfo.kind[0] >= AWARDKIND_GIRLBASE && getinfo.kind[0] < AWARDKIND_GIRLSOULBASE )
+		{ // 如果获得是非碎片，要检查是否存在这个女将，存在就转换
+			Girl *pGirl = girl_getptr( actor_index, getinfo.kind[0] );
+			if ( pGirl && pGirl->color > 0 )
+			{
+				GirlInfoConfig *config = girl_getconfig( pGirl->kind, pGirl->color );
+				if ( config )
+				{
+					getinfo.kind[0] = getinfo.kind[0] + 1000;
+					getinfo.num[0] = config->soulchange;
+					girlkind = pGirl->kind;
+				}
+
+			}
+		}
 		// 放到奖励列表
 		for ( int i = 0; i < FANGSHI_AWARDNUM; i++ )
 		{
@@ -773,6 +789,7 @@ int fangshi_visit( int actor_index, int type )
 		pValue.m_list[pValue.m_count].m_nodeid = g_actors[actor_index].fs_nodeid;
 		pValue.m_list[pValue.m_count].m_awardkind = getinfo.kind[0];
 		pValue.m_list[pValue.m_count].m_awardnum = getinfo.num[0];
+		pValue.m_list[pValue.m_count].m_girlkind = girlkind;
 		pValue.m_count += 1;
 	}
 	netsend_fsvisitresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -805,34 +822,170 @@ int fangshi_node_sendaward( int actor_index, int nodeid )
 	return 0;
 }
 
+// 随机一个奖励
+int _fangshi_palace_random( int *kind, int *num, int *weight, int count, int *totalweight, int *outkind, int *outnum )
+{
+	int allvalue = *totalweight;
+	int curvalue = 0;
+	int odds = allvalue > 0 ? rand() % allvalue : 0;
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		// 按照评价值方式随机
+		int awardkind = kind[tmpi];
+		int awardnum = num[tmpi];
+		if ( awardkind <= 0 || awardnum <= 0 )
+			continue;
+		curvalue = weight[tmpi];
+		if ( curvalue > 0 && curvalue > odds )
+		{
+			*outkind = awardkind;
+			*outnum = awardnum;
+			kind[tmpi] = 0;
+			num[tmpi] = 0;
+			*totalweight -= curvalue;
+			break;
+		}
+		odds -= curvalue;
+	}
+	return 0;
+}
+
+// 获取奖励
+int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *out_awardnum, int out_count )
+{
+	if ( type < 0 || type >= g_fangshi_palace_maxnum )
+		return -1;
+	int count = 0;
+	int awardkind[32] = { 0 };
+	int awardnum[32] = { 0 };
+	int weight[32] = { 0 };
+	int totalweight = 0;
+	int nowtime = (int)time( NULL );
+	for ( int index = 0; index < g_fangshi_palace[type].maxnum; index++ )
+	{
+		FangshiPalaceConfig *config = &g_fangshi_palace[type].config[index];
+		if ( type == 0 )
+		{
+			int herokind = config->cond_herokind;
+			if ( herokind <= 0 || herokind >= g_nation_hero_maxcount )
+				continue;
+			if ( g_nation_hero[herokind].createtime <= 0 )
+				continue;
+			if ( (nowtime - g_nation_hero[herokind].createtime) < global.fangshi_nationhero_time )
+				continue;
+		}
+		else if ( type == 1 )
+		{
+			if ( config->cond_herokind > 0 )
+			{
+				Hero *pHero = hero_getptr( pCity->actor_index, config->cond_herokind );
+				if ( !pHero )
+					continue;
+			}
+		}
+
+		if ( config->awardkind > AWARDKIND_GIRLSOULBASE )
+		{ // 碎片，没有整卡丢弃，有整卡突破满丢弃
+			if ( config->cond_girlkind > 0 )
+			{
+				if ( config->cond_girlkind >= ACTOR_GIRL_MAX )
+					continue;
+				Girl *pGirl = girl_getptr( pCity->index, config->cond_girlkind );
+				if ( !pGirl )
+					continue;
+				if ( pGirl->color == 0 )
+					continue;
+				if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+					continue;
+			}
+		}
+		else
+		{ // 完整，有了，丢弃
+			char girlkind = config->awardkind - AWARDKIND_GIRLBASE;
+			if ( girlkind <= 0 || girlkind >= ACTOR_GIRL_MAX )
+				continue;
+			Girl *pGirl = girl_getptr( pCity->index, girlkind );
+			if ( !pGirl )
+				continue;
+			if ( pGirl->color > 0 )
+				continue;
+		}
+		awardkind[count] = config->awardkind;
+		awardnum[count] = config->awardnum;
+		weight[count] = config->weight;
+		totalweight += config->weight;
+		count += 1;
+		if ( count >= 32 )
+		{
+			break;
+		}
+	}
+
+	for ( int tmpi = 0; tmpi < out_count; tmpi++ )
+	{
+		_fangshi_palace_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
+	}
+	return 0;
+}
+
 // 坊市皇宫内院随机
-int fangshi_palace_random( int actor_index )
+int fangshi_palace_update( int actor_index )
 {
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
 
-	// 随机主要
-	int main_count = 0;
-	int main_awardkind[2] = { 0 };
-	// 1，遍历所有名将，找到出现时间2个月以上的且该女将未突破满
-	int nowtime = (int)time( NULL );
-	for ( int herokind = 1; herokind < g_nation_hero_maxcount; herokind++ )
-	{
-		if ( (nowtime - g_nation_hero[herokind].createtime) >= global.fangshi_nationhero_time )
-		{
-			char girlkind = girl_withherokind( herokind );
-			if ( girlkind <= 0 )
-				continue;
-			Girl *pGirl = girl_getptr( pCity->index, girlkind );
-			if ( !pGirl )
-				continue;
-			if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
-				continue;
-		}
-	}
-	// 随机次要
+	// 名将
+	int nh_awardkind[2] = { 0 };
+	int nh_awardnum[2] = { 0 };
+	_fangshi_palace_getaward( pCity, 0, nh_awardkind, nh_awardnum, 1 );
 
+	// 神将
+	int god_awardkind[2] = { 0 };
+	int god_awardnum[2] = { 0 };
+	_fangshi_palace_getaward( pCity, 1, god_awardkind, god_awardnum, 1 );
+
+	int main_awardkind[2] = { 0 };
+	int main_awardnum[2] = { 0 };
+	if ( nh_awardkind[0] <= 0 && god_awardkind[0] <= 0 )
+	{
+		_fangshi_palace_getaward( pCity, 2, main_awardkind, main_awardnum, 2 );
+	}
+	else if ( god_awardkind[0] <= 0 )
+	{
+		_fangshi_palace_getaward( pCity, 2, main_awardkind, main_awardnum, 1 );
+		main_awardkind[1] = nh_awardkind[0];
+		main_awardnum[1] = nh_awardnum[0];
+	}
+	else if ( nh_awardkind[0] <= 0 )
+	{
+		_fangshi_palace_getaward( pCity, 2, main_awardkind, main_awardnum, 1 );
+		main_awardkind[1] = god_awardkind[0];
+		main_awardnum[1] = god_awardnum[0];
+	}
+	else
+	{
+		main_awardkind[0] = nh_awardkind[0];
+		main_awardnum[0] = nh_awardnum[0];
+		main_awardkind[1] = god_awardkind[0];
+		main_awardnum[1] = god_awardnum[0];
+	}
+
+	// 次要奖励
+	int other_awardkind[3] = { 0 };
+	int other_awardnum[3] = { 0 };
+	_fangshi_palace_getaward( pCity, 3, other_awardkind, other_awardnum, 3 );
+
+	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		g_actors[actor_index].fs_weekkind[tmpi] = main_awardkind[tmpi];
+		g_actors[actor_index].fs_weeknum[tmpi] = main_awardnum[tmpi];
+	}
+	for ( int tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		g_actors[actor_index].fs_weekkind[tmpi + 2] = other_awardkind[tmpi];
+		g_actors[actor_index].fs_weeknum[tmpi + 2] = other_awardnum[tmpi];
+	}
 	return 0;
 }
 
@@ -841,11 +994,12 @@ int fangshi_palace_sendinfo( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	int fweek = system_getfweek();
-	if ( g_actors[actor_index].fs_fweek != fweek )
+	fangshi_palace_update( actor_index );
+	/*if ( g_actors[actor_index].fs_fweek != fweek )
 	{
-		fangshi_palace_random( actor_index );
+		fangshi_palace_update( actor_index );
 		g_actors[actor_index].fs_fweek = fweek;
-	}
+	}*/
 	SLK_NetS_FsPalace pValue = { 0 };
 	for ( int tmpi = 0; tmpi < 5; tmpi++ )
 	{

@@ -400,8 +400,9 @@ end
 
 -- 打开皇宫内院界面
 function FangshiDlgOnBtnGarth()
+	system_askinfo( ASKINFO_FANGSHI, "", 4 )
 	SetTrue(m_uiGarthLayer);
-	FangshiDlgInitGarth();
+	--FangshiDlgInitGarth();
 end
 
 -- 初始化皇宫内院界面

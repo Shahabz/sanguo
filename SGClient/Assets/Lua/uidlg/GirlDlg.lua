@@ -37,6 +37,7 @@ local m_ObjectPool = nil;
 local m_GirlCache = nil;
 local m_SelectGirl = nil;
 local m_star = nil;
+local m_cacheValue = nil;
 
 -- 打开界面
 function GirlDlgOpen()
@@ -163,7 +164,7 @@ end
 
 -- 界面显示时调用
 function GirlDlgOnEnable( gameObject )
-	
+	m_cacheValue = true;
 end
 
 -- 界面隐藏时调用
@@ -341,6 +342,9 @@ function GirlDlgSelect( kind )
 				local objs = m_GirlCache[i].m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 				local uiSelect = objs[6]
 				SetTrue( uiSelect )
+				if m_SelectGirl ~= m_GirlCache[i] then
+					m_cacheValue = true;
+				end
 				m_SelectGirl = m_GirlCache[i];
 				break
 			end
@@ -373,52 +377,65 @@ function GirlDlgCreateInfo( pGirl )
 		SetProgress( uiProgress, nowSoul/maxSoul )
 		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )
 		
-		-- TODO 是否已经有孩子了
-		
-		-- 没有孩子
-		local m_girlConifg = girlconfig(m_SelectGirl.m_kind,m_SelectGirl.m_color);
-		if m_girlConifg ~= nil then
-			GirlDlgShowStar(actorGirl.m_herokind,m_girlConifg);
-			SetText(m_uiLoveSpeed,T(3357)..(100 * GirlDlgLoveUpSpeed()).."%");
+		local pHero = GetHero():GetPtr( actorGirl.m_herokind );
+		if pHero == nil then
+			return
 		end
-		
-		-- 亲密度
-		SetProgress( m_uiLoveProgress, actorGirl.m_love_exp/g_girllove[actorGirl.m_love_level].exp ); 
-		SetText( m_uiLoveProgress.transform:Find("Text"), actorGirl.m_love_exp.."/"..g_girllove[actorGirl.m_love_level].exp ) 
-		SetLevel( m_uiLoveProgress.transform:Find("Title/LoveLevel"),actorGirl.m_love_level);
-		SetTrue(m_uiLoveLayer);
-		SetFalse(m_uiDontMarry);
-		SetFalse(m_uiIntimate);
-		SetFalse(m_uiMarryBtn);
-		SetFalse(m_uiMakeLoveBtn);
-		SetFalse(m_uiMakeLoveAlready);
-		
-		-- 还不能喜结连理
-		if actorGirl.m_love_level < global.girl_marry_lovelevel then 
-			SetTrue(m_uiDontMarry);
-			SetText(m_uiDontMarry.transform:Find("Text"),T(3352));
-		else
+		--有孩子
+		if pHero.m_sontime > 0 then
+			SetTrue(m_uiSonLayer);
+			SetFalse(m_uiLoveLayer);
+			GirlDlgSonLayerSetSon(pHero,g_girlson[pHero.m_kind][pHero.m_sonnum]);
 			
-			-- 可以喜结连理
-			if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MARRY ) == 0 then
-				SetTrue(m_uiMarryBtn);
+		--没有孩子
+		else
+			local m_girlConifg = girlconfig(m_SelectGirl.m_kind,m_SelectGirl.m_color);
+			if m_girlConifg ~= nil then
+				GirlDlgShowStar(actorGirl.m_herokind,m_girlConifg);
+				SetText(m_uiLoveSpeed,T(3357)..(100 * GirlDlgLoveUpSpeed()).."%");
+			end
+			
+			-- 亲密度
+			SetProgress( m_uiLoveProgress, actorGirl.m_love_exp/g_girllove[actorGirl.m_love_level].exp ); 
+			SetText( m_uiLoveProgress.transform:Find("Text"), actorGirl.m_love_exp.."/"..g_girllove[actorGirl.m_love_level].exp ) 
+			SetLevel( m_uiLoveProgress.transform:Find("Title/LoveLevel"),actorGirl.m_love_level);
+			SetTrue(m_uiLoveLayer);
+			if m_cacheValue == true then
+				SetFalse(m_uiSonLayer);
+				SetFalse(m_uiDontMarry);
+				SetFalse(m_uiIntimate);
+				SetFalse(m_uiMarryBtn);
+				SetFalse(m_uiMakeLoveBtn);
+				SetFalse(m_uiMakeLoveAlready);
 				
-			-- 已经喜结连理
-			else
-				--未亲密互动
-				if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MAKELOVE) == 0 then
-					SetTrue(m_uiMakeLoveBtn);
-					
-				--已经亲密互动
+				-- 还不能喜结连理
+				if actorGirl.m_love_level < global.girl_marry_lovelevel then 
+					SetTrue(m_uiDontMarry);
+					SetText(m_uiDontMarry.transform:Find("Text"),T(3352));
 				else
-					SetTrue(m_uiMakeLoveAlready);
-					SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
+					
+					-- 可以喜结连理
+					if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MARRY ) == 0 then
+						SetTrue(m_uiMarryBtn);
+						
+					-- 已经喜结连理
+					else
+						--未亲密互动
+						if Utils.get_int_sflag( actorGirl.m_sflag, GIRL_SFLAG_MAKELOVE) == 0 then
+							SetTrue(m_uiMakeLoveBtn);
+							
+						--已经亲密互动
+						else
+							SetTrue(m_uiMakeLoveAlready);
+							SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
+						end
+					end
 				end
 			end
 		end
-		
 	else
 		-- 未获得 或者 未指派
+		SetFalse(m_uiSonLayer);
 		SetFalse(m_uiLoveLayer);
 		SetTrue( m_uiSingleLayer )
 		SetFalse( m_uiDoubleLayer )
@@ -556,6 +573,26 @@ local function MakeAttrText( uiAttrText, config )
 	SetText( uiAttrText, msg )
 end
 
+-- 拼儿子属性
+local function MakeSonAttrText( uiAttrText, config ,pHero)
+	local msg = "";
+	if config  then
+		if config.attack > 0 then
+			msg = msg..F(3406,HeroName(pHero.m_kind),config.attack,T(146)).."\n";
+		end
+		if config.defense > 0 then
+			msg = msg..F(3406,HeroName(pHero.m_kind),config.defense,T(147)).."\n";
+		end
+		if config.attack_increase > 0 then
+			msg = msg..F(3406,HeroName(pHero.m_kind),config.attack_increase,T(165)).."\n";
+		end
+		if config.defense_increase > 0 then
+			msg = msg..F(3406,HeroName(pHero.m_kind),config.defense_increase,T(166)).."\n";
+		end
+	end
+	SetText( uiAttrText, msg..T(3407))
+end
+
 -- 设置男将信息
 function GirlDlgDoubleLayerSetHero( uiHeroObj, config, herokind )
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
@@ -592,6 +629,24 @@ function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
 		SetText( uiAttrName, T(3349) ) -- 下次突破加成属性
 		MakeAttrText( uiAttrText, girlconfig( kind, color+1 ) )
 	end
+end
+
+-- 设置儿子信息
+function GirlDlgSonLayerSetSon(pHero,sonConifg)
+	--SetImage(m_uiSonHead,)
+	-- 儿子的出师进度
+	if pHero.m_sontime - GetServerTime() <= 0 then
+		SetTrue(m_uiGrowUpBtn);
+	else
+		SetFalse(m_uiGrowUpBtn);
+	end
+
+	local age,progress = math.modf((GetServerTime() - (pHero.m_sontime - sonConifg.grow_sec))/(sonConifg.grow_sec/sonConifg.born_odds));
+	SetImage(m_uiSonHead,SonHeadSprite(sonConifg.client_shape));
+	SetProgress(m_uiAgeProgress, progress); 
+	SetText( m_uiAgeProgress.transform:Find("Text"), F(3408,age));
+	SetText(m_uiSonName,SonName(sonConifg.client_name));
+	MakeSonAttrText(m_uiSonAttr,sonConifg,pHero);
 end
 
 -- 委派男将
@@ -661,10 +716,10 @@ function GirlDlgMakeLove()
 	if m_SelectGirl == nil then
 		return
 	end
-	SetTrue(m_uiIntimate);
 	SetFalse(m_uiMakeLoveBtn);
 	
 	system_askinfo( ASKINFO_GIRL, "", 6, m_SelectGirl.m_kind )
+	m_cacheValue = false;
 end
 
 -- 亲密互动结果
@@ -688,11 +743,13 @@ function GirlDlgMakeLoveResult( kind, born, makelove_exp )
 	end
 	
 	local actorGirl = GetGirl().m_Girl[kind];
-	local pHero = GetHero():GetPtr( actorGirl.m_kind );
+	local pHero = GetHero():GetPtr( actorGirl.m_herokind );
 	if pHero == nil then
 		return
 	end
 	SetText(m_uiIntimate.transform:Find("Desc"),F(value,HeroName(pHero.m_kind),GirlName(m_SelectGirl.m_kind),makelove_exp));
+	
+	SetTrue(m_uiIntimate);
 end
 		
 -- 下一步
@@ -700,9 +757,22 @@ function GirlDlgMakeNext()
 	if m_SelectGirl == nil then
 		return
 	end
-	SetFalse(m_uiIntimate);
-	SetTrue(m_uiMakeLoveAlready);
-	SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
+	
+	local actorGirl = GetGirl().m_Girl[m_SelectGirl.m_kind];
+	local pHero = GetHero():GetPtr( actorGirl.m_herokind );
+	if pHero == nil then
+		return
+	end
+	--有孩子
+	if pHero.m_sontime > 0 then
+		SetFalse(m_uiLoveLayer);
+		SetTrue(m_uiSonLayer);
+	else
+		SetFalse(m_uiIntimate);
+		SetTrue(m_uiMakeLoveAlready);
+		SetText(m_uiMakeLoveAlready.transform:Find("Text"),T(3353));
+	end
+	m_cacheValue = true;
 end
 		
 -- 出师
@@ -710,6 +780,7 @@ function GirlDlgSonGrowUp()
 	if m_SelectGirl == nil then
 		return
 	end
+	system_askinfo( ASKINFO_GIRL, "", 7, m_SelectGirl.m_kind )
 end
 
 -- 配对指数
