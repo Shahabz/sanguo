@@ -3245,6 +3245,7 @@ int struct_NetS_FsVisit_send( char **pptr, int *psize, SLK_NetS_FsVisit *pValue 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nodeid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_girlkind, (*psize) );
 	return 0;
 }
 
@@ -3257,6 +3258,18 @@ int struct_NetS_FsVisitResult_send( char **pptr, int *psize, SLK_NetS_FsVisitRes
 	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
 	{
 		struct_NetS_FsVisit_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_FsPalace_send( char **pptr, int *psize, SLK_NetS_FsPalace *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	return 0;
 }

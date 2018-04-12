@@ -1,6 +1,7 @@
 CC=g++
 SRC = \
 ../AutoS/src/auto_city.cpp \
+../AutoS/src/auto_data_fangshi_palace.cpp \
 ../AutoS/src/auto_data_official_tech.cpp \
 ../AutoS/src/global_netrecv_auto.cpp \
 ../AutoS/src/auto_data_building_res_unlock.cpp \
@@ -190,6 +191,8 @@ $(EXE) : $(OBJ)
 
 
 ../AutoS/src/auto_city.o: ../AutoS/src/auto_city.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_fangshi_palace.o: ../AutoS/src/auto_data_fangshi_palace.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_tech.o: ../AutoS/src/auto_data_official_tech.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

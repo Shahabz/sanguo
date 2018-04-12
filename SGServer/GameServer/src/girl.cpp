@@ -40,6 +40,9 @@ extern int g_city_maxcount;
 extern ItemKind *g_itemkind;
 extern int g_itemkind_maxnum;
 
+extern NationHero *g_nation_hero;
+extern int g_nation_hero_maxcount;
+
 extern GirlInfo *g_girlinfo;
 extern int g_girlinfo_maxnum;
 
@@ -51,6 +54,9 @@ extern int g_girlson_maxnum;
 
 extern FangshiNode *g_fangshi_node;
 extern int g_fangshi_node_maxnum;
+
+extern FangshiPalace *g_fangshi_palace;
+extern int g_fangshi_palace_maxnum;
 
 Girl *girl_getptr( int city_index, int kind )
 {
@@ -576,6 +582,8 @@ int girl_son_growth( int actor_index, short kind )
 		return -1;
 	if ( pHero->sontime <= 0 )
 		return -1;
+	if ((int)time(NULL) < pHero->sontime )
+		return -1;
 	if ( pHero->kind >= g_girlson_maxnum )
 		return -1;
 	if ( pHero->sonnum < g_girlson[pHero->kind].maxnum-1 )
@@ -600,6 +608,40 @@ void girl_gm_getall( City *pCity )
 	}
 }
 
+int girl_gm_son_growth_quick( City *pCity, short herokind )
+{
+	if ( !pCity )
+		return -1;
+	Hero *pHero = hero_getptr( pCity->actor_index, herokind );
+	if ( !pHero )
+		return -1;
+	if ( pHero->sontime <= 0 )
+		return -1;
+	pHero->sontime = (int)time( NULL )+30;
+	hero_attr_calc( pCity, pHero );
+	city_battlepower_hero_calc( pCity );
+	hero_sendinfo( pCity->actor_index, pHero );
+
+	Girl *pGirl = girl_getptr( pCity->index, pHero->girlkind );
+	if ( pGirl )
+	{
+		girl_info( pCity, pGirl );
+	}
+	return 0;
+}
+
+// 获取这个男将对应的女将
+char girl_withherokind( short herokind )
+{
+	for ( char kind = 1; kind < g_girlinfo_maxnum; kind++ )
+	{
+		if ( g_girlinfo[kind].config && g_girlinfo[kind].config[0].private_herokind == herokind )
+		{
+			return kind;
+		}
+	}
+	return 0;
+}
 
 // 坊市信息
 int fangshi_sendinfo( int actor_index )
@@ -750,5 +792,67 @@ int fangshi_visit_getaward( int actor_index )
 			g_actors[actor_index].fs_awardnum[tmpi] = 0;
 		}
 	}
+	return 0;
+}
+
+// 坊市节点奖励
+int fangshi_node_sendaward( int actor_index, int nodeid )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( nodeid < 0 || nodeid >= g_fangshi_node_maxnum )
+		return -1;
+	awardgroup_sendinfo( actor_index, g_fangshi_node[nodeid].awardgroup, 5, nodeid, 8 );
+	return 0;
+}
+
+// 坊市皇宫内院随机
+int fangshi_palace_random( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	// 随机主要
+	int main_count = 0;
+	int main_awardkind[2] = { 0 };
+	// 1，遍历所有名将，找到出现时间2个月以上的且该女将未突破满
+	int nowtime = (int)time( NULL );
+	for ( int herokind = 1; herokind < g_nation_hero_maxcount; herokind++ )
+	{
+		if ( (nowtime - g_nation_hero[herokind].createtime) >= global.fangshi_nationhero_time )
+		{
+			char girlkind = girl_withherokind( herokind );
+			if ( girlkind <= 0 )
+				continue;
+			Girl *pGirl = girl_getptr( pCity->index, girlkind );
+			if ( !pGirl )
+				continue;
+			if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+				continue;
+		}
+	}
+	// 随机次要
+
+	return 0;
+}
+
+// 坊市皇宫内院奖励
+int fangshi_palace_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int fweek = system_getfweek();
+	if ( g_actors[actor_index].fs_fweek != fweek )
+	{
+		fangshi_palace_random( actor_index );
+		g_actors[actor_index].fs_fweek = fweek;
+	}
+	SLK_NetS_FsPalace pValue = { 0 };
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		pValue.m_list[pValue.m_count].m_kind = g_actors[actor_index].fs_weekkind[tmpi];
+		pValue.m_list[pValue.m_count].m_num = g_actors[actor_index].fs_weeknum[tmpi];
+		pValue.m_count += 1;
+	}
+	netsend_fspalace_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

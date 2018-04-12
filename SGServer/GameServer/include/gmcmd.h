@@ -65,6 +65,7 @@
 #define GMC_UNLOCKUSER			(GMC_BASE+60)	// 解锁账户
 #define GMC_GIRL				(GMC_BASE+61)	// 女将
 #define GMC_GIRLSOUL			(GMC_BASE+62)	// 女将碎片
+#define GMC_SONQUICK			(GMC_BASE+63)	// 出师加速
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

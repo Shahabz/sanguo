@@ -400,6 +400,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 坊市皇宫内院数据初始化
+	if ( fangshipalace_init_auto() < 0 )
+	{
+		printf_msg( "fangshipalace_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 国器初始化
 	if ( nationequipinfo_init_auto() < 0 )
 	{
@@ -1702,6 +1711,7 @@ int process_dbreload()
 	girllove_reload_auto();
 	girlson_reload_auto();
 	fangshinode_reload_auto();
+	fangshipalace_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

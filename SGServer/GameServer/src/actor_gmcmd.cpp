@@ -785,6 +785,13 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			girl_getsoul( pCity, pValue[0], pValue[1], PATH_GM );
 		}
 		break;
+	case GMC_SONQUICK: // 出师加速
+		if ( pCity )
+		{
+			if ( pValue[0] > 0 )
+				girl_gm_son_growth_quick( pCity, pValue[0] );
+		}
+		break;
 	default:
 		break;
 	}

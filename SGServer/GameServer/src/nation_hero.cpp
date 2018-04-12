@@ -192,11 +192,12 @@ void nation_hero_check( char nation )
 	for ( int tmpi = 0; tmpi < g_nation_heroinfo_maxnum; tmpi++ )
 	{
 		short kind = g_nation_heroinfo[tmpi].herokind;
-		if ( kind <= 0 )
+		if ( kind <= 0 || kind >= g_nation_hero_maxcount )
 			continue;
 		if ( nation == g_nation_heroinfo[tmpi].nation && pNation->level >= g_nation_heroinfo[tmpi].nationlevel )
 		{
 			nation_hero_showmap( kind );
+			g_nation_hero[kind].createtime = (int)time( NULL );
 		}
 	}
 }

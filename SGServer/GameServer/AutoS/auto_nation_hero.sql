@@ -16,5 +16,6 @@ CREATE TABLE `nation_hero` (
   `troops` int(11) NOT NULL DEFAULT '0' COMMENT '兵力',
   `attack_increase` smallint(6) NOT NULL DEFAULT '0' COMMENT '攻击增强',
   `defense_increase` smallint(6) NOT NULL DEFAULT '0' COMMENT '防御增强',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '首次出现时间',
   PRIMARY KEY (`kind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

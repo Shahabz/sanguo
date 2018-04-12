@@ -21,6 +21,7 @@ struct _nation_hero {
 				int troops;	//兵力
 				short attack_increase;	//攻击增强
 				short defense_increase;	//防御增强
+				int createtime;	//首次出现时间
 				int unit_index;	//显示索引
 				int city_index;	//当前所属城池索引
 };

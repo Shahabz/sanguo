@@ -390,6 +390,8 @@ function proc_awardinfolist_C( recvValue )
 		WorldQuestInfoDlgRecvAward( recvValue )
 	elseif recvValue.m_callback_code == 4 then
 		MapNationHeroDlgRecvAward( recvValue )
+	elseif recvValue.m_callback_code == 5 then
+		
 	end
 end
 
@@ -2229,5 +2231,10 @@ end
 function proc_fsvisitresult_C( recvValue )
 	-- process.
 	FangshiDlgGetLayerResult(recvValue)
+end
+
+-- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},
+function proc_fspalace_C( recvValue )
+	-- process.
 end
 

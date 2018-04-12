@@ -43,8 +43,8 @@ CREATE TABLE `actor` (
   `storyid` smallint(6) NOT NULL DEFAULT '0' COMMENT '副本进度章节',
   `story_star` varbinary(512) NOT NULL DEFAULT '' COMMENT '精英副本星级',
   `story_hero` varbinary(128) NOT NULL DEFAULT '' COMMENT '招募副本',
-  `story_restime` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本时间',
   `story_resnum` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本次数',
+  `story_restime` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本时间',
   `story_resreset` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本重置次数',
   `story_itemnum` varbinary(256) NOT NULL DEFAULT '' COMMENT '道具副本掉落次数',
   `story_drawing` varbinary(64) NOT NULL DEFAULT '' COMMENT '装备图纸副本是否购买',
@@ -66,8 +66,8 @@ CREATE TABLE `actor` (
   `neq_crit` varbinary(24) NOT NULL DEFAULT '' COMMENT '国器暴击状态',
   `mapcallfree` tinyint(3) NOT NULL DEFAULT '0' COMMENT '免费召唤次数',
   `wishingid` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具列表',
-  `wishingopen` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具开启',
   `wishingday` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆道具哪天的',
+  `wishingopen` varbinary(36) NOT NULL DEFAULT '' COMMENT '聚宝盆道具开启',
   `wishingcd` int(11) NOT NULL DEFAULT '0' COMMENT '聚宝盆寻宝冷却',
   `shape_bag` int(11) NOT NULL DEFAULT '0' COMMENT '形象背包',
   `student` varbinary(120) NOT NULL DEFAULT '' COMMENT '徒弟',
@@ -89,5 +89,8 @@ CREATE TABLE `actor` (
   `fs_awardkind` varbinary(56) NOT NULL DEFAULT '' COMMENT '坊市寻访奖励',
   `fs_awardnum` varbinary(56) NOT NULL DEFAULT '' COMMENT '坊市寻访奖励',
   `fs_awardfday` int(11) NOT NULL DEFAULT '0' COMMENT '坊市寻访奖励日期',
+  `fs_weekkind` varbinary(20) NOT NULL DEFAULT '' COMMENT '皇宫内院奖励',
+  `fs_weeknum` varbinary(20) NOT NULL DEFAULT '' COMMENT '皇宫内院奖励',
+  `fs_fweek` int(11) NOT NULL DEFAULT '0' COMMENT '坊市周数',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

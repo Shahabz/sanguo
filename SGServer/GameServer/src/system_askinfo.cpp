@@ -1172,6 +1172,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 坊市寻访领取奖励
 			fangshi_visit_getaward( actor_index );
 		}
+		else if ( pvalue[0] == 3 )
+		{ // 坊市能获得什么奖励
+			fangshi_node_sendaward( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

@@ -995,6 +995,11 @@ function netrecv_fsvisitresult_C( buffer )
 	proc_fsvisitresult_C( recvValue );
 end
 
+function netrecv_fspalace_C( buffer )
+	local recvValue = struct_NetS_FsPalace_recv( buffer );
+	proc_fspalace_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1195,6 +1200,7 @@ Proc_Command = {
 	[CMDS_GIRLLOVERESULT]=netrecv_girlloveresult_C;
 	[CMDS_FSINFO]=netrecv_fsinfo_C;
 	[CMDS_FSVISITRESULT]=netrecv_fsvisitresult_C;
+	[CMDS_FSPALACE]=netrecv_fspalace_C;
 }
 
 function in_proc_command_C( cmd, buffer )

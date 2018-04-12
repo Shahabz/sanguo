@@ -31,8 +31,12 @@ int girl_addloveexp_kingwar( City *pCity, short herokind, short kind );
 int girl_addloveexp( City *pCity, Girl *pGirl, int exp, short path ); // 添加亲昵度
 int girl_son_growth( int actor_index, short kind ); // 子女出师
 void girl_gm_getall( City *pCity );
+int girl_gm_son_growth_quick( City *pCity, short herokind );
+char girl_withherokind( short herokind );
 
 int fangshi_sendinfo( int actor_index );
 int fangshi_visit( int actor_index, int type );
 int fangshi_visit_getaward( int actor_index );
+int fangshi_node_sendaward( int actor_index, int nodeid );
+int fangshi_palace_sendinfo( int actor_index );
 #endif
