@@ -391,7 +391,7 @@ function proc_awardinfolist_C( recvValue )
 	elseif recvValue.m_callback_code == 4 then
 		MapNationHeroDlgRecvAward( recvValue )
 	elseif recvValue.m_callback_code == 5 then
-		
+		FangshiDlgPlaceInfoRecv( recvValue )
 	end
 end
 
@@ -2235,6 +2235,11 @@ end
 
 -- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},
 function proc_fspalace_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,[m_count]},
+function proc_fspalaceresult_C( recvValue )
 	-- process.
 end
 

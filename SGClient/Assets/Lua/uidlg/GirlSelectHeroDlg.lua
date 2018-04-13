@@ -219,7 +219,7 @@ end
 function GirlSelectShowStar(kind)
 	if m_girlConifg.private_herokind == kind then
 		GirlSelectInitStar(m_girlConifg.love_star);
-		local objs = m_uiStarContent.transform:GetChild(0).gameObject
+		local objs = m_uiStarContent.transform:GetChild(m_uiStarContent.transform.childCount - 1).gameObject
 		SetTrue( objs );
 	else
 		GirlSelectInitStar(m_girlConifg.love_star);
@@ -228,7 +228,7 @@ end
 
 function GirlSelectInitStar(count)
 	GirlSelectHideStar();
-	for i = 1 ,count do
+	for i = 0 ,count - 1 do
 		local objs = m_uiStarContent.transform:GetChild(i).gameObject
 		SetTrue( objs );
     end 

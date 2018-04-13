@@ -31,6 +31,9 @@ local m_uiDownBtn = nil; --UnityEngine.GameObject
 local m_uiLoyal = nil; --UnityEngine.GameObject
 local m_uiGodBtn = nil; --UnityEngine.GameObject
 local m_uiGirlPicture = nil; --UnityEngine.GameObject
+local m_uiSonBtn = nil; --UnityEngine.GameObject
+local m_uiGirlBtn = nil; --UnityEngine.GameObject
+local m_uiSonPicture = nil; --UnityEngine.GameObject
 
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
@@ -178,6 +181,9 @@ function HeroInfoDlgOnAwake( gameObject )
 	m_uiLoyal = objs[31];
 	m_uiGodBtn = objs[32];
 	m_uiGirlPicture = objs[33];
+	m_uiSonBtn = objs[34];
+	m_uiGirlBtn = objs[35];
+	m_uiSonPicture = objs[36];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -228,6 +234,19 @@ function HeroInfoDlgSet( path, pHero, up )
 	m_pCacheHero = pHero;
 	m_up = up
 	HeroInfoDlgClear()
+	
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+		SetTrue(m_uiSonBtn);
+		SetTrue(m_uiGirlBtn);
+			
+		if g_girlson[pHero.m_kind] == nil then
+			SetText(m_uiSonBtn.transform:Find("Back/Text"),T(3413));
+			SetGray(m_uiSonPicture,true);
+		else
+			SetText(m_uiSonBtn.transform:Find("Back/Text"),T(3412));
+			SetGray(m_uiSonPicture,false);
+		end
+	end
 	
 	-- 女将图片
 	if m_pCacheHero.m_girlkind > 0 then

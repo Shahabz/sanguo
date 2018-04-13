@@ -167,3 +167,14 @@ function GirlGetDlgWait( callback, value )
 	m_WaitCallback = callback;
 	m_WaitValue = value;
 end
+
+function GirlGetDlgShowByFansghi(girlkind,callback)
+	local recvValue = {};
+	recvValue.m_girl = {};
+	recvValue.m_soulnum = 0;
+	recvValue.m_girl.m_kind = girlkind;
+	recvValue.m_girl.m_color = g_girlinfo[girlkind][0].init_color;
+	
+	GirlGetDlgShow( recvValue )
+	GirlGetDlgWait(callback)
+end

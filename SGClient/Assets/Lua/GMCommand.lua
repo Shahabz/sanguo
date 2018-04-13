@@ -144,7 +144,9 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	elseif cmdstr == "f" then
 		JumpFightSkip()
 	elseif cmdstr == "guide" then
-		Guide(41,1,false);
+		--Guide(46,1,false);
+		GirlDlgShow();
+		--HeroOffspringDlgShow(125)
 	end
 	
 end

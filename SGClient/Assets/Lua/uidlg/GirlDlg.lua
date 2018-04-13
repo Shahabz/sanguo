@@ -33,6 +33,7 @@ local m_uiAgeProgress = nil; --UnityEngine.GameObject
 local m_uiIntimate = nil; --UnityEngine.GameObject
 local m_uiDontMarry = nil; --UnityEngine.GameObject
 local m_uiMakeLoveAlready = nil; --UnityEngine.GameObject
+local m_uiRelieveBtn = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_GirlCache = nil;
 local m_SelectGirl = nil;
@@ -109,6 +110,14 @@ function GirlDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 8 then
 			GirlDlgRelieve();
 		
+		-- 解除委派按钮显示
+		elseif nControlID == 9 then
+			if IsActive(m_uiRelieveBtn) == true then
+				SetFalse(m_uiRelieveBtn);
+			else
+				SetTrue(m_uiRelieveBtn);
+			end
+		
 		-- 选择女将		
 		elseif nControlID > 1000 and nControlID < 2000 then
 			GirlDlgSelect( nControlID - 1000 )
@@ -152,6 +161,7 @@ function GirlDlgOnAwake( gameObject )
 	m_uiIntimate = objs[29];
 	m_uiDontMarry = objs[30];
 	m_uiMakeLoveAlready = objs[31];
+	m_uiRelieveBtn = objs[32];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Girl", 64, 64, m_uiUIP_Girl);
@@ -633,20 +643,21 @@ end
 
 -- 设置儿子信息
 function GirlDlgSonLayerSetSon(pHero,sonConifg)
-	--SetImage(m_uiSonHead,)
+	SetImage(m_uiSonHead,SonHeadSprite(sonConifg.client_shape));
+	SetText(m_uiSonName,SonName(sonConifg.client_name));
+	MakeSonAttrText(m_uiSonAttr,sonConifg,pHero);
+	
 	-- 儿子的出师进度
 	if pHero.m_sontime - GetServerTime() <= 0 then
 		SetTrue(m_uiGrowUpBtn);
+		SetProgress(m_uiAgeProgress, 1); 
+		SetText(m_uiAgeProgress.transform:Find("Text"), F(3408,18));
 	else
 		SetFalse(m_uiGrowUpBtn);
+		local age,progress = math.modf((GetServerTime() - (pHero.m_sontime - sonConifg.grow_sec))/(sonConifg.grow_sec/18));
+		SetProgress(m_uiAgeProgress, progress); 
+		SetText(m_uiAgeProgress.transform:Find("Text"), F(3408,age));
 	end
-
-	local age,progress = math.modf((GetServerTime() - (pHero.m_sontime - sonConifg.grow_sec))/(sonConifg.grow_sec/sonConifg.born_odds));
-	SetImage(m_uiSonHead,SonHeadSprite(sonConifg.client_shape));
-	SetProgress(m_uiAgeProgress, progress); 
-	SetText( m_uiAgeProgress.transform:Find("Text"), F(3408,age));
-	SetText(m_uiSonName,SonName(sonConifg.client_name));
-	MakeSonAttrText(m_uiSonAttr,sonConifg,pHero);
 end
 
 -- 委派男将
@@ -767,6 +778,7 @@ function GirlDlgMakeNext()
 	if pHero.m_sontime > 0 then
 		SetFalse(m_uiLoveLayer);
 		SetTrue(m_uiSonLayer);
+		GirlDlgSonLayerSetSon(pHero,g_girlson[pHero.m_kind][pHero.m_sonnum]);
 	else
 		SetFalse(m_uiIntimate);
 		SetTrue(m_uiMakeLoveAlready);
@@ -787,7 +799,7 @@ end
 function GirlDlgShowStar(herokind,girlConifg)
 	if girlConifg.private_herokind == herokind then
 		GirlDlgInitStar(girlConifg.love_star);
-		local objs = m_uiLoveStar.transform:GetChild(0).gameObject
+		local objs = m_uiLoveStar.transform:GetChild(m_uiLoveStar.transform.childCount - 1).gameObject
 		SetTrue( objs );
 		m_star = girlConifg.love_star + girlConifg.private_love_star;
 	else
@@ -798,7 +810,7 @@ end
 
 function GirlDlgInitStar(count)
 	GirlDlgHideStar();
-	for i = 1 ,count do
+	for i = 0 ,count - 1 do
 		local objs = m_uiLoveStar.transform:GetChild(i).gameObject
 		SetTrue( objs );
     end 

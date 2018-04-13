@@ -225,3 +225,4 @@ global.girl_marry_lovelevel = 5 --女将可以结婚的等级
 global.fangshi_visit_freenum = 15 --坊市寻访每天免费次数
 global.fangshi_visit_token = 10 --坊市寻访所需元宝
 global.fangshi_nationhero_time = 5184000 --坊市出现名将时间
+global.fangshi_palace_token = 400 --坊市觐见元宝
