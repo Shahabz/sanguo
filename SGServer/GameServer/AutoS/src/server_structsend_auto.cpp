@@ -3274,3 +3274,24 @@ int struct_NetS_FsPalace_send( char **pptr, int *psize, SLK_NetS_FsPalace *pValu
 	return 0;
 }
 
+int struct_NetS_FsPalaceAward_send( char **pptr, int *psize, SLK_NetS_FsPalaceAward *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	return 0;
+}
+
+int struct_NetS_FsPalaceResult_send( char **pptr, int *psize, SLK_NetS_FsPalaceResult *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_FsPalaceAward_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

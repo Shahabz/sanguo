@@ -2226,6 +2226,18 @@ struct _slk_NetS_FsPalace {
 };
 typedef struct _slk_NetS_FsPalace SLK_NetS_FsPalace;	//坊市皇宫内院
 
+struct _slk_NetS_FsPalaceAward {
+	int m_awardkind;	//坊市皇宫内院奖励结果
+	int m_awardnum;	//坊市皇宫内院奖励结果
+};
+typedef struct _slk_NetS_FsPalaceAward SLK_NetS_FsPalaceAward;	//皇宫内院奖励
+
+struct _slk_NetS_FsPalaceResult {
+	char m_count;	//坊市皇宫内院奖励结果
+	SLK_NetS_FsPalaceAward m_list[5];	//坊市皇宫内院奖励结果
+};
+typedef struct _slk_NetS_FsPalaceResult SLK_NetS_FsPalaceResult;	//皇宫内院奖励结果
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2467,5 +2479,7 @@ int struct_NetS_FsInfo_send( char **pptr, int *psize, SLK_NetS_FsInfo *pValue );
 int struct_NetS_FsVisit_send( char **pptr, int *psize, SLK_NetS_FsVisit *pValue );
 int struct_NetS_FsVisitResult_send( char **pptr, int *psize, SLK_NetS_FsVisitResult *pValue );
 int struct_NetS_FsPalace_send( char **pptr, int *psize, SLK_NetS_FsPalace *pValue );
+int struct_NetS_FsPalaceAward_send( char **pptr, int *psize, SLK_NetS_FsPalaceAward *pValue );
+int struct_NetS_FsPalaceResult_send( char **pptr, int *psize, SLK_NetS_FsPalaceResult *pValue );
 
 #endif

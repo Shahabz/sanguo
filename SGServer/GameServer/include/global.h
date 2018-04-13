@@ -199,6 +199,7 @@ typedef struct _global
 	short fangshi_visit_token;
 	short fangshi_visit_freenum;
 	int fangshi_nationhero_time;
+	short fangshi_palace_token;
 }Global;
 int global_init();
 void global_reload();

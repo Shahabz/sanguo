@@ -39,4 +39,5 @@ int fangshi_visit( int actor_index, int type );
 int fangshi_visit_getaward( int actor_index );
 int fangshi_node_sendaward( int actor_index, int nodeid );
 int fangshi_palace_sendinfo( int actor_index );
+int fangshi_palace_see( int actor_index, int index );
 #endif

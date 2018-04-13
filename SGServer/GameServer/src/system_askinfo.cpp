@@ -1180,6 +1180,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 皇宫内院
 			fangshi_palace_sendinfo( actor_index );
 		}
+		else if ( pvalue[0] == 5 )
+		{ // 获取皇宫内院奖励
+			fangshi_palace_see( actor_index, pvalue[1] );
+		}
 		break;
 	default:
 		break;

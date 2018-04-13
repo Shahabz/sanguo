@@ -700,6 +700,10 @@ char fangshi_next_nodeid( char nodeid )
 int fangshi_visit( int actor_index, int type )
 {
 	ACTOR_CHECK_INDEX( actor_index );
+	if ( g_actors[actor_index].fs_awardkind[FANGSHI_AWARDNUM-1] > 0 )
+	{// 奖励满了
+		fangshi_visit_getaward( actor_index );
+	}
 	int count = 0;
 	if ( type == 0 )
 	{ // 免费寻访
@@ -714,7 +718,7 @@ int fangshi_visit( int actor_index, int type )
 	}
 	else if ( type == 1 )
 	{ // 元宝一次寻访
-		if ( actor_change_token( actor_index, -global.fangshi_visit_token, PATH_FANGSHI, 0 ) < 0 )
+		if ( actor_change_token( actor_index, -global.fangshi_visit_token, PATH_FANGSHI_VISIT, 0 ) < 0 )
 		{
 			return -1;
 		}
@@ -731,7 +735,7 @@ int fangshi_visit( int actor_index, int type )
 		count = FANGSHI_AWARDNUM - awardcount;
 		if ( count <= 0 )
 			return -1;
-		if ( actor_change_token( actor_index, -global.fangshi_visit_token*count, PATH_FANGSHI, 0 ) < 0 )
+		if ( actor_change_token( actor_index, -global.fangshi_visit_token*count, PATH_FANGSHI_VISIT, 0 ) < 0 )
 		{
 			return -1;
 		}
@@ -804,7 +808,7 @@ int fangshi_visit_getaward( int actor_index )
 	{
 		if ( g_actors[actor_index].fs_awardkind[tmpi] > 0 )
 		{
-			award_getaward( actor_index, g_actors[actor_index].fs_awardkind[tmpi], g_actors[actor_index].fs_awardnum[tmpi], -1, PATH_FANGSHI, NULL );
+			award_getaward( actor_index, g_actors[actor_index].fs_awardkind[tmpi], g_actors[actor_index].fs_awardnum[tmpi], -1, PATH_FANGSHI_VISIT, NULL );
 			g_actors[actor_index].fs_awardkind[tmpi] = 0;
 			g_actors[actor_index].fs_awardnum[tmpi] = 0;
 		}
@@ -928,6 +932,38 @@ int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *ou
 	return 0;
 }
 
+// 获取奖励
+int _fangshi_palace_getaward_other( int type, int *out_awardkind, int *out_awardnum, int out_count )
+{
+	if ( type < 0 || type >= g_fangshi_palace_maxnum )
+		return -1;
+	int count = 0;
+	int awardkind[32] = { 0 };
+	int awardnum[32] = { 0 };
+	int weight[32] = { 0 };
+	int totalweight = 0;
+	int nowtime = (int)time( NULL );
+	for ( int index = 0; index < g_fangshi_palace[type].maxnum; index++ )
+	{
+		FangshiPalaceConfig *config = &g_fangshi_palace[type].config[index];
+		awardkind[count] = config->awardkind;
+		awardnum[count] = config->awardnum;
+		weight[count] = config->visit_weight;
+		totalweight += config->visit_weight;
+		count += 1;
+		if ( count >= 32 )
+		{
+			break;
+		}
+	}
+
+	for ( int tmpi = 0; tmpi < out_count; tmpi++ )
+	{
+		_fangshi_palace_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
+	}
+	return 0;
+}
+
 // 坊市皇宫内院随机
 int fangshi_palace_update( int actor_index )
 {
@@ -994,12 +1030,11 @@ int fangshi_palace_sendinfo( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	int fweek = system_getfweek();
-	fangshi_palace_update( actor_index );
-	/*if ( g_actors[actor_index].fs_fweek != fweek )
+	if ( g_actors[actor_index].fs_fweek != fweek )
 	{
 		fangshi_palace_update( actor_index );
 		g_actors[actor_index].fs_fweek = fweek;
-	}*/
+	}
 	SLK_NetS_FsPalace pValue = { 0 };
 	for ( int tmpi = 0; tmpi < 5; tmpi++ )
 	{
@@ -1008,5 +1043,80 @@ int fangshi_palace_sendinfo( int actor_index )
 		pValue.m_count += 1;
 	}
 	netsend_fspalace_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 获取觐见权重
+int _fangshi_palace_visit_weight( int awardkind )
+{
+	for ( int type = 0; type < g_fangshi_palace_maxnum; type++ )
+	{
+		for ( int index = 0; index < g_fangshi_palace[type].maxnum; index++ )
+		{
+			if ( g_fangshi_palace[type].config[index].awardkind == awardkind )
+			{
+				return g_fangshi_palace[type].config[index].visit_weight;
+			}
+		}
+	}
+	return 0;
+}
+
+// 觐见获取奖励
+int fangshi_palace_see( int actor_index, int index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( index < 0 || index > 1 )
+		return -1;
+	if ( actor_change_token( actor_index, -global.fangshi_palace_token, PATH_FANGSHI_PALACE, 0 ) < 0 )
+	{
+		return -1;
+	}
+
+	int awardkind[4] = { 0 };
+	int awardnum[4] = { 0 };
+	int awardweight[4] = { 0 };
+	int totalweight = 0;
+
+	awardkind[0] = g_actors[actor_index].fs_weekkind[index];
+	awardnum[0] = g_actors[actor_index].fs_weeknum[index];
+	awardweight[0] = _fangshi_palace_visit_weight( awardkind[0] );
+	totalweight += awardweight[0];
+
+	for ( int tmpi = 2; tmpi < 5; tmpi++ )
+	{
+		awardkind[tmpi - 1] = g_actors[actor_index].fs_weekkind[tmpi];
+		awardnum[tmpi - 1] = g_actors[actor_index].fs_weeknum[tmpi];
+		awardweight[tmpi - 1] = _fangshi_palace_visit_weight( awardkind[tmpi - 1] );
+		totalweight += awardweight[tmpi - 1];
+	}
+
+	int outkind = { 0 };
+	int outnum = { 0 };
+	_fangshi_palace_random( awardkind, awardnum, awardweight, 4, &totalweight, &outkind, &outnum );
+
+	int other_outkind[4] = { 0 };
+	int other_outnum[4] = { 0 };
+	_fangshi_palace_getaward_other( 4, other_outkind, other_outnum, 4 );
+
+	SLK_NetS_FsPalaceResult pValue = { 0 };
+	pValue.m_list[pValue.m_count].m_awardkind = outkind;
+	pValue.m_list[pValue.m_count].m_awardnum = outnum;
+	pValue.m_count += 1;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		pValue.m_list[pValue.m_count].m_awardkind = other_outkind[tmpi];
+		pValue.m_list[pValue.m_count].m_awardnum = other_outnum[tmpi];
+		pValue.m_count += 1;
+	}
+	netsend_fspalaceresult_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	for ( int tmpi = 0; tmpi < 5; tmpi++ )
+	{
+		if ( pValue.m_list[tmpi].m_awardkind > 0 )
+		{
+			award_getaward( actor_index, pValue.m_list[tmpi].m_awardkind, pValue.m_list[tmpi].m_awardnum, -1, PATH_FANGSHI_PALACE, NULL );
+		}
+	}
 	return 0;
 }
