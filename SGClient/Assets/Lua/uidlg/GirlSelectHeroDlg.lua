@@ -123,9 +123,11 @@ function GirlSelectHeroDlgCreate()
 	for offset = 0, MAX_HERONUM-1, 1 do
 		local pHero = GetHero().m_Hero[offset];
 		if pHero ~= nil and pHero.m_kind > 0 then
-			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
-			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
-			table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
+			if GetHero():IsCanUse( pHero.m_kind ) == true then
+				local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+				local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
+			end
 		end
 	end
 	

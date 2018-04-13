@@ -117,8 +117,8 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			HeroOffspringDlgShow(m_pCacheHero.m_kind);
 		
 		-- 女将栏
-		elseif nControlID == 10 then
-			GirlDlgShow();
+		elseif nControlID == 21 then
+			GirlDlgShow(m_pCacheHero.m_girlkind);
 			
 		-- 卸下装备
 		elseif nControlID >= 10 and nControlID < 20 then
@@ -346,6 +346,12 @@ function HeroInfoDlgSet( path, pHero, up )
 			SetImage( uiShape, EquipSprite(pHero.m_Equip[i].m_kind) )
 			SetImage( uiColor, ItemColorSprite(equip_getcolor(pHero.m_Equip[i].m_kind)) )
 			SetEquipWash( uiWash, pHero.m_Equip[i] );
+			
+			-- 检查背包是否有同类型更好的装备
+			if GetEquip():CheckByType( equip_gettype( pHero.m_Equip[i].m_kind ) , pHero.m_Equip[i].m_kind ) then
+				SetTrue( uiAdd )
+				break;
+			end
 		else
 			SetTrue( uiShape )
 			SetFalse( uiColor )

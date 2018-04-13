@@ -2236,10 +2236,12 @@ end
 -- m_count=0,m_list={m_kind=0,m_num=0,[m_count]},
 function proc_fspalace_C( recvValue )
 	-- process.
+	FangshiDlgGarthRecv(recvValue)
 end
 
 -- m_count=0,m_list={m_awardkind=0,m_awardnum=0,[m_count]},
 function proc_fspalaceresult_C( recvValue )
 	-- process.
+	FangshiDlgSeeRecv(recvValue)
 end
 

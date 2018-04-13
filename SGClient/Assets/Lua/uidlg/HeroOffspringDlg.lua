@@ -96,7 +96,7 @@ function HeroOffspringDlgInit(herokind)
 	if sonConfig == nil then
 		return;
 	end
-	for i = 0,table.getn(sonConfig) - 1,1 do
+	for i = 0,table.getn(sonConfig),1 do
 		HeroOffspringDlgInfo(sonConfig[i],pHero,i);
 	end
 	
@@ -113,7 +113,8 @@ function HeroOffspringDlgInfo(config,pHero,i)
 	local uiAttrText = objs[3];
 	local uiNoFinish = objs[4];
 	local uiFinish = objs[5];
-	
+	SetFalse(uiFinish);
+	SetFalse(uiNoFinish);
 	SetImage(uiShape,SonHeadSprite(config.client_shape));
 	SetText(uiName,SonName(config.client_name));
 	

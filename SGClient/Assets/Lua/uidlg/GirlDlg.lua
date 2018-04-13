@@ -1,3 +1,5 @@
+GIRL_MAX_COLOR	=	5	-- 女将最高突破品质
+
 -- 界面
 local m_Dlg = nil;
 local m_DialogFrameMod = nil;
@@ -196,11 +198,14 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function GirlDlgShow()
+function GirlDlgShow(kind)
 	GirlDlgOpen()
 	GirlDlgHeadLayerCreate()
-	GirlDlgSelect( 0 )
-	
+	if kind == nil then
+		GirlDlgSelect( 0 )
+	else
+		GirlDlgSelect(kind);
+	end
 end
 
 function GirlDlgShowByKind( kind )
@@ -247,6 +252,8 @@ end
 function GirlDlgHeadLayerCreate()
 	GirlDlgHeadLayerClear()
 	m_GirlCache = {}
+	local m_GirlCantBreak = {}
+	local m_GirlNoGet = {}
 	-- 遍历所有女将
 	for k, v in pairs(g_girlinfo) do
 		local kind = k
@@ -260,13 +267,33 @@ function GirlDlgHeadLayerCreate()
 				--end
 			end
 			-- 已经获得这个女将，使用存档
-			table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+			if actorGirl.m_soul > v[actorGirl.m_color].soul then
+				table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+			else
+				table.insert( m_GirlCantBreak, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+			end
 		else
 			-- 未获得这个女将，使用配置
-			table.insert( m_GirlCache, {m_kind=kind, m_color=v[0].init_color, m_state=-1 } )
+			table.insert( m_GirlNoGet, {m_kind=kind, m_color=v[0].init_color, m_state=-1 } )
 		end
 	end
-	-- 排序
+	-- 不可突破排序
+	table.sort( m_GirlCantBreak, function(a,b) 
+		if a.m_state > b.m_state then
+			return true;
+		elseif a.m_state == b.m_state then
+			if a.m_color > b.m_color then 
+				return true
+			elseif a.m_color == b.m_color then
+				if a.m_kind < b.m_kind then 
+					return true
+				end
+			end
+		end
+		return false
+	end );
+	
+	-- 可突破排序
 	table.sort( m_GirlCache, function(a,b) 
 		if a.m_state > b.m_state then
 			return true;
@@ -281,6 +308,14 @@ function GirlDlgHeadLayerCreate()
 		end
 		return false
 	end );
+	
+	for i,v in pairs(m_GirlCantBreak) do
+		table.insert(m_GirlCache,v)
+	end
+	
+	for i,v in pairs(m_GirlNoGet) do
+		table.insert(m_GirlCache,v)
+	end
 	
 	-- 创建
 	for i=1, #m_GirlCache, 1 do
@@ -354,6 +389,7 @@ function GirlDlgSelect( kind )
 				SetTrue( uiSelect )
 				if m_SelectGirl ~= m_GirlCache[i] then
 					m_cacheValue = true;
+					SetFalse(m_uiRelieveBtn);
 				end
 				m_SelectGirl = m_GirlCache[i];
 				break
@@ -685,7 +721,13 @@ function GirlDlgColorUp()
 	if m_SelectGirl == nil then
 		return
 	end
-	system_askinfo( ASKINFO_GIRL, "", 3, m_SelectGirl.m_kind )
+	
+	if m_SelectGirl.m_color == GIRL_MAX_COLOR then
+		pop(T(3350));
+	else
+		system_askinfo( ASKINFO_GIRL, "", 3, m_SelectGirl.m_kind )
+	end
+	
 end
 			
 -- 增加亲昵度

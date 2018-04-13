@@ -25,14 +25,17 @@ local m_uiPlaceInfo = nil; --UnityEngine.GameObject
 local m_uiUIP_GetGrid = nil; --UnityEngine.GameObject
 local m_uiUIP_GirlGrid = nil; --UnityEngine.GameObject
 local m_uiUIP_InfoGrid = nil; --UnityEngine.GameObject
+local m_uiInfoTitle = nil; --UnityEngine.GameObject
 local m_uiInfoContent = nil; --UnityEngine.GameObject
 local m_uiGetEffect = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_recvInfo = nil;
 local m_recvVisit = nil;
+local m_recvGarth = nil;
+local m_recvSee = nil;
 local m_placeSelect = nil;
-local m_awardList = nil;
+local m_grathSelect = nil;
 local m_GetIndex = nil;
 local m_IsPlayGet = false;
 local m_IsShowGetGirl = false;
@@ -52,9 +55,12 @@ function FangshiDlgClose()
 	m_DialogFrameMod = nil;
 	m_recvInfo = nil;
 	m_recvVisit = nil;
+	m_recvGarth = nil;
+	m_recvSee = nil;
 	m_placeSelect = nil;
-	m_awardList = nil;
+	m_grathSelect = nil;
 	m_cacheNodeAward = nil;
+	m_IsPlayGet = nil;
 	eye.uiManager:Close( "FangshiDlg" );
 end
 
@@ -64,9 +70,12 @@ function FangshiDlgDestroy()
 	m_Dlg = nil;
 	m_recvInfo = nil;
 	m_recvVisit = nil;
+	m_recvGarth = nil;
+	m_recvSee = nil;
 	m_placeSelect = nil;
-	m_awardList = nil;
+	m_grathSelect = nil;
 	m_cacheNodeAward = nil;
+	m_IsPlayGet = nil;
 end
 
 ----------------------------------------
@@ -106,7 +115,12 @@ function FangshiDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 9 then									-- 关闭巡游位置信息
 			FangshiDlgClosePlaceInfo()
 			warn("关闭巡游位置信息")			
+		elseif nControlID >= 50 and nControlID <= 60 then			-- 皇宫内院女将选择
+			m_grathSelect = nControlID - 50;
+			FangshiDlgSetGarthSelect();
+			warn("皇宫内院女将选择"..m_grathSelect)		
 		elseif nControlID == 100 then								-- 打开女将界面
+			GirlDlgShow();
 			warn("打开女将界面")
 		elseif nControlID == 101 then								-- 打开女将商店
 			warn("打开女将商店")
@@ -147,7 +161,8 @@ function FangshiDlgOnAwake( gameObject )
 	m_uiUIP_GetGrid = objs[21];
 	m_uiUIP_GirlGrid = objs[22];
 	m_uiUIP_InfoGrid = objs[23];
-	m_uiInfoContent = objs[24];
+	m_uiInfoTitle = objs[24];
+	m_uiInfoContent = objs[25];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );	
@@ -196,6 +211,7 @@ function FangshiDlgShow()
 	FangshiDlgOpen()
 	m_uiGirlBtn.transform:SetSiblingIndex(1000); 
 	m_uiShopBtn.transform:SetSiblingIndex(1001);	
+	m_uiSeeLayer.transform:SetSiblingIndex(1002);
 	system_askinfo( ASKINFO_FANGSHI, "", 0 );
 end
 
@@ -208,6 +224,8 @@ function FangshiDlgInfoRecv( recvValue )
 	--绘制未领取的巡游奖励
 	if m_recvInfo.m_awardcount ~= 0 then 		
 		FangshiDlgInitGetLayer();
+	else
+		SetFalse(m_uiGetLayer);
 	end
 end
 
@@ -281,7 +299,7 @@ function FangshiDlgSetIncognitoButtons()
 	SetTrue(m_uiIncognito1Btn);
 	if m_recvInfo.m_freenum < global.fangshi_visit_freenum then	
 		SetTrue(m_uiIncognitoCount)		
-		SetText(m_uiIncognitoCount,F(4001,global.fangshi_visit_freenum - m_recvInfo.m_freenum));	
+		SetText(m_uiIncognitoCount,F(4001,global.fangshi_visit_freenum - m_recvInfo.m_freenum,global.fangshi_visit_freenum));	
 		--按钮1	
 		SetFalse(m_uiIncognito1Btn.transform:Find("Yb"));
 		--按钮2
@@ -325,30 +343,28 @@ end
 
 -- 位置信息框显示
 function FangshiDlgPlaceInfoShow()	
-	local ChildIndex = FangshiDlgNodetoChild(m_cacheNodeAward[m_placeSelect].m_value)
-	--设置出现位置
-	local uiObj = m_uiPlaceLayer.transform:GetChild( ChildIndex );
-	m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x,uiObj.localPosition.y, 0);	
-	FangshiDlgSetPlaceSelect(ChildIndex);
-	m_placeSelect = m_cacheNodeAward[m_placeSelect].m_value;	
-	
-	local objs = m_uiPlaceInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local uiTitle = objs[0];
-	local uiContent = objs[1];
+	--设置标题	
 	local TitleID = 4100 + m_placeSelect;
-	SetText(uiTitle,T(TitleID))
+	SetText(m_uiInfoTitle,T(TitleID))
 	
-	FangshiDlgClearPlaceInfoGrid(uiContent)
+	FangshiDlgClearPlaceInfoGrid()
 	
 	for i = 1 , m_cacheNodeAward[m_placeSelect].m_count do 
 		local data = m_cacheNodeAward[m_placeSelect].m_list[i]
-		FangshiDlgCreatPlaceInfoGrid(uiContent,data);
+		FangshiDlgCreatPlaceInfoGrid(data);
 	end	
+	
+	--设置出现位置
+	local ChildIndex = FangshiDlgNodetoChild(m_placeSelect)
+	local uiObj = m_uiPlaceLayer.transform:GetChild( ChildIndex );
+	m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x,uiObj.localPosition.y, 0);	
+	FangshiDlgSetPlaceSelect(ChildIndex);
+	
 	SetTrue(m_uiPlaceInfo);	
 end
 
 -- 创建位置信息子控件
-function FangshiDlgCreatPlaceInfoGrid(uiContent,data)
+function FangshiDlgCreatPlaceInfoGrid(data)
 	local uiObj = m_ObjectPool:Get( "UIP_InfoGrid" );
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape= objs[0];	
@@ -359,15 +375,15 @@ function FangshiDlgCreatPlaceInfoGrid(uiContent,data)
 	SetImage(uiColor,color)
 	SetText(uiName,name);
 	
-	uiObj.transform:SetParent( uiContent.transform );
+	uiObj.transform:SetParent( m_uiInfoContent.transform );
 	uiObj.gameObject:SetActive( true );
 end
 
 -- 清空位置信息子控件
-function FangshiDlgClearPlaceInfoGrid(uiContent)
+function FangshiDlgClearPlaceInfoGrid()
 	local objs = {};
-	for i=0,uiContent.transform.childCount-1 do
-		table.insert(objs,uiContent.transform:GetChild(i).gameObject);
+	for i=0,m_uiInfoContent.transform.childCount-1 do
+		table.insert(objs,m_uiInfoContent.transform:GetChild(i).gameObject);
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
@@ -501,7 +517,7 @@ function FangshiDlgPlayGet()
 	FangshiDlgSynchroRecv();
 	FangshiDlgSetPlaceInfo();
 	FangshiDlgSetIncognitoButtons();
-	if m_recvVisit.m_list[m_GetIndex].m_girlkind and m_recvVisit.m_list[m_GetIndex].m_girlkind > 0 then
+	if m_recvVisit.m_list[m_GetIndex].m_girlkind > 0 then
 		m_IsShowGetGirl = true;
 	else
 		m_IsShowGetGirl = false;
@@ -515,6 +531,7 @@ function FangshiDlgPlayGetOff()
 	award.m_num = m_recvVisit.m_list[m_GetIndex].m_awardnum;
 	FangshiDlgCreatGetGrid(award);
 	m_GetIndex = m_GetIndex + 1;
+	SetFalse(m_uiGetEffect);
 	if m_IsShowGetGirl == true then
 		GirlGetDlgShowByFansghi(m_recvVisit.m_list[m_GetIndex].m_girlkind,FangshiDlgPlayGetNext())
 	else
@@ -527,8 +544,7 @@ end
 function FangshiDlgPlayGetNext()
 	if m_GetIndex <= m_recvVisit.m_count then
 		FangshiDlgPlayGet();
-	else
-		SetFalse(m_uiGetEffect);	
+	else			
 		m_IsPlayGet = false;
 	end
 end
@@ -559,10 +575,22 @@ function FangshiDlgCreatGetGrid(data)
 	local uiShape= objs[0];	
 	local uiColor = objs[1];
 	local uiNum = objs[2];
+	local uiSui = objs[3];
 	local sprite, color, name, c, desc = AwardInfo( data.m_kind );	
 	SetImage(uiShape,sprite)
 	SetImage(uiColor,color)
-	SetText(uiNum,data.m_num);
+	SetText(uiNum,"x"..data.m_num);
+	
+	if data.m_kind > AWARDKIND_GIRLSOULBASE then 
+		SetTrue(uiSui);
+		SetTrue(uiNum);
+	elseif data.m_kind >= AWARDKIND_GIRLBASE and data.m_kind <AWARDKIND_GIRLSOULBASE then 
+		SetFalse(uiSui);
+		SetFalse(uiNum);
+	else
+		SetFalse(uiSui);
+		SetTrue(uiNum);
+	end		
 	
 	uiObj.transform:SetParent( m_uiListContent.transform );
 	uiObj.gameObject:SetActive( true );
@@ -595,34 +623,56 @@ end
 -- 打开皇宫内院界面
 function FangshiDlgOnBtnGarth()
 	system_askinfo( ASKINFO_FANGSHI, "", 4 )
-	SetTrue(m_uiGarthLayer);
-	--FangshiDlgInitGarth();
 end
 
 -- 初始化皇宫内院界面
-function FangshiDlgInitGarth()
+function FangshiDlgGarthRecv(recvValue)
+	m_recvGarth = recvValue;
+	PrintTable(m_recvGarth,"皇宫内院数据")
+	SetTrue(m_uiGarthLayer);
+	m_grathSelect = 0;
 	FangshiDlgClearGarthTopGrid();
 	FangshiDlgClearGarthBottomGrid();
-	for i = 1 , 2 do 
-		FangshiDlgCreatGarthTopGrid();
+	for i = 1 , m_recvGarth.m_count do 
+		local data = m_recvGarth.m_list[i];
+		if i <= 2 then 
+			FangshiDlgCreatGarthTopGrid(i,data);
+		else
+			FangshiDlgCreatGarthBottomGrid(data);
+		end
 	end
-	for i = 1 , 3 do 
-		FangshiDlgCreatGarthBottomGrid();
-	end
+	FangshiDlgSetGarthSelect();
 end 
 
+-- 设置选择觐见的女将
+function FangshiDlgSetGarthSelect()
+	for i = 0,m_uiTopSroll.transform.childCount-1 do
+		local uiObj = m_uiTopSroll.transform:GetChild(i);
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[3];
+		if i == m_grathSelect then 
+			SetTrue(uiSelect);
+		else
+			SetFalse(uiSelect);
+		end
+	end
+end
+
 -- 创建皇宫内院主要女将
-function FangshiDlgCreatGarthTopGrid(data)
+function FangshiDlgCreatGarthTopGrid(index,data)
 	local uiObj = m_ObjectPool:Get( "UIP_GirlGrid" );
 	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape= objs[0];	
 	local uiColor = objs[1];
 	local uiName = objs[2];
-	
-	SetText(uiName,11);
+	local sprite, color, name, c, desc = AwardInfo( data.m_kind );	
+	SetImage(uiShape,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);	
 	
 	uiObj.transform:SetParent( m_uiTopSroll.transform );
 	uiObj.gameObject:SetActive( true );
+	SetControlID(uiObj,50 + index - 1);
 end
 
 -- 清空皇宫内院主要女将
@@ -647,7 +697,10 @@ function FangshiDlgCreatGarthBottomGrid(data)
 	local uiColor = objs[1];
 	local uiName = objs[2];
 	
-	SetText(uiName,22);
+	local sprite, color, name, c, desc = AwardInfo( data.m_kind );	
+	SetImage(uiShape,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);
 	
 	uiObj.transform:SetParent( m_uiBottomSroll.transform );
 	uiObj.gameObject:SetActive( true );
@@ -669,15 +722,45 @@ end
 
 -- 点击觐见
 function FangshiDlgOnBtnSee()
-	FangshiDlgInitSeeLayer();
+	system_askinfo( ASKINFO_FANGSHI, "", 5, m_grathSelect )
 end
 
 -- 初始化觐见界面
-function FangshiDlgInitSeeLayer()
-	SetTrue(m_uiSeeLayer);
-	for i = 1 , 5 do
-		
+function FangshiDlgSeeRecv(recvValue)
+	m_recvSee = recvValue;
+	SetTrue(m_uiSeeLayer);	
+	SetFalse(m_uiGarthLayer);	
+	for i = 1 , m_recvSee.m_count do
+		local data = m_recvSee.m_list[i];
+		FangshiDlgSetSeeGrid(i,data)
 	end
+end
+
+-- 觐见奖励子控件
+function FangshiDlgSetSeeGrid(index,data)
+	local uiObj = m_uiSeeLayer.transform:Find("SeeGrid"..index);
+    local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape= objs[0];	
+	local uiColor = objs[1];
+	local uiName = objs[2];
+	local uiNum = objs[3]; 
+	local uiSui = objs[4]; 
+	local sprite, color, name, c, desc = AwardInfo( data.m_awardkind );	
+	SetImage(uiShape,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,name);
+	SetText(uiNum,"x"..data.m_awardnum)
+	
+	if data.m_awardkind > AWARDKIND_GIRLSOULBASE then 
+		SetTrue(uiSui);
+		SetTrue(uiNum);
+	elseif data.m_awardkind >= AWARDKIND_GIRLBASE and data.m_awardkind <AWARDKIND_GIRLSOULBASE then 
+		SetFalse(uiSui);
+		SetFalse(uiNum);
+	else
+		SetFalse(uiSui);
+		SetTrue(uiNum);
+	end	
 end
 
 -- 关闭觐见获得界面
