@@ -294,6 +294,7 @@ function AwardInfo( awardkind )
 		sprite = GirlHeadSprite( kind )
 		color = ItemColorSprite( g_girlinfo[kind][0].init_color );
 		name = GirlName( kind )
+		c = g_girlinfo[kind][0].init_color
 		
 	-- 女将碎片	
 	elseif awardkind >= AWARDKIND_GIRLSOULBASE and awardkind < AWARDKIND_GIRLSOULBASE+1000 then
@@ -301,6 +302,8 @@ function AwardInfo( awardkind )
 		sprite = GirlHeadSprite( kind )
 		color = ItemColorSprite( g_girlinfo[kind][0].init_color );
 		name = GirlName( kind )	
+		c = g_girlinfo[kind][0].init_color
+		
 	end
 	
 	if sprite == nil then

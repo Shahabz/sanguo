@@ -374,7 +374,7 @@ function FangshiDlgCreatPlaceInfoGrid(data)
 	SetImage(uiShape,sprite)
 	SetImage(uiColor,color)
 	SetText(uiName,name);
-	
+	SetTextColor(uiName,NameColor(c))
 	uiObj.transform:SetParent( m_uiInfoContent.transform );
 	uiObj.gameObject:SetActive( true );
 end
@@ -669,6 +669,7 @@ function FangshiDlgCreatGarthTopGrid(index,data)
 	SetImage(uiShape,sprite);
 	SetImage(uiColor,color);
 	SetText(uiName,name);	
+	SetTextColor(uiName,NameColor(c))
 	
 	uiObj.transform:SetParent( m_uiTopSroll.transform );
 	uiObj.gameObject:SetActive( true );
@@ -701,6 +702,7 @@ function FangshiDlgCreatGarthBottomGrid(data)
 	SetImage(uiShape,sprite);
 	SetImage(uiColor,color);
 	SetText(uiName,name);
+	SetTextColor(uiName,NameColor(c))
 	
 	uiObj.transform:SetParent( m_uiBottomSroll.transform );
 	uiObj.gameObject:SetActive( true );

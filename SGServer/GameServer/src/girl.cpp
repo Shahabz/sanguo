@@ -764,7 +764,7 @@ int fangshi_visit( int actor_index, int type )
 		awardgroup_random( node->awardgroup, 0, &getinfo );
 		if ( getinfo.kind[0] >= AWARDKIND_GIRLBASE && getinfo.kind[0] < AWARDKIND_GIRLSOULBASE )
 		{ // 如果获得是非碎片，要检查是否存在这个女将，存在就转换
-			Girl *pGirl = girl_getptr( actor_index, getinfo.kind[0] );
+			Girl *pGirl = girl_getptr( actor_index, getinfo.kind[0] - AWARDKIND_GIRLBASE );
 			if ( pGirl && pGirl->color > 0 )
 			{
 				GirlInfoConfig *config = girl_getconfig( pGirl->kind, pGirl->color );
