@@ -46,6 +46,9 @@ extern int g_quest_talk_maxnum;
 extern TianceQuest *g_tiance_quest;
 extern int g_tiance_quest_maxnum;
 
+extern OfficialForging *g_official_forging;
+extern int g_official_forging_maxnum;
+
 inline QuestInfo *quest_config( int questid )
 {
 	if ( questid <= 0 || questid >= g_questinfo_maxnum )
@@ -408,6 +411,21 @@ int quest_check( int actor_index, int questid, int *value )
 			for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
 			{
 				if ( g_actors[actor_index].hero[tmpi].kind == questinfo->datakind )
+				{
+					if ( value )
+						*value = 1;
+					return 1;
+				}
+			}
+		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_SMITHYOFFHIRE )
+		{ // 招募铁匠，当前有正在工作的铁匠
+			if ( value )
+				*value = 0;
+			int kind = pCity->ofkind[0];
+			if ( kind > 0 && kind < g_official_forging_maxnum )
+			{
+				if ( g_official_forging[kind].level >= questinfo->needvalue )
 				{
 					if ( value )
 						*value = 1;

@@ -788,7 +788,12 @@ end
 
 -- 设置副本道具图标
 function StoryDlgItemShape( uiItem, itemkind )
-	SetImage( uiItem.transform:Find("Shape"), ItemSprite(itemkind) )
+	if itemkind > AWARDKIND_EQUIPBASE then
+		local sprite = AwardInfo( itemkind )
+		SetImage( uiItem.transform:Find("Shape"), sprite )
+	else
+		SetImage( uiItem.transform:Find("Shape"), ItemSprite(itemkind) )	
+	end
 	SetTrue( uiItem )
 end
 

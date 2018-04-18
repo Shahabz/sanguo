@@ -797,6 +797,8 @@ int _girl_shop_randomitem( City *pCity, int row, short *outid )
 				continue;
 			if ( pGirl->color == 0 )
 				continue;
+			if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+				continue;
 		}
 		
 		itemid[count] = config->id;

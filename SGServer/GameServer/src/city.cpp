@@ -2868,7 +2868,7 @@ int city_officialhire( int actor_index, int type, int kind )
 	if ( pCity->ofkind[type] >= kind )
 		return -1;
 	if ( type == 0 )
-	{
+	{ // 铁匠
 		if ( kind <= 0 || kind >= g_official_forging_maxnum )
 			return -1;
 		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Main );
@@ -2905,7 +2905,7 @@ int city_officialhire( int actor_index, int type, int kind )
 		quest_addvalue( pCity, QUEST_DATATYPE_SMITHYOFFHIRE, 0, 0, kind );
 	}
 	else if ( type == 1 )
-	{
+	{ // 内政官
 		if ( kind <= 0 || kind >= g_official_gov_maxnum )
 			return -1;
 		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Main );
@@ -2944,7 +2944,7 @@ int city_officialhire( int actor_index, int type, int kind )
 		}
 	}
 	else if ( type == 2 )
-	{
+	{ // 研究员
 		if ( kind <= 0 || kind >= g_official_tech_maxnum )
 			return -1; 
 		Building *pBuilding = building_getptr_kind( g_actors[actor_index].city_index, BUILDING_Tech );

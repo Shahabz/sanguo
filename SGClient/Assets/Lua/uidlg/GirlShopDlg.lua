@@ -1,4 +1,3 @@
--- 界面
 local m_Dlg = nil;
 local m_DialogFrameMod = nil;
 
@@ -108,15 +107,16 @@ function GirlShopDlgShow()
 end
 
 -- 女将商店数据
--- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_cost_awardkind=0,m_cost_awardnum=0,m_isbuy=0,m_id=0,[m_count]},m_update_lefttime=0,m_update_num=0,m_update_nummax=0,m_update_viplevel=0,m_update_token=0,
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_cost_awardkind=0,m_cost_awardnum=0,m_isbuy=0,m_id=0,[m_count]},m_update_lefttime=0,m_update_num=0,m_update_nummax=0,m_update_viplevel=0,m_up
 function GirlShopDlgInfoRecv( recvValue )
 	m_InfoRecv = recvValue;
+	PrintTable(m_InfoRecv,"女将商店数据")
 	GirlShopDlgClearGrid();
-	for i = 1 , 9 do 
-		local data = {};
+	for i = 1 , m_InfoRecv.m_count do 
+		local data = m_InfoRecv.m_list[i];
 		GirlShopDlgCreatGrid(i,data);
 	end
-	GirlShopDlgCDTitle(GetServerTime()+10)
+	GirlShopDlgCDTitle(GetServerTime()+10)-- 界面
 end
 
 --设置标题或时间
@@ -142,15 +142,18 @@ function GirlShopDlgCreatGrid(index,data)
 	local uiCostBack = objs[3];
 	local uiCostNum = objs[4];
 	local uiBuyBtn = objs[5];
-	SetControlID(uiBuyBtn,index + 10);
---[[	local sprite, color, name, c, desc = AwardInfo( data.m_kind );	
+		
+	local sprite, color, name, c, desc = AwardInfo( data.m_awardkind );		
 	SetImage(uiShape,sprite)
 	SetImage(uiColor,color)
-	SetText(uiName,name);
-	SetTextColor(uiName,NameColor(c))--]]
+	SetText(uiName,name.."x"..data.m_awardnum)
+	
+	local Csprite, Ccolor, Cname, Cc, Cdesc = AwardInfo( data.m_cost_awardkind );	
+	SetImage(uiCostBack,Csprite)
+	SetText(uiCostNum,"x"..data.m_cost_awardnum)
 	uiObj.transform:SetParent( m_uiItemContent.transform );
 	uiObj.gameObject:SetActive( true );
-	
+	SetControlID(uiBuyBtn,index + 10);
 end
 
 -- 清空商店子控件
