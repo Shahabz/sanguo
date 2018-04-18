@@ -385,7 +385,7 @@ int quest_check( int actor_index, int questid, int *value )
 				return 1;
 			}
 		}
-		else if ( questinfo->datatype == QUEST_DATATYPE_STORY )
+		else if ( questinfo->datatype == QUEST_DATATYPE_STORY || questinfo->datatype == QUEST_DATATYPE_HERO_CALL_STORY )
 		{ // ¸±±¾
 			if ( value )
 				*value = g_actors[actor_index].storyid;
