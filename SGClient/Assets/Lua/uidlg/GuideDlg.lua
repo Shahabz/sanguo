@@ -37,6 +37,8 @@ GUIDE_DRESS_FU = 30      --点击符穿戴
 GUIDE_GUOQI = 31         --打造国器1
 GUIDE_DAZAO = 32         --点击开始打造国器
 GUIDE_MAKE_POS = 33      --指向铁匠框
+GUIDE_CHOOSE_FU = 34     --选择符打造
+GUIDE_CHOOSE_YIN = 35    --选择印打造
 
 GUIDE_TASK_FINISH = 111  --任务完成，作为一个触发的标识
 GUIDE_END = 999          --指引结束标识

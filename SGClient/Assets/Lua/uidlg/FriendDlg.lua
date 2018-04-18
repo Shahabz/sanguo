@@ -544,7 +544,7 @@ end
 --师徒界面消息
 function FriendDlgTeacherRecv(recvValue)
 	m_TeacherRecvValue = recvValue;
-	PrintTable(m_TeacherRecvValue,"m_TeacherRecvValue")
+	--PrintTable(m_TeacherRecvValue,"m_TeacherRecvValue")
 	FriendDlgSetTeacherView();
 end
 

@@ -43,8 +43,8 @@ CREATE TABLE `actor` (
   `storyid` smallint(6) NOT NULL DEFAULT '0' COMMENT '副本进度章节',
   `story_star` varbinary(512) NOT NULL DEFAULT '' COMMENT '精英副本星级',
   `story_hero` varbinary(128) NOT NULL DEFAULT '' COMMENT '招募副本',
-  `story_resnum` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本次数',
   `story_restime` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本时间',
+  `story_resnum` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本次数',
   `story_resreset` varbinary(128) NOT NULL DEFAULT '' COMMENT '资源副本重置次数',
   `story_itemnum` varbinary(256) NOT NULL DEFAULT '' COMMENT '道具副本掉落次数',
   `story_drawing` varbinary(64) NOT NULL DEFAULT '' COMMENT '装备图纸副本是否购买',
@@ -92,5 +92,8 @@ CREATE TABLE `actor` (
   `fs_weekkind` varbinary(20) NOT NULL DEFAULT '' COMMENT '皇宫内院奖励',
   `fs_weeknum` varbinary(20) NOT NULL DEFAULT '' COMMENT '皇宫内院奖励',
   `fs_fweek` int(11) NOT NULL DEFAULT '0' COMMENT '坊市周数',
+  `girlshop` varbinary(36) NOT NULL DEFAULT '' COMMENT '女将商店',
+  `girlshop_buy` smallint(6) NOT NULL DEFAULT '0' COMMENT '女将商店是否购买',
+  `girlshop_fday` int(11) NOT NULL DEFAULT '0' COMMENT '女将商店刷新天数',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

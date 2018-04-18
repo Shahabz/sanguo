@@ -56,6 +56,7 @@ function BuildingGetDlgClose()
 	m_WaitValue3 = nil;
 	system_askinfo( ASKINFO_AUTOBUILD, "", 3 );
 	eye.uiManager:Close( "BuildingGetDlg" );
+	PatrolModSetSiblingIndex();
 end
 
 -- 删除界面
@@ -148,6 +149,7 @@ function BuildingGetDlgShow( recvValue )
 	-- 关闭部分界面
 	StoryDlgClose()
 	FightDlgClose()
+	FightInfoDlgClose()
 	LevyDlgClose()
 	WishingDlgClose()
 end

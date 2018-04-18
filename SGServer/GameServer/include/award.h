@@ -140,5 +140,6 @@ int gift_uid_get( int actor_index );
 // 随机数
 int awardgroup_randnum( int awardgroup, int level, int index );
 
-
+// 权重随机
+int weight_random( int *kind, int *num, int *weight, int count, int *totalweight, int *outkind, int *outnum );
 #endif

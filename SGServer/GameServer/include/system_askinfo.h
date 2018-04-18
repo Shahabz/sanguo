@@ -52,6 +52,7 @@
 #define	ASKINFO_CDKEY			47 // CDKEY
 #define	ASKINFO_GIRL			48 // 女将
 #define	ASKINFO_FANGSHI			49 // 坊市
+#define	ASKINFO_GIRLSHOP		50 // 女将商店
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

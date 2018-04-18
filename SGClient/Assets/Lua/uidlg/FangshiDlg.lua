@@ -28,6 +28,7 @@ local m_uiUIP_InfoGrid = nil; --UnityEngine.GameObject
 local m_uiInfoTitle = nil; --UnityEngine.GameObject
 local m_uiInfoContent = nil; --UnityEngine.GameObject
 local m_uiGetEffect = nil; --UnityEngine.GameObject
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_recvInfo = nil;
@@ -40,6 +41,7 @@ local m_GetIndex = nil;
 local m_IsPlayGet = false;
 local m_IsShowGetGirl = false;
 local m_cacheNodeAward = {};
+
 -- 打开界面
 function FangshiDlgOpen()
 	m_Dlg = eye.uiManager:Open( "FangshiDlg" );
@@ -59,7 +61,7 @@ function FangshiDlgClose()
 	m_recvSee = nil;
 	m_placeSelect = nil;
 	m_grathSelect = nil;
-	m_cacheNodeAward = nil;
+	m_cacheNodeAward = {};
 	m_IsPlayGet = nil;
 	eye.uiManager:Close( "FangshiDlg" );
 end
@@ -74,7 +76,7 @@ function FangshiDlgDestroy()
 	m_recvSee = nil;
 	m_placeSelect = nil;
 	m_grathSelect = nil;
-	m_cacheNodeAward = nil;
+	m_cacheNodeAward = {};
 	m_IsPlayGet = nil;
 end
 
@@ -86,47 +88,42 @@ end
 function FangshiDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
 		if m_IsPlayGet == true then return end;
+		FangshiDlgClosePlaceInfo();	
+		FangshiDlgCloseAwardDesc();
         if nControlID == -1 then
             FangshiDlgClose();
 		elseif nControlID == 1 then 								-- 打开皇宫内院界面
 			FangshiDlgOnBtnGarth();	
-			warn("打开皇宫内院界面")
 		elseif nControlID == 2 then									-- 普通巡游
 			FangshiDlgOnBtnIncognito(1);		
-			warn("普通巡游")
 		elseif nControlID == 3 then									-- 多次巡游
 			FangshiDlgOnBtnIncognito(2);				
-			warn("多次巡游")
 		elseif nControlID == 4 then									-- 领取巡游奖励
 			FangshiDlgOnBtnGet();	
-			warn("领取巡游奖励")
 		elseif nControlID == 5 then									-- 关闭皇宫内院界面
 			FangshiDlgOnBtnCloseGarth();
-			warn("关闭皇宫内院界面")	
 		elseif nControlID == 6 then									-- 觐见
 			FangshiDlgOnBtnSee();
-			warn("觐见")
 		elseif nControlID == 7 then									-- 再次觐见
 			FangshiDlgOnBtnSee();	
-			warn("再次觐见")
 		elseif nControlID == 8 then									-- 关闭觐见获得界面	
 			FangshiDlgOnBtnCloseSee();	
-			warn("关闭觐见获得界面")
-		elseif nControlID == 9 then									-- 关闭巡游位置信息
-			FangshiDlgClosePlaceInfo()
-			warn("关闭巡游位置信息")			
+		elseif nControlID == 9 then									-- 关闭巡游位置奖励界面	
+			FangshiDlgClosePlaceInfo();			
+		elseif nControlID >= 20 and nControlID < 40 then			-- 巡游奖励tips
+			FangshiDlgShowAwardDesc(nControlID - 20);
+		elseif nControlID == 40 then								-- 巡游奖励tips关闭
+			FangshiDlgCloseAwardDesc();
 		elseif nControlID >= 50 and nControlID <= 60 then			-- 皇宫内院女将选择
 			m_grathSelect = nControlID - 50;
-			FangshiDlgSetGarthSelect();
-			warn("皇宫内院女将选择"..m_grathSelect)		
+			FangshiDlgSetGarthSelect();								
 		elseif nControlID == 100 then								-- 打开女将界面
 			GirlDlgShow();
-			warn("打开女将界面")
 		elseif nControlID == 101 then								-- 打开女将商店
 			warn("打开女将商店")
+			GirlShopDlgShow();
 		elseif nControlID >= 200 and nControlID <= 300 then				-- 查看巡游地点信息
 			FangshiDlgOnBtnPlace( nControlID - 200 )
-			warn("查看巡游地点信息")
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		FangshiDlgPlayGetOff();	
@@ -163,6 +160,7 @@ function FangshiDlgOnAwake( gameObject )
 	m_uiUIP_InfoGrid = objs[23];
 	m_uiInfoTitle = objs[24];
 	m_uiInfoContent = objs[25];
+	m_uiAwardDescLayer = objs[26]
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );	
@@ -261,12 +259,13 @@ function FangshiDlgSetPlaceState(index,bOver,bReturn)
 	local uiFoot = objs[0];
 	local uiColor = objs[1];
 	local uiRFoot = objs[2];
+	local uiBack = objs[4];
 	if bOver == false then 
 		SetTrue(uiFoot);
 		SetImage(uiFoot,LoadSprite("ui_fangshi_footoff"))
 		SetFalse(uiRFoot);
-		SetImage(uiColor,LoadSprite("ui_fangshi_quality0"))		
-		SetButtonFalse(uiObj)
+		SetImage(uiColor,LoadSprite("ui_fangshi_quality0"))			
+		SetGray(uiBack,true);
 	else
 		if bReturn == true then 
 			SetFalse(uiFoot);
@@ -278,7 +277,7 @@ function FangshiDlgSetPlaceState(index,bOver,bReturn)
 			SetImage(uiFoot,LoadSprite("ui_fangshi_footon"))
 		end		
 		FangshiDlgSetPlaceColor(uiColor,index);
-		SetButtonTrue(uiObj)
+		SetGray(uiBack,false);
 	end
 end
 
@@ -319,7 +318,6 @@ end
 
 -- 巡游位置信息
 function FangshiDlgOnBtnPlace(index)
-	warn("点击巡游位置："..index)	
 	if m_placeSelect == index then 		
 		SetFalse(m_uiPlaceInfo);
 		FangshiDlgSetPlaceSelect(-1);
@@ -443,6 +441,7 @@ end
 function FangshiDlgClosePlaceInfo()
 	SetFalse(m_uiPlaceInfo);
 	m_placeSelect = nil;
+	FangshiDlgSetPlaceSelect(-1);
 end
 
 -- system_askinfo( ASKINFO_FANGSHI, "", 1,0 ); 免费寻访
@@ -594,6 +593,8 @@ function FangshiDlgCreatGetGrid(data)
 	
 	uiObj.transform:SetParent( m_uiListContent.transform );
 	uiObj.gameObject:SetActive( true );
+	
+	SetControlID(uiObj,m_uiListContent.transform.childCount+20);
 end
 
 -- 清空巡游奖励子控件
@@ -608,6 +609,36 @@ function FangshiDlgClearGetGrid()
 			m_ObjectPool:Release( "UIP_GetGrid", obj );
 		end
 	end
+end
+
+-- 显示巡游奖励Tips
+function FangshiDlgShowAwardDesc(awardIndex)	
+	-- 位置
+	local uiObj = m_uiListContent.transform:GetChild( awardIndex - 1 );
+	m_uiAwardDescLayer.transform:SetParent( uiObj.transform )	
+	local anchoredX = 0;
+	if awardIndex == 1 or awardIndex == 8 then 
+		anchoredX = 60;
+	elseif awardIndex == 7 or awardIndex == 14 then 
+		anchoredX = -60;
+	end
+	m_uiAwardDescLayer.transform.anchoredPosition = Vector2( anchoredX, -190 )	
+	m_uiAwardDescLayer.transform:SetParent( m_Dlg.transform )
+	local _, _, name, c, desc = AwardInfo( m_recvInfo.m_awardlist[awardIndex].m_kind )
+	SetText( m_uiAwardDescLayer.transform:Find("Name"), name, NameColor(c) )	
+	local _desc = string.split( desc, "\n")
+	if _desc ~= nil and _desc[1] ~= nil then
+		SetText( m_uiAwardDescLayer.transform:Find("Desc"), _desc[1] )
+	else
+		SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+	end
+	SetText( m_uiAwardDescLayer.transform:Find("Warn"), "" )
+	SetTrue( m_uiAwardDescLayer )
+end
+
+-- 关闭巡游奖励Tips
+function FangshiDlgCloseAwardDesc()
+	SetFalse( m_uiAwardDescLayer );
 end
 
 -- 领取巡游奖励
@@ -684,8 +715,8 @@ function FangshiDlgClearGarthTopGrid()
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "UIP_GetGrid(Clone)" then
-			m_ObjectPool:Release( "UIP_GetGrid", obj );
+		if obj.name == "UIP_GirlGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_GirlGrid", obj );
 		end
 	end
 end
@@ -716,8 +747,8 @@ function FangshiDlgClearGarthBottomGrid()
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "UIP_GetGrid(Clone)" then
-			m_ObjectPool:Release( "UIP_GetGrid", obj );
+		if obj.name == "UIP_GirlGrid(Clone)" then
+			m_ObjectPool:Release( "UIP_GirlGrid", obj );
 		end
 	end
 end
@@ -751,6 +782,7 @@ function FangshiDlgSetSeeGrid(index,data)
 	SetImage(uiShape,sprite);
 	SetImage(uiColor,color);
 	SetText(uiName,name);
+	SetTextColor(uiName,NameColor(c))
 	SetText(uiNum,"x"..data.m_awardnum)
 	
 	if data.m_awardkind > AWARDKIND_GIRLSOULBASE then 

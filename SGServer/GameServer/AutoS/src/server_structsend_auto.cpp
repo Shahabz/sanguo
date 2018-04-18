@@ -3295,3 +3295,33 @@ int struct_NetS_FsPalaceResult_send( char **pptr, int *psize, SLK_NetS_FsPalaceR
 	return 0;
 }
 
+int struct_NetS_GirlShopItem_send( char **pptr, int *psize, SLK_NetS_GirlShopItem *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_cost_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_cost_awardnum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isbuy, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	return 0;
+}
+
+int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_GirlShopItem_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_update_lefttime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_update_num, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_update_nummax, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_update_viplevel, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_update_token, (*psize) );
+	return 0;
+}
+

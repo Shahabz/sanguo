@@ -34,6 +34,11 @@ void girl_gm_getall( City *pCity );
 int girl_gm_son_growth_quick( City *pCity, short herokind );
 char girl_withherokind( short herokind );
 
+int girl_shop_sendlist( int actor_index );
+int girl_shop_buy( int actor_index, int index, short id );
+int girl_shop_update( int actor_index );
+int girl_shop_update_manual( int actor_index );
+
 int fangshi_sendinfo( int actor_index );
 int fangshi_visit( int actor_index, int type );
 int fangshi_visit_getaward( int actor_index );

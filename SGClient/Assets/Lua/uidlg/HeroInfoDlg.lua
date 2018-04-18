@@ -246,14 +246,18 @@ function HeroInfoDlgSet( path, pHero, up )
 			SetText(m_uiSonBtn.transform:Find("Back/Text"),T(3412));
 			SetGray(m_uiSonPicture,false);
 		end
+		
+		-- 女将图片
+		if m_pCacheHero.m_girlkind > 0 then
+			SetImage(m_uiGirlPicture,GirlHeadSprite(m_pCacheHero.m_girlkind));
+		else
+			SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
+		end
+	else
+		SetFalse(m_uiSonBtn);
+		SetFalse(m_uiGirlBtn);
 	end
 	
-	-- 女将图片
-	if m_pCacheHero.m_girlkind > 0 then
-		SetImage(m_uiGirlPicture,GirlHeadSprite(m_pCacheHero.m_girlkind));
-	else
-		SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
-	end
 	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
 	

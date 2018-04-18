@@ -1185,6 +1185,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			fangshi_palace_see( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_GIRLSHOP:
+		if ( pvalue[0] == 0 )
+		{ // 女将商店信息
+			girl_shop_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 女将商店购买
+			girl_shop_buy( actor_index, pvalue[1], pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 坊市寻访领取奖励
+			girl_shop_update_manual( actor_index );
+		}
+		break;
 	default:
 		break;
 	}

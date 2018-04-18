@@ -158,7 +158,7 @@ end
 
 function HeroLevyDlgRecv(recvValue)
 	m_RecvValue = recvValue;
-	PrintTable(m_RecvValue,"天策府任务信息")
+	--PrintTable(m_RecvValue,"天策府任务信息")
 	HeroLevyDlgSetSelectPage();
 	HeroLevyDlgTaskView();
 	HeroLevyDlgTaskStateView();

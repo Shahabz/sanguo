@@ -2238,6 +2238,27 @@ struct _slk_NetS_FsPalaceResult {
 };
 typedef struct _slk_NetS_FsPalaceResult SLK_NetS_FsPalaceResult;	//皇宫内院奖励结果
 
+struct _slk_NetS_GirlShopItem {
+	int m_awardkind;	//女将商店
+	int m_awardnum;	//女将商店
+	int m_cost_awardkind;	//女将商店
+	int m_cost_awardnum;	//女将商店
+	char m_isbuy;	//女将商店
+	short m_id;	//女将商店
+};
+typedef struct _slk_NetS_GirlShopItem SLK_NetS_GirlShopItem;	//女将商店
+
+struct _slk_NetS_GirlShop {
+	char m_count;	//女将商店列表
+	SLK_NetS_GirlShopItem m_list[9];	//女将商店列表
+	int m_update_lefttime;	//刷新剩余时间
+	char m_update_num;	//刷新次数
+	char m_update_nummax;	//刷新次数上限
+	char m_update_viplevel;	//刷新次数vip限制
+	short m_update_token;	//刷新元宝
+};
+typedef struct _slk_NetS_GirlShop SLK_NetS_GirlShop;	//女将商店
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2481,5 +2502,7 @@ int struct_NetS_FsVisitResult_send( char **pptr, int *psize, SLK_NetS_FsVisitRes
 int struct_NetS_FsPalace_send( char **pptr, int *psize, SLK_NetS_FsPalace *pValue );
 int struct_NetS_FsPalaceAward_send( char **pptr, int *psize, SLK_NetS_FsPalaceAward *pValue );
 int struct_NetS_FsPalaceResult_send( char **pptr, int *psize, SLK_NetS_FsPalaceResult *pValue );
+int struct_NetS_GirlShopItem_send( char **pptr, int *psize, SLK_NetS_GirlShopItem *pValue );
+int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValue );
 
 #endif

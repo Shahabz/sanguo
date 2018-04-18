@@ -288,6 +288,14 @@ function EquipForgingDlgShow()
 				if kind ==31 and forging == true then
 					FindCmdTpye(m_uiUpBtn.transform);
 				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_YIN then
+				if kind ==41 and forging == true then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_FU then
+				if kind ==51 and forging == true then
+					FindCmdTpye(m_uiUpBtn.transform);
+				end
 			end
 		end
     end 
@@ -371,6 +379,14 @@ function EquipForgingDlgSelect( kind )
 				end
 			elseif GetCurrentGuideType() == GUIDE_CHOOSE_HEAD then 
 				if kind == 31 and forging == true then
+					GuideNext();
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_YIN then
+				if kind == 41 and forging == true then
+					GuideNext();
+				end
+			elseif GetCurrentGuideType() == GUIDE_CHOOSE_FU then
+				if kind == 51 and forging == true then
 					GuideNext();
 				end
 			end

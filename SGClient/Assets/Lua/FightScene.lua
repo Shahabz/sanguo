@@ -317,7 +317,7 @@ end
 -- 播放技能特效
 function FightScene.PlaySkill( pos, skillid )
 	local skill = { {name="Jn3",ax=0,ay=-0.7, dx=0,dy=-0.7,s = -1},{name="Jn1",ax=0.1,ay=0.14, dx=-0.1,dy=0.14,s = 1},{name="Jn2",ax=-0.12,ay=-0.67, dx=0.12,dy=-0.67,s = -1} }
-	PrintTable(skill,"skill")
+	--PrintTable(skill,"skill")
 	local effectObj = FightScene.PoolGetEffect( skill[skillid].name )
 	if effectObj == nil then
 		return

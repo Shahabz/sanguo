@@ -928,3 +928,30 @@ int awardgroup_randnum( int awardgroup, int level, int index )
 	return num;
 }
 
+// 权重随机
+int weight_random( int *kind, int *num, int *weight, int count, int *totalweight, int *outkind, int *outnum )
+{
+	int allvalue = *totalweight;
+	int curvalue = 0;
+	int odds = allvalue > 0 ? rand() % allvalue : 0;
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		// 按照评价值方式随机
+		int awardkind = kind[tmpi];
+		int awardnum = num[tmpi];
+		if ( awardkind <= 0 || awardnum <= 0 )
+			continue;
+		curvalue = weight[tmpi];
+		if ( curvalue > 0 && curvalue > odds )
+		{
+			*outkind = awardkind;
+			*outnum = awardnum;
+			kind[tmpi] = 0;
+			num[tmpi] = 0;
+			*totalweight -= curvalue;
+			break;
+		}
+		odds -= curvalue;
+	}
+	return 0;
+}

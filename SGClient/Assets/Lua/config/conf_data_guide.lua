@@ -10,7 +10,7 @@ g_guide = {
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 0,point = 2,isSpecial = 0},   --领取奖励
 	},
 [3] = {
-	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
+	[1] = {cmd = 2,guideType = 1,x = 0,y = 0.5,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 14,x = 0,y = 0,point = 2,isSpecial = 0},     --升级官府
 	[3] = {cmd = 1,guideType = 111,x = 0,y = 0,point = 2,isSpecial = 0},   --领取奖励
 	},
@@ -38,7 +38,7 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 5,x = 0,y = 0,point = 2,isSpecial = 0},   --点击衣服穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成，作为触发标识
 	},
 [9] = {
@@ -84,7 +84,7 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 11,x = 0,y = 0,point = 2,isSpecial = 0},  --点击武器穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴按钮
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [18] = {
@@ -101,7 +101,7 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击马岱头像
 	[3] = {cmd = 3,guideType = 16,x = 0,y = 0,point = 2,isSpecial = 0},  --点击马穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴按钮
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [21] = {
@@ -125,14 +125,14 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张良头像
 	[3] = {cmd = 3,guideType = 11,x = 0,y = 0,point = 2,isSpecial = 0},  --点击武器穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴按钮
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [25] = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 1},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 1},   --点击张良头像
 	[3] = {cmd = 3,guideType = 16,x = 0,y = 0,point = 2,isSpecial = 0},  --点击马穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴按钮
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴按钮
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [26] = {
@@ -172,7 +172,7 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张角头像
 	[3] = {cmd = 3,guideType = 5,x = 0,y = 0,point = 2,isSpecial = 0},   --点击衣服穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
 [34] = {
@@ -185,12 +185,12 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框
 	[2] = {cmd = 3,guideType = 18,x = 0,y = 0,point = 2,isSpecial = 0},   --点击张角头像
 	[3] = {cmd = 3,guideType = 23,x = 0,y = 0,point = 2,isSpecial = 0},   --点击头盔穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [36] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框打造装备守备印
-	[2] = {cmd = 3,guideType = 9,x = 0,y = -4.5,point = 2,isSpecial = 0},   --选择守备印
+	[2] = {cmd = 3,guideType = 35,x = 0,y = -4.5,point = 2,isSpecial = 0},   --选择守备印
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造守备印
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
@@ -198,12 +198,12 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框给武将穿戴守备印
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击武将头像
 	[3] = {cmd = 3,guideType = 29,x = 0,y = 0,point = 2,isSpecial = 0},   --点击武将守备印穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成，作为触发标识
 	},
 [38] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框打造装备千营符
-	[2] = {cmd = 3,guideType = 9,x = 0,y = -5.4,point = 2,isSpecial = 0},   --选择千营符
+	[2] = {cmd = 3,guideType = 34,x = 0,y = -5.4,point = 2,isSpecial = 0},   --选择千营符
 	[3] = {cmd = 3,guideType = 10,x = 0,y = 0,point = 2,isSpecial = 0},  --打造千营符
 	[4] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成
 	},
@@ -211,7 +211,7 @@ g_guide = {
 	[1] = {cmd = 2,guideType = 25,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框给武将穿戴千营符
 	[2] = {cmd = 3,guideType = 4,x = 0,y = 0,point = 2,isSpecial = 0},   --点击武将头像
 	[3] = {cmd = 3,guideType = 30,x = 0,y = 0,point = 2,isSpecial = 0},   --点击武将符印穿戴
-	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 3,isSpecial = 0},   --穿戴
+	[4] = {cmd = 3,guideType = 6,x = 0,y = 0,point = 6,isSpecial = 0},   --穿戴
 	[5] = {cmd = 1,guideType = 111,x = 0,y = 1}  --任务完成，作为触发标识
 	},
 [40] = {

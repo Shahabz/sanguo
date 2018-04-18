@@ -45,8 +45,8 @@ struct _actor {
 				short storyid;	//副本进度章节
 				char story_star[128];	//精英副本星级
 				char story_hero[32];	//招募副本
-				char story_resnum[32];	//资源副本次数
 				int story_restime[32];	//资源副本时间
+				char story_resnum[32];	//资源副本次数
 				char story_resreset[32];	//资源副本重置次数
 				char story_itemnum[64];	//道具副本掉落次数
 				char story_drawing[16];	//装备图纸副本是否购买
@@ -96,6 +96,9 @@ struct _actor {
 				int fs_weekkind[5];	//皇宫内院奖励
 				int fs_weeknum[5];	//皇宫内院奖励
 				int fs_fweek;	//坊市周数
+				short girlshop[9];	//女将商店
+				short girlshop_buy;	//女将商店是否购买
+				int girlshop_fday;	//女将商店刷新天数
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

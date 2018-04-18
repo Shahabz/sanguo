@@ -226,7 +226,7 @@ function proc_buildinglist_C( recvValue )
 	-- πÿ±’º”‘ÿ√Ê∞Â
 	GameObject.FindWithTag( "UpdateManager" ):SetActive( false );
 	LoginModClose();
-	PatrolModSetSiblingIndex()
+	PatrolModSetSiblingIndex();
 end
 
 -- m_kind=0,m_offset=0,m_level=0,m_sec=0,m_needsec=0,m_quick=0,m_overvalue=0,
@@ -2243,5 +2243,10 @@ end
 function proc_fspalaceresult_C( recvValue )
 	-- process.
 	FangshiDlgSeeRecv(recvValue)
+end
+-- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_cost_awardkind=0,m_cost_awardnum=0,m_isbuy=0,m_id=0,[m_count]},m_update_lefttime=0,m_update_num=0,m_update_nummax=0,m_update_viplevel=0,m_update_token=0,
+function proc_girlshop_C( recvValue )
+	-- process.
+	GirlShopDlgInfoRecv( recvValue );
 end
 

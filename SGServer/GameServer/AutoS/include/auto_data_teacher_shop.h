@@ -5,7 +5,7 @@
 struct _teachershop {
 //--Automatically generated
 				int id;	//
-				short awardkind;	//
+				int awardkind;	//
 				short awardnum;	//
 				short showlevel;	//
 				short buylevel;	//

@@ -188,13 +188,12 @@ function StoryDlgStateRecv( recvValue )
 		m_recvValue.m_story_drawing[recvValue.m_saveoffset+1] = recvValue.m_state
 		
 	end
-	if m_uiObjCache[recvValue.m_storyid] == nil then
-		return
-	end
 	
 	-- 更新	
 	local storyid = recvValue.m_storyid;
-	StoryDlgSetRank( m_uiObjCache[storyid], g_story[storyid] )
+	if m_uiObjCache[storyid] ~= nil then
+		StoryDlgSetRank( m_uiObjCache[storyid], g_story[storyid] )
+	end
 	
 	if m_recvValue.m_storyid < recvValue.m_actor_storyid then
 		m_recvValue.m_storyid = recvValue.m_actor_storyid;

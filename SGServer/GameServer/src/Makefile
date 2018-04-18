@@ -46,6 +46,7 @@ SRC = \
 ../AutoS/src/auto_data_official_gov.cpp \
 ../AutoS/src/auto_data_activity_05.cpp \
 ../AutoS/src/auto_city_nation_hero.cpp \
+../AutoS/src/auto_data_girl_shop_update.cpp \
 ../AutoS/src/auto_data_fangshi_node.cpp \
 ../AutoS/src/auto_data_wishing_shop.cpp \
 ../AutoS/src/auto_data_activity_04.cpp \
@@ -64,6 +65,7 @@ SRC = \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
+../AutoS/src/auto_data_girl_shop.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_activity_08.cpp \
 ../AutoS/src/auto_data_shop.cpp \
@@ -282,6 +284,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_nation_hero.o: ../AutoS/src/auto_city_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_girl_shop_update.o: ../AutoS/src/auto_data_girl_shop_update.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_fangshi_node.o: ../AutoS/src/auto_data_fangshi_node.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_wishing_shop.o: ../AutoS/src/auto_data_wishing_shop.cpp 
@@ -317,6 +321,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_world_questinfo.o: ../AutoS/src/auto_data_world_questinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_girl_shop.o: ../AutoS/src/auto_data_girl_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

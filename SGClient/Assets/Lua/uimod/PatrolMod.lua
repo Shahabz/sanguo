@@ -105,7 +105,8 @@ function PatrolModStop()
 end
 -- …Ë÷√≤„º∂
 function PatrolModSetSiblingIndex()
-	m_Mod.transform:SetSiblingIndex(1001)
+	local Index = City.BuildingRoot().transform.childCount; 
+	m_Mod.transform:SetSiblingIndex(Index + 1)
 end
 function PatrolModPlay()
 	if GameManager.currentScence ~= "city" then return end;

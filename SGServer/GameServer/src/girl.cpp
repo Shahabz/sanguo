@@ -58,6 +58,11 @@ extern int g_fangshi_node_maxnum;
 extern FangshiPalace *g_fangshi_palace;
 extern int g_fangshi_palace_maxnum;
 
+extern GirlShop *g_girlshop;
+extern int g_girlshop_maxnum;
+extern GirlShopUpdate *g_girlshop_update;
+extern int g_girlshop_update_maxnum;
+
 Girl *girl_getptr( int city_index, int kind )
 {
 	if ( city_index < 0 || city_index >= g_city_maxcount )
@@ -643,6 +648,238 @@ char girl_withherokind( short herokind )
 	return 0;
 }
 
+// 女将商店
+int girl_shop_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int nowday = system_getfday();
+	if ( g_actors[actor_index].girlshop_fday != nowday )
+	{
+		girl_shop_update( actor_index );
+		g_actors[actor_index].girlshop_fday = nowday;
+	}
+	SLK_NetS_GirlShop pValue = { 0 };
+	for ( int tmpi = 0; tmpi < 9; tmpi++ )
+	{
+		short id = g_actors[actor_index].girlshop[tmpi];
+		if ( id > 0 && id < g_girlshop_maxnum )
+		{
+			pValue.m_list[pValue.m_count].m_id = id;
+			pValue.m_list[pValue.m_count].m_awardkind = g_girlshop[id].awardkind;
+			pValue.m_list[pValue.m_count].m_awardnum = g_girlshop[id].awardnum;
+			pValue.m_list[pValue.m_count].m_cost_awardkind = g_girlshop[id].cost_awardkind;
+			pValue.m_list[pValue.m_count].m_cost_awardnum = g_girlshop[id].cost_awardnum;
+			if ( g_actors[actor_index].girlshop_buy & (1 << tmpi) )
+			{
+				pValue.m_list[pValue.m_count].m_isbuy = 1;
+			}
+			else
+			{
+				pValue.m_list[pValue.m_count].m_isbuy = 0;
+			}
+		}
+		pValue.m_count += 1;
+	}
+	// 当前更新次数
+	pValue.m_update_num = actor_get_today_char_times( actor_index, TODAY_CHAR_GIRLSHOP_UPDATE );
+	if ( pValue.m_update_num >= g_girlshop_update_maxnum )
+	{
+		pValue.m_update_num = g_girlshop_update_maxnum - 1;
+	}
+
+	// 更新次数上限
+	for ( int tmpi = g_girlshop_update_maxnum - 1; tmpi >= 0; tmpi-- )
+	{
+		if ( pCity->level >= g_girlshop_update[tmpi].viplevel )
+		{
+			if ( tmpi == g_girlshop_update_maxnum - 1 )
+			{
+				pValue.m_update_nummax = 127;
+			}
+			else
+			{
+				pValue.m_update_nummax = tmpi;
+			}
+			break;
+		}
+	}
+
+	// 更新所需元宝
+	pValue.m_update_token = g_girlshop_update[pValue.m_update_num].token;
+	pValue.m_update_viplevel = (char)g_girlshop_update[pValue.m_update_num].viplevel;
+
+	// 距离今天零点剩余多少秒
+	time_t t;
+	time( &t );
+	struct tm *nowtime = localtime( &t );
+
+	time_t zero_t;
+	time( &zero_t );
+	struct tm ZeroTm = { 0 };
+	ZeroTm.tm_year = nowtime->tm_year;
+	ZeroTm.tm_mon = nowtime->tm_mon;
+	ZeroTm.tm_mday = nowtime->tm_mday;
+	ZeroTm.tm_hour = 23;
+	ZeroTm.tm_min = 59;
+	ZeroTm.tm_sec = 59;
+	int endstamp = (int)mktime( &ZeroTm );
+	pValue.m_update_lefttime = (int)(endstamp - t);
+	netsend_girlshop_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+// 女将商品购买
+int girl_shop_buy( int actor_index, int index, short id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( index < 0 || index >= 9 )
+		return -1;
+	short trueid = g_actors[actor_index].girlshop[index];
+	if ( trueid <= 0 || trueid >= g_girlshop_maxnum )
+		return -1;
+	if ( id != trueid )
+		return -1;
+	if ( g_actors[actor_index].girlshop_buy & (1 << index) )
+		return -1;
+	if ( g_girlshop[id].cost_awardkind == AWARDKIND_TOKEN )
+	{
+		if ( actor_change_token( actor_index, -g_girlshop[id].cost_awardnum, PATH_GIRL_SHOP, 0 ) < 0 )
+		{
+			return -1;
+		}
+	}
+	else if ( g_girlshop[id].cost_awardkind > AWARDKIND_GIRLSOULBASE && g_girlshop[id].cost_awardkind < AWARDKIND_GIRLSOULBASE + 1000 )
+	{
+		char girlkind = g_girlshop[id].cost_awardkind - AWARDKIND_GIRLSOULBASE;
+		if ( girlkind <= 0 || girlkind >= ACTOR_GIRL_MAX )
+			return -1;
+		if ( pCity->girl[girlkind].soul < g_girlshop[id].cost_awardnum )
+			return -1;
+		pCity->girl[girlkind].soul -= g_girlshop[id].cost_awardnum;
+		girl_info( pCity, &pCity->girl[girlkind] );
+	}
+	else
+		return -1;
+
+	award_getaward( actor_index, g_girlshop[id].awardkind, g_girlshop[id].awardnum, 0, PATH_GIRL_SHOP, NULL );
+	g_actors[actor_index].girlshop_buy |= (1 << index);
+	girl_shop_sendlist( actor_index );
+	return 0;
+}
+
+// 获取奖励
+int _girl_shop_randomitem( City *pCity, int row, short *outid )
+{
+	int count = 0;
+	int itemid[64] = { 0 };
+	int num[64] = { 0 };
+	int weight[64] = { 0 };
+	int totalweight = 0;
+	for ( int id = 1; id < g_girlshop_maxnum; id++ )
+	{
+		GirlShop *config = &g_girlshop[id];
+		if ( row != config->row )
+			continue;
+		if ( pCity->level < config->actorlevel )
+			continue;
+		if ( pCity->viplevel < config->viplevel )
+			continue;
+		if ( config->girlkind > 0 )
+		{ 
+			Girl *pGirl = girl_getptr( pCity->index, config->girlkind );
+			if ( !pGirl )
+				continue;
+			if ( pGirl->color == 0 )
+				continue;
+		}
+		
+		itemid[count] = config->id;
+		num[count] = 1;
+		weight[count] = config->weight;
+		totalweight += config->weight;
+		count += 1;
+		if ( count >= 64 )
+		{
+			break;
+		}
+	}
+
+	int out_id = 0;
+	int out_num = 0;
+	weight_random( itemid, num, weight, count, &totalweight, &out_id, &out_num );
+	*outid = (short)out_id;
+	return 0;
+}
+
+// 更新商品
+int girl_shop_update( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	_girl_shop_randomitem( pCity, 1, &g_actors[actor_index].girlshop[0] );
+	_girl_shop_randomitem( pCity, 1, &g_actors[actor_index].girlshop[1] );
+	_girl_shop_randomitem( pCity, 1, &g_actors[actor_index].girlshop[2] );
+	_girl_shop_randomitem( pCity, 2, &g_actors[actor_index].girlshop[3] );
+	_girl_shop_randomitem( pCity, 2, &g_actors[actor_index].girlshop[4] );
+	_girl_shop_randomitem( pCity, 2, &g_actors[actor_index].girlshop[5] );
+	_girl_shop_randomitem( pCity, 3, &g_actors[actor_index].girlshop[6] );
+	_girl_shop_randomitem( pCity, 3, &g_actors[actor_index].girlshop[7] );
+	_girl_shop_randomitem( pCity, 3, &g_actors[actor_index].girlshop[8] );
+	g_actors[actor_index].girlshop_buy = 0;
+	return 0;
+}
+
+// 女将商店手动更新
+int girl_shop_update_manual( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int update_num = actor_get_today_char_times( actor_index, TODAY_CHAR_GIRLSHOP_UPDATE ) + 1;
+	if ( update_num >= g_girlshop_update_maxnum )
+		update_num = g_girlshop_update_maxnum - 1;
+	// 更新次数上限
+	int update_nummax = 1;
+	for ( int tmpi = g_girlshop_update_maxnum - 1; tmpi >= 0; tmpi-- )
+	{
+		if ( pCity->level >= g_girlshop_update[tmpi].viplevel )
+		{
+			if ( tmpi == g_girlshop_update_maxnum - 1 )
+			{
+				update_nummax = 127;
+			}
+			else
+			{
+				update_nummax = tmpi;
+			}
+			break;
+		}
+	}
+	if ( update_num > update_nummax && update_nummax < 127 )
+	{
+		actor_notify_pop( actor_index, 3414 );
+		return -1;
+	}
+
+	// 更新所需元宝
+	if ( actor_change_token( actor_index, -g_girlshop_update[update_num].token, PATH_GIRL_SHOP, 0 ) < 0 )
+		return -1;
+
+	girl_shop_update( actor_index );
+	actor_add_today_char_times( actor_index, TODAY_CHAR_GIRLSHOP_UPDATE );
+	girl_shop_sendlist( actor_index );
+	return 0;
+}
+
 // 坊市信息
 int fangshi_sendinfo( int actor_index )
 {
@@ -826,34 +1063,6 @@ int fangshi_node_sendaward( int actor_index, int nodeid )
 	return 0;
 }
 
-// 随机一个奖励
-int _fangshi_palace_random( int *kind, int *num, int *weight, int count, int *totalweight, int *outkind, int *outnum )
-{
-	int allvalue = *totalweight;
-	int curvalue = 0;
-	int odds = allvalue > 0 ? rand() % allvalue : 0;
-	for ( int tmpi = 0; tmpi < count; tmpi++ )
-	{
-		// 按照评价值方式随机
-		int awardkind = kind[tmpi];
-		int awardnum = num[tmpi];
-		if ( awardkind <= 0 || awardnum <= 0 )
-			continue;
-		curvalue = weight[tmpi];
-		if ( curvalue > 0 && curvalue > odds )
-		{
-			*outkind = awardkind;
-			*outnum = awardnum;
-			kind[tmpi] = 0;
-			num[tmpi] = 0;
-			*totalweight -= curvalue;
-			break;
-		}
-		odds -= curvalue;
-	}
-	return 0;
-}
-
 // 获取奖励
 int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *out_awardnum, int out_count )
 {
@@ -927,7 +1136,7 @@ int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *ou
 
 	for ( int tmpi = 0; tmpi < out_count; tmpi++ )
 	{
-		_fangshi_palace_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
+		weight_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
 	}
 	return 0;
 }
@@ -959,7 +1168,7 @@ int _fangshi_palace_getaward_other( int type, int *out_awardkind, int *out_award
 
 	for ( int tmpi = 0; tmpi < out_count; tmpi++ )
 	{
-		_fangshi_palace_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
+		weight_random( awardkind, awardnum, weight, count, &totalweight, &out_awardkind[tmpi], &out_awardnum[tmpi] );
 	}
 	return 0;
 }
@@ -1093,7 +1302,7 @@ int fangshi_palace_see( int actor_index, int index )
 
 	int outkind = { 0 };
 	int outnum = { 0 };
-	_fangshi_palace_random( awardkind, awardnum, awardweight, 4, &totalweight, &outkind, &outnum );
+	weight_random( awardkind, awardnum, awardweight, 4, &totalweight, &outkind, &outnum );
 
 	int other_outkind[4] = { 0 };
 	int other_outnum[4] = { 0 };

@@ -14,6 +14,7 @@ local notificationConfig = {
 ["SETTING_PUSH_GATHERCOMPLETE"] 	= {id=12,title=5912,trigger_time=0}, -- 资源采集完成通知
 ["SETTING_PUSH_LEVYFULL"] 			= {id=13,title=5913,trigger_time=0}, -- 征收次数满通知
 ["SETTING_PUSH_GUARD"] 				= {id=14,title=5914,trigger_time=0}, -- 城防军冷却完成通知
+["SETTING_PUSH_GirlShop"] 			= {id=14,title=5915,trigger_time=0}, -- 女将商店冷却完成通知
 }
 
 -- 设置时间

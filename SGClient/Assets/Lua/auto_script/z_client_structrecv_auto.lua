@@ -3005,3 +3005,31 @@ function struct_NetS_FsPalaceResult_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_GirlShopItem_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind = buffer:ReadInt();
+	recvValue.m_awardnum = buffer:ReadInt();
+	recvValue.m_cost_awardkind = buffer:ReadInt();
+	recvValue.m_cost_awardnum = buffer:ReadInt();
+	recvValue.m_isbuy = buffer:ReadSByte();
+	recvValue.m_id = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_GirlShop_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_GirlShopItem_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_update_lefttime = buffer:ReadInt();
+	recvValue.m_update_num = buffer:ReadSByte();
+	recvValue.m_update_nummax = buffer:ReadSByte();
+	recvValue.m_update_viplevel = buffer:ReadSByte();
+	recvValue.m_update_token = buffer:ReadShort();
+	return recvValue;
+end
+

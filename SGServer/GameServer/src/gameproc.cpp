@@ -391,6 +391,24 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
 
+	// 女将商店数据初始化
+	if ( girlshop_init_auto() < 0 )
+	{
+		printf_msg( "girlshop_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
+	// 女将商店数据初始化
+	if ( girlshopupdate_init_auto() < 0 )
+	{
+		printf_msg( "girlshopupdate_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+
 	// 坊市节点数据初始化
 	if ( fangshinode_init_auto() < 0 )
 	{
@@ -1710,6 +1728,8 @@ int process_dbreload()
 	girlinfo_reload_auto();
 	girllove_reload_auto();
 	girlson_reload_auto();
+	girlshop_reload_auto();
+	girlshopupdate_reload_auto();
 	fangshinode_reload_auto();
 	fangshipalace_reload_auto();
 

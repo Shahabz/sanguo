@@ -88,7 +88,7 @@ int actor_add_today_char_times( int actor_index, int offset )
 	if ( offset >= MAX_TODAY_COUNT || offset < 0 )
 		return -1;
 	_check_fday( actor_index );
-	if ( g_actors[actor_index].today_char[offset] < MAX_TODAY_COUNT )
+	if ( g_actors[actor_index].today_char[offset] < 127 )
 		g_actors[actor_index].today_char[offset]++;
 	return 0;
 }
