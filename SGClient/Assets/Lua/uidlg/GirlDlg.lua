@@ -392,6 +392,7 @@ function GirlDlgSelect( kind )
 					SetFalse(m_uiRelieveBtn);
 				end
 				m_SelectGirl = m_GirlCache[i];
+				SetItemCenterInScroll(i - 1,m_uiGirlScroll.transform);
 				break
 			end
 		end

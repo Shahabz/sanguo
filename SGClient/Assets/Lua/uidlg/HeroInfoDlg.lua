@@ -325,7 +325,7 @@ function HeroInfoDlgSet( path, pHero, up )
 		local uiWash = objs[2];
 		local uiAdd = objs[4];
 		SetControlID( m_uiEquip[i], 1000+i )
-	
+
 		if IsGuiding() then
 			if GetCurrentGuideType() == GUIDE_CLCLK_DRESS and i == 2 then
 				FindCmdTpye(uiShape.transform);
@@ -341,12 +341,12 @@ function HeroInfoDlgSet( path, pHero, up )
 				FindCmdTpye(uiShape.transform);
 			end
 		end
-		
+
 		if pHero.m_Equip[i].m_kind > 0 then
-			SetTrue( uiShape )
 			SetTrue( uiColor )
 			SetTrue( uiWash )
 			SetFalse( uiAdd )
+
 			SetImage( uiShape, EquipSprite(pHero.m_Equip[i].m_kind) )
 			SetImage( uiColor, ItemColorSprite(equip_getcolor(pHero.m_Equip[i].m_kind)) )
 			SetEquipWash( uiWash, pHero.m_Equip[i] );
@@ -354,10 +354,8 @@ function HeroInfoDlgSet( path, pHero, up )
 			-- 检查背包是否有同类型更好的装备
 			if GetEquip():CheckByType( equip_gettype( pHero.m_Equip[i].m_kind ) , pHero.m_Equip[i].m_kind ) then
 				SetTrue( uiAdd )
-				break;
 			end
 		else
-			SetTrue( uiShape )
 			SetFalse( uiColor )
 			SetFalse( uiWash )
 			SetImage( uiShape, EquipNormalSprite(i+1) )

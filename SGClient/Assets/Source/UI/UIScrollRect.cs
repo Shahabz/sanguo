@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class UIScrollRect : ScrollRect
 {
@@ -13,6 +14,8 @@ public class UIScrollRect : ScrollRect
 
     protected GameObject m_LoadingItem = null;
     protected bool m_IsLoadingTop = false;
+
+    private List<float> _childrenPos = new List<float>();
     protected override void Start()
     {
         base.Start();
@@ -181,31 +184,45 @@ public class UIScrollRect : ScrollRect
 	/// 指定一个 item让其定位到ScrollRect中间
 	/// </summary>
 	/// <param name="target">需要定位到的目标</param>
-	public void CenterOnItem(RectTransform target)
+	public void CenterOnItem(int index, GameObject scroll)
 	{
-		// Item is here
-		//var itemCenterPositionInScroll = GetWorldPointInWidget( scrollRect.GetComponent<RectTransform>(), GetWidgetWorldPoint( target));
-		//var itemCenterPositionInScroll = GetWorldPointInWidget( this.GetComponent<RectTransform>(), GetWidgetWorldPoint( target));
-		//Debug .Log( "Item Anchor Pos In Scroll: " + itemCenterPositionInScroll);
-		// But must be here
-		//var targetPositionInScroll = GetWorldPointInWidget( scrollRect.GetComponent <RectTransform>(), GetWidgetWorldPoint( viewPointTransform));
-		//var targetPositionInScroll = GetWorldPointInWidget( this.GetComponent <RectTransform>(), GetWidgetWorldPoint( viewPointTransform));
-		//Debug .Log( "Target Anchor Pos In Scroll: " + targetPositionInScroll);
-		// So it has to move this distance
-		//var difference = targetPositionInScroll - itemCenterPositionInScroll;
-		//difference .z = 0f ;
+        ScrollRect scrollView = scroll.GetComponent<ScrollRect>();
+        RectTransform viewPort = scrollView.viewport;
+        RectTransform contentTransform = scrollView.content;
 
-		//var newNormalizedPosition = new Vector2(difference .x / (contentTransform.rect.width -viewPointTransform.rect.width ), difference .y / (contentTransform.rect .height - viewPointTransform. rect.height ));
-		
-		//newNormalizedPosition = scrollRect.normalizedPosition - newNormalizedPosition;
+        if (_childrenPos.Count == 0)
+        {
+            float childPosX = scrollView.GetComponent<RectTransform>().rect.width * 0.5f - GetChildItemWidth(0, contentTransform) * 0.5f;
+            HorizontalLayoutGroup group = contentTransform.GetComponent<HorizontalLayoutGroup>();
+            float spacing = group.spacing;
+            _childrenPos.Add(childPosX);
+            for (int i = 1; i < contentTransform.childCount; i++)
+            {
+                childPosX -= GetChildItemWidth(i, contentTransform) * 0.5f + GetChildItemWidth(i - 1, contentTransform) * 0.5f + spacing;
+                _childrenPos.Add(childPosX);
+            }
+        }
+        Vector3 newPos = Vector3.zero;
+        if (index >= 2)
+            newPos = new Vector3(_childrenPos[index], 0, 0);
+        DOTween.To(() => contentTransform.localPosition, x => contentTransform.localPosition = x, newPos, 1);
+    }
 
-		//newNormalizedPosition .x = Mathf.Clamp01(newNormalizedPosition.x );
-		//newNormalizedPosition .y = Mathf.Clamp01(newNormalizedPosition.y );
+    /// <summary>
+    /// 指定到中间
+    /// </summary>
+    /// <param name="selected"></param>
+    public void CenterToSelected()
+    {
+        
+    }
 
-		//DOTween .To(() => scrollRect.normalizedPosition , x=>scrollRect.normalizedPosition = x ,newNormalizedPosition, 3);
-	}
+    private float GetChildItemWidth(int index,RectTransform contentTransform)
+    {
+        return (contentTransform.GetChild(index) as RectTransform).sizeDelta.x;
+    }
 
-	Vector3 GetWidgetWorldPoint (RectTransform target)
+    Vector3 GetWidgetWorldPoint (RectTransform target)
 	{
 		//pivot position + item size has to be included
 		var pivotOffset = new Vector3(

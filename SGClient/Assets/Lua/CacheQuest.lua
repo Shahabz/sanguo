@@ -175,7 +175,7 @@ function QuestName( type, recvValue )
 	if recvValue.m_nameid > 0 then
 		name = Localization.text_quest( recvValue.m_nameid );
 	elseif datatype == QUEST_DATATYPE_ACTOR_LEVEL then-- 主公等级 datatype=1 datakind=0 needvalue=等级
-		name = name..FQUEST( 1, value );
+		name = name..FQUEST( 1, needvalue );
 	elseif datatype == QUEST_DATATYPE_BUILDING_LEVEL or datatype == QUEST_DATATYPE_BUILDING_UPGRADE then-- 建筑等级 datatype=2 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
 		if dataoffset > 100 then
 			name = name..FQUEST( 23, F(99, math.floor(dataoffset/100), BuildingName(datakind) ), F(99, math.floor(dataoffset%100), BuildingName(datakind) ), needvalue );

@@ -638,3 +638,7 @@ end
 function SetSprite( transform, sprite )
 	transform:GetComponent( "SpriteRenderer" ).sprite = sprite;
 end
+
+function SetItemCenterInScroll(index,scroll)
+	scroll:GetComponent( "UIScrollRect" ):CenterOnItem(index,scroll.gameObject);
+end
