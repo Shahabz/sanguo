@@ -322,10 +322,10 @@ function WorldMap.SendAreaIndex( areaindex, posx, posy )
 	
 	-- 如果皇城开启，哪都可以看到
 	if GetPlayer().m_open_townking <= 0 then
-		-- 如果州城开启，只能看见四个州城和对应郡城
-		if GetPlayer().m_open_town6 > 0 then
-			if g_zoneinfo[zoneid].type ~= 1 then
-				if map_zone_ismovezone( GetPlayer().m_zone, zoneid ) == 0 then
+		-- 如果郡城已经攻克，只能看见对应州城和对应郡城
+		if GetPlayer().m_open_town3 > 0 then
+			if map_zone_ismovezone( GetPlayer().m_zone, zoneid ) == 0 then
+				if GetPlayer().m_zone ~= zoneid then 
 					areaupdate = 0
 				end
 			end
@@ -1294,10 +1294,10 @@ function map_zone_ismovezone( zoneid, movezoneid )
 		return 0;
 	end
 	
-	if movezoneid == move_zoneid0 then
+	if movezoneid == g_zoneinfo[zoneid].move_zoneid0 then
 		return 1;
 	end
-	if movezoneid == move_zoneid1 then
+	if movezoneid == g_zoneinfo[zoneid].move_zoneid1 then
 		return 1;
 	end
 	return 0;
