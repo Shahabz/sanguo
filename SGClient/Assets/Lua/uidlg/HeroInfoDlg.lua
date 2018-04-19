@@ -528,6 +528,13 @@ function HeroInfoDlgSet( path, pHero, up )
 	else
 		SetFalse( m_uiLoyal )
 	end
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_SZ then
+			FindCmdTpye(m_uiUpBtn.transform);
+		end
+	end
+	
 end
 
 function HeroInfoDlgClear()
@@ -769,6 +776,12 @@ function HeroInfoDlgHeroUp()
 		end
 		-- 没空位打开替换界面
 		HeroReplaceDlgShow( m_path, m_pCacheHero.m_kind )
+		
+		if IsGuiding() then
+			if GetCurrentGuideType() == GUIDE_SZ then
+				GuideNext();
+			end
+		end
 	
 	elseif m_path == HEROLIST_PATH_HERO_GATHER then -- 财赋署武将
 		local heromax = 0;

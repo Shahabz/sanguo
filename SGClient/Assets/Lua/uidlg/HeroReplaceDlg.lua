@@ -89,11 +89,7 @@ function HeroReplaceDlgShow( path, upkind )
 	m_upkind = upkind
 	HeroReplaceDlgOpen()
 	HeroReplaceDlgSetHero()
-	if IsGuiding() then
-		HeroReplaceDlgSelectHero(1);
-	else
-		HeroReplaceDlgSelectHero(-1)
-	end
+	HeroReplaceDlgSelectHero(-1)
 end
 
 -- 英雄

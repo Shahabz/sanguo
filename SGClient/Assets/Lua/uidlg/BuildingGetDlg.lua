@@ -142,7 +142,7 @@ function BuildingGetDlgShow( recvValue )
 		SetGray( m_uiShape, false )
 	end
 		
-	m_uiName:GetComponent( "UIText" ).text = T(50).." <color=#ECC244>["..T( recvValue.m_kind ).."]</color>";
+	SetText(m_uiName, T(50).." <color=#ECC244>["..T( recvValue.m_kind ).."]</color>");
 	SetTrue(m_uiDesc)
 	SetText(m_uiDesc,T(recvValue.m_kind+50))
 	
@@ -188,6 +188,7 @@ function BuildingGetDlgMove()
 		
 		uiShape[k] = m_ObjectPool:Get( "Shape" );
 		uiShape[k].transform:SetParent( m_uiMovePanel.transform );
+		uiShape[k].transform.localPosition = Vector3.zero
 		uiShape[k]:GetComponent( "Image" ).sprite = BuildingSprite( m_kind[k] );
 		if m_info[k].m_level == 0 and m_info[k].m_kind < 30 then
 			SetGray( uiShape[k], true )
@@ -228,7 +229,6 @@ function BuildingGetDlgMove()
 		uiShape[k]:GetComponent( "UITweenScale" ).to = Vector3( 0.8, 0.8, 0.8 ); 
 		uiShape[k]:GetComponent( "UITweenScale" ):Play( true );
 
-		
 		Invoke( function() 
 			uiShape[k]:GetComponent( "UITweenPath" ).from = Vector2( uiShape[k].transform.localPosition.x, uiShape[k].transform.localPosition.y );
 			local screenPos = City.m_CameraMain:WorldToScreenPoint( Vector3.New( unitObj[k].transform.position.x,unitObj[k].transform.position.y+0.5,unitObj[k].transform.position.z ) );

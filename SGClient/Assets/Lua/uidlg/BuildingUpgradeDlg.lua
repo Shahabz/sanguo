@@ -38,6 +38,8 @@ function BuildingUpgradeDlgClose()
 		City.m_Camera.transform:GetComponent("ScreenBlur").enabled = false
 	end
 	MainDlgOpen()
+	MainDlgSetWorker()
+	
 	if m_Dlg == nil then
 		return;
 	end

@@ -67,6 +67,7 @@ int quest_give_branch( int actor_index, int questid );
 
 // 添加任务数值并主动检查任务是否完成
 int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int value );
+int quest_setvalue( City *pCity, int datatype, int datakind, int dataoffset, int value );
 
 // 添加任务数值，并主动检查任务是否完成(主线任务使用的)
 int quest_main_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int value );

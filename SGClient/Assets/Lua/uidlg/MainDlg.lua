@@ -741,9 +741,8 @@ end
 
 -- 建造队列
 function MainDlgSetWorker()
-	MainDlgWorkerObjectInit();
-		
-	MainDlgSetWorkerObject( 0,
+	--MainDlgWorkerObjectInit();
+	MainDlgSetWorkerObject( 1,
 	m_uiWorker, 
 	GetPlayer().m_worker_kind, 
 	GetPlayer().m_worker_offset, 
@@ -751,7 +750,7 @@ function MainDlgSetWorker()
 	GetPlayer().m_worker_sec, 
 	0 );
 	
-	MainDlgSetWorkerObject( 1,
+	MainDlgSetWorkerObject( 2,
 	m_uiWorkerEx, 
 	GetPlayer().m_worker_kind_ex, 
 	GetPlayer().m_worker_offset_ex, 
@@ -769,26 +768,26 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 		-- 缺省文字
 		local NormalText = uiWorker.transform:Find("NormalText");
 		NormalText.gameObject:SetActive(true);
-		if type == 1 and expire <= 0 then
-			NormalText:GetComponent( "UIText" ).text = T(601);
+		if type == 2 and expire <= 0 then
+			SetText(NormalText, T(601))
 		else
-			NormalText:GetComponent( "UIText" ).text = T(600);
+			SetText(NormalText, T(600))
 		end
 		
 		-- 停止动画
-		MainDlgWorkerStop( type+1 )
-		local NormalShape = uiWorker.transform:Find("NormalShape");
-		if type == 1 then
+		MainDlgWorkerStop( type )
+		local NormalShape = m_uiNormalShape[type]
+		if type == 2 then
 			SetImage( NormalShape, LoadSprite( "ui_main_worker_3" ) )
 		else
 			SetImage( NormalShape, LoadSprite( "ui_main_worker_4" ) )
 		end
-		NormalShape.gameObject:SetActive(true);
+		SetTrue(NormalShape)
 		NormalShape.transform.localScale = Vector3.one;
-		uiWorker.transform:Find("WorkProgress").gameObject:SetActive(false);
-		uiWorker.transform:Find("BuildingShape").gameObject:SetActive(false);
-		uiWorker.transform:Find("BuildingTimer").gameObject:SetActive(false);
-		uiWorker.transform:Find("BuildingName").gameObject:SetActive(false);
+		SetFalse(uiWorker.transform:Find("WorkProgress"))
+		SetFalse(uiWorker.transform:Find("BuildingShape"))
+		SetFalse(uiWorker.transform:Find("BuildingTimer"))
+		SetFalse(uiWorker.transform:Find("BuildingName"))
 		return;
 	end
 	
@@ -799,39 +798,41 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 	end
 		
 	-- 建筑形象
-	local BuildingShape = uiWorker.transform:Find("BuildingShape");
-	BuildingShape:GetComponent( "Image" ).sprite = BuildingIconSprite( kind );
-	BuildingShape.gameObject:SetActive(true);
+	SetImage( m_uiBuildingShape[type], BuildingIconSprite( kind ) );
+	SetFalse( m_uiBuildingShape[type] )
 	
 	-- 建筑名称
-	local BuildingName = uiWorker.transform:Find("BuildingName");
-	BuildingName:GetComponent( "UIText" ).text = name;
-	BuildingName.gameObject:SetActive(false);
-	BuildingName:GetComponent("UITweenScale"):Play(true);
+	SetText( m_uiBuildingName[type], name )
+	SetTrue( m_uiBuildingName[type] )
+	if m_uiBuildingNameUITweenScale[type].isPlaying == false then
+		m_uiBuildingNameUITweenScale[type]:Play(true);
+	end
 	
 	-- 建筑计时器
-	local BuildingTimer = uiWorker.transform:Find("BuildingTimer");
-	BuildingTimer.gameObject:SetActive(true);
+	SetTrue( m_uiBuildingTimer[type] )
 	
 	-- 计时器
-	local timer = BuildingTimer:GetComponent( "UITextTimeCountdown" );
+	local timer = m_uiBuildingTimer[type]:GetComponent( "UITextTimeCountdown" );
 	timer:SetTime( needsec, needsec-sec );
+	SetFalse( m_uiBuildingTimer[type] )
 	
 	-- 进度条
-	uiWorker.transform:Find("WorkProgress").gameObject:SetActive(true);
+	SetTrue( uiWorker.transform:Find("WorkProgress") )
 	
 	-- 缺省锤子形象
-	local NormalShape = uiWorker.transform:Find("NormalShape");
-	NormalShape.gameObject:SetActive(false);
-	NormalShape:GetComponent("UITweenScale"):Play(true);
+	local NormalShape = m_uiNormalShape[type];
+	SetTrue( NormalShape )
+	if NormalShape:GetComponent("UITweenScale").isPlaying == false then
+		NormalShape:GetComponent("UITweenScale"):Play(true);
+	end
 	
-	if type == 0 then
+	if type == 1 then
 		if GetPlayer().m_worker_free > 0 then
 			SetImage( NormalShape, LoadSprite( "ui_main_worker_free" ) )
 		else
 			SetImage( NormalShape, LoadSprite( "ui_main_worker_4" ) )
 		end
-	elseif type == 1 then 
+	elseif type == 2 then 
 		if GetPlayer().m_worker_free_ex > 0 then
 			SetImage( NormalShape, LoadSprite( "ui_main_worker_free" ) )
 		else
@@ -839,21 +840,28 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 		end
 	end
 	-- 缺省文字
-	uiWorker.transform:Find("NormalText").gameObject:SetActive(false);
-	
+	SetFalse( uiWorker.transform:Find("NormalText") )
 end
 
 -- 停止动画
 function MainDlgWorkerStop( type )
 	m_uiBuildingShapeUITweenScale[type]:Kill(false);
+	m_uiBuildingShapeUITweenScale[type]:ToInit()
 	m_uiNormalShapeUITweenScale[type]:Kill(false);
+	m_uiNormalShapeUITweenScale[type]:ToInit()
 	m_uiBuildingTimerUITweenScale[type]:Kill(false);
+	m_uiBuildingTimerUITweenScale[type]:ToInit()
 	m_uiBuildingNameUITweenScale[type]:Kill(false);
+	m_uiBuildingNameUITweenScale[type]:ToInit()
 	
 	m_uiBuildingShapeUITweenScale1[type]:Kill(false);
+	m_uiBuildingShapeUITweenScale1[type]:ToInit()
 	m_uiNormalShapeUITweenScale1[type]:Kill(false);
+	m_uiNormalShapeUITweenScale1[type]:ToInit()
 	m_uiBuildingTimerUITweenScale1[type]:Kill(false);
+	m_uiBuildingTimerUITweenScale1[type]:ToInit()
 	m_uiBuildingNameUITweenScale1[type]:Kill(false);
+	m_uiBuildingNameUITweenScale1[type]:ToInit()
 end
 
 -- 建造队列动画所需缓存
@@ -1130,6 +1138,7 @@ function MainDlgShowCity()
 	SetFalse( ButtonTable.m_uiButtonCity )
 	MapMainDlgClose()
 	PatrolModPlay();
+	MainDlgSetWorker()
 end
 
 -- 显示外城的空间
@@ -1274,7 +1283,6 @@ function MainDlgCutScenesInit()
 	if m_Dlg == nil then
 		return;
 	end
-	SetTrue( m_uiCutScenes )
 	SetFalse( m_uiCutScenes )
 	m_uiCutScenes.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform )
 end

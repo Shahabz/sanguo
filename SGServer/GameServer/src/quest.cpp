@@ -170,6 +170,35 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 	return 0;
 }
 
+// 设置任务数值，并主动检查任务是否完成
+int quest_setvalue( City *pCity, int datatype, int datakind, int dataoffset, int value )
+{
+	if ( !pCity )
+		return -1;
+	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
+	{
+		int questid = pCity->questid[tmpi];
+		QuestInfo *questinfo = quest_config( questid );
+		if ( !questinfo )
+			continue;
+		if ( questinfo->datatype != datatype )
+			continue;
+		
+		if ( questinfo->datakind > 0 && questinfo->datakind == datakind || questinfo->datakind == 0 )
+		{
+			pCity->questvalue[tmpi] = value;
+			if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
+			{
+				if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
+				{ // 任务完成，通知领奖
+					quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 // 添加任务数值，并主动检查任务是否完成(主线任务使用的)
 int quest_main_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int value )
 {

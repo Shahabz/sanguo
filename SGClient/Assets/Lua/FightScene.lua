@@ -65,6 +65,7 @@ function FightScene.Delete()
 	ResourceManager.UnloadAssetBundleImmediately( "_ab_char_shape_fightunit"  );
 	GameManager.ChangeScence( "current" )
 	MainDlgOpen()
+	MainDlgSetWorker()
 	if FightScene.m_mapMainDlgIsActive == true then
 		MapMainDlgShow()
 		-- 城外bgm

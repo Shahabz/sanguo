@@ -109,7 +109,6 @@ end
 -- m_count=0,m_list={m_awardkind=0,m_awardnum=0,m_cost_awardkind=0,m_cost_awardnum=0,m_isbuy=0,m_id=0,[m_count]},m_update_lefttime=0,m_update_num=0,m_update_nummax=0,m_update_viplevel=0,m_up
 function GirlShopDlgInfoRecv( recvValue )
 	m_InfoRecv = recvValue;
-	PrintTable(m_InfoRecv,"女将商店数据")
 	GirlShopDlgClearGrid();
 	for i = 1 , m_InfoRecv.m_count do 
 		local data = m_InfoRecv.m_list[i];
@@ -247,10 +246,8 @@ end
 
 function GirlShopDlgCheckBuy(info,index)
 	if GirlShopDlgCheckCost( info ) == true then 	
-		warn("购买第"..index.."个")
 		system_askinfo( ASKINFO_GIRLSHOP, "", 1, index, info.m_id ); 				
 	else
-		warn("道具或元宝不足")
 		if info.m_cost_awardkind > AWARDKIND_GIRLSOULBASE then
 			pop(T(4202));
 		else

@@ -155,7 +155,9 @@ g_guide = {
 	},
 [30] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框,聚闲馆张角上阵
-	[2] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
+	[2] = {cmd = 3,guideType = 36,x = 0,y = 0,point = 2,isSpecial = 0},   --聚闲馆指向张角
+	[3] = {cmd = 3,guideType = 37,x = 0,y = 0,point = 2,isSpecial = 0},   --张角上阵按钮
+	[4] = {cmd = 1,guideType = 111,x = 0,y = 1},  --任务完成
 	},
 [31] = {
 	[1] = {cmd = 2,guideType = 1,x = 0,y = 0,point = 2,isSpecial = 0},   --指向任务框

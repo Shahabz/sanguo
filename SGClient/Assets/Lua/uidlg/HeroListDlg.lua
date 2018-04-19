@@ -602,6 +602,14 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 		SetFalse(uiHidBack);
 		SetTrue( uiCorps );
 	end
+	
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_ZJ then
+			if pHero.m_kind == 12 then
+				FindCmdTpye(uiColor.transform);
+			end
+		end
+	end
 end
 
 -- 选择
@@ -623,6 +631,13 @@ function HeroListDlgSelect( offset )
 	m_SelectHeroKind = pHero.m_kind;
 	if m_SelectHeroKind <= 0 then
 		return
+	end
+	if IsGuiding() then
+		if GetCurrentGuideType() == GUIDE_ZJ then
+			if m_SelectHeroKind == 12 then
+				GuideNext();
+			end
+		end
 	end
 	m_isUpdate = 0;
 	HeroInfoDlgShow( m_path, pHero, up )
