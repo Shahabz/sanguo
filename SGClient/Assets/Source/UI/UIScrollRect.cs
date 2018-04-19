@@ -208,35 +208,10 @@ public class UIScrollRect : ScrollRect
         DOTween.To(() => contentTransform.localPosition, x => contentTransform.localPosition = x, newPos, 1);
     }
 
-    /// <summary>
-    /// 指定到中间
-    /// </summary>
-    /// <param name="selected"></param>
-    public void CenterToSelected()
-    {
-        
-    }
-
     private float GetChildItemWidth(int index,RectTransform contentTransform)
     {
         return (contentTransform.GetChild(index) as RectTransform).sizeDelta.x;
     }
-
-    Vector3 GetWidgetWorldPoint (RectTransform target)
-	{
-		//pivot position + item size has to be included
-		var pivotOffset = new Vector3(
-			(0.5f - target .pivot. x) * target.rect.size.x ,
-			(0.5f - target .pivot. y) * target.rect.size.y ,
-			0f);
-		var localPosition = target.localPosition + pivotOffset ;
-		return target.parent.TransformPoint (localPosition);
-	}
-
-	Vector3 GetWorldPointInWidget (RectTransform target, Vector3 worldPoint)
-	{
-		return target.InverseTransformPoint(worldPoint );
-	}
 
     /// <summary>
     /// 显示加载更多

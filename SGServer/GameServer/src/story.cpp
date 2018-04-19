@@ -592,6 +592,8 @@ int story_drawing_buy( int actor_index, int id )
 		return -1;
 	g_actors[actor_index].story_drawing[config->drawing_saveoffset] = 1;
 	story_sendrankstate( actor_index, id, 7, config->drawing_saveoffset );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_STORY, id, 0, 1 );
 	return 0;
 }
 
@@ -615,6 +617,8 @@ int story_drawing_get( int actor_index, int id )
 	item_getitem( actor_index, config->drawing_kind, 1, -1, PATH_STORY_DRAWING );
 	g_actors[actor_index].story_drawing[config->drawing_saveoffset] = 2;
 	story_sendrankstate( actor_index, id, 7, config->drawing_saveoffset );
+	// 任务
+	quest_addvalue( pCity, QUEST_DATATYPE_STORY, id, 0, 1 );
 	return 0;
 }
 

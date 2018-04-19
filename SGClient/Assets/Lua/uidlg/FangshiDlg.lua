@@ -120,9 +120,8 @@ function FangshiDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 100 then								-- 打开女将界面
 			GirlDlgShow();
 		elseif nControlID == 101 then								-- 打开女将商店
-			warn("打开女将商店")
 			GirlShopDlgShow();
-		elseif nControlID >= 200 and nControlID <= 300 then				-- 查看巡游地点信息
+		elseif nControlID >= 200 and nControlID <= 300 then			-- 查看巡游地点信息
 			FangshiDlgOnBtnPlace( nControlID - 200 )
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
@@ -216,7 +215,6 @@ end
 -- 接收数据
 function FangshiDlgInfoRecv( recvValue )		
 	m_recvInfo = recvValue;	
-	PrintTable(m_recvInfo,"数据")
 	FangshiDlgSetPlaceInfo();
 	FangshiDlgSetIncognitoButtons();
 	--绘制未领取的巡游奖励
@@ -335,7 +333,6 @@ end
 -- 巡游位置信息框数据
 function FangshiDlgPlaceInfoRecv(recvValue)
 	m_cacheNodeAward[m_placeSelect] = recvValue;
-	PrintTable(m_cacheNodeAward[m_placeSelect],"位置信息")
 	FangshiDlgPlaceInfoShow()		
 end
 
@@ -476,7 +473,6 @@ end
 -- 获得巡游奖励信息
 function FangshiDlgGetLayerResult(recvValue)
 	m_recvVisit = recvValue;
-	PrintTable(m_recvVisit,"巡游奖励");
 	m_GetIndex = 1;	
 	if m_recvVisit.m_count > 0 then 
 		SetTrue(m_uiGetLayer);
@@ -564,7 +560,6 @@ function FangshiDlgSynchroRecv()
 	award.m_kind = m_recvVisit.m_list[m_GetIndex].m_awardkind;	
 	award.m_num = m_recvVisit.m_list[m_GetIndex].m_awardnum;
 	table.insert(m_recvInfo.m_awardlist,award);
-	PrintTable(m_recvInfo,"同步后数据")
 end
 
 -- 巡游奖励子控件
@@ -659,7 +654,6 @@ end
 -- 初始化皇宫内院界面
 function FangshiDlgGarthRecv(recvValue)
 	m_recvGarth = recvValue;
-	PrintTable(m_recvGarth,"皇宫内院数据")
 	SetTrue(m_uiGarthLayer);
 	m_grathSelect = 0;
 	FangshiDlgClearGarthTopGrid();

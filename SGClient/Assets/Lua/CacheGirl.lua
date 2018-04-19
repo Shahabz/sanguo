@@ -74,6 +74,14 @@ function Girl:GetPtr( nKind )
 	return self.m_Girl[nKind]
 end
 
+-- 根据kind获取碎片
+function Girl:GetSoul( nKind )
+	if nKind <= 0 or nKind >= ACTOR_GIRL_MAX then
+		return nil;
+	end
+	return self.m_Girl[nKind].m_soul;
+end
+
 -- 全局
 local G_Girl = nil;
 function GetGirl()

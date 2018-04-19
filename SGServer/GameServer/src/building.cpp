@@ -623,7 +623,7 @@ int building_upgrade( int city_index, int kind, int offset )
 		building_sendworker( g_city[city_index].actor_index );
 
 		// хннЯ
-		quest_main_addvalue( &g_city[city_index], QUEST_DATATYPE_BUILDING_UPGRADE, kind, offset, level+1 );
+		quest_addvalue( &g_city[city_index], QUEST_DATATYPE_BUILDING_UPGRADE, kind, offset, level+1 );
 	}
 	return 0;
 }

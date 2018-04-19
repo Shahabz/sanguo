@@ -8,6 +8,7 @@ local m_uiUIP_ItemGrid = nil; --UnityEngine.GameObject
 local m_uiCDTitle = nil; --UnityEngine.GameObject
 
 local m_InfoRecv = nil;
+
 -- 打开界面
 function GirlShopDlgOpen()
 	m_Dlg = eye.uiManager:Open( "GirlShopDlg" );
@@ -42,15 +43,13 @@ function GirlShopDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             GirlShopDlgClose();
 		elseif nControlID == 1 then
-			warn("刷新道具")
 			GirlShopDlgOnBtnRefresh();
-		elseif nControlID >= 10 and nControlID <= 20 then	
-			warn("购买第"..(nControlID - 10).."个")
+		elseif nControlID >= 10 and nControlID <= 20 then				
 			GirlShopDlgOnBtnBuy( nControlID - 10 )
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
-			SetFalse(m_uiCDTitle);
+			system_askinfo( ASKINFO_GIRLSHOP, "", 0 ); 
 		end
 	end
 end
@@ -114,9 +113,11 @@ function GirlShopDlgInfoRecv( recvValue )
 	GirlShopDlgClearGrid();
 	for i = 1 , m_InfoRecv.m_count do 
 		local data = m_InfoRecv.m_list[i];
-		GirlShopDlgCreatGrid(i,data);
+		if data.m_awardkind ~= 0 then
+			GirlShopDlgCreatGrid(i,data);
+		end
 	end
-	GirlShopDlgCDTitle(GetServerTime()+10)-- 界面
+	GirlShopDlgCDTitle(GetServerTime() + m_InfoRecv.m_update_lefttime)-- 界面
 end
 
 --设置标题或时间
@@ -142,17 +143,35 @@ function GirlShopDlgCreatGrid(index,data)
 	local uiCostBack = objs[3];
 	local uiCostNum = objs[4];
 	local uiBuyBtn = objs[5];
-		
+	local uiSellOut = objs[6];	
+	
 	local sprite, color, name, c, desc = AwardInfo( data.m_awardkind );		
-	SetImage(uiShape,sprite)
-	SetImage(uiColor,color)
-	SetText(uiName,name.."x"..data.m_awardnum)
+	SetImage(uiShape,sprite);
+	SetImage(uiColor,color);
+	SetText(uiName,F(4203,name,data.m_awardnum));
 	
 	local Csprite, Ccolor, Cname, Cc, Cdesc = AwardInfo( data.m_cost_awardkind );	
-	SetImage(uiCostBack,Csprite)
-	SetText(uiCostNum,"x"..data.m_cost_awardnum)
+	SetImage(uiCostBack,Csprite);
+	SetText(uiCostNum,"x"..data.m_cost_awardnum);
+	
+	if data.m_cost_awardkind > AWARDKIND_GIRLSOULBASE then
+		if GirlShopDlgCheckCost( data ) == true then 
+			SetTextColor(uiCostNum,Hex2Color(0xFFFFFFFF));
+		else
+			SetTextColor(uiCostNum,Hex2Color(0xE80017FF));
+		end
+	end
+	
+	-- 是否售罄 
+	if data.m_isbuy == 1 then
+		SetTrue(uiSellOut);
+	else
+		SetFalse(uiSellOut);
+	end
+	
 	uiObj.transform:SetParent( m_uiItemContent.transform );
 	uiObj.gameObject:SetActive( true );
+	
 	SetControlID(uiBuyBtn,index + 10);
 end
 
@@ -173,18 +192,90 @@ end
 -- 刷新
 function GirlShopDlgOnBtnRefresh()	
 	-- 刷新元宝判断
-	--m_InfoRecv.m_update_token
-	system_askinfo( ASKINFO_GIRLSHOP, "", 2 ); 
+	if GirlShopDlgCheckRefresh() == true then 
+		system_askinfo( ASKINFO_GIRLSHOP, "", 2 ); 
+	end
+end
+
+-- 刷新判断
+function GirlShopDlgCheckRefresh()
+	-- 判断次数
+	if m_InfoRecv.m_update_num < m_InfoRecv.m_update_nummax then 
+		-- 判断vip
+		if m_InfoRecv.m_update_viplevel <= GetPlayer().m_viplevel then 
+			-- 判断元宝
+			if m_InfoRecv.m_update_token <= GetPlayer().m_token then 
+				return true;
+			else
+				JumpToken();
+				return false;
+			end
+		else
+			pop(F(4201,m_InfoRecv.m_update_viplevel));
+			return false;
+		end		
+	else
+		pop(T(3414));
+		return false;
+	end	
 end
 
 -- 购买
 function GirlShopDlgOnBtnBuy( index )
-	local info = m_InfoRecv.m_list[index]
+	local info = m_InfoRecv.m_list[index];
 	if info == nil then
-		return
+		return;
 	end
 	if info.m_isbuy == 1 then
-		return
+		return;
 	end
-	system_askinfo( ASKINFO_GIRLSHOP, "", 1, index, info.m_id ); 
+	
+	local Csprite, Ccolor, Cname, Cc, Cdesc = AwardInfo( info.m_cost_awardkind );	
+	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind );
+	local costName = nil;
+	local buyName = F(4203,name,info.m_awardnum);	
+	--弹窗提示
+	if info.m_cost_awardkind > AWARDKIND_GIRLSOULBASE then 	
+		costName = F(4203,Cname,info.m_cost_awardnum);
+	else
+		costName = F(4204,info.m_cost_awardnum);
+	end
+	MsgBox( F(4205, costName,buyName ), function()
+			GirlShopDlgCheckBuy(info,index)
+		end)
+end
+
+function GirlShopDlgCheckBuy(info,index)
+	if GirlShopDlgCheckCost( info ) == true then 	
+		warn("购买第"..index.."个")
+		system_askinfo( ASKINFO_GIRLSHOP, "", 1, index, info.m_id ); 				
+	else
+		warn("道具或元宝不足")
+		if info.m_cost_awardkind > AWARDKIND_GIRLSOULBASE then
+			pop(T(4202));
+		else
+			JumpToken();
+		
+		end
+	end
+end
+--判断消耗
+function GirlShopDlgCheckCost( info )
+	local CostKind = info.m_cost_awardkind;
+	local CostNum = info.m_cost_awardnum;
+	if CostKind > AWARDKIND_GIRLSOULBASE then 			--女将碎片
+		local HaveNum = GetGirl():GetSoul(CostKind-71000);
+		if CostNum <= HaveNum then 
+			return true;
+		else			
+			return false;
+		end
+	else												--元宝
+		if CostNum <= GetPlayer().m_token then 
+			return true;
+		else			
+			return false;
+		end
+	end
+	return false
 end

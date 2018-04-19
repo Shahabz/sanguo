@@ -570,7 +570,14 @@ int quest_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_descid = g_questinfo[questid].descid;
 		if ( flag == QUEST_COMPLETEFLAG_SUCCESS )
 		{
-			pValue.m_list[pValue.m_count].m_value = g_questinfo[questid].needvalue;
+			if ( g_questinfo[questid].datatype == QUEST_DATATYPE_STORY )
+			{
+				pValue.m_list[pValue.m_count].m_value = nowvalue;
+			}
+			else
+			{
+				pValue.m_list[pValue.m_count].m_value = g_questinfo[questid].needvalue;
+			}
 		}
 		else
 		{

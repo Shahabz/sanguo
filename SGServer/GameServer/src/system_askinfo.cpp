@@ -1192,7 +1192,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{ // 女将商店购买
-			girl_shop_buy( actor_index, pvalue[1], pvalue[1] );
+			girl_shop_buy( actor_index, pvalue[1]-1, pvalue[2] );
 		}
 		else if ( pvalue[0] == 2 )
 		{ // 坊市寻访领取奖励

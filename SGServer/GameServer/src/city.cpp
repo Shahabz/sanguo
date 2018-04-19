@@ -1149,6 +1149,8 @@ int city_actorupgrade( int city_index, short path, AwardGetInfo *getinfo )
 	{
 		city_function_open( &g_city[city_index], CITY_FUNCTION_FANGSHI );
 	}
+	// хннЯ
+	quest_addvalue( &g_city[city_index], QUEST_DATATYPE_ACTOR_LEVEL, 0, 0, g_city[city_index].level );
 	return 0;
 }
 
