@@ -232,7 +232,13 @@ int quest_checkcomplete( int actor_index )
 		if ( quest_check( pCity->actor_index, questid, NULL ) == QUEST_COMPLETEFLAG_SUCCESS )
 		{
 			if ( tmpi == 0 )
+			{ // 主线任务
 				quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
+			}
+			else
+			{
+				quest_sendlist( actor_index );
+			}
 			break;
 		}
 	}
