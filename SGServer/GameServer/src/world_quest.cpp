@@ -196,24 +196,24 @@ int worldquest_setvalue( int questid, int value )
 
 		if ( questid == WORLDQUEST_ID6 )
 		{// 攻克郡城
-			worldquest_updateopen();
-		}
-		else if ( questid == WORLDQUEST_ID9 )
-		{ // 州城开放
 			// 开放官员系统
 			nation_official_open();
-			worldquest_updateopen();
+			worldquest_updateopen(); 
 			// 开启天气系统
 			weather_open();
 			// 刷州城野怪和资源点
 			for ( int zoneid = 1; zoneid < g_zoneinfo_maxnum; zoneid++ )
 			{
-				if ( g_zoneinfo[zoneid].type == MAPZONE_TYPE1 )
+				if ( g_zoneinfo[zoneid].open == 1 )
 				{
 					brush_enemy_queue_add( 0, zoneid );
 					brush_enemy_queue_add( 1, zoneid );
 				}
 			}
+		}
+		else if ( questid == WORLDQUEST_ID9 )
+		{ // 攻克州城
+			worldquest_updateopen();
 		}
 		else if ( questid == WORLDQUEST_WORLDBOSS2 )
 		{ // 击杀董卓、

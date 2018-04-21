@@ -261,7 +261,7 @@ function GirlShopDlgCheckCost( info )
 	local CostKind = info.m_cost_awardkind;
 	local CostNum = info.m_cost_awardnum;
 	if CostKind > AWARDKIND_GIRLSOULBASE then 			--女将碎片
-		local HaveNum = GetGirl():GetSoul(CostKind-71000);
+		local HaveNum = GetGirl():GetSoul(CostKind-AWARDKIND_GIRLSOULBASE);
 		if CostNum <= HaveNum then 
 			return true;
 		else			

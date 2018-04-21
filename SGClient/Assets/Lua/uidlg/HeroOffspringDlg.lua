@@ -1,5 +1,6 @@
 local m_uiUIP_SonInfo = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
+local m_uiWarn = nil; --UnityEngine.GameObject
 
 -- 界面
 local m_Dlg = nil;
@@ -46,6 +47,7 @@ function HeroOffspringDlgOnAwake( gameObject )
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
 	m_uiUIP_SonInfo = objs[0];
 	m_uiContent = objs[1];
+	m_uiWarn = objs[2];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -87,19 +89,28 @@ function HeroOffspringDlgShow(herokind)
 end
 
 function HeroOffspringDlgInit(herokind)
-	
+	HeroOffspringDlgClear();
 	local pHero = GetHero():GetPtr(herokind);
 	local sonConfig = g_girlson[pHero.m_kind];
-	
-	HeroOffspringDlgClear();
-	
-	if sonConfig == nil then
-		return;
-	end
-	for i = 0,table.getn(sonConfig),1 do
-		HeroOffspringDlgInfo(sonConfig[i],pHero,i);
-	end
-	
+	if pHero.m_sonnum == 0 and pHero.m_sontime == 0 then
+		SetTrue( m_uiWarn )
+	else
+		SetFalse( m_uiWarn )
+		if sonConfig == nil then
+			return;
+		end
+		
+		local num = pHero.m_sonnum;
+		if pHero.m_sontime > 0 then
+			num = num + 1
+		end
+		if num > 4 then
+			num = 4;
+		end
+		for i=0,num,1 do
+			HeroOffspringDlgInfo(sonConfig[i],pHero,i);
+		end
+	end	
 end
 
 function HeroOffspringDlgInfo(config,pHero,i)

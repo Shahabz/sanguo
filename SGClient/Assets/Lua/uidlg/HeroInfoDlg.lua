@@ -235,29 +235,6 @@ function HeroInfoDlgSet( path, pHero, up )
 	m_up = up
 	HeroInfoDlgClear()
 	
-	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
-		SetTrue(m_uiSonBtn);
-		SetTrue(m_uiGirlBtn);
-			
-		if g_girlson[pHero.m_kind] == nil then
-			SetText(m_uiSonBtn.transform:Find("Back/Text"),T(3413));
-			SetGray(m_uiSonPicture,true);
-		else
-			SetText(m_uiSonBtn.transform:Find("Back/Text"),T(3412));
-			SetGray(m_uiSonPicture,false);
-		end
-		
-		-- 女将图片
-		if m_pCacheHero.m_girlkind > 0 then
-			SetImage(m_uiGirlPicture,GirlHeadSprite(m_pCacheHero.m_girlkind));
-		else
-			SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
-		end
-	else
-		SetFalse(m_uiSonBtn);
-		SetFalse(m_uiGirlBtn);
-	end
-	
 	-- 形象
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
 	
@@ -527,6 +504,29 @@ function HeroInfoDlgSet( path, pHero, up )
 		SetText( m_uiLoyal.transform:Find("Progress/Text"), loyal.."/"..maxloyal )
 	else
 		SetFalse( m_uiLoyal )
+	end
+	
+	-- 子女，女将
+	SetTrue(m_uiGirlBtn);	
+	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+		-- 子女按钮
+		if g_girlson[pHero.m_kind] == nil then
+			SetFalse(m_uiSonBtn);
+		else
+			SetTrue(m_uiSonBtn);
+			if pHero.m_sonnum == 0 and pHero.m_sontime == 0 then
+				SetImage(m_uiSonPicture,LoadSprite("ui_icon_back_4"));
+			else
+				SetImage(m_uiSonPicture,SonHeadSprite(1));
+			end
+		end
+		
+		-- 女将图片
+		if m_pCacheHero.m_girlkind > 0 then
+			SetImage(m_uiGirlPicture,GirlHeadSprite(m_pCacheHero.m_girlkind));
+		else
+			SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
+		end		
 	end
 	
 	if IsGuiding() then
