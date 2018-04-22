@@ -320,6 +320,9 @@ end
 
 -- 良将寻访
 function HeroVisitDlgLow()
+	if m_recvValue == nil then
+		return
+	end
 	-- 关键条件判断
 	-- 
 	-- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,

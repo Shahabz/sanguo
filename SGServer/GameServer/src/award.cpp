@@ -307,7 +307,9 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo )
 	{
 		// 按照评价值方式随机
 		curvalue = g_awardgroup[awardgroup].value[tmpi];
-		if ( curvalue > 0 && curvalue > odds )
+		if ( curvalue <= 0 )
+			continue;
+		if ( curvalue > odds )
 		{
 			int kind = g_awardgroup[awardgroup].kind[tmpi];
 			//int num = random( g_awardgroup[awardgroup].minnum[tmpi], g_awardgroup[awardgroup].maxnum[tmpi] );
@@ -413,9 +415,11 @@ int awardgroup_withindex( int actor_index, int awardgroup, int level, char path,
 	{
 		// 按照评价值方式随机
 		curvalue = g_awardgroup[awardgroup].value[tmpi];
-		int num = awardgroup_randnum( awardgroup, level, tmpi );
-		if ( curvalue > 0 && curvalue > odds )
+		if ( curvalue <= 0 )
+			continue;
+		if ( curvalue > odds )
 		{
+			int num = awardgroup_randnum( awardgroup, level, tmpi );
 			award_getaward( actor_index, g_awardgroup[awardgroup].kind[tmpi], num, g_awardgroup[awardgroup].color[tmpi], path, getinfo );
 			break;
 		}

@@ -577,7 +577,11 @@ function GirlDlgCreateInfo( pGirl )
 		else
 			SetFalse( m_uiAllotBtn )
 			maxSoul = girlconfig( kind, 0 ).soul
-			SetText(m_uiSingleLayer.transform:Find("Warning"), F(3347,maxSoul,GirlName(kind)));
+			if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+				SetText(m_uiSingleLayer.transform:Find("Warning"), F(3347,maxSoul,GirlName(kind)));
+			else
+				SetText(m_uiSingleLayer.transform:Find("Warning"), F(3347,maxSoul,GirlName(kind)).."\n"..T(3365));
+			end
 		end
 		SetProgress( uiProgress, nowSoul/maxSoul )
 		SetText( uiProgress.transform:Find("Text"), nowSoul.."/"..maxSoul )

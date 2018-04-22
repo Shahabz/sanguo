@@ -680,7 +680,7 @@ function HeroListDlgSelectRankWay(number)
 	HeroListDlgSelectCloseToggle();
 end
 function HeroListDlgSelectCloseToggle()
-	local b_toggle = m_uiToggleRank.transform:GetComponent( "UIToggle"  );
+	local b_toggle = m_uiToggleRank.transform:GetComponent( "UIToggle" );
 	if b_toggle.isOn == true then
 		b_toggle.isOn=false;
 	end

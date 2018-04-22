@@ -142,6 +142,7 @@ map_enemy.cpp \
 login_net.cpp \
 pay.cpp \
 activity.cpp \
+robot.cpp \
 rank.cpp \
 map.cpp \
 nation_hero.cpp \
@@ -475,6 +476,8 @@ login_net.o: login_net.cpp
 pay.o: pay.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 activity.o: activity.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+robot.o: robot.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 rank.o: rank.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

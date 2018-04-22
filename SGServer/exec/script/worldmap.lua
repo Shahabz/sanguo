@@ -86,7 +86,7 @@ function BrushEnemy()
 				end
 			end
 			if g_zoneinfo[zoneid].type == 1 then
-				if c_get_open_town6() == 0 then
+				if c_get_open_town3() == 0 then
 					-- 州城没开
 					brush = 0;
 				end
@@ -163,17 +163,16 @@ function BrushRes()
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
 		if g_zoneinfo[zoneid].open == 1 then
-			local brush = 1;
-			if g_zoneinfo[zoneid].type == 2 then
-				if c_get_open_townking() == 0 then
-					-- 皇城没开
-					brush = 0;
-				end
-			end
+			local brush = 0;
 			if g_zoneinfo[zoneid].type == 1 then
-				if c_get_open_town6() == 0 then
-					-- 州城没开
-					brush = 0;
+				if c_get_open_town3() > 0 then
+					-- 州城开放
+					brush = 1;
+				end
+			elseif g_zoneinfo[zoneid].type == 2 then
+				if c_get_open_townking() > 0 then
+					-- 皇城开放
+					brush = 1;
 				end
 			end
 			if brush == 1 then
@@ -204,11 +203,10 @@ function BrushResWithZone( zoneid )
 	
 	-- 洗牌打乱搜到的空余坐标点
 	-- 因为 table.remove( emptylist, randidx ); -- 效率非常低，所以不随机了，顺序取
-	for  i = 1, #emptylist, 1 do  
+	for  i = 1, #emptylist, 1 do
 		local index = math.random( 1, #emptylist );
 		emptylist[i], emptylist[index] = emptylist[index],emptylist[i]
 	end
-	
 	-- 刷资源点集合
 	local kindgroup = g_zoneinfo[zoneid].reskind;
 	local numgroup = g_zoneinfo[zoneid].resnum;
