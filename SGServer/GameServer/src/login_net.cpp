@@ -375,8 +375,7 @@ int login_send_proc()
 		// 从队列中取出一项
 		cmd = login_queue[g_nLoginQueueHead].command;
 		client_index = login_queue[g_nLoginQueueHead].client_index;
-		sprintf( send_buf, "/u.php?c=%d&i=%d&a=%d%s", cmd, login_queue[g_nLoginQueueHead].client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
-		//sprintf( send_buf, "/u.php?c=1&i=0&a=0&v1=2117596285&v2=f0099a99fbe527bd1b9909e3845412bf_1469109314&v3=11&v4=23.20.104.41&v5=2c33a452f2b2ded510c485438acc711d" );
+		sprintf( send_buf, "?c=%d&i=%d&a=%d%s", cmd, login_queue[g_nLoginQueueHead].client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
 
 		g_nLoginQueueHead++;
 		if( g_nLoginQueueHead >= MAX_LOGINQUEUENUM )
