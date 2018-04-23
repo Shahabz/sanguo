@@ -1,5 +1,5 @@
 HttpRequest = {};
-local SECRET_KEY = "zaya^sanguo"
+local SECRET_KEY = "eye^sanguo"
 
 -- SDK获取用户信息
 function HttpRequest.GetSDKUserInfo()
@@ -57,7 +57,7 @@ end
 
 -- 执行http get静态文件请求
 function HttpRequest.GetFile( filename, callBack )
-	local url = Global.GetValue("CLIENTACCESS_URL");
+	local url = Global.GetValue("FILE_URL");
 	url = url..filename;
 	print( url )
 	-- 启动协程
