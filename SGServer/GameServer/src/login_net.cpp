@@ -370,7 +370,7 @@ int login_send_proc()
 		// 从队列中取出一项
 		cmd = login_queue[g_nLoginQueueHead].command;
 		client_index = login_queue[g_nLoginQueueHead].client_index;
-		sprintf( send_buf, "%s?c=%d&i=%d&a=%d%s", cmd, login_queue[g_nLoginQueueHead].path, client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
+		sprintf( send_buf, "%s?c=%d&i=%d&a=%d%s", login_queue[g_nLoginQueueHead].path, cmd, client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
 
 		g_nLoginQueueHead++;
 		if( g_nLoginQueueHead >= MAX_LOGINQUEUENUM )

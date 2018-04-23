@@ -44,14 +44,14 @@ const char *plat_loginpath( int platid )
 {
 	if ( platid < 0 || platid >= g_platinfo_maxnum )
 		return "";
-	return g_platinfo[platid].filepath;
+	return g_platinfo[platid].loginpath;
 }
 
 const char *plat_cdkeypath( int platid )
 {
 	if ( platid < 0 || platid >= g_platinfo_maxnum )
 		return "";
-	return g_platinfo[platid].filepath;
+	return g_platinfo[platid].cdkeypath;
 }
 
 // 用户发送登陆请求到登陆队列
