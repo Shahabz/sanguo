@@ -35,9 +35,24 @@ extern int g_maxactorid;
 extern Actor *g_actors;
 extern int g_maxactornum;
 extern char g_bServerIsInit;
-
+extern PlatInfo *g_platinfo;
+extern int g_platinfo_maxnum;
 extern MYSQL *myData;
 char g_user_queue_logic = 1;
+
+const char *plat_loginpath( int platid )
+{
+	if ( platid < 0 || platid >= g_platinfo_maxnum )
+		return "";
+	return g_platinfo[platid].filepath;
+}
+
+const char *plat_cdkeypath( int platid )
+{
+	if ( platid < 0 || platid >= g_platinfo_maxnum )
+		return "";
+	return g_platinfo[platid].filepath;
+}
 
 // 用户发送登陆请求到登陆队列
 int user_login( int client_index, const char *szUserName, const char *szPassWord, char *szDeviceID )
@@ -68,11 +83,13 @@ int user_login( int client_index, const char *szUserName, const char *szPassWord
 		netsend_login_S( client_index, SENDTYPE_ACTOR, &Value );
 		return -1;
 	}
+	int platid = client_getplatid( client_index );
 	// 将需要处理的客户放置到登录队列
 	login_queue[g_nLoginQueueTail].client_index = client_index;
 	login_queue[g_nLoginQueueTail].authid = authid;
 	login_queue[g_nLoginQueueTail].command = USERCMDC_LOGIN;
-	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%s&v2=%s&v3=%d&v4=%s&v5=%s", szUserName, HttpString( szPassWord, tmpstr ), client_getplatid( client_index ), client_getip( client_index ), szDeviceID );
+	strcpy( login_queue[g_nLoginQueueTail].path, plat_loginpath( platid ) );
+	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%s&v2=%s&v3=%d&v4=%s&v5=%s", szUserName, HttpString( szPassWord, tmpstr ), platid, client_getip( client_index ), szDeviceID );
 	g_nLoginQueueTail = queue_tail;
 	mmux_unlock( g_login_mmux );
 	// 通知登录线程干活
@@ -207,7 +224,7 @@ int actor_get_cdkey( int actor_index, char *outkey, int len )
 }
 
 // 发送兑换奖励信息
-int user_award( int client_index, char *cardnumber )
+int user_cdkey( int client_index, char *cardnumber )
 {
 	if ( client_index < 0 || client_index >= g_maxactornum )
 		return -1;
@@ -250,11 +267,12 @@ int user_award( int client_index, char *cardnumber )
 		return -1;
 	}
 	// 将需要处理的客户放置到登录队列
+	int platid = client_getplatid( client_index );
 	login_queue[g_nLoginQueueTail].client_index = client_index;
 	login_queue[g_nLoginQueueTail].authid = authid;
-	login_queue[g_nLoginQueueTail].command = USERCMDC_AWARD;
-
-	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%d&v2=%d&v3=%s&v4=%s&v5=%s&v6=%s&v7=%d&v8=%d", g_actors[client_index].actorid, g_Config.server_code, szUserID, client_getip( client_index ), HttpString(cardnumber, tmpstr ), cdkey, client_getos( client_index ), client_getchannelid( client_index ) );
+	login_queue[g_nLoginQueueTail].command = USERCMDC_CDKEY;
+	strcpy( login_queue[g_nLoginQueueTail].path, plat_cdkeypath( platid ) );
+	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%d&v2=%d&v3=%s&v4=%s&v5=%s&v6=%s&v7=%d&v8=%d&v9=%d", g_actors[client_index].actorid, g_Config.server_code, szUserID, client_getip( client_index ), HttpString( cardnumber, tmpstr ), cdkey, client_getos( client_index ), client_getchannelid( client_index ), platid );
 
 	g_nLoginQueueTail = queue_tail;
 	mmux_unlock( g_login_mmux );
@@ -264,7 +282,7 @@ int user_award( int client_index, char *cardnumber )
 }
 
 // 用户服务器返回奖励信息
-int user_awarded( int client_index, int authid, int cdkey_index, int awardgroup, int result, char *cardnumber )
+int user_cdkeyed( int client_index, int authid, int cdkey_index, int awardgroup, int result, char *cardnumber )
 {
 	if ( client_index < 0 || client_index >= g_maxactornum )
 		return -1;
@@ -317,108 +335,6 @@ int user_awarded( int client_index, int authid, int cdkey_index, int awardgroup,
 		actor_notify_pop( client_index, 497 ); // 兑换码无效
 	}
 
-	return 0;
-}
-
-// 用户锁定账号
-int user_lock( int client_index, int authid, i64 player_userid, int lockmin )
-{
-	char *ptr;
-	int queue_tail;
-
-	if( client_index < 0 )
-		player_userid = actor_getoffline_userid( authid );
-
-	if( player_userid < 0 )
-		return -1;
-
-	// 锁住写队列缓冲
-	mmux_lock( g_login_mmux );
-	queue_tail = g_nLoginQueueTail + 1;
-	if( queue_tail >= MAX_LOGINQUEUENUM )
-	{
-		queue_tail = 0;
-	}
-	if( g_nLoginQueueHead == queue_tail )
-	{
-		write_netlog("login queue full");
-		mmux_unlock( g_login_mmux );
-		// 通知登录线程得赶紧干活, 都满了啊
-		mcond_broadcast( g_pthr_login );
-		return -1;
-	}
-	// 将需要处理的客户放置到登录队列
-	login_queue[g_nLoginQueueTail].client_index = client_index;
-	login_queue[g_nLoginQueueTail].authid = authid;
-	login_queue[g_nLoginQueueTail].command = USERCMDC_LOCKUSER;
-	ptr = login_queue[g_nLoginQueueTail].data;
-
-	char tmpBuf[MAX_PATH];
-	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%s&v2=%d", lltoa(player_userid,tmpBuf,10), lockmin );
-
-	g_nLoginQueueTail = queue_tail;
-	mmux_unlock( g_login_mmux );
-	// 通知登录线程干活
-	mcond_broadcast( g_pthr_login );
-	return 0;
-}
-
-// 用户改变这个服务器名，国王名，国王国家
-int user_changesev( int client_index, short serverid, char *sevname, char *kingname, char *kingclub, short king_country )
-{
-	if ( client_index < 0 || client_index >= g_maxactornum )
-		return -1;
-	int authid = server_getautuid( client_index );
-	if ( authid < 0 )
-		return -1;
-
-	char szSevName[NAME_SIZE] = { 0 };
-	char szKingName[NAME_SIZE] = { 0 };
-	char szKingClubName[NAME_SIZE] = { 0 };
-
-	if ( sevname )
-		strncpy( szSevName, sevname, NAME_SIZE );
-	
-	if ( kingname )
-		strncpy( szKingName, kingname, NAME_SIZE );
-
-	if ( kingclub )
-		strncpy( szKingClubName, kingclub, NAME_SIZE );
-
-	int queue_tail;
-
-	// 锁住写队列缓冲
-	mmux_lock( g_login_mmux );
-	queue_tail = g_nLoginQueueTail + 1;
-	if ( queue_tail >= MAX_LOGINQUEUENUM )
-	{
-		queue_tail = 0;
-	}
-	if ( g_nLoginQueueHead == queue_tail )
-	{
-		write_netlog( "login queue full" );
-		mmux_unlock( g_login_mmux );
-		// 通知登录线程得赶紧干活, 都满了啊
-		mcond_broadcast( g_pthr_login );
-		return -1;
-	}
-	// 将需要处理的客户放置到登录队列
-	login_queue[g_nLoginQueueTail].client_index = client_index;
-	login_queue[g_nLoginQueueTail].authid = authid;
-	login_queue[g_nLoginQueueTail].command = USERCMDC_CHANGESEV;
-
-	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%d&v2=%s&v3=%s&v4=%s&v5=%d", serverid, szSevName, szKingName, szKingClubName, king_country );
-
-	g_nLoginQueueTail = queue_tail;
-	mmux_unlock( g_login_mmux );
-	// 通知登录线程干活
-	mcond_broadcast( g_pthr_login );
-	return 0;
-}
-
-// 修改夏日活动排行榜数据
-int user_change_summerrank( int client_index, short serverid, int actorid, int cityid, char *name, int headid, short countryid, int flower )
-{
 	return 0;
 }
 

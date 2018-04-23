@@ -7,6 +7,8 @@ struct _platinfo {
 				int platid;	//
 				char userhost[64];	//
 				short userport;	//
+				char loginpath[64];	//
+				char cdkeypath[64];	//
 };
 typedef struct _platinfo PlatInfo;
 

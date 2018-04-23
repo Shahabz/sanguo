@@ -22,7 +22,7 @@ extern SConfig g_Config;
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue )
 {
 	// process.
-	user_awarded( pValue->m_client_index, pValue->m_authid, pValue->m_cdkey_index, pValue->m_awardgroup, pValue->m_result, pValue->m_cardnumber );
+	user_cdkeyed( pValue->m_client_index, pValue->m_authid, pValue->m_cdkey_index, pValue->m_awardgroup, pValue->m_result, pValue->m_cardnumber );
 	write_gamelog( "[SERV_USERAWARDED]_idx:%d", client_index );
 }
 

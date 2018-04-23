@@ -60,6 +60,7 @@ int login_init()
 	g_nLoginQueueTail = 0;
 	login_queue = (SLoginQueue *)malloc( sizeof(SLoginQueue)*MAX_LOGINQUEUENUM );
 	memset( login_queue, 0, sizeof(SLoginQueue)*MAX_LOGINQUEUENUM );
+	printf_msg( "SLoginQueue  maxcount=%d  memory=%0.2fMB(memory=%0.2fKB)\n", MAX_LOGINQUEUENUM, (sizeof( SLoginQueue )*MAX_LOGINQUEUENUM) / 1024.0 / 1024.0, sizeof( SLoginQueue ) / 1024.0 );
 	for ( int tmpi = 0; tmpi < MAX_LOGINQUEUENUM; tmpi++ )
 	{
 		login_queue[tmpi].client_index = -1;
@@ -325,14 +326,8 @@ int login_recv_proc( short cmd, char *recv_buf )
 	case USERCMDS_LOGIN:	// 账号登陆
 		return login_loginproc( recv_buf );
 		break;
-	case USERCMDS_AWARD:	// 兑换码
+	case USERCMDS_CDKEY:	// 兑换码
 		return login_awardproc( recv_buf );
-		break;
-	case USERCMDS_LOCKUSER:	// 账号锁定
-		return login_lockproc( recv_buf );
-		break;
-	case USERCMDS_CHANGESEV:// 服务器国王信息
-		return login_changesevproc( recv_buf );
 		break;
 	}
 	return -1;
@@ -375,7 +370,7 @@ int login_send_proc()
 		// 从队列中取出一项
 		cmd = login_queue[g_nLoginQueueHead].command;
 		client_index = login_queue[g_nLoginQueueHead].client_index;
-		sprintf( send_buf, "?c=%d&i=%d&a=%d%s", cmd, login_queue[g_nLoginQueueHead].client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
+		sprintf( send_buf, "%s?c=%d&i=%d&a=%d%s", cmd, login_queue[g_nLoginQueueHead].path, client_index, login_queue[g_nLoginQueueHead].authid, login_queue[g_nLoginQueueHead].data );
 
 		g_nLoginQueueHead++;
 		if( g_nLoginQueueHead >= MAX_LOGINQUEUENUM )

@@ -1127,7 +1127,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		break;
 	case ASKINFO_CDKEY:
 		// ¶Ò»»Âë
-		user_award( actor_index, pstr );
+		user_cdkey( actor_index, pstr );
 		break;
 	case ASKINFO_GIRL:
 		if ( pvalue[0] == 1 )
