@@ -72,13 +72,16 @@ public class UIText : Text
     {
         if ( font == null || font.name == "Arial" )//这个地方的name可以改为原来的字体的名称  
         {
-            Font mFont = Resources.Load<Font>( "Fonts/arial" );//注意这个地方是要替换成的字体的路径  
+			Font mFont = Resources.Load<Font>( "Fonts/pglh" );//注意这个地方是要替换成的字体的路径  
             if ( mFont == null )
             {
                 Debug.LogError( " Font not found ! " );
                 return;
             }
             font = mFont;
+			this.fontSize = 24;
+			this.supportRichText = false;
+			this.raycastTarget = false;
         }
     }
 }

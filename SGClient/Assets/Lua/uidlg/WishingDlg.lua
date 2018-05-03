@@ -71,12 +71,6 @@ function WishingDlgDestroy()
 	m_recvWish = nil;
 	m_recvPack = nil;
 	m_recvChange = nil;
-	HeroColorSpriteUnload( 0 )
-	HeroColorSpriteUnload( 1 )
-	HeroColorSpriteUnload( 2 )
-	HeroColorSpriteUnload( 3 )
-	HeroColorSpriteUnload( 4 )
-	HeroColorSpriteUnload( 5 )
 end
 
 ----------------------------------------

@@ -92,20 +92,22 @@ function CorpsFaceSpriteEx( buildingkind )
 	return CorpsFaceSprite( corps );
 end
 
--- 英雄颜色底板(带ab读取)
+-- 英雄颜色底板
 function HeroColorSprite( color )
-	local name = "ui_static_colorpanel_"..color;
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_colorpanel" );
-	local sprite = LoadSprite( name );
+	local sprite = LoadSprite( "ui_colorback_"..color );
 	if sprite == nil then
-		sprite = LoadSprite( "ui_static_colorpanel_0" );
+		sprite = LoadSprite( "ui_colorback_0" );
 	end
 	return sprite;
 end
 
--- 英雄颜色底板卸载
-function HeroColorSpriteUnload()
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_colorpanel" );
+-- 英雄名称颜色底板
+function HeroNameColorSprite( color )
+	local sprite = LoadSprite( "ui_colornameback_"..color );
+	if sprite == nil then
+		sprite = LoadSprite( "ui_colornameback_0" );
+	end
+	return sprite;
 end
 
 -- 女将头像

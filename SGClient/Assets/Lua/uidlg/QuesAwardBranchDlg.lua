@@ -3,6 +3,7 @@ local m_Dlg = nil;
 local m_uiQuestName = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Award = nil; --UnityEngine.GameObject
+local m_uiGetBtn = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_questid = 0;
 

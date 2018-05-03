@@ -3,12 +3,12 @@ local m_Dlg = nil;
 local m_uiQuestName = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Award = nil; --UnityEngine.GameObject
+local m_uiGetBtn = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_questid = 0;
 
 -- 打开界面
 function QuestAwardDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "QuestAwardDlg" );
 end
 
@@ -30,7 +30,6 @@ end
 -- 删除界面
 function QuestAwardDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 
@@ -108,8 +107,7 @@ function QuestAwardDlgShow( recvValue )
 		local uiObj = m_ObjectPool:Get( "m_uiUIP_Award" );
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
-		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
+		SetText( uiObj.transform:Find("Name"), name.."x"..recvValue.m_list[i].m_num );
 	end
 end
 

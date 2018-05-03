@@ -1,10 +1,11 @@
 -- 界面
 local m_Dlg = nil;
 --------------------------------------------------------------
-local m_uiHeroHead = nil; --UnityEngine.GameObject
-local m_uiHeroColor = nil; --UnityEngine.GameObject
-local m_uiHeroCorps = nil; --UnityEngine.GameObject
-local m_uiHeroName = nil; --UnityEngine.GameObject
+local m_uiColor = nil; --UnityEngine.GameObject
+local m_uiShape = nil; --UnityEngine.GameObject
+local m_uiName = nil; --UnityEngine.GameObject
+local m_uiCorps = nil; --UnityEngine.GameObject
+local m_uiDesc = nil; --UnityEngine.GameObject
 local m_uiAttack = nil; --UnityEngine.GameObject
 local m_uiDefense = nil; --UnityEngine.GameObject
 local m_uiTroops = nil; --UnityEngine.GameObject
@@ -63,10 +64,11 @@ end
 function HeroGetDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;
-	m_uiHeroHead = objs[0];
-	m_uiHeroColor = objs[1];
-	m_uiHeroCorps = objs[2];
-	m_uiHeroName = objs[3];
+	m_uiColor = objs[0];
+	m_uiShape = objs[1];
+	m_uiName = objs[2];
+	m_uiCorps = objs[3];
+	m_uiDesc = objs[4];
 	m_uiAttack = objs[5];
 	m_uiDefense = objs[6];
 	m_uiTroops = objs[7];
@@ -109,8 +111,8 @@ end
 function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
 	m_herokind = recvValue.m_kind+AWARDKIND_HEROBASE;
-	local b_haveHero = HeroVisitDlgIsHaveHero( m_herokind );
-	if b_haveHero == true and recvValue.m_itemnum ~= nil then
+	local haveHero = HeroVisitDlgIsHaveHero( m_herokind );
+	if haveHero == true and recvValue.m_itemnum ~= nil then
 		SetTrue( m_uiHaveCloseBtn );
 		SetFalse( m_uiCloseBtn );
 		SetText( m_uiText, F( 1968, recvValue.m_itemnum ) );
@@ -119,10 +121,11 @@ function HeroGetDlgShow( recvValue )
 		SetTrue( m_uiCloseBtn );
 		HeroVisitDlgAddHero(m_herokind);
 	end
-	SetImage( m_uiHeroHead, HeroHeadSprite( recvValue.m_kind )  );
-	SetImage( m_uiHeroColor,  ItemColorSprite( recvValue.m_color )  );
-	SetImage( m_uiHeroCorps,  CorpsSprite( recvValue.m_corps )  );
-	SetText( m_uiHeroName, HeroName( recvValue.m_kind ).."("..T(134+recvValue.m_corps)..")", NameColor(recvValue.m_color) )
+	SetImage( m_uiShape, HeroFaceSprite( recvValue.m_kind )  );
+	SetImage( m_uiColor,  ItemColorSprite( recvValue.m_color )  );
+	SetImage( m_uiCorps,  CorpsSprite( recvValue.m_corps )  );
+	SetText( m_uiName, HeroName( recvValue.m_kind ) )
+	SetTextWriter( m_uiDesc, T(1570), function() end )
 	
 	local attack = recvValue.m_attack_base;
 	local defense = recvValue.m_defense_base;

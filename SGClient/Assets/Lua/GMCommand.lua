@@ -138,9 +138,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 	elseif cmdstr == "dump"	then
 		ResourceManager.dump()
 	elseif cmdstr == "t" then
-		--FriendDlgShow();
-		--BlackListDlgShow();
-		RankListDlgShow();
+		HeroTalk( 3,"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", nil )
 	elseif cmdstr == "f" then
 		JumpFightSkip()
 	elseif cmdstr == "guide" then

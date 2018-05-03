@@ -5,9 +5,10 @@ local m_uiName = nil; --UnityEngine.GameObject
 local m_uiTalk = nil; --UnityEngine.GameObject
 local m_WaitCallback = nil;
 local m_WaitValue = nil;
-
+local m_clickstep = 0
 -- 打开界面
 function NpcTalkDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "NpcTalkDlg" );
 end
 
@@ -28,6 +29,7 @@ end
 function NpcTalkDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 end
 
 ----------------------------------------
@@ -38,7 +40,13 @@ end
 function NpcTalkDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
-			NpcTalkDlgClose();
+			if m_clickstep == 0 then
+				-- 文字快速出现
+				m_uiTalk:GetComponent( typeof(TypeWriter) ):OnFinish()
+				m_clickstep = 1;
+			else
+				NpcTalkDlgClose();
+			end
         end
 	end
 end
@@ -81,11 +89,14 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function NpcTalk( talk, callback )
+function NpcTalk( text, callback )
 	NpcTalkDlgOpen();
-	m_uiShape:GetComponent( "Image" ).sprite = LoadSprite("playerhead_01_face");
-	--m_uiName:GetComponent( "UIText" ).text = name;
-	m_uiTalk:GetComponent( "UIText" ).text = talk;
+	m_clickstep = 0;
+	SetImage( m_uiShape, LoadSprite("ui_static_npc1") );
+	--SetText( m_uiName, name );
+	SetTextWriter( m_uiTalk, text, function() 
+		m_clickstep=1
+	end )
 	m_WaitCallback = callback;
 end
 

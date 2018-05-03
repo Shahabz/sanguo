@@ -40,6 +40,7 @@ public static class DelegateFactory
 		dict.Add(typeof(UnityEngine.RectTransform.ReapplyDrivenProperties), UnityEngine_RectTransform_ReapplyDrivenProperties);
 		dict.Add(typeof(UITween.OnFinish), UITween_OnFinish);
 		dict.Add(typeof(UIProgress.LuaCallback), UIProgress_LuaCallback);
+		dict.Add(typeof(TypeWriter.LuaExecute), TypeWriter_LuaExecute);
 		dict.Add(typeof(YlyDelegateUtil.StringDelegate), YlyDelegateUtil_StringDelegate);
 		dict.Add(typeof(DragonBones.ListenerDelegate<DragonBones.EventObject>), DragonBones_ListenerDelegate_DragonBones_EventObject);
 		dict.Add(typeof(Character.OnEvent), Character_OnEvent);
@@ -1260,6 +1261,49 @@ public static class DelegateFactory
 		{
 			UIProgress_LuaCallback_Event target = new UIProgress_LuaCallback_Event(func, self);
 			UIProgress.LuaCallback d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class TypeWriter_LuaExecute_Event : LuaDelegate
+	{
+		public TypeWriter_LuaExecute_Event(LuaFunction func) : base(func) { }
+		public TypeWriter_LuaExecute_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call()
+		{
+			func.Call();
+		}
+
+		public void CallWithSelf()
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate TypeWriter_LuaExecute(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			TypeWriter.LuaExecute fn = delegate() { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			TypeWriter_LuaExecute_Event target = new TypeWriter_LuaExecute_Event(func);
+			TypeWriter.LuaExecute d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			TypeWriter_LuaExecute_Event target = new TypeWriter_LuaExecute_Event(func, self);
+			TypeWriter.LuaExecute d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

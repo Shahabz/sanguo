@@ -4,173 +4,177 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using LuaInterface;
 
 [AddComponentMenu( "UI/Effects/TypeWriter" )]
 [RequireComponent(typeof(UIText))]
 public class TypeWriter : BaseMeshEffect
 {
-    public bool playOnStart = false;
-    public int charsPerSecond = 0;
-    public float delay = 0;
-    public float speedRatio = 1;
-    public UnityEvent myEvent; 
-    //public LuaFunction onFinish;
+	public bool playOnStart = false;
+	public int charsPerSecond = 0;
+	public float delay = 0;
+	public float speedRatio = 1;
+	public UnityEvent myEvent; 
 
-    VertexHelper    _Mesh;
-    private float   _Timer;
-    private bool    _Active = false;
-    private bool    _Playing = false;
-    private int     _LastWordCount = 0;
-    private List<int> _Vtx;
+	public delegate void LuaExecute();
+	public LuaExecute onFinish = null;
 
-    private bool    _Rebuild = false;
 
-    void Start()
-    {
-        if ( myEvent == null )
-            myEvent = new UnityEvent();
+	VertexHelper    _Mesh;
+	private float   _Timer;
+	private bool    _Active = false;
+	private bool    _Playing = false;
+	private int     _LastWordCount = 0;
+	private List<int> _Vtx;
 
-        if( playOnStart )
-            Play();
-    }
+	private bool    _Rebuild = false;
 
-    public override void ModifyMesh( VertexHelper mesh )
-    {
-        if ( !IsActive() || Localization.currentLanguage == "ar" )
-        {
-            return;
-        }
+	void Start()
+	{
+		if ( myEvent == null )
+			myEvent = new UnityEvent();
 
-        _Mesh = mesh;
+		if( playOnStart )
+			Play();
+	}
 
-        if( _Rebuild || _Vtx == null )
-        {
-            _Vtx = new List<int>();
-            for( int i = 0; i < _Mesh.currentVertCount; i++ )
-            {
-                bool ok = true;
-                UIVertex uv1 = new UIVertex();
-                _Mesh.PopulateUIVertex( ref uv1, i );
-                if( i < _Mesh.currentVertCount - 1 )
-                {
-                    UIVertex uv2 = new UIVertex();
-                    _Mesh.PopulateUIVertex( ref uv2, i+1 );
+	public override void ModifyMesh( VertexHelper mesh )
+	{
+		if ( !IsActive() || Localization.currentLanguage == "ar" || Localization.currentLanguage == "fa" )
+		{
+			return;
+		}
 
-                    if( uv1.position == uv2.position )
-                    {
-                        ok = false;
-                    }
-                }
-                if ( ok && i > 0 )
-                {
-                    UIVertex uv2 = new UIVertex();
-                    _Mesh.PopulateUIVertex( ref uv2, i-1 );
+		_Mesh = mesh;
 
-                    if( uv1.position == uv2.position )
-                    {
-                        ok = false;
-                    }
-                }
+		if( _Rebuild || _Vtx == null )
+		{
+			_Vtx = new List<int>();
+			for( int i = 0; i < _Mesh.currentVertCount; i++ )
+			{
+				bool ok = true;
+				UIVertex uv1 = new UIVertex();
+				_Mesh.PopulateUIVertex( ref uv1, i );
+				if( i < _Mesh.currentVertCount - 1 )
+				{
+					UIVertex uv2 = new UIVertex();
+					_Mesh.PopulateUIVertex( ref uv2, i+1 );
 
-                if( ok )
-                    _Vtx.Add( i );
-            }
-        }
+					if( uv1.position == uv2.position )
+					{
+						ok = false;
+					}
+				}
+				if ( ok && i > 0 )
+				{
+					UIVertex uv2 = new UIVertex();
+					_Mesh.PopulateUIVertex( ref uv2, i-1 );
 
-        int index = 0;
-        for( int i = 0; i < _Vtx.Count; i++ )
-        {            
-            UIVertex uv = new UIVertex();
-            _Mesh.PopulateUIVertex( ref uv, _Vtx[i] );
+					if( uv1.position == uv2.position )
+					{
+						ok = false;
+					}
+				}
 
-            Color32 color = uv.color;
+				if( ok )
+					_Vtx.Add( i );
+			}
+		}
 
-            if( index < (int)( charsPerSecond * ( _Timer - delay ) ) * 4 )
-            {
-                color.a = 255;
-            }
-            else
-            {
-                color.a = 0;
-            }
+		int index = 0;
+		for( int i = 0; i < _Vtx.Count; i++ )
+		{            
+			UIVertex uv = new UIVertex();
+			_Mesh.PopulateUIVertex( ref uv, _Vtx[i] );
 
-            uv.color = color;
+			Color32 color = uv.color;
 
-            _Mesh.SetUIVertex( uv, _Vtx[i] );
+			if( index < (int)( charsPerSecond * ( _Timer - delay ) ) * 4 )
+			{
+				color.a = 255;
+			}
+			else
+			{
+				color.a = 0;
+			}
 
-            index++;
-        }
-    }
+			uv.color = color;
 
-    public void Play()
-    {
-        _Timer = 0;
-        _Active = true;
-        _LastWordCount = 0;
+			_Mesh.SetUIVertex( uv, _Vtx[i] );
 
-        _Rebuild = true;
+			index++;
+		}
+	}
 
-        // 如是阿拉伯语，立即显示所有
-        if( Localization.currentLanguage == "ar" )
-        {
-            _Vtx = new List<int>();
-            OnFinish();
-        }
-    }
+	public void Play()
+	{
+		_Timer = 0;
+		_Active = true;
+		_LastWordCount = 0;
 
-    void Update()
-    {
-        if( _Mesh == null || _Active == false )
-            return;
+		_Rebuild = true;
 
-        if( _Timer < delay )
-        {
-            _Timer += Time.deltaTime * speedRatio;
-            return;
-        }
-        else            
-            _Timer += Time.deltaTime * speedRatio;
+		// 如是阿拉伯语，立即显示所有
+		if( Localization.currentLanguage == "ar" || Localization.currentLanguage == "fa" )
+		{
+			_Vtx = new List<int>();
+			OnFinish();
+		}
+	}
 
-        if( (int)( charsPerSecond * ( _Timer - delay ) ) > _LastWordCount )
-        {
-            _Playing = true;
-            _LastWordCount = (int)( charsPerSecond * ( _Timer - delay ) );
+	void Update()
+	{
+		if( _Mesh == null || _Active == false )
+			return;
 
-            gameObject.SetActive( false );
-            gameObject.SetActive( true );
+		if( _Timer < delay )
+		{
+			_Timer += Time.deltaTime * speedRatio;
+			return;
+		}
+		else            
+			_Timer += Time.deltaTime * speedRatio;
 
-            if( (int)( charsPerSecond * ( _Timer - delay ) ) * 4 >= _Vtx.Count )
-            {
-                OnFinish();
-            }
-        }
-    }
-    public void OnFinish()
-    {
-        if( _Active == false )
-            return;
-        
-        _Playing = false;
-        _Active = false;
+		if( (int)( charsPerSecond * ( _Timer - delay ) ) > _LastWordCount )
+		{
+			_Playing = true;
+			_LastWordCount = (int)( charsPerSecond * ( _Timer - delay ) );
 
-        if( _Vtx == null )
-            return;
-        
-        _Timer = _Vtx.Count / 4 / charsPerSecond + delay + 1;
+			gameObject.SetActive( false );
+			gameObject.SetActive( true );
 
-        gameObject.SetActive( false );
-        gameObject.SetActive( true );
+			if( (int)( charsPerSecond * ( _Timer - delay ) ) * 4 >= _Vtx.Count )
+			{
+				OnFinish();
+			}
+		}
+	}
+	public void OnFinish()
+	{
+		if( _Active == false )
+			return;
 
-        //if( onFinish != null )
-        //    onFinish.Execute();
+		_Playing = false;
+		_Active = false;
 
-        try
-        {
-            myEvent.Invoke();
-        }
-        catch ( Exception )
-        {
-            Debug.Log( "Error!" );
-        }
-    }
+		if( _Vtx == null )
+			return;
+
+		_Timer = _Vtx.Count / 4 / charsPerSecond + delay + 1;
+
+		gameObject.SetActive( false );
+		gameObject.SetActive( true );
+
+		if( onFinish != null )
+			onFinish();
+
+		try
+		{
+			myEvent.Invoke();
+		}
+		catch ( Exception )
+		{
+			Debug.Log( "Error!" );
+		}
+	}
 }

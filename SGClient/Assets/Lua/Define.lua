@@ -335,6 +335,17 @@ function HeroState( state )
 	end
 end
 
+-- 英雄状态文字
+function HeroStateFull( state )
+	if state == 0 then
+		return T(296);
+	elseif state == 1 or state == 3 then
+		return T(297);
+	elseif state == 2 then
+		return T(298);
+	end
+end
+
 -- 获取女将名称
 function GirlName( kind )
 	return Localization.text_item(kind+3200);
@@ -546,6 +557,13 @@ end
 function SetRichTextColor( transform, color )
 	local uiComponent = transform:GetComponent( typeof(YlyRichText) )
 	uiComponent.color = color;
+end
+
+function SetTextWriter( transform, text, fun )
+	SetText( transform, text );
+	local uiTypeWriter = transform:GetComponent( typeof(TypeWriter) );
+	uiTypeWriter:Play();
+	uiTypeWriter.onFinish = fun
 end
 
 function SetControlID( transform, controlID )

@@ -17,6 +17,8 @@ public class TypeWriterWrap
 		L.RegVar("delay", get_delay, set_delay);
 		L.RegVar("speedRatio", get_speedRatio, set_speedRatio);
 		L.RegVar("myEvent", get_myEvent, set_myEvent);
+		L.RegVar("onFinish", get_onFinish, set_onFinish);
+		L.RegFunction("LuaExecute", TypeWriter_LuaExecute);
 		L.EndClass();
 	}
 
@@ -198,6 +200,25 @@ public class TypeWriterWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_onFinish(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			TypeWriter obj = (TypeWriter)o;
+			TypeWriter.LuaExecute ret = obj.onFinish;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index onFinish on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_playOnStart(IntPtr L)
 	{
 		object o = null;
@@ -289,6 +310,64 @@ public class TypeWriterWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index myEvent on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_onFinish(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			TypeWriter obj = (TypeWriter)o;
+			TypeWriter.LuaExecute arg0 = null;
+			LuaTypes funcType2 = LuaDLL.lua_type(L, 2);
+
+			if (funcType2 != LuaTypes.LUA_TFUNCTION)
+			{
+				 arg0 = (TypeWriter.LuaExecute)ToLua.CheckObject(L, 2, typeof(TypeWriter.LuaExecute));
+			}
+			else
+			{
+				LuaFunction func = ToLua.ToLuaFunction(L, 2);
+				arg0 = DelegateFactory.CreateDelegate(typeof(TypeWriter.LuaExecute), func) as TypeWriter.LuaExecute;
+			}
+
+			obj.onFinish = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index onFinish on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int TypeWriter_LuaExecute(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(TypeWriter.LuaExecute), func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateFactory.CreateDelegate(typeof(TypeWriter.LuaExecute), func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
 		}
 	}
 }

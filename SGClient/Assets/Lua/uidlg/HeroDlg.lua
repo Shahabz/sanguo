@@ -136,76 +136,60 @@ end
 
 function HeroDlgSetHero( index, pHero )
 	local objs = m_uiUIP_Hero[index].transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local uiShape = objs[0];
-	local uiColor = objs[1];
-	local uiCorps = objs[2];
-	local uiName = objs[3];
-	local uiSoldiersProgress = objs[4];
-	local uiSoldiersText = objs[5];
-	local uiSoldiersBtn = objs[6];
-	local uiState = objs[7];
-	local uiSoldiersFull = objs[8];
-	local uiUnLockText = objs[9];
-	local uiStateBack = objs[10];
-	local uiAdd = objs[11];
-	local uiShapeBack1 = objs[12];
-	local uiType = objs[13];
-	local uiCheck = objs[14];
+	local uiHero = objs[0];
+	local uiColorBack = objs[1];
+	local uiShape = objs[2];
+	local uiNameBack = objs[3];
+	local uiName = objs[4];
+	local uiCorps = objs[5];
+	local uiType = objs[6];
+	local uiAdd = objs[7];	
+	local uiLevel = objs[8];
+	local uiState = objs[9];
+	local uiSoldiersProgress = objs[10];
+	local uiSoldiersBtn = objs[11];
+	local uiUnLock = objs[12];
 	SetControlID( m_uiUIP_Hero[index], index )
 	
 	if pHero == nil or pHero.m_kind <= 0 then
-		SetFalse( uiShape )
-		SetFalse( uiColor )
-		SetFalse( uiCorps )
-		SetFalse( uiName )
-		SetFalse( uiSoldiersProgress )
-		SetFalse( uiSoldiersText )
-		SetFalse( uiSoldiersBtn )
-		SetFalse( uiSoldiersFull )
-		SetFalse( uiState )
-		SetFalse( uiStateBack )
-		SetFalse( uiAdd )
-		SetFalse( uiCheck )
-		
-		if index == 3 then
+		SetFalse( uiHero )
+		SetTrue( uiUnLock )
+		if index == 2 then
+			SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+			SetText( uiUnLock.transform:Find("Text"), T(3367) )
+			
+		elseif index == 3 then
 			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
-				SetTrue( uiUnLockText )
-				SetText( uiUnLockText, T(610) )
-				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_2") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
+				SetText( uiUnLock.transform:Find("Text"), T(610) )
 			else
-				SetFalse( uiUnLockText )
-				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_4") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+				SetText( uiUnLock.transform:Find("Text"), T(3367) )
 			end
 
 		elseif index == 4 then
 			if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
-				SetTrue( uiUnLockText )
-				SetText( uiUnLockText, T(611) )
-				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_2") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
+				SetText( uiUnLock.transform:Find("Text"), T(611) )
 			else
-				SetFalse( uiUnLockText )
-				SetImage( uiShapeBack1, LoadSprite("ui_icon_back_4") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+				SetText( uiUnLock.transform:Find("Text"), T(3367) )
 			end
 		end
 		return;
 	end
 	
-	SetFalse( uiUnLockText )
-	SetTrue( uiShape )
-	SetTrue( uiColor )
-	SetTrue( uiCorps )
-	SetTrue( uiName )
-	SetTrue( uiSoldiersProgress )
-	SetTrue( uiSoldiersText )
-	SetTrue( uiState )
-	SetTrue( uiStateBack )
+	SetFalse( uiUnLock )
+	SetTrue( uiHero )
+	SetImage( uiColorBack, HeroColorSprite( pHero.m_color ) );
+	SetImage( uiNameBack, HeroNameColorSprite( pHero.m_color ) );
+	SetImage( uiShape, HeroFaceSprite( pHero.m_kind ) );
+	SetImage( uiCorps, CorpsSprite( pHero.m_corps ) );
+	SetText( uiName, HeroName( pHero.m_kind ) );
+	SetLevel( uiLevel, pHero.m_level );
 	
-	SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
-	SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
-	SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
-	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor( pHero.m_color ) );
-	
-	GuideShow(index,uiColor.transform);
+	-- 指引显示
+	GuideShow( index, uiHero.transform );
 	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 	if only == true and pHero.m_god == 1 then
@@ -222,24 +206,20 @@ function HeroDlgSetHero( index, pHero )
 	end
 			
 	SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
-	SetText( uiSoldiersText, pHero.m_soldiers.."/"..pHero.m_troops );
+	SetText( uiSoldiersProgress.transform:Find("Text"), pHero.m_soldiers.."/"..pHero.m_troops );
 	if pHero.m_soldiers < pHero.m_troops then
 		SetTrue( uiSoldiersBtn );
-		SetFalse( uiSoldiersFull )
 	else
 		SetFalse( uiSoldiersBtn );
-		SetTrue( uiSoldiersFull )
 	end
 	SetControlID( uiSoldiersBtn, 100 + index )
-	SetText( uiState, HeroState( pHero.m_state ) );
+	SetText( uiState, HeroStateFull( pHero.m_state ) );
 	
 	--判断是否有新装备
 	SetFalse( uiAdd )
-	SetTrue( uiCheck )
 	for i= 0,5,1 do 
 		if GetEquip():CheckByType( i+1 , pHero.m_Equip[i].m_kind ) then
 			SetTrue( uiAdd )
-			SetFalse( uiCheck )
 			break;
 		end
 	end
@@ -287,7 +267,10 @@ end
 -- 选择英雄
 function HeroDlgSelect( index )
 	if GetHero().m_CityHero[index-1] == nil or GetHero().m_CityHero[index-1].m_kind <= 0 then
-		if index == 3 then
+		if index == 2 then
+			HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
+			
+		elseif index == 3 then
 			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
 			else
 				HeroListDlgShow( HEROLIST_PATH_HERO )

@@ -12,6 +12,7 @@ public class ChannelSDKWrap
 		L.RegFunction("login", login);
 		L.RegFunction("logout", logout);
 		L.RegFunction("pay", pay);
+		L.RegFunction("user_center", user_center);
 		L.RegFunction("gmbug", gmbug);
 		L.RegFunction("setExtendData", setExtendData);
 		L.RegFunction("__eq", op_Equality);
@@ -97,6 +98,23 @@ public class ChannelSDKWrap
 			ChannelSDK obj = (ChannelSDK)ToLua.CheckObject(L, 1, typeof(ChannelSDK));
 			string arg0 = ToLua.CheckString(L, 2);
 			obj.pay(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int user_center(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			ChannelSDK obj = (ChannelSDK)ToLua.CheckObject(L, 1, typeof(ChannelSDK));
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.user_center(arg0);
 			return 0;
 		}
 		catch(Exception e)

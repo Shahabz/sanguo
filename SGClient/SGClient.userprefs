@@ -1,12 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Manager/UpdateManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Effect/TypeWriter.cs">
     <Files>
       <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="125" Column="2" />
       <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Plugins/Android/AndroidManifest.xml" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIProgress.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIProgress.cs" Line="50" Column="2" />
       <File FileName="Assets/Source/UI/UISystem.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollPage.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIRaycast.cs" Line="1" Column="1" />
@@ -14,10 +14,10 @@
       <File FileName="Assets/Source/UI/Tween/UITweenRectPositionBetween.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenRectPosition.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIButtonPolygon.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Effect/ImageScreenBlur.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Effect/ImageScreenBlur.cs" Line="70" Column="44" />
       <File FileName="Assets/Source/Manager/UIManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/AudioManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIButton.cs" Line="31" Column="3" />
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
@@ -49,7 +49,7 @@
       <File FileName="Assets/Source/UI/Tween/UITweenBeat.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenColor.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenFade.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIMod.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIMod.cs" Line="32" Column="47" />
       <File FileName="Assets/Source/UI/UIAutoSize.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollBase.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollRing.cs" Line="1" Column="1" />
@@ -62,9 +62,9 @@
       <File FileName="Assets/Source/Base/LuaFun.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIDepth.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichText.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyRichTextParser.cs" Line="124" Column="15" />
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyAssetIdentify.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyDelegateUtil.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Scripts/YlyDelegateUtil.cs" Line="9" Column="1" />
       <File FileName="Assets/Source/Manager/ResourceManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIParticleSystem.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenPath.cs" Line="1" Column="1" />
@@ -84,9 +84,9 @@
       <File FileName="Assets/Source/UI/UIDropper.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/DebugUILine.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/Utils.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIInputField.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIInputField.cs" Line="78" Column="22" />
       <File FileName="Assets/Source/Base/ShowMemorySize.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/UI/UIText.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/UIText.cs" Line="54" Column="55" />
       <File FileName="Assets/Source/FileSystem/PathUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/GameObjectPool.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/LoopScrollRect/Scripts/EasyObjectPool/ResourceManager.cs" Line="1" Column="1" />
@@ -101,7 +101,7 @@
       <File FileName="Assets/Source/Base/ChannelSDK.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/SpriteChecker.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/Localization.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Manager/GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Manager/GameManager.cs" Line="226" Column="23" />
       <File FileName="Assets/Source/Base/ActiveDelay.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/AndroidNotification.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/INotification.cs" Line="1" Column="1" />
@@ -124,6 +124,16 @@
       <File FileName="Assets/Source/UI/Tween/UITweenCityBuilding.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenScale.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenScale1.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/FontReplace.cs" Line="52" Column="32" />
+      <File FileName="Assets/Source/UI/UIHighLightMask.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/UI/Editor/UITextEditor.cs" Line="40" Column="3" />
+      <File FileName="Assets/Source/Effect/TypeWriter.cs" Line="87" Column="33" />
+      <File FileName="Assets/Source/Effect/FXTypeWriter.cs" Line="117" Column="13" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Editor/YlyRichTextEditor.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Shaders/YlyUISeqFrameAni.shader" Line="44" Column="11" />
+      <File FileName="Assets/Source/Manager/NetworkManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Effect/UIGradient.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Generate/TypeWriterWrap.cs" Line="52" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

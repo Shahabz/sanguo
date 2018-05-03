@@ -18,6 +18,8 @@ public class ArmyMoveWrap
 		L.RegVar("heroCount", get_heroCount, set_heroCount);
 		L.RegVar("invokeShow", get_invokeShow, set_invokeShow);
 		L.RegVar("direction", get_direction, set_direction);
+		L.RegVar("direction1", get_direction1, set_direction1);
+		L.RegVar("direction2", get_direction2, set_direction2);
 		L.EndClass();
 	}
 
@@ -211,6 +213,44 @@ public class ArmyMoveWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_direction1(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float ret = obj.direction1;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction1 on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_direction2(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float ret = obj.direction2;
+			LuaDLL.lua_pushnumber(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction2 on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_stat(IntPtr L)
 	{
 		object o = null;
@@ -378,6 +418,44 @@ public class ArmyMoveWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_direction1(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			obj.direction1 = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction1 on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_direction2(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			ArmyMove obj = (ArmyMove)o;
+			float arg0 = (float)LuaDLL.luaL_checknumber(L, 2);
+			obj.direction2 = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index direction2 on a nil value" : e.Message);
 		}
 	}
 }

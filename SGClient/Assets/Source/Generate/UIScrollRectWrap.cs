@@ -180,9 +180,9 @@ public class UIScrollRectWrap
 		{
 			ToLua.CheckArgsCount(L, 3);
 			UIScrollRect obj = (UIScrollRect)ToLua.CheckObject(L, 1, typeof(UIScrollRect));
-			int arg0 = (int)LuaDLL.lua_tonumber(L, 2);
-            UnityEngine.GameObject scroll = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 3, typeof(UnityEngine.GameObject));
-            obj.CenterOnItem(arg0, scroll);
+			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+			UnityEngine.GameObject arg1 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 3, typeof(UnityEngine.GameObject));
+			obj.CenterOnItem(arg0, arg1);
 			return 0;
 		}
 		catch(Exception e)

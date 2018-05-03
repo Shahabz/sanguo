@@ -41,12 +41,6 @@ function HeroGodDlgDestroy()
 	m_NeedEquip = nil
 	m_AttrName = nil
 	m_AttrWashid = nil
-	HeroColorSpriteUnload( 0 )
-	HeroColorSpriteUnload( 1 )
-	HeroColorSpriteUnload( 2 )
-	HeroColorSpriteUnload( 3 )
-	HeroColorSpriteUnload( 4 )
-	HeroColorSpriteUnload( 5 )
 end
 
 ----------------------------------------
