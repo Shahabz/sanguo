@@ -7,6 +7,7 @@ local m_uiAward = nil; --UnityEngine.GameObject
 
 local m_nation_award = 0;
 local m_SelectNation = 0;
+local m_audioID = 0;
 -- 打开界面
 function CreateDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CreateDlg" );
@@ -19,6 +20,8 @@ function CreateDlgClose()
 	end
 	
 	eye.uiManager:Close( "CreateDlg" );
+	eye.audioManager:SetChannelVolume(2,0.7)
+	eye.audioManager:Stop(m_audioID);
 end
 
 -- 删除界面
@@ -84,6 +87,7 @@ end
 ----------------------------------------
 function CreateDlgShow( nation_award )
 	CreateDlgOpen();
+	eye.audioManager:SetChannelVolume(2,0.3)
 	m_nation_award = nation_award;
 	CreateDlgSelect(nation_award);
 end
@@ -96,13 +100,17 @@ function CreateDlgSelect( nation )
 	if nation == 1 then
 		m_uiWeiTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiWeiTalkPanel,nation);
+		m_audioID = 450
 	elseif nation == 2 then
 		m_uiShuTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiShuTalkPanel,nation);
+		m_audioID = 451
 	elseif nation == 3 then
 		m_uiWuTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiWuTalkPanel,nation);
+		m_audioID = 452
 	end
+	eye.audioManager:Play(m_audioID);
 end
 function CreateDlgSetAward( gameObj,nation )
 	local uiAward=gameObj.transform:Find("SelectNation");
