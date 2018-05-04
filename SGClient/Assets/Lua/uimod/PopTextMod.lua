@@ -72,7 +72,7 @@ function PopTextModPoolShow( text )
 	obj.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform );
 	obj.transform.localScale = Vector3( 1, 1, 1 );
 	obj.transform.localPosition = Vector3( 0, 0, 0 );
-	obj.transform:Find("Text"):GetComponent( "UIText" ).text = text
+	SetRichText(obj.transform:Find("Text"), text);
 	
 	-- 上移
 	for i = 1, #PopTextList, 1 do
@@ -80,8 +80,8 @@ function PopTextModPoolShow( text )
 		if unit then
 			local unitTween = PopTextList[i].transform:GetComponent( "UITweenMove" );
 			local unitRect = PopTextList[i].transform:GetComponent( "RectTransform" );
-			targetPos = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + 40 );
-			unitRect.localPosition = Vector3( unitRect.localPosition.x, unitRect.localPosition.y + 40, 0 );
+			targetPos = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y + 48 );
+			unitRect.localPosition = Vector3( unitRect.localPosition.x, unitRect.localPosition.y + 48, 0 );
 			unitTween.from = Vector2.New( unitRect.localPosition.x, unitRect.localPosition.y )
 			unitTween.to = targetPos
 			unitTween:Play(true);
