@@ -500,7 +500,8 @@ function proc_changesilver_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(121).."x"..recvValue.m_add );
+			pop( "<icon=silver>"..T(121).." x "..recvValue.m_add );
 		end
 	end
 	GetPlayer().m_silver = recvValue.m_total;
@@ -517,7 +518,8 @@ function proc_changewood_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(122).."x"..recvValue.m_add );
+			pop( "<icon=wood>"..T(122).." x "..recvValue.m_add );
 		end
 	end
 	GetPlayer().m_wood = recvValue.m_total;
@@ -533,7 +535,8 @@ function proc_changefood_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(123).."x"..recvValue.m_add );
+			pop( "<icon=food>"..T(123).." x "..recvValue.m_add );
 		end
 	end
 	GetPlayer().m_food = recvValue.m_total;
@@ -549,7 +552,8 @@ function proc_changeiron_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(124).."x"..recvValue.m_add );
+			pop( "<icon=iron>"..T(124).." x "..recvValue.m_add );
 		end
 	end
 	GetPlayer().m_iron = recvValue.m_total;
@@ -605,7 +609,8 @@ function proc_changtoken_C( recvValue )
 		if recvValue.m_path == PATH_WISHINGSHOP then
 			ItemGetDlgShow( 124, recvValue.m_add )
 		else
-			pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(125).."x"..recvValue.m_add );
+			pop( "<icon=token>"..T(125).." x "..recvValue.m_add );
 		end
 	end
 	GetPlayer().m_token = recvValue.m_total;

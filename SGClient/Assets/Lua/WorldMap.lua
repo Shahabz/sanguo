@@ -286,7 +286,7 @@ end
 
 -- 返回城池
 function WorldMap.ReturnCity()
-	MainDlgPlayCutScenes()
+	--MainDlgPlayCutScenes()
 	GameManager.ChangeScence( "city" )
 	TmxLastList = { 0, 0, 0, 0 };
 	WorldMap.Clear()

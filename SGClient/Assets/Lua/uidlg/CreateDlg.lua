@@ -4,9 +4,11 @@ local m_uiWeiTalkPanel = nil; --UnityEngine.GameObject
 local m_uiShuTalkPanel = nil; --UnityEngine.GameObject
 local m_uiWuTalkPanel = nil; --UnityEngine.GameObject
 local m_uiAward = nil; --UnityEngine.GameObject
+local m_uiOpeningSpeech = nil; --UnityEngine.GameObject
 
 local m_nation_award = 0;
 local m_SelectNation = 0;
+local m_audioID = 0;
 -- 打开界面
 function CreateDlgOpen()
 	m_Dlg = eye.uiManager:Open( "CreateDlg" );
@@ -19,6 +21,9 @@ function CreateDlgClose()
 	end
 	
 	eye.uiManager:Close( "CreateDlg" );
+	eye.audioManager:SetChannelVolume(2,0.7)
+	eye.audioManager:Stop(m_audioID);
+	InvokeStop("CreateDlgInvoke")
 end
 
 -- 删除界面
@@ -39,7 +44,11 @@ function CreateDlgOnEvent( nType, nControlID, value, gameObject )
 			CreateDlgSelect( nControlID )
 		elseif nControlID == 10 then
 			CreateDlgCreate()
-        end
+    end
+   elseif nType == UI_EVENT_TWEENFINISH then
+		if nControlID == 0 then
+			SetFalse(m_uiOpeningSpeech)
+		end
 	end
 end
 
@@ -51,6 +60,7 @@ function CreateDlgOnAwake( gameObject )
 	m_uiShuTalkPanel = objs[1];
 	m_uiWuTalkPanel = objs[2];
 	m_uiAward = objs[3];
+	m_uiOpeningSpeech = objs[4];
 end
 
 -- 界面初始化时调用
@@ -84,8 +94,11 @@ end
 ----------------------------------------
 function CreateDlgShow( nation_award )
 	CreateDlgOpen();
+	eye.audioManager:SetChannelVolume(2,0.3)
 	m_nation_award = nation_award;
-	CreateDlgSelect(nation_award);
+	local uiTypeWriter = m_uiOpeningSpeech.transform:Find("Text"):GetComponent( typeof(TypeWriter) );
+	uiTypeWriter:Play();
+	uiTypeWriter.onFinish = CreateDlgTypeWriterFinish;
 end
 
 function CreateDlgSelect( nation )	
@@ -96,14 +109,19 @@ function CreateDlgSelect( nation )
 	if nation == 1 then
 		m_uiWeiTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiWeiTalkPanel,nation);
+		m_audioID = 450
 	elseif nation == 2 then
 		m_uiShuTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiShuTalkPanel,nation);
+		m_audioID = 451
 	elseif nation == 3 then
 		m_uiWuTalkPanel:SetActive( true );
 		CreateDlgSetAward(m_uiWuTalkPanel,nation);
+		m_audioID = 452
 	end
+	eye.audioManager:Play(m_audioID);
 end
+
 function CreateDlgSetAward( gameObj,nation )
 	local uiAward=gameObj.transform:Find("SelectNation");
 	if nation == m_nation_award then
@@ -112,8 +130,15 @@ function CreateDlgSetAward( gameObj,nation )
 	else
 		SetFalse( uiAward );
 	end
-	
 end	
+
+function CreateDlgTypeWriterFinish()
+	Invoke( function()
+		m_uiOpeningSpeech.transform:GetComponent( typeof(UITweenFade) ):Play(true);
+		CreateDlgSelect(m_nation_award);
+	end, 2, nil, "CreateDlgInvoke" );	
+end
+
 function CreateDlgCreate()
 	if m_SelectNation <= 0 then
 		return;
