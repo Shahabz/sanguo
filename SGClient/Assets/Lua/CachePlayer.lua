@@ -99,9 +99,8 @@ function Player:Init()
 	self.m_blacklist		= 	{};
 	self.m_buff_endtime		= 	{};
 	self.m_bufftrain		= 	{};
-	self.m_open_town3		=	0;
-	self.m_open_town6		=	0;
-	self.m_open_townking	=	0;
+	self.m_open_zone_sili	=	0;
+	self.m_open_zone_luoyang=	0;
 	self.m_shape_bag		=	0;
 	
 	self.m_view_zoneid		=	0;
@@ -162,9 +161,8 @@ function Player:Set( recvValue )
 		self.m_buff_endtime[i-1] = recvValue.m_buff_endtime[i]
 	end
 	self.m_bufftrain		= 	recvValue.m_bufftrain
-	self.m_open_town3		=	recvValue.m_open_town3;
-	self.m_open_town6		=	recvValue.m_open_town6;
-	self.m_open_townking	=	recvValue.m_open_townking;
+	self.m_open_zone_sili		=	recvValue.m_open_zone_sili;
+	self.m_open_zone_luoyang	=	recvValue.m_open_zone_luoyang;
 	self.m_shape_bag		=	recvValue.m_shape_bag;
 end
 

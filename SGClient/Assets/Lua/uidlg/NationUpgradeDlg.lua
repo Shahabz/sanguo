@@ -128,8 +128,8 @@ function NationUpgradeDlgShowRecv( recvValue )
 		SetText( m_uiWarn, T(1770) )
 		return
 		
-	-- 还没开启皇城
-	elseif m_recvValue.m_level == 3 and m_recvValue.m_exp >= g_nation_upgrade[m_recvValue.m_level][1].maxexp and GetPlayer().m_open_townking == 0 then
+	-- 还没开启司隶
+	elseif m_recvValue.m_level == 3 and m_recvValue.m_exp >= g_nation_upgrade[m_recvValue.m_level][1].maxexp and GetPlayer().m_open_zone_luoyang == 0 then
 		SetButtonFalse( m_uiUpgradeBtn )
 		SetFalse( m_uiCost )
 		SetFalse( m_uiAward )

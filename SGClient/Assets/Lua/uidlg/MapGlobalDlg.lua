@@ -93,7 +93,7 @@ end
 function MapGlobalDlgShow()
 	MapGlobalDlgOpen()
 	
-	-- 皇城未开启
+	--[[-- 皇城未开启
 	if GetPlayer().m_open_townking <= 0 then
 		-- 如果郡城已经攻克，只能看见对应州城和对应郡城
 		if GetPlayer().m_open_town3 > 0 then
@@ -124,6 +124,27 @@ function MapGlobalDlgShow()
 		end
 	else
 		-- 皇城已经开启
+		for zoneid,v in pairs(m_uiTownBtnList) do
+			SetButtonTrue( v )
+			SetGray( v.transform:Find("Back"), false )
+			SetTextColor( v.transform:Find("Text"), Hex2Color(0xFFDE00FF) )
+		end
+	end--]]
+	
+	-- 司隶没开启
+	if GetPlayer().m_open_zone_sili == 0 then
+		for zoneid,v in pairs(m_uiTownBtnList) do
+			if GetPlayer().m_zone == 5 then
+				SetButtonFalse( v )
+				SetGray( v.transform:Find("Back"), true )
+				SetTextColor( v.transform:Find("Text"), Hex2Color(0xC1C1C1FF) )
+			else
+				SetButtonTrue( v )
+				SetGray( v.transform:Find("Back"), false )
+				SetTextColor( v.transform:Find("Text"), Hex2Color(0xFFDE00FF) )
+			end
+		end
+	else
 		for zoneid,v in pairs(m_uiTownBtnList) do
 			SetButtonTrue( v )
 			SetGray( v.transform:Find("Back"), false )

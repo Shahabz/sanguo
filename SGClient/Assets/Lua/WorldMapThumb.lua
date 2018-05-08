@@ -99,7 +99,7 @@ function WorldMapThumb.Start( Prefab )
 	-- 获取单元
 	local areaupdate = 1;
 	-- 当前所在区域
-	local zoneid = WorldMapThumb.m_nZoneID
+	--[[local zoneid = WorldMapThumb.m_nZoneID
 	
 	-- 如果皇城开启，哪都可以看到
 	if GetPlayer().m_open_townking <= 0 then
@@ -116,7 +116,7 @@ function WorldMapThumb.Start( Prefab )
 				areaupdate = 0
 			end
 		end
-	end
+	end--]]
 	
 	if areaupdate == 1 then
 		-- 获取玩家信息

@@ -191,10 +191,9 @@ struct _slk_NetS_ActorInfo {
 	int m_storyid;	//服务器发送玩家基本信息-副本进度
 	short m_posx;	//服务器发送玩家基本信息-副本进度
 	short m_posy;	//服务器发送玩家基本信息-副本进度
-	char m_open_town6;	//服务器发送玩家基本信息-州城开启
-	char m_open_townking;	//服务器发送玩家基本信息-皇城开启
+	char m_open_zone_sili;	//服务器发送玩家基本信息-司隶开启
+	char m_open_zone_luoyang;	//服务器发送玩家基本信息-洛阳开启
 	char m_game_day_loop;	//服务器发送玩家基本信息-天气
-	char m_open_town3;	//服务器发送玩家基本信息-攻克郡城
 	int m_shape_bag;	//服务器发送玩家基本信息-头像背包
 	short m_bufftrain;	//服务器发送玩家基本信息-武卒官加速
 };
@@ -1917,9 +1916,8 @@ struct _slk_NetS_NationCandidateList {
 typedef struct _slk_NetS_NationCandidateList SLK_NetS_NationCandidateList;	//国家官员候选人列表
 
 struct _slk_NetS_WorldDataOpen {
-	char m_open_town3;	//是否攻占郡城
-	char m_open_town6;	//州城是否开放
-	char m_open_townking;	//皇城是否开放
+	char m_open_zone_sili;	//司隶是否开放
+	char m_open_zone_luoyang;	//洛阳是否开放
 };
 typedef struct _slk_NetS_WorldDataOpen SLK_NetS_WorldDataOpen;	//世界数据开放
 

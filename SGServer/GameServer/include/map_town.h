@@ -2,21 +2,17 @@
 #define _MAP_TOWN_H_
 #include "define.h"
 
-#define MAPUNIT_TYPE_TOWN_TYPE1  1
-#define MAPUNIT_TYPE_TOWN_TYPE2  2
-#define MAPUNIT_TYPE_TOWN_TYPE3  3
-#define MAPUNIT_TYPE_TOWN_TYPE4  4
-#define MAPUNIT_TYPE_TOWN_TYPE5  5
-#define MAPUNIT_TYPE_TOWN_TYPE6  6
-#define MAPUNIT_TYPE_TOWN_TYPE7  7 // 名城
-#define MAPUNIT_TYPE_TOWN_TYPE8  8 // 都城
-#define MAPUNIT_TYPE_TOWN_TYPE9  9 // 皇城
+#define MAPUNIT_TYPE_TOWN_XIAN		1	// 县
+#define MAPUNIT_TYPE_TOWN_JUN		2	// 郡
+#define MAPUNIT_TYPE_TOWN_ZHISUO	3	// 治所
+#define MAPUNIT_TYPE_TOWN_ZHFD		4	// 诸侯封地
+#define MAPUNIT_TYPE_TOWN_GJFD		5	// 国家封地
+#define MAPUNIT_TYPE_TOWN_LUOYANG	6	// 洛阳
+#define MAPUNIT_KING_TOWNID			200		// 洛阳
 
-#define MAPUNIT_KING_TOWNID 500
-
-#define MAP_TOWN_JOIN_MAX	128	// 参战人员
-#define MAP_TOWN_MONSTER_MAX	16	// 守卫数量
-#define MAP_TOWN_UNDERFIRE_GROUP_MAX 4
+#define MAP_TOWN_JOIN_MAX				128	// 参战人员
+#define MAP_TOWN_MONSTER_MAX			16	// 守卫数量
+#define MAP_TOWN_UNDERFIRE_GROUP_MAX	4
 
 int map_town_load();
 int map_town_save( FILE *fp );

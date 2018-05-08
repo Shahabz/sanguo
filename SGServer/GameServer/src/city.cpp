@@ -3624,7 +3624,7 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 	char boss1_complete = 0;
 	char boss2_complete = 0;
 	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS1, NULL ) == 1 )
-	{ // 如果已经完成了世界任务张角
+	{ // 如果已经完成了世界任务虎牢关
 		boss1_complete = 1;
 	}
 	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS2, NULL ) == 1 )
@@ -3642,10 +3642,10 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		{ // 全部地区已经解锁
 			for ( short tmp_zoneid = 1; tmp_zoneid < g_zoneinfo_maxnum; tmp_zoneid++ )
 			{
-				if ( g_zoneinfo[tmp_zoneid].open == 0 )
-					continue;
-				if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
-					continue;
+				//if ( g_zoneinfo[tmp_zoneid].open == 0 )
+				//	continue;
+				//if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
+				//	continue;
 				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
 					continue;
 				zoneidlist[zoneidcount] = tmp_zoneid;
@@ -3659,8 +3659,8 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 				int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
 				if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
 					continue;
-				if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
-					continue;
+				//if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
+				//	continue;
 				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
 					continue;
 				zoneidlist[zoneidcount] = tmp_zoneid;
@@ -3702,11 +3702,11 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		char zoneid = map_zone_getid( posx, posy );
 		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 			return -1;
-		if ( g_zoneinfo[zoneid].open == 0 )
+		/*if ( g_zoneinfo[zoneid].open == 0 )
 		{
 			actor_notify_alert( actor_index, 1365 );
 			return -1;
-		}
+		}*/
 		if ( boss2_complete == 1 )
 		{ // 全部地区已经解锁
 			
@@ -3737,13 +3737,13 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			}
 		}
 
-		if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
-		{ // 需要玩家等级{0}才可迁移到该地图
-			char v1[32] = { 0 };
-			sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
-			actor_notify_alert_v( actor_index, 1366, v1, NULL );
-			return -1;
-		}
+		//if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
+		//{ // 需要玩家等级{0}才可迁移到该地图
+		//	char v1[32] = { 0 };
+		//	sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
+		//	actor_notify_alert_v( actor_index, 1366, v1, NULL );
+		//	return -1;
+		//}
 		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
 		{ // 需要击败{ 0 }级流寇才可迁移到该地图
 			char v1[32] = { 0 };
@@ -3851,12 +3851,12 @@ int city_move( City *pCity, short posx, short posy )
 
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-		if ( map_zone_gettype( pCity->zone ) == MAPZONE_TYPE1 )
+		if ( map_zone_gettype( pCity->zone ) == MAPZONE_TYPE_SILI )
 		{
 			if ( actor_get_sflag( pCity->actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC ) == 0 )
 			{
 				actor_set_sflag( pCity->actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC, 1 );
-				// 隐藏前往州城按钮
+				// 隐藏前往司隶按钮
 				int value = 0;
 				actor_notify_value( pCity->actor_index, NOTIFY_MAPZONEGOZC, 1, &value, NULL );
 			}

@@ -45,12 +45,14 @@ function MapZoneDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 世界地图
 		elseif nControlID == 1 then
-			if GetPlayer().m_open_town3 > 0 then
+			MapZoneDlgClose()
+			MapGlobalDlgShow()
+			--[[if GetPlayer().m_open_town3 > 0 then
 				MapZoneDlgClose()
 				MapGlobalDlgShow()
 			else
 				WorldMapThumb.Alert( T(2367) )
-			end
+			end--]]
 			
 		-- 显示玩家
 		elseif nControlID == 10 then
@@ -118,21 +120,23 @@ function MapZoneDlgShow( zoneid )
 
 	-- 显示缩略图
 	WorldMapThumb.Create( zoneid );
+	SetGray( m_uiGlobalBtn.transform:Find("Back"), false )
+	SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(1004) )
 	-- 郡城被攻克
-	if GetPlayer().m_open_town3 > 0 then
+	--[[if GetPlayer().m_open_town3 > 0 then
 		SetGray( m_uiGlobalBtn.transform:Find("Back"), false )
 		SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(1004) )
 	else
 		SetGray( m_uiGlobalBtn.transform:Find("Back"), true )
 		SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(601) )
-	end
+	end--]]
 	
 	-- 如果未开放
-	if g_zoneinfo[zoneid].open == 0 then
+	--[[if g_zoneinfo[zoneid].open == 0 then
 		SetFalse( m_uiNation )
 		SetTrue( m_uiWarn )
 		SetText( m_uiWarn, T(937) )	
-	end
+	end--]]
 end
 -- 设置所属国家
 function MapZoneDlgSetNation( nation )

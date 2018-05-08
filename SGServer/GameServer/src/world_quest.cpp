@@ -44,9 +44,8 @@ extern int g_zoneinfo_maxnum;
 int *g_world_questlist = NULL;
 int g_world_questid = 0;
 
-char g_open_town3 = 0;
-char g_open_town6 = 0;
-char g_open_townking = 0;
+char g_open_zone_sili = 0;
+char g_open_zone_luoyang = 0;
 
 int worldquest_init()
 {
@@ -159,9 +158,8 @@ int worldquest_setvalue( int questid, int value )
 	}
 	world_data_set( WORLD_DATA_WORLDQUEST_BASE + saveindex, value, NULL, NULL );
 
-	g_open_town3 = worldquest_check_server( WORLDQUEST_ID6 );
-	g_open_town6 = worldquest_check_server( WORLDQUEST_ID9 );
-	g_open_townking = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
+	g_open_zone_sili = worldquest_check_server( WORLDQUEST_WORLDBOSS1 );
+	g_open_zone_luoyang = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
 
 	if ( questid == WORLDQUEST_WORLDBOSS1 || questid == WORLDQUEST_WORLDBOSS2 )
 	{
@@ -175,13 +173,17 @@ int worldquest_setvalue( int questid, int value )
 			}
 		}
 
-		if ( questid == WORLDQUEST_WORLDBOSS2 )
-		{ // 皇城开启
-			worldquest_updateopen();
-			// 刷皇城野怪和资源点
+		if ( questid == WORLDQUEST_WORLDBOSS1 )
+		{// 击败虎牢关-刷司隶野怪和资源点
 			brush_enemy_queue_add( 0, MAPZONE_CENTERID );
 			brush_enemy_queue_add( 1, MAPZONE_CENTERID );
 		}
+		else if ( questid == WORLDQUEST_WORLDBOSS2 )
+		{ // 击败董卓-开启血战皇城
+			kingwar_activity_open();
+		}
+		// 更新
+		worldquest_updateopen();
 	}
 	else
 	{
@@ -195,30 +197,13 @@ int worldquest_setvalue( int questid, int value )
 		}
 
 		if ( questid == WORLDQUEST_ID6 )
-		{// 攻克郡城
+		{// 攻克治所
 			// 开放官员系统
 			nation_official_open();
-			worldquest_updateopen(); 
 			// 开启天气系统
 			weather_open();
-			// 刷州城野怪和资源点
-			for ( int zoneid = 1; zoneid < g_zoneinfo_maxnum; zoneid++ )
-			{
-				if ( g_zoneinfo[zoneid].open == 1 )
-				{
-					brush_enemy_queue_add( 0, zoneid );
-					brush_enemy_queue_add( 1, zoneid );
-				}
-			}
-		}
-		else if ( questid == WORLDQUEST_ID9 )
-		{ // 攻克州城
+			// 更新
 			worldquest_updateopen();
-		}
-		else if ( questid == WORLDQUEST_WORLDBOSS2 )
-		{ // 击杀董卓、
-			// 开启血战皇城
-			kingwar_activity_open();
 		}
 	}
 	return 0;
@@ -360,10 +345,10 @@ int worldquest_sendinfo( int actor_index )
 	}
 	netsend_worldquest_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
-	// 是否需要通知前往州城
+	// 是否需要通知前往司隶
 	if ( pValue.m_questid == 0 )
 	{
-		map_zone_goto_zc_send( actor_index );
+		map_zone_goto_sili_send( actor_index );
 	}
 
 	// 是否需要通知血战皇城
@@ -400,7 +385,7 @@ int worldquest_getaward( int actor_index, int questid )
 		return -1;
 
 	char dd = 1;
-	if ( questid == WORLDQUEST_ID4 || questid == WORLDQUEST_ID5 || questid == WORLDQUEST_ID6 || questid == WORLDQUEST_ID8 || questid == WORLDQUEST_ID9 )
+	if ( questid == WORLDQUEST_ID4 || questid == WORLDQUEST_ID5 || questid == WORLDQUEST_ID6 )
 	{
 		int saveindex = g_worldquestinfo[questid].saveindex;
 		if ( saveindex >= 0 && saveindex < 16 )
@@ -428,9 +413,8 @@ int worldquest_getaward( int actor_index, int questid )
 int worldquest_updateopen()
 {
 	SLK_NetS_WorldDataOpen pValue = { 0 };
-	pValue.m_open_town3 = g_open_town3;
-	pValue.m_open_town6 = g_open_town6;
-	pValue.m_open_townking = g_open_townking;
+	pValue.m_open_zone_sili = g_open_zone_sili;
+	pValue.m_open_zone_luoyang = g_open_zone_luoyang;
 	netsend_worlddataopen_S( 0, SENDTYPE_WORLD, &pValue );
 	return 0;
 }

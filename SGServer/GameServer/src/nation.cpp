@@ -65,9 +65,8 @@ extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 extern int g_map_town_maxindex;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang;
 
 extern NationUpgrade *g_nation_upgrade;
 extern int g_nation_upgrade_maxnum;
@@ -267,7 +266,7 @@ int nation_people_capital_calc( int nation )
 	{
 		if ( g_towninfo[townid].id <= 0 )
 			continue;
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_GJFD )
 		{
 			if ( nation == g_map_town[townid].nation )
 			{
@@ -506,7 +505,7 @@ int nation_upgrade( char nation )
 		return -1;
 	if ( pNation->level == 3 )
 	{
-		if ( g_open_townking == 0 )
+		if ( g_open_zone_luoyang == 0 )
 		{// 需要击杀董卓后升级
 			return -1;
 		}
@@ -634,7 +633,7 @@ int nation_build( int actor_index )
 		return -1;
 	if ( pNation->level == 3 && pNation->exp >= g_nation_upgrade[pNation->level].config[1].maxexp )
 	{
-		if ( g_open_townking == 0 )
+		if ( g_open_zone_luoyang == 0 )
 		{// 需要击杀董卓后升级
 			actor_notify_alert( actor_index, 1891 );
 			return -1;
@@ -768,7 +767,7 @@ int nation_town_sendlist( int actor_index )
 			continue;
 		if ( g_map_town[townid].zoneid != pCity->zone )
 			continue;
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
 			continue;
 
 		map_town_info_makestruct( &pValue.m_list[pValue.m_count].m_info, &g_map_town[townid], pCity->actorid, 0 );

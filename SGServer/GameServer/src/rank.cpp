@@ -53,11 +53,11 @@ int rank_init()
 	// 全服排行榜
 	g_rank_server = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
 
-	// 区域排行榜
+	// 州地排行榜
 	for ( int tmpi = 1; tmpi < MAPZONE_MAXNUM; tmpi++ )
 	{
-		if ( g_zoneinfo[tmpi].open == 0 )
-			continue;
+		//if ( g_zoneinfo[tmpi].open == 0 )
+		//	continue;
 		g_rank_zone[tmpi] = (ActorRank*)malloc( sizeof( ActorRank )*g_city_maxcount );
 		memset( g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );
 		g_rank_zone_count[tmpi] = 0;
@@ -140,8 +140,8 @@ int rank_server()
 	// 区域排行榜
 	for ( int tmpi = 1; tmpi < MAPZONE_MAXNUM; tmpi++ )
 	{
-		if ( g_zoneinfo[tmpi].open == 0 )
-			continue;
+		//if ( g_zoneinfo[tmpi].open == 0 )
+		//	continue;
 		if ( g_rank_zone[tmpi] )
 		{
 			memset( g_rank_zone[tmpi], 0, sizeof( ActorRank )*g_city_maxcount );

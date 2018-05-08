@@ -1038,7 +1038,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				mail_fight( mailid, pArmyCity->actorid, pFight->unit_json );
 
 				// 记录
-				if ( g_towninfo[townid].type >= MAPUNIT_TYPE_TOWN_TYPE1 && g_towninfo[townid].type <= MAPUNIT_TYPE_TOWN_TYPE7 )
+				if ( g_towninfo[townid].type >= MAPUNIT_TYPE_TOWN_XIAN && g_towninfo[townid].type <= MAPUNIT_TYPE_TOWN_ZHFD )
 				{
 					data_record_addvalue( pArmyCity, 2+g_towninfo[townid].type, 1 );
 				}
@@ -1149,29 +1149,21 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		sprintf( v5, "%s%d", TAG_NATION, g_map_town[townid].nation );
 		system_talkjson( 0, pTown->nation, 6001, v1, v2, v3, v5, v4, NULL, 1 );
 
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE1 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_XIAN )
 		{
 			worldquest_setvalue( WORLDQUEST_ID4, attackNation );
 		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE2 )
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_JUN )
 		{
 			worldquest_setvalue( WORLDQUEST_ID5, attackNation );
 		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 )
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO )
 		{
 			worldquest_setvalue( WORLDQUEST_ID6, attackNation );
 		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE5 )
-		{
-			worldquest_setvalue( WORLDQUEST_ID8, attackNation );
-		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 )
-		{
-			worldquest_setvalue( WORLDQUEST_ID9, attackNation );
-		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 )
-		{// 如果是名城池，那么一个国家只能有7个
-			if ( nation_town_num( attackNation, MAPUNIT_TYPE_TOWN_TYPE7 ) >= 7 )
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD )
+		{// 如果是诸侯封地，那么一个国家只能有7个
+			if ( nation_town_num( attackNation, MAPUNIT_TYPE_TOWN_ZHFD ) >= 7 )
 			{
 				system_talkjson( 0, attackNation, 6002, v1, v2, v3, v4, NULL, NULL, 1 );
 
@@ -1182,31 +1174,31 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				attackNation = 0;
 			}
 
-			// 如果是都城直属名城
-			int capid = 0;
-			for ( int tmpid = 301; tmpid <= 304; tmpid++ )
-			{
-				for ( int tmpi = 0; tmpi < 8; tmpi++ )
-				{
-					if ( townid == g_map_town[tmpid].pre_townid[tmpi] )
-					{
-						capid = tmpid;
-						break;;
-					}
-				}
-				if ( capid > 0 )
-					break;
-			}
-			if ( capid > 0 )
-			{
-				map_town_dev_addexp( capid, global.town_dev_occupytown );
-			}
+			//// 如果是都城直属名城
+			//int capid = 0;
+			//for ( int tmpid = 301; tmpid <= 304; tmpid++ )
+			//{
+			//	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+			//	{
+			//		if ( townid == g_map_town[tmpid].pre_townid[tmpi] )
+			//		{
+			//			capid = tmpid;
+			//			break;;
+			//		}
+			//	}
+			//	if ( capid > 0 )
+			//		break;
+			//}
+			//if ( capid > 0 )
+			//{
+			//	map_town_dev_addexp( capid, global.town_dev_occupytown );
+			//}
 		}
-		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+		else if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_GJFD )
 		{ // 如果是都城
 			nation_capital_townid( attackNation, townid );
 			nation_people_capital_set( attackNation, 0 );
-			map_town_attack_checkstart();
+			//map_town_attack_checkstart();
 		}
 		
 		if ( notify == 0 )
@@ -1263,7 +1255,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, pTown->nation );
 
 		// 核心建筑决定地区归属
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
 		{
 			map_zone_setnation( map_zone_getid( g_towninfo[townid].posx, g_towninfo[townid].posy ), pTown->nation );
 		}
@@ -1536,38 +1528,38 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 
 	char zonetype = map_zone_gettype( pCity->zone );
 	char target_zonetype = map_zone_gettype( (char)g_towninfo[townid].zoneid );
-	if ( zonetype == MAPZONE_TYPE0 )
-	{ // 我在郡城
+	if ( zonetype == MAPZONE_TYPE_ZHOU )
+	{ // 我在州地
 		if ( pCity->zone != g_towninfo[townid].zoneid )
 		{
-			actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
+			actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的州无法对该州宣战
 			return -1;
 		}
 	}
-	else if ( zonetype == MAPZONE_TYPE1 )
-	{ // 我在州城
-		if ( target_zonetype != MAPZONE_TYPE1 )
-		{ // 对方不在州城
-			if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
-			{
-				actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
-				return -1;
-			}
-		}
-	}
-	else if ( zonetype == MAPZONE_TYPE1 )
-	{ // 我在皇城
-		if ( target_zonetype == MAPZONE_TYPE0 || target_zonetype == MAPZONE_TYPE1 )
-		{
-			if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
-			{
-				actor_notify_alert( actor_index, 2366 );// 需要官员特殊战事权才可对该地图据点宣战
-				return -1;
-			}
-		}
-	}
+	//else if ( zonetype == MAPZONE_TYPE1 )
+	//{ // 我在司隶
+	//	if ( target_zonetype != MAPZONE_TYPE1 )
+	//	{ // 对方不在州城
+	//		if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
+	//		{
+	//			actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
+	//			return -1;
+	//		}
+	//	}
+	//}
+	//else if ( zonetype == MAPZONE_TYPE1 )
+	//{ // 我在皇城
+	//	if ( target_zonetype == MAPZONE_TYPE0 || target_zonetype == MAPZONE_TYPE1 )
+	//	{
+	//		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
+	//		{
+	//			actor_notify_alert( actor_index, 2366 );// 需要官员特殊战事权才可对该地图据点宣战
+	//			return -1;
+	//		}
+	//	}
+	//}
 
-	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD )
 	{
 		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
 		{
@@ -1598,9 +1590,9 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 			return -1;
 		}
 	}
-	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE7 && g_map_town[townid].nation == 0 )
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD && g_map_town[townid].nation == 0 )
 	{// 如果是名城池，那么一个国家只能有7个
-		if ( nation_town_num( pCity->nation, MAPUNIT_TYPE_TOWN_TYPE7 ) >= 7 )
+		if ( nation_town_num( pCity->nation, MAPUNIT_TYPE_TOWN_ZHFD ) >= 7 )
 		{
 			actor_notify_alert( actor_index, 1363 );
 			return -1;

@@ -43,9 +43,8 @@ extern int g_towninfo_maxnum;
 extern MapTown *g_map_town;
 extern int g_map_town_maxcount;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang; 
 
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
@@ -93,10 +92,7 @@ int map_zone_load()
 		g_map_zone[zoneid].zoneid = zoneid;
 		g_map_zone[zoneid].unit_head = -1;
 		g_map_zone[zoneid].unit_tail = -1;
-		if ( g_zoneinfo[zoneid].open == 1 )
-		{
-			g_map_zone[zoneid].allow = 1;
-		}
+		g_map_zone[zoneid].allow = 1;
 	}
 	map_zone_load_auto( map_zone_getptr, map_zone_loadcb, "map_zone" );
 	return 0;
@@ -650,8 +646,8 @@ int map_zone_center_townchange( int townid )
 	return 0;
 }
 
-// 显示前往州城按钮
-int map_zone_goto_zc_send( int actor_index )
+// 显示前往司隶按钮
+int map_zone_goto_sili_send( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -660,7 +656,7 @@ int map_zone_goto_zc_send( int actor_index )
 	char cur_zoneid = pCity->zone;
 	if ( cur_zoneid <= 0 || cur_zoneid >= g_zoneinfo_maxnum )
 		return -1;
-	if ( g_zoneinfo[cur_zoneid].type != MAPZONE_TYPE0 )
+	if ( g_zoneinfo[cur_zoneid].type != MAPZONE_TYPE_ZHOU )
 		return -1;
 	
 	int value = 1;
@@ -668,8 +664,8 @@ int map_zone_goto_zc_send( int actor_index )
 	return 0;
 }
 
-// 前往州城
-int map_zone_goto_zc( int actor_index )
+// 前往司隶
+int map_zone_goto_sili( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	City *pCity = city_getptr( actor_index );
@@ -693,7 +689,7 @@ int map_zone_goto_zc( int actor_index )
 		int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
 		if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
 			continue;
-		if ( g_zoneinfo[tmp_zoneid].type == MAPZONE_TYPE1 )
+		if ( g_zoneinfo[tmp_zoneid].type == MAPZONE_TYPE_SILI )
 		{
 			goto_zoneid = tmp_zoneid;
 			break;
@@ -706,13 +702,13 @@ int map_zone_goto_zc( int actor_index )
 
 	short move_posx = -1;
 	short move_posy = -1;
-	if ( pCity->level < g_zoneinfo[goto_zoneid].actorlevel )
-	{ // 需要玩家等级{0}才可迁移到该地图
-		char v1[32] = { 0 };
-		sprintf( v1, "%d", g_zoneinfo[goto_zoneid].actorlevel );
-		actor_notify_alert_v( actor_index, 1366, v1, NULL );
-		return -1;
-	}
+	//if ( pCity->level < g_zoneinfo[goto_zoneid].actorlevel )
+	//{ // 需要玩家等级{0}才可迁移到该地图
+	//	char v1[32] = { 0 };
+	//	sprintf( v1, "%d", g_zoneinfo[goto_zoneid].actorlevel );
+	//	actor_notify_alert_v( actor_index, 1366, v1, NULL );
+	//	return -1;
+	//}
 	if ( pCity->mokilllv < g_zoneinfo[goto_zoneid].killenemy )
 	{ // 需要击败{ 0 }级流寇才可迁移到该地图
 		char v1[32] = { 0 };
@@ -726,7 +722,7 @@ int map_zone_goto_zc( int actor_index )
 	city_move( pCity, move_posx, move_posy );
 
 	actor_set_sflag( actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC, 1 );
-	// 隐藏前往州城按钮
+	// 隐藏前往司隶按钮
 	int value = 0;
 	actor_notify_value( actor_index, NOTIFY_MAPZONEGOZC, 1, &value, NULL );
 	return 0;

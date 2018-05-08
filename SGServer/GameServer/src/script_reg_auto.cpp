@@ -42,9 +42,8 @@ extern int g_map_res_maxcount;
 extern MapEvent *g_map_event;
 extern int g_map_event_maxcount;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang;
 
 extern lua_State* servL;
 
@@ -100,9 +99,8 @@ static int lua_c_brush_enemy_queue_add( lua_State *servL );
 static int lua_c_city_baseinfo( lua_State *servL );
 static int lua_c_world_data_get( lua_State *servL );
 static int lua_c_world_data_set( lua_State *servL );
-static int lua_c_get_open_town3( lua_State *servL );
-static int lua_c_get_open_town6( lua_State *servL );
-static int lua_c_get_open_townking( lua_State *servL );
+static int lua_c_get_open_zone_sili( lua_State *servL );
+static int lua_c_get_open_zone_luoyang( lua_State *servL );
 static int lua_c_system_getruntime( lua_State *servL );
 static int lua_c_system_getopentime( lua_State *servL );
 static int lua_c_system_getfday( lua_State *servL );
@@ -165,9 +163,8 @@ void lua_func_register()
 	lua_register( servL, "c_city_baseinfo", lua_c_city_baseinfo );
 	lua_register( servL, "c_world_data_get", lua_c_world_data_get );
 	lua_register( servL, "c_world_data_set", lua_c_world_data_set );
-	lua_register( servL, "c_get_open_town3", lua_c_get_open_town3 );
-	lua_register( servL, "c_get_open_town6", lua_c_get_open_town6 );
-	lua_register( servL, "c_get_open_townking", lua_c_get_open_townking );
+	lua_register( servL, "c_get_open_zone_sili", lua_c_get_open_zone_sili );
+	lua_register( servL, "c_get_open_zone_luoyang", lua_c_get_open_zone_luoyang );
 	lua_register( servL, "c_system_getruntime", lua_c_system_getruntime );
 	lua_register( servL, "c_system_getopentime", lua_c_system_getopentime );
 	lua_register( servL, "c_system_getfday", lua_c_system_getfday );
@@ -1380,9 +1377,10 @@ static int lua_c_city_baseinfo( lua_State *servL )
 	lua_pushinteger( servL, zone );
 	return 6;
 }
-static int lua_c_get_open_town3( lua_State *servL )
+
+static int lua_c_get_open_zone_sili( lua_State *servL )
 {
-	int num = lua_gettop( servL );
+	int num = lua_gettop(servL);
 	if ( num != 0 )
 	{
 		char szErrorMsg[128];
@@ -1392,14 +1390,14 @@ static int lua_c_get_open_town3( lua_State *servL )
 		return 0;
 	}
 	//--Process script
-	short value = g_open_town3;
+	short value = g_open_zone_sili;
 	lua_pushinteger( servL, value );
 	return 1;
 }
 
-static int lua_c_get_open_town6( lua_State *servL )
+static int lua_c_get_open_zone_luoyang( lua_State *servL )
 {
-	int num = lua_gettop( servL );
+	int num = lua_gettop(servL);
 	if ( num != 0 )
 	{
 		char szErrorMsg[128];
@@ -1409,27 +1407,8 @@ static int lua_c_get_open_town6( lua_State *servL )
 		return 0;
 	}
 	//--Process script
-	short value = g_open_town6;
+	short value = g_open_zone_luoyang;
 	lua_pushinteger( servL, value );
 	return 1;
 }
-
-static int lua_c_get_open_townking( lua_State *servL )
-{
-	int num = lua_gettop( servL );
-	if ( num != 0 )
-	{
-		char szErrorMsg[128];
-		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
-		lua_pushstring( servL, szErrorMsg );
-		lua_error( servL );
-		return 0;
-	}
-	//--Process script
-	short value = g_open_townking;
-	lua_pushinteger( servL, value );
-	return 1;
-}
-
-
 

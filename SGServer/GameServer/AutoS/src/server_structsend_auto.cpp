@@ -299,10 +299,9 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_storyid, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_zone_sili, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_zone_luoyang, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town3, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_shape_bag, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_bufftrain, (*psize) );
 	return 0;
@@ -2804,9 +2803,8 @@ int struct_NetS_WorldDataOpen_send( char **pptr, int *psize, SLK_NetS_WorldDataO
 {
 	int tmpi = 0;
 
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town3, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_town6, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_townking, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_zone_sili, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_open_zone_luoyang, (*psize) );
 	return 0;
 }
 

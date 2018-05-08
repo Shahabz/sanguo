@@ -102,7 +102,7 @@ int map_town_loadcb( int townid )
 	map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, g_map_town[townid].nation );
 
 	// 核心建筑决定地区归属
-	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
 	{
 		map_zone_setnation( g_map_town[townid].zoneid, g_map_town[townid].nation );
 	}
@@ -156,7 +156,7 @@ int map_town_load()
 		map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, g_map_town[townid].nation );
 
 		// 核心建筑决定地区归属
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE3 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE6 || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE9 )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
 		{
 			map_zone_setnation( g_map_town[townid].zoneid, g_map_town[townid].nation );
 		}
@@ -374,7 +374,7 @@ void map_town_logic( int townid )
 	}
 	
 	// 主动出击
-	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 && g_map_town[townid].attackcd > 0 )
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_GJFD && g_map_town[townid].attackcd > 0 )
 	{
 		g_map_town[townid].attackcd -= 1;
 		if ( g_map_town[townid].attackcd <= 0 )
@@ -1016,7 +1016,7 @@ int map_town_attack_checkstart()
 		int ylist[4] = { 0, 1, 2, 3 };
 		for ( int nation = 0; nation < 3; nation++ )
 		{
-			xlist[nation] = nation_town_num( nation, MAPUNIT_TYPE_TOWN_TYPE7 );
+			xlist[nation] = nation_town_num( nation, MAPUNIT_TYPE_TOWN_ZHFD );
 		}
 		for ( int tmpi = 0; tmpi < 4; tmpi++ )
 		{
@@ -1041,7 +1041,7 @@ int map_town_attack_checkstart()
 			int capital_townid = nation_capital_townid_get( nation );
 			if ( capital_townid <= 0 || capital_townid >= g_map_town_maxcount )
 				continue;
-			if ( g_towninfo[capital_townid].type != MAPUNIT_TYPE_TOWN_TYPE8 )
+			if ( g_towninfo[capital_townid].type != MAPUNIT_TYPE_TOWN_GJFD )
 				continue;
 			g_map_town[capital_townid].attackcd = global.town_attackcd + (tmpi * 3600);
 		}
@@ -1054,7 +1054,7 @@ int map_town_attack( int townid )
 {
 	if ( townid <= 0 || townid >= g_map_town_maxcount )
 		return -1;
-	if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_TYPE8 )
+	if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_GJFD )
 		return -1;
 	int to_townid = 0;
 
@@ -1087,7 +1087,7 @@ int map_town_attack( int townid )
 		{
 			if ( g_towninfo[id].id <= 0 )
 				continue;
-			if ( g_towninfo[id].type != MAPUNIT_TYPE_TOWN_TYPE7 )
+			if ( g_towninfo[id].type != MAPUNIT_TYPE_TOWN_ZHFD )
 				continue;
 			if ( g_map_town[id].nation == g_map_town[townid].nation )
 				continue;

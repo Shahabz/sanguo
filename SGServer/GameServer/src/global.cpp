@@ -20,9 +20,8 @@ extern MYSQL *myData;
 extern int g_serverpoint;
 extern int g_server_citylevel5_count;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang;
 
 Global global;
 int g_world_data[WORLD_DATA_MAX] = {0};
@@ -669,10 +668,8 @@ int world_data_init()
 		}
 	}
 	mysql_free_result( res );
-
-	g_open_town3 = worldquest_check_server( WORLDQUEST_ID6 );
-	g_open_town6 = worldquest_check_server( WORLDQUEST_ID9 );
-	g_open_townking = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
+	g_open_zone_sili = worldquest_check_server( WORLDQUEST_WORLDBOSS1 );
+	g_open_zone_luoyang = worldquest_check_server( WORLDQUEST_WORLDBOSS2 );
 	return 0;
 }
 

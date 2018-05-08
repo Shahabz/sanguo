@@ -14,9 +14,8 @@ extern Map g_map;
 extern Actor *g_actors;
 extern int g_maxactornum;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang;
 
 //extern int g_city_maxcount;
 extern int g_city_maxindex;
@@ -275,11 +274,11 @@ int area_enter( int actor_index, int area_index )
 	if ( area_index < 0 || area_index >= g_map.m_nAreaMaxCount )
 		return -1;
 
-	if ( g_open_townking == 0 )
-	{
-		if ( g_actors[actor_index].view_zoneid != g_map.m_aArea[area_index].zoneid )
-			return -1;
-	}
+	//if ( g_open_zone_luoyang == 0 )
+	//{
+	//	if ( g_actors[actor_index].view_zoneid != g_map.m_aArea[area_index].zoneid )
+	//		return -1;
+	//}
 
 	// 把区域中的单元组合进入的消息传送给自己
 	cur_index = g_map.m_aArea[area_index].unit_head;

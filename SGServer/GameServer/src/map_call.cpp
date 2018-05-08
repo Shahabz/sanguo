@@ -272,13 +272,13 @@ int map_call_response( int actor_index, int index )
 	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 		return -1;
 
-	if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
-	{ // 需要玩家等级{0}才可迁移到该地图
-		char v1[32] = { 0 };
-		sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
-		actor_notify_alert_v( actor_index, 1366, v1, NULL );
-		return -1;
-	}
+	//if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
+	//{ // 需要玩家等级{0}才可迁移到该地图
+	//	char v1[32] = { 0 };
+	//	sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
+	//	actor_notify_alert_v( actor_index, 1366, v1, NULL );
+	//	return -1;
+	//}
 	if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
 	{ // 需要击败{ 0 }级流寇才可迁移到该地图
 		char v1[32] = { 0 };

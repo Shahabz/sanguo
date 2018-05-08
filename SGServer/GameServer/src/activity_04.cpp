@@ -472,7 +472,7 @@ int activity_04_getvalue( int actor_index, int type, int id )
 	case ACTIVITY_SEVENDAY_TYPE5: //	主公达到{ 0 }级
 		value = pCity->level;
 		break;
-	case ACTIVITY_SEVENDAY_TYPE8: //	所在地图本国最多拥有{ 0 }座营地
+	case ACTIVITY_SEVENDAY_TYPE8: //	所在地图本国最多拥有{ 0 }座县城
 		for ( int townid = 1; townid < g_map_town_maxcount; townid++ )
 		{
 			if ( g_towninfo[townid].id <= 0 )
@@ -481,12 +481,12 @@ int activity_04_getvalue( int actor_index, int type, int id )
 				continue;
 			if ( g_map_town[townid].nation != pCity->nation )
 				continue;
-			if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_TYPE1 )
+			if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_XIAN )
 				continue;
 			value += 1;
 		}
 		break;
-	case ACTIVITY_SEVENDAY_TYPE9: //	所在地图本国最多拥有{ 0 }座县城
+	case ACTIVITY_SEVENDAY_TYPE9: //	所在地图本国最多拥有{ 0 }座郡城
 		for ( int townid = 1; townid < g_map_town_maxcount; townid++ )
 		{
 			if ( g_towninfo[townid].id <= 0 )
@@ -495,18 +495,18 @@ int activity_04_getvalue( int actor_index, int type, int id )
 				continue;
 			if ( g_map_town[townid].nation != pCity->nation )
 				continue;
-			if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_TYPE2 )
+			if ( g_towninfo[townid].type != MAPUNIT_TYPE_TOWN_JUN )
 				continue;
 			value += 1;
 		}
 		break;
-	case ACTIVITY_SEVENDAY_TYPE10: //	参与攻下{ 0 }座营地
+	case ACTIVITY_SEVENDAY_TYPE10: //	参与攻下{ 0 }座县城
 		value = data_record_getvalue( pCity, DATA_RECORD_KILLTOWNTYPE1 );
 		break;
-	case ACTIVITY_SEVENDAY_TYPE11: //	参与攻下{ 0 }座县城
+	case ACTIVITY_SEVENDAY_TYPE11: //	参与攻下{ 0 }座郡城
 		value = data_record_getvalue( pCity, DATA_RECORD_KILLTOWNTYPE2 );
 		break;
-	case ACTIVITY_SEVENDAY_TYPE12: //	参与攻下{ 0 }座郡城
+	case ACTIVITY_SEVENDAY_TYPE12: //	参与攻下{ 0 }座治所
 		value = data_record_getvalue( pCity, DATA_RECORD_KILLTOWNTYPE3 );
 		break;
 	case ACTIVITY_SEVENDAY_TYPE14: //	主线副本通关第{ 0 }章

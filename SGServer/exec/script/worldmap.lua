@@ -8,7 +8,7 @@ MAPUNIT_TYPE_TOWN			=	3	-- 城镇
 MAPUNIT_TYPE_ENEMY			=	4	-- 流寇
 MAPUNIT_TYPE_RES			=	5	-- 资源
 
-g_map_enemy_maxcount		= 50000;-- 流寇最大数量
+g_map_enemy_maxcount		= 30000;-- 流寇最大数量
 g_map_res_maxcount			= 5000;	-- 资源点最大数量
 g_map_event_maxcount		= 100000;-- 地图事件最大数量
 
@@ -77,23 +77,15 @@ function BrushEnemy()
 	
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
-		if g_zoneinfo[zoneid].open == 1 then
-			local brush = 1;
-			if g_zoneinfo[zoneid].type == 2 then
-				if c_get_open_townking() == 0 then
-					-- 皇城没开
-					brush = 0;
-				end
+		local brush = 1;
+		if g_zoneinfo[zoneid].type == 1 then
+			if c_get_open_zone_sili() == 0 then
+				-- 司隶没开
+				brush = 0;
 			end
-			if g_zoneinfo[zoneid].type == 1 then
-				if c_get_open_town3() == 0 then
-					-- 州城没开
-					brush = 0;
-				end
-			end
-			if brush == 1 then
-				c_brush_enemy_queue_add( 0, zoneid )
-			end
+		end
+		if brush == 1 then
+			c_brush_enemy_queue_add( 0, zoneid )
 		end
 	end
 end
@@ -162,22 +154,15 @@ function BrushRes()
 	c_world_data_set( 2, 1 );
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
-		if g_zoneinfo[zoneid].open == 1 then
-			local brush = 0;
-			if g_zoneinfo[zoneid].type == 1 then
-				if c_get_open_town3() > 0 then
-					-- 州城开放
-					brush = 1;
-				end
-			elseif g_zoneinfo[zoneid].type == 2 then
-				if c_get_open_townking() > 0 then
-					-- 皇城开放
-					brush = 1;
-				end
+		local brush = 1;
+		if g_zoneinfo[zoneid].type == 1 then
+			if c_get_open_zone_sili() == 0 then
+				-- 司隶没开
+				brush = 0;
 			end
-			if brush == 1 then
-				c_brush_enemy_queue_add( 1, zoneid )
-			end
+		end
+		if brush == 1 then
+			c_brush_enemy_queue_add( 1, zoneid )
 		end
 	end
 end

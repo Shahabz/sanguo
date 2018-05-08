@@ -466,28 +466,14 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			if ( !pTargetCity )
 				return -1;
 
-			//1，如果我在皇城区域就是随意打，没有任何限制
-			//2，如果我在州城，可以打四个州和两个对应君城
-			//3，如果我在君城，只能打对应君城
+			//1，如果我在司隶就是随意打，没有任何限制
+			//2，如果我在州地，可以两个相邻州
 			if ( pCity->zone != MAPZONE_CENTERID && pCity->zone != pTargetCity->zone )
-			{// 不是皇城，也不在自己的地图，那么需要判断
-				char zonetype = map_zone_gettype( pCity->zone );
-				char target_zonetype = map_zone_gettype( pTargetCity->zone );
-				if ( zonetype == MAPZONE_TYPE0 )
-				{ // 我在郡城
-					actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
+			{// 不是司隶，也不在自己所在州，那么需要判断;
+				if ( map_zone_ismovezone( pCity->zone, pTargetCity->zone ) == 0 )
+				{
+					actor_notify_alert( pCity->actor_index, 2364 );// 你当前所在的州无法攻打该州的城池
 					return -1;
-				}
-				else if ( zonetype == MAPZONE_TYPE1 )
-				{ // 我在州城
-					if ( zonetype != target_zonetype )
-					{ // 对方不在州城
-						if ( map_zone_ismovezone( pCity->zone, pTargetCity->zone ) == 0 )
-						{
-							actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
-							return -1;
-						}
-					}
 				}
 			}
 
@@ -716,32 +702,32 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			if ( !pTown )
 				return -1;
 
-			char zonetype = map_zone_gettype( pCity->zone );
-			char target_zonetype = map_zone_gettype( pTown->zoneid );
-			if ( zonetype == MAPZONE_TYPE0 )
-			{ // 我在郡城
-				if ( pCity->zone != pTown->zoneid )
-				{
-					actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
-					return -1;
-				}
-			}
-			else if ( zonetype == MAPZONE_TYPE1 )
-			{ // 我在州城
-				if ( target_zonetype != MAPZONE_TYPE1 )
-				{ // 对方不在州城
-					if ( map_zone_ismovezone( pCity->zone, pTown->zoneid ) == 0 )
-					{
-						actor_notify_alert( pCity->actor_index, 2364 );// 当前所在的位置无法攻打该地图的城池
-						return -1;
-					}
-				}
-			}
+			//char zonetype = map_zone_gettype( pCity->zone );
+			//char target_zonetype = map_zone_gettype( pTown->zoneid );
+			//if ( zonetype == MAPZONE_TYPE_ZHOU )
+			//{ // 我在州地
+			//	if ( pCity->zone != pTown->zoneid )
+			//	{
+			//		actor_notify_alert( pCity->actor_index, 2364 );// 你当前所在的州无法攻打该州的城池
+			//		return -1;
+			//	}
+			//}
+			//else if ( zonetype == MAPZONE_TYPE_SILI )
+			//{ // 我在司隶
+			//	if ( target_zonetype != MAPZONE_TYPE_SILI )
+			//	{ // 对方不在州城
+			//		if ( map_zone_ismovezone( pCity->zone, pTown->zoneid ) == 0 )
+			//		{
+			//			actor_notify_alert( pCity->actor_index, 2364 );// 你当前所在的州无法攻打该州的城池
+			//			return -1;
+			//		}
+			//	}
+			//}
 
-			if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+			if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_GJFD )
 			{
 				if ( pTown->nation > 0 )
-				{// 一国之都，不可轻犯
+				{// 国家封地，不可轻犯
 					actor_notify_alert( pCity->actor_index, 1333 );
 					return -1;
 				}
@@ -1803,11 +1789,11 @@ int army_gather_calc( int army_index )
 	if ( g_map_res[index].num <= 0 )
 	{ // 没了，删除资源点
 
-		// 如果是都城范围,添加开发经验
+		// 如果是国家封地范围,添加开发经验
 		short range_townid = map_tile_gettownid( g_map_res[index].posx, g_map_res[index].posy );
 		if ( range_townid > 0 && range_townid < g_towninfo_maxnum )
 		{
-			if ( g_towninfo[range_townid].type == MAPUNIT_TYPE_TOWN_TYPE8 )
+			if ( g_towninfo[range_townid].type == MAPUNIT_TYPE_TOWN_GJFD )
 			{
 				map_town_dev_addexp( range_townid, global.town_dev_gather );
 			}

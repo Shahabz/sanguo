@@ -144,7 +144,7 @@ end
 -- 自定
 ----------------------------------------
 function NationOfficialDlgShow()
-	if GetPlayer().m_open_town6 == 0 then
+	if GetPlayer().m_open_zone_sili == 0 then
 		pop( T(1791) )
 		return
 	end

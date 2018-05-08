@@ -53,9 +53,8 @@ extern char g_game_day;
 extern char g_game_weather;
 extern char g_game_day_loop;
 
-extern char g_open_town3;
-extern char g_open_town6;
-extern char g_open_townking;
+extern char g_open_zone_sili;
+extern char g_open_zone_luoyang;
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
 // 函数说明: 根据索引获取用户id
@@ -534,9 +533,8 @@ int actor_getinfo( int actor_index )
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
 	info.m_game_day_loop = g_game_day_loop;
-	info.m_open_town3 = g_open_town3;
-	info.m_open_town6 = g_open_town6;
-	info.m_open_townking = g_open_townking;
+	info.m_open_zone_sili = g_open_zone_sili;
+	info.m_open_zone_luoyang = g_open_zone_luoyang;
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{

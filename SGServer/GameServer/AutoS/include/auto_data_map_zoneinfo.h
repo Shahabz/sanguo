@@ -5,7 +5,6 @@
 struct _mapzoneinfo {
 //--Automatically generated
 				short id;	//
-				short open;	//
 				short type;	//
 				short center_posx;	//
 				short center_posy;	//
@@ -23,9 +22,7 @@ struct _mapzoneinfo {
 				char resnum[512];	//
 				char eventkind[256];	//
 				short eventnum;	//
-				short actorlevel;	//
 				short killenemy;	//
-				int questid;	//
 				short move_zoneid[2];	//
 };
 typedef struct _mapzoneinfo MapZoneInfo;

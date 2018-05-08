@@ -2041,12 +2041,11 @@ function proc_nationcandidatelist_C( recvValue )
 	NationOfficialDlgCandidateRecv( recvValue )
 end
 
--- m_open_town6=0,m_open_townking=0,
+-- m_open_zone_sili=0,m_open_zone_luoyang=0,
 function proc_worlddataopen_C( recvValue )
 	-- process.
-	GetPlayer().m_open_town3 = recvValue.m_open_town3
-	GetPlayer().m_open_town6 = recvValue.m_open_town6
-	GetPlayer().m_open_townking = recvValue.m_open_townking
+	GetPlayer().m_open_zone_sili = recvValue.m_open_zone_sili
+	GetPlayer().m_open_zone_luoyang = recvValue.m_open_zone_luoyang
 end
 
 -- m_count=0,m_list={m_namelen=0,m_name="[m_namelen]",m_level=0,m_battlepower=0,m_place=0,m_official=0,m_actorid=0,[m_count]},m_op=0,

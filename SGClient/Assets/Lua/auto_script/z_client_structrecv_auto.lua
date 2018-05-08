@@ -241,10 +241,9 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_storyid = buffer:ReadInt();
 	recvValue.m_posx = buffer:ReadShort();
 	recvValue.m_posy = buffer:ReadShort();
-	recvValue.m_open_town6 = buffer:ReadSByte();
-	recvValue.m_open_townking = buffer:ReadSByte();
+	recvValue.m_open_zone_sili = buffer:ReadSByte();
+	recvValue.m_open_zone_luoyang = buffer:ReadSByte();
 	recvValue.m_game_day_loop = buffer:ReadSByte();
-	recvValue.m_open_town3 = buffer:ReadSByte();
 	recvValue.m_shape_bag = buffer:ReadInt();
 	recvValue.m_bufftrain = buffer:ReadShort();
 	return recvValue;
@@ -2548,9 +2547,8 @@ end
 
 function struct_NetS_WorldDataOpen_recv( buffer )
 	local recvValue = {};
-	recvValue.m_open_town3 = buffer:ReadSByte();
-	recvValue.m_open_town6 = buffer:ReadSByte();
-	recvValue.m_open_townking = buffer:ReadSByte();
+	recvValue.m_open_zone_sili = buffer:ReadSByte();
+	recvValue.m_open_zone_luoyang = buffer:ReadSByte();
 	return recvValue;
 end
 

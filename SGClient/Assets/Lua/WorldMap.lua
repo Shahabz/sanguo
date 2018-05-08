@@ -320,7 +320,7 @@ function WorldMap.SendAreaIndex( areaindex, posx, posy )
 	local zoneid = map_zone_getid( posx, posy );
 	GetPlayer().m_view_zoneid = zoneid;
 	
-	-- 如果皇城开启，哪都可以看到
+	--[[-- 如果皇城开启，哪都可以看到
 	if GetPlayer().m_open_townking <= 0 then
 		-- 如果郡城已经攻克，只能看见对应州城和对应郡城
 		if GetPlayer().m_open_town3 > 0 then
@@ -335,7 +335,7 @@ function WorldMap.SendAreaIndex( areaindex, posx, posy )
 				areaupdate = 0
 			end
 		end
-	end
+	end--]]
 	
 	-- m_areaindex=0,
 	local sendValue = {};
