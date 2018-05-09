@@ -132,7 +132,7 @@ end
 -- 地图阻挡
 function MapTile.block( posx, posy )    
     -- 范围
-	if posx < 0 or posy < 0 or posx >= 500 or posy >= 500 then
+	if posx < 0 or posy < 0 or posx >= 300 or posy >= 300 then
 		return -1;
 	end
 	return 0;
@@ -140,13 +140,13 @@ end
 
 -- 获取森林池对象
 function MapTile.GetForestObj( id )
-	local offset = id - 21;
+	local offset = id - 49;
 	return MapForestRootObjectPool:Get( "MapForest"..offset );
 end
 
 -- 获取森林池对象
 function MapTile.ReleaseForestObj( id, unitObj )
-	local offset = id - 21;
+	local offset = id - 49;
 	MapForestRootObjectPool:Release( "MapForest"..offset, unitObj );
 end
 
@@ -157,7 +157,7 @@ function MapTile.AddForest( posx, posy )
 	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
 	local index = localposx + localposy*TMX_HEIGHT + 1;
 	
-	local id = MapTile.tiledMap.layers[3].data[index];
+	local id = MapTile.tiledMap.layers[4].data[index];
 	if id == 0 then
 		return
 	end
@@ -199,7 +199,7 @@ function MapTile.DelForest( posx, posy )
 	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
 	local index = localposx + localposy*TMX_HEIGHT + 1;
 	
-	local id = MapTile.tiledMap.layers[3].data[index];
+	local id = MapTile.tiledMap.layers[4].data[index];
 	if id == 0 then
 		return
 	end

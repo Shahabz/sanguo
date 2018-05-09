@@ -63,7 +63,7 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 	
 		-- 城镇信息
 		elseif nControlID == 11 then
-			if m_towntype == MAPUNIT_TYPE_TOWN_TYPE8 then
+			if m_towntype == MAPUNIT_TYPE_TOWN_GJFD then
 				MapTownExDlgShow( m_LastRecvValue )
 			else
 				MapTownDlgShow( 0, m_LastRecvValue )
@@ -274,7 +274,7 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	m_towntype = type;
 	
 	SetText( m_uiTownInfo.transform:Find("Pos"), "["..posx..","..posy.."]" )
-	if type == MAPUNIT_TYPE_TOWN_TYPE8 then
+	if type == MAPUNIT_TYPE_TOWN_GJFD then
 		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..(dev_level+1)..MapTownName(townid) )
 	else
 		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..level..MapTownName(townid) )
@@ -283,7 +283,7 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	SetImage( m_uiTownInfo.transform:Find("Nation"), NationSprite(nation) )
 	
 	-- 我国占领
-	if nation == GetPlayer().m_nation or type == MAPUNIT_TYPE_TOWN_TYPE8 then
+	if nation == GetPlayer().m_nation or type == MAPUNIT_TYPE_TOWN_GJFD then
 		SetTrue( m_uiNationInfoBtn )
 		SetFalse( m_uiNationFightBtn )
 		local buttonList = { m_uiNationInfoBtn };
@@ -311,7 +311,7 @@ function MapClickModCloseTown( recvValue )
 	local nation 		= recvValue.m_char_value[1];
 	local townid 		= recvValue.m_short_value[1];
 	local type 			= g_towninfo[townid].type
-	if nation > 0 and type < MAPUNIT_TYPE_TOWN_TYPE8 then
+	if nation > 0 and type < MAPUNIT_TYPE_TOWN_GJFD then
 		-- 显示生产信息
 		local unitObj = MapUnit.cache[recvValue.m_unit_index];
 		if unitObj ~= nil then

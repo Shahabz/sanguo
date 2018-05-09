@@ -216,7 +216,7 @@ void nation_hero_showmap( int kind )
 	int step = 0;
 	while ( true )
 	{
-		if ( map_getrandpos_withtype( 2, &g_nation_hero[kind].posx, &g_nation_hero[kind].posy ) >= 0 )
+		if ( map_getrandpos_withtype( 0, &g_nation_hero[kind].posx, &g_nation_hero[kind].posy ) >= 0 )
 			break;
 		step += 1;
 		if ( step >= 10 )
@@ -292,7 +292,7 @@ int nation_hero_changepos( int kind )
 	int step = 0;
 	while ( true )
 	{
-		if ( map_getrandpos_withtype( 2, &g_nation_hero[kind].posx, &g_nation_hero[kind].posy ) >= 0 )
+		if ( map_getrandpos_withtype( 0, &g_nation_hero[kind].posx, &g_nation_hero[kind].posy ) >= 0 )
 			break;
 		step += 1;
 		if ( step >= 10 )

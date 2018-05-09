@@ -3791,6 +3791,11 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			{
 				return -1;
 			}
+			else
+			{
+				if ( map_canmove( move_posx, move_posy ) == 0 )
+					return -1;
+			}
 			move_posx = posx;
 			move_posy = posy;
 		}

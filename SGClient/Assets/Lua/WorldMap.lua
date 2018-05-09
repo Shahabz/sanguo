@@ -5,6 +5,8 @@ MAP_TILEHEIGHT 		= 128;	-- 一块格子有多少像素
 TMX_WIDTH 			= 100;  -- 一块tmx地图大小
 TMX_HEIGHT 			= 100;  -- 一块tmx地图大小
 
+TMX_ROWS 			= 3;  -- n*n
+
 WORLDMAP_ZORDER_CLICKMOD	=	-1000; 	-- 点击地图选择框层级
 WORLDMAP_ZORDER_MARCHROUTE	=	-2000;	-- 行军路线层级
 WORLDMAP_ZORDER_ARMY		=	-2001;	-- 部队层级
@@ -15,8 +17,8 @@ WORLDMAP_MODE_FOLLOW	=	1; -- 跟随模式
 
 -- 世界地图
 WorldMap = {}
-WorldMap.m_nMaxWidth 			= 500;    -- 世界地图大小（格子数）
-WorldMap.m_nMaxHeight 			= 500;    -- 世界地图大小（格子数）
+WorldMap.m_nMaxWidth 			= 300;    -- 世界地图大小（格子数）
+WorldMap.m_nMaxHeight 			= 300;    -- 世界地图大小（格子数）
 WorldMap.m_nAreaWidth 			= 0;    -- 区域大小（一个区域几个地图格子）
 WorldMap.m_nAreaHeight 			= 0;    -- 区域大小（一个区域几个地图格子）
 WorldMap.m_nAreaXNum 			= 0;    -- 一个地图有多少区域
@@ -404,13 +406,14 @@ function WorldMap.RefreshShow( gamePosX, gamePosY )
 			
         elseif TmxShowList[i] ~= 0 then
             MapTmx[i]:SetActive( true );
-			MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
+			--MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
 			local x = WorldMap.m_nMaxWidth * MAP_TILEWIDTH / 2 / 100 + MAP_TILEWIDTH * TMX_WIDTH * ( TmxShowList[i][1] - TmxShowList[i][2] - 1 ) / 2 / 100
 			local y = - MAP_TILEHEIGHT * TMX_HEIGHT * ( TmxShowList[i][2] + TmxShowList[i][1] ) / 2 / 100;
-			if x >= 511 and x <= 513 and y >= -257 and y <= -255 then
-				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( false ); -- 中间
+			--if x >= 511 and x <= 513 and y >= -257 and y <= -255 then
+			if x >= 255 and x <= 257 and y >= -129 and y <= -127 then
+				--MapTmx[i].transform:Find( "road" ).gameObject:SetActive( false ); -- 中间
 			else
-				MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
+				--MapTmx[i].transform:Find( "road" ).gameObject:SetActive( true );
 			end
             MapTmx[i].transform.localPosition = Vector3.New( x, y, 0 );
 
@@ -880,7 +883,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			local townid 		= recvValue.m_short_value[1]
 			local type 			= g_towninfo[townid].type
-			if type == MAPUNIT_TYPE_TOWN_TYPE9 then
+			if type == MAPUNIT_TYPE_TOWN_LUOYANG then
 				BloodyBattleDlgTownClick( recvValue )
 				MapClickEffect.gameObject:SetActive( false );
 				return
@@ -1210,10 +1213,10 @@ function WorldMap.MarchTime(fposx, fposy, tposx, tposy)
     end
 	
 	-- 优先检查皇城区域向非皇城区域行军
-	if fposx >= g_zoneinfo[13].top_left_posx and fposx <= g_zoneinfo[13].bottom_right_posx and 
-		fposy >= g_zoneinfo[13].top_left_posy and fposy <= g_zoneinfo[13].bottom_right_posy then
-		if  tposx < g_zoneinfo[13].top_left_posx or tposx > g_zoneinfo[13].bottom_right_posx or
-			tposy < g_zoneinfo[13].top_left_posy or tposy > g_zoneinfo[13].bottom_right_posy then
+	if fposx >= g_zoneinfo[MAPZONE_CENTERID].top_left_posx and fposx <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx and 
+		fposy >= g_zoneinfo[MAPZONE_CENTERID].top_left_posy and fposy <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy then
+		if  tposx < g_zoneinfo[MAPZONE_CENTERID].top_left_posx or tposx > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx or
+			tposy < g_zoneinfo[MAPZONE_CENTERID].top_left_posy or tposy > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy then
 			return global.army_move_kingzone;
 		end
 	end
@@ -1272,7 +1275,7 @@ function map_zone_getid( posx, posy )
 	end
 	zonex = math.floor(posx / 100);
 	zoney = math.floor(posy / 100);
-	return zoney*(5) + zonex + 1;
+	return zoney*(TMX_ROWS) + zonex + 1;
 end
 
 -- 检查是不是在同一个区域

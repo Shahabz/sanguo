@@ -341,8 +341,8 @@ function MapTownDlgRecvValue( recvValue )
 				SetTrue( m_uiFightButton );
 			end
 			
-			-- 名称
-			if g_towninfo[m_townid].type == MAPUNIT_TYPE_TOWN_TYPE7 then
+			-- 诸侯封地
+			if g_towninfo[m_townid].type == MAPUNIT_TYPE_TOWN_ZHFD then
 				SetTrue( m_uiPeople )
 				SetText( m_uiPeople, T(127)..":"..g_towninfo[m_townid].people )
 				SetText( m_uiWarn, "" )

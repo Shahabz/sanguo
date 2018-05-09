@@ -163,7 +163,7 @@ function MapTownExDlgShow( recvValue )
 	local level 		= g_towninfo[m_townid].level
 	
 	-- 洛阳
-	if type == MAPUNIT_TYPE_TOWN_TYPE9 then
+	if type == MAPUNIT_TYPE_TOWN_LUOYANG then
 		-- 名字
 		SetText( m_uiName, MapTownName(m_townid) )
 		-- 所属

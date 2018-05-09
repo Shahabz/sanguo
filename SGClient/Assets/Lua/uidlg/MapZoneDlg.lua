@@ -8,6 +8,7 @@ local m_uiShowBtn = nil; --UnityEngine.GameObject
 local m_uiHideBtn = nil; --UnityEngine.GameObject
 local m_uiGlobalBtn = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
+local m_uiCEO = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function MapZoneDlgOpen()
@@ -79,6 +80,7 @@ function MapZoneDlgOnAwake( gameObject )
 	m_uiHideBtn = objs[3];
 	m_uiGlobalBtn = objs[4];
 	m_uiWarn = objs[5];
+	m_uiCEO = objs[6];
 end
 
 -- 界面初始化时调用

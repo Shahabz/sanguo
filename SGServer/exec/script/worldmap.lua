@@ -14,7 +14,13 @@ g_map_event_maxcount		= 100000;-- 地图事件最大数量
 
 -- 世界地图初始化
 function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
-	
+	-- 预先将地形信息赋值到g_map.m_aTileData
+	for posx = 0, nMaxWidth-1, 1 do
+		for posy = 0, nMaxHeight-1, 1 do
+			local terrain = IN_OnWorldMapBlock( posx, posy );
+			c_map_addobject( 0, terrain, posx, posy );
+		end
+	end
 	-- 流寇最大数量
 	c_map_enemy_maxcount( g_map_enemy_maxcount );
 	
@@ -32,7 +38,20 @@ function IN_OnWorldMapBlock( posx, posy )
 	local localposx = math.floor( posx % TMX_WIDTH );
 	local localposy = math.floor( posy % TMX_HEIGHT );
 	local index = localposx + localposy*TMX_HEIGHT + 1;	
-	return 0;
+	
+	-- 地表层，要检查水
+	local terrain = tiledMap.layers[1].data[index];
+	if terrain >= 85 then
+		return terrain;
+	end
+	
+	-- 山层
+	local mountain = tiledMap.layers[2].data[index];
+	if mountain >= 85 then
+		return mountain;
+	end
+	
+	return terrain;
 end
 
 -- 刷怪服务器启动时候的刷对象，算是补充，刷对象计时重置

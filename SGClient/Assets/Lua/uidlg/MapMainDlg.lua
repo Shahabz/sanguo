@@ -824,6 +824,11 @@ function MapMainDlgActivityTreasureEndStamp()
 end
 	
 -- 小地图
+local MAP_W = 5 -- 大地图是小地图的5倍
+local MAP_H = 5
+local cameraPosOffsetX = 384 -- 3个区域。5个区域就是640
+local cameraPosOffsetY = 192
+
 function MapMainDlgMiniMapChangeZone( zoneid, open )
 	-- 切换地区先都隐藏
 	for i = 0 ,m_uiZoneList.transform.childCount - 1 do
@@ -847,7 +852,7 @@ function MapMainDlgMiniMapMove( cameraPosX, cameraPosY )
 	if m_show == 0 then
 		return
 	end
-	m_uiMiniMapLayer.transform.localPosition = Vector2( (cameraPosX-640)*5, -(cameraPosY+320)*5 )
+	m_uiMiniMapLayer.transform.localPosition = Vector2( (cameraPosX-cameraPosOffsetX)*MAP_W, -(cameraPosY+cameraPosOffsetY)*MAP_H )
 end
 
 -- 清空城池
@@ -868,8 +873,8 @@ function MapMainDlgMiniMapAddCity( recvValue )
 		return
 	end
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( recvValue.m_posx, recvValue.m_posy );
-	local x = 0-(cameraPosX-640)*5
-	local y = (cameraPosY+320)*5
+	local x = 0-(cameraPosX-cameraPosOffsetX)*MAP_W
+	local y = (cameraPosY+cameraPosOffsetY)*MAP_H
 	
 	local uiObj = m_ObjectPool:Get( "UIP_City" );
 	uiObj.transform:SetParent( m_uiCityList.transform );
@@ -885,20 +890,20 @@ function MapMainDlgMiniMapCreateMyPos()
 		return
 	end
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
-	local x = 0-(cameraPosX-640)*5
-	local y = (cameraPosY+320)*5
+	local x = 0-(cameraPosX-cameraPosOffsetX)*MAP_W
+	local y = (cameraPosY+cameraPosOffsetY)*MAP_H
 	m_uiMyPosFlag.transform.localPosition = Vector2( x, y )
 end
 
 -- 区域范围
 -- m_count=0,m_list={m_townid=0,m_nation=0,m_protect_sec=0,m_from_nation="[4]",[m_count]},m_zoneid=0,
 function MapMainDlgMiniMapSetTown( recvValue )
-	if WorldMap.m_nZoneID ~= 13 then
+	if WorldMap.m_nZoneID ~= MAPZONE_CENTERID then
 		return
 	end
-	local uiZone13 = m_uiZoneList.transform:Find("Zone13")
+	local uiZone5 = m_uiZoneList.transform:Find("Zone5")
 	for i=1, recvValue.m_count, 1 do
-		local uiTown = uiZone13.transform:Find( "Town"..recvValue.m_list[i].m_townid )
+		local uiTown = uiZone5.transform:Find( "Town"..recvValue.m_list[i].m_townid )
 		uiTown.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColorA[recvValue.m_list[i].m_nation] )
 	end
 end

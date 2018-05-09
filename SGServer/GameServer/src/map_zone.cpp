@@ -134,7 +134,7 @@ char map_zone_getid( short posx, short posy )
 		posy = g_map.m_nMaxHeight - 1;
 	zonex = (posx) / 100;
 	zoney = (posy) / 100;
-	return zoney*(5) + zonex + 1;
+	return zoney*(3) + zonex + 1;
 }
 
 // 获取地图类型

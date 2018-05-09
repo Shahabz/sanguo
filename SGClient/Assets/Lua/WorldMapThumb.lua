@@ -137,8 +137,8 @@ function WorldMapThumb.ConvertThumbToZone( thumbX, thumbY )
 	local gameCoorX, gameCoorY = WorldMap.ConvertCameraToGame( worldCameraX, worldCameraY );
 	gameCoorX = WorldMap.m_nMaxWidth + gameCoorX;
 	
-	gameCoorX = math.floor(gameCoorX/5) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx;
-	gameCoorY = math.floor(gameCoorY/5) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy;
+	gameCoorX = math.floor(gameCoorX/TMX_ROWS) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posx;
+	gameCoorY = math.floor(gameCoorY/TMX_ROWS) + g_zoneinfo[WorldMapThumb.m_nZoneID].top_left_posy;
 	--print( gameCoorX ..","..gameCoorY )
 	return gameCoorX, gameCoorY;
 end
@@ -214,8 +214,8 @@ function WorldMapThumb.OnClick( obj, touchpos )
 	end	
 	
 	-- 双击位置
-	if gameCoorX >= WorldMapThumb.m_nLastClickGameCoorX - 2 and gameCoorX <= WorldMapThumb.m_nLastClickGameCoorX + 2 and
-		gameCoorY >= WorldMapThumb.m_nLastClickGameCoorY - 2 and gameCoorY <= WorldMapThumb.m_nLastClickGameCoorY + 2 then
+	if gameCoorX >= WorldMapThumb.m_nLastClickGameCoorX - 3 and gameCoorX <= WorldMapThumb.m_nLastClickGameCoorX + 3 and
+		gameCoorY >= WorldMapThumb.m_nLastClickGameCoorY - 3 and gameCoorY <= WorldMapThumb.m_nLastClickGameCoorY + 3 then
 		-- 关闭界面
 		MapZoneDlgClose();
 		-- 跳转到位置
@@ -326,7 +326,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		return true;
 	end
 
-	if recvValue.m_zoneid == 13 then
+	if recvValue.m_zoneid == MAPZONE_CENTERID then
 		SetFalse( ThumbDisplayPrefab.transform:Find("Back1") )
 		SetFalse( ThumbDisplayPrefab.transform:Find("Back2") )
 	else
@@ -351,7 +351,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		-- 名称
 		thumbObj.transform:Find( "Name" ):GetComponent( "UIText" ).text = MapTownName( townid )
 		-- 形象
-		if type == MAPUNIT_TYPE_TOWN_TYPE3 or type == MAPUNIT_TYPE_TOWN_TYPE6 or type == MAPUNIT_TYPE_TOWN_TYPE9 then
+		if type == MAPUNIT_TYPE_TOWN_ZHISUO or type == MAPUNIT_TYPE_TOWN_GJFD or type == MAPUNIT_TYPE_TOWN_LUOYANG then
 			thumbObj.transform:Find( "Shape" ):GetComponent( "SpriteRenderer" ).sprite = LoadSprite( "ui_worldmap_nation_"..nation )
 			MapZoneDlgSetNation( nation )
 		else
@@ -372,7 +372,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 		end
 		-- 皇城地区的范围
 		local Range = thumbObj.transform:Find( "Range" );
-		if recvValue.m_zoneid == 13 then
+		if recvValue.m_zoneid == MAPZONE_CENTERID then
 			SetTrue( Range )
 			Range:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColorA[nation] )
 		else

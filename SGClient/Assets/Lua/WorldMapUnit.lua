@@ -10,15 +10,14 @@ MAPUNIT_TYPE_EVENT		=	6	-- 随机事件
 MAPUNIT_TYPE_NATIONHERO	=	7	-- 国家名将
 MAPUNIT_TYPE_KINGWAR_TOWN	= 10-- 皇城血战据点
 
-MAPUNIT_TYPE_TOWN_TYPE1	= 1
-MAPUNIT_TYPE_TOWN_TYPE2	= 2
-MAPUNIT_TYPE_TOWN_TYPE3	= 3
-MAPUNIT_TYPE_TOWN_TYPE4	= 4
-MAPUNIT_TYPE_TOWN_TYPE5	= 5
-MAPUNIT_TYPE_TOWN_TYPE6	= 6
-MAPUNIT_TYPE_TOWN_TYPE7	= 7 -- 名城
-MAPUNIT_TYPE_TOWN_TYPE8	= 8 -- 都城
-MAPUNIT_TYPE_TOWN_TYPE9	= 9 -- 皇城
+MAPUNIT_TYPE_TOWN_XIAN		= 1	-- 县
+MAPUNIT_TYPE_TOWN_JUN		= 2	-- 郡
+MAPUNIT_TYPE_TOWN_ZHISUO	= 3	-- 治所
+MAPUNIT_TYPE_TOWN_ZHFD		= 4	-- 诸侯封地
+MAPUNIT_TYPE_TOWN_GJFD		= 5	-- 国家封地
+MAPUNIT_TYPE_TOWN_LUOYANG	= 6	-- 洛阳
+
+MAPZONE_CENTERID		= 5 -- 司隶
 
 -- 城池状态
 CITY_STATE_FIRE			=	0x01	-- 着火中
@@ -127,9 +126,14 @@ MapUnitTownShapeList = {
 [4] = "mapunit_type4",
 [5] = "mapunit_type5",
 [6] = "mapunit_type6",
-[7] = "mapunit_type7",
-[8] = "mapunit_type8",
-[9] = "mapunit_type9",
+}
+MapUnitTownShapeListScale = {
+[1] = 1.5,
+[2] = 1.5,
+[3] = 1.6,
+[4] = 1.6,
+[5] = 1.6,
+[6] = 1.6,
 }
 
 -- 资源点形象
@@ -687,6 +691,8 @@ function MapUnit.createTown( recvValue )
 	local shapeSprite = ""
 	shapeSprite = MapUnitTownShapeList[type].."_"..nation;
 	uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( shapeSprite );
+	local scale = MapUnitTownShapeListScale[type];
+	uiShape.transform.localScale = Vector3( scale,scale,1 );
 	
 	-- 名字
 	local townname = ""
@@ -695,14 +701,14 @@ function MapUnit.createTown( recvValue )
 	else
 		townname = MapTownName( townid );
 	end
-	if type == MAPUNIT_TYPE_TOWN_TYPE8 then
+	if type == MAPUNIT_TYPE_TOWN_GJFD then
 		uiName:GetComponent("UIText").text = "Lv."..(dev_level+1).." "..townname
 	else
 		uiName:GetComponent("UIText").text = townname
 	end
 	
 	-- 范围框
-	if type < MAPUNIT_TYPE_TOWN_TYPE7 then
+	if type < MAPUNIT_TYPE_TOWN_ZHFD then
 		uiRange.transform.localScale = Vector3.New( range, range, range );
 		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
 		SetTrue( uiRange )
@@ -711,7 +717,7 @@ function MapUnit.createTown( recvValue )
 	end
 	
 	-- 非群雄状态显示
-	if nation > 0 and type < MAPUNIT_TYPE_TOWN_TYPE8 then
+	if nation > 0 and type < MAPUNIT_TYPE_TOWN_GJFD then
 		SetTrue( uiTownProduceMod )
 	
 		if produce_num > 0 then
@@ -1255,7 +1261,7 @@ function MapUnit.createCenterTownRange( recvValue )
 	local townid = recvValue.m_townid;
 	local nation = recvValue.m_nation;
 	local v = g_towninfo[townid];
-	if v.type >= MAPUNIT_TYPE_TOWN_TYPE7 then
+	if v.type >= MAPUNIT_TYPE_TOWN_ZHFD then
 		if v.grid == 2 then
 			MapUnit.objectCenterTownRange[townid] = MapUnit.createTownRange( MapUnit.objectCenterTownRange[townid], 2, v.posx-1, v.posy, v.range, nation );
 		elseif v.grid == 3 then

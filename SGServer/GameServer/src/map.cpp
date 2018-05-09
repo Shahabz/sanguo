@@ -385,10 +385,13 @@ int map_canmove( short posX, short posY )
 		return 0;
 	}
 
-	// 检查下
+	// 检查下地表
 	if ( g_map.m_aTileData[posX][posY].unit_type == 0 )
 	{
-		return 1;
+		if ( g_map.m_aTileData[posX][posY].unit_index >= WORLDMAPBLOCKTILEDID )
+			return 0;
+		else
+			return 1;
 	}
 
 	return 0;
@@ -598,22 +601,15 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 // 随机玩家城池位置
 int map_getrandcitypos( short *pPosx, short *pPosy )
 {
-	short zoneidlist[8] = { 1, 5, 21, 25, 3, 11, 15, 23 };
+	short zoneidlist[8] = { 1, 2, 3, 4, 6, 7, 8, 9 };
 	int openday = system_getopentime() / 86400;
 
-	// 先随机一个新手区域，然后在这个区域内随机空位，当随机1万次依然没有位置，那么从这个区域一个一个找，不随机了，还是没找到，那么换下一个区域
+	// 先找到一个新手州，然后在这个州内随机空位，当随机1万次依然没有位置，那么从这个区域一个一个找，不随机了，还是没找到，那么换下一个区域
 	int step = 0;
 	while ( true )
 	{
 		short zoneid = 0;
-		if ( openday <= 14 )
-		{ // 开服两周内
-			zoneid = zoneidlist[random( 0, 3 )];
-		}
-		else
-		{ // 开服两周后
-			zoneid = zoneidlist[random( 4, 7 )];
-		}
+		zoneid = zoneidlist[random( 0, 7 )];
 		if ( zoneid >= g_zoneinfo_maxnum )
 		{
 			continue;
@@ -673,9 +669,8 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 // 随机坐标
 int map_getrandpos_withtype( int type, short *pPosx, short *pPosy )
 {
-	static short s_zoneidlist0[8] = { 1, 3, 5, 11, 15, 21, 23, 25 };
-	static short s_zoneidlist1[12] = { 1, 3, 5, 11, 15, 21, 23, 25, 7, 9, 17, 19 };
-	static short s_zoneidlist2[13] = { 1, 3, 5, 11, 15, 21, 23, 25, 7, 9, 17, 19, 13 };
+	static short s_zoneidlist0[8] = { 1, 2, 3, 4, 6, 7, 8, 9 };
+	static short s_zoneidlist1[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	short zoneid = 0;
 	if ( type == 0 )
 	{
@@ -683,11 +678,11 @@ int map_getrandpos_withtype( int type, short *pPosx, short *pPosy )
 	}
 	else if ( type == 1 )
 	{
-		zoneid = s_zoneidlist1[random( 0, 11 )];
+		zoneid = s_zoneidlist1[random( 0, 8 )];
 	}
 	else if ( type == 2 )
 	{
-		zoneid = s_zoneidlist1[random( 0, 12 )];
+		zoneid = 5;
 	}
 	if ( zoneid == 0 )
 		return -1;
