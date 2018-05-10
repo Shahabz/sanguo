@@ -278,7 +278,7 @@ function GameManager.ChangeScence( scence )
 		end
 		
 		-- 主城bgm
-		eye.audioManager:Play(203);
+		CityPlayAudio()
 		GameManager.currentScence = scence
 		
 	elseif scence == "worldmap" then
@@ -300,7 +300,7 @@ function GameManager.ChangeScence( scence )
 		end
 		
 		-- 地图bgm
-		eye.audioManager:Play(202);
+		MapPlayAudio()
 		GameManager.currentScence = scence
 		
 	elseif scence == "fight" then

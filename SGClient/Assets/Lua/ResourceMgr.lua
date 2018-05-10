@@ -368,3 +368,12 @@ function PlaceRichText( place )
 	local name = string.format("<icon=p%d>", place+1 );
 	return name;
 end
+
+-- 主城背景音
+function CityPlayAudio()
+	eye.audioManager:Play(math.random(203,204));
+end
+-- 城外环境音
+function MapPlayAudio()
+	eye.audioManager:Play(math.random(211,214));
+end

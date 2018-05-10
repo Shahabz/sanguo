@@ -69,10 +69,10 @@ function FightScene.Delete()
 	if FightScene.m_mapMainDlgIsActive == true then
 		MapMainDlgShow()
 		-- 城外bgm
-		eye.audioManager:Play(202);
+		MapPlayAudio()
 	else
 		-- 城内bgm
-		eye.audioManager:Play(203);
+		CityPlayAudio()
 	end
 	fight_destory()
 end
