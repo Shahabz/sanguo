@@ -881,7 +881,6 @@ function MapMainDlgMiniMapAddCity( recvValue )
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.transform.localPosition = Vector2( x, y )
 	uiObj.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColor[recvValue.m_nation] )
-	--uiObj.transform:GetComponent( typeof(Image) ).color = MapUnitRangeColorB[recvValue.m_nation]
 end
 
 -- 创建我的城池
@@ -903,6 +902,7 @@ function MapMainDlgMiniMapSetTown( recvValue )
 	end
 	local uiZone5 = m_uiZoneList.transform:Find("Zone5")
 	for i=1, recvValue.m_count, 1 do
+		--recvValue.m_list[i].m_nation = math.random(0,3)
 		local uiTown = uiZone5.transform:Find( "Town"..recvValue.m_list[i].m_townid )
 		uiTown.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColorA[recvValue.m_list[i].m_nation] )
 	end

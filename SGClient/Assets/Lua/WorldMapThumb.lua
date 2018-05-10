@@ -336,6 +336,7 @@ function WorldMapThumb.SetTownInfo( recvValue )
 	for tmpi=1, recvValue.m_count, 1 do
 		local townid = recvValue.m_list[tmpi].m_townid;
 		local nation = recvValue.m_list[tmpi].m_nation;
+		--nation = math.random(0,3)
 		local type = g_towninfo[townid].type
 		local posx = g_towninfo[townid].posx
 		local posy = g_towninfo[townid].posy

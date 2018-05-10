@@ -189,10 +189,10 @@ MapUnitRangeColorA = {
 }
 
 MapUnitRangeColorB = {
-[0] = Color.yellow,
-[1] = Color.blue,
-[2] = Color.red,
-[3] = Color.green,
+[0] = 0xecc24457,
+[1] = 0x49def957,
+[2] = 0xf0173557,
+[3] = 0x38f62e57,
 }
 
 -- 军队状态名称
@@ -1249,9 +1249,12 @@ function MapUnit.createTownRange( unitObj, grid, posx, posy, range, nation )
 	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_TOWN, grid, cameraPosX, cameraPosY );
 	unitObj.transform.localPosition = Vector3.New( posx, posy, 0 );
 
-	-- 范围
+	-- 范围辐射
 	unitObj.transform:GetComponent("MapBorder"):SetSize( range );
-    unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColor[nation] ) );
+	--nation = math.random(0,3)
+    unitObj.transform:GetComponent("MapBorder"):SetColor( Hex2Color( MapUnitRangeColorB[nation] ) );
+	-- 范围线
+	unitObj.transform:Find("Line"):GetComponent("MapBorder"):SetSize( range );
 	return unitObj;
 end
 

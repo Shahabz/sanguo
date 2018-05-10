@@ -8,11 +8,15 @@ MapTile.data = {};
 
 MapTile.tiledMap = {};
 MapTile.forest = nil
+MapTile.fog = nil
+MapTile.birds = nil
 
 -- 初始化
 function MapTile.init()
 	MapTile.tiledMap = require("config/conf_worldmap");
 	MapTile.forest = {}
+	MapTile.fog = {}
+	MapTile.birds = {}
 end
 
 -- 向格子里添加数据
@@ -113,6 +117,8 @@ end
 function MapTile.clear()
 	MapTile.data = {};
 	MapTile.forest = nil
+	MapTile.fog = nil
+	MapTile.birds = nil
 end
 
 -- 获取点击的格子数据
@@ -212,4 +218,85 @@ function MapTile.DelForest( posx, posy )
 	MapTile.forest[posx][posy] = nil;
 end
 
+-- 创建云雾
+function MapTile.AddFog( posx, posy )
+	if math.mod( posx, 10 ) ~= 0 or math.mod( posy, 10 ) ~= 0 then
+		return
+	end
+	
+	if MapTile.fog[posx] ~= nil and MapTile.fog[posx][posy] ~= nil then
+		return
+	end
+	
+	local id = math.random( 1, 2 )
+	local unitObj = MapSkyRootObjectPool:Get( "MapSkyFog"..id );
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	local x, y = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( x, y, 0 );
+	unitObj.transform:SetParent( MapSkyRoot.transform );
+	--unitObj.transform.localScale = Vector3.one;
+	unitObj.gameObject:SetActive( true );
+	
+	-- 缓存起来
+	if MapTile.fog[posx] == nil then
+		MapTile.fog[posx] = {};
+	end
+	if MapTile.fog[posx][posy] == nil then 
+		MapTile.fog[posx][posy] = nil;
+	end
+			
+	MapTile.fog[posx][posy] = {unitObj,id};
+end
 
+-- 删除云雾
+function MapTile.DelFog( posx, posy )
+	if MapTile.fog[posx] == nil or MapTile.fog[posx][posy] == nil then
+		return
+	end
+	MapSkyRootObjectPool:Release( "MapSkyFog"..MapTile.fog[posx][posy][2], MapTile.fog[posx][posy][1] );
+	MapTile.fog[posx][posy] = nil;
+end
+
+
+-- 创建飞鸟
+function MapTile.AddBirds( posx, posy )
+	--local randnum = math.random( 20, 23 );
+	if math.mod( posx, 12 ) ~= 0 or math.mod( posy, 12 ) ~= 0 then
+		return
+	end
+	
+	if MapTile.birds[posx] ~= nil and MapTile.birds[posx][posy] ~= nil then
+		return
+	end
+	
+	local id = math.random( 1, 2 )
+	local unitObj = MapSkyRootObjectPool:Get( "MapSkyBirds"..id );
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	local x, y = MapUnit.getGridTrans( MAPUNIT_TYPE_CITY, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( x, y, 0 );
+	unitObj.transform:SetParent( MapSkyRoot.transform );
+	--unitObj.transform.localScale = Vector3.one;
+	unitObj.gameObject:SetActive( true );
+	
+	-- 缓存起来
+	if MapTile.birds[posx] == nil then
+		MapTile.birds[posx] = {};
+	end
+	if MapTile.birds[posx][posy] == nil then 
+		MapTile.birds[posx][posy] = nil;
+	end
+			
+	MapTile.birds[posx][posy] = {unitObj,id};
+end
+
+-- 删除飞鸟
+function MapTile.DelBirds( posx, posy )
+	if MapTile.birds[posx] == nil or MapTile.birds[posx][posy] == nil then
+		return
+	end
+	MapSkyRootObjectPool:Release( "MapSkyBirds"..MapTile.birds[posx][posy][2], MapTile.birds[posx][posy][1] );
+	MapTile.birds[posx][posy] = nil;
+end

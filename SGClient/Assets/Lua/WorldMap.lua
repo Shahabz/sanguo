@@ -56,7 +56,7 @@ local m_MoveType = 0;
 
 -- 地图区域
 Area = {}
-Area.forest = {};
+--Area.forest = {};
 -- 根据世界坐标获取区域编号
 function Area.GetIndex( posx, posy )
 	local areax, areay;
@@ -161,6 +161,8 @@ function Area.Leave( area_index )
 		for i=beginx, beginx + 5, 1 do
 			for j=beginy, beginy + 5, 1 do
 				MapTile.DelForest( i, j )
+				MapTile.DelFog( i, j )
+				MapTile.DelBirds( i, j )
 			end
 		end
 		--for k, v in pairs( forests ) do
@@ -180,6 +182,8 @@ function Area.Enter( area_index )
 		for i=beginx, beginx + 5, 1 do
 			for j=beginy, beginy + 5, 1 do
 				MapTile.AddForest( i, j )
+				MapTile.AddFog( i, j )
+				MapTile.AddBirds( i, j )
 			end
 		end
 		--for k, v in pairs( forests ) do
@@ -208,6 +212,12 @@ MapForest5 				= nil;
 MapForest6 				= nil;
 MapUnitRoot				= nil;	-- 所有显示对象的根节点
 MapArmyRoot				= nil;	-- 部队单独拿出
+MapSkyRoot				= nil;  -- 天空
+MapSkyRootObjectPool 	= nil;	-- 天空内存池
+MapSkyBirds1 			= nil;
+MapSkyBirds2 			= nil;
+MapSkyFog1				= nil;
+MapSkyFog2 				= nil;
 local MapLineRoot		= nil;	-- 所有线根节点
 local MapClickEffect	= nil;	-- 点击特效
 local MapClickMod		= nil;	-- 操作界面
@@ -441,6 +451,7 @@ function WorldMap.Start( Prefab )
 	MapUnitRoot				= WorldMapPrefab.transform:Find( "MapUnitRoot" );
 	MapLineRoot				= WorldMapPrefab.transform:Find( "MapLineRoot" );
 	MapArmyRoot				= WorldMapPrefab.transform:Find( "MapArmyRoot" );
+	MapSkyRoot				= WorldMapPrefab.transform:Find( "MapSkyRoot" );
 	MapClickEffect			= WorldMapPrefab.transform:Find( "MapClickEffect" );
 	MapClickMod				= WorldMapPrefab.transform:Find( "MapClickMod" );
 	MapCamera				= WorldMapPrefab.transform:Find( "MapCamera" );
@@ -477,12 +488,23 @@ function WorldMap.Start( Prefab )
 	MapForest5 		= LoadPrefab("MapForest5");
 	MapForest6		= LoadPrefab("MapForest6");
 	MapForestRootObjectPool = MapForestRoot:GetComponent( typeof(ObjectPoolManager) );		
-	MapForestRootObjectPool:CreatePool("MapForest1", 20, 20, MapForest1 );
-	MapForestRootObjectPool:CreatePool("MapForest2", 20, 20, MapForest2 );
-	MapForestRootObjectPool:CreatePool("MapForest3", 20, 20, MapForest3 );
-	MapForestRootObjectPool:CreatePool("MapForest4", 20, 20, MapForest4 );
-	MapForestRootObjectPool:CreatePool("MapForest5", 20, 20, MapForest5 );
-	MapForestRootObjectPool:CreatePool("MapForest6", 20, 20, MapForest6 );
+	MapForestRootObjectPool:CreatePool("MapForest1", 10, 10, MapForest1 );
+	MapForestRootObjectPool:CreatePool("MapForest2", 10, 10, MapForest2 );
+	MapForestRootObjectPool:CreatePool("MapForest3", 10, 10, MapForest3 );
+	MapForestRootObjectPool:CreatePool("MapForest4", 10, 10, MapForest4 );
+	MapForestRootObjectPool:CreatePool("MapForest5", 10, 10, MapForest5 );
+	MapForestRootObjectPool:CreatePool("MapForest6", 10, 10, MapForest6 );
+	
+	-- 创建天空
+	MapSkyBirds1 			= LoadPrefab("MapSkyBirds1");
+	MapSkyBirds2 			= LoadPrefab("MapSkyBirds2");
+	MapSkyFog1				= LoadPrefab("MapSkyFog1");
+	MapSkyFog2 				= LoadPrefab("MapSkyFog2");
+	MapSkyRootObjectPool = MapSkyRoot:GetComponent( typeof(ObjectPoolManager) );		
+	MapSkyRootObjectPool:CreatePool("MapSkyBirds1", 1, 1, MapSkyBirds1 );
+	MapSkyRootObjectPool:CreatePool("MapSkyBirds2", 1, 1, MapSkyBirds2 );
+	MapSkyRootObjectPool:CreatePool("MapSkyFog1", 1, 1, MapSkyFog1 );
+	MapSkyRootObjectPool:CreatePool("MapSkyFog2", 1, 1, MapSkyFog2 );
     	
 	-- 设置摄像机初始位置为我的城池
 	WorldMap.m_nMyCityCameraX, WorldMap.m_nMyCityCameraY = WorldMap.ConvertGameToCamera( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy );
