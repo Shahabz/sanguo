@@ -117,18 +117,22 @@ function City.BuildingSelect( transform )
 			City.BuildingHideOver( building.kind )
 			system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );
 		else
+			eye.audioManager:Play(315);
 			EquipForgingDlgShow();
 		end
 	elseif building.kind == BUILDING_Wash then -- 洗炼铺
+		eye.audioManager:Play(315);
 		EquipWashDlgShow();
 		
 	elseif building.kind == BUILDING_Fangshi then -- 坊市
 		FangshiDlgShow()
 		
 	elseif building.kind == BUILDING_Shop then -- 商店
+		eye.audioManager:Play(313);
 		ShopDlgShow()
 		
 	elseif building.kind == BUILDING_Hero then -- 聚贤馆
+		eye.audioManager:Play(317);
 		HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
 		
 	elseif building.kind == BUILDING_Wishing then -- 聚宝盆
@@ -150,7 +154,8 @@ function City.BuildingSelect( transform )
 		elseif building.kind >= BUILDING_Infantry and building.kind <= BUILDING_Militiaman_Archer and GetPlayer():BuildingOverValue( building.kind ) > 0 then
 			City.BuildingHideOver( building.kind )
 			system_askinfo( ASKINFO_TRAIN, "", 4, building.kind );
-					
+			eye.audioManager:Play(312);
+		
 		else
 	
 			if building.kind == BUILDING_Wood and GetPlayer().m_questid == QUEST_MAINID_MADAI then
@@ -370,22 +375,23 @@ function City.BuildingSetName( info )
 	end
 
 	if kind <= BUILDING_Militiaman_Archer then
-		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind).." "..info.m_level;
+		SetText( unitObj:Find("info/name"), T(kind) )
+		SetText( unitObj:Find("info/level"), info.m_level )
 	elseif kind <= BUILDING_Iron then
 		if info.m_level <= 0 then
 			SetSpriteGray( unitObj:Find("shape"), true )
-			SetFalse( unitObj:Find("panel") )
+			SetFalse( unitObj:Find("info") )
 			SetTrue( unitObj:Find("ResDrawingMod") );
 		else
 			if info.m_level == 1 then -- 只有1级有必要
 				SetSpriteGray( unitObj:Find("shape"), false )
-				SetTrue( unitObj:Find("panel") )
+				SetTrue( unitObj:Find("info") )
 				SetFalse( unitObj:Find("ResDrawingMod") );
 			end
-			unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = "Lv."..info.m_level;
+			SetText( unitObj:Find("info/level"), info.m_level )
 		end
 	else
-		unitObj:Find("panel/name"):GetComponent( typeof(UIText) ).text = T(kind)
+		SetText( unitObj:Find("info/name"), T(kind) )
 	end
 end
 
@@ -957,7 +963,7 @@ function City.UpgradeArrow()
 				local unitObj = City.m_Buildings[v.m_kind]
 				local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
 				if unitObj ~= nil and buildingConfig ~= nil then
-					local arrow = unitObj.transform:Find("arrow")
+					local arrow = unitObj.transform:Find("info/arrow")
 					-- 满足升级
 					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
 						GetPlayer().m_level >= buildingConfig.actorlevel and
@@ -990,7 +996,7 @@ function City.UpgradeArrow()
 						local unitObj = City.m_Buildings_res[v.m_kind][v.m_offset]
 						local buildingConfig = g_building_upgrade[v.m_kind][v.m_level+1]
 						if unitObj ~= nil and buildingConfig ~= nil then
-							local arrow = unitObj.transform:Find("arrow")
+							local arrow = unitObj.transform:Find("info/arrow")
 							-- 满足升级
 							if GetPlayer():CityLevel() >= buildingConfig.citylevel and
 								GetPlayer().m_level >= buildingConfig.actorlevel and

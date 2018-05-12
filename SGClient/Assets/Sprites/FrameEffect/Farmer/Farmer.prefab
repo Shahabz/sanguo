@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1588188526753214}
+  m_IsPrefabParent: 1
+--- !u!1 &1588188526753214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 224032305031081484}
+  - component: {fileID: 114269948773504330}
+  - component: {fileID: 212820295276194226}
+  m_Layer: 5
+  m_Name: Farmer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &114269948773504330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1588188526753214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a90ea73b5f2254a64823e99c9e0ea4ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FPS: 0.1
+  MinFPS: 0
+  MaxFPS: 0
+  SpriteFrames:
+  - {fileID: 21300000, guid: bf9224f1cb35c498cb3767cb9e8f81fb, type: 3}
+  - {fileID: 21300000, guid: 4e68a34075a6447babbc81b992c40b18, type: 3}
+  - {fileID: 21300000, guid: b2419a58c2a0d4f92a0d385301c4adf5, type: 3}
+  - {fileID: 21300000, guid: a00ccb4f5d49f441cbd64de3f5a66741, type: 3}
+  - {fileID: 21300000, guid: d97c83390a0af4b8cb3dd5427cafcfb9, type: 3}
+  - {fileID: 21300000, guid: 42891b45be6624f73a15bcd3c4b24e49, type: 3}
+  - {fileID: 21300000, guid: f0a496839e1f04796952c23c183c6b42, type: 3}
+  - {fileID: 21300000, guid: 209865d61f6dd4486bc30c065e2785fd, type: 3}
+  - {fileID: 21300000, guid: a455b94362f9d42a0ba9f04e10ccc27a, type: 3}
+  - {fileID: 21300000, guid: e5cea7c89ede2496c857f0af695f9b77, type: 3}
+  - {fileID: 21300000, guid: 98af2acd8eee5425b812d8f3a07314ea, type: 3}
+  - {fileID: 21300000, guid: 7bad122e16b6b4fa3986c275d3a48249, type: 3}
+  - {fileID: 21300000, guid: 7b5a29226901644dabfd4261daf8ea6f, type: 3}
+  - {fileID: 21300000, guid: 85df01f7a00694150a0bba46438d1de7, type: 3}
+  - {fileID: 21300000, guid: 421c3b555ea314f01811e1e8f7d569a8, type: 3}
+  - {fileID: 21300000, guid: 204d602322d2d4fa280e11bf199a752f, type: 3}
+  - {fileID: 21300000, guid: e30691527198c486b8ca327d46369464, type: 3}
+  - {fileID: 21300000, guid: 2065824f616b24fd8b6192206828fdb2, type: 3}
+  - {fileID: 21300000, guid: 48d69253b516848dd944cbdd91f71e3c, type: 3}
+  - {fileID: 21300000, guid: ccc25e54deb054cc2ae69c2c920ec031, type: 3}
+  - {fileID: 21300000, guid: 101e9d1583e0548b08a14e6dc6fcf654, type: 3}
+  - {fileID: 21300000, guid: 68a928e21140a429895dd59e4fc74289, type: 3}
+  IsPlaying: 0
+  Foward: 1
+  AutoPlay: 1
+  Loop: 1
+--- !u!212 &212820295276194226
+SpriteRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1588188526753214}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: bf9224f1cb35c498cb3767cb9e8f81fb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.6, y: 0.78}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+--- !u!224 &224032305031081484
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1588188526753214}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 20, y: -86}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}

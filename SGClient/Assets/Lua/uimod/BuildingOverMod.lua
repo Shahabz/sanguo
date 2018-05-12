@@ -65,6 +65,7 @@ function BuildingOverModClick( gameObject )
 		
 	elseif kind >= BUILDING_Infantry and kind <= BUILDING_Militiaman_Archer then
 		system_askinfo( ASKINFO_TRAIN, "", 4, kind );
+		eye.audioManager:Play(312);
 	
 	elseif kind == BUILDING_Smithy then
 		system_askinfo( ASKINFO_EQUIPFORGING, "", 4 );

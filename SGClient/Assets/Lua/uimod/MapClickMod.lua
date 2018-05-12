@@ -336,8 +336,8 @@ local m_ButtonPos =
 function MapClickModButton( buttonList )
     for i = 1, #buttonList, 1 do
         buttonList[i].gameObject:SetActive( true );
-        buttonList[i]:GetComponent("UITweenLocalPosition").to = m_ButtonPos[ #buttonList ][i];
-        buttonList[i]:GetComponent("UITweenLocalPosition"):Play( true );
+        buttonList[i]:GetComponent(typeof(UITweenLocalPosition)).to = m_ButtonPos[ #buttonList ][i];
+        buttonList[i]:GetComponent(typeof(UITweenLocalPosition)):Play( true );
     end
 end
 

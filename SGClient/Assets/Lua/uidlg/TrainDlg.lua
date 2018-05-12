@@ -181,10 +181,13 @@ function TrainDlgOnShow( buildingKind )
 	
 	if m_buildingKind == BUILDING_Infantry or m_buildingKind == BUILDING_Militiaman_Infantry then
 		m_corps = 0
+		eye.audioManager:Play(308);
 	elseif m_buildingKind == BUILDING_Cavalry or m_buildingKind == BUILDING_Militiaman_Cavalry then
 		m_corps = 1
+		eye.audioManager:Play(309);
 	elseif m_buildingKind == BUILDING_Archer or m_buildingKind == BUILDING_Militiaman_Archer then
 		m_corps = 2
+		eye.audioManager:Play(310);
 	end
 	SetImage( m_uiCorps, CorpsSprite( m_corps ) );
 	SetImage( m_uiShape, CorpsFaceSprite( m_corps ) );
@@ -404,6 +407,7 @@ function TrainDlgTrain()
 		GuideNext();
 	end
 	system_askinfo( ASKINFO_TRAIN, "", 1, m_buildingKind, m_selectsec );
+	eye.audioManager:Play(311);
 end
 
 -- 加速

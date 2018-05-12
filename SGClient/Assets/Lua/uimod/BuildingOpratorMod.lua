@@ -36,12 +36,14 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 			if m_kind == BUILDING_Main then
 				LevyDlgShow();
 			elseif m_kind == BUILDING_Wall then
+				eye.audioManager:Play(314);
 				CityGuardDlgShow();
 			elseif m_kind == BUILDING_StoreHouse then
 				StoreDlgShow()
 			elseif m_kind == BUILDING_Tech then
 				CityTechDlgOnShow();
 			elseif m_kind == BUILDING_Craftsman then
+					eye.audioManager:Play(316);
 				MaterialMakeDlgShow();
 			elseif m_kind == BUILDING_Cabinet	then
 				CabinetDlgShow();
@@ -127,7 +129,26 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-
+-------------------------------
+-- 按钮表现
+-------------------------------
+-- 移动距离
+local uiButtonOffset = 40;
+local uiButtonOffsetX = 110;
+local uiButtonOffsetY = 44;
+local m_ButtonPos = 
+{
+    [1] = { Vector3.New( 0, -uiButtonOffsetY, 0 ) },
+    [2] = { Vector3.New( -uiButtonOffsetX, -uiButtonOffsetY+uiButtonOffset, 0 ), Vector3.New( uiButtonOffsetX, -uiButtonOffsetY+uiButtonOffset, 0 ) },
+    [3] = { Vector3.New( -uiButtonOffsetX, -uiButtonOffsetY+uiButtonOffset, 0 ), Vector3.New( 0, -uiButtonOffsetY+uiButtonOffset, 0 ), Vector3.New( uiButtonOffsetX, -uiButtonOffsetY+uiButtonOffset, 0 ) },
+}
+function BuildingOpratorModButton( buttonList )
+    for i = 1, #buttonList, 1 do
+        buttonList[i].gameObject:SetActive( true );
+        buttonList[i]:GetComponent(typeof(UITweenLocalPosition)).to = m_ButtonPos[ #buttonList ][i];
+        buttonList[i]:GetComponent(typeof(UITweenLocalPosition)):Play( true );
+    end
+end
 function BuildingOpratorModShow( show, kind, offset, parent )
 
     if show then
@@ -226,22 +247,23 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 
 
         -- 刷新显示位置
-        --[[local activeOP = {};
-        for i = 0, m_uiOprator.childCount - 1, 1 do
-            local op = m_uiOprator:GetChild( i );
+        local activeOP = {};
+        for i = 0, m_uiOprator.transform.childCount - 1, 1 do
+            local op = m_uiOprator.transform:GetChild( i );
             if op.gameObject.activeSelf then
                 table.insert( activeOP, op );
             end
         end
-        local space = 116;
+		BuildingOpratorModButton( activeOP )
+        --[[local space = 160;
         local start = -( space * ( #activeOP - 1 ) ) / 2;
         for i = 1, #activeOP, 1 do
             local pos = Vector3.zero;
             pos.x = start + ( i - 1 ) * space;
-            local tweenerPos = activeOP[i]:GetComponent( UITweenLocalPosition.GetClassType() );
+            local tweenerPos = activeOP[i]:GetComponent( typeof(UITweenLocalPosition) );
             tweenerPos.from = pos + Vector3.New( 0, 64, 0 );
             tweenerPos.to = pos;
-            local tweenerFade = activeOP[i]:GetComponent( UITweenFade.GetClassType() );
+            local tweenerFade = activeOP[i]:GetComponent( typeof(UITweenFade) );
 
             tweenerFade.delay = 0.2 + i * 0.05;
             tweenerPos.delay = 0.2 + i * 0.05;
