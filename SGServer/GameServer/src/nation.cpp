@@ -162,6 +162,10 @@ int nation_load()
 	for ( int nation = 0; nation < NATION_MAX; nation++ )
 	{
 		g_nation[nation].nation = nation;
+		if ( g_nation[nation].level <= 0 )
+		{
+			g_nation[nation].level = 1;
+		}
 		for ( int tmpi = 0; tmpi < NATION_OFFICIAL_MAX; tmpi++ )
 		{
 			g_nation[nation].official_city_index[tmpi] = -1;
@@ -522,6 +526,8 @@ int nation_exp( char nation, int exp )
 		return -1;
 	if ( pNation->level >= g_nation_upgrade_maxnum - 1 )
 		return -1;
+	if ( pNation->level <= 0 )
+		pNation->level = 1;
 	pNation->exp += exp;
 
 	// ¼ì²éÉý¼¶

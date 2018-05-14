@@ -387,13 +387,21 @@ function MapUnit.createCity( recvValue )
 	local uiEffectProtect = objs[3];
 	local uiArmyGroup = objs[4];
 	local CityMapCallMod = objs[5];
+	local uiLevel = objs[8];
+	local uiNation = objs[9];
 	
 	-- 形象
-    uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
+    uiShape.transform:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
 			
 	-- 名字
-	uiName:GetComponent("UIText").text = "Lv."..level.." "..name
-
+	SetText(uiName,name)
+	
+	-- 等级
+	SetText(uiLevel,level)
+	
+	-- 国家
+	SetImage(uiNation,NationSprite(nation))
+	
 	-- 范围框
 	if recvValue.m_unit_index == WorldMap.m_nMyCityUnitIndex then
 		SetTrue( uiRange )
@@ -709,9 +717,10 @@ function MapUnit.createTown( recvValue )
 	
 	-- 范围框
 	if type < MAPUNIT_TYPE_TOWN_ZHFD then
-		uiRange.transform.localScale = Vector3.New( range, range, range );
-		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
-		SetTrue( uiRange )
+		--uiRange.transform.localScale = Vector3.New( range, range, range );
+		--uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
+		--SetTrue( uiRange )
+		SetFalse( uiRange )
 	else
 		SetFalse( uiRange )
 	end
@@ -890,16 +899,20 @@ function MapUnit.createEnemy( recvValue )
 	local uiName = objs[1];
 	local uiQuest = objs[2];
 	local uiTarget = objs[3];
+	local uiLevel = objs[4];
+	
 	-- 名字
 	if g_enemyinfo[kind].nameid > 0 then
-		SetText( uiName, "Lv."..level.." "..T(g_enemyinfo[kind].nameid), Color.yellow )
+		SetText( uiName, T(g_enemyinfo[kind].nameid), Color.yellow )
 	else
 		if level > GetPlayer().m_mokilllv+1 then
-			SetText( uiName, "Lv."..level.." "..T(938), Color.red )
+			SetText( uiName, T(938), Color.red )
 		else
-			SetText( uiName, "Lv."..level.." "..T(938), Color.white )
+			SetText( uiName, T(938), Color.white )
 		end
 	end
+	-- 等级
+	SetText( uiLevel, level )
 	
 	local shape = g_enemyinfo[kind].shape
 	local spriteAni = uiShape:GetComponent( typeof(SpriteAnimation) )
@@ -992,24 +1005,31 @@ function MapUnit.createRes( recvValue )
 	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
-	local uiEffectGather = objs[2];
+	local uiLevel = objs[2];
+	local uiNation = objs[3];
+	local uiEffectGather = objs[4];
 		
 	-- 形象
     --uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitResShapeList[restype] );
 	uiShape:GetComponent("SpriteRenderer").sprite = MapUnit.SpritePoolRes[restype]
 	
+	-- 等级
+	SetText( uiLevel, level );
 	-- 名字
 	if state == ARMY_STATE_GATHER then
 		local nation	= recvValue.m_char_value[3];
 		local actorid	= recvValue.m_int_value[1];
+		SetImage( uiNation, NationSprite(nation) )
+		SetTrue( uiNation )
 		if actorid == GetPlayer().m_actorid then
-			SetText( uiName, "["..Nation(nation).."]"..name, NameColor(2) )
+			SetText( uiName, name, NameColor(2) )
 		else
-			SetText( uiName, "["..Nation(nation).."]"..name, NameColor(4) )
+			SetText( uiName, name, NameColor(4) )
 		end
 		uiEffectGather.gameObject:SetActive( true );
 	else
-		SetText( uiName, "Lv."..level.." "..T(MapUnitResNameList[restype]), Hex2Color( 0xFFFFFFFF ) ) 
+		SetFalse( uiNation )
+		SetText( uiName, " "..T(MapUnitResNameList[restype]), Hex2Color( 0xFFFFFFFF ) )
 		uiEffectGather.gameObject:SetActive( false );
 	end
 	return unitObj;

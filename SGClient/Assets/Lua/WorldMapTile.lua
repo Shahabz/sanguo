@@ -144,18 +144,6 @@ function MapTile.block( posx, posy )
 	return 0;
 end
 
--- 获取森林池对象
-function MapTile.GetForestObj( id )
-	local offset = id - 49;
-	return MapForestRootObjectPool:Get( "MapForest"..offset );
-end
-
--- 获取森林池对象
-function MapTile.ReleaseForestObj( id, unitObj )
-	local offset = id - 49;
-	MapForestRootObjectPool:Release( "MapForest"..offset, unitObj );
-end
-
 -- 创建森林
 function MapTile.AddForest( posx, posy )
 	-- 先转换成一小块地图的坐标，因为地图是N*N的拼起来的
@@ -163,7 +151,7 @@ function MapTile.AddForest( posx, posy )
 	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
 	local index = localposx + localposy*TMX_HEIGHT + 1;
 	
-	local id = MapTile.tiledMap.layers[4].data[index];
+	local id = MapTile.tiledMap.layers[5].data[index];
 	if id == 0 then
 		return
 	end
@@ -178,7 +166,8 @@ function MapTile.AddForest( posx, posy )
 		end
 	end
 	
-	local unitObj = MapTile.GetForestObj( id )
+	local id = math.random( 1, 6 )
+	local unitObj = MapForestRootObjectPool:Get( "MapForest"..id );
 	
 	-- 位置
 	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
@@ -196,7 +185,7 @@ function MapTile.AddForest( posx, posy )
 		MapTile.forest[posx][posy] = nil;
 	end
 			
-	MapTile.forest[posx][posy] = unitObj;
+	MapTile.forest[posx][posy] = {unitObj,id};
 end
 
 -- 删除森林
@@ -205,7 +194,7 @@ function MapTile.DelForest( posx, posy )
 	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
 	local index = localposx + localposy*TMX_HEIGHT + 1;
 	
-	local id = MapTile.tiledMap.layers[4].data[index];
+	local id = MapTile.tiledMap.layers[5].data[index];
 	if id == 0 then
 		return
 	end
@@ -213,8 +202,7 @@ function MapTile.DelForest( posx, posy )
 	if MapTile.forest[posx] == nil or MapTile.forest[posx][posy] == nil then
 		return
 	end
-
-	MapTile.ReleaseForestObj( id, MapTile.forest[posx][posy] )
+	MapForestRootObjectPool:Release( "MapForest"..MapTile.forest[posx][posy][2], MapTile.forest[posx][posy][1] );
 	MapTile.forest[posx][posy] = nil;
 end
 

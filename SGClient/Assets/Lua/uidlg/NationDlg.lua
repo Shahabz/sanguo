@@ -242,6 +242,9 @@ end
 
 -- 基本信息
 function NationDlgChangeBase()
+	if m_recvValue.m_level == 0 then
+		m_recvValue.m_level = 1;
+	end
 	SetText( m_uiLevel, F( 1936, m_recvValue.m_level ) )
 	if m_recvValue.m_level >= #g_nation_upgrade then
 		SetText( m_uiExp, T(1768) )

@@ -41,12 +41,12 @@ function IN_OnWorldMapBlock( posx, posy )
 	
 	-- 地表层，要检查水
 	local terrain = tiledMap.layers[1].data[index];
-	if terrain >= 85 then
+	if terrain >= 83 then
 		return terrain;
 	end
 	
 	-- 山层
-	local mountain = tiledMap.layers[2].data[index];
+	local mountain = tiledMap.layers[3].data[index];
 	if mountain >= 85 then
 		return mountain;
 	end
