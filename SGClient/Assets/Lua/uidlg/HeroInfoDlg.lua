@@ -415,10 +415,10 @@ function HeroInfoDlgSet( path, pHero, up )
 				SetFalse( uiSelect )
 			end
 		
-			SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
-			SetImage( uiColor, ItemColorSprite(pHero.m_color) )
+			--SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
+			--SetImage( uiColor, ItemColorSprite(pHero.m_color) )
 			SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
-			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
+			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ), NameColor(pHero.m_color) )
 			
 			local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 			if only == true and pHero.m_god == 1 then

@@ -6,8 +6,8 @@ local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiVipText = nil; --UnityEngine.GameObject
 local m_uiExpProgress = nil; --UnityEngine.GameObject
 local m_uiBodyProgress = nil; --UnityEngine.GameObject
-local m_uiLabelNationText = nil; --UnityEngine.GameObject
-local m_uiLabelNameText = nil; --UnityEngine.GameObject
+local m_uiLabelPosText = nil; --UnityEngine.GameObject
+local m_uiLabelZoneText = nil; --UnityEngine.GameObject
 local m_uiLabelPlaceText = nil; --UnityEngine.GameObject
 local m_uiLabelServerText = nil; --UnityEngine.GameObject
 local m_uiLabelIDText = nil; --UnityEngine.GameObject
@@ -83,8 +83,8 @@ function PlayerDlgOnAwake( gameObject )
 	m_uiVipText = objs[3];
 	m_uiExpProgress = objs[4];
 	m_uiBodyProgress = objs[5];
-	m_uiLabelNationText = objs[6];
-	m_uiLabelNameText = objs[7];
+	m_uiLabelPosText = objs[6];
+	m_uiLabelZoneText = objs[7];
 	m_uiLabelPlaceText = objs[8];
 	m_uiLabelServerText = objs[9];
 	m_uiLabelIDText = objs[10];
@@ -156,8 +156,8 @@ function PlayerDlgSet()
 	end
 	
 	-- 其它信息
-	SetText( m_uiLabelNationText, NationEx( GetPlayer().m_nation ) );
-	SetText( m_uiLabelNameText, GetPlayer().m_name );
+	SetText( m_uiLabelPosText, "[0,0]" );
+	SetText( m_uiLabelZoneText, MapZoneName( GetPlayer().m_zone) );
 	SetText( m_uiLabelPlaceText, PlaceName( GetPlayer().m_place ) );
 	SetText( m_uiLabelServerText, Const.servername );
 	SetText( m_uiLabelIDText, GetPlayer().m_actorid );
