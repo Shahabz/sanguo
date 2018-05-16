@@ -184,7 +184,7 @@ end
 -- 改变装备信息
 function Equip:OnEquipChange( _EquipIndex )
 	local nEquipIndex = _EquipIndex + 1;
-	BagDlgLoadEquip();	
+	EquipDlgLoadEquip();	
 end
 
 -- 得到服务器返回的消息，得到一个装备

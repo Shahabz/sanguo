@@ -906,7 +906,7 @@ int kingwar_activity_onclose()
 	if ( g_map_town[MAPUNIT_KING_TOWNID].nation > 0 )
 	{
 		// 邮件
-		// 5530	本届Lv.{0}皇城血战圆满结束，[{1}]登顶皇城。战胜国战神{2}携带红色图纸消息而来
+		// 5530	本届Lv.{0}皇城血战圆满结束，[{1}]登顶皇城。战胜国战神{2}携带金色图纸消息而来
 		char v1[32] = { 0 };
 		char v2[32] = { 0 };
 		char v3[32] = { 0 };
@@ -1807,7 +1807,7 @@ int kingwar_treasure_do( int actor_index, short posx, short posy )
 				// 1998	地表冒着灿烂的金光，您掘地三尺，终于挖到了<color=#{0}>{1}</color>
 				actor_notify_alert_v( actor_index, 1998, v3, v4 );
 
-				// 6012	{0}的红色图纸已全部集齐，国宴已顺利开启，主公前往恭贺会获得一份大礼
+				// 6012	{0}的金色色图纸已全部集齐，国宴已顺利开启，主公前往恭贺会获得一份大礼
 				if ( g_treasure_nationitem_count[nation] <= 0 )
 				{
 					sprintf( v1, "%s%d", TAG_NATION, pCity->nation );

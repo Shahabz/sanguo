@@ -517,10 +517,10 @@ function EquipWashDlgSetWash( pEquip )
 		end
 	end
 	
-	-- 金装秘技
+	-- 紫装秘技
 	local objs = m_uiWashIcon[4].transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiWarn = objs[5];
-	if color < ITEM_COLOR_LEVEL_GOLD then
+	if color < ITEM_COLOR_LEVEL_PURPLE then
 		SetFalse( m_uiWashIconAdd );
 		SetFalse( m_uiWashIcon[4] );
 	else
@@ -533,15 +533,15 @@ function EquipWashDlgSetWash( pEquip )
 		end
 	end
 	
-	-- 小于金色，等级全满，就不自动洗练了
-	if color < ITEM_COLOR_LEVEL_GOLD and m_level_allfull == 1 then
+	-- 小于紫色，等级全满，就不自动洗练了
+	if color < ITEM_COLOR_LEVEL_PURPLE and m_level_allfull == 1 then
 		EquipWashDlgStopAuto()
 			
 	-- 金色装备，洗出秘技，就不自动洗练了
-	elseif color >= ITEM_COLOR_LEVEL_GOLD and m_hassuper == 1 then
+	elseif color >= ITEM_COLOR_LEVEL_PURPLE and m_hassuper == 1 then
 		EquipWashDlgStopAuto()
 		
-	elseif color >= ITEM_COLOR_LEVEL_GOLD and m_level_allfull == 1 then 
+	elseif color >= ITEM_COLOR_LEVEL_PURPLE and m_level_allfull == 1 then 
 		EquipWashDlgStopAuto()
 	end
 	
@@ -564,7 +564,7 @@ end
 -- 
 function EquipWashDlgSetButton()
 	-- 开启秘技洗练
-	if m_color >= ITEM_COLOR_LEVEL_GOLD and GetPlayer().m_attr.m_ability_open_201 > 0 and m_level_allfull == 1 and m_level_allfull_num > 0 then
+	if m_color >= ITEM_COLOR_LEVEL_PURPLE and GetPlayer().m_attr.m_ability_open_201 > 0 and m_level_allfull == 1 and m_level_allfull_num > 0 then
 		SetFalse( m_uiTokenBtn )
 		SetTrue( m_uiSuperBtn )
 		-- 秘技洗练价格 
@@ -639,14 +639,14 @@ function EquipWashDlgToken()
 	local token = m_washtoken;
 	m_showEffect = true;
 	local auto = true;
-	-- 小于金色，等级全满，就不自动洗练了
-	if m_color < ITEM_COLOR_LEVEL_GOLD and m_level_allfull == 1 then
+	-- 小于紫色色，等级全满，就不自动洗练了
+	if m_color < ITEM_COLOR_LEVEL_PURPLE and m_level_allfull == 1 then
 		auto = false;
 	end
 	
-	--[[-- 金色装备，洗出秘技，就不自动洗练了
+	--[[-- 紫色装备，洗出秘技，就不自动洗练了
 	if auto == true then
-		if m_color >= ITEM_COLOR_LEVEL_GOLD and m_hassuper == 1 then
+		if m_color >= ITEM_COLOR_LEVEL_PURPLE and m_hassuper == 1 then
 			auto = false;
 		end
 	end--]]
@@ -655,7 +655,7 @@ function EquipWashDlgToken()
 	if auto == true and m_wash_count >= 5 and m_auto_wash_toggle == false then
 		
 		local msg = ""
-		if m_color >= ITEM_COLOR_LEVEL_GOLD then
+		if m_color >= ITEM_COLOR_LEVEL_PURPLE then
 			msg = "\n"..T(880).."\n\n"..T(879)
 		else
 			msg = "\n\n"..T(879)

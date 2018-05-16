@@ -673,7 +673,7 @@ function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
 	SetImage( uiColor, ItemColorSprite( color ) )
 	SetText( uiName, GirlName( kind ) )
 	SetImage( uiShape, GirlFaceSprite( kind ) )
-	if color >= ITEM_COLOR_LEVEL_PURPLE then
+	if color >= ITEM_COLOR_LEVEL_RED then
 		SetText( uiAttrName, T(3350) ) -- 突破已满
 		SetText( uiAttrText, "" )
 	else

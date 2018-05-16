@@ -1624,7 +1624,7 @@ int city_guard_call( int city_index )
 		return -1;
 
 	char monsterid = random( 1, g_cityguardinfo_maxnum-1 );
-	char color = ITEM_COLOR_LEVEL_BLUE;
+	char color = ITEM_COLOR_LEVEL_GREEN;
 	char corps = random( 0, 2 );
 	char shape = random( 1, 15 );
 	unsigned char minlevel = buildingconfig->value[0];

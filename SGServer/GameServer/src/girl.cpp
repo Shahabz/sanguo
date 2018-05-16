@@ -301,7 +301,7 @@ int girl_colorup( int actor_index, short kind )
 	Girl *pGirl = girl_getptr( pCity->index, kind );
 	if ( !pGirl )
 		return -1;
-	if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+	if ( pGirl->color >= ITEM_COLOR_LEVEL_RED )
 		return -1;
 	GirlInfoConfig *config = girl_getconfig( kind, pGirl->color );
 	if ( !config )
@@ -797,7 +797,7 @@ int _girl_shop_randomitem( City *pCity, int row, short *outid )
 				continue;
 			if ( pGirl->color == 0 )
 				continue;
-			if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+			if ( pGirl->color >= ITEM_COLOR_LEVEL_RED )
 				continue;
 		}
 		
@@ -1110,7 +1110,7 @@ int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *ou
 					continue;
 				if ( pGirl->color == 0 )
 					continue;
-				if ( pGirl->color >= ITEM_COLOR_LEVEL_PURPLE )
+				if ( pGirl->color >= ITEM_COLOR_LEVEL_RED )
 					continue;
 			}
 		}

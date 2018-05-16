@@ -235,7 +235,7 @@ void city_attr_calc( CityAttr *pAttr, short ability, int value, float digit )
 	case CITY_ATTR_ABILITY_139:// 增加武将带兵排数（固定数值）（内阁采集）
 		pAttr->hero_row_gather += value;
 		break;
-	case CITY_ATTR_ABILITY_201:// 秘技：金色以上装备技能满级且相同，可开启秘技（开启功能）
+	case CITY_ATTR_ABILITY_201:// 秘技：紫色以上装备技能满级且相同，可开启秘技（开启功能）
 		pAttr->ability_open_201 = 1;
 		break;
 	case CITY_ATTR_ABILITY_202:// 极品装备：打造装备有概率直接获得秘技装备（开启功能）

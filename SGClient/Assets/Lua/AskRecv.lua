@@ -74,7 +74,7 @@ function RecvActorNotify(recvValue)
 	elseif msgid == NOTIFY_EQUIP then
 		if value[1] == 0 then
 			GetPlayer().m_equipext = value[2];
-			BagDlgEquipExtSet();
+			EquipDlgEquipExtSet();
 		end
 	
 	-- 角色	

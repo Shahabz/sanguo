@@ -52,6 +52,8 @@ ButtonTable.m_uiButtonGM = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonRelogin = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonRestart = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonGirl = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonEquip = nil; --UnityEngine.GameObject
+
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
 local m_bMorePanel = false;
@@ -220,6 +222,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 女将	
 		elseif nControlID == 20 then
 			GirlDlgShow()
+		
+		-- 装备
+		elseif nControlID == 21 then
+			EquipDlgShow()
 			
 		-- 聊天
 		elseif nControlID == 30 then
@@ -475,6 +481,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiCutScenes = objs[85];
 	m_uiQuestTitleText = objs[86];
 	m_uiQuestEffect = objs[87];
+	ButtonTable.m_uiButtonEquip = objs[88];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
@@ -1028,6 +1035,13 @@ function MainDlgSetButtons( openoffset )
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
 		SetParent( ButtonTable.m_uiButtonBag, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
+	-- 装备
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( ButtonTable.m_uiButtonEquip, m_uiButtonBack[offset] );
 		m_hasButton[offset] = true;
 	end
 	

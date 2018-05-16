@@ -272,11 +272,11 @@ int equip_create( int actor_index, short equipkind, EquipOut *pOut )
 	// 默认洗练属性
 	int valuenum = 0;
 	short color = g_equipinfo[equipkind].color;
-	if ( color == ITEM_COLOR_LEVEL_GREEN )
+	if ( color == ITEM_COLOR_LEVEL_BLUE )
 	{ // 2个lv1属性
 		valuenum = 2;
 	}
-	else if ( color == ITEM_COLOR_LEVEL_GOLD || color == ITEM_COLOR_LEVEL_RED || color == ITEM_COLOR_LEVEL_PURPLE )
+	else if ( color == ITEM_COLOR_LEVEL_PURPLE || color == ITEM_COLOR_LEVEL_GOLD || color == ITEM_COLOR_LEVEL_RED )
 	{ // 3个lv1属性
 		valuenum = 3;
 	}
@@ -1217,7 +1217,7 @@ int equip_wash_free( int actor_index, int offset )
 		return -1;
 
 	char color = equip_getcolor( pEquip->kind );
-	if ( color < ITEM_COLOR_LEVEL_BLUE || color >= g_equip_washrule_maxnum )
+	if ( color < ITEM_COLOR_LEVEL_GREEN || color >= g_equip_washrule_maxnum )
 		return -1;
 
 	// 去掉秘技属性
@@ -1310,7 +1310,7 @@ int equip_wash_token( int actor_index, int offset )
 		return -1;
 
 	char color = equip_getcolor( pEquip->kind );
-	if ( color < ITEM_COLOR_LEVEL_BLUE || color >= g_equip_washrule_maxnum )
+	if ( color < ITEM_COLOR_LEVEL_GREEN || color >= g_equip_washrule_maxnum )
 		return -1;
 
 	if ( actor_change_token( actor_index, -g_equip_washrule[color].token, PATH_EQUIP_WASH, 0 ) < 0 )
@@ -1398,7 +1398,7 @@ int equip_wash_super( int actor_index, int offset )
 		return -1;
 
 	char color = equip_getcolor( pEquip->kind );
-	if ( color < ITEM_COLOR_LEVEL_GOLD || color >= g_equip_washrule_maxnum )
+	if ( color < ITEM_COLOR_LEVEL_PURPLE || color >= g_equip_washrule_maxnum )
 		return -1;
 
 	// 随机一个属性

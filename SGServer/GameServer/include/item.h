@@ -7,11 +7,11 @@
 
 /* 物品颜色 */
 #define ITEM_COLOR_LEVEL_WHITE	0 // 白色
-#define ITEM_COLOR_LEVEL_BLUE	1 // 蓝色
-#define ITEM_COLOR_LEVEL_GREEN	2 // 绿色
-#define ITEM_COLOR_LEVEL_GOLD	3 // 金色
-#define ITEM_COLOR_LEVEL_RED	4 // 红色
-#define ITEM_COLOR_LEVEL_PURPLE	5 // 紫色
+#define ITEM_COLOR_LEVEL_GREEN	1 // 绿色
+#define ITEM_COLOR_LEVEL_BLUE	2 // 蓝色
+#define ITEM_COLOR_LEVEL_PURPLE	3 // 紫色
+#define ITEM_COLOR_LEVEL_GOLD	4 // 金色
+#define ITEM_COLOR_LEVEL_RED	5 // 红色
 
 
 #define ITEM_COLOR_LEVEL_MAX	6 // 最大颜色数量

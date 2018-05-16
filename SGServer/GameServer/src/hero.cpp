@@ -2192,7 +2192,7 @@ int hero_godup( int actor_index, int herokind )
 	}
 	if ( pHero->level < global.hero_god_level )
 		return -1;
-	if ( pHero->color < ITEM_COLOR_LEVEL_PURPLE )
+	if ( pHero->color < ITEM_COLOR_LEVEL_RED )
 		return -1;
 	if ( pHero->god == 1 )
 		return -1;

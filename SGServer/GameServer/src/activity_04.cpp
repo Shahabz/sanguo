@@ -148,31 +148,31 @@ int activity_04_addvalue_equip( int city_index, int equiptype, int color )
 	if ( (int)time( NULL ) > endtime )
 		return -1;
 
-	//	收集至少{ 0 }件蓝色或以上品质装备
-	if ( color >= ITEM_COLOR_LEVEL_BLUE )
+	//	收集至少{ 0 }件绿色或以上品质装备
+	if ( color >= ITEM_COLOR_LEVEL_GREEN )
 	{
 		activity_04_addvalue( city_index, ACTIVITY_SEVENDAY_TYPE21, 1 );
 	}
 
-	//	收集至少{ 0 }件绿色或以上品质装备
-	if ( color >= ITEM_COLOR_LEVEL_GREEN )
+	//	收集至少{ 0 }件蓝色或以上品质装备
+	if ( color >= ITEM_COLOR_LEVEL_BLUE )
 	{
 		activity_04_addvalue( city_index, ACTIVITY_SEVENDAY_TYPE22, 1 );
 	}
 
-	//	收集{ 0 }件蓝色或以上品质兵符
-	if ( color >= ITEM_COLOR_LEVEL_BLUE && equiptype == EQUIP_TYPE_EQUIP6 )
+	//	收集{ 0 }件绿色或以上品质兵符
+	if ( color >= ITEM_COLOR_LEVEL_GREEN && equiptype == EQUIP_TYPE_EQUIP6 )
 	{
 		activity_04_addvalue( city_index, ACTIVITY_SEVENDAY_TYPE23, 1 );
 	}
 	
-	//	收集{ 0 }件蓝色或以上品质头盔
-	if ( color >= ITEM_COLOR_LEVEL_BLUE && equiptype == EQUIP_TYPE_EQUIP4 )
+	//	收集{ 0 }件绿色或以上品质头盔
+	if ( color >= ITEM_COLOR_LEVEL_GREEN && equiptype == EQUIP_TYPE_EQUIP4 )
 	{
 		activity_04_addvalue( city_index, ACTIVITY_SEVENDAY_TYPE24, 1 );
 	}
-	//	收集{ 0 }件绿色或以上品质头盔
-	if ( color >= ITEM_COLOR_LEVEL_GREEN && equiptype == EQUIP_TYPE_EQUIP4 )
+	//	收集{ 0 }件蓝色或以上品质头盔
+	if ( color >= ITEM_COLOR_LEVEL_BLUE && equiptype == EQUIP_TYPE_EQUIP4 )
 	{
 		activity_04_addvalue( city_index, ACTIVITY_SEVENDAY_TYPE25, 1 );
 	}
@@ -218,12 +218,12 @@ int activity_04_addvalue_equipwash( int actor_index )
 
 		if ( fulllevel >= g_equip_washrule[color].valuenum )
 		{
-			//	{0}件绿色或以上品质装备洗炼到满级
-			if ( color >= ITEM_COLOR_LEVEL_GREEN )
+			//	{0}件蓝色或以上品质装备洗炼到满级
+			if ( color >= ITEM_COLOR_LEVEL_BLUE )
 				new_type32 += 1;
 
-			//	{0}件金色或以上品质装备洗炼到满级
-			if ( color >= ITEM_COLOR_LEVEL_GOLD )
+			//	{0}件紫色或以上品质装备洗炼到满级
+			if ( color >= ITEM_COLOR_LEVEL_PURPLE )
 				new_type33 += 1;
 		}	
 	}
@@ -253,12 +253,12 @@ int activity_04_addvalue_equipwash( int actor_index )
 
 			if ( fulllevel >= g_equip_washrule[color].valuenum )
 			{
-				//	{0}件绿色或以上品质装备洗炼到满级
-				if ( color >= ITEM_COLOR_LEVEL_GREEN )
+				//	{0}件蓝色或以上品质装备洗炼到满级
+				if ( color >= ITEM_COLOR_LEVEL_BLUE )
 					new_type32 += 1;
 
-				//	{0}件金色或以上品质装备洗炼到满级
-				if ( color >= ITEM_COLOR_LEVEL_GOLD )
+				//	{0}件紫色或以上品质装备洗炼到满级
+				if ( color >= ITEM_COLOR_LEVEL_PURPLE )
 					new_type33 += 1;
 			}
 		}
@@ -289,12 +289,12 @@ int activity_04_addvalue_equipwash( int actor_index )
 
 			if ( fulllevel >= g_equip_washrule[color].valuenum )
 			{
-				//	{0}件绿色或以上品质装备洗炼到满级
-				if ( color >= ITEM_COLOR_LEVEL_GREEN )
+				//	{0}件蓝色或以上品质装备洗炼到满级
+				if ( color >= ITEM_COLOR_LEVEL_BLUE )
 					new_type32 += 1;
 
-				//	{0}件金色或以上品质装备洗炼到满级
-				if ( color >= ITEM_COLOR_LEVEL_GOLD )
+				//	{0}件紫色或以上品质装备洗炼到满级
+				if ( color >= ITEM_COLOR_LEVEL_PURPLE )
 					new_type33 += 1;
 			}
 		}
@@ -340,20 +340,20 @@ int activity_04_addvalue_hero( int actor_index )
 	{
 		if ( pCity->hero[tmpi].kind <= 0 )
 			continue;
-		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_BLUE )
-		{//	至少拥有{ 0 }名蓝色或以上将
-			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE26] += 1;
-		}
 		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_GREEN )
 		{//	至少拥有{ 0 }名绿色或以上将
+			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE26] += 1;
+		}
+		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_BLUE )
+		{//	至少拥有{ 0 }名蓝色或以上将
 			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE27] += 1;
+		}
+		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_PURPLE )
+		{//	至少拥有{ 0 }名紫色或以上将
+			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE28] += 1;
 		}
 		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_GOLD )
 		{//	至少拥有{ 0 }名金色或以上将
-			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE28] += 1;
-		}
-		if ( pCity->hero[tmpi].color >= ITEM_COLOR_LEVEL_RED )
-		{//	至少拥有{ 0 }名红色或以上将
 			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE29] += 1;
 		}
 	}
@@ -362,20 +362,20 @@ int activity_04_addvalue_hero( int actor_index )
 	{
 		if ( g_actors[actor_index].hero[tmpi].kind <= 0 )
 			continue;
-		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_BLUE )
-		{//	至少拥有{ 0 }名蓝色或以上将
-			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE26] += 1;
-		}
 		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_GREEN )
 		{//	至少拥有{ 0 }名绿色或以上将
+			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE26] += 1;
+		}
+		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_BLUE )
+		{//	至少拥有{ 0 }名蓝色或以上将
 			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE27] += 1;
+		}
+		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_PURPLE )
+		{//	至少拥有{ 0 }名紫色或以上将
+			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE28] += 1;
 		}
 		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_GOLD )
 		{//	至少拥有{ 0 }名金色或以上将
-			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE28] += 1;
-		}
-		if ( g_actors[actor_index].hero[tmpi].color >= ITEM_COLOR_LEVEL_RED )
-		{//	至少拥有{ 0 }名红色或以上将
 			g_actors[actor_index].act04_value[ACTIVITY_SEVENDAY_TYPE29] += 1;
 		}
 	}
