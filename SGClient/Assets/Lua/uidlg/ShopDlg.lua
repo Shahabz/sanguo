@@ -40,7 +40,6 @@ local m_AwardDescLayerShow = false
 
 -- 打开界面
 function ShopDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_bagdlg" );
 	ResourceManager.LoadAssetBundle( "_ab_paybag" );
 	m_Dlg = eye.uiManager:Open( "ShopDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(34), HELP_BagDlg, ShopDlgClose );
@@ -64,7 +63,6 @@ end
 function ShopDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
-	ResourceManager.UnloadAssetBundle( "_ab_ui_bagdlg" );
 	ResourceManager.UnloadAssetBundle( "_ab_paybag" );
 end
 
