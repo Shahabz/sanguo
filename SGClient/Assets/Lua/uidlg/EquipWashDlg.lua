@@ -91,7 +91,7 @@ function EquipWashDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 选择标签	
 		elseif nControlID >= 1 and nControlID <= 3 then
-			EquipWashDlgSelectTag( nControlID );
+			EquipWashDlgSelectTag( nControlID, 0, -1 );
 			
 		-- 免费洗练
 		elseif nControlID == 10 then
@@ -115,11 +115,11 @@ function EquipWashDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 选择英雄
 		elseif nControlID >= 1000 and nControlID < 2000 then
-			EquipWashDlgSelectHero( nControlID-1000 )
+			EquipWashDlgSelectHero( nControlID-1000, -1 )
 		
 		-- 选择背包
 		elseif nControlID == 2000 then
-			EquipWashDlgSelectHero( 2000 )
+			EquipWashDlgSelectHero( 2000, -1 )
 		
 		-- 选择装备
 		elseif nControlID >= 10000 then
@@ -208,12 +208,32 @@ function EquipWashDlgShow()
 	EquipWashDlgOpen();
 	SetText( m_uiTokenTitle.transform:Find("Num"), "5" );
 	system_askinfo( ASKINFO_EQUIP, "", 5 );
-	EquipWashDlgSelectTag( 1 )
+	EquipWashDlgSelectTag( 1, 0, -1 )
+	EquipWashDlgStopAuto()
+end
+
+-- 自动选择
+function EquipWashDlgAutoSelect( heroindex, herokind, equipoffset )
+	EquipWashDlgOpen();
+	SetText( m_uiTokenTitle.transform:Find("Num"), "5" );
+	system_askinfo( ASKINFO_EQUIP, "", 5 );
+	
+	local tag = 1
+	if heroindex >= 0 and heroindex <= 3 then
+		tag = 1
+	elseif heroindex >= 4 and heroindex <= 7 then
+		tag = 2
+	elseif heroindex >= 8 and heroindex <= 11 then
+		tag = 3
+	else
+		herokind = 2000
+	end
+	EquipWashDlgSelectTag( tag, herokind, equipoffset )
 	EquipWashDlgStopAuto()
 end
 
 -- 选择标签
-function EquipWashDlgSelectTag( index )
+function EquipWashDlgSelectTag( index, herokind, equipoffset )
 	m_selectTag = index;
 	m_CacheHeroCache = {}
 	m_showEffect = false;
@@ -252,10 +272,12 @@ function EquipWashDlgSelectTag( index )
 	end
 	
 	EquipWashDlgSetHero()
-	if m_CacheHeroCache[1] ~= nil and m_CacheHeroCache[1].m_kind > 0 then
-		EquipWashDlgSelectHero( m_CacheHeroCache[1].m_kind );
+	if herokind > 0 then
+		EquipWashDlgSelectHero( herokind, equipoffset );
+	elseif m_CacheHeroCache[1] ~= nil and m_CacheHeroCache[1].m_kind > 0 then
+		EquipWashDlgSelectHero( m_CacheHeroCache[1].m_kind, -1 );
 	else
-		EquipWashDlgSelectHero( 2000 );
+		EquipWashDlgSelectHero( 2000, -1 );
 	end	
 end
 
@@ -272,7 +294,7 @@ function EquipWashDlgSetHero()
 end
 
 -- 选择英雄
-function EquipWashDlgSelectHero( kind )
+function EquipWashDlgSelectHero( kind, equipoffset )
 	m_herokind = kind;
 	if kind == 0 then
 		return
@@ -301,8 +323,8 @@ function EquipWashDlgSelectHero( kind )
 			local pHero = m_CacheHeroCache[i].m_pHero;
 			if pHero.m_kind == kind then
 				SetImage( m_uiHeroBtn[i].transform:Find("Back"), LoadSprite( "ui_button_page1" )  );
-				for equipoffset=0, 5, 1 do
-					local pEquip = pHero.m_Equip[equipoffset];
+				for equipindex=0, 5, 1 do
+					local pEquip = pHero.m_Equip[equipindex];
 					if pEquip.m_kind > 0 then
 						table.insert(m_CacheEquipCache, { m_kind = pEquip.m_kind, m_color=equip_getcolor(pEquip.m_kind), m_pEquip = pEquip });
 					end
@@ -313,7 +335,9 @@ function EquipWashDlgSelectHero( kind )
 	end
 	
 	EquipWashDlgSetItem()
-	if #m_CacheEquipCache > 0 and m_CacheEquipCache[1] ~= nil then
+	if equipoffset >= 0 then
+		EquipWashDlgSelectItem( equipoffset )
+	elseif #m_CacheEquipCache > 0 and m_CacheEquipCache[1] ~= nil then
 		EquipWashDlgSelectItem( m_CacheEquipCache[1].m_pEquip.m_offset )
 	else
 		EquipWashDlgSelectItem( -1 )

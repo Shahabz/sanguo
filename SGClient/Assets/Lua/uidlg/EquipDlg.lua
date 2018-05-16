@@ -74,7 +74,7 @@ function EquipDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 洗炼
 		elseif nControlID == 24 then
-			EquipWashDlgShow()
+			EquipWashDlgAutoSelect( m_EquipHeroIndex, m_SelectHeroKind, m_SelectEquipIndex-1 )
 			EquipDlgClose();
 			
 		-- 已装备
@@ -141,7 +141,7 @@ end
 -- 缓存排序
 function EquipDlgEquipCacheSort(a, b)
     if a ~= nil and b ~= nil then
-        if a.m_color < b.m_color then
+        if a.m_color > b.m_color then
             return true;
         else
             return false;
@@ -156,7 +156,11 @@ function EquipDlgClearEquip()
 	local childCount = m_uiEquipContent.transform.childCount;
 	for i = 0, childCount - 1, 1 do
 		local child = m_uiEquipContent.transform:GetChild(i).gameObject;
-		EquipDlgClearEquipRow(m_uiEquipContent.transform:GetChild(i).gameObject)
+		if child.name == "EquipInfo" then
+			EquipDlgSelectEquip( -1 )
+		else
+			EquipDlgClearEquipRow(m_uiEquipContent.transform:GetChild(i).gameObject)
+		end
 	end
     m_CacheEquipCache = { };
     m_CacheEquipList = { };
@@ -277,7 +281,7 @@ function EquipDlgSelectEquip( offset )
 		return
 	end
 	m_SelectEquipIndex = offset;
-		
+
 	-- 获取装备
     local pEquip = GetEquip():GetAnyEquip(m_SelectEquipIndex - 1);
     if pEquip == nil then
@@ -331,8 +335,8 @@ function EquipDlgSetEquipInfo( pEquip )
 			
 	SetText( EquipName, equip_getname( pEquip.m_kind ), NameColor( equip_getcolor(pEquip.m_kind) ) );
 	SetText( EquipDesc, equip_getabilityname( pEquip.m_kind ) );
-	SetEquipWashLevel( WashLevel, pEquip );
-	
+	SetEquipWashInfo( WashLevel, pEquip );
+			
 	-- 装备类型1-6 变成0-5
 	m_equiptype = equip_gettype( pEquip.m_kind )-1
 	
@@ -410,6 +414,7 @@ function EquipDlgSelectHeroEquip( index )
 			EquipDlgSetEquipInfo( pEquip )
 		end
 		m_SelectHeroKind = 0;
+		m_EquipHeroIndex = -1
 		return;
 	end
 	
@@ -438,7 +443,7 @@ function EquipDlgSelectHeroEquip( index )
 				local hEquip = GetHero().m_CityHero[i].m_Equip[m_equiptype]
 				SetText( uiTips.transform:Find( "Name" ), EquipName( hEquip.m_kind ),NameColor( equip_getcolor(hEquip.m_kind) ) )
 				SetText( uiTips.transform:Find( "Ability" ), equip_getabilityname( hEquip.m_kind ) )
-				SetEquipWashLevel( uiTips.transform:Find( "WashLevel" ), hEquip );
+				SetEquipWashInfo( uiTips.transform:Find( "WashLevel" ), hEquip );
 				SetFalse( UseButton ); -- 装备
 				SetTrue( ReplaceButton ); -- 替换
 			end

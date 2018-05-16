@@ -156,7 +156,7 @@ function PlayerDlgSet()
 	end
 	
 	-- 其它信息
-	SetText( m_uiLabelPosText, "[0,0]" );
+	SetText( m_uiLabelPosText, "["..GetPlayer().m_posx..","..GetPlayer().m_posy.."]" );
 	SetText( m_uiLabelZoneText, MapZoneName( GetPlayer().m_zone) );
 	SetText( m_uiLabelPlaceText, PlaceName( GetPlayer().m_place ) );
 	SetText( m_uiLabelServerText, Const.servername );

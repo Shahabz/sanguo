@@ -752,8 +752,7 @@ function HeroInfoDlgEquipWash( index )
 	end
 	EquipWashDlgShow()
 	if m_up == true then
-		EquipWashDlgSelectHero( m_pCacheHero.m_kind )
-		EquipWashDlgSelectItem( m_pCacheHero.m_Equip[index].m_offset )
+		EquipWashDlgSelectHero( m_pCacheHero.m_kind, m_pCacheHero.m_Equip[index].m_offset )
 	end
 end
 

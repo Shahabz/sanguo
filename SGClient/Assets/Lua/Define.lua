@@ -457,13 +457,13 @@ end
 
 -- 名称颜色
 function NameColor( color )
-	local c = { 0xf7f3bbff, 0x25c9ffff, 0x03de27ff, 0xffde00ff, 0xe80017ff, 0xd95df4ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff  }
+	local c = { 0xf7f3bbff, 0x03de27ff, 0x25c9ffff, 0xd95df4ff, 0xffde00ff, 0xe80017ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff, 0x9b8869ff  }
 	return Hex2Color( c[color+1] )
 end
 
 -- 名称颜色
 function NameColorStr( color )
-	local c = { "f7f3bbff", "25c9ffff", "03de27ff", "ffde00ff", "e80017ff", "d95df4ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff" }
+	local c = { "f7f3bbff", "03de27ff", "25c9ffff", "d95df4ff", "ffde00ff", "e80017ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff", "9b8869ff" }
 	return c[color+1]
 end
 
