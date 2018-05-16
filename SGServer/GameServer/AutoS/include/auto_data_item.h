@@ -18,6 +18,7 @@ struct _itemkind {
 				int m_value_min[4];	//
 				int m_value_max[4];	//
 				short m_color_level;	//
+				short m_filter;	//
 				short m_sort;	//
 };
 typedef struct _itemkind ItemKind;

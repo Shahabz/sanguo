@@ -47,7 +47,7 @@ int itemkind_init_auto()
 	g_itemkind = (ItemKind *)malloc( sizeof(ItemKind)*g_itemkind_maxnum );
 	memset( g_itemkind, 0, sizeof(ItemKind)*g_itemkind_maxnum );
 
-	sprintf( szSQL, "select `kind`,`name`,`level`,`price`,`token`,`type`,`situation`,`overlap`,`base_ability0`,`base_ability1`,`base_value0`,`base_value1`,`ability0`,`ability1`,`ability2`,`ability3`,`value_min0`,`value_min1`,`value_min2`,`value_min3`,`value_max0`,`value_max1`,`value_max2`,`value_max3`,`color_level`,`sort` from item;" );
+	sprintf( szSQL, "select `kind`,`name`,`level`,`price`,`token`,`type`,`situation`,`overlap`,`base_ability0`,`base_ability1`,`base_value0`,`base_value1`,`ability0`,`ability1`,`ability2`,`ability3`,`value_min0`,`value_min1`,`value_min2`,`value_min3`,`value_max0`,`value_max1`,`value_max2`,`value_max3`,`color_level`,`filter`,`sort` from item;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -86,6 +86,7 @@ int itemkind_init_auto()
 		g_itemkind[kind].m_value_max[2] = atoi(row[offset++]);
 		g_itemkind[kind].m_value_max[3] = atoi(row[offset++]);
 		g_itemkind[kind].m_color_level = atoi(row[offset++]);
+		g_itemkind[kind].m_filter = atoi(row[offset++]);
 		g_itemkind[kind].m_sort = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
@@ -197,6 +198,10 @@ int itemkind_luatable_auto()
 
 		lua_pushstring( servL, "m_color_level" );
 		lua_pushinteger( servL, g_itemkind[kind].m_color_level );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "m_filter" );
+		lua_pushinteger( servL, g_itemkind[kind].m_filter );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "m_sort" );

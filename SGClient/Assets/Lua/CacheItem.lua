@@ -138,6 +138,14 @@ function item_gettype( itemkind )
 	return type;
 end
 
+-- 获取过滤器
+function item_getfilter( itemkind )
+	if g_itemkind[itemkind] == nil then 
+		return -1;
+	end
+	return g_itemkind[itemkind].filter;
+end
+
 -- 获取道具属性描述
 function item_getabilitydesc( ability )
 	local abilitydesc = Localization.text_item( ability+10000 );
