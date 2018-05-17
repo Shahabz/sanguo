@@ -793,7 +793,7 @@ function EquipWashDlgWashTips( index )
 	local uiLevel = objs[5];
 	local uiWarn = objs[6];
 	local uiBack = objs[7];
-	uiInfo.transform.position = Vector3.New( m_uiWashIcon[index].transform.position.x, m_uiWashIcon[index].transform.position.y+1, 0 )
+	uiInfo.transform.position = Vector3.New( m_uiWashIcon[index].transform.position.x, m_uiWashIcon[index].transform.position.y+1.5, 0 )
 	
 	if index == 4 and washid == nil then
 		SetFalse( uiShape );
