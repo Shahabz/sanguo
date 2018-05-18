@@ -105,7 +105,7 @@ function MapEventDlgShow( recvValue )
 		return
 	end
 	MapEventDlgOpen()
-	SetText( m_uiTitle, T(976)..T( MapUnitEventNameList[type] ) )
+	SetText( m_uiTitle, T( MapUnitEventNameList[type] ) )
 	SetText( m_uiName, T( MapUnitEventNameList[type] ) )
 	SetImage( m_uiShape, LoadSprite( MapUnitEventShapeList[type] ) )
 	if type == 1 then -- 募兵加速
@@ -130,8 +130,8 @@ function MapEventDlgShow( recvValue )
 		SetText( m_uiDesc, T(1017) )
 	end
 	
-	local buttonIcon = m_uiCostButton.transform:Find("Back/Icon")
-	local buttonText = m_uiCostButton.transform:Find("Back/Text")
+	local buttonIcon = m_uiCostButton.transform:Find("Back/Layout/Icon")
+	local buttonText = m_uiCostButton.transform:Find("Back/Layout/Text")
 	if info.costtype > 0 then
 		SetTrue( buttonIcon )
 		SetImage( buttonIcon, ResIcon(info.costtype) );

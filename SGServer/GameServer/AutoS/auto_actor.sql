@@ -95,5 +95,6 @@ CREATE TABLE `actor` (
   `girlshop` varbinary(36) NOT NULL DEFAULT '' COMMENT '女将商店',
   `girlshop_buy` smallint(6) NOT NULL DEFAULT '0' COMMENT '女将商店是否购买',
   `girlshop_fday` int(11) NOT NULL DEFAULT '0' COMMENT '女将商店刷新天数',
+  `maidname` varbinary(22) NOT NULL DEFAULT '' COMMENT '侍女名称',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -304,6 +304,9 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_game_day_loop, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_shape_bag, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_bufftrain, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maidname_len, (*psize) );
+	if( pValue->m_maidname_len > 0 && pValue->m_maidname_len <= 22 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_maidname, pValue->m_maidname_len*sizeof(char), (*psize) );
 	return 0;
 }
 
@@ -1075,6 +1078,7 @@ int struct_NetS_ChangeName_send( char **pptr, int *psize, SLK_NetS_ChangeName *p
 	LKSET_WORD_SEND( (*pptr), &pValue->m_name_length, (*psize) );
 	if( pValue->m_name_length > 0 && pValue->m_name_length <= 32 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_name_length*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 
@@ -2186,9 +2190,11 @@ int struct_NetS_QuestTalk_send( char **pptr, int *psize, SLK_NetS_QuestTalk *pVa
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_talkid, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_herokind, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_shape, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_talk_textid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_btn_textid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_op, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_format, (*psize) );
 	return 0;
 }
 

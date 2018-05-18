@@ -102,6 +102,7 @@ function Player:Init()
 	self.m_open_zone_sili	=	0;
 	self.m_open_zone_luoyang=	0;
 	self.m_shape_bag		=	0;
+	self.m_maidname 		= "";
 	
 	self.m_view_zoneid		=	0;
 	self.m_award_mailid		=	int64.new(0);
@@ -164,6 +165,7 @@ function Player:Set( recvValue )
 	self.m_open_zone_sili		=	recvValue.m_open_zone_sili;
 	self.m_open_zone_luoyang	=	recvValue.m_open_zone_luoyang;
 	self.m_shape_bag		=	recvValue.m_shape_bag;
+	self.m_maidname			=	recvValue.m_maidname;
 end
 
 --

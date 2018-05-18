@@ -70,7 +70,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		actor_changeshape( actor_index, (char)pvalue[0] );
 		break;
 	case ASKINFO_CHANGENAME:
-		actor_changename( actor_index, pstr, pvalue[0] );
+		if ( pvalue[0] < 100 )
+			actor_changename( actor_index, pstr, pvalue[0] );
+		else
+			actor_maid_changename( actor_index, pstr, pvalue[0]-100 );
 		break;
 	case ASKINFO_CITYGUARD:
 		if ( pvalue[0] == 0 )

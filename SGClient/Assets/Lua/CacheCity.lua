@@ -868,14 +868,16 @@ function City.FindCanUpgrade( callback )
 			local pBuilding = GetPlayer():GetBuilding( k, -1 )
 			if pBuilding ~= nil then
 				local buildingConfig = v[pBuilding.m_level+1]
-				if GetPlayer():CityLevel() >= buildingConfig.citylevel and
-					GetPlayer().m_level >= buildingConfig.actorlevel and
-					GetPlayer().m_silver >= buildingConfig.silver and
-					GetPlayer().m_wood >= buildingConfig.wood and
-					GetPlayer().m_food >= buildingConfig.food and
-					GetPlayer().m_iron >= buildingConfig.iron then
-					callback( k, -1 )
-					return
+				if buildingConfig ~= nil then
+					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+						GetPlayer().m_level >= buildingConfig.actorlevel and
+						GetPlayer().m_silver >= buildingConfig.silver and
+						GetPlayer().m_wood >= buildingConfig.wood and
+						GetPlayer().m_food >= buildingConfig.food and
+						GetPlayer().m_iron >= buildingConfig.iron then
+						callback( k, -1 )
+						return
+					end
 				end
 			end
 		end
@@ -888,14 +890,16 @@ function City.FindCanUpgrade( callback )
 				local pBuilding = GetPlayer():GetBuilding( k, offset )
 				if pBuilding ~= nil and pBuilding.m_level < #v then
 					local buildingConfig = v[pBuilding.m_level+1]
-					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
-						GetPlayer().m_level >= buildingConfig.actorlevel and
-						GetPlayer().m_silver >= buildingConfig.silver and
-						GetPlayer().m_wood >= buildingConfig.wood and
-						GetPlayer().m_food >= buildingConfig.food and
-						GetPlayer().m_iron >= buildingConfig.iron then
-						callback( k, offset )
-						return
+					if buildingConfig ~= nil then
+						if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+							GetPlayer().m_level >= buildingConfig.actorlevel and
+							GetPlayer().m_silver >= buildingConfig.silver and
+							GetPlayer().m_wood >= buildingConfig.wood and
+							GetPlayer().m_food >= buildingConfig.food and
+							GetPlayer().m_iron >= buildingConfig.iron then
+							callback( k, offset )
+							return
+						end
 					end
 				end
 			end
@@ -912,14 +916,16 @@ function City.QuestFindCanUpgrade( kind, callback )
 				local pBuilding = GetPlayer():GetBuilding( k, offset )
 				if pBuilding ~= nil and pBuilding.m_level < #v then
 					local buildingConfig = v[pBuilding.m_level+1]
-					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
-						GetPlayer().m_level >= buildingConfig.actorlevel and
-						GetPlayer().m_silver >= buildingConfig.silver and
-						GetPlayer().m_wood >= buildingConfig.wood and
-						GetPlayer().m_food >= buildingConfig.food and
-						GetPlayer().m_iron >= buildingConfig.iron then
-						callback( k, offset )
-						return
+					if buildingConfig ~= nil then
+						if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+							GetPlayer().m_level >= buildingConfig.actorlevel and
+							GetPlayer().m_silver >= buildingConfig.silver and
+							GetPlayer().m_wood >= buildingConfig.wood and
+							GetPlayer().m_food >= buildingConfig.food and
+							GetPlayer().m_iron >= buildingConfig.iron then
+							callback( k, offset )
+							return
+						end
 					end
 				end
 			end

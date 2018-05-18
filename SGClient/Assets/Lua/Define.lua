@@ -181,6 +181,7 @@ PATH_NATIONHERO					=	85	-- 国家名将
 PATH_WISHINGSHOP				=	87	-- 聚宝盆
 PATH_WISHINGCHANGE				=	88	-- 聚宝盆兑换
 PATH_WISHINGPACK				=	89	-- 聚宝盆打包
+PATH_SELECTNATION				=	99	-- 选择国家
 
 -- 文字表
 -- 获取本地化文字

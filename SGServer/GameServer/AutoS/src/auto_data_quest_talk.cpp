@@ -47,7 +47,7 @@ int questtalk_init_auto()
 	g_quest_talk = (QuestTalk *)malloc( sizeof(QuestTalk)*g_quest_talk_maxnum );
 	memset( g_quest_talk, 0, sizeof(QuestTalk)*g_quest_talk_maxnum );
 
-	sprintf( szSQL, "select `id`,`nextid`,`herokind`,`talk_textid`,`btn_textid`,`trigger_kind0`,`trigger_kind1`,`trigger_num0`,`trigger_num1`,`limit_questid`,`complete_questid` from quest_talk;" );
+	sprintf( szSQL, "select `id`,`nextid`,`shape`,`talk_textid`,`format`,`btn_textid`,`op`,`trigger_kind0`,`trigger_kind1`,`trigger_num0`,`trigger_num1`,`limit_questid`,`complete_questid`,`next_questid`,`guide` from quest_talk;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,15 +63,19 @@ int questtalk_init_auto()
 			continue;
 		g_quest_talk[id].id = atoi(row[offset++]);
 		g_quest_talk[id].nextid = atoi(row[offset++]);
-		g_quest_talk[id].herokind = atoi(row[offset++]);
+		g_quest_talk[id].shape = atoi(row[offset++]);
 		g_quest_talk[id].talk_textid = atoi(row[offset++]);
+		g_quest_talk[id].format = atoi(row[offset++]);
 		g_quest_talk[id].btn_textid = atoi(row[offset++]);
+		g_quest_talk[id].op = atoi(row[offset++]);
 		g_quest_talk[id].trigger_kind[0] = atoi(row[offset++]);
 		g_quest_talk[id].trigger_kind[1] = atoi(row[offset++]);
 		g_quest_talk[id].trigger_num[0] = atoi(row[offset++]);
 		g_quest_talk[id].trigger_num[1] = atoi(row[offset++]);
 		g_quest_talk[id].limit_questid = atoi(row[offset++]);
 		g_quest_talk[id].complete_questid = atoi(row[offset++]);
+		g_quest_talk[id].next_questid = atoi(row[offset++]);
+		g_quest_talk[id].guide = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

@@ -304,12 +304,12 @@ function EquipWashDlgSelectHero( kind, equipoffset )
 	
 	-- 先全部设为未选
 	for i=1, 4, 1 do
-		SetImage( m_uiHeroBtn[i].transform:Find("Back"), LoadSprite( "ui_button_page2" )  );
+		SetImage( m_uiHeroBtn[i].transform:Find("Back"), LoadSprite( "ui_button_17" )  );
 	end
 	
 	-- 点击的是背包装备
 	if kind == 2000 then
-		SetImage( m_uiHeroBtn[5].transform:Find("Back"), LoadSprite( "ui_button_page1" )  );
+		SetImage( m_uiHeroBtn[5].transform:Find("Back"), LoadSprite( "ui_button_18" )  );
 		for tmpi=0, MAX_EQUIPNUM-1, 1 do
 			local pEquip = GetEquip():GetAnyEquip( tmpi );
 			if pEquip ~= nil and pEquip.m_kind > 0 then
@@ -317,12 +317,12 @@ function EquipWashDlgSelectHero( kind, equipoffset )
 			end
 		end
 	else
-		SetImage( m_uiHeroBtn[5].transform:Find("Back"), LoadSprite( "ui_button_page2" )  );
+		SetImage( m_uiHeroBtn[5].transform:Find("Back"), LoadSprite( "ui_button_17" )  );
 		-- 找到这个英雄的装备
 		for i=1, 4, 1 do
 			local pHero = m_CacheHeroCache[i].m_pHero;
 			if pHero.m_kind == kind then
-				SetImage( m_uiHeroBtn[i].transform:Find("Back"), LoadSprite( "ui_button_page1" )  );
+				SetImage( m_uiHeroBtn[i].transform:Find("Back"), LoadSprite( "ui_button_18" )  );
 				for equipindex=0, 5, 1 do
 					local pEquip = pHero.m_Equip[equipindex];
 					if pEquip.m_kind > 0 then

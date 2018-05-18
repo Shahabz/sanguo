@@ -127,6 +127,7 @@
 #define PATH_FANGSHI_VISIT				96	// 坊市
 #define PATH_FANGSHI_PALACE				97	// 坊市觐见
 #define PATH_GIRL_SHOP					98	// 女将商店
+#define PATH_SELECTNATION				99	// 选择国家
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

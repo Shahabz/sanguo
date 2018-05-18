@@ -196,6 +196,8 @@ struct _slk_NetS_ActorInfo {
 	char m_game_day_loop;	//服务器发送玩家基本信息-天气
 	int m_shape_bag;	//服务器发送玩家基本信息-头像背包
 	short m_bufftrain;	//服务器发送玩家基本信息-武卒官加速
+	char m_maidname_len;	//服务器发送玩家基本信息-侍女名称
+	char m_maidname[22];	//服务器发送玩家基本信息-侍女名称
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -747,6 +749,7 @@ typedef struct _slk_NetS_BuildingSmithy SLK_NetS_BuildingSmithy;	//铁匠铺
 struct _slk_NetS_ChangeName {
 	short m_name_length;	//修改名称
 	char m_name[32];	//修改名称
+	char m_type;	//修改名称
 };
 typedef struct _slk_NetS_ChangeName SLK_NetS_ChangeName;	//改名
 
@@ -1503,9 +1506,11 @@ typedef struct _slk_NetS_StorySweepResult SLK_NetS_StorySweepResult;	//扫荡结果
 
 struct _slk_NetS_QuestTalk {
 	int m_talkid;	//任务对话
-	short m_herokind;	//任务对话
+	short m_shape;	//任务对话
 	int m_talk_textid;	//任务对话
 	int m_btn_textid;	//任务对话
+	char m_op;	//任务对话
+	char m_format;	//任务对话
 };
 typedef struct _slk_NetS_QuestTalk SLK_NetS_QuestTalk;	//任务对话
 

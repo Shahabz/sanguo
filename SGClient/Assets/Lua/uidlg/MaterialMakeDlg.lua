@@ -157,7 +157,7 @@ function MaterialMakeDlgRecv( recvValue )
 		elseif recvValue.m_change_city_people+recvValue.m_change_nation_people < 0 then
 			statemsg = "<color=#e80017>"..T(929).."</color>"
 		end
-		NpcTalk( T(927).."\n"..T(888)..":"..change_city.."\n"..T(887)..":"..change_nation.."\n"..T(928)..":"..statemsg );
+		NpcTalk( {5002, T(927).."\n"..T(888)..":"..change_city.."\n"..T(887)..":"..change_nation.."\n"..T(928)..":"..statemsg, nil, nil} );
 	end
 	
 	-- 国家人口

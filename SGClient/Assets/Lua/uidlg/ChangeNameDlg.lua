@@ -1,8 +1,12 @@
 -- 界面
 local m_Dlg = nil;
-local m_uiShape = nil; --UnityEngine.GameObject
+local m_uiLeft = nil; --UnityEngine.GameObject
+local m_uiRight = nil; --UnityEngine.GameObject
+local m_uiTalk = nil; --UnityEngine.GameObject
 local m_uiNameInput = nil; --UnityEngine.GameObject
 local m_uiChangeNameBtn = nil; --UnityEngine.GameObject
+local m_type = 0;
+
 -- 打开界面
 function ChangeNameDlgOpen()
 	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
@@ -14,7 +18,8 @@ function ChangeNameDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	
+	SetFalse( m_uiLeft )
+	SetFalse( m_uiRight )
 	eye.uiManager:Close( "ChangeNameDlg" );
 end
 
@@ -46,10 +51,11 @@ end
 function ChangeNameDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
-	m_uiShape = objs[0];
-	m_uiNameInput = objs[1];
-	m_uiChangeNameBtn = objs[2];
-
+	m_uiLeft = objs[0];
+	m_uiRight = objs[1];
+	m_uiTalk = objs[2];
+	m_uiNameInput = objs[3];
+	m_uiChangeNameBtn = objs[4];
 end
 
 -- 界面初始化时调用
@@ -81,10 +87,35 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function ChangeNameDlgShow()
+function ChangeNameDlgShow( type )
+	m_type = type;
 	math.randomseed(tostring(math.sin(os.time())):sub(4, 12))
 	ChangeNameDlgOpen();
+	SetFalse( m_uiLeft )
+	SetFalse( m_uiRight )
 	ChangeNameDlgRandom();
+	
+	local textid = 0
+	local shape = 0
+	if m_type == 1 then
+		shape = 999
+		textid = 438
+	elseif m_type == 2 then
+		shape = 0
+		textid = 439
+	end
+	
+	local sprite, name, left = NpcTalkShapeInfo( shape );
+	local obj = nil
+	if left == 1 then
+		obj = m_uiLeft
+	else
+		obj = m_uiRight
+	end
+	
+	SetTrue( obj )
+	SetImage( obj.transform:Find("Shape"), sprite );
+	SetText( m_uiTalk, T(textid) )
 end
 
 function ChangeNameDlgRandom()
@@ -108,7 +139,10 @@ function ChangeNameDlgChange()
 		pop(T(789))
 		return;
 	end
-				
-	system_askinfo( ASKINFO_CHANGENAME, name, 0 );
 	
+	if m_type == 1 then			
+		system_askinfo( ASKINFO_CHANGENAME, name, 0 );	
+	elseif m_type == 2 then
+		system_askinfo( ASKINFO_CHANGENAME, name, 100 );	
+	end
 end

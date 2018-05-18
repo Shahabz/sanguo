@@ -102,8 +102,6 @@ int quest_talk_check( int actor_index );
 // 客户端请求一个对话
 int quest_talk_client_ask( int actor_index, int talkid );
 
-// 改名
-int quest_changename( int actor_index );
 // 战斗
 int quest_fight( int actor_index, int storyid );
 

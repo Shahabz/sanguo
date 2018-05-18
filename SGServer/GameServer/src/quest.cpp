@@ -61,10 +61,12 @@ int quest_newplayer( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	if ( pCity->questid[0] > 1 )
+	if ( pCity->questid[0] > 1 || g_actors[actor_index].quest_talkid > 0 )
 		return -1;
 	quest_give_main( actor_index, 1 );
-	quest_sendawardinfo( actor_index, 1, QUEST_TYPE_MAIN );
+	g_actors[actor_index].quest_talkid = 101;
+	//quest_sendawardinfo( actor_index, 1, QUEST_TYPE_MAIN );
+	//quest_getaward( actor_index, 1 );
 	return 0;
 }
 
@@ -256,7 +258,7 @@ int quest_checkcomplete( int actor_index )
 	for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )
 	{
 		int questid = pCity->questid[tmpi];
-		if ( questid <= 0 )
+		if ( questid <= 1 )
 			continue;
 		if ( quest_check( pCity->actor_index, questid, NULL ) == QUEST_COMPLETEFLAG_SUCCESS )
 		{
@@ -670,9 +672,11 @@ int quest_talk( int actor_index, int talkid )
 	g_actors[actor_index].quest_talkid = talkid;
 	SLK_NetS_QuestTalk pValue = { 0 };
 	pValue.m_talkid = talkid;
-	pValue.m_herokind = g_quest_talk[talkid].herokind;
+	pValue.m_op = (char)g_quest_talk[talkid].op;
+	pValue.m_shape = g_quest_talk[talkid].shape;
 	pValue.m_talk_textid = g_quest_talk[talkid].talk_textid;
 	pValue.m_btn_textid = g_quest_talk[talkid].btn_textid;
+	pValue.m_format = (char)g_quest_talk[talkid].format;
 	netsend_questtalk_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -686,7 +690,7 @@ int quest_talk_next( int actor_index, int talkid )
 		return -1;
 	if ( g_actors[actor_index].quest_talkid != talkid )
 		return -1;
-	
+
 	// 触发给与建筑，英雄，功能等事件
 	for ( int i = 0; i < 2; i++ )
 	{
@@ -705,6 +709,20 @@ int quest_talk_next( int actor_index, int talkid )
 			quest_main_addvalue( city_getptr( actor_index ), questinfo->datatype, questinfo->datakind, questinfo->dataoffset, 1 );
 		}
 	}
+
+	// 跳到下一个任务
+	if ( g_quest_talk[talkid].next_questid > 0 )
+	{
+		quest_give_main( actor_index, g_quest_talk[talkid].next_questid );
+	}
+
+	if ( g_quest_talk[talkid].guide > 0 )
+	{
+		int value[1] = { 0 };
+		value[0] = g_quest_talk[talkid].guide;
+		actor_notify_value( actor_index, NOTIFY_GUIDE, 1, value, NULL );
+	}
+
 	g_actors[actor_index].quest_talkid = 0;
 	quest_talk( actor_index, g_quest_talk[talkid].nextid );
 	return 0;
@@ -733,25 +751,6 @@ int quest_talk_client_ask( int actor_index, int talkid )
 	if ( pCity->questid[0] != g_quest_talk[talkid].limit_questid )
 		return -1;
 	quest_talk( actor_index, talkid );
-	return 0;
-}
-
-// 改名
-int quest_changename( int actor_index )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	City *pCity = city_getptr( actor_index );
-	if ( !pCity )
-		return -1;
-	QuestInfo *questinfo = quest_config( pCity->questid[0] );
-	if ( !questinfo )
-		return -1;
-	if ( questinfo->datatype != QUEST_DATATYPE_CREATENAME )
-		return -1;
-
-	SLK_NetS_QuestTalk pValue = { 0 };
-	pValue.m_talkid = -1;
-	netsend_questtalk_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

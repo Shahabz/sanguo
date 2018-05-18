@@ -792,7 +792,6 @@ int actor_entercity( int actor_index )
 	quest_sendlist( actor_index );
 	quest_talk_check( actor_index );
 	quest_checkcomplete( actor_index );
-	quest_changename( actor_index );
 
 	// 世界任务相关（不发）
 	worldquest_give( actor_index );
@@ -990,7 +989,7 @@ int actor_new( int actor_index )
 	// 所选的阵营是否有奖励
 	if ( g_actors[actor_index].nation == client_getnationaward( actor_index ) )
 	{
-		actor_change_token( actor_index, global.nation_award_token, PATH_SYSTEM, 0 );
+		actor_change_token( actor_index, global.nation_award_token, PATH_SELECTNATION, 0 );
 	}
 
 	// 新手保护

@@ -99,6 +99,7 @@ struct _actor {
 				short girlshop[9];	//女将商店
 				short girlshop_buy;	//女将商店是否购买
 				int girlshop_fday;	//女将商店刷新天数
+				char maidname[22];	//侍女名称
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

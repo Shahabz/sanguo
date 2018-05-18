@@ -246,6 +246,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_game_day_loop = buffer:ReadSByte();
 	recvValue.m_shape_bag = buffer:ReadInt();
 	recvValue.m_bufftrain = buffer:ReadShort();
+	recvValue.m_maidname_len = buffer:ReadSByte();
+	recvValue.m_maidname = buffer:ReadStringWithLen( recvValue.m_maidname_len );
 	return recvValue;
 end
 
@@ -937,6 +939,7 @@ function struct_NetS_ChangeName_recv( buffer )
 	local recvValue = {};
 	recvValue.m_name_length = buffer:ReadShort();
 	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_name_length );
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -1960,9 +1963,11 @@ end
 function struct_NetS_QuestTalk_recv( buffer )
 	local recvValue = {};
 	recvValue.m_talkid = buffer:ReadInt();
-	recvValue.m_herokind = buffer:ReadShort();
+	recvValue.m_shape = buffer:ReadShort();
 	recvValue.m_talk_textid = buffer:ReadInt();
 	recvValue.m_btn_textid = buffer:ReadInt();
+	recvValue.m_op = buffer:ReadSByte();
+	recvValue.m_format = buffer:ReadSByte();
 	return recvValue;
 end
 

@@ -362,10 +362,12 @@ int actor_changename( int actor_index, char *pname, int type )
 	SLK_NetS_ChangeName pValue = { 0 };
 	strcpy( pValue.m_name, g_actors[actor_index].name );
 	pValue.m_name_length = strlen( pValue.m_name );
+	pValue.m_type = 0;
 	netsend_changename_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 任务
-	quest_addvalue( pCity, QUEST_DATATYPE_CREATENAME, 0, 0, 1 );
+	//quest_addvalue( pCity, QUEST_DATATYPE_CREATENAME, 0, 0, 1 );
+	quest_talk_next( actor_index, g_actors[actor_index].quest_talkid );
 
 	// 通知到城外
 	mapunit_update( MAPUNIT_TYPE_CITY, -1, pCity->unit_index );
@@ -451,6 +453,34 @@ int actor_changename_gm( int actorid, char *pname )
 	return 0;
 }
 
+// 修改侍女名称
+int actor_maid_changename( int actor_index, char *pname, int type )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( !pname )
+		return -1;
+	MYSQL_RES * res;
+	MYSQL_ROW	row;
+	char szSQL[1024];
+
+	int namelen = (int)strlen( pname );
+	if ( namelen <= 0 || namelen >= NAME_SIZE )
+		return -1;
+
+	strncpy( g_actors[actor_index].maidname, pname, NAME_SIZE );
+	g_actors[actor_index].maidname[NAME_SIZE - 1] = 0;
+
+	SLK_NetS_ChangeName pValue = { 0 };
+	strcpy( pValue.m_name, g_actors[actor_index].maidname );
+	pValue.m_name_length = strlen( pValue.m_name );
+	pValue.m_type = 1;
+	netsend_changename_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 任务
+	quest_talk_next( actor_index, g_actors[actor_index].quest_talkid );
+	return 0;
+}
+
 // 修改头像
 int actor_changeshape( int actor_index, char shape )
 {
@@ -522,7 +552,9 @@ int actor_getinfo( int actor_index )
 	ACTOR_CHECK_INDEX( actor_index );
 	SLK_NetS_ActorInfo info = { 0 };
 	info.m_actorid = g_actors[actor_index].actorid;
-	memcpy( info.m_name, g_actors[actor_index].name, sizeof(char)*NAME_SIZE );
+	strncpy( info.m_name, g_actors[actor_index].name, sizeof( char )*NAME_SIZE );
+	strncpy( info.m_maidname, g_actors[actor_index].maidname, sizeof( char )*NAME_SIZE );
+	info.m_maidname_len = strlen( info.m_maidname );
 	info.m_nation = g_actors[actor_index].nation;
 	info.m_shape = g_actors[actor_index].shape;
 	info.m_level = g_actors[actor_index].level;

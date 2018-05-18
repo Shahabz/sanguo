@@ -566,9 +566,6 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	case AWARDKIND_QUESTFIGHT:// 任务战斗
 		quest_fight( actor_index, num );
 		break;
-	case AWARDKIND_CHANGENAME:
-		quest_changename( actor_index );
-		break;
 	case AWARDKIND_BUFF_TRAIN:// 武卒官加速N%，时间1天
 	{
 		City *pCity = city_getptr( actor_index );

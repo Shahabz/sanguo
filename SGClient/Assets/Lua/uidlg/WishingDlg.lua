@@ -207,9 +207,9 @@ function WishingDlgSelectType( type )
 		SetTrue(m_uiWishingScroll);
 		SetFalse(m_uiChangeresScroll); 	
 		SetFalse(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_18") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
 		SetText( m_uiTitle, T(3004));
 		system_askinfo( ASKINFO_WISHING, "", 0 );
 		
@@ -218,9 +218,9 @@ function WishingDlgSelectType( type )
 		SetFalse(m_uiWishingScroll);
 		SetTrue(m_uiChangeresScroll);
 		SetFalse(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_18") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
 		SetText( m_uiTitle, T(3005));
 		m_ChangeType = 1;
 		system_askinfo( ASKINFO_WISHING, "", 3 ); 
@@ -230,9 +230,9 @@ function WishingDlgSelectType( type )
 		SetFalse(m_uiWishingScroll);
 		SetFalse(m_uiChangeresScroll); 
 		SetTrue(m_uiPackScroll);
-		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_page2") );
-		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_page1") );
+		SetImage( m_uiWishingBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
+		SetImage( m_uiChangeresBtn.transform:Find("Back"), LoadSprite("ui_button_17") );
+		SetImage( m_uiPackresBtn.transform:Find("Back"), LoadSprite("ui_button_18") );
 		SetText( m_uiTitle, T(3006));
 		m_PackType = nil;
 		system_askinfo( ASKINFO_WISHING, "", 5 ); 		
@@ -339,6 +339,10 @@ end
 
 -- 点击某一个聚宝盆物品
 function WishingDlgClickGrid( index )
+	if m_recvWish == nil then
+		WishingDlgSelectType( 1 )
+		return
+	end
 	-- 今天已购买，提示
 	if m_recvWish.m_todaybuy > 0 then 
 		pop(T(3007));

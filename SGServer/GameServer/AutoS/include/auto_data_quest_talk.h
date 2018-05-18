@@ -6,13 +6,17 @@ struct _questtalk {
 //--Automatically generated
 				int id;	//
 				int nextid;	//
-				short herokind;	//
+				short shape;	//
 				int talk_textid;	//
+				short format;	//
 				int btn_textid;	//
+				short op;	//
 				int trigger_kind[2];	//
 				int trigger_num[2];	//
 				int limit_questid;	//
 				int complete_questid;	//
+				int next_questid;	//
+				short guide;	//
 };
 typedef struct _questtalk QuestTalk;
 

@@ -106,6 +106,9 @@ end
 -- m_actorid=0,m_name="[22]",m_nation=0,m_shape=0,m_level=0,m_exp=0,m_exp_max=0,m_token=0,m_viplevel=0,m_vipexp=0,m_vipexp_max=0,m_body=0,m_place=0,m_official=0,m_zone=0,m_battlepower=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_infantry_num=0,m_cavalry_num=0,m_archer_num=0,m_mokilllv=0,m_sflag=0,m_cityid=0,
 function proc_actorinfo_C( recvValue )
 	-- process.
+	if recvValue.m_questid <= 1 then
+		FilmDlgShow()
+	end
 	-- 打开主界面
 	MainDlgOpen();
 	MainDlgCutScenesInit();
@@ -608,6 +611,8 @@ function proc_changtoken_C( recvValue )
 	if recvValue.m_add > 0 then
 		if recvValue.m_path == PATH_WISHINGSHOP then
 			ItemGetDlgShow( 124, recvValue.m_add )
+		elseif recvValue.m_path == PATH_SELECTNATION then
+			
 		else
 			--pop( T(120)..": "..T(125).."x"..recvValue.m_add );
 			pop( "<icon=token>"..T(125).." x "..recvValue.m_add );
@@ -1019,7 +1024,11 @@ end
 -- m_name_length=0,m_name="[m_name_length]",
 function proc_changename_C( recvValue )
 	-- process.
-	GetPlayer().m_name = recvValue.m_name;
+	if recvValue.m_type == 0 then
+		GetPlayer().m_name = recvValue.m_name;
+	elseif recvValue.m_type == 1 then
+		GetPlayer().m_maidname = recvValue.m_name;
+	end
 	ChangeNameDlgClose();
 	PlayerDlgSet();
 end
@@ -1784,41 +1793,93 @@ function proc_storysweepresult_C( recvValue )
 	FightDlgSweepResult( recvValue )
 end
 
--- m_talkid=0,m_herokind=0,m_talk_textid=0,m_btn_textid=0,
+-- m_talkid=0,m_op=0,m_format=0,m_shape=0,m_talk_textid=0,m_btn_textid=0,
 function proc_questtalk_C( recvValue )
 	-- process.
-	if recvValue.m_talkid == -1 then
-		ChangeNameDlgShow();
-		return
-	end
-	local callback = function()
-		local sendValue = {};
-		sendValue.m_talkid = recvValue.m_talkid;
-		sendValue.m_type = 0;
-		netsend_questtalknext_C( sendValue )
+	local callback = nil
+	
+	 -- 玩家改名
+	if recvValue.m_op == 1 then
+		callback = function()
+			ChangeNameDlgShow( 1 );
+		end
+		
+	-- 侍女改名	
+	elseif recvValue.m_op == 2 then
+		callback = function()
+			ChangeNameDlgShow( 2 );
+		end
+	
+	-- 进入城池
+	elseif recvValue.m_op == 3 then 
+		FilmDlgClose();
+		callback = function()
+			local sendValue = {};
+			sendValue.m_talkid = recvValue.m_talkid;
+			sendValue.m_type = 0;
+			netsend_questtalknext_C( sendValue )
+		end
+		
+	else
+		
+		callback = function()
+			local sendValue = {};
+			sendValue.m_talkid = recvValue.m_talkid;
+			sendValue.m_type = 0;
+			netsend_questtalknext_C( sendValue )
+		end
+	
 	end
 	
-	if recvValue.m_herokind > 0 then
-		if BuildingGetDlgIsShow() == true then
-			BuildingGetDlgWait( HeroTalk, recvValue.m_herokind, Localization.text_quest(recvValue.m_talk_textid), callback )
+	local talktext = Localization.text_quest(recvValue.m_talk_textid)
+	if recvValue.m_format == 1 then
+		talktext = Utils.StringFormat( talktext, GetPlayer().m_name );
+	elseif recvValue.m_format == 2 then
+		talktext = Utils.StringFormat( talktext, GetPlayer().m_maidname );
+	end
+	
+	-- 如果建筑正在显示，进入延迟显示
+	if BuildingGetDlgIsShow() == true then
+		if recvValue.m_shape == 998 then
+			BuildingGetDlgWait( NpcTalkOne, talktext, callback )
 		else
-			HeroTalk( recvValue.m_herokind, Localization.text_quest(recvValue.m_talk_textid), callback )
-		end
-	else
-		if recvValue.m_btn_textid > 0 then
-			if BuildingGetDlgIsShow() == true then
-				BuildingGetDlgWait( NpcTalkOne, Localization.text_quest(recvValue.m_talk_textid), Localization.text_quest(recvValue.m_btn_textid), callback )
+			if recvValue.m_btn_textid > 0 then
+				local btntext = Localization.text_quest(recvValue.m_btn_textid)
+				BuildingGetDlgWait( NpcTalk, {recvValue.m_shape, talktext, btntext, callback} )
 			else
-				NpcTalkOne( Localization.text_quest(recvValue.m_talk_textid), Localization.text_quest(recvValue.m_btn_textid), callback )
+				BuildingGetDlgWait( NpcTalk, {recvValue.m_shape, talktext, nil, callback} )
 			end
+		end
+	
+	-- 如果获取英雄界面正在显示	，进入延迟显示
+	elseif HeroGetDlgIsShow() == true then	
+		if recvValue.m_shape == 998 then
+			--HeroGetDlgWait( NpcTalkOne, talktext, callback )
+			NpcTalkOne( talktext, callback )
 		else
-			if BuildingGetDlgIsShow() == true then
-				BuildingGetDlgWait( NpcTalk, Localization.text_quest(recvValue.m_talk_textid), callback )
+			if recvValue.m_btn_textid > 0 then
+				local btntext = Localization.text_quest(recvValue.m_btn_textid)
+				HeroGetDlgWait( NpcTalk, {recvValue.m_shape, talktext, btntext, callback} )
 			else
-				NpcTalk( Localization.text_quest(recvValue.m_talk_textid), callback )
+				HeroGetDlgWait( NpcTalk, {recvValue.m_shape, talktext, nil, callback} )
+			end
+		end
+		
+	else
+	
+		if recvValue.m_shape == 998 then
+			NpcTalkOne( talktext, callback )
+		else
+			if recvValue.m_btn_textid > 0 then
+				local btntext = Localization.text_quest(recvValue.m_btn_textid)
+				NpcTalk( {recvValue.m_shape, talktext, btntext, callback} )
+			else
+				NpcTalk( {recvValue.m_shape, talktext, nil, callback} )
 			end
 		end
 	end
+	
+	
 end
 
 -- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_place=0,m_battlepower=0,m_actorid=0,[m_count]},m_myrank=0,m_type=0,m_page=0,m_myrank=0,

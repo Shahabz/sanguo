@@ -150,7 +150,7 @@ function QuickItemDlgSet( sec, update )
 		else
 			local itemnum = GetItem():GetCount(kind)
 			if itemnum > 0 then
-				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), "x"..itemnum );
+				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), itemnum );
 			else
 				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..item_gettoken(kind) );
 			end

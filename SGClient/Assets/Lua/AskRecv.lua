@@ -65,9 +65,9 @@ function RecvActorNotify(recvValue)
 	-- NPC对话	
 	elseif msgid == NOTIFY_NPCTALK then
 		if BuildingGetDlgIsShow() == true then
-			BuildingGetDlgWait( NpcTalk, Localization.text_quest(value[1]) )
+			BuildingGetDlgWait( NpcTalk, {5002, Localization.text_quest(value[1]), nil, nil} )
 		else
-			NpcTalk( Localization.text_quest(value[1]) )
+			NpcTalk( {5002, Localization.text_quest(value[1]), nil, nil} )
 		end
 	
 	-- 装备	

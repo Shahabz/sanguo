@@ -125,6 +125,9 @@ int actor_changename( int actor_index, char *pname, int type );
 // 修改名称
 int actor_changename_gm( int actorid, char *pname );
 
+// 修改侍女名称
+int actor_maid_changename( int actor_index, char *pname, int type );
+
 // 修改头像
 int actor_changeshape( int actor_index, char shape );
 void actor_change_open( int actor_index, char shape );
