@@ -251,8 +251,8 @@ function HeroWashDlgSelectHero( kind )
 	
 		if pHero.m_kind == kind then	
 			SetTrue( uiSelect )
-			SetImage( m_uiShape, HeroHeadSprite( pHero.m_kind )  );
-			SetImage( m_uiColor,  ItemColorSprite( pHero.m_color )  );
+			SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind )  );
+			--SetImage( m_uiColor,  ItemColorSprite( pHero.m_color )  );
 			SetImage( m_uiCorps,  CorpsSprite( pHero.m_corps )  );
 			SetImage( m_uiColorBack, HeroColorSprite( pHero.m_color ) )
 			
@@ -276,7 +276,7 @@ function HeroWashDlgSelectHero( kind )
 			local total = pHero.m_attack_base + pHero.m_defense_base + pHero.m_troops_base;
 			local total_wash = pHero.m_attack_wash + pHero.m_defense_wash + pHero.m_troops_wash;
 			
-			local attrname = T(149)..":<color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
+			local attrname = T(149).."：<color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
 			local uiTotalGrowth = m_uiGrid.transform:GetChild(0).gameObject;
 			SetText( uiTotalGrowth.transform:Find("Text"), Utils.StringFormat( attrname, total, total_wash ) )
 			SetProgress( uiTotalGrowth, total_wash/config.total_wash )

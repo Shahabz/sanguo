@@ -484,45 +484,51 @@ end
 -- 设置单个对象
 function HeroListDlgSetHero( uiHeroObj, pHero, index )
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-	local uiBorder = objs[0];
+	local uiColorBack = objs[0];
 	local uiShape = objs[1];
-	local uiColor = objs[2];
+	local uiNameBack = objs[2];
 	local uiCorps = objs[3];
 	local uiType = objs[4];
 	local uiName = objs[5];
-	local uiBack = objs[6]
+	local uiLevel = objs[6]
 	local uiHidBack = objs[7];
 	local uiQualtiyText = objs[8];
 	local uiAttackText = objs[9];
 	local uiDefenseText = objs[10];
 	local uiTroopsText = objs[11];
+	local uiLevelText = objs[12];
 	
 	-- 空对象
 	if pHero == nil then
-		SetTrue( uiBack )
+		SetTrue( uiColorBack )
 		SetTrue( uiShape )
-		SetFalse( uiColor )
+		SetTrue( uiNameBack )
 		SetTrue( uiName )
-		SetTrue( uiBorder )
 		SetFalse( uiHidBack )
+		SetFalse( uiLevel )
+		SetFalse( uiCorps )
+		SetFalse( uiType )
+		SetImage( uiColorBack, HeroColorSprite(0) )
+		SetImage( uiNameBack, HeroNameColorSprite(0) )
+		SetImage( uiShape, HeroFaceSprite(0) )
 		
 		if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
 			if index == 3 then
 				if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
 					SetText( uiName, T(610) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 
 			elseif index == 4 then
 				if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
 					SetText( uiName, T(611) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 			end
 			
@@ -565,16 +571,18 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 		return
 	end
 	uiHeroObj:GetComponent("UIButton").controlID = 10000 + pHero.m_offset;
-	SetTrue( uiBack )
+	SetTrue( uiColorBack )
 	SetTrue( uiShape )
-	SetTrue( uiColor )
+	SetTrue( uiNameBack )
 	SetTrue( uiName )
-	SetTrue( uiBorder )
-	SetFalse(uiHidBack)	
+	SetFalse( uiHidBack )
+	SetTrue( uiLevel )
+	SetTrue( uiCorps )
 
-	SetImage( uiShape, HeroHeadSprite(pHero.m_kind) )
-	SetImage( uiColor, ItemColorSprite(pHero.m_color) )
-	SetImage( uiCorps, CorpsSprite(pHero.m_corps) )
+	SetImage( uiColorBack, HeroColorSprite(pHero.m_color) )
+	SetImage( uiNameBack, HeroNameColorSprite(pHero.m_color) )
+	SetImage( uiShape, HeroFaceSprite(pHero.m_kind) )
+	SetImage( uiCorps, CorpsSprite( pHero.m_corps ) )
 	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 	if only == true and pHero.m_god == 1 then
@@ -590,17 +598,18 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 		SetFalse( uiType )
 	end
 	
-	SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) )
+	SetText( uiName, HeroName( pHero.m_kind ) )
+	SetLevel( uiLevelText, pHero.m_level )
 	SetText( uiQualtiyText,F(1930,pHero.m_qualtiy,pHero.m_washqualtiy) );
 	SetText( uiAttackText, pHero.m_attack );
 	SetText( uiDefenseText, pHero.m_defense );
 	SetText( uiTroopsText, pHero.m_troops );
 	if b_OpenCloseInfo == true then
 		SetTrue(uiHidBack);
-		SetFalse(uiCorps);
+		--SetFalse(uiCorps);
 	else
 		SetFalse(uiHidBack);
-		SetTrue( uiCorps );
+		--SetTrue(uiCorps);
 	end
 	
 	if IsGuiding() then
@@ -704,9 +713,9 @@ function HeroListDlgOpenInfo()
 	b_OpenCloseInfo = true;
 	for k,v in pairs(m_CacheHeroList) do
 		local obj = v.transform:Find("HidBack");
-		local uiCorps = v.transform:Find("Corps");
+		--local uiCorps = v.transform:Find("Corps");
 		SetTrue(obj);
-		SetFalse(uiCorps);
+		--SetFalse(uiCorps);
 	end
 end
 --隐藏资质 
@@ -722,9 +731,9 @@ function HeroListDlgCloseInfo()
 	b_OpenCloseInfo = false;
 		for k,v in pairs(m_CacheHeroList) do
 		local obj = v.transform:Find("HidBack");
-		local uiCorps = v.transform:Find("Corps");
+		--local uiCorps = v.transform:Find("Corps");
 		SetFalse(obj);
-		SetTrue(uiCorps);
+		--SetTrue(uiCorps);
 	end
 end
 

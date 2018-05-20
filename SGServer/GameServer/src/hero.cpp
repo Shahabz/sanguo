@@ -318,6 +318,8 @@ int hero_gethero( int actor_index, int kind, short path )
 	HeroInfoConfig *config = hero_getconfig( kind, color );
 	if ( !config )
 		return -1;
+	if ( config->sound < 0 )
+		return -1;
 	memset( &g_actors[actor_index].hero[offset], 0, sizeof( Hero ) );
 	g_actors[actor_index].hero[offset].id = g_maxheroid++;
 	g_actors[actor_index].hero[offset].actorid = g_actors[actor_index].actorid;
@@ -2676,9 +2678,12 @@ int hero_gm_getallhero( City *pCity )
 	if ( !pCity )
 		return -1;
 	
-	for ( int kind = 1; kind < g_heroinfo_maxnum; kind++ )
+	for ( int kind = 1; kind < 111; kind++ )
 	{
-		hero_gethero( pCity->actor_index, kind, PATH_GM );
+		if ( g_heroinfo[kind].config && g_heroinfo[kind].config[0].sound >= 0 )
+		{
+			hero_gethero( pCity->actor_index, kind, PATH_GM );
+		}
 	}
 	return 0;
 }

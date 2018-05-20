@@ -117,7 +117,7 @@ function HeroGodDlgShow( pHero )
 	HeroGodDlgOpen()
 	m_pHero = pHero
 	SetImage( m_uiBack, HeroColorSprite( pHero.m_color ) )
-	SetImage( m_uiShape, HeroHeadSprite( pHero.m_kind ) );
+	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) );
 	SetImage( m_uiCorps, CorpsSprite( pHero.m_corps ) );
 	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )

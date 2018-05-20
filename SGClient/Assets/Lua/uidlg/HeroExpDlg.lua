@@ -221,7 +221,7 @@ function HeroExpDlgUpdateDesc( itemkind )
 	if m_pHero == nil then
 		return
 	end
-	SetText( m_uiExpPer, T(128)..": "..math.floor(m_pHero.m_exp*100/m_pHero.m_exp_max).."%" )
+	SetText( m_uiExpPer, T(119)..": "..math.floor(m_pHero.m_exp*100/m_pHero.m_exp_max).."%" )
 	SetProgress( m_uiProgress1, (m_pHero.m_exp+g_itemkind[m_itemkind].base_value0)/m_pHero.m_exp_max );
 	SetProgress( m_uiProgress2, m_pHero.m_exp/m_pHero.m_exp_max );
 end

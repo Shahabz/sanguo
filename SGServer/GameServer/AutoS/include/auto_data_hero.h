@@ -22,6 +22,7 @@ struct _heroinfo_config {
 				short troops;	//
 				short skillid;	//
 				int itemnum;	//
+				short sound;	//
 };
 typedef struct _heroinfo_config HeroInfoConfig;
 

@@ -152,27 +152,39 @@ function HeroDlgSetHero( index, pHero )
 	SetControlID( m_uiUIP_Hero[index], index )
 	
 	if pHero == nil or pHero.m_kind <= 0 then
-		SetFalse( uiHero )
 		SetTrue( uiUnLock )
+		SetImage( uiColorBack, HeroColorSprite( 0 ) );
+		SetImage( uiShape, HeroFaceSprite( 0 ) );
+		SetFalse( uiNameBack )
+		SetFalse( uiCorps );
+		SetFalse( uiName );
+		SetFalse( uiLevel );
+		SetFalse( uiType )
+		SetFalse( uiAdd )
+		SetFalse( uiLevel )
+		SetFalse( uiState )
+		SetFalse( uiSoldiersProgress )
+		SetFalse( uiSoldiersBtn )
+		
 		if index == 2 then
-			SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+			SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_add") )
 			SetText( uiUnLock.transform:Find("Text"), T(3367) )
 			
 		elseif index == 3 then
 			if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
-				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_lock_1") )
 				SetText( uiUnLock.transform:Find("Text"), T(610) )
 			else
-				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_add") )
 				SetText( uiUnLock.transform:Find("Text"), T(3367) )
 			end
 
 		elseif index == 4 then
 			if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
-				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_2") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_lock_1") )
 				SetText( uiUnLock.transform:Find("Text"), T(611) )
 			else
-				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_back_4") )
+				SetImage( uiUnLock.transform:Find("Back"), LoadSprite("ui_icon_add") )
 				SetText( uiUnLock.transform:Find("Text"), T(3367) )
 			end
 		end
@@ -180,13 +192,22 @@ function HeroDlgSetHero( index, pHero )
 	end
 	
 	SetFalse( uiUnLock )
-	SetTrue( uiHero )
+	SetTrue( uiNameBack )
+	SetTrue( uiCorps );
+	SetTrue( uiName );
+	SetTrue( uiLevel );
+	SetTrue( uiType )
+	SetTrue( uiAdd )
+	SetTrue( uiLevel )
+	SetTrue( uiState )
+	SetTrue( uiSoldiersProgress )
+	SetTrue( uiSoldiersBtn )
 	SetImage( uiColorBack, HeroColorSprite( pHero.m_color ) );
 	SetImage( uiNameBack, HeroNameColorSprite( pHero.m_color ) );
 	SetImage( uiShape, HeroFaceSprite( pHero.m_kind ) );
 	SetImage( uiCorps, CorpsSprite( pHero.m_corps ) );
 	SetText( uiName, HeroName( pHero.m_kind ) );
-	SetLevel( uiLevel, pHero.m_level );
+	SetLevel( uiLevel.transform:Find("Level"), pHero.m_level );
 	
 	-- 指引显示
 	GuideShow( index, uiHero.transform );

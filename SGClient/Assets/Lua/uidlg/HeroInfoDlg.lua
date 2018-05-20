@@ -239,7 +239,7 @@ function HeroInfoDlgSet( path, pHero, up )
 	SetImage( m_uiShape, HeroFaceSprite( pHero.m_kind ) )
 	
 	-- 名称
-	SetText( m_uiName, HeroNameLv(pHero.m_kind, pHero.m_level ) )
+	SetText( m_uiName, HeroNameEx(pHero.m_kind ) )
 	
 	-- 经验
 	SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
@@ -346,7 +346,7 @@ function HeroInfoDlgSet( path, pHero, up )
 		end
 	end
 	
-	local baseoffset = -1; 
+	--[[local baseoffset = -1; 
 	if pHero.m_offset >= 1000 and pHero.m_offset < 1004 then -- 上阵武将
 		baseoffset = 0;
 		
@@ -367,10 +367,18 @@ function HeroInfoDlgSet( path, pHero, up )
 				table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset, m_qualtiy = base, m_washqualtiy = wash });
 			end
 		end
+	end--]]
+	for offset = 0, 11, 1 do
+		local pHero = GetHero().m_CityHero[offset];
+		if pHero ~= nil and pHero.m_kind > 0 then
+			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
+			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
+			table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset, m_qualtiy = base, m_washqualtiy = wash });
+		end
 	end
 	
 	-- 先放进临时缓存	
-	if pHero.m_offset < 1000 then -- 聚贤阁武将		
+	--if pHero.m_offset < 1000 then -- 聚贤阁武将		
 		for offset = 0, MAX_HERONUM-1, 1 do
 			local pHero = GetHero().m_Hero[offset];
 			if pHero ~= nil and pHero.m_kind > 0 then
@@ -390,7 +398,7 @@ function HeroInfoDlgSet( path, pHero, up )
 		elseif rankType == 3 then
 			table.sort( m_CacheHeroCache, HeroListDlgLevelSort );
 		end
-	end
+	--end
 	
 	-- 创建对象
 	for i=1, #m_CacheHeroCache, 1 do

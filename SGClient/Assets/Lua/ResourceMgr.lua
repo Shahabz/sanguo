@@ -54,7 +54,7 @@ function HeroFaceSprite( kind )
 	local name = string.format("heroface_%d", kind );
 	local sprite = LoadSprite( name );
 	if sprite == nil then
-		sprite = LoadSprite( "heroface_1" );
+		sprite = LoadSprite( "heroface_0" );
 	end
 	return sprite;
 end

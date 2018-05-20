@@ -112,24 +112,30 @@ function HeroReplaceDlgSetHero()
 		SetTrue( uiHero )
 		SetControlID( uiHero, 1000+pHero.m_kind )
 		local objs = uiHero.transform:GetComponent( typeof(Reference) ).relatedGameObject;
-		local uiShape = objs[0];
-		local uiColor = objs[1];
+		local uiColorBack = objs[0];
+		local uiShape = objs[1];
 		local uiCorps = objs[2];
 		local uiName = objs[3];
 		local uiSelect = objs[4];
 		local uiType = objs[5];
+		local uiLevel = objs[6];
+		local uiNameBack = objs[7];
 			
-		if pHero.m_kind > 0 then		
+		if pHero.m_kind > 0 then	
+			SetTrue( uiHero )	
 			SetTrue( uiShape )
-			SetTrue( uiColor )
 			SetTrue( uiCorps )
 			SetTrue( uiName )
 			SetFalse( uiSelect )
-			
-			SetImage( uiShape, HeroHeadSprite( pHero.m_kind )  );
-			SetImage( uiColor,  ItemColorSprite( pHero.m_color )  );
+			SetTrue( uiLevel )
+			SetTrue( uiNameBack ) 
+						
+			SetImage( uiColorBack,  HeroColorSprite( pHero.m_color ) );
+			SetImage( uiNameBack, HeroNameColorSprite( pHero.m_color ) )
+			SetImage( uiShape, HeroFaceSprite( pHero.m_kind )  );
 			SetImage( uiCorps,  CorpsSprite( pHero.m_corps )  );
-			SetText( uiName, HeroNameLv( pHero.m_kind, pHero.m_level ) );
+			SetText( uiName, HeroName( pHero.m_kind ) );
+			SetLevel( uiLevel.transform:Find("Level"), pHero.m_level );
 			
 			local only = GetHero():IsNationHeroOnly( pHero.m_kind )
 			if only == true and pHero.m_god == 1 then
@@ -146,12 +152,14 @@ function HeroReplaceDlgSetHero()
 			end
 	
 		else
-			SetTrue( uiShape )
-			SetFalse( uiColor )
+			SetFalse( uiHero )
+			--[[SetTrue( uiShape )
 			SetFalse( uiCorps )
 			SetFalse( uiName )
 			SetFalse( uiSelect )
-			SetImage( uiShape, LoadSprite( "ui_icon_back_2" )  );
+			SetFalse( uiLevel )
+			SetFalse( uiNameBack ) 
+			SetImage( uiShape, LoadSprite( "ui_icon_back_2" )  );--]]
 			isfull = 0;
 		end
 	end

@@ -758,7 +758,9 @@ function FightDlgResultLayerShow()
 		local uiAward = m_uiAwardGrid.transform:GetChild( i )
 		SetTrue( uiAward )
 		SetImage( uiAward.transform:Find("Icon"), sprite );
-		SetText( uiAward.transform:Find("Name"), name.."x"..awardTable[i].num  )
+		SetImage( uiAward.transform:Find("Color"), color )
+		SetText( uiAward.transform:Find("Name"), name )
+		SetText( uiAward.transform:Find("Num"), knum(awardTable[i].num) )
 	end			
 	
 	-- 英雄
@@ -965,7 +967,9 @@ function FightDlgSweepResult( recvValue )
 		local uiAward = m_uiAwardGrid.transform:GetChild( i )
 		SetTrue( uiAward )
 		SetImage( uiAward.transform:Find("Icon"), sprite );
-		SetText( uiAward.transform:Find("Name"), name.."x"..knum(awardTable[i].num) )
+		SetImage( uiAward.transform:Find("Color"), color )
+		SetText( uiAward.transform:Find("Name"), name )
+		SetText( uiAward.transform:Find("Num"), knum(awardTable[i].num) )
 	end
 	
 	-- 武将经验信息

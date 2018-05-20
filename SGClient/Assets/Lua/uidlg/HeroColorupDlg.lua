@@ -127,7 +127,7 @@ end
 function HeroColorupDlgSetHero( uiObj, pHero, color )
 	local config = g_heroinfo[pHero.m_kind][color];
 	
-	SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind )  );
+	SetImage( uiObj.transform:Find("Shape"), HeroFaceSprite( pHero.m_kind )  );
 	SetImage( uiObj.transform:Find("Color"),  ItemColorSprite( color )  );
 	SetImage( uiObj.transform:Find("Corps"),  CorpsSprite( pHero.m_corps )  );
 	SetImage( uiObj.transform:Find("Back"),  HeroColorSprite( color ) )

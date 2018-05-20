@@ -320,6 +320,12 @@ function HeroName( kind )
 	return Localization.text_item(kind+3000);
 end
 
+-- 获取英雄名称，带字的
+function HeroNameEx( kind )
+	return Localization.text_item(kind+13000);
+end
+
+
 -- 获取英雄名称带等级
 function HeroNameLv( kind, level )
 	return "Lv."..level.." "..HeroName( kind );
