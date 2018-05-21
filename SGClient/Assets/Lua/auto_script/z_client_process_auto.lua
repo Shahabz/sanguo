@@ -105,6 +105,8 @@ end
 
 -- m_actorid=0,m_name="[22]",m_nation=0,m_shape=0,m_level=0,m_exp=0,m_exp_max=0,m_token=0,m_viplevel=0,m_vipexp=0,m_vipexp_max=0,m_body=0,m_place=0,m_official=0,m_zone=0,m_battlepower=0,m_silver=0,m_wood=0,m_food=0,m_iron=0,m_infantry_num=0,m_cavalry_num=0,m_archer_num=0,m_mokilllv=0,m_sflag=0,m_cityid=0,
 function proc_actorinfo_C( recvValue )
+	gamelog( "nation:"..recvValue.m_nation )
+	print( "nation:"..recvValue.m_nation )
 	-- process.
 	if recvValue.m_questid <= 1 then
 		FilmDlgShow()
