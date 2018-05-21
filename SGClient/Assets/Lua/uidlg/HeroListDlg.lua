@@ -269,6 +269,7 @@ function HeroListDlgLoadHero()
     for offset = 0+baseoffset, 3+baseoffset, 1 do
         local pHero = GetHero().m_CityHero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
+        	print("pHero.m_kind:"..pHero.m_kind)
 			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
 			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
             table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset,
@@ -511,11 +512,12 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 		SetImage( uiColorBack, HeroColorSprite(0) )
 		SetImage( uiNameBack, HeroNameColorSprite(0) )
 		SetImage( uiShape, HeroFaceSprite(0) )
+		SetText( uiName, "" )
 		
 		if m_path == HEROLIST_PATH_HERO or m_path == HEROLIST_PATH_HERO_LIST then -- 上阵武将
 			if index == 3 then
 				if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
-					SetText( uiName, T(610) )
+					--SetText( uiName, T(610) )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
@@ -524,10 +526,10 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 
 			elseif index == 4 then
 				if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
-					SetText( uiName, T(611) )
+					--SetText( uiName, T(611) )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
-					SetText( uiName, "" )
+					--SetText( uiName, "" )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 			end
@@ -536,23 +538,23 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 			if index == 1 then
 				if GetPlayer().m_level < global.hero_cabinet_level1 then -- 等级0开放
 					SetText( uiName, F(1486,global.hero_cabinet_level1) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 			elseif index == 2 then
 				if GetPlayer().m_level < global.hero_cabinet_level2 then -- 等级100开放
 					SetText( uiName, F(1486,global.hero_cabinet_level2) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 			elseif index == 3 then
 				if GetPlayer().m_level < global.hero_cabinet_level3 then -- 等级105开放
 					SetText( uiName, F(1486,global.hero_cabinet_level3) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
 					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
@@ -561,7 +563,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 			elseif index == 4 then
 				if GetPlayer().m_level < global.hero_cabinet_level4 then -- 等级110开放
 					SetText( uiName, F(1486,global.hero_cabinet_level4) )
-					SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
 					SetImage( uiShape, LoadSprite("ui_icon_back_4") )

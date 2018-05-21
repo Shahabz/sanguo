@@ -2958,6 +2958,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4473678005635340}
+  - component: {fileID: 114634459211109576}
   m_Layer: 8
   m_Name: Sky
   m_TagString: Untagged
@@ -5900,7 +5901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1837165654101666
 GameObject:
   m_ObjectHideFlags: 1
@@ -7031,6 +7032,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4859358799358788}
+  - component: {fileID: 114918074365043186}
   m_Layer: 8
   m_Name: Tileds
   m_TagString: Untagged
@@ -19402,6 +19404,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minsec: 100
   maxsec: 160
+--- !u!114 &114634459211109576
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1436856894757246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4295cf470e1514cd0a942128aa313432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objList: []
+  numPreFrame: 1
+  allchild: 1
 --- !u!114 &114634574998965628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23237,6 +23253,20 @@ MonoBehaviour:
   localizeID: 0
   rtlAlignment: 0
   rtlReverseSign: 
+--- !u!114 &114918074365043186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1983378280437398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4295cf470e1514cd0a942128aa313432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objList: []
+  numPreFrame: 1
+  allchild: 0
 --- !u!114 &114919013064599854
 MonoBehaviour:
   m_ObjectHideFlags: 1
