@@ -204,12 +204,12 @@ function BrushResWithZone( zoneid )
 			end
 		end
 	end
-	
+
 	-- 洗牌打乱搜到的空余坐标点
 	-- 因为 table.remove( emptylist, randidx ); -- 效率非常低，所以不随机了，顺序取
 	for  i = 1, #emptylist, 1 do
 		local index1 = math.random( 1, #emptylist );
-		local index2 = math.random( #emptylist, 1 );
+		local index2 = math.random( 1, #emptylist );
 		emptylist[index1], emptylist[index2] = emptylist[index2],emptylist[index1]
 	end
 	-- 刷资源点集合
