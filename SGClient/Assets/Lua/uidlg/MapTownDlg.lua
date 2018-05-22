@@ -335,9 +335,9 @@ function MapTownDlgRecvValue( recvValue )
 		else
 			-- 如果在保护状态
 			if recvValue.m_protect_sec > 0 then
-				SetTrue( m_uiCloseButton );
+				--SetTrue( m_uiCloseButton );
 			else
-				SetTrue( m_uiCloseButton );
+				--SetTrue( m_uiCloseButton );
 				SetTrue( m_uiFightButton );
 			end
 			
@@ -385,7 +385,7 @@ function MapTownDlgRecvValue( recvValue )
 				SetText( m_uiOwn, T(1211).." "..recvValue.m_own_name );
 			end
 		end	
-		SetTrue( m_uiCloseButton );
+		--SetTrue( m_uiCloseButton );
 	end	
 end
 
