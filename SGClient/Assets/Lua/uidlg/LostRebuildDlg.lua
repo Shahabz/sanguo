@@ -3,6 +3,7 @@ local m_Dlg = nil;
 local m_uiAwardName = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Award = nil; --UnityEngine.GameObject
+local m_uiLeft = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 
 -- 打开界面
@@ -47,6 +48,7 @@ function LostRebuildDlgOnAwake( gameObject )
 	m_uiAwardName = objs[0];
 	m_uiContent = objs[1];
 	m_uiUIP_Award = objs[2];
+	m_uiLeft = objs[3];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -86,6 +88,13 @@ end
 function LostRebuildDlgShow( recvValue )
 	LostRebuildDlgOpen()
 	LostRebuildDlgClear()
+	
+	local sprite, name, left = NpcTalkShapeInfo( 0 );
+	local obj = m_uiLeft
+	SetTrue( obj )
+	SetImage( obj.transform:Find("Shape"), sprite );
+	SetText( obj.transform:Find("Name"), name );
+	
 	-- 奖励
 	if recvValue.m_rb_silver > 0 then
 		local sprite, color, name = AwardInfo( AWARDKIND_SILVER )

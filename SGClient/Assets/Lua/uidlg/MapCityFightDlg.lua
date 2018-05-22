@@ -109,7 +109,7 @@ function MapCityFightDlgShow( recvValue )
 	local unit_index = recvValue.m_unit_index;
 	
 	-- 形象
-    m_uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitCityShapeList[level].."_"..nation );
+  SetImage(m_uiShape, LoadSprite( MapUnitCityShapeList[level].."_"..nation ));
 			
 	-- 名字
 	SetText( m_uiName, F(1228, level, name, posx, posy) )
