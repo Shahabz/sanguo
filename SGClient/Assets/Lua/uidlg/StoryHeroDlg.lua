@@ -188,18 +188,18 @@ function StoryHeroDlgSetHero( uiObj, herokind )
 	end
 	SetTrue( uiObj )
 	SetImage( uiObj.transform:Find("Back"), HeroColorSprite( color ) )
-	SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( herokind )  );
-	SetImage( uiObj.transform:Find("Color"),  ItemColorSprite( color )  );
+	SetImage( uiObj.transform:Find("Shape"), HeroFaceSprite( herokind )  );
+	--SetImage( uiObj.transform:Find("Color"),  ItemColorSprite( color )  );
 	SetImage( uiObj.transform:Find("Corps"),  CorpsSprite( config.corps )  );
 	SetText( uiObj.transform:Find("Name"), HeroName( herokind ), NameColor( color ) )
 	local uiGrid = uiObj.transform:Find("Grid");
 	
 	-- 总资质
-	local attrname = T(149)..":<color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
+	local attrname = T(149)..": <color=#f7f3bbff>{0}</color> +<color=#03DE27FF>{1}</color>"
 	local total = config.attack_base + config.defense_base + config.troops_base;
 	local total_wash = config.attack_wash + config.defense_wash + config.troops_wash;
 	if total_wash == 0 then
-		attrname = T(149)..":<color=#f7f3bbff>{0}</color>"
+		attrname = T(149)..": <color=#f7f3bbff>{0}</color>"
 	end
 	local uiTotalGrowth = uiGrid.transform:GetChild(0).gameObject;
 	SetText( uiTotalGrowth.transform:Find("Text"), Utils.StringFormat( attrname, total, total_wash ) )

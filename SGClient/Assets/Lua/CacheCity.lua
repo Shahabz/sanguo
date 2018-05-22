@@ -988,6 +988,11 @@ function City.UpgradeArrow()
 							SetFalse( arrow )
 						end
 					end
+				elseif unitObj then
+						local arrow = unitObj.transform:Find("info/arrow")
+						if arrow ~= nil then
+							SetFalse( arrow )
+						end
 				end
 			end
 		end
@@ -1020,6 +1025,11 @@ function City.UpgradeArrow()
 								if arrow ~= nil then
 									SetFalse( arrow )
 								end
+							end
+						elseif unitObj then
+							local arrow = unitObj.transform:Find("info/arrow")
+							if arrow ~= nil then
+								SetFalse( arrow )
 							end
 						end
 					end

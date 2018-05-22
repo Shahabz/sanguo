@@ -299,6 +299,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 	local uiToken = objs[9];
 	local uiShapeBack = objs[10];
 	local uiEffect = objs[11];
+	local uiBack = objs[12];
 	SetTrue( uiObj )
 	SetFalse( uiFlag );
 	SetFalse( uiNew );
@@ -307,7 +308,9 @@ function StoryDlgSetRank( uiObj, storyConfig )
 	SetFalse( uiTimer );
 	SetFalse( uiCount );
 	SetFalse( uiToken );
+	SetFalse( uiShapeBack )
 	SetFalse( uiEffect );
+	SetFalse( uiBack );
 	
 	local color = NameColor( storyConfig.color )
 	local type = storyConfig.type;
@@ -317,18 +320,18 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 0 )
 			SetTrue( uiShape )
 			SetGray( uiShape, true )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, true )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, true )
 			SetTrue( uiFlag );
-			color = Hex2Color(0x9b8869ff)
+			color = Hex2Color(0x969696FF)
 		
 		-- 当前正在打的关卡
 		elseif m_recvValue.m_storyid == storyConfig.id then
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			SetTrue( uiEffect );
 			StoryDlgShowIcon( uiItem, storyConfig )	
@@ -339,7 +342,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
 				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )
 			else
 				SetFalse( uiObj )
@@ -360,8 +364,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiFlag );
 
 			-- 星级
@@ -376,8 +380,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			SetTrue( uiEffect );
 			StoryDlgShowIcon( uiItem, storyConfig )	
@@ -389,7 +393,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
 				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )	
 				showWarning = 1;
 			else
@@ -400,7 +405,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 名称
 		SetText( uiName, StoryRankName( storyConfig.id ), color )
 		-- 形象
-		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
+		--StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
 		
 		-- 未3星通关，显示警告
@@ -440,8 +445,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )
 			
 			if resnum < storyConfig.resnum then
@@ -465,8 +470,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			
@@ -491,7 +496,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
 				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )	
 			else
 				SetFalse( uiObj )
@@ -501,7 +507,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 名称
 		SetText( uiName, StoryRankName( storyConfig.id ), color )
 		-- 形象
-		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
+		--StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
 		
 	elseif type == STORY_TYPE_ITEM then-- 道具
@@ -518,8 +524,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			SetTrue( uiCount )
 			SetText( uiCount, F( 2029, num, storyConfig.itemnum )  )
@@ -529,8 +535,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			SetTrue( uiCount )
@@ -542,7 +548,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
 				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )	
 			else
 				SetFalse( uiObj )
@@ -552,7 +559,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 名称
 		SetText( uiName, StoryRankName( storyConfig.id ), color )
 		-- 形象
-		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
+		--StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
 		-- 显示道具形象
 		if storyConfig.item_awardkind > 0 then
@@ -587,8 +594,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			if IsGuiding() then
 				if GetCurrentGuideType() == GUIDE_COPY_HERO then
@@ -601,8 +608,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 				
@@ -611,8 +618,9 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			-- 显示锁定状态的
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
-				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShape )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )	
 			else
 				SetFalse( uiObj )
@@ -622,7 +630,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 名称
 		SetText( uiName, StoryRankName( storyConfig.id ), color )
 		-- 形象
-		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
+		--StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
 	
 	elseif type == STORY_TYPE_DRAWING then-- 装备图纸
@@ -639,8 +647,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			if isbuy == 1 then
 				SetTrue( uiCount )
@@ -655,8 +663,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			SetControlID( uiObj, 10000+storyConfig.id )
 			SetTrue( uiShape )
 			SetGray( uiShape, false )
-			SetTrue( uiShapeBack )
-			SetGray( uiShapeBack, false )
+			--SetTrue( uiShapeBack )
+			--SetGray( uiShapeBack, false )
 			SetTrue( uiNew )
 			StoryDlgShowIcon( uiItem, storyConfig )	
 			if isbuy == 1 then
@@ -673,7 +681,8 @@ function StoryDlgSetRank( uiObj, storyConfig )
 			if m_recvValue.m_storyid > storyConfig.unlock_preid then
 				SetControlID( uiObj, 0 )
 				SetFalse( uiShape )
-				SetFalse( uiShapeBack )
+				--SetFalse( uiShapeBack )
+				SetTrue( uiBack );
 				StoryDlgShowIcon( uiItem, storyConfig )	
 			else
 				SetFalse( uiObj )
@@ -683,7 +692,7 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		-- 名称
 		SetText( uiName, StoryRankName( storyConfig.id ), color )
 		-- 形象
-		StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
+		--StoryRankShapeBack( uiShapeBack, storyConfig.shapeback )
 		StoryRankShape( uiShape, storyConfig.shape )
 		-- 显示装备图纸
 		if storyConfig.drawing_kind > 0 then
