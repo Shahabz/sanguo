@@ -635,7 +635,7 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 		local uiName = objs[2];
 		SetImage(uiShape,sprite);
 		SetImage(uiColor,colorSprite);
-		SetText(uiName,"x"..value.num,NameColor(value.color));
+		SetText(uiName,value.num,NameColor(value.color));
 	end
 end
 --单次寻访开始前判断灰化哪种按钮
