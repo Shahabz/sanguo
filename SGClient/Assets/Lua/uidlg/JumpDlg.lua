@@ -6,6 +6,7 @@ local m_uiBuyButton = nil; --UnityEngine.GameObject
 local m_uiPayButton = nil; --UnityEngine.GameObject
 local m_uiFreeButton = nil; --UnityEngine.GameObject
 local m_uiCloseButton = nil; --UnityEngine.GameObject
+local m_uiLeft = nil; --UnityEngine.GameObject
 
 local m_res = 0;
 -- 打开界面
@@ -78,6 +79,7 @@ function JumpDlgOnAwake( gameObject )
 	m_uiPayButton = objs[3];
 	m_uiFreeButton = objs[4];
 	m_uiCloseButton = objs[5];
+	m_uiLeft = objs[6];
 end
 
 -- 界面初始化时调用
@@ -111,6 +113,10 @@ end
 ----------------------------------------
 function JumpDlgShow()
 	JumpDlgOpen()
+	local sprite, name, left = NpcTalkShapeInfo( 0 );
+	SetTrue( m_uiLeft )
+	SetImage( m_uiLeft.transform:Find("Shape"), sprite );
+	SetText( m_uiLeft.transform:Find("Name"), name );
 end
 
 function JumpToken()

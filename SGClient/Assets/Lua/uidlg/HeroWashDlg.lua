@@ -13,6 +13,7 @@ local m_uiUIP_HeroHead = nil; --UnityEngine.GameObject
 local m_uiTimer = nil; --UnityEngine.GameObject
 local m_uiColorBack = nil; --UnityEngine.GameObject
 local m_uiType = nil; --UnityEngine.GameObject
+local m_uiToken = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 
@@ -90,7 +91,8 @@ function HeroWashDlgOnAwake( gameObject )
 	m_uiTimer = objs[10];
 	m_uiColorBack = objs[11];
 	m_uiType = objs[12];
-	
+	m_uiToken = objs[13];
+
 	SetFalse( m_uiNum );
 	SetFalse( m_uiTimer );
 	
@@ -134,6 +136,7 @@ function HeroWashDlgShow( kind, path )
 	system_askinfo( ASKINFO_HERO, "", 4 );
 	HeroWashDlgSetHero()
 	HeroWashDlgSelectHero( kind )
+	SetText( m_uiToken, global.hero_wash_token )
 end
 
 -- 英雄

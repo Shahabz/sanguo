@@ -7,6 +7,7 @@ local m_uiNextBtn = nil; --UnityEngine.GameObject
 local m_uiGrid = nil; --UnityEngine.GameObject
 local m_uiWarning = nil; --UnityEngine.GameObject
 local m_uiResResetLayer = nil; --UnityEngine.GameObject
+local m_uiTalk = nil; --UnityEngine.GameObject
 
 local m_chapter =0;
 local m_storyidAsyn = nil;
@@ -78,10 +79,12 @@ function StoryDlgOnAwake( gameObject )
 	m_uiGrid = objs[3];
 	m_uiWarning = objs[4];
 	m_uiResResetLayer = objs[5];
+	m_uiTalk = objs[6];
 	SetFalse( m_uiGrid );
 	SetFalse( m_uiPreBtn )
 	SetFalse( m_uiNextBtn )
 	SetFalse( m_uiWarning )
+	SetFalse( m_uiTalk )
 end
 
 -- 界面初始化时调用
@@ -132,7 +135,7 @@ end
 -- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind[4] = 0
 function StoryDlgRecv( recvValue )
 	m_recvValue = recvValue;
-	--m_recvValue.m_storyid = 646
+--m_recvValue.m_storyid = 646
 	if GetPlayer().m_storyid < recvValue.m_storyid then
 		GetPlayer().m_storyid = recvValue.m_storyid;
 	end
@@ -249,7 +252,8 @@ function StoryDlgSetInfo()
 	SetFalse( m_uiWarning )
 	-- 标题
 	SetText( m_uiTitleText, StoryChapterName( m_chapter ) )
-	
+	-- 提示
+	SetFalse( m_uiTalk )
 	-- 关卡
 	SetTrue( m_uiGrid );
 	for i=1, 9, 1 do
@@ -412,9 +416,11 @@ function StoryDlgSetRank( uiObj, storyConfig )
 		if showWarning == 1 then
 			SetTrue( m_uiWarning )
 			if GetPlayer().m_viplevel < global.story_sweep_vip then
-				SetText( m_uiWarning, F( 2013,  "<color=#"..NameColorStr(storyConfig.color)..">"..StoryRankName( storyConfig.id ).."</color>" ) )
+				--SetText( m_uiWarning, F( 2013,  "<color=#"..NameColorStr(storyConfig.color)..">"..StoryRankName( storyConfig.id ).."</color>" ) )
+				SetText( m_uiWarning, T(2013))
 			else
-				SetText( m_uiWarning, F( 2014, "<color=#"..NameColorStr(storyConfig.color)..">"..StoryRankName( storyConfig.id ).."</color>" ) )
+				--SetText( m_uiWarning, F( 2014, "<color=#"..NameColorStr(storyConfig.color)..">"..StoryRankName( storyConfig.id ).."</color>" ) )
+				SetText( m_uiWarning, T(2014))
 			end
 		end
 		
@@ -748,7 +754,9 @@ function StoryDlgSelect( id )
 		local save_offset = storyConfig.drawing_saveoffset;
 		local isbuy = m_recvValue. m_story_drawing[save_offset+1];
 		if isbuy == 0 then
-			MsgBox( F(2030, storyConfig.drawing_token), function() 
+			local sprite, color, name, c, desc = AwardInfo( storyConfig.drawing_kind )
+			local itemname = NameColorText( name, c )
+			MsgBox( F(2030, storyConfig.drawing_token,itemname), function() 
 				system_askinfo( ASKINFO_STORY, "", 6, id );
 			end )
 		elseif isbuy == 1 then
@@ -779,19 +787,62 @@ end
 function StoryDlgShowIcon( uiItem, storyConfig )
 	-- 显示武将
 	if storyConfig.hero_kind0 > 0 then
-		StoryDlgHeroShape( uiItem, storyConfig.hero_kind0 )
+		if storyConfig.type == 2 then
+			SetTrue( m_uiTalk )
+			local c1 = 0
+			local c2 = 0
+			local heroname1 = ""
+			local heroname2 = ""
+			if storyConfig.hero_kind0 > 0 then
+				heroname1 = NameColorText( HeroName( storyConfig.hero_kind0 ), hero_getnormalcolor( storyConfig.hero_kind0 ) )
+			end
+			if storyConfig.hero_kind1 > 0 then
+				heroname2 = NameColorText( HeroName( storyConfig.hero_kind1 ), hero_getnormalcolor( storyConfig.hero_kind1 ) )
+				heroname2 = "|"..heroname2
+			end		
+			local rankname = NameColorText( StoryRankName(storyConfig.id), storyConfig.color )
+			local talk = F(2494, rankname, heroname1, heroname2 )
+			SetText( m_uiTalk.transform:Find("Text"), talk )
+		else
+			StoryDlgHeroShape( uiItem, storyConfig.hero_kind0 )	
+		end
 	end
 	-- 显示资源
 	if storyConfig.restype > 0 then
-		StoryDlgResShape( uiItem, storyConfig.restype )
+		if storyConfig.type == 2 then
+			SetTrue( m_uiTalk )
+			local rankname = NameColorText( StoryRankName(storyConfig.id), storyConfig.color )
+			local talk = F(2495, rankname )
+			SetText( m_uiTalk.transform:Find("Text"), talk )
+		else
+			StoryDlgResShape( uiItem, storyConfig.restype )
+		end
 	end
 	-- 显示道具
 	if storyConfig.item_awardkind > 0 then
-		StoryDlgItemShape( uiItem, storyConfig.item_awardkind )
+		if storyConfig.type == 2 then
+			SetTrue( m_uiTalk )
+			local sprite, color, name, c, desc = AwardInfo( storyConfig.item_awardkind )
+			local rankname = NameColorText( StoryRankName(storyConfig.id), storyConfig.color )
+			local itemname = NameColorText( name, c )
+			local talk = F(2496, rankname, itemname )
+			SetText( m_uiTalk.transform:Find("Text"), talk )
+		else
+			StoryDlgItemShape( uiItem, storyConfig.item_awardkind )
+		end
 	end
 	-- 显示图纸
 	if storyConfig.drawing_kind > 0 then
-		StoryDlgItemShape( uiItem, storyConfig.drawing_kind )
+		if storyConfig.type == 2 then
+			SetTrue( m_uiTalk )
+			local sprite, color, name, c, desc = AwardInfo( storyConfig.drawing_kind )
+			local rankname = NameColorText( StoryRankName(storyConfig.id), storyConfig.color )
+			local itemname = NameColorText( name, c )
+			local talk = F(2496, rankname, itemname )
+			SetText( m_uiTalk.transform:Find("Text"), talk )
+		else
+			StoryDlgItemShape( uiItem, storyConfig.drawing_kind )
+		end
 	end
 end
 

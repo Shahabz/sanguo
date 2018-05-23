@@ -474,6 +474,12 @@ function NameColorStr( color )
 	return c[color+1]
 end
 
+-- 带颜色的文本
+function NameColorText( text, color )
+	local name = "<color=#"..NameColorStr(color)..">"..text.."</color>"
+	return name
+end
+
 -- 国家颜色
 function NationColor( nation )
 	local c = { 0x25C9FFFF, 0xE80017FF, 0x03DE27FF }

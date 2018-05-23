@@ -7,6 +7,7 @@ local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiCallBtn = nil; --UnityEngine.GameObject
 local m_uiBuyBtn = nil; --UnityEngine.GameObject
 local m_storyid = 0;
+local m_costtoken = 0;
 
 -- 打开界面
 function StoryHeroDlgOpen()
@@ -117,11 +118,14 @@ function StoryHeroDlgShow( storyid, info )
 			SetFalse( m_uiCallBtn )
 			SetTrue( m_uiBuyBtn )
 			SetText( m_uiCost.transform:Find("Text"), storyConfig.hero_token )
+			m_costtoken = storyConfig.hero_token
+						
 		elseif iscallover == 0 then
 			SetFalse( m_uiTalk )
 			SetFalse( m_uiCost )
 			SetTrue( m_uiCallBtn )
 			SetFalse( m_uiBuyBtn )
+			m_costtoken = 0
 		end
 		
 	elseif storyConfig.hero_kind0 > 0 then
@@ -138,11 +142,13 @@ function StoryHeroDlgShow( storyid, info )
 			SetFalse( m_uiCallBtn )
 			SetTrue( m_uiBuyBtn )
 			SetText( m_uiCost.transform:Find("Text"), storyConfig.hero_token )
+			m_costtoken = storyConfig.hero_token
 		else
 			SetTrue( m_uiTalk )
 			SetFalse( m_uiCost )
 			SetTrue( m_uiCallBtn )
 			SetFalse( m_uiBuyBtn )
+			m_costtoken = 0
 		end
 		
 		if IsGuiding() then
@@ -168,11 +174,13 @@ function StoryHeroDlgShow( storyid, info )
 			SetFalse( m_uiCallBtn )
 			SetTrue( m_uiBuyBtn )
 			SetText( m_uiCost.transform:Find("Text"), storyConfig.hero_token )
+			m_costtoken = storyConfig.hero_token
 		else
 			SetTrue( m_uiTalk )
 			SetFalse( m_uiCost )
 			SetTrue( m_uiCallBtn )
 			SetFalse( m_uiBuyBtn )
+			m_costtoken = 0
 		end
 	end
 		
@@ -228,7 +236,9 @@ end
 
 -- 钻石购买
 function StoryHeroDlgToken()
-	system_askinfo( ASKINFO_STORY, "", 5, m_storyid );
-	StoryHeroDlgClose()
+	MsgBox( F(2497, m_costtoken), function() 
+		system_askinfo( ASKINFO_STORY, "", 5, m_storyid );
+		StoryHeroDlgClose()
+	end )
 end
 
