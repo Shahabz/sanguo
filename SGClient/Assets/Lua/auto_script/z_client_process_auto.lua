@@ -464,7 +464,8 @@ function proc_experience_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_addexp > 0 then
-			pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+			--pop( T(120)..": "..T(128).."x"..recvValue.m_addexp );
+			AwardNotify( AWARDKIND_EXP, recvValue.m_addexp )
 		end
 	end
 	GetPlayer().m_level = recvValue.m_level;
@@ -473,7 +474,8 @@ function proc_experience_C( recvValue )
 	MainDlgSetExp();
 	if recvValue.m_isup == 1 then
 		if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
-			pop( T(150) );
+			--pop( T(150) );
+			NotifyMiddle( T(150), nil )
 		end
 		MainDlgSetLevel();
 	end
@@ -484,7 +486,8 @@ function proc_body_C( recvValue )
 	-- process.
 	if recvValue.m_path ~= PATH_SYSTEM then
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(126).."x"..recvValue.m_add );
+			AwardNotify( AWARDKIND_BODY, recvValue.m_add )
 		end
 	end
 	
@@ -498,6 +501,10 @@ function proc_changelevy_C( recvValue )
 	-- process.
 	GetPlayer():SetBuildingLevy( recvValue.m_total )
 	LevyDlgChangeSec( recvValue.m_sec )
+	
+	if recvValue.m_add > 0 then
+		AwardNotify( AWARDKIND_LEVYNUM, recvValue.m_add )
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -506,7 +513,8 @@ function proc_changesilver_C( recvValue )
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
 			--pop( T(120)..": "..T(121).."x"..recvValue.m_add );
-			pop( "<icon=silver>"..T(121).." x "..recvValue.m_add );
+			--pop( T(121).." x "..recvValue.m_add, {shape=ResIcon(1)} );
+			AwardNotify( AWARDKIND_SILVER, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_silver = recvValue.m_total;
@@ -524,7 +532,8 @@ function proc_changewood_C( recvValue )
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
 			--pop( T(120)..": "..T(122).."x"..recvValue.m_add );
-			pop( "<icon=wood>"..T(122).." x "..recvValue.m_add );
+			--pop( T(122).." x "..recvValue.m_add, {shape=ResIcon(2)} );
+			AwardNotify( AWARDKIND_WOOD, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_wood = recvValue.m_total;
@@ -541,7 +550,8 @@ function proc_changefood_C( recvValue )
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
 			--pop( T(120)..": "..T(123).."x"..recvValue.m_add );
-			pop( "<icon=food>"..T(123).." x "..recvValue.m_add );
+			--pop( T(123).." x "..recvValue.m_add, {shape=ResIcon(3)} );
+			AwardNotify( AWARDKIND_FOOD, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_food = recvValue.m_total;
@@ -558,7 +568,8 @@ function proc_changeiron_C( recvValue )
 	if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		if recvValue.m_add > 0 then
 			--pop( T(120)..": "..T(124).."x"..recvValue.m_add );
-			pop( "<icon=iron>"..T(124).." x "..recvValue.m_add );
+			--pop( T(124).." x "..recvValue.m_add, {shape=ResIcon(4)} );
+			AwardNotify( AWARDKIND_IRON, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_iron = recvValue.m_total;
@@ -577,7 +588,8 @@ function proc_changeprestige_C( recvValue )
 	if recvValue.m_path == PATH_FIGHT then
 	else
 		if recvValue.m_add > 0 then
-			pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+			--pop( T(120)..": "..T(152).."x"..recvValue.m_add );
+			AwardNotify( AWARDKIND_PRESTIGE, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_prestige = recvValue.m_total;
@@ -603,7 +615,8 @@ function proc_changevip_C( recvValue )
 	VipDlgUpdateVip()
 	
 	if recvValue.m_addexp > 0 then
-		pop( T(120)..": "..T(190).."x"..recvValue.m_addexp );
+		--pop( T(120)..": "..T(190).."x"..recvValue.m_addexp );
+		AwardNotify( AWARDKIND_VIPEXP, recvValue.m_addexp )
 	end
 end
 
@@ -617,7 +630,8 @@ function proc_changtoken_C( recvValue )
 			
 		else
 			--pop( T(120)..": "..T(125).."x"..recvValue.m_add );
-			pop( "<icon=token>"..T(125).." x "..recvValue.m_add );
+			--pop( T(125).." x "..recvValue.m_add, {shape=ResIcon(5)} );
+			AwardNotify( AWARDKIND_TOKEN, recvValue.m_add )
 		end
 	end
 	GetPlayer().m_token = recvValue.m_total;
@@ -907,7 +921,13 @@ function proc_soldiers_C( recvValue )
 	end
 	
 	if recvValue.m_add > 0 then
-		pop( T(605)..": "..CorpsName(recvValue.m_corps).."x"..recvValue.m_add );
+		if recvValue.m_path == PATH_TRAIN_GET or recvValue.m_path == PATH_ITEMUSE or recvValue.m_path == PATH_TOKENITEMUSE then -- ÕÐÄ¼
+			pop( T(605)..": <color=#ffde00ff>"..CorpsName(recvValue.m_corps).."</color><color=#03de27ff>x"..recvValue.m_add.."</color>", {shape=CorpsSprite(recvValue.m_corps)} )
+			
+		elseif recvValue.m_path == PATH_HERO_DOWN or recvValue.m_path == PATH_HERO_SOLDIERS_EQUIP then -- »ØÓª
+			pop( F(2498,recvValue.m_add,CorpsName(recvValue.m_corps)), {shape=CorpsSprite(recvValue.m_corps)} )
+		end
+		--pop( T(605)..": "..CorpsName(recvValue.m_corps).."x"..recvValue.m_add );
 	end
 end
 

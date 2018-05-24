@@ -98,6 +98,6 @@ function PopTextModPoolShow( text )
 	table.insert( PopTextList, obj );                    
 end
 
-function pop( text )
+--[[function pop( text )
 	PopTextModPoolShow( text )
-end
+end--]]

@@ -224,7 +224,10 @@ function Equip:OnGetEquip( _EquipIndex, nEquipKind, path )
 	-- 新装备标示
 	pEquip.m_bIsNew = true;
 	
-	pop( T(120)..": "..equip_getname(nEquipKind) )
+	AwardNotify( AWARDKIND_EQUIPBASE+nEquipKind, 1 )
+	--local equipcolor = equip_getcolor(nEquipKind)
+	--local equipname = NameColorText( equip_getname(nEquipKind), equipcolor )
+	--NotifyMiddle( T(120)..": "..equipname, {back=ItemColorSprite(equipcolor), shape=EquipSprite(nEquipKind)} )
 end
 
 -- 得到服务器返回的消息，失去装备

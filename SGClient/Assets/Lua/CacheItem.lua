@@ -320,7 +320,10 @@ function Item:OnGetItem( _ItemIndex, nItemKind, num, new, path )
 	elseif path == PATH_HEROVISIT then
 	elseif path == PATH_HEROVISIT_CHANGE then
     else
-		pop( F( 690, item_getname(nItemKind), num ) )
+		AwardNotify( nItemKind, num )
+		--local itemcolor = item_getcolor(nItemKind)
+		--local itemname = NameColorText( item_getname(nItemKind), itemcolor )
+		--NotifyMiddle( F( 690, itemname, num ), {back=ItemColorSprite(itemcolor), shape=ItemSprite(nItemKind)} )
 	end
 	NationPlaceDlgRecv()
 end

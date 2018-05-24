@@ -2346,6 +2346,7 @@ int city_train_get( int actor_index, int kind )
 	pValue.m_corps = corps;
 	pValue.m_add = overnum;
 	pValue.m_soldiers = pCity->soldiers[corps];
+	pValue.m_path = PATH_TRAIN_GET;
 	netsend_soldiers_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 
 	wlog( 0, LOGOP_BARRACKS, PATH_TRAIN_GET, kind, overnum, 0, pCity->actorid, city_mainlevel( pCity->index ) );

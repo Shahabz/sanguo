@@ -4,6 +4,7 @@ local m_uiItemObj = nil; --UnityEngine.GameObject
 local m_uiBuildingObj = nil; --UnityEngine.GameObject
 local m_uiGetBtn = nil; --UnityEngine.GameObject
 local m_uiRebuildBtn = nil; --UnityEngine.GameObject
+local m_uiLeft = nil; --UnityEngine.GameObject
 local m_kind = 0;
 local m_offset = -1;
 -- 打开界面
@@ -56,7 +57,7 @@ function ResDrawingDlgOnAwake( gameObject )
 	m_uiBuildingObj = objs[1];
 	m_uiGetBtn = objs[2];
 	m_uiRebuildBtn = objs[3];
-
+	m_uiLeft = objs[4];
 end
 
 -- 界面初始化时调用
@@ -112,6 +113,11 @@ function ResDrawingDlgShow( kind, offset )
 		return
 	end
 
+	local sprite, name, left = NpcTalkShapeInfo( 0 );
+	SetTrue( m_uiLeft )
+	SetImage( m_uiLeft.transform:Find("Shape"), sprite );
+	SetText( m_uiLeft.transform:Find("Name"), name );
+	
 	local itemcolor = item_getcolor( config.itemkind );
 	local itemcount = GetItem():GetCount( config.itemkind )
 	SetImage( m_uiItemObj.transform:Find("Shape"), ItemSprite( config.itemkind ) )

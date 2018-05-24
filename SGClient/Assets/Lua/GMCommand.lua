@@ -133,7 +133,7 @@ function GMCommandClientProc( cmdstr, value1, value2, value3, value4, value5, va
 		MsgBox( msg, function() end )
 		
 	elseif cmdstr == "notify" then
-		Notify( msg )
+		NotifyMiddle( "jawdwadawdawdawdawdawd", {back=nil,shape=BuildingSprite(1)} )
 	
 	elseif cmdstr == "dump"	then
 		ResourceManager.dump()

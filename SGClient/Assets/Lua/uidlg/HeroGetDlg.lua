@@ -122,9 +122,9 @@ function HeroGetDlgShow( recvValue )
 		SetTrue( m_uiCloseBtn );
 		HeroVisitDlgAddHero(m_herokind);
 	end
-	SetImage( m_uiShape, HeroFaceSprite( recvValue.m_kind )  );
-	SetImage( m_uiColor,  ItemColorSprite( recvValue.m_color )  );
-	SetImage( m_uiCorps,  CorpsSprite( recvValue.m_corps )  );
+	SetImage( m_uiShape, HeroFaceSprite( recvValue.m_kind ) );
+	SetImage( m_uiColor,  HeroColorSprite( recvValue.m_color ) )  
+	SetImage( m_uiCorps,  CorpsSprite( recvValue.m_corps ) );
 	SetText( m_uiName, HeroName( recvValue.m_kind ) )
 	SetTextWriter( m_uiDesc, T(1570), function() end )
 	

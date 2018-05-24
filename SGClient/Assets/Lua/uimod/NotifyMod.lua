@@ -92,9 +92,6 @@ function NotifyModPoolShow( text )
 	table.insert( NotifyList, obj );
 end
 
-function Notify( text )
-	NotifyModPoolShow( text )
-end
-function notify( text )
+function FNotify( text )
 	NotifyModPoolShow( text )
 end

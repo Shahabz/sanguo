@@ -443,7 +443,11 @@ int item_use_quick( int actor_index, short itemkind, char op, int buildingkind, 
 		else
 		{
 			if ( item_lost( actor_index, itemkind, 1, PATH_TRAIN ) < 0 )
-				return -1;
+			{
+				int token = item_gettoken( itemkind );
+				if ( actor_change_token( actor_index, -token, PATH_TRAIN, 0 ) < 0 )
+					return -1;
+			}
 			city_train_quick( actor_index, buildingkind, value1 );
 		}
 	}

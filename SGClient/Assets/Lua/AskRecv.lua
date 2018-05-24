@@ -40,11 +40,17 @@ function RecvActorNotify(recvValue)
 	-- 购买并使用道具
 	elseif msgid == NOTIFY_ITEM then
 		if value[1] == 0 then
-			pop( T(753)..": "..item_getname(value[2]).."x"..value[3] )
+			local kind = value[2]
+			local num = value[3]
+			local color = item_getcolor(kind)
+			local itemname = NameColorText( item_getname(kind), color )
+			local msg = T(753)..": "..itemname.."x"..num
+			pop( msg )
 		elseif value[1] == 1 then
 			-- 道具加速
 			if value[2] > 0 then
-				pop( T(759)..zhtime(value[2]) )
+				NotifyMiddle( T(759)..NameColorText(zhtime(value[2]),1), nil )
+				--pop( T(759)..zhtime(value[2]) )
 				QuickItemDlgSet( value[2], 1 )
 			else
 				QuickItemDlgClose();
@@ -229,9 +235,9 @@ function RecvActorNotify(recvValue)
 			else
 				msg = T(value[1])
 			end
-			Notify( msg )
+			NotifyMiddle( msg, nil )
 		else
-			Notify( T(value[1]) )
+			NotifyMiddle( msg )
 		end
 		
 	-- 弹出消息，无框
@@ -265,9 +271,9 @@ function RecvActorNotify(recvValue)
 		local offset = value[3];
 		local level = value[4]
 		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-			Notify( F(1481,level,offset+1,BuildingName(kind)) )
+			NotifyTop( F(1481,level,offset+1,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		else
-			Notify( F(1480,level,BuildingName(kind)) )
+			NotifyTop( F(1480,level,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		end
 	
 	-- 城防军数量	

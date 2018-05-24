@@ -1,7 +1,7 @@
 -- 界面
 local m_Dlg = nil;
-local m_uiGirlHead = nil; --UnityEngine.GameObject
-local m_uiGirlColor = nil; --UnityEngine.GameObject
+local m_uiShape = nil; --UnityEngine.GameObject
+local m_uiColor = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
 local m_uiAttackIncrease = nil; --UnityEngine.GameObject
 local m_uiDefenseIncrease = nil; --UnityEngine.GameObject
@@ -59,8 +59,8 @@ end
 function GirlGetDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
-	m_uiGirlHead = objs[0];
-	m_uiGirlColor = objs[1];
+	m_uiShape = objs[0];
+	m_uiColor = objs[1];
 	m_uiName = objs[2];
 	m_uiAttackIncrease = objs[3];
 	m_uiDefenseIncrease = objs[4];
@@ -115,40 +115,40 @@ function GirlGetDlgShow( recvValue )
 	if config == nil then
 		return
 	end
-	SetImage( m_uiGirlHead, GirlHeadSprite( recvValue.m_girl.m_kind )  );
-	SetImage( m_uiGirlColor,  ItemColorSprite( recvValue.m_girl.m_color )  );
+	SetImage( m_uiShape, GirlFaceSprite( recvValue.m_girl.m_kind ) );
+	SetImage( m_uiColor,  HeroColorSprite( recvValue.m_girl.m_color) )
 	SetText( m_uiName, GirlName( recvValue.m_girl.m_kind ).."("..GirlType( config.type )..")", NameColor(recvValue.m_girl.m_color) )
 	-- 强攻
 	if config.attack_increase > 0 then
-		SetText(m_uiAttackIncrease, T(165).."+"..config.attack_increase)
+		SetText(m_uiAttackIncrease.transform:Find("Text"), T(165).."+"..config.attack_increase)
 		SetTrue(m_uiAttackIncrease)
 	else
 		SetFalse(m_uiAttackIncrease)
 	end
 	-- 强防
 	if config.defense_increase > 0 then
-		SetText(m_uiDefenseIncrease, T(166).."+"..config.defense_increase)
+		SetText(m_uiDefenseIncrease.transform:Find("Text"), T(166).."+"..config.defense_increase)
 		SetTrue(m_uiDefenseIncrease)
 	else
 		SetFalse(m_uiDefenseIncrease)
 	end
 	-- 攻击资质
 	if config.attack_growth > 0 then
-		SetText(m_uiAttackGrowth, F(3336,config.attack_growth))
+		SetText(m_uiAttackGrowth.transform:Find("Text"), F(3336,config.attack_growth))
 		SetTrue(m_uiAttackGrowth)
 	else
 		SetFalse(m_uiAttackGrowth)
 	end
 	-- 防御资质
 	if config.defense_growth > 0 then
-		SetText(m_uiDefenseGrowth, F(3337,config.defense_growth))
+		SetText(m_uiDefenseGrowth.transform:Find("Text"), F(3337,config.defense_growth))
 		SetTrue(m_uiDefenseGrowth)
 	else
 		SetFalse(m_uiDefenseGrowth)
 	end
 	-- 兵力资质
 	if config.troops_growth > 0 then
-		SetText(m_uiTroopsGrowth, F(3338,config.troops_growth))
+		SetText(m_uiTroopsGrowth.transform:Find("Text"), F(3338,config.troops_growth))
 		SetTrue(m_uiTroopsGrowth)
 	else
 		SetFalse(m_uiTroopsGrowth)
