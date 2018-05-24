@@ -181,22 +181,22 @@ function AwardInfo( awardkind )
 		name = T(1010)
 		
 	elseif awardkind == AWARDKIND_BUILD_QUICK then-- 建造加速
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_470" );
 		color = ItemColorSprite( 0 );
 		name = T(1011)
 		
 	elseif awardkind == AWARDKIND_HERO_WASH	then-- 免费洗髓次数
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_164" );
 		color = ItemColorSprite( 0 );
 		name = T(1100)
 		
 	elseif awardkind == AWARDKIND_EQUIP_WASH then-- 免费洗练次数
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_462" );
 		color = ItemColorSprite( 0 );
 		name = T(1101)
 		
 	elseif awardkind == AWARDKIND_LOSTREBUILD then -- 高级重建次数
-		sprite = LoadSprite( "Char_Default" );
+		sprite = LoadSprite( "item_icon_1000" );
 		color = ItemColorSprite( 2 );
 		name = T(1375)
 		

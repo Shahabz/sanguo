@@ -475,7 +475,7 @@ function proc_experience_C( recvValue )
 	if recvValue.m_isup == 1 then
 		if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 			--pop( T(150) );
-			NotifyMiddle( T(150), nil )
+			NotifyMiddle( T(150), {back=LoadSprite("ui_icon_back_8"),shape=PlayerHeadSprite(GetPlayer().m_shape)} )
 		end
 		MainDlgSetLevel();
 	end

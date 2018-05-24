@@ -124,10 +124,14 @@ function RecvActorNotify(recvValue)
 	elseif msgid == NOTIFY_VALUECHANGE then
 		-- 洗髓次数
 		if value[1] == 1 then
-			pop( T(120)..": "..T(1100).."x"..value[2] ) 
+			--pop( T(120)..": "..T(1100).."x"..value[2] ) 
+			AwardNotify( AWARDKIND_HERO_WASH, value[2] )
+			
 		-- 洗练次数
 		elseif value[1] == 2 then
-			pop( T(120)..": "..T(1101).."x"..value[2] ) 
+			--pop( T(120)..": "..T(1101).."x"..value[2] ) 
+			AwardNotify( AWARDKIND_EQUIP_WASH, value[2] )
+			
 		-- 爵位变化
 		elseif value[1] == 3 then
 			GetPlayer().m_place = value[2]
@@ -271,9 +275,9 @@ function RecvActorNotify(recvValue)
 		local offset = value[3];
 		local level = value[4]
 		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-			NotifyTop( F(1481,level,offset+1,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
+			NotifyBottom( F(1481,level,offset+1,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		else
-			NotifyTop( F(1480,level,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
+			NotifyBottom( F(1480,level,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		end
 	
 	-- 城防军数量	
