@@ -6,6 +6,7 @@ struct _mapzoneinfo {
 //--Automatically generated
 				short id;	//
 				short type;	//
+				short center_townid;	//
 				short center_posx;	//
 				short center_posy;	//
 				short top_left_posx;	//

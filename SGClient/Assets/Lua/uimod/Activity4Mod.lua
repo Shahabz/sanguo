@@ -179,9 +179,13 @@ function Activity4ModSetList( day, kind )
 		local uiButton = m_uiDay.transform:GetChild(i+1)
 		SetText( uiButton.transform:Find("Back/Text"), T(2780+i) )
 		if day == i then
-			SetImage( uiButton.transform:Find("Back"), LoadSprite("activity_back_2") )
+			local back = uiButton.transform:Find("Back")
+			SetImage( back, LoadSprite("activity_back_2") )
+			back.transform:GetComponent( typeof(Image) ):SetNativeSize();
 		else
-			SetImage( uiButton.transform:Find("Back"), LoadSprite("activity_back_1") )
+			local back = uiButton.transform:Find("Back")
+			SetImage( back, LoadSprite("activity_back_1") )
+			back.transform:GetComponent( typeof(Image) ):SetNativeSize();
 		end
 		if i <= m_recvValue.m_myday then
 			SetFalse( uiButton.transform:Find("Back/Lock") )
@@ -331,8 +335,10 @@ function Activity4ModCreate( info, value, state )
 			SetControlID( awardObj, 1000000+awardkind[i] )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
+				SetTrue( awardObj.transform:Find("NumBack") )
+				SetText( awardObj.transform:Find("Num"), knum(awardnum[i]) );
 			else
+				SetFalse( awardObj.transform:Find("NumBack") )
 				SetText( awardObj.transform:Find("Num"), "" );
 			end
 		else

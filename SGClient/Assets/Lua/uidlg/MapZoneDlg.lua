@@ -8,7 +8,8 @@ local m_uiShowBtn = nil; --UnityEngine.GameObject
 local m_uiHideBtn = nil; --UnityEngine.GameObject
 local m_uiGlobalBtn = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
-local m_uiCEO = nil; --UnityEngine.GameObject
+local m_uiMaster = nil; --UnityEngine.GameObject
+g_ZoneMaster = {};
 
 -- 打开界面
 function MapZoneDlgOpen()
@@ -80,7 +81,7 @@ function MapZoneDlgOnAwake( gameObject )
 	m_uiHideBtn = objs[3];
 	m_uiGlobalBtn = objs[4];
 	m_uiWarn = objs[5];
-	m_uiCEO = objs[6];
+	m_uiMaster = objs[6];
 end
 
 -- 界面初始化时调用
@@ -124,6 +125,23 @@ function MapZoneDlgShow( zoneid )
 	WorldMapThumb.Create( zoneid );
 	SetGray( m_uiGlobalBtn.transform:Find("Back"), false )
 	SetText( m_uiGlobalBtn.transform:Find("Back/Text"), T(1004) )
+	
+	-- 州牧皇帝
+	if zoneid == MAPZONE_CENTERID then
+		SetTrue( m_uiMaster.transform:Find("Desc/KingText") )
+		SetFalse( m_uiMaster.transform:Find("Desc/Text") )
+	else
+		SetFalse( m_uiMaster.transform:Find("Desc/KingText") )
+		SetTrue( m_uiMaster.transform:Find("Desc/Text") )
+	end
+	if g_ZoneMaster[zoneid] and g_ZoneMaster[zoneid].m_nation > 0 then
+		SetImage( m_uiMaster.transform:Find("Shape"), PlayerHeadSprite(g_ZoneMaster[zoneid].m_shape) )
+		SetText( m_uiMaster.transform:Find("Name/Text"), g_ZoneMaster[zoneid].m_name )
+	else
+		SetImage( m_uiMaster.transform:Find("Shape"), LoadSprite("playerhead_normal") )
+		SetText( m_uiMaster.transform:Find("Name/Text"), T(3030) )
+	end
+
 	-- 郡城被攻克
 	--[[if GetPlayer().m_open_town3 > 0 then
 		SetGray( m_uiGlobalBtn.transform:Find("Back"), false )

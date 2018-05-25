@@ -11,7 +11,6 @@ local m_uiLeft = nil; --UnityEngine.GameObject
 local m_res = 0;
 -- 打开界面
 function JumpDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "JumpDlg" );
 end
 
@@ -27,7 +26,6 @@ end
 -- 删除界面
 function JumpDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 

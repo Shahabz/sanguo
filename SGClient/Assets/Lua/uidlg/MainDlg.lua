@@ -617,7 +617,7 @@ function MainDlgSetToken()
 	if m_Dlg == nil then
 		return;
 	end
-	SetText( m_uiTokenNum, GetPlayer().m_token );
+	SetText( m_uiTokenNum, knum(GetPlayer().m_token) );
 end
 
 -- VIP

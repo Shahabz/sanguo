@@ -1,6 +1,7 @@
 ----------------------------------------
 -- 事件
 ----------------------------------------
+local m_Tweens = nil
 
 -- 所属按钮点击时调用
 function MapZoneTipsModOnEvent( nType, nControlID, value, gameObject )
@@ -14,13 +15,8 @@ function MapZoneTipsModOnEvent( nType, nControlID, value, gameObject )
 		end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 0 then
-			local fade = gameObject.transform:GetComponent( typeof(UITweenFade) );
-			fade.controlID = 1;
-			fade:Play( false )
-			
+			m_Tweens[1]:Play(true)
 		elseif nControlID == 1 then
-			local fade = gameObject.transform:GetComponent( typeof(UITweenFade) );
-			fade.controlID = 0;
 			gameObject:SetActive( false );
 			eye.objectPoolManager:Release( "UIF_MapZoneTips", gameObject );
 		end
@@ -29,7 +25,7 @@ end
 
 -- 载入时调用
 function MapZoneTipsModOnAwake( gameObject )
-	
+	m_Tweens = gameObject:GetComponents( typeof(UITween) );
 end
 
 -- 界面初始化时调用
@@ -69,9 +65,12 @@ function MapZoneTipsModShow( name, nation )
 	local obj = eye.objectPoolManager:Get( "UIF_MapZoneTips" );
 	obj.transform:SetParent( eye.uiManager:GetLayer( 3 ).transform );
 	obj.transform.localScale = Vector3( 1, 1, 1 );
-	obj.transform.localPosition = Vector3( 0, 0, 0 );
+	obj.transform.localPosition = Vector3( 0, 260, 0 );
 	
 	local color = Hex2Color(MapUnitRangeColor[nation]);
-	SetText( obj.transform:Find("Name"), name, color )
+	SetText( obj.transform:Find("Name"), name )
 	SetText( obj.transform:Find("Nation"), NationEx( nation )..T(115), color )
+	
+	m_Tweens[0]:ToInit()
+	m_Tweens[0]:Play(true)
 end

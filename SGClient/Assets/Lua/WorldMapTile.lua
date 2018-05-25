@@ -141,6 +141,47 @@ function MapTile.block( posx, posy )
 	if posx < 0 or posy < 0 or posx >= 300 or posy >= 300 then
 		return -1;
 	end
+	-- 先转换成一小块地图的坐标，因为地图是N*N的拼起来的
+	local localposx = math.floor( math.mod( posx, TMX_WIDTH ) );
+	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
+	local index = localposx + localposy*TMX_HEIGHT + 1;
+	
+	-- 地表层，要检查水
+	local terrain = MapTile.tiledMap.layers[1].data[index];
+	if terrain >= 84 then
+		return -1;
+	end
+	
+	-- 山层
+	local mountain = MapTile.tiledMap.layers[3].data[index];
+	if mountain >= 85 then
+		return -1;
+	end
+	return 0;
+end
+
+-- 地图格子数据
+function MapTile.getTileData( posx, posy )
+    -- 范围
+	if posx < 0 or posy < 0 or posx >= 300 or posy >= 300 then
+		return -1;
+	end
+	-- 先转换成一小块地图的坐标，因为地图是N*N的拼起来的
+	local localposx = math.floor( math.mod( posx, TMX_WIDTH ) );
+	local localposy = math.floor( math.mod( posy, TMX_HEIGHT ) );
+	local index = localposx + localposy*TMX_HEIGHT + 1;
+	
+	-- 地表层，要检查水
+	local terrain = MapTile.tiledMap.layers[1].data[index];
+	if terrain >= 84 then
+		return -2;
+	end
+	
+	-- 山层
+	local mountain = MapTile.tiledMap.layers[3].data[index];
+	if mountain >= 85 then
+		return -3;
+	end
 	return 0;
 end
 

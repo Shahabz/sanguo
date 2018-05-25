@@ -588,6 +588,12 @@ int map_town_ask_owner( int actor_index, int townid )
 		sprintf( v4, "%s", pCity->name );
 		system_talkjson( 0, pCity->nation, 6003, v1, v2, v3, v4, NULL, NULL, 1 );
 
+		// 如果是治所，更新州牧
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO )
+		{
+			map_zone_master( g_towninfo[townid].zoneid );
+		}
+
 		// 国家日志
 		nationlog_add( pCity->nation, NATION_LOG_TYPE_REBUILD, townid, pCity->name, 0 );
 	}
@@ -705,6 +711,12 @@ int map_town_alloc_owner( int townid )
 	sprintf( v4, "%s", pCity->name );
 	system_talkjson( 0, pCity->nation, 6003, v1, v2, v3, v4, NULL, NULL, 1 );
 
+	// 如果是治所，更新州牧
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO )
+	{
+		map_zone_master( g_towninfo[townid].zoneid );
+	}
+
 	// 国家日志
 	nationlog_add( pCity->nation, NATION_LOG_TYPE_REBUILD, townid, pCity->name, 0 );
 	return 0;
@@ -743,6 +755,12 @@ int map_town_owner_leave( int actor_index, int townid )
 	sprintf( v3, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 	sprintf( v4, "%s", pCity->name );
 	system_talkjson( 0, pCity->nation, 6004, v1, v2, v3, v4, NULL, NULL, 1 );
+
+	// 如果是治所，更新州牧
+	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO )
+	{
+		map_zone_master( g_towninfo[townid].zoneid );
+	}
 
 	// 国家日志
 	nationlog_add( pCity->nation, NATION_LOG_TYPE_LEAVE, townid, pCity->name, 0 );

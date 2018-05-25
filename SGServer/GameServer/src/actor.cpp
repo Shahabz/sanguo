@@ -816,6 +816,9 @@ int actor_entercity( int actor_index )
 
 	// 上线提醒
 	nation_online_notify( actor_index );
+
+	// 地图的州牧和皇帝
+	map_zone_masterlist( actor_index );
 	return 0;
 }
 

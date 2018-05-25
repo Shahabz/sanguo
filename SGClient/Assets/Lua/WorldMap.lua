@@ -43,6 +43,8 @@ WorldMap.m_nLastGotoUnitIndex	= -1;	-- 等待跳转的索引
 WorldMap.m_nLastGotoPosX		= -1;	-- 等待跳转的位置
 WorldMap.m_nLastGotoPosY		= -1;	-- 等待跳转的位置
 WorldMap.m_nZoneID				= 0;	-- 当前地图
+WorldMap.m_Nation				= 0;	-- 当前地图所属国家
+WorldMap.m_CenterNation			= {};	-- 司隶封地所属国家
 WorldMap.m_nMode 				= WORLDMAP_MODE_NORMAL;
 
 local TmxShowThreshold = 24;
@@ -1298,6 +1300,18 @@ function map_zone_getid( posx, posy )
 	zonex = math.floor(posx / 100);
 	zoney = math.floor(posy / 100);
 	return zoney*(TMX_ROWS) + zonex + 1;
+end
+
+-- 坐标是否在指定地区里
+function map_zone_inrange( zoneid, posx, posy )
+	if zoneid <= 0 then
+		return 0;
+	end
+	if posx >= g_zoneinfo[zoneid].top_left_posx and posx <= g_zoneinfo[zoneid].bottom_right_posx and
+		posy >= g_zoneinfo[zoneid].top_left_posy and posy <= g_zoneinfo[zoneid].bottom_right_posy then
+		return 1;
+	end
+	return 0;
 end
 
 -- 检查是不是在同一个区域

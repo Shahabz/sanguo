@@ -41,7 +41,7 @@ function IN_OnWorldMapBlock( posx, posy )
 	
 	-- 地表层，要检查水
 	local terrain = tiledMap.layers[1].data[index];
-	if terrain >= 83 then
+	if terrain >= 84 then
 		return terrain;
 	end
 	

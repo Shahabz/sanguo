@@ -53,6 +53,10 @@ int map_zone_center_townlist( int actor_index );
 // 地区皇城区域都城和名城更新
 int map_zone_center_townchange( int townid );
 
+// 皇帝州牧信息
+int map_zone_master( short zoneid );
+int map_zone_masterlist( int actor_index );
+
 // 显示前往司隶按钮
 int map_zone_goto_sili_send( int actor_index );
 

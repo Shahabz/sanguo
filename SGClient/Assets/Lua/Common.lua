@@ -423,15 +423,27 @@ function knum( num )
     end
 	if num >= 10000000 then
 		num = num / 1000000;
-		--return string.format( "%.1f", num ) .. "M";
 		return math.floor( num ) .. "M";
 	elseif num >= 10000 then
 		num = num / 1000;
 		return math.floor( num ) .. "K";
-		--return string.format( "%.1f", num ) .. "K";
 	end
 	return num
 end
+
+--[[function knum( num )
+    if type(num) ~= "number" then
+        return num;
+    end
+	if num >= 1000000 then
+		num = num / 1000000;
+		return string.format( "%.1f", num ) .. "M";
+	elseif num >= 1000 then
+		num = num / 1000;
+		return string.format( "%.1f", num ) .. "K";
+	end
+	return num
+end--]]
 
 function secnum( sec )
 	return Utils.GetTimeFormatISO(sec)

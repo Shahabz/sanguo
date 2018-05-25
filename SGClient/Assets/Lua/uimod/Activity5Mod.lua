@@ -174,7 +174,7 @@ function Activity5ModRecv( recvValue )
 		SetText( uiToken, recvValue.m_list[i].m_token )	
 		SetControlID( uiObj, 2000+i )
 		SetControlID( uiBuyButton, 1000+i )
-		SetText( uiNum, "x"..recvValue.m_list[i].m_awardnum )
+		SetText( uiNum, recvValue.m_list[i].m_awardnum )
 		
 		if recvValue.m_list[i].m_isbuy == 1 then
 			SetFalse( uiBuyButton )
@@ -216,6 +216,10 @@ end
 function Activity5ModBuy( index )
 	local info = m_recvValue.m_list[index];
 	if info == nil then
+		return
+	end
+	if GetPlayer().m_token < info.m_token then
+		JumpToken()
 		return
 	end
 	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )

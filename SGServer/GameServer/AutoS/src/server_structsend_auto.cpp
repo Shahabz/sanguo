@@ -3329,3 +3329,28 @@ int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValu
 	return 0;
 }
 
+int struct_NetS_ZoneMaster_send( char **pptr, int *psize, SLK_NetS_ZoneMaster *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 22 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_zoneid, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMasterList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ZoneMaster_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

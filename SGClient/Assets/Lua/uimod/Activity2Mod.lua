@@ -239,8 +239,10 @@ function Activity2ModScrollPage( page )
 			SetControlID( awardObj, 1000000+awardkind[i] )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
+				SetTrue( awardObj.transform:Find("NumBack") )
+				SetText( awardObj.transform:Find("Num"), knum(awardnum[i]) );
 			else
+				SetFalse( awardObj.transform:Find("NumBack") )
 				SetText( awardObj.transform:Find("Num"), "" );
 			end
 		else

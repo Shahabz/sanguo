@@ -9,7 +9,6 @@ local m_questid = 0;
 
 -- 打开界面
 function QuesAwardBranchDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "QuesAwardBranchDlg" );
 end
 
@@ -31,7 +30,6 @@ end
 -- 删除界面
 function QuesAwardBranchDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 

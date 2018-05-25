@@ -17,7 +17,6 @@ local m_WaitValue = nil;
 
 -- 打开界面
 function GirlGetDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_npc1" );
 	m_Dlg = eye.uiManager:Open( "GirlGetDlg" );
 end
 
@@ -38,7 +37,6 @@ end
 -- 删除界面
 function GirlGetDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_npc1" )
 	m_Dlg = nil;
 end
 

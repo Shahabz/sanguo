@@ -104,7 +104,7 @@ end
 
 function DialogFrameModChangeToken()
 	for k, v in pairs( m_uiTokenText ) do
-		SetText( v, GetPlayer().m_token );
+		SetText( v, knum(GetPlayer().m_token) );
 	end
 end
 

@@ -172,9 +172,11 @@ function Activity3ModCreate( info, value, state )
 			SetControlID( awardObj, 1000000+awardkind[i] )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			if awardnum[i] > 1 then
-				SetText( awardObj.transform:Find("Num"), "x"..knum(awardnum[i]) );
+				SetTrue( awardObj.transform:Find("NumBack") )
+				SetText( awardObj.transform:Find("Num"), knum(awardnum[i]) );
 			else
 				SetText( awardObj.transform:Find("Num"), "" );
+				SetFalse( awardObj.transform:Find("NumBack") )
 			end
 		else
 			SetFalse( awardObj )

@@ -6,7 +6,7 @@
 
 #define MAP_W	300
 #define MAP_H	300
-#define WORLDMAPBLOCKTILEDID	83 // 地图阻挡瓦片
+#define WORLDMAPBLOCKTILEDID	84 // 地图阻挡瓦片
 
 // 一个格子数据结构
 typedef struct _tile

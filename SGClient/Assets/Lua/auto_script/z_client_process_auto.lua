@@ -1264,6 +1264,7 @@ function proc_mapzonechange_C( recvValue )
 		MainDlgSetZoneName( name.."("..T(936)..")" )
 	end
 	WorldMap.m_nZoneID = recvValue.m_zoneid;
+	WorldMap.m_Nation = recvValue.m_nation;
 	MapMainDlgMiniMapChangeZone( recvValue.m_zoneid, recvValue.m_open )
 end
 
@@ -2335,5 +2336,21 @@ end
 function proc_girlshop_C( recvValue )
 	-- process.
 	GirlShopDlgInfoRecv( recvValue );
+end
+
+-- m_nation=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_zoneid=0,
+function proc_zonemaster_C( recvValue )
+	-- process.
+	local zoneid = recvValue.m_zoneid
+	g_ZoneMaster[zoneid] = recvValue
+end
+
+-- m_count=0,m_list={m_nation=0,m_shape=0,m_namelen=0,m_name="[m_namelen]",m_zoneid=0,[m_count]},
+function proc_zonemasterlist_C( recvValue )
+	-- process.
+	for i=1,recvValue.m_count,1 do
+		local zoneid = recvValue.m_list[i].m_zoneid
+		g_ZoneMaster[zoneid] = recvValue.m_list[i];
+	end
 end
 

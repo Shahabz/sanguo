@@ -646,6 +646,62 @@ int map_zone_center_townchange( int townid )
 	return 0;
 }
 
+// 皇帝州牧信息
+int map_zone_master( short zoneid )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return -1;
+	int townid = g_zoneinfo[zoneid].center_townid;
+	MapTown *pTown = map_town_getptr( townid );
+	if ( !pTown )
+		return -1;
+	int city_index = pTown->own_city_index;
+	if ( city_index < 0 )
+		return -1;
+	City *pCity = city_indexptr( city_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_ZoneMaster pValue = { 0 };
+	pValue.m_nation = pCity->nation;
+	pValue.m_shape = pCity->shape;
+	strncpy( pValue.m_name, pCity->name, NAME_SIZE );
+	pValue.m_namelen = strlen( pValue.m_name );
+	pValue.m_zoneid = (char)zoneid;
+	netsend_zonemaster_S( 0, SENDTYPE_WORLDMAP, &pValue );
+	return 0;
+}
+int map_zone_masterlist( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	SLK_NetS_ZoneMasterList pValue = { 0 };
+	for ( int zoneid = 1; zoneid < g_zoneinfo_maxnum; zoneid++ )
+	{
+		int townid = g_zoneinfo[zoneid].center_townid;
+		MapTown *pTown = map_town_getptr( townid );
+		if ( !pTown )
+			continue;
+		int city_index = pTown->own_city_index;
+		if ( city_index < 0 )
+			continue;
+		City *pCity = city_indexptr( city_index );
+		if ( !pCity )
+			continue;
+		pValue.m_list[pValue.m_count].m_nation = pCity->nation;
+		pValue.m_list[pValue.m_count].m_shape = pCity->shape;
+		strncpy( pValue.m_list[pValue.m_count].m_name, pCity->name, NAME_SIZE );
+		pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+		pValue.m_list[pValue.m_count].m_zoneid = zoneid;
+		pValue.m_count += 1;
+		if ( pValue.m_count >= 9 )
+		{
+			break;
+		}
+	}
+	netsend_zonemasterlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
 // 显示前往司隶按钮
 int map_zone_goto_sili_send( int actor_index )
 {

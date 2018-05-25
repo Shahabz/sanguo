@@ -2262,6 +2262,21 @@ struct _slk_NetS_GirlShop {
 };
 typedef struct _slk_NetS_GirlShop SLK_NetS_GirlShop;	//女将商店
 
+struct _slk_NetS_ZoneMaster {
+	char m_nation;	//州牧皇帝信息
+	char m_shape;	//州牧皇帝信息
+	char m_namelen;	//州牧皇帝信息
+	char m_name[22];	//州牧皇帝信息
+	char m_zoneid;	//州牧皇帝信息
+};
+typedef struct _slk_NetS_ZoneMaster SLK_NetS_ZoneMaster;	//皇帝州牧信息
+
+struct _slk_NetS_ZoneMasterList {
+	char m_count;	//州牧皇帝列表
+	SLK_NetS_ZoneMaster m_list[9];	//州牧皇帝列表
+};
+typedef struct _slk_NetS_ZoneMasterList SLK_NetS_ZoneMasterList;	//皇帝州牧列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2507,5 +2522,7 @@ int struct_NetS_FsPalaceAward_send( char **pptr, int *psize, SLK_NetS_FsPalaceAw
 int struct_NetS_FsPalaceResult_send( char **pptr, int *psize, SLK_NetS_FsPalaceResult *pValue );
 int struct_NetS_GirlShopItem_send( char **pptr, int *psize, SLK_NetS_GirlShopItem *pValue );
 int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValue );
+int struct_NetS_ZoneMaster_send( char **pptr, int *psize, SLK_NetS_ZoneMaster *pValue );
+int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMasterList *pValue );
 
 #endif

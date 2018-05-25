@@ -117,7 +117,7 @@ function MapClickModOnEnable( gameObject )
 
 	if unit_index == -2 then
 		-- 不允许操作的空地
-		MapClickModOpenNull();
+		MapClickModOpenNull(gameCoorX, gameCoorY);
 		
 	elseif unit_index < 0 then
 		-- 空地
@@ -176,7 +176,8 @@ function MapClickModCoordinate( gameCoorX, gameCoorY )
 end
 
 -- 点击不允许操作的地面
-function MapClickModOpenNull()
+function MapClickModOpenNull( gameCoorX, gameCoorY )
+	MapClickModOpenEmpty( nil, gameCoorX, gameCoorY )
 end
 
 -- 点击空地显示的操作界面
@@ -186,10 +187,53 @@ function MapClickModOpenEmpty( recvValue, gameCoorX, gameCoorY )
 	SetFalse( m_uiMoveCityBtn )
 	SetFalse( m_uiTreasureBtn )
 	SetFalse( m_uiCallBtn )
-	local buttonList = { m_uiMoveCityBtn }
+	local buttonList = {}
+	
+	-- 地块类型
+	local terrain = MapTile.getTileData( gameCoorX, gameCoorY )
+	if terrain == -1 then -- 边界
+	elseif terrain == -2 then -- 河流
+		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3021) )
+	elseif terrain == -3 then -- 高山
+		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3022) )
+	else
+		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3023) )
+		table.insert( buttonList, m_uiMoveCityBtn )
+	end
+	
+	-- 领土所属
+	if WorldMap.m_nZoneID == MAPZONE_CENTERID then
+		if map_zone_inrange( MAPZONE_CENTERID, gameCoorX, gameCoorY ) == 1 then
+			for townid = 161, 200, 1 do
+				local info = g_towninfo[townid];
+				if info then
+					if gameCoorX >= info.posx-10 and gameCoorX <= info.posx+9 and gameCoorY >= info.posy-10 and gameCoorY <= info.posy+9 then
+						local nation = WorldMap.m_CenterNation[townid];
+						if nation then
+							local color = Hex2Color(MapUnitRangeColor[nation]);
+							SetText( m_uiEmptyInfo.transform:Find("Nation"), NationEx( WorldMap.m_Nation )..T(115), color )
+						end
+						break
+					end
+				end
+			end
+		else
+			local color = Hex2Color(0x989898FF);
+			SetText( m_uiEmptyInfo.transform:Find("Nation"), T(1183), color )
+		end
+	else
+		if map_zone_inrange( WorldMap.m_nZoneID, gameCoorX, gameCoorY ) == 1 then
+			local color = Hex2Color(MapUnitRangeColor[WorldMap.m_Nation]);
+			SetText( m_uiEmptyInfo.transform:Find("Nation"), NationEx( WorldMap.m_Nation )..T(115), color )
+		else
+			local color = Hex2Color(0x989898FF);
+			SetText( m_uiEmptyInfo.transform:Find("Nation"), T(1183), color )
+		end
+	end
+	
 	-- 挖宝活动中
 	if MapMainDlgActivityTreasureState() == 1 then
-		buttonList = { m_uiMoveCityBtn, m_uiTreasureBtn }
+		table.insert( buttonList, m_uiTreasureBtn )
 	end
 	MapClickModButton( buttonList );
 end
@@ -277,9 +321,10 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	if type == MAPUNIT_TYPE_TOWN_GJFD then
 		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..(dev_level+1)..MapTownName(townid) )
 	else
-		SetText( m_uiTownInfo.transform:Find("Level"), "Lv."..level..MapTownName(townid) )
+		SetText( m_uiTownInfo.transform:Find("Level"), MapTownName(townid) )
 	end
-	SetText( m_uiTownInfo.transform:Find("Name"), NationEx(nation) )
+	
+	SetText( m_uiTownInfo.transform:Find("Name"), T(180+type) )
 	SetImage( m_uiTownInfo.transform:Find("Nation"), NationSprite(nation) )
 	
 	-- 我国占领

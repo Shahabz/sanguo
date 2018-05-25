@@ -3036,3 +3036,25 @@ function struct_NetS_GirlShop_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_ZoneMaster_recv( buffer )
+	local recvValue = {};
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_shape = buffer:ReadSByte();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_zoneid = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_ZoneMasterList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ZoneMaster_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

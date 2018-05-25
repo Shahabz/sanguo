@@ -9,8 +9,8 @@
 #define ACTIVITY_SEVENDAY_TYPE5		5	//	主公达到{ 0 }级 get
 #define ACTIVITY_SEVENDAY_TYPE6		6	//	购买{ 0 }个特价礼包v
 #define ACTIVITY_SEVENDAY_TYPE7		7	//	登入领取高顺 get
-#define ACTIVITY_SEVENDAY_TYPE8		8	//	所在地图本国最多拥有{ 0 }座营地 get
-#define ACTIVITY_SEVENDAY_TYPE9		9	//	所在地图本国最多拥有{ 0 }座县城 get
+#define ACTIVITY_SEVENDAY_TYPE8		8	//	所在地图本国最多拥有{ 0 }座县城 get
+#define ACTIVITY_SEVENDAY_TYPE9		9	//	所在地图本国最多拥有{ 0 }座郡城 get
 #define ACTIVITY_SEVENDAY_TYPE10	10	//	参与攻下{ 0 }座营地 get
 #define ACTIVITY_SEVENDAY_TYPE11	11	//	参与攻下{ 0 }座县城 get
 #define ACTIVITY_SEVENDAY_TYPE12	12	//	参与攻下{ 0 }座郡城 get

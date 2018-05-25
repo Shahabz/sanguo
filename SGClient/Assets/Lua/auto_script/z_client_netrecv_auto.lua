@@ -1010,6 +1010,16 @@ function netrecv_girlshop_C( buffer )
 	proc_girlshop_C( recvValue );
 end
 
+function netrecv_zonemaster_C( buffer )
+	local recvValue = struct_NetS_ZoneMaster_recv( buffer );
+	proc_zonemaster_C( recvValue );
+end
+
+function netrecv_zonemasterlist_C( buffer )
+	local recvValue = struct_NetS_ZoneMasterList_recv( buffer );
+	proc_zonemasterlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1213,6 +1223,8 @@ Proc_Command = {
 	[CMDS_FSPALACE]=netrecv_fspalace_C;
 	[CMDS_FSPALACERESULT]=netrecv_fspalaceresult_C;
 	[CMDS_GIRLSHOP]=netrecv_girlshop_C;
+	[CMDS_ZONEMASTER]=netrecv_zonemaster_C;
+	[CMDS_ZONEMASTERLIST]=netrecv_zonemasterlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

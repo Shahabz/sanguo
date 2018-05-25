@@ -1291,6 +1291,7 @@ function MapUnit.createCenterTownRange( recvValue )
 			MapUnit.objectCenterTownRange[townid] = MapUnit.createTownRange( MapUnit.objectCenterTownRange[townid], 2, v.posx-1, v.posy, v.range, nation );
 		end
 	end
+	WorldMap.m_CenterNation[townid] = nation;
 end
 
 -- 获取占地块

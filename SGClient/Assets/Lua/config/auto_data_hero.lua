@@ -116,7 +116,7 @@ g_heroinfo = {
 },
 [31] = 
 { 
-	[2] = { kind=31,color=2,name="华雄",desc="vip2礼包",corps=0,attack_base=59,attack_wash=28,attack_wash_limit=44,defense_base=47,defense_wash=22,defense_wash_limit=35,troops_base=23,troops_wash=10,troops_wash_limit=17,total_wash=84,attack=190,defense=119,troops=295,skillid=0,itemnum=0,sound=0,},
+	[2] = { kind=31,color=2,name="华雄",desc="vip3礼包",corps=0,attack_base=59,attack_wash=28,attack_wash_limit=44,defense_base=47,defense_wash=22,defense_wash_limit=35,troops_base=23,troops_wash=10,troops_wash_limit=17,total_wash=84,attack=190,defense=119,troops=295,skillid=0,itemnum=0,sound=0,},
 	[4] = { kind=31,color=4,name="华雄",desc="",corps=0,attack_base=87,attack_wash=28,attack_wash_limit=89,defense_base=69,defense_wash=22,defense_wash_limit=71,troops_base=33,troops_wash=10,troops_wash_limit=33,total_wash=168,attack=325,defense=200,troops=573,skillid=0,itemnum=0,sound=0,},
 	[5] = { kind=31,color=5,name="华雄",desc="",corps=0,attack_base=101,attack_wash=28,attack_wash_limit=134,defense_base=80,defense_wash=22,defense_wash_limit=106,troops_base=38,troops_wash=10,troops_wash_limit=50,total_wash=252,attack=375,defense=228,troops=635,skillid=0,itemnum=0,sound=0,},
 },
