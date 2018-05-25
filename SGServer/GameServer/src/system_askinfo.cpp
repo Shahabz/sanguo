@@ -602,7 +602,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 4 )
 		{ // Õ÷ÊÕ
-			map_town_levy( actor_index, pvalue[1] );
+			map_town_levy( actor_index, pvalue[1], pvalue[2] );
 		}
 		else if ( pvalue[0] == 5 )
 		{ // ³ÇÕò½±Àø

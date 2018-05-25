@@ -1443,26 +1443,12 @@ int equip_wash_super( int actor_index, int offset )
 
 int equip_gm_getall( int actor_index )
 {
-	equip_getequip( actor_index, 6, PATH_GM ); 
-	equip_getequip( actor_index, 16, PATH_GM );
-	equip_getequip( actor_index, 26, PATH_GM );
-	equip_getequip( actor_index, 36, PATH_GM );
-	equip_getequip( actor_index, 46, PATH_GM );
-	equip_getequip( actor_index, 56, PATH_GM );
-
 	equip_getequip( actor_index, 5, PATH_GM );
 	equip_getequip( actor_index, 15, PATH_GM );
 	equip_getequip( actor_index, 25, PATH_GM );
 	equip_getequip( actor_index, 35, PATH_GM );
 	equip_getequip( actor_index, 45, PATH_GM );
 	equip_getequip( actor_index, 55, PATH_GM );
-
-	equip_getequip( actor_index, 4, PATH_GM );
-	equip_getequip( actor_index, 14, PATH_GM );
-	equip_getequip( actor_index, 24, PATH_GM );
-	equip_getequip( actor_index, 34, PATH_GM );
-	equip_getequip( actor_index, 44, PATH_GM );
-	equip_getequip( actor_index, 54, PATH_GM );
 	return 0;
 }
 

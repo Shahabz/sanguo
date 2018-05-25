@@ -15,6 +15,7 @@ local m_uiFriendTitle = nil; --UnityEngine.GameObject
 local m_uiFriendBack = nil; --UnityEngine.GameObject
 local m_uiFriendWarn = nil; --UnityEngine.GameObject
 local m_uiMailButton = nil; --UnityEngine.GameObject
+local m_uiRelation = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_SpyType = 0;
@@ -88,6 +89,7 @@ function MapCityDlgOnAwake( gameObject )
 	m_uiFriendBack = objs[12];
 	m_uiFriendWarn = objs[13];
 	m_uiMailButton = objs[14];
+	m_uiRelation = objs[15];
 end
 
 -- 界面初始化时调用
@@ -129,9 +131,9 @@ function MapCityDlgShow( recvValue )
 	local nation	= recvValue.m_char_value[2];
 	
 	SetImage( m_uiShape, LoadSprite( MapUnitCityShapeList[level].."_"..nation ) );
-	SetText( m_uiLevel, "Lv."..level.." "..T(995) )
-	SetText( m_uiPos, T(1210).."["..posx..","..posy.."]" )
-	SetText( m_uiActorName, T(1211).." "..name )
+	SetText( m_uiLevel, F(3041,level) )
+	SetText( m_uiPos, F(1272, posx, posy) )
+	SetText( m_uiActorName, name )
 	SetImage( m_uiNation, NationSprite(nation) )
 	
 	-- 友方城池
@@ -145,6 +147,7 @@ function MapCityDlgShow( recvValue )
 		SetTrue( m_uiFriendTitle );
 		SetTrue( m_uiFriendBack );
 		SetTrue( m_uiFriendWarn );
+		SetText( m_uiRelation, T(3043) )
 	else
 		SetTrue( m_uiAwardWarn );
 		SetTrue( m_uiAwardBack );
@@ -155,6 +158,7 @@ function MapCityDlgShow( recvValue )
 		SetFalse( m_uiFriendTitle );
 		SetFalse( m_uiFriendBack );
 		SetFalse( m_uiFriendWarn );
+		SetText( m_uiRelation, T(3042) )
 		
 		-- 设置侦察花费
 		-- 主城等级

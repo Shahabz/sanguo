@@ -49,7 +49,7 @@ int map_town_owner_leave( int actor_index, int townid );
 int map_town_soldiers_repair( int actor_index, int townid );
 
 // 城镇征收
-int map_town_levy( int actor_index, int townid );
+int map_town_levy( int actor_index, int townid, int type );
 
 // 城镇领主奖励
 int map_town_owner_award();

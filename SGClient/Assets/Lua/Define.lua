@@ -432,6 +432,11 @@ function MapTownName( id )
 	return Localization.text_item(14100+id);
 end
 
+-- 获取地图城池规模名
+function MapTownType( type )
+	return Localization.text(180+type);
+end
+
 -- 获取血战据点
 KingWarTownNameList = {1384,1385,1386,1380,1381,1382,1383 }
 function KingWarTownName( id )

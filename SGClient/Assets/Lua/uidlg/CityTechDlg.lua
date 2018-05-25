@@ -204,7 +204,7 @@ function CityTechDlgOnSet()
 	
 	-- 首选科技
 	local fristTechObj = nil;
-	
+	local fristListObj = {}
 	-- 可研究的科技列表
 	for kind=1, #g_techinfo, 1 do
 		local level = GetPlayer().m_techlevel[kind];
@@ -253,6 +253,7 @@ function CityTechDlgOnSet()
 					SetTrue( uiContinueBtn );
 					SetFalse( uiViewBtn );
 					SetFalse( uiUpgradeBtn );
+					table.insert( fristListObj, uiObj )
 					
 				-- 显示研究
 				else
@@ -273,6 +274,11 @@ function CityTechDlgOnSet()
 		end
 	end
 	
+	-- 将可以继续研究的科技放在前面
+	for i=1, #fristListObj, 1 do
+		local uiObj = fristListObj[i]
+		uiObj.transform:SetSiblingIndex(0);
+	end
 	-- 将首选科技放在前面
 	if fristTechObj ~= nil then
 		fristTechObj.transform:SetSiblingIndex(0);

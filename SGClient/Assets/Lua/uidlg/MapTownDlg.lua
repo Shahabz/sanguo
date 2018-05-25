@@ -1,6 +1,6 @@
 -- 界面
 local m_Dlg = nil;
-local m_uiTitle = nil; --UnityEngine.GameObject
+local m_uiType = nil; --UnityEngine.GameObject
 local m_uiShape = nil; --UnityEngine.GameObject
 local m_uiName = nil; --UnityEngine.GameObject
 local m_uiPos = nil; --UnityEngine.GameObject
@@ -23,6 +23,7 @@ local m_uiRepairButton = nil; --UnityEngine.GameObject
 local m_uiProduceTimer = nil; --UnityEngine.GameObject
 local m_uiSendMailButton = nil; --UnityEngine.GameObject
 local m_uiPeople = nil; --UnityEngine.GameObject
+local m_uiLevyItemButton = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_path = 0;
@@ -30,6 +31,7 @@ local m_LastRecvValue = nil;
 local m_awardCache = {};
 local m_towninfo = nil;
 
+local m_type = 0;
 local m_posx = 0;
 local m_posy = 0;
 local m_nation = 0;
@@ -95,6 +97,10 @@ function MapTownDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 发送邮件
 		elseif nControlID == 6 then
 			MapTownDlgSendMail()
+		
+		-- 强征令征收	
+		elseif nControlID == 7 then
+			MapTownDlgItemLevy()
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
@@ -109,7 +115,7 @@ end
 function MapTownDlgOnAwake( gameObject )
 	-- 控件赋值	
 	local objs = gameObject:GetComponent( typeof(UISystem) ).relatedGameObject;	
-	m_uiTitle = objs[0];
+	m_uiType = objs[0];
 	m_uiShape = objs[1];
 	m_uiName = objs[2];
 	m_uiPos = objs[3];
@@ -132,6 +138,7 @@ function MapTownDlgOnAwake( gameObject )
 	m_uiProduceTimer = objs[20];
 	m_uiSendMailButton = objs[21];
 	m_uiPeople = objs[22];
+	m_uiLevyItemButton = objs[23];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -175,6 +182,7 @@ function MapTownDlgShow( path, recvValue )
 	SetFalse( m_uiLevyCost )
 	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton )
+	SetFalse( m_uiLevyItemButton )
 	SetFalse( m_uiRebuildButton )
 	SetFalse( m_uiFightButton )
 	SetFalse( m_uiLeaveButton )
@@ -182,6 +190,7 @@ function MapTownDlgShow( path, recvValue )
 	SetFalse( m_uiSendMailButton )
 	SetFalse( m_uiProduceTimer )
 	SetFalse( m_uiPeople )
+	SetFalse( m_uiOwn )
 	
 	m_path = path;
 	m_LastRecvValue = recvValue;
@@ -194,7 +203,7 @@ function MapTownDlgShow( path, recvValue )
 	m_produce_num	= recvValue.m_short_value[2];
 	local protect_sec	= recvValue.m_int_value[1];
 	local produce_sec	= recvValue.m_int_value[2];
-	local type 			= g_towninfo[m_townid].type
+	m_type 				= g_towninfo[m_townid].type
 	local level 		= g_towninfo[m_townid].level
 	m_produce_maxnum= g_towninfo[m_townid].produce_maxnum
 	m_produce_maxsec= g_towninfo[m_townid].produce_maxsec
@@ -211,39 +220,30 @@ function MapTownDlgShow( path, recvValue )
 	
 	-- 点击城池
 	if m_path == 0 then
-		SetText( m_uiTitle, T(1274) )
 		SetText( m_uiAwardWarn, T(1277) )
 		SetText( m_uiWarn, F(1278, 21, math.floor(g_towninfo[m_townid].own_maxsec/86400) ) )
-		SetTrue( m_uiOwn )
 	-- 点击图纸
 	elseif m_path == 1 then	
-		SetText( m_uiTitle, T(1275) )
 		SetText( m_uiAwardWarn, T(1276) )
-		
 		if m_nation == GetPlayer().m_nation then
 			SetText( m_uiWarn, T(1283) )
 		else
 			SetText( m_uiWarn, "" )
 		end
-		SetFalse( m_uiOwn )
 	end
 	
 	-- 形象
-	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
+	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[m_type].."_"..m_nation ) )
 	-- 名字
 	if custom_namelen > 0 then
 		SetText( m_uiName, custom_name )
 	else
 		SetText( m_uiName, MapTownName(m_townid) )
 	end
+	-- 规模
+	SetText( m_uiType, F(1274, MapTownType(m_type)) )
 	-- 位置
 	SetText( m_uiPos, F(1272, m_posx, m_posy) )
-	-- 所属
-	if m_nation == 0 then
-		SetText( m_uiOwn, T(951) );
-	else
-		SetText( m_uiOwn, T(1211).." "..NationEx(m_nation) );
-	end
 	-- 国旗
 	SetImage( m_uiNation, NationSprite(m_nation) )
 	
@@ -309,7 +309,7 @@ function MapTownDlgRecvValue( recvValue )
 					SetTrue( m_uiRebuildButton );
 				else
 					SetTrue( m_uiOwn );
-					SetText( m_uiOwn, T(1211).." "..recvValue.m_own_name );
+					SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
 					
 					SetTrue( m_uiOwnSec );
 					SetTimer( m_uiOwnSec, recvValue.m_own_sec, m_own_maxsec, 1, T(1280) );
@@ -351,7 +351,8 @@ function MapTownDlgRecvValue( recvValue )
 			end
 			
 			if recvValue.m_own_actorid > 0 then
-				SetText( m_uiOwn, T(1211).." "..recvValue.m_own_name );
+				SetTrue( m_uiOwn );
+				SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
 			end
 		end
 	
@@ -365,6 +366,12 @@ function MapTownDlgRecvValue( recvValue )
 				SetTimer( m_uiProduceTimer,0,0 );
 				SetTimerText( m_uiProduceTimer, T(1273) )
 				SetTrue( m_uiLevyButton )
+				-- 双倍征收
+				if g_towninfo[m_townid].levy_item > 0 then
+					if GetItem():GetCount( g_towninfo[m_townid].levy_item ) > 0 then
+						SetTrue( m_uiLevyItemButton )
+					end
+				end
 			else
 				-- 生产中
 				SetTimer( m_uiProduceTimer, recvValue.m_produce_sec, m_produce_maxsec, 2, T(1282) );
@@ -380,9 +387,9 @@ function MapTownDlgRecvValue( recvValue )
 			end
 		else
 			SetFalse( m_uiProduceTimer )
-			SetTrue( m_uiOwn )
 			if recvValue.m_own_actorid > 0 then
-				SetText( m_uiOwn, T(1211).." "..recvValue.m_own_name );
+				SetTrue( m_uiOwn )
+				SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
 			end
 		end	
 		--SetTrue( m_uiCloseButton );
@@ -392,13 +399,7 @@ end
 -- 征收
 function MapTownDlgLevy()
 	local levy_prestige = g_towninfo[m_townid].levy_prestige;
-	-- 强征令双倍
-	local other = ""
-	if GetItem():GetCount( g_towninfo[m_townid].levy_item ) > 0 then
-		levy_prestige = levy_prestige * 2;
-		other = F( 1319, item_getname(g_towninfo[m_townid].levy_item) )
-	end
-	MsgBox( F( 1286, "<color=#03de27>"..T(152)..knum(levy_prestige).."</color>" )..other, function()
+	MsgBox( F( 1286, T(152)..knum(levy_prestige) ), function()
 		if GetPlayer().m_prestige < levy_prestige then
 			pop( T(1318) )
 			return
@@ -407,7 +408,24 @@ function MapTownDlgLevy()
 			pop( T(1320) )
 			return
 		end
-		system_askinfo( ASKINFO_MAPTOWN, "", 4, m_townid )
+		system_askinfo( ASKINFO_MAPTOWN, "", 4, m_townid, 0 )
+	end )
+	
+end
+
+-- 强征令征收
+function MapTownDlgItemLevy()
+	local levy_prestige = g_towninfo[m_townid].levy_prestige * 2;
+	MsgBox( F( 1319, item_getname(g_towninfo[m_townid].levy_item), T(152)..knum(levy_prestige) ), function()
+		if GetPlayer().m_prestige < levy_prestige then
+			pop( T(1318) )
+			return
+		end
+		if m_towninfo.m_produce_num <= 0 then
+			pop( T(1320) )
+			return
+		end
+		system_askinfo( ASKINFO_MAPTOWN, "", 4, m_townid, 1 )
 	end )
 	
 end

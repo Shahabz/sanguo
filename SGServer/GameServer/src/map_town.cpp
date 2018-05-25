@@ -854,7 +854,7 @@ int map_town_soldiers_repair( int actor_index, int townid )
 }
 
 // 城镇征收
-int map_town_levy( int actor_index, int townid )
+int map_town_levy( int actor_index, int townid, int type )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
@@ -876,10 +876,15 @@ int map_town_levy( int actor_index, int townid )
 	// 消耗威望
 	int dd = 1;
 	int prestige = g_towninfo[townid].levy_prestige;
-	if ( item_getitemnum( actor_index, g_towninfo[townid].levy_item ) > 0 )
+	if( type == 1 )
 	{
-		prestige *= 2;
-		dd = 2;
+		if ( item_getitemnum( actor_index, g_towninfo[townid].levy_item ) > 0 )
+		{
+			prestige *= 2;
+			dd = 2;
+		}
+		else
+			return -1;
 	}
 
 	if ( pCity->prestige < prestige )
@@ -890,7 +895,7 @@ int map_town_levy( int actor_index, int townid )
 	// 扣威望
 	city_changeprestige( pCity->index, -prestige, PATH_TOWNLEVY );
 	// 扣强征令
-	if ( dd == 1 )
+	if ( dd == 2 )
 		item_lost( actor_index, g_towninfo[townid].levy_item, 1, PATH_TOWNLEVY );
 
 	// 总征收次数-1
