@@ -3623,45 +3623,33 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 	// 当前的地区
 	char cur_zoneid = map_zone_getid( pCity->posx, pCity->posy );
 	char boss1_complete = 0;
-	char boss2_complete = 0;
 	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS1, NULL ) == 1 )
 	{ // 如果已经完成了世界任务虎牢关
 		boss1_complete = 1;
-	}
-	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS2, NULL ) == 1 )
-	{ // 如果已经完成了世界任务董卓
-		boss2_complete = 1;
 	}
 
 	short move_posx = -1;
 	short move_posy = -1;
 	if ( itemkind == 131 )
 	{ // 已经解锁的地图纯随机
-		short zoneidlist[32] = { 0 };
+		short zoneidlist[16] = { 0 };
 		short zoneidcount = 0;
-		if ( boss2_complete == 1 )
-		{ // 全部地区已经解锁
+		if ( boss1_complete == 1 )
+		{ // 已经击败虎牢关
 			for ( short tmp_zoneid = 1; tmp_zoneid < g_zoneinfo_maxnum; tmp_zoneid++ )
 			{
-				//if ( g_zoneinfo[tmp_zoneid].open == 0 )
-				//	continue;
-				//if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
-				//	continue;
 				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
 					continue;
 				zoneidlist[zoneidcount] = tmp_zoneid;
 				zoneidcount += 1;
 			}
 		}
-		else if ( boss1_complete == 1 )
-		{ // 部分指定地图已经解锁
-			for ( short tmpi = 0; tmpi < 2; tmpi++ )
+		else
+		{  // 没有击败虎牢关 
+			for ( short tmp_zoneid = 1; tmp_zoneid < g_zoneinfo_maxnum; tmp_zoneid++ )
 			{
-				int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
-				if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
+				if ( tmp_zoneid == MAPZONE_CENTERID )
 					continue;
-				//if ( pCity->level < g_zoneinfo[tmp_zoneid].actorlevel )
-				//	continue;
 				if ( pCity->mokilllv < g_zoneinfo[tmp_zoneid].killenemy )
 					continue;
 				zoneidlist[zoneidcount] = tmp_zoneid;
@@ -3703,48 +3691,15 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		char zoneid = map_zone_getid( posx, posy );
 		if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 			return -1;
-		/*if ( g_zoneinfo[zoneid].open == 0 )
+		if ( zoneid == MAPZONE_CENTERID )
 		{
-			actor_notify_alert( actor_index, 1365 );
-			return -1;
-		}*/
-		if ( boss2_complete == 1 )
-		{ // 全部地区已经解锁
-			
-		}
-		else if ( boss1_complete == 1 )
-		{ // 部分地区已经解锁
-			if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
-			{ // 需要击败世界boss董卓后才可前往该地图
-				actor_notify_alert( actor_index, 1368 );
-				return -1;
-			}
-		}
-		else
-		{
-			if ( zoneid == cur_zoneid )
-			{
-
-			}
-			else if ( g_zoneinfo[cur_zoneid].move_zoneid[0] != zoneid && g_zoneinfo[cur_zoneid].move_zoneid[1] != zoneid )
-			{ // 需要击败世界boss董卓后才可前往该地图
-				actor_notify_alert( actor_index, 1368 );
-				return -1;
-			}
-			else
-			{ // 需要击败世界boss张角后才可前往该地图
+			if ( boss1_complete == 0 )
+			{ // 需要击破虎牢关后才可前往该地图
 				actor_notify_alert( actor_index, 1378 );
 				return -1;
 			}
 		}
-
-		//if ( pCity->level < g_zoneinfo[zoneid].actorlevel )
-		//{ // 需要玩家等级{0}才可迁移到该地图
-		//	char v1[32] = { 0 };
-		//	sprintf( v1, "%d", g_zoneinfo[zoneid].actorlevel );
-		//	actor_notify_alert_v( actor_index, 1366, v1, NULL );
-		//	return -1;
-		//}
+		
 		if ( pCity->mokilllv < g_zoneinfo[zoneid].killenemy )
 		{ // 需要击败{ 0 }级流寇才可迁移到该地图
 			char v1[32] = { 0 };
@@ -3781,6 +3736,8 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 		}
 		else
 		{ // 选择指定解锁地图指定坐标点
+			move_posx = posx;
+			move_posy = posy;
 			if ( posx < 0 || posy < 0 || posx >= g_map.m_nMaxWidth || posy >= g_map.m_nMaxWidth )
 				return 1;
 			if ( g_map.m_aTileData[posx][posy].unit_type == MAPUNIT_TYPE_EVENT )
@@ -3797,8 +3754,6 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 				if ( map_canmove( move_posx, move_posy ) == 0 )
 					return -1;
 			}
-			move_posx = posx;
-			move_posy = posy;
 		}
 	}
 	else

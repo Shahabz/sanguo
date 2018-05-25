@@ -297,6 +297,10 @@ end
 -- m_protect_sec=0,m_produce_sec=0,m_own_actorid=0,m_own_namelen=0,m_own_name="[m_own_namelen]",m_own_sec=0,m_hp=0,m_maxhp=0,m_myask=0,m_produce_num=0
 function MapTownDlgRecvValue( recvValue )
 	m_towninfo = recvValue;
+	if recvValue.m_own_actorid > 0 then
+		SetTrue( m_uiOwn )
+		SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
+	end		
 	-- 城池详情
 	if m_path == 0 then
 		
@@ -307,10 +311,7 @@ function MapTownDlgRecvValue( recvValue )
 			else
 				if recvValue.m_own_actorid <= 0 then
 					SetTrue( m_uiRebuildButton );
-				else
-					SetTrue( m_uiOwn );
-					SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
-					
+				else					
 					SetTrue( m_uiOwnSec );
 					SetTimer( m_uiOwnSec, recvValue.m_own_sec, m_own_maxsec, 1, T(1280) );
 
@@ -349,18 +350,12 @@ function MapTownDlgRecvValue( recvValue )
 			else 
 				SetFalse( m_uiPeople )
 			end
-			
-			if recvValue.m_own_actorid > 0 then
-				SetTrue( m_uiOwn );
-				SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
-			end
 		end
 	
 	-- 征收	
 	elseif m_path == 1 then
 		if m_nation == GetPlayer().m_nation then
 			SetTrue( m_uiProduceTimer ) 
-			SetFalse( m_uiOwn )
 			if recvValue.m_produce_num > 0 then
 				-- 生产完成
 				SetTimer( m_uiProduceTimer,0,0 );
@@ -387,10 +382,6 @@ function MapTownDlgRecvValue( recvValue )
 			end
 		else
 			SetFalse( m_uiProduceTimer )
-			if recvValue.m_own_actorid > 0 then
-				SetTrue( m_uiOwn )
-				SetText( m_uiOwn, T(3030+m_type).."：<color=#D95DF4FF>"..recvValue.m_own_name.."</color>" );
-			end
 		end	
 		--SetTrue( m_uiCloseButton );
 	end	
