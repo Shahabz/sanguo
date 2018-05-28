@@ -207,17 +207,17 @@ local function type2text_b( type, name, value )
 		
 	elseif type == 5 then -- 国战进攻
 		if value == 1 then -- 进攻胜利
-			return F( 746, TownName(tonumber(name)), T(1178) )
+			return F( 746, MapTownName(tonumber(name)), T(1178) )
 		elseif value == 2 then -- 进攻失败
-			return F( 746, TownName(tonumber(name)), T(1177) )
+			return F( 746, MapTownName(tonumber(name)), T(1177) )
 		end
 		
 		
 	elseif type == 6 then -- 国战防守
 		if value == 1 then -- 防守失败
-			return F( 747, TownName(tonumber(name)), T(1177) )
+			return F( 747, MapTownName(tonumber(name)), T(1177) )
 		elseif value == 2 then -- 防守胜利
-			return F( 747, TownName(tonumber(name)), T(1178) )
+			return F( 747, MapTownName(tonumber(name)), T(1178) )
 		end	
 	end
 	return ""

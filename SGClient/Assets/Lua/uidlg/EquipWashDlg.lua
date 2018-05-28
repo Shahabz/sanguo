@@ -578,7 +578,8 @@ end
 function EquipWashDlgUpdateEffect(uiEffect)
 	if m_showEffect == false then 
 		return 
-	end;
+	end
+	eye.audioManager:Play(341);
 	local effect = GameObject.Instantiate( LoadPrefab( "Jssj" ) );
 	effect.transform:SetParent( uiEffect.transform );
 	effect.transform.localPosition = Vector3.New( 0, 0, 0 );		

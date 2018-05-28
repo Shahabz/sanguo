@@ -11,6 +11,11 @@ MAPUNIT_TYPE_RES			=	5	-- 资源
 g_map_enemy_maxcount		= 30000;-- 流寇最大数量
 g_map_res_maxcount			= 5000;	-- 资源点最大数量
 g_map_event_maxcount		= 100000;-- 地图事件最大数量
+g_map_pickup_maxcount		= 2000;-- 地图拾取物品最大数量
+
+local WORLD_DATA_BRUSH_ENEMY_TIMER		=	1		-- 刷新流寇计时
+local WORLD_DATA_BRUSH_RES_TIMER		=	2		-- 刷新资源点计时
+local WORLD_DATA_BRUSH_PICKUP_TIMER		=	32		-- 刷新拾取物品计时
 
 -- 世界地图初始化
 function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
@@ -30,6 +35,8 @@ function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
 	-- 地图事件最大数量
 	c_map_event_maxcount( g_map_event_maxcount );
 	
+	-- 地图拾取物品最大数量
+	c_map_pickup_maxcount( g_map_pickup_maxcount );
 end
 
 -- 地图阻挡
@@ -62,24 +69,31 @@ end
 -- 服务器运行中刷对象(1分钟一次)
 function WorldMapBrushTimer()
 	local minute = 0;
-	minute = c_world_data_get( 1 )
+	minute = c_world_data_get( WORLD_DATA_BRUSH_ENEMY_TIMER )
 	if minute == 0 or minute >= global.brush_enemy_minute then
 		BrushEnemy()
 	else
-		c_world_data_set( 1, minute + 1 );
+		c_world_data_set( WORLD_DATA_BRUSH_ENEMY_TIMER, minute + 1 );
 	end
 	
-	minute =  c_world_data_get( 2 )
+	minute =  c_world_data_get( WORLD_DATA_BRUSH_RES_TIMER )
 	if minute == 0 or minute >= global.brush_res_minute then
 		BrushRes()
 	else
-		c_world_data_set( 2, minute + 1 );
+		c_world_data_set( WORLD_DATA_BRUSH_RES_TIMER, minute + 1 );
+	end
+	
+	minute =  c_world_data_get( WORLD_DATA_BRUSH_PICKUP_TIMER )
+	if minute == 0 or minute >= 60 then
+		BrushPickup()
+	else
+		c_world_data_set( WORLD_DATA_BRUSH_PICKUP_TIMER, minute + 1 );
 	end
 end
 
 -- 刷流寇
 function BrushEnemy()
-	c_world_data_set( 1, 1 );
+	c_world_data_set( WORLD_DATA_BRUSH_ENEMY_TIMER, 1 );
 	
 	-- 删除所有未选中的流寇
 	local nowtime = os.time();
@@ -170,7 +184,7 @@ end
 
 -- 刷资源点
 function BrushRes()
-	c_world_data_set( 2, 1 );
+	c_world_data_set( WORLD_DATA_BRUSH_RES_TIMER, 1 );
 	-- 按地区刷新
 	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
 		local brush = 1;
@@ -231,6 +245,81 @@ function BrushResWithZone( zoneid )
 				end
 				--local randidx = math.random( 1, #emptylist );
 				c_map_res_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy );
+				indexcount = indexcount + 1;
+				--table.remove( emptylist, randidx );-- 此方法效率非常低
+			end
+		end
+	end
+end
+
+function BrushPickupClear()
+	for index = 0, g_map_pickup_maxcount-1, 1 do
+		c_map_pickup_delete( index );
+	end
+end
+-- 刷拾取物品
+function BrushPickup()
+	c_world_data_set( WORLD_DATA_BRUSH_PICKUP_TIMER, 1 );
+	-- 按地区刷新
+	for zoneid=1, g_zoneinfo_maxnum-1, 1 do
+		local brush = 1;
+		if g_zoneinfo[zoneid].type == 1 then
+			if c_get_open_zone_sili() == 0 then
+				-- 司隶没开
+				brush = 0;
+			end
+		end
+		if brush == 1 then
+			c_brush_enemy_queue_add( 2, zoneid )
+		end
+	end
+end
+function BrushPickupWithZone( zoneid )
+	if zoneid <= 0 or zoneid >= g_zoneinfo_maxnum then
+		return
+	end
+	if g_zoneinfo[zoneid].open == 0 then
+		return
+	end
+	
+	-- 搜集所有的空余位置
+	local emptylist = {};
+	local totalvalue = 0;
+	for posx = g_zoneinfo[zoneid].top_left_posx, g_zoneinfo[zoneid].bottom_right_posx, 1 do
+		for posy = g_zoneinfo[zoneid].top_left_posy, g_zoneinfo[zoneid].bottom_right_posy, 1 do
+			if c_map_canmove( posx, posy ) == 1 then
+				table.insert( emptylist, {m_posx=posx, m_posy=posy, m_value=2} );
+				totalvalue = totalvalue + 2;
+			end
+		end
+	end
+
+	-- 洗牌打乱搜到的空余坐标点
+	-- 因为 table.remove( emptylist, randidx ); -- 效率非常低，所以不随机了，顺序取
+	for  i = 1, #emptylist, 1 do
+		local index1 = math.random( 1, #emptylist );
+		local index2 = math.random( 1, #emptylist );
+		emptylist[index1], emptylist[index2] = emptylist[index2],emptylist[index1]
+	end
+	-- 刷资源点集合
+	local kindgroup = g_zoneinfo[zoneid].pickupkind;
+	local numgroup = g_zoneinfo[zoneid].pickupnum;
+	local kindlist = string.split( kindgroup, "," );
+	local numlist = string.split( numgroup, "," );
+	local indexcount = 1;
+	
+	-- 刷资源点
+	for i=1, #kindlist, 1 do
+		local kind = tonumber(kindlist[i])
+		local num = tonumber(numlist[i]);
+		local hasnum = c_map_pickup_num( zoneid, kind );
+		if num ~= nil and num > 0 then
+			for j=1, (num-hasnum), 1 do
+				if #emptylist == 0 or indexcount > #emptylist then
+					break;
+				end
+				--local randidx = math.random( 1, #emptylist );
+				c_map_pickup_create( kind, emptylist[indexcount].m_posx, emptylist[indexcount].m_posy );
 				indexcount = indexcount + 1;
 				--table.remove( emptylist, randidx );-- 此方法效率非常低
 			end

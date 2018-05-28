@@ -146,6 +146,7 @@ end
 -- 自定
 ----------------------------------------
 function CityTechDlgOnShow()
+	eye.audioManager:Play(319);
 	CityTechDlgOpen()
 	m_uiTreeBtn.transform:SetSiblingIndex(1000);	
 	m_uiTechInfo.transform:SetSiblingIndex(1000);

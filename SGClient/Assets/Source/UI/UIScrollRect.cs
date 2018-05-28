@@ -15,7 +15,7 @@ public class UIScrollRect : ScrollRect
     protected GameObject m_LoadingItem = null;
     protected bool m_IsLoadingTop = false;
 
-    private List<float> _childrenPos = new List<float>();
+	private List<Vector3> _childrenPos = new List<Vector3>();
     protected override void Start()
     {
         base.Start();
@@ -67,6 +67,7 @@ public class UIScrollRect : ScrollRect
 
     public void ResetScroll()
     {
+		_childrenPos.Clear();
         SetContentAnchoredPosition(Vector2.zero);
         onValueChanged.Invoke(normalizedPosition);
     }
@@ -180,6 +181,11 @@ public class UIScrollRect : ScrollRect
 		yield return null;
 	}
 
+	public void clearChildrenPos()
+	{
+		_childrenPos.Clear();
+	}
+
 	/// <summary>
 	/// 指定一个 item让其定位到ScrollRect中间
 	/// </summary>
@@ -190,28 +196,70 @@ public class UIScrollRect : ScrollRect
         RectTransform viewPort = scrollView.viewport;
         RectTransform contentTransform = scrollView.content;
 
-        if (_childrenPos.Count == 0)
-        {
-            float childPosX = scrollView.GetComponent<RectTransform>().rect.width * 0.5f - GetChildItemWidth(0, contentTransform) * 0.5f;
-            HorizontalLayoutGroup group = contentTransform.GetComponent<HorizontalLayoutGroup>();
-            float spacing = group.spacing;
-            _childrenPos.Add(childPosX);
-            for (int i = 1; i < contentTransform.childCount; i++)
-            {
-                childPosX -= GetChildItemWidth(i, contentTransform) * 0.5f + GetChildItemWidth(i - 1, contentTransform) * 0.5f + spacing;
-                _childrenPos.Add(childPosX);
-            }
-        }
-        Vector3 newPos = Vector3.zero;
-        if (index >= 2)
-            newPos = new Vector3(_childrenPos[index], 0, 0);
-        DOTween.To(() => contentTransform.localPosition, x => contentTransform.localPosition = x, newPos, 1);
+		if (scrollView.horizontal == true) 
+		{
+			if (_childrenPos.Count == 0) 
+			{
+				Vector3 childPos = new Vector3();
+				childPos.y = contentTransform.localPosition.y;
+				childPos.x = scrollView.GetComponent<RectTransform> ().rect.width * 0.5f - GetChildItemWidth(0, contentTransform) * 0.5f;
+				HorizontalLayoutGroup group = contentTransform.GetComponent<HorizontalLayoutGroup> ();
+				float spacing = group.spacing;
+				_childrenPos.Add (childPos);
+				for (int i = 1; i < contentTransform.childCount; i++) 
+				{
+					childPos.x -= GetChildItemWidth(i, contentTransform) * 0.5f + GetChildItemWidth (i - 1, contentTransform) * 0.5f + spacing;
+					_childrenPos.Add (childPos);
+				}
+			}
+			Vector3 newPos = _childrenPos[index];
+			if (_childrenPos[index].x > 0 )
+				newPos.x = 0;
+			if (contentTransform.sizeDelta.x > 0.0f) {
+				if (-_childrenPos [index].x > contentTransform.sizeDelta.x)
+					newPos.x = -contentTransform.sizeDelta.x;
+			}
+			
+			DOTween.To (() => contentTransform.localPosition, x => contentTransform.localPosition = x, newPos, 1);
+		} 
+		else if (scrollView.vertical == true) 
+		{
+			if (_childrenPos.Count == 0) 
+			{
+				Vector3 childPos = new Vector3();
+				childPos.x = contentTransform.localPosition.x;
+				childPos.y = -(scrollView.GetComponent<RectTransform> ().rect.height * 0.5f - GetChildItemHeight(0, contentTransform) * 0.5f);
+				VerticalLayoutGroup group = contentTransform.GetComponent<VerticalLayoutGroup> ();
+				float spacing = group.spacing;
+				_childrenPos.Add (childPos);
+				for (int i = 1; i < contentTransform.childCount; i++)
+				{
+					childPos.y -= -(GetChildItemHeight(i, contentTransform) * 0.5f + GetChildItemHeight (i - 1, contentTransform) * 0.5f + spacing);
+					_childrenPos.Add (childPos);
+				}
+			}
+			Vector3 newPos = _childrenPos[index];
+			if (_childrenPos[index].y < 0 )
+				newPos.y = 0;
+
+			if (contentTransform.sizeDelta.y > 0.0f) {
+				if (_childrenPos [index].y > contentTransform.sizeDelta.y)
+					newPos.y = contentTransform.sizeDelta.y;
+			}
+
+			DOTween.To (() => contentTransform.localPosition, y => contentTransform.localPosition = y, newPos, 1);
+		}
     }
 
     private float GetChildItemWidth(int index,RectTransform contentTransform)
     {
         return (contentTransform.GetChild(index) as RectTransform).sizeDelta.x;
     }
+	private float GetChildItemHeight(int index,RectTransform contentTransform)
+	{
+		return (contentTransform.GetChild(index) as RectTransform).sizeDelta.y;
+	}
+
 
     /// <summary>
     /// 显示加载更多

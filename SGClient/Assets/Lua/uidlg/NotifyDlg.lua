@@ -85,6 +85,7 @@ local function NotifyAdd( msg, popWindow, data, param )
     if window == nil then
         table.insert( data, { msg = msg, param = param } );
     else
+		eye.audioManager:Play(339);
         -- 字
         local text = window:Find( "Text" ):GetComponent( typeof(UIText) );
 		text.text = msg;

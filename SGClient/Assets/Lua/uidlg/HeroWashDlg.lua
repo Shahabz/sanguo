@@ -359,6 +359,7 @@ function HeroWashDlgUpdate()
 		return;
 	end
 	HeroWashDlgSelectHero( m_herokind )
+	eye.audioManager:Play(341);
 end
 
 function HeroWashDlgFree()

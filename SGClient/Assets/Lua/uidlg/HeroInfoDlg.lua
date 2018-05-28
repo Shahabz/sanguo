@@ -43,6 +43,7 @@ local m_pCacheHero = nil;
 local m_up = false
 local m_MatchEquipList = {};
 local m_path = 0;
+local m_selectEquipType = -1;
 
 -- 打开界面
 function HeroInfoDlgOpen()
@@ -100,7 +101,7 @@ function HeroInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 打造装备
 		elseif nControlID == 6 then
-			EquipForgingDlgShow();
+			EquipForgingDlgShow( m_selectEquipType )
 			HeroInfoDlgClose();
 			HeroDlgClose()
 		
@@ -225,6 +226,7 @@ function HeroInfoDlgShow( path, pHero, up )
 		return
 	end
 	HeroInfoDlgOpen();
+	m_uiHeroScroll.transform:GetComponent( "UIScrollRect" ):clearChildrenPos();
 	HeroInfoDlgSelectEquip( -1 )
 	HeroInfoDlgSet( path, pHero, up )
 end
@@ -401,6 +403,7 @@ function HeroInfoDlgSet( path, pHero, up )
 	--end
 	
 	-- 创建对象
+	local selectObj = nil
 	for i=1, #m_CacheHeroCache, 1 do
 		local pHero = m_CacheHeroCache[i];
         if pHero ~= nil and pHero.m_kind > 0 then
@@ -419,6 +422,7 @@ function HeroInfoDlgSet( path, pHero, up )
 			
 			if pHero.m_kind == m_pCacheHero.m_kind then
 				SetTrue( uiSelect )
+				selectObj = uiHeroObj;
 			else
 				SetFalse( uiSelect )
 			end
@@ -444,9 +448,10 @@ function HeroInfoDlgSet( path, pHero, up )
 			m_CacheHeroList[pHero.m_offset] = uiHeroObj;
 		end
 	end
-	
-	--local siblingIndex = tmp.transform:GetSiblingIndex();
-    --m_uiHeroScroll.transform:GetComponent("UIScrollRect"):ScrollToBottom(siblingIndex);
+	if selectObj then
+		local siblingIndex = selectObj.transform:GetSiblingIndex();
+		SetItemCenterInScroll(siblingIndex,m_uiHeroScroll.transform);
+	end
 	
 	-- 已经上阵的
 	if up == true then
@@ -587,6 +592,7 @@ end
 
 -- 选择装备
 function HeroInfoDlgSelectEquip( offset )
+	m_selectEquipType = offset+1
 	if offset < 0 then
 		SetFalse( m_uiEquipInfo )
 		return

@@ -75,6 +75,7 @@ function LoginModOnEvent( nType, nControlID, value )
 	if nType == UI_EVENT_CLICK then
 		-- 快速试玩
 		if nControlID == 1 then 
+			eye.audioManager:Play(338);
 			LoginModQuickLogin();
 			
 		--关闭服务器列表
@@ -87,6 +88,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 账户登陆	
 		elseif nControlID == 2 then
+			eye.audioManager:Play(338);
 			LoginModLogin();
 			
 		-- 关闭每组的小列表 返回大列表
@@ -115,6 +117,7 @@ function LoginModOnEvent( nType, nControlID, value )
 		
 		-- SDK进入游戏
 		elseif nControlID == 9 then	
+			eye.audioManager:Play(338);
 			LoginModSDKLogin()
 			
 		-- 显示服务器列表

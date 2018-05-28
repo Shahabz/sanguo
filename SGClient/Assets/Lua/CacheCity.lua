@@ -472,6 +472,7 @@ end
 
 -- 升级完成特效
 function City.BuildingUpgradeEffect(unitObj)
+	eye.audioManager:Play(401);
 	local effect = GameObject.Instantiate( LoadPrefab( "Jzsj" ) );
 	effect.transform:SetParent( unitObj.transform );
 	effect.transform.position = unitObj.transform.position;

@@ -275,9 +275,9 @@ function RecvActorNotify(recvValue)
 		local offset = value[3];
 		local level = value[4]
 		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-			NotifyBottom( F(1481,level,offset+1,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
+			NotifyMiddle( F(1481,level,offset+1,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		else
-			NotifyBottom( F(1480,level,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
+			NotifyMiddle( F(1480,level,BuildingName(kind)), {back=LoadSprite("ui_icon_back_8"), shape=BuildingSprite(kind)} )
 		end
 	
 	-- 城防军数量	

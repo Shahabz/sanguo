@@ -113,6 +113,9 @@ function Activity5ModRecv( recvValue )
 		return
 	end
 	local ActivityList = ActivityDlgGetRecvValue()
+	if ActivityList == nil then
+		return
+	end
 	local info = nil;
 	for i=1, #ActivityList, 1 do
 		if ActivityList[i].m_activityid == ACTIVITY_5 then

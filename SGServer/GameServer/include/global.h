@@ -216,6 +216,7 @@ void global_reload();
 #define WORLD_DATA_WORLDQUEST_BASE		10		// 世界任务起始
 #define WORLD_DATA_WORLDQUEST_BASEEND	30		// 世界任务结束
 #define WORLD_DATA_ACTIVITY06_PAYTOKEN	31		// 服务器全服返利活动充值总量
+#define WORLD_DATA_BRUSH_PICKUP_TIMER	32		// 刷新拾取物品计时
 #define WORLD_DATA_SAVEFLAG				99		// 存档的标记时间
 #define WORLD_DATA_SAVEFILE_FLAG		100		// 崩溃执行完毕的标记时间
 #define WORLD_DATA_SERVERINIT			101		// 服务器首次初始化

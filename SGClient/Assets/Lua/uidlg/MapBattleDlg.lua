@@ -554,6 +554,7 @@ function MapBattleDlgSoldiers( index )
 	end
 	
 	system_askinfo( ASKINFO_HERO, "", 1, pHero.m_kind );
+	eye.audioManager:Play(312);
 end
 
 -- 更新血量
@@ -695,11 +696,13 @@ function MapBattleDlgBattle()
 	if has == 0 then			
 		netsend_mapbattle_C( sendValue )
 		MapBattleDlgClose()
+		eye.audioManager:Play(337);
 	else
 			
 		Invoke( function() 
 			netsend_mapbattle_C( sendValue )
 			MapBattleDlgClose()
+			eye.audioManager:Play(337);
 		end, 0.5, nil, "MapBattleDlgBattle" );
 	end
 end

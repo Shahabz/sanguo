@@ -129,6 +129,7 @@ end
 -- 自定
 ----------------------------------------
 function MapResDlgShow( recvValue )
+	eye.audioManager:Play(334);
 	MapResDlgOpen()
 	m_SelectHeroKind = 0;
 	m_defaultSelect = 0;

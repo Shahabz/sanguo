@@ -47,7 +47,7 @@ int mapzoneinfo_init_auto()
 	g_zoneinfo = (MapZoneInfo *)malloc( sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 	memset( g_zoneinfo, 0, sizeof(MapZoneInfo)*g_zoneinfo_maxnum );
 
-	sprintf( szSQL, "select `id`,`type`,`center_townid`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy`,`enemykind`,`enemynum`,`reskind`,`resnum`,`eventkind`,`eventnum`,`killenemy`,`move_zoneid0`,`move_zoneid1` from map_zoneinfo;" );
+	sprintf( szSQL, "select `id`,`type`,`center_townid`,`center_posx`,`center_posy`,`top_left_posx`,`top_left_posy`,`top_right_posx`,`top_right_posy`,`bottom_left_posx`,`bottom_left_posy`,`bottom_right_posx`,`bottom_right_posy`,`enemykind`,`enemynum`,`reskind`,`resnum`,`eventkind`,`eventnum`,`pickupkind`,`pickupnum`,`killenemy`,`move_zoneid0`,`move_zoneid1` from map_zoneinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -80,6 +80,8 @@ int mapzoneinfo_init_auto()
 		memcpy( g_zoneinfo[id].resnum, row[offset++], 512 ); g_zoneinfo[id].resnum[511]=0;
 		memcpy( g_zoneinfo[id].eventkind, row[offset++], 256 ); g_zoneinfo[id].eventkind[255]=0;
 		g_zoneinfo[id].eventnum = atoi(row[offset++]);
+		memcpy( g_zoneinfo[id].pickupkind, row[offset++], 256 ); g_zoneinfo[id].pickupkind[255]=0;
+		memcpy( g_zoneinfo[id].pickupnum, row[offset++], 256 ); g_zoneinfo[id].pickupnum[255]=0;
 		g_zoneinfo[id].killenemy = atoi(row[offset++]);
 		g_zoneinfo[id].move_zoneid[0] = atoi(row[offset++]);
 		g_zoneinfo[id].move_zoneid[1] = atoi(row[offset++]);
@@ -183,6 +185,14 @@ int mapzoneinfo_luatable_auto()
 
 		lua_pushstring( servL, "eventnum" );
 		lua_pushinteger( servL, g_zoneinfo[id].eventnum );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "pickupkind" );
+		lua_pushstring( servL, g_zoneinfo[id].pickupkind );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "pickupnum" );
+		lua_pushstring( servL, g_zoneinfo[id].pickupnum );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "killenemy" );

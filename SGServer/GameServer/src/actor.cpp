@@ -48,6 +48,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "map_call.h"
+#include "map_pickup.h"
 #include "nation.h"
 #include "nation_hero.h"
 #include "world_boss.h"
@@ -217,6 +218,8 @@ void actors_on_core()
 	map_call_save( fp );
 	// 所有国家名将保存
 	nation_hero_save( fp );
+	// 所有拾取物保存
+	map_pickup_save( fp );
 	// 所有世界boss
 	world_boss_save( fp );
 	// 所有血战皇城据点保存

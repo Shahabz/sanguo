@@ -741,23 +741,32 @@ end
 -- m_kind=0,m_exp=0,m_exp_max=0,m_add=0,m_level,m_isup=0,m_path=0,
 function proc_heroexp_C( recvValue )
 	-- process.
+	local color = 0
 	local type, offset = GetHero():GetIndex( recvValue.m_kind );
 	if type == "CityHero" then
 		GetHero().m_CityHero[offset].m_exp = recvValue.m_exp;
 		GetHero().m_CityHero[offset].m_exp_max = recvValue.m_exp_max;
 		GetHero().m_CityHero[offset].m_level = recvValue.m_level;
+		color = GetHero().m_CityHero[offset].m_color
 	elseif type == "Hero" then
 		GetHero().m_Hero[offset].m_exp = recvValue.m_exp;
 		GetHero().m_Hero[offset].m_exp_max = recvValue.m_exp_max;
 		GetHero().m_Hero[offset].m_level = recvValue.m_level;
+		color = GetHero().m_Hero[offset].m_color
 	end
 	HeroInfoDlgUpdate( recvValue.m_kind );
 	HeroExpDlgUpdate();
 	
 	if recvValue.m_add > 0 then
 		if recvValue.m_path == PATH_ITEMUSE or recvValue.m_path == PATH_TOKENITEMUSE then
-			pop( HeroName(recvValue.m_kind)..T(128).."+"..recvValue.m_add )
+			local name = NameColorText( HeroName(recvValue.m_kind), color )
+			pop( name..T(119).." +"..recvValue.m_add )
 		end
+	end
+	
+	if recvValue.m_isup == 1 and recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
+		local name = NameColorText( HeroName(recvValue.m_kind), color )
+		NotifyTop( F( 170, name ), {back=LoadSprite("ui_icon_back_8"), shape=HeroHeadSprite(recvValue.m_kind)} )
 	end
 end
 
@@ -921,11 +930,14 @@ function proc_soldiers_C( recvValue )
 	end
 	
 	if recvValue.m_add > 0 then
-		if recvValue.m_path == PATH_TRAIN_GET or recvValue.m_path == PATH_ITEMUSE or recvValue.m_path == PATH_TOKENITEMUSE then -- 招募
+		--[[if recvValue.m_path == PATH_TRAIN_GET or recvValue.m_path == PATH_ITEMUSE or recvValue.m_path == PATH_TOKENITEMUSE then -- 招募
 			pop( T(605)..": <color=#ffde00ff>"..CorpsName(recvValue.m_corps).."</color><color=#03de27ff>x"..recvValue.m_add.."</color>", {shape=CorpsSprite(recvValue.m_corps)} )
 			
-		elseif recvValue.m_path == PATH_HERO_DOWN or recvValue.m_path == PATH_HERO_SOLDIERS_EQUIP then -- 回营
+		else--]]
+		if recvValue.m_path == PATH_HERO_DOWN or recvValue.m_path == PATH_HERO_SOLDIERS_EQUIP then -- 回营
 			pop( F(2498,recvValue.m_add,CorpsName(recvValue.m_corps)), {shape=CorpsSprite(recvValue.m_corps)} )
+		else
+			pop( T(605)..": <color=#ffde00ff>"..CorpsName(recvValue.m_corps).."</color><color=#03de27ff>x"..recvValue.m_add.."</color>", {shape=CorpsSprite(recvValue.m_corps)} )
 		end
 		--pop( T(605)..": "..CorpsName(recvValue.m_corps).."x"..recvValue.m_add );
 	end
@@ -1135,9 +1147,9 @@ function proc_techchange_C( recvValue )
 	GetPlayer().m_techlevel[kind] = recvValue.m_level;
 	GetPlayer().m_techprogress[kind] = recvValue.m_progress;
 	if recvValue.m_progress > 0 then
-		pop( F( 707, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind], recvValue.m_progress ) )
+		NotifyMiddle( F( 707, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind], recvValue.m_progress ), {back=LoadSprite("ui_icon_back_8"), shape=TechSprite(kind)} )
 	else
-		pop( F( 706, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind] ) )
+		NotifyMiddle( F( 706, TechName(kind).."Lv"..GetPlayer().m_techlevel[kind] ), {back=LoadSprite("ui_icon_back_8"), shape=TechSprite(kind)} )
 	end
 end
 

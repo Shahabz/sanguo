@@ -936,6 +936,7 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			MapClickEffect.gameObject:SetActive( false );
 			MapNationHeroDlgShow( recvValue )
 			return
+			
 		end
 	end
 	

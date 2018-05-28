@@ -8,6 +8,7 @@ MAPUNIT_TYPE_ENEMY		=	4	-- 流寇
 MAPUNIT_TYPE_RES		=	5	-- 资源点
 MAPUNIT_TYPE_EVENT		=	6	-- 随机事件
 MAPUNIT_TYPE_NATIONHERO	=	7	-- 国家名将
+MAPUNIT_TYPE_PICKUP		=	8	-- 拾取物品
 MAPUNIT_TYPE_KINGWAR_TOWN	= 10-- 皇城血战据点
 
 MAPUNIT_TYPE_TOWN_XIAN		= 1	-- 县
@@ -79,6 +80,7 @@ local MapUnitEnemy 		= nil;
 local MapUnitRes 		= nil;
 local MapUnitEvent 		= nil;
 local MapUnitNationHero = nil;
+local MapUnitPickup 	= nil;
 local MapBorder			= nil;
 local MapTownRange		= nil;
 local MapUnitInited		= false;
@@ -224,6 +226,7 @@ MapUnit.objectPoolEnemy 		= {}; 	-- 流寇
 MapUnit.objectPoolRes 			= {}; 	-- 资源田
 MapUnit.objectPoolEvent 		= {}; 	-- 事件
 MapUnit.objectPoolNationHero 	= {}; 	-- 国家名将
+MapUnit.objectPoolPickup 		= {}; 	-- 拾取物品
 MapUnit.objectCenterTownRange 	= {}; 	-- 皇城区域范围
 MapUnit.SpritePoolEnemy			= {};	-- 流寇形象
 MapUnit.SpritePoolRes			= {};	-- 资源田形象
@@ -239,6 +242,7 @@ function MapUnit.init()
 		MapUnitRes 			= LoadPrefab("MapUnitRes");
 		MapUnitEvent		= LoadPrefab("MapUnitEvent");
 		MapUnitNationHero	= LoadPrefab("MapUnitNationHero");
+		MapUnitPickup		= LoadPrefab("MapUnitPickup");
 		MapBorder			= LoadPrefab("MapBorder");
 		MapTownRange		= LoadPrefab("MapTownRange");
 		
@@ -272,6 +276,7 @@ function MapUnit.clear()
 	MapUnitRes 			= nil;
 	MapUnitEvent 		= nil;
 	MapUnitNationHero 	= nil;
+	MapUnitPickup 	= nil;
 	
 	MapUnitInited		= false;
 	MapUnit.unitRoot 	= nil;
@@ -283,6 +288,7 @@ function MapUnit.clear()
 	MapUnit.objectPoolRes 		= {};
 	MapUnit.objectPoolEvent 	= {};
 	MapUnit.objectPoolNationHero= {};
+	MapUnit.objectPoolPickup	= {};
 	MapUnit.SpritePoolEnemy		= {};
 	MapUnit.SpritePoolRes		= {};
 	
@@ -322,6 +328,10 @@ function MapUnit.add( unitRoot, recvValue )
 	-- 国家名将	
 	elseif recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
 		unit = MapUnit.createNationHero( recvValue );
+	
+	-- 拾取事件	
+	elseif recvValue.m_type == MAPUNIT_TYPE_PICKUP then
+		unit = MapUnit.createPickup( recvValue );
 	end
 	
 	-- 缓存起来，以便删除
@@ -1234,6 +1244,50 @@ function MapUnit.createNationHero( recvValue )
 	return unitObj; 
 end
 
+-- 创建拾取事件
+function MapUnit.createPickup( recvValue )
+	local state 	= recvValue.m_state;
+	local posx 		= recvValue.m_posx;
+	local posy 		= recvValue.m_posy;
+	local kind 		= recvValue.m_short_value[1];
+	
+	-- 先搜索缓存，如果缓存有，那么就更新
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	
+	-- 先检查对象缓存池是否有空余的
+	if unitObj == nil then
+		for index, unit in pairs( MapUnit.objectPoolPickup ) do
+			if unit and unit.gameObject.activeSelf == false then
+				unitObj = unit;
+				break;
+			end
+		end
+	end
+	
+	-- 没有空余的就新创建一个
+	if unitObj == nil then
+		unitObj = GameObject.Instantiate( MapUnitPickup );
+		unitObj.transform:SetParent( MapUnit.unitRoot );
+		table.insert( MapUnit.objectPoolPickup, unitObj );
+	end
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_PICKUP, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( posx, posy, posy );
+	
+	-- 获取引用
+	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiName = objs[1];
+		
+	-- 形象
+	local shape = "mapunit_pickup"..g_pickupinfo[kind].shape
+    uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( shape );
+	SetText( uiName, T(g_pickupinfo[kind].nameid) )
+	return unitObj; 
+end
+
 -- 地图区域边界线
 function MapUnit.createMapBorder( posx, posy, range )
 	if MapUnitRoot == nil then
@@ -1296,8 +1350,13 @@ end
 
 -- 获取占地块
 function MapUnit.getGrid( unittype, unitgrid )
+	
+	if unittype == MAPUNIT_TYPE_TOWN then
+		return unitgrid;
+	end
+	
 	-- 城池
-	if unittype == MAPUNIT_TYPE_CITY then
+	--[[if unittype == MAPUNIT_TYPE_CITY then
 		return 1;
 	-- 部队
 	elseif unittype == MAPUNIT_TYPE_ARMY then
@@ -1317,7 +1376,10 @@ function MapUnit.getGrid( unittype, unitgrid )
 	-- 国家名将
 	elseif unittype == MAPUNIT_TYPE_NATIONHERO then
 		return 1;
-	end	
+	-- 拾取事件
+	elseif unittype == MAPUNIT_TYPE_PICKUP then
+		return 1;
+	end	--]]
 	return 1;
 end
 

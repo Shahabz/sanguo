@@ -149,9 +149,9 @@ inline int map_getobject_grid( int type, int index )
 	int grid = 1;
 	switch ( type )
 	{
-	case MAPUNIT_TYPE_CITY:	// 玩家城池
-		grid = 1;
-		break;
+	//case MAPUNIT_TYPE_CITY:	// 玩家城池
+	//	grid = 1;
+	//	break;
 	case MAPUNIT_TYPE_TOWN://  城镇
 	{
 		if ( index <= 0 || index >= g_towninfo_maxnum )
@@ -159,18 +159,18 @@ inline int map_getobject_grid( int type, int index )
 		grid = g_towninfo[index].grid;
 	}
 		break;
-	case MAPUNIT_TYPE_ENEMY:// 流寇
-		grid = 1;
-		break;
-	case MAPUNIT_TYPE_RES: // 资源
-		grid = 1;
-		break;
-	case MAPUNIT_TYPE_EVENT: // 事件
-		grid = 1;
-		break;
-	case MAPUNIT_TYPE_NATIONHERO: // 国家名将
-		grid = 1;
-		break;
+	//case MAPUNIT_TYPE_ENEMY:// 流寇
+	//	grid = 1;
+	//	break;
+	//case MAPUNIT_TYPE_RES: // 资源
+	//	grid = 1;
+	//	break;
+	//case MAPUNIT_TYPE_EVENT: // 事件
+	//	grid = 1;
+	//	break;
+	//case MAPUNIT_TYPE_NATIONHERO: // 国家名将
+	//	grid = 1;
+	//	break;
 	default:
 		return 1;
 	}

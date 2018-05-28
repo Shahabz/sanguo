@@ -94,6 +94,7 @@ end
 -- 自定
 ----------------------------------------
 function MapEnemyDlgShow( recvValue )
+	eye.audioManager:Play(336);
 	MapEnemyDlgOpen()
 	for i = 0 ,m_uiAwardGrid.transform.childCount - 1 do
 		local objs = m_uiAwardGrid.transform:GetChild(i).gameObject

@@ -101,6 +101,9 @@ function Activity1ModRecv( recvValue )
 	end
 	m_red = 0;
 	local ActivityList = ActivityDlgGetRecvValue()
+	if ActivityList == nil then
+		return
+	end
 	local info = nil;
 	for i=1, #ActivityList, 1 do
 		if ActivityList[i].m_activityid == ACTIVITY_1 then

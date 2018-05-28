@@ -108,7 +108,7 @@ end
 --{m_kind=0,m_color=0,m_level=0,m_corps=0,m_exp=0,m_exp_max=0,m_soldiers=0,m_state=0,m_attack_base=0,m_attack_wash=0,m_defense_base=0,m_defense_wash=0,m_troops_base=0,m_troops_wash=0,m_attack=0,m_defense=0,m_troops=0,m_offset=0,},
 function HeroGetDlgShow( recvValue )
 	HeroGetDlgOpen()
-	eye.audioManager:Play(math.random(453,457));
+	eye.audioManager:Play(math.random(453,459));
 	m_herokind = recvValue.m_kind+AWARDKIND_HEROBASE;
 	local haveHero = HeroVisitDlgIsHaveHero( m_herokind );
 	if haveHero == true and recvValue.m_itemnum ~= nil then

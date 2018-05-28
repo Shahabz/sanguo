@@ -26,6 +26,7 @@ extern "C"
 #include "map_enemy.h"
 #include "map_res.h"
 #include "map_event.h"
+#include "map_pickup.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -41,6 +42,9 @@ extern int g_map_res_maxcount;
 
 extern MapEvent *g_map_event;
 extern int g_map_event_maxcount;
+
+extern MapPickup *g_map_pickup;
+extern int g_map_pickup_maxcount;
 
 extern char g_open_zone_sili;
 extern char g_open_zone_luoyang;
@@ -96,6 +100,10 @@ static int lua_c_map_event_num( lua_State *servL );
 static int lua_c_map_event_range_brush( lua_State *servL );
 static int lua_c_map_event_delete_actor( lua_State *servL );
 static int lua_c_brush_enemy_queue_add( lua_State *servL );
+static int lua_c_map_pickup_maxcount( lua_State *servL );
+static int lua_c_map_pickup_create( lua_State *servL );
+static int lua_c_map_pickup_delete( lua_State *servL );
+static int lua_c_map_pickup_num( lua_State *servL );
 static int lua_c_city_baseinfo( lua_State *servL );
 static int lua_c_world_data_get( lua_State *servL );
 static int lua_c_world_data_set( lua_State *servL );
@@ -160,6 +168,10 @@ void lua_func_register()
 	lua_register( servL, "c_map_event_range_brush", lua_c_map_event_range_brush );
 	lua_register( servL, "c_map_event_delete_actor", lua_c_map_event_delete_actor );
 	lua_register( servL, "c_brush_enemy_queue_add", lua_c_brush_enemy_queue_add );
+	lua_register( servL, "c_map_pickup_maxcount", lua_c_map_pickup_maxcount );
+	lua_register( servL, "c_map_pickup_create", lua_c_map_pickup_create );
+	lua_register( servL, "c_map_pickup_delete", lua_c_map_pickup_delete );
+	lua_register( servL, "c_map_pickup_num", lua_c_map_pickup_num );
 	lua_register( servL, "c_city_baseinfo", lua_c_city_baseinfo );
 	lua_register( servL, "c_world_data_get", lua_c_world_data_get );
 	lua_register( servL, "c_world_data_set", lua_c_world_data_set );
@@ -1409,6 +1421,78 @@ static int lua_c_get_open_zone_luoyang( lua_State *servL )
 	//--Process script
 	short value = g_open_zone_luoyang;
 	lua_pushinteger( servL, value );
+	return 1;
+}
+
+static int lua_c_map_pickup_maxcount( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int maxcount = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_pickup_maxcount_set( maxcount );
+	return 0;
+}
+
+static int lua_c_map_pickup_create( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 3 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	//--Process script
+	map_pickup_create( kind, posx, posy );
+	return 0;
+}
+
+static int lua_c_map_pickup_delete( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_pickup_delete( index );
+	return 0;
+}
+
+static int lua_c_map_pickup_num( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	char zoneid = (char )lua_tointeger( servL, 1 );
+	short kind = (short )lua_tointeger( servL, 2 );
+	//--Process script
+	int count = map_pickup_num( zoneid, kind );
+	lua_pushinteger( servL, count );
 	return 1;
 }
 

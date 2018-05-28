@@ -217,6 +217,10 @@ int brush_enemy_queue_fetch()
 	{
 		sc_Script_Exec( 2, zoneid, 0 );
 	}
+	else if ( type == BRUSH_ENEMY_QUEUE_PICKUP )
+	{
+		sc_Script_Exec( 3, zoneid, 0 );
+	}
 	
 	// 头部步进
 	g_nBrushEnemyQueueHead++;

@@ -167,6 +167,7 @@ end
 -- 自定
 ----------------------------------------
 function LevyDlgShow()
+	eye.audioManager:Play(338);
 	LevyDlgOpen();
 	m_uiResBuyBtn.transform:SetSiblingIndex(1000);
 	m_uiInteriorBtn.transform:SetSiblingIndex(1000);

@@ -8,6 +8,7 @@
 #define MAPUNIT_TYPE_RES			5	// 资源
 #define MAPUNIT_TYPE_EVENT			6	// 事件
 #define MAPUNIT_TYPE_NATIONHERO		7	// 国家名将
+#define MAPUNIT_TYPE_PICKUP			8	// 拾取事件
 #define MAPUNIT_TYPE_KINGWAR_TOWN	10	// 皇城血战据点
 
 // 世界地图显示单元

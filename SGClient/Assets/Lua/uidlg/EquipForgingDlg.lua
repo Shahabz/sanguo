@@ -181,7 +181,7 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function EquipForgingDlgShow()
+function EquipForgingDlgShow( EquipType, EquipKind )
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_SMITHY ) == 0 then
 		AlertMsg( T(2427) )
 		return
@@ -205,6 +205,7 @@ function EquipForgingDlgShow()
 	end
 	table.sort( EquipList, EquipForgingDlgCacheSort )
 	
+	local normalSelectKind = 0;
 	for key, info in pairsByKeys(EquipList) do
 		local kind = info.m_kind;
 		local uiObj = m_ObjectPool:Get( "UIP_ForgingEquip" );
@@ -262,13 +263,26 @@ function EquipForgingDlgShow()
 				end
 			end
 		end
+		
+		local _bSelect = false
 		if forging == true then
 			SetTrue( uiHammer );
+			
+			if EquipType then
+				if EquipType == g_equipinfo[kind].type then
+					normalSelectKind = kind
+				end
+			end
+			
+			if EquipKind then
+				if EquipKind == kind then
+					normalSelectKind = kind
+				end
+			end
 		else
 			SetFalse( uiHammer );
 		end
 		
-		-- 选择状态
 		SetFalse( uiSelect )
 		
 		if IsGuiding() then
@@ -299,6 +313,12 @@ function EquipForgingDlgShow()
 			end
 		end
     end 
+	
+	-- 默认选择
+	if normalSelectKind > 0 then
+		EquipForgingDlgSelect( normalSelectKind )
+	end
+	
 	-- 任务检查
 	QuestClickCheck( 4 )
 	
@@ -355,7 +375,10 @@ function EquipForgingDlgSelect( kind )
 	local uiSelect = objs[6];
 	SetTrue( uiSelect )
 	SetTrue( m_uiEquipInfo )
-	
+
+	local siblingIndex = m_uiEquipObj[m_selectkind].transform:GetSiblingIndex();
+	SetItemCenterInScroll(siblingIndex,m_uiScroll.transform);
+
 	if GetPlayer().m_level < g_equipinfo[kind].actorlevel then
 		SetTrue( m_uiUnLockDesc )
 		SetText( m_uiUnLockDesc, F(765, g_equipinfo[kind].actorlevel ) )

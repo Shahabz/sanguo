@@ -51,6 +51,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "map_call.h"
+#include "map_pickup.h"
 #include "nation.h"
 #include "nation_hero.h"
 #include "king_war.h"
@@ -803,6 +804,15 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 
+	// 世界地图-拾取物品
+	if ( mappickupinfo_init_auto() < 0 )
+	{
+		printf_msg( "mappickupinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 世界boss
 	if ( worldbossinfo_init_auto() < 0 )
 	{
@@ -1036,6 +1046,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 111 );
 
+	// 加载拾取物品（严格顺序要求，不允许改变）
+	if ( map_pickup_load() < 0 )
+	{
+		printf_msg( "map_pickup_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 111 );
+
 	// 加载皇城血战据点（严格顺序要求，不允许改变）
 	if ( kingwar_town_load() < 0 )
 	{
@@ -1207,6 +1226,10 @@ void process_close()
 
 	// 所有国家名将保存
 	nation_hero_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有拾取物保存
+	map_pickup_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有世界boss

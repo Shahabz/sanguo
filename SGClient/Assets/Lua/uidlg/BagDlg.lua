@@ -472,7 +472,7 @@ function BagDlgItemUse()
 	end
 	
 	if pItem.m_type == ITEM_TYPE_EQUIP_DRAWING then
-		EquipForgingDlgShow()
+		EquipForgingDlgShow( nil, g_itemkind[pItem.m_kind].base_ability0 )
 		BagDlgClose();
 	elseif pItem.m_type == ITEM_TYPE_HEROEXP then
 		if GetHero().m_CityHero[0] ~= nil then

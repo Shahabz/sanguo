@@ -23,6 +23,8 @@ struct _mapzoneinfo {
 				char resnum[512];	//
 				char eventkind[256];	//
 				short eventnum;	//
+				char pickupkind[256];	//
+				char pickupnum[256];	//
 				short killenemy;	//
 				short move_zoneid[2];	//
 };

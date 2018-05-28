@@ -13,6 +13,8 @@ local m_uiNationInfoBtn = nil; --UnityEngine.GameObject
 local m_uiNationFightBtn = nil; --UnityEngine.GameObject
 local m_uiTreasureBtn = nil; --UnityEngine.GameObject
 local m_uiCallBtn = nil; --UnityEngine.GameObject
+local m_uiPickupInfo = nil; --UnityEngine.GameObject
+local m_uiPickupBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 local m_towntype = 0;
@@ -72,7 +74,10 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		-- 国战
 		elseif nControlID == 12 then
 			MapNationFightDlgShow( m_LastRecvValue.m_unit_index )
-			
+		
+		-- 拾取
+		elseif nControlID == 13 then
+			MapClickModPickup( m_LastRecvValue.m_unit_index )
 		end
 
 		if m_Mod then
@@ -101,6 +106,8 @@ function MapClickModOnAwake( gameObject )
 	m_uiNationFightBtn = objs[10];
 	m_uiTreasureBtn = objs[11];
 	m_uiCallBtn = objs[12];
+	m_uiPickupInfo = objs[13];
+	m_uiPickupBtn = objs[14];
 end
 
 -- 界面初始化时调用
@@ -137,6 +144,9 @@ function MapClickModOnEnable( gameObject )
 		elseif recvValue.m_type == MAPUNIT_TYPE_TOWN then
 			MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 			
+		-- 拾取物品
+		elseif recvValue.m_type == MAPUNIT_TYPE_PICKUP then
+			MapClickModOpenPickup( recvValue, gameCoorX, gameCoorY )
 		end
 	end
 end
@@ -146,6 +156,7 @@ function MapClickModOnDisable( gameObject )
 	SetFalse( m_uiEmptyInfo )
 	SetFalse( m_uiCityInfo )
 	SetFalse( m_uiTownInfo )
+	SetFalse( m_uiPickupInfo )
 	if m_LastRecvValue ~= nil then
 		if m_LastRecvValue.m_type == MAPUNIT_TYPE_TOWN then
 			MapClickModCloseTown( m_LastRecvValue )
@@ -193,10 +204,13 @@ function MapClickModOpenEmpty( recvValue, gameCoorX, gameCoorY )
 	local terrain = MapTile.getTileData( gameCoorX, gameCoorY )
 	if terrain == -1 then -- 边界
 	elseif terrain == -2 then -- 河流
+		eye.audioManager:Play(331);
 		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3021) )
 	elseif terrain == -3 then -- 高山
+		eye.audioManager:Play(332);
 		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3022) )
 	else
+		eye.audioManager:Play(330);
 		SetText( m_uiEmptyInfo.transform:Find("TitleName"), T(3023) )
 		table.insert( buttonList, m_uiMoveCityBtn )
 	end
@@ -240,6 +254,7 @@ end
 
 -- 点击城市显示的操作界面
 function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )	
+	eye.audioManager:Play(313);
 	SetTrue( m_uiCityInfo )	
 	m_LastRecvValue = recvValue;
 	local name 		= recvValue.m_name;
@@ -297,7 +312,8 @@ function MapClickModOpenCity( recvValue, gameCoorX, gameCoorY )
 end
 
 -- 点击城镇显示的操作界面
-function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )	
+function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
+	eye.audioManager:Play(333);
 	SetTrue( m_uiTownInfo )	
 	m_LastRecvValue = recvValue;
 	local posx 			= recvValue.m_posx;
@@ -367,6 +383,28 @@ function MapClickModCloseTown( recvValue )
 	end
 end
 
+-- 点击拾取物品的操作界面
+function MapClickModOpenPickup( recvValue, gameCoorX, gameCoorY )
+	eye.audioManager:Play(335);
+	SetTrue( m_uiPickupInfo )	
+	m_LastRecvValue = recvValue;
+	local name 		= recvValue.m_name;
+	local posx 		= recvValue.m_posx;
+	local posy 		= recvValue.m_posy;
+	local kind 	= recvValue.m_short_value[1];
+	
+	SetText( m_uiPickupInfo.transform:Find("Desc"), T(g_pickupinfo[kind].descid) )
+	if kind == 1 then
+		SetText( m_uiPickupBtn.transform:Find("Back/Text"), T(3081) )
+	elseif kind == 2 or kind == 3 or kind == 4 then
+		SetText( m_uiPickupBtn.transform:Find("Back/Text"), T(3082) )
+	else
+		SetText( m_uiPickupBtn.transform:Find("Back/Text"), T(3083) )
+	end
+	local buttonList = { m_uiPickupBtn };
+	MapClickModButton( buttonList );
+end
+
 -------------------------------
 -- 按钮表现
 -------------------------------
@@ -427,4 +465,9 @@ function MapClickModOpenCityFight( unit_index )
 		end
 	end
 	MapCityFightDlgShow( m_LastRecvValue )
+end
+
+-- 拾取物品
+function MapClickModPickup( unit_index )
+	system_askinfo( ASKINFO_WORLDMAP, "", 15, unit_index );
 end

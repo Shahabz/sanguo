@@ -33,6 +33,7 @@
 #include "map_res.h"
 #include "map_event.h"
 #include "map_call.h"
+#include "map_pickup.h"
 #include "army_march.h"
 #include "army_group.h"
 #include "king_war.h"
@@ -535,6 +536,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 14 )
 		{  // ’ŸªΩ–≈œ¢
 			map_call_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 15 )
+		{  //  ∞»°
+			map_pickup_get( actor_index, pvalue[1] );
 		}
 		break;
 	case ASKINFO_MAP_EVENT:

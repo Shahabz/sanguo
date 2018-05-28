@@ -52,6 +52,14 @@ function IN_Script_Command( v1, v2, v3, v4, msg, PlayerIdx )
 		else
 			BrushResWithZone( v2 )
 		end
+	-- ˢʰȡ��Ʒ
+	elseif v1 == 3 then
+		if v2 == 0 then
+			BrushPickupClear()
+			BrushPickup()
+		else
+			BrushPickupWithZone( v2 )
+		end
 	end
 	return 0;
 end
@@ -61,6 +69,8 @@ function IN_Script_Exec( id, value1, value2 )
 		BrushEnemyWithZone( value1 )
 	elseif id == 2 then
 		BrushResWithZone( value1 )
+	elseif id == 3 then
+		BrushPickupWithZone( value1 )
 	elseif id == 10 then
 		BrushEventWithCity( value1, value2 )
 	end

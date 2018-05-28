@@ -14,6 +14,7 @@ public class UIScrollRectWrap
 		L.RegFunction("SetContentPosition", SetContentPosition);
 		L.RegFunction("ScrollToBottom", ScrollToBottom);
 		L.RegFunction("ScrollToTop", ScrollToTop);
+		L.RegFunction("clearChildrenPos", clearChildrenPos);
 		L.RegFunction("CenterOnItem", CenterOnItem);
 		L.RegFunction("ShowLoading", ShowLoading);
 		L.RegFunction("HideLoading", HideLoading);
@@ -166,6 +167,22 @@ public class UIScrollRectWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UIScrollRect.ScrollToTop");
 			}
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int clearChildrenPos(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UIScrollRect obj = (UIScrollRect)ToLua.CheckObject(L, 1, typeof(UIScrollRect));
+			obj.clearChildrenPos();
+			return 0;
 		}
 		catch(Exception e)
 		{

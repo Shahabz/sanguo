@@ -12,6 +12,7 @@ SRC = \
 ../AutoS/src/auto_data_map_zoneinfo.cpp \
 ../AutoS/src/server_netrecv_auto.cpp \
 ../AutoS/src/auto_data_hero_visit.cpp \
+../AutoS/src/auto_map_pickup.cpp \
 ../AutoS/src/auto_city_building.cpp \
 ../AutoS/src/auto_data_nation_quest.cpp \
 ../AutoS/src/auto_data_upgrade.cpp \
@@ -41,6 +42,7 @@ SRC = \
 ../AutoS/src/server_process_auto.cpp \
 ../AutoS/src/auto_data_kingwar_towninfo.cpp \
 ../AutoS/src/auto_data_monster.cpp \
+../AutoS/src/auto_data_robot_base.cpp \
 ../AutoS/src/auto_data_nation_official.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
@@ -65,6 +67,7 @@ SRC = \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
+../AutoS/src/auto_data_map_pickupinfo.cpp \
 ../AutoS/src/auto_data_girl_shop.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
 ../AutoS/src/auto_data_activity_08.cpp \
@@ -81,6 +84,7 @@ SRC = \
 ../AutoS/src/server_structsend_auto.cpp \
 ../AutoS/src/auto_data_vipshop.cpp \
 ../AutoS/src/auto_data_bodytoken.cpp \
+../AutoS/src/auto_data_robot_ai.cpp \
 ../AutoS/src/auto_city_attr.cpp \
 ../AutoS/src/auto_data_kingwar.cpp \
 ../AutoS/src/auto_data_hero_skill.cpp \
@@ -108,6 +112,7 @@ SRC = \
 ../AutoS/src/auto_city_guard.cpp \
 ../AutoS/src/auto_data_fight.cpp \
 login_user.cpp \
+map_pickup.cpp \
 activity_04.cpp \
 army_march.cpp \
 wishing.cpp \
@@ -217,6 +222,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero_visit.o: ../AutoS/src/auto_data_hero_visit.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_pickup.o: ../AutoS/src/auto_map_pickup.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building.o: ../AutoS/src/auto_city_building.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_quest.o: ../AutoS/src/auto_data_nation_quest.cpp 
@@ -275,6 +282,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_monster.o: ../AutoS/src/auto_data_monster.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_robot_base.o: ../AutoS/src/auto_data_robot_base.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_official.o: ../AutoS/src/auto_data_nation_official.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_structrecv_auto.o: ../AutoS/src/server_structrecv_auto.cpp 
@@ -323,6 +332,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_pickupinfo.o: ../AutoS/src/auto_data_map_pickupinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_girl_shop.o: ../AutoS/src/auto_data_girl_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_material_make.o: ../AutoS/src/auto_data_material_make.cpp 
@@ -354,6 +365,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_vipshop.o: ../AutoS/src/auto_data_vipshop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_bodytoken.o: ../AutoS/src/auto_data_bodytoken.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_robot_ai.o: ../AutoS/src/auto_data_robot_ai.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_attr.o: ../AutoS/src/auto_city_attr.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
@@ -408,6 +421,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_fight.o: ../AutoS/src/auto_data_fight.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 login_user.o: login_user.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_pickup.o: map_pickup.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 activity_04.o: activity_04.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

@@ -11,6 +11,7 @@ local m_Data_M = {};
 -- 打开界面
 function AwardNotifyDlgOpen()
 	m_Dlg = eye.uiManager:Open( "AwardNotifyDlg" );
+	eye.audioManager:Play(103);
 end
 
 -- 隐藏界面
@@ -131,9 +132,6 @@ function AwardNotifyNext( mode )
     elseif mode == 1 then
         data = m_Data_M;
         popWindow = m_PopWindow_M;
-    elseif mode == 2 then
-        data = m_Data_B;
-        popWindow = m_PopWindow_B;
     end
 
     if #data > 0 then

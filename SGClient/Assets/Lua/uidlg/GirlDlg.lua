@@ -651,11 +651,15 @@ function GirlDlgDoubleLayerSetHero( uiHeroObj, config, herokind )
 	local uiName = objs[1];
 	local uiShape = objs[2];
 	local uiAttrText = objs[3];
+	local uiBack = objs[4];
+	local uiNameBack = objs[5];
 	local pHero = GetHero():GetPtr( herokind )
 	if pHero == nil then
 		return
 	end
-	SetImage( uiColor, ItemColorSprite( pHero.m_color ) )
+	--SetImage( uiColor, ItemColorSprite( pHero.m_color ) )
+	SetImage( uiBack, HeroColorSprite( color ) )
+	SetImage( uiNameBack, HeroNameColorSprite( color ) )
 	SetText( uiName, HeroName( herokind ) )
 	SetImage( uiShape, HeroFaceSprite( herokind ) )
 	MakeAttrText( uiAttrText, config )
@@ -670,7 +674,11 @@ function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
 	local uiShape = objs[2];
 	local uiAttrName = objs[3];
 	local uiAttrText = objs[4];
-	SetImage( uiColor, ItemColorSprite( color ) )
+	local uiBack = objs[5];
+	local uiNameBack = objs[6];
+	--SetImage( uiColor, ItemColorSprite( color ) )
+	SetImage( uiBack, HeroColorSprite( color ) )
+	SetImage( uiNameBack, HeroNameColorSprite( color ) )
 	SetText( uiName, GirlName( kind ) )
 	SetImage( uiShape, GirlFaceSprite( kind ) )
 	if color >= ITEM_COLOR_LEVEL_RED then

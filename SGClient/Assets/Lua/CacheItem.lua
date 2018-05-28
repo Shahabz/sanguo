@@ -756,3 +756,22 @@ function GetItem()
 	end
 	return G_Item;
 end
+
+-- 图纸对应装备类型
+function drawing_equiptype( kind )
+	local equiptype = 0;
+	if kind >= 41 and kind <= 44 then
+		equiptype = 1;
+	elseif kind >= 45 and kind <= 48 then
+		equiptype = 2;
+	elseif kind >= 49 and kind <= 52 then
+		equiptype = 3;
+	elseif kind >= 53 and kind <= 56 then
+		equiptype = 4;
+	elseif kind >= 57 and kind <= 60 then
+		equiptype = 5;
+	elseif kind >= 61 and kind <= 64 then
+		equiptype = 6;
+	end
+	return equiptype
+end
