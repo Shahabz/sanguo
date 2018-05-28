@@ -215,9 +215,14 @@ public class UIScrollRect : ScrollRect
 			Vector3 newPos = _childrenPos[index];
 			if (_childrenPos[index].x > 0 )
 				newPos.x = 0;
-			if (contentTransform.sizeDelta.x > 0.0f) {
+			if (contentTransform.sizeDelta.x > 0.0f) 
+			{
 				if (-_childrenPos [index].x > contentTransform.sizeDelta.x)
 					newPos.x = -contentTransform.sizeDelta.x;
+			} 
+			else 
+			{
+				newPos.x = 0;
 			}
 			
 			DOTween.To (() => contentTransform.localPosition, x => contentTransform.localPosition = x, newPos, 1);
@@ -242,9 +247,14 @@ public class UIScrollRect : ScrollRect
 			if (_childrenPos[index].y < 0 )
 				newPos.y = 0;
 
-			if (contentTransform.sizeDelta.y > 0.0f) {
+			if (contentTransform.sizeDelta.y > 0.0f) 
+			{
 				if (_childrenPos [index].y > contentTransform.sizeDelta.y)
 					newPos.y = contentTransform.sizeDelta.y;
+			} 
+			else 
+			{
+				newPos.y = 0;
 			}
 
 			DOTween.To (() => contentTransform.localPosition, y => contentTransform.localPosition = y, newPos, 1);
