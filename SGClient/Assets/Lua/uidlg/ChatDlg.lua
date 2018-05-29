@@ -42,6 +42,8 @@ CHAT_MSGTYPE_VS					=	1		-- 消息类型-对战
 CHAT_MSGTYPE_SPY				=	2		-- 消息类型-侦察
 CHAT_MSGTYPE_ATTACK_ASKHELP		=	3		-- 消息类型-攻击请求支援
 CHAT_MSGTYPE_DEFENSE_ASKHELP	=	4		-- 消息类型-防守请求支援
+CHAT_MSGTYPE_SYSTEM				=	10		-- 消息类型-系统
+CHAT_MSGTYPE_SYSTEMJSON			=	11		-- 消息类型-系统json
 
 -- 打开界面
 function ChatDlgOpen()
@@ -428,7 +430,7 @@ function ChatDlgRecv( recvValue )
 	-- 创建一条聊天
 	if recvValue.m_actorid > 0 then
 		ChatDlgAddMsg( m_uiContent, recvValue );
-	elseif recvValue.m_actorid == -1 then
+	elseif recvValue.m_actorid <= 0 then
 		ChatDlgAddSysTalk( m_uiContent, recvValue );
 	end
 	ChatDlgScrollToBottom( m_uiScrollView )
@@ -490,7 +492,7 @@ function ChatDlgHornLayerShow()
 	SetTrue( m_uiHornLayer )
 	m_horn_itemnum = GetItem():GetCount(171);
 	SetImage( m_uiItem.transform:Find("Shape"), ItemSprite(171) )
-	SetText( m_uiItem.transform:Find("Num"), "x"..m_horn_itemnum );
+	SetText( m_uiItem.transform:Find("Num"), m_horn_itemnum );
 	if m_horn_itemnum == 0 then
 		SetTrue( m_uiBuyButton )
 		SetFalse( m_uiSendButton )

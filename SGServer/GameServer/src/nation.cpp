@@ -839,8 +839,8 @@ int nation_town_warlist( int actor_index )
 		int townid = g_armygroup[group_index].to_id;
 		if ( townid <= 0 || townid >= g_map_town_maxcount )
 			continue;
-		if ( g_map_town[townid].zoneid != pCity->zone )
-			continue;
+		//if ( g_map_town[townid].zoneid != pCity->zone )
+		//	continue;
 
 		if ( nation == g_map_town[townid].nation )
 		{ // 我看的据点属于我的国家
@@ -935,9 +935,9 @@ int nation_city_warlist( int actor_index )
 		if ( pCity->nation != pAtkCity->nation && pCity->nation != pDefCity->nation )
 			continue;
 		
-		// 防守方不在我的地图
-		if ( pCity->zone != pDefCity->zone )
-			continue;
+		//// 防守方不在我的地图
+		//if ( pCity->zone != pDefCity->zone )
+		//	continue;
 
 		if ( pCity->nation == pAtkCity->nation )
 		{ // 我属于攻击方

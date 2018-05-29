@@ -766,7 +766,7 @@ function proc_heroexp_C( recvValue )
 	
 	if recvValue.m_isup == 1 and recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 		local name = NameColorText( HeroName(recvValue.m_kind), color )
-		NotifyTop( F( 170, name ), {back=LoadSprite("ui_icon_back_8"), shape=HeroHeadSprite(recvValue.m_kind)} )
+		NotifyMiddle( F( 170, name ), {back=LoadSprite("ui_icon_back_8"), shape=HeroHeadSprite(recvValue.m_kind)} )
 	end
 end
 
@@ -1100,11 +1100,17 @@ end
 function proc_chatlist_C( recvValue )
 	-- process.
 	for i=1, recvValue.m_count, 1 do
-		if GetPlayer():CheckBlacklist( recvValue.m_list[i].m_actorid ) == false then
-			ChatDlgRecv( recvValue.m_list[i] );
-			if i == recvValue.m_count then
-				MainDlgSetChat( recvValue.m_list[i] );
-				BloodyBattleDlgSetChat( recvValue.m_list[i] );
+		if GetPlayer():CheckBlacklist( recvValue.m_list[i].m_actorid ) == false then		
+			if recvValue.m_list[i].m_msgtype == CHAT_MSGTYPE_SYSTEM then
+				proc_systalk_C( recvValue.m_list[i] )
+			elseif recvValue.m_list[i].m_msgtype == CHAT_MSGTYPE_SYSTEMJSON then
+				proc_systalkjson_C( recvValue.m_list[i] )
+			else
+				ChatDlgRecv( recvValue.m_list[i] );
+				if i == recvValue.m_count then
+					MainDlgSetChat( recvValue.m_list[i] );
+					BloodyBattleDlgSetChat( recvValue.m_list[i] );
+				end
 			end
 		end
 	end
@@ -1129,7 +1135,7 @@ function proc_systalk_C( recvValue )
 	
 	-- 有滚动消息
 	if recvValue.m_roll == 1 then
-		RollingMsgDlgShowMsg( recvValue.m_msg );
+		RollingMsgDlgShowMsg( "", recvValue.m_msg );
 	end
 end
 
@@ -1539,7 +1545,7 @@ function proc_systalkjson_C( recvValue )
 	
 	-- 有滚动消息
 	if recvValue.m_roll == 1 then
-		RollingMsgDlgShowMsg( msg );
+		RollingMsgDlgShowMsg( "", msg );
 	end
 end
 
@@ -1591,13 +1597,21 @@ function proc_rollmsgjson_C( recvValue )
 	else
 		msg = T( msgjson["text"] )
 	end
-	RollingMsgDlgShowMsg( msg );
+	RollingMsgDlgShowMsg( "", msg );
 end
 
 -- m_msglen=0,m_msg="[m_msglen]",
 function proc_rollmsg_C( recvValue )
 	-- process.
-	RollingMsgDlgShowMsg( recvValue.m_msg );
+	local title = ""
+	local json = require "cjson"
+	local titlejson = json.decode( recvValue.m_title );
+	if titlejson["nation"] ~= nil and titlejson["name"] ~= nil then
+		local nation = Nation(titlejson["nation"]);
+		local name = titlejson["name"];
+		title = "["..nation.."]"..name;
+	end
+	RollingMsgDlgShowMsg( title, recvValue.m_msg );
 end
 
 -- m_count=0,m_list={m_name_len=0,m_name="[m_name_len]",m_place=0,[m_count]},m_sec=0,

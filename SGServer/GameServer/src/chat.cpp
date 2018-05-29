@@ -93,6 +93,7 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 		}
 
 		chat_send_world( &pValue );
+		system_rollchat( actor_index, pValue.m_msg );
 	}
 	
 	return 0;
@@ -213,7 +214,7 @@ int chat_cache_sendlist( int actor_index )
 	pValue.m_channel = CHAT_CHANNEL_NATION;
 	for ( int tmpi = 0; tmpi < CHAT_CACHE_QUEUE_COUNT; tmpi++ )
 	{
-		if ( g_ChatCacheNation[pCity->nation-1][tmpi].m_actorid <= 0 )
+		if ( g_ChatCacheNation[pCity->nation-1][tmpi].m_actorid == 0 )
 			continue;
 		memcpy( &pValue.m_list[pValue.m_count], &g_ChatCacheNation[pCity->nation-1][tmpi], sizeof( SLK_NetS_Chat ) );
 		pValue.m_count += 1;
@@ -238,6 +239,22 @@ int system_talk( const char *szMsg, char roll )
 	pValue.m_optime = (int)time( NULL );
 	pValue.m_roll = roll;
 	netsend_systalk_S( 0, SENDTYPE_WORLD, &pValue );
+
+	// 保存起来
+	if ( pValue.m_msglen < 127 )
+	{
+		SLK_NetS_Chat info = { 0 };
+		info.m_actorid = -1;
+		info.m_channel = CHAT_CHANNEL_WORLD;
+		strncpy( info.m_msg, pValue.m_msg, 127 );
+		info.m_msglen = pValue.m_msglen;
+		info.m_msgtype = CHAT_MSGTYPE_SYSTEM;
+		info.m_optime = pValue.m_optime;
+		chat_cache_queue_add( g_ChatCacheNation[0], &info );
+		chat_cache_queue_add( g_ChatCacheNation[1], &info );
+		chat_cache_queue_add( g_ChatCacheNation[2], &info );
+		chat_cache_queue_add_db( &info );
+	}
 	return 0;
 }
 
@@ -260,6 +277,24 @@ int system_talktonation( int nation, const char *szMsg, char roll )
 	pValue.m_optime = (int)time( NULL );
 	pValue.m_roll = roll;
 	netsend_systalk_S( 0, SENDTYPE_NATION + nation, &pValue );
+
+	// 保存起来
+	if ( pValue.m_msglen < 127 )
+	{
+		SLK_NetS_Chat info = { 0 };
+		info.m_actorid = -1;
+		info.m_channel = CHAT_CHANNEL_NATION;
+		strncpy( info.m_msg, pValue.m_msg, 127 );
+		info.m_msglen = pValue.m_msglen;
+		info.m_msgtype = CHAT_MSGTYPE_SYSTEM;
+		info.m_optime = pValue.m_optime;
+		info.m_nation = nation;
+		if ( nation > 0 && nation <= 3 )
+		{
+			chat_cache_queue_add( g_ChatCacheNation[nation - 1], &info );
+			chat_cache_queue_add_db( &info );
+		}
+	}
 	return 0;
 }
 
@@ -311,6 +346,25 @@ int system_talkjson( int zone, int nation, int textid, char *v1, char *v2, char 
 	SLK_NetS_SystalkJson pValue = { 0 };
 	system_talkjson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6, roll );
 	netsend_systalkjson_S( zone, SENDTYPE_NATION + nation, &pValue );
+
+	// 保存起来
+	if ( pValue.m_msglen < 127 )
+	{
+		SLK_NetS_Chat info = { 0 };
+		info.m_actorid = -1;
+		info.m_channel = CHAT_CHANNEL_NATION;
+		strncpy( info.m_msg, pValue.m_msg, 127 );
+		info.m_msglen = pValue.m_msglen;
+		info.m_msgtype = CHAT_MSGTYPE_SYSTEMJSON;
+		info.m_optime = pValue.m_optime;
+		info.m_zone = zone;
+		info.m_nation = nation;
+		if ( nation > 0 && nation <= 3 )
+		{
+			chat_cache_queue_add( g_ChatCacheNation[nation - 1], &info );
+			chat_cache_queue_add_db( &info );
+		}
+	}
 	return 0;
 }
 
@@ -319,12 +373,35 @@ int system_talkjson_world( int textid, char *v1, char *v2, char *v3, char *v4, c
 	SLK_NetS_SystalkJson pValue = { 0 };
 	system_talkjson_makestruct( &pValue, textid, v1, v2, v3, v4, v5, v6, roll );
 	netsend_systalkjson_S( 0, SENDTYPE_WORLD, &pValue );
+
+	// 保存起来
+	if ( pValue.m_msglen < 127 )
+	{
+		SLK_NetS_Chat info = { 0 };
+		info.m_actorid = -1;
+		info.m_channel = CHAT_CHANNEL_WORLD;
+		strncpy( info.m_msg, pValue.m_msg, 127 );
+		info.m_msglen = pValue.m_msglen;
+		info.m_msgtype = CHAT_MSGTYPE_SYSTEMJSON;
+		info.m_optime = pValue.m_optime;
+		chat_cache_queue_add( g_ChatCacheNation[0], &info );
+		chat_cache_queue_add( g_ChatCacheNation[1], &info );
+		chat_cache_queue_add( g_ChatCacheNation[2], &info );
+		chat_cache_queue_add_db( &info );
+	}
 	return 0;
 }
 
-int system_roll( const char *szMsg )
+int system_rollchat( int actor_index, const char *szMsg )
 {
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	SLK_NetS_RollMsg pValue = { 0 };
+	sprintf( pValue.m_title, "{\"nation\":%d, \"name\":\"%s\"}", pCity->nation, pCity->name );
+	pValue.m_titlelen = strlen( pValue.m_title );
 	strncpy( pValue.m_msg, szMsg, 1023 );
 	pValue.m_msglen = strlen( pValue.m_msg );
 	netsend_rollmsg_S( 0, SENDTYPE_WORLD, &pValue );

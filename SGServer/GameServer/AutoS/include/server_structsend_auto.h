@@ -1208,6 +1208,8 @@ typedef struct _slk_NetS_RollMsgJson SLK_NetS_RollMsgJson;	//json滚动消息
 struct _slk_NetS_RollMsg {
 	short m_msglen;	//滚动消息
 	char m_msg[1024];	//滚动消息
+	short m_titlelen;	//滚动消息
+	char m_title[128];	//滚动消息
 };
 typedef struct _slk_NetS_RollMsg SLK_NetS_RollMsg;	//滚动消息
 

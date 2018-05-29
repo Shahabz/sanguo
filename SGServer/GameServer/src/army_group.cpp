@@ -1623,13 +1623,13 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[townid].zoneid );
 	sprintf( v4, "%s%d", TAG_TOWNID, townid );
 	sprintf( v5, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
-	system_talkjson( zoneid, pCity->nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+	system_talkjson( 0/*zoneid*/, pCity->nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
 
 	// 发起人不在该地图情况
-	if ( pCity->zone != zoneid )
-	{
-		system_talkjson_to( actor_index, 1294, v1, v2, v3, v4, v5, NULL, 1 );
-	}
+	//if ( pCity->zone != zoneid )
+	//{
+	//	system_talkjson_to( actor_index, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+	//}
 
 	// {0}{1}对我国的{2}{3}发起了国战。敌国来犯，我城势单力孤，还请诸位同袍伸出援手。<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
 	sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
@@ -1637,7 +1637,7 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[townid].zoneid );
 	sprintf( v4, "%s%d", TAG_TOWNID, townid );
 	sprintf( v5, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
-	system_talkjson( zoneid, g_map_town[townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
+	system_talkjson( 0/*zoneid*/, g_map_town[townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
 	return 0;
 }
 
@@ -1683,7 +1683,7 @@ int armygroup_nation_askcreate_ai( int from_townid, int to_townid )
 	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[to_townid].zoneid );
 	sprintf( v4, "%s%d", TAG_TOWNID, to_townid );
 	sprintf( v5, "%d,%d", g_towninfo[to_townid].posx, g_towninfo[to_townid].posy );
-	system_talkjson( zoneid, g_map_town[from_townid].nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
+	system_talkjson( 0/*zoneid*/, g_map_town[from_townid].nation, 1294, v1, v2, v3, v4, v5, NULL, 1 );
 
 	// {0}{1}对我国的{2}{3}发起了国战。敌国来犯，我城势单力孤，还请诸位同袍伸出援手。<color=#bbddf3><url={4}>[点击进入国家战争参战]</url></color>
 	sprintf( v1, "%s%d", TAG_NATION, g_map_town[from_townid].nation );
@@ -1691,7 +1691,7 @@ int armygroup_nation_askcreate_ai( int from_townid, int to_townid )
 	sprintf( v3, "%s%d", TAG_ZONEID, g_towninfo[to_townid].zoneid );
 	sprintf( v4, "%s%d", TAG_TOWNID, to_townid );
 	sprintf( v5, "%d,%d", g_towninfo[to_townid].posx, g_towninfo[to_townid].posy );
-	system_talkjson( zoneid, g_map_town[to_townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
+	system_talkjson( 0/*zoneid*/, g_map_town[to_townid].nation, 1295, v1, v2, v3, v4, v5, NULL, 1 );
 	return group_index;
 }
 

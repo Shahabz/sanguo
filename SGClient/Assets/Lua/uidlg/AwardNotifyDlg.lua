@@ -145,7 +145,7 @@ function AwardNotifyNext( mode )
         end
     else
         -- 没有显示的界面了，关闭
-        if m_PopWindow_T.currCount == 0 and m_PopWindow_M.currCount == 0 and m_PopWindow_B.currCount == 0 then
+        if m_PopWindow_T.currCount == 0 and m_PopWindow_M.currCount == 0 then
             AwardNotifyDlgClose();
         end
     end

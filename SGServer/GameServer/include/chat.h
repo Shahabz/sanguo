@@ -12,6 +12,8 @@
 #define CHAT_MSGTYPE_SPY				2		// 消息类型-侦察
 #define CHAT_MSGTYPE_ATTACK_ASKHELP		3		// 消息类型-攻击请求支援
 #define CHAT_MSGTYPE_DEFENSE_ASKHELP	4		// 消息类型-防守请求支援
+#define CHAT_MSGTYPE_SYSTEM				10		// 消息类型-系统
+#define CHAT_MSGTYPE_SYSTEMJSON			11		// 消息类型-系统json
 
 int chat_actortalk( int actor_index, char channel, char msgtype, char *msg );
 int chat_send_nation( SLK_NetS_Chat *pValue );
@@ -29,7 +31,7 @@ int system_talkjson_to( int actor_index, int textid, char *v1, char *v2, char *v
 int system_talkjson( int zone, int nation, int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll );
 int system_talkjson_world( int textid, char *v1, char *v2, char *v3, char *v4, char *v5, char *v6, char roll );
 
-int system_roll( const char *szMsg );
+int system_rollchat( int actor_index, const char *szMsg );
 int system_rollto( int actor_index, const char *szMsg );
 int system_rolltonation( int nation, const char *szMsg );
 

@@ -11,7 +11,7 @@ local m_FirstIndex = 1;
 -- 队列结束
 local m_LastIndex = 0;
 -- 移动速度
-local m_MoveSpeed = 50;
+local m_MoveSpeed = 80;
 -- 界面初始宽度
 local m_StartPosX = 600;
 ------------------
@@ -104,10 +104,10 @@ end
 -- 自定
 ----------------------------------------
 -- 显示内容
-function RollingMsgDlgShowMsg( text )
+function RollingMsgDlgShowMsg( title, text )
     m_LastIndex = m_LastIndex + 1;
     m_Cache[m_LastIndex] = {};
-    m_Cache[m_LastIndex].title = "";
+    m_Cache[m_LastIndex].title = title;
     m_Cache[m_LastIndex].text = text;
     if m_Dlg == nil or m_Dlg.activeInHierarchy == false then
         RollingMsgDlgOpen();
@@ -149,7 +149,7 @@ function RollingMsgDlgPrepare()
     else
         if m_Dlg ~= nil and m_Dlg.activeInHierarchy == true then
             local cache = m_Cache[m_FirstIndex];
-            --m_Title:GetComponent("UIText").text = cache.title;
+            SetText(m_uiTitle, cache.title.." ");
             local trans = m_uiUIP_Item.transform;
 			SetRichText( trans:Find("Text"), cache.text, ChatDlgOnLinkClickPos )
             trans.localPosition = Vector3.New(m_StartPosX,0,0);

@@ -1741,6 +1741,9 @@ int struct_NetS_RollMsg_send( char **pptr, int *psize, SLK_NetS_RollMsg *pValue 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_msglen, (*psize) );
 	if( pValue->m_msglen > 0 && pValue->m_msglen <= 1024 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_msg, pValue->m_msglen*sizeof(char), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_titlelen, (*psize) );
+	if( pValue->m_titlelen > 0 && pValue->m_titlelen <= 128 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_title, pValue->m_titlelen*sizeof(char), (*psize) );
 	return 0;
 }
 

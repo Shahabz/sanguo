@@ -366,6 +366,29 @@ int hero_gethero( int actor_index, int kind, short path )
 	// 七日狂欢
 	activity_04_addvalue_hero( actor_index );
 
+	// 通知
+	if ( kind == 49 )
+	{// 6028 < color = 03DE27FF > [{0}]{1}< / color>在<color = FFDE00FF>袁术密信< / color>活动中获得大将<color = D95DF4FF>纪灵< / color>，过关斩将，大事可成矣！
+		char v1[64] = { 0 };
+		char v2[64] = { 0 };
+		char v3[64] = { 0 };
+		sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+		sprintf( v2, "%s", pCity->name );
+		sprintf( v3, "%s%d", TAG_HERO, kind );
+		system_talkjson_world( 6028, v1, v2, v3, NULL, NULL, NULL, 1 );
+
+	}
+	else if ( kind >= 91 && kind <= 99 )
+	{ // 6029 < color = 03DE27FF > [{0}]{1}< / color>寻访到名将<color = 25C9FFFF>{2}< / color>，得名将者，可安天下！
+		char v1[64] = { 0 };
+		char v2[64] = { 0 };
+		char v3[64] = { 0 };
+		sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+		sprintf( v2, "%s", pCity->name );
+		sprintf( v3, "%s%d", TAG_HERO, kind );
+		system_talkjson_world( 6029, v1, v2, v3, NULL, NULL, NULL, 1 );
+	}
+	
 	// 统计log
 	wlog( 0, LOGOP_HERO, path, kind, 0, g_actors[actor_index].hero[offset].id, g_actors[actor_index].actorid, city_mainlevel( g_actors[actor_index].city_index ) );
 	return 0;

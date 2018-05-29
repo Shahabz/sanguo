@@ -61,6 +61,7 @@ function CreateDlgOnAwake( gameObject )
 	m_uiWuTalkPanel = objs[2];
 	m_uiAward = objs[3];
 	m_uiOpeningSpeech = objs[4];
+	SetTrue(m_uiOpeningSpeech)
 end
 
 -- 界面初始化时调用

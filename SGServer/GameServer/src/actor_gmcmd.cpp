@@ -358,7 +358,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	case GMC_QUEST:// 任务
 		break;
 	case GMC_ROLLMSG:// 跑马灯
-		system_roll( pMsg );
+		system_rollchat( actor_index, pMsg );
 		break;
 	case GMC_MAIL:// 邮件
 		if ( pCity )

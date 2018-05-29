@@ -215,13 +215,14 @@ function FightDlgShow( recvValue )
 		local storyid = BattleDlgGetStoryid()
 		if storyid > 0 and g_story[storyid].skip == 1 then
 			SetTrue( m_uiBottom )
-			if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_SKIPFIGHT ) == 1 then
+			SetControlID( m_uiSkipBtn, 1 )
+			--[[if Utils.get_int_sflag( GetPlayer().m_actor_sflag, ACTOR_SFLAG_SKIPFIGHT ) == 1 then
 				SetControlID( m_uiSkipBtn, 1 )
 				SetText( m_uiSkipDesc, T(2279) )
 			else
 				SetControlID( m_uiSkipBtn, -2 )
 				SetText( m_uiSkipDesc, T(2280) )
-			end
+			end--]]
 		else
 			SetFalse( m_uiBottom )
 		end

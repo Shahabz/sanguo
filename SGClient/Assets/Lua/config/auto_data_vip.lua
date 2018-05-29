@@ -1,6 +1,6 @@
 g_vip = {
 [1] = { level=1,exp=300,buildfree=6,bodybuy=2,autobuild=5,skipfight=0,marchcall=0,train=0,palace=0,storysweep=0,},
-[2] = { level=2,exp=1000,buildfree=8,bodybuy=3,autobuild=5,skipfight=1,marchcall=1,train=50,palace=0,storysweep=0,},
+[2] = { level=2,exp=1000,buildfree=8,bodybuy=3,autobuild=5,skipfight=0,marchcall=1,train=50,palace=0,storysweep=0,},
 [3] = { level=3,exp=2000,buildfree=10,bodybuy=3,autobuild=6,skipfight=0,marchcall=1,train=50,palace=0,storysweep=0,},
 [4] = { level=4,exp=5000,buildfree=15,bodybuy=3,autobuild=7,skipfight=0,marchcall=1,train=50,palace=0,storysweep=0,},
 [5] = { level=5,exp=10000,buildfree=20,bodybuy=4,autobuild=8,skipfight=0,marchcall=5,train=50,palace=0,storysweep=1,},

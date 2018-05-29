@@ -8,6 +8,7 @@ local m_uiShopList = nil; --UnityEngine.GameObject
 local m_uiWarnList = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_uiBack1 = nil; --UnityEngine.GameObject
+local m_uiCallButton = nil; --UnityEngine.GameObject
 local m_recvValue = nil
 local m_AwardDescLayerShow = false
 ----------------------------------------
@@ -64,6 +65,7 @@ function Activity5ModOnAwake( gameObject )
 	m_uiWarnList = objs[6];
 	m_uiAwardDescLayer = objs[7];
 	m_uiBack1 = objs[8];
+	m_uiCallButton = objs[9];
 end
 
 -- 界面初始化时调用
@@ -134,6 +136,11 @@ function Activity5ModRecv( recvValue )
 	
 	-- 信物个数
 	SetText( m_uiItemInfo.transform:Find("Name"), F(2473,recvValue.m_myxw,7) )
+	if recvValue.m_myxw >= 7 then
+		SetTrue( m_uiCallButton )
+	else
+		SetFalse( m_uiCallButton )
+	end
 	
 	-- 刷新次数
 	SetText( m_uiWarnList.transform:Find("Num"), F(2471,recvValue.m_updatenum,4) )

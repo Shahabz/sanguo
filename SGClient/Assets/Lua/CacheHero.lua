@@ -389,3 +389,14 @@ function hero_getcorps( kind )
 	local color = hero_getnormalcolor( kind )
 	return g_heroinfo[kind][color].corps
 end
+
+-- 喊话
+function hero_sound( kind )
+	local color = hero_getnormalcolor( kind )
+	local sound = g_heroinfo[kind][color].sound;
+	if sound < 0 then
+		sound = math.random(453,459)
+	end
+	
+	eye.audioManager:Play(sound);
+end

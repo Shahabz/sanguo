@@ -334,6 +334,10 @@ function MaterialMakeDlgMakeInfo()
 end
 
 -- 选择生产内容
+--[[local colorsprite = { "ui_color_2", "ui_color_3", "ui_color_4", "ui_color_5" }
+local colorname = { 898, 899, 900,1684 }
+local matname = { 913, 914, 915,916 }
+local drawingname = { 901, 902, 903,904 }--]]
 local colorsprite = { "ui_color_2", "ui_color_3", "ui_color_4", "ui_color_5" }
 local colorname = { 898, 899, 900,1684 }
 local matname = { 913, 914, 915,916 }

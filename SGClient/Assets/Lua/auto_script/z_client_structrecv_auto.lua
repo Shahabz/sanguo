@@ -1564,6 +1564,8 @@ function struct_NetS_RollMsg_recv( buffer )
 	local recvValue = {};
 	recvValue.m_msglen = buffer:ReadShort();
 	recvValue.m_msg = buffer:ReadStringWithLen( recvValue.m_msglen );
+	recvValue.m_titlelen = buffer:ReadShort();
+	recvValue.m_title = buffer:ReadStringWithLen( recvValue.m_titlelen );
 	return recvValue;
 end
 

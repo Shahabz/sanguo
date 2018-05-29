@@ -200,6 +200,11 @@ int city_loadcb( int city_index )
 	// 占地块信息添加到世界地图
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, g_city[city_index].posx, g_city[city_index].posy );
 	g_city[city_index].zone = map_zone_getid( g_city[city_index].posx, g_city[city_index].posy );
+
+	if ( g_city[city_index].people < 0 )
+	{
+		g_city[city_index].people = 0;
+	}
 	return 0;
 }
 
@@ -574,7 +579,8 @@ void city_logic_sec( int begin, int end )
 
 						if ( g_city[city_index].people < min_people )
 						{ // 低于下限，增长
-							g_city[city_index].people += (add + min( global.people_add_v1, (int)(min_people / (float)g_city[city_index].people * global.people_add_v2) ));
+							int v = (add + min( global.people_add_v1, (int)(min_people / (float)g_city[city_index].people * global.people_add_v2) ));
+							g_city[city_index].people += v;
 						}
 						else if ( g_city[city_index].people > max_people )
 						{ // 高于上限，减少
