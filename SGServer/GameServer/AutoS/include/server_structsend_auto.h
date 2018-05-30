@@ -300,6 +300,12 @@ struct _slk_NetS_ZoneUnit {
 };
 typedef struct _slk_NetS_ZoneUnit SLK_NetS_ZoneUnit;	//地区单元
 
+struct _slk_NetS_MapUnitAction {
+	int m_unit_index;	//地图地区显示单元动作
+	char m_action;	//地图地区显示单元动作
+};
+typedef struct _slk_NetS_MapUnitAction SLK_NetS_MapUnitAction;	//地区单元动作
+
 struct _slk_NetS_AddMapUnit {
 	char m_type;	//地图单元-类型
 	char m_state;	//地图单元-状态
@@ -2306,6 +2312,7 @@ int struct_ItemAttr_send( char **pptr, int *psize, SLK_ItemAttr *pValue );
 int struct_NetS_ItemInfo_send( char **pptr, int *psize, SLK_NetS_ItemInfo *pValue );
 int struct_WalkPath_send( char **pptr, int *psize, SLK_WalkPath *pValue );
 int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValue );
+int struct_NetS_MapUnitAction_send( char **pptr, int *psize, SLK_NetS_MapUnitAction *pValue );
 int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *pValue );
 int struct_NetS_DelMapUnit_send( char **pptr, int *psize, SLK_NetS_DelMapUnit *pValue );
 int struct_NetS_WorldMapInfo_send( char **pptr, int *psize, SLK_NetS_WorldMapInfo *pValue );

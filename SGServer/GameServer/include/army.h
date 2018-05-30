@@ -38,7 +38,7 @@
 #define ARMY_REBACK_FIGHTLOSE		4	// 返程类型-战斗失败打回
 #define ARMY_REBACK_REPATRIAT		5	// 返程类型-他人遣回
 
-#define ARMY_STATE_FIGHT_TIME		1	// 战斗时长(S)
+#define ARMY_STATE_FIGHT_TIME		2	// 战斗时长(S)
 #define ARMY_CARRY_ITEMMAX			8	// 部队携带的道具
 #define ARMY_HERO_MAX				4	// 部队最多武将
 

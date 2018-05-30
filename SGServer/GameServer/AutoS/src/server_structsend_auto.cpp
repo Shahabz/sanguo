@@ -452,6 +452,15 @@ int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValu
 	return 0;
 }
 
+int struct_NetS_MapUnitAction_send( char **pptr, int *psize, SLK_NetS_MapUnitAction *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );
+	return 0;
+}
+
 int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *pValue )
 {
 	int tmpi = 0;

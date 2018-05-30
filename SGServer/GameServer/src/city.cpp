@@ -579,7 +579,10 @@ void city_logic_sec( int begin, int end )
 
 						if ( g_city[city_index].people < min_people )
 						{ // 低于下限，增长
-							int v = (add + min( global.people_add_v1, (int)(min_people / (float)g_city[city_index].people * global.people_add_v2) ));
+							int p = g_city[city_index].people <= 0 ? 1 : g_city[city_index].people;
+							float m = min_people / (float)p;
+							int n = (int)(m * global.people_add_v2);
+							int v = add + min( global.people_add_v1, n );
 							g_city[city_index].people += v;
 						}
 						else if ( g_city[city_index].people > max_people )

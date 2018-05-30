@@ -273,8 +273,7 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 		pArmy->state == ARMY_STATE_GROUP_END ||
 		pArmy->state == ARMY_STATE_READY ||
 		pArmy->state == ARMY_STATE_GATHER ||
-		pArmy->state == ARMY_STATE_HELP ||
-		pArmy->state == ARMY_STATE_FIGHT )
+		pArmy->state == ARMY_STATE_HELP )
 	{
 		return;
 	}

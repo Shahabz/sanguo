@@ -275,10 +275,10 @@ void army_arrived( int army_index )
 				}
 
 				army_setstate( army_index, ARMY_STATE_FIGHT );
-				if ( pUnit->type == MAPUNIT_TYPE_CITY )
-				{
-					//city_setstate( pTargetCity, CITY_STATE_FIGHT );
-				}
+				//if ( pUnit->type == MAPUNIT_TYPE_CITY )
+				//{
+				//	city_setstate( pTargetCity, CITY_STATE_FIGHT );
+				//}
 			}
 			else if ( g_army[army_index].action == ARMY_ACTION_OCCUPY )
 			{ // 驻扎点被占了

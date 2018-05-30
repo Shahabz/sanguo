@@ -136,6 +136,7 @@ int netsend_kingwaractivity_S( int actor_index, char send_type, SLK_NetS_KingWar
 int netsend_kingwarnotify_S( int actor_index, char send_type, SLK_NetS_KingWarNotify *pValue );
 int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingWarNotifyList *pValue );
 int netsend_kingwarranklist_S( int actor_index, char send_type, SLK_NetS_KingWarRankList *pValue );
+int netsend_mapunitaction_S( int actor_index, char send_type, SLK_NetS_MapUnitAction *pValue );
 int netsend_kingwarpk_S( int actor_index, char send_type, SLK_NetS_KingWarPK *pValue );
 int netsend_kingwarpoint_S( int actor_index, char send_type, SLK_NetS_KingWarPoint *pValue );
 int netsend_treasureactivity_S( int actor_index, char send_type, SLK_NetS_TreasureActivity *pValue );

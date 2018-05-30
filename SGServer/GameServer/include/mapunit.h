@@ -62,5 +62,6 @@ MapUnit *mapunit_getinfo_withpos( short posx, short posy, char excude_unittype, 
 
 // 根据位置获取当前位置的索引
 int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int excude_index );
-
+// 动作
+int mapunit_action( int unit_index, char action );
 #endif

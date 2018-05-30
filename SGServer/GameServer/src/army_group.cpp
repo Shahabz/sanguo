@@ -708,6 +708,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 	City *pTargetCity = city_indexptr( g_armygroup[group_index].to_index );
 	if ( !pTargetCity )
 		return -1;
+	mapunit_action( pTargetCity->unit_index, 1 );
 
 	i64 mailid = 0;
 	char title[MAIL_TITLE_MAXSIZE] = { 0 };
@@ -973,6 +974,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 	MapTown *pTown = map_town_getptr( townid );
 	if ( !pTown )
 		return -1;
+	mapunit_action( pTown->unit_index, 1 );
 
 	// 国战发起者
 	if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )

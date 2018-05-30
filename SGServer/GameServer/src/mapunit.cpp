@@ -573,3 +573,19 @@ int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int 
 	return -1;
 }
 
+int mapunit_action( int unit_index, char action )
+{
+	if ( unit_index < 0 )
+	{
+		return -1;
+	}
+	short posx, posy;
+	mapunit_getpos( unit_index, &posx, &posy );
+	// 通知区域播放动作
+	SLK_NetS_MapUnitAction info = { 0 };
+	info.m_unit_index = unit_index;
+	info.m_action = action;
+	int area_index = area_getindex( posx, posy );
+	netsend_mapunitaction_S( area_index, SENDTYPE_AREA, &info );
+	return 0;
+}
