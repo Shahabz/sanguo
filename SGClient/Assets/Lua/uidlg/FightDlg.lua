@@ -510,10 +510,10 @@ function FightDlgPlayHpEffect( pos, hp, crit )
 	SetTrue( uiObj );
 	
 	uiObj.transform.localScale = Vector3.New( 1, 1, 1 );
-	local color = NameColor( 4 )
+	local color = NameColor( 5 )
 	if crit == 1 then
 		color = Hex2Color( 0xECC244FF )
-		uiObj.transform.localScale = Vector3.New( 1.5, 1.5, 1 );
+		uiObj.transform.localScale = Vector3.New( 1.1, 1.1, 1 );
 	end
 	
 	-- 计算位数 +1减号算一位
