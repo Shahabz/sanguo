@@ -615,59 +615,31 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 			continue;
 		}
 
-		short findlistx[4096] = { 0 };
-		short findlisty[4096] = { 0 };
+		short findlistx[10001] = { 0 };
+		short findlisty[10001] = { 0 };
 		short offset = 0;
 		short beginx,beginy;
 		short endx, endy;
-		int dis = random( 0, 1 );
-		if ( dis == 0 )
+		for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
 		{
-			for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+			for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
 			{
-				for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
-				{
-					short x = tmpi;
-					short y = tmpj;
-					if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
-						continue;
-					if ( g_map.m_aTileData[x][y].unit_type > 0 )
-						continue;
-					// 找到所有的空余点
-					findlistx[offset] = x;
-					findlisty[offset] = y;
-					offset += 1;
-					if ( offset >= 1024 )
-						break;
-				}
-				if ( offset >= 1024 )
+				short x = tmpi;
+				short y = tmpj;
+				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+					continue;
+				if ( g_map.m_aTileData[x][y].unit_type > 0 )
+					continue;
+				// 找到所有的空余点
+				findlistx[offset] = x;
+				findlisty[offset] = y;
+				offset += 1;
+				if ( offset >= 10000 )
 					break;
 			}
+			if ( offset >= 10000 )
+				break;
 		}
-		else
-		{
-			for ( int tmpi = g_zoneinfo[zoneid].bottom_right_posx; tmpi >= g_zoneinfo[zoneid].top_left_posx; tmpi-- )
-			{
-				for ( int tmpj = g_zoneinfo[zoneid].bottom_right_posy; tmpj <= g_zoneinfo[zoneid].top_left_posy; tmpj-- )
-				{
-					short x = tmpi;
-					short y = tmpj;
-					if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
-						continue;
-					if ( g_map.m_aTileData[x][y].unit_type > 0 )
-						continue;
-					// 找到所有的空余点
-					findlistx[offset] = x;
-					findlisty[offset] = y;
-					offset += 1;
-					if ( offset >= 1024 )
-						break;
-				}
-				if ( offset >= 1024 )
-					break;
-			}
-		}
-		
 
 		if ( offset > 0 )
 		{

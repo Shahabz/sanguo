@@ -159,6 +159,35 @@ int robot_create( char ai, char nation )
 	if ( city_index <= 0 )
 		return -1;
 
+	// 角色表也插入
+	char szSQL[1024];
+	char ActorName[64];
+	db_escape( (const char *)city.name, ActorName, 0 );
+	sprintf( szSQL, "insert into actor_list (actorid,offset,create_time,name,nation) values('%d','%d','%d','%s','%d')",
+		city.actorid, 0, city.createtime, ActorName, city.nation );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+		{
+			db_reconnect_game();
+		}
+		//return -3;// 可能是角色重名了
+	}
+
+	// 插入记录到 actor
+	sprintf( szSQL, "insert into actor (actorid,name,nation,createtime) values('%d','%s','%d','%d')",
+		city.actorid, ActorName, city.nation, city.createtime );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		//return -4;	// 可能是id错误同名了
+	}
+
 	// 主城
 	building_create( city_index, BUILDING_Main, -1 );
 	g_city[city_index].building[0].level = 2;

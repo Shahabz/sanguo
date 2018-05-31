@@ -1107,8 +1107,8 @@ int actor_db_create( int client_index, int platid, i64 userid, char *username, S
 	}
 
 	// ²åÈë¼ÇÂ¼µ½ actor
-	sprintf( szSQL, "insert into actor (actorid,name,nation,lastip,createtime) values('%d','%s','%d','%s','%d')",
-					actorid, ActorName, pListInfo->m_nation, client_getip( client_index ), thistime );
+	sprintf( szSQL, "insert into actor (actorid,userid,username,name,nation,lastip,createtime) values('%d','%s','%s','%s','%d','%s','%d')",
+		actorid, szUserID, username, ActorName, pListInfo->m_nation, client_getip( client_index ), thistime );
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
