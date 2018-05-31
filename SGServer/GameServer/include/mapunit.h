@@ -64,4 +64,6 @@ MapUnit *mapunit_getinfo_withpos( short posx, short posy, char excude_unittype, 
 int mapunit_getindex_withpos( short posx, short posy, char excude_unittype, int excude_index );
 // 动作
 int mapunit_action( int unit_index, char action );
+// 动作
+int mappos_action( short posx, short posy, char action );
 #endif

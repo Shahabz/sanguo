@@ -407,6 +407,10 @@ void armygroup_alllogic()
 void armygroup_logic( int group_index )
 {
 	g_armygroup[group_index].statetime += 1;
+	if ( g_armygroup[group_index].statetime == g_armygroup[group_index].stateduration-2 )
+	{// 主要用来播放特效
+		mappos_action( g_armygroup[group_index].to_posx, g_armygroup[group_index].to_posy, 1 );
+	}
 	if ( g_armygroup[group_index].statetime >= g_armygroup[group_index].stateduration )
 	{ // 战斗开始
 		if ( fight_start_armygroup( group_index ) >= 0 )
@@ -708,7 +712,6 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 	City *pTargetCity = city_indexptr( g_armygroup[group_index].to_index );
 	if ( !pTargetCity )
 		return -1;
-	mapunit_action( pTargetCity->unit_index, 1 );
 
 	i64 mailid = 0;
 	char title[MAIL_TITLE_MAXSIZE] = { 0 };
@@ -974,7 +977,6 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 	MapTown *pTown = map_town_getptr( townid );
 	if ( !pTown )
 		return -1;
-	mapunit_action( pTown->unit_index, 1 );
 
 	// 国战发起者
 	if ( g_armygroup[group_index].from_type == MAPUNIT_TYPE_CITY )

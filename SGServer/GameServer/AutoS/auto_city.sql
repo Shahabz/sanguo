@@ -133,5 +133,7 @@ CREATE TABLE `city` (
   `bufftrain` smallint(6) NOT NULL DEFAULT '0' COMMENT '武卒官加速值',
   `teacherid` int(11) NOT NULL DEFAULT '0' COMMENT '师父',
   `act06_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '全服返利领取状态',
+  `robot_ai` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'AI',
+  `robot_cd` int(11) NOT NULL DEFAULT '0' COMMENT '机器人逻辑',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

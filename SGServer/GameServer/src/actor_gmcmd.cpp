@@ -38,6 +38,7 @@
 #include "story.h"
 #include "city_attr.h"
 #include "girl.h"
+#include "robot.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -60,7 +61,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_LUA || cmd == GMC_SC || cmd == GMC_SYSTALK || cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF || cmd == GMC_DB || cmd == GMC_MAIL_SERVER || cmd == GMC_MAIL_NOTICE )
+	if ( cmd == GMC_LUA || cmd == GMC_SC || cmd == GMC_SYSTALK || cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF || cmd == GMC_DB || cmd == GMC_MAIL_SERVER || cmd == GMC_MAIL_NOTICE || cmd == GMC_ROBOTADD || cmd == GMC_ROBOTDEL || cmd == GMC_ROBOTLOGIC )
 	{
 		actorid = 0;
 	}
@@ -792,6 +793,50 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				girl_gm_son_growth_quick( pCity, pValue[0] );
 		}
 		break;
+	case GMC_ROBOTADD:// 机器人创建
+		{
+			for ( int tmpi = 0; tmpi < pValue[1]; tmpi++ )
+			{
+				robot_create( pValue[0], random(1,3) );
+			}
+		}	
+		break;
+	case GMC_ROBOTDEL:// 机器人删除
+	{
+		if ( pValue[0] == -1 )
+		{
+			city_delallrobot();
+		}
+		else if( pValue[0] > 0 )
+		{
+			for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+			{
+				if ( g_city[tmpi].actorid <= 0 )
+					continue;
+				if ( g_city[tmpi].type != CityLairdType_Robot )
+					continue;
+				if ( pValue[0] == g_city[tmpi].actorid )
+				{
+					if ( g_city[tmpi].robot_ai < 100 )
+					{
+						city_del( &g_city[tmpi], tmpi );
+						break;
+					}
+				}
+			}
+		}
+	}
+		break;
+	case GMC_ROBOTLOGIC:// 机器人逻辑
+		break;
+	case GMC_ROBOTQUEUE:// 机器人创建队列方式
+	{
+		for ( int tmpi = 0; tmpi < pValue[1]; tmpi++ )
+		{
+			robotcreate_queue_add( pValue[0], random( 1, 3 ) );
+		}
+	}
+	break;
 	default:
 		break;
 	}

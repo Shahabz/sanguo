@@ -66,6 +66,10 @@
 #define GMC_GIRL				(GMC_BASE+61)	// 女将
 #define GMC_GIRLSOUL			(GMC_BASE+62)	// 女将碎片
 #define GMC_SONQUICK			(GMC_BASE+63)	// 出师加速
+#define GMC_ROBOTADD			(GMC_BASE+64)	// 机器人创建
+#define GMC_ROBOTDEL			(GMC_BASE+65)	// 机器人删除
+#define GMC_ROBOTLOGIC			(GMC_BASE+66)	// 机器人逻辑
+#define GMC_ROBOTQUEUE			(GMC_BASE+67)	// 机器人逻辑-队列创建
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

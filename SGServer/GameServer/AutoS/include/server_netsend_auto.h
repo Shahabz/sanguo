@@ -136,7 +136,9 @@ int netsend_kingwaractivity_S( int actor_index, char send_type, SLK_NetS_KingWar
 int netsend_kingwarnotify_S( int actor_index, char send_type, SLK_NetS_KingWarNotify *pValue );
 int netsend_kingwarnotifylist_S( int actor_index, char send_type, SLK_NetS_KingWarNotifyList *pValue );
 int netsend_kingwarranklist_S( int actor_index, char send_type, SLK_NetS_KingWarRankList *pValue );
+int netsend_addzoneunit_S( int actor_index, char send_type, SLK_NetS_ZoneUnit *pValue );
 int netsend_mapunitaction_S( int actor_index, char send_type, SLK_NetS_MapUnitAction *pValue );
+int netsend_mapposaction_S( int actor_index, char send_type, SLK_NetS_MapPosAction *pValue );
 int netsend_kingwarpk_S( int actor_index, char send_type, SLK_NetS_KingWarPK *pValue );
 int netsend_kingwarpoint_S( int actor_index, char send_type, SLK_NetS_KingWarPoint *pValue );
 int netsend_treasureactivity_S( int actor_index, char send_type, SLK_NetS_TreasureActivity *pValue );
@@ -207,6 +209,7 @@ int netsend_fspalaceresult_S( int actor_index, char send_type, SLK_NetS_FsPalace
 int netsend_girlshop_S( int actor_index, char send_type, SLK_NetS_GirlShop *pValue );
 int netsend_zonemaster_S( int actor_index, char send_type, SLK_NetS_ZoneMaster *pValue );
 int netsend_zonemasterlist_S( int actor_index, char send_type, SLK_NetS_ZoneMasterList *pValue );
+int netsend_delzoneunit_S( int actor_index, char send_type, SLK_NetS_DelZoneUnit *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

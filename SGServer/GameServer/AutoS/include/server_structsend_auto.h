@@ -295,7 +295,7 @@ struct _slk_NetS_ZoneUnit {
 	short m_posx;	//地图地区显示单元
 	short m_posy;	//地图地区显示单元
 	char m_nation;	//地图地区显示单元
-	char m_level;	//地图地区显示单元
+	unsigned char m_level;	//地图地区显示单元
 	int m_zoneunit_index;	//添加地图地区显示单元
 };
 typedef struct _slk_NetS_ZoneUnit SLK_NetS_ZoneUnit;	//地区单元
@@ -305,6 +305,13 @@ struct _slk_NetS_MapUnitAction {
 	char m_action;	//地图地区显示单元动作
 };
 typedef struct _slk_NetS_MapUnitAction SLK_NetS_MapUnitAction;	//地区单元动作
+
+struct _slk_NetS_MapPosAction {
+	short m_posx;	//地图坐标动作
+	short m_posy;	//地图坐标动作
+	char m_action;	//地图坐标动作
+};
+typedef struct _slk_NetS_MapPosAction SLK_NetS_MapPosAction;	//地区坐标动作
 
 struct _slk_NetS_AddMapUnit {
 	char m_type;	//地图单元-类型
@@ -2285,6 +2292,13 @@ struct _slk_NetS_ZoneMasterList {
 };
 typedef struct _slk_NetS_ZoneMasterList SLK_NetS_ZoneMasterList;	//皇帝州牧列表
 
+struct _slk_NetS_DelZoneUnit {
+	int m_unit_index;	//删除小地图上的单元
+	short m_posx;	//删除小地图上的单元
+	short m_posy;	//删除小地图上的单元
+};
+typedef struct _slk_NetS_DelZoneUnit SLK_NetS_DelZoneUnit;	//删除小地图上的玩家
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2313,6 +2327,7 @@ int struct_NetS_ItemInfo_send( char **pptr, int *psize, SLK_NetS_ItemInfo *pValu
 int struct_WalkPath_send( char **pptr, int *psize, SLK_WalkPath *pValue );
 int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValue );
 int struct_NetS_MapUnitAction_send( char **pptr, int *psize, SLK_NetS_MapUnitAction *pValue );
+int struct_NetS_MapPosAction_send( char **pptr, int *psize, SLK_NetS_MapPosAction *pValue );
 int struct_NetS_AddMapUnit_send( char **pptr, int *psize, SLK_NetS_AddMapUnit *pValue );
 int struct_NetS_DelMapUnit_send( char **pptr, int *psize, SLK_NetS_DelMapUnit *pValue );
 int struct_NetS_WorldMapInfo_send( char **pptr, int *psize, SLK_NetS_WorldMapInfo *pValue );
@@ -2533,5 +2548,6 @@ int struct_NetS_GirlShopItem_send( char **pptr, int *psize, SLK_NetS_GirlShopIte
 int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValue );
 int struct_NetS_ZoneMaster_send( char **pptr, int *psize, SLK_NetS_ZoneMaster *pValue );
 int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMasterList *pValue );
+int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit *pValue );
 
 #endif

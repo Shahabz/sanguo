@@ -975,7 +975,7 @@ int actor_new( int actor_index )
 	if ( g_actors[actor_index].city_index < 0 )
 	{
 		// 没有可用索引了，那么清除一个机器人
-		//city_delrobot();
+		city_delrobot();
 		g_actors[actor_index].city_index = city_new( &city );
 		if ( g_actors[actor_index].city_index < 0 )
 			return -1;
@@ -991,6 +991,15 @@ int actor_new( int actor_index )
 	g_city[city_index].zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, city_index );
 	map_addobject( MAPUNIT_TYPE_CITY, g_city[city_index].unit_index, city.posx, city.posy );
 	g_city[city_index].zone = map_zone_getid( city.posx, city.posy );
+
+	// 通知小地图
+	SLK_NetS_ZoneUnit info = { 0 };
+	info.m_posx = g_city[city_index].posx;
+	info.m_posy = g_city[city_index].posy;
+	info.m_nation = g_city[city_index].nation;
+	info.m_level = (unsigned char)g_city[city_index].level;
+	info.m_zoneunit_index = g_city[city_index].zoneunit_index;
+	netsend_addzoneunit_S( g_city[city_index].zone, SENDTYPE_ZONE, &info );
 
 	// 所选的阵营是否有奖励
 	if ( g_actors[actor_index].nation == client_getnationaward( actor_index ) )

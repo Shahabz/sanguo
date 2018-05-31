@@ -67,6 +67,7 @@ SRC = \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
+../AutoS/src/auto_data_random_firstname.cpp \
 ../AutoS/src/auto_data_map_pickupinfo.cpp \
 ../AutoS/src/auto_data_girl_shop.cpp \
 ../AutoS/src/auto_data_material_make.cpp \
@@ -74,6 +75,7 @@ SRC = \
 ../AutoS/src/auto_data_shop.cpp \
 ../AutoS/src/auto_data_girl.cpp \
 ../AutoS/src/auto_map_call.cpp \
+../AutoS/src/auto_data_random_lastname.cpp \
 ../AutoS/src/auto_nation_hero.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
 ../AutoS/src/auto_data_wishing_pack.cpp \
@@ -332,6 +334,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_random_firstname.o: ../AutoS/src/auto_data_random_firstname.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_pickupinfo.o: ../AutoS/src/auto_data_map_pickupinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_girl_shop.o: ../AutoS/src/auto_data_girl_shop.cpp 
@@ -345,6 +349,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_girl.o: ../AutoS/src/auto_data_girl.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_call.o: ../AutoS/src/auto_map_call.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_random_lastname.o: ../AutoS/src/auto_data_random_lastname.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_nation_hero.o: ../AutoS/src/auto_nation_hero.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

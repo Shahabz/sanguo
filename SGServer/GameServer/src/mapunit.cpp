@@ -589,3 +589,15 @@ int mapunit_action( int unit_index, char action )
 	netsend_mapunitaction_S( area_index, SENDTYPE_AREA, &info );
 	return 0;
 }
+
+int mappos_action( short posx, short posy, char action )
+{
+	// 通知区域播放动作
+	SLK_NetS_MapPosAction info = { 0 };
+	info.m_posx = posx;
+	info.m_posy = posy;
+	info.m_action = action;
+	int area_index = area_getindex( posx, posy );
+	netsend_mapposaction_S( area_index, SENDTYPE_AREA, &info );
+	return 0;
+}

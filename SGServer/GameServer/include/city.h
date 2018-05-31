@@ -106,6 +106,17 @@ int city_new( City *pCity );
 // 所有城市每秒的逻辑
 void city_logic_sec( int begin, int end );
 
+// 删除一个机器人城池
+void city_delrobot();
+// 删除所有机器人城池
+void city_delallrobot();
+
+// 删除一个城池
+void city_del( City *pCity, int city_index );
+
+// AI托管一个城池
+void city_entrust( City *pCity, int ai );
+
 // 城市主城等级
 int city_mainlevel( int city_index );
 

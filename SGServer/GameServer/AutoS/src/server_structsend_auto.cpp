@@ -447,7 +447,7 @@ int struct_NetS_ZoneUnit_send( char **pptr, int *psize, SLK_NetS_ZoneUnit *pValu
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_BYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_zoneunit_index, (*psize) );
 	return 0;
 }
@@ -457,6 +457,16 @@ int struct_NetS_MapUnitAction_send( char **pptr, int *psize, SLK_NetS_MapUnitAct
 	int tmpi = 0;
 
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );
+	return 0;
+}
+
+int struct_NetS_MapPosAction_send( char **pptr, int *psize, SLK_NetS_MapPosAction *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_action, (*psize) );
 	return 0;
 }
@@ -3363,6 +3373,16 @@ int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMaste
 	{
 		struct_NetS_ZoneMaster_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	return 0;
+}
+
+int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_unit_index, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posx, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_posy, (*psize) );
 	return 0;
 }
 

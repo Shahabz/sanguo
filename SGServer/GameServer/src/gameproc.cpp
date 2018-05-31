@@ -59,6 +59,7 @@
 #include "pay.h"
 #include "wishing.h"
 #include "girl.h"
+#include "robot.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -301,6 +302,25 @@ int process_init( int max_connection )
 	LOGI("%s-%d",__FUNCTION__,__LINE__);
 	//global_process_init();
 	serv_setstat( 15 );
+	lastname_init_auto();
+	firstname_init_auto();
+	robotcreate_queue_init();
+	// 机器人数据初始化
+	if ( robotai_init_auto() < 0 )
+	{
+		printf_msg( "robotai_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
+	// 机器人数据初始化
+	if ( robotbase_init_auto() < 0 )
+	{
+		printf_msg( "robotbase_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 17 );
 
 	// 道具数据初始化
 	if ( itemkind_init() < 0 )
@@ -1485,6 +1505,7 @@ int process_logic()
 		g_sec++;		// 秒针可当做服务器启动多少秒了
 		dbwork_fetchcomplete();
 		globalcmd_fetch();
+		robotcreate_queue_fetch(); // 创建一个机器人操作
 #ifndef WIN32
 		linuxmsg_recv();
 #endif
@@ -1755,6 +1776,8 @@ int process_dbreload()
 	girlshopupdate_reload_auto();
 	fangshinode_reload_auto();
 	fangshipalace_reload_auto();
+	robotai_reload_auto();
+	robotbase_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

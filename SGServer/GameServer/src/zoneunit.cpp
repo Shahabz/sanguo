@@ -170,14 +170,12 @@ int zoneunit_del( char type, int index, int unit_index )
 	short posx = 0, posy = 0;
 	zoneunit_getpos( unit_index, &posx, &posy );
 	char zoneid = map_zone_getid( posx, posy );
-	/*SLK_NetS_DelZoneUnit info = { 0 };
-	info.m_unit_index = unit_index;
-	int tmpsize = netsend_delzoneunit_S( tmpbuf, sizeleft, &info );
 
-	short posx = 0, posy = 0;
-	zoneunit_getpos( unit_index, &posx, &posy );
-	int area_index = area_getindex( posx, posy );
-	area_sendmsg( area_index, tmpsize, tmpbuf );*/
+	SLK_NetS_DelZoneUnit info = { 0 };
+	info.m_unit_index = unit_index;
+	info.m_posx = posx;
+	info.m_posy = posy;
+	netsend_delzoneunit_S( zoneid, SENDTYPE_ZONE, &info );
 
 	map_zone_delunit( unit_index );
 	memset( &g_zoneunit[unit_index], 0, sizeof( ZoneUnit ) );

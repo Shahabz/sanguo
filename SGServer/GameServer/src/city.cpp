@@ -829,6 +829,186 @@ void city_logic_sec( int begin, int end )
 //#endif
 }
 
+// 删除一个机器人城池
+void city_delrobot()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid <= 0 )
+			continue;
+		if ( g_city[tmpi].actor_index >= 0 )
+			continue;
+		if ( g_city[tmpi].type == CityLairdType_Robot )
+		{
+			if ( g_city[tmpi].robot_ai < 100 )
+			{// 托管的不删除
+				// 删除数据库和内存
+				city_del( &g_city[tmpi], tmpi );
+				break;
+			}
+		}
+	}
+}
+
+// 删除所有机器人城池
+void city_delallrobot()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid <= 0 )
+			continue;
+		if ( g_city[tmpi].actor_index >= 0 )
+			continue;
+		if ( g_city[tmpi].type == CityLairdType_Robot )
+		{
+			if ( g_city[tmpi].robot_ai < 100 )
+			{ // 托管的不删除
+				// 删除数据库和内存
+				city_del( &g_city[tmpi], tmpi );
+			}
+		}
+	}
+}
+
+// 删除一个城池
+void city_del( City *pCity, int city_index )
+{
+	if ( pCity == NULL )
+		return;
+	// 数据库删除
+	char szSQL[2048];
+	char reconnect_flag = 0;
+RE_CITY_DEL:
+	sprintf( szSQL, "DELETE FROM `city` WHERE `actorid`=%d;", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( reconnect_flag )
+			return;
+		if ( mysql_ping( myGame ) != 0 )
+		{
+			db_reconnect_game();
+			reconnect_flag = 1;
+			goto RE_CITY_DEL;
+		}
+		return;
+	}
+
+	// 删除他的建筑
+	sprintf( szSQL, "DELETE FROM `city_building` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+	sprintf( szSQL, "DELETE FROM `city_building_barracks` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+	sprintf( szSQL, "DELETE FROM `city_building_res` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 删除他的城墙守卫
+	sprintf( szSQL, "DELETE FROM `city_guard` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 删除他的邮件
+	sprintf( szSQL, "DELETE FROM `mail` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 删除它的离线奖励
+	sprintf( szSQL, "DELETE FROM `gift` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 删除它的道具
+	sprintf( szSQL, "DELETE FROM `actor_item` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 删除它的武将
+	sprintf( szSQL, "DELETE FROM `actor_hero` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+	// 删除它的女将
+	sprintf( szSQL, "DELETE FROM `actor_girl` WHERE `actorid`=%d", pCity->actorid );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+	}
+
+	// 在显示单元里清除掉
+	if ( city_index >= 0 )
+	{
+		mapunit_del( MAPUNIT_TYPE_CITY, city_index, pCity->unit_index );
+	}
+	// 世界地图删除占地块信息
+	map_delobject( MAPUNIT_TYPE_CITY, pCity->index, pCity->posx, pCity->posy );
+
+	// 删除他的部队
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+	{
+		int army_index = pCity->battle_armyindex[tmpi];
+		if ( army_index < 0 )
+			continue;
+		army_delete( army_index );
+	}
+
+	write_gamelog( "[CITY_DEL]_actorid:%d", pCity->actorid );
+
+	// 内存中删除
+	memset( pCity, 0, sizeof( City ) );
+	pCity->index = -1;
+	pCity->actor_index = -1;
+	pCity->unit_index = -1;
+}
+
+// AI托管一个城池
+void city_entrust( City *pCity, int ai )
+{
+	if ( pCity == NULL )
+		return;
+
+	//if ( ai <= 0 || ai >= g_robotAI_maxnum )
+	//	return;
+
+	//int level = pCity->building[0].level;
+	//if ( level <= 0 || level >= g_robotAI[ai].level_max )
+	//	return;
+
+	//int upgrade_level = level + 1;
+	//pCity->laird_type = CityLairdType_Robot;
+	//pCity->robot_ai = ai;
+	//pCity->robot_cd = (int)(g_robotBase[upgrade_level].minute * g_robotAI[ai].upgrade_addvalue);
+	//pCity->robot_atkcd = 0;
+	//pCity->robot_beatk = 0;
+}
+
 // 城市主城等级
 int city_mainlevel( int city_index )
 {
@@ -3809,6 +3989,14 @@ int city_move( City *pCity, short posx, short posy )
 	if ( pCity->zoneunit_index < 0 )
 	{
 		pCity->zoneunit_index = zoneunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+		// 通知小地图
+		SLK_NetS_ZoneUnit info = { 0 };
+		info.m_posx = pCity->posx;
+		info.m_posy = pCity->posy;
+		info.m_nation = pCity->nation;
+		info.m_level = (unsigned char)pCity->level;
+		info.m_zoneunit_index = pCity->zoneunit_index;
+		netsend_addzoneunit_S( pCity->zone, SENDTYPE_ZONE, &info );
 	}
 
 	// 我的随机事件也要更新位置
