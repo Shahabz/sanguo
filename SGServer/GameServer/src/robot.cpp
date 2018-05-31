@@ -132,7 +132,6 @@ int robot_create( char ai, char nation )
 	City city = { 0 };
 	city.actorid = g_maxactorid++;
 	city.type = CityLairdType_Robot;
-	city.actorid = 1;
 	city.shape = random(0,5);
 	city.createtime = (int)time( NULL );
 	city.lastlogin = (int)time( NULL );

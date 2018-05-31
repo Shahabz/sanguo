@@ -257,7 +257,7 @@ int map_res_logic()
 
 				short posx = -1;
 				short posy = -1;
-				map_getrandpos_withrange( oldposx, oldposy, 20, &posx, &posy );
+				map_getrandpos_withrange( oldposx, oldposy, 10, &posx, &posy );
 				map_res_create( kind, posx, posy );
 			}
 		}

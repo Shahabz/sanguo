@@ -555,8 +555,8 @@ int map_getrandpos( int grid, short *pPosx, short *pPosy )
 // 根据指定点的范围获取一个可用坐标点1*1的
 int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, short *pPosy )
 {
-	short findlistx[256] = { 0 };
-	short findlisty[256] = { 0 };
+	short findlistx[512] = { 0 };
+	short findlisty[512] = { 0 };
 	short offset = 0;
 	int zoneid = map_zone_getid( posx, posy );
 	for ( int tmpi = -range; tmpi <= range; tmpi++ )
@@ -577,10 +577,10 @@ int map_getrandpos_withrange( short posx, short posy, int range, short *pPosx, s
 			findlistx[offset] = x;
 			findlisty[offset] = y;
 			offset += 1;
-			if ( offset >= 256 )
+			if ( offset >= 500 )
 				break;
 		}
-		if ( offset >= 256 )
+		if ( offset >= 500 )
 			break;
 	}
 
@@ -618,26 +618,56 @@ int map_getrandcitypos( short *pPosx, short *pPosy )
 		short findlistx[4096] = { 0 };
 		short findlisty[4096] = { 0 };
 		short offset = 0;
-		for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+		short beginx,beginy;
+		short endx, endy;
+		int dis = random( 0, 1 );
+		if ( dis == 0 )
 		{
-			for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+			for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
 			{
-				short x = tmpi;
-				short y = tmpj;
-				if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
-					continue;
-				if ( g_map.m_aTileData[x][y].unit_type > 0 )
-					continue;
-				// 找到所有的空余点
-				findlistx[offset] = x;
-				findlisty[offset] = y;
-				offset += 1;
-				if ( offset >= 4096 )
+				for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+				{
+					short x = tmpi;
+					short y = tmpj;
+					if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+						continue;
+					if ( g_map.m_aTileData[x][y].unit_type > 0 )
+						continue;
+					// 找到所有的空余点
+					findlistx[offset] = x;
+					findlisty[offset] = y;
+					offset += 1;
+					if ( offset >= 1024 )
+						break;
+				}
+				if ( offset >= 1024 )
 					break;
 			}
-			if ( offset >= 4096 )
-				break;
 		}
+		else
+		{
+			for ( int tmpi = g_zoneinfo[zoneid].bottom_right_posx; tmpi >= g_zoneinfo[zoneid].top_left_posx; tmpi-- )
+			{
+				for ( int tmpj = g_zoneinfo[zoneid].bottom_right_posy; tmpj <= g_zoneinfo[zoneid].top_left_posy; tmpj-- )
+				{
+					short x = tmpi;
+					short y = tmpj;
+					if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+						continue;
+					if ( g_map.m_aTileData[x][y].unit_type > 0 )
+						continue;
+					// 找到所有的空余点
+					findlistx[offset] = x;
+					findlisty[offset] = y;
+					offset += 1;
+					if ( offset >= 1024 )
+						break;
+				}
+				if ( offset >= 1024 )
+					break;
+			}
+		}
+		
 
 		if ( offset > 0 )
 		{
