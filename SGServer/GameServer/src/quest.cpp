@@ -20,6 +20,7 @@
 #include "fight.h"
 #include "quest.h"
 #include "nation.h"
+#include "equip.h"
 #include "map_enemy.h"
 #include "city_attr.h"
 
@@ -452,6 +453,54 @@ int quest_check( int actor_index, int questid, int *value )
 					if ( value )
 						*value = 1;
 					return 1;
+				}
+			}
+		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_EQUIP_UP )
+		{ // 给N武将穿N装备
+			if ( value )
+				*value = 0;
+			int equiptype = equip_gettype( questinfo->dataoffset ) - 1;
+			if ( questinfo->datakind > 0 )
+			{ // 指定武将
+				for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+				{
+					if ( pCity->hero[tmpi].kind == questinfo->datakind && pCity->hero[tmpi].equip[equiptype].kind == questinfo->dataoffset )
+					{
+						if ( value )
+							*value = 1;
+						return 1;
+					}
+				}
+				for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+				{
+					if ( g_actors[actor_index].hero[tmpi].kind == questinfo->datakind && g_actors[actor_index].hero[tmpi].equip[equiptype].kind == questinfo->dataoffset )
+					{
+						if ( value )
+							*value = 1;
+						return 1;
+					}
+				}
+			}
+			else
+			{ // 任意武将
+				for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+				{
+					if ( pCity->hero[tmpi].equip[equiptype].kind == questinfo->dataoffset )
+					{
+						if ( value )
+							*value = 1;
+						return 1;
+					}
+				}
+				for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+				{
+					if ( g_actors[actor_index].hero[tmpi].equip[equiptype].kind == questinfo->dataoffset )
+					{
+						if ( value )
+							*value = 1;
+						return 1;
+					}
 				}
 			}
 		}

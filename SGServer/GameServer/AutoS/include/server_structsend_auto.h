@@ -470,7 +470,7 @@ struct _slk_NetS_HeroExp {
 	short m_kind;	//英雄种类
 	int m_exp;	//英雄当前经验
 	int m_exp_max;	//英雄经验上限
-	short m_add;	//英雄获取经验
+	int m_add;	//英雄获取经验
 	char m_isup;	//是否升级
 	short m_level;	//英雄等级
 	short m_path;	//途径

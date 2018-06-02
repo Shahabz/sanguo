@@ -1113,14 +1113,22 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 
 	char isup = 0;
 	pHero->exp += exp;
+	if ( pHero->exp < 0 )
+	{
+		pHero->exp = 0;
+	}
 	// 检查升级
 	while ( pHero->exp >= hero_getexp_max( pHero->level, pHero->color ) )
 	{
 		int curlevel = pHero->level;
 		// 可以升级
-		if ( pHero->level >= pCity->level || _hero_upgrade( pHero, path ) < 0 )
+		if ( pHero->level >= pCity->level )
+			break;
+		if ( _hero_upgrade( pHero, path ) < 0 )
 			break;
 		pHero->exp -= hero_getexp_max( curlevel, pHero->color );
+		if ( pHero->exp < 0 )
+			pHero->exp = 0;
 		isup = 1;
 	}
 
@@ -1147,6 +1155,9 @@ int hero_addexp( City *pCity, Hero *pHero, int exp, short path )
 	}
 
 	nation_hero_attrupdate( pHero );
+
+	// 统计log
+	wlog( 0, LOGOP_HEROEXP, path, pHero->kind, exp, pHero->exp, pCity->actorid, pCity->building[0].level );
 	return 0;
 }
 

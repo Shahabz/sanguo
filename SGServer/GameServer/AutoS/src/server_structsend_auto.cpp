@@ -690,7 +690,7 @@ int struct_NetS_HeroExp_send( char **pptr, int *psize, SLK_NetS_HeroExp *pValue 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_exp_max, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isup, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );

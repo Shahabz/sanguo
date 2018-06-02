@@ -27,6 +27,7 @@
 #define LOGOP_KWPOINT			21	// 血战积分
 #define LOGOP_GIRL				22	// 女将
 #define LOGOP_GIRLSOUL			23	// 女将碎片
+#define LOGOP_HEROEXP			24	// 英雄经验
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
