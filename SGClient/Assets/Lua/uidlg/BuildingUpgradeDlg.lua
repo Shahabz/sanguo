@@ -277,7 +277,7 @@ function BuildingUpgradeDlgShow( kind, offset, rebuildkind )
 	if m_op == 2 then
 		recvValue.m_sec = global.building_delete_cd
 	else
-		recvValue.m_sec = g_building_upgrade[m_kind][nextlevel].sec
+		recvValue.m_sec = g_building_upgrade[m_kind][nextlevel].sec / (1.0+GetPlayer().m_attr.m_buildingsec_per/100)
 	end
 	BuildingUpgradeDlgRecv( recvValue )
 end

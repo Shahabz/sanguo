@@ -308,12 +308,12 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 		-- 播放动画-排数改变
 		if g_fight.left_change_line == 1 then
 			ChangeLine( FIGHT_DEFENSE, pDefenseUnit )
-			timer = 3.5
+			timer = 3
 		end
 		-- 播放动画-武将改变
 		if g_fight.left_change_unit == 1 then
 			ChangeUnit( FIGHT_DEFENSE )
-			timer = 4.5
+			timer = 4
 		end
 		-- 更新界面显示
 		if g_fight.left_change_unit == 1 then
@@ -363,12 +363,12 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 		-- 播放动画-排数改变
 		if g_fight.right_change_line == 1 then
 			ChangeLine( FIGHT_ATTACK, pAttackUnit )
-			timer = 3.5
+			timer = 3
 		end
 		-- 播放动画-武将改变
 		if g_fight.right_change_unit == 1 then
 			ChangeUnit( FIGHT_ATTACK )
-			timer = 4.5
+			timer = 4
 		end
 		-- 更新界面显示
 		if g_fight.right_change_unit == 1 then
@@ -430,12 +430,12 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			-- 播放动画-排数改变
 			if g_fight.right_change_line == 1 then
 				ChangeLine( FIGHT_DEFENSE, pDefenseUnit )
-				timer = 3.5
+				timer = 3
 			end
 			-- 播放动画-武将改变
 			if g_fight.right_change_unit == 1 and g_fight.result <= 0 then
 				ChangeUnit( FIGHT_DEFENSE )
-				timer = 4.5
+				timer = 4
 			end
 			-- 更新界面显示
 			if g_fight.right_change_unit == 1 then
@@ -457,12 +457,12 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 			-- 播放动画-排数改变
 			if g_fight.left_change_line == 1 then
 				ChangeLine( FIGHT_ATTACK, pAttackUnit )
-				timer = 3.5
+				timer = 3
 			end
 			-- 播放动画-武将改变
 			if g_fight.left_change_unit == 1 and g_fight.result <= 0 then
 				ChangeUnit( FIGHT_ATTACK )
-				timer = 4.5
+				timer = 4
 			end
 			-- 更新界面显示
 			if g_fight.left_change_unit == 1 then
@@ -481,7 +481,7 @@ function fight_process( step, pAttackUnit, pDefenseUnit )
 				FightDlgUnitVsLayerShow()
 				-- 更新界面显示
 				FightDlgUnitUpdate()
-			end, 2.8*FightScene.m_speed, nil, "FightInvoke_UpdateLayer" );
+			end, 2.5*FightScene.m_speed, nil, "FightInvoke_UpdateLayer" );
 		end
 	
 		-- 本过程时间

@@ -19,6 +19,7 @@ public abstract class Camera2D : MonoBehaviour
 
     // 点击特效
     public bool enableTouchEffect = true;
+	public string szEffectMouseClickName;
     public float pixelsPerUnit = 100.0f;
 
 	// 速度衰减（乘）
@@ -71,8 +72,8 @@ public abstract class Camera2D : MonoBehaviour
     //
     Coroutine           _TweenPosCoroutine;
     Coroutine           _TweenSizeCoroutine;
-
-    static GameObject   _OnTouchEffect;
+	
+	private GameObject   _OnTouchEffect;
 
     protected virtual void Awake()
     {
@@ -98,8 +99,8 @@ public abstract class Camera2D : MonoBehaviour
         if( defaultPos != Vector2.zero )
             MoveTo( defaultPos );
 
-        /*if( _OnTouchEffect == null )
-            _OnTouchEffect = ResourceManager.LoadPrefab( "Effect_Interface_MouseClick" );*/
+        if( _OnTouchEffect == null )
+			_OnTouchEffect = ResourceManager.LoadPrefab( szEffectMouseClickName );
 	}
 
     void OnDisable()
@@ -802,7 +803,7 @@ public abstract class Camera2D : MonoBehaviour
     protected virtual void OnTouch( Vector2 screenPos ){}
     protected virtual void OnTouchRelease( Vector2 screenPos )
     {
-        /*if( enableTouchEffect )
+        if( enableTouchEffect )
         {
             GameObject obj = GameObject.Instantiate( _OnTouchEffect );
             obj.transform.SetParent( eye.uiManager.GetUIRoot() );
@@ -812,7 +813,7 @@ public abstract class Camera2D : MonoBehaviour
             obj.transform.position = pos;
             obj.SetActive( true );
             Destroy( obj, 1 );
-        }*/
+        }
     }
 	
 	protected abstract void OnDragStart( Vector2 pos );

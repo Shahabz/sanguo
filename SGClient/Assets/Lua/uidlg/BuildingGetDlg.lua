@@ -247,6 +247,14 @@ function BuildingGetDlgMove()
 			uiShape[k]:GetComponent( "UITweenScale" ):ToInit();
 			uiShape[k]:GetComponent( "UITweenPath" ):ToInit();
 			unitObj[k].gameObject:SetActive(true);
+			-- 特效
+			--[[local localPosition = unitObj[k].transform.localPosition
+			local effect = GameObject.Instantiate( LoadPrefab( "Effect_BuildingGet" ) )
+			effect.transform:SetParent( City.BuildingRoot().transform );
+			effect.transform.localPosition = localPosition;
+			effect.transform.localScale = Vector3.New( 1, 1, 1 );
+			GameObject.Destroy(effect,5)--]]
+			
 			if k == 1 then
 				if m_kind[1] == BUILDING_Silver then
 					if m_offset[1] == 0 or m_offset[1] == 1 then

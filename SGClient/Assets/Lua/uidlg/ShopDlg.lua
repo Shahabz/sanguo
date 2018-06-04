@@ -37,6 +37,8 @@ local m_Cache = nil;
 local m_CacheItem = nil
 local m_PayBagRecvValue = nil;
 local m_AwardDescLayerShow = false
+local m_gotoKind = nil;
+local m_gotoObj = nil;
 
 -- 打开界面
 function ShopDlgOpen()
@@ -57,6 +59,8 @@ function ShopDlgClose()
 	m_Cache = nil;
 	m_CacheItem = nil
 	m_PayBagRecvValue = nil;
+	m_gotoKind = nil;
+	m_gotoObj = nil;
 end
 
 -- 删除界面
@@ -64,6 +68,8 @@ function ShopDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	ResourceManager.UnloadAssetBundle( "_ab_paybag" );
+	m_gotoKind = nil;
+	m_gotoObj = nil;
 end
 
 ----------------------------------------
@@ -222,6 +228,16 @@ function ShopDlgShow()
 end
 
 function ShopDlgShowByType( type )
+	m_gotoKind = nil
+	m_gotoObj = nil
+	ShopDlgOpen()
+	ShopDlgSelectType( type )
+	system_askinfo( ASKINFO_PAY, "", 1, 0 )
+end
+
+function ShopDlgShowByKind( type, kind )
+	m_gotoKind = kind
+	m_gotoObj = nil
 	ShopDlgOpen()
 	ShopDlgSelectType( type )
 	system_askinfo( ASKINFO_PAY, "", 1, 0 )
@@ -294,6 +310,13 @@ function ShopDlgRecvVipShop( recvValue )
 	for i = 1, recvValue.m_count, 1 do
 		ShopDlgCreateVipShopItem( i, recvValue.m_list[i], recvValue.m_useitem )
 	end
+	
+	-- 默认选择
+	if m_gotoObj then
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiSelect = objs[14]
+		SetTrue( uiSelect )
+	end
 end
 function ShopDlgCreateVipShopItem( index, info, useitem )
 	if info.m_id >= 16 and info.m_id <= 20 then
@@ -323,6 +346,9 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	local uiFree = objs[10]
 	local uiToken = objs[11]
 	local uiTimer = objs[12]
+	local uiNumBack = objs[13]
+	local uiSelect = objs[14]
+	SetFalse( uiSelect )
 	SetFalse( uiTimer )
 	
 	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )
@@ -336,9 +362,11 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 			SetText( uiName, name.."x"..info.m_awardnum, NameColor(c) )
 			SetText( uiNum, "x"..info.m_awardnum )
 		end
+		SetTrue( uiNumBack );
 	else
 		SetText( uiName, name, NameColor(c) )
 		SetText( uiNum, "" )
+		SetFalse( uiNumBack );
 	end	
 	SetText( uiDesc1, F( 2280+info.m_id, info.m_awardnum ) );
 	
@@ -405,6 +433,12 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 		SetFalse( uiFree )
 	end
 	SetControlID( uiBuyButton, 1000+index )
+	
+	-- 默认选择
+	print( m_gotoKind .."==".. info.m_awardkind )
+	if m_gotoKind == info.m_awardkind then
+		m_gotoObj = uiObj;
+	end
 end
 -- VIP商店清空对象
 function ShopDlgClearVipShopItem()

@@ -34,6 +34,7 @@ local m_bNationLayerShow = false;
 local m_TreasureActivity = {};
 local m_show = 0
 g_targetEnemyPos = {}
+local m_CityUnitObj = nil
 
 -- 打开界面
 function MapMainDlgOpen()
@@ -57,6 +58,7 @@ function MapMainDlgClose()
 	
 	eye.uiManager:Close( "MapMainDlg" );
 	m_show = 0
+	m_CityUnitObj = nil
 end
 
 -- 删除界面
@@ -64,6 +66,7 @@ function MapMainDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
 	m_show = 0
+	m_CityUnitObj = nil
 end
 
 ----------------------------------------
@@ -240,6 +243,7 @@ function MapMainDlgShow()
 	system_askinfo( ASKINFO_QUEST, "", 10 );
 	-- 掉落
 	MapMainDlgSetAward()
+	m_CityUnitObj = {}
 end
 
 -- 接收出征队列信息
@@ -866,6 +870,22 @@ function MapMainDlgMiniMapClearCity()
     end
 end
 
+-- 删除一个城池
+function MapMainDlgMiniMapDelCity( recvValue )
+	if m_CityUnitObj == nil then
+		return
+	end
+	local posx = recvValue.m_posx
+	local posy = recvValue.m_posy
+	if m_CityUnitObj[posx] == nil then
+		return
+	end
+	if m_CityUnitObj[posx][posy] == nil then
+		return
+	end
+	GameObject.Destroy( m_CityUnitObj[posx][posy] )
+end
+
 -- 创建城池
 -- {m_posx=0,m_posy=0,m_nation=0,m_level=0,[m_count]}
 function MapMainDlgMiniMapAddCity( recvValue )
@@ -881,6 +901,11 @@ function MapMainDlgMiniMapAddCity( recvValue )
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.transform.localPosition = Vector2( x, y )
 	uiObj.transform:GetComponent( typeof(Image) ).color = Hex2Color( MapUnitRangeColor[recvValue.m_nation] )
+	
+	if m_CityUnitObj[recvValue.m_posx] == nil then
+		m_CityUnitObj[recvValue.m_posx] = {}
+	end
+	m_CityUnitObj[recvValue.m_posx][recvValue.m_posy] = uiObj
 end
 
 -- 创建我的城池

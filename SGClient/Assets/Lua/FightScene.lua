@@ -27,7 +27,7 @@ local RightUnitPosX = { 0.4, 1.8, 2.6, 3.4, 4.2, 5, 5.8, 6.6, 7.4, 8.2, 9 }
 local BeatPos = { 2.0, -0.8, -3.6 }
 
 -- 战斗速度
-FightScene.m_speed = 1
+FightScene.m_speed = 0.8
 
 -- 创建战场
 function FightScene.Create()
@@ -190,7 +190,7 @@ function FightScene.UnitWalk( pos, unit )
 			if FightScene.m_leftUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_leftUnit[line] ) do
 					local charactor = v;
-					charactor:SetSpeed( math.random( 20, 23 )/10 )
+					charactor:SetSpeed( math.random( 20, 23 )/(10*FightScene.m_speed) )
 					charactor:MoveTo( Vector3.New( LeftUnitPosX[line], charactor.transform.localPosition.y, charactor.transform.localPosition.z ) )
 					charactor:Walk();
 				end
@@ -201,7 +201,7 @@ function FightScene.UnitWalk( pos, unit )
 			if FightScene.m_rightUnit[line] ~= nil then
 				for k, v in pairs ( FightScene.m_rightUnit[line] ) do
 					local charactor = v;
-					charactor:SetSpeed( math.random( 20, 23 )/10 )
+					charactor:SetSpeed( math.random( 20, 23 )/(10*FightScene.m_speed) )
 					charactor:MoveTo( Vector3.New( RightUnitPosX[line], charactor.transform.localPosition.y, charactor.transform.localPosition.z ) )
 					charactor:Walk();
 				end

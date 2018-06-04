@@ -332,6 +332,12 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 区域地图
 		elseif nControlID == 301 then
 			MapZoneDlgShow();
+			
+		-- 天气
+		elseif nControlID == 302 then
+			if g_game_day <= 0 then
+				pop(T(3016))
+			end
         end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 1 then
@@ -692,6 +698,7 @@ function MainDlgSetQuest()
 			SetFalse( uiObj );
 		else
 			SetTrue( uiObj );
+			SetControlID( uiObj, 40+i )
 			SetText( uiObj.transform:Find("Text"), QuestType( questInfo ) )
 			SetText( uiObj.transform:Find("QuestText"), QuestName( -1, questInfo ) )
 			questnum = questnum + 1;

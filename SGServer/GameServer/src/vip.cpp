@@ -346,7 +346,24 @@ int vipshop_buy( int actor_index, int id, int awardkind, int count )
 	if ( actor_change_token( actor_index, -costtoken, PATH_SHOP, 0 ) < 0 )
 		return -1;
 
-	award_getaward( actor_index, g_vipshop[id].awardkind, g_vipshop[id].awardnum*count, -1, PATH_VIPSHOP, NULL );
+	if ( g_vipshop[id].awardkind == AWARDKIND_BUFF_TRAIN )
+	{// 武卒官加速N%，时间1天
+		City *pCity = city_getptr( actor_index );
+		if ( pCity->buffsec[CITY_BUFF_TRAIN] <= 0 )
+		{
+			pCity->bufftrain = g_vipshop[id].awardnum;
+		}
+		city_change_buff( g_actors[actor_index].city_index, CITY_BUFF_TRAIN, 86400 * count, PATH_VIPSHOP );
+	}
+	else if ( g_vipshop[id].awardkind == AWARDKIND_BUFF_MARCH )
+	{// 行军耗时降低N%，时间1天
+		city_change_buff( g_actors[actor_index].city_index, CITY_BUFF_MARCH, 86400 * count, PATH_VIPSHOP );
+	}
+	else
+	{
+		award_getaward( actor_index, g_vipshop[id].awardkind, g_vipshop[id].awardnum*count, -1, PATH_VIPSHOP, NULL );
+	}
+
 	if ( addtimes > 0 )
 	{
 		vipshop_addbuynum( actor_index, id, addtimes );

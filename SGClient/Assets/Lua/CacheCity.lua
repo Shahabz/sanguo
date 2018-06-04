@@ -631,10 +631,13 @@ function City.BuildingSetOver( kind )
 			local info = GetPlayer():GetBuilding( kind, -1 )
 			local iconname = "ui_opration_item_"..info.m_overvalue;
 			SetImage( overObj.transform:Find("Back"), LoadSprite( iconname ) );
+			overObj.transform:Find("Back/Effect").transform.localPosition.y = 0.39;
 		elseif kind >= BUILDING_Militiaman_Infantry and kind <= BUILDING_Militiaman_Archer then
 			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..(kind-3) ) );
+			overObj.transform:Find("Back/Effect").transform.localPosition.y = 5.45;
 		else
 			SetImage( overObj.transform:Find("Back"), LoadSprite( "ui_opration_finish_"..kind ) );
+			overObj.transform:Find("Back/Effect").transform.localPosition.y = 5.45;
 		end
 		unitObj:GetComponent("CityBuilding").BuildingOverMod = overObj;
 	end

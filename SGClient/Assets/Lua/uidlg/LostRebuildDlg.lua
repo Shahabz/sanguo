@@ -90,10 +90,9 @@ function LostRebuildDlgShow( recvValue )
 	LostRebuildDlgClear()
 	
 	local sprite, name, left = NpcTalkShapeInfo( 0 );
-	local obj = m_uiLeft
-	SetTrue( obj )
-	SetImage( obj.transform:Find("Shape"), sprite );
-	SetText( obj.transform:Find("Name"), name );
+	SetTrue( m_uiLeft )
+	SetImage( m_uiLeft.transform:Find("Shape"), sprite );
+	SetText( m_uiLeft.transform:Find("Name"), name );
 	
 	-- 奖励
 	if recvValue.m_rb_silver > 0 then
@@ -126,7 +125,7 @@ function LostRebuildDlgShow( recvValue )
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_rb_food );
+		SetText( uiObj.transform:Find("Num"), recvValue.m_rb_df );
 	end
 end
 

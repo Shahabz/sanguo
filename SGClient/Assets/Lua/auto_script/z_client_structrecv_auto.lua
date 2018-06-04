@@ -376,8 +376,23 @@ function struct_NetS_ZoneUnit_recv( buffer )
 	recvValue.m_posx = buffer:ReadShort();
 	recvValue.m_posy = buffer:ReadShort();
 	recvValue.m_nation = buffer:ReadSByte();
-	recvValue.m_level = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadByte();
 	recvValue.m_zoneunit_index = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_MapUnitAction_recv( buffer )
+	local recvValue = {};
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_action = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_MapPosAction_recv( buffer )
+	local recvValue = {};
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
+	recvValue.m_action = buffer:ReadSByte();
 	return recvValue;
 end
 
@@ -584,7 +599,7 @@ function struct_NetS_HeroExp_recv( buffer )
 	recvValue.m_kind = buffer:ReadShort();
 	recvValue.m_exp = buffer:ReadInt();
 	recvValue.m_exp_max = buffer:ReadInt();
-	recvValue.m_add = buffer:ReadShort();
+	recvValue.m_add = buffer:ReadInt();
 	recvValue.m_isup = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_path = buffer:ReadShort();
@@ -3057,6 +3072,14 @@ function struct_NetS_ZoneMasterList_recv( buffer )
 		tmpValue = struct_NetS_ZoneMaster_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	return recvValue;
+end
+
+function struct_NetS_DelZoneUnit_recv( buffer )
+	local recvValue = {};
+	recvValue.m_unit_index = buffer:ReadInt();
+	recvValue.m_posx = buffer:ReadShort();
+	recvValue.m_posy = buffer:ReadShort();
 	return recvValue;
 end
 

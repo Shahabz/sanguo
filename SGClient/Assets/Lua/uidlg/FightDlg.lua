@@ -513,7 +513,7 @@ function FightDlgPlayHpEffect( pos, hp, crit )
 	local color = NameColor( 5 )
 	if crit == 1 then
 		color = Hex2Color( 0xECC244FF )
-		uiObj.transform.localScale = Vector3.New( 1.1, 1.1, 1 );
+		uiObj.transform.localScale = Vector3.New( 1.5, 1.5, 1 );
 	end
 	
 	-- 计算位数 +1减号算一位
@@ -799,6 +799,7 @@ function FightDlgResultLayerShow()
 			end
 			
 			-- 检查是否升级
+			local playeffect = 0
 			local beginvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
 			local playcount = 1;
 			local isup = 0;
@@ -816,7 +817,10 @@ function FightDlgResultLayerShow()
 				isup = isup + 1;
 				playcount = playcount + 1
 				--升级特效
-				FightDlgLevelUpEffect(uiObj)
+				if playeffect == 0 then
+					FightDlgLevelUpEffect(uiObj)
+					playeffect = 1;
+				end
 			end
 			SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, v.lv ) )
 			local endvalue = v.mexp/hero_getexp_max( v.lv, v.cr );
@@ -825,14 +829,15 @@ function FightDlgResultLayerShow()
 			if v.mexp ~= nil then
 				SetProgressPlay( uiObj.transform:Find("Progress"), beginvalue, endvalue, 2, playcount, function() 
 					-- 名称+等级
-					level = level + 1
-					if level > v.lv then
-						level = v.lv
-					end
-					SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, level ) )
+					--level = level + 1
+					--if level > v.lv then
+						--level = v.lv
+					--end
+					SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, v.lv ) )
 				end )
 			else
 				SetProgress( uiObj.transform:Find("Progress"), 0 )
+				SetText( uiObj.transform:Find("Name"), HeroNameLv( v.kd, v.lv ) )
 			end
 
 			
@@ -979,13 +984,14 @@ function FightDlgSweepResult( recvValue )
 		local pHero = recvValue.m_hero[i]
 		SetImage( uiObj.transform:Find("Shape"), HeroHeadSprite( pHero.m_kind ) )
 		SetImage( uiObj.transform:Find("Color"), ItemColorSprite( pHero.m_color ) )		
-		SetText( uiObj.transform:Find("Name"),  pHero.m_name  )
+		SetText( uiObj.transform:Find("Name"),  HeroNameLv( pHero.m_kind, pHero.m_level ) )
 
 		SetTrue( uiObj )
 		-- 获取经验
 		SetText( uiObj.transform:Find("Exp"), "+"..pHero.m_exp )
 		
 		-- 检查是否升级
+		local playeffect = 0;
 		local beginvalue = pHero.m_pre_exp/hero_getexp_max( pHero.m_level, pHero.m_color );
 		local playcount = 1;
 		local isup = 0;
@@ -1002,18 +1008,21 @@ function FightDlgSweepResult( recvValue )
 			isup = isup + 1;
 			playcount = playcount + 1
 			--升级特效
-			FightDlgLevelUpEffect(uiObj)
+			if playeffect == 0 then
+				FightDlgLevelUpEffect(uiObj)
+				playeffect = 1
+			end
 		end
 		local endvalue = pHero.m_pre_exp/hero_getexp_max( pHero.m_level, pHero.m_color );
 		
 		-- 进度条
 		SetProgressPlay( uiObj.transform:Find("Progress"), beginvalue, endvalue, 2, playcount, function() 
 			-- 名称+等级
-			level = level + 1
-			if level > pHero.m_level then
-				level = pHero.m_level
-			end
-			SetText( uiObj.transform:Find("Name"), HeroNameLv( pHero.m_kind, level ) )
+			--level = level + 1
+			--if level > pHero.m_level then
+				--level = pHero.m_level
+			--end
+			SetText( uiObj.transform:Find("Name"), HeroNameLv( pHero.m_kind, pHero.m_level ) )
 		end )
 	end
 end

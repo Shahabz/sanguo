@@ -146,7 +146,7 @@ public class BuildCharAnimaiton : Editor
         ObjectReferenceKeyframe[] keyFrames;
         Sprite sprite;
         //动画长度是按秒为单位，1/10就表示1秒切10张图片，根据项目的情况可以自己调节
-        float frameTime = 1f / 5f;
+        float frameTime = 1f / 8f;
         
         // 最后补一个第一帧
         // 补帧一个第一帧

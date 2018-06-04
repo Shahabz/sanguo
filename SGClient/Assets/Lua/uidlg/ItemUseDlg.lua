@@ -113,7 +113,7 @@ function ItemUseDlgItemSet( index, kind, desc )
 	if GetItem():GetCount( kind ) > 0 then
 		SetFalse( uiToken );
 		SetTrue( uiNum );
-		SetText( uiNum, "x"..num );
+		SetText( uiNum, num );
 		SetText( uiUse.transform:Find("Back/Text"), T(679) )
 		SetControlID( uiUse, 10000 + kind ); 
 	else

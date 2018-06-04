@@ -47,7 +47,15 @@ function JumpDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 购买
 		elseif nControlID == 2 then
 			if m_res > 0 then
-				ShopDlgShowByType( 1 )
+				if m_res == 1 then
+					ShopDlgShowByKind( 1, AWARDKIND_LEVY_SILVER )
+				elseif m_res == 2 then
+					ShopDlgShowByKind( 1, AWARDKIND_LEVY_WOOD )
+				elseif m_res == 3 then
+					ShopDlgShowByKind( 1, AWARDKIND_LEVY_FOOD )
+				elseif m_res == 4 then
+					ShopDlgShowByKind( 1, AWARDKIND_LEVY_IRON )
+				end
 			else
 				JumpDlgBodyBuy()
 			end

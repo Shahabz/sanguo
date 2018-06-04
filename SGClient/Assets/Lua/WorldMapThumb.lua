@@ -20,6 +20,7 @@ local ThumbCamera			= nil;	-- 地图摄像机
 local ThumbDisplayTownPrefab = nil;
 local ThumbDisplayCityPrefab = nil;
 local ThumbUIMod = nil;
+local m_CityUnitObj = nil
 
 -- 只是显示隐藏 
 function WorldMapThumb.Show( bShow )
@@ -38,7 +39,7 @@ function WorldMapThumb.Create( zoneid )
 	if GameManager.WorldMap ~= nil then
 		GameManager.WorldMap.gameObject:SetActive( false );
 	end
-	
+	m_CityUnitObj = {}
     --MainDlgClose();
     --fruit.audioManager:Play(71);
 	-- 注释掉，防止去缩略图后返回大地图部队显示不正确
@@ -61,6 +62,7 @@ function WorldMapThumb.Delete()
 	end
 	ThumbDisplayTownPrefab= nil;
 	ThumbDisplayCityPrefab = nil;
+	m_CityUnitObj = nil
     --fruit.audioManager:Play(72);
     --MainDlgPlayBGM(true);
     --MainDlgOpen();
@@ -288,31 +290,57 @@ function WorldMapThumb.SetCityInfo( recvValue )
 	if ThumbCityRoot == nil then
 		return false;
 	end
-
 	for tmpi=1, recvValue.m_count, 1 do
-		local posx = recvValue.m_list[tmpi].m_posx
-		local posy = recvValue.m_list[tmpi].m_posy
-		local nation = recvValue.m_list[tmpi].m_nation
-		local level = recvValue.m_list[tmpi].m_level
-
-		local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
-		if ThumbDisplayCityPrefab == nil then
-		   ThumbDisplayCityPrefab = LoadPrefab("ThumbDisplayCity");
-		end
-		local thumbObj = GameObject.Instantiate( ThumbDisplayCityPrefab );
-		thumbObj.transform:SetParent( ThumbCityRoot );
-		thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
-		
-		if level <= 10 then
-			thumbObj.transform.localScale = Vector3( 0.15, 0.15, 0.15 );
-		elseif level <= 20 then
-			thumbObj.transform.localScale = Vector3( 0.3, 0.3, 0.3 );
-		else
-			thumbObj.transform.localScale = Vector3( 0.4, 0.4, 0.4 );
-		end
-		thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
+		WorldMapThumb.CreateCity( recvValue.m_list[tmpi] )
 	end
 	return true
+end
+function WorldMapThumb.CreateCity( recvValue )
+	if ThumbCityRoot == nil then
+		return false;
+	end
+	local posx = recvValue.m_posx
+	local posy = recvValue.m_posy
+	local nation = recvValue.m_nation
+	local level = recvValue.m_level
+
+	local thumbX, thumbY = WorldMapThumb.ConvertMapToThumb( posx, posy );
+	if ThumbDisplayCityPrefab == nil then
+	   ThumbDisplayCityPrefab = LoadPrefab("ThumbDisplayCity");
+	end
+	local thumbObj = GameObject.Instantiate( ThumbDisplayCityPrefab );
+	thumbObj.transform:SetParent( ThumbCityRoot );
+	thumbObj.transform.localPosition = Vector3.New( thumbX, thumbY, 0 );
+	
+	if level <= 10 then
+		thumbObj.transform.localScale = Vector3( 0.15, 0.15, 0.15 );
+	elseif level <= 20 then
+		thumbObj.transform.localScale = Vector3( 0.3, 0.3, 0.3 );
+	else
+		thumbObj.transform.localScale = Vector3( 0.4, 0.4, 0.4 );
+	end
+	thumbObj.transform:GetComponent( "SpriteRenderer" ).color = Hex2Color( MapUnitRangeColor[nation] )
+	
+	if m_CityUnitObj[posx] == nil then
+		m_CityUnitObj[posx] = {}
+	end
+	m_CityUnitObj[posx][posy] = thumbObj
+end
+
+-- 删除城池
+function WorldMapThumb.DeleteCity( recvValue )
+	if m_CityUnitObj == nil then
+		return
+	end
+	local posx = recvValue.m_posx
+	local posy = recvValue.m_posy
+	if m_CityUnitObj[posx] == nil then
+		return
+	end
+	if m_CityUnitObj[posx][posy] == nil then
+		return
+	end
+	GameObject.Destroy( m_CityUnitObj[posx][posy] )
 end
 
 -- 设置城镇的位置

@@ -670,6 +670,21 @@ function netrecv_kingwarranklist_C( buffer )
 	proc_kingwarranklist_C( recvValue );
 end
 
+function netrecv_addzoneunit_C( buffer )
+	local recvValue = struct_NetS_ZoneUnit_recv( buffer );
+	proc_addzoneunit_C( recvValue );
+end
+
+function netrecv_mapunitaction_C( buffer )
+	local recvValue = struct_NetS_MapUnitAction_recv( buffer );
+	proc_mapunitaction_C( recvValue );
+end
+
+function netrecv_mapposaction_C( buffer )
+	local recvValue = struct_NetS_MapPosAction_recv( buffer );
+	proc_mapposaction_C( recvValue );
+end
+
 function netrecv_kingwarpk_C( buffer )
 	local recvValue = struct_NetS_KingWarPK_recv( buffer );
 	proc_kingwarpk_C( recvValue );
@@ -1020,6 +1035,11 @@ function netrecv_zonemasterlist_C( buffer )
 	proc_zonemasterlist_C( recvValue );
 end
 
+function netrecv_delzoneunit_C( buffer )
+	local recvValue = struct_NetS_DelZoneUnit_recv( buffer );
+	proc_delzoneunit_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1155,6 +1175,9 @@ Proc_Command = {
 	[CMDS_KINGWARNOTIFY]=netrecv_kingwarnotify_C;
 	[CMDS_KINGWARNOTIFYLIST]=netrecv_kingwarnotifylist_C;
 	[CMDS_KINGWARRANKLIST]=netrecv_kingwarranklist_C;
+	[CMDS_ADDZONEUNIT]=netrecv_addzoneunit_C;
+	[CMDS_MAPUNITACTION]=netrecv_mapunitaction_C;
+	[CMDS_MAPPOSACTION]=netrecv_mapposaction_C;
 	[CMDS_KINGWARPK]=netrecv_kingwarpk_C;
 	[CMDS_KINGWARPOINT]=netrecv_kingwarpoint_C;
 	[CMDS_TREASUREACTIVITY]=netrecv_treasureactivity_C;
@@ -1225,6 +1248,7 @@ Proc_Command = {
 	[CMDS_GIRLSHOP]=netrecv_girlshop_C;
 	[CMDS_ZONEMASTER]=netrecv_zonemaster_C;
 	[CMDS_ZONEMASTERLIST]=netrecv_zonemasterlist_C;
+	[CMDS_DELZONEUNIT]=netrecv_delzoneunit_C;
 }
 
 function in_proc_command_C( cmd, buffer )

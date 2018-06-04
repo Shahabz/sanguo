@@ -241,6 +241,9 @@ function CityGuardDlgCreateEmpty()
 end
 
 function CityGuardDlgSet( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	local offset = recvValue.m_offset;
 	if offset < 0 then
 		return;

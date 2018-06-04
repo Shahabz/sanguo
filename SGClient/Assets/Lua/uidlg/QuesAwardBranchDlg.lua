@@ -107,7 +107,7 @@ function QuesAwardBranchDlgShow( recvValue )
 		uiObj.transform:SetParent( m_uiContent.transform );
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetText( uiObj.transform:Find("Name"), name );
-		SetText( uiObj.transform:Find("Num"), recvValue.m_list[i].m_num );
+		SetText( uiObj.transform:Find("Name"), name.."x"..recvValue.m_list[i].m_num );
 	end
 end
 

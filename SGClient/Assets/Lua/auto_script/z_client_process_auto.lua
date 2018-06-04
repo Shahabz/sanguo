@@ -2380,3 +2380,29 @@ function proc_zonemasterlist_C( recvValue )
 	end
 end
 
+-- m_unit_index=0,m_action=0,
+function proc_mapunitaction_C( recvValue )
+	-- process.
+	MapUnit.playAction( recvValue.m_unit_index, recvValue.m_action )
+end
+
+-- m_posx=0,m_posy=0,m_action=0,
+function proc_mapposaction_C( recvValue )
+	-- process.
+	MapUnit.playPosAction( recvValue.m_posx, recvValue.m_posy, recvValue.m_action )
+end
+
+-- m_unit_index=0,m_posx=0,m_posy=0,
+function proc_delzoneunit_C( recvValue )
+	-- process.
+	WorldMapThumb.DeleteCity( recvValue )
+	MapMainDlgMiniMapDelCity( recvValue )
+end
+
+-- m_posx=0,m_posy=0,m_nation=0,m_level=0,m_zoneunit_index=0,
+function proc_addzoneunit_C( recvValue )
+	-- process.
+	WorldMapThumb.CreateCity( recvValue )
+	MapMainDlgMiniMapAddCity( recvValue )
+end
+

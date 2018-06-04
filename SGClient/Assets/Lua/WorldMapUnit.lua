@@ -23,6 +23,7 @@ MAPZONE_CENTERID		= 5 -- 司隶
 -- 城池状态
 CITY_STATE_FIRE			=	0x01	-- 着火中
 CITY_STATE_ARMYGROUP	=	0x02	-- 被城战中
+CITY_STATE_FIGHT		=	0x04	-- 战斗状态
 
 -- 单只部队状态
 ARMY_STATE_IDLE				=	0	-- 空闲
@@ -417,6 +418,7 @@ function MapUnit.createCity( recvValue )
 		SetTrue( uiRange )
 		uiRange.transform:GetComponent("SpriteRenderer").color = Hex2Color( MapUnitRangeColor[nation] )
 		uiRange.transform.localScale = Vector3.New( 3, 3, 3 );
+		--SetFalse( uiRange )
 	else
 		SetFalse( uiRange )
 	end
@@ -429,9 +431,9 @@ function MapUnit.createCity( recvValue )
 	end
 	
 	-- 着火
-	if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
-	else	
-	end
+	--if Utils.byteAndOp( recvValue.m_state, CITY_STATE_FIRE ) == CITY_STATE_FIRE then
+	--else	
+	--end
 	
 	-- 城战
 	if Utils.byteAndOp( state, CITY_STATE_ARMYGROUP ) == CITY_STATE_ARMYGROUP then
@@ -643,6 +645,14 @@ function MapUnit.createArmy( recvValue )
 			charactor:TurnTo( direction );
 			charactor:Walk();
 		end
+	
+	-- 战斗状态	
+	elseif state == ARMY_STATE_FIGHT then
+		for i=1, 4, 1 do
+			local uiHero = unitObj.transform:GetChild(i-1);
+			SetFalse(uiHero)
+		end
+		MapUnit.playPosAction( recvValue.m_posx, recvValue.m_posy, 1 )	
 	end
 	return unitObj;
 end
@@ -704,6 +714,7 @@ function MapUnit.createTown( recvValue )
 	local uiMatBtn = objs[6];
 	local uiItemShape = objs[7];
 	local uiTownFightMod = objs[8];
+	local uiFightSmoke = objs[9];
 	
 	-- 形象
 	local shapeSprite = ""
@@ -790,6 +801,12 @@ function MapUnit.createTown( recvValue )
 		SetFalse( uiTownFightMod )
 	end
 	
+	if has == 1 then
+		SetTrue( uiFightSmoke )
+	else
+		SetFalse( uiFightSmoke )
+	end
+	
 	return unitObj;
 end
 
@@ -805,9 +822,9 @@ function MapUnit.RefreshQuestEnemy( targetLevel )
 	
 				if level == g_QuestTargetEnemyLevel then
 					if uiQuest == nil then
-						uiQuest = GameObject.Instantiate( LoadPrefab( "Djjt" ) )
+						uiQuest = GameObject.Instantiate( LoadPrefab( "EnemyArrow" ) )
 						uiQuest.transform:SetParent( unitObj.transform );
-						uiQuest.transform.localPosition = Vector3( 0, 0.4, 0 );
+						uiQuest.transform.localPosition = Vector3( 0, 0.6, 0 );
 						objs[2] = uiQuest;
 					end
 					SetTrue( uiQuest )
@@ -941,9 +958,9 @@ function MapUnit.createEnemy( recvValue )
 	-- 是否是主线任务目标流寇
     if level == g_QuestTargetEnemyLevel then
 		if uiQuest == nil then
-			uiQuest = GameObject.Instantiate( LoadPrefab( "Djjt" ) )
+			uiQuest = GameObject.Instantiate( LoadPrefab( "EnemyArrow" ) )
 			uiQuest.transform:SetParent( unitObj.transform );
-			uiQuest.transform.localPosition = Vector3( 0, 0.4, 0 );
+			uiQuest.transform.localPosition = Vector3( 0, 0.6, 0 );
 			objs[2] = uiQuest;
 		end
 		SetTrue( uiQuest )
@@ -1438,4 +1455,39 @@ function MapUnit.armySpeedUpdate( unit_index, state, statetime, stateduration )
 	-- 开始移动
 	local moveAttr = unitObj:GetComponent("ArmyMove");
 	moveAttr.speed = speed;
+end
+
+-- 播放动作
+function MapUnit.playAction( unit_index, action )
+	local recvValue = WorldMap.m_nMapUnitList[unit_index];
+	if recvValue == nil then
+		return;
+	end
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	if unitObj == nil then
+		return;
+	end
+	
+	if action == 1 then
+		local effect = GameObject.Instantiate( LoadPrefab( "FightBeat" ) )
+		effect.transform:SetParent( unitObj.transform );
+		effect.transform.localPosition = Vector3.New( 0, 0, 0 );		
+		effect.transform.localScale = Vector3.New( 0.5, 0.5, 1 );
+		GameObject.Destroy(effect,5)
+	end
+end
+
+-- 播放动作
+function MapUnit.playPosAction( posx, posy, action )
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_PICKUP, 0, cameraPosX, cameraPosY );
+	
+	if action == 1 then
+		local effect = GameObject.Instantiate( LoadPrefab( "FightBeat" ) )
+		effect.transform:SetParent( MapArmyRoot );
+		effect.transform.localPosition = Vector3.New( posx, posy, posy );		
+		effect.transform.localScale = Vector3.New( 0.5, 0.5, 1 );
+		GameObject.Destroy(effect,6)
+	end
 end

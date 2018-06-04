@@ -37,7 +37,9 @@ local m_scrollindex = 0;
 
 local m_ForgingEffect = nil;
 local m_guideShow = true;
-
+local m_gotoEquipType = nil;
+local m_gotoEquipKind = nil;
+	
 -- 打开界面
 function EquipForgingDlgOpen()
 	m_Dlg = eye.uiManager:Open( "EquipForgingDlg" );
@@ -54,12 +56,17 @@ function EquipForgingDlgClose()
 	eye.uiManager:Close( "EquipForgingDlg" );
 	HideSelect();
 	m_selectkind = 0;
+	m_gotoEquipType = nil;
+	m_gotoEquipKind = nil;
 end
 
 -- 删除界面
 function EquipForgingDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	m_selectkind = 0;
+	m_gotoEquipType = nil;
+	m_gotoEquipKind = nil;
 end
 
 ----------------------------------------
@@ -267,13 +274,11 @@ function EquipForgingDlgShow( EquipType, EquipKind )
 		local _bSelect = false
 		if forging == true then
 			SetTrue( uiHammer );
-			
 			if EquipType then
 				if EquipType == g_equipinfo[kind].type then
 					normalSelectKind = kind
 				end
-			end
-			
+			end		
 			if EquipKind then
 				if EquipKind == kind then
 					normalSelectKind = kind
@@ -283,6 +288,17 @@ function EquipForgingDlgShow( EquipType, EquipKind )
 			SetFalse( uiHammer );
 		end
 		
+		if m_gotoEquipType then
+			if m_gotoEquipType == g_equipinfo[kind].type then
+				normalSelectKind = kind
+			end
+		end
+		if m_gotoEquipKind then
+			if m_gotoEquipKind == kind then
+				normalSelectKind = kind
+			end
+		end
+			
 		SetFalse( uiSelect )
 		
 		if IsGuiding() then
@@ -324,6 +340,12 @@ function EquipForgingDlgShow( EquipType, EquipKind )
 	
 	if IsGuiding() then
 	end
+end
+
+-- 跳转使用
+function EquipForgingDlgSetGotoInfo( EquipType, EquipKind ) 
+	m_gotoEquipType = EquipType;
+	m_gotoEquipKind = EquipKind;
 end
 
 -- 排序

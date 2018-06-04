@@ -332,7 +332,7 @@ function QuestGoto( index )
 		City.Move( BUILDING_Main, 0, true )
 	
 	elseif datatype == QUEST_DATATYPE_STORY then-- 副本 datatype=8 datakind=副本编号 needvalue=1
-		StoryDlgShow()
+		StoryDlgShow( datakind )
 		
 	elseif datatype == QUEST_DATATYPE_KILLMONSTER then-- 打流寇N次 datatype=9 datakind=0 needvalue=数量
 		if GameManager.currentScence == "city" then
@@ -345,6 +345,7 @@ function QuestGoto( index )
 		end
 	
 	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING then-- 打造N装备N数量 datatype=11 datakind=装备kind needvalue=数量
+		EquipForgingDlgSetGotoInfo( nil, datakind ) 
 		City.Move( BUILDING_Smithy, -1, true );
 	
 		
@@ -416,7 +417,7 @@ function QuestGoto( index )
 		City.Move( BUILDING_Hero, -1, true );
 	
 	elseif datatype == QUEST_DATATYPE_HERO_CALL_STORY then -- 副本招募武将 datatype=46 datakind=副本id needvalue=1
-		StoryDlgShow();
+		StoryDlgShow( datakind );
 		
 	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_OP then -- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
 		City.Move( BUILDING_Smithy, -1, true );

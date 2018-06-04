@@ -55,6 +55,10 @@ local GMCMD_SERVER = {
 [61]="girl",
 [62]="girlsoul",
 [63]="sonquick",
+[64]="radd",
+[65]="rdel",
+[66]="rlogic",
+[67]="raddq",
 }
  
 -- 发到客户端本地指令
