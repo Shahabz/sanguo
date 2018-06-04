@@ -313,7 +313,7 @@ function ShopDlgRecvVipShop( recvValue )
 	
 	-- 默认选择
 	if m_gotoObj then
-		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local objs = m_gotoObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiSelect = objs[14]
 		SetTrue( uiSelect )
 	end
@@ -435,7 +435,6 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 	SetControlID( uiBuyButton, 1000+index )
 	
 	-- 默认选择
-	print( m_gotoKind .."==".. info.m_awardkind )
 	if m_gotoKind == info.m_awardkind then
 		m_gotoObj = uiObj;
 	end

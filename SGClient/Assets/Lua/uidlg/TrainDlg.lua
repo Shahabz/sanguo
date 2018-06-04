@@ -84,7 +84,7 @@ function TrainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 强征
 		elseif nControlID == 11 then
-			ShopDlgShowByType( 1 )
+			ShopDlgShowByKind( 1, AWARDKIND_INFANTRY )
 			TrainDlgClose();
 		
 		-- 募兵加时
