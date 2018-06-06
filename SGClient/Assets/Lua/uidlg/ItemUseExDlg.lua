@@ -208,7 +208,12 @@ function ItemUseExDlgBuy()
 	if m_nSelectKind <= 0 then
 		return
 	end
-	MsgBox( F(754, item_gettoken(m_nSelectKind), item_getname(m_nSelectKind) ), function()
+	local token = item_gettoken(m_nSelectKind)
+	MsgBox( F(754, token, item_getname(m_nSelectKind) ), function()
+		if GetPlayer().m_token < token then
+			JumpToken()
+			return
+		end
 		if m_type == 1 then
 			system_askinfo( ASKINFO_WORLDMAP, "", 8, WorldMap.m_nLastTouchGameCoorX, WorldMap.m_nLastTouchGameCoorY, m_nSelectKind );
 		else

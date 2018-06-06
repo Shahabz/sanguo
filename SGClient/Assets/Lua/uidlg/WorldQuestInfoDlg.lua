@@ -110,33 +110,23 @@ function WorldQuestInfoDlgShow( recvValue )
 	
 	-- 显示流寇
 	if questid == 1 or questid == 2 or questid == 3 then
-		SetImage( m_uiShape, EnemySprite( 1, 1 ) )
+		SetImage( m_uiShape, EnemySprite( 1, 1 ), true )
 		SetText( m_uiName, T(938) )
 		
-	-- 显示营地
+	-- 显示县城
 	elseif questid == 4 then
-		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[1].."_0") )
+		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[1].."_0"), true )
 		SetText( m_uiName, T(181) )
 		
-	-- 显示郡县
+	-- 显示郡城
 	elseif questid == 5 then
-		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[2].."_0") )
+		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[2].."_0"), true )
 		SetText( m_uiName, T(182) )
 		
-	-- 显示郡城
+	-- 显示治所
 	elseif questid == 6 then
-		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[3].."_0") )
+		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[3].."_0"), true )
 		SetText( m_uiName, T(183) )
-		
-	-- 显示州府
-	elseif questid == 8 then
-		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[5].."_0") )
-		SetText( m_uiName, T(185) )
-		
-	-- 显示州城
-	elseif questid == 9 then
-		SetImage( m_uiShape, LoadSprite(MapUnitTownShapeList[6].."_0") )
-		SetText( m_uiName, T(186) )
 	end
 	
 	if recvValue.m_complete == 1 then

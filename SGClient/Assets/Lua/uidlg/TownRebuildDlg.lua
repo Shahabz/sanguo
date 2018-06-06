@@ -15,6 +15,7 @@ local m_towninfo = nil;
 
 -- 打开界面
 function TownRebuildDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ui_static_pic_1" );
 	m_Dlg = eye.uiManager:Open( "TownRebuildDlg" );
 end
 
@@ -31,6 +32,7 @@ end
 function TownRebuildDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ui_static_pic_1" );
 end
 
 ----------------------------------------

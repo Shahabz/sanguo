@@ -706,10 +706,8 @@ local g_worldmapinfo = {
 [4] = { pic="ui_mapmain_quest_4" },
 [5] = { pic="ui_mapmain_quest_4" },
 [6] = { pic="ui_mapmain_quest_4" },
-[7] = { pic="ui_mapmain_quest_7" },
-[8] = { pic="ui_mapmain_quest_8" },
-[9] = { pic="ui_mapmain_quest_8" },
-[10] = { pic="ui_mapmain_quest_10" },
+[7] = { pic="ui_mapmain_quest_8" },
+[8] = { pic="ui_mapmain_quest_10" },
 }
 -- m_questid=0,m_value=0,m_maxvalue=0,m_complete=0,
 function MapMainDlgSetWorldQuest( recvValue )
@@ -734,7 +732,7 @@ function MapMainDlgSetWorldQuest( recvValue )
 	else
 		if questid == 1 or questid == 2 or questid == 3 then
 			str = T(1348)..recvValue.m_value.."/"..recvValue.m_maxvalue
-		elseif questid == 4 or questid == 5 or questid == 6 or questid == 8 or questid == 9 then
+		elseif questid == 4 or questid == 5 or questid == 6 then
 			str = T(1348)..recvValue.m_value.."/1"
 		else
 			str = Localization.text_quest( 2050+questid )
@@ -748,7 +746,7 @@ function MapMainDlgClickWorldMap()
 	local questid = m_WorldQuestCache.m_questid
 	if questid == 7 then
 		WorldBossDlgShow( 1, questid )
-	elseif questid == 10 then
+	elseif questid == 8 then
 		WorldBossDlgShow( 2, questid )
 	else
 		WorldQuestInfoDlgShow( m_WorldQuestCache )

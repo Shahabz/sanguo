@@ -15,7 +15,7 @@ public abstract class Camera2D : MonoBehaviour
     // 子摄影机
     public Camera subCamera;
     //
-    //public ScreenBlur blur;
+    public ScreenBlur blur;
 
     // 点击特效
     public bool enableTouchEffect = true;
@@ -753,26 +753,23 @@ public abstract class Camera2D : MonoBehaviour
 
     public void Shake( float strength, float rate, float time )
     {
-        //Shake shake = GetComponent<Shake>();
-
-        //if( shake == null )
-        //{
-        //    shake = gameObject.AddComponent<Shake>();
-        //}
-        //shake.shakeStrength = strength;
-        //shake.shakeRate = rate;
-        //shake.shakeTime = time;
-
-        //shake.Play();
+        Shake shake = GetComponent<Shake>();
+        if( shake == null )
+        {
+            shake = gameObject.AddComponent<Shake>();
+        }
+        shake.shakeStrength = strength;
+        shake.shakeRate = rate;
+        shake.shakeTime = time;
+        shake.Play();
     }
 
 
     public void Blur( bool On )
     {
-        //if( blur == null )
-        //    return;
-
-        //blur.enabled = On;
+        if( blur == null )
+            return;
+        blur.enabled = On;
     }
 
     // 还原摄像机缩放
