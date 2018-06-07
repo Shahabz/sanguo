@@ -61,7 +61,7 @@ function LoginModDestroy()
 	GameObject.Destroy( m_Dlg );
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_notice1" )
 	ResourceManager.UnloadAssetBundle( "_ab_ui_static_notice2" )
-	--ResourceManager.UnloadAssetBundle( "launchload" )
+	ResourceManager.UnloadAssetBundleImmediately( "launchload" )
 	m_Dlg = nil;
 	m_objectPoolServer = {};
 end

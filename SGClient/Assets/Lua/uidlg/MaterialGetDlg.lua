@@ -57,13 +57,13 @@ function MaterialGetDlgOnEvent( nType, nControlID, value, gameObject )
 			if nControlID == -10000 then
 				LevyDlgShow()
 			elseif nControlID == -10001 then
-				ShopDlgShowByKind( 1, 1 )
+				ShopDlgShowByKind( 1, AWARDKIND_LEVY_SILVER )
 			elseif nControlID == -10002 then
-				ShopDlgShowByKind( 1, 2 )
+				ShopDlgShowByKind( 1, AWARDKIND_LEVY_WOOD )
 			elseif nControlID == -10003 then
-				ShopDlgShowByKind( 1, 3 )
+				ShopDlgShowByKind( 1, AWARDKIND_LEVY_FOOD )
 			elseif nControlID == -10004 then
-				ShopDlgShowByKind( 1, 4 )
+				ShopDlgShowByKind( 1, AWARDKIND_LEVY_IRON )
 			end
 				MaterialGetDlgClose();
 			
