@@ -183,6 +183,7 @@ function MaterialMakeWillDlgSetObject( uiObj, shape, color, num, sec, wait, make
 	local uiTimer = objs[3];
 	local uiWait = objs[4];
 	local uiMakeBtn = objs[5];
+	local uiNameBack = objs[6];
 	if shape == nil then
 		SetFalse( uiShape )
 	else
@@ -199,9 +200,11 @@ function MaterialMakeWillDlgSetObject( uiObj, shape, color, num, sec, wait, make
 	
 	if num == nil then
 		SetFalse( uiNum )
+		SetFalse( uiNameBack )
 	else
 		SetTrue( uiNum )
 		SetText( uiNum, num );
+		SetTrue( uiNameBack )
 	end
 	
 	if sec == nil then
@@ -282,8 +285,8 @@ function MaterialMakeWillDlgSelect( id )
 	-- 消耗
 	local cost = "";
 	cost = cost..F( matname[id], 1 )
-	cost = cost.."<color=#f7f3bb>,"..T(121).."x"..g_material_make[id].silver..","
-	cost = cost..T(122).."x"..g_material_make[id].wood.."</color>"
+	cost = cost.."<color=#f7f3bb>,"..T(121).."x"..knum(g_material_make[id].silver)..","
+	cost = cost..T(122).."x"..knum(g_material_make[id].wood).."</color>"
 	SetText( uiInfo.transform:Find("Cost"), T(912)..": "..cost )
 	
 	-- 耗时
@@ -304,7 +307,7 @@ function MaterialMakeWillDlgSelect( id )
 				SetControlID( uiObj, 100+i )
 				SetImage( uiObj.transform:Find("Shape"), ItemSprite( m_CacheItemList[i].m_itemkind ) )
 				SetImage( uiObj.transform:Find("Color"), ItemColorSprite( item_getcolor( m_CacheItemList[i].m_itemkind ) ) )
-				SetText( uiObj.transform:Find("Name"), item_getname( m_CacheItemList[i].m_itemkind ) )
+				SetText( uiObj.transform:Find("Name"), item_getname( m_CacheItemList[i].m_itemkind ), NameColor(item_getcolor( m_CacheItemList[i].m_itemkind )) )
 				SetText( uiObj.transform:Find("Num"), "x"..m_CacheItemList[i].m_itemcount )
 				SetImage( uiObj.transform:Find("Select"), LoadSprite("ui_button_select3") )
 			else

@@ -128,11 +128,9 @@ function City.BuildingSelect( transform )
 		FangshiDlgShow()
 		
 	elseif building.kind == BUILDING_Shop then -- 商店
-		eye.audioManager:Play(313);
 		ShopDlgShow()
 		
 	elseif building.kind == BUILDING_Hero then -- 聚贤馆
-		eye.audioManager:Play(317);
 		HeroListDlgShow( HEROLIST_PATH_HERO_LIST );
 		
 	elseif building.kind == BUILDING_Wishing then -- 聚宝盆

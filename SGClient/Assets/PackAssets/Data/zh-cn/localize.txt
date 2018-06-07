@@ -871,8 +871,8 @@ id	text
 1291	加入国战
 1292	不能垮区域发起国战
 1293	本城池国战已经结束
-1294	我国的<color=03de27ff>{0}</color>对<color=D95DF4FF>{2}</color>的<color=FFDE00FF>{3}</color>(<color=03de27ff>{1}占领</color>)发起了国战，请各位主公加入。<color=bbddf3ff><url={4}>[点击前往查看]</url></color>
-1295	<color=03de27ff>{0}{1}</color>对我国占领的<color=D95DF4FF>{2}</color>的<color=FFDE00FF>{3}</color>发起了国战，敌人来犯，请诸位同袍伸出援手。<color=bbddf3ff><url={4}>[点击前往查看]</url></color>
+1294	我国的<color=03de27ff>{0}</color>对<color=D95DF4FF>{2}</color><color=FFDE00FF>{3}</color>(<color=03de27ff>{1}占领</color>)发起了国战，请各位主公加入。<color=bbddf3ff><url={4}>[点击前往查看]</url></color>
+1295	<color=03de27ff>{0}{1}</color>对我国占领的<color=D95DF4FF>{2}</color><color=FFDE00FF>{3}</color>发起了国战，敌人来犯，请诸位同袍伸出援手。<color=bbddf3ff><url={4}>[点击前往查看]</url></color>
 1296	国战进攻
 1297	国战防守
 1298	已经加入国战攻击部队
@@ -903,7 +903,7 @@ id	text
 1323	非本国占领区域，不可贸然前往
 1324	只有通过血战占领了洛阳的国家玩家才能采集
 1325	群雄封地
-1326	占领后成为本国封地，将派出禁卫开拓疆土
+1326	国家封地会派出禁卫开拓疆土
 1327	群雄封地会互相增援，国战胜利后占领
 1328	守将
 1329	封地守卫：lv.1-Lv.3守卫
@@ -1314,12 +1314,12 @@ id	text
 1867	响应召唤，将迁移至该城池附近
 1868	您已经在附近
 1869	国家日志记录本国城池重建，城池攻伐的信息
-1870	我国区域<color=#03DE27FF>{0}{1}</color><color=#BBDDF3FF>[{2}]</color>,被<color=#E80017FF>{3}</color>的<color=#D95DF4FF>{4}</color>占领
-1871	我国区域<color=#03DE27FF>{0}{1}</color><color=#BBDDF3FF>[{2}]</color>,成功的抵御了来自<color=#E80017FF>{3}</color>的<color=#D95DF4FF>{4}</color>的进攻
-1872	<color=#D95DF4FF>{0}成为了</color><color=#03DE27FF>{1}</color>的<color=#03DE27FF>{2}</color><color=#BBDDF3FF>[{3}]</color>太守
-1873	<color=#D95DF4FF>{0}</color>深明大义，辞去了<color=#03DE27FF>{1}{2}</color><color=#BBDDF3FF>[{3}]</color>的太守
-1874	<color=#03DE27FF>{0}{1}</color><color=#BBDDF3FF>[{2}]</color>，由我国的<color=#D95DF4FF>{3}</color>率众攻破，因为我国占领皇城城池已到7座上限，故放弃占领，该城归群雄势力所有
-1875	<color=#03DE27FF>{0}{1}</color><color=#BBDDF3FF>[{3}]</color>，由我国的<color=#D95DF4FF>{3}</color>率众攻破
+1870	我国的<color=#D95DF4FF>{0}</color><color=#FFDE00FF>{1}</color><color=#25C9FFFF>[{2}]</color>,被<color=#E80017FF>{3}</color>的<color=#03DE27FF>{4}</color>占领
+1871	我国的<color=#D95DF4FF>{0}</color><color=#FFDE00FF>{1}</color><color=#25C9FFFF>[{2}]</color>,成功抵御来自<color=#E80017FF>{3}</color>的<color=#03DE27FF>{4}</color>进攻
+1872	<color=#03DE27FF>{0}</color>成为了<color=#D95DF4FF>{1}</color><color=#FFDE00FF>{2}</color><color=#25C9FFFF>[{3}]</color>的太守
+1873	<color=#03DE27FF>{0}</color>深明大义，辞去了<color=#D95DF4FF>{1}</color><color=#FFDE00FF>{2}</color><color=#25C9FFFF>[{3}]</color>的太守
+1874	<color=#D95DF4FF>{0}</color><color=#FFDE00FF>{1}</color><color=#25C9FFFF>[{2}]</color>，由我国的<color=#03DE27FF>{3}</color>率众攻破，因为我国占领皇城城池已到7座上限，故放弃占领，该城归群雄势力所有
+1875	<color=#D95DF4FF>{0}</color><color=#FFDE00FF>{1}</color><color=#25C9FFFF>[{3}]</color>，由我国的<color=#03DE27FF>{3}</color>率众攻破
 1881	没有更多日志了
 1882	公告未进行任何修改
 1883	当前已被招降名将 <color=#03DE27FF>{0}</color>/{1}
@@ -2281,12 +2281,12 @@ id	text
 5913	征收次数已满
 5914	城防军招募冷却完成
 5915	女将商店冷却完成
-6000	<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被<color=03DE27FF>{3}</color>率众攻下
-6001	我国<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被<color=03DE27FF>[{3}]{4}</color>率众攻下
-6002	<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被我国的<color=03DE27FF>{4}</color>率众攻下，因我国占领司隶封地已达7座，故放弃占领，改城由群雄势力所有
-6003	玩家<color=03DE27FF>{3}</color>成为了<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>太守
-6004	玩家<color=03DE27FF>{3}</color>深明大义，辞去了<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>太守
-6005	玩家<color=03DE27FF>{3}</color>在<color=D95DF4FF>{0}</color>的<color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>征收了{4}到自己的主公府中
+6000	<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被<color=03DE27FF>{3}</color>率众攻下
+6001	我国<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被<color=03DE27FF>[{3}]{4}</color>率众攻下
+6002	<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>被我国的<color=03DE27FF>{4}</color>率众攻下，因我国占领司隶封地已达7座，故放弃占领，改城由群雄势力所有
+6003	玩家<color=03DE27FF>{3}</color>成为了<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>的太守
+6004	玩家<color=03DE27FF>{3}</color>深明大义，辞去了<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>的太守
+6005	玩家<color=03DE27FF>{3}</color>在<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>征收了{4}到自己的主公府中
 6006	司隶已经开放，诸位主公请速速前往地图查看
 6007	奸臣董卓已被击败，血战洛阳开放在即，诸位主公请速速前往地图查看
 6008	本届血战已经开启！战后将有珍贵的金色图纸现世，大丈夫为国争荣，出征吧！

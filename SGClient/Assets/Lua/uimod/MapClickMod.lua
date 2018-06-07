@@ -15,6 +15,7 @@ local m_uiTreasureBtn = nil; --UnityEngine.GameObject
 local m_uiCallBtn = nil; --UnityEngine.GameObject
 local m_uiPickupInfo = nil; --UnityEngine.GameObject
 local m_uiPickupBtn = nil; --UnityEngine.GameObject
+local m_uiProduceBtn = nil; --UnityEngine.GameObject
 
 local m_LastRecvValue = nil
 local m_towntype = 0;
@@ -63,6 +64,10 @@ function MapClickModOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 8 then
 			MapCallDlgShow()
 	
+		-- 征收界面
+		elseif nControlID == 10 then
+			MapTownDlgShow( 1, m_LastRecvValue )
+			
 		-- 城镇信息
 		elseif nControlID == 11 then
 			if m_towntype == MAPUNIT_TYPE_TOWN_GJFD then
@@ -108,6 +113,7 @@ function MapClickModOnAwake( gameObject )
 	m_uiCallBtn = objs[12];
 	m_uiPickupInfo = objs[13];
 	m_uiPickupBtn = objs[14];
+	m_uiProduceBtn = objs[15];
 end
 
 -- 界面初始化时调用
@@ -347,13 +353,20 @@ function MapClickModOpenTown( recvValue, gameCoorX, gameCoorY )
 	if nation == GetPlayer().m_nation or type == MAPUNIT_TYPE_TOWN_GJFD then
 		SetTrue( m_uiNationInfoBtn )
 		SetFalse( m_uiNationFightBtn )
-		local buttonList = { m_uiNationInfoBtn };
-		MapClickModButton( buttonList );
+		SetFalse( m_uiProduceBtn )
+		if nation == GetPlayer().m_nation and type < MAPUNIT_TYPE_TOWN_GJFD then
+			local buttonList = { m_uiProduceBtn, m_uiNationInfoBtn };
+			MapClickModButton( buttonList );
+		else
+			local buttonList = { m_uiNationInfoBtn };
+			MapClickModButton( buttonList );
+		end
 		
 	-- 敌国占领
 	else
 		SetTrue( m_uiNationInfoBtn )
 		SetTrue( m_uiNationFightBtn )
+		SetFalse( m_uiProduceBtn )
 		local buttonList = { m_uiNationInfoBtn, m_uiNationFightBtn };
 		MapClickModButton( buttonList );
 	end

@@ -201,6 +201,15 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 		
 		-- 资源	
 		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
+			if m_kind == BUILDING_Silver then
+					eye.audioManager:Play(320);
+			elseif m_kind == BUILDING_Wood then
+					eye.audioManager:Play(321);
+			elseif m_kind == BUILDING_Food then
+					eye.audioManager:Play(322);
+			elseif m_kind == BUILDING_Iron then
+					eye.audioManager:Play(323);
+			end
 			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
 			if pBuilding.m_level <= 0 then
 				 BuildingOpratorModClose();

@@ -42,6 +42,7 @@ local m_gotoObj = nil;
 
 -- 打开界面
 function ShopDlgOpen()
+	eye.audioManager:Play(313);
 	ResourceManager.LoadAssetBundle( "_ab_paybag" );
 	m_Dlg = eye.uiManager:Open( "ShopDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(34), HELP_BagDlg, ShopDlgClose );

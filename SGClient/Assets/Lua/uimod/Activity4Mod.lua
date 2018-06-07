@@ -126,6 +126,9 @@ function Activity4ModRecv( recvValue )
 	if m_Mod == nil then
 		return
 	end
+	if recvValue.m_myday > 7 then
+		recvValue.m_myday = 7
+	end
 	m_red = 0;
 	m_dayred = { 0,0,0,0,0,0,0 };
 	m_recvValue = recvValue

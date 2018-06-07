@@ -24,6 +24,7 @@ local m_uiProduceTimer = nil; --UnityEngine.GameObject
 local m_uiSendMailButton = nil; --UnityEngine.GameObject
 local m_uiPeople = nil; --UnityEngine.GameObject
 local m_uiLevyItemButton = nil; --UnityEngine.GameObject
+local m_uiAwardNum = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_path = 0;
@@ -139,6 +140,7 @@ function MapTownDlgOnAwake( gameObject )
 	m_uiSendMailButton = objs[21];
 	m_uiPeople = objs[22];
 	m_uiLevyItemButton = objs[23];
+	m_uiAwardNum = objs[24];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -191,6 +193,7 @@ function MapTownDlgShow( path, recvValue )
 	SetFalse( m_uiProduceTimer )
 	SetFalse( m_uiPeople )
 	SetFalse( m_uiOwn )
+	SetFalse( m_uiAwardNum )
 	
 	m_path = path;
 	m_LastRecvValue = recvValue;
@@ -233,7 +236,8 @@ function MapTownDlgShow( path, recvValue )
 	end
 	
 	-- 形象
-	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[m_type].."_"..m_nation ) )
+	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[m_type].."_"..m_nation ), true )
+	
 	-- 名字
 	if custom_namelen > 0 then
 		SetText( m_uiName, custom_name )
@@ -372,6 +376,10 @@ function MapTownDlgRecvValue( recvValue )
 				SetTimer( m_uiProduceTimer, recvValue.m_produce_sec, m_produce_maxsec, 2, T(1282) );
 				SetFalse( m_uiLevyButton )
 			end
+			
+			-- 次数
+			SetTrue( m_uiAwardNum )
+			SetText( m_uiAwardNum, recvValue.m_produce_num.."/"..m_produce_maxnum );
 			
 			-- 征收消耗
 			SetTrue( m_uiLevyCost );

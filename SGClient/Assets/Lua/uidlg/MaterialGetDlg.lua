@@ -52,10 +52,20 @@ function MaterialGetDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 1 and nControlID <= 4 then
 			MaterialGetDlgSelectTab( nControlID )
 			
-		-- 前往征收
-		elseif nControlID == 10 then
-			LevyDlgShow()
-			MaterialGetDlgClose();
+		-- 前往
+		elseif nControlID >= -10004 and nControlID <= -10000 then
+			if nControlID == -10000 then
+				LevyDlgShow()
+			elseif nControlID == -10001 then
+				ShopDlgShowByKind( 1, 1 )
+			elseif nControlID == -10002 then
+				ShopDlgShowByKind( 1, 2 )
+			elseif nControlID == -10003 then
+				ShopDlgShowByKind( 1, 3 )
+			elseif nControlID == -10004 then
+				ShopDlgShowByKind( 1, 4 )
+			end
+				MaterialGetDlgClose();
 			
 		-- 减10
 		elseif nControlID == 11 then
@@ -134,25 +144,25 @@ function MaterialGetDlgShow( itemkind )
 	if itemkind == 120 or itemkind == 121 or itemkind == 122 or itemkind == 123 then
 		SetText( m_uiText, T(774) );
 		m_nTabKind = { 120, 121, 122, 123 };
-		m_nContentKind = { { 101,102,103, -10000 }, { 104,105,106, -10000 },{ 107,108,109, -10000 }, { 110,111,112, -10000 }}
+		m_nContentKind = { { 101,102,103, -10000, -10001 }, { 104,105,106, -10000, -10002 },{ 107,108,109, -10000, -10003 }, { 110,111,112, -10000, -10004 }}
 		
-	elseif itemkind == 1 or itemkind == 11 or itemkind == 21 then -- 绿
+	elseif itemkind == 1 or itemkind == 11 or itemkind == 21 then -- 蓝
 		SetText( m_uiText, T(775) );
 		m_nTabKind = { 1, 11, 21 };
 		m_nContentKind = { { -1,81,91,92 }, { -11,81,91,92 },{ -21,81,91,92 }, { -31,81,91,92 }}
 		SetFalse( m_uiTabs.transform:GetChild(3).gameObject )
 		
-	elseif itemkind == 2 or itemkind == 12 or itemkind == 22 or itemkind == 32 then -- 金
+	elseif itemkind == 2 or itemkind == 12 or itemkind == 22 or itemkind == 32 then -- 紫
 		SetText( m_uiText, T(776) );
 		m_nTabKind = { 2, 12, 22, 32 };
-		m_nContentKind = { { -2,83,93,94 }, { -12,83,93,94 },{ -22,83,93,94 }, { -32,83,93,94 }}
+		m_nContentKind = { { -2,93,94 }, { -12,93,94 },{ -22,93,94 }, { -32,93,94 }}
 		
-	elseif itemkind == 3 or itemkind == 13 or itemkind == 23 or itemkind == 33 then -- 红
+	elseif itemkind == 3 or itemkind == 13 or itemkind == 23 or itemkind == 33 then -- 金
 		SetText( m_uiText, T(777) );
 		m_nTabKind = { 3, 13, 23, 33 };
 		m_nContentKind = { { -3,85,95,96 }, { -13,85,95,96 },{ -23,85,95,96 }, { -33,85,95,96 }}
 	
-	elseif itemkind == 4 or itemkind == 14 or itemkind == 24 or itemkind == 34 then -- 紫
+	elseif itemkind == 4 or itemkind == 14 or itemkind == 24 or itemkind == 34 then -- 红
 		SetText( m_uiText, T(777) );
 		m_nTabKind = { 4, 14, 24, 34 };
 		m_nContentKind = { { -4,97,95,96 }, { -14,97,95,96 },{ -24,97,95,96 }, { -34,97,95,96 }}	
@@ -181,6 +191,10 @@ function MaterialGetDlgSelectTab( index )
 			SetImage( uiTab.transform:Find("Back"), LoadSprite("ui_button_page2") )
 		end
 	end
+	for i=0, 4, 1 do
+		local uiItem = m_uiContent.transform:GetChild(i).gameObject;
+		SetFalse( uiItem )
+	end
 
 	local contentKind = m_nContentKind[index]
 	for i=1, #contentKind, 1 do
@@ -194,7 +208,7 @@ function MaterialGetDlgSelectTab( index )
 		local uiBuyBtn = objs[4];
 		local uiGotoBtn = objs[5];
 		local uiNum = objs[6];
-		
+		SetTrue( uiItem )
 		-- 前往
 		if itemkind == -10000 then
 			SetTrue( uiGotoBtn );
@@ -203,8 +217,20 @@ function MaterialGetDlgSelectTab( index )
 			SetFalse( uiNum )
 			SetImage( uiShape, BuildingSprite(1) )
 			SetImage( uiColor, ItemColorSprite(4) )
-			SetText( uiName, BuildingName(1).."("..T(659)..")" )
+			SetText( uiName, BuildingName(1).."("..T(659)..")", NameColor(4) )
+			SetControlID( uiGotoBtn, itemkind )
 		
+		-- 商店
+		elseif itemkind == -10001 or itemkind == -10002 or itemkind == -10003 or itemkind == -10004 then
+			SetTrue( uiGotoBtn );
+			SetFalse( uiUseBtn );
+			SetFalse( uiBuyBtn );
+			SetFalse( uiNum )
+			SetImage( uiShape, BuildingSprite(34) )
+			SetImage( uiColor, ItemColorSprite(4) )
+			SetText( uiName, BuildingName(34).."("..T(731)..")", NameColor(4) )
+			SetControlID( uiGotoBtn, itemkind )
+			
 		-- 购买	
 		elseif itemkind < 0 then
 			
@@ -216,7 +242,9 @@ function MaterialGetDlgSelectTab( index )
 			SetControlID( uiBuyBtn, 2000+_kind )
 			SetImage( uiShape, ItemSprite(_kind) )
 			SetImage( uiColor, ItemColorSprite(item_getcolor(_kind)) )
-			SetText( uiName, item_getname(_kind).."("..item_getdesc(_kind)..")", NameColor( item_getcolor(_kind) ) )
+			
+			local desc = string.split(item_getdesc(_kind), "\n")
+			SetText( uiName, item_getname(_kind).."\n"..desc[1], NameColor( item_getcolor(_kind) ) )
 			SetText( uiNum, GetItem():GetCount( _kind ) )
 			
 			SetText( uiBuyBtn.transform:Find("Back/Num"), item_gettoken(_kind) )	
@@ -230,7 +258,9 @@ function MaterialGetDlgSelectTab( index )
 			SetControlID( uiUseBtn, 1000+itemkind )
 			SetImage( uiShape, ItemSprite(itemkind) )
 			SetImage( uiColor, ItemColorSprite(item_getcolor(itemkind)) )
-			SetText( uiName, item_getname(itemkind).."("..item_getdesc(itemkind)..")", NameColor( item_getcolor(itemkind) ) )
+			
+			local desc = string.split(item_getdesc(itemkind), "\n")
+			SetText( uiName, item_getname(itemkind).."\n"..desc[1], NameColor( item_getcolor(_kind) ) )
 			SetText( uiNum, GetItem():GetCount( itemkind ) )
 		end
 	end

@@ -176,6 +176,8 @@ function MapTownExDlgShow( recvValue )
 		SetTrue( m_uiLayer3 )
 		SetFalse( m_uiLayer1 )
 		SetFalse( m_uiLayer2 )
+		-- 形象
+		SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
 	else
 		-- 国都信息
 		system_askinfo( ASKINFO_MAPTOWN, "", 7, m_townid );
@@ -193,10 +195,10 @@ function MapTownExDlgShow( recvValue )
 		end
 		SetFalse( m_uiKingButton )
 		SetFalse( m_uiLayer3 )
+		-- 形象
+	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ), true )
 	end
 	
-	-- 形象
-	SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..m_nation ) )
 	-- 位置
 	SetText( m_uiPos, F(1272, m_posx, m_posy) )
 	-- 国旗

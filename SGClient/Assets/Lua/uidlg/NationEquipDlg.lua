@@ -404,7 +404,7 @@ function NationEquipDlgSetIron( update )
 			local uiGetIronBtn = objs[19];
 			local info = m_recvValue[kind];
 			if info.m_neq_lv > 0 then
-				if g_nation_equip[kind][info.m_neq_lv].remake_star == 0 and info.m_neq_star >= g_nation_equip[kind][info.m_neq_lv].remake_star then
+				if g_nation_equip[kind][info.m_neq_lv].remake_star == 0 or info.m_neq_star >= g_nation_equip[kind][info.m_neq_lv].remake_star then
 					if GetPlayer().m_iron < g_nation_equip[kind][info.m_neq_lv].iron then 
 						SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xE80017FF ) )
 						SetFalse( uiUpgradeBtn )

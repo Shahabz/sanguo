@@ -29,6 +29,7 @@ HEROLIST_PATH_HERO_LIST		= 3
 
 -- 打开界面
 function HeroListDlgOpen()
+	eye.audioManager:Play(317);
 	m_Dlg = eye.uiManager:Open( "HeroListDlg" );
 	m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(35), HELP_HeroListDlg, HeroListDlgClose );
 end
