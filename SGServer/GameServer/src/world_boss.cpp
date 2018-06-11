@@ -124,6 +124,7 @@ int worldboss_sendinfo( int actor_index, int bossid )
 	pValue.m_maxhp = g_world_boss[bossid].maxhp;
 	pValue.m_actorlevel = g_worldbossinfo[bossid].actorlevel;
 	pValue.m_isfight = actor_get_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS );
+	pValue.m_resetnum = actor_get_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS_RESET );
 	netsend_worldboss_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -139,6 +140,7 @@ int worldboss_sendworld( int bossid )
 	pValue.m_maxhp = g_world_boss[bossid].maxhp;
 	pValue.m_actorlevel = g_worldbossinfo[bossid].actorlevel;
 	pValue.m_isfight = -1;
+	pValue.m_resetnum = -1;
 	netsend_worldboss_S( 0, SENDTYPE_WORLDMAP, &pValue );
 	return 0;
 }
@@ -232,6 +234,34 @@ int worldboss_battle( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 	actor_notify_alert_v( actor_index, 1364, v1, NULL );
 	actor_add_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS );
 	worldboss_sendworld( bossid );
+	return 0;
+}
+
+// ÖØÖÃ
+int worldboss_reset( int actor_index, int bossid )
+{
+	if ( bossid <= 0 || bossid >= g_world_boss_maxcount )
+		return -1;
+	if ( actor_get_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS ) == 0 )
+		return -1;
+
+	int num = actor_get_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS_RESET );
+	if ( num > 100 )
+	{
+		num = 100;
+	}
+	int token = 100 + num * 100;
+	if ( actor_change_token( actor_index, -token, PATH_WORLDBOSS, 0 ) < 0 )
+	{
+		return -1;
+	}
+	
+	actor_set_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS, 0 );
+	if ( num < 100 )
+	{
+		actor_add_today_char_times( actor_index, TODAY_CHAR_WORLDBOSS_RESET );
+	}
+	worldboss_sendinfo( actor_index, bossid );
 	return 0;
 }
 

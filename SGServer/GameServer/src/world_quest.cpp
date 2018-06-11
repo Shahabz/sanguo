@@ -177,6 +177,16 @@ int worldquest_setvalue( int questid, int value )
 		{// 击败虎牢关-刷司隶野怪和资源点
 			brush_enemy_queue_add( 0, MAPZONE_CENTERID );
 			brush_enemy_queue_add( 1, MAPZONE_CENTERID );
+
+			// 设置都城
+			nation_capital_townid( 1, 191 );
+			nation_people_capital_set( 1, 0 );
+
+			nation_capital_townid( 2, 192 );
+			nation_people_capital_set( 2, 0 );
+
+			nation_capital_townid( 3, 193 );
+			nation_people_capital_set( 3, 0 );
 		}
 		else if ( questid == WORLDQUEST_WORLDBOSS2 )
 		{ // 击败董卓-开启血战皇城

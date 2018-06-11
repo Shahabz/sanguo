@@ -1730,6 +1730,7 @@ function struct_NetS_WorldBoss_recv( buffer )
 	recvValue.m_maxhp = buffer:ReadInt();
 	recvValue.m_isfight = buffer:ReadSByte();
 	recvValue.m_actorlevel = buffer:ReadShort();
+	recvValue.m_resetnum = buffer:ReadSByte();
 	return recvValue;
 end
 

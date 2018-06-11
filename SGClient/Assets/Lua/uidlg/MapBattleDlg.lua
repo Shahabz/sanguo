@@ -195,6 +195,8 @@ function MapBattleDlgShow( recvValue, action, group_index )
 			SetFalse( m_uiAttackDesc )
 			SetText( m_uiTitle.transform:Find("Text"), T(1297) )
 			SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1297) );
+		else
+			
 		end
 		
 		-- 形象
@@ -202,7 +204,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..nation ) )
 		
 		-- 名字
-		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )
+		SetText( m_uiName, F(3019, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )
 		
 	elseif recvValue.m_type == MAPUNIT_TYPE_ENEMY then -- 流寇
 		local level	= recvValue.m_char_value[1];
@@ -246,7 +248,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetImage( m_uiShape, LoadSprite( MapUnitTownShapeList[type].."_"..recvValue.m_nation ) )
 		--m_uiShape.transform.localScale = Vector3.New( 48, 48, 48 );
 		-- 名字
-		SetText( m_uiName, F(1228, g_towninfo[townid].level, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )	
+		SetText( m_uiName, F(3019, MapTownName( townid ), g_towninfo[townid].posx, g_towninfo[townid].posy) )	
 		-- 按钮名称
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(1392) );
 		SetFalse( m_uiCost )

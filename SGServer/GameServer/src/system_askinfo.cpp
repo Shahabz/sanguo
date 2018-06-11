@@ -140,6 +140,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 首次免费前往司隶
 			map_zone_goto_sili( actor_index );
 		}
+		else if ( pvalue[0] == 16 )
+		{// 世界boss重置
+			worldboss_reset( actor_index, pvalue[1] );
+		}
 		break;
 	case ASKINFO_BUILDING:
 		if ( pvalue[0] == 0 )

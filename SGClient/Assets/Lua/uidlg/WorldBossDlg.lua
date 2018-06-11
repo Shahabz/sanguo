@@ -8,8 +8,10 @@ local m_uiProgress = nil; --UnityEngine.GameObject
 local m_uiFightButton = nil; --UnityEngine.GameObject
 local m_uiCancelButton = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
+local m_uiResetButton = nil; --UnityEngine.GameObject
 local m_bossid = 0;
 local m_limit_actorlevel = {};
+local m_costtoken = 0;
 -- 打开界面
 function WorldBossDlgOpen()
 	m_Dlg = eye.uiManager:Open( "WorldBossDlg" );
@@ -41,6 +43,8 @@ function WorldBossDlgOnEvent( nType, nControlID, value, gameObject )
             WorldBossDlgClose();
 		elseif nControlID == 1 then
 			WorldBossDlgFight();
+		elseif nControlID == 2 then
+			WorldBossDlgReset();
         end
 	end
 end
@@ -57,6 +61,7 @@ function WorldBossDlgOnAwake( gameObject )
 	m_uiFightButton = objs[5];
 	m_uiCancelButton = objs[6];
 	m_uiWarn = objs[7];
+	m_uiResetButton = objs[8];
 end
 
 -- 界面初始化时调用
@@ -113,13 +118,14 @@ function WorldBossDlgRecvValue( recvValue )
 	SetText( m_uiProgress.transform:Find("Text"), recvValue.m_hp.."/"..recvValue.m_maxhp )
 	if recvValue.m_isfight < 0 then
 	elseif recvValue.m_isfight > 0 then
-		SetTrue( m_uiCancelButton )
 		SetFalse( m_uiFightButton )
-		SetText( m_uiWarn, T(1358) )
+		m_costtoken = 100 + recvValue.m_resetnum * 100;
+		SetRichText( m_uiWarn, F(1358,m_costtoken) )
+		SetTrue( m_uiResetButton )
 	else
 		SetTrue( m_uiFightButton )
-		SetFalse( m_uiCancelButton )
-		SetText( m_uiWarn, T(1357) )
+		SetRichText( m_uiWarn, T(1357) )
+		SetFalse( m_uiResetButton )
 	end
 end
 
@@ -131,4 +137,14 @@ function WorldBossDlgFight()
 	end
 	BattleDlgShowByWorldBoss( m_bossid )
 	WorldBossDlgClose()
+end
+
+function WorldBossDlgReset()
+	MsgBox( F(3018,m_costtoken), function() 
+		if GetPlayer().m_token < m_costtoken then
+			JumpToken()
+		else
+			system_askinfo( ASKINFO_QUEST, "", 16, m_bossid );
+		end
+	end )
 end

@@ -1,13 +1,13 @@
--- 丄1�7次�1�7�变釄1�7
+-- 一次性变量
 ACTOR_SFLAG_BODY_FREEBUY	=	0	-- 首次购买体力免费
 ACTOR_SFLAG_MAPZONE_GO_ZC	=	1	-- 首次免费前往州城
-ACTOR_SFLAG_QUEST_AUTOBUILD	=	2	-- 新手任务是否领取过自动建逄1�7
+ACTOR_SFLAG_QUEST_AUTOBUILD	=	2	-- 新手任务是否领取过自动建造
 ACTOR_SFLAG_SKIPFIGHT		=	3	-- 是否可以跳过战斗
-ACTOR_SFLAG_PALACE			=	4	-- 是否弄1�7启皇宫内附1�7
-ACTOR_SFLAG_STORYSWEEP		=	5	-- 是否弄1�7启扫荡副朄1�7
-ACTOR_SFLAG_OFFICIAL_TECH	=	6   -- 是否弄1�7启紫色研究员
-ACTOR_SFLAG_EQUPIPDRAWING	=	7	-- 是否弄1�7启装备分解获得图纄1�7
-ACTOR_SFLAG_MATERIAL_MAKEWILL = 8   -- 是否弄1�7启作坊预讄1�7
+ACTOR_SFLAG_PALACE			=	4	-- 是否开启皇宫内院
+ACTOR_SFLAG_STORYSWEEP		=	5	-- 是否开启扫荡副本
+ACTOR_SFLAG_OFFICIAL_TECH	=	6   -- 是否开启紫色研究员
+ACTOR_SFLAG_EQUPIPDRAWING	=	7	-- 是否开启装备分解获得图纸
+ACTOR_SFLAG_MATERIAL_MAKEWILL = 8   -- 是否开启作坊预设
 
 CITY_BUFF_MAX		=	6 -- buff数量
 CITY_BUFF_MARCH		=	0 -- 军曹管buff 行军耗时降低15%
@@ -108,7 +108,7 @@ function Player:Init()
 	self.m_award_mailid		=	int64.new(0);
 end
 
--- 属�1�7�变匄1�7
+-- 属性变化
 function Player:Set( recvValue )
 	self.m_actorid			=	recvValue.m_actorid;
 	self.m_name				=	recvValue.m_name;
@@ -178,12 +178,12 @@ function Player:SetBuilding( kind, info, active )
 	--
 	local unitObj = City.BuildingAdd( info, active );
 	
-	-- 完成数�1�7�状怄1�7
+	-- 完成数值状态
 	if info.m_overvalue > 0 then
 		City.BuildingSetOver( kind );
 	end
 	
-	-- 加�1�7�标讄1�7
+	-- 加速标记
 	if info.m_quick > 0 then
 		City.BuildingSetQuick( kind );
 	end
@@ -227,18 +227,18 @@ function Player:SetBuildingLevy( levynum )
 	if GetPlayer().m_questid < 80 then
 		return
 	end
-	--[[征收次数=12时，扄1�7有的资源田（100%）上方都悬浮丄1�7个金色气泄1�7
-征收次数=11时，扄1�7有的资源田（90%）显示为金色气泡＄1�710%显示绿色气泡
-征收次数=10时，扄1�7有的资源田（80%）显示为金色气泡＄1�720%显示绿色气泡
-征收次数=9时，扄1�7有的资源田（70%）显示为金色气泡＄1�730%显示绿色气泡
-征收次数=8时，扄1�7有的资源田（60%）显示为金色气泡＄1�740%显示绿色气泡
-征收次数=7时，扄1�7有的资源田（50%）显示为金色气泡＄1�750%显示绿色气泡
-征收次数=6时，扄1�7有的资源田（40%）显示为金色气泡＄1�760%显示绿色气泡
-征收次数=5时，扄1�7有的资源田（0%）显示为金色气泡＄1�740%显示绿色气泡
-征收次数=4时，每种资源田各朄1�74个绿色泡泄1�7
-征收次数=3时，每种资源田各朄1�73个绿色泡泄1�7
-征收次数=2时，每种资源田各朄1�72个绿色泡泄1�7
-征收次数=1时，每种资源田各朄1�71个绿色泡泄1�7--]]
+	--[[征收次数=12时，所有的资源田（100%）上方都悬浮一个金色气泡
+征收次数=11时，所有的资源田（90%）显示为金色气泡，10%显示绿色气泡
+征收次数=10时，所有的资源田（80%）显示为金色气泡，20%显示绿色气泡
+征收次数=9时，所有的资源田（70%）显示为金色气泡，30%显示绿色气泡
+征收次数=8时，所有的资源田（60%）显示为金色气泡，40%显示绿色气泡
+征收次数=7时，所有的资源田（50%）显示为金色气泡，50%显示绿色气泡
+征收次数=6时，所有的资源田（40%）显示为金色气泡，60%显示绿色气泡
+征收次数=5时，所有的资源田（0%）显示为金色气泡，40%显示绿色气泡
+征收次数=4时，每种资源田各有4个绿色泡泡
+征收次数=3时，每种资源田各有3个绿色泡泡
+征收次数=2时，每种资源田各有2个绿色泡泡
+征收次数=1时，每种资源田各有1个绿色泡泡--]]
 	
 	-- 获取每种建筑数量
 	local total = 0
@@ -311,7 +311,7 @@ function Player:SetBuildingLevy( levynum )
 		greennum = 0
 	end
 	
-	-- 计算每一种资源金色数釄1�7
+	-- 计算每一种资源金色数量
 	local temp = goldnum
 	for tmpi=1, goldnum do
 		for i=21, 24, 1 do
@@ -328,7 +328,7 @@ function Player:SetBuildingLevy( levynum )
 		end
 	end
 	
-	-- 计算每一种资源绿色数釄1�7
+	-- 计算每一种资源绿色数量
 	if levynum > 4 then
 		local temp = greennum
 		for tmpi=1, greennum do
@@ -353,7 +353,7 @@ function Player:SetBuildingLevy( levynum )
 		end
 	end
 		
-	-- 先全部隐藄1�7
+	-- 先全部隐藏
 	for i=21, 24, 1 do
 		if City.m_Buildings_res[i] then
 			for k, v in pairs( City.m_Buildings_res[i] ) do
@@ -430,10 +430,13 @@ function Player:BuildingOverValue( kind )
 	return pBuilding.m_overvalue;
 end
 
--- 找一个等级最低的资源甄1�7
+-- 找一个等级最低的资源田
 function Player:BuildingResMinLevel( kind )
 	local minlevel = 99;
 	local offset = -1;
+	if self.m_buildings_res[kind] == nil then
+		return
+	end
 	for k, v in pairs( self.m_buildings_res[kind] ) do
 		if v.m_level < minlevel then
 			minlevel = v.m_level;
@@ -447,7 +450,7 @@ function Player:CityLevel()
 	return self.m_buildings[1].m_level;
 end
 
--- 黑名卄1�7
+-- 黑名单
 function Player:SetBlacklist( recvValue )
 	for i=1, recvValue.m_count do
 		local actorid = recvValue.m_actorid[i]
@@ -485,9 +488,9 @@ function Player:SetServerTime( servertime )
 	self.m_clienttime = os.time();
 end
 
--- 服务器时间戳，游戏所有时间均以服务器时间戳为凄1�7
--- 当前时间-客户端收到服务器时间戳的时间丄1�7=流�1�7�时闄1�7
--- 流�1�7�时闄1�7+服务器时闄1�7=当前时间
+-- 服务器时间戳，游戏所有时间均以服务器时间戳为准
+-- 当前时间-客户端收到服务器时间戳的时间为=流逝时间
+-- 流逝时间+服务器时间=当前时间
 function GetServerTime()
 	return GetPlayer().m_servertime + (os.time()-GetPlayer().m_clienttime);
 end

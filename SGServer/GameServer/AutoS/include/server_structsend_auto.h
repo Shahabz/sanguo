@@ -1330,6 +1330,7 @@ struct _slk_NetS_WorldBoss {
 	int m_maxhp;	//世界boos信息
 	char m_isfight;	//世界boos信息今天是否打过
 	short m_actorlevel;	//世界boos信息等级限制
+	char m_resetnum;	//世界boos信息今天重置次数
 };
 typedef struct _slk_NetS_WorldBoss SLK_NetS_WorldBoss;	//世界boss信息
 

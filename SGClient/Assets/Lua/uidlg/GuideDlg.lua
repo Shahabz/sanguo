@@ -237,6 +237,7 @@ function FindCmdTpye(tran)
 			m_uiFinger[point].transform.position = GetCopyPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_GOTO_SOCIETY then 
 			m_uiFinger[point].transform.position = GetWorldPos() + deviation;
+			
 		elseif g_guide[mId][mStep].guideType == GUIDE_BACK then
 			m_uiFinger[point].transform.position = GetBackPos() + deviation;
 		elseif g_guide[mId][mStep].guideType == GUIDE_AUTOBUILDING then

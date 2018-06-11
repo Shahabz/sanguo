@@ -152,10 +152,10 @@ function MapEnemyDlgRecvAward( recvValue )
 	for i = 0 ,count - 1 do
 		local uiObj = m_uiAwardGrid.transform:GetChild(i).gameObject
 		SetTrue( uiObj );
-		local sprite, color, name = AwardInfo( recvValue.m_list[i+1].m_kind )
+		local sprite, color, name,c = AwardInfo( recvValue.m_list[i+1].m_kind )
 		SetImage( uiObj.transform:Find("Shape"), sprite );
 		SetImage( uiObj.transform:Find("Color"), color );
-		SetText( uiObj.transform:Find("Name"), name );
+		SetText( uiObj.transform:Find("Name"), name, NameColor(c) );
     end
 	
 end

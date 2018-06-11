@@ -11,7 +11,6 @@ struct _maptowninfo {
 				short posy;	//
 				short grid;	//
 				short range;	//
-				short level;	//
 				char preid[64];	//
 				int base_award;	//
 				int other_award;	//

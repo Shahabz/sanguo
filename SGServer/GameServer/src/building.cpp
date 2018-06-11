@@ -680,12 +680,12 @@ int building_upgrade_autocheck( int city_index )
 	QuestInfo *questinfo = quest_config( g_city[city_index].questid[0] );
 	if ( questinfo )
 	{
-		if ( questinfo->type == QUEST_DATATYPE_BUILDING_LEVEL ||
-			questinfo->type == QUEST_DATATYPE_BUILDING_UPGRADE ||
-			questinfo->type == QUEST_DATATYPE_BUILDING_SILVER ||
-			questinfo->type == QUEST_DATATYPE_BUILDING_WOOD ||
-			questinfo->type == QUEST_DATATYPE_BUILDING_FOOD ||
-			questinfo->type == QUEST_DATATYPE_BUILDING_IRON )
+		if ( questinfo->datatype == QUEST_DATATYPE_BUILDING_LEVEL ||
+			questinfo->datatype == QUEST_DATATYPE_BUILDING_UPGRADE ||
+			questinfo->datatype == QUEST_DATATYPE_BUILDING_SILVER ||
+			questinfo->datatype == QUEST_DATATYPE_BUILDING_WOOD ||
+			questinfo->datatype == QUEST_DATATYPE_BUILDING_FOOD ||
+			questinfo->datatype == QUEST_DATATYPE_BUILDING_IRON )
 		{
 			if ( questinfo->datakind < BUILDING_Infantry )
 			{ // ÆÕÍ¨½¨Öş

@@ -1929,6 +1929,7 @@ int struct_NetS_WorldBoss_send( char **pptr, int *psize, SLK_NetS_WorldBoss *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxhp, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isfight, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_actorlevel, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_resetnum, (*psize) );
 	return 0;
 }
 

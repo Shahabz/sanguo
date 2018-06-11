@@ -912,7 +912,7 @@ int map_town_levy( int actor_index, int townid, int type )
 		int pre_townid = g_map_town[townid].pre_townid[tmpi];
 		if ( pre_townid <= 0 || pre_townid >= g_map_town_maxcount )
 			continue;
-		if ( g_map_town[pre_townid].nation > 0 )
+		if ( g_map_town[pre_townid].nation == g_map_town[townid].nation )
 		{
 			occupy = 1;
 			break;
@@ -962,7 +962,7 @@ int map_town_owner_award_actor( int townid )
 		int pre_townid = g_map_town[townid].pre_townid[tmpi];
 		if ( pre_townid <= 0 || pre_townid >= g_map_town_maxcount )
 			continue;
-		if ( g_map_town[pre_townid].nation > 0 )
+		if ( g_map_town[pre_townid].nation == g_map_town[townid].nation )
 		{
 			occupy = 1;
 			break;
@@ -1378,7 +1378,7 @@ int map_town_sendaward( int actor_index, int townid )
 		int pre_townid = g_map_town[townid].pre_townid[tmpi];
 		if ( pre_townid <= 0 || pre_townid >= g_map_town_maxcount )
 			continue;
-		if ( g_map_town[pre_townid].nation > 0 )
+		if ( g_map_town[pre_townid].nation == g_map_town[townid].nation )
 		{
 			occupy = 1;
 			break;

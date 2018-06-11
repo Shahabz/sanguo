@@ -10,6 +10,7 @@ WorldBoss *world_boss_getptr( int bossid );
 int worldboss_sendinfo( int actor_index, int bossid );
 int worldboss_sendbattleinfo( int actor_index, int bossid );
 int worldboss_battle( int actor_index, SLK_NetC_WorldBossBattle *pValue );
+int worldboss_reset( int actor_index, int bossid );
 int worldboss_gm( int bossid, int value );
 #endif
 
