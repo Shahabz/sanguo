@@ -14,6 +14,7 @@ end
 
 -- 隐藏界面
 function QuestAwardDlgClose()
+	QuestAwardDlgGet()
 	if m_Dlg == nil then
 		return;
 	end
@@ -41,7 +42,7 @@ end
 function QuestAwardDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == 1 then
-			QuestAwardDlgGet();
+			QuestAwardDlgClose();
         end
 	end
 end
@@ -131,5 +132,4 @@ function QuestAwardDlgGet()
 		GuideEnd();
 	end
 	system_askinfo( ASKINFO_QUEST, "", 1, m_questid );
-	QuestAwardDlgClose();
 end
