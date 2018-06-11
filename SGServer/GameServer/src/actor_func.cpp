@@ -795,8 +795,3 @@ int actor_search( int actor_index, int target_actorid, int target_city_index )
 	netsend_actorsearch_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
-
-// 功能获取
-void city_function_open( City *pCity, int offset );
-void city_function_close( City *pCity, int offset );
-int city_function_check( City *pCity, int offset );
