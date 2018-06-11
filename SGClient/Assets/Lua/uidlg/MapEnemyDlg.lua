@@ -116,7 +116,7 @@ function MapEnemyDlgShow( recvValue )
 	end
 	
 	-- 形象
-	m_uiShape:GetComponent("SpriteRenderer").sprite = EnemySprite( g_enemyinfo[kind].shape, 1 )
+	SetImage( m_uiShape, EnemySprite( g_enemyinfo[kind].shape, 1 ) )
 	-- 名字
 	if g_enemyinfo[kind].nameid > 0 then
 		SetText( m_uiName, "Lv."..level.." "..T(g_enemyinfo[kind].nameid) )

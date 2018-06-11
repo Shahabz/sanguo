@@ -1,7 +1,6 @@
 ----------------------------------------
 -- 事件
 ----------------------------------------
-local m_Tweens = nil
 
 -- 所属按钮点击时调用
 function MapZoneTipsModOnEvent( nType, nControlID, value, gameObject )
@@ -15,7 +14,8 @@ function MapZoneTipsModOnEvent( nType, nControlID, value, gameObject )
 		end
 	elseif nType == UI_EVENT_TWEENFINISH then
 		if nControlID == 0 then
-			m_Tweens[1]:Play(true)
+			local uiTweens = gameObject:GetComponents( typeof(UITween) );
+			uiTweens[1]:Play(true)
 		elseif nControlID == 1 then
 			gameObject:SetActive( false );
 			eye.objectPoolManager:Release( "UIF_MapZoneTips", gameObject );
@@ -25,7 +25,7 @@ end
 
 -- 载入时调用
 function MapZoneTipsModOnAwake( gameObject )
-	m_Tweens = gameObject:GetComponents( typeof(UITween) );
+
 end
 
 -- 界面初始化时调用
@@ -71,6 +71,7 @@ function MapZoneTipsModShow( name, nation )
 	SetText( obj.transform:Find("Name"), name )
 	SetText( obj.transform:Find("Nation"), NationEx( nation )..T(115), color )
 	
-	m_Tweens[0]:ToInit()
-	m_Tweens[0]:Play(true)
+	local uiTweens = obj:GetComponents( typeof(UITween) );
+	uiTweens[0]:ToInit()
+	uiTweens[0]:Play(true)
 end
