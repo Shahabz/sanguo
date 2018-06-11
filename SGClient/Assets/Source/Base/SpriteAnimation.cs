@@ -5,6 +5,8 @@ using UnityEngine;
 /// <summary>
 ///  帧动画组件
 /// </summary>
+/// 
+[RequireComponent(typeof(SpriteRenderer))]
 public class SpriteAnimation : MonoBehaviour
 {
 	private SpriteRenderer _spriteRenderer;
