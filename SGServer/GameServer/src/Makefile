@@ -57,6 +57,7 @@ SRC = \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
+../AutoS/src/auto_data_fight_helper.cpp \
 ../AutoS/src/auto_map_enemy.cpp \
 ../AutoS/src/auto_map_event.cpp \
 ../AutoS/src/auto_data_activity_07.cpp \
@@ -313,6 +314,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_map_eventinfo.o: ../AutoS/src/auto_data_map_eventinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_hero_corpsmul.o: ../AutoS/src/auto_data_hero_corpsmul.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_fight_helper.o: ../AutoS/src/auto_data_fight_helper.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_map_enemy.o: ../AutoS/src/auto_map_enemy.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
