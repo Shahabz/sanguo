@@ -4,6 +4,7 @@
 #include "fight.h"
 
 #define ARMYGROUP_MAXCOUNT			128	// 最多有128人集结
+#define ARMYGROUP_FIGHTHELPER		12	// 雇佣兵
 
 #define ARMYGROUP_STATE_IDLE		0	// 空闲
 #define ARMYGROUP_STATE_ING			1	// 集结中
@@ -54,4 +55,8 @@ int armygroup_askhelp( int actor_index, int group_index, int group_id );
 
 // 集结所有人发送邮件
 int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight, char *name );
+
+// 雇佣兵
+int armygroup_fighthelper_sendlist( int actor_index, int group_index );
+int armygroup_fighthelper_buy( int actor_index, int group_index, int kind );
 #endif

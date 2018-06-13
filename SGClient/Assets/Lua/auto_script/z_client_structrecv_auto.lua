@@ -3084,3 +3084,31 @@ function struct_NetS_DelZoneUnit_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_FightHelper_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadSByte();
+	recvValue.m_shape = buffer:ReadSByte();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_corps = buffer:ReadSByte();
+	recvValue.m_attack = buffer:ReadInt();
+	recvValue.m_defense = buffer:ReadInt();
+	recvValue.m_troops = buffer:ReadInt();
+	recvValue.m_token = buffer:ReadInt();
+	recvValue.m_sort = buffer:ReadSByte();
+	recvValue.m_buynum = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_FightHelperList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_FightHelper_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_group_index = buffer:ReadInt();
+	return recvValue;
+end
+

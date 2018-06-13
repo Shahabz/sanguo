@@ -2187,8 +2187,7 @@ int nationlog_cache_load()
 // 记录国家日志
 void nationlog_add( char nation, int type, int townid, char *name, char target_nation )
 {
-	nation = nation - 1;
-	if ( nation < 0 || nation >= 3 )
+	if ( nation <= 0 || nation > 3 )
 		return;
 	SLK_NetS_NationLog info = { 0 };
 	info.m_type = type;
@@ -2197,7 +2196,7 @@ void nationlog_add( char nation, int type, int townid, char *name, char target_n
 	info.m_namelen = strlen( info.m_name );
 	info.m_target_nation = target_nation;
 	info.m_optime = (int)time(NULL);
-	nationlog_cache_queue_add( g_nation_log[nation], &info );
+	nationlog_cache_queue_add( g_nation_log[nation-1], &info );
 	nationlog_cache_queue_add_db( nation, &info );
 }
 

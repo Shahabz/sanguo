@@ -13,6 +13,7 @@ local m_townid = -1
 local m_cache = {};
 
 local UIADD_EVENT_BASE = 1000000
+local UIHELPER_EVENT_BASE = 2000000
 
 -- 打开界面
 function MapNationFightDlgOpen()
@@ -45,8 +46,10 @@ function MapNationFightDlgOnEvent( nType, nControlID, value, gameObject )
             MapNationFightDlgClose();
 			
 		-- 加入国战
-		elseif nControlID >= UIADD_EVENT_BASE then
+		elseif nControlID >= UIADD_EVENT_BASE and nControlID < UIHELPER_EVENT_BASE then
 			MapNationFightDlgJoin( nControlID-UIADD_EVENT_BASE )
+		elseif nControlID >= UIHELPER_EVENT_BASE then
+			MapNationFightDlgHelperBuy( nControlID-UIHELPER_EVENT_BASE )
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		MapNationFightDlgClose()
@@ -151,6 +154,7 @@ function MapNationFightDlgAddRecvValue( recvValue )
 	uiNation = objs[10];
 	uiTNation = objs[11];
 	uiAddBtn = objs[12];
+	uiHelperBtn = objs[13];
 		
 	-- 形象
 	local type 	= g_towninfo[m_townid].type
@@ -179,7 +183,10 @@ function MapNationFightDlgAddRecvValue( recvValue )
 		-- 守备兵力
 		SetText( uiTotal, T(1259).."\n"..recvValue.m_total )
 		SetText( uiTTotal, T(1262).."\n"..recvValue.m_t_total )
-	
+		
+		SetTrue( uiAddBtn )
+		SetTrue( uiHelperBtn )
+		
 	-- 属于防御方
 	elseif recvValue.m_attack == 2 then
 	
@@ -191,7 +198,10 @@ function MapNationFightDlgAddRecvValue( recvValue )
 		-- 守备兵力
 		SetText( uiTotal, T(1261).."\n"..recvValue.m_total )
 		SetText( uiTTotal, T(1260).."\n"..recvValue.m_t_total )
-	
+		
+		SetTrue( uiAddBtn )
+		SetTrue( uiHelperBtn )
+		
 	-- 第三方	
 	elseif recvValue.m_attack == 3 then
 		SetTrue( uiArrowAttack )
@@ -199,10 +209,12 @@ function MapNationFightDlgAddRecvValue( recvValue )
 		SetText( uiFlagText, T(1264), Hex2Color(0xffde00ff) )
 		SetText( uiTFlagText, T(1265), Hex2Color(0x03de27ff) )
 		SetFalse( uiAddBtn )
+		SetFalse( uiHelperBtn )
 	end
 	
 	-- 加入国战按钮	
 	SetControlID( uiAddBtn, UIADD_EVENT_BASE + #m_cache )
+	SetControlID( uiHelperBtn, UIHELPER_EVENT_BASE + #m_cache )
 end
 
 function MapNationFightDlgOver()
@@ -262,4 +274,19 @@ function MapNationFightDlgJoin( index )
 	end
 	MapBattleDlgID( recvValue.m_group_id )
 	MapNationFightDlgClose()
+end
+
+function MapNationFightDlgHelperBuy( index )
+	local recvValue = m_cache[index]
+	if recvValue == nil then
+		return
+	end
+	local unitRecvValue = WorldMap.m_nMapUnitList[m_unit_index];
+	if unitRecvValue == nil then
+		return
+	end
+	if unitRecvValue.m_type ~= MAPUNIT_TYPE_TOWN then
+		return
+	end
+	FightHelperDlgShow( recvValue.m_group_index );
 end

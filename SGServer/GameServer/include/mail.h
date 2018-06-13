@@ -42,6 +42,7 @@
 #define TAG_GIRL			"$G"// 标记--标记为女将
 #define TAG_COLOR			"$C"// 标记--标记为颜色
 #define TAG_OFFICIAL		"$O"// 标记--标记为官职
+#define TAG_MONSTERNAME		"MN"// 标记--标记为怪物名称
 
 typedef struct _mailfight_searchcache
 {

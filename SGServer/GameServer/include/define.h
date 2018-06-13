@@ -39,6 +39,7 @@
 #include "auto_data_official_tech.h"
 #include "auto_data_material_make.h"
 #include "auto_data_monster.h"
+#include "auto_data_fight_helper.h"
 #include "auto_data_map_zoneinfo.h"
 #include "auto_data_map_towninfo.h"
 #include "auto_data_map_enemyinfo.h"

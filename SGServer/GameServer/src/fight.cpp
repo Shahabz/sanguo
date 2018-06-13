@@ -86,6 +86,9 @@ extern int g_world_boss_maxcount;
 
 extern int g_nation_heroinfo_maxnum;
 
+extern FightHelper *g_fight_helper;
+extern int g_fight_helper_maxnum;
+
 Fight g_fight;
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 char g_gm_isout = 0;
@@ -508,6 +511,22 @@ int fight_start_armygroup( int group_index )
 	fight_debug( "\n\n============================================== FIGHT GROUP START ==============================================" );
 	int result = 0;
 	// 攻击方
+	// 雇佣兵优先出战
+	for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
+	{
+		int num = g_armygroup[group_index].attack_helpernum[kind];
+		if ( num > 0 )
+		{
+			int monsterid = g_fight_helper[kind+1].monsterid;
+			if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+				continue;
+			MonsterInfo *pMonster = &g_monster[monsterid];
+			if ( !pMonster )
+				continue;
+			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_TOWN, 0, FIGHT_UNITTYPE_MONSTER, kind+1, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
+				pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
+		}
+	}
 	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 	{
 		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
@@ -675,6 +694,24 @@ int fight_start_armygroup( int group_index )
 	else if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
 	{
 		g_fight.type = FIGHTTYPE_NATION;
+
+		// 雇佣兵优先出战
+		for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
+		{
+			int num = g_armygroup[group_index].defense_helpernum[kind];
+			if ( num > 0 )
+			{
+				int monsterid = g_fight_helper[kind + 1].monsterid;
+				if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+					continue;
+				MonsterInfo *pMonster = &g_monster[monsterid];
+				if ( !pMonster )
+					continue;
+				fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_TOWN, 0, FIGHT_UNITTYPE_MONSTER, kind + 1, monsterid, pMonster->shape, pMonster->level, (char)pMonster->color, (char)pMonster->corps,
+					pMonster->attack, pMonster->defense, pMonster->troops, pMonster->troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
+			}
+		}
+
 		// 守军
 		MapTown *pTown = map_town_getptr( g_armygroup[group_index].to_id );
 		if ( pTown )

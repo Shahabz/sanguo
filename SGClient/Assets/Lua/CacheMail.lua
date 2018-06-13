@@ -32,6 +32,7 @@ TAG_HERO		= "$R"  -- 标记--标记为武将
 TAG_GIRL		= "$G"	-- 标记--标记为女将
 TAG_COLOR		= "$C"	-- 标记--标记为颜色
 TAG_OFFICIAL	= "$O"	-- 标记--标记为官职
+TAG_MONSTERNAME	= "MN"	-- 标记--标记为怪物名称
 
 local Mail = class("Mail");
 function Mail:ctor()
@@ -410,8 +411,16 @@ function Mail:GetString( v )
 			str =  getTimeStringByInterval( textid )
 		else
 			str = v
-		end		
-	
+		end
+		
+	-- 怪物名称
+	elseif self:IsTag( v, TAG_MONSTERNAME ) then
+		local textid = tonumber(string.sub(v, string.len(TAG_MONSTERNAME) + 1));
+		if textid ~= nil then
+			str = EnemyName( textid )
+		else
+			str = v
+		end
 	else
 		str = v;
 	end

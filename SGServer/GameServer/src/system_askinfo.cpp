@@ -1211,6 +1211,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			girl_shop_update_manual( actor_index );
 		}
 		break;
+	case ASKINFO_FIGHTHELPER:
+		if ( pvalue[0] == 0 )
+		{ // ¹ÍÓ¶±ø
+			armygroup_fighthelper_sendlist( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			armygroup_fighthelper_buy( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
 	default:
 		break;
 	}

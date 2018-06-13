@@ -22,5 +22,7 @@ CREATE TABLE `army_group` (
   `leader_index` int(11) NOT NULL DEFAULT '0' COMMENT '队长索引',
   `attack_armyindex` varbinary(512) NOT NULL DEFAULT '' COMMENT '临时存储攻击方集结部队索引',
   `defense_armyindex` varbinary(512) NOT NULL DEFAULT '' COMMENT '临时存储防御方集结部队索引',
+  `attack_helpernum` varbinary(48) NOT NULL DEFAULT '' COMMENT '雇佣兵',
+  `defense_helpernum` varbinary(48) NOT NULL DEFAULT '' COMMENT '雇佣兵',
   PRIMARY KEY (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

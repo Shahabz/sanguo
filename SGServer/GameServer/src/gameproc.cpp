@@ -564,6 +564,7 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 17 );
+	fighthelper_init_auto();
 
 	// 奖励包数据初始化
 	if ( awardgroup_init() < 0 )
@@ -1758,6 +1759,7 @@ int process_dbreload()
 	mapresinfo_reload_auto();
 	maptowninfo_reload_auto();
 	monsterinfo_reload_auto();
+	fighthelper_reload_auto();
 	paygoods_reload_auto();
 	paystore_reload_auto();
 	questinfo_reload_auto();

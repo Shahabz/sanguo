@@ -331,6 +331,9 @@ end
 
 -- 更新
 function BloodyBattleDlgHeroUpdate( recvValue )
+	if m_HeroRecvValue == nil then
+		return
+	end
 	for i=1, m_HeroRecvValue.m_count, 1 do
 		if m_HeroRecvValue.m_list[i].m_army_index == recvValue.m_army_index then
 			m_HeroRecvValue.m_list[i] = recvValue;

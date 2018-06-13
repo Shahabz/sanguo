@@ -21,6 +21,7 @@ local m_uiZoneList = nil; --UnityEngine.GameObject
 local m_uiCityList = nil; --UnityEngine.GameObject
 local m_uiUIP_City = nil; --UnityEngine.GameObject
 local m_uiMyPosFlag = nil; --UnityEngine.GameObject
+local m_uiArrowPos = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local CONTROLOFFSET_REBACK = 10000000
@@ -182,6 +183,7 @@ function MapMainDlgOnAwake( gameObject )
 	m_uiCityList = objs[18];
 	m_uiUIP_City = objs[19];
 	m_uiMyPosFlag = objs[20];
+	m_uiArrowPos = objs[21];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -850,11 +852,12 @@ function MapMainDlgMiniMapChangeZone( zoneid, open )
 end
 
 -- 移动
-function MapMainDlgMiniMapMove( cameraPosX, cameraPosY )
+function MapMainDlgMiniMapMove( cameraPosX, cameraPosY, gameCoorX, gameCoorY )
 	if m_show == 0 then
 		return
 	end
 	m_uiMiniMapLayer.transform.localPosition = Vector2( (cameraPosX-cameraPosOffsetX)*MAP_W, -(cameraPosY+cameraPosOffsetY)*MAP_H )
+	SetText( m_uiArrowPos, gameCoorX..","..gameCoorY )
 end
 
 -- 清空城池

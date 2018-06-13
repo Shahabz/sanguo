@@ -748,7 +748,7 @@ function WorldMap.ViewChangeFrame()
 	end
 	
 	-- 小地图更新
-	MapMainDlgMiniMapMove( cameraPosX, cameraPosY )
+	MapMainDlgMiniMapMove( cameraPosX, cameraPosY, gameCoorX, gameCoorY )
 	
 	-- 操作界面更新坐标
 	--MapClickModCoordinate( gameCoorX, gameCoorY );

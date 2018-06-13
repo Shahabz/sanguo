@@ -53,6 +53,7 @@
 #define	ASKINFO_GIRL			48 // 女将
 #define	ASKINFO_FANGSHI			49 // 坊市
 #define	ASKINFO_GIRLSHOP		50 // 女将商店
+#define	ASKINFO_FIGHTHELPER		51 // 雇佣兵
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

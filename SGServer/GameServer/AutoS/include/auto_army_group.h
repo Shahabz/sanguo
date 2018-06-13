@@ -27,6 +27,8 @@ struct _army_group {
 				int leader_index;	//队长索引
 				int attack_armyindex[128];	//临时存储攻击方集结部队索引
 				int defense_armyindex[128];	//临时存储防御方集结部队索引
+				int attack_helpernum[12];	//雇佣兵
+				int defense_helpernum[12];	//雇佣兵
 };
 typedef struct _army_group ArmyGroup;
 

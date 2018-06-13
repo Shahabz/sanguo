@@ -94,6 +94,13 @@ int g_armygroup_maxcount = 0;
 int g_armygroup_count = 0;
 extern int g_army_group_maxindex;
 extern char g_test_mod;
+
+extern MonsterInfo *g_monster;
+extern int g_monster_maxnum;
+
+extern FightHelper *g_fight_helper;
+extern int g_fight_helper_maxnum;
+
 // 读档完毕的回调
 int armygroup_loadcb( int group_index )
 {
@@ -618,6 +625,21 @@ int armygroup_from_totals( int group_index )
 		return 0;
 	int total = 0;
 
+	for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
+	{
+		int num = g_armygroup[group_index].attack_helpernum[kind];
+		if ( num > 0 )
+		{
+			int monsterid = g_fight_helper[kind + 1].monsterid;
+			if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+				continue;
+			MonsterInfo *pMonster = &g_monster[monsterid];
+			if ( !pMonster )
+				continue;
+			total += pMonster->troops;
+		}
+	}
+
 	for ( int tmpi = 0; tmpi < ARMYGROUP_MAXCOUNT; tmpi++ )
 	{
 		int army_index = g_armygroup[group_index].attack_armyindex[tmpi];
@@ -679,6 +701,21 @@ int armygroup_to_totals( int group_index )
 		MapTown *pTown = map_town_getptr( g_armygroup[group_index].to_id );
 		if ( pTown )
 		{
+			for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
+			{
+				int num = g_armygroup[group_index].defense_helpernum[kind];
+				if ( num > 0 )
+				{
+					int monsterid = g_fight_helper[kind + 1].monsterid;
+					if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+						continue;
+					MonsterInfo *pMonster = &g_monster[monsterid];
+					if ( !pMonster )
+						continue;
+					total += pMonster->troops;
+				}
+			}
+
 			for ( int tmpi = 0; tmpi < MAP_TOWN_MONSTER_MAX; tmpi++ )
 			{
 				int monsterid = pTown->monster[tmpi];
@@ -1045,6 +1082,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 				if ( g_towninfo[townid].type >= MAPUNIT_TYPE_TOWN_XIAN && g_towninfo[townid].type <= MAPUNIT_TYPE_TOWN_ZHFD )
 				{
 					data_record_addvalue( pArmyCity, 2+g_towninfo[townid].type, 1 );
+					data_record_addvalue( pArmyCity, DATA_RECORD_KILLTOWN, 1 );
 				}
 
 				pArmyCity->temp_silver = 0;
@@ -1845,6 +1883,7 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 					if ( attack == 2 )
 					{
 						city_battle_event_add( pArmyCity->index, CITY_BATTLE_EVENT_NATION_DEFEND, name, fight->result, mailid );
+						data_record_addvalue( pArmyCity, DATA_RECORD_KILLTOWN, 1 );
 					}
 				}
 			}
@@ -1869,3 +1908,116 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 	return 0;
 }
 
+// 雇佣兵
+int armygroup_fighthelper_sendlist( int actor_index, int group_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	SLK_NetS_FightHelperList pValue = { 0 };
+	for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
+	{
+		pValue.m_list[kind].m_kind = kind+1;
+		pValue.m_list[kind].m_token = g_fight_helper[kind + 1].token;
+		pValue.m_list[kind].m_sort = (char)g_fight_helper[kind + 1].sort;
+		int monsterid = g_fight_helper[kind + 1].monsterid;
+		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+			continue;
+		pValue.m_list[kind].m_shape = g_monster[monsterid].shape;
+		pValue.m_list[kind].m_color = g_monster[monsterid].color;
+		pValue.m_list[kind].m_corps = g_monster[monsterid].corps;
+		pValue.m_list[kind].m_attack = g_monster[monsterid].attack;
+		pValue.m_list[kind].m_defense = g_monster[monsterid].defense;
+		pValue.m_list[kind].m_troops = g_monster[monsterid].troops;
+		if ( g_armygroup[group_index].from_nation == pCity->nation )
+		{ // 我是攻击方
+			pValue.m_list[kind].m_buynum = g_armygroup[group_index].attack_helpernum[kind];
+		}
+		else if ( g_armygroup[group_index].to_nation == pCity->nation )
+		{ // 我是防御方
+			pValue.m_list[kind].m_buynum = g_armygroup[group_index].defense_helpernum[kind];
+		}
+	}
+	pValue.m_count = ARMYGROUP_FIGHTHELPER;
+	netsend_fighthelperlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int armygroup_fighthelper_buy( int actor_index, int group_index, int kind )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
+		return -1;
+	if ( kind <= 0 || kind > ARMYGROUP_FIGHTHELPER )
+		return -1;
+	if ( g_armygroup[group_index].from_nation == pCity->nation )
+	{ // 我是攻击方
+		if ( g_armygroup[group_index].attack_helpernum[kind - 1] > 0 )
+			return -1;
+	}
+	else if ( g_armygroup[group_index].to_nation == pCity->nation )
+	{ // 我是防御方
+		if ( g_armygroup[group_index].defense_helpernum[kind - 1] > 0 )
+			return -1;
+	}
+
+	int monsterid = g_fight_helper[kind].monsterid;
+	if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+		return -1;
+
+	if ( actor_change_token( actor_index, -g_fight_helper[kind].token, PATH_FIGHTHELPER, 0 ) < 0 )
+		return -1;
+
+	char v1[64] = { 0 };
+	char v2[64] = { 0 };
+	char v3[64] = { 0 };
+	char v4[64] = { 0 };
+	char v5[64] = { 0 };
+	char v6[64] = { 0 };
+
+	if ( g_armygroup[group_index].to_type == MAPUNIT_TYPE_TOWN )
+	{
+		int townid = g_armygroup[group_index].to_index;
+		if ( townid <= 0 || townid >= g_map_town_maxcount )
+			return -1;
+
+		sprintf( v1, "%s%d", TAG_ZONEID, g_towninfo[townid].zoneid );
+		sprintf( v2, "%s%d", TAG_TOWNID, townid );
+		sprintf( v3, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
+		sprintf( v4, "%s%d", TAG_NATION, pCity->nation );
+		sprintf( v5, "%s", pCity->name );
+		sprintf( v6, "%s%d", TAG_MONSTERNAME, monsterid );
+
+		if ( g_armygroup[group_index].from_nation == pCity->nation )
+		{ // 我是攻击方
+			g_armygroup[group_index].attack_helpernum[kind - 1] += 1;
+
+			// 6030	<color=03DE27FF>[{3}]{4}</color>招募了雇佣兵<color=E80017FF>{5}</color>参与进攻<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>
+			system_talkjson( 0, g_armygroup[group_index].from_nation, 6030, v1, v2, v3, v4, v5, v6, 1 );
+			system_talkjson( 0, g_armygroup[group_index].to_nation, 6030, v1, v2, v3, v4, v5, v6, 1 );
+
+		}
+		else if ( g_armygroup[group_index].to_nation == pCity->nation )
+		{ // 我是防御方
+			g_armygroup[group_index].defense_helpernum[kind - 1] += 1;
+
+			// 6031 <color=03DE27FF>[{3}]{4}</color>招募了雇佣兵<color=E80017FF>{5}</color>参与防守<color=D95DF4FF>{0}</color><color=FFDE00FF>{1}</color><color=25C9FFFF><url={2}>[{2}]</url></color>
+			system_talkjson( 0, g_armygroup[group_index].from_nation, 6031, v1, v2, v3, v4, v5, v6, 1 );
+			system_talkjson( 0, g_armygroup[group_index].to_nation, 6031, v1, v2, v3, v4, v5, v6, 1 );
+		}
+
+		// 通知客户端UI更新
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].from_nation, UI_UPDATE_FIGHTINFO );
+		ui_update( 0, SENDTYPE_NATION + g_armygroup[group_index].to_nation, UI_UPDATE_FIGHTINFO );
+	}
+	else
+	{
+
+	}
+	armygroup_fighthelper_sendlist( actor_index, group_index );
+	return 0;
+}

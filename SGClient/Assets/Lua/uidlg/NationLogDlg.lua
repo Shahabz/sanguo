@@ -183,7 +183,7 @@ function NationLogDlgCreate( uiObj, info )
 		SetText(  uiObj.transform:Find( "Text" ), F( 1874, zonename, townname, pos, info.m_name ) )
 		
 	elseif info.m_type == NATION_LOG_TYPE_ATTACK_WIN then
-		SetText(  uiObj.transform:Find( "Text" ), F( 1874, zonename, townname, pos, info.m_name ) )
+		SetText(  uiObj.transform:Find( "Text" ), F( 1875, zonename, townname, pos, info.m_name ) )
 	end
 end
 

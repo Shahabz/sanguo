@@ -3387,3 +3387,33 @@ int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit 
 	return 0;
 }
 
+int struct_NetS_FightHelper_send( char **pptr, int *psize, SLK_NetS_FightHelper *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shape, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_defense, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_troops, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sort, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_buynum, (*psize) );
+	return 0;
+}
+
+int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHelperList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_FightHelper_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_group_index, (*psize) );
+	return 0;
+}
+

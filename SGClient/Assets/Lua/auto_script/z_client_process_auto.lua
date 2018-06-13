@@ -2406,3 +2406,14 @@ function proc_addzoneunit_C( recvValue )
 	MapMainDlgMiniMapAddCity( recvValue )
 end
 
+-- m_kind=0,m_shape=0,m_color=0,m_corps=0,m_attack=0,m_defense=0,m_troops=0,m_token=0,
+function proc_fighthelper_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_kind=0,m_shape=0,m_color=0,m_corps=0,m_attack=0,m_defense=0,m_troops=0,m_token=0,[m_count]},m_group_index=0,
+function proc_fighthelperlist_C( recvValue )
+	-- process.
+	FightHelperDlgRecvList( recvValue )
+end
+

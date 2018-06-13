@@ -2300,6 +2300,27 @@ struct _slk_NetS_DelZoneUnit {
 };
 typedef struct _slk_NetS_DelZoneUnit SLK_NetS_DelZoneUnit;	//É¾³ıĞ¡µØÍ¼ÉÏµÄÍæ¼Ò
 
+struct _slk_NetS_FightHelper {
+	char m_kind;	//¹ÍÓ¶±ø
+	char m_shape;	//¹ÍÓ¶±ø
+	char m_color;	//¹ÍÓ¶±ø
+	char m_corps;	//¹ÍÓ¶±ø
+	int m_attack;	//¹ÍÓ¶±ø
+	int m_defense;	//¹ÍÓ¶±ø
+	int m_troops;	//¹ÍÓ¶±ø
+	int m_token;	//¹ÍÓ¶±ø
+	char m_sort;	//¹ÍÓ¶±ø
+	char m_buynum;	//¹ÍÓ¶±ø
+};
+typedef struct _slk_NetS_FightHelper SLK_NetS_FightHelper;	//¹ÍÓ¶±ø
+
+struct _slk_NetS_FightHelperList {
+	char m_count;	//¹ÍÓ¶±øÁĞ±í
+	SLK_NetS_FightHelper m_list[16];	//¹ÍÓ¶±øÁĞ±í
+	int m_group_index;	//¹ÍÓ¶±øÁĞ±í
+};
+typedef struct _slk_NetS_FightHelperList SLK_NetS_FightHelperList;	//¹ÍÓ¶±øÁĞ±í
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2550,5 +2571,7 @@ int struct_NetS_GirlShop_send( char **pptr, int *psize, SLK_NetS_GirlShop *pValu
 int struct_NetS_ZoneMaster_send( char **pptr, int *psize, SLK_NetS_ZoneMaster *pValue );
 int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMasterList *pValue );
 int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit *pValue );
+int struct_NetS_FightHelper_send( char **pptr, int *psize, SLK_NetS_FightHelper *pValue );
+int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHelperList *pValue );
 
 #endif
