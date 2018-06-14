@@ -42,6 +42,7 @@
 #include "actor_friend.h"
 #include "activity_04.h"
 #include "girl.h"
+#include "robot.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -217,6 +218,8 @@ int city_load()
 	city_reset();
 	city_load_auto( city_indexptr, city_loadcb, "city" );
 	g_city_allinited = 1;
+
+	robot_logic_hour();
 	return 0;
 }
 

@@ -1925,9 +1925,9 @@ int armygroup_fighthelper_sendlist( int actor_index, int group_index )
 		int monsterid = g_fight_helper[kind + 1].monsterid;
 		if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
 			continue;
-		pValue.m_list[kind].m_shape = g_monster[monsterid].shape;
-		pValue.m_list[kind].m_color = g_monster[monsterid].color;
-		pValue.m_list[kind].m_corps = g_monster[monsterid].corps;
+		pValue.m_list[kind].m_shape = (char)g_monster[monsterid].shape;
+		pValue.m_list[kind].m_color = (char)g_monster[monsterid].color;
+		pValue.m_list[kind].m_corps = (char)g_monster[monsterid].corps;
 		pValue.m_list[kind].m_attack = g_monster[monsterid].attack;
 		pValue.m_list[kind].m_defense = g_monster[monsterid].defense;
 		pValue.m_list[kind].m_troops = g_monster[monsterid].troops;

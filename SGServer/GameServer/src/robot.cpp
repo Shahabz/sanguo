@@ -139,7 +139,6 @@ int robot_create( char ai, char nation )
 	city.level = 1;
 	city.body = global.body_max;
 	city.robot_ai = ai;
-	city.robot_cd = (int)(g_robot_base[city.level].minute * (float)g_robot_ai[ai].actorexp_add);
 
 	// 随机名字
 	char step = 0;
@@ -212,9 +211,165 @@ int robot_create( char ai, char nation )
 
 	// 征收时间
 	g_city[city_index].levysec = global.levy_max;
+	g_city[city_index].silver = g_robot_ai[ai].silver_init;
+	g_city[city_index].wood = g_robot_ai[ai].wood_init;
+	g_city[city_index].food = g_robot_ai[ai].food_init;
+	g_city[city_index].iron = g_robot_ai[ai].iron_init;
 	return 0;
 }
 
+void robot_logic_min()
+{
+
+}
+
+void robot_logic_hour()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
+	{
+		if ( g_city[tmpi].robot_ai > 0 )
+		{
+			robot_logic( &g_city[tmpi] );
+		}
+	}
+}
+
+// 加资源
+void robot_logic( City *pCity )
+{
+	int ai = pCity->robot_ai;
+	if ( ai <= 0 || ai >= g_robot_ai_maxnum )
+		return;
+
+	int level = pCity->building[0].level;
+	if ( level <= 0 || level >= g_robot_base_maxnum )
+		return;
+
+	int actorlevel = random( g_robot_base[level].actorlevel_min, g_robot_base[level].actorlevel_max );
+	if ( actorlevel > pCity->level )
+	{
+		pCity->level = actorlevel;
+	}
+
+	// 加资源
+	int silver_max = (int)(g_robot_base[level].silver_max * g_robot_ai[ai].silver_max);
+	int silver_add = (int)(g_robot_base[level].silver_add * g_robot_ai[ai].silver_add);
+	if ( pCity->silver < silver_max )
+	{
+		pCity->silver += silver_add;
+	}
+
+	int wood_max = (int)(g_robot_base[level].wood_max * g_robot_ai[ai].wood_max);
+	int wood_add = (int)(g_robot_base[level].wood_add * g_robot_ai[ai].wood_add);
+	if ( pCity->wood < wood_max )
+	{
+		pCity->wood += wood_add;
+	}
+
+	int food_max = (int)(g_robot_base[level].food_max * g_robot_ai[ai].food_max);
+	int food_add = (int)(g_robot_base[level].food_add * g_robot_ai[ai].food_add);
+	if ( pCity->food < food_max )
+	{
+		pCity->food += food_add;
+	}
+
+	int iron_max = (int)(g_robot_base[level].iron_max * g_robot_ai[ai].iron_max);
+	int iron_add = (int)(g_robot_base[level].iron_add * g_robot_ai[ai].iron_add);
+	if ( pCity->iron < iron_max )
+	{
+		pCity->iron += iron_add;
+	}
+
+	// 自动升级
+	// 空闲建造队是否满足
+	if ( pCity->worker_sec <= 0 )
+	{
+		char kind = 0;
+		char offset = -1;
+		for ( int tmpi = 0; tmpi < BUILDING_MAXNUM; tmpi++ )
+		{
+			if ( pCity->building[tmpi].kind <= 0 )
+				continue;
+			if ( pCity->building[tmpi].kind == pCity->worker_kind || pCity->building[tmpi].kind == pCity->worker_kind_ex )
+				continue;
+			BuildingUpgradeConfig *config = building_getconfig( pCity->building[tmpi].kind, pCity->building[tmpi].level + 1 );
+			if ( config )
+			{
+				// 角色等级是否满足
+				if ( pCity->level < config->actorlevel )
+					continue;
+				// 官府等级是否满足
+				if ( pCity->building[0].level < config->citylevel )
+					continue;
+				// 资源是否满足
+				if ( pCity->silver < config->silver )
+					continue;
+				if ( pCity->wood < config->wood )
+					continue;
+				kind = pCity->building[tmpi].kind;
+				offset = tmpi;
+				break;
+			}
+		}
+
+		if ( kind > 0 )
+		{
+			building_upgrade( pCity->index, kind, offset );
+		}
+	}
+
+
+	// 设置武将
+	int list[12] = {0};
+	int count = 0;
+	for ( int tmpi = 0; tmpi < 8; tmpi++ )
+	{
+		if ( g_robot_base[level].herokind[tmpi] > 0 )
+		{
+			list[count] = g_robot_base[level].herokind[tmpi];
+			count += 1;
+		}
+	}
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( g_robot_ai[ai].herokind[tmpi] > 0 )
+		{
+			list[count] = g_robot_ai[ai].herokind[tmpi];
+			count += 1;
+		}
+	}
+	ruffle( list, count );
+	for ( int tmpi = 0; tmpi < g_robot_base[level].heroup_max; tmpi++ )
+	{
+		short kind = list[tmpi];
+		char color = hero_defaultcolor( kind );
+		HeroInfoConfig *config = hero_getconfig( kind, color );
+		if ( !config )
+			continue;
+		if ( config->sound < 0 )
+			continue;
+		memset( &pCity->hero[tmpi], 0, sizeof( Hero ) );
+		pCity->hero[tmpi].id = 0;
+		pCity->hero[tmpi].actorid = 0;
+		pCity->hero[tmpi].offset = kind * 1000 + tmpi;
+		pCity->hero[tmpi].kind = (short)kind;	//英雄种类
+		pCity->hero[tmpi].color = color;	//颜色
+		pCity->hero[tmpi].level = pCity->level;	//等级
+		pCity->hero[tmpi].exp = 0;	//经验
+		pCity->hero[tmpi].attack_wash = config->attack_wash;	//洗髓攻击资质
+		pCity->hero[tmpi].defense_wash = config->defense_wash;	//洗髓防御资质
+		pCity->hero[tmpi].troops_wash = config->troops_wash;	//洗髓兵力资质
+		pCity->hero[tmpi].soldiers = 0;
+		pCity->hero[tmpi].equip[0].kind = g_robot_base[level].equipkind[0];
+		pCity->hero[tmpi].equip[1].kind = g_robot_base[level].equipkind[1];
+		pCity->hero[tmpi].equip[2].kind = g_robot_base[level].equipkind[2];
+		pCity->hero[tmpi].equip[3].kind = g_robot_base[level].equipkind[3];
+		pCity->hero[tmpi].equip[4].kind = g_robot_base[level].equipkind[4];
+		pCity->hero[tmpi].equip[5].kind = g_robot_base[level].equipkind[5];
+		hero_attr_calc( pCity, &pCity->hero[tmpi] );
+		pCity->hero[tmpi].soldiers = pCity->hero[tmpi].troops;
+	}
+}
 
 // 创建队列
 RobotCreateQueue *g_robotcreate_queue = NULL;

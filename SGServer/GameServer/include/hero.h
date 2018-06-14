@@ -20,6 +20,7 @@ char hero_getcolor( City *pCity, int herokind );
 
 int hero_maxid_init();
 HeroInfoConfig *hero_getconfig( int kind, int color );
+char hero_defaultcolor( int kind );
 
 int hero_gethero( int actor_index, int kind, short path );
 int hero_up_auto( int actor_index, int offset );

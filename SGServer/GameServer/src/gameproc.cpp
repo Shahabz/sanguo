@@ -1571,6 +1571,10 @@ int process_logic()
 		{ // 每小时一次逻辑
 			sc_Script_Hour();
 		}
+		else if ( tick == 20 )
+		{ // 机器人
+			robot_logic_hour();
+		}
 	}
 	g_frame_count++;
 	return 0;

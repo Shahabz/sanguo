@@ -47,7 +47,7 @@ int robotai_init_auto()
 	g_robot_ai = (RobotAi *)malloc( sizeof(RobotAi)*g_robot_ai_maxnum );
 	memset( g_robot_ai, 0, sizeof(RobotAi)*g_robot_ai_maxnum );
 
-	sprintf( szSQL, "select `id`,`actorexp_add`,`silver_init`,`silver_add`,`silver_max`,`wood_init`,`wood_add`,`wood_max`,`food_init`,`food_add`,`food_max`,`iron_init`,`iron_add`,`iron_max`,`soldiers_add0`,`soldiers_add1`,`soldiers_add2`,`soldiers_max0`,`soldiers_max1`,`soldiers_max2`,`herokind0`,`herokind1`,`herokind2`,`herokind3`,`equiplevel_min`,`equiplevel_max` from robot_ai;" );
+	sprintf( szSQL, "select `id`,`actorexp_add`,`silver_init`,`silver_add`,`silver_max`,`wood_init`,`wood_add`,`wood_max`,`food_init`,`food_add`,`food_max`,`iron_init`,`iron_add`,`iron_max`,`herokind0`,`herokind1`,`herokind2`,`herokind3` from robot_ai;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,30 +63,22 @@ int robotai_init_auto()
 			continue;
 		g_robot_ai[id].id = atoi(row[offset++]);
 		g_robot_ai[id].actorexp_add = (float)atof(row[offset++]);
-		g_robot_ai[id].silver_init = (float)atof(row[offset++]);
+		g_robot_ai[id].silver_init = atoi(row[offset++]);
 		g_robot_ai[id].silver_add = (float)atof(row[offset++]);
 		g_robot_ai[id].silver_max = (float)atof(row[offset++]);
-		g_robot_ai[id].wood_init = (float)atof(row[offset++]);
+		g_robot_ai[id].wood_init = atoi(row[offset++]);
 		g_robot_ai[id].wood_add = (float)atof(row[offset++]);
 		g_robot_ai[id].wood_max = (float)atof(row[offset++]);
-		g_robot_ai[id].food_init = (float)atof(row[offset++]);
+		g_robot_ai[id].food_init = atoi(row[offset++]);
 		g_robot_ai[id].food_add = (float)atof(row[offset++]);
 		g_robot_ai[id].food_max = (float)atof(row[offset++]);
-		g_robot_ai[id].iron_init = (float)atof(row[offset++]);
+		g_robot_ai[id].iron_init = atoi(row[offset++]);
 		g_robot_ai[id].iron_add = (float)atof(row[offset++]);
 		g_robot_ai[id].iron_max = (float)atof(row[offset++]);
-		g_robot_ai[id].soldiers_add[0] = atoi(row[offset++]);
-		g_robot_ai[id].soldiers_add[1] = atoi(row[offset++]);
-		g_robot_ai[id].soldiers_add[2] = atoi(row[offset++]);
-		g_robot_ai[id].soldiers_max[0] = atoi(row[offset++]);
-		g_robot_ai[id].soldiers_max[1] = atoi(row[offset++]);
-		g_robot_ai[id].soldiers_max[2] = atoi(row[offset++]);
 		g_robot_ai[id].herokind[0] = atoi(row[offset++]);
 		g_robot_ai[id].herokind[1] = atoi(row[offset++]);
 		g_robot_ai[id].herokind[2] = atoi(row[offset++]);
 		g_robot_ai[id].herokind[3] = atoi(row[offset++]);
-		g_robot_ai[id].equiplevel_min = atoi(row[offset++]);
-		g_robot_ai[id].equiplevel_max = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

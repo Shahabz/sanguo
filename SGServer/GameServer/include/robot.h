@@ -4,7 +4,8 @@
 
 int robot_randomname( char *name );
 int robot_create( char ai, char nation );
-
+void robot_logic_hour();
+void robot_logic( City *pCity );
 
 // 机器人创建队，每秒执行1个
 #define	ROBOTCREATE_QUEUE_MAXNUM	20000
