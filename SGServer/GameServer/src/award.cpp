@@ -552,16 +552,28 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 		city_change_autoguard( g_actors[actor_index].city_index, num, path );
 		break;
 	case AWARDKIND_RES_SILVER:// 奖励未启用资源点（民居）
-		building_giveres( g_actors[actor_index].city_index, BUILDING_Silver );
+		for ( int tmpi = 0; tmpi < num; tmpi++ )
+		{
+			building_giveres( g_actors[actor_index].city_index, BUILDING_Silver );
+		}
 		break;
 	case AWARDKIND_RES_WOOD:// 奖励未启用资源点（木材厂）
-		building_giveres( g_actors[actor_index].city_index, BUILDING_Wood );
+		for ( int tmpi = 0; tmpi < num; tmpi++ )
+		{
+			building_giveres( g_actors[actor_index].city_index, BUILDING_Wood );
+		}
 		break;
 	case AWARDKIND_RES_FOOD:// 奖励未启用资源点（农田）
-		building_giveres( g_actors[actor_index].city_index, BUILDING_Food );
+		for ( int tmpi = 0; tmpi < num; tmpi++ )
+		{
+			building_giveres( g_actors[actor_index].city_index, BUILDING_Food );
+		}
 		break;
 	case AWARDKIND_RES_IRON:// 奖励未启用资源点（矿厂）
-		building_giveres( g_actors[actor_index].city_index, BUILDING_Iron );
+		for ( int tmpi = 0; tmpi < num; tmpi++ )
+		{
+			building_giveres( g_actors[actor_index].city_index, BUILDING_Iron );
+		}
 		break;
 	case AWARDKIND_QUESTFIGHT:// 任务战斗
 		quest_fight( actor_index, num );
