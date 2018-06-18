@@ -301,7 +301,8 @@ end
 -- 获取建筑名称
 function BuildingName( kind, offset )
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron and offset ~= nil then
-		return F( 99, offset+1, T( kind ) )
+		--return F( 99, offset+1, T( kind ) )
+		return T(kind);
 	else
 		return T(kind);
 	end
