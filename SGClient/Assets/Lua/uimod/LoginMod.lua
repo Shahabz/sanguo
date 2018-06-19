@@ -7,8 +7,8 @@ local m_uiServerInfo = nil; --UnityEngine.GameObject
 local m_uiServerList = nil; --UnityEngine.GameObject
 local m_uiWarning = nil; --UnityEngine.GameObject
 local m_uiLoading = nil; --UnityEngine.GameObject
-local m_uiFastEnter = nil; --UnityEngine.GameObject
-local m_uiRegEnter = nil; --UnityEngine.GameObject
+local m_uiWaiting = nil; --UnityEngine.GameObject
+local m_uiMsgBox = nil; --UnityEngine.GameObject
 local m_uiGameEnter = nil; --UnityEngine.GameObject
 local m_uiButtonList = nil; --UnityEngine.GameObject
 local m_uiNoticeLayer = nil; --UnityEngine.GameObject
@@ -20,6 +20,12 @@ local m_uiUIP_Group = nil; --UnityEngine.GameObject
 local m_uiUIP_Server = nil; --UnityEngine.GameObject
 local m_uiUsedGroup = nil; --UnityEngine.GameObject
 local m_uiNewGroup = nil; --UnityEngine.GameObject
+local m_uiLoginLayer = nil; --UnityEngine.GameObject
+local m_uiRegLayer = nil; --UnityEngine.GameObject
+local m_uiLoginType = nil; --UnityEngine.GameObject
+local m_uiRegUserEdit = nil; --UnityEngine.GameObject
+local m_uiRegPwdEdit = nil; --UnityEngine.GameObject
+local m_uiRegPwdReEdit = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -38,6 +44,8 @@ local m_LoginUsedServerList = nil;
 -- 用户名密码
 local m_UserName = "";
 local m_PassWord = "";
+
+local m_MsgBoxCallBack = nil
 
 -- 打开界面
 function LoginModOpen()
@@ -73,23 +81,28 @@ end
 -- 所属按钮点击时调用
 function LoginModOnEvent( nType, nControlID, value )
 	if nType == UI_EVENT_CLICK then
-		-- 快速试玩
-		if nControlID == 1 then 
-			eye.audioManager:Play(338);
-			LoginModQuickLogin();
 			
 		--关闭服务器列表
-		elseif nControlID == -1  then
+		if nControlID == -1  then
 		    LoginModCloseServerList();
 		
 		-- 关闭公告	
 		elseif nControlID == -2 then
 			SetFalse( m_uiNoticeLayer )
 			
-		-- 账户登陆	
+		elseif nControlID == -3 then
+			SetFalse( m_uiLoginLayer )
+			
+		elseif nControlID == -4 then
+			SetFalse( m_uiRegLayer )
+		
+		-- 快速试玩
+		elseif nControlID == 1 then
+			LoginModQuickLogin();
+				
+		-- 打开账户登陆页
 		elseif nControlID == 2 then
-			eye.audioManager:Play(338);
-			LoginModLogin();
+			LoginModLoginLayer()
 			
 		-- 关闭每组的小列表 返回大列表
 		elseif nControlID == 3 then
@@ -97,7 +110,11 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 切换账号
 		elseif nControlID == 4 then
-			SDK.logout()
+			if Const.platid > 11 then
+				SDK.logout()
+			else
+				LoginModLoginLayer()
+			end
 			
 		-- 游戏公告
 		elseif nControlID == 5 then
@@ -115,15 +132,32 @@ function LoginModOnEvent( nType, nControlID, value )
 		elseif nControlID == 7 then
 			SDK.gmbug()
 		
-		-- SDK进入游戏
+		-- 进入游戏
 		elseif nControlID == 9 then	
-			eye.audioManager:Play(338);
-			LoginModSDKLogin()
+			LoginModEnterGame()
 			
 		-- 显示服务器列表
 		elseif nControlID == 10 then
 			LoginModOpenServerList();
 		
+		-- 账户登陆	
+		elseif nControlID == 11 then
+			LoginModLogin();
+		
+		-- 打开账户注册页
+		elseif nControlID == 12 then
+			LoginModRegLayer();
+		
+		-- 账户注册
+		elseif nControlID == 13 then
+			LoginModReg();
+		
+		-- MsgBox回调
+		elseif nControlID == 14 then
+			if m_MsgBoxCallBack then
+				m_MsgBoxCallBack()
+			end
+			
 		-- 点击推荐分组	
 		elseif nControlID == 1000 then	
 			LoginModSelectGroup( nControlID );
@@ -156,6 +190,47 @@ function LoginModOnEvent( nType, nControlID, value )
 			end
 			
 		end
+		
+	elseif nType == UI_EVENT_INPUTVALUECHANGED then
+		if nControlID == 1 then
+			local text = m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiAccountEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiAccountEdit.transform:Find("Input/Hint") )
+			end
+		elseif nControlID == 2 then
+			local text = m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiPasswordEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiPasswordEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 3 then
+			local text = m_uiRegUserEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegUserEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegUserEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 4 then
+			local text = m_uiRegPwdEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegPwdEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegPwdEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 5 then
+			local text = m_uiRegPwdReEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegPwdReEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegPwdReEdit.transform:Find("Input/Hint") )
+			end
+		end
 	end
 end
 
@@ -170,8 +245,8 @@ function LoginModOnAwake( gameObject )
 	m_uiServerList = objs[4];
 	m_uiWarning = objs[5];
 	m_uiLoading = objs[6];
-	m_uiFastEnter = objs[7];
-	m_uiRegEnter = objs[8];
+	m_uiWaiting = objs[7];
+	m_uiMsgBox = objs[8];
 	m_uiGameEnter = objs[9];
 	m_uiButtonList = objs[10];
 	m_uiNoticeLayer = objs[11];
@@ -183,11 +258,22 @@ function LoginModOnAwake( gameObject )
 	m_uiUIP_Server = objs[17];
 	m_uiUsedGroup = objs[18];
 	m_uiNewGroup = objs[19];
-	
+	m_uiLoginLayer = objs[20];
+	m_uiRegLayer = objs[21];
+	m_uiLoginType = objs[22];
+	m_uiRegUserEdit = objs[23];
+	m_uiRegPwdEdit = objs[24];
+	m_uiRegPwdReEdit = objs[25];
+
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Group", 3, 3, m_uiUIP_Group);
 	m_ObjectPool:CreatePool("UIP_Server", 3, 3, m_uiUIP_Server);
+end
+
+-- 界面初始化时调用
+function LoginModOnStart()
+	eye.audioManager:Play(201);
 	
 	-- 版本号
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
@@ -198,11 +284,6 @@ function LoginModOnAwake( gameObject )
 	else
 		LoginModOpenTestLogin();
 	end
-end
-
--- 界面初始化时调用
-function LoginModOnStart()
-	eye.audioManager:Play(201);
 end
 
 -- 界面显示时调用
@@ -238,22 +319,32 @@ function LoginModOpenTestLogin()
 	LoginModCloseTestLogin()
 	
 	-- 读取上次登陆过的账户密码
-	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
-	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
-	
-	-- 请求服务器列表
+	local username = GameManager.ini( "USERNAME", "" );
+	local pwd = GameManager.ini( "PASSTOKEN", "" );
+	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = username
+	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = pwd
+	if username == "" then
+		SetTrue( m_uiAccountEdit.transform:Find("Input/Hint") )
+	else
+		SetFalse( m_uiAccountEdit.transform:Find("Input/Hint") )
+	end
+	if pwd == "" then
+		SetTrue( m_uiPasswordEdit.transform:Find("Input/Hint") )
+	else
+		SetFalse( m_uiPasswordEdit.transform:Find("Input/Hint") )
+	end
+			
+	-- 账户
+	local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
+	m_uiLoginType.gameObject:SetActive( true );
+	if loginType == "2" then
+		SetText( m_uiLoginType, T(414)..":"..T(435) )
+	else
+		SetText( m_uiLoginType, T(414)..":"..GameManager.ini( "USERNAME", "" ) )
+	end
+
+	-- 请求服务器列表	
 	LoginModAskServerList()
-		
-	-- 需要显示的
-	m_uiAccountEdit.gameObject:SetActive( true );
-	m_uiPasswordEdit.gameObject:SetActive( true );
-	m_uiServerInfo.gameObject:SetActive( true );
-	m_uiButtonList.gameObject:SetActive( true );
-	m_uiFastEnter.gameObject:SetActive( true );
-	m_uiRegEnter.gameObject:SetActive( true );
-	
-	-- 显示公告
-	LoginModNoticeShow(1)
 end
 
 -- 关闭测试模式登陆
@@ -262,13 +353,103 @@ function LoginModCloseTestLogin()
 		return;
 	end
 	-- 需要隐藏的
-	m_uiAccountEdit.gameObject:SetActive( false );
-	m_uiPasswordEdit.gameObject:SetActive( false );
-	m_uiFastEnter.gameObject:SetActive( false );
-	m_uiRegEnter.gameObject:SetActive( false );
+	m_uiLoginType.gameObject:SetActive( false );
+	m_uiLoginLayer.gameObject:SetActive( false );
+	m_uiRegLayer.gameObject:SetActive( false );
 	m_uiServerInfo.gameObject:SetActive( false );
 	m_uiButtonList.gameObject:SetActive( false );
 	m_uiGameEnter.gameObject:SetActive( false );
+end
+
+-- 测试模式登陆页
+function LoginModLoginLayer()
+	m_uiLoginLayer.gameObject:SetActive( true );
+	m_uiRegLayer.gameObject:SetActive( false );
+	-- 读取上次登陆过的账户密码
+	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
+	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
+end
+
+-- 测试模式注册页
+function LoginModRegLayer()
+	m_uiRegLayer.gameObject:SetActive( true );
+	m_uiLoginLayer.gameObject:SetActive( false );
+end
+
+-- 注册
+function LoginModReg()
+	local userName = m_uiRegUserEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local passWord = m_uiRegPwdEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local passWordRe = m_uiRegPwdReEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	-- 非法检查
+	local len = string.len( userName );
+	if len < 4 or len > 64 then
+		LoginModWarning( T(417) );
+		return
+	end
+	if string.checksign( userName ) == false then
+		LoginModWarning( T(417) );
+		return
+	end
+	
+	local pwdlen = string.len( passWord );
+	if passWord == "" or pwdlen < 4 or pwdlen > 64 then
+		LoginModWarning( T(419) );
+		return
+	end
+	
+	if passWord ~= passWordRe then
+		LoginModWarning( T(416) );
+		return
+	end
+	
+	LoginModWaitOpen()
+	HttpRequest.RegisterUser( userName, passWord, function( response ) 
+		LoginModWaitClose()
+		local json = require "cjson"
+		local info = json.decode( response );
+		if info == nil then
+			netlog( response );
+			LoginModWarning( T(418) )
+			return;
+		end
+		if info["result"] == -1 then
+			LoginModWarning( T(418) )
+			return
+		end
+		if info["result"] == -2 then
+			LoginModWarning( T(417) )
+			return
+		end
+		if info["result"] == -3 then
+			LoginModWarning( T(419) )
+			return
+		end
+		
+		m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["u"];
+		m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["p"];
+		LoginModLogin()
+	end )
+end
+
+-- 进入游戏
+function LoginModEnterGame()
+	if Const.platid > 11 then
+		LoginModSDKLogin()
+	else
+		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
+		if loginType == "2" then
+			LoginModQuickLogin();
+		else
+			local userName = m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			local passWord = m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if userName == "" or passWord == "" then
+				LoginModLoginLayer()
+			else
+				LoginModLogin()
+			end
+		end
+	end
 end
 
 -- 显示SDK模式登陆
@@ -281,14 +462,6 @@ function LoginModOpenSDKLogin()
 	
 	-- 请求服务器列表
 	LoginModAskServerList()
-	
-	-- 需要显示的
-	m_uiServerInfo.gameObject:SetActive( true );
-	m_uiButtonList.gameObject:SetActive( true );
-	m_uiGameEnter.gameObject:SetActive( true );
-	
-	-- 显示公告
-	LoginModNoticeShow(1)
 end
 
 -- 关闭SDK模式登陆
@@ -303,11 +476,14 @@ end
 -- 请求服务器列表
 function LoginModAskServerList()
 	-- 获取服务器列表
+	LoginModWaitOpen()
 	HttpRequest.GetServerList( function( response )
+		LoginModWaitClose()
 		local json = require "cjson"
 		local info = json.decode( response );
 		if info == nil then
 			netlog( response );
+			LoginModMsgBox( T(413), LoginModAskServerList )
 			return;
 		end
 
@@ -332,17 +508,28 @@ function LoginModAskServerList()
 			m_LoginUsedServerList = json.decode( loginUsedServerJson )
 			LoginModSelectServer( m_LoginUsedServerList[#m_LoginUsedServerList]["sid"] );
 		end 
+			
+		-- 需要显示的
+		m_uiServerInfo.gameObject:SetActive( true );
+		m_uiButtonList.gameObject:SetActive( true );
+		m_uiGameEnter.gameObject:SetActive( true );
+
+		-- 显示公告
+		LoginModNoticeShow(1)
 	end );
 end
 
 -- 再次请求服务器列表
 function LoginModAskServerListRe()
 	-- 获取服务器列表
+	LoginModWaitOpen()
 	HttpRequest.GetServerList( function( response )
+	LoginModWaitClose()
 		local json = require "cjson"
 		local info = json.decode( response );
 		if info == nil then
 			netlog( response );
+			LoginModMsgBox( T(413), LoginModAskServerListRe )
 			return;
 		end
 		-- 服务器分组
@@ -355,10 +542,6 @@ end
 
 -- 打开服务器列表界面
 function LoginModOpenServerList()
-	m_uiAccountEdit.gameObject:SetActive( false);
-	m_uiPasswordEdit.gameObject:SetActive( false );
-	m_uiFastEnter.gameObject:SetActive( false );
-	m_uiRegEnter.gameObject:SetActive( false );
 	m_uiGameEnter.gameObject:SetActive( false );
 	m_uiServerInfo.gameObject:SetActive( false );
 	m_uiServerList.gameObject:SetActive( true );
@@ -367,7 +550,7 @@ function LoginModOpenServerList()
 	LoginModServerClear( m_uiGroupContent )
 	
 	-- 默认添加常用服务器
-	if m_LoginUsedServerList ~= nil then 
+	if m_LoginUsedServerList ~= nil then
 		local index = 1;
 		for k, v in pairs( m_LoginUsedServerList ) do
 			local serverinfo = LoginModGetServerInfo( v["sid"] );
@@ -392,14 +575,7 @@ function LoginModCloseServerList()
 	end
 	m_uiGroupCache = {}
 	
-	if Const.platid > 11 then
-		m_uiGameEnter.gameObject:SetActive( true );
-	else
-		m_uiFastEnter.gameObject:SetActive( true );
-		m_uiRegEnter.gameObject:SetActive( true );
-		m_uiAccountEdit.gameObject:SetActive( true );
-		m_uiPasswordEdit.gameObject:SetActive( true );
-	end
+	m_uiGameEnter.gameObject:SetActive( true );
 	m_uiServerInfo.gameObject:SetActive( true );
 	m_uiServerList.gameObject:SetActive( false );
 end
@@ -648,11 +824,8 @@ function LoginModOpenLoading()
 	LoginModLoginQueue( false );
 	
 	-- 需要隐藏的
-	m_uiAccountEdit.gameObject:SetActive( false );
-	m_uiPasswordEdit.gameObject:SetActive( false );
+	m_uiLoginLayer.gameObject:SetActive( false );
 	m_uiServerInfo.gameObject:SetActive( false );
-	m_uiFastEnter.gameObject:SetActive( false );
-	m_uiRegEnter.gameObject:SetActive( false );
 	m_uiGameEnter.gameObject:SetActive( false );
 	m_uiButtonList.gameObject:SetActive( false );
 	
@@ -783,6 +956,21 @@ end
 function LoginModWarning( text )
 	m_uiWarning.transform:Find("Text"):GetComponent("UIText").text = text;
 	m_uiWarning.gameObject:SetActive( true );
+end
+
+-- 等待框
+function LoginModWaitOpen()
+	SetTrue( m_uiWaiting )
+end
+function LoginModWaitClose()
+	SetFalse( m_uiWaiting )
+end
+
+-- 提示框
+function LoginModMsgBox( msg, callback )
+	SetTrue( m_uiMsgBox )
+	SetText( m_uiMsgBox.transform:Find("Back/Msg"), msg )
+	m_MsgBoxCallBack = callback;
 end
 
 -- 登陆队列显示

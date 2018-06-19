@@ -1,6 +1,21 @@
 HttpRequest = {};
 local SECRET_KEY = "eye^sanguo"
 
+-- 注册用户
+function HttpRequest.RegisterUser( username, pwd, callback )
+	local paramString = "c=userinfo&m=register"
+	.."&username="..username
+	.."&pwd="..pwd
+	.."&lang="..DeviceHelper.getLanguage()
+	.."&country="..DeviceHelper.getCountry()
+	.."&channelId="..Const.sdk_channelId
+	.."&os="..Const.sdk_sysType
+	.."&version="..Application.version
+	.."&platid="..Const.platid
+
+	HttpRequest.Get( paramString, callback );
+end
+
 -- SDK获取用户信息
 function HttpRequest.GetSDKUserInfo()
 	local paramString = "c=userinfo&m=get"
