@@ -5,9 +5,6 @@ local m_uiTogButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function NoticeDlgOpen()
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_3" )
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_notice1" )
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_notice2" )
 	m_Dlg = eye.uiManager:Open( "NoticeDlg" );
 end
 
@@ -23,9 +20,6 @@ end
 -- 删除界面
 function NoticeDlgDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_3" )
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_notice1" )
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_notice2" )
 	m_Dlg = nil;
 end
 

@@ -67,7 +67,6 @@ end
 -- 删除界面
 function LoginModDestroy()
 	GameObject.Destroy( m_Dlg );
-	ResourceManager.UnloadAssetBundle( "_ab_ui_static_notice2" )
 	ResourceManager.UnloadAssetBundleImmediately( "launchload" )
 	m_Dlg = nil;
 	m_objectPoolServer = {};
@@ -1049,7 +1048,6 @@ function LoginModNoticeShow( check )
 	end
 	
 	SetTrue( m_uiNoticeLayer )
-	ResourceManager.LoadAssetBundle( "_ab_ui_static_notice2" )
 	HttpRequest.GetFile( "notice.cfg", function( response )
 		SetText(m_uiNoticeText, response)
 	end )
