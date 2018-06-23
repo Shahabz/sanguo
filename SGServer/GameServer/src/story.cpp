@@ -318,6 +318,7 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 		if ( config->type == STORY_TYPE_NORMAL )
 		{
 			story_sendrankstate( actor_index, pValue->m_storyid, 0, 0 );
+
 		}
 		// 精英副本
 		else if ( config->type == STORY_TYPE_BOSS && config->star_saveoffset >= 0 && config->star_saveoffset < STORY_STAR_OFFSETMAX )
@@ -384,6 +385,17 @@ int story_battle( int actor_index, SLK_NetC_StoryBattle *pValue )
 	{
 		// 任务
 		quest_addvalue( pCity, QUEST_DATATYPE_STORY, pValue->m_storyid, 0, 1 );
+
+		// 主要给资源建筑使用
+		if ( config->type != STORY_TYPE_ITEM && config->itemnum_saveoffset >= 0 && config->itemnum_saveoffset < STORY_ITEMNUM_OFFSETMAX )
+		{
+			int odds = rand() % 100;
+			if ( g_actors[actor_index].story_itemnum[config->itemnum_saveoffset] < config->itemnum && odds < config->item_awardodds )
+			{
+				award_getaward( actor_index, config->item_awardkind, config->itemnum, -1, PATH_STORY, NULL );
+				g_actors[actor_index].story_itemnum[config->itemnum_saveoffset] += config->itemnum;
+			}
+		}
 	}
 	return 0;
 }

@@ -884,6 +884,8 @@ function proc_buildingget_C( recvValue )
 	-- process.
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_building )
+	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
+		FightDlgWait( BuildingGetDlgShow, recvValue.m_building )
 	else
 		BuildingGetDlgShow( recvValue.m_building );
 	end
@@ -894,6 +896,8 @@ function proc_buildingbarracksget_C( recvValue )
 	-- process.
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_barracks )
+	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
+		FightDlgWait( BuildingGetDlgShow, recvValue.m_barracks )
 	else
 		BuildingGetDlgShow( recvValue.m_barracks );
 	end
@@ -904,6 +908,8 @@ function proc_buildingresget_C( recvValue )
 	-- process.
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_res )
+	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
+		FightDlgWait( BuildingGetDlgShow, recvValue.m_res )
 	else
 		BuildingGetDlgShow( recvValue.m_res );
 	end

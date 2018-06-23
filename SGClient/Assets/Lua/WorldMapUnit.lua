@@ -1491,3 +1491,28 @@ function MapUnit.playPosAction( posx, posy, action )
 		GameObject.Destroy(effect,6)
 	end
 end
+
+-- 更新缩放
+local m_ScaleRatio = 32;
+function MapUnit.ResetScale( cameraPosX, cameraPosY )
+    for i, unitObj in pairs( MapUnit.cache ) do
+        MapUnit.SetScale( unitObj, cameraPosX, cameraPosY );
+    end
+end
+-- 新unit缩放
+function MapUnit.SetScale( unitObj, cameraPosX, cameraPosY )
+    if unitObj == nil then
+        return;
+    end
+    if cameraPosX == nil then
+        cameraPosX, cameraPosY = WorldMap.m_nLastCameraX, WorldMap.m_nLastCameraY;
+    end
+    local offset = unitObj.transform.position.y - cameraPosY + 1.6;
+    if unitObj.transform.childCount > 0 then
+        if offset > 0 then
+            unitObj.transform:GetChild( 0 ).localScale = Vector3.New( 1, 1 - offset / m_ScaleRatio, 1 );
+        else
+            unitObj.transform:GetChild( 0 ).localScale = Vector3.New( 1, 1, 1 );
+        end
+    end
+end

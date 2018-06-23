@@ -124,6 +124,7 @@ end
 -- 自定
 ----------------------------------------
 function BuildingGetDlgShow( recvValue )
+	FightDlgClose()
 	if GameManager.currentScence ~= "city" then
 		WorldMap.ReturnCity()
 	end
@@ -148,7 +149,6 @@ function BuildingGetDlgShow( recvValue )
 	
 	-- 关闭部分界面
 	StoryDlgClose()
-	FightDlgClose()
 	FightInfoDlgClose()
 	LevyDlgClose()
 	WishingDlgClose()

@@ -57,6 +57,9 @@ function FightDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
+	if FightDlgIsShow() == false then
+		return
+	end
 	for i=0, 3, 1 do
 		local uiObj = m_uiHeroList.transform:GetChild( i )
 		SetProgressStop( uiObj.transform:Find("Progress") )
@@ -65,9 +68,6 @@ function FightDlgClose()
 	eye.uiManager:Close( "FightDlg" );
 	FightScene.Delete()
 	
-	if m_WaitCallback then
-		m_WaitCallback( m_WaitValue );
-	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
 	PatrolModPlay();
@@ -99,12 +99,21 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 返回城池	
 		elseif nControlID == 2 then
+			if m_WaitCallback then
+				m_WaitCallback( m_WaitValue );
+			end
 			FightDlgClose();
 			
 		-- 返回副本
 		elseif nControlID == 3 then	
-			FightDlgClose();
-			StoryDlgShow()
+			if m_WaitCallback then
+				m_WaitCallback( m_WaitValue );
+				FightDlgClose();
+			else
+				FightDlgClose();
+				StoryDlgShow()
+			end
+
 			
 		-- 继续扫荡
 		elseif nControlID == 4 then	

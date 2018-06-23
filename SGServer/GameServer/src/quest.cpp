@@ -167,6 +167,10 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 						quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
 					}
 				}
+				else
+				{
+					quest_sendlist( pCity->actor_index );
+				}
 			}
 		}
 	}

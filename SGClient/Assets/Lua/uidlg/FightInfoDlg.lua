@@ -370,3 +370,10 @@ function FightInfoDlgFast()
 	FightDlgStart()
 	FightInfoDlgClose()
 end
+
+function FightInfoDlgIsShow()
+	if m_Dlg ~= nil then
+		return IsActive( m_Dlg )
+	end
+	return false;
+end

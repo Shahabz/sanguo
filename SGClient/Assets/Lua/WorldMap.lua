@@ -755,6 +755,9 @@ function WorldMap.ViewChangeFrame()
 	
 	-- 更新箭头朝向
     --WorldMap.UpdateArrow();
+	
+	-- 刷新所有角色缩放
+    --MapUnit.ResetScale( WorldMap.m_nLastCameraX, WorldMap.m_nLastCameraY );
 end
 
 -- 更新箭头朝向
