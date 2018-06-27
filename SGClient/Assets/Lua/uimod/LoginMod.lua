@@ -423,7 +423,7 @@ function LoginModReg()
 			LoginModWarning( T(419) )
 			return
 		end
-		
+		LoginModWarning( T(447) );
 		m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["u"];
 		m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["p"];
 		LoginModLogin()
