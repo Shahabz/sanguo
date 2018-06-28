@@ -410,8 +410,10 @@ int paystore_list( int actor_index )
 	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
+	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
 
 	SLK_NetS_PayStore store = { 0 };
+	store.m_paymode = (char)paymode;
 	for ( short id = 1; id < g_paystore_maxnum; id++ )
 	{
 		short goodsid = g_paystore[id].goodsid;

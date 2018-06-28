@@ -96,16 +96,22 @@ end
 -- 自定
 ----------------------------------------
 function PayDlgShow()
-	PayDlgOpen()
 	system_askinfo( ASKINFO_PAY, "", 0 )
-	PayDlgUpdateVip()
 end
 
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_token=0,m_day=0,m_nameid=0,m_icon=0,[m_count]},
 function PayDlgRecv( recvValue )
-	PayDlgClear()
-	for i=1, recvValue.m_count, 1 do
-		PayDlgCreateGoods( recvValue.m_list[i] )
+	if recvValue.m_paymode == 0 then
+		-- 正规打开模式
+		PayDlgOpen()
+		PayDlgClear()
+		for i=1, recvValue.m_count, 1 do
+			PayDlgCreateGoods( recvValue.m_list[i] )
+		end
+		PayDlgUpdateVip()
+	else
+		-- web打开模式
+		PayWebDlgShow( recvValue )
 	end
 end
 

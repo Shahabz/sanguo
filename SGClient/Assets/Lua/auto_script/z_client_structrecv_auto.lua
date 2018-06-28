@@ -2172,6 +2172,7 @@ function struct_NetS_PayStore_recv( buffer )
 		tmpValue = struct_NetS_PayStoreGoods_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_paymode = buffer:ReadSByte();
 	return recvValue;
 end
 

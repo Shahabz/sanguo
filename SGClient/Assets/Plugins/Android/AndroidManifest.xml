@@ -33,8 +33,10 @@
 
             <meta-data
                 android:name="unityplayer.UnityActivity"
-                android:value="true" />
+                android:value="true" /> 
         </activity>
+        
+        <activity android:name="com.onevcat.uniwebview.UniWebViewFileChooserActivity" />
 
         <receiver android:name=".AlarmReceiver">
             <intent-filter android:priority="1000">

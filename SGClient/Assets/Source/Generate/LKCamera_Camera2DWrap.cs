@@ -22,7 +22,9 @@ public class LKCamera_Camera2DWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("subCamera", get_subCamera, set_subCamera);
+		L.RegVar("blur", get_blur, set_blur);
 		L.RegVar("enableTouchEffect", get_enableTouchEffect, set_enableTouchEffect);
+		L.RegVar("szEffectMouseClickName", get_szEffectMouseClickName, set_szEffectMouseClickName);
 		L.RegVar("pixelsPerUnit", get_pixelsPerUnit, set_pixelsPerUnit);
 		L.RegVar("moveDecay", get_moveDecay, set_moveDecay);
 		L.RegVar("horizontalLock", get_horizontalLock, set_horizontalLock);
@@ -289,6 +291,25 @@ public class LKCamera_Camera2DWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_blur(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
+			ScreenBlur ret = obj.blur;
+			ToLua.Push(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index blur on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_enableTouchEffect(IntPtr L)
 	{
 		object o = null;
@@ -304,6 +325,25 @@ public class LKCamera_Camera2DWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index enableTouchEffect on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_szEffectMouseClickName(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
+			string ret = obj.szEffectMouseClickName;
+			LuaDLL.lua_pushstring(L, ret);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index szEffectMouseClickName on a nil value" : e.Message);
 		}
 	}
 
@@ -650,6 +690,25 @@ public class LKCamera_Camera2DWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_blur(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
+			ScreenBlur arg0 = (ScreenBlur)ToLua.CheckUnityObject(L, 2, typeof(ScreenBlur));
+			obj.blur = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index blur on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_enableTouchEffect(IntPtr L)
 	{
 		object o = null;
@@ -665,6 +724,25 @@ public class LKCamera_Camera2DWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index enableTouchEffect on a nil value" : e.Message);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_szEffectMouseClickName(IntPtr L)
+	{
+		object o = null;
+
+		try
+		{
+			o = ToLua.ToObject(L, 1);
+			LKCamera.Camera2D obj = (LKCamera.Camera2D)o;
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.szEffectMouseClickName = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e, o == null ? "attempt to index szEffectMouseClickName on a nil value" : e.Message);
 		}
 	}
 

@@ -2421,6 +2421,7 @@ int struct_NetS_PayStore_send( char **pptr, int *psize, SLK_NetS_PayStore *pValu
 	{
 		struct_NetS_PayStoreGoods_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_paymode, (*psize) );
 	return 0;
 }
 

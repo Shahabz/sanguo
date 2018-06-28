@@ -44,6 +44,15 @@ public static class DelegateFactory
 		dict.Add(typeof(YlyDelegateUtil.StringDelegate), YlyDelegateUtil_StringDelegate);
 		dict.Add(typeof(DragonBones.ListenerDelegate<DragonBones.EventObject>), DragonBones_ListenerDelegate_DragonBones_EventObject);
 		dict.Add(typeof(Character.OnEvent), Character_OnEvent);
+		dict.Add(typeof(UniWebView.PageStartedDelegate), UniWebView_PageStartedDelegate);
+		dict.Add(typeof(UniWebView.PageFinishedDelegate), UniWebView_PageFinishedDelegate);
+		dict.Add(typeof(UniWebView.PageErrorReceivedDelegate), UniWebView_PageErrorReceivedDelegate);
+		dict.Add(typeof(UniWebView.MessageReceivedDelegate), UniWebView_MessageReceivedDelegate);
+		dict.Add(typeof(UniWebView.ShouldCloseDelegate), UniWebView_ShouldCloseDelegate);
+		dict.Add(typeof(UniWebView.KeyCodeReceivedDelegate), UniWebView_KeyCodeReceivedDelegate);
+		dict.Add(typeof(UniWebView.OreintationChangedDelegate), UniWebView_OreintationChangedDelegate);
+		dict.Add(typeof(System.Action<UniWebViewNativeResultPayload>), System_Action_UniWebViewNativeResultPayload);
+		dict.Add(typeof(System.Action<string>), System_Action_string);
 	}
 
     [NoToLuaAttribute]
@@ -1447,6 +1456,449 @@ public static class DelegateFactory
 		{
 			Character_OnEvent_Event target = new Character_OnEvent_Event(func, self);
 			Character.OnEvent d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_PageStartedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_PageStartedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_PageStartedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, string param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, string param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_PageStartedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.PageStartedDelegate fn = delegate(UniWebView param0, string param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_PageStartedDelegate_Event target = new UniWebView_PageStartedDelegate_Event(func);
+			UniWebView.PageStartedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_PageStartedDelegate_Event target = new UniWebView_PageStartedDelegate_Event(func, self);
+			UniWebView.PageStartedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_PageFinishedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_PageFinishedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_PageFinishedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, int param1, string param2)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, int param1, string param2)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_PageFinishedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.PageFinishedDelegate fn = delegate(UniWebView param0, int param1, string param2) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_PageFinishedDelegate_Event target = new UniWebView_PageFinishedDelegate_Event(func);
+			UniWebView.PageFinishedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_PageFinishedDelegate_Event target = new UniWebView_PageFinishedDelegate_Event(func, self);
+			UniWebView.PageFinishedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_PageErrorReceivedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_PageErrorReceivedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_PageErrorReceivedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, int param1, string param2)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, int param1, string param2)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_PageErrorReceivedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.PageErrorReceivedDelegate fn = delegate(UniWebView param0, int param1, string param2) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_PageErrorReceivedDelegate_Event target = new UniWebView_PageErrorReceivedDelegate_Event(func);
+			UniWebView.PageErrorReceivedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_PageErrorReceivedDelegate_Event target = new UniWebView_PageErrorReceivedDelegate_Event(func, self);
+			UniWebView.PageErrorReceivedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_MessageReceivedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_MessageReceivedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_MessageReceivedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, UniWebViewMessage param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PushValue(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, UniWebViewMessage param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PushValue(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_MessageReceivedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.MessageReceivedDelegate fn = delegate(UniWebView param0, UniWebViewMessage param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_MessageReceivedDelegate_Event target = new UniWebView_MessageReceivedDelegate_Event(func);
+			UniWebView.MessageReceivedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_MessageReceivedDelegate_Event target = new UniWebView_MessageReceivedDelegate_Event(func, self);
+			UniWebView.MessageReceivedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_ShouldCloseDelegate_Event : LuaDelegate
+	{
+		public UniWebView_ShouldCloseDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_ShouldCloseDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public bool Call(UniWebView param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+
+		public bool CallWithSelf(UniWebView param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public static Delegate UniWebView_ShouldCloseDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.ShouldCloseDelegate fn = delegate(UniWebView param0) { return false; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_ShouldCloseDelegate_Event target = new UniWebView_ShouldCloseDelegate_Event(func);
+			UniWebView.ShouldCloseDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_ShouldCloseDelegate_Event target = new UniWebView_ShouldCloseDelegate_Event(func, self);
+			UniWebView.ShouldCloseDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_KeyCodeReceivedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_KeyCodeReceivedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_KeyCodeReceivedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, int param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, int param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_KeyCodeReceivedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.KeyCodeReceivedDelegate fn = delegate(UniWebView param0, int param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_KeyCodeReceivedDelegate_Event target = new UniWebView_KeyCodeReceivedDelegate_Event(func);
+			UniWebView.KeyCodeReceivedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_KeyCodeReceivedDelegate_Event target = new UniWebView_KeyCodeReceivedDelegate_Event(func, self);
+			UniWebView.KeyCodeReceivedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class UniWebView_OreintationChangedDelegate_Event : LuaDelegate
+	{
+		public UniWebView_OreintationChangedDelegate_Event(LuaFunction func) : base(func) { }
+		public UniWebView_OreintationChangedDelegate_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebView param0, UnityEngine.ScreenOrientation param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebView param0, UnityEngine.ScreenOrientation param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate UniWebView_OreintationChangedDelegate(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UniWebView.OreintationChangedDelegate fn = delegate(UniWebView param0, UnityEngine.ScreenOrientation param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UniWebView_OreintationChangedDelegate_Event target = new UniWebView_OreintationChangedDelegate_Event(func);
+			UniWebView.OreintationChangedDelegate d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UniWebView_OreintationChangedDelegate_Event target = new UniWebView_OreintationChangedDelegate_Event(func, self);
+			UniWebView.OreintationChangedDelegate d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class System_Action_UniWebViewNativeResultPayload_Event : LuaDelegate
+	{
+		public System_Action_UniWebViewNativeResultPayload_Event(LuaFunction func) : base(func) { }
+		public System_Action_UniWebViewNativeResultPayload_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UniWebViewNativeResultPayload param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UniWebViewNativeResultPayload param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate System_Action_UniWebViewNativeResultPayload(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<UniWebViewNativeResultPayload> fn = delegate(UniWebViewNativeResultPayload param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_UniWebViewNativeResultPayload_Event target = new System_Action_UniWebViewNativeResultPayload_Event(func);
+			System.Action<UniWebViewNativeResultPayload> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_UniWebViewNativeResultPayload_Event target = new System_Action_UniWebViewNativeResultPayload_Event(func, self);
+			System.Action<UniWebViewNativeResultPayload> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	class System_Action_string_Event : LuaDelegate
+	{
+		public System_Action_string_Event(LuaFunction func) : base(func) { }
+		public System_Action_string_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(string param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(string param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public static Delegate System_Action_string(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<string> fn = delegate(string param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_string_Event target = new System_Action_string_Event(func);
+			System.Action<string> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_string_Event target = new System_Action_string_Event(func, self);
+			System.Action<string> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}

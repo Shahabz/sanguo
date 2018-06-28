@@ -297,7 +297,9 @@ public static class CustomSettings
 		_GT(typeof(WorldMapThumbCamera)),
 		_GT(typeof(ScreenBlur)),
 		_GT(typeof(ChannelSDK)),
-
+		_GT(typeof(UniWebView)),
+		_GT(typeof(UniWebViewHelper)),
+		_GT(typeof(UniWebViewTransitionEdge)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

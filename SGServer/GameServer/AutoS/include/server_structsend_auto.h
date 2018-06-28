@@ -1667,6 +1667,7 @@ typedef struct _slk_NetS_PayStoreGoods SLK_NetS_PayStoreGoods;	//支付商品
 struct _slk_NetS_PayStore {
 	char m_count;	//支付商店列表
 	SLK_NetS_PayStoreGoods m_list[16];	//支付商店列表
+	char m_paymode;	//支付商店列表
 };
 typedef struct _slk_NetS_PayStore SLK_NetS_PayStore;	//支付商品商店
 

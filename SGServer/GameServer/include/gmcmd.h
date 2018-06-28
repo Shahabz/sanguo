@@ -70,6 +70,7 @@
 #define GMC_ROBOTDEL			(GMC_BASE+65)	// 机器人删除
 #define GMC_ROBOTLOGIC			(GMC_BASE+66)	// 机器人逻辑
 #define GMC_ROBOTQUEUE			(GMC_BASE+67)	// 机器人逻辑-队列创建
+#define GMC_PAYMODE				(GMC_BASE+68)	// 支付模式
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功

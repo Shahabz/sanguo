@@ -61,7 +61,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 	int actorid = pValue[3];
 	City *pCity = NULL;
 
-	if ( cmd == GMC_LUA || cmd == GMC_SC || cmd == GMC_SYSTALK || cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF || cmd == GMC_DB || cmd == GMC_MAIL_SERVER || cmd == GMC_MAIL_NOTICE || cmd == GMC_ROBOTADD || cmd == GMC_ROBOTDEL || cmd == GMC_ROBOTLOGIC )
+	if ( cmd == GMC_LUA || cmd == GMC_SC || cmd == GMC_SYSTALK || cmd == GMC_PAYBAG || cmd == GMC_ACTIVITY || cmd == GMC_NATIONRANK || cmd == GMC_NATIONOF || cmd == GMC_DB || cmd == GMC_MAIL_SERVER || cmd == GMC_MAIL_NOTICE || cmd == GMC_ROBOTADD || cmd == GMC_ROBOTDEL || cmd == GMC_ROBOTLOGIC || cmd == GMC_PAYMODE )
 	{
 		actorid = 0;
 	}
@@ -837,6 +837,16 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 	}
 	break;
+	case GMC_PAYMODE: // Ö§¸¶Ä£Ê½
+		if ( pValue[0] == 0 )
+		{
+			world_data_set( WORLD_DATA_PAYMODE, 0, NULL, NULL );
+		}
+		else
+		{
+			world_data_set( WORLD_DATA_PAYMODE, 1, NULL, NULL );
+		}
+		break;
 	default:
 		break;
 	}
