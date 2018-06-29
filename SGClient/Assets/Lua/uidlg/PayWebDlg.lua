@@ -85,7 +85,7 @@ function PayWebDlgShow( recvValue )
 	
 	local url = Global.GetValue("PAY_URL");
 	local uniWebView = m_uiWebView.transform:GetComponent( "UniWebView" )
-	uniWebView:Load( "http://uniwebview.onevcat.com/demo/index.html", false );
+	uniWebView:Load( url, false );
 	uniWebView:Show( false, UniWebViewTransitionEdge.None, 0.4, nil );
 	uniWebView.OnPageFinished = uniWebView.OnPageFinished + function( view, statusCode, url ) 
 		
