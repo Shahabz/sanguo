@@ -294,7 +294,7 @@ function GirlDlgHeadLayerCreate()
 	end );
 	
 	-- 可突破排序
-	table.sort( m_GirlCache, function(a,b) 
+	table.sort( m_GirlNoGet, function(a,b) 
 		if a.m_state > b.m_state then
 			return true;
 		elseif a.m_state == b.m_state then
@@ -658,8 +658,8 @@ function GirlDlgDoubleLayerSetHero( uiHeroObj, config, herokind )
 		return
 	end
 	--SetImage( uiColor, ItemColorSprite( pHero.m_color ) )
-	SetImage( uiBack, HeroColorSprite( color ) )
-	SetImage( uiNameBack, HeroNameColorSprite( color ) )
+	SetImage( uiBack, HeroColorSprite( pHero.m_color ) )
+	SetImage( uiNameBack, HeroNameColorSprite( pHero.m_color ) )
 	SetText( uiName, HeroName( herokind ) )
 	SetImage( uiShape, HeroFaceSprite( herokind ) )
 	MakeAttrText( uiAttrText, config )
