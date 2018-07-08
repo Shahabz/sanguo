@@ -850,6 +850,25 @@ int quest_gm_reset( int actor_index )
 	return 0;
 }
 
+// GM…Ë÷√»ŒŒÒ
+int quest_gm_set( int actor_index, int questid )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( questid <= 0 )
+	{
+		questid = 1;
+	}
+	if ( questid >= g_questinfo_maxnum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	quest_give_main( actor_index, questid );
+	quest_sendlist( actor_index );
+	return 0;
+}
+
 int data_record_addvalue( struct _city *pCity, int offset, int value )
 {
 	if ( pCity == NULL )

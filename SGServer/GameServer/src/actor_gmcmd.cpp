@@ -357,6 +357,17 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		break;
 	case GMC_QUEST:// »ŒŒÒ
+		if ( pCity )
+		{
+			if ( pValue[0] == -1 )
+			{
+				quest_gm_reset( pCity->actor_index );
+			}
+			else
+			{
+				quest_gm_set( pCity->actor_index, pValue[0] );
+			}
+		}
 		break;
 	case GMC_ROLLMSG:// ≈‹¬Ìµ∆
 		system_rollchat( actor_index, pMsg );

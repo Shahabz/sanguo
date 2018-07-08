@@ -108,6 +108,9 @@ int quest_fight( int actor_index, int storyid );
 // GM重置所有任务
 int quest_gm_reset( int actor_index );
 
+// GM设置任务
+int quest_gm_set( int actor_index, int questid );
+
 // city数据记录
 #define DATA_RECORD_MAXNUM						16
 #define DATA_RECORD_KILLENEMY					0	// 流寇数量
