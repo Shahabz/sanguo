@@ -573,6 +573,7 @@ function GirlDlgCreateInfo( pGirl )
 			SetTrue( m_uiAllotBtn )
 			maxSoul = config.soul
 			SetText(m_uiSingleLayer.transform:Find("Warning"), T(3346));
+
 		-- 未获得
 		else
 			SetFalse( m_uiAllotBtn )
