@@ -16,6 +16,8 @@ public class UtilsWrap
 		L.RegFunction("HashToMD5Hex", HashToMD5Hex);
 		L.RegFunction("md5", md5);
 		L.RegFunction("md5file", md5file);
+		L.RegFunction("RSAEncrypt", RSAEncrypt);
+		L.RegFunction("RSADecrypt", RSADecrypt);
 		L.RegFunction("CompressFile", CompressFile);
 		L.RegFunction("DecompressFile", DecompressFile);
 		L.RegFunction("Compress", Compress);
@@ -218,6 +220,42 @@ public class UtilsWrap
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
 			string o = Utils.md5file(arg0);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RSAEncrypt(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			string arg0 = ToLua.CheckString(L, 1);
+			string arg1 = ToLua.CheckString(L, 2);
+			string o = Utils.RSAEncrypt(arg0, arg1);
+			LuaDLL.lua_pushstring(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int RSADecrypt(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			string arg0 = ToLua.CheckString(L, 1);
+			string arg1 = ToLua.CheckString(L, 2);
+			string o = Utils.RSADecrypt(arg0, arg1);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}

@@ -5,7 +5,6 @@
 struct _paygoods {
 //--Automatically generated
 				int goodsid;	//
-				int productid;	//
 				short tier;	//
 				int point;	//
 				int token;	//
@@ -20,6 +19,12 @@ struct _paygoods {
 				short nextid;	//
 				int nextcd;	//
 				short nextcount;	//
+				char productid_a[64];	//
+				char productid_b[64];	//
+				char productid_c[64];	//
+				char productid_d[64];	//
+				char productid_e[64];	//
+				char productid_f[64];	//
 };
 typedef struct _paygoods PayGoods;
 

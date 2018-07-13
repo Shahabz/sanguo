@@ -46,6 +46,7 @@ local m_playing = 0;
 
 local m_WaitCallback = nil;
 local m_WaitValue = nil;
+local m_WaitCount = 0;
 	
 -- 打开界面
 function FightDlgOpen()
@@ -70,6 +71,7 @@ function FightDlgClose()
 	
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	m_WaitCount = 0;
 	PatrolModPlay();
 end
 
@@ -100,14 +102,18 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 返回城池	
 		elseif nControlID == 2 then
 			if m_WaitCallback then
-				m_WaitCallback( m_WaitValue );
+				for i=1,m_WaitCount,1 do
+					m_WaitCallback( m_WaitValue );
+				end
 			end
 			FightDlgClose();
 			
 		-- 返回副本
 		elseif nControlID == 3 then	
 			if m_WaitCallback then
-				m_WaitCallback( m_WaitValue );
+				for i=1,m_WaitCount,1 do
+					m_WaitCallback( m_WaitValue );
+				end
 				FightDlgClose();
 			else
 				FightDlgClose();
@@ -1054,4 +1060,5 @@ end
 function FightDlgWait( callback, value )
 	m_WaitCallback = callback;
 	m_WaitValue = value;
+	m_WaitCount = m_WaitCount + 1;
 end

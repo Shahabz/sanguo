@@ -101,7 +101,7 @@ end
 
 -- m_count=0,m_list={m_goodsid=0,m_price=0,m_token=0,m_day=0,m_nameid=0,m_icon=0,[m_count]},
 function PayDlgRecv( recvValue )
-	if recvValue.m_paymode == 0 then
+	--if recvValue.m_paymode == 0 then
 		-- 正规打开模式
 		PayDlgOpen()
 		PayDlgClear()
@@ -109,10 +109,10 @@ function PayDlgRecv( recvValue )
 			PayDlgCreateGoods( recvValue.m_list[i] )
 		end
 		PayDlgUpdateVip()
-	else
+	--else
 		-- web打开模式
-		PayWebDlgShow( recvValue )
-	end
+		--PayWebDlgShow( recvValue )
+	--end
 end
 
 -- 创建一个商品
@@ -127,6 +127,9 @@ function PayDlgCreateGoods( info )
 	if info.m_goodsid == 1 then
 		SetTrue( uiObj.transform:Find("Flag") )
 		SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
+	elseif info.m_goodsid == 3 then
+		SetFalse( uiObj.transform:Find("Flag") )
+		SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol().."0.01" )
 	else
 		SetFalse( uiObj.transform:Find("Flag") )
 	end
@@ -169,7 +172,7 @@ end
 
 -- 购买
 function PayDlgBuy( goodsid )
-	if Const.platid == 1 then
+	if Const.platid == 0 then
 		system_askinfo( ASKINFO_PAY, "", 3, goodsid )
 	else
 		system_askinfo( ASKINFO_PAY, "", 2, goodsid )

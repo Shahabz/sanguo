@@ -174,6 +174,37 @@ public class Utils : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// 功能：RSA公钥加密
+	/// </summary>
+	/// <param name="data"></param>
+	/// <param name="publicKey"></param>
+	public static string RSAEncrypt(string str, string publicKey)
+	{
+		RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+		rsa.FromXmlString(publicKey);
+		byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
+		byte[] encryptData = rsa.Encrypt(data, false);
+		return encryptData.ToString();
+	}
+
+	/// <summary>
+	/// 功能：RSA私钥解密
+	/// </summary>
+	/// <param name="data"></param>
+	/// <param name="privateKey"></param>
+	/// <returns></returns>
+	public static string RSADecrypt(string str, string privateKey)
+	{
+		RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+		rsa.FromXmlString(privateKey);
+		byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
+		byte[] decryptData = rsa.Decrypt(data, false);
+		return decryptData.ToString();
+	}
+
+
+
     /// <summary>
     /// 功能：压缩字符串
     /// </summary>
@@ -854,5 +885,4 @@ public class Utils : MonoBehaviour
     {
         return data.Replace(old, ne);
     }
-    
 }

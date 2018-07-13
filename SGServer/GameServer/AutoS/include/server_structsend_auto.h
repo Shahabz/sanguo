@@ -1699,7 +1699,9 @@ struct _slk_NetS_PayOrder {
 	char m_ext_len;	//支付订单
 	char m_ext[64];	//支付订单
 	short m_goodsid;	//支付订单
-	int m_productid;	//支付订单
+	char m_paymode;	//支付订单
+	char m_productidlen;	//支付订单
+	char m_productid[64];	//支付订单
 	int m_nameid;	//支付订单
 	int m_descid;	//支付订单
 	int m_price;	//支付订单

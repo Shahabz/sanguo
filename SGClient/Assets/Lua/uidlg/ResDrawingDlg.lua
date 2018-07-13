@@ -139,6 +139,7 @@ end
 
 -- 获取
 function ResDrawingDlgGet()
+	ResDrawingDlgClose()
 	StoryDlgShow()
 end
 

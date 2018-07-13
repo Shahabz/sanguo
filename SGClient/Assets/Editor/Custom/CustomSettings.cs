@@ -98,6 +98,7 @@ public static class CustomSettings
         _GT(typeof(Shader)),        
         _GT(typeof(Renderer)),
         _GT(typeof(WWW)),
+		_GT(typeof(WWWForm)),
         _GT(typeof(Screen)),        
         _GT(typeof(CameraClearFlags)),
         _GT(typeof(AudioClip)),        

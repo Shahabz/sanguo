@@ -47,7 +47,7 @@ int paygoods_init_auto()
 	g_paygoods = (PayGoods *)malloc( sizeof(PayGoods)*g_paygoods_maxnum );
 	memset( g_paygoods, 0, sizeof(PayGoods)*g_paygoods_maxnum );
 
-	sprintf( szSQL, "select `goodsid`,`productid`,`tier`,`point`,`token`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount` from paygoods;" );
+	sprintf( szSQL, "select `goodsid`,`tier`,`point`,`token`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount`,`productid_a`,`productid_b`,`productid_c`,`productid_d`,`productid_e`,`productid_f` from paygoods;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -62,7 +62,6 @@ int paygoods_init_auto()
 		if ( goodsid < 0 || goodsid >= g_paygoods_maxnum  )
 			continue;
 		g_paygoods[goodsid].goodsid = atoi(row[offset++]);
-		g_paygoods[goodsid].productid = atoi(row[offset++]);
 		g_paygoods[goodsid].tier = atoi(row[offset++]);
 		g_paygoods[goodsid].point = atoi(row[offset++]);
 		g_paygoods[goodsid].token = atoi(row[offset++]);
@@ -77,6 +76,12 @@ int paygoods_init_auto()
 		g_paygoods[goodsid].nextid = atoi(row[offset++]);
 		g_paygoods[goodsid].nextcd = atoi(row[offset++]);
 		g_paygoods[goodsid].nextcount = atoi(row[offset++]);
+		memcpy( g_paygoods[goodsid].productid_a, row[offset++], 64 ); g_paygoods[goodsid].productid_a[63]=0;
+		memcpy( g_paygoods[goodsid].productid_b, row[offset++], 64 ); g_paygoods[goodsid].productid_b[63]=0;
+		memcpy( g_paygoods[goodsid].productid_c, row[offset++], 64 ); g_paygoods[goodsid].productid_c[63]=0;
+		memcpy( g_paygoods[goodsid].productid_d, row[offset++], 64 ); g_paygoods[goodsid].productid_d[63]=0;
+		memcpy( g_paygoods[goodsid].productid_e, row[offset++], 64 ); g_paygoods[goodsid].productid_e[63]=0;
+		memcpy( g_paygoods[goodsid].productid_f, row[offset++], 64 ); g_paygoods[goodsid].productid_f[63]=0;
 	}
 	mysql_free_result( res );
 	return 0;

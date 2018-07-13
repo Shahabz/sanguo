@@ -47,6 +47,9 @@ extern int g_activity_count;
 extern int g_serverpoint;
 extern int g_server_citylevel5_count;
 
+extern PlatInfo *g_platinfo;
+extern int g_platinfo_maxnum;
+
 PayPrice *g_PayPrice = NULL;
 int g_PayPriceCount = 0;
 
@@ -533,6 +536,45 @@ int paystore_goodslist_withtype( int type, int *goodsid, int count )
 	return 0;
 }
 
+// 获取商品编号
+int paystore_get_productid( int platid, char paymode, int goodsid, char *out )
+{
+	char paystr[2] = { 0 };
+	if ( paymode == 0 )
+	{
+		strncpy( paystr, g_platinfo[platid].paymode_sdk, 2 );
+	}
+	else
+	{
+		strncpy( paystr, g_platinfo[platid].paymode_web, 2 );
+	}
+	if ( strncmp( paystr, "a", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_a, 63 );
+	}
+	else if ( strncmp( paystr, "b", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_b, 63 );
+	}
+	else if ( strncmp( paystr, "c", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_c, 63 );
+	}
+	else if ( strncmp( paystr, "d", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_d, 63 );
+	}
+	else if ( strncmp( paystr, "e", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_e, 63 );
+	}
+	else if ( strncmp( paystr, "f", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_f, 63 );
+	}
+	return 0;
+}
+
 // 购买商品
 int paystore_buy( int actor_index, int goodsid )
 {
@@ -540,11 +582,17 @@ int paystore_buy( int actor_index, int goodsid )
 		return -1;
 	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
 		return -1;
-	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	int platid = client_getplatid( actor_index );
+	int coinindex = paycoin_getindex_withplat( platid );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
 	int goodstype = g_paygoods[goodsid].type;
-	
+	// 发送去支付
+	SLK_NetS_PayOrder info = { 0 };
+	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
+	paystore_get_productid( platid, paymode, goodsid, info.m_productid );
+	info.m_productidlen = strlen( info.m_productid );
+
 	// 生成一份订单
 	// 订单构成：服务器ID_角色ID_时间随机值
 	char pOrderID[32] = { 0 };
@@ -556,18 +604,15 @@ int paystore_buy( int actor_index, int goodsid )
 
 	// 透传参数构成：服务器编号#角色编号#平台产品编号#游戏商品编号
 	char pOrderExt[64] = { 0 };
-	snprintf( pOrderExt, 64, "%d#%d#%d#%d", g_Config.server_code, g_actors[actor_index].actorid, g_paygoods[goodsid].productid, goodsid );
-
-	// 发送去支付
-	SLK_NetS_PayOrder info = { 0 };
+	snprintf( pOrderExt, 64, "%d#%d#%s#%d", g_Config.server_code, g_actors[actor_index].actorid, info.m_productid, goodsid );
 
 	strncpy( info.m_orderid, pOrderID, 32 );
 	info.m_orderid_len = strlen( info.m_orderid );
 
 	strncpy( info.m_ext, pOrderExt, 64 );
 	info.m_ext_len = strlen( info.m_ext );
+	info.m_paymode = (char)paymode;
 
-	info.m_productid = g_paygoods[goodsid].productid;
 	info.m_goodsid = goodsid;
 	info.m_nameid = g_paygoods[goodsid].nameid;
 	info.m_descid = g_paygoods[goodsid].descid;
@@ -592,8 +637,11 @@ int paystore_addorder( int actor_index, int goodsid, char *pOrderID )
 	lltoa( userid, szUserID, 10 );
 
 	int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
-	sprintf( szSQL, "insert into pay_order( orderid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%s','%d','%d','%d','%d','%d','%d','%s','%d','%d' )", 
-		pOrderID, szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), g_paygoods[goodsid].productid, goodsid, awardgroup, client_getip( actor_index ), 0, (int)time( NULL ) );
+	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
+	char productid[64] = { 0 };
+	paystore_get_productid( client_getplatid( actor_index ), paymode, goodsid, productid );
+	sprintf( szSQL, "insert into pay_order( orderid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d' )", 
+		pOrderID, szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), productid, goodsid, awardgroup, client_getip( actor_index ), 0, (int)time( NULL ) );
 
 	if ( mysql_query( myGame, szSQL ) )
 	{

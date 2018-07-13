@@ -2018,6 +2018,9 @@ end
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function proc_payorder_C( recvValue )
 	-- process.
+	if recvValue.m_goodsid == 3 then
+		recvValue.m_price = 0.01
+	end
 	SDK.pay( recvValue )
 end
 

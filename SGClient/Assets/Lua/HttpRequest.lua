@@ -84,3 +84,15 @@ function HttpRequest.GetFile( filename, callBack )
 		end
 	end)
 end
+
+-- 执行http post请求
+function HttpRequest.Post( url, wwwform, callBack )
+	-- 启动协程
+	coroutine.start( function()
+		local request = WWW( url, wwwform );
+		coroutine.www( request );
+		if callBack ~= nil then
+			callBack( tolua.tolstring( request.bytes ) );
+		end
+	end)
+end

@@ -2470,7 +2470,10 @@ int struct_NetS_PayOrder_send( char **pptr, int *psize, SLK_NetS_PayOrder *pValu
 	if( pValue->m_ext_len > 0 && pValue->m_ext_len <= 64 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_ext, pValue->m_ext_len*sizeof(char), (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_goodsid, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_productid, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_paymode, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_productidlen, (*psize) );
+	if( pValue->m_productidlen > 0 && pValue->m_productidlen <= 64 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_productid, pValue->m_productidlen*sizeof(char), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_descid, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_price, (*psize) );

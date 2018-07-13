@@ -44,6 +44,10 @@ AWARDKIND_PERMISSION_3	=	50053 -- 购买弓兵权限（只用于显示）
 AWARDKIND_PERMISSION_4	=	50054 -- 科技快研
 AWARDKIND_PERMISSION_5	=	50055 -- 装备回收图纸
 AWARDKIND_PERMISSION_6	=	50056 -- 作坊预设
+AWARDKIND_RES_SILVER	=	60001 -- 奖励未启用资源点（民居）
+AWARDKIND_RES_WOOD		=	60002 -- 奖励未启用资源点（木材厂）
+AWARDKIND_RES_FOOD		=	60003 -- 奖励未启用资源点（农田）
+AWARDKIND_RES_IRON		=	60004 -- 奖励未启用资源点（矿厂）
 AWARDKIND_GIRLBASE		=	70000 -- 女将(70000+女将编号)
 AWARDKIND_GIRLSOULBASE	=	71000 -- 女将碎片(71000+女将编号)
 
@@ -288,6 +292,30 @@ function AwardInfo( awardkind )
 		c = 3
 		desc = item_getdesc( 489 )
 	
+	elseif awardkind == AWARDKIND_RES_SILVER then -- 奖励未启用资源点（民居）
+		local kind = BUILDING_Silver
+		sprite = BuildingSprite( kind )
+		color = ItemColorSprite( 0 );
+		name = BuildingName( kind )
+		
+	elseif AWARDKIND_RES_WOOD then-- 奖励未启用资源点（木材厂）
+		local kind = BUILDING_Wood
+		sprite = BuildingSprite( kind )
+		color = ItemColorSprite( 0 );
+		name = BuildingName( kind )
+		
+	elseif AWARDKIND_RES_FOOD then-- 奖励未启用资源点（农田）
+		local kind = BUILDING_Food
+		sprite = BuildingSprite( kind )
+		color = ItemColorSprite( 0 );
+		name = BuildingName( kind )
+		
+	elseif AWARDKIND_RES_IRON then-- 奖励未启用资源点（矿厂）
+		local kind = BUILDING_Iron
+		sprite = BuildingSprite( kind )
+		color = ItemColorSprite( 0 );
+		name = BuildingName( kind )
+
 	-- 女将	
 	elseif awardkind >= AWARDKIND_GIRLBASE and awardkind < AWARDKIND_GIRLSOULBASE then
 		local kind = awardkind-AWARDKIND_GIRLBASE;

@@ -163,7 +163,7 @@ function BuildingGetDlgMove()
 	for k, v in pairs( m_kind ) do
 		count = count + 1;
 	end
-	
+
 	local bAllMove = true;
 	if count <= 2 then
 		bAllMove = false;

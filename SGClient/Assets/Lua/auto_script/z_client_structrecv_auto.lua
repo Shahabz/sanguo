@@ -2217,7 +2217,9 @@ function struct_NetS_PayOrder_recv( buffer )
 	recvValue.m_ext_len = buffer:ReadSByte();
 	recvValue.m_ext = buffer:ReadStringWithLen( recvValue.m_ext_len );
 	recvValue.m_goodsid = buffer:ReadShort();
-	recvValue.m_productid = buffer:ReadInt();
+	recvValue.m_paymode = buffer:ReadSByte();
+	recvValue.m_productidlen = buffer:ReadSByte();
+	recvValue.m_productid = buffer:ReadStringWithLen( recvValue.m_productidlen );
 	recvValue.m_nameid = buffer:ReadInt();
 	recvValue.m_descid = buffer:ReadInt();
 	recvValue.m_price = buffer:ReadInt();

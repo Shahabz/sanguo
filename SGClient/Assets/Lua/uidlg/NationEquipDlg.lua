@@ -164,6 +164,9 @@ end
 -- 接收单个
 -- m_neq_lv=0,m_neq_exp=0,m_neq_pro=0,m_neq_sec=0,m_neq_crit=0,m_neq_star=0,m_kind=0,
 function NationEquipDlgRecv( recvValue )
+	if m_recvValue == nil then
+		return
+	end
 	m_recvValue[recvValue.m_kind] = recvValue;
 	NationEquipDlgSetObj( recvValue.m_kind, recvValue )
 end

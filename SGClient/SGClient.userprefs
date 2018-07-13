@@ -1,6 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/ProjectBuild.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Base/Utils.cs">
     <Files>
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewHelper.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ActiveDelay.cs" Line="1" Column="1" />
@@ -8,7 +8,7 @@
       <File FileName="Assets/Source/Manager/UpdateManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/eye.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/Tween/UITweenLocalPositionBetween.cs" Line="1" Column="1" />
-      <File FileName="Assets/Plugins/Android/AndroidManifest.xml" Line="39" Column="9" />
+      <File FileName="Assets/Plugins/Android/AndroidManifest.xml" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIProgress.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UISystem.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIScrollPage.cs" Line="1" Column="1" />
@@ -23,7 +23,7 @@
       <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="100" Column="21" />
       <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/ScreenBlur.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UITextNumCountdown.cs" Line="1" Column="1" />
@@ -85,7 +85,7 @@
       <File FileName="Assets/Source/UI/UIScrollPageDot.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIDropper.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/DebugUILine.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/Utils.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/Utils.cs" Line="185" Column="30" />
       <File FileName="Assets/Source/UI/UIInputField.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ShowMemorySize.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIText.cs" Line="1" Column="1" />
@@ -109,8 +109,6 @@
       <File FileName="Assets/Source/Notification/IOSNotification.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/NotificationManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/DefaultNotification.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Generate/NotificationManagerWrap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Generate/DeviceHelperWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/ProjectBuild.cs" Line="115" Column="6" />
       <File FileName="Assets/Source/Net/IPv6SupportMidleware.cs" Line="1" Column="1" />
@@ -134,7 +132,6 @@
       <File FileName="Assets/ThirdPartyPlugin/YLYRichText/Shaders/YlyUISeqFrameAni.shader" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/NetworkManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/UIGradient.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Generate/TypeWriterWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/AudioSourceAgent.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/FileSystem/FileUtil.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Misc/LuaLooper.cs" Line="1" Column="1" />
@@ -148,9 +145,7 @@
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebView.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Interface/UniWebViewAndroid.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Interface/UniWebViewCocoa.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Generate/UniWebViewWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewTransitionEdge.cs" Line="1" Column="1" />
-      <File FileName="Assets/Source/Generate/UniWebViewHelperWrap.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCPlist2.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCPlist.cs" Line="1" Column="1" />
     </Files>
@@ -177,5 +172,7 @@
       <Breakpoint file="/Users/jiazhi/Documents/GitHub/sanguo/SGClient/Assets/Source/UI/Tween/UITweenJump.cs" line="34" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Assets/Source/Base/Utils.cs" line="185" offsetX="437" offsetY="2760" expression="privateKey1" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>
