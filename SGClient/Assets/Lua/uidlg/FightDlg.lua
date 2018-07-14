@@ -55,6 +55,11 @@ end
 
 -- 隐藏界面
 function FightDlgClose()
+	if m_WaitCallback then
+		for i=1,m_WaitCount,1 do
+			m_WaitCallback( m_WaitValue );
+		end
+	end
 	if m_Dlg == nil then
 		return;
 	end

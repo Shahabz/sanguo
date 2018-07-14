@@ -1557,12 +1557,6 @@ int process_logic()
 	{
 		
 	}
-	else if ( tick == 11 )
-	{
-		rank_reset();
-		rank_server();
-		paybag_logic();
-	}
 
 	if ( g_speed > 108000 )
 	{
@@ -1574,6 +1568,12 @@ int process_logic()
 		else if ( tick == 20 )
 		{ // »úÆ÷ÈË
 			robot_logic_hour();
+		}
+		else if ( tick == 21 )
+		{
+			rank_reset();
+			rank_server();
+			paybag_logic();
 		}
 	}
 	g_frame_count++;

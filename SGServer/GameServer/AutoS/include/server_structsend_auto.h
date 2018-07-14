@@ -714,7 +714,7 @@ struct _slk_NetS_QuestAward {
 	SLK_NetS_AwardInfo m_list[5];	//任务奖励
 	char m_datatype;	//任务类型
 	short m_datakind;	//任务种类
-	char m_dataoffset;	//任务编号
+	short m_dataoffset;	//任务编号
 	int m_value;	//值
 	int m_needvalue;	//需要值
 	int m_nameid;	//名称ID

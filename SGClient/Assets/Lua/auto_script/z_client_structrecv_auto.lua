@@ -895,7 +895,7 @@ function struct_NetS_QuestAward_recv( buffer )
 	end
 	recvValue.m_datatype = buffer:ReadSByte();
 	recvValue.m_datakind = buffer:ReadShort();
-	recvValue.m_dataoffset = buffer:ReadSByte();
+	recvValue.m_dataoffset = buffer:ReadShort();
 	recvValue.m_value = buffer:ReadInt();
 	recvValue.m_needvalue = buffer:ReadInt();
 	recvValue.m_nameid = buffer:ReadInt();

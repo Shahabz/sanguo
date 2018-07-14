@@ -1027,7 +1027,7 @@ int struct_NetS_QuestAward_send( char **pptr, int *psize, SLK_NetS_QuestAward *p
 	}
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_datatype, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_datakind, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_dataoffset, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
