@@ -59,7 +59,7 @@ end
 -- 支付
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function SDK.pay( recvValue )
-	if Const.platid == 13 or Const.platid == 1 then -- ziur-ios
+	if Const.platid == 13 or Const.platid == 11 or Const.platid == 1 then -- ziur-ios
 		local json = require "cjson"
 		local info = {}
 		info["product_id"] = recvValue.m_productid
