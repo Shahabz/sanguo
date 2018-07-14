@@ -298,19 +298,19 @@ function AwardInfo( awardkind )
 		color = ItemColorSprite( 0 );
 		name = BuildingName( kind )
 		
-	elseif AWARDKIND_RES_WOOD then-- 奖励未启用资源点（木材厂）
+	elseif awardkind == AWARDKIND_RES_WOOD then-- 奖励未启用资源点（木材厂）
 		local kind = BUILDING_Wood
 		sprite = BuildingSprite( kind )
 		color = ItemColorSprite( 0 );
 		name = BuildingName( kind )
 		
-	elseif AWARDKIND_RES_FOOD then-- 奖励未启用资源点（农田）
+	elseif awardkind == AWARDKIND_RES_FOOD then-- 奖励未启用资源点（农田）
 		local kind = BUILDING_Food
 		sprite = BuildingSprite( kind )
 		color = ItemColorSprite( 0 );
 		name = BuildingName( kind )
 		
-	elseif AWARDKIND_RES_IRON then-- 奖励未启用资源点（矿厂）
+	elseif awardkind == AWARDKIND_RES_IRON then-- 奖励未启用资源点（矿厂）
 		local kind = BUILDING_Iron
 		sprite = BuildingSprite( kind )
 		color = ItemColorSprite( 0 );
