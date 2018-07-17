@@ -674,6 +674,7 @@ function FightDlgResultLayerShow()
 	if fighttype == nil then
 		SetText( m_uiTitle.transform:Find("Text"), "" )
 	elseif fighttype == FIGHTTYPE_QUEST then
+		FightDlgExecWait()
 		FightDlgClose()
 	else
 		SetText( m_uiTitle.transform:Find("Text"), T(2000+fighttype-1) )
@@ -1057,4 +1058,10 @@ function FightDlgWait( callback, value )
 	m_WaitCallback = callback;
 	m_WaitValue = value;
 	m_WaitCount = m_WaitCount + 1;
+end
+
+function FightDlgExecWait()
+	if m_WaitCallback then
+		m_WaitCallback( m_WaitValue, m_WaitCount );
+	end
 end

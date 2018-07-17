@@ -189,6 +189,18 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{ // 开启天气系统
 			weather_open();
 		}
+		else if ( pValue[0] == 9 )
+		{
+			// 设置都城
+			nation_capital_townid( 1, 191 );
+			nation_people_capital_set( 1, 0 );
+
+			nation_capital_townid( 2, 193 );
+			nation_people_capital_set( 2, 0 );
+
+			nation_capital_townid( 3, 192 );
+			nation_people_capital_set( 3, 0 );
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );

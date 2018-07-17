@@ -182,10 +182,10 @@ int worldquest_setvalue( int questid, int value )
 			nation_capital_townid( 1, 191 );
 			nation_people_capital_set( 1, 0 );
 
-			nation_capital_townid( 2, 192 );
+			nation_capital_townid( 2, 193 );
 			nation_people_capital_set( 2, 0 );
 
-			nation_capital_townid( 3, 193 );
+			nation_capital_townid( 3, 192 );
 			nation_people_capital_set( 3, 0 );
 		}
 		else if ( questid == WORLDQUEST_WORLDBOSS2 )
@@ -356,7 +356,7 @@ int worldquest_sendinfo( int actor_index )
 	netsend_worldquest_S( actor_index, SENDTYPE_ACTOR, &pValue );
 
 	// 是否需要通知前往司隶
-	if ( pValue.m_questid == 0 )
+	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS1, NULL ) == 1 )
 	{
 		map_zone_goto_sili_send( actor_index );
 	}

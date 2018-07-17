@@ -130,7 +130,13 @@ function BuildingGetDlgShow( recvValue, count )
 	end
 	BuildingGetDlgOpen();
 	
-	for i=1, count, 1 do
+	if count then
+		for i=1, count, 1 do
+			table.insert( m_kind, recvValue.m_kind );
+			table.insert( m_offset, recvValue.m_offset );
+			table.insert( m_info, recvValue );
+		end
+	else
 		table.insert( m_kind, recvValue.m_kind );
 		table.insert( m_offset, recvValue.m_offset );
 		table.insert( m_info, recvValue );

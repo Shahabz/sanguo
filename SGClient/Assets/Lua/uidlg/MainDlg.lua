@@ -489,8 +489,8 @@ function MainDlgOnAwake( gameObject )
 	m_uiQuestEffect = objs[87];
 	ButtonTable.m_uiButtonEquip = objs[88];
 	
-	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
-	m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
+	--m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
+	--m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
 
 	MainDlgWorkerObjectInit();
 end 
@@ -1206,15 +1206,18 @@ function MainDlgSetWarCache( recvValue )
 	MainDlgClearWarObj();
 	for i=1, recvValue.m_count, 1 do
 		table.insert( m_uiWarTable.m_cache, recvValue.m_list[i] );
-		table.insert( m_uiWarTable.m_cacheObj, MainDlgCreateWarObj( recvValue.m_list[i] ) );
+		MainDlgCreateWarObj( recvValue.m_list[i] )
+		--table.insert( m_uiWarTable.m_cacheObj, MainDlgCreateWarObj( recvValue.m_list[i] ) );
 	end
 	
 	if #m_uiWarTable.m_cache == 0 then
 		SetFalse( m_uiWarTable.m_uiWar )
 		SetFalse( m_uiWarTable.m_uiWarWarning )
+		SetFalse( m_uiWarTable.m_uiUIP_WarText )
 	else
 		SetTrue( m_uiWarTable.m_uiWar )
 		SetTrue( m_uiWarTable.m_uiWarWarning )
+		SetTrue( m_uiWarTable.m_uiUIP_WarText )
 	end
 end
 
@@ -1236,6 +1239,7 @@ function MainDlgAddWar( recvValue )
 	end
 	SetTrue( m_uiWarTable.m_uiWar )
 	SetTrue( m_uiWarTable.m_uiWarWarning )
+	SetTrue( m_uiWarTable.m_uiUIP_WarText )
 end
 
 -- 删除军情
@@ -1245,34 +1249,29 @@ function MainDlgAddDel( recvValue )
 		local info = m_uiWarTable.m_cache[i];
 		if info ~= nil and info.m_group_index == recvValue.m_group_index then
 			table.remove(  m_uiWarTable.m_cache, i );
-			m_ObjectPool:Release( "UIP_WarText", m_uiWarTable.m_cacheObj[i] );
-			table.remove(  m_uiWarTable.m_cacheObj, i );
+			--m_ObjectPool:Release( "UIP_WarText", m_uiWarTable.m_cacheObj[i] );
+			--table.remove(  m_uiWarTable.m_cacheObj, i );
 			break
 		end
 	end
 	if #m_uiWarTable.m_cache == 0 then
 		SetFalse( m_uiWarTable.m_uiWar )
 		SetFalse( m_uiWarTable.m_uiWarWarning )
+		SetFalse( m_uiWarTable.m_uiUIP_WarText )
 	else
 		SetTrue( m_uiWarTable.m_uiWar )
 		SetTrue( m_uiWarTable.m_uiWarWarning )
+		SetTrue( m_uiWarTable.m_uiUIP_WarText )
 	end
 end
 
 -- 设置军情
-function MainDlgCreateWarObj( info )	
-	local uiObj = m_ObjectPool:Get( "UIP_WarText" );
+function MainDlgCreateWarObj( info )
+	local uiObj = m_uiWarTable.m_uiUIP_WarText
+	--local uiObj = m_ObjectPool:Get( "UIP_WarText" );
 	uiObj.transform:SetParent( m_uiWarTable.m_uiWarContent.transform );
 	local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
-	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
-	
---[[	local tween = uiObj:GetComponent("UITweenRectPosition");
-	tween.from = Vector3.New( 0, 0, 0 );
-	tween.to = Vector3.New( 0, 0, 0 );
-	tween.duration = ( 50 + m_StartPosX ) / 10;
-	tween.delay = 0;
-	tween:Play(true);--]]
-			
+	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )		
 	return uiObj
 end
 
@@ -1287,7 +1286,8 @@ function MainDlgUpdateWarObj( uiObj, info )
 end
 	
 function MainDlgClearWarObj()
-	local objs = {};
+	SetFalse(m_uiWarTable.m_uiUIP_WarText)
+	--[[local objs = {};
 	for i = 0 ,m_uiWarTable.m_uiWarContent.transform.childCount - 1 do
 		table.insert( objs, m_uiWarTable.m_uiWarContent.transform:GetChild(i).gameObject )
     end
@@ -1296,7 +1296,7 @@ function MainDlgClearWarObj()
 		if obj.name == "UIP_WarText(Clone)" then
 			m_ObjectPool:Release( "UIP_WarText", obj );
 		end
-    end
+    end--]]
 end
 
 -- 初始化切换场景

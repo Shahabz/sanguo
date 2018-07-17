@@ -28,6 +28,7 @@
 #include "army.h"
 #include "map.h"
 #include "map_town.h"
+#include "map_zone.h"
 #include "mail.h"
 #include "city.h"
 #include "chat.h"
@@ -152,6 +153,30 @@ int nation_loadcb( int nation )
 			g_nation[nation].candidate_city_index[tmpi] = city_getindex_withactorid( g_nation[nation].candidate_actorid[tmpi] );
 		}
 	}
+	if ( nation == 1 )
+	{
+		if ( nation_capital_townid_get( 1 ) == 0 )
+		{
+			nation_capital_townid( 1, 191 );
+			nation_people_capital_set( 1, 0 );
+		}
+	}
+	else if ( nation == 2 )
+	{
+		if ( nation_capital_townid_get( 2 ) == 0 )
+		{
+			nation_capital_townid( 2, 193 );
+			nation_people_capital_set( 2, 0 );
+		}
+	}
+	else if ( nation == 3 )
+	{
+		if ( nation_capital_townid_get( 3 ) == 0 )
+		{
+			nation_capital_townid( 3, 192 );
+			nation_people_capital_set( 3, 0 );
+		}
+	}
 	return 0;
 }
 
@@ -216,6 +241,20 @@ int nation_capital_townid( int nation, int townid )
 	if ( nation < 0 || nation >= NATION_MAX )
 		return 0;
 	g_nation[nation].capital_townid = townid;
+
+	if ( townid > 0 && townid < g_map_town_maxcount )
+	{
+		g_map_town[townid].nation = nation;
+		// 城镇辐射圈归属
+		map_tile_setnation( g_towninfo[townid].posx, g_towninfo[townid].posy, g_towninfo[townid].range, townid, g_map_town[townid].nation );
+
+		// 核心建筑决定地区归属
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHISUO || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
+		{
+			map_zone_setnation( g_map_town[townid].zoneid, g_map_town[townid].nation );
+		}
+
+	}
 	return 0;
 }
 int nation_capital_townid_get( int nation )

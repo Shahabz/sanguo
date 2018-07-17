@@ -731,33 +731,42 @@ int map_zone_goto_sili( int actor_index )
 		return -1;
 	// 当前的地区
 	char cur_zoneid = pCity->zone;
-	char boss2_complete = 0;
-	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS2, NULL ) == 1 )
-	{ // 如果已经完成了世界任务董卓
-		boss2_complete = 1;
+	char boss1_complete = 0;
+	if ( worldquest_check( actor_index, WORLDQUEST_WORLDBOSS1, NULL ) == 1 )
+	{ // 如果已经完成了世界任务虎牢关
+		boss1_complete = 1;
 	}
-	if ( boss2_complete == 0 )
+	if ( boss1_complete == 0 )
 		return -1;
 
-	short goto_zoneid = 0;
-	for ( short tmpi = 0; tmpi < 2; tmpi++ )
-	{
-		int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
-		if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
-			continue;
-		if ( g_zoneinfo[tmp_zoneid].type == MAPZONE_TYPE_SILI )
-		{
-			goto_zoneid = tmp_zoneid;
-			break;
-		}
-	}
-	if ( goto_zoneid <= 0 || goto_zoneid >= g_zoneinfo_maxnum )
-	{
-		return -1;
-	}
+	short goto_zoneid = MAPZONE_CENTERID;
+	//for ( short tmpi = 0; tmpi < 2; tmpi++ )
+	//{
+	//	int tmp_zoneid = g_zoneinfo[cur_zoneid].move_zoneid[tmpi];
+	//	if ( tmp_zoneid <= 0 || tmp_zoneid >= g_zoneinfo_maxnum )
+	//		continue;
+	//	if ( g_zoneinfo[tmp_zoneid].type == MAPZONE_TYPE_SILI )
+	//	{
+	//		goto_zoneid = tmp_zoneid;
+	//		break;
+	//	}
+	//}
+	//if ( goto_zoneid <= 0 || goto_zoneid >= g_zoneinfo_maxnum )
+	//{
+	//	return -1;
+	//}
 
 	short move_posx = -1;
 	short move_posy = -1;
+	// 武将有出征的
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].state > 0 )
+		{
+			actor_notify_pop( pCity->actor_index, 1001 ); // 召回在外征战的武将
+			return -1;
+		}
+	}
 	//if ( pCity->level < g_zoneinfo[goto_zoneid].actorlevel )
 	//{ // 需要玩家等级{0}才可迁移到该地图
 	//	char v1[32] = { 0 };
