@@ -123,15 +123,18 @@ end
 ----------------------------------------
 -- 自定
 ----------------------------------------
-function BuildingGetDlgShow( recvValue )
+function BuildingGetDlgShow( recvValue, count )
 	FightDlgClose()
 	if GameManager.currentScence ~= "city" then
 		WorldMap.ReturnCity()
 	end
 	BuildingGetDlgOpen();
-	table.insert( m_kind, recvValue.m_kind );
-	table.insert( m_offset, recvValue.m_offset );
-	table.insert( m_info, recvValue );
+	
+	for i=1, count, 1 do
+		table.insert( m_kind, recvValue.m_kind );
+		table.insert( m_offset, recvValue.m_offset );
+		table.insert( m_info, recvValue );
+	end
 	
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);

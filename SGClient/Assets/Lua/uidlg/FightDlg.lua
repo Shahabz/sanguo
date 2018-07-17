@@ -55,11 +55,6 @@ end
 
 -- 隐藏界面
 function FightDlgClose()
-	if m_WaitCallback then
-		for i=1,m_WaitCount,1 do
-			m_WaitCallback( m_WaitValue );
-		end
-	end
 	if m_Dlg == nil then
 		return;
 	end
@@ -107,18 +102,14 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 返回城池	
 		elseif nControlID == 2 then
 			if m_WaitCallback then
-				for i=1,m_WaitCount,1 do
-					m_WaitCallback( m_WaitValue );
-				end
+				m_WaitCallback( m_WaitValue, m_WaitCount );
 			end
 			FightDlgClose();
 			
 		-- 返回副本
 		elseif nControlID == 3 then	
 			if m_WaitCallback then
-				for i=1,m_WaitCount,1 do
-					m_WaitCallback( m_WaitValue );
-				end
+				m_WaitCallback( m_WaitValue, m_WaitCount );
 				FightDlgClose();
 			else
 				FightDlgClose();

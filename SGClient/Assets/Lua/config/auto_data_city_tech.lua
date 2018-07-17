@@ -328,11 +328,11 @@ g_techinfo = {
 },
 [15] = 
 { 
-	[1] = { kind=15,level=1,name="秘技：金色以上装备技能满级且相同，可开启秘技",buildinglevel=28,prekind=25,prelevel=1,progress=1,sec=3600,silver=150000,wood=100000,food=0,iron=0,ability=201,value=1,},
+	[1] = { kind=15,level=1,name="秘技：金色以上装备技能满级且相同，可开启秘技",buildinglevel=20,prekind=25,prelevel=1,progress=1,sec=3600,silver=150000,wood=100000,food=0,iron=0,ability=201,value=1,},
 },
 [16] = 
 { 
-	[1] = { kind=16,level=1,name="极品装备：打造装备有概率直接获得秘技装备",buildinglevel=29,prekind=15,prelevel=1,progress=3,sec=82800,silver=3900000,wood=1300000,food=0,iron=0,ability=202,value=1,},
+	[1] = { kind=16,level=1,name="极品装备：打造装备有概率直接获得秘技装备",buildinglevel=22,prekind=15,prelevel=1,progress=3,sec=82800,silver=3900000,wood=1300000,food=0,iron=0,ability=202,value=1,},
 },
 [17] = 
 { 
