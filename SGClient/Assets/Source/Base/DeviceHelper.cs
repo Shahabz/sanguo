@@ -30,6 +30,20 @@ public static class DeviceHelper
 		}
 	}
 
+	public static void loadInnerApp( string url )
+	{
+		try
+		{             
+			AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+			AndroidJavaObject obj = jc.GetStatic<AndroidJavaObject>("currentActivity");
+			obj.Call( "loadInnerApp", url );
+		}
+		catch
+		{
+			
+		}
+	}
+
     public static string getCountry()
     {
         if ( Application.isEditor )
@@ -82,6 +96,15 @@ public static class DeviceHelper
 			return "";		
 		}
 	}
+
+	[DllImport("__Internal")]
+	private static extern void _loadInnerApp(string url);
+	public static void loadInnerApp(string url)
+	{
+		 _loadInnerApp(url);
+	
+	}
+
     [DllImport("__Internal")]
     private static extern string _getCountry();
     public static string getCountry()
@@ -132,6 +155,10 @@ public static class DeviceHelper
 		{
 		return "";		
 		}
+	}
+	public static void loadInnerApp(string url)
+	{
+	
 	}
     public static string getCountry()
     {

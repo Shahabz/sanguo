@@ -1780,6 +1780,7 @@ struct _slk_NetS_NationInfo {
 	char m_kingname[32];	//国家信息
 	short m_questvalue[3];	//国家信息
 	short m_questvalue_max[3];	//国家信息
+	int m_prestige;	//国家信息
 };
 typedef struct _slk_NetS_NationInfo SLK_NetS_NationInfo;	//国家信息
 
@@ -2077,12 +2078,8 @@ struct _slk_NetS_WishingPack {
 typedef struct _slk_NetS_WishingPack SLK_NetS_WishingPack;	//聚宝盆打包
 
 struct _slk_NetS_TianceQuest {
-	short m_tc_state;	//天策府任务
-	char m_tc_kind;	//天策府任务
-	char m_tc_num;	//天策府任务
-	short m_tc_tech;	//天策府任务
-	char m_nation_tiance_level;	//天策府任务
-	int m_nation_tiance_point;	//天策府任务
+	short m_tc_level[2];	//天策府任务
+	short m_tc_progress[2];	//天策府任务
 };
 typedef struct _slk_NetS_TianceQuest SLK_NetS_TianceQuest;	//天策府任务
 

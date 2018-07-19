@@ -7,11 +7,28 @@ public class DeviceHelperWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginStaticLibs("DeviceHelper");
+		L.RegFunction("loadInnerApp", loadInnerApp);
 		L.RegFunction("getCountry", getCountry);
 		L.RegFunction("getLanguage", getLanguage);
 		L.RegFunction("GetDeviceDesc", GetDeviceDesc);
 		L.RegVar("AndroidPackageName", get_AndroidPackageName, null);
 		L.EndStaticLibs();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int loadInnerApp(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			string arg0 = ToLua.CheckString(L, 1);
+			DeviceHelper.loadInnerApp(arg0);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -523,6 +523,7 @@ function proc_changesilver_C( recvValue )
 		BuildingUpgradeDlgUpdate()
 		NationUpgradeDlgSetCost()
 		NationPlaceDlgRecv()
+		HeroLevyDlgUpdate()
 	end
 end
 
@@ -541,6 +542,7 @@ function proc_changewood_C( recvValue )
 	if recvValue.m_add > 0 then
 		BuildingUpgradeDlgUpdate()
 		NationUpgradeDlgSetCost()
+		HeroLevyDlgUpdate()
 	end
 end
 
@@ -559,6 +561,7 @@ function proc_changefood_C( recvValue )
 	HeroGuardDlgSetFood()
 	if recvValue.m_add > 0 then
 		NationUpgradeDlgSetCost()
+		HeroLevyDlgUpdate()
 	end
 end
 
@@ -575,6 +578,9 @@ function proc_changeiron_C( recvValue )
 	GetPlayer().m_iron = recvValue.m_total;
 	MainDlgSetIron();
 	NationEquipDlgSetIron( 1 );
+	if recvValue.m_add > 0 then
+		HeroLevyDlgUpdate()
+	end
 end
 
 -- m_total=0,m_add=0,m_path=0,

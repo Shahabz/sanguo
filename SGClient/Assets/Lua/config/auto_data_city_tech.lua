@@ -435,7 +435,7 @@ g_techinfo = {
 },
 [27] = 
 { 
-	[1] = { kind=27,level=1,name="中级点兵术：增加武将带兵排数2排",buildinglevel=15,prekind=24,prelevel=1,progress=1,sec=43200,silver=480000,wood=140000,food=0,iron=0,ability=131,value=1,},
+	[1] = { kind=27,level=1,name="中级点兵术：增加武将带兵排数2排",buildinglevel=9,prekind=24,prelevel=1,progress=1,sec=43200,silver=480000,wood=140000,food=0,iron=0,ability=131,value=1,},
 },
 [28] = 
 { 

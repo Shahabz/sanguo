@@ -142,14 +142,14 @@ int army_vs_enemy( int army_index, Fight *pFight )
 				{
 					if ( g_city[city_index].nation == pCity->nation )
 					{ // 本国的
-						tiance_quest_addnum( &g_city[city_index] );
+						//tiance_quest_addnum( &g_city[city_index] );
 						awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT;
 						awardinfo.num[awardinfo.count] = 1;
 						awardinfo.count += 1;
 					}
 					else
 					{ // 他国的
-						tiance_quest_addnum( &g_city[city_index] );
+						//tiance_quest_addnum( &g_city[city_index] );
 						if ( g_city[city_index].nation == 1 )
 							awardinfo.kind[awardinfo.count] = AWARDKIND_TIANCE_POINT_1;
 						else if ( g_city[city_index].nation == 2 )

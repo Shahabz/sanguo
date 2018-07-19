@@ -1100,11 +1100,11 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 1 )
 		{
-			tiance_quest_get( actor_index, pvalue[1] );
+			//tiance_quest_get( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 2 )
 		{
-			tiance_quest_complete( actor_index, pvalue[1] );
+			//tiance_quest_complete( actor_index, pvalue[1] );
 		}
 		else if ( pvalue[0] == 3 )
 		{

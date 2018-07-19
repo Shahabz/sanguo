@@ -47,7 +47,26 @@ int tiancequest_init_auto()
 	g_tiance_quest = (TianceQuest *)malloc( sizeof(TianceQuest)*g_tiance_quest_maxnum );
 	memset( g_tiance_quest, 0, sizeof(TianceQuest)*g_tiance_quest_maxnum );
 
-	sprintf( szSQL, "select `kind`,`prekind`,`nextkind`,`level`,`tiance_level`,`actor_level`,`brush_enemykind`,`brush_enemynum`,`ability`,`value`,`showvalue` from tiance_quest;" );
+	sprintf( szSQL, "select `kind`, max( `level` ) from tiance_quest group by `kind`;" );
+	if( mysql_query( myData, szSQL ) )
+	{
+		printf( "Query failed (%s)\n", mysql_error(myData) );
+		write_gamelog( "%s", szSQL );
+		return -1;
+	}
+	res = mysql_store_result( myData );
+	while( ( row = mysql_fetch_row( res ) ) )
+	{
+		int kind = atoi( row[0] );
+		if ( kind < 0 || kind >= g_tiance_quest_maxnum  )
+			continue;
+		g_tiance_quest[kind].maxnum = atoi( row[1] ) + 1;
+		g_tiance_quest[kind].config = (TianceQuestConfig *)malloc( sizeof(TianceQuestConfig)*g_tiance_quest[kind].maxnum );
+		memset( g_tiance_quest[kind].config, 0, sizeof(TianceQuestConfig)*g_tiance_quest[kind].maxnum );
+	}
+	mysql_free_result( res );
+
+	sprintf( szSQL, "select `kind`,`level`,`actor_level`,`ability`,`value`,`showvalue`,`silver`,`wood`,`food`,`iron`,`progress` from tiance_quest;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -61,17 +80,20 @@ int tiancequest_init_auto()
 		int kind = atoi( row[0] );
 		if ( kind < 0 || kind >= g_tiance_quest_maxnum  )
 			continue;
-		g_tiance_quest[kind].kind = atoi(row[offset++]);
-		g_tiance_quest[kind].prekind = atoi(row[offset++]);
-		g_tiance_quest[kind].nextkind = atoi(row[offset++]);
-		g_tiance_quest[kind].level = atoi(row[offset++]);
-		g_tiance_quest[kind].tiance_level = atoi(row[offset++]);
-		g_tiance_quest[kind].actor_level = atoi(row[offset++]);
-		g_tiance_quest[kind].brush_enemykind = atoi(row[offset++]);
-		g_tiance_quest[kind].brush_enemynum = atoi(row[offset++]);
-		g_tiance_quest[kind].ability = atoi(row[offset++]);
-		g_tiance_quest[kind].value = atoi(row[offset++]);
-		g_tiance_quest[kind].showvalue = atoi(row[offset++]);
+		int level = atoi( row[1] );
+		if ( level < 0 || level >= g_tiance_quest[kind].maxnum )
+			continue;
+		g_tiance_quest[kind].config[level].kind = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].level = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].actor_level = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].ability = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].value = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].showvalue = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].silver = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].wood = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].food = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].iron = atoi(row[offset++]);
+		g_tiance_quest[kind].config[level].progress = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;
@@ -79,6 +101,14 @@ int tiancequest_init_auto()
 
 int tiancequest_reload_auto()
 {
+	for ( int tmpi = 0; tmpi < g_tiance_quest_maxnum; tmpi++ )
+	{
+		if ( g_tiance_quest[tmpi].config )
+		{
+			free( g_tiance_quest[tmpi].config );
+			g_tiance_quest[tmpi].config = NULL;
+		}
+	}
 	if ( g_tiance_quest )
 	{
 		free( g_tiance_quest );

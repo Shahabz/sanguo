@@ -914,107 +914,101 @@ int tiance_quest_sendinfo( int actor_index )
 	if ( !pCity )
 		return -1;
 	SLK_NetS_TianceQuest pValue = { 0 };
-	pValue.m_tc_state = pCity->tc_state;
-	pValue.m_tc_kind = pCity->tc_kind;
-	pValue.m_tc_num = pCity->tc_num;
-	pValue.m_tc_tech = pCity->tc_tech;
-	Nation *pNation = nation_getptr( pCity->nation );
-	if ( pNation )
-	{
-		pValue.m_nation_tiance_level = pNation->tiance_level;
-		pValue.m_nation_tiance_point = pNation->tiance_point;
-	}
+	pValue.m_tc_level[0] = pCity->tc_level[0];
+	pValue.m_tc_level[1] = pCity->tc_level[1];
+	pValue.m_tc_progress[0] = pCity->tc_progress[0];
+	pValue.m_tc_progress[1] = pCity->tc_progress[1];
 	netsend_tiancequest_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
-// 领取天策府任务
-int tiance_quest_get( int actor_index, short kind )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	City *pCity = city_getptr( actor_index );
-	if ( !pCity )
-		return -1;
-	Nation *pNation = nation_getptr( pCity->nation );
-	if ( !pNation )
-		return -1;
-	if ( kind <= 0 || kind >= g_tiance_quest_maxnum - 1 )
-		return -1;
-	// 任务已经完成
-	if ( pCity->tc_state & (1 << kind) )
-		return -1;
-
-	// 检查前一个任务是否完成
-	short prekind = g_tiance_quest[kind].prekind;
-	if ( prekind > 0 && prekind < g_tiance_quest_maxnum )
-	{
-		if ( (pCity->tc_state & (1 << prekind)) == 0 )
-			return -1;
-	}
-
-	char has = 0;
-	if ( pCity->level >= g_tiance_quest[kind].actor_level )
-	{ // 玩家等级达到条件时，可领取
-		has = 1;
-	}
-	else if ( pNation->tiance_level >= g_tiance_quest[kind].tiance_level )
-	{ // 等级不足时，根据全服的点兵统领等级领取
-		has = 1;
-	}
-	if ( has == 0 )
-	{
-		return -1;
-	}
-
-	pCity->tc_kind = (char)kind;
-	pCity->tc_num = 0;
-	tiance_quest_sendinfo( actor_index );
-	for ( int tmpi = 0; tmpi < g_tiance_quest[pCity->tc_kind].brush_enemynum; tmpi++ )
-	{
-		map_enemy_range_brush( g_tiance_quest[pCity->tc_kind].brush_enemykind, pCity->posx, pCity->posy, 4, 0, pCity->actorid );
-	}
-	
-	return 0;
-}
-
-// 添加天策府任务数值
-int tiance_quest_addnum( City *pCity )
-{
-	if ( !pCity )
-		return -1;
-	pCity->tc_num += 1;
-	return 0;
-}
-
-// 天策府任务完成
-int tiance_quest_complete( int actor_index, short kind )
-{
-	ACTOR_CHECK_INDEX( actor_index );
-	City *pCity = city_getptr( actor_index );
-	if ( !pCity )
-		return -1;
-	Nation *pNation = nation_getptr( pCity->nation );
-	if ( !pNation )
-		return -1;
-	if ( kind <= 0 || kind >= g_tiance_quest_maxnum - 1 )
-		return -1;
-	// 任务如果已经完成状态
-	if ( pCity->tc_state & (1 << kind) )
-		return -1;
-
-	// 数值没有达到条件
-	if ( pCity->tc_num < g_tiance_quest[kind].brush_enemynum )
-		return -1;
-
-	// 设为已经领取状态
-	pCity->tc_state |= (1 << kind);
-
-	// 给与点兵点数
-	nation_tiance_point( pCity->nation, g_tiance_quest[kind].brush_enemynum );
-	pCity->tc_num = 0;
-	tiance_quest_sendinfo( actor_index );
-	return 0;
-}
+//// 领取天策府任务
+//int tiance_quest_get( int actor_index, short kind )
+//{
+//	ACTOR_CHECK_INDEX( actor_index );
+//	City *pCity = city_getptr( actor_index );
+//	if ( !pCity )
+//		return -1;
+//	Nation *pNation = nation_getptr( pCity->nation );
+//	if ( !pNation )
+//		return -1;
+//	if ( kind <= 0 || kind >= g_tiance_quest_maxnum - 1 )
+//		return -1;
+//	// 任务已经完成
+//	if ( pCity->tc_state & (1 << kind) )
+//		return -1;
+//
+//	// 检查前一个任务是否完成
+//	short prekind = g_tiance_quest[kind].prekind;
+//	if ( prekind > 0 && prekind < g_tiance_quest_maxnum )
+//	{
+//		if ( (pCity->tc_state & (1 << prekind)) == 0 )
+//			return -1;
+//	}
+//
+//	char has = 0;
+//	if ( pCity->level >= g_tiance_quest[kind].actor_level )
+//	{ // 玩家等级达到条件时，可领取
+//		has = 1;
+//	}
+//	else if ( pNation->tiance_level >= g_tiance_quest[kind].tiance_level )
+//	{ // 等级不足时，根据全服的点兵统领等级领取
+//		has = 1;
+//	}
+//	if ( has == 0 )
+//	{
+//		return -1;
+//	}
+//
+//	pCity->tc_kind = (char)kind;
+//	pCity->tc_num = 0;
+//	tiance_quest_sendinfo( actor_index );
+//	for ( int tmpi = 0; tmpi < g_tiance_quest[pCity->tc_kind].brush_enemynum; tmpi++ )
+//	{
+//		map_enemy_range_brush( g_tiance_quest[pCity->tc_kind].brush_enemykind, pCity->posx, pCity->posy, 4, 0, pCity->actorid );
+//	}
+//	
+//	return 0;
+//}
+//
+//// 添加天策府任务数值
+//int tiance_quest_addnum( City *pCity )
+//{
+//	if ( !pCity )
+//		return -1;
+//	pCity->tc_num += 1;
+//	return 0;
+//}
+//
+//// 天策府任务完成
+//int tiance_quest_complete( int actor_index, short kind )
+//{
+//	ACTOR_CHECK_INDEX( actor_index );
+//	City *pCity = city_getptr( actor_index );
+//	if ( !pCity )
+//		return -1;
+//	Nation *pNation = nation_getptr( pCity->nation );
+//	if ( !pNation )
+//		return -1;
+//	if ( kind <= 0 || kind >= g_tiance_quest_maxnum - 1 )
+//		return -1;
+//	// 任务如果已经完成状态
+//	if ( pCity->tc_state & (1 << kind) )
+//		return -1;
+//
+//	// 数值没有达到条件
+//	if ( pCity->tc_num < g_tiance_quest[kind].brush_enemynum )
+//		return -1;
+//
+//	// 设为已经领取状态
+//	pCity->tc_state |= (1 << kind);
+//
+//	// 给与点兵点数
+//	nation_tiance_point( pCity->nation, g_tiance_quest[kind].brush_enemynum );
+//	pCity->tc_num = 0;
+//	tiance_quest_sendinfo( actor_index );
+//	return 0;
+//}
 
 // 点兵科技激活
 int tiance_quest_tech_activate( int actor_index, short kind )
@@ -1023,16 +1017,49 @@ int tiance_quest_tech_activate( int actor_index, short kind )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-
-	// 任务如果尚未完成
-	if ( (pCity->tc_state & (1 << kind)) == 0 )
+	if ( kind <= 0 || kind >= g_tiance_quest_maxnum )
 		return -1;
-	// 如果科技已经激活
-	if ( pCity->tc_tech & (1 << kind) )
+	char tc_level = pCity->tc_level[kind - 1] + 1;
+	if ( tc_level <= 0 || tc_level >= g_tiance_quest[kind].maxnum )
+	{
+		return -1;
+	}
+	
+	TianceQuestConfig *config = &g_tiance_quest[kind].config[tc_level];
+	if ( !config )
 		return -1;
 
-	// 设为已经激活状态
-	pCity->tc_tech |= (1 << kind);
+	// 角色等级是否满足
+	if ( pCity->level < config->actor_level )
+		return -1;
+
+	// 资源是否满足
+	if ( pCity->silver < config->silver )
+		return -1;
+	if ( pCity->wood < config->wood )
+		return -1;
+	if ( pCity->food < config->food )
+		return -1;
+	if ( pCity->iron < config->iron )
+		return -1;
+
+	// 扣减资源
+	city_changesilver( pCity->index, -config->silver, PATH_TCQUEST );
+	city_changewood( pCity->index, -config->wood, PATH_TCQUEST );
+	city_changefood( pCity->index, -config->food, PATH_TCQUEST );
+	city_changeiron( pCity->index, -config->iron, PATH_TCQUEST );
+
+	pCity->tc_progress[kind - 1] += 1;
+	if ( pCity->tc_progress[kind - 1] >= config->progress )
+	{
+		pCity->tc_progress[kind - 1] = 0;
+		pCity->tc_level[kind - 1] += 1;
+		if ( pCity->tc_level[kind - 1] >= g_tiance_quest[kind].maxnum )
+		{
+			pCity->tc_level[kind - 1] = g_tiance_quest[kind].maxnum - 1;
+		}
+	}
+
 	tiance_quest_sendinfo( actor_index );
 	city_attr_reset( pCity );
 	return 0;

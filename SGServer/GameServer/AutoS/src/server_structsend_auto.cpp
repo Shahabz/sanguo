@@ -2590,6 +2590,7 @@ int struct_NetS_NationInfo_send( char **pptr, int *psize, SLK_NetS_NationInfo *p
 		LKSET_MEM_SEND( (*pptr), pValue->m_kingname, pValue->m_kingname_len*sizeof(char), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_questvalue, 3*sizeof(short), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_questvalue_max, 3*sizeof(short), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_prestige, (*psize) );
 	return 0;
 }
 
@@ -3040,12 +3041,8 @@ int struct_NetS_TianceQuest_send( char **pptr, int *psize, SLK_NetS_TianceQuest 
 {
 	int tmpi = 0;
 
-	LKSET_WORD_SEND( (*pptr), &pValue->m_tc_state, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_tc_kind, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_tc_num, (*psize) );
-	LKSET_WORD_SEND( (*pptr), &pValue->m_tc_tech, (*psize) );
-	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation_tiance_level, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_nation_tiance_point, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_tc_level, 2*sizeof(short), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_tc_progress, 2*sizeof(short), (*psize) );
 	return 0;
 }
 

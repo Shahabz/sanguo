@@ -23,6 +23,7 @@ struct _girlinfo_config {
 				int soulchange;	//
 				short love_star;	//
 				short private_love_star;	//
+				short noused;	//
 };
 typedef struct _girlinfo_config GirlInfoConfig;
 

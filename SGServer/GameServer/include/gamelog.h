@@ -131,6 +131,7 @@
 #define PATH_SELECTNATION				99	// 选择国家
 #define PATH_MAPPICKUP					100 // 地图拾取事件
 #define PATH_FIGHTHELPER				101 // 雇佣兵
+#define PATH_TCQUEST					102 // 天策府
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

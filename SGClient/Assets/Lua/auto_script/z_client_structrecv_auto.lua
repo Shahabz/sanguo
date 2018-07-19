@@ -2328,6 +2328,7 @@ function struct_NetS_NationInfo_recv( buffer )
 	for tmpi=1,3,1 do
 		recvValue.m_questvalue_max[tmpi] = buffer:ReadShort();
 	end
+	recvValue.m_prestige = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -2758,12 +2759,14 @@ end
 
 function struct_NetS_TianceQuest_recv( buffer )
 	local recvValue = {};
-	recvValue.m_tc_state = buffer:ReadShort();
-	recvValue.m_tc_kind = buffer:ReadSByte();
-	recvValue.m_tc_num = buffer:ReadSByte();
-	recvValue.m_tc_tech = buffer:ReadShort();
-	recvValue.m_nation_tiance_level = buffer:ReadSByte();
-	recvValue.m_nation_tiance_point = buffer:ReadInt();
+	recvValue.m_tc_level={};
+	for tmpi=1,2,1 do
+		recvValue.m_tc_level[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_tc_progress={};
+	for tmpi=1,2,1 do
+		recvValue.m_tc_progress[tmpi] = buffer:ReadShort();
+	end
 	return recvValue;
 end
 

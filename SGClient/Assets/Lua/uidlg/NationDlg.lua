@@ -229,6 +229,7 @@ function NationDlgRecv( recvValue )
 	NationDlgChangeBase()
 	NationDlgChangeNotice();
 	NationDlgSetQuest()
+	SetText( m_uiPrestige, F(1941, knum(m_recvValue.m_prestige)) )
 end
 
 -- m_level=0,m_exp=0,m_donate_num=0,m_myrank=0

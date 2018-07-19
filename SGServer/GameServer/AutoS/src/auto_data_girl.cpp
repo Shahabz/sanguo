@@ -66,7 +66,7 @@ int girlinfo_init_auto()
 	}
 	mysql_free_result( res );
 
-	sprintf( szSQL, "select `kind`,`color`,`init_color`,`type`,`attack_increase`,`defense_increase`,`attack_growth`,`defense_growth`,`troops_growth`,`private_herokind`,`private_attack_increase`,`private_defense_increase`,`private_attack_growth`,`private_defense_growth`,`private_troops_growth`,`soul`,`soulchange`,`love_star`,`private_love_star` from girl;" );
+	sprintf( szSQL, "select `kind`,`color`,`init_color`,`type`,`attack_increase`,`defense_increase`,`attack_growth`,`defense_growth`,`troops_growth`,`private_herokind`,`private_attack_increase`,`private_defense_increase`,`private_attack_growth`,`private_defense_growth`,`private_troops_growth`,`soul`,`soulchange`,`love_star`,`private_love_star`,`noused` from girl;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -102,6 +102,7 @@ int girlinfo_init_auto()
 		g_girlinfo[kind].config[color].soulchange = atoi(row[offset++]);
 		g_girlinfo[kind].config[color].love_star = atoi(row[offset++]);
 		g_girlinfo[kind].config[color].private_love_star = atoi(row[offset++]);
+		g_girlinfo[kind].config[color].noused = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

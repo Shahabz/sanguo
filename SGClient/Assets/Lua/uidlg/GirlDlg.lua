@@ -256,25 +256,27 @@ function GirlDlgHeadLayerCreate()
 	local m_GirlNoGet = {}
 	-- 遍历所有女将
 	for k, v in pairs(g_girlinfo) do
-		local kind = k
-		local actorGirl = GetGirl().m_Girl[kind];
-		if actorGirl and actorGirl.m_color > 0 then
-			local isup = 0;
-			-- 有关联武将，检查这个武将是否是上阵状态
-			if actorGirl.m_herokind > 0 then
-				--if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
-					isup = 1
-				--end
-			end
-			-- 已经获得这个女将，使用存档
-			if actorGirl.m_soul > v[actorGirl.m_color].soul then
-				table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+		if v.noused == 0 then
+			local kind = k
+			local actorGirl = GetGirl().m_Girl[kind];
+			if actorGirl and actorGirl.m_color > 0 then
+				local isup = 0;
+				-- 有关联武将，检查这个武将是否是上阵状态
+				if actorGirl.m_herokind > 0 then
+					--if GetHero():GetPtrWithCity( actorGirl.m_herokind ) ~= nil then
+						isup = 1
+					--end
+				end
+				-- 已经获得这个女将，使用存档
+				if actorGirl.m_soul > v[actorGirl.m_color].soul then
+					table.insert( m_GirlCache, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+				else
+					table.insert( m_GirlCantBreak, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+				end
 			else
-				table.insert( m_GirlCantBreak, {m_kind=kind, m_color=actorGirl.m_color, m_state=isup} )
+				-- 未获得这个女将，使用配置
+				table.insert( m_GirlNoGet, {m_kind=kind, m_color=v[0].init_color, m_state=-1 } )
 			end
-		else
-			-- 未获得这个女将，使用配置
-			table.insert( m_GirlNoGet, {m_kind=kind, m_color=v[0].init_color, m_state=-1 } )
 		end
 	end
 	-- 不可突破排序

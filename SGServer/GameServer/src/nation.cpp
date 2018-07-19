@@ -624,7 +624,7 @@ int nation_sendinfo( int actor_index )
 	pValue.m_notice_len = strlen( pValue.m_notice );
 	nation_kingname( pCity->nation, pValue.m_kingname );
 	pValue.m_kingname_len = strlen( pValue.m_kingname );
-
+	pValue.m_prestige = pCity->prestige;
 	for ( int tmpi = 0; tmpi < NATION_QUEST_MAX; tmpi++ )
 	{
 		char questlevel = pNation->questlevel[tmpi];

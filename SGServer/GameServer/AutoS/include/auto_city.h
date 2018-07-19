@@ -135,10 +135,8 @@ struct _city {
 				char ballot;	//是否投票
 				short tokenballot;	//元宝拉票票数
 				int soldiers[3];	//兵力
-				short tc_state;	//天策府点兵任务状态
-				char tc_kind;	//当前领取天策府点兵任务
-				char tc_num;	//当前领取天策府点兵任务
-				short tc_tech;	//天策府点兵科技
+				char tc_level[2];	//天策府科技等级
+				char tc_progress[2];	//天策府科技进度
 				short bufftrain;	//武卒官加速值
 				int teacherid;	//师父
 				short act06_state;	//全服返利领取状态

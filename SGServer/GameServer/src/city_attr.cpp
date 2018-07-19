@@ -85,13 +85,11 @@ void city_attr_reset( City *pCity )
 	// 天策府带兵排数
 	for ( short kind = 1; kind < g_tiance_quest_maxnum; kind++ )
 	{
-		if ( g_tiance_quest[kind].ability == 0 )
-			continue;
-		if ( pCity->tc_tech & (1 << kind) )
-		{ // 激活了这个科技
-			city_attr_calc( &pCity->attr, g_tiance_quest[kind].ability, g_tiance_quest[kind].value, 100.0f );
+		char tc_level = pCity->tc_level[kind-1];
+		if ( tc_level > 0 && tc_level < g_tiance_quest[kind].maxnum )
+		{
+			city_attr_calc( &pCity->attr, g_tiance_quest[kind].config[tc_level].ability, g_tiance_quest[kind].config[tc_level].showvalue, 100.0f );
 		}
-
 	}
 
 	city_attr_sendinfo( pCity->actor_index );

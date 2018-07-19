@@ -2,19 +2,26 @@
 #define __TIANCE_QUEST_DATA_AUTO_H
 #include "define.h"
 
-struct _tiancequest {
+struct _tiancequest_config {
 //--Automatically generated
 				int kind;	//
-				short prekind;	//
-				short nextkind;	//
 				short level;	//
-				short tiance_level;	//
 				short actor_level;	//
-				short brush_enemykind;	//
-				short brush_enemynum;	//
 				short ability;	//
 				int value;	//
 				short showvalue;	//
+				int silver;	//
+				int wood;	//
+				int food;	//
+				int iron;	//
+				int progress;	//
+};
+typedef struct _tiancequest_config TianceQuestConfig;
+
+struct _tiancequest {
+//--Automatically generated
+	TianceQuestConfig *config;
+	int	maxnum;
 };
 typedef struct _tiancequest TianceQuest;
 

@@ -86,9 +86,38 @@ function IAppPayDlgShow( recvValue )
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
 	local uniWebView = m_uiWebView.transform:GetComponent( "UniWebView" )
+	uniWebView:CleanCache()
 	uniWebView:Load( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata, false );
-	uniWebView:Show( false, UniWebViewTransitionEdge.None, 0.4, nil );
-	uniWebView.OnPageFinished = uniWebView.OnPageFinished + function( view, statusCode, url ) 
+	
+	uniWebView.OnPageStarted = uniWebView.OnPageStarted + function( view, url )
+		print( "OnPageStarted:"..url )
+		gamelog( "OnPageStarted:"..url )
+		local prefixHttp = string.sub( url, 4 )
+		local prefixHttps = string.sub( url, 5 )
+		if prefixHttp ~= "http" and prefixHttps ~= "https" then
+			gamelog( "loadInnerApp" )
+			DeviceHelper.loadInnerApp( url )
+			uniWebView:Hide( false, UniWebViewTransitionEdge.None, 0.4, nil );
+			IAppPayDlgClose()
+		end
+	end
+	
+	uniWebView.OnPageFinished = uniWebView.OnPageFinished + function( view, statusCode, url )
+		print( "OnPageFinished:"..statusCode..","..url )
+		gamelog( "OnPageFinished:"..statusCode..","..url )
 		SetFalse( m_uiWaiting )
+		--uniWebView:Show( false, UniWebViewTransitionEdge.None, 0.4, nil );
+	end
+	
+	uniWebView.OnPageErrorReceived = uniWebView.OnPageErrorReceived + function( view, errorCode, errorMessage )
+		print( "OnPageErrorReceived:"..errorCode..","..errorMessage )
+		gamelog( "OnPageErrorReceived:"..errorCode..","..errorMessage )
+		SetFalse( m_uiWaiting )
+		--uniWebView:Hide( false, UniWebViewTransitionEdge.None, 0.4, nil );
+	end
+	
+	uniWebView.OnMessageReceived = uniWebView.OnMessageReceived + function( view, message ) 
+		gamelog( "OnMessageReceived:"..message )
+		print( "OnMessageReceived:"..message )
 	end
 end
