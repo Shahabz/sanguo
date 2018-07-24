@@ -920,6 +920,32 @@ int kingwar_activity_onclose()
 			sprintf( v3, "%s%d", TAG_HERO, 119 );
 		mail_sendall( 5034, 5530, v1, v2, v3, "" );
 
+		// 排行榜积分
+		for ( int tmpi = 0; tmpi < KINGWAR_RANK_MAX; tmpi++ )
+		{
+			if ( g_kingwar_rank[tmpi].actorid <= 0 )
+				continue;
+			city_kingwarpoint( g_kingwar_rank[tmpi].city_index, g_kingwar_config[tmpi + 1].rank_award_point, PATH_KINGWAR_RANK );
+		}
+
+		// 累计杀敌积分
+		for ( int city_index = 0; city_index < g_city_maxindex/*注意：使用索引位置，为了效率*/; city_index++ )
+		{
+			if ( g_city[city_index].actorid <= 0 )
+				continue;
+			for ( int i = g_kingwar_config_maxnum - 1; i >= 0; i-- )
+			{
+				if ( g_city[city_index].kw_totalkill >= g_kingwar_config[i].totalkill )
+				{
+					if ( g_city[city_index].kw_totalkill > 0 && g_kingwar_config[i].totalkill_award_point == 0 )
+						city_kingwarpoint( city_index, 200, PATH_KINGWAR_KILL );
+					else
+						city_kingwarpoint( city_index, g_kingwar_config[i].totalkill_award_point, PATH_KINGWAR_KILL );
+					break;
+				}
+			}
+		}
+
 		// 开启挖宝活动
 		kingwar_treasure_onopen();
 	}
