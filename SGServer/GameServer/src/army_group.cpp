@@ -1578,28 +1578,17 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 			return -1;
 		}
 	}
-	//else if ( zonetype == MAPZONE_TYPE1 )
-	//{ // 我在司隶
-	//	if ( target_zonetype != MAPZONE_TYPE1 )
-	//	{ // 对方不在州城
-	//		if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
-	//		{
-	//			actor_notify_alert( pCity->actor_index, 2365 );// 你当前所在的位置无法宣战该地图据点
-	//			return -1;
-	//		}
-	//	}
-	//}
-	//else if ( zonetype == MAPZONE_TYPE1 )
-	//{ // 我在皇城
-	//	if ( target_zonetype == MAPZONE_TYPE0 || target_zonetype == MAPZONE_TYPE1 )
-	//	{
-	//		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
-	//		{
-	//			actor_notify_alert( actor_index, 2366 );// 需要官员特殊战事权才可对该地图据点宣战
-	//			return -1;
-	//		}
-	//	}
-	//}
+	else if ( zonetype == MAPZONE_TYPE_SILI )
+	{ // 我在司隶
+		if ( target_zonetype == MAPZONE_TYPE_SILI )
+		{ // 对方在州
+			if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
+			{
+				actor_notify_alert( pCity->actor_index, 2366 );// 需要官员特殊战事权才可对该地宣战
+				return -1;
+			}
+		}
+	}
 
 	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD )
 	{

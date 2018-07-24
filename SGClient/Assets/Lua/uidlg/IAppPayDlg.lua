@@ -75,7 +75,7 @@ end
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function IAppPayDlgShow( recvValue )
 	IAppPayDlgOpen()
-	SetTrue( m_uiWaiting )
+	--SetTrue( m_uiWaiting )
 	local info = {}
 	info["waresid"] = tonumber(recvValue.m_productid)-- 商品编号
 	--info["waresname"] = -- 商品名称
@@ -85,17 +85,21 @@ function IAppPayDlgShow( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
-	local uniWebView = m_uiWebView.transform:GetComponent( "UniWebView" )
+	Application.OpenURL( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata )
+	IAppPayDlgClose()
+	--[[local uniWebView = m_uiWebView.transform:GetComponent( "UniWebView" )
+	uniWebView:SetOpenLinksInExternalBrowser(false)
 	uniWebView:CleanCache()
 	uniWebView:Load( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata, false );
 	
 	uniWebView.OnPageStarted = uniWebView.OnPageStarted + function( view, url )
 		print( "OnPageStarted:"..url )
 		gamelog( "OnPageStarted:"..url )
-		local prefixHttp = string.sub( url, 4 )
-		local prefixHttps = string.sub( url, 5 )
+		local prefixHttp = string.sub( url, 1, 4 )
+		local prefixHttps = string.sub( url, 1, 5 )
 		if prefixHttp ~= "http" and prefixHttps ~= "https" then
 			gamelog( "loadInnerApp" )
+			--Application.OpenURL(url)
 			DeviceHelper.loadInnerApp( url )
 			uniWebView:Hide( false, UniWebViewTransitionEdge.None, 0.4, nil );
 			IAppPayDlgClose()
@@ -120,4 +124,25 @@ function IAppPayDlgShow( recvValue )
 		gamelog( "OnMessageReceived:"..message )
 		print( "OnMessageReceived:"..message )
 	end
+	
+	uniWebView.OnShouldClose = uniWebView.OnShouldClose + function( view )
+		gamelog( "OnShouldClose" )
+		print( "OnShouldClose" )
+		uniWebView:Hide( false, UniWebViewTransitionEdge.None, 0.4, nil );
+		IAppPayDlgClose()
+	end--]]
+end
+
+-- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
+function IAppPayExec( recvValue )
+	local info = {}
+	info["waresid"] = tonumber(recvValue.m_productid)-- 商品编号
+	--info["waresname"] = -- 商品名称
+	info["cporderid"] = recvValue.m_orderid -- 商户订单号
+	info["price"] = recvValue.m_price -- 支付金额
+	info["appuserid"] = Const.serverid.."#"..Const.actorid -- 用户在商户应用的唯一标识
+	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
+	local transdata_json = json.encode(info)
+	local transdata = WWW.EscapeURL(transdata_json)
+	Application.OpenURL( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata )
 end

@@ -644,6 +644,9 @@ end
 
 -- 聊天
 function MainDlgSetChat( recvValue )
+	if m_Dlg == nil then
+		return;
+	end
 	if recvValue.m_actorid < 0 then
 		-- 系统
 		local name = "<color=FF0000FF>["..recvValue.m_name.."]：</color>"

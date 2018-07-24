@@ -26,4 +26,5 @@ int worldquest_sendinfo( int actor_index );
 int worldquest_sendaward( int actor_index, int questid );
 int worldquest_getaward( int actor_index, int questid );
 int worldquest_updateopen();
+int worldquest_gmclear( int actor_index );
 #endif

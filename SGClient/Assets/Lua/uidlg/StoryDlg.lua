@@ -135,7 +135,7 @@ end
 -- m_story_star={[128]},m_story_hero={[32]},m_story_restime={[32]},m_story_resnum={[32]},m_story_resreset={[32]},m_story_itemnum={[32]},m_story_drawing={[16]},m_storyid=0,m_sweep_herokind[4] = 0
 function StoryDlgRecv( recvValue )
 	m_recvValue = recvValue;
---m_recvValue.m_storyid = 646
+--m_recvValue.m_storyid = 651
 	if GetPlayer().m_storyid < recvValue.m_storyid then
 		GetPlayer().m_storyid = recvValue.m_storyid;
 	end
@@ -318,7 +318,9 @@ function StoryDlgSetRank( uiObj, storyConfig )
 	
 	local color = NameColor( storyConfig.color )
 	local type = storyConfig.type;
-	if type == STORY_TYPE_NORMAL then -- 普通副本
+	if type == 0 then
+		SetFalse( uiObj )
+	elseif type == STORY_TYPE_NORMAL then -- 普通副本
 		-- 已经通关
 		if m_recvValue.m_storyid > storyConfig.id then
 			SetControlID( uiObj, 0 )

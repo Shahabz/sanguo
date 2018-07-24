@@ -23,6 +23,7 @@
 #include "map_zone.h"
 #include "king_war.h"
 #include "nation.h"
+#include "map_town.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -187,6 +188,8 @@ int worldquest_setvalue( int questid, int value )
 
 			nation_capital_townid( 3, 192 );
 			nation_people_capital_set( 3, 0 );
+
+			map_town_attack_checkstart();
 		}
 		else if ( questid == WORLDQUEST_WORLDBOSS2 )
 		{ // »÷°Ü¶­×¿-¿ªÆôÑªÕ½»Ê³Ç
@@ -426,5 +429,15 @@ int worldquest_updateopen()
 	pValue.m_open_zone_sili = g_open_zone_sili;
 	pValue.m_open_zone_luoyang = g_open_zone_luoyang;
 	netsend_worlddataopen_S( 0, SENDTYPE_WORLD, &pValue );
+	return 0;
+}
+
+int worldquest_gmclear( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	g_actors[actor_index].worldquest_complete = 0;
+	worldquest_give( actor_index );
+	worldquest_sendinfo( actor_index );
 	return 0;
 }

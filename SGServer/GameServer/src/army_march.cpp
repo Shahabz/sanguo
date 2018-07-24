@@ -84,11 +84,11 @@ extern int g_army_maxindex;
 int army_marchtime_calc( City *pCity, short from_posx, short from_posy, short to_posx, short to_posy )
 {
 	// 优先检查皇城区域向非皇城区域行军
-	if ( from_posx >= g_zoneinfo[13].top_left_posx && from_posx <= g_zoneinfo[13].bottom_right_posx && 
-		from_posy >= g_zoneinfo[13].top_left_posy && from_posy <= g_zoneinfo[13].bottom_right_posy )
+	if ( from_posx >= g_zoneinfo[MAPZONE_CENTERID].top_left_posx && from_posx <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx &&
+		from_posy >= g_zoneinfo[MAPZONE_CENTERID].top_left_posy && from_posy <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy )
 	{
-		if ( to_posx < g_zoneinfo[13].top_left_posx || to_posx > g_zoneinfo[13].bottom_right_posx ||
-			to_posy < g_zoneinfo[13].top_left_posy || to_posy > g_zoneinfo[13].bottom_right_posy )
+		if ( to_posx < g_zoneinfo[MAPZONE_CENTERID].top_left_posx || to_posx > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx ||
+			to_posy < g_zoneinfo[MAPZONE_CENTERID].top_left_posy || to_posy > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy )
 		{
 			return global.army_move_kingzone;
 		}

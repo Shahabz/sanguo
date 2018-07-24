@@ -1,7 +1,7 @@
 #ifndef _MAP_ZONE_H_
 #define _MAP_ZONE_H_
 #include "define.h"
-#define MAPZONE_TYPE_ZHOU		0 // 郡地
+#define MAPZONE_TYPE_ZHOU		0 // 州
 #define MAPZONE_TYPE_SILI		1 // 司隶
 #define MAPZONE_CENTERID		5 // 司隶
 #define MAPZONE_MAXNUM			10 // 1-9

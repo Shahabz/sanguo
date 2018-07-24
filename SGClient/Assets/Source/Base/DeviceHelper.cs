@@ -97,12 +97,10 @@ public static class DeviceHelper
 		}
 	}
 
-	[DllImport("__Internal")]
-	private static extern void _loadInnerApp(string url);
+
 	public static void loadInnerApp(string url)
 	{
-		 _loadInnerApp(url);
-	
+		Application.OpenURL(url);
 	}
 
     [DllImport("__Internal")]

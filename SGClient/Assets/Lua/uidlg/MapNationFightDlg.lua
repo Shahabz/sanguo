@@ -236,10 +236,16 @@ function MapNationFightDlgCreate( townid )
 		if town == nil then
 			return
 		end
-		-- 不在同一区域
-		if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, town.posx, town.posy ) == 0 then
-			AlertMsg(T(1292))
-			return
+		local zoneid = map_zone_getid( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy )
+		if zoneid == 5 then
+			-- 不在同一区域
+			
+		else
+			-- 不在同一区域
+			if map_zone_checksame( WorldMap.m_nMyCityPosx, WorldMap.m_nMyCityPosy, town.posx, town.posy ) == 0 then
+				AlertMsg(T(1292))
+				return
+			end
 		end
 		
 		-- 创建国战

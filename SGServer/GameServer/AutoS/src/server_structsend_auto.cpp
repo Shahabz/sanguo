@@ -307,6 +307,7 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maidname_len, (*psize) );
 	if( pValue->m_maidname_len > 0 && pValue->m_maidname_len <= 22 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_maidname, pValue->m_maidname_len*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_prestige, (*psize) );
 	return 0;
 }
 

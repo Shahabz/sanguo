@@ -1,16 +1,4 @@
 g_nation_equip = {
-[0] = 
-{ 
-	[2] = { kind=0,level=2,name="泽字营",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[3] = { kind=0,level=3,name="南都",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[5] = { kind=0,level=5,name="琅琊南门",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[9] = { kind=0,level=9,name="琅琊城",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[12] = { kind=0,level=12,name="泽字郡",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[15] = { kind=0,level=15,name="朱雀府",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[19] = { kind=0,level=19,name="雍州城",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[21] = { kind=0,level=21,name="建安城",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-	[29] = { kind=0,level=29,name="洛阳都城",exp=0,maxexp=0,iron=0,attack=0,defense=0,troops=0,remake_star=0,},
-},
 [1] = 
 { 
 	[1] = { kind=1,level=1,name="青虹剑",exp=10,maxexp=100,iron=40,attack=75,defense=0,troops=0,remake_star=0,},

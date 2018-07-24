@@ -100,7 +100,7 @@ int g_nation_official_statetime = 0;
 
 // 国家日志
 SLK_NetS_NationLog g_nation_log[3][NATION_LOG_CACHE_QUEUE_COUNT] = { 0 };
-
+char g_ismap_town_attack_checkstart = 0;
 // 读档完毕的回调
 int nation_loadcb( int nation )
 {
@@ -159,6 +159,7 @@ int nation_loadcb( int nation )
 		{
 			nation_capital_townid( 1, 191 );
 			nation_people_capital_set( 1, 0 );
+			g_ismap_town_attack_checkstart = 1;
 		}
 	}
 	else if ( nation == 2 )
@@ -167,6 +168,7 @@ int nation_loadcb( int nation )
 		{
 			nation_capital_townid( 2, 193 );
 			nation_people_capital_set( 2, 0 );
+			g_ismap_town_attack_checkstart = 1;
 		}
 	}
 	else if ( nation == 3 )
@@ -175,6 +177,7 @@ int nation_loadcb( int nation )
 		{
 			nation_capital_townid( 3, 192 );
 			nation_people_capital_set( 3, 0 );
+			g_ismap_town_attack_checkstart = 1;
 		}
 	}
 	return 0;
@@ -216,6 +219,10 @@ int nation_load()
 		nation_people_capital_calc( nation );
 	}
 	nation_load_auto( nation_getptr, nation_loadcb, "nation" );
+	if ( g_ismap_town_attack_checkstart == 1 )
+	{
+		map_town_attack_checkstart();
+	}
 	return 0;
 }
 

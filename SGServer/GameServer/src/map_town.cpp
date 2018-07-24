@@ -1012,7 +1012,7 @@ int map_town_owner_award()
 int map_town_attack_checkstart()
 {
 	int num = 0;
-	for ( int townid = 301; townid <= 304; townid++ )
+	for ( int townid = 191; townid <= 194; townid++ )
 	{
 		if ( g_map_town[townid].nation > 0 )
 		{
@@ -1022,7 +1022,7 @@ int map_town_attack_checkstart()
 	if ( num >= 3 )
 	{ // 满足3个都城都被占领
 		char start = 0;
-		for ( int townid = 301; townid <= 304; townid++ )
+		for ( int townid = 191; townid <= 194; townid++ )
 		{
 			if ( g_map_town[townid].attackcd > 0 )
 			{

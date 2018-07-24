@@ -36,7 +36,15 @@
                 android:value="true" /> 
         </activity>
         
-        <activity android:name="com.onevcat.uniwebview.UniWebViewFileChooserActivity" />
+        <activity android:name="com.onevcat.uniwebview.UniWebViewFileChooserActivity" >
+        	 <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" /> 
+             <meta-data
+                android:name="unityplayer.ForwardNativeEventsToDalvik"
+                android:value="false" />
+        </activity>
+
 
         <receiver android:name=".AlarmReceiver">
             <intent-filter android:priority="1000">

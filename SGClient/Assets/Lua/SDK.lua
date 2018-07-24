@@ -59,25 +59,28 @@ end
 -- 支付
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function SDK.pay( recvValue )
+	local json = require "cjson"
+	local info = {}
+	info["product_id"] = recvValue.m_productid
+	info["product_price"] = recvValue.m_price
+	info["product_orider"] = recvValue.m_orderid
+	info["product_ext"] = recvValue.m_ext
+		
 	if Const.platid == 13 or Const.platid == 11 or Const.platid == 1 then -- ziur-ios
-		local json = require "cjson"
-		local info = {}
-		info["product_id"] = recvValue.m_productid
-		info["product_price"] = recvValue.m_price
-		info["product_orider"] = recvValue.m_orderid
-		info["product_ext"] = recvValue.m_ext
 		if recvValue.m_paymode == 0 then
 			local jsonMsg = json.encode( info ); 
 			ChannelSDK.Instance:pay( jsonMsg );
 		else
-			IAppPayDlgShow( recvValue )
+			IAppPayExec( recvValue )
 		end
+	elseif Const.platid == 14 then
+		IAppPayExec( recvValue )
 	end
 end
 
 -- 问题提交
 function SDK.gmbug()
-	if Const.platid == 13 then -- ziur-ios
+	if Const.platid == 14 or Const.platid == 13 then -- ziur-ios
 		ChannelSDK.Instance:gmbug( '' );
 	else
 	end

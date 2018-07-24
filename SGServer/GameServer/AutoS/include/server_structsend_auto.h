@@ -198,6 +198,7 @@ struct _slk_NetS_ActorInfo {
 	short m_bufftrain;	//服务器发送玩家基本信息-武卒官加速
 	char m_maidname_len;	//服务器发送玩家基本信息-侍女名称
 	char m_maidname[22];	//服务器发送玩家基本信息-侍女名称
+	int m_prestige;	//服务器发送玩家基本信息-威望
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

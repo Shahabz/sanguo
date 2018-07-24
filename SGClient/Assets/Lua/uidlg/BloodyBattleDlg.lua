@@ -232,12 +232,16 @@ function BloodyBattleDlgTownRecv( recvValue )
 	local obj = 0;
 	if recvValue.m_id == 4 then
 		obj = m_uiPingJin
+		SetImage( obj.transform:Find("Shape"), LoadSprite("mapunit_type4_0") )
 	elseif recvValue.m_id == 5 then
 		obj = m_uiHanGu
+		SetImage( obj.transform:Find("Shape"), LoadSprite("mapunit_type4_0") )
 	elseif recvValue.m_id == 6 then
 		obj = m_uiHuLao
+		SetImage( obj.transform:Find("Shape"), LoadSprite("mapunit_type4_0") )
 	elseif recvValue.m_id == 7 then
 		obj = m_uiLuoYang
+		SetImage( obj.transform:Find("Shape"), LoadSprite("mapunit_type6_0") )
 	end
 	if recvValue.m_nation > 0 then
 		SetImage( obj.transform:Find("Back"), LoadSprite("ui_bloodybattle_back_"..recvValue.m_nation) )

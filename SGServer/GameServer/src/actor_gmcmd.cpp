@@ -141,6 +141,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		{
 			if ( pValue[1] == 0 )
 			{
+				extern int g_kingwar_activity_openweek;
 				time_t t;
 				time( &t );
 				t += 60;
@@ -148,6 +149,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				global.kingwar_activity_week = nowtime->tm_wday;
 				global.kingwar_activity_hour = nowtime->tm_hour;
 				global.kingwar_activity_minute = nowtime->tm_min;
+				g_kingwar_activity_openweek = system_getfweek();
 				kingwar_activity_sendinfo( -1 );
 			}
 			else if( pValue[1] == -1 )
@@ -200,6 +202,13 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 
 			nation_capital_townid( 3, 192 );
 			nation_people_capital_set( 3, 0 );
+		}
+		else if ( pValue[0] == 10 )
+		{
+			if ( pCity )
+			{
+				worldquest_gmclear( pCity->actor_index );
+			}
 		}
 		break;
 	case GMC_SC:

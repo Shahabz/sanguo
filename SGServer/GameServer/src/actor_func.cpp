@@ -603,6 +603,7 @@ int actor_getinfo( int actor_index )
 		info.m_guardnum = pCity->guardnum;
 		info.m_guardsec = pCity->guardsec;
 		info.m_questid = pCity->questid[0];
+		info.m_prestige = pCity->prestige;
 		for ( int i = 0; i < CITY_TECH_MAX; i++ )
 		{
 			info.m_techlevel[i] = pCity->techlevel[i];

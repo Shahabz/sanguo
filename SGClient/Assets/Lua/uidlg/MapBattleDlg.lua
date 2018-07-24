@@ -238,7 +238,7 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		SetTrue( m_uiAttackDesc )
 			
 	elseif recvValue.m_type == MAPUNIT_TYPE_KINGWAR_TOWN then-- 皇城血战
-		townid = 500
+		townid = 200
 		-- 标题
 		SetTrue( m_uiAttackDesc )
 		SetText( m_uiTitle.transform:Find("Text"), T(1296) )

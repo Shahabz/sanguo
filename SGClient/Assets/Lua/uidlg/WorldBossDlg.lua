@@ -113,6 +113,7 @@ function WorldBossDlgRecvValue( recvValue )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
+	print( recvValue.m_hp..","..recvValue.m_isfight )
 	m_limit_actorlevel = recvValue.m_actorlevel
 	SetProgress( m_uiProgress, recvValue.m_hp/recvValue.m_maxhp );
 	SetText( m_uiProgress.transform:Find("Text"), recvValue.m_hp.."/"..recvValue.m_maxhp )

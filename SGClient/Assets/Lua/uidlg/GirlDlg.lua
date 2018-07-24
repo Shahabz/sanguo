@@ -256,7 +256,7 @@ function GirlDlgHeadLayerCreate()
 	local m_GirlNoGet = {}
 	-- 遍历所有女将
 	for k, v in pairs(g_girlinfo) do
-		if v.noused == 0 then
+		if v[1].noused == 0 then
 			local kind = k
 			local actorGirl = GetGirl().m_Girl[kind];
 			if actorGirl and actorGirl.m_color > 0 then
@@ -377,7 +377,7 @@ function GirlDlgSelect( kind )
 		local uiSelect = objs[6]
 		SetFalse( uiSelect )
 	end
-	
+
 	if kind == 0 then
 		local objs = m_GirlCache[1].m_uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 		local uiSelect = objs[6]

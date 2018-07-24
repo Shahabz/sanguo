@@ -1,6 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebView.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Source/Base/DeviceHelper.cs">
     <Files>
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewHelper.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ActiveDelay.cs" Line="1" Column="1" />
@@ -22,7 +22,7 @@
       <File FileName="Assets/Source/Manager/AudioManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/UIButton.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Manager/LaunchLoad.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/Custom/Packager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Custom/Packager.cs" Line="42" Column="13" />
       <File FileName="Assets/Editor/Custom/CustomSettings.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Net/SocketClient.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Effect/ScreenBlur.cs" Line="1" Column="1" />
@@ -98,7 +98,7 @@
       <File FileName="Assets/Source/UI/LoopScrollRect/Scripts/Editor/SGMenuOptions.cs" Line="1" Column="1" />
       <File FileName="Assets/ToLua/Editor/ToLuaExport.cs" Line="1" Column="1" />
       <File FileName="Assets/PackAssets/Shader/ImageGray.shader" Line="1" Column="1" />
-      <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/DeviceHelper.cs" Line="103" Column="28" />
       <File FileName="Assets/Source/Base/SpriteAnimation.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ChannelSDK.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/Custom/SpriteChecker.cs" Line="1" Column="1" />
@@ -109,8 +109,8 @@
       <File FileName="Assets/Source/Notification/IOSNotification.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/NotificationManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Notification/DefaultNotification.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/ProjectBuild.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/XUPorter/XCodePostProcess.cs" Line="40" Column="26" />
+      <File FileName="Assets/Editor/ProjectBuild.cs" Line="38" Column="5" />
       <File FileName="Assets/Source/Net/IPv6SupportMidleware.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCMod.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCProject.cs" Line="1" Column="1" />
@@ -142,16 +142,20 @@
       <File FileName="Assets/ThirdPartyPlugin/DragonBones/src/DragonBones/unity/Editor/AssetProcess.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/Base/ActiveDelayFrame.cs" Line="1" Column="1" />
       <File FileName="Assets/Source/UI/RTL.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebView.cs" Line="65" Column="106" />
+      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebView.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Interface/UniWebViewAndroid.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Interface/UniWebViewCocoa.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewTransitionEdge.cs" Line="18" Column="62" />
+      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewTransitionEdge.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCPlist2.cs" Line="1" Column="1" />
       <File FileName="Assets/Editor/XUPorter/XCPlist.cs" Line="1" Column="1" />
-      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewMessage.cs" Line="55" Column="58" />
-      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewNativeListener.cs" Line="35" Column="17" />
+      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewMessage.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewNativeListener.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewLogger.cs" Line="1" Column="1" />
       <File FileName="Assets/ThirdPartyPlugin/UniWebView/Script/UniWebViewToolbarPosition.cs" Line="1" Column="1" />
+      <File FileName="Assets/ThirdPartyPlugin/UniWebView/Interface/UniWebViewPlaceholder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Base/OpenUDID.cs" Line="1" Column="1" />
+      <File FileName="Assets/Source/Generate/DeviceHelperWrap.cs" Line="1" Column="1" />
+      <File FileName="Assets/PackAssets/Data/plat.txt" Line="1" Column="9" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

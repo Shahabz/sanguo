@@ -321,6 +321,8 @@ int building_giveres( int city_index, int kind )
 			}
 		}
 	}
+	if ( offset < 0 )
+		return -1;
 
 	SLK_NetS_BuildingResGet pValue = { 0 };
 	building_res_makestruct( &g_city[city_index].building_res[offset], offset, &pValue.m_res );
