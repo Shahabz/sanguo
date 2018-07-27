@@ -63,7 +63,7 @@ function PayDlgOnAwake( gameObject )
 	m_uiUIP_Goods = objs[6];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
-	m_ObjectPool:CreatePool("UIP_Goods", 6, 6, m_uiUIP_Goods);
+	m_ObjectPool:CreatePool("UIP_Goods", 7, 7, m_uiUIP_Goods);
 end
 
 -- 界面初始化时调用
@@ -121,17 +121,29 @@ function PayDlgCreateGoods( info )
 	uiObj.transform:SetParent( m_uiContent.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
+	
 	SetControlID( uiObj.transform:Find("BuyBtn"), 1000+info.m_goodsid )
-	SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
-	SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol()..info.m_price )
+	SetFalse( uiObj.transform:Find("Flag") )
+	SetImage( uiObj.transform:Find("Shape"), LoadSprite("ui_pay_token"..info.m_icon) )
+	
+	if info.m_gift_token > 0 then
+		SetText( uiObj.transform:Find("Gift"), F(2114,info.m_gift_token) )
+	else
+		SetText( uiObj.transform:Find("Gift"), "" )
+	end
+	
+	SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol().." "..info.m_price )
+	
 	if info.m_goodsid == 1 then
-		SetTrue( uiObj.transform:Find("Flag") )
-		SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
+		--SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
+		SetText( uiObj.transform:Find("Name"), T(info.m_nameid).." <size=24>"..F(2115,info.m_day).."</size>" )
+		SetText( uiObj.transform:Find("Gift"), T(2116) )
+		
 	elseif info.m_goodsid == 3 then
-		SetFalse( uiObj.transform:Find("Flag") )
+		SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
 		SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol().."0.01" )
 	else
-		SetFalse( uiObj.transform:Find("Flag") )
+		SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
 	end
 end
 
@@ -172,7 +184,7 @@ end
 
 -- 购买
 function PayDlgBuy( goodsid )
-	if Const.platid == 0 then
+	if Const.platid == 1 then
 		system_askinfo( ASKINFO_PAY, "", 3, goodsid )
 	else
 		system_askinfo( ASKINFO_PAY, "", 2, goodsid )

@@ -130,6 +130,10 @@ public class ChannelSDK : MonoBehaviour
 	{
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
+		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+		{
+		jc.CallStatic( "user_center", jsonString );
+		}
 #elif  UNITY_IPHONE || UNITY_IOS
 		sdkUserCenter( jsonString );
 #else

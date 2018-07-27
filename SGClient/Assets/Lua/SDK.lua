@@ -46,7 +46,17 @@ end
 function SDK.onLogout( jsonResult )
 	Const.sdk_uid 		= "";
 	Const.sdk_token 	= "";
-	SDK.login()
+	
+	local json = require "cjson"
+	local info = json.decode( jsonResult );   
+	local result 	    = info["result"];
+	if result == "1" then
+		SDK.login()
+	elseif result == "2" then
+		GameManager.Restart();
+		GameManager.Logout( 1 );
+		SDK.login()
+	end
 end
 
 -- 切换账号回调
@@ -66,29 +76,49 @@ function SDK.pay( recvValue )
 	info["product_orider"] = recvValue.m_orderid
 	info["product_ext"] = recvValue.m_ext
 		
-	if Const.platid == 13 or Const.platid == 11 or Const.platid == 1 then -- ziur-ios
+	if Const.platid == 13 or Const.platid == 15 or Const.platid == 11 or Const.platid == 1 then
 		if recvValue.m_paymode == 0 then
 			local jsonMsg = json.encode( info ); 
 			ChannelSDK.Instance:pay( jsonMsg );
 		else
-			IAppPayExec( recvValue )
+			if Const.platid == 13 then
+				IAppPay_sgbl( recvValue )
+			elseif Const.platid == 15 then
+				IAppPay_fysgz( recvValue )
+			end
 		end
+		
 	elseif Const.platid == 14 then
-		IAppPayExec( recvValue )
+		IAppPay_sgbl( recvValue )
+		
+	elseif Const.platid == 16 then
+		IAppPay_fysgz( recvValue )
 	end
 end
 
 -- 问题提交
 function SDK.gmbug()
-	if Const.platid == 14 or Const.platid == 13 then -- ziur-ios
+	if Const.platid == 13 or Const.platid == 14 then -- sgbl-ios
 		ChannelSDK.Instance:gmbug( '' );
+	elseif Const.platid == 15 or Const.platid == 16 then -- fysgz-ios
+		ChannelSDK.Instance:gmbug( '' );
+	else
+	end
+end
+
+-- 用户中心
+function SDK.userCenter()
+	if Const.platid == 13 or Const.platid == 14 then -- sgbl-ios
+		ChannelSDK.Instance:user_center( '' );
+	elseif Const.platid == 15 or Const.platid == 16 then -- fysgz-ios
+		ChannelSDK.Instance:user_center( '' );
 	else
 	end
 end
 
 -- 传额外参数
 function SDK.setExtendData()
-	if Const.platid == 13 then -- ziur-ios
+	if Const.platid == 13 or Const.platid == 14 or Const.platid == 15 or Const.platid == 16 then
 		local json = require "cjson"
 		local info = {}
 		info["actorname"] = GetPlayer().m_name

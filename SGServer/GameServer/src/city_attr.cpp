@@ -397,6 +397,12 @@ void city_battlepower_girl_calc( City *pCity )
 	if ( !pCity )
 		return;
 	int battlepower = 0;
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].kind <= 0 )
+			continue;
+		battlepower += pCity->hero[tmpi].bp_girl;
+	}
 	pCity->battlepower_girl = battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_GIRL );
 }

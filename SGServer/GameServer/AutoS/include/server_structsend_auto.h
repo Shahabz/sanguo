@@ -1662,6 +1662,7 @@ struct _slk_NetS_PayStoreGoods {
 	short m_day;	//支付商店
 	short m_nameid;	//支付商店
 	short m_icon;	//支付商店
+	int m_gift_token;	//支付商店
 };
 typedef struct _slk_NetS_PayStoreGoods SLK_NetS_PayStoreGoods;	//支付商品
 

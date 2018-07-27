@@ -747,6 +747,7 @@ int nation_place_upgrade( int actor_index )
 	// ¼ì²é
 	if ( pCity->prestige < config->prestige )
 	{
+		actor_notify_alert( actor_index, 1318 );
 		return -1;
 	}
 	if ( pCity->silver < config->silver )
@@ -758,7 +759,10 @@ int nation_place_upgrade( int actor_index )
 		if ( config->cost_kind[tmpi] <= 0 )
 			continue;
 		if ( item_getitemnum( actor_index, config->cost_kind[tmpi] ) < config->cost_num[tmpi] )
+		{
+			actor_notify_alert( actor_index, 779 );
 			return -1;
+		}
 	}
 	// ¿Û
 	city_changeprestige( pCity->index, -config->prestige, PATH_NATIONPLACE );

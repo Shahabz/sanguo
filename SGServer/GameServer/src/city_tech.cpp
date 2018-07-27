@@ -273,6 +273,7 @@ int city_tech_get( int actor_index )
 	if ( kind > 20 )
 	{
 		hero_attr_calc_all( pCity, 1 );
+		city_battlepower_tech_calc( pCity );
 	}
 
 	// хннЯ

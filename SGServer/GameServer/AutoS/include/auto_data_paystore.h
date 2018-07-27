@@ -12,6 +12,7 @@ struct _paystore {
 				int everyday_gifttoken;	//
 				short everyday_saveindex;	//
 				short everyday_count;	//
+				int gift_token;	//
 };
 typedef struct _paystore PayStore;
 

@@ -1785,6 +1785,11 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 		float bp_tech_defense = tech_defense * global.battlepower_defense;
 		float bp_tech_troops = (tech_troops / 4) * hero_getline( pCity, HERO_STATE_FIGHT ) * global.battlepower_troops;
 		pHero->bp_tech = (int)ceil( bp_tech_attack + bp_tech_defense + bp_tech_troops );
+
+		// 女将提供战力
+		float bp_girl_attack = girl_attack_increase * global.battlepower_attack_increase;
+		float bp_girl_defense = girl_defense_increase * global.battlepower_defense_increase;
+		pHero->bp_girl = (int)ceil( bp_girl_attack + bp_girl_defense );
 	}
 	nation_hero_attrupdate( pHero );
 	return 0;

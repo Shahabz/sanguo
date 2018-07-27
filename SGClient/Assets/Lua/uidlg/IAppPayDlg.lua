@@ -134,7 +134,7 @@ function IAppPayDlgShow( recvValue )
 end
 
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
-function IAppPayExec( recvValue )
+function IAppPay_sgbl( recvValue )
 	local info = {}
 	info["waresid"] = tonumber(recvValue.m_productid)-- 商品编号
 	--info["waresname"] = -- 商品名称
@@ -144,5 +144,18 @@ function IAppPayExec( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
-	Application.OpenURL( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata )
+	Application.OpenURL( "http://39.105.38.19/sg/iapppay_sgbl/trade.php?transdata="..transdata )
+end
+
+function IAppPay_fysgz( recvValue )
+	local info = {}
+	info["waresid"] = tonumber(recvValue.m_productid)-- 商品编号
+	--info["waresname"] = -- 商品名称
+	info["cporderid"] = recvValue.m_orderid -- 商户订单号
+	info["price"] = recvValue.m_price -- 支付金额
+	info["appuserid"] = Const.serverid.."#"..Const.actorid -- 用户在商户应用的唯一标识
+	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
+	local transdata_json = json.encode(info)
+	local transdata = WWW.EscapeURL(transdata_json)
+	Application.OpenURL( "http://39.105.38.19/sg/iapppay_fysgz/trade.php?transdata="..transdata )
 end

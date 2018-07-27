@@ -2410,6 +2410,7 @@ int struct_NetS_PayStoreGoods_send( char **pptr, int *psize, SLK_NetS_PayStoreGo
 	LKSET_WORD_SEND( (*pptr), &pValue->m_day, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_nameid, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_icon, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_gift_token, (*psize) );
 	return 0;
 }
 

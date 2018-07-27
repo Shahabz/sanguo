@@ -129,7 +129,6 @@ function BuildingGetDlgShow( recvValue, count )
 		WorldMap.ReturnCity()
 	end
 	BuildingGetDlgOpen();
-	print( recvValue.m_kind..","..recvValue.m_offset..","..count )
 	if count then
 		for i=1, count, 1 do
 			table.insert( m_kind, recvValue.m_kind );

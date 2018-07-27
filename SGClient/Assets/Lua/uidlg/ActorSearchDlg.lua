@@ -201,6 +201,9 @@ end
 
 -- 显示战力页
 function ActorSearchDlgShowBattlepower()
+	if m_recvValue == nil then
+		return
+	end
 	SetTrue( m_uiHeroInfoBtn )
 	SetFalse( m_uiBattleCmpBtn )
 	SetFalse( m_uiHeroGrid )

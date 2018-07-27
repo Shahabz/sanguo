@@ -428,7 +428,7 @@ int paystore_list( int actor_index )
 		store.m_list[store.m_count].m_goodsid = goodsid;
 		store.m_list[store.m_count].m_price = (unsigned int)(g_PayPrice[tier].price[coinindex]);
 		store.m_list[store.m_count].m_token = g_paygoods[goodsid].token;
-
+		store.m_list[store.m_count].m_gift_token = g_paystore[id].gift_token;
 		//// 永久限购
 		//if ( g_paystore[id].limitbuy_count > 0 )
 		//{
@@ -945,6 +945,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 {
 	char szSQL[1024];
 	int token = 0;
+	int gifttoken = 0;
 	int limitbuy_gifttoken = 0;
 	int everyday_gifttoken = 0;
 	int awardgroup = 0;
@@ -972,6 +973,12 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		int id = paystore_getid( goodsid );
 		if ( id > 0 )
 		{
+			// 赠送
+			if ( g_paystore[id].gift_token > 0 )
+			{
+				gifttoken = g_paystore[id].gift_token;
+			}
+
 			// 永久限购
 			if ( g_paystore[id].limitbuy_count > 0 )
 			{
@@ -1028,13 +1035,14 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		token = g_paygoods[goodsid].token;
 	}
 
-	// 最终钻石计算完毕
-	token = token + limitbuy_gifttoken + everyday_gifttoken;
-
 	// 给钻石
 	if ( token > 0 )
 	{
 		actor_change_token( actor_index, token, PATH_PAY, 0 );
+	}
+	if ( gifttoken > 0 )
+	{-
+		actor_change_token( actor_index, gifttoken, PATH_PAY_GIFT, 0 );
 	}
 
 	// 带礼包的
@@ -1045,12 +1053,12 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		if ( pCity )
 		{
 			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
-			pCity->wcard += (PAY_INT_MONTH_DAY - 1);
+			pCity->mcard += (PAY_INT_MONTH_DAY - 1);
 			// 发邮件
 			char v1[64] = { 0 };
 			AwardGetInfo getinfo = { 0 };
 			char award_content[256] = { 0 };
-			sprintf( v1, "%d", pCity->wcard );
+			sprintf( v1, "%d", pCity->mcard );
 			awardgroup_random( PAY_MONTH_AWARDGROUP, 0, &getinfo );
 			awardgroup_makestr( &getinfo, award_content );
 			mail_system( actor_index, pCity->actorid, 5036, 5532, v1, NULL, NULL, award_content, 0 );
@@ -1062,12 +1070,12 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		if ( pCity )
 		{
 			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
-			pCity->mcard += (PAY_INT_WEEK_DAY - 1);
+			pCity->wcard += (PAY_INT_WEEK_DAY - 1);
 			// 发邮件
 			char v1[64] = { 0 };
 			AwardGetInfo getinfo = { 0 };
 			char award_content[256] = { 0 };
-			sprintf( v1, "%d", pCity->mcard );
+			sprintf( v1, "%d", pCity->wcard );
 			awardgroup_random( PAY_WEEK_AWARDGROUP, 0, &getinfo );
 			awardgroup_makestr( &getinfo, award_content );
 			mail_system( actor_index, g_actors[actor_index].actorid, 5037, 5533, v1, NULL, NULL, award_content, 0 );
@@ -1512,7 +1520,7 @@ int paycard_give()
 		}
 		if ( g_city[city_index].wcard > 0 )
 		{
-			sprintf( v1, "%d", g_city[city_index].mcard );
+			sprintf( v1, "%d", g_city[city_index].wcard );
 			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5037, 5533, v1, NULL, NULL, w_award, 1 );
 		}
 	}

@@ -2161,6 +2161,7 @@ function struct_NetS_PayStoreGoods_recv( buffer )
 	recvValue.m_day = buffer:ReadShort();
 	recvValue.m_nameid = buffer:ReadShort();
 	recvValue.m_icon = buffer:ReadShort();
+	recvValue.m_gift_token = buffer:ReadInt();
 	return recvValue;
 end
 
