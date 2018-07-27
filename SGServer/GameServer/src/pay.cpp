@@ -1041,7 +1041,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 		actor_change_token( actor_index, token, PATH_PAY, 0 );
 	}
 	if ( gifttoken > 0 )
-	{-
+	{
 		actor_change_token( actor_index, gifttoken, PATH_PAY_GIFT, 0 );
 	}
 
