@@ -1591,8 +1591,8 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 	else if ( zonetype == MAPZONE_TYPE_SILI )
 	{ // 我在司隶
 		if ( target_zonetype == MAPZONE_TYPE_SILI )
-		{ // 对方在州
-			if ( map_zone_ismovezone( pCity->zone, (char)g_towninfo[townid].zoneid ) == 0 )
+		{ // 对方司隶
+			if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
 			{
 				actor_notify_alert( pCity->actor_index, 2366 );// 需要官员特殊战事权才可对该地宣战
 				return -1;
@@ -1600,14 +1600,14 @@ int armygroup_nation_askcreate( int actor_index, int townid )
 		}
 	}
 
-	if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD )
+	/*if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD )
 	{
 		if ( nation_official_right( pCity->official, NATION_OFFICIAL_RIGHT_FIGHT ) == 0 )
 		{
 			actor_notify_alert( actor_index, 1852 );
 			return -1;
 		}
-	}
+	}*/
 	if ( pCity->level < global.nationfight_actorlevel )
 	{
 		char v1[32] = { 0 };
