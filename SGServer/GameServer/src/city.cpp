@@ -3959,8 +3959,25 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 			return -1;
 		}
 	}
+	int ret = city_move( pCity, move_posx, move_posy );
+	// 跟他有关的战斗取消
+	for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+	{
+		int index = pCity->underfire_groupindex[tmpi];
+		if ( index >= 0 )
+		{
+			char title[64] = { 0 };
+			snprintf( title, 63, "%s%d", TAG_TEXTID, 5049 );
 
-	return city_move( pCity, move_posx, move_posy );
+			char content[128] = { 0 };
+			snprintf( content, 127, "{\"text\":\"%s%d\"}", TAG_TEXTID, 5544 );
+
+			armygroup_mail( index, 1, NULL, MAIL_TYPE_SYSTEM, title, content, NULL, NULL, "" ); // 攻击方
+			armygroup_mail( index, 2, NULL, MAIL_TYPE_SYSTEM, title, content, NULL, NULL, "" ); // 防御方
+			armygroup_delete( index );
+		}
+	}
+	return ret;
 }
 int city_move( City *pCity, short posx, short posy )
 {

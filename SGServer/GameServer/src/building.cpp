@@ -1764,6 +1764,10 @@ int building_sendlist( int actor_index )
 	pValue.m_wnquick = pCity->wnquick;
 	pValue.m_wnquick_ex = pCity->wnquick_ex;
 	pValue.m_levynum = pCity->levynum;
+	if ( pCity->questid[0] >= 80 && city_function_check( pCity, CITY_FUNCTION_WORLD ) == 0 )
+	{
+		city_function_open( pCity, CITY_FUNCTION_WORLD );
+	}
 	pValue.m_function= pCity->function;
 	pValue.m_forgingkind = pCity->forgingkind;
 	pValue.m_forgingsec = pCity->forgingsec;

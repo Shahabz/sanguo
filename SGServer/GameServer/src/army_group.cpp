@@ -926,6 +926,16 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 				// 给城主发送击飞邮件
 				mail_system( pTargetCity->actor_index, pTargetCity->actorid, 5023, 5521, pCity->name, NULL, NULL, "", 0 );
+
+				// 跟他有关的战斗取消
+				for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
+				{
+					int index = pCity->underfire_groupindex[tmpi];
+					if ( index >= 0 && index != group_index )
+					{
+						armygroup_delete( index );
+					}
+				}
 			}
 			// 着火
 			city_setstate( pTargetCity, CITY_STATE_FIRE );
@@ -1366,8 +1376,8 @@ int armygroup_city_sendlist( int actor_index, int unit_index )
 		if ( pCity->nation != pAtkCity->nation && pCity->nation != pDefCity->nation )
 			continue;
 
-		if ( g_armygroup[tmpi].from_id == pTargetCity->actorid )
-		{ // 我看的人属于攻击方
+		if ( g_armygroup[tmpi].from_id == pTargetCity->actorid && g_armygroup[tmpi].from_nation == pCity->nation )
+		{ // 我看的人属于攻击方 并且是我的国家
 
 			City *pDefCity = city_indexptr( g_armygroup[tmpi].to_index );
 			if ( !pDefCity )

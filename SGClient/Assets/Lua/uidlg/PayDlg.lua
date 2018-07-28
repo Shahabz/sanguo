@@ -136,7 +136,11 @@ function PayDlgCreateGoods( info )
 	
 	if info.m_goodsid == 1 then
 		--SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
-		SetText( uiObj.transform:Find("Name"), T(info.m_nameid).." <size=24>"..F(2115,info.m_day).."</size>" )
+		if info.m_day > 0 then
+			SetText( uiObj.transform:Find("Name"), T(info.m_nameid).." <size=24>"..F(2115,info.m_day).."</size>" )
+		else
+			SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
+		end
 		SetText( uiObj.transform:Find("Gift"), T(2116) )
 		
 	elseif info.m_goodsid == 3 then
