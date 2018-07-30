@@ -560,7 +560,7 @@ int activity_sendlist( int actor_index )
 	}
 
 	// ÆßÐÇ°Ý½«
-	endtime = g_actors[actor_index].createtime + 3 * 86400;
+	endtime = g_actors[actor_index].createtime + 5 * 86400;
 	int activity05_call = actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL );
 	if ( (int)time( NULL ) < endtime || (activity05_call == 0 && g_actors[actor_index].act05_xw >= 7) )
 	{

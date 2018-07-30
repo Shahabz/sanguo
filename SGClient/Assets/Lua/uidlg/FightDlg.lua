@@ -47,6 +47,9 @@ local m_playing = 0;
 local m_WaitCallback = nil;
 local m_WaitValue = nil;
 local m_WaitCount = 0;
+
+local m_WaitQuestCallback = nil;
+local m_WaitQuestValue = nil;
 	
 -- 打开界面
 function FightDlgOpen()
@@ -103,17 +106,30 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			if m_WaitCallback then
 				m_WaitCallback( m_WaitValue, m_WaitCount );
+				m_WaitCount = 0;
+			end
+			if m_WaitQuestCallback then
+				m_WaitQuestCallback( m_WaitQuestValue )
+				m_WaitQuestCallback = nil;
+				m_WaitQuestValue = nil;
 			end
 			FightDlgClose();
 			
 		-- 返回副本
-		elseif nControlID == 3 then	
+		elseif nControlID == 3 then
 			if m_WaitCallback then
 				m_WaitCallback( m_WaitValue, m_WaitCount );
+				m_WaitCount = 0;
 				FightDlgClose();
 			else
 				FightDlgClose();
 				StoryDlgShow()
+			end
+			
+			if m_WaitQuestCallback then
+				m_WaitQuestCallback( m_WaitQuestValue )
+				m_WaitQuestCallback = nil;
+				m_WaitQuestValue = nil;
 			end
 
 			
@@ -1060,8 +1076,16 @@ function FightDlgWait( callback, value )
 	m_WaitCount = m_WaitCount + 1;
 end
 
+function FightDlgQuestWait( callback, value )
+	m_WaitQuestCallback = callback;
+	m_WaitQuestValue = value;
+end
+
 function FightDlgExecWait()
 	if m_WaitCallback then
 		m_WaitCallback( m_WaitValue, m_WaitCount );
+	end
+	if m_WaitQuestCallback then
+		m_WaitQuestCallback( m_WaitQuestValue )
 	end
 end

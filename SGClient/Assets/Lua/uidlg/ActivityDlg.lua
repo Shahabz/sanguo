@@ -73,6 +73,8 @@ function ActivityDlgClose()
 	eye.uiManager:Close( "ActivityDlg" );
 	m_recvValue = nil
 	ActivityDlgActivityModHide()
+	m_WaitSelectActivityID = 0;
+	m_SelectActivityID = 0
 end
 
 -- 删除界面

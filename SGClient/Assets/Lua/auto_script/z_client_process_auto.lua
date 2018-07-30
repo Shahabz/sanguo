@@ -983,7 +983,7 @@ function proc_questaward_C( recvValue )
 		QuesAwardBranchDlgShow( recvValue )
 	else
 		if FightDlgIsShow() == true then
-			FightDlgWait( QuestAwardDlgShow, recvValue )
+			FightDlgQuestWait( QuestAwardDlgShow, recvValue )
 		elseif HeroGetDlgIsShow() == true then
 			HeroGetDlgWait( QuestAwardDlgShow, recvValue )
 		elseif NpcTalkIsShow() == true then
