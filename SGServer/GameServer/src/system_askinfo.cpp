@@ -1033,6 +1033,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 修改国家公告
 			nation_notice( actor_index, pstr );
 		}
+		else if ( pvalue[0] == 18 )
+		{ // 建设重置
+			nation_build_reset( actor_index );
+		}
 		break;
 	case ASKINFO_NATIONLOG:
 		nationlog_sendlist( actor_index, pvalue[0] );

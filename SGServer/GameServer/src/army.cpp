@@ -917,11 +917,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 		}
 		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_NATIONHERO )
 		{ // 国家名将
-			if ( pCity->zone != map_zone_getid( info->m_to_posx, info->m_to_posy ) )
-			{// 不在同一区域
-				actor_notify_alert( pCity->actor_index, 1322 );
-				return -1;
-			}
+			//if ( pCity->zone != map_zone_getid( info->m_to_posx, info->m_to_posy ) )
+			//{// 不在同一区域
+			//	actor_notify_alert( pCity->actor_index, 1322 );
+			//	return -1;
+			//}
 			// 是否超过4个名将
 			if ( nation_hero_checklimit( pCity ) == 0 )
 			{

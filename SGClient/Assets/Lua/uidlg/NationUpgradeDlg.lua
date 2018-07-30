@@ -9,7 +9,7 @@ local m_uiCost = nil; --UnityEngine.GameObject
 local m_uiAward = nil; --UnityEngine.GameObject
 local m_uiUpgradeBtn = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
-
+local m_uiResetBtn = nil; --UnityEngine.GameObject
 local m_recvValue = nil
 
 -- 打开界面
@@ -45,6 +45,8 @@ function NationUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
             NationUpgradeDlgClose();
 		elseif nControlID == 1 then
 			NationUpgradeDlgBuild()
+		elseif nControlID == 2 then
+			NationUpgradeDlgReset()
         end
 	end
 end
@@ -61,6 +63,7 @@ function NationUpgradeDlgOnAwake( gameObject )
 	m_uiAward = objs[5];
 	m_uiUpgradeBtn = objs[6];
 	m_uiWarn = objs[7];
+	m_uiResetBtn = objs[8];
 end
 
 -- 界面初始化时调用
@@ -121,7 +124,8 @@ function NationUpgradeDlgShowRecv( recvValue )
 	SetProgress( m_uiExpProgress, m_recvValue.m_exp/g_nation_upgrade[m_recvValue.m_level][1].maxexp )
 	-- 今日次数已经用尽
 	if m_recvValue.m_donate_num >= 11 then
-		SetButtonFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiUpgradeBtn )
+		SetTrue( m_uiResetBtn )
 		SetFalse( m_uiCost )
 		SetFalse( m_uiAward )
 		SetTrue( m_uiWarn )
@@ -130,7 +134,8 @@ function NationUpgradeDlgShowRecv( recvValue )
 		
 	-- 还没开启司隶
 	elseif m_recvValue.m_level == 3 and m_recvValue.m_exp >= g_nation_upgrade[m_recvValue.m_level][1].maxexp and GetPlayer().m_open_zone_luoyang == 0 then
-		SetButtonFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiUpgradeBtn )
+		SetFalse( m_uiResetBtn )
 		SetFalse( m_uiCost )
 		SetFalse( m_uiAward )
 		SetTrue( m_uiWarn )
@@ -138,7 +143,8 @@ function NationUpgradeDlgShowRecv( recvValue )
 		return
 	end
 	
-	SetButtonTrue( m_uiUpgradeBtn )
+	SetTrue( m_uiUpgradeBtn )
+	SetFalse( m_uiResetBtn )
 	SetTrue( m_uiCost )
 	SetTrue( m_uiAward )
 	SetFalse( m_uiWarn )
@@ -210,4 +216,15 @@ function NationUpgradeDlgBuild()
 		return
 	end
 	system_askinfo( ASKINFO_NATION, "", 1 )
+end
+
+-- 重置
+function NationUpgradeDlgReset()
+	MsgBox( F(3371,global.nation_update_reset_token), function()
+		if GetPlayer().m_token < global.nation_update_reset_token then
+			JumpToken()
+			return
+		end
+		system_askinfo( ASKINFO_NATION, "", 18 ) 
+	end )
 end

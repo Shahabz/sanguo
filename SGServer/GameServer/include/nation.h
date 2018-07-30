@@ -119,6 +119,7 @@ int nation_sendbase( int actor_index );
 
 // 国家建设升级
 int nation_build( int actor_index );
+int nation_build_reset( int actor_index );
 
 // 国家爵位晋升
 int nation_place_upgrade( int actor_index );

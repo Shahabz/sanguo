@@ -44,7 +44,6 @@ function NationDlgClose()
 	DialogFrameModClose( m_DialogFrameMod );
 	m_DialogFrameMod = nil;
 	eye.uiManager:Close( "NationDlg" );
-	m_recvValue = nil
 	m_curQuestKind = 1;
 end
 

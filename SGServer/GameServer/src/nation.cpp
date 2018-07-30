@@ -584,7 +584,7 @@ int nation_exp( char nation, int exp )
 		// 可以升级
 		if ( nation_upgrade( nation ) < 0 )
 			break;
-		pNation->exp -= g_nation_upgrade[pNation->level].config[1].maxexp;
+		pNation->exp -= g_nation_upgrade[curlevel].config[1].maxexp;
 		isup = 1;
 	}
 
@@ -731,6 +731,32 @@ int nation_build( int actor_index )
 	return 0;
 }
 
+// 国家建设升级重置
+int nation_build_reset( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	Nation *pNation = nation_getptr( pCity->nation );
+	if ( !pNation )
+		return -1;
+	if ( pNation->level <= 0 || pNation->level >= g_nation_upgrade_maxnum - 1 )
+		return -1;
+
+	int donatenum = actor_get_today_char_times( actor_index, TODAY_CHAR_NATION_DONATE );
+	if ( donatenum < g_nation_upgrade[pNation->level].maxnum )
+		return -1;
+	
+	if ( actor_change_token( actor_index, -global.nation_update_reset_token, PATH_NATIONUPGRADE, 0 ) < 0 )
+	{
+		return -1;
+	}
+	actor_set_today_char_times( actor_index, TODAY_CHAR_NATION_DONATE, 0 );
+	nation_sendbase( actor_index );
+	return 0;
+}
+
 // 国家爵位晋升
 int nation_place_upgrade( int actor_index )
 {
@@ -741,7 +767,8 @@ int nation_place_upgrade( int actor_index )
 	if ( pCity->place < 0 || pCity->place >= global.nation_place_max || pCity->place >= g_nation_place_maxnum )
 		return -1;
 
-	NationPlace *config = &g_nation_place[pCity->place];
+	int nextplace = pCity->place + 1;
+	NationPlace *config = &g_nation_place[nextplace];
 	if ( !config )
 		return -1;
 	// 检查
@@ -823,7 +850,7 @@ int nation_town_sendlist( int actor_index )
 			continue;
 		if ( g_map_town[townid].zoneid != pCity->zone )
 			continue;
-		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_ZHFD || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
+		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_GJFD || g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_LUOYANG )
 			continue;
 
 		map_town_info_makestruct( &pValue.m_list[pValue.m_count].m_info, &g_map_town[townid], pCity->actorid, 0 );

@@ -729,7 +729,7 @@ int nation_hero_rob( City *pAttackCity, City *pCity, char *json )
 		}
 		if ( pCity->actor_index >= 0 )
 		{
-			hero_sendinfo( pCity->actor_index, hero_getptr( pCity->actor_index, pCity->nation_hero[offset].kind ) );
+			nation_hero_cityinfo( pCity->actor_index, kind );
 		}
 	}
 

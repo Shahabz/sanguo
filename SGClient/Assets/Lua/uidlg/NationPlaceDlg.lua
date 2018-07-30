@@ -98,7 +98,7 @@ function NationPlaceDlgRecv()
 	local nextplace = GetPlayer().m_place+1
 	SetRichText( m_uiPlaceName, F(1773, PlaceRichText( place ), PlaceName( place )) )
 	-- 满级
-	if nextplace >= global.nation_place_max then
+	if place >= global.nation_place_max then
 		SetRichText( m_uiNextPlaceName, F(1772, T(1757), "") )
 		SetText( m_uiPlaceDesc, PlaceDesc(place) )
 		SetRichText( m_uiPlaceAttr, F( 1776, g_nation_place[place].value ) )
