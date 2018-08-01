@@ -958,6 +958,14 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 48 );
 
+	// 全局数据
+	if ( world_data_init() < 0 )
+	{
+		printf_msg( "world_data_init Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
 	// 天气
 	weather_load();
 
@@ -1132,14 +1140,6 @@ int process_init( int max_connection )
 	if ( paybag_load() < 0 )
 	{
 		printf_msg( "paybag_load Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-
-	// 全局数据
-	if ( world_data_init() < 0 )
-	{
-		printf_msg( "TalkCacheLoad Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

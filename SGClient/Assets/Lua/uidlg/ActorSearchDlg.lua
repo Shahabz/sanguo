@@ -213,46 +213,46 @@ function ActorSearchDlgShowBattlepower()
 	if m_recvValue.m_actorid == GetPlayer().m_actorid then
 		local offset = 0;
 		-- 武将
-		if m_recvValue.m_bp_hero > 0 then
+		--if m_recvValue.m_bp_hero > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2072, m_recvValue.m_bp_hero )
 			offset = offset + 1;
-		end
+		--end
 		
 		-- 装备
-		if m_recvValue.m_bp_equip > 0 then
+		--if m_recvValue.m_bp_equip > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2073, m_recvValue.m_bp_equip )
 			offset = offset + 1;
-		end
+		--end
 		
 		-- 科技
-		if m_recvValue.m_bp_tech > 0 then
+		--if m_recvValue.m_bp_tech > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2074, m_recvValue.m_bp_tech )
 			offset = offset + 1;
-		end
+		--end
 		
 		-- 国器
-		if m_recvValue.m_bp_nequip > 0 then
+		--if m_recvValue.m_bp_nequip > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2075, m_recvValue.m_bp_nequip )
 			offset = offset + 1;
-		end
+		--end
 		
 		-- 爵位
-		if m_recvValue.m_bp_place > 0 then
+		--if m_recvValue.m_bp_place > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2076, m_recvValue.m_bp_place )
 			offset = offset + 1;
-		end
+		--end
 		
 		-- 女将
-		if m_recvValue.m_bp_girl > 0 then
+		--if m_recvValue.m_bp_girl > 0 then
 			local uiObj = m_uiBattlepowerGrid.transform:GetChild( offset )
 			ActorSearchDlgSetMyBattlepower( uiObj, 2077, m_recvValue.m_bp_girl )
 			offset = offset + 1;
-		end
+		--end
 		
 		for i=0, m_uiBattlepowerGrid.transform.childCount-1, 1 do
 			if i < offset then

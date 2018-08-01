@@ -1200,7 +1200,7 @@ void army_delete( int army_index )
 		// 删除出征队列
 		city_battlequeue_del( army_getcityptr( army_index ), army_index );
 
-		// 邮件通知
+		// 采集
 		if ( g_army[army_index].action == ARMY_ACTION_GATHER )
 		{
 			// 这是为了立即召回的情况
@@ -1213,7 +1213,7 @@ void army_delete( int army_index )
 				}
 			}
 
-			army_mail_gather( army_index );
+			//army_mail_gather( army_index );
 		}
 		else if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )
 		{ // 检查集结是否达到解散条件
@@ -1695,7 +1695,7 @@ int army_carry_additem( int army_index, int itemkind, int itemnum )
 }
 
 // 采集时间
-int army_gather_time( int army_index )
+int  army_gather_time( int army_index )
 {
 	if ( army_index < 0 || army_index >= g_army_maxcount )
 		return 0;
@@ -1728,15 +1728,35 @@ int army_gather_time( int army_index )
 
 	// 每秒采集量
 	float sec_gather = (config->num / (float)config->sec);
+	
+	// 每秒采集量增益之后的
+	sec_gather = sec_gather * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]);
 
 	// 采集时长
-	g_army[army_index].stateduration = (int)ceil( res_total / (sec_gather* (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1])) );
-	if ( g_army[army_index].stateduration > global.hero_gather_duration[color] )
+	g_army[army_index].stateduration = (int)ceil( res_total / sec_gather );
+	//if ( g_army[army_index].stateduration > global.hero_gather_duration[color] )
+	//{
+	//	g_army[army_index].stateduration = global.hero_gather_duration[color];
+	//}
+	return 0;
+}
+
+int army_gather_time_reset( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+
+	for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
 	{
-		g_army[army_index].stateduration = global.hero_gather_duration[color];
+		int army_index = pCity->battle_armyindex[tmpi];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue; 
+		army_gather_time( army_index );
+		city_battlequeue_sendupdate( army_index );
 	}
 	return 0;
 }
+
 
 // 部队采集量计算
 int army_gather_calc( int army_index )
@@ -1758,10 +1778,20 @@ int army_gather_calc( int army_index )
 	if ( !pCity )
 		return -1;
 
-	// 当前已经采集的资源数量=每秒采集量*武将采集时间*(1 + 科技加成%)*(1＋活动加成%)
-	int gathernum_buff = (int)round( (config->num / (float)config->sec) * g_army[army_index].gatherbuff * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]) );
-	int gathernum = gathernum_buff + ( int )round( (config->num / (float)config->sec) * (g_army[army_index].statetime - g_army[army_index].gatherbuff) * (1.0f + pCity->attr.gather_per[0]) );
+	// 每秒采集量
+	float sec_gather = (config->num / (float)config->sec);
 
+	// 每秒采集量增益之后的
+	sec_gather = sec_gather * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]);
+
+	// 当前已经采集的资源数量=每秒采集量*武将采集时间*(1 + 科技加成%)*(1＋活动加成%)
+	//int gathernum_buff = (int)round( sec_gather * g_army[army_index].gatherbuff );
+	//int gathernum = gathernum_buff + (int)round( sec_gather * (g_army[army_index].statetime - g_army[army_index].gatherbuff) ) );
+	int gathernum = (int)round( sec_gather * g_army[army_index].statetime );
+	if ( gathernum >= config->num )
+	{
+		gathernum = config->num;
+	}
 	// 部队采集量
 	switch ( config->type )
 	{
@@ -1804,7 +1834,8 @@ int army_gather_calc( int army_index )
 	{ // 结算完毕，资源点关联部队取消
 		map_res_setarmy( index, -1 );
 	}
-
+	// 邮件
+	army_mail_gather( army_index );
 	return 0;
 }
 
@@ -1832,7 +1863,7 @@ int army_gather( int army_index )
 	// 已经采集时长
 	g_army[army_index].appdata = g_map_res[index].kind;
 	g_army[army_index].statetime += 1;
-	g_army[army_index].gatherbuff += 1;
+	//g_army[army_index].gatherbuff += 1;
 	if ( g_army[army_index].statetime >= g_army[army_index].stateduration )
 	{// 采集完毕
 		army_gather_calc( army_index );

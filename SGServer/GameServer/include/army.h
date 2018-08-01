@@ -103,6 +103,7 @@ int army_carry_additem( int army_index, int itemkind, int itemnum );
 
 // 采集时间
 int army_gather_time( int army_index );
+int army_gather_time_reset( City *pCity );
 
 // 部队采集量计算
 int army_gather_calc( int army_index );

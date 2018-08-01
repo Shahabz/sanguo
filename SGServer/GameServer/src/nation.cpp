@@ -223,6 +223,10 @@ int nation_load()
 	{
 		map_town_attack_checkstart();
 	}
+	if ( g_open_zone_sili == 1 && g_nation_official_statetime <= 0 )
+	{
+		nation_official_open();
+	}
 	return 0;
 }
 

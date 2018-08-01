@@ -190,6 +190,9 @@ int worldquest_setvalue( int questid, int value )
 			nation_people_capital_set( 3, 0 );
 
 			map_town_attack_checkstart();
+
+			// 开放官员系统
+			nation_official_open();
 		}
 		else if ( questid == WORLDQUEST_WORLDBOSS2 )
 		{ // 击败董卓-开启血战皇城
@@ -211,8 +214,6 @@ int worldquest_setvalue( int questid, int value )
 
 		if ( questid == WORLDQUEST_ID6 )
 		{// 攻克治所
-			// 开放官员系统
-			nation_official_open();
 			// 开启天气系统
 			weather_open();
 			// 更新

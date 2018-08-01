@@ -16,6 +16,7 @@
 #include "equip.h"
 #include "quest.h"
 #include "hero.h"
+#include "army.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -269,12 +270,16 @@ int city_tech_get( int actor_index )
 	// 计算临时属性
 	city_attr_reset( pCity );
 
-	// 重算武将属性
-	if ( kind > 20 )
-	{
+	if ( kind == 12 )
+	{ // 采集加成
+		army_gather_time_reset( pCity );
+	}
+	else if ( kind > 20 )
+	{ // 重算武将属性
 		hero_attr_calc_all( pCity, 1 );
 		city_battlepower_tech_calc( pCity );
 	}
+	
 
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_CITY_TECH, kind, 0, pCity->techlevel[kind] );

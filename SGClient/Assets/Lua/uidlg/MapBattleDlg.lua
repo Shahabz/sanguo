@@ -356,18 +356,18 @@ function MapBattleDlgHero( index, pHero )
 	SetText( uiSort, index );
 	
 	local only = GetHero():IsNationHeroOnly( pHero.m_kind )
-		if only == true and pHero.m_god == 1 then
-			SetTrue( uiType )
-			SetText( uiType, T(2359) )
-		elseif only == true then
-			SetTrue( uiType )
-			SetText( uiType, T(2357) )
-		elseif pHero.m_god == 1 then
-			SetTrue( uiType )
-			SetText( uiType, T(2358) )
-		else
-			SetFalse( uiType )
-		end
+	if only == true and pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2359) )
+	elseif only == true then
+		SetTrue( uiType )
+		SetText( uiType, T(2357) )
+	elseif pHero.m_god == 1 then
+		SetTrue( uiType )
+		SetText( uiType, T(2358) )
+	else
+		SetFalse( uiType )
+	end
 	
 	-- 兵力
 	SetProgress( uiSoldiersProgress, pHero.m_soldiers/pHero.m_troops );
