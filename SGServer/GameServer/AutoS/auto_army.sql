@@ -50,5 +50,6 @@ CREATE TABLE `army` (
   `group_pos` smallint(6) NOT NULL DEFAULT '0' COMMENT '编队队伍中位置',
   `group_id` int(11) NOT NULL DEFAULT '0' COMMENT '编队id',
   `damage` int(11) NOT NULL DEFAULT '0' COMMENT '伤害',
+  `other` int(11) NOT NULL DEFAULT '0' COMMENT '鍏跺畠',
   PRIMARY KEY (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

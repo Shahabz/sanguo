@@ -31,6 +31,7 @@
 #include "map_zone.h"
 #include "mail.h"
 #include "city.h"
+#include "city_attr.h"
 #include "chat.h"
 #include "army_group.h"
 #include "rank.h"
@@ -806,6 +807,7 @@ int nation_place_upgrade( int actor_index )
 	}
 	pCity->place += 1;
 	hero_attr_calc_all( pCity, 1 );
+	city_battlepower_place_calc( pCity );
 
 	int pValue[2] = { 0 };
 	pValue[0] = 3;

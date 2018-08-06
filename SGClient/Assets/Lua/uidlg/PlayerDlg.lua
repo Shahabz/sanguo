@@ -51,7 +51,7 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 			SettingDlgShow();
 		-- 反馈
 		elseif nControlID == 12 then
-			pop( T(579) )
+			--pop( T(579) )
 			SDK.gmbug()
 			
 		-- vip

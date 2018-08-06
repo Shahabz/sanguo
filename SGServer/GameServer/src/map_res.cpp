@@ -324,7 +324,13 @@ int map_res_sendinfo( int actor_index, int unit_index )
 		City *pCity = army_getcityptr( army_index );
 		if ( pCity )
 		{
-			pValue.m_spacenum = g_map_res[unit->index].num - (int)round( (config->num / (float)config->sec) * g_army[army_index].statetime * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]) );
+			// 每秒采集量
+			float sec_gather = (config->num / (float)config->sec);
+
+			// 每秒采集量增益之后的
+			sec_gather = sec_gather * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]);
+
+			pValue.m_spacenum = g_map_res[unit->index].num - (int)round( g_army[army_index].statetime * sec_gather );
 			pValue.m_actorlevel = pCity->level;
 			pValue.m_herokind = g_army[army_index].herokind[0];
 			int hero_index = city_hero_getindex( pCity->index, g_army[army_index].herokind[0] );

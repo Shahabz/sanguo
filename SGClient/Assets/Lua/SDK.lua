@@ -98,12 +98,13 @@ end
 
 -- 问题提交
 function SDK.gmbug()
-	if Const.platid == 13 or Const.platid == 14 then -- sgbl-ios
+	BugReportDlgShow()
+	--[[if Const.platid == 13 or Const.platid == 14 then -- sgbl-ios
 		ChannelSDK.Instance:gmbug( '' );
 	elseif Const.platid == 15 or Const.platid == 16 then -- fysgz-ios
 		ChannelSDK.Instance:gmbug( '' );
 	else
-	end
+	end--]]
 end
 
 -- 用户中心

@@ -1146,11 +1146,19 @@ int activity_11_get( int actor_index )
 
 	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 )
 	{ // ÎçÑç
+		if ( actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 ) > 0 )
+		{
+			return -1;
+		}
 		awardgroup_withindex( actor_index, 163, -1, PATH_ACTIVITY, NULL );
 		actor_add_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 );
 	}
 	else if ( nowtime->tm_hour >= 18 && nowtime->tm_hour <= 20 )
 	{ // ÍíÑç
+		if ( actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 ) > 0 )
+		{
+			return -1;
+		}
 		awardgroup_withindex( actor_index, 163, -1, PATH_ACTIVITY, NULL );
 		actor_add_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 );
 	}

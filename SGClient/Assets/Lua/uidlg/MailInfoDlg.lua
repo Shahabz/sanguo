@@ -394,7 +394,7 @@ function MailInfoDlgByRecvValue( recvValue )
 		-- 采集详细内容 采集时间:{0}\n采集获得:{1}\nLv.{2} {3} 经验+{4}
 		local gatherContent = "";
 		if buff > 0 then
-			gatherContent = F( 5510, secnum( time ), ResName( restype ).."x"..resnum.."("..T(1215)..")", herolevel, HeroName( herokind ), heroexp );
+			gatherContent = F( 5510, secnum( time ), ResName( restype ).."x"..resnum.."("..T(3241)..buff..")", herolevel, HeroName( herokind ), heroexp );
 		else
 			gatherContent = F( 5510, secnum( time ), ResName( restype ).."x"..resnum, herolevel, HeroName( herokind ), heroexp );
 		end

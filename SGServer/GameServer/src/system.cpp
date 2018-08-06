@@ -320,6 +320,16 @@ int weather_attr_value()
 		return 0;
 	return g_weather[g_game_day].config[g_game_weather].value;
 }
+int weather_attr_checkgather( char type )
+{
+	if ( g_game_day <= 0 || g_game_day >= g_weather_maxnum )
+		return 0;
+	if ( g_game_weather < 0 || g_game_weather >= g_weather[g_game_day].maxnum )
+		return 0;
+	if ( g_weather[g_game_day].config[g_game_weather].ability == type )
+		return 1;
+	return 0;
+}
 
 /* 自定义随机 */
 //extern int fight_debug( const char *format, ... );

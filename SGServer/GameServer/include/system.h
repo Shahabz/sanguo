@@ -29,6 +29,7 @@ void weather_logic();
 int weather_change( char day, char weather );
 int weather_attr_ability();
 int weather_attr_value();
+int weather_attr_checkgather( char type );
 
 // —”≥Ÿ÷¥––
 #define DELAYEXEC_MAX	2048

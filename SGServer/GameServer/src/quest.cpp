@@ -523,6 +523,36 @@ int quest_check( int actor_index, int questid, int *value )
 				}
 			}
 		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_NEQUIP_FORGING )
+		{ // 打造国器
+			if ( value )
+				*value = 0;
+			int index = questinfo->datakind - 1;
+			if ( index >= 0 && index < 6 )
+			{
+				if ( pCity->neq_sec[index] > 0 || pCity->neq_lv[index] > 0 )
+				{
+					if ( value )
+						*value = 1;
+					return 1;
+				}
+			}
+		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_NEQUIP_LEVELNUM )
+		{ // 升级国器
+			if ( value )
+				*value = 0;
+			int index = questinfo->datakind - 1;
+			for ( int tmpi = 0; tmpi < 6; tmpi++ )
+			{
+				if ( pCity->neq_sec[index] > 0 || pCity->neq_lv[index] > 0 )
+				{
+					if ( value )
+						*value = 1;
+					return 1;
+				}
+			}
+		}
 		else
 		{
 			for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )

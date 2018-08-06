@@ -260,6 +260,8 @@ void city_attr_sendinfo( int actor_index )
 	pValue.m_buildingsec_per = (short)(pCity->attr.buildingsec_per * 100);
 	pValue.m_materialsec_per[0] = (short)(pCity->attr.materialsec_per[0] * 100);
 	pValue.m_materialsec_per[1] = (short)(pCity->attr.materialsec_per[1] * 100);
+	pValue.m_gather_per[0] = (short)(pCity->attr.gather_per[0] * 100);
+	pValue.m_gather_per[1] = (short)(pCity->attr.gather_per[1] * 100);
 	pValue.m_movespeed_per[0] = (short)(pCity->attr.movespeed_per[0] * 100);
 	pValue.m_movespeed_per[1] = (short)(pCity->attr.movespeed_per[1] * 100);
 	pValue.m_movespeed_per[2] = (short)(pCity->attr.movespeed_per[2] * 100);

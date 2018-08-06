@@ -309,15 +309,16 @@ function MapResDlgRecv( infoRecvValue )
 		
 		-- 采集速度/秒
 		local sec_gather = m_infoRecvValue.m_totalnum/m_infoRecvValue.m_totalsec;
-		
+		sec_gather = sec_gather*(1.0 + GetPlayer().m_attr.m_gather_per[1]/100) * (1.0 + GetPlayer().m_attr.m_gather_per[2]/100)
+
 		-- 采集速度/小时
 		local text1 = m_uiResInfo.transform:Find("Desc").transform:GetChild(1);
 		SetTrue( text1 )
 		SetText( text1, F( 988, math.floor(sec_gather * 3600) ) )
 		
 		--武将采集时长
-		local gatherlong = m_infoRecvValue.m_totalsec;
-		local herocolor_time = {}
+		local gatherlong = math.floor(m_infoRecvValue.m_totalnum/sec_gather);
+		--[[local herocolor_time = {}
 		herocolor_time[0] = global.hero_gather_duration0
 		herocolor_time[1] = global.hero_gather_duration1
 		herocolor_time[2] = global.hero_gather_duration2
@@ -328,7 +329,7 @@ function MapResDlgRecv( infoRecvValue )
 		-- 采集总时长不超过武将能采集的时长
 		if herocolor_time[m_infoRecvValue.m_herocolor] > gatherlong then
 			gatherlong = herocolor_time[m_infoRecvValue.m_herocolor];
-		end
+		end--]]
 		
 		local text2 = m_uiResInfo.transform:Find("Desc").transform:GetChild(2);
 		SetTrue( text2 )
@@ -340,7 +341,7 @@ function MapResDlgRecv( infoRecvValue )
 			gather_base = m_infoRecvValue.m_spacenum;
 		end
 		
-		local gather_total = math.round(gather_base*(1.0 + GetPlayer().m_attr.m_gather_per[1]/100) * (1.0 + GetPlayer().m_attr.m_gather_per[2]/100))
+		--[[local gather_total = math.round(gather_base*(1.0 + GetPlayer().m_attr.m_gather_per[1]/100) * (1.0 + GetPlayer().m_attr.m_gather_per[2]/100))
 		if gather_total > m_infoRecvValue.m_spacenum then
 			gather_total = m_infoRecvValue.m_spacenum;
 		end
@@ -351,7 +352,10 @@ function MapResDlgRecv( infoRecvValue )
 			SetText( text3, F( 990, gather_base ).."("..T(1002).."+"..knum(other)..")" )
 		else
 			SetText( text3, F( 990, gather_base ) )
-		end
+		end--]]
+		
+		local text3 = m_uiResInfo.transform:Find("Desc").transform:GetChild(3);
+		SetText( text3, F( 990, gather_base ) )
 		
 		SetFalse( m_uiBattleButton );
 		SetTrue( m_uiGatherButton )

@@ -57,7 +57,7 @@ end
 -- 参数{c="serverinfo",m="getlist"}
 function HttpRequest.Get( paramString, callBack )
 	local url = Global.GetValue("CLIENTACCESS_URL");
-	local sign = Utils.md5( paramString..SECRET_KEY );
+	local sign = Utils.md5( string.lower(paramString..SECRET_KEY) );
 	url = url.."api.php?"..paramString.."&sign="..sign;
 	print( url )
 	-- 启动协程

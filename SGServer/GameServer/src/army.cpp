@@ -1785,30 +1785,41 @@ int army_gather_calc( int army_index )
 	sec_gather = sec_gather * (1.0f + pCity->attr.gather_per[0]) * (1.0f + pCity->attr.gather_per[1]);
 
 	// 当前已经采集的资源数量=每秒采集量*武将采集时间*(1 + 科技加成%)*(1＋活动加成%)
-	//int gathernum_buff = (int)round( sec_gather * g_army[army_index].gatherbuff );
-	//int gathernum = gathernum_buff + (int)round( sec_gather * (g_army[army_index].statetime - g_army[army_index].gatherbuff) ) );
 	int gathernum = (int)round( sec_gather * g_army[army_index].statetime );
 	if ( gathernum >= config->num )
 	{
 		gathernum = config->num;
 	}
+
+	// 天气系统下的加成
+	int gathernum_buff = 0;
+	if ( g_army[army_index].gatherbuff > 0 )
+	{
+		gathernum_buff = (int)round( sec_gather * g_army[army_index].gatherbuff );
+	}
+	g_army[army_index].other = gathernum_buff;
+	if ( g_army[army_index].other > gathernum )
+	{
+		g_army[army_index].other = gathernum;
+	}
+
 	// 部队采集量
 	switch ( config->type )
 	{
 	case 1:
-		g_army[army_index].silver = gathernum;
+		g_army[army_index].silver = gathernum + g_army[army_index].other;
 		break;
 	case 2:
-		g_army[army_index].wood = gathernum;
+		g_army[army_index].wood = gathernum + g_army[army_index].other;
 		break;
 	case 3:
-		g_army[army_index].food = gathernum;
+		g_army[army_index].food = gathernum + g_army[army_index].other;
 		break;
 	case 4:
-		g_army[army_index].iron = gathernum;
+		g_army[army_index].iron = gathernum + g_army[army_index].other;
 		break;
 	case 5:
-		g_army[army_index].token = gathernum;
+		g_army[army_index].token = gathernum + g_army[army_index].other;
 	default:
 		break;
 	}
@@ -1863,7 +1874,13 @@ int army_gather( int army_index )
 	// 已经采集时长
 	g_army[army_index].appdata = g_map_res[index].kind;
 	g_army[army_index].statetime += 1;
-	//g_army[army_index].gatherbuff += 1;
+
+	// 天气系统下采集时长
+	if ( weather_attr_checkgather( config->type ) )
+	{
+		g_army[army_index].gatherbuff += 1;
+	}
+
 	if ( g_army[army_index].statetime >= g_army[army_index].stateduration )
 	{// 采集完毕
 		army_gather_calc( army_index );
