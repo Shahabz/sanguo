@@ -598,6 +598,7 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 				if ( add > has )
 					add = has;
 				pHero->soldiers += add;
+				city_changesoldiers( pCity->index, config->corps, -add, PATH_HERO_UP );
 			}
 		}
 	}

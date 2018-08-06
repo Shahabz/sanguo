@@ -265,6 +265,7 @@ int girl_allot( int actor_index, short herokind, short girlkind )
 	pGirl->sflag = 0;
 	hero_attr_calc( pCity, pHero );
 	city_battlepower_hero_calc( pCity );
+	city_battlepower_girl_calc( pCity );
 	hero_sendinfo( pCity->actor_index, pHero );
 	girl_info( pCity, pGirl );
 	return 0;
@@ -287,6 +288,7 @@ int girl_unallot( int actor_index, short kind )
 	pGirl->herokind = 0;
 	hero_attr_calc( pCity, pHero );
 	city_battlepower_hero_calc( pCity );
+	city_battlepower_girl_calc( pCity );
 	hero_sendinfo( pCity->actor_index, pHero );
 	girl_info( pCity, pGirl );
 	return 0;
@@ -322,6 +324,7 @@ int girl_colorup( int actor_index, short kind )
 		{
 			hero_attr_calc( pCity, pHero );
 			city_battlepower_hero_calc( pCity );
+			city_battlepower_girl_calc( pCity );
 			hero_sendinfo( pCity->actor_index, pHero );
 		}
 	}

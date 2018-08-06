@@ -1943,12 +1943,13 @@ int city_guard_subsoldiers( int city_index, int offset, int sub )
 	if ( g_city[city_index].guard[offset].soldiers <= 0 )
 	{ // ËÀÁË
 		memset( &g_city[city_index].guard[offset], 0, sizeof( CityGuard ) );
-		if ( offset < CITY_GUARD_MAX - 1 )
-		{
-			memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1 - offset) );
-			memset( &g_city[city_index].guard[CITY_GUARD_MAX-1], 0, sizeof( CityGuard ) );
-			g_city[city_index].guardnum -= 1;
-		}
+		g_city[city_index].guardnum -= 1;
+		//if ( offset < CITY_GUARD_MAX - 1 )
+		//{
+		//	memmove( &g_city[city_index].guard[offset], &g_city[city_index].guard[offset + 1], sizeof( CityGuard )*(CITY_GUARD_MAX - 1 - offset) );
+		//	memset( &g_city[city_index].guard[CITY_GUARD_MAX-1], 0, sizeof( CityGuard ) );
+		//	g_city[city_index].guardnum -= 1;
+		//}
 	}
 	return 0;
 }

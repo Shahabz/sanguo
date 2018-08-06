@@ -1261,6 +1261,11 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 			nationlog_add( pTown->nation, NATION_LOG_TYPE_DEFENSE_LOSE, pTown->townid, attackName, attackNation );
 		}
 
+		if ( pTown->own_city_index >= 0 && pTown->own_city_index < g_city_maxcount )
+		{
+			g_city[pTown->own_city_index].own_townid = 0;
+		}
+
 		pTown->nation = attackNation;
 		pTown->protect_sec = g_towninfo[townid].protect_maxsec;
 		pTown->produce_num = 0;

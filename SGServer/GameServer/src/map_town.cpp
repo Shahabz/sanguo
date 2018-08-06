@@ -452,6 +452,14 @@ int map_town_ask_owner( int actor_index, int townid )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	if ( pCity->own_townid > 0 && pCity->own_townid < g_map_town_maxcount )
+	{
+		if ( g_map_town[pCity->own_townid].own_actorid != pCity->actorid )
+		{
+			pCity->own_townid = 0;
+		}
+	}
+
 	if ( pCity->own_townid > 0 )
 	{
 		actor_notify_alert( actor_index, 1353 );

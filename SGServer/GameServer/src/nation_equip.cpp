@@ -30,6 +30,7 @@
 #include "map_town.h"
 #include "mail.h"
 #include "city.h"
+#include "city_attr.h"
 #include "nation.h"
 #include "nation_equip.h"
 #include "activity_04.h"
@@ -90,6 +91,7 @@ int nation_equip_open( int actor_index, int kind )
 
 	// 七日活动
 	activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE34, 1 );
+	city_battlepower_nequip_calc( pCity );
 	return 0;
 }
 
@@ -191,7 +193,7 @@ int nation_equip_upgrade( int actor_index, int kind )
 	}
 
 	nation_equip_sendinfo( actor_index, kind );
-
+	city_battlepower_nequip_calc( pCity );
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_NEQUIP_LEVELNUM, 0, 0, 1 );
 	return 0;
@@ -229,6 +231,7 @@ int nation_equip_remake( int actor_index, int kind )
 	city_changesilver( pCity->index, -g_nequip_remake[kind].config[star].silver, PATH_NATIONEQUIP );
 	pCity->neq_sec[index] = g_nequip_remake[kind].config[star].sec;
 	nation_equip_sendinfo( actor_index, kind );
+	city_battlepower_nequip_calc( pCity );
 	return 0;
 }
 

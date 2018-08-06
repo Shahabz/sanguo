@@ -338,19 +338,32 @@ function HeroVisitDlgLow()
 		return
 	end
 	
-	local token = global.hero_visit_low_token
-	MsgBox(F(1978,token,1),function()
-		if GetPlayer().m_token < token then
-			JumpToken();
-		else
-			i_TimesNum = i_TimesNum -1 ;
-			if i_TimesNum == 0 then
-				i_TimesNum = 10 ;
+	if i_itemTimes >= global.hero_visit_low_itemnum then
+		MsgBox(F(3242,global.hero_visit_low_itemnum,item_getname(484)),function()
+
+				i_TimesNum = i_TimesNum -1 ;
+				if i_TimesNum == 0 then
+					i_TimesNum = 10 ;
+				end
+				SetText(m_uiTimesText,F(1963,i_TimesNum));
+				system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
+
+		end);
+	else
+		local token = global.hero_visit_low_token
+		MsgBox(F(1978,token,1),function()
+			if GetPlayer().m_token < token then
+				JumpToken();
+			else
+				i_TimesNum = i_TimesNum -1 ;
+				if i_TimesNum == 0 then
+					i_TimesNum = 10 ;
+				end
+				SetText(m_uiTimesText,F(1963,i_TimesNum));
+				system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
 			end
-			SetText(m_uiTimesText,F(1963,i_TimesNum));
-			system_askinfo( ASKINFO_HERO_VISIT, "", 1, 0 );		
-		end
-	end);
+		end);
+	end
 end
 
 -- 良将寻访10连
@@ -380,21 +393,35 @@ end
 -- 神将寻访
 function HeroVisitDlgHigh()
 	-- 关键条件判断
-	local token = global.hero_visit_high_token
-	MsgBox(F(1979,token,1),function()
-		if GetPlayer().m_token < token then
-			JumpToken();
-		else
-			i_TimesNum = i_TimesNum -1 ;
-			if i_TimesNum == 0 then
-				i_TimesNum = 10 ;
-			end
-			SetText(m_uiTimesText,F(1964,i_TimesNum));
+	if i_itemTimes >= global.hero_visit_high_itemnum then
+		MsgBox(F(3242,global.hero_visit_high_itemnum,item_getname(485)),function()
 
-			-- 发送信息
-			system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );
-		end
-	 end);
+				i_TimesNum = i_TimesNum -1 ;
+				if i_TimesNum == 0 then
+					i_TimesNum = 10 ;
+				end
+				SetText(m_uiTimesText,F(1964,i_TimesNum));
+				system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );	
+
+		end);
+	else
+	
+		local token = global.hero_visit_high_token
+			MsgBox(F(1979,token,1),function()
+				if GetPlayer().m_token < token then
+					JumpToken();
+				else
+					i_TimesNum = i_TimesNum -1 ;
+					if i_TimesNum == 0 then
+						i_TimesNum = 10 ;
+					end
+					SetText(m_uiTimesText,F(1964,i_TimesNum));
+
+					-- 发送信息
+					system_askinfo( ASKINFO_HERO_VISIT, "", 2, 0 );
+				end
+		end);
+	end
 end
 
 -- 神将寻访10连

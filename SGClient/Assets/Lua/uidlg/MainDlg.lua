@@ -1137,10 +1137,12 @@ function MainDlgSetButtons( openoffset )
 	end
 	
 	-- 重新创角
-	local offset, root = MainDlgGetEmptyButton();
-	if root ~= nil then
-		SetParent( ButtonTable.m_uiButtonRestart, m_uiButtonBack[offset] );
-		m_hasButton[offset] = true;
+	if Const.platid <= 11 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( ButtonTable.m_uiButtonRestart, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
 	end
 	
 	-- 聊天
@@ -1150,7 +1152,7 @@ function MainDlgSetButtons( openoffset )
 		end
 	end	
 	
-	-- 联系客服
+	-- 用户中心
 	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 16 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then

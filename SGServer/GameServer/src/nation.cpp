@@ -711,13 +711,13 @@ int nation_build( int actor_index )
 	{
 		if ( pCity->wood < wood )
 			return -1;
-		city_changesilver( pCity->index, -wood, PATH_NATIONUPGRADE );
+		city_changewood( pCity->index, -wood, PATH_NATIONUPGRADE );
 	}
 	if ( food > 0 )
 	{
 		if ( pCity->food < food )
 			return -1;
-		city_changesilver( pCity->index, -food, PATH_NATIONUPGRADE );
+		city_changefood( pCity->index, -food, PATH_NATIONUPGRADE );
 	}
 	
 	// 给与经验
@@ -1615,6 +1615,7 @@ int nation_official_open()
 	BeginTm.tm_min = 59;
 	BeginTm.tm_sec = 59;
 	// 重新生成时间戳
+	g_nation_official_state = 0;
 	g_nation_official_statetime = (int)mktime( &BeginTm ) + 1;
 	world_data_set( WORLD_DATA_NATION_OFFICIAL_STATETIME, g_nation_official_statetime, NULL, NULL );
 	return 0;
