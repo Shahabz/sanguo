@@ -792,14 +792,21 @@ int mail_share_getfightcontent( int actor_index, i64 mailid )
 		{
 			if ( g_MailFightSearchCache[tmpi].m_mailid <= 0 )
 			{
-				memcpy( &g_MailFightSearchCache[tmpi], row[0], sizeof( MailFightSearchCache ) );
+				MailFightSearchCache cache = { 0 };
+				cache.m_mailid = mailid;
+				strncpy( cache.m_content, row[0], FIGHT_JSON_MAX - 1 );
+				memcpy( &g_MailFightSearchCache[tmpi], &cache, sizeof( MailFightSearchCache ) );
 				break;
 			}
 		}
 		if ( tmpi >= MAIL_SEARCHCACHE_MAX )
 		{
 			memmove( &g_MailFightSearchCache[0], &g_MailFightSearchCache[1], sizeof( MailFightSearchCache )*(MAIL_SEARCHCACHE_MAX - 1) );
-			memcpy( &g_MailFightSearchCache[MAIL_SEARCHCACHE_MAX - 1], row[0], sizeof( MailFightSearchCache ) );
+
+			MailFightSearchCache cache = { 0 };
+			cache.m_mailid = mailid;
+			strncpy( cache.m_content, row[0], FIGHT_JSON_MAX - 1 );
+			memcpy( &g_MailFightSearchCache[MAIL_SEARCHCACHE_MAX - 1], &cache, sizeof( MailFightSearchCache ) );
 		}
 	}
 	else
