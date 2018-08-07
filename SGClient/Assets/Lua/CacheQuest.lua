@@ -369,9 +369,11 @@ function QuestGoto( index )
 		
 	elseif datatype == QUEST_DATATYPE_CITY_TECH then-- 研究N科技N级 datatype=16 datakind=科技ID needvalue=等级
 		City.Move( BUILDING_Tech, -1, true );
+		CityTechDlgSetFirst( datakind )
 		
 	elseif datatype == QUEST_DATATYPE_CITY_TECHONE	 then-- 研究一次N科技 datatype=17 datakind=科技ID needvalue=1
 		City.Move( BUILDING_Tech, -1, true );
+		CityTechDlgSetFirst( datakind )
 		
 	elseif datatype == QUEST_DATATYPE_HERO_WASHCOUNT then-- 武将洗髓N次 datatype=18 datakind=0 needvalue=次数
 		
