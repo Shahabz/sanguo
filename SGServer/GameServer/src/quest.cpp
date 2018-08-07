@@ -553,6 +553,23 @@ int quest_check( int actor_index, int questid, int *value )
 				}
 			}
 		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_EQUIP_FORGING_OP )
+		{ // 打造装备的操作
+			if ( value )
+				*value = 0;
+			if ( equip_has( actor_index, questinfo->datakind ) > 0 )
+			{
+				if ( value )
+					*value = 1;
+				return 1;
+			}
+			if ( equip_herohas( actor_index, questinfo->datakind ) > 0 )
+			{
+				if ( value )
+					*value = 1;
+				return 1;
+			}
+		}
 		else
 		{
 			for ( int tmpi = 0; tmpi < CITY_QUEST_MAX; tmpi++ )

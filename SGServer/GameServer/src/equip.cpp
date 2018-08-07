@@ -940,6 +940,47 @@ int equip_heroupdate( int actor_index, Hero *pHero )
 	return 0;
 }
 
+int equip_has( int actor_index, int kind )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return 0;
+	for ( int tmpi = 0; tmpi < MAX_ACTOR_EQUIPNUM; tmpi++ )
+	{
+		if ( g_actors[actor_index].equip[tmpi].kind == kind )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int equip_herohas( int actor_index, int kind )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return 0;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return 0;
+	char equiptype = equip_gettype( kind ) - 1;
+	if ( equiptype < 0 || equiptype >= 6 )
+		return 0;
+	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
+	{
+		if ( pCity->hero[tmpi].equip[equiptype].kind == kind )
+		{
+			return 1;
+		}
+	}
+	for ( int tmpi = 0; tmpi < HERO_ACTOR_MAX; tmpi++ )
+	{
+		if ( g_actors[actor_index].hero[tmpi].equip[equiptype].kind == kind )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
 int equip_sendbag( int actor_index, int offset )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )

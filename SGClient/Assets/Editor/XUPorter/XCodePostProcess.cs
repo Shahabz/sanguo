@@ -35,7 +35,8 @@ public static class XCodePostProcess
 		EditIphoneXCode(path);
 		// www url 缓存
 		EditWWWCacheCode(path); 
-
+		// 编辑plist
+		EditorPlist_all(path);
 		//TODO implement generic settings as a module option
 		Debug.Log(projectName);
 		if(projectName== "test")
@@ -71,7 +72,23 @@ public static class XCodePostProcess
 			return "";
 		}
 	}
-		
+
+	private static void EditorPlist_all(string filePath)
+	{
+
+		XCPlist2 list = new XCPlist2(filePath);
+
+		string Plist_url_types = @"
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app requires access to the photo library.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>This app requires access to the camera.</string>
+		";
+		list.AddKey(Plist_url_types);
+		list.Save();
+	}
+
+
 	private static void EditorPlist(string filePath)
 	{
 		XCPlist2 list = new XCPlist2(filePath);
