@@ -66,6 +66,8 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 1 then
 			BuyWorkerDlgShow();
 			BuildingUpgradeDlgClose();
+		elseif nControlID == 3 then
+			TeacherHelpDlgShowByUpgrade()
 		elseif nControlID == 4 then
 			JumpRes( 1 )
 		elseif nControlID == 5 then
@@ -407,11 +409,13 @@ function BuildingUpgradeCondSet( uiObj, text, flag, type )
 	if flag == false then
 		if type == 1 and GetPlayer().m_worker_expire_ex > 0 then
 			SetFalse( uiButton );
-		elseif type == 2 or type == 3 then
+		elseif type == 2 then
 			SetFalse( uiButton );
 		else	
 			if type == 1 then
 				SetText( uiButton.transform:Find("Back/Text"), T(609) ); -- 开启
+			elseif type == 3 then
+				SetText( uiButton.transform:Find("Back/Text"), T(4214) ); -- 升级
 			else
 				SetText( uiButton.transform:Find("Back/Text"), T(608) ); -- 获取
 			end

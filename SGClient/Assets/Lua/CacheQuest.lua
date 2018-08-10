@@ -272,6 +272,7 @@ function QuestGoto( index )
 	local value = CacheQuest.m_list[index].m_value;
 	local needvalue = CacheQuest.m_list[index].m_needvalue;
 	if datatype == QUEST_DATATYPE_ACTOR_LEVEL then
+		TeacherHelpDlgShowByUpgrade()
 	elseif datatype == QUEST_DATATYPE_CLICK then
 		if datakind == 4 then --点击事件4，查看铁匠铺
 			EquipForgingDlgShow();
@@ -376,9 +377,10 @@ function QuestGoto( index )
 		CityTechDlgSetFirst( datakind )
 		
 	elseif datatype == QUEST_DATATYPE_HERO_WASHCOUNT then-- 武将洗髓N次 datatype=18 datakind=0 needvalue=次数
-		
+		City.Move( BUILDING_Hero, -1, true );
 		
 	elseif datatype == QUEST_DATATYPE_HERO_COLORWASH then-- 将一名N品质的武将属性洗满 datatype=19 datakind=颜色 needvalue=1
+		City.Move( BUILDING_Hero, -1, true );
 		
 	elseif datatype == QUEST_DATATYPE_HERO_CALL then-- 招募N名武将 datatype=20 datakind=0 needvalue=数量
 		if datakind == 2 or datakind == 12 or datakind == 11 then

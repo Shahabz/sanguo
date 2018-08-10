@@ -151,8 +151,12 @@ function QuickItemDlgSet( sec, update )
 			local itemnum = GetItem():GetCount(kind)
 			if itemnum > 0 then
 				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), itemnum );
+				SetTrue( m_uiUIP_QuickItem[i].transform:Find("UseButton") )
+				SetFalse( m_uiUIP_QuickItem[i].transform:Find("BuyButton") )
 			else
 				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..item_gettoken(kind) );
+				SetFalse( m_uiUIP_QuickItem[i].transform:Find("UseButton") )
+				SetTrue( m_uiUIP_QuickItem[i].transform:Find("BuyButton") )
 			end
 		end
 	end

@@ -137,6 +137,35 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 4 then	
 			FightDlgClose();
 			StorySweepDlgSweep()
+		
+		-- 打造更高级装备
+		elseif nControlID == 11 then
+			FightDlgClose();
+			City.Move( BUILDING_Smithy, -1, true );
+			
+		-- 武将洗髓
+		elseif nControlID == 12 then
+			FightDlgClose();
+			City.Move( BUILDING_Hero, -1, true );
+			
+		-- 升级战斗科技
+		elseif nControlID == 13 then
+			FightDlgClose();
+			City.Move( BUILDING_Tech, -1, true );
+			
+		-- 升级国器
+		elseif nControlID == 14 then
+			FightDlgClose();
+			if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 1 then
+				NationEquipDlgShow()
+			end
+			
+		-- 装备洗炼 	
+		elseif nControlID == 15 then
+			FightDlgClose();
+			if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WASH ) == 1 then
+				City.Move( BUILDING_Wash, -1, true );
+			end
         end
 		
 	elseif nType == UI_EVENT_TWEENFINISH then
@@ -715,6 +744,24 @@ function FightDlgResultLayerShow()
 			SetTrue( m_uiPicLose ) 
 			SetFalse( m_uiPicWin )
 			eye.audioManager:Play(409);
+			-- 打造更高级装备
+			SetTrue( m_uiPicLose.transform:Find("Layer/Item1") );
+			-- 武将洗髓
+			SetTrue( m_uiPicLose.transform:Find("Layer/Item2") );
+			-- 升级战斗科技
+			SetTrue( m_uiPicLose.transform:Find("Layer/Item3") );
+			-- 升级国器
+			if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_NATIONEQUIP ) == 1 then
+				SetFalse( m_uiPicLose.transform:Find("Layer/Item1") );
+				SetTrue( m_uiPicLose.transform:Find("Layer/Item4") )
+			end
+			
+			-- 装备洗炼 	
+			if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WASH ) == 1 then
+				SetFalse( m_uiPicLose.transform:Find("Layer/Item1") );
+				SetTrue( m_uiPicLose.transform:Find("Layer/Item5") )
+			end
+		
 		else
 			SetTrue( m_uiPicWin ) 
 			SetFalse( m_uiPicLose ) 
@@ -925,7 +972,7 @@ function FightDlgResultLayerShow()
 			SetTrue( m_uiStarWarn )
 			StoryDlgStar( m_uiStar, star )
 		else
-			SetTrue( m_uiWarn )
+			SetFalse( m_uiWarn )
 			SetFalse( m_uiStar )
 			SetFalse( m_uiStarWarn )
 		end

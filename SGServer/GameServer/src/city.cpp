@@ -206,6 +206,12 @@ int city_loadcb( int city_index )
 	{
 		g_city[city_index].people = 0;
 	}
+
+	// 默认开放第二队列
+	if ( g_city[city_index].worker_expire_ex <= 0 )
+	{
+		g_city[city_index].worker_expire_ex = 1;
+	}
 	return 0;
 }
 
@@ -476,6 +482,9 @@ int city_new( City *pCity )
 	g_city[city_index].nation_qv[1] = 0;
 	g_city[city_index].nation_qv[2] = 0;
 
+	// 默认开放第二队列
+	g_city[city_index].worker_expire_ex = 1;
+
 	// 活动礼包
 	activity_paybag_citynew( &g_city[city_index] );
 
@@ -503,7 +512,7 @@ void city_logic_sec( int begin, int end )
 			continue;
 		
 		// 商用建造队列到期时间
-		if ( g_city[city_index].worker_expire_ex > 0 )
+		/*if ( g_city[city_index].worker_expire_ex > 0 )
 		{
 			g_city[city_index].worker_expire_ex -= 1;
 			if ( g_city[city_index].worker_expire_ex <= 0 )
@@ -513,7 +522,7 @@ void city_logic_sec( int begin, int end )
 					building_sendworker( g_city[city_index].actor_index );
 				}
 			}
-		}
+		}*/
 
 		// 普通建造队列
 		if ( g_city[city_index].worker_sec > 0 )

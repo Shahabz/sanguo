@@ -181,7 +181,7 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 背包
 		elseif nControlID == 11 then
 			BagDlgShow();
-		
+
 		-- 好友
 		elseif nControlID == 12 then
 			FriendDlgShow()

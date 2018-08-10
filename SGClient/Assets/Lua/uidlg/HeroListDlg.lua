@@ -95,9 +95,14 @@ function HeroListDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 1000 and nControlID < 1500 then
 			HeroListDlgNationHeroCall( nControlID-1000 )
 			
-		elseif nControlID >= 10000 then
+		elseif nControlID >= 10000 and nControlID < 30000 then
 		 	HeroListDlgSelect(nControlID-10000);
 			HeroListDlgSelectCloseToggle();
+		
+		elseif nControlID == 30001 then
+			pop( T(610) )
+		elseif nControlID == 30002 then
+			pop( T(611) )
         end
 	elseif nType == UI_EVENT_TOGGLEVALUECHANGE then
 		if nControlID == 1 then
@@ -520,6 +525,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 				if GetPlayer().m_attr.m_hero_up_num < 1 then -- 科技增加
 					--SetText( uiName, T(610) )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					uiHeroObj:GetComponent("UIButton").controlID = 30001;
 				else
 					SetText( uiName, "" )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
@@ -529,6 +535,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 				if GetPlayer().m_attr.m_hero_up_num < 2 then -- 科技增加
 					--SetText( uiName, T(611) )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
+					uiHeroObj:GetComponent("UIButton").controlID = 30002;
 				else
 					--SetText( uiName, "" )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
