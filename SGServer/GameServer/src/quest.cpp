@@ -542,10 +542,9 @@ int quest_check( int actor_index, int questid, int *value )
 		{ // Éý¼¶¹úÆ÷
 			if ( value )
 				*value = 0;
-			int index = questinfo->datakind - 1;
 			for ( int tmpi = 0; tmpi < 6; tmpi++ )
 			{
-				if ( pCity->neq_sec[index] > 0 || pCity->neq_lv[index] > 0 )
+				if ( pCity->neq_sec[tmpi] > 0 || pCity->neq_lv[tmpi] > 0 )
 				{
 					if ( value )
 						*value = 1;

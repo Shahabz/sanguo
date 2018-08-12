@@ -8,11 +8,13 @@ function proc_login_C( recvValue )
 		-- 登陆失败
 		print( "Login Result:"..recvValue.m_result );
 		eye.networkManager:Logout();
-		if Const.platid > 11 then
-			LoginModOpenSDKLogin();
-		else
+		
+		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 then
 			LoginModOpenTestLogin();
+		else
+			LoginModOpenSDKLogin();
 		end
+
 		if recvValue.m_result == -10000 then
 			-- 队列满了的情况
 			LoginModWarning( T(500) );

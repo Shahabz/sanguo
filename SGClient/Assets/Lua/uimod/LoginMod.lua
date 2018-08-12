@@ -108,7 +108,9 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 切换账号
 		elseif nControlID == 4 then
-			if Const.platid > 11 then
+			if Const.platid == 18 or Const.platid == 19 then
+				LoginModLoginLayer()
+			elseif Const.platid > 11 then
 				SDK.logout()
 			else
 				LoginModLoginLayer()
@@ -276,7 +278,9 @@ function LoginModOnStart()
 	-- 版本号
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	-- 平台
-	if Const.platid > 11 then
+	if Const.platid == 18 or Const.platid == 19 then
+		LoginModOpenTestLogin();
+	elseif Const.platid > 11 then
 		SDK.init()
 		LoginModOpenSDKLogin();
 	else
@@ -432,9 +436,7 @@ end
 
 -- 进入游戏
 function LoginModEnterGame()
-	if Const.platid > 11 then
-		LoginModSDKLogin()
-	else
+	if Const.platid == 18 or Const.platid == 19 or Const.platid <= 11 then
 		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
 		if loginType == "2" then
 			LoginModQuickLogin();
@@ -447,6 +449,8 @@ function LoginModEnterGame()
 				LoginModLogin()
 			end
 		end
+	else
+		LoginModSDKLogin()
 	end
 end
 

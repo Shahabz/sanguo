@@ -102,6 +102,16 @@ function SDK.pay( recvValue )
 		info["product_notifyurl_params"] = "ext="..recvValue.m_ext
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
+		
+	elseif Const.platid == 18 then
+		
+		info["product_price"] = recvValue.m_price*100
+		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_notifyurl"] = "http://39.105.38.19/sg/tomato_trpay/trpay.php"
+		info["product_notifyurl_params"] = "ext="..recvValue.m_ext
+		local jsonMsg = json.encode( info );
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 
