@@ -212,6 +212,7 @@ int netsend_zonemasterlist_S( int actor_index, char send_type, SLK_NetS_ZoneMast
 int netsend_delzoneunit_S( int actor_index, char send_type, SLK_NetS_DelZoneUnit *pValue );
 int netsend_fighthelper_S( int actor_index, char send_type, SLK_NetS_FightHelper *pValue );
 int netsend_fighthelperlist_S( int actor_index, char send_type, SLK_NetS_FightHelperList *pValue );
+int netsend_redinfo_S( int actor_index, char send_type, SLK_NetS_RedInfo *pValue );
 
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );
 int netsend_gmlocalcmd_S( int actor_index, char send_type, SLK_NetU_Gmlocalcmd *pValue );

@@ -1050,6 +1050,11 @@ function netrecv_fighthelperlist_C( buffer )
 	proc_fighthelperlist_C( recvValue );
 end
 
+function netrecv_redinfo_C( buffer )
+	local recvValue = struct_NetS_RedInfo_recv( buffer );
+	proc_redinfo_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1261,6 +1266,7 @@ Proc_Command = {
 	[CMDS_DELZONEUNIT]=netrecv_delzoneunit_C;
 	[CMDS_FIGHTHELPER]=netrecv_fighthelper_C;
 	[CMDS_FIGHTHELPERLIST]=netrecv_fighthelperlist_C;
+	[CMDS_REDINFO]=netrecv_redinfo_C;
 }
 
 function in_proc_command_C( cmd, buffer )

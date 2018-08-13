@@ -3420,3 +3420,12 @@ int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHel
 	return 0;
 }
 
+int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_has, (*psize) );
+	return 0;
+}
+

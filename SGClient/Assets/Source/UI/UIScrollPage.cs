@@ -83,7 +83,9 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 	///<param name="eventData">  
 	public void OnBeginDrag(PointerEventData eventData)  
 	{  
-		isDrag = true;  
+		isDrag = true; 
+		Stop ();
+	
 	}  
 	/// <summary>  
 	/// 拖拽结束  
@@ -197,12 +199,15 @@ public class UIScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
 	public void Stop()
 	{
+		isplay = false;
 		CancelInvoke ("OnAuto");
 	}
 
 
 	public void OnAuto()
 	{
+		if (isDrag)
+			return;
 		srect.horizontalNormalizedPosition =  listPageValue[Convert.ToInt32(nowindex)];
 		if (nowindex + 1 > pageIndex) {
 			nowindex = 0;

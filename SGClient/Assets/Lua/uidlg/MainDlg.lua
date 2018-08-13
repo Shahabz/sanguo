@@ -307,6 +307,10 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 62 then
 			ShopDlgShowByType(1)
 		
+		-- 首充福利
+		elseif nControlID == 63 then
+			ActivityDlgShowByID( ACTIVITY_1 )
+			
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -1334,6 +1338,14 @@ end
 
 function MainDlgStopCutScenes()
 	SetFalse( m_uiCutScenes )
+end
+
+function MainDlgFristPayShow( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/FristPay"), show )
+	SetShow( m_uiTop_City.transform:Find("Right/PayBag"), not show )
 end
 
 -- 得到点击区域位置

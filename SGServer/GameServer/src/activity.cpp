@@ -433,7 +433,7 @@ int activity_sendlist( int actor_index )
 		int starttime = g_activity_item[activityid].m_starttime;
 		if ( starttime <= 0 )
 			continue;
-		
+
 		pValue.m_list[pValue.m_count].m_activityid = activityid;
 		pValue.m_list[pValue.m_count].m_starttime = starttime;
 		pValue.m_list[pValue.m_count].m_endtime = g_activity_item[activityid].m_endtime;
@@ -454,15 +454,14 @@ int activity_sendlist( int actor_index )
 	}
 
 	// Ê×³äÀñ°ü
-	endtime = g_actors[actor_index].createtime + 7 * 86400;
 	int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
 	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
-	if ( (int)time( NULL ) < endtime || (fristpay == 1 && fristpay_awardget == 0) )
+	if ( fristpay == 0 || fristpay == 1 && fristpay_awardget == 0 )
 	{
 		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_1;
 		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
-		pValue.m_list[pValue.m_count].m_endtime = endtime;
-		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		pValue.m_list[pValue.m_count].m_endtime = 0;
+		pValue.m_list[pValue.m_count].m_closetime = 0;
 		if ( fristpay == 1 && fristpay_awardget == 0 )
 		{
 			pValue.m_list[pValue.m_count].m_red = 1;
@@ -687,6 +686,7 @@ int activity_01_get( int actor_index )
 	awardgroup_withindex( actor_index, 164, -1, PATH_ACTIVITY, NULL );
 	actor_set_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET, 1 );
 	activity_01_sendinfo( actor_index );
+	actor_redinfo( actor_index, 2 );
 	return 0;
 }
 

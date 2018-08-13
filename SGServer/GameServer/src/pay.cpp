@@ -1165,6 +1165,11 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 
 	// 充过值
 	city_set_sflag( pCity, CITY_SFLAG_FRISTPAY, 1 );
+	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+	if ( fristpay_awardget == 0 )
+	{
+		activity_01_sendinfo( actor_index );
+	}
 
 	// 单笔付费
 	if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )

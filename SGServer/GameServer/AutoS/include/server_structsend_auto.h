@@ -2323,6 +2323,12 @@ struct _slk_NetS_FightHelperList {
 };
 typedef struct _slk_NetS_FightHelperList SLK_NetS_FightHelperList;	//雇佣兵列表
 
+struct _slk_NetS_RedInfo {
+	char m_path;	//红点
+	char m_has;	//红点
+};
+typedef struct _slk_NetS_RedInfo SLK_NetS_RedInfo;	//红点
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2575,5 +2581,6 @@ int struct_NetS_ZoneMasterList_send( char **pptr, int *psize, SLK_NetS_ZoneMaste
 int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit *pValue );
 int struct_NetS_FightHelper_send( char **pptr, int *psize, SLK_NetS_FightHelper *pValue );
 int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHelperList *pValue );
+int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue );
 
 #endif

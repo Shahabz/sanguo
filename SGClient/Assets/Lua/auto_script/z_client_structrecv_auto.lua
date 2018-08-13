@@ -3120,3 +3120,10 @@ function struct_NetS_FightHelperList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_RedInfo_recv( buffer )
+	local recvValue = {};
+	recvValue.m_path = buffer:ReadSByte();
+	recvValue.m_has = buffer:ReadSByte();
+	return recvValue;
+end
+

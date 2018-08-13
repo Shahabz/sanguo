@@ -817,6 +817,11 @@ int actor_entercity( int actor_index )
 	// VIP属性
 	vip_attr_calc( g_actors[actor_index].city_index );
 
+	// 红点国家建设
+	actor_redinfo( actor_index, 1 );
+	// 首充
+	actor_redinfo( actor_index, 2 );
+
 	// 上线提醒
 	nation_online_notify( actor_index );
 

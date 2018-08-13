@@ -2435,3 +2435,19 @@ function proc_fighthelperlist_C( recvValue )
 	FightHelperDlgRecvList( recvValue )
 end
 
+-- m_path=0,m_has=0,
+function proc_redinfo_C( recvValue )
+	-- process.
+	if recvValue.m_path == 1 then
+		if recvValue.m_has == 1 then
+		else
+		end
+	elseif recvValue.m_path == 2 then
+		if recvValue.m_has == 1 then
+			MainDlgFristPayShow( true )
+		else
+			MainDlgFristPayShow( false )
+		end
+	end
+end
+

@@ -796,3 +796,32 @@ int actor_search( int actor_index, int target_actorid, int target_city_index )
 	netsend_actorsearch_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
+
+// 红点
+int actor_redinfo( int actor_index, char path )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_RedInfo pValue = { 0 };
+	pValue.m_path = path;
+	if ( path == 1 )
+	{ // 红点-国家建设
+		int donatenum = actor_get_today_char_times( actor_index, TODAY_CHAR_NATION_DONATE );
+		if ( donatenum == 0 )
+		{
+			pValue.m_has = 1;
+		}
+	}
+	else if ( path == 2 )
+	{
+		int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
+		int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+		if ( fristpay == 0 || fristpay == 1 && fristpay_awardget == 0 )
+		{
+			pValue.m_has = 1;
+		}
+	}
+	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
