@@ -88,9 +88,9 @@ function GameManager.GameLogic()
 	end
 	
 	-- 商用建造队到期时间
-	if GetPlayer().m_worker_expire_ex > 0 then
+--[[	if GetPlayer().m_worker_expire_ex > 0 then
 		GetPlayer().m_worker_expire_ex = GetPlayer().m_worker_expire_ex - 1;
-	end
+	end--]]
 	
 	-- 保护时间
 	if GetPlayer().m_ptsec > 0 then

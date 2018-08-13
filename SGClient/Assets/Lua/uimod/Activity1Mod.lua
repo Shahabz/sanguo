@@ -115,9 +115,10 @@ function Activity1ModRecv( recvValue )
 		return
 	end
 	-- 活动时间
-	local left = info.m_endtime-info.m_starttime
-	SetTimer( m_uiActivityTime.transform:Find("Text"), info.m_endtime-GetServerTime(), left, 0, T(2483) )
-	
+	--local left = info.m_endtime-info.m_starttime
+	--SetTimer( m_uiActivityTime.transform:Find("Text"), info.m_endtime-GetServerTime(), left, 0, T(2483) )
+	--SetText( m_uiActivityTime.transform:Find("Text"), T(2451) )
+
 	-- 活动状态
 	if recvValue.m_fristpay == 0 then
 		SetTrue( m_uiPayButton )
@@ -138,7 +139,7 @@ function Activity1ModRecv( recvValue )
 	
 	-- 奖励
 	SetTrue( m_uiAwardList )
-	for i=1, 3, 1 do
+	for i=1, 4, 1 do
 		local awardObj = m_uiAwardList.transform:GetChild(i-1);
 		if recvValue.m_list[i].m_kind > 0 then
 			local sprite, color, name = AwardInfo( recvValue.m_list[i].m_kind )

@@ -50,7 +50,8 @@ function GovInfoDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 购买商用建造队伍
 		elseif nControlID == 2 then
-			BuyWorkerDlgShow()
+			--BuyWorkerDlgShow()
+			ActivityDlgShowByID( ACTIVITY_1 )
 		
 		-- 使用	
 		elseif nControlID == 10 then
@@ -153,10 +154,11 @@ function GovInfoDlgSetBuffWorker()
 	SetTrue( m_uiUIP_Buff[2] )
 	SetText( m_uiUIP_Buff[2].transform:Find("Name"), T(750) );
 	if GetPlayer().m_worker_expire_ex > 0 then
-		SetFalse( m_uiUIP_Buff[2].transform:Find("State") )
-		SetTrue( m_uiUIP_Buff[2].transform:Find("Timer") )
-		SetTimer( m_uiUIP_Buff[2].transform:Find("Timer"), GetPlayer().m_worker_expire_ex, GetPlayer().m_worker_expire_ex )
-		SetFalse( m_uiUIP_Buff[2].transform:Find("OpenBtn") )
+		SetFalse( m_uiUIP_Buff[2] )
+		--SetFalse( m_uiUIP_Buff[2].transform:Find("State") )
+		--SetTrue( m_uiUIP_Buff[2].transform:Find("Timer") )
+		--SetTimer( m_uiUIP_Buff[2].transform:Find("Timer"), GetPlayer().m_worker_expire_ex, GetPlayer().m_worker_expire_ex )
+		--SetFalse( m_uiUIP_Buff[2].transform:Find("OpenBtn") )
 	else
 		SetTrue( m_uiUIP_Buff[2].transform:Find("State") )
 		SetText( m_uiUIP_Buff[2].transform:Find("State"), T(599) );
@@ -277,11 +279,11 @@ function GovInfoDlgProtectBuyShow()
 		
 		local itemkind = itemlist[i]
 		SetImage( uiShape, ItemSprite(itemkind) )
-		SetText( uiNum, "x"..GetItem():GetCount( itemkind ) )
+		SetText( uiNum, GetItem():GetCount( itemkind ) )
 		SetImage( uiColor, ItemColorSprite(item_getcolor(itemkind)) )
 		SetControlID( uiItem[i], 100+i )
 	end
-	
+	GovInfoDlgProtectBuySelect( 1 )
 end
 
 function GovInfoDlgProtectBuySelect( index )

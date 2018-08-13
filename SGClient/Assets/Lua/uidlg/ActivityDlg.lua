@@ -227,7 +227,7 @@ end
 
 -- 选择活动
 function ActivityDlgSelect( index )
-	if m_recvValue[index] == nil then
+	if m_recvValue == nil or m_recvValue[index] == nil then
 		return
 	end
 	for i=1,#m_recvValue do

@@ -832,7 +832,8 @@ function City.GoToWorkerEx()
 	-- 打开购买商用建造队界面
 	if GetPlayer().m_worker_expire_ex <= 0 then
 		-- 
-		BuyWorkerDlgShow();
+		--BuyWorkerDlgShow();
+		ActivityDlgShowByID( ACTIVITY_1 )
 		return
 	end
 	

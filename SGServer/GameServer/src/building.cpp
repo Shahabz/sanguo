@@ -1610,6 +1610,10 @@ int building_workerbuy( int actor_index, int type )
 		}
 		pCity->worker_expire_ex += global.worker_expire_7;
 	}
+	else if ( type == 2 )
+	{
+		pCity->worker_expire_ex = 1;
+	} 
 	building_sendworker( actor_index );
 
 	// 自动建造检查

@@ -64,7 +64,8 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
         if nControlID == -1 then
             BuildingUpgradeDlgClose();
 		elseif nControlID == 1 then
-			BuyWorkerDlgShow();
+			--BuyWorkerDlgShow();
+			ActivityDlgShowByID( ACTIVITY_1 )
 			BuildingUpgradeDlgClose();
 		elseif nControlID == 3 then
 			TeacherHelpDlgShowByUpgrade()

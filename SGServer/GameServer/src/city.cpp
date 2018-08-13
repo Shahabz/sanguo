@@ -206,12 +206,6 @@ int city_loadcb( int city_index )
 	{
 		g_city[city_index].people = 0;
 	}
-
-	// 默认开放第二队列
-	if ( g_city[city_index].worker_expire_ex <= 0 )
-	{
-		g_city[city_index].worker_expire_ex = 1;
-	}
 	return 0;
 }
 
@@ -481,9 +475,6 @@ int city_new( City *pCity )
 	g_city[city_index].nation_qv[0] = 0;
 	g_city[city_index].nation_qv[1] = 0;
 	g_city[city_index].nation_qv[2] = 0;
-
-	// 默认开放第二队列
-	g_city[city_index].worker_expire_ex = 1;
 
 	// 活动礼包
 	activity_paybag_citynew( &g_city[city_index] );

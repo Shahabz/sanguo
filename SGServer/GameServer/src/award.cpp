@@ -634,6 +634,10 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	case AWARDKIND_FORBIDTALK:// 禁言
 		actor_forbidtalk( actor_index, num );
 		break;
+	case AWARDKIND_BUILDINGEXT:
+		// 默认开放第二队列
+		building_workerbuy( actor_index, 2 );
+		break;
 	case AWARDKIND_PERMISSION_4:// 科技快研
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );
 		break;

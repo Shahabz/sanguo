@@ -526,6 +526,7 @@ function proc_changesilver_C( recvValue )
 		NationUpgradeDlgSetCost()
 		NationPlaceDlgRecv()
 		HeroLevyDlgUpdate()
+		EquipForgingDlgUpdate()
 	end
 end
 
