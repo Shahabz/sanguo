@@ -54,6 +54,7 @@ ButtonTable.m_uiButtonRestart = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonGirl = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonEquip = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonUserCenter = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonInviteCode = nil; --UnityEngine.GameObject
 
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
@@ -231,7 +232,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 用户中心
 		elseif nControlID == 22 then
 			SDK.userCenter()
-				
+		
+		-- 送福利邀请码
+		elseif nControlID == 23 then
+			InviteCodeDlgShow()
+					
 		-- 聊天
 		elseif nControlID == 30 then
 			ChatDlgShow();
@@ -498,6 +503,7 @@ function MainDlgOnAwake( gameObject )
 	m_uiQuestEffect = objs[87];
 	ButtonTable.m_uiButtonEquip = objs[88];
 	ButtonTable.m_uiButtonUserCenter = objs[89];
+	ButtonTable.m_uiButtonInviteCode = objs[90];
 	--m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	--m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
 
@@ -1161,6 +1167,15 @@ function MainDlgSetButtons( openoffset )
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonUserCenter, m_uiButtonBack[offset] );
+			m_hasButton[offset] = true;
+		end
+	end
+	
+	-- 送福利
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 then
+		local offset, root = MainDlgGetEmptyButton();
+		if root ~= nil then
+			SetParent( ButtonTable.m_uiButtonInviteCode, m_uiButtonBack[offset] );
 			m_hasButton[offset] = true;
 		end
 	end

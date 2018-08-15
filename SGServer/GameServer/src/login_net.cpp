@@ -247,6 +247,44 @@ int login_awardproc( char *recv_buf )
 	return 0;
 }
 
+// 邀请码奖励
+int login_invitecodeproc( char *recv_buf )
+{
+	int valuecount = 5;
+	int tmpi;
+	char *pcur;
+	char *pnext;
+	pcur = recv_buf;
+	SLK_NetU_InviteCodeed Value = { 0 };
+	for ( tmpi = 0; tmpi < valuecount; tmpi++ )
+	{
+		if ( pcur == NULL )
+			return -1;
+		pnext = login_getnextvalue( pcur );
+		switch ( tmpi )
+		{
+		case 0:
+			Value.m_client_index = atoi( pcur );
+			break;
+		case 1:
+			Value.m_authid = atoi( pcur );
+			break;
+		case 2:
+			Value.m_result = atoi( pcur );
+			break;
+		case 3:
+			Value.m_path = atoi( pcur );
+			break;
+		case 4:
+			Value.m_isaward = atoi( pcur );
+			break;
+		}
+		pcur = pnext;
+	}
+	netsend_invitecodeed_S( -2, 0, &Value );
+	return 0;
+}
+
 //用户锁定的接收过程
 int login_lockproc( char *recv_buf )
 {
@@ -328,6 +366,9 @@ int login_recv_proc( short cmd, char *recv_buf )
 		break;
 	case USERCMDS_CDKEY:	// 兑换码
 		return login_awardproc( recv_buf );
+		break;
+	case USERCMDS_INVITECODE:	// 邀请码
+		return login_invitecodeproc( recv_buf );
 		break;
 	}
 	return -1;

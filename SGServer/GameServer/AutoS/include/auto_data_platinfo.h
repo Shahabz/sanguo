@@ -9,6 +9,7 @@ struct _platinfo {
 				short userport;	//
 				char loginpath[64];	//
 				char cdkeypath[64];	//
+				char invitecodepath[64];	//
 				char paymode_sdk[2];	//
 				char paymode_web[2];	//
 };

@@ -27,6 +27,7 @@ NOTIFY_HEROBACK		  = 24	-- 武将回城
 NOTIFY_HEROGOD		  =	25	-- 神突成功
 NOTIFY_ACTIVITY		  =	26	-- 活动
 NOTIFY_GUIDE		  = 27  -- 指引
+NOTIFY_INVITECODE	  =	28	-- 邀请码
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -343,6 +344,10 @@ function RecvActorNotify(recvValue)
 	-- 触发指引	
 	elseif msgid == NOTIFY_GUIDE then
 		Guide( value[1], 1, false );
+	
+	-- 邀请码	
+	elseif msgid == NOTIFY_INVITECODE then
+		InviteCodeDlgOpRecv( value[1], value[2] )
     end
 end
 

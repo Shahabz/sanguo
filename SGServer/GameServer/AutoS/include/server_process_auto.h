@@ -3,6 +3,7 @@
 #include "server_structrecv_auto.h"
 
 int proc_command_S( int client_index, short cmd, char *ptr, int tmpsize, int exec_code );
+void proc_invitecodeed_S( int client_index, SLK_NetU_InviteCodeed *pValue );
 void proc_userawarded_S( int client_index, SLK_NetU_UserAwarded *pValue );
 void proc_gmlocalcmd_S( int client_index, SLK_NetU_Gmlocalcmd *pValue );
 void proc_logined_S( int client_index, SLK_NetU_Logined *pValue );

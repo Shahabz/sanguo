@@ -7,6 +7,19 @@
 #include "utils.h"
 extern int g_mysql_wait;
 
+int netrecv_invitecodeed_S( int client_index, char *data, int size )
+{
+	SLK_NetU_InviteCodeed Value = {0};
+	int tmpsize = size;
+	char *ptr = data;
+
+	struct_NetU_InviteCodeed_recv( &ptr, &tmpsize, &Value );
+
+	proc_invitecodeed_S( client_index, &Value );
+
+	return 0;
+}
+
 int netrecv_userawarded_S( int client_index, char *data, int size )
 {
 	SLK_NetU_UserAwarded Value = {0};
@@ -445,6 +458,9 @@ int proc_command_S( int client_index, short cmd, char *ptr, int tmpsize, int exe
 {
 	switch( cmd )
 	{
+	case CMDC_INVITECODEED:
+		netrecv_invitecodeed_S( client_index, ptr, tmpsize );
+		break;
 	case CMDC_USERAWARDED:
 		netrecv_userawarded_S( client_index, ptr, tmpsize );
 		break;

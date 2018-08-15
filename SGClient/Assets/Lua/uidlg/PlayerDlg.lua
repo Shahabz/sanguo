@@ -12,6 +12,8 @@ local m_uiLabelPlaceText = nil; --UnityEngine.GameObject
 local m_uiLabelServerText = nil; --UnityEngine.GameObject
 local m_uiLabelIDText = nil; --UnityEngine.GameObject
 local m_uiLabelBattlepowerText = nil; --UnityEngine.GameObject
+local m_uiPayButton = nil; --UnityEngine.GameObject
+local m_uiCodeButton = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function PlayerDlgOpen()
@@ -65,6 +67,10 @@ function PlayerDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 购买体力
 		elseif nControlID == 15 then
 			JumpBody()
+			
+		-- 邀请码
+		elseif nControlID == 16 then
+			InviteCodeDlgShow()
         end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
@@ -89,6 +95,8 @@ function PlayerDlgOnAwake( gameObject )
 	m_uiLabelServerText = objs[9];
 	m_uiLabelIDText = objs[10];
 	m_uiLabelBattlepowerText = objs[11];
+	m_uiPayButton = objs[12];
+	m_uiCodeButton = objs[13];
 end
 
 -- 界面初始化时调用
@@ -122,6 +130,14 @@ end
 ----------------------------------------
 function PlayerDlgShow()
 	PlayerDlgOpen()
+	-- 送福利-邀请码
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 then
+		SetFalse( m_uiPayButton );
+		SetTrue( m_uiCodeButton );
+	else
+		SetTrue( m_uiPayButton );
+		SetFalse( m_uiCodeButton );
+	end
 	PlayerDlgSet()
 end
 

@@ -5692,6 +5692,31 @@ int netsend_redinfo_S( int actor_index, char send_type, SLK_NetS_RedInfo *pValue
 }
 
 
+int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr;
+	short cmd=CMDC_INVITECODEED;
+
+	if( actor_index >= 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDC_INVITECODEED; ptr+=sizeof(short); tmpsize+=sizeof(short);
+
+	struct_NetU_InviteCodeed_send( &ptr, &tmpsize, pValue );
+
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	readtoqueue( actor_index, tmpbuf, tmpsize+sizeof(short), 0 );
+	return 0;
+}
+
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue )
 {
 	char tmpbuf[2048];

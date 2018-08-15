@@ -333,3 +333,10 @@ void proc_friendop_S( int client_index, SLK_NetC_FriendOp *pValue )
 	write_gamelog( "[Serv_friendop]_idx:%d", client_index );
 }
 
+void proc_invitecodeed_S( int client_index, SLK_NetU_InviteCodeed *pValue )
+{
+	// process.
+	user_invitecodeed( pValue->m_client_index, pValue->m_authid, pValue->m_result, pValue->m_path, pValue->m_isaward );
+	write_gamelog( "[SERV_INVITECODEED]_idx:%d", client_index );
+}
+

@@ -128,6 +128,18 @@ int struct_NetC_EnterCity_recv( char **pptr, int *psize, SLK_NetC_EnterCity *pVa
 	return 0;
 }
 
+int struct_NetU_InviteCodeed_recv( char **pptr, int *psize, SLK_NetU_InviteCodeed *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_RECV( &pValue->m_result, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_client_index, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_authid, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_path, (*pptr), (*psize) );
+	LKSET_DWORD_RECV( &pValue->m_isaward, (*pptr), (*psize) );
+	return 0;
+}
+
 int struct_NetC_Chat_recv( char **pptr, int *psize, SLK_NetC_Chat *pValue )
 {
 	int tmpi = 0;

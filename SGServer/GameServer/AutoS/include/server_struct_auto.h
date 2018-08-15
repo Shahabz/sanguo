@@ -217,6 +217,7 @@
 #define CMDS_FIGHTHELPERLIST	(CMDS_BASE+295)
 #define CMDS_REDINFO	(CMDS_BASE+296)
 
+#define CMDC_INVITECODEED	(CMDC_BASE-5)
 #define CMDC_USERAWARDED	(CMDC_BASE-4)
 #define CMDC_GMLOCALCMD	(CMDC_BASE-3)
 #define CMDC_LOGINED	(CMDC_BASE-2)
@@ -280,11 +281,22 @@ struct _slk_NetU_Gmlocalcmd {
 };
 typedef struct _slk_NetU_Gmlocalcmd SLK_NetU_Gmlocalcmd;	//本地GM信息
 
+struct _slk_NetU_InviteCodeed {
+	int m_result;	//用户服务器返回-邀请码结果返回值
+	int m_client_index;	//用户服务器返回-角色索引
+	int m_authid;	//用户服务器返回-认证ID
+	int m_path;	//用户服务器返回-途径
+	int m_isaward;	//用户服务器返回-获取奖励
+};
+typedef struct _slk_NetU_InviteCodeed SLK_NetU_InviteCodeed;	//用户服务器返回邀请码奖励
+
 int struct_NetU_Logined_send( char **pptr, int *psize, SLK_NetU_Logined *pValue );
 int struct_NetU_Logined_recv( char **pptr, int *psize, SLK_NetU_Logined *pValue );
 int struct_NetU_UserAwarded_send( char **pptr, int *psize, SLK_NetU_UserAwarded *pValue );
 int struct_NetU_UserAwarded_recv( char **pptr, int *psize, SLK_NetU_UserAwarded *pValue );
 int struct_NetU_Gmlocalcmd_send( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *pValue );
 int struct_NetU_Gmlocalcmd_recv( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *pValue );
+int struct_NetU_InviteCodeed_send( char **pptr, int *psize, SLK_NetU_InviteCodeed *pValue );
+int struct_NetU_InviteCodeed_recv( char **pptr, int *psize, SLK_NetU_InviteCodeed *pValue );
 
 #endif

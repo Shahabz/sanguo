@@ -47,7 +47,7 @@ int platinfo_init_auto()
 	g_platinfo = (PlatInfo *)malloc( sizeof(PlatInfo)*g_platinfo_maxnum );
 	memset( g_platinfo, 0, sizeof(PlatInfo)*g_platinfo_maxnum );
 
-	sprintf( szSQL, "select `platid`,`userhost`,`userport`,`loginpath`,`cdkeypath`,`paymode_sdk`,`paymode_web` from platinfo;" );
+	sprintf( szSQL, "select `platid`,`userhost`,`userport`,`loginpath`,`cdkeypath`,`invitecodepath`,`paymode_sdk`,`paymode_web` from platinfo;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -66,6 +66,7 @@ int platinfo_init_auto()
 		g_platinfo[platid].userport = atoi(row[offset++]);
 		memcpy( g_platinfo[platid].loginpath, row[offset++], 64 ); g_platinfo[platid].loginpath[63]=0;
 		memcpy( g_platinfo[platid].cdkeypath, row[offset++], 64 ); g_platinfo[platid].cdkeypath[63]=0;
+		memcpy( g_platinfo[platid].invitecodepath, row[offset++], 64 ); g_platinfo[platid].invitecodepath[63]=0;
 		memcpy( g_platinfo[platid].paymode_sdk, row[offset++], 2 ); g_platinfo[platid].paymode_sdk[1]=0;
 		memcpy( g_platinfo[platid].paymode_web, row[offset++], 2 ); g_platinfo[platid].paymode_web[1]=0;
 	}
@@ -112,6 +113,10 @@ int platinfo_luatable_auto()
 
 		lua_pushstring( servL, "cdkeypath" );
 		lua_pushstring( servL, g_platinfo[platid].cdkeypath );
+		lua_rawset( servL, -3 );
+
+		lua_pushstring( servL, "invitecodepath" );
+		lua_pushstring( servL, g_platinfo[platid].invitecodepath );
 		lua_rawset( servL, -3 );
 
 		lua_pushstring( servL, "paymode_sdk" );

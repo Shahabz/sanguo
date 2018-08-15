@@ -10,10 +10,11 @@
 
 #define USERCMDS_LOGIN				1
 #define USERCMDS_CDKEY				2
+#define USERCMDS_INVITECODE			3
 
 #define USERCMDC_LOGIN				1
 #define USERCMDC_CDKEY				2
-
+#define USERCMDC_INVITECODE			3
 
 // 登陆队列
 struct _sloginqueue
@@ -39,6 +40,11 @@ int user_logined( int client_index, int authid, SClientInfo *pClientInfo );
 int user_cdkey( int client_index, char *cardnumber );
 // 用户服务器返回奖励信息
 int user_cdkeyed( int client_index, int authid, int cdkey_index, int awardgroup, int result, char *cardnumber );
+
+// 发送邀请码信息
+int user_invitecode( int client_index, int path, char *msg );
+// 用户服务器返回邀请码信息
+int user_invitecodeed( int client_index, int authid, int result, int path, int isaward );
 
 // 排队机制
 int user_queue_logic();

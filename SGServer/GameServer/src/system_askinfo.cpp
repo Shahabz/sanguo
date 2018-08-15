@@ -1225,6 +1225,13 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			armygroup_fighthelper_buy( actor_index, pvalue[1], pvalue[2] );
 		}
 		break;
+	case ASKINFO_INVITECODE:
+		// ÑûÇëÂë
+		if ( pvalue[0] == 0 )
+		{
+			user_invitecode( actor_index, pvalue[1], pstr );
+		}
+		break;
 	default:
 		break;
 	}

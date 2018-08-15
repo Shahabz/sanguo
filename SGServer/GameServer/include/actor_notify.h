@@ -33,6 +33,7 @@
 #define NOTIFY_HEROGOD			25	// 神突成功
 #define NOTIFY_ACTIVITY			26	// 活动
 #define NOTIFY_GUIDE			27	// 指引
+#define NOTIFY_INVITECODE		28	// 邀请码
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );

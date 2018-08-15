@@ -26,6 +26,10 @@ local m_uiLoginType = nil; --UnityEngine.GameObject
 local m_uiRegUserEdit = nil; --UnityEngine.GameObject
 local m_uiRegPwdEdit = nil; --UnityEngine.GameObject
 local m_uiRegPwdReEdit = nil; --UnityEngine.GameObject
+local m_uiRegPhoneEdit = nil; --UnityEngine.GameObject
+local m_uiRegQQEdit = nil; --UnityEngine.GameObject
+local m_uiRegWeiXinEdit = nil; --UnityEngine.GameObject
+local m_uiRegInviteCodeEdit = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -230,6 +234,38 @@ function LoginModOnEvent( nType, nControlID, value )
 			else
 				SetFalse( m_uiRegPwdReEdit.transform:Find("Input/Hint") )
 			end
+			
+		elseif nControlID == 6 then
+			local text = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegPhoneEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegPhoneEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 7 then
+			local text = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegQQEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegQQEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 8 then
+			local text = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegWeiXinEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegWeiXinEdit.transform:Find("Input/Hint") )
+			end
+			
+		elseif nControlID == 9 then
+			local text = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegInviteCodeEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegInviteCodeEdit.transform:Find("Input/Hint") )
+			end
 		end
 	end
 end
@@ -264,6 +300,10 @@ function LoginModOnAwake( gameObject )
 	m_uiRegUserEdit = objs[23];
 	m_uiRegPwdEdit = objs[24];
 	m_uiRegPwdReEdit = objs[25];
+	m_uiRegPhoneEdit = objs[26];
+	m_uiRegQQEdit = objs[27];
+	m_uiRegWeiXinEdit = objs[28];
+	m_uiRegInviteCodeEdit = objs[29];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -383,6 +423,11 @@ function LoginModReg()
 	local userName = m_uiRegUserEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local passWord = m_uiRegPwdEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local passWordRe = m_uiRegPwdReEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local phone = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	
 	-- 非法检查
 	local len = string.len( userName );
 	if len < 4 or len > 64 then
@@ -406,7 +451,7 @@ function LoginModReg()
 	end
 	
 	LoginModWaitOpen()
-	HttpRequest.RegisterUser( userName, passWord, function( response ) 
+	HttpRequest.RegisterUser( userName, passWord, phone, qq, wchat, friend_invite_code, function( response )
 		LoginModWaitClose()
 		local json = require "cjson"
 		local info = json.decode( response );
@@ -415,18 +460,21 @@ function LoginModReg()
 			LoginModWarning( T(418) )
 			return;
 		end
+		
 		if info["result"] == -1 then
 			LoginModWarning( T(418) )
 			return
-		end
-		if info["result"] == -2 then
+		elseif info["result"] == -2 then
 			LoginModWarning( T(417) )
 			return
-		end
-		if info["result"] == -3 then
+		elseif info["result"] == -3 then
 			LoginModWarning( T(419) )
 			return
+		elseif info["result"] < 0 then
+			LoginModWarning( info["error"] )
+			return
 		end
+	
 		LoginModWarning( T(447) );
 		m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["u"];
 		m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["p"];

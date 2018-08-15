@@ -78,7 +78,9 @@ end
 -- 所属按钮点击时调用
 function SettingDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-        if nControlID == -1 then
+		if nControlID == -2 then
+			SettingDlgSignatureHide()
+        elseif nControlID == -1 then
             SettingDlgClose();
 		elseif nControlID == 1 then			--选项按钮
 			SettingDlgOptionShow()	
@@ -270,6 +272,11 @@ function SettingDlgSignatureShow()
 	SettingDlgHideBtns()
 	SetTrue(m_uiSignature)
 	SetText(m_uiTitleName,T(1716))
+end
+
+function SettingDlgSignatureHide()
+	SettingDlgSetTrueBtns()
+	SetFalse(m_uiSignature)
 end
 
 function SettingDlgBubbleShow()

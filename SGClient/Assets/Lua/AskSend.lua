@@ -51,6 +51,7 @@ ASKINFO_GIRL			= 	48 -- 女将
 ASKINFO_FANGSHI			=	49 -- 坊市
 ASKINFO_GIRLSHOP		=	50 -- 女将商店
 ASKINFO_FIGHTHELPER		=	51 -- 雇佣兵
+ASKINFO_INVITECODE		=   52 -- 邀请码
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

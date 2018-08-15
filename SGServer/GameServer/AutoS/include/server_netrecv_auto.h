@@ -2,6 +2,7 @@
 #define __NETRECV_AUTO_H0
 
 #include "server_structrecv_auto.h"
+int netrecv_invitecodeed_S( int client_index, char *data, int size );
 int netrecv_userawarded_S( int client_index, char *data, int size );
 int netrecv_gmlocalcmd_S( int client_index, char *data, int size );
 int netrecv_logined_S( int client_index, char *data, int size );

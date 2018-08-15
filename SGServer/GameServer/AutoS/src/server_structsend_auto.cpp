@@ -144,6 +144,18 @@ int struct_NetU_Gmlocalcmd_send( char **pptr, int *psize, SLK_NetU_Gmlocalcmd *p
 	return 0;
 }
 
+int struct_NetU_InviteCodeed_send( char **pptr, int *psize, SLK_NetU_InviteCodeed *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_result, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_client_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_authid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_isaward, (*psize) );
+	return 0;
+}
+
 int struct_NetS_DialogUpdate_send( char **pptr, int *psize, SLK_NetS_DialogUpdate *pValue )
 {
 	int tmpi = 0;

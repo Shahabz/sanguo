@@ -54,6 +54,13 @@ const char *plat_cdkeypath( int platid )
 	return g_platinfo[platid].cdkeypath;
 }
 
+const char *plat_invitecodepath( int platid )
+{
+	if ( platid < 0 || platid >= g_platinfo_maxnum )
+		return "";
+	return g_platinfo[platid].invitecodepath;
+}
+
 // 用户发送登陆请求到登陆队列
 int user_login( int client_index, const char *szUserName, const char *szPassWord, char *szDeviceID )
 {
@@ -335,6 +342,106 @@ int user_cdkeyed( int client_index, int authid, int cdkey_index, int awardgroup,
 		actor_notify_pop( client_index, 497 ); // 兑换码无效
 	}
 
+	return 0;
+}
+
+// 发送邀请码信息
+int user_invitecode( int client_index, int path, char *msg )
+{
+	if ( client_index < 0 || client_index >= g_maxactornum )
+		return -1;
+	if ( !msg )
+		return -1;
+	int len = (int)strlen( msg );
+	if ( len <= 0 || len >= 32 )
+		return -1;
+	int authid = server_getautuid( client_index );
+	if ( authid < 0 )
+		return -1;
+
+	if ( g_actors[client_index].cdkeywait )
+		return -1;
+	g_actors[client_index].cdkeywait = 1;
+
+	char tmpstr[2048] = { 0 };
+	char szUserID[32] = { 0 };
+	lltoa( client_getuserid( client_index ), szUserID, 10 );
+
+	int queue_tail;
+
+	// 锁住写队列缓冲
+	mmux_lock( g_login_mmux );
+	queue_tail = g_nLoginQueueTail + 1;
+	if ( queue_tail >= MAX_LOGINQUEUENUM )
+	{
+		queue_tail = 0;
+	}
+	if ( g_nLoginQueueHead == queue_tail )
+	{
+		write_netlog( "login queue full" );
+		mmux_unlock( g_login_mmux );
+		// 通知登录线程得赶紧干活, 都满了啊
+		mcond_broadcast( g_pthr_login );
+		return -1;
+	}
+	// 将需要处理的客户放置到登录队列
+	int platid = client_getplatid( client_index );
+	login_queue[g_nLoginQueueTail].client_index = client_index;
+	login_queue[g_nLoginQueueTail].authid = authid;
+	login_queue[g_nLoginQueueTail].command = USERCMDC_INVITECODE;
+	strcpy( login_queue[g_nLoginQueueTail].path, plat_invitecodepath( platid ) );
+	sprintf( login_queue[g_nLoginQueueTail].data, "&v1=%d&v2=%d&v3=%s&v4=%d&v5=%s", g_actors[client_index].actorid, g_Config.server_code, szUserID, path, HttpString( msg, tmpstr ) );
+
+	g_nLoginQueueTail = queue_tail;
+	mmux_unlock( g_login_mmux );
+	// 通知登录线程干活
+	mcond_broadcast( g_pthr_login );
+	return 0;
+}
+// 用户服务器返回邀请码信息
+int user_invitecodeed( int client_index, int authid, int result, int path, int isaward )
+{
+	if ( client_index < 0 || client_index >= g_maxactornum )
+		return -1;
+
+	g_actors[client_index].cdkeywait = 0;
+	if ( server_getautuid( client_index ) != authid )
+	{
+		return -1;
+	}
+
+	if ( result == 0 )
+	{
+		if ( path == 1 || path == 2 || path == 3 )
+		{
+			if ( isaward == 0 )
+			{
+				AwardGetInfo getinfo = { 0 };
+				awardgroup_withindex( client_index, 200, 0, PATH_INVITECODE, &getinfo );
+			}
+		}
+		else if ( path == 4 )
+		{
+			if ( isaward == 0 )
+			{
+				AwardGetInfo getinfo = { 0 };
+				awardgroup_withindex( client_index, 201, 0, PATH_INVITECODE, &getinfo );
+			}
+		}
+		else if ( path == 5 )
+		{
+			if ( isaward == 0 )
+			{
+				AwardGetInfo getinfo = { 0 };
+				awardgroup_withindex( client_index, 202, 0, PATH_INVITECODE, &getinfo );
+			}
+		}
+	}
+
+	int value[2] = { 0 };
+	value[0] = result;
+	value[1] = path;
+	actor_notify_value( client_index, NOTIFY_INVITECODE, 2, value, NULL );
 	return 0;
 }
 
