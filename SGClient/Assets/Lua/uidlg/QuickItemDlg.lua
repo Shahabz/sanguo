@@ -11,7 +11,7 @@ local m_buildingkind = 0;
 local m_buildingoffset = 0;
 local m_op = 0;
 
-local m_itemlist = { 142, 134, 135, 136 }
+local m_itemlist = { 142, 134, 135 }
 
 -- 打开界面
 function QuickItemDlgOpen()
@@ -140,7 +140,7 @@ function QuickItemDlgSet( sec, update )
 		SetTimer( m_uiTimer, sec, sec, 0, T(702) )
 	end
 	
-	for i=1, 4, 1 do
+	for i=1, #m_itemlist, 1 do
 		local kind = m_itemlist[i]
 		SetImage( m_uiUIP_QuickItem[i].transform:Find("Back/Shape"), ItemSprite(kind) );
 		SetImage( m_uiUIP_QuickItem[i].transform:Find("Back/Color"), ItemColorSprite(item_getcolor(kind)) );

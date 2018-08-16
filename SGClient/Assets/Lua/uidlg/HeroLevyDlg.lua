@@ -179,19 +179,19 @@ function HeroLevyDlgDonate( kind )
 		return
 	end
 	if GetPlayer().m_silver < g_tiance_quest[kind][nextlevel].silver then
-		JumpRes( 1 )
+		JumpRes( 1,g_tiance_quest[kind][nextlevel].silver-GetPlayer().m_silver )
 		return
 	end
 	if GetPlayer().m_wood < g_tiance_quest[kind][nextlevel].wood then
-		JumpRes( 2 )
+		JumpRes( 2,g_tiance_quest[kind][nextlevel].wood-GetPlayer().m_wood )
 		return
 	end
 	if GetPlayer().m_food < g_tiance_quest[kind][nextlevel].food then
-		JumpRes( 3 )
+		JumpRes( 3,g_tiance_quest[kind][nextlevel].food-GetPlayer().m_food )
 		return
 	end
 	if GetPlayer().m_iron < g_tiance_quest[kind][nextlevel].iron then
-		JumpRes( 4 )
+		JumpRes( 4,g_tiance_quest[kind][nextlevel].iron-GetPlayer().m_iron )
 		return
 	end
 	system_askinfo( ASKINFO_TIANCEQUEST, "", 3, kind );

@@ -20,6 +20,7 @@ local m_uiOfficialBtn = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil;
 local m_kind = 0;
 local m_canUpgrade = 0;
+local m_canUpgradeResDiff = 0;
 local m_firstKind = 0;
 
 -- 打开界面
@@ -390,7 +391,7 @@ function CityTechDlgSelect( kind )
 	end
 	SetTrue( m_uiTechInfo );
 	m_canUpgrade = 0;
-	
+	m_canUpgradeResDiff = 0;
 	local objs = m_uiTechInfo.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiShape = objs[0];
 	local uiName = objs[1];
@@ -439,6 +440,7 @@ function CityTechDlgSelect( kind )
 		else
 			SetText( uiSilver.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_silver).."</color>" )
 			m_canUpgrade = 1;
+			m_canUpgradeResDiff = value-GetPlayer().m_silver
 		end
 	else
 		SetFalse( uiSilver );
@@ -452,6 +454,7 @@ function CityTechDlgSelect( kind )
 		else
 			SetText( uiWood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_wood).."</color>" )
 			m_canUpgrade = 2;
+			m_canUpgradeResDiff = value-GetPlayer().m_wood
 		end
 	else
 		SetFalse( uiWood );
@@ -465,6 +468,7 @@ function CityTechDlgSelect( kind )
 		else
 			SetText( uiFood.transform:Find("Text"), "<color=#03DE27FF>"..knum(value).."/</color><color=#A01515FF>"..knum(GetPlayer().m_food).."</color>" )
 			m_canUpgrade = 3;
+			m_canUpgradeResDiff = value-GetPlayer().m_food
 		end
 	else
 		SetFalse( uiFood );
@@ -478,6 +482,7 @@ function CityTechDlgSelect( kind )
 		else
 			SetText( uiIron.transform:Find("Text"), "<color=#03DE27FF>"..value.."/</color><color=#A01515FF>"..GetPlayer().m_iron.."</color>" )
 			m_canUpgrade = 4;
+			m_canUpgradeResDiff = value-GetPlayer().m_iron
 		end
 	else
 		SetFalse( uiIron );
@@ -517,7 +522,7 @@ function CityTechDlgUpgrade()
 	end
 	if m_canUpgrade > 0 then
 		CityTechDlgSelect( -1 )
-		JumpRes( m_canUpgrade )
+		JumpRes( m_canUpgrade, m_canUpgradeResDiff )
 		return
 	end
 	system_askinfo( ASKINFO_TECH, "", 1, m_kind );
@@ -572,14 +577,18 @@ end
 
 --指引升级科技特效开启
 function CityTechDlgGuideOpenEffect(bShow)
-	if m_Dlg == nil then return; end
+	if m_Dlg == nil then
+		return; 
+	end
 	local uiObj = m_uiContent.transform:GetChild(1);
-	local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;	
-	local uiEffect = objs[8];
-	if bShow == true then 
-		SetTrue(uiEffect);
-	else
-		SetFalse(uiEffect);
+	if uiObj.name == "UIP_Tech(Clone)" then
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;	
+		local uiEffect = objs[8];
+		if bShow == true then 
+			SetTrue(uiEffect);
+		else
+			SetFalse(uiEffect);
+		end
 	end
 end
 

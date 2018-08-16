@@ -204,15 +204,15 @@ function NationUpgradeDlgBuild()
 	local wood = g_nation_upgrade[m_recvValue.m_level][m_recvValue.m_donate_num].wood
 	local food = g_nation_upgrade[m_recvValue.m_level][m_recvValue.m_donate_num].food
 	if GetPlayer().m_silver < silver then
-		JumpRes(1)
+		JumpRes(1,silver-GetPlayer().m_silver)
 		return
 	end
 	if GetPlayer().m_wood < wood then
-		JumpRes(2)
+		JumpRes(2,wood-GetPlayer().m_wood)
 		return
 	end
 	if GetPlayer().m_food < food then
-		JumpRes(3)
+		JumpRes(3,food-GetPlayer().m_food)
 		return
 	end
 	system_askinfo( ASKINFO_NATION, "", 1 )

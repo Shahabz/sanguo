@@ -26,6 +26,7 @@ local m_uiPayBagContent = nil; --UnityEngine.GameObject
 local m_uiUIP_PayBagItem = nil; --UnityEngine.GameObject
 local m_uiPayBagScrollDot = nil; --UnityEngine.GameObject
 
+local m_uiItemName = nil;
 local m_uiCostToken = nil
 local m_uiUseNum = nil
 local m_buytoken = 0;
@@ -360,8 +361,8 @@ function ShopDlgCreateVipShopItem( index, info, useitem )
 			SetText( uiName, name..info.m_awardnum.."%", NameColor(c) )
 			SetText( uiNum, "" )
 		else
-			SetText( uiName, name.."x"..info.m_awardnum, NameColor(c) )
-			SetText( uiNum, "x"..info.m_awardnum )
+			SetText( uiName, name.."x"..knum(info.m_awardnum), NameColor(c) )
+			SetText( uiNum, "x"..knum(info.m_awardnum) )
 		end
 		SetTrue( uiNumBack );
 	else
@@ -703,6 +704,7 @@ function ShopDlgBuyAsk( index )
 	local NumSelect = objs[6];
 	local CostToken = objs[7];
 	m_uiCostToken = CostToken;
+	m_uiItemName = ItemName;
 	m_uiUseNum = UseNum;
 	m_SelectItemNum = 1;
 		
@@ -721,7 +723,9 @@ function ShopDlgBuyAsk( index )
 		local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
 		SetImage( ItemObj.transform:Find("Shape"), sprite )
 		SetImage( ItemObj.transform:Find("Color"), color )
-		SetText( ItemName, name, NameColor(c) );
+		
+
+		SetText( ItemName, name.."x"..knum(m_CacheItem.m_awardnum), NameColor(c) );
 		SetText( ItemDesc, desc )
 		SetText( m_uiUseNum, m_SelectItemNum );
 		
@@ -791,6 +795,10 @@ function ShopDlgBuyItemSetNum( num )
 		end
 	end		
 	
+	if m_CacheItem.m_awardnum > 0 and m_CacheItem.m_id < 15 then
+		local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
+		SetText( m_uiItemName, name.."x"..knum(m_CacheItem.m_awardnum*m_SelectItemNum), NameColor(c) );
+	end
 	SetText( m_uiUseNum, m_SelectItemNum );
 	local cost = m_SelectItemNum*m_buytoken
 	if GetPlayer().m_token < cost then

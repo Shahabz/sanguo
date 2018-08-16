@@ -1363,6 +1363,10 @@ function MainDlgFristPayShow( show )
 	SetShow( m_uiTop_City.transform:Find("Right/PayBag"), not show )
 end
 
+function MainDlgButtonNationShow( show )
+	SetShow( ButtonTable.m_uiButtonNation.transform:Find("Back/Red"), show  )
+end
+
 -- 得到点击区域位置
 function GetQuestDlgPos()
 	return m_uiQuest.transform.position

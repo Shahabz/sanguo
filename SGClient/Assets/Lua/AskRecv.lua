@@ -95,7 +95,10 @@ function RecvActorNotify(recvValue)
 		-- 次数用尽
 		elseif value[1] == 1 then
 			AlertMsg( T(784) )
-	
+		
+		-- 购买资源
+		elseif value[1] == 2 then
+			JumpDlgMsgBox( value[2], value[3], value[4] )
 		end
 	
 	-- 角色标志位	

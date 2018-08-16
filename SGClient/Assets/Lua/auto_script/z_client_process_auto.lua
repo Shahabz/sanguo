@@ -2440,7 +2440,11 @@ function proc_redinfo_C( recvValue )
 	-- process.
 	if recvValue.m_path == 1 then
 		if recvValue.m_has == 1 then
+			MainDlgButtonNationShow( true )
+			NationDlgNationUpgradeRed( true )
 		else
+			MainDlgButtonNationShow( false )
+			NationDlgNationUpgradeRed( false )
 		end
 	elseif recvValue.m_path == 2 then
 		if recvValue.m_has == 1 then

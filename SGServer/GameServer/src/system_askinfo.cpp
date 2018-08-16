@@ -1232,6 +1232,9 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			user_invitecode( actor_index, pvalue[1], pstr );
 		}
 		break;
+	case ASKINFO_BUYRES:
+		actor_buyres( actor_index, pvalue[0], pvalue[1], pvalue[2] );
+		break;
 	default:
 		break;
 	}

@@ -220,12 +220,12 @@ function NationTownDlgRepair( index )
 	MsgBox( F(1316, MapTownName(info.m_townid), T(121)..knum(cost_silver).." "..T(122)..knum(cost_wood) ), function() 
 		
 		if GetPlayer().m_silver < cost_silver then
-			JumpRes(1)
+			JumpRes(1,cost_silver-GetPlayer().m_silver)
 			return
 		end
 
 		if GetPlayer().m_wood < cost_wood then
-			JumpRes(2)
+			JumpRes(2,cost_wood-GetPlayer().m_wood)
 			return
 		end
 		

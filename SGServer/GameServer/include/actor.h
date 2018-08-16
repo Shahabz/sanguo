@@ -146,6 +146,9 @@ int actor_getconfig( int actor_index, int index );
 // 购买体力
 int actor_buybody( int actor_index, int ask );
 
+// 一键补齐资源
+int actor_buyres( int actor_index, int restype, int resnum, int ask );
+
 // 查询玩家信息
 int actor_search( int actor_index, int target_actorid, int target_city_index );
 

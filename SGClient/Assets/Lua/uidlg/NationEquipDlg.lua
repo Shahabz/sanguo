@@ -518,7 +518,7 @@ function NationEquipDlgMake()
 	end
 	local info = m_recvValue[m_selectkind];
 	if GetPlayer().m_silver < g_nequip_open[m_selectkind].silver then
-		JumpRes( 1 )
+		JumpRes( 1,g_nequip_open[m_selectkind].silver-GetPlayer().m_silver )
 		return
 	end
 	if IsGuiding() then
@@ -552,7 +552,7 @@ function NationEquipDlgUpgrade( kind, uiButton )
 	end
 	local level = m_recvValue[kind].m_neq_lv
 	if GetPlayer().m_iron < g_nation_equip[kind][level].iron then
-		JumpRes( 4 )
+		JumpRes( 4,g_nation_equip[kind][level].iron-GetPlayer().m_iron )
 		return
 	end
 	if level >= GetPlayer().m_level then
@@ -647,7 +647,7 @@ function NationEquipDlgRemake( kind )
 	local info = m_recvValue[kind];
 	local remake_star = g_nation_equip[kind][info.m_neq_lv].remake_star
 	if GetPlayer().m_silver < g_nequip_remake[kind][remake_star].silver then
-		JumpRes( 1 )
+		JumpRes( 1, g_nequip_remake[kind][remake_star].silver-GetPlayer().m_silver )
 		return
 	end
 	system_askinfo( ASKINFO_NATIONEQUIP, "", 3, kind );

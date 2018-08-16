@@ -733,6 +733,9 @@ int nation_build( int actor_index )
 
 	// 国家荣誉排行
 	nation_rank_addvalue( pCity, NATION_RANK_BUILD, 1 );
+
+	// 红点
+	actor_redinfo( actor_index, 2 );
 	return 0;
 }
 

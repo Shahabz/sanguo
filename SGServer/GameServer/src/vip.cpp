@@ -15,6 +15,7 @@
 #include "actor_times.h"
 #include "server_netsend_auto.h"
 #include "item.h"
+#include "building.h"
 #include "vip.h"
 
 extern SConfig g_Config;
@@ -277,7 +278,23 @@ int vipshop_list( int actor_index )
 		pValue.m_list[pValue.m_count].m_vip_token = g_vipshop[tmpi].vip_token[viplevel];
 		pValue.m_list[pValue.m_count].m_vip_buynum_max = g_vipshop[tmpi].vip_buynum[viplevel];
 		pValue.m_list[pValue.m_count].m_vip_buynum = vipshop_getbuynum( actor_index, g_vipshop[tmpi].id );
-		if ( g_vipshop[tmpi].id == 5 )
+		if ( g_vipshop[tmpi].id == 1 )
+		{
+			pValue.m_list[pValue.m_count].m_awardnum = city_yield_total( pCity, BUILDING_Silver, 1 );
+		}
+		else if ( g_vipshop[tmpi].id == 2 )
+		{
+			pValue.m_list[pValue.m_count].m_awardnum = city_yield_total( pCity, BUILDING_Wood, 1 );
+		}
+		else if ( g_vipshop[tmpi].id == 3 )
+		{
+			pValue.m_list[pValue.m_count].m_awardnum = city_yield_total( pCity, BUILDING_Food, 1 );
+		}
+		else if ( g_vipshop[tmpi].id == 4 )
+		{
+			pValue.m_list[pValue.m_count].m_awardnum = city_yield_total( pCity, BUILDING_Iron, 1 );
+		}
+		else if ( g_vipshop[tmpi].id == 5 )
 		{ // 自动建造
 			pValue.m_list[pValue.m_count].m_awardnum = g_vipinfo[viplevel].autobuild;
 		}

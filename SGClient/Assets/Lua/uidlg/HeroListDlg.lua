@@ -625,7 +625,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 	if IsGuiding() then
 		if GetCurrentGuideType() == GUIDE_ZJ then
 			if pHero.m_kind == 12 then
-				FindCmdTpye(uiColorBack.transform);
+				FindCmdTpye(uiShape.transform);
 			end
 		end
 	end

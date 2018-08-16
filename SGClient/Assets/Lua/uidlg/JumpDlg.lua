@@ -7,8 +7,10 @@ local m_uiPayButton = nil; --UnityEngine.GameObject
 local m_uiFreeButton = nil; --UnityEngine.GameObject
 local m_uiCloseButton = nil; --UnityEngine.GameObject
 local m_uiLeft = nil; --UnityEngine.GameObject
+local m_uiFastButton = nil; --UnityEngine.GameObject
 
 local m_res = 0;
+local m_res_diff = 0;
 -- 打开界面
 function JumpDlgOpen()
 	m_Dlg = eye.uiManager:Open( "JumpDlg" );
@@ -71,6 +73,10 @@ function JumpDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 4 then
 			JumpDlgBodyBuy()
 			JumpDlgClose();
+		
+		-- 一键补齐	
+		elseif nControlID == 5 then
+			JumpDlgFast();
         end
 	end
 end
@@ -86,6 +92,7 @@ function JumpDlgOnAwake( gameObject )
 	m_uiFreeButton = objs[4];
 	m_uiCloseButton = objs[5];
 	m_uiLeft = objs[6];
+	m_uiFastButton = objs[7];
 end
 
 -- 界面初始化时调用
@@ -127,16 +134,18 @@ end
 
 function JumpToken()
 	JumpDlgShow()
+	SetFalse( m_uiFastButton );
 	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiBuyButton );
 	SetTrue( m_uiPayButton );
 	SetFalse( m_uiFreeButton )
-	SetText( m_uiAlertText, F(764, T(125)) )
+	SetText( m_uiAlertText, F(4230, T(125)) )
 end
 
 function JumpVip( viplevel )
 	JumpDlgShow()
+	SetFalse( m_uiFastButton );
 	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiBuyButton );
@@ -145,9 +154,10 @@ function JumpVip( viplevel )
 	SetText( m_uiAlertText, F(2461, viplevel) )
 end
 
-function JumpRes( res )
+function JumpRes( res, diff )
 	JumpDlgShow()
 	SetFalse( m_uiCloseButton )
+	SetTrue( m_uiFastButton );
 	SetTrue( m_uiBuyButton );
 	SetFalse( m_uiPayButton );
 	SetFalse( m_uiFreeButton )
@@ -156,12 +166,14 @@ function JumpRes( res )
 	else
 		SetTrue( m_uiLevyButton );
 	end
-	SetText( m_uiAlertText, F(764, T(120+res)) )
+	SetText( m_uiAlertText, F(764, T(120+res), knum(diff)) )
 	m_res = res
+	m_res_diff = diff;
 end
 
 function JumpBody()
 	JumpDlgShow()
+	SetFalse( m_uiFastButton );
 	SetFalse( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiPayButton );
@@ -191,10 +203,22 @@ end
 
 function JumpFightSkip()
 	JumpDlgShow()
+	SetFalse( m_uiFastButton );
 	SetTrue( m_uiCloseButton )
 	SetFalse( m_uiLevyButton );
 	SetFalse( m_uiBuyButton );
 	SetTrue( m_uiPayButton );
 	SetFalse( m_uiFreeButton )
 	SetText( m_uiAlertText, T(2337) )
+end
+
+function JumpDlgFast()
+	system_askinfo( ASKINFO_BUYRES, "", m_res, m_res_diff, 1 )
+end
+
+function JumpDlgMsgBox( restype, resnum, token )
+	MsgBox( F(4229,token), function()
+		system_askinfo( ASKINFO_BUYRES, "", restype, resnum, 0 )
+		JumpDlgClose()
+	end )
 end

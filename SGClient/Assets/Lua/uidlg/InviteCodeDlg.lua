@@ -200,6 +200,7 @@ function InviteCodeDlgSet( info )
 	else
 		m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = false;
 		SetTrue( m_uiRegPhoneEdit.transform:Find("Input/Hint") )
+		m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = "";
 	end
 	if info["award_phone"] == "0" then
 		SetTrue( m_uiRegPhoneEdit.transform:Find("AwardButton") )
@@ -215,6 +216,7 @@ function InviteCodeDlgSet( info )
 	else
 		m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = false;
 		SetTrue( m_uiRegQQEdit.transform:Find("Input/Hint") )
+		m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = ""
 	end
 	if info["award_qq"] == "0" then
 		SetTrue( m_uiRegQQEdit.transform:Find("AwardButton") )
@@ -230,6 +232,7 @@ function InviteCodeDlgSet( info )
 	else
 		m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = false;
 		SetTrue( m_uiRegWeiXinEdit.transform:Find("Input/Hint") )
+		m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = ""
 	end
 	if info["award_wchat"] == "0" then
 		SetTrue( m_uiRegWeiXinEdit.transform:Find("AwardButton") )
@@ -248,9 +251,18 @@ function InviteCodeDlgSet( info )
 		m_uiRegFriendCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = info["friend_invite_code"]
 		m_uiRegFriendCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = true;
 		SetFalse( m_uiRegFriendCodeEdit.transform:Find("Input/Hint") )
+		
+		if info["award_invite_code"] == "0" then
+			SetTrue( m_uiRegFriendCodeEdit.transform:Find("AwardButton") )
+		else
+			SetFalse( m_uiRegFriendCodeEdit.transform:Find("AwardButton") )
+		end
+	
 	else
-		m_uiRegFriendCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = false;
+		m_uiRegFriendCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).readOnly = true;
 		SetTrue( m_uiRegFriendCodeEdit.transform:Find("Input/Hint") )
+		m_uiRegFriendCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = ""
+		SetFalse( m_uiRegFriendCodeEdit.transform:Find("AwardButton") )
 	end
 end
 

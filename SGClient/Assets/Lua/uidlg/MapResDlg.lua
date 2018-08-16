@@ -401,7 +401,7 @@ function MapResDlgGather()
 		return
 	end
 	if m_cost_food > GetPlayer().m_food then
-		JumpRes(3)
+		JumpRes(3,m_cost_food-GetPlayer().m_food)
 		return
 	end
 	if m_SelectHeroKind <= 0 then
@@ -434,7 +434,7 @@ function MapResDlgBattle()
 		return
 	end
 	if m_cost_food > GetPlayer().m_food then
-		JumpRes(3)
+		JumpRes(3,m_cost_food-GetPlayer().m_food)
 		return
 	end
 	if m_SelectHeroKind <= 0 then

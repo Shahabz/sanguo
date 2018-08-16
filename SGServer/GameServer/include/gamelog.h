@@ -136,6 +136,7 @@
 #define PATH_KINGWAR_KILL				104	// 血战排行击杀积分
 #define PATH_PAY_GIFT					105 // 充值赠送
 #define PATH_INVITECODE					106 // 邀请码
+#define PATH_BUYRES						107 // 购买资源
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

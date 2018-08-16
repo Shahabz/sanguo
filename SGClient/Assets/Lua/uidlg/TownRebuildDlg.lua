@@ -176,25 +176,25 @@ function TownRebuildDlgAsk()
 	MsgBox( msg, function()
 		if g_towninfo[townid].ask_silver > 0 then
 			if GetPlayer().m_silver < g_towninfo[townid].ask_silver then
-				JumpRes(1)
+				JumpRes(1,g_towninfo[townid].ask_silver-GetPlayer().m_silver)
 				return
 			end
 		end
 		if g_towninfo[townid].ask_wood > 0 then
 			if GetPlayer().m_wood < g_towninfo[townid].ask_wood then
-				JumpRes(2)
+				JumpRes(2,g_towninfo[townid].ask_wood-GetPlayer().m_wood)
 				return
 			end
 		end
 		if g_towninfo[townid].ask_food > 0 then
 			if GetPlayer().m_food < g_towninfo[townid].ask_food then
-				JumpRes(3)
+				JumpRes(3,g_towninfo[townid].ask_food-GetPlayer().m_food)
 				return
 			end
 		end
 		if g_towninfo[townid].ask_iron > 0 then
 			if GetPlayer().m_iron < g_towninfo[townid].ask_iron then
-				JumpRes(4)
+				JumpRes(4,g_towninfo[townid].ask_iron-GetPlayer().m_iron)
 				return
 			end
 		end

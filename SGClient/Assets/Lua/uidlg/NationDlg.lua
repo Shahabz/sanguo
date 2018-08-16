@@ -26,7 +26,7 @@ local m_uiPlaceIcon = nil; --UnityEngine.GameObject
 local m_uiChangeNoticeBtn = nil; --UnityEngine.GameObject
 local m_uiNoticeLayer = nil; --UnityEngine.GameObject
 local m_uiContentField = nil; --UnityEngine.GameObject
-
+local m_NationBuildUpgradeShow = false;
 local m_recvValue = nil
 local m_curQuestKind = 1;
 
@@ -238,6 +238,7 @@ function NationDlgRecvBase( recvValue )
 	m_recvValue.m_donate_num = recvValue.m_donate_num
 	m_recvValue.m_myrank = recvValue.m_myrank
 	NationDlgChangeBase()
+	SetShow( m_uiNationBuildBtn.transform:Find("Back/Red"), m_NationBuildUpgradeShow  )
 end
 
 -- 基本信息
@@ -254,6 +255,7 @@ function NationDlgChangeBase()
 		SetText( m_uiBuild, F( 1940, m_recvValue.m_donate_num, 11 ) )
 	end
 	SetText( m_uiRank, F( 1939, m_recvValue.m_myrank ) )
+	SetShow( m_uiNationBuildBtn.transform:Find("Back/Red"), m_NationBuildUpgradeShow  )
 end
 
 -- 公告
@@ -383,4 +385,8 @@ function NationDlgNoticeLayerSend()
 	end
 	system_askinfo( ASKINFO_NATION, content, 17 )
 	NationDlgHideNoticeLayer()
+end
+
+function NationDlgNationUpgradeRed( show )
+	m_NationBuildUpgradeShow = show;
 end

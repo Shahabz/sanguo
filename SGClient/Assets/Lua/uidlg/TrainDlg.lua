@@ -535,7 +535,7 @@ function TrainDlgTrainLongBuy()
 	local silver = g_trainlong[m_recvValue.m_trainlong+1].silver;
 	MsgBox( F(757, knum(silver) ), function() 
 		if GetPlayer().m_silver < silver then
-			JumpRes( 1 )
+			JumpRes( 1, silver-GetPlayer().m_silver )
 		else
 			system_askinfo( ASKINFO_TRAIN, "", 6, m_buildingKind );
 		end

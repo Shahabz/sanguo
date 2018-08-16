@@ -30,6 +30,7 @@ local m_uiRegPhoneEdit = nil; --UnityEngine.GameObject
 local m_uiRegQQEdit = nil; --UnityEngine.GameObject
 local m_uiRegWeiXinEdit = nil; --UnityEngine.GameObject
 local m_uiRegInviteCodeEdit = nil; --UnityEngine.GameObject
+local m_uiMakeSureLayer = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -98,6 +99,9 @@ function LoginModOnEvent( nType, nControlID, value )
 		elseif nControlID == -4 then
 			SetFalse( m_uiRegLayer )
 		
+		elseif nControlID == -5 then
+			SetFalse( m_uiMakeSureLayer )
+			
 		-- 快速试玩
 		elseif nControlID == 1 then
 			LoginModQuickLogin();
@@ -161,6 +165,10 @@ function LoginModOnEvent( nType, nControlID, value )
 			if m_MsgBoxCallBack then
 				m_MsgBoxCallBack()
 			end
+		
+		-- 确定注册
+		elseif nControlID == 15 then
+			LoginModRegMakeSure()
 			
 		-- 点击推荐分组	
 		elseif nControlID == 1000 then	
@@ -304,6 +312,7 @@ function LoginModOnAwake( gameObject )
 	m_uiRegQQEdit = objs[27];
 	m_uiRegWeiXinEdit = objs[28];
 	m_uiRegInviteCodeEdit = objs[29];
+	m_uiMakeSureLayer = objs[30];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -416,6 +425,12 @@ end
 function LoginModRegLayer()
 	m_uiRegLayer.gameObject:SetActive( true );
 	m_uiLoginLayer.gameObject:SetActive( false );
+	
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 then
+		SetTrue( m_uiRegInviteCodeEdit );
+	else
+		SetFalse( m_uiRegInviteCodeEdit );
+	end
 end
 
 -- 注册
@@ -450,6 +465,26 @@ function LoginModReg()
 		return
 	end
 	
+	if friend_invite_code == "" then
+		SetTrue( m_uiMakeSureLayer ) 
+	else
+		LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
+	end
+end
+
+function LoginModRegMakeSure()
+	SetFalse( m_uiMakeSureLayer ) 
+	local userName = m_uiRegUserEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local passWord = m_uiRegPwdEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local passWordRe = m_uiRegPwdReEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local phone = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
+end
+
+function LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
 	LoginModWaitOpen()
 	HttpRequest.RegisterUser( userName, passWord, phone, qq, wchat, friend_invite_code, function( response )
 		LoginModWaitClose()

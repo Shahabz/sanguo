@@ -351,11 +351,11 @@ function MaterialMakeWillDlgMake()
 		return
 	end
 	if GetPlayer().m_silver < g_material_make[m_id].silver then
-		JumpRes(1)
+		JumpRes(1,g_material_make[m_id].silver-GetPlayer().m_silver)
 		return
 	end
 	if GetPlayer().m_wood < g_material_make[m_id].wood then
-		JumpRes(2)
+		JumpRes(2,g_material_make[m_id].wood-GetPlayer().m_wood)
 		return
 	end
 	system_askinfo( ASKINFO_MATERIALMAKE, "", 5, m_id, m_itemkind );

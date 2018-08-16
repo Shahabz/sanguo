@@ -156,22 +156,22 @@ function MapEventDlgGather()
 	if info.costtype > 0 then
 		if info.costtype == 1 then
 			if GetPlayer().m_silver < info.costnum then
-				JumpRes( 1 )
+				JumpRes( 1,info.costnum-GetPlayer().m_silver )
 				return
 			end
 		elseif info.costtype == 2 then
 			if GetPlayer().m_wood < info.costnum then
-				JumpRes( 2 )
+				JumpRes( 2,info.costnum-GetPlayer().m_wood )
 				return
 			end
 		elseif info.costtype == 3 then
 			if GetPlayer().m_food < info.costnum then
-				JumpRes( 3 )
+				JumpRes( 3,info.costnum-GetPlayer().m_food )
 				return
 			end
 		elseif info.costtype == 4 then
 			if GetPlayer().m_iron < info.costnum then
-				JumpRes( 4 )
+				JumpRes( 4,info.costnum-GetPlayer().m_iron )
 				return
 			end
 		elseif info.costtype == 5 then

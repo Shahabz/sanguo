@@ -424,6 +424,7 @@ function QuestGoto( index )
 		StoryDlgShow( datakind );
 		
 	elseif datatype == QUEST_DATATYPE_EQUIP_FORGING_OP then -- 操作-打造N装备N数量 datatype=21 datakind=装备kind needvalue=数量
+		EquipForgingDlgSetGotoInfo( nil, datakind ) 
 		City.Move( BUILDING_Smithy, -1, true );
 	elseif datatype == QUEST_DATATYPE_SMITHYOFFHIRE then --雇佣更高级铁匠
 		EquipForgingDlgShow();

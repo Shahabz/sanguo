@@ -21,6 +21,7 @@ local m_pBuilding = nil;
 local m_bUpgrade = true;
 local m_recvValue = nil
 local m_op = 0;
+local m_canUpgradeResDiff = 0;
 
 -- 打开界面
 function BuildingUpgradeDlgOpen()
@@ -70,13 +71,13 @@ function BuildingUpgradeDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			TeacherHelpDlgShowByUpgrade()
 		elseif nControlID == 4 then
-			JumpRes( 1 )
+			JumpRes( 1,m_canUpgradeResDiff )
 		elseif nControlID == 5 then
-			JumpRes( 2 )
+			JumpRes( 2,m_canUpgradeResDiff )
 		elseif nControlID == 6 then
-			JumpRes( 3 )
+			JumpRes( 3,m_canUpgradeResDiff )
 		elseif nControlID == 7 then
-			JumpRes( 4 )
+			JumpRes( 4,m_canUpgradeResDiff )
 		elseif nControlID == 100 then
 			BuildingUpgradeDlgUpgrade()
         end
@@ -324,6 +325,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		if GetPlayer().m_silver < recvValue.m_silver then
 			flag = false;
 			m_bUpgrade = false;
+			m_canUpgradeResDiff=recvValue.m_silver-GetPlayer().m_silver
 		end
 		BuildingUpgradeCondSet( uiObj, T(121).." "..knum(recvValue.m_silver).." / "..knum(GetPlayer().m_silver), flag, 4 );
 	end
@@ -335,6 +337,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		if GetPlayer().m_wood < recvValue.m_wood then
 			flag = false;
 			m_bUpgrade = false;
+			m_canUpgradeResDiff=recvValue.m_wood-GetPlayer().m_wood
 		end
 		BuildingUpgradeCondSet( uiObj, T(122).." "..knum(recvValue.m_wood).." / "..knum(GetPlayer().m_wood), flag, 5 );
 	end
@@ -346,6 +349,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		if GetPlayer().m_food < recvValue.m_food then
 			flag = false;
 			m_bUpgrade = false;
+			m_canUpgradeResDiff=recvValue.m_food-GetPlayer().m_food
 		end
 		BuildingUpgradeCondSet( uiObj, T(123).." "..knum(recvValue.m_food).." / "..knum(GetPlayer().m_food), flag, 6 );
 	end
@@ -357,6 +361,7 @@ function BuildingUpgradeDlgRecv( recvValue )
 		if GetPlayer().m_iron < recvValue.m_iron then
 			flag = false;
 			m_bUpgrade = false;
+			m_canUpgradeResDiff=recvValue.m_iron-GetPlayer().m_iron
 		end
 		BuildingUpgradeCondSet( uiObj, T(124).." "..knum(recvValue.m_iron).." / "..knum(GetPlayer().m_iron), flag, 7 );
 	end

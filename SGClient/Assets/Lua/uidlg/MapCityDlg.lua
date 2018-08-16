@@ -198,7 +198,7 @@ function MapCityDlgSpyAsk( type )
 	if type == 1 then
 		local silver1 = g_building_upgrade[BUILDING_Main][pBuilding.m_level].value3;
 		if GetPlayer().m_silver < silver1 then
-			JumpRes(1);
+			JumpRes(1,silver1-GetPlayer().m_silver);
 			return
 		end
 		MsgBox( F( 1219, techlevel, T(1204), global.spy_add_techlevel1 ), MapCityDlgSpy ) 
@@ -206,7 +206,7 @@ function MapCityDlgSpyAsk( type )
 	elseif type == 2 then
 		local silver2 = g_building_upgrade[BUILDING_Main][pBuilding.m_level].value3;
 		if GetPlayer().m_silver < silver2 then
-			JumpRes(1);
+			JumpRes(1,silver2-GetPlayer().m_silver);
 			return
 		end
 		MsgBox( F( 1219, techlevel, T(1205), global.spy_add_techlevel2 ), MapCityDlgSpy ) 

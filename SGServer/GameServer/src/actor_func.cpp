@@ -720,6 +720,69 @@ int actor_buybody( int actor_index, int ask )
 	return 0;
 }
 
+// 一键补齐资源
+int actor_buyres( int actor_index, int restype, int resnum, int ask )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	int yield = 0;
+	if ( restype == 1 )
+	{
+		yield = city_yield_total( pCity, BUILDING_Silver, 1 );
+	}
+	else if ( restype == 2 )
+	{
+		yield = city_yield_total( pCity, BUILDING_Wood, 1 );
+	}
+	else if ( restype == 3 )
+	{
+		yield = city_yield_total( pCity, BUILDING_Food, 1 );
+	}
+	else if ( restype == 4 )
+	{
+		yield = city_yield_total( pCity, BUILDING_Iron, 1 );
+	}
+
+	// 购买几次征收量=差额/每次征收量
+	int buytimes = (int)ceil( resnum / (float)yield );
+	int token = buytimes * 20;
+	if ( ask == 1 )
+	{
+		int value[4] = { 0 };
+		value[0] = 2;
+		value[1] = restype;
+		value[2] = resnum;
+		value[3] = token;
+		actor_notify_value( actor_index, NOTIFY_ACTOR, 4, value, NULL );
+		return 0;
+	}
+
+	if ( actor_change_token( actor_index, -token, PATH_BUYRES, 0 ) < 0 )
+		return -1;
+
+	if ( restype == 1 )
+	{
+		city_changesilver( pCity->index, yield*buytimes, PATH_BUYRES );
+	}
+	else if ( restype == 2 )
+	{
+		city_changewood( pCity->index, yield*buytimes, PATH_BUYRES );
+	}
+	else if ( restype == 3 )
+	{
+		city_changefood( pCity->index, yield*buytimes, PATH_BUYRES );
+	}
+	else if ( restype == 4 )
+	{
+		city_changeiron( pCity->index, yield*buytimes, PATH_BUYRES );
+	}
+	return 0;
+}
+
 // 查询玩家信息
 int actor_search( int actor_index, int target_actorid, int target_city_index )
 {

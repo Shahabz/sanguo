@@ -620,7 +620,7 @@ function MapBattleDlgBattle()
 	-- 流寇	
 	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
 		if m_cost_food > GetPlayer().m_food then
-			JumpRes(3)
+			JumpRes(3,m_cost_food-GetPlayer().m_food)
 			return
 		end
 		sendValue.m_id = m_recvValue.m_short_value[1];

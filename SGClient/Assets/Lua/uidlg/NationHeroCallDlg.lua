@@ -107,7 +107,7 @@ end
 function NationHeroCallDlgCall()
 	local kind = m_kind;
 	if GetPlayer().m_silver < g_nation_heroinfo[kind].call_silver then
-		JumpRes(1)
+		JumpRes(1,g_nation_heroinfo[kind].call_silver-GetPlayer().m_silver)
 		return
 	end
 	

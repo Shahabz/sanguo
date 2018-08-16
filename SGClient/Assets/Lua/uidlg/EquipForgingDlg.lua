@@ -392,6 +392,9 @@ function EquipForgingDlgSelect( kind )
 		local uiSelect = objs[6];
 		SetFalse( uiSelect )
 	end
+	if m_uiEquipObj[m_selectkind] == nil then
+		return
+	end
 	m_selectkind = kind;
 	local objs = m_uiEquipObj[m_selectkind].transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	local uiSelect = objs[6];

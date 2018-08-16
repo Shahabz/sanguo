@@ -539,7 +539,7 @@ function OfficialHireDlgBuy( kind )
 		
 	elseif config.silver > 0 then
 		if GetPlayer().m_silver < config.silver then
-			JumpRes(1);
+			JumpRes(1,config.silver-GetPlayer().m_silver);
 			return
 		end
 		system_askinfo( ASKINFO_OFFICIALHIRE, "", 0, m_type, kind )

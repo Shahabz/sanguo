@@ -568,6 +568,12 @@ int quest_check( int actor_index, int questid, int *value )
 					*value = 1;
 				return 1;
 			}
+			if ( pCity->forgingkind == questinfo->datakind )
+			{
+				if ( value )
+					*value = 1;
+				return 1;
+			}
 		}
 		else
 		{
@@ -744,7 +750,7 @@ int quest_sendawardinfo( int actor_index, int questid, char type )
 	pValue.m_questid = questid;
 	pValue.m_datatype = g_questinfo[questid].datatype;
 	pValue.m_datakind = g_questinfo[questid].datakind;
-	pValue.m_dataoffset = (char)g_questinfo[questid].dataoffset;
+	pValue.m_dataoffset = g_questinfo[questid].dataoffset;
 	pValue.m_nameid = g_questinfo[questid].nameid;
 	pValue.m_value = g_questinfo[questid].needvalue;
 	pValue.m_needvalue = g_questinfo[questid].needvalue;
