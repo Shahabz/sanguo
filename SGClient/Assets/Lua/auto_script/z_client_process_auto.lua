@@ -1219,7 +1219,9 @@ end
 -- m_hero_washnum=0,m_hero_washsec=0,
 function proc_herowash_C( recvValue )
 	-- process.
+	GetPlayer().m_hero_washnum = recvValue.m_hero_washnum
 	HeroWashDlgWashInfo( recvValue )
+	HeroInfoDlgWashUpdate()
 end
 
 -- m_value=0,
@@ -1237,7 +1239,13 @@ end
 -- m_equip_washnum=0,m_equip_washsec=0,
 function proc_equipwash_C( recvValue )
 	-- process.
+	GetPlayer().m_equip_washnum = recvValue.m_equip_washnum
 	EquipWashDlgRecv( recvValue )
+	if GetPlayer().m_equip_washnum > 0 then
+		City.EquipWashMod( nil, true, 1 )
+	else
+		City.EquipWashMod( nil, false, 1 )
+	end
 end
 
 
@@ -2451,6 +2459,12 @@ function proc_redinfo_C( recvValue )
 			MainDlgFristPayShow( true )
 		else
 			MainDlgFristPayShow( false )
+		end
+	elseif recvValue.m_path == 3 then
+		if recvValue.m_has == 1 then
+			MainDlgButtonActivityShow( true )
+		else
+			MainDlgButtonActivityShow( false )
 		end
 	end
 end

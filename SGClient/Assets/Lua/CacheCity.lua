@@ -299,6 +299,13 @@ function City.BuildingAdd( info, active )
 	-- 聚贤馆-免费寻访头
 	elseif kind == BUILDING_Hero then
 		City.HeroVisitMod( unitObj, false, 0 )
+	-- 洗炼铺-免费洗炼头
+	elseif kind == BUILDING_Wash then
+		if GetPlayer().m_equip_washnum > 0 then
+			City.EquipWashMod( unitObj, true, 1 )
+		else
+			City.EquipWashMod( unitObj, false, 1 )
+		end
 	end
 	
 	return unitObj;
@@ -778,6 +785,21 @@ function City.HeroVisitMod( unitObj, show, type )
 		else
 			SetText( modObj.transform:Find("Back/Text"), T(1932) )
 		end
+	end
+	modObj.gameObject:SetActive( show );
+end
+
+-- 洗炼铺-免费洗炼头
+function City.EquipWashMod( unitObj, show, type )
+	if unitObj == nil then
+		unitObj = City.m_Buildings[BUILDING_Wash];
+		if unitObj == nil then
+			return
+		end
+	end
+	local modObj = unitObj.transform:Find( "EquipWashMod" )
+	if modObj == nil then
+		return
 	end
 	modObj.gameObject:SetActive( show );
 end

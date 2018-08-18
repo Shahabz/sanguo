@@ -490,6 +490,8 @@ function HeroInfoDlgSet( path, pHero, up )
 		SetFalse( m_uiWashBtn );
 	else
 		SetTrue( m_uiWashBtn );
+		HeroInfoDlgWashUpdate()
+		
 	end
 	
 	-- 武将突破
@@ -902,4 +904,15 @@ function HeroInfoDlgUpdate( herokind )
 		return;
 	end
 	HeroInfoDlgSet( m_path, pHero, m_up )
+end
+
+function HeroInfoDlgWashUpdate()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if GetPlayer().m_hero_washnum > 0 then
+		SetTrue( m_uiWashBtn.transform:Find("Back/Red") );
+	else
+		SetFalse( m_uiWashBtn.transform:Find("Back/Red") );
+	end
 end

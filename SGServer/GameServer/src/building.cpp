@@ -1065,6 +1065,21 @@ int building_rebuild( int city_index, int kind, int offset, int rebuild_kind )
 	{ // 资源建筑
 		if ( !(rebuild_kind >= BUILDING_Silver && rebuild_kind <= BUILDING_Smithy) )
 			return -1;
+		// 保留4个
+		int hasnum = 0;
+		for ( int tmpi = 0; tmpi < BUILDING_RES_MAXNUM; tmpi++ )
+		{
+			if ( g_city[city_index].building_res[tmpi].kind == kind )
+			{
+				hasnum += 1;
+			}
+		}
+		if ( hasnum <= 4 )
+		{
+			actor_notify_alert( g_city[city_index].actor_index, 4231 );
+			return -1;
+		}
+
 		BuildingRes *pBuilding = buildingres_getptr( city_index, offset );
 		if ( !pBuilding )
 			return -1;

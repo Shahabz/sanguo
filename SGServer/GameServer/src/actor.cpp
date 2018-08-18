@@ -821,7 +821,8 @@ int actor_entercity( int actor_index )
 	actor_redinfo( actor_index, 1 );
 	// 首充
 	actor_redinfo( actor_index, 2 );
-
+	// 活动
+	actor_redinfo( actor_index, 3 );
 	// 上线提醒
 	nation_online_notify( actor_index );
 

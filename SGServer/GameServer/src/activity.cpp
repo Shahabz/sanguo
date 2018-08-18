@@ -649,6 +649,148 @@ int activity_sendlist( int actor_index )
 	return 0;
 }
 
+char activity_checkred( int actor_index )
+{
+	int endtime = 0;
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	time_t t;
+	time( &t );
+	struct tm *nowtime = localtime( &t );
+
+	for ( int activityid = 1; activityid < MAX_ACTIVITY_COUNT; activityid++ )
+	{
+		int starttime = g_activity_item[activityid].m_starttime;
+		if ( starttime <= 0 )
+			continue;
+
+		if ( activityid == ACTIVITY_6 )
+		{ // 全服返利
+			int serv_paytoken = world_data_getcache( WORLD_DATA_ACTIVITY06_PAYTOKEN );
+			for ( int id = 1; id < g_activity_06_maxnum; id++ )
+			{
+				if ( (pCity->act06_state & (1 << id)) == 0 && serv_paytoken >= g_activity_06[id].token )
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	
+	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 ) == 0 )
+	{ // 午宴
+		return 1;
+	}
+	else if ( nowtime->tm_hour >= 18 && nowtime->tm_hour <= 20 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET2 ) == 0 )
+	{ // 晚宴
+		return 1;
+	}
+
+	// 首充礼包
+	int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
+	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+	if ( fristpay == 0 || fristpay == 1 && fristpay_awardget == 0 )
+	{
+		if ( fristpay == 1 && fristpay_awardget == 0 )
+		{
+			return 1;
+		}
+	}
+
+	// 特价礼包
+	char activity10_hasbag = 0;
+	for ( int tmpi = 0; tmpi < CITY_BAG_MAX; tmpi++ )
+	{
+		if ( pCity->bag_gid[tmpi] > 0 )
+		{
+			if ( (int)time( NULL ) >= pCity->bag_time[tmpi] )
+			{
+				pCity->bag_gid[tmpi] = 0;
+				pCity->bag_time[tmpi] = 0;
+				pCity->bag_num[tmpi] = 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+
+	// 主城等级
+	char activity02_over = 1;
+	for ( int id = 1; id < g_activity_02_maxnum; id++ )
+	{
+		if ( (g_actors[actor_index].act02_state & (1 << id)) == 0 && pCity->building[0].level >= g_activity_02[id].level )
+		{
+			return 1;
+		}
+	}
+
+	// 攻城略地
+	char activity03_over = 1;
+	for ( int id = 1; id < g_activity_03_maxnum; id++ )
+	{
+		if ( (g_actors[actor_index].act03_state & (1 << id)) == 0 && data_record_getvalue( pCity, g_activity_03[id].record_offset ) >= g_activity_03[id].needvalue )
+		{
+			return 1;
+		}
+	}
+	
+	// 七日狂欢
+	endtime = g_actors[actor_index].createtime + ACTIVITY_SEVENDAY_TIME;
+	if ( (int)time( NULL ) < endtime )
+	{
+		int myday = system_getfday() - system_getfday_withstamp( g_actors[actor_index].createtime ) + 1;
+		for ( int id = 1; id < g_activity_04_maxnum; id++ )
+		{
+			if ( myday >= g_activity_04[id].day && g_actors[actor_index].act04_state[id] == 0 )
+			{
+				int value = activity_04_getvalue( actor_index, g_activity_04[id].type, id );
+				if ( g_activity_04[id].type == ACTIVITY_SEVENDAY_TYPE2 )
+				{
+					if ( value > 0 )
+					{
+						return 1;
+					}
+				}
+				else
+				{
+					if ( value >= g_activity_04[id].value )
+					{
+						return 1;
+					}
+				}
+			}
+		}
+	}
+
+	// 七星拜将
+	endtime = g_actors[actor_index].createtime + 5 * 86400;
+	int activity05_call = actor_get_sflag( actor_index, ACTOR_SFLAG_ACTIVITY05_CALL );
+	if ( (int)time( NULL ) < endtime || (activity05_call == 0 && g_actors[actor_index].act05_xw >= 7) )
+	{
+		if ( activity05_call == 0 && g_actors[actor_index].act05_xw >= 7 )
+		{
+			return 1;
+		}
+	}
+
+	// 成长计划
+	char activity08_over = 1;
+	for ( int id = 1; id < g_activity_08_maxnum; id++ )
+	{
+		if ( (g_actors[actor_index].act08_state & (1 << id)) == 0 && g_actors[actor_index].level >= g_activity_08[id].level )
+		{
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+
 // 首充礼包活动
 int activity_01_sendinfo( int actor_index )
 {

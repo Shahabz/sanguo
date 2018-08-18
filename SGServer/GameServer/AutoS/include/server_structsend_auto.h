@@ -199,6 +199,8 @@ struct _slk_NetS_ActorInfo {
 	char m_maidname_len;	//服务器发送玩家基本信息-侍女名称
 	char m_maidname[22];	//服务器发送玩家基本信息-侍女名称
 	int m_prestige;	//服务器发送玩家基本信息-威望
+	char m_equip_washnum;	//服务器发送玩家基本信息-装备洗练
+	char m_hero_washnum;	//服务器发送玩家基本信息-武将洗髓
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 

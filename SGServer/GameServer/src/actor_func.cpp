@@ -604,6 +604,8 @@ int actor_getinfo( int actor_index )
 		info.m_guardsec = pCity->guardsec;
 		info.m_questid = pCity->questid[0];
 		info.m_prestige = pCity->prestige;
+		info.m_equip_washnum = pCity->equip_washnum;
+		info.m_hero_washnum = pCity->hero_washnum;
 		for ( int i = 0; i < CITY_TECH_MAX; i++ )
 		{
 			info.m_techlevel[i] = pCity->techlevel[i];
@@ -877,13 +879,17 @@ int actor_redinfo( int actor_index, char path )
 		}
 	}
 	else if ( path == 2 )
-	{
+	{ // 红点-首充
 		int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
 		int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
 		if ( fristpay == 0 || fristpay == 1 && fristpay_awardget == 0 )
 		{
 			pValue.m_has = 1;
 		}
+	}
+	else if ( path == 3 )
+	{ // 红点-活动
+		pValue.m_has = activity_checkred( actor_index );
 	}
 	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;

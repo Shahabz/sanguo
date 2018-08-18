@@ -103,6 +103,8 @@ function Player:Init()
 	self.m_open_zone_luoyang=	0;
 	self.m_shape_bag		=	0;
 	self.m_maidname 		= "";
+	self.m_equip_washnum	= 0;
+	self.m_hero_washnum		= 0;
 	
 	self.m_view_zoneid		=	0;
 	self.m_award_mailid		=	int64.new(0);
@@ -167,6 +169,8 @@ function Player:Set( recvValue )
 	self.m_open_zone_luoyang	=	recvValue.m_open_zone_luoyang;
 	self.m_shape_bag		=	recvValue.m_shape_bag;
 	self.m_maidname			=	recvValue.m_maidname;
+	self.m_equip_washnum	= 	recvValue.m_equip_washnum;
+	self.m_hero_washnum		= 	recvValue.m_hero_washnum;
 end
 
 --

@@ -392,7 +392,7 @@ function EquipForgingDlgSelect( kind )
 		local uiSelect = objs[6];
 		SetFalse( uiSelect )
 	end
-	if m_uiEquipObj[m_selectkind] == nil then
+	if m_uiEquipObj[kind] == nil then
 		return
 	end
 	m_selectkind = kind;

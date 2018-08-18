@@ -879,6 +879,12 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 			world_data_set( WORLD_DATA_PAYMODE, 1, NULL, NULL );
 		}
 		break;
+	case GMC_FANGSHI: // ·»ÊÐ
+		if ( pCity )
+		{
+			fangshi_palace_update( pCity->actor_index );
+		}
+		break;
 	default:
 		break;
 	}

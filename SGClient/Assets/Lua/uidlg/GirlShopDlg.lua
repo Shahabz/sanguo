@@ -236,12 +236,17 @@ function GirlShopDlgOnBtnBuy( index )
 	--弹窗提示
 	if info.m_cost_awardkind > AWARDKIND_GIRLSOULBASE then 	
 		costName = F(4203,Cname,info.m_cost_awardnum);
-	else
-		costName = F(4204,info.m_cost_awardnum);
-	end
-	MsgBox( F(4205, costName,buyName ), function()
+		costName = NameColorText( costName, Cc )
+		buyName = NameColorText( buyName, c )
+		MsgBox( F(4205, costName, buyName ), function()
 			GirlShopDlgCheckBuy(info,index)
 		end)
+	else
+		costName = F(4204,info.m_cost_awardnum);
+		MsgBox( F(4205, costName, buyName ), function()
+			GirlShopDlgCheckBuy(info,index)
+		end)
+	end
 end
 
 function GirlShopDlgCheckBuy(info,index)

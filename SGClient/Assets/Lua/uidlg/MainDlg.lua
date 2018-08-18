@@ -826,7 +826,8 @@ function MainDlgSetWorkerObject( type, uiWorker, kind, offset, needsec, sec, exp
 	-- 建筑名
 	local name = T(kind);
 	if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-		name = (offset%16+1)..T(597)..T(kind);		
+		--name = (offset%16+1)..T(597)..T(kind);		
+		name = T(kind);
 	end
 		
 	-- 建筑形象
@@ -1363,8 +1364,20 @@ function MainDlgFristPayShow( show )
 	SetShow( m_uiTop_City.transform:Find("Right/PayBag"), not show )
 end
 
+-- 国家按钮红点
 function MainDlgButtonNationShow( show )
+	if m_Dlg == nil then
+		return;
+	end
 	SetShow( ButtonTable.m_uiButtonNation.transform:Find("Back/Red"), show  )
+end
+
+-- 活动按钮红点
+function MainDlgButtonActivityShow( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/Activity/Back/Red"), show )
 end
 
 -- 得到点击区域位置

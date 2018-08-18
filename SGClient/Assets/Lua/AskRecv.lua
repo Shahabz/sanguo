@@ -130,11 +130,19 @@ function RecvActorNotify(recvValue)
 		if value[1] == 1 then
 			--pop( T(120)..": "..T(1100).."x"..value[2] ) 
 			AwardNotify( AWARDKIND_HERO_WASH, value[2] )
+			GetPlayer().m_hero_washnum = value[3];
+			HeroInfoDlgWashUpdate()
 			
 		-- 洗练次数
 		elseif value[1] == 2 then
 			--pop( T(120)..": "..T(1101).."x"..value[2] ) 
 			AwardNotify( AWARDKIND_EQUIP_WASH, value[2] )
+			GetPlayer().m_equip_washnum = value[3];
+			if GetPlayer().m_equip_washnum > 0 then
+				City.EquipWashMod( nil, true, 1 )
+			else
+				City.EquipWashMod( nil, false, 1 )
+			end
 			
 		-- 爵位变化
 		elseif value[1] == 3 then

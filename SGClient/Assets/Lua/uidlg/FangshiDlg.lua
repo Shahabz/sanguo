@@ -87,11 +87,16 @@ end
 -- 所属按钮点击时调用
 function FangshiDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
-		if m_IsPlayGet == true then return end;
+		if m_IsPlayGet == true then 
+			return 
+		end;
 		FangshiDlgClosePlaceInfo();	
 		FangshiDlgCloseAwardDesc();
         if nControlID == -1 then
             FangshiDlgClose();
+		elseif nControlID == -2 then
+           SetFalse( m_uiAwardDescLayer )
+			SetFalse( m_uiPlaceInfo )
 		elseif nControlID == 1 then 								-- 打开皇宫内院界面
 			FangshiDlgOnBtnGarth();	
 		elseif nControlID == 2 then									-- 普通巡游
@@ -352,7 +357,13 @@ function FangshiDlgPlaceInfoShow()
 	--设置出现位置
 	local ChildIndex = FangshiDlgNodetoChild(m_placeSelect)
 	local uiObj = m_uiPlaceLayer.transform:GetChild( ChildIndex );
-	m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x,uiObj.localPosition.y, 0);	
+	if ChildIndex == 4 or ChildIndex == 6 then
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x+60, uiObj.localPosition.y+200, 0);
+	elseif ChildIndex == 2 then
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x-60, uiObj.localPosition.y+200, 0);
+	else
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x, uiObj.localPosition.y+200, 0);
+	end
 	FangshiDlgSetPlaceSelect(ChildIndex);
 	
 	SetTrue(m_uiPlaceInfo);	
@@ -640,8 +651,10 @@ end
 function FangshiDlgOnBtnGet()
 	SetFalse(m_uiGetLayer)
 	system_askinfo( ASKINFO_FANGSHI, "", 2 );
-	m_recvInfo.m_awardcount = 0 ;
-	m_recvInfo.m_awardlist = {};
+	if m_recvInfo then
+		m_recvInfo.m_awardcount = 0 ;
+		m_recvInfo.m_awardlist = {};
+	end
 	FangshiDlgClearGetGrid();
 	FangshiDlgSetIncognitoButtons();
 end

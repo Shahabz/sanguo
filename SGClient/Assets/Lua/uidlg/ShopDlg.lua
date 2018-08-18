@@ -793,12 +793,12 @@ function ShopDlgBuyItemSetNum( num )
 			m_SelectItemNum = leftnum;
 			pop( F(2089, m_CacheItem.m_vip_token,leftnum) )
 		end
+		if m_CacheItem.m_awardnum > 0 and m_CacheItem.m_id < 15 then
+			local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
+			SetText( m_uiItemName, name.."x"..knum(m_CacheItem.m_awardnum*m_SelectItemNum), NameColor(c) );
+		end
 	end		
 	
-	if m_CacheItem.m_awardnum > 0 and m_CacheItem.m_id < 15 then
-		local sprite, color, name, c, desc = AwardInfo( m_CacheItem.m_awardkind )
-		SetText( m_uiItemName, name.."x"..knum(m_CacheItem.m_awardnum*m_SelectItemNum), NameColor(c) );
-	end
 	SetText( m_uiUseNum, m_SelectItemNum );
 	local cost = m_SelectItemNum*m_buytoken
 	if GetPlayer().m_token < cost then

@@ -82,7 +82,7 @@ int activity_onlogic( int activityid );
 
 // 活动列表
 int activity_sendlist( int actor_index );
-
+char activity_checkred( int actor_index );
 // 首充礼包活动
 int activity_01_sendinfo( int actor_index );
 int activity_01_get( int actor_index );

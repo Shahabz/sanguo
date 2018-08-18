@@ -249,6 +249,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_maidname_len = buffer:ReadSByte();
 	recvValue.m_maidname = buffer:ReadStringWithLen( recvValue.m_maidname_len );
 	recvValue.m_prestige = buffer:ReadInt();
+	recvValue.m_equip_washnum = buffer:ReadSByte();
+	recvValue.m_hero_washnum = buffer:ReadSByte();
 	return recvValue;
 end
 
