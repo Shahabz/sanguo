@@ -214,7 +214,7 @@ function ShowGuideFinger()
 end
 
 function HideCurrentFinger()
-	if currentFinger ~= nil then
+	if currentFinger ~= nil and currentFinger.transform ~= nil then
 		SetFalse(currentFinger.transform);
 		currentFinger = nil;
 	end
