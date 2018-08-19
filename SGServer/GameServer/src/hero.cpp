@@ -433,6 +433,11 @@ int hero_up_auto( int actor_index, int offset )
 
 	// 自动上阵，补满兵力
 	hero_addsoldiers( actor_index, pCity->hero[index].kind, PATH_HERO_UP );
+
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		g_actors[actor_index].story_sweephero[tmpi] = 0;
+	}
 	return 0;
 }
 
@@ -622,6 +627,11 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 	{
 		quest_addvalue( pCity, QUEST_DATATYPE_HEROGUARD_UP, 0, 0, 1 );
 	}
+
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		g_actors[actor_index].story_sweephero[tmpi] = 0;
+	}
 	return 0;
 }
 
@@ -791,6 +801,11 @@ int hero_down( int actor_index, int kind, char equip_down )
 	if ( equip_down == 1 )
 	{
 		equip_down_all( actor_index, kind );
+	}
+
+	for ( int tmpi = 0; tmpi < 4; tmpi++ )
+	{
+		g_actors[actor_index].story_sweephero[tmpi] = 0;
 	}
 	return 0;
 }

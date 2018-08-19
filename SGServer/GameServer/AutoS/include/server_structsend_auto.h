@@ -687,6 +687,7 @@ struct _slk_NetS_TrainInfo {
 	int m_train_confnum;	//每五分钟训练士兵数
 	int m_train_confsec;	//招募最大时长时间
 	int m_train_conffood;	//单兵耗粮
+	char m_shopbuy;	//手机否可以士兵强征
 };
 typedef struct _slk_NetS_TrainInfo SLK_NetS_TrainInfo;	//训练士兵
 

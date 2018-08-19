@@ -439,8 +439,8 @@ g_techinfo = {
 },
 [28] = 
 { 
-	[1] = { kind=28,level=1,name="攻城术",buildinglevel=21,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=30,},
-	[2] = { kind=28,level=2,name="攻城术",buildinglevel=23,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=60,},
-	[3] = { kind=28,level=3,name="攻城术",buildinglevel=25,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=90,},
+	[1] = { kind=28,level=1,name="攻城术",buildinglevel=17,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=30,},
+	[2] = { kind=28,level=2,name="攻城术",buildinglevel=22,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=60,},
+	[3] = { kind=28,level=3,name="攻城术",buildinglevel=27,prekind=0,prelevel=0,progress=7,sec=9000,silver=720000,wood=330000,food=0,iron=0,ability=15,value=90,},
 },
 }

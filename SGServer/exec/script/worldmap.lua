@@ -8,7 +8,7 @@ MAPUNIT_TYPE_TOWN			=	3	-- 城镇
 MAPUNIT_TYPE_ENEMY			=	4	-- 流寇
 MAPUNIT_TYPE_RES			=	5	-- 资源
 
-g_map_enemy_maxcount		= 30000;-- 流寇最大数量
+g_map_enemy_maxcount		= 35000;-- 流寇最大数量
 g_map_res_maxcount			= 5000;	-- 资源点最大数量
 g_map_event_maxcount		= 100000;-- 地图事件最大数量
 g_map_pickup_maxcount		= 2000;-- 地图拾取物品最大数量

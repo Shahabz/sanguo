@@ -997,6 +997,7 @@ int struct_NetS_TrainInfo_send( char **pptr, int *psize, SLK_NetS_TrainInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_confnum, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_confsec, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_train_conffood, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_shopbuy, (*psize) );
 	return 0;
 }
 

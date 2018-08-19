@@ -31,6 +31,7 @@ local SEC = 300;
 local m_recvValue = {};
 local m_uiTimerCache = nil;
 local m_popcd = 0
+local m_shopbuy = 0;
 -- 打开界面
 function TrainDlgOpen()
 	m_Dlg = eye.uiManager:Open( "TrainDlg" );
@@ -84,8 +85,28 @@ function TrainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 强征
 		elseif nControlID == 11 then
-			ShopDlgShowByKind( 1, AWARDKIND_INFANTRY )
-			TrainDlgClose();
+			if m_corps == 0 then
+				if m_shopbuy == 1 then
+					ShopDlgShowByKind( 1, AWARDKIND_INFANTRY )
+					TrainDlgClose();
+				else
+					pop( F(4232,1) )
+				end
+			elseif m_corps == 1 then
+				if m_shopbuy == 1 then
+					ShopDlgShowByKind( 1, AWARDKIND_CAVALRY )
+					TrainDlgClose();
+				else
+					pop( F(4232,2) )
+				end
+			elseif m_corps == 2 then
+				if m_shopbuy == 1 then
+					ShopDlgShowByKind( 1, AWARDKIND_ARCHER )
+					TrainDlgClose();
+				else
+					pop( F(4232,3) )
+				end
+			end
 		
 		-- 募兵加时
 		elseif nControlID == 12 then
@@ -217,6 +238,7 @@ function TrainDlgRecv( recvValue )
 	SetText( m_uiSoldiers, "<color=#927F64FF>"..T(622)..": </color><color=#ABC7D9FF>"..recvValue.m_soldiers.."</color>" )
 	SetText( m_uiSoldiersMax, "<color=#927F64FF>"..T(623)..": </color><color=#ABC7D9FF>"..recvValue.m_soldiers_max.."</color>" )
 	SetRichText( m_uiQueueLevel, "<color=927F64FF>"..T(624)..": </color><emote=002><color=ABC7D9FF>x"..recvValue.m_queue.."</color>" )
+	m_shopbuy = recvValue.m_shopbuy
 	
 	-- 正在训练的
 	if recvValue.m_trainnum > 0 then

@@ -849,6 +849,7 @@ function struct_NetS_TrainInfo_recv( buffer )
 	recvValue.m_train_confnum = buffer:ReadInt();
 	recvValue.m_train_confsec = buffer:ReadInt();
 	recvValue.m_train_conffood = buffer:ReadInt();
+	recvValue.m_shopbuy = buffer:ReadSByte();
 	return recvValue;
 end
 

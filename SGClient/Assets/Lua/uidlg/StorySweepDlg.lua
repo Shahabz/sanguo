@@ -136,7 +136,7 @@ function StorySweepDlgCreateLayer1Hero()
 	for i=1, 4, 1 do
 		local uiHero = m_uiGrid.transform:GetChild(i-1);
 		local pHero = GetHero():GetPtr(m_sweep_herokind[i])
-		if pHero ~= nil then
+		if m_sweep_herokind[i] > 0 and pHero ~= nil then
 			SetTrue( uiHero )
 			SetImage( uiHero.transform:Find("Shape"), HeroHeadSprite(pHero.m_kind) )
 			SetImage( uiHero.transform:Find("Color"), ItemColorSprite(pHero.m_color) )

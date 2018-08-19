@@ -92,6 +92,9 @@ extern int g_army_maxcount;
 extern BuildingUpgrade *g_building_upgrade;
 extern int g_building_upgrade_maxnum;
 
+extern VipShop *g_vipshop;
+extern int g_vipshop_maxnum;
+
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
 
@@ -2635,6 +2638,18 @@ int city_train_sendinfo( int actor_index, int kind )
 			pValue.m_queuenum[count] = barracks->queuenum[tmpi];
 			count += 1;
 		}
+	}
+	if ( kind == BUILDING_Infantry )
+	{
+		pValue.m_shopbuy = (char)vipbag_check( actor_index, g_vipshop[12].vipbaglevel );
+	}
+	else if ( kind == BUILDING_Cavalry )
+	{
+		pValue.m_shopbuy = (char)vipbag_check( actor_index, g_vipshop[13].vipbaglevel );
+	}
+	else if ( kind == BUILDING_Archer )
+	{
+		pValue.m_shopbuy = (char)vipbag_check( actor_index, g_vipshop[14].vipbaglevel );
 	}
 	netsend_traininfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;

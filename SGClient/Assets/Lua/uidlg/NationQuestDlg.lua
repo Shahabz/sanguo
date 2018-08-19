@@ -171,7 +171,7 @@ function NationQuestDlgCreate( index, info )
 			SetTrue( awardObj )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
 			SetText( awardObj.transform:Find("Name"), name );
-			SetText( awardObj.transform:Find("Num"), info.m_awardnum[i] );
+			SetText( awardObj.transform:Find("Num"), knum(info.m_awardnum[i]) );
 			step = step + 1
 		end
 	end
