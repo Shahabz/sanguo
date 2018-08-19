@@ -621,7 +621,10 @@ int hero_up( int actor_index, int selectkind, int upkind, int replace_equip, cha
 	// 任务
 	if ( uptype == 0 )
 	{
-		quest_addvalue( pCity, QUEST_DATATYPE_HERO_UP, upkind, 0, 1 );
+		if ( upkind == 11 )
+			quest_addvalue( pCity, QUEST_DATATYPE_HERO_UP, 3, 0, 1 );
+		else
+			quest_addvalue( pCity, QUEST_DATATYPE_HERO_UP, upkind, 0, 1 );
 	}
 	else if ( uptype == 2 )
 	{
@@ -2604,13 +2607,13 @@ int hero_visit_high( int actor_index )
 
 		if ( getinfo.kind[tmpi] > AWARDKIND_HEROBASE && getinfo.kind[tmpi] < AWARDKIND_BUILDINGBASE )
 		{ // 武将公告
-			char v1[32] = { 0 };
-			char v2[32] = { 0 };
-			char v3[32] = { 0 };
-			sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
-			sprintf( v2, "%s", pCity->name );
-			sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
-			system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
+			//char v1[32] = { 0 };
+			//char v2[32] = { 0 };
+			//char v3[32] = { 0 };
+			//sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+			//sprintf( v2, "%s", pCity->name );
+			//sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
+			//system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
 		}
 	}
 	// 发送获取的奖励ID
@@ -2668,13 +2671,13 @@ int hero_visit_high10( int actor_index )
 
 		if ( getinfo.kind[tmpi] > AWARDKIND_HEROBASE && getinfo.kind[tmpi] < AWARDKIND_BUILDINGBASE )
 		{ // 武将公告
-			char v1[32] = { 0 };
-			char v2[32] = { 0 };
-			char v3[32] = { 0 };
-			sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
-			sprintf( v2, "%s", pCity->name );
-			sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
-			system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
+			//char v1[32] = { 0 };
+			//char v2[32] = { 0 };
+			//char v3[32] = { 0 };
+			//sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+			//sprintf( v2, "%s", pCity->name );
+			//sprintf( v3, "%s%d", TAG_HERO, getinfo.kind[tmpi] - AWARDKIND_HEROBASE );
+			//system_talkjson_world( 6027, v1, v2, v3, NULL, NULL, NULL, 1 );
 		}
 	}
 	// 发送获取的奖励ID

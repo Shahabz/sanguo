@@ -366,6 +366,8 @@ function ShowBuildingModEffect()
 		else
 			ShowMod();
 		end
+	elseif g_QuestTargetBuildingOprator > 0 then
+		BuildingOpratorModEffectShow(g_QuestTargetBuildingOprator);
 	else
 		ShowMod();
 	end
@@ -389,18 +391,22 @@ end
 function BuildingOpratorModEffectShow(kind)
 	BuildingOpratorModHideAllEffect()
 	
-	if kind == 1 then SetTrue(m_uiUpgrade.transform:Find("Effect"));
-	elseif kind == 2 then SetTrue(m_uiEnter.transform:Find("Effect"));
-	elseif kind == 3 then SetTrue(m_uiTrain.transform:Find("Effect"));
-	elseif kind == 4 then SetTrue(m_uiSpeed.transform:Find("Effect"));
+	if kind == 1 then 
+		SetTrue(m_uiUpgrade.transform:Find("Back/Effect"));
+	elseif kind == 2 then 
+		SetTrue(m_uiEnter.transform:Find("Back/Effect"));
+	elseif kind == 3 then 
+		SetTrue(m_uiTrain.transform:Find("Back/Effect"));
+	elseif kind == 4 then 
+		SetTrue(m_uiSpeed.transform:Find("Back/Effect"));
 	end
 end
 
 function BuildingOpratorModHideAllEffect()
-	SetFalse(m_uiUpgrade.transform:Find("Effect"));
-	SetFalse(m_uiEnter.transform:Find("Effect"));
-	SetFalse(m_uiTrain.transform:Find("Effect"));
-	SetFalse(m_uiSpeed.transform:Find("Effect"));
+	SetFalse(m_uiUpgrade.transform:Find("Back/Effect"));
+	SetFalse(m_uiEnter.transform:Find("Back/Effect"));
+	SetFalse(m_uiTrain.transform:Find("Back/Effect"));
+	SetFalse(m_uiSpeed.transform:Find("Back/Effect"));
 end
 
 function BuildingOpratorModIsOpen()

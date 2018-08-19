@@ -12,6 +12,7 @@ local m_uiRankWayText = nil; --UnityEngine.GameObjec 显示排序方法的Text
 local m_uiEmptyHeroContent = nil; --UnityEngine.GameObject
 local m_uiHeoVisitEnter = nil; --UnityEngine.GameObject
 local m_uiUIP_NationHeroVisit = {nil,nil,nil,nil}; --UnityEngine.GameObject
+local m_uiTextBack = nil; --UnityEngine.GameObject
 local m_CacheHeroCache = {}
 local m_CacheHeroList = {}
 local m_SelectHeroKind = 0;
@@ -133,6 +134,7 @@ function HeroListDlgOnAwake( gameObject )
 	m_uiUIP_NationHeroVisit[2] = objs[11];
 	m_uiUIP_NationHeroVisit[3] = objs[12];
 	m_uiUIP_NationHeroVisit[4] = objs[13];
+	m_uiTextBack = objs[14];
 end
 
 -- 界面初始化时调用
@@ -171,8 +173,11 @@ function HeroListDlgShow( path )
 	m_path = path
 	HeroListDlgOpen()
 	if GetPlayer().m_level >= global.hero_visit_actorlevel and GetPlayer():CityLevel() >= global.hero_visit_mainlevel then
+		SetFalse( m_uiTextBack )
 		SetTrue( m_uiHeoVisitEnter );
 	else
+		SetTrue( m_uiTextBack )
+		SetText( m_uiTextBack.transform:Find("Text"), F(1924,global.hero_visit_mainlevel) )
 		SetFalse( m_uiHeoVisitEnter );
 	end
 	
@@ -275,7 +280,7 @@ function HeroListDlgLoadHero()
     for offset = 0+baseoffset, 3+baseoffset, 1 do
         local pHero = GetHero().m_CityHero[offset];
         if pHero ~= nil and pHero.m_kind > 0 then
-        	print("pHero.m_kind:"..pHero.m_kind)
+        	--print("pHero.m_kind:"..pHero.m_kind)
 			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
 			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
             table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_color = pHero.m_color, m_level = pHero.m_level, m_corps = pHero.m_corps, m_god = pHero.m_god, m_offset = offset,

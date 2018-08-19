@@ -32,6 +32,7 @@ local m_uiFreeItemBtnGroup = nil; --UnityEngine.GameObject
 local m_uiFreeItemText = nil; --UnityEngine.GameObject
 local m_uiFreeItemBtn = nil; --UnityEngine.GameObject
 local m_uiGodDot = nil; --UnityEngine.GameObject
+local m_uiItemInfo = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_cacheAward = nil;
@@ -69,7 +70,7 @@ function HeroVisitDlgClose()
 	if m_Dlg == nil then
 		return;
 	end
-	if b_isVisit == true then
+	if b_isVisit == true or b_isTenVisit == true then
 		return;
 	end
 	if IsActive(m_uiTenPage) then
@@ -140,9 +141,13 @@ function HeroVisitDlgOnEvent( nType, nControlID, value, gameObject )
 			else
 				print("i_controlID value error ");
 			end
-		elseif nControlID >= 17 and nControlID < 400 then
-			HeroVisitDlgSelect(nControlID);
+		elseif nControlID >= 2000 and nControlID < 2400 then
+			HeroVisitDlgSelect(nControlID-2000);
         end		
+	elseif nType == UI_EVENT_PRESS then
+		if nControlID >= 1000 and nControlID < 2000 then
+			HeroVisitDlgSelectItem( nControlID-1000, value );
+		end
 	elseif nType == UI_EVENT_TIMECOUNTEND  then
 		if nControlID == 1 then
 			HeroVisitDlgShow();
@@ -191,12 +196,13 @@ function HeroVisitDlgOnAwake( gameObject )
 	m_uiFreeItemText = objs[28];
 	m_uiFreeItemBtn = objs[29];
 	m_uiGodDot = objs[30];
+	m_uiItemInfo = objs[31];
 	--HeroVisitDlgGetObject();
 end
 
 -- 界面初始化时调用
 function HeroVisitDlgOnStart( gameObject )
-	HeroVisitDlgGetObject();
+	
 end
 
 -- 界面显示时调用
@@ -285,6 +291,7 @@ end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
 function HeroVisitDlgRecv( recvValue )
+	HeroVisitDlgGetObject();
 	m_recvValue = recvValue;
 	i_goodTimesNum = recvValue.m_hv_low_num ;
 	i_godTimesNum = recvValue.m_hv_high_num ;
@@ -615,6 +622,8 @@ end
 --获得道具和英雄的GameObject
 function HeroVisitDlgGetObject()
 	m_combineObjectArray ={};
+	m_tokenObjectArray = {}
+	m_heroObjectArray = {}
 	for i = 0,m_uiLeftToken.transform.childCount-1  do
 		table.insert(m_tokenObjectArray,m_uiLeftToken.transform:GetChild(i));
 		table.insert(m_combineObjectArray,m_uiLeftToken.transform:GetChild(i));
@@ -636,11 +645,14 @@ end
 
 --单次寻访设置单个对象
 function HeroVisitDlgSetCell(uiHeroObj,value)
-	local sprite, color, name = AwardInfo(value.kind  ) ;
+	if uiHeroObj == nil then
+		return;
+	end
+	local sprite, color, name = AwardInfo(value.kind) ;
 	local colorSprite = ItemColorSprite(value.color);
-	uiHeroObj:GetComponent("UIButton").controlID = value.id;
 	local objs = uiHeroObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
 	if value.kind >= 20000 then
+		uiHeroObj:GetComponent("UIButton").controlID = 2000+value.id;
 		local uiShape = objs[0];
 		local uiColor = objs[1];
 		local uiCorps = objs[2];
@@ -659,6 +671,7 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 			SetFalse(uiAlreadlyHave);
 		end
 	else
+		uiHeroObj:GetComponent("UIButton").controlID = 1000+value.id;
 		local uiShape = objs[0];
 		local uiColor = objs[1];
 		local uiName = objs[2];
@@ -763,8 +776,15 @@ function HeroVisitDlgTransform( id )
 		selectid = objCache[id]
 	end
 	for i = 1 ,#m_combineObjectArray do
-		if selectid == m_combineObjectArray[i].transform:GetComponent("UIButton").controlID then
-			transformid = i
+		local controlID = m_combineObjectArray[i].transform:GetComponent("UIButton").controlID
+		if controlID >= 1000 and controlID < 2000 then
+			if selectid == controlID-1000 then
+				transformid = i
+			end
+		elseif controlID >= 2000 then
+			if selectid == controlID-2000 then
+				transformid = i
+			end
 		end
 	end
 	return transformid ;
@@ -804,8 +824,18 @@ function HeroVisitDlgAddHero( kind )
 	table.insert(t_getHero,kind);
 end
 
-
-
+function HeroVisitDlgSelectItem( colickid, value )
+	if value == 1 then
+		SetFalse( m_uiItemInfo )
+		return
+	end
+	local kindid = g_hero_visit[colickid].kind;
+	if kindid < 20000 then
+		SetTrue( m_uiItemInfo )
+		SetText( m_uiItemInfo.transform:Find("Name"), item_getname(kindid) )
+		SetText( m_uiItemInfo.transform:Find("Desc"), item_getdesc(kindid) )
+	end	
+end
 
 
 

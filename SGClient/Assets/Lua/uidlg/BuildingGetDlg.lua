@@ -160,6 +160,7 @@ function BuildingGetDlgShow( recvValue, count )
 	FightInfoDlgClose()
 	LevyDlgClose()
 	WishingDlgClose()
+	NationEquipDlgClose()
 end
 
 function BuildingGetDlgMove()

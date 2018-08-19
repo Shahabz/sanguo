@@ -1505,10 +1505,10 @@ void nation_rank_addvalue( City *pCity, char kind, int value )
 	}
 	else
 	{// 不在里面
-		if ( replace_tmpi < NATION_RANK_MEMBERNUM - 1 )
+		/*if ( replace_tmpi < NATION_RANK_MEMBERNUM - 1 )
 		{
 			memmove( &pRank->member[index][replace_tmpi + 1], &pRank->member[index][replace_tmpi], sizeof( NationRankMember ) * (NATION_RANK_MEMBERNUM - 1 - replace_tmpi) );
-		}
+		}*/
 		pRank->member[index][replace_tmpi].city_index = pCity->index;
 		pRank->member[index][replace_tmpi].actorid = pCity->actorid;
 	}

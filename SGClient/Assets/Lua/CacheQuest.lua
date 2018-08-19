@@ -45,6 +45,7 @@ QUEST_MAINID_MADAI	=	20	--	 马岱任务特殊处理
 QUEST_MAINID_LIUKOU	=	55	--   木场流寇任务特殊处理
 
 g_QuestTargetEnemyLevel = 0; -- 任务流寇等级
+g_QuestTargetBuildingOprator = 0;
 
 -- 任务缓存
 CacheQuest = {};
@@ -54,6 +55,7 @@ end
 
 -- m_count=0,m_list={m_questid=0,m_flag=0,m_datatype=0,m_datakind=0,m_dataoffset=0,m_value=0,m_needvalue=0,m_awardkind={[5]},m_awardnum={[5]},m_nameid=0,m_descid=0,[m_count]},
 function CacheQuestSet( recvValue )
+	g_QuestTargetBuildingOprator = 0;
 	g_QuestTargetEnemyLevel = 0;
 	if CacheQuest ~= nil and CacheQuest.m_list ~= nil and CacheQuest.m_list[1] ~= nil then
 		if CacheQuest.m_list[1].m_datatype == QUEST_DATATYPE_KILLMONSTER_LEVEL then
@@ -278,7 +280,7 @@ function QuestGoto( index )
 			EquipForgingDlgShow();
 		end
 	elseif datatype == QUEST_DATATYPE_BUILDING_LEVEL or datatype == QUEST_DATATYPE_BUILDING_UPGRADE then-- 建筑等级 datatype=2 datakind=建筑kind dataoffset=资源建筑编号 needvalue=建筑等级
-				
+		g_QuestTargetBuildingOprator = 1		
 		if dataoffset > 100 then
 			local offset = 0;
 			if datakind == BUILDING_Silver then
@@ -306,24 +308,28 @@ function QuestGoto( index )
 		end
 		
 	elseif datatype == QUEST_DATATYPE_BUILDING_SILVER then-- N个民居达到N级 datatype=3 datakind=等级 needvalue=建筑数量
+		g_QuestTargetBuildingOprator = 1
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Silver );
 		if offset >= 0 then
 			City.Move( BUILDING_Silver, offset, true )
 		end
 		
 	elseif datatype == QUEST_DATATYPE_BUILDING_WOOD then-- N个木场达到N级 datatype=4 datakind=等级 needvalue=建筑数量
+		g_QuestTargetBuildingOprator = 1
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Wood );
 		if offset >= 0 then
 			City.Move( BUILDING_Wood, offset, true )
 		end
 		
 	elseif datatype == QUEST_DATATYPE_BUILDING_FOOD then-- N个农田达到N级 datatype=5 datakind=等级 needvalue=建筑数量
+		g_QuestTargetBuildingOprator = 1
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Food );
 		if offset >= 0 then
 			City.Move( BUILDING_Food, offset, true )
 		end
 		
 	elseif datatype == QUEST_DATATYPE_BUILDING_IRON then-- N个矿场达到N级 datatype=6 datakind=等级 needvalue=建筑数量
+		g_QuestTargetBuildingOprator = 1
 		local offset =  GetPlayer():BuildingResMinLevel( BUILDING_Iron );
 		if offset >= 0 then
 			City.Move( BUILDING_Iron, offset, true )
@@ -366,13 +372,16 @@ function QuestGoto( index )
 		end
 		
 	elseif datatype == QUEST_DATATYPE_TRAINCOUNT or datatype == QUEST_DATATYPE_TRAINCOUNT_OP then-- 募兵N次 datatype=15 datakind=0 needvalue=数量
+		g_QuestTargetBuildingOprator = 3
 		City.Move( BUILDING_Infantry, -1, true );
 		
 	elseif datatype == QUEST_DATATYPE_CITY_TECH then-- 研究N科技N级 datatype=16 datakind=科技ID needvalue=等级
+		g_QuestTargetBuildingOprator = 2
 		City.Move( BUILDING_Tech, -1, true );
 		CityTechDlgSetFirst( datakind )
 		
 	elseif datatype == QUEST_DATATYPE_CITY_TECHONE	 then-- 研究一次N科技 datatype=17 datakind=科技ID needvalue=1
+		g_QuestTargetBuildingOprator = 2
 		City.Move( BUILDING_Tech, -1, true );
 		CityTechDlgSetFirst( datakind )
 		

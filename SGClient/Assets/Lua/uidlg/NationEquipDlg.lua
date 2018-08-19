@@ -416,6 +416,8 @@ function NationEquipDlgSetIron( update )
 						SetControlID( uiGetIronBtn, 3 )
 					else
 						SetText( uiCostNum, g_nation_equip[kind][info.m_neq_lv].iron, Hex2Color( 0xECC244FF ) )
+						SetTrue( uiUpgradeBtn )
+						SetFalse( uiGetIronBtn )
 					end
 				end
 			end
