@@ -1055,6 +1055,11 @@ function netrecv_redinfo_C( buffer )
 	proc_redinfo_C( recvValue );
 end
 
+function netrecv_everydayevent_C( buffer )
+	local recvValue = struct_NetS_EverydayEvent_recv( buffer );
+	proc_everydayevent_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1267,6 +1272,7 @@ Proc_Command = {
 	[CMDS_FIGHTHELPER]=netrecv_fighthelper_C;
 	[CMDS_FIGHTHELPERLIST]=netrecv_fighthelperlist_C;
 	[CMDS_REDINFO]=netrecv_redinfo_C;
+	[CMDS_EVERYDAYEVENT]=netrecv_everydayevent_C;
 }
 
 function in_proc_command_C( cmd, buffer )

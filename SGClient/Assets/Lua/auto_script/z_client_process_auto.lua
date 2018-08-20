@@ -2469,3 +2469,9 @@ function proc_redinfo_C( recvValue )
 	end
 end
 
+-- m_index=0,m_textid=0,m_talkid0=0,m_talkid1=0,m_awardkind0=0,m_awardnum0=0,m_awardkind1=0,m_awardnum1=0,m_eventnum=0,m_eventsec=0,
+function proc_everydayevent_C( recvValue )
+	-- process.
+	EveryDayEventDlgRecv( recvValue )
+end
+

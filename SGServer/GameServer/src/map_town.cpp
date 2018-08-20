@@ -379,7 +379,7 @@ void map_town_logic( int townid )
 		g_map_town[townid].attackcd -= 1;
 		if ( g_map_town[townid].attackcd <= 0 )
 		{
-			map_town_attack( townid );
+			//map_town_attack( townid );
 			g_map_town[townid].attackcd = global.town_attackcd;
 		}
 	}

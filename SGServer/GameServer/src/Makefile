@@ -65,6 +65,7 @@ SRC = \
 ../AutoS/src/auto_data_item.cpp \
 ../AutoS/src/auto_data_teacher_shop.cpp \
 ../AutoS/src/auto_data_city_tech.cpp \
+../AutoS/src/auto_data_everyday_event.cpp \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
@@ -330,6 +331,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_teacher_shop.o: ../AutoS/src/auto_data_teacher_shop.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_city_tech.o: ../AutoS/src/auto_data_city_tech.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_everyday_event.o: ../AutoS/src/auto_data_everyday_event.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_city_building_res.o: ../AutoS/src/auto_city_building_res.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

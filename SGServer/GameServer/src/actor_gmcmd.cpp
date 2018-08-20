@@ -210,6 +210,13 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				worldquest_gmclear( pCity->actor_index );
 			}
 		}
+		else if ( pValue[0] == 11 )
+		{
+			if ( pCity )
+			{
+				city_everyday_event_add( pCity );
+			}
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );

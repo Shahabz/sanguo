@@ -56,6 +56,7 @@
 #define	ASKINFO_FIGHTHELPER		51 // 雇佣兵
 #define ASKINFO_INVITECODE		52 // 邀请码
 #define ASKINFO_BUYRES			53 // 购买资源
+#define ASKINFO_EVERYDAY_EVENT	54 // 政务
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

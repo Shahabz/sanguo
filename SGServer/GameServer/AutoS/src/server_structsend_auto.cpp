@@ -3444,3 +3444,20 @@ int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue 
 	return 0;
 }
 
+int struct_NetS_EverydayEvent_send( char **pptr, int *psize, SLK_NetS_EverydayEvent *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_index, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_textid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_talkid0, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_talkid1, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind0, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum0, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind1, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum1, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_eventnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_eventsec, (*psize) );
+	return 0;
+}
+

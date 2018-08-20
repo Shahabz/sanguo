@@ -99,6 +99,7 @@ function RecvActorNotify(recvValue)
 		-- 购买资源
 		elseif value[1] == 2 then
 			JumpDlgMsgBox( value[2], value[3], value[4] )
+			
 		end
 	
 	-- 角色标志位	
@@ -153,6 +154,14 @@ function RecvActorNotify(recvValue)
 		elseif value[1] == 4 then
 			GetPlayer().m_official = value[2]
 			NationDlgChangeOfficial()
+			
+		-- 政务变化
+		elseif value[1] == 5 then
+			if value[2] > 0 then
+				City.DayEventhMod( nil, true )
+			else
+				City.DayEventhMod( nil, false )	
+			end
 		end
 	
 	-- 邮件	

@@ -621,6 +621,10 @@ int global_init()
 			global.fangshi_palace_token = atoi( row[1] );
 		else if ( id == 228 )
 			global.nation_update_reset_token = atoi( row[1] );
+		else if ( id == 229 )
+			global.everyday_event_max = atoi( row[1] );
+		else if ( id == 230 )
+			global.everyday_event_sec = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

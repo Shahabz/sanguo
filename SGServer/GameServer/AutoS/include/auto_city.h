@@ -142,6 +142,9 @@ struct _city {
 				short act06_state;	//全服返利领取状态
 				char robot_ai;	//AI
 				int robot_cd;	//机器人逻辑
+				char edevent[16];	//政务系统
+				short edevent_sec;	//政务系统
+				char edevent_num;	//政务系统
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

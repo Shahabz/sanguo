@@ -2332,6 +2332,20 @@ struct _slk_NetS_RedInfo {
 };
 typedef struct _slk_NetS_RedInfo SLK_NetS_RedInfo;	//红点
 
+struct _slk_NetS_EverydayEvent {
+	short m_index;	//政务
+	int m_textid;	//政务
+	int m_talkid0;	//政务
+	int m_talkid1;	//政务
+	int m_awardkind0;	//政务
+	int m_awardnum0;	//政务
+	int m_awardkind1;	//政务
+	int m_awardnum1;	//政务
+	short m_eventnum;	//政务
+	int m_eventsec;	//政务
+};
+typedef struct _slk_NetS_EverydayEvent SLK_NetS_EverydayEvent;	//政务
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2585,5 +2599,6 @@ int struct_NetS_DelZoneUnit_send( char **pptr, int *psize, SLK_NetS_DelZoneUnit 
 int struct_NetS_FightHelper_send( char **pptr, int *psize, SLK_NetS_FightHelper *pValue );
 int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHelperList *pValue );
 int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue );
+int struct_NetS_EverydayEvent_send( char **pptr, int *psize, SLK_NetS_EverydayEvent *pValue );
 
 #endif

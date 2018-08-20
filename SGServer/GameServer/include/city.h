@@ -292,6 +292,12 @@ int city_lost_rebuild( City *pCity );
 int city_lost_rebuild_get( int actor_index );
 int city_lost_rebuild_num( int actor_index );
 
+// 政务系统
+void city_everyday_event_add( City *pCity );
+int city_everyday_event_update( int actor_index );
+int city_everyday_event_sendinfo( int actor_index );
+int city_everyday_event_getaward( int actor_index, int select );
+
 // GM获取城池信息
 int city_gm_getinfo( City *pCity );
 #endif

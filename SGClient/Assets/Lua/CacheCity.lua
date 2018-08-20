@@ -804,6 +804,21 @@ function City.EquipWashMod( unitObj, show, type )
 	modObj.gameObject:SetActive( show );
 end
 
+-- 官府-处理政务
+function City.DayEventhMod( unitObj, show )
+	if unitObj == nil then
+		unitObj = City.m_Buildings[BUILDING_Main];
+		if unitObj == nil then
+			return
+		end
+	end
+	local modObj = unitObj.transform:Find( "DayEventMod" )
+	if modObj == nil then
+		return
+	end
+	modObj.gameObject:SetActive( show );
+end
+
 -- 闲置睡觉
 function City.Sleep()
 	-- 步兵营

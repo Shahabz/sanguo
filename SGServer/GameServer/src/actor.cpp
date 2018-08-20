@@ -825,6 +825,8 @@ int actor_entercity( int actor_index )
 	actor_redinfo( actor_index, 3 );
 	// 上线提醒
 	nation_online_notify( actor_index );
+	// 政务次数
+	city_everyday_event_update( actor_index );
 
 	// 地图的州牧和皇帝
 	map_zone_masterlist( actor_index );

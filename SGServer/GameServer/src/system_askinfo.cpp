@@ -1235,6 +1235,16 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_BUYRES:
 		actor_buyres( actor_index, pvalue[0], pvalue[1], pvalue[2] );
 		break;
+	case ASKINFO_EVERYDAY_EVENT: // ÕþÎñ
+		if ( pvalue[0] == 0 )
+		{
+			city_everyday_event_sendinfo( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			city_everyday_event_getaward( actor_index, pvalue[1] );
+		}
+		break;
 	default:
 		break;
 	}

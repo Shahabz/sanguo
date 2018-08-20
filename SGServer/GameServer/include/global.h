@@ -201,6 +201,8 @@ typedef struct _global
 	int fangshi_nationhero_time;
 	short fangshi_palace_token;
 	short nation_update_reset_token;
+	int everyday_event_max;
+	int everyday_event_sec;
 }Global;
 int global_init();
 void global_reload();

@@ -137,6 +137,7 @@
 #define PATH_PAY_GIFT					105 // 充值赠送
 #define PATH_INVITECODE					106 // 邀请码
 #define PATH_BUYRES						107 // 购买资源
+#define PATH_EVERYDAY_EVENT				108 // 政务
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

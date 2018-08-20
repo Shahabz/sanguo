@@ -3130,3 +3130,18 @@ function struct_NetS_RedInfo_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_EverydayEvent_recv( buffer )
+	local recvValue = {};
+	recvValue.m_index = buffer:ReadShort();
+	recvValue.m_textid = buffer:ReadInt();
+	recvValue.m_talkid0 = buffer:ReadInt();
+	recvValue.m_talkid1 = buffer:ReadInt();
+	recvValue.m_awardkind0 = buffer:ReadInt();
+	recvValue.m_awardnum0 = buffer:ReadInt();
+	recvValue.m_awardkind1 = buffer:ReadInt();
+	recvValue.m_awardnum1 = buffer:ReadInt();
+	recvValue.m_eventnum = buffer:ReadShort();
+	recvValue.m_eventsec = buffer:ReadInt();
+	return recvValue;
+end
+

@@ -169,6 +169,17 @@ function table.shuffle(starNum, endNum, count)
     generateShuffle()   
 	return shuffleNum;
 end 
+
+-- 洗牌
+function table.ruffle(t)
+    if not t then return end
+    local cnt = #t
+    for i=1,cnt do
+        local j = math.random(i,cnt)
+        t[i],t[j] = t[j],t[i]
+    end
+end
+
 -------------------------------
 -- 计算表格包含的字段数量
 -- @function [parent=#table] nums

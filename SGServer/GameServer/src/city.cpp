@@ -98,6 +98,9 @@ extern int g_vipshop_maxnum;
 extern ArmyGroup *g_armygroup;
 extern int g_armygroup_maxcount;
 
+extern EverydayEvent *g_everyday_event;
+extern int g_everyday_event_maxnum;
+
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 
 extern int g_city_maxindex;
@@ -713,6 +716,17 @@ void city_logic_sec( int begin, int end )
 			{
 				g_city[city_index].hero_washsec = global.hero_wash_sec;
 				g_city[city_index].hero_washnum += 1;
+			}
+		}
+
+		// 政务
+		if ( g_city[city_index].edevent_num < global.everyday_event_max )
+		{
+			g_city[city_index].edevent_sec -= 1;
+			if ( g_city[city_index].edevent_sec <= 0 )
+			{
+				g_city[city_index].edevent_sec = global.everyday_event_sec;
+				city_everyday_event_add( &g_city[city_index] );
 			}
 		}
 		
@@ -4419,6 +4433,136 @@ int city_lost_rebuild_num( int actor_index )
 	value[0] = 0;
 	value[1] = pCity->rb_num;
 	actor_notify_value( actor_index, NOTIFY_LOSTREBUILD, 2, value, NULL );
+	return 0;
+}
+
+// 政务系统
+void city_everyday_event_add( City *pCity )
+{
+	if ( !pCity )
+		return;
+	if ( g_everyday_event_maxnum <= 0 )
+		return;
+	int index = -1;
+	for ( int tmpi = 0; tmpi < 16; tmpi++ )
+	{
+		if ( pCity->edevent[tmpi] <= 0 )
+		{
+			index = tmpi;
+			break;
+		}
+	}
+	if ( index < 0 )
+		return;
+	pCity->edevent[index] = random( 1, g_everyday_event_maxnum - 1 );
+	pCity->edevent_num = index + 1;
+	city_everyday_event_update( pCity->actor_index );
+}
+
+int city_everyday_event_update( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int pValue[2] = { 0 };
+	pValue[0] = 5;
+	pValue[1] = pCity->edevent_num;
+	actor_notify_value( actor_index, NOTIFY_VALUECHANGE, 2, pValue, NULL );
+	return 0;
+}
+
+int _city_everyday_event_awardnum_get( City *pCity, int awardkind, int awardnum )
+{
+	int num = awardnum;
+	switch ( awardkind )
+	{
+	case AWARDKIND_EXP:
+	{
+		int exp = g_upgradeinfo[pCity->level].exp / 50;
+		if ( exp < 5 )
+			exp = 5;
+		num = exp;
+	}
+		break;
+	case AWARDKIND_LEVY_SILVER:
+		num = city_yield_total( pCity, BUILDING_Silver, 1 );
+		break;
+	case AWARDKIND_LEVY_WOOD:
+		num = city_yield_total( pCity, BUILDING_Wood, 1 );
+		break;
+	case AWARDKIND_LEVY_FOOD:
+		num = city_yield_total( pCity, BUILDING_Food, 1 );
+		break;
+	case AWARDKIND_LEVY_IRON:
+		num = city_yield_total( pCity, BUILDING_Iron, 1 );
+		break;
+	}
+	return num;
+}
+
+int city_everyday_event_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_EverydayEvent pValue = { 0 };
+	int id = pCity->edevent[0];
+	if ( id <= 0 || id >= g_everyday_event_maxnum )
+	{
+		pCity->edevent_num = 0;
+		pValue.m_index = -1;
+		pValue.m_eventnum = pCity->edevent_num;
+		pValue.m_eventsec = pCity->edevent_sec;
+		netsend_everydayevent_S( actor_index, SENDTYPE_ACTOR, &pValue );
+		return -1;
+	}
+	
+	pValue.m_textid = g_everyday_event[id].textid;
+	pValue.m_talkid0 = g_everyday_event[id].talkid[0];
+	pValue.m_talkid1 = g_everyday_event[id].talkid[1];
+	pValue.m_awardkind0 = g_everyday_event[id].awardkind[0];
+	pValue.m_awardnum0 = _city_everyday_event_awardnum_get( pCity, g_everyday_event[id].awardkind[0], g_everyday_event[id].awardnum[0] );
+	pValue.m_awardkind1 = g_everyday_event[id].awardkind[1];
+	pValue.m_awardnum1 = _city_everyday_event_awardnum_get( pCity, g_everyday_event[id].awardkind[1], g_everyday_event[id].awardnum[1] );
+	pValue.m_eventnum = pCity->edevent_num;
+	pValue.m_eventsec = pCity->edevent_sec;
+	netsend_everydayevent_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int city_everyday_event_getaward( int actor_index, int select )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( select < 0 || select > 1 )
+		return -1;
+	int id = pCity->edevent[0];
+	if ( id <= 0 || id >= g_everyday_event_maxnum )
+	{
+		return -1;
+	}
+	int awardkind = g_everyday_event[id].awardkind[select];
+	int awardnum = _city_everyday_event_awardnum_get( pCity, awardkind, g_everyday_event[id].awardnum[select] );
+	award_getaward( actor_index, awardkind, awardnum, -1, PATH_EVERYDAY_EVENT, NULL );
+
+	if ( pCity->edevent[1] > 0 )
+	{
+		memmove( &pCity->edevent[0], &pCity->edevent[1], sizeof( char )*(15) );
+		pCity->edevent[15] = 0;
+		pCity->edevent_num -= 1;
+	}
+	else
+	{
+		pCity->edevent[0] = 0;
+		pCity->edevent_num = 0;
+	}
+
+	city_everyday_event_update( actor_index );
+	city_everyday_event_sendinfo( actor_index );
 	return 0;
 }
 
