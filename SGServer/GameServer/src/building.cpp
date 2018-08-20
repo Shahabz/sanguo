@@ -839,6 +839,8 @@ int building_upgrade_autocheck( int city_index )
 				continue;
 			if ( g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind || g_city[city_index].building_barracks[tmpi].kind == g_city[city_index].worker_kind_ex )
 				continue;
+			if ( g_city[city_index].building_barracks[tmpi].trainsec > 0 )
+				continue;
 			BuildingUpgradeConfig *config = building_getconfig( g_city[city_index].building_barracks[tmpi].kind, g_city[city_index].building_barracks[tmpi].level + 1 );
 			if ( config )
 			{
