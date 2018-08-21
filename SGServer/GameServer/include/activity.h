@@ -16,7 +16,7 @@
 #define ACTIVITY_9	9	//	幸运罗盘
 #define ACTIVITY_10	10	//	特价礼包
 #define ACTIVITY_11	11	//	出师大宴
-#define ACTIVITY_12	12	//	副本掉落
+#define ACTIVITY_12	12	//	南蛮入侵
 #define ACTIVITY_13	13	//	流寇图纸
 #define ACTIVITY_14	14	//	流寇资源
 #define ACTIVITY_15	15	//	经验翻倍
@@ -36,7 +36,7 @@
 #define ACTIVITY_29	29	//	体力大卖
 #define ACTIVITY_30	30	//	图纸活动
 #define ACTIVITY_31	31	//	全民寻宝
-#define ACTIVITY_32	32	//	抢夺名城
+#define ACTIVITY_32	32	//	抢夺封地
 #define ACTIVITY_33	33	//	充值排行
 #define ACTIVITY_34	34	//	屯银排行
 #define ACTIVITY_35	35	//	屯木排行

@@ -759,7 +759,8 @@ int kingwar_activity_open()
 	}
 	else
 	{
-		g_kingwar_activity_openweek = system_getfweek() + 1;
+		//g_kingwar_activity_openweek = system_getfweek() + 1;
+		g_kingwar_activity_openweek = system_getfweek();
 	}
 	return 0;
 }

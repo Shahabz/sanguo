@@ -351,7 +351,7 @@ void robot_logic( City *pCity )
 		memset( &pCity->hero[tmpi], 0, sizeof( Hero ) );
 		pCity->hero[tmpi].id = 0;
 		pCity->hero[tmpi].actorid = 0;
-		pCity->hero[tmpi].offset = kind * 1000 + tmpi;
+		pCity->hero[tmpi].offset = HERO_BASEOFFSET + tmpi;
 		pCity->hero[tmpi].kind = (short)kind;	//英雄种类
 		pCity->hero[tmpi].color = color;	//颜色
 		pCity->hero[tmpi].level = pCity->level;	//等级

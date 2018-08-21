@@ -906,9 +906,38 @@ function City.FindCanUpgrade( callback )
 	
 	-- 优先普通建筑
 	for k, v in pairs( g_building_upgrade ) do
-		if k >= BUILDING_Main and k <= BUILDING_Militiaman_Archer and (k ~= GetPlayer().m_worker_kind and k ~= GetPlayer().m_worker_kind_ex) then
+		if k >= BUILDING_Main and k <= BUILDING_Cabinet and (k ~= GetPlayer().m_worker_kind and k ~= GetPlayer().m_worker_kind_ex) then
 			local pBuilding = GetPlayer():GetBuilding( k, -1 )
 			if pBuilding ~= nil then
+				local check = 1
+				if k == BUILDING_Tech and pBuilding.m_sec > 0 then
+					check = 0;
+				elseif k == BUILDING_Craftsman and pBuilding.m_sec > 0 then
+					check = 0;
+				end
+				if check == 1 then
+					local buildingConfig = v[pBuilding.m_level+1]
+					if buildingConfig ~= nil then
+						if GetPlayer():CityLevel() >= buildingConfig.citylevel and
+							GetPlayer().m_level >= buildingConfig.actorlevel and
+							GetPlayer().m_silver >= buildingConfig.silver and
+							GetPlayer().m_wood >= buildingConfig.wood and
+							GetPlayer().m_food >= buildingConfig.food and
+							GetPlayer().m_iron >= buildingConfig.iron then
+							callback( k, -1 )
+							return
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	-- 找兵营
+	for k, v in pairs( g_building_upgrade ) do
+		if k >= BUILDING_Infantry and k <= BUILDING_Militiaman_Archer and (k ~= GetPlayer().m_worker_kind and k ~= GetPlayer().m_worker_kind_ex) then
+			local pBuilding = GetPlayer():GetBuilding( k, -1 )
+			if pBuilding ~= nil and pBuilding.m_sec <= 0 then
 				local buildingConfig = v[pBuilding.m_level+1]
 				if buildingConfig ~= nil then
 					if GetPlayer():CityLevel() >= buildingConfig.citylevel and
