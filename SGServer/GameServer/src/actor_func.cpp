@@ -241,7 +241,7 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 		int pre20 = -(int)ceil(token * global.token_sale_per / 100.0f);
 		if ( actor_change_token_sale( actor_index, -pre20, path ) >= 0 )
 		{
-			token -= pre20;
+			token += pre20;
 		}
 	}
 
