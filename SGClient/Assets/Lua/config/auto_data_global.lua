@@ -229,3 +229,6 @@ global.fangshi_palace_token = 400 --坊市觐见元宝
 global.nation_update_reset_token = 1000 --国家建设重置耗费钻石
 global.everyday_event_max = 15 --政务系统最大次数
 global.everyday_event_sec = 3600 --政务系统恢复时间
+global.token_sale_per = 20 --元宝抵扣百分比
+global.token_ret_costmin = 50 --元宝返还最低消费
+global.token_ret_token = 20 --元宝返还数量

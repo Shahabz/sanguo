@@ -7,6 +7,8 @@ local m_uiMCard = nil; --UnityEngine.GameObject
 local m_uiGoodsScroll = nil; --UnityEngine.GameObject
 local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Goods = nil; --UnityEngine.GameObject
+local m_uiAward1 = nil; --UnityEngine.GameObject
+local m_uiAward2 = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 -- 打开界面
@@ -47,6 +49,13 @@ function PayDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 1000 and nControlID <= 10000 then
 			PayDlgBuy( nControlID-1000 )
         end
+		
+	elseif nType == UI_EVENT_PRESS then
+		if value == 0 then
+			PayDlgTips( nControlID, true )
+		else
+			PayDlgTips( nControlID, false )
+		end
 	end
 end
 
@@ -61,6 +70,8 @@ function PayDlgOnAwake( gameObject )
 	m_uiGoodsScroll = objs[4];
 	m_uiContent = objs[5];
 	m_uiUIP_Goods = objs[6];
+	m_uiAward1 = objs[7];
+	m_uiAward2 = objs[8];
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Goods", 7, 7, m_uiUIP_Goods);
@@ -109,6 +120,8 @@ function PayDlgRecv( recvValue )
 			PayDlgCreateGoods( recvValue.m_list[i] )
 		end
 		PayDlgUpdateVip()
+		PayDlgSetTokenSale()
+		PayDlgSetTokenRet()
 	--else
 		-- web打开模式
 		--PayWebDlgShow( recvValue )
@@ -183,6 +196,55 @@ function PayDlgUpdateVip()
 		SetText( m_uiVipNext, F(2096, needexp-GetPlayer().m_vipexp, viplevel+1 ) )
 		SetProgress( m_uiVipProgress, GetPlayer().m_vipexp/needexp );
 		SetText( m_uiVipProgress.transform:Find("Text"), GetPlayer().m_vipexp.."/"..needexp );
+	end
+end
+
+-- 抵扣券
+function PayDlgSetTokenSale()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	
+	if GetPlayer().m_token_sale > 0 then
+		SetTrue( m_uiAward1 )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_SALE )
+		SetImage( m_uiAward1.transform:Find("Shape"), sprite )
+		SetText( m_uiAward1.transform:Find("Name"), "x"..GetPlayer().m_token_sale )
+	else
+		SetFalse( m_uiAward1 )
+	end
+end
+
+-- 返利券
+function PayDlgSetTokenRet()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	
+	if GetPlayer().m_token_ret > 0 then
+		SetTrue( m_uiAward2 )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_RET )
+		SetImage( m_uiAward2.transform:Find("Shape"), sprite )
+		SetText( m_uiAward2.transform:Find("Name"), "x"..GetPlayer().m_token_ret )
+	else
+		SetFalse( m_uiAward2 )
+	end
+end
+
+-- 奖励显示
+function PayDlgTips( id, show )
+	if id == 10 then
+		SetShow( m_uiAward1.transform:Find("AwardInfo"), show )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_SALE )
+		SetText( m_uiAward1.transform:Find("AwardInfo/Name"), name, NameColor(c) )
+		SetText( m_uiAward1.transform:Find("AwardInfo/Desc"), desc )
+		
+	elseif id == 11 then
+		SetShow( m_uiAward2.transform:Find("AwardInfo"), show )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_RET )
+		SetText( m_uiAward2.transform:Find("AwardInfo/Name"), name, NameColor(c) )
+		SetText( m_uiAward2.transform:Find("AwardInfo/Desc"), desc )
+		
 	end
 end
 

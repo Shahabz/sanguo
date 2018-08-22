@@ -105,6 +105,8 @@ function Player:Init()
 	self.m_maidname 		= "";
 	self.m_equip_washnum	= 0;
 	self.m_hero_washnum		= 0;
+	self.m_token_sale		= 0;
+	self.m_token_ret		= 0;
 	
 	self.m_view_zoneid		=	0;
 	self.m_award_mailid		=	int64.new(0);
@@ -171,6 +173,8 @@ function Player:Set( recvValue )
 	self.m_maidname			=	recvValue.m_maidname;
 	self.m_equip_washnum	= 	recvValue.m_equip_washnum;
 	self.m_hero_washnum		= 	recvValue.m_hero_washnum;
+	self.m_token_sale		=   recvValue.m_token_sale;
+	self.m_token_ret		=   recvValue.m_token_ret;
 end
 
 --

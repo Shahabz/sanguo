@@ -129,11 +129,11 @@ function BuildingGetDlgShow( recvValue, count )
 		WorldMap.ReturnCity()
 	end
 	BuildingGetDlgOpen();
-	if count then
+	if count ~= nil then
 		for i=1, count, 1 do
-			table.insert( m_kind, recvValue.m_kind );
-			table.insert( m_offset, recvValue.m_offset );
-			table.insert( m_info, recvValue );
+			table.insert( m_kind, recvValue[i].m_kind );
+			table.insert( m_offset, recvValue[i].m_offset );
+			table.insert( m_info, recvValue[i] );
 		end
 	else
 		table.insert( m_kind, recvValue.m_kind );

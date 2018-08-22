@@ -361,9 +361,11 @@ function InviteCodeDlgSetFriendObj( index, info )
 	if tonumber(info["h"]) > 0 then
 		-- 已经领取
 		SetFalse( uiButton )
-		SetTrue( uiHas )
+		--SetTrue( uiHas )
+		SetFalse( uiHas )
 	else
-		SetTrue( uiButton )
+		--SetTrue( uiButton )
+		SetFalse( uiButton )
 		SetFalse( uiHas )
 	end
 end

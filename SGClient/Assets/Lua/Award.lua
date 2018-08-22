@@ -39,6 +39,8 @@ AWARDKIND_TIANCE_POINT_2=	50033 -- 天策府点数蜀国
 AWARDKIND_TIANCE_POINT_3=	50034 -- 天策府点数吴国
 AWARDKIND_ACTIVITY05_XW	=	50036 -- 陈宫信物
 AWARDKIND_BUILDINGEXT	=	50040 -- 第二建造队列
+AWARDKIND_TOKEN_SALE	=	50041 -- 元宝抵扣点数
+AWARDKIND_TOKEN_RET		=	50042 -- 元宝返还次数
 AWARDKIND_PERMISSION_1	=	50051 -- 购买步兵权限（只用于显示）
 AWARDKIND_PERMISSION_2	=	50052 -- 购买骑兵权限（只用于显示）
 AWARDKIND_PERMISSION_3	=	50053 -- 购买弓兵权限（只用于显示）
@@ -299,7 +301,21 @@ function AwardInfo( awardkind )
 		name = T( 4221 )
 		c = 5
 		desc = T( 4222 )
+	
+	elseif awardkind == AWARDKIND_TOKEN_SALE then -- 元宝抵扣点数
+		sprite = LoadSprite( "item_icon_490" );
+		color = ItemColorSprite( 5 );
+		name = item_getname( 490 )
+		c = 5
+		desc = item_getdesc( 490 )
 		
+	elseif awardkind == AWARDKIND_TOKEN_RET then -- 元宝返还次数
+		sprite = LoadSprite( "item_icon_491" );
+		color = ItemColorSprite( 3 );
+		name = item_getname( 491 )
+		c = 3
+		desc = item_getdesc( 491 )
+	
 	elseif awardkind == AWARDKIND_RES_SILVER then -- 奖励未启用资源点（民居）
 		local kind = BUILDING_Silver
 		sprite = BuildingSprite( kind )

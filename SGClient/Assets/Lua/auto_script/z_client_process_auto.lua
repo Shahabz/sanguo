@@ -899,7 +899,7 @@ function proc_buildingget_C( recvValue )
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_building )
 	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
-		FightDlgWait( BuildingGetDlgShow, recvValue.m_building )
+		FightDlgBuildingWait( BuildingGetDlgShow, recvValue.m_building )
 	else
 		BuildingGetDlgShow( recvValue.m_building );
 	end
@@ -911,7 +911,7 @@ function proc_buildingbarracksget_C( recvValue )
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_barracks )
 	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
-		FightDlgWait( BuildingGetDlgShow, recvValue.m_barracks )
+		FightDlgBuildingWait( BuildingGetDlgShow, recvValue.m_barracks )
 	else
 		BuildingGetDlgShow( recvValue.m_barracks );
 	end
@@ -923,7 +923,7 @@ function proc_buildingresget_C( recvValue )
 	if NpcTalkIsShow() == true then
 		NpcTalkWait( BuildingGetDlgShow, recvValue.m_res )
 	elseif FightDlgIsShow() == true or FightInfoDlgIsShow() == true then
-		FightDlgWait( BuildingGetDlgShow, recvValue.m_res )
+		FightDlgBuildingWait( BuildingGetDlgShow, recvValue.m_res )
 	else
 		BuildingGetDlgShow( recvValue.m_res );
 	end
@@ -2486,5 +2486,29 @@ end
 function proc_everydayevent_C( recvValue )
 	-- process.
 	EveryDayEventDlgRecv( recvValue )
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_tokensale_C( recvValue )
+	-- process.
+	if recvValue.m_add > 0 then
+		AwardNotify( AWARDKIND_TOKEN_SALE, recvValue.m_add )
+	else
+		pop( F(4237, -recvValue.m_add, -recvValue.m_add, recvValue.m_total) )
+	end
+	GetPlayer().m_token_sale = recvValue.m_total;
+	PayDlgSetTokenSale()
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_tokenret_C( recvValue )
+	-- process.
+	if recvValue.m_add > 0 then
+		AwardNotify( AWARDKIND_TOKEN_RET, recvValue.m_add )
+	else
+		pop( F(4238, -recvValue.m_add, global.token_ret_token, recvValue.m_total) )
+	end
+	GetPlayer().m_token_ret = recvValue.m_total;
+	PayDlgSetTokenRet()
 end
 

@@ -488,7 +488,7 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 		city_changeiron( g_actors[actor_index].city_index, num, path );
 		break;
 	case AWARDKIND_TOKEN:// 元宝
-		actor_change_token( actor_index, num, PATH_QUEST, 0 );
+		actor_change_token( actor_index, num, path, 0 );
 		break;
 	case AWARDKIND_BODY:// 体力
 		city_changebody( g_actors[actor_index].city_index, num, path );
@@ -637,6 +637,12 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	case AWARDKIND_BUILDINGEXT:
 		// 默认开放第二队列
 		building_workerbuy( actor_index, 2 );
+		break;
+	case AWARDKIND_TOKEN_SALE: // 元宝抵扣点数
+		actor_change_token_sale( actor_index, num, path );
+		break;
+	case AWARDKIND_TOKEN_RET: // 元宝返还次数
+		actor_change_token_ret( actor_index, num, path );
 		break;
 	case AWARDKIND_PERMISSION_4:// 科技快研
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );

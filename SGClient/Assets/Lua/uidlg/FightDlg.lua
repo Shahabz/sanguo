@@ -45,7 +45,7 @@ local m_uiRightHeroCache = {}-- 右面武将信息缓存
 local m_playing = 0;
 
 local m_WaitCallback = nil;
-local m_WaitValue = nil;
+local m_WaitValue = {};
 local m_WaitCount = 0;
 
 local m_WaitQuestCallback = nil;
@@ -73,7 +73,7 @@ function FightDlgClose()
 	FightScene.Delete()
 	
 	m_WaitCallback = nil;
-	m_WaitValue = nil;
+	m_WaitValue = {};
 	m_WaitCount = 0;
 	PatrolModPlay();
 end
@@ -106,6 +106,7 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 2 then
 			if m_WaitCallback then
 				m_WaitCallback( m_WaitValue, m_WaitCount );
+				m_WaitValue = {}
 				m_WaitCount = 0;
 			end
 			if m_WaitQuestCallback then
@@ -119,6 +120,7 @@ function FightDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 3 then
 			if m_WaitCallback then
 				m_WaitCallback( m_WaitValue, m_WaitCount );
+				m_WaitValue = {}
 				m_WaitCount = 0;
 				FightDlgClose();
 			else
@@ -1117,9 +1119,9 @@ function FightDlgIsShow()
 	return false;
 end
 -- 设置等待数据
-function FightDlgWait( callback, value )
+function FightDlgBuildingWait( callback, value )
 	m_WaitCallback = callback;
-	m_WaitValue = value;
+	table.insert( m_WaitValue, value )
 	m_WaitCount = m_WaitCount + 1;
 end
 

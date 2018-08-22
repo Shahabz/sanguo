@@ -1060,6 +1060,16 @@ function netrecv_everydayevent_C( buffer )
 	proc_everydayevent_C( recvValue );
 end
 
+function netrecv_tokensale_C( buffer )
+	local recvValue = struct_NetS_TokenSale_recv( buffer );
+	proc_tokensale_C( recvValue );
+end
+
+function netrecv_tokenret_C( buffer )
+	local recvValue = struct_NetS_TokenRet_recv( buffer );
+	proc_tokenret_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1273,6 +1283,8 @@ Proc_Command = {
 	[CMDS_FIGHTHELPERLIST]=netrecv_fighthelperlist_C;
 	[CMDS_REDINFO]=netrecv_redinfo_C;
 	[CMDS_EVERYDAYEVENT]=netrecv_everydayevent_C;
+	[CMDS_TOKENSALE]=netrecv_tokensale_C;
+	[CMDS_TOKENRET]=netrecv_tokenret_C;
 }
 
 function in_proc_command_C( cmd, buffer )

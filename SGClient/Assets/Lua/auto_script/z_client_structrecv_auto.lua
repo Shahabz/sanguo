@@ -251,6 +251,8 @@ function struct_NetS_ActorInfo_recv( buffer )
 	recvValue.m_prestige = buffer:ReadInt();
 	recvValue.m_equip_washnum = buffer:ReadSByte();
 	recvValue.m_hero_washnum = buffer:ReadSByte();
+	recvValue.m_token_sale = buffer:ReadInt();
+	recvValue.m_token_ret = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -3142,6 +3144,22 @@ function struct_NetS_EverydayEvent_recv( buffer )
 	recvValue.m_awardnum1 = buffer:ReadInt();
 	recvValue.m_eventnum = buffer:ReadShort();
 	recvValue.m_eventsec = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_TokenSale_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_TokenRet_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
 	return recvValue;
 end
 

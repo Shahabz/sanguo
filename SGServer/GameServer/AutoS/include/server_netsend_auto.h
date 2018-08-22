@@ -214,6 +214,8 @@ int netsend_fighthelper_S( int actor_index, char send_type, SLK_NetS_FightHelper
 int netsend_fighthelperlist_S( int actor_index, char send_type, SLK_NetS_FightHelperList *pValue );
 int netsend_redinfo_S( int actor_index, char send_type, SLK_NetS_RedInfo *pValue );
 int netsend_everydayevent_S( int actor_index, char send_type, SLK_NetS_EverydayEvent *pValue );
+int netsend_tokensale_S( int actor_index, char send_type, SLK_NetS_TokenSale *pValue );
+int netsend_tokenret_S( int actor_index, char send_type, SLK_NetS_TokenRet *pValue );
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue );
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );

@@ -47,6 +47,8 @@
 #define	AWARDKIND_ACTIVITY04_VALUE_SET	50038 // 七日活动数值
 #define	AWARDKIND_FORBIDTALK	50039 // 禁言
 #define	AWARDKIND_BUILDINGEXT	50040 // 第二建造队列
+#define	AWARDKIND_TOKEN_SALE	50041 // 元宝抵扣点数
+#define	AWARDKIND_TOKEN_RET		50042 // 元宝返还次数
 #define AWARDKIND_PERMISSION_1	50051 // 购买步兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_2	50052 // 购买骑兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_3	50053 // 购买弓兵权限（只用于显示）

@@ -234,6 +234,17 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 		//actor_notify_value( actor_index, NOTIFY_WARNING, 1, &value, NULL ); // 钻石不够
 		return -2;
 	}
+
+	// 检查抵扣券
+	if ( token < 0 && g_actors[actor_index].token_sale > 0 )
+	{
+		int pre20 = -(int)ceil(token * global.token_sale_per / 100.0f);
+		if ( actor_change_token_sale( actor_index, -pre20, path ) >= 0 )
+		{
+			token -= pre20;
+		}
+	}
+
 	g_actors[actor_index].token += token;
 	if ( token > 0 && path == PATH_PAY )
 	{ // 充值量
@@ -278,6 +289,57 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 
 	// 记录log
 	wlog( 0, LOGOP_TOKEN, path, token, g_actors[actor_index].token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value );
+
+	// 检查返还次数
+	if ( token <= -50 && g_actors[actor_index].token_ret > 0 )
+	{
+		actor_change_token_ret( actor_index, -1, path );
+		actor_change_token( actor_index, global.token_ret_token, PATH_TOKENRET, 0 );
+	}
+	return 0;
+}
+
+// 元宝抵扣点数
+int actor_change_token_sale( int actor_index, int value, short path )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( g_actors[actor_index].token_sale + value < 0 )
+	{
+		return -2;
+	}
+	g_actors[actor_index].token_sale += value;
+
+	SLK_NetS_TokenSale Value = {};
+	Value.m_total = g_actors[actor_index].token_sale;
+	Value.m_add = value;
+	Value.m_path = path;
+	netsend_tokensale_S( actor_index, SENDTYPE_ACTOR, &Value );
+
+	// 记录log
+	wlog( 0, LOGOP_TOKEN_SALE, path, value, g_actors[actor_index].token_sale, 0, g_actors[actor_index].actorid, city_mainlevel(actor_index) );
+	return 0;
+}
+
+// 元宝返还次数
+int actor_change_token_ret( int actor_index, int value, short path )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( g_actors[actor_index].token_ret + value < 0 )
+	{
+		return -2;
+	}
+	g_actors[actor_index].token_ret += value;
+
+	SLK_NetS_TokenRet Value = {};
+	Value.m_total = g_actors[actor_index].token_ret;
+	Value.m_add = value;
+	Value.m_path = path;
+	netsend_tokenret_S( actor_index, SENDTYPE_ACTOR, &Value );
+
+	// 记录log
+	wlog( 0, LOGOP_TOKEN_RET, path, value, g_actors[actor_index].token_ret, 0, g_actors[actor_index].actorid, city_mainlevel( actor_index ) );
 	return 0;
 }
 
@@ -562,6 +624,8 @@ int actor_getinfo( int actor_index )
 	info.m_actor_sflag = g_actors[actor_index].sflag;
 	info.m_storyid = g_actors[actor_index].storyid;
 	info.m_shape_bag = g_actors[actor_index].shape_bag;
+	info.m_token_sale = g_actors[actor_index].token_sale;
+	info.m_token_ret = g_actors[actor_index].token_ret;
 	info.m_game_day = g_game_day;
 	info.m_game_weather = g_game_weather;
 	info.m_game_day_loop = g_game_day_loop;

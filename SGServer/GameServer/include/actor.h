@@ -118,6 +118,10 @@ int actor_verifyid( i64 userid, int actorid );
 
 // 角色钻石
 int actor_change_token( int actor_index, int token, char path, int path_value );
+// 元宝抵扣点数
+int actor_change_token_sale( int actor_index, int value, short path );
+// 元宝返还次数
+int actor_change_token_ret( int actor_index, int value, short path );
 
 // 修改名称
 int actor_changename( int actor_index, char *pname, int type );

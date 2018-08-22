@@ -201,6 +201,8 @@ struct _slk_NetS_ActorInfo {
 	int m_prestige;	//服务器发送玩家基本信息-威望
 	char m_equip_washnum;	//服务器发送玩家基本信息-装备洗练
 	char m_hero_washnum;	//服务器发送玩家基本信息-武将洗髓
+	int m_token_sale;	//服务器发送玩家基本信息-
+	int m_token_ret;	//服务器发送玩家基本信息-
 };
 typedef struct _slk_NetS_ActorInfo SLK_NetS_ActorInfo;	//角色基本信息
 
@@ -2346,6 +2348,20 @@ struct _slk_NetS_EverydayEvent {
 };
 typedef struct _slk_NetS_EverydayEvent SLK_NetS_EverydayEvent;	//政务
 
+struct _slk_NetS_TokenSale {
+	int m_total;	//元宝抵扣点数
+	int m_add;	//元宝抵扣点数
+	short m_path;	//元宝抵扣点数
+};
+typedef struct _slk_NetS_TokenSale SLK_NetS_TokenSale;	//元宝抵扣点数
+
+struct _slk_NetS_TokenRet {
+	int m_total;	//元宝返还次数
+	int m_add;	//元宝返还次数
+	short m_path;	//元宝返还次数
+};
+typedef struct _slk_NetS_TokenRet SLK_NetS_TokenRet;	//元宝返还次数
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2600,5 +2616,7 @@ int struct_NetS_FightHelper_send( char **pptr, int *psize, SLK_NetS_FightHelper 
 int struct_NetS_FightHelperList_send( char **pptr, int *psize, SLK_NetS_FightHelperList *pValue );
 int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue );
 int struct_NetS_EverydayEvent_send( char **pptr, int *psize, SLK_NetS_EverydayEvent *pValue );
+int struct_NetS_TokenSale_send( char **pptr, int *psize, SLK_NetS_TokenSale *pValue );
+int struct_NetS_TokenRet_send( char **pptr, int *psize, SLK_NetS_TokenRet *pValue );
 
 #endif

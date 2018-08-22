@@ -418,7 +418,7 @@ function BagDlgSelectItem( offset )
         if Utils.byteAndOp(pItem.m_situation, 1) == 0 then
            
         else
-           
+           SetFalse( NumSelect );
         end
 	else
 		SetFalse( NumSelect );
@@ -479,6 +479,12 @@ function BagDlgItemUse()
 			HeroExpDlgShow( GetHero().m_CityHero[0].m_kind )
 		end
 	else
+		if pItem.m_kind == 131 then
+			BagDlgClose()
+			if GameManager.currentScence == "city" then
+				WorldMap.GotoWorldMap(-1, -1)
+			end
+		end
 		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, m_SelectItemIndex - 1, m_SelectItemNum, -1, 1 );
 	end	
 	BagDlgSelectItem( -1 )

@@ -625,6 +625,12 @@ int global_init()
 			global.everyday_event_max = atoi( row[1] );
 		else if ( id == 230 )
 			global.everyday_event_sec = atoi( row[1] );
+		else if ( id == 231 )
+			global.token_sale_per = atoi( row[1] );
+		else if ( id == 232 )
+			global.token_ret_costmin = atoi( row[1] );
+		else if ( id == 232 )
+			global.token_ret_token = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

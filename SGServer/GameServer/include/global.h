@@ -203,6 +203,9 @@ typedef struct _global
 	short nation_update_reset_token;
 	int everyday_event_max;
 	int everyday_event_sec;
+	short token_sale_per;
+	short token_ret_costmin;
+	short token_ret_token;
 }Global;
 int global_init();
 void global_reload();

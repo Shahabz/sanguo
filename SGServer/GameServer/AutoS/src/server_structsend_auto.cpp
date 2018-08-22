@@ -322,6 +322,8 @@ int struct_NetS_ActorInfo_send( char **pptr, int *psize, SLK_NetS_ActorInfo *pVa
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_prestige, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_equip_washnum, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_hero_washnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token_sale, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_token_ret, (*psize) );
 	return 0;
 }
 
@@ -3458,6 +3460,26 @@ int struct_NetS_EverydayEvent_send( char **pptr, int *psize, SLK_NetS_EverydayEv
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum1, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_eventnum, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_eventsec, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TokenSale_send( char **pptr, int *psize, SLK_NetS_TokenSale *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_TokenRet_send( char **pptr, int *psize, SLK_NetS_TokenRet *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
 	return 0;
 }
 

@@ -28,6 +28,8 @@
 #define LOGOP_GIRL				22	// 女将
 #define LOGOP_GIRLSOUL			23	// 女将碎片
 #define LOGOP_HEROEXP			24	// 英雄经验
+#define LOGOP_TOKEN_SALE		25	// 元宝抵扣点
+#define LOGOP_TOKEN_RET			26	// 元宝返还次数
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统
@@ -138,6 +140,7 @@
 #define PATH_INVITECODE					106 // 邀请码
 #define PATH_BUYRES						107 // 购买资源
 #define PATH_EVERYDAY_EVENT				108 // 政务
+#define PATH_TOKENRET					109	// 元宝返还
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );
