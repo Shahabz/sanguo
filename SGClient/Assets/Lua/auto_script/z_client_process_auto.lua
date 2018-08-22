@@ -589,6 +589,11 @@ end
 -- m_total=0,m_add=0,m_path=0,
 function proc_changepeople_C( recvValue )
 	-- process.
+	--if recvValue.m_path ~= PATH_FIGHT then
+		if recvValue.m_add > 0 then
+			AwardNotify( AWARDKIND_PEOPLE, recvValue.m_add )
+		end
+	--end
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -1817,9 +1822,13 @@ end
 -- m_autobuild=0,m_autobuildopen=0,m_path
 function proc_changeautobuild_C( recvValue )
 	-- process.
+	local old = GetPlayer().m_autobuild;
 	GetPlayer().m_autobuild		=	recvValue.m_autobuild;
 	GetPlayer().m_autobuildopen	=	recvValue.m_autobuildopen;
 	MainDlgSetAutoBuild( recvValue.m_path )
+	if recvValue.m_path ~= PATH_QUEST and old < GetPlayer().m_autobuild then
+		AwardNotify( AWARDKIND_AUTOBUILD, (GetPlayer().m_autobuild-old) )
+	end
 end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
@@ -2067,9 +2076,13 @@ end
 -- m_autoguard=0,m_autoguardopen=0,m_path=0,
 function proc_changeautoguard_C( recvValue )
 	-- process.
+	local old = GetPlayer().m_autoguard;
 	GetPlayer().m_autoguard		=	recvValue.m_autoguard;
 	GetPlayer().m_autoguardopen	=	recvValue.m_autoguardopen;
 	MainDlgSetAutoGuard( recvValue.m_path )
+	if recvValue.m_path ~= PATH_QUEST and old < GetPlayer().m_autoguard then
+		AwardNotify( AWARDKIND_CITYGUARDNUM, (GetPlayer().m_autoguard-old) )
+	end
 end
 
 -- m_count=0,m_list={m_activityid=0,m_starttime=0,m_endtime=0,m_closetime=0,[m_count]},

@@ -675,6 +675,14 @@ function City.BuildingSetWorkerQuick( kind, offset )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+	if unitObj == nil then
+		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
+			gamelog( "City.BuildingSetWorkerQuick:offset="..offset )
+			print( "City.BuildingSetWorkerQuick:offset="..offset )
+			return
+		end
+	end
+	
 	local freeObj = unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod;
 	if freeObj == nil then
 		freeObj = GameObject.Instantiate( City.m_BuildingWorkerQuickMod );

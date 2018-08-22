@@ -1675,7 +1675,10 @@ int city_autoguard_open( int city_index )
 	// ×Ô¶¯²¹³ä
 	if ( g_city[city_index].atgu_op == 1 )
 	{
-		city_guard_call( city_index );
+		if ( city_guard_call( city_index ) >= 0 )
+		{
+			city_change_autoguard( city_index, -1, PATH_SYSTEM );
+		}
 	}
 
 	ACTOR_CHECK_INDEX( g_city[city_index].actor_index );
@@ -4485,16 +4488,16 @@ int _city_everyday_event_awardnum_get( City *pCity, int awardkind, int awardnum 
 		num = exp;
 	}
 		break;
-	case AWARDKIND_LEVY_SILVER:
+	case AWARDKIND_SILVER:
 		num = city_yield_total( pCity, BUILDING_Silver, 1 );
 		break;
-	case AWARDKIND_LEVY_WOOD:
+	case AWARDKIND_WOOD:
 		num = city_yield_total( pCity, BUILDING_Wood, 1 );
 		break;
-	case AWARDKIND_LEVY_FOOD:
+	case AWARDKIND_FOOD:
 		num = city_yield_total( pCity, BUILDING_Food, 1 );
 		break;
-	case AWARDKIND_LEVY_IRON:
+	case AWARDKIND_IRON:
 		num = city_yield_total( pCity, BUILDING_Iron, 1 );
 		break;
 	}

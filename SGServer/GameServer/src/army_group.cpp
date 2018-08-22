@@ -1921,6 +1921,7 @@ int armygroup_fighthelper_sendlist( int actor_index, int group_index )
 	if ( group_index < 0 || group_index >= g_armygroup_maxcount )
 		return -1;
 	SLK_NetS_FightHelperList pValue = { 0 };
+	pValue.m_group_index = group_index;
 	for ( int kind = 0; kind < ARMYGROUP_FIGHTHELPER; kind++ )
 	{
 		pValue.m_list[kind].m_kind = kind+1;

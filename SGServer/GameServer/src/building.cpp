@@ -1251,6 +1251,16 @@ int building_finish( int city_index, int op, int kind, int offset )
 				city_function_open( &g_city[city_index], CITY_FUNCTION_FANGSHI );
 			}
 		}
+		else if ( kind == BUILDING_Wall )
+		{ // 城墙自动招募
+			if ( g_city[city_index].atgu_op == 1 && g_city[city_index].atgu > 0 )
+			{
+				if ( city_guard_call( city_index ) >= 0 )
+				{
+					city_change_autoguard( city_index, -1, PATH_SYSTEM );
+				}
+			}
+		}
 		else if ( kind == BUILDING_StoreHouse )
 		{// 仓库给予高级重建次数
 			g_city[city_index].rb_num += 1;

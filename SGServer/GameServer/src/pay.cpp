@@ -640,8 +640,8 @@ int paystore_addorder( int actor_index, int goodsid, char *pOrderID )
 	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
 	char productid[64] = { 0 };
 	paystore_get_productid( client_getplatid( actor_index ), paymode, goodsid, productid );
-	sprintf( szSQL, "insert into pay_order( orderid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d' )", 
-		pOrderID, szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), productid, goodsid, awardgroup, client_getip( actor_index ), 0, (int)time( NULL ) );
+	sprintf( szSQL, "insert into pay_order( orderid, platid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%d','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d' )", 
+		pOrderID, client_getplatid( actor_index ), szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), productid, goodsid, awardgroup, client_getip( actor_index ), 0, (int)time( NULL ) );
 
 	if ( mysql_query( myGame, szSQL ) )
 	{
