@@ -1363,6 +1363,8 @@ void activity_33_onend()
 	// ·¢½±Àø
 	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
 	{
+		if ( g_activity33_rank[tmpi].actorid <= 0 )
+			continue;
 		int id = 0;
 		if ( tmpi == 0 )
 		{
