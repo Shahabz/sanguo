@@ -1408,7 +1408,7 @@ void activity_33_onend()
 			strcat( attach, tempitem );
 		}
 		char v1[32] = { 0 };
-		sprintf( v1, "%d", tmpi );
+		sprintf( v1, "%d", (tmpi+1) );
 		mail_system( MAIL_ACTORID, g_activity33_rank[tmpi].actorid, 5050, 5545, v1, NULL, NULL, attach, 1 );
 	}
 }
