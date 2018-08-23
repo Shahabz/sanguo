@@ -49,7 +49,7 @@ int zoneunit_init()
 	g_zoneunit_lastfreeindex = -1;
 	if ( g_Config.max_mapunitcount <= 0 )
 	{
-		g_zoneunit_maxcount = 250000;
+		g_zoneunit_maxcount = 90000;
 	}
 	else
 	{

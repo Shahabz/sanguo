@@ -1346,7 +1346,7 @@ int update_fdmap( SOCKET fd, char *ip )
 	if( client_index < 0 )
 		return -1;
 
-	g_sockset[client_index].m_enter_time = (int)time(NULL);
+	g_sockset[client_index].m_enter_time = g_net_time;
 	g_sockset[client_index].m_exec_code = g_exec_code ++;
 #ifndef NONECODE
 	g_sockset[client_index].m_send_key = netcode_create();

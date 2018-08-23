@@ -2362,6 +2362,30 @@ struct _slk_NetS_TokenRet {
 };
 typedef struct _slk_NetS_TokenRet SLK_NetS_TokenRet;	//元宝返还次数
 
+struct _slk_NetS_Activity33Member {
+	char m_nation;	//充值活动
+	char m_namelen;	//充值活动
+	char m_name[22];	//充值活动
+	int m_pay;	//充值活动
+};
+typedef struct _slk_NetS_Activity33Member SLK_NetS_Activity33Member;	//充值排名
+
+struct _slk_NetS_Activity33Award {
+	int m_awardkind[5];	//充值活动
+	int m_awardnum[5];	//充值活动
+};
+typedef struct _slk_NetS_Activity33Award SLK_NetS_Activity33Award;	//充值排名
+
+struct _slk_NetS_Activity33 {
+	char m_count;	//充值活动
+	SLK_NetS_Activity33Member m_list[10];	//充值活动
+	short m_myrank;	//充值活动
+	char m_awardcount;	//充值活动
+	SLK_NetS_Activity33Award m_awardlist[10];	//充值活动
+	int m_mypay;	//充值活动
+};
+typedef struct _slk_NetS_Activity33 SLK_NetS_Activity33;	//充值排名
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2618,5 +2642,8 @@ int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue 
 int struct_NetS_EverydayEvent_send( char **pptr, int *psize, SLK_NetS_EverydayEvent *pValue );
 int struct_NetS_TokenSale_send( char **pptr, int *psize, SLK_NetS_TokenSale *pValue );
 int struct_NetS_TokenRet_send( char **pptr, int *psize, SLK_NetS_TokenRet *pValue );
+int struct_NetS_Activity33Member_send( char **pptr, int *psize, SLK_NetS_Activity33Member *pValue );
+int struct_NetS_Activity33Award_send( char **pptr, int *psize, SLK_NetS_Activity33Award *pValue );
+int struct_NetS_Activity33_send( char **pptr, int *psize, SLK_NetS_Activity33 *pValue );
 
 #endif

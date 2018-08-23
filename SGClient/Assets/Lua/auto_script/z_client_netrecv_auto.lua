@@ -1070,6 +1070,11 @@ function netrecv_tokenret_C( buffer )
 	proc_tokenret_C( recvValue );
 end
 
+function netrecv_activity33_C( buffer )
+	local recvValue = struct_NetS_Activity33_recv( buffer );
+	proc_activity33_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1285,6 +1290,7 @@ Proc_Command = {
 	[CMDS_EVERYDAYEVENT]=netrecv_everydayevent_C;
 	[CMDS_TOKENSALE]=netrecv_tokensale_C;
 	[CMDS_TOKENRET]=netrecv_tokenret_C;
+	[CMDS_ACTIVITY33]=netrecv_activity33_C;
 }
 
 function in_proc_command_C( cmd, buffer )

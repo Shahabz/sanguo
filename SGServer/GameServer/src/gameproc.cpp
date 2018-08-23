@@ -958,6 +958,8 @@ int process_init( int max_connection )
 	activityinfo06_init_auto();
 	activityinfo08_init_auto();
 	activityinfo10_init_auto();
+	activityinfo12_init_auto();
+	activityinfo33_init_auto();
 
 	activity_init();
 	time_gmcmd_init();
@@ -1177,6 +1179,15 @@ int process_init( int max_connection )
 	if ( nation_rank_calc() < 0 )
 	{
 		printf_msg( "nation_rank_calc Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 118 );
+
+	// ³äÖµÅÅÐÐ
+	if ( activity_33_load() < 0 )
+	{
+		printf_msg( "activity_33_load Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
@@ -1802,6 +1813,8 @@ int process_dbreload()
 	activityinfo06_reload_auto();
 	activityinfo08_reload_auto();
 	activityinfo10_reload_auto();
+	activityinfo12_reload_auto();
+	activityinfo33_reload_auto();
 
 	db_closedata();
 	return 0;

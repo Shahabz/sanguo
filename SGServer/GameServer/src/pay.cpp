@@ -1145,6 +1145,8 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	// 总充值积分（人民币，由于玩家不一定是美金支付的，有可能是欧元什么的）
 	g_actors[actor_index].charge_point += g_paygoods[goodsid].point;
 
+	// 充值排行
+	activity_33_addvalue( actor_index, g_paygoods[goodsid].point );
 	//// 发送购买成功通知邮件
 	//char szItemGet[512] = { 0 };
 	//char szTempGet[64] = { 0 };

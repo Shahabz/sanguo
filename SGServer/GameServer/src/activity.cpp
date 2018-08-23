@@ -275,6 +275,8 @@ int activity_logic()
 	int timestamp = (int)time( NULL );
 	for ( activityid = 1; activityid < g_activity_count; activityid++ )
 	{
+		if ( g_activity_item[activityid].m_starttime <= 0 )
+			continue;
 		if ( timestamp < g_activity_item[activityid].m_warningtime )
 		{// 未到预热时间
 			continue;
@@ -355,6 +357,9 @@ int activity_onopen( int activityid )
 	case ACTIVITY_6:
 		activity_06_onopen();
 		break;
+	case ACTIVITY_33:
+		activity_33_onopen();
+		break;
 	default:
 		sc_ActivityOnOpen( activityid );
 		break;
@@ -373,6 +378,9 @@ int activity_onend( int activityid )
 	case ACTIVITY_6:
 		activity_06_onend();
 		break;
+	case ACTIVITY_33:
+		activity_33_onend();
+		break;
 	default:
 		sc_ActivityOnEnd( activityid );
 		break;
@@ -390,6 +398,9 @@ int activity_onclose( int activityid )
 	{
 	case ACTIVITY_6:
 		activity_06_onclose();
+		break;
+	case ACTIVITY_33:
+		activity_33_onclose();
 		break;
 	default:
 		sc_ActivityOnClose( activityid );
@@ -1307,5 +1318,220 @@ int activity_11_get( int actor_index )
 	else
 		return -1;
 	activity_11_sendinfo( actor_index );
+	return 0;
+}
+
+// 充值排名活动
+extern ActivityInfo33 *g_activity_33;
+extern int g_activity_33_maxnum;
+Activity33Rank g_activity33_rank[ACTIVITY33_MEMBERMAX];
+int activity_33_load()
+{
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		g_activity33_rank[tmpi].actorid = 0;
+		g_activity33_rank[tmpi].city_index = -1;
+	}
+	if ( activity_intime( ACTIVITY_33 ) == 0 )
+		return 0;
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		activity_33_calc_rank( &g_city[tmpi] );
+	}
+	return 0;
+}
+
+void activity_33_onopen()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{ // 重置数据
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		g_city[tmpi].act33_pay = 0;
+	}
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		g_activity33_rank[tmpi].actorid = 0;
+		g_activity33_rank[tmpi].city_index = -1;
+	}
+}
+
+void activity_33_onend()
+{
+	// 发奖励
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		int id = 0;
+		if ( tmpi == 0 )
+		{
+			id = 1;
+		}
+		else if ( tmpi == 1 )
+		{
+			id = 2;
+		}
+		else if ( tmpi == 2 )
+		{
+			id = 3;
+		}
+		else if ( tmpi >= 3 && tmpi <= 8 )
+		{
+			id = 4;
+		}
+		else if ( tmpi >= 9 && tmpi <= 38 )
+		{
+			id = 5;
+		}
+		else if ( tmpi >= 39 && tmpi <= 68 )
+		{
+			id = 6;
+		}
+		else if ( tmpi >= 69 && tmpi <= 99 )
+		{
+			id = 7;
+		}
+
+		char attach[256] = { 0 };
+		for ( int i = 0; i < 5; i++ )
+		{
+			if ( g_activity_33[id].awardkind[i] <= 0 )
+				continue;
+			char tempitem[64] = { 0 };
+			sprintf( tempitem, "%d,%d@", g_activity_33[id].awardkind[i], g_activity_33[id].awardnum[i] );
+			strcat( attach, tempitem );
+		}
+		char v1[32] = { 0 };
+		sprintf( v1, "%d", tmpi );
+		mail_system( MAIL_ACTORID, g_activity33_rank[tmpi].actorid, 5050, 5545, v1, NULL, NULL, attach, 1 );
+	}
+}
+
+void activity_33_onclose()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{ // 重置数据
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		g_city[tmpi].act33_pay = 0;
+	}
+}
+
+void activity_33_calc_rank( City *pCity )
+{
+	if ( !pCity || pCity ->act33_pay <= 0 )
+		return;
+	// 找到我的排名，把我踢出
+	int my_tmpi = -1;
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		if ( g_activity33_rank[tmpi].actorid == pCity->actorid )
+		{
+			my_tmpi = tmpi;
+			break;
+		}
+	}
+	if ( my_tmpi >= 0 && my_tmpi < ACTIVITY33_MEMBERMAX - 1 )
+	{
+		// 往前移
+		memmove( &g_activity33_rank[my_tmpi], &g_activity33_rank[my_tmpi + 1], sizeof( Activity33Rank )*(ACTIVITY33_MEMBERMAX - my_tmpi - 1) );
+		g_activity33_rank[ACTIVITY33_MEMBERMAX - 1].actorid = 0;
+		g_activity33_rank[ACTIVITY33_MEMBERMAX - 1].city_index = -1;
+	}
+	else if ( my_tmpi == ACTIVITY33_MEMBERMAX - 1 )
+	{
+		g_activity33_rank[my_tmpi].actorid = 0;
+		g_activity33_rank[my_tmpi].city_index = -1;
+	}
+
+	// 跟前100名逐一比较
+	int replace_tmpi = -1;
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		int value = 0;
+		int city_index = g_activity33_rank[tmpi].city_index;
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			value = g_city[city_index].act33_pay;
+		}
+
+		if ( pCity->act33_pay > value )
+		{
+			replace_tmpi = tmpi;
+			break;
+		}
+	}
+
+	if ( replace_tmpi >= 0 && replace_tmpi < ACTIVITY33_MEMBERMAX - 1 )
+	{
+		// 往后移
+		memmove( &g_activity33_rank[replace_tmpi + 1], &g_activity33_rank[replace_tmpi], sizeof( Activity33Rank )*(ACTIVITY33_MEMBERMAX - replace_tmpi - 1) );
+		g_activity33_rank[replace_tmpi].actorid = pCity->actorid;
+		g_activity33_rank[replace_tmpi].city_index = pCity->index;
+	}
+	else if ( replace_tmpi == ACTIVITY33_MEMBERMAX - 1 )
+	{
+		g_activity33_rank[replace_tmpi].actorid = pCity->actorid;
+		g_activity33_rank[replace_tmpi].city_index = pCity->index;
+	}
+}
+
+int activity_33_addvalue( int actor_index, int value )
+{
+	if ( activity_intime( ACTIVITY_33 ) == 0 )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	pCity->act33_pay += value;
+	activity_33_calc_rank( pCity );
+	return 0;
+}
+
+int activity_33_sendinfo( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Activity33 pValue = {0};
+	// 发送前10名
+	for ( int tmpi = 0; tmpi < 10; tmpi++ )
+	{
+		int value = 0;
+		int city_index = g_activity33_rank[tmpi].city_index;
+		if ( city_index >= 0 && city_index < g_city_maxcount )
+		{
+			strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );
+			pValue.m_list[pValue.m_count].m_namelen = strlen( pValue.m_list[pValue.m_count].m_name );
+			pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
+			pValue.m_list[pValue.m_count].m_pay = g_city[city_index].act33_pay;
+			pValue.m_count += 1;
+		}
+	}
+	// 我的排名
+	int my_tmpi = -1;
+	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
+	{
+		if ( g_activity33_rank[tmpi].actorid == pCity->actorid )
+		{
+			my_tmpi = tmpi;
+			break;
+		}
+	}
+	pValue.m_myrank = my_tmpi;
+	pValue.m_mypay = pCity->act33_pay;
+
+	// 发送奖励
+	for ( int tmpi = 1; tmpi < g_activity_33_maxnum; tmpi++ )
+	{
+		for ( int i = 0; i < 5; i++ )
+		{
+			pValue.m_awardlist[pValue.m_awardcount].m_awardkind[i] = g_activity_33[tmpi].awardkind[i];
+			pValue.m_awardlist[pValue.m_awardcount].m_awardnum[i] = g_activity_33[tmpi].awardnum[i];
+		}
+		pValue.m_awardcount += 1;
+	}
+	netsend_activity33_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

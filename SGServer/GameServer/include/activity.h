@@ -119,4 +119,19 @@ int activity_10_init();
 // 出师大宴活动
 int activity_11_sendinfo( int actor_index );
 int activity_11_get( int actor_index );
+
+// 充值排名活动
+#define ACTIVITY33_MEMBERMAX	100
+typedef struct _activity_33_rank
+{
+	int actorid;
+	int city_index;
+}Activity33Rank;
+int activity_33_load();
+void activity_33_onopen();
+void activity_33_onend();
+void activity_33_onclose();
+void activity_33_calc_rank( City *pCity );
+int activity_33_addvalue( int actor_index, int value );
+int activity_33_sendinfo( int actor_index );
 #endif

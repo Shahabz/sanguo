@@ -135,12 +135,14 @@ function GameManager.GameLogic()
 	GameManager.LastGameLogicTime = os.time();
 	
 	-- 心跳
-	GameManager.HeartTime = GameManager.HeartTime + 1;
-	if GameManager.HeartTime > 120 then
-		local sendValue = {};
-		sendValue.m_value = 0;
-		netsend_heart_C( sendValue )
-		GameManager.HeartTime = 0;
+	if Const.NetStatus == 3 then
+		GameManager.HeartTime = GameManager.HeartTime + 1;
+		if GameManager.HeartTime > 120 then
+			local sendValue = {};
+			sendValue.m_value = 0;
+			netsend_heart_C( sendValue )
+			GameManager.HeartTime = 0;
+		end
 	end
 	
 	-- 可升级箭头

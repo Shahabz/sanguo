@@ -3163,3 +3163,46 @@ function struct_NetS_TokenRet_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Activity33Member_recv( buffer )
+	local recvValue = {};
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_pay = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_Activity33Award_recv( buffer )
+	local recvValue = {};
+	recvValue.m_awardkind={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardkind[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardnum={};
+	for tmpi=1,5,1 do
+		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
+	end
+	return recvValue;
+end
+
+function struct_NetS_Activity33_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity33Member_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_myrank = buffer:ReadShort();
+	recvValue.m_awardcount = buffer:ReadSByte();
+	recvValue.m_awardlist = {};
+	for tmpi=1,recvValue.m_awardcount,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity33Award_recv( buffer );
+		table.insert( recvValue.m_awardlist, tmpValue );
+	end
+	recvValue.m_mypay = buffer:ReadInt();
+	return recvValue;
+end
+

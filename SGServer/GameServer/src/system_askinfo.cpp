@@ -936,6 +936,13 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_11_get( actor_index );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_33 )
+		{ // ≥‰÷µ≈≈––
+			if ( pvalue[1] == 0 )
+			{
+				activity_33_sendinfo( actor_index );
+			}
+		}
 		break;
 	case ASKINFO_NATIONEQUIP:
 		if ( pvalue[0] == 0 )

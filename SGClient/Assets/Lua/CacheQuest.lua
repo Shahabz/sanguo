@@ -63,7 +63,9 @@ function CacheQuestSet( recvValue )
 			MapUnit.RefreshQuestEnemy( 0 )
 		end
 	end
-	
+	if recvValue.m_list[1] == nil then
+		return
+	end
 	if recvValue.m_list[1].m_datatype == QUEST_DATATYPE_KILLMONSTER_LEVEL then
 		-- 添加新任务的目标流寇
 		g_QuestTargetEnemyLevel = recvValue.m_list[1].m_datakind;

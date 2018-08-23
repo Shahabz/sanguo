@@ -49,7 +49,7 @@ int mapunit_init()
 	g_mapunit_lastfreeindex = -1;
 	if ( g_Config.max_mapunitcount <= 0 )
 	{
-		g_mapunit_maxcount = 250000;
+		g_mapunit_maxcount = 90000;
 	}
 	else
 	{

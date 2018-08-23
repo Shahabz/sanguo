@@ -54,6 +54,7 @@ SRC = \
 ../AutoS/src/auto_data_activity_04.cpp \
 ../AutoS/src/auto_data_activity_10.cpp \
 ../AutoS/src/auto_data_activity_06.cpp \
+../AutoS/src/auto_data_activity_12.cpp \
 ../AutoS/src/auto_data_equip_wash.cpp \
 ../AutoS/src/auto_data_map_eventinfo.cpp \
 ../AutoS/src/auto_data_hero_corpsmul.cpp \
@@ -79,6 +80,7 @@ SRC = \
 ../AutoS/src/auto_map_call.cpp \
 ../AutoS/src/auto_data_random_lastname.cpp \
 ../AutoS/src/auto_nation_hero.cpp \
+../AutoS/src/auto_data_activity_33.cpp \
 ../AutoS/src/auto_data_nation_upgrade.cpp \
 ../AutoS/src/auto_data_wishing_pack.cpp \
 ../AutoS/src/auto_actor_hero.cpp \
@@ -310,6 +312,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_activity_06.o: ../AutoS/src/auto_data_activity_06.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_12.o: ../AutoS/src/auto_data_activity_12.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_equip_wash.o: ../AutoS/src/auto_data_equip_wash.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_eventinfo.o: ../AutoS/src/auto_data_map_eventinfo.cpp 
@@ -359,6 +363,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_random_lastname.o: ../AutoS/src/auto_data_random_lastname.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_nation_hero.o: ../AutoS/src/auto_nation_hero.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_33.o: ../AutoS/src/auto_data_activity_33.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_upgrade.o: ../AutoS/src/auto_data_nation_upgrade.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

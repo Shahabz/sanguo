@@ -2516,3 +2516,9 @@ function proc_tokenret_C( recvValue )
 	PayDlgSetTokenRet()
 end
 
+-- m_count=0,m_list={m_nation=0,m_namelen=0,m_name="[m_namelen]",m_pay=0,[m_count]},m_myrank=0,m_awardcount=0,m_awardlist={m_awardkind={[5]},m_awardnum={[5]},[m_awardcount]},m_mypay=0,
+function proc_activity33_C( recvValue )
+	-- process.
+	Activity33ModRecv( recvValue )
+end
+

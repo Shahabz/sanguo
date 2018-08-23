@@ -136,5 +136,8 @@ CREATE TABLE `city` (
   `edevent` varbinary(64) NOT NULL DEFAULT '' COMMENT '政务系统',
   `edevent_sec` smallint(6) NOT NULL DEFAULT '0' COMMENT '政务系统',
   `edevent_num` tinyint(3) NOT NULL DEFAULT '0' COMMENT '政务系统',
+  `act12_state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '南蛮入侵活动',
+  `act12_turn` tinyint(3) NOT NULL DEFAULT '0' COMMENT '南蛮入侵活动',
+  `act33_pay` int(11) NOT NULL DEFAULT '0' COMMENT '充值排名',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

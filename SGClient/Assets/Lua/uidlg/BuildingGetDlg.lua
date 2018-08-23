@@ -174,7 +174,7 @@ function BuildingGetDlgMove()
 	end
 
 	local bAllMove = true;
-	if count <= 2 then
+	if count <= 1 then
 		bAllMove = false;
 	end
 	

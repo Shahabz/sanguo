@@ -513,7 +513,7 @@ int client_logic()
 				//			if( g_clientset[client_index].m_idle_time >= HEARTBEAT_OUTTIME ||
 				if( g_clientset[client_index].m_idle_time >= 90 )
 				{
-					write_netlog( "message:close client(m_stat:%d),gate=%d", g_clientset[client_index].m_stat, g_clientset[client_index].m_gate_index );
+					write_gamelog( "message:close client(m_stat:%d),gate=%d", g_clientset[client_index].m_stat, g_clientset[client_index].m_gate_index );
 					close_client( client_index );
 				}
 			}

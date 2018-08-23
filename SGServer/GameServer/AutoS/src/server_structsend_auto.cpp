@@ -3483,3 +3483,43 @@ int struct_NetS_TokenRet_send( char **pptr, int *psize, SLK_NetS_TokenRet *pValu
 	return 0;
 }
 
+int struct_NetS_Activity33Member_send( char **pptr, int *psize, SLK_NetS_Activity33Member *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 22 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_pay, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity33Award_send( char **pptr, int *psize, SLK_NetS_Activity33Award *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity33_send( char **pptr, int *psize, SLK_NetS_Activity33 *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity33Member_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_myrank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_awardcount, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_awardcount; tmpi++ )
+	{
+		struct_NetS_Activity33Award_send( pptr, psize, &pValue->m_awardlist[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypay, (*psize) );
+	return 0;
+}
+
