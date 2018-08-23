@@ -9,7 +9,7 @@ function proc_login_C( recvValue )
 		print( "Login Result:"..recvValue.m_result );
 		eye.networkManager:Logout();
 		
-		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 then
+		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 			LoginModOpenTestLogin();
 		else
 			LoginModOpenSDKLogin();
@@ -30,7 +30,11 @@ function proc_login_C( recvValue )
 		
 		-- µÇÂ½³É¹¦
 		GameManager.writeini( "USERNAME", recvValue.m_username );
-		GameManager.writeini( "PASSTOKEN", recvValue.m_token );
+		if recvValue.m_token == '0' then
+			GameManager.writeini( "PASSTOKEN", "" );
+		else
+			GameManager.writeini( "PASSTOKEN", recvValue.m_token );
+		end
 		GetPlayer().m_usertype = recvValue.m_usertype;
 		
 		-- GMºÅÆô¶¯FPS

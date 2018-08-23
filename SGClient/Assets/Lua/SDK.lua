@@ -103,7 +103,7 @@ function SDK.pay( recvValue )
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
 		
-	elseif Const.platid == 18 or Const.platid == 19 then
+	elseif Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		local url = Global.GetValue("CLIENTACCESS_URL");
 		Application.OpenURL( url.."wmcard.php"
 							.."?product_id="..recvValue.m_productid
@@ -131,6 +131,8 @@ function SDK.userCenter()
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 15 or Const.platid == 16 then -- fysgz-ios
 		ChannelSDK.Instance:user_center( '' );
+	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+		UserInfoDlgShow()
 	else
 	end
 end

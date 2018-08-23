@@ -20,6 +20,28 @@ function HttpRequest.RegisterUser( username, pwd, phone, qq, wchat, friend_invit
 	HttpRequest.Get( paramString, callback );
 end
 
+-- 游客绑定用户
+function HttpRequest.BindUser( devicename, username, pwd, callback )
+	local paramString = "c=userinfo&m=binduser"
+	.."&devicename="..devicename
+	.."&username="..username
+	.."&pwd="..pwd
+	.."&lang="..DeviceHelper.getLanguage()
+	.."&country="..DeviceHelper.getCountry()
+	.."&channelId="..Const.sdk_channelId
+	.."&os="..Const.sdk_sysType
+	HttpRequest.Get( paramString, callback );
+end
+
+-- 修改密码
+function HttpRequest.ChangePwd( username, oldpwd, newpwd, callback )
+	local paramString = "c=userinfo&m=changepwd"
+	.."&username="..username
+	.."&oldpwd="..oldpwd
+	.."&newpwd="..newpwd
+	HttpRequest.Get( paramString, callback );
+end
+
 -- 获取邀请码信息
 function HttpRequest.InviteCode( callback )
 	local username = GameManager.ini( "USERNAME", "" );

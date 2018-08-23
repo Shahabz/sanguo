@@ -1164,7 +1164,7 @@ function MainDlgSetButtons( openoffset )
 	end	
 	
 	-- 用户中心
-	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 17 then
+	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 20 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonUserCenter, m_uiButtonBack[offset] );
@@ -1173,7 +1173,7 @@ function MainDlgSetButtons( openoffset )
 	end
 	
 	-- 送福利
-	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 then
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonInviteCode, m_uiButtonBack[offset] );

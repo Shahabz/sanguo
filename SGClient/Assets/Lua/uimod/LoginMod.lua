@@ -31,6 +31,7 @@ local m_uiRegQQEdit = nil; --UnityEngine.GameObject
 local m_uiRegWeiXinEdit = nil; --UnityEngine.GameObject
 local m_uiRegInviteCodeEdit = nil; --UnityEngine.GameObject
 local m_uiMakeSureLayer = nil; --UnityEngine.GameObject
+local m_uiVisitBtn = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -116,7 +117,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			
 		-- 切换账号
 		elseif nControlID == 4 then
-			if Const.platid == 18 or Const.platid == 19 then
+			if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 				LoginModLoginLayer()
 			elseif Const.platid > 11 then
 				SDK.logout()
@@ -313,6 +314,7 @@ function LoginModOnAwake( gameObject )
 	m_uiRegWeiXinEdit = objs[28];
 	m_uiRegInviteCodeEdit = objs[29];
 	m_uiMakeSureLayer = objs[30];
+	m_uiVisitBtn = objs[31];
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -327,7 +329,7 @@ function LoginModOnStart()
 	-- 版本号
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	-- 平台
-	if Const.platid == 18 or Const.platid == 19 then
+	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		LoginModOpenTestLogin();
 	elseif Const.platid > 11 then
 		SDK.init()
@@ -393,7 +395,16 @@ function LoginModOpenTestLogin()
 	else
 		SetText( m_uiLoginType, T(414)..":"..GameManager.ini( "USERNAME", "" ) )
 	end
-
+	
+	-- 游客登录按钮
+	if m_uiVisitBtn and Const.platid ~= 1 then
+		if username == "" or pwd == "" or pwd =="0" then
+			SetTrue(m_uiVisitBtn)
+		else
+			SetFalse(m_uiVisitBtn)
+		end
+	end
+	
 	-- 请求服务器列表	
 	LoginModAskServerList()
 end
@@ -426,7 +437,7 @@ function LoginModRegLayer()
 	m_uiRegLayer.gameObject:SetActive( true );
 	m_uiLoginLayer.gameObject:SetActive( false );
 	
-	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 then
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		SetTrue( m_uiRegInviteCodeEdit );
 	else
 		SetFalse( m_uiRegInviteCodeEdit );
@@ -519,7 +530,7 @@ end
 
 -- 进入游戏
 function LoginModEnterGame()
-	if Const.platid == 18 or Const.platid == 19 or Const.platid <= 11 then
+	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 then
 		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
 		if loginType == "2" then
 			LoginModQuickLogin();
