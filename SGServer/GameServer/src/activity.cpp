@@ -444,6 +444,8 @@ int activity_sendlist( int actor_index )
 		int starttime = g_activity_item[activityid].m_starttime;
 		if ( starttime <= 0 )
 			continue;
+		if ( g_activity_item[activityid].m_endstat == 1 )
+			continue;
 
 		pValue.m_list[pValue.m_count].m_activityid = activityid;
 		pValue.m_list[pValue.m_count].m_starttime = starttime;

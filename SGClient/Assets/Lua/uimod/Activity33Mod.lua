@@ -61,6 +61,8 @@ end
 function Activity33ModOnStart( gameObject )
 	SetFalse( m_uiActorList )
 	SetFalse( m_uiAwardScrollView )
+	SetFalse( m_uiMyRank )
+	SetFalse( m_uiMyPay )
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_33, 0 )
 	m_AwardDescLayerShow = false
 end
