@@ -1429,6 +1429,31 @@ void nation_rank_addvalue( City *pCity, char kind, int value )
 	pCity->nation_rankv[index] += value;
 	if ( pCity->nation_rankv[index] == 0 )
 		return;
+
+	// 找到我的排名，把我踢出
+	int my_tmpi = -1;
+	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	{
+		int actorid = pRank->member[index][tmpi].actorid;
+		if ( actorid == pCity->actorid )
+		{
+			my_tmpi = tmpi;
+			break;
+		}
+	}
+	if ( my_tmpi >= 0 && my_tmpi < NATION_RANK_MEMBERNUM - 1 )
+	{
+		// 往前移
+		memmove( &pRank->member[index][my_tmpi], &pRank->member[index][my_tmpi + 1], sizeof( NationRankMember )*(NATION_RANK_MEMBERNUM - my_tmpi - 1) );
+		pRank->member[index][NATION_RANK_MEMBERNUM - 1].actorid = 0;
+		pRank->member[index][NATION_RANK_MEMBERNUM - 1].city_index = -1;
+	}
+	else if ( my_tmpi == NATION_RANK_MEMBERNUM - 1 )
+	{
+		pRank->member[index][my_tmpi].actorid = 0;
+		pRank->member[index][my_tmpi].city_index = -1;
+	}
+
 	int replace_tmpi = -1;
 	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
 	{
@@ -1446,71 +1471,18 @@ void nation_rank_addvalue( City *pCity, char kind, int value )
 		}
 	}
 
-	if ( replace_tmpi < 0 || replace_tmpi >= NATION_RANK_MEMBERNUM )
-	{
-		return;
-	}
 
-	// 检查我是不是已经在里面了
-	int my_tmpi = -1;
-	for ( int tmpi = 0; tmpi < NATION_RANK_MEMBERNUM; tmpi++ )
+	if ( replace_tmpi >= 0 && replace_tmpi < NATION_RANK_MEMBERNUM - 1 )
 	{
-		int actorid = pRank->member[index][tmpi].actorid;
-		if ( actorid == pCity->actorid )
-		{
-			my_tmpi = tmpi;
-			break;
-		}
-	}
-
-	if ( my_tmpi >= 0 && my_tmpi < NATION_RANK_MEMBERNUM )
-	{ // 在里面
-		int space = my_tmpi - replace_tmpi;
-		if ( space == 1 )
-		{ // 直接交换
-			NationRankMember tmpMember = { 0 };
-			memcpy( &tmpMember, &pRank->member[index][replace_tmpi], sizeof( NationRankMember ) );
-			memcpy( &pRank->member[index][replace_tmpi], &pRank->member[index][my_tmpi], sizeof( NationRankMember ) );
-			memcpy( &pRank->member[index][my_tmpi], &tmpMember, sizeof( NationRankMember ) );
-		}
-		else if ( space > 1 )
-		{ // 重新排序, 这种情况除了不太可能出现
-			for ( int i = 0; i < NATION_RANK_MEMBERNUM; i++ )
-			{
-				for ( int j = 0; j < NATION_RANK_MEMBERNUM-i; j++ )
-				{
-					int city_index = pRank->member[index][j].city_index;
-					int next_city_index = pRank->member[index][j+1].city_index;
-					int value = 0;
-					int next_value = 0;
-					if ( city_index >= 0 && city_index < g_city_maxcount )
-					{
-						value = g_city[city_index].nation_rankv[index];
-					}
-					if ( next_city_index >= 0 && next_city_index < g_city_maxcount )
-					{
-						next_value = g_city[next_city_index].nation_rankv[index];
-					}
-					if ( value > next_value )
-					{
-						NationRankMember tmpMember = { 0 };
-						memcpy( &tmpMember, &pRank->member[index][j], sizeof( NationRankMember ) );
-						memcpy( &pRank->member[index][j], &pRank->member[index][j+1], sizeof( NationRankMember ) );
-						memcpy( &pRank->member[index][j+1], &tmpMember, sizeof( NationRankMember ) );
-					}
-				}
-			
-			}
-		}
-	}
-	else
-	{// 不在里面
-		/*if ( replace_tmpi < NATION_RANK_MEMBERNUM - 1 )
-		{
-			memmove( &pRank->member[index][replace_tmpi + 1], &pRank->member[index][replace_tmpi], sizeof( NationRankMember ) * (NATION_RANK_MEMBERNUM - 1 - replace_tmpi) );
-		}*/
-		pRank->member[index][replace_tmpi].city_index = pCity->index;
+		// 往后移
+		memmove( &pRank->member[index][replace_tmpi + 1], &pRank->member[index][replace_tmpi], sizeof( NationRankMember )*(NATION_RANK_MEMBERNUM - replace_tmpi - 1) );
 		pRank->member[index][replace_tmpi].actorid = pCity->actorid;
+		pRank->member[index][replace_tmpi].city_index = pCity->index;
+	}
+	else if ( replace_tmpi == NATION_RANK_MEMBERNUM - 1 )
+	{
+		pRank->member[index][replace_tmpi].actorid = pCity->actorid;
+		pRank->member[index][replace_tmpi].city_index = pCity->index;
 	}
 }
 
