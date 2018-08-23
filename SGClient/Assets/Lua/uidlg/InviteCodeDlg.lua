@@ -387,6 +387,9 @@ function InviteCodeDlgGetList()
 	SetTrue( m_uiListLayer )
 	FriendDlgFriendClear()
 	local InviteCode = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	if InviteCode == "" then
+		return
+	end
 	HttpRequest.InviteCodeFriend( InviteCode, function( response )
 		SetFalse( m_uiWaiting )
 		local json = require "cjson"
