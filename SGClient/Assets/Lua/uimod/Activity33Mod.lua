@@ -59,6 +59,9 @@ end
 
 -- 界面初始化时调用
 function Activity33ModOnStart( gameObject )
+	ResourceManager.LoadAssetBundle( "_ab_activity_pic_7" )
+	ResourceManager.LoadAssetBundle( "_ab_activity_back_5" )
+	SetImage( m_uiBack, LoadSprite("activity_pic_7") )
 	SetFalse( m_uiActorList )
 	SetFalse( m_uiAwardScrollView )
 	SetFalse( m_uiMyRank )
@@ -80,6 +83,8 @@ end
 -- 界面删除时调用
 function Activity33ModOnDestroy( gameObject )
 	m_Mod = nil
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_7" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_5" )
 end
 
 -- 每帧调用
@@ -166,6 +171,7 @@ function Activity33ModShowAwardList()
 	
 	for i=1,m_recvValue.m_awardcount,1 do
 		local obj = m_uiAwardContent.transform:GetChild(i-1).gameObject
+		SetImage( obj.transform:Find("Back"), LoadSprite("activity_back_5") )
 		local awardObj = obj.transform:Find("AwardList")
 		for j=1,4,1 do
 			local awardkind = m_recvValue.m_awardlist[i].m_awardkind[j]

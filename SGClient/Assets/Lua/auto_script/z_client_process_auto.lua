@@ -1578,6 +1578,13 @@ function proc_systalkjson_C( recvValue )
 	-- 有滚动消息
 	if recvValue.m_roll == 1 then
 		RollingMsgDlgShowMsg( "", msg );
+	elseif recvValue.m_roll == 2 then
+		RollingMsgDlgShowMsg( "", msg );
+		RollingMsgDlgShowMsg( "", msg );
+	elseif recvValue.m_roll == 3 then
+		RollingMsgDlgShowMsg( "", msg );
+		RollingMsgDlgShowMsg( "", msg );
+		RollingMsgDlgShowMsg( "", msg );
 	end
 end
 

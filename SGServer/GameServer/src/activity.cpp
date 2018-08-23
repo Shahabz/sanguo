@@ -18,6 +18,7 @@
 #include "pay.h"
 #include "actor_times.h"
 #include "city.h"
+#include "chat.h"
 #include "quest.h"
 #include "hero.h"
 #include "nation.h"
@@ -1426,6 +1427,10 @@ void activity_33_calc_rank( City *pCity )
 {
 	if ( !pCity || pCity ->act33_pay <= 0 )
 		return;
+
+	// 变化之前的第一名
+	int one_city_index = g_activity33_rank[0].city_index;
+
 	// 找到我的排名，把我踢出
 	int my_tmpi = -1;
 	for ( int tmpi = 0; tmpi < ACTIVITY33_MEMBERMAX; tmpi++ )
@@ -1478,6 +1483,15 @@ void activity_33_calc_rank( City *pCity )
 	{
 		g_activity33_rank[replace_tmpi].actorid = pCity->actorid;
 		g_activity33_rank[replace_tmpi].city_index = pCity->index;
+	}
+
+	if ( my_tmpi > 0 && replace_tmpi == 0 )
+	{//  6032	恭喜<color=03DE27FF>[{0}]{1}</color>在充值排行活动中暂时位居第一
+		char v1[64] = { 0 };
+		char v2[64] = { 0 };
+		sprintf( v1, "%s%d", TAG_NATION, pCity->nation );
+		sprintf( v2, "%s", pCity->name );
+		system_talkjson_world( 6032, v1, v2, NULL, NULL, NULL, NULL, 2 );
 	}
 }
 
