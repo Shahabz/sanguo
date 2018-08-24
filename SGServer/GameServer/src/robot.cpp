@@ -244,6 +244,15 @@ void robot_logic( City *pCity )
 	int level = pCity->building[0].level;
 	if ( level <= 0 || level >= g_robot_base_maxnum )
 		return;
+	Building *pWall = building_getptr_kind( pCity->index, BUILDING_Wall );
+	if ( pWall && pWall->level < level )
+	{
+		pWall->level = level;
+	}
+	else
+	{
+		building_give( pCity->index, BUILDING_Wall, 1 );
+	}
 
 	int actorlevel = random( g_robot_base[level].actorlevel_min, g_robot_base[level].actorlevel_max );
 	if ( actorlevel > pCity->level )
@@ -318,7 +327,44 @@ void robot_logic( City *pCity )
 		}
 	}
 
+	// ±øÁ¦¿â´æ
+	pCity->soldiers[0] = random( 0, 20000 );
+	pCity->soldiers[1] = random( 0, 20000 );
+	pCity->soldiers[2] = random( 0, 20000 );
 
+	// ³ÇÇ½ÊØÎÀ
+	if ( pWall )
+	{
+		for ( int tmpi = 0; tmpi < pWall->level; tmpi++ )
+		{
+			if ( pCity->guard[tmpi].monsterid <= 0 )
+			{
+				BuildingUpgradeConfig *buildingconfig = building_getconfig( BUILDING_Wall, pWall->level );
+				if ( buildingconfig )
+				{
+					char monsterid = random( 1, g_cityguardinfo_maxnum - 1 );
+					char color = ITEM_COLOR_LEVEL_GREEN;
+					char corps = random( 0, 2 );
+					char shape = random( 1, 15 );
+					unsigned char minlevel = buildingconfig->value[0];
+					unsigned char maxlevel = buildingconfig->value[1];
+					unsigned char level = random( minlevel, maxlevel );
+
+					CityGuardInfoConfig *config = city_guard_config( monsterid, color );
+					if ( config )
+					{
+						pCity->guard[tmpi].monsterid = monsterid;
+						pCity->guard[tmpi].corps = corps;
+						pCity->guard[tmpi].color = color;
+						pCity->guard[tmpi].shape = shape;
+						pCity->guard[tmpi].level = level;
+						pCity->guard[tmpi].soldiers = TROOPS( level, config->troops, config->troops_growth );
+						pCity->guardnum += 1;
+					}
+				}
+			}
+		}
+	}
 	// ÉèÖÃÎä½«
 	int list[12] = {0};
 	int count = 0;
