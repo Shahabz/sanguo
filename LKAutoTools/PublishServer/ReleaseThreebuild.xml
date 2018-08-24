@@ -10,7 +10,7 @@
 	<!-- 执行比较game表的批处理,将有变化的数据取出来 -->
 	<target name="checksql_game">  
     		<exec dir="../PublishSQL/CompareGame" executable="cmd.exe">
-						<arg line="/c test_check_online.bat" />
+						<arg line="/c test_check_three.bat" />
         		<arg line="/c exit" />
     		</exec> 
 
@@ -21,36 +21,36 @@
 	<!-- 更新data数据库和基础game表 -->
 	<target name="sdata">
 			
-		<scp todir="root:game123,./@39.105.38.19:/data/sg_base" port="50022" trust="true">
+		<scp todir="root:game123,./@39.105.38.19:/data/three_base" port="50022" trust="true">
 		   <fileset file="./sgsql.tar.gz"/>
 		</scp>
 		
-		<scp todir="root:game123,./@39.105.38.19:/data/sg_base/sql" port="50022" trust="true">
+		<scp todir="root:game123,./@39.105.38.19:/data/three_base/sql" port="50022" trust="true">
 		   <fileset file="./sg_game_patch.sql"/>
 		</scp>
 
 		<sshexec host="39.105.38.19"  port="50022" username="root"  password="game123,./"  
-         		trust="true" command="cd /data/sg_base;./sql_shell"/>
+         		trust="true" command="cd /data/three_base;./sql_shell"/>
          		
 	</target>
 	
 	<!-- 上传到外网服务器 -->
 	<target name="s1">
 			
-		<scp todir="root:game123,./@39.105.38.19:/usr/local/sanguo_s1/" port="50022" trust="true">
+		<scp todir="root:game123,./@39.105.38.19:/usr/local/three_s1/" port="50022" trust="true">
 		   <fileset file="./sgserver.tar.gz"/>
 		</scp>
 
-		<scp todir="root:game123,./@39.105.38.19:/usr/local/sanguo_s1/" port="50022" trust="true">
+		<scp todir="root:game123,./@39.105.38.19:/usr/local/three_s1/" port="50022" trust="true">
 		   <fileset file="./sgsql.tar.gz"/>
 		</scp>
 		
-		<scp todir="root:game123,./@39.105.38.19:/usr/local/sanguo_s1/sql" port="50022" trust="true">
+		<scp todir="root:game123,./@39.105.38.19:/usr/local/three_s1/sql" port="50022" trust="true">
 		   <fileset file="./sg_game_patch.sql"/>
 		</scp>
 		 
 		<sshexec host="39.105.38.19"  port="50022" username="root"  password="game123,./"
-         		trust="true" command="cd /usr/local/sanguo_s1;./stop_shell;./sql_shell;./start_shell"/>
+         		trust="true" command="cd /usr/local/three_s1;./stop_shell;./sql_shell;./start_shell"/>
          		
 	</target>
 

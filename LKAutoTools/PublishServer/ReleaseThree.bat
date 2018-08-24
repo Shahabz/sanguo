@@ -1,2 +1,2 @@
-ant	-buildfile	Releasebuild.xml	-verbose
+ant	-buildfile	ReleaseThreebuild.xml	-verbose
 pause
