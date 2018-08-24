@@ -1164,7 +1164,7 @@ function MainDlgSetButtons( openoffset )
 	end	
 	
 	-- 用户中心
-	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 20 then
+	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 21 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonUserCenter, m_uiButtonBack[offset] );

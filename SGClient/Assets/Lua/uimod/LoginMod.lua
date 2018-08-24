@@ -327,7 +327,7 @@ function LoginModOnStart()
 	eye.audioManager:Play(201);
 	
 	-- 版本号
-	m_uiVersion:GetComponent( typeof(UIText) ).text = "v "..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
+	m_uiVersion:GetComponent( typeof(UIText) ).text = "[p"..Const.platid.."]v"..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"--[[.."lang："..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()--]];
 	-- 平台
 	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		LoginModOpenTestLogin();

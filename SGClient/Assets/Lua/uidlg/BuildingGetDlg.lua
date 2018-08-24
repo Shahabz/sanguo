@@ -128,14 +128,20 @@ function BuildingGetDlgShow( recvValue, count )
 	if GameManager.currentScence ~= "city" then
 		WorldMap.ReturnCity()
 	end
+	local buildingkind = 0;
+	local buildinglevel = 0;
 	BuildingGetDlgOpen();
 	if count ~= nil then
 		for i=1, count, 1 do
+			buildingkind = recvValue[i].m_kind
+			buildinglevel = recvValue[i].m_level
 			table.insert( m_kind, recvValue[i].m_kind );
 			table.insert( m_offset, recvValue[i].m_offset );
 			table.insert( m_info, recvValue[i] );
 		end
 	else
+		buildingkind = recvValue.m_kind
+		buildinglevel = recvValue.m_level
 		table.insert( m_kind, recvValue.m_kind );
 		table.insert( m_offset, recvValue.m_offset );
 		table.insert( m_info, recvValue );
@@ -144,16 +150,16 @@ function BuildingGetDlgShow( recvValue, count )
 	m_uiNormalPanel.gameObject:SetActive(true);
 	m_uiMovePanel.gameObject:SetActive(false);
 	m_uiShape.gameObject:SetActive(true);
-	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( recvValue.m_kind );
-	if recvValue.m_level == 0 and recvValue.m_kind < 30 then
+	m_uiShape:GetComponent( "Image" ).sprite = BuildingSprite( buildingkind );
+	if buildinglevel == 0 and buildingkind < 30 then
 		SetGray( m_uiShape, true )
 	else
 		SetGray( m_uiShape, false )
 	end
 		
-	SetText(m_uiName, T(50).." <color=#ECC244>["..T( recvValue.m_kind ).."]</color>");
+	SetText(m_uiName, T(50).." <color=#ECC244>["..T( buildingkind ).."]</color>");
 	SetTrue(m_uiDesc)
-	SetText(m_uiDesc,T(recvValue.m_kind+50))
+	SetText(m_uiDesc,T(buildingkind+50))
 	
 	-- 关闭部分界面
 	StoryDlgClose()

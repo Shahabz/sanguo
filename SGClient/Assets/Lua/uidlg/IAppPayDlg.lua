@@ -159,5 +159,6 @@ function IAppPay_fysgz( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
+	local url = Global.GetValue("SERVERACCESS_URL");
 	Application.OpenURL( url.."iapppay_fysgz/trade.php?transdata="..transdata )
 end

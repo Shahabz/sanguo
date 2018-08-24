@@ -111,6 +111,15 @@ function SDK.pay( recvValue )
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
 							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+							
+	elseif Const.platid == 21 then
+		local url = Global.GetValue("CLIENTACCESS_URL");
+		Application.OpenURL( url.."wmcard.php"
+							.."?product_id="..recvValue.m_productid
+							.."&product_price="..(recvValue.m_price*100)
+							.."&product_orider="..recvValue.m_orderid
+							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
+							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
 	end
 end
 
@@ -130,6 +139,8 @@ function SDK.userCenter()
 	if Const.platid == 13 or Const.platid == 14 then -- sgbl-ios
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 15 or Const.platid == 16 then -- fysgz-ios
+		ChannelSDK.Instance:user_center( '' );
+	elseif Const.platid == 21 then -- fysgz-android 爱贝登录-完美舒卡支付
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
 		UserInfoDlgShow()

@@ -657,8 +657,14 @@ int fight_start_armygroup( int group_index )
 			CityGuardInfoConfig *config = city_guard_config( monsterid, pCity->guard[tmpi].color );
 			if ( !config )
 				continue;
+
+			int base_attack = ATTACK( pCity->guard[tmpi].level, config->attack, config->attack_growth );
+			int base_defense = DEFENSE( pCity->guard[tmpi].level, config->defense, config->defense_growth );
+			int base_troops = TROOPS( pCity->guard[tmpi].level, config->troops, config->troops_growth );
+			if ( base_troops < pCity->guard[tmpi].soldiers )
+				base_troops = pCity->guard[tmpi].soldiers;
 			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_CITY, pCity->index, FIGHT_UNITTYPE_GUARD, tmpi, monsterid, pCity->guard[tmpi].shape, pCity->guard[tmpi].level, pCity->guard[tmpi].color, (char)pCity->guard[tmpi].corps,
-				config->attack, config->defense, pCity->guard[tmpi].soldiers, config->troops, config->attack_increase, config->defense_increase, config->assault, config->defend, (char)config->line, 0, 0 );
+				base_attack, base_defense, pCity->guard[tmpi].soldiers, base_troops, config->attack_increase, config->defense_increase, config->assault, config->defend, (char)config->line, 0, 0 );
 		}
 
 		// 加上驻防的部队
