@@ -85,7 +85,8 @@ function IAppPayDlgShow( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
-	Application.OpenURL( "http://39.105.38.19/sg/iapppay/trade.php?transdata="..transdata )
+	local url = Global.GetValue("SERVERACCESS_URL");
+	Application.OpenURL( url.."iapppay/trade.php?transdata="..transdata )
 	IAppPayDlgClose()
 	--[[local uniWebView = m_uiWebView.transform:GetComponent( "UniWebView" )
 	uniWebView:SetOpenLinksInExternalBrowser(false)
@@ -144,7 +145,8 @@ function IAppPay_sgbl( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
-	Application.OpenURL( "http://39.105.38.19/sg/iapppay_sgbl/trade.php?transdata="..transdata )
+	local url = Global.GetValue("SERVERACCESS_URL");
+	Application.OpenURL( url.."iapppay_sgbl/trade.php?transdata="..transdata )
 end
 
 function IAppPay_fysgz( recvValue )
@@ -157,5 +159,5 @@ function IAppPay_fysgz( recvValue )
 	info["cpprivateinfo"] = recvValue.m_ext -- 商户私有信息会透传给商户
 	local transdata_json = json.encode(info)
 	local transdata = WWW.EscapeURL(transdata_json)
-	Application.OpenURL( "http://39.105.38.19/sg/iapppay_fysgz/trade.php?transdata="..transdata )
+	Application.OpenURL( url.."iapppay_fysgz/trade.php?transdata="..transdata )
 end

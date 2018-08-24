@@ -94,11 +94,11 @@ function SDK.pay( recvValue )
 	elseif Const.platid == 16 then
 		IAppPay_fysgz( recvValue )
 	elseif Const.platid == 17 then
-		
+		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_price"] = recvValue.m_price*100
 		info["product_actorid"] = GetPlayer().m_actorid
 		info["product_name"] = T(recvValue.m_nameid)
-		info["product_notifyurl"] = "http://39.105.38.19/sg/iapppay_fysgz_trpay/trpay.php"
+		info["product_notifyurl"] = url.."iapppay_fysgz_trpay/trpay.php"
 		info["product_notifyurl_params"] = "ext="..recvValue.m_ext
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
