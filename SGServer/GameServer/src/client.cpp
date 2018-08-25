@@ -375,7 +375,7 @@ char *client_getusername( int client_index )
 			return g_sockset[client_index].m_username;
 #endif
 	}
-	return NULL;
+	return "";
 }
 
 int client_getplatid( int client_index )
@@ -453,7 +453,7 @@ int client_getchannelid( int client_index )
 	return -1;
 }
 
-char* client_getdevdata( int client_index )
+const char* client_getdevdata( int client_index )
 {
 	if ( client_index >= 0 && client_index < g_max_connection )
 	{

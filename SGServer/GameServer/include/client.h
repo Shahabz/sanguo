@@ -50,7 +50,7 @@ char client_getlanguage( int client_index );
 int client_getinvcode( int client_index );
 int client_getos( int client_index );
 int client_getchannelid( int client_index );
-char* client_getdevdata( int client_index );
+const char* client_getdevdata( int client_index );
 int client_logic();
 int client_get_maxrecvcount();
 

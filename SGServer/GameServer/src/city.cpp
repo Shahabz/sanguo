@@ -1102,6 +1102,7 @@ void city_function_open( City *pCity, int offset )
 	SLK_NetS_Function pValue = { 0 };
 	pValue.m_function = pCity->function;
 	pValue.m_openoffset = (char)offset;
+	pValue.m_path = 0;
 	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
@@ -1116,6 +1117,7 @@ void city_function_close( City *pCity, int offset )
 	SLK_NetS_Function pValue = { 0 };
 	pValue.m_function = pCity->function;
 	pValue.m_openoffset = (char)offset;
+	pValue.m_path = 0;
 	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 

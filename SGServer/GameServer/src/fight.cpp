@@ -93,7 +93,7 @@ Fight g_fight;
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
 char g_gm_isout = 0;
 extern int g_map_town_attackmonster[3][8];
-static char *s_fight_posname[] = { "", "attack", "defense" };
+static const char *s_fight_posname[] = { "", "attack", "defense" };
 #ifdef _WIN32
 char g_test_mod = 0;
 #else
@@ -127,7 +127,7 @@ int fight_debug( const char *format, ... )
 	return rtn;
 #else
 	return 0;
-#endif FIGHT_DEBUG
+#endif
 }
 
 // 向战场里添加一个英雄

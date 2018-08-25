@@ -748,9 +748,9 @@ int quest_sendawardinfo( int actor_index, int questid, char type )
 	SLK_NetS_QuestAward pValue = { 0 };
 	pValue.m_type = type;
 	pValue.m_questid = questid;
-	pValue.m_datatype = g_questinfo[questid].datatype;
-	pValue.m_datakind = g_questinfo[questid].datakind;
-	pValue.m_dataoffset = g_questinfo[questid].dataoffset;
+	pValue.m_datatype = (char)g_questinfo[questid].datatype;
+	pValue.m_datakind = (short)g_questinfo[questid].datakind;
+	pValue.m_dataoffset = (short)g_questinfo[questid].dataoffset;
 	pValue.m_nameid = g_questinfo[questid].nameid;
 	pValue.m_value = g_questinfo[questid].needvalue;
 	pValue.m_needvalue = g_questinfo[questid].needvalue;
