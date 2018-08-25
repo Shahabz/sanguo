@@ -28,7 +28,6 @@ GameObject:
   - component: {fileID: 19883210}
   - component: {fileID: 19953302}
   - component: {fileID: 8289354}
-  - component: {fileID: 11491622}
   m_Layer: 5
   m_Name: Effect_MapMouseClick
   m_TagString: Untagged
@@ -267,22 +266,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &11491622
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 148288}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50632da4243a4394da12c7a04f624602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playOnEnable: 1
-  audioType: 1
-  mode: 0
-  fadeTime: 1
-  clip: {fileID: 8300000, guid: ae13d33f05169eb4996a3933472bbdb1, type: 3}
 --- !u!198 &19806620
 ParticleSystem:
   m_ObjectHideFlags: 1

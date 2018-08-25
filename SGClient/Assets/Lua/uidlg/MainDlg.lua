@@ -1390,7 +1390,7 @@ function GetCopyPos()
 end
 
 function GetWorldPos()
-	SetTrue( ButtonTable.m_uiButtonWorld );
+	--SetTrue( ButtonTable.m_uiButtonWorld );
 	return m_uiButtonBack[4].transform.position
 end
 

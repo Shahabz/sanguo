@@ -87,6 +87,20 @@ function SDK.pay( recvValue )
 				IAppPay_fysgz( recvValue )
 			end
 		end
+	
+	elseif Const.platid == 20 then
+		if recvValue.m_paymode == 0 then
+			local jsonMsg = json.encode( info ); 
+			ChannelSDK.Instance:pay( jsonMsg );
+		else
+			local url = Global.GetValue("CLIENTACCESS_URL");
+			Application.OpenURL( url.."wmcard.php"
+							.."?product_id="..recvValue.m_productid
+							.."&product_price="..(recvValue.m_price*100)
+							.."&product_orider="..recvValue.m_orderid
+							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
+							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+		end
 		
 	elseif Const.platid == 14 then
 		IAppPay_sgbl( recvValue )

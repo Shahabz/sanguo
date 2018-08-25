@@ -800,7 +800,7 @@ public abstract class Camera2D : MonoBehaviour
     protected virtual void OnTouch( Vector2 screenPos ){}
     protected virtual void OnTouchRelease( Vector2 screenPos )
     {
-        if( enableTouchEffect )
+		if( enableTouchEffect && _OnTouchEffect != null)
         {
             GameObject obj = GameObject.Instantiate( _OnTouchEffect );
             obj.transform.SetParent( eye.uiManager.GetUIRoot() );

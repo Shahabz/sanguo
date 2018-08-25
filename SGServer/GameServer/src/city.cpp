@@ -1093,13 +1093,15 @@ void city_function_open( City *pCity, int offset )
 {
 	if ( pCity == NULL )
 		return;
+	if ( offset < 0 || offset >= 31 )
+		return;
 	if ( pCity->function & (1 << offset) )
 		return;
 	pCity->function |= (1 << offset);
 
 	SLK_NetS_Function pValue = { 0 };
 	pValue.m_function = pCity->function;
-	pValue.m_openoffset = offset;
+	pValue.m_openoffset = (char)offset;
 	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
@@ -1108,10 +1110,12 @@ void city_function_close( City *pCity, int offset )
 {
 	if ( pCity == NULL )
 		return;
+	if ( offset < 0 || offset >= 31 )
+		return;
 	pCity->function &= ~(1 << offset);
 	SLK_NetS_Function pValue = { 0 };
 	pValue.m_function = pCity->function;
-	pValue.m_openoffset = offset;
+	pValue.m_openoffset = (char)offset;
 	netsend_function_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 }
 
