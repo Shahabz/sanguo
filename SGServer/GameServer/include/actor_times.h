@@ -39,6 +39,7 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_FANSHI_VISIT_FREE	16	// 坊市免费寻访次数
 #define TODAY_CHAR_GIRLSHOP_UPDATE		17	// 女将商店刷新次数
 #define TODAY_CHAR_WORLDBOSS_RESET		18 // 今天重置世界boss次数
+#define TODAY_CHAR_MAP_PICKUP			19 // 世界拾取数量限制
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );

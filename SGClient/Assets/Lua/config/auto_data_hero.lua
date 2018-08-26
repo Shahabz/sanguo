@@ -372,62 +372,62 @@ g_heroinfo = {
 },
 [111] = 
 { 
-	[5] = { kind=111,color=5,name="邓艾",desc="7级国家名将",corps=0,attack_base=57,attack_wash=32,attack_wash_limit=89,defense_base=88,defense_wash=63,defense_wash_limit=174,troops_base=65,troops_wash=54,troops_wash_limit=150,total_wash=360,attack=182,defense=176,troops=690,skillid=1,itemnum=0,sound=459,},
+	[5] = { kind=111,color=5,name="邓艾",desc="1级国家名将",corps=0,attack_base=57,attack_wash=32,attack_wash_limit=89,defense_base=88,defense_wash=63,defense_wash_limit=174,troops_base=65,troops_wash=54,troops_wash_limit=150,total_wash=360,attack=182,defense=176,troops=690,skillid=1,itemnum=0,sound=459,},
 },
 [112] = 
 { 
-	[5] = { kind=112,color=5,name="姜维",desc="7级国家名将",corps=1,attack_base=84,attack_wash=59,attack_wash_limit=162,defense_base=65,defense_wash=41,defense_wash_limit=114,troops_base=61,troops_wash=50,troops_wash_limit=138,total_wash=360,attack=236,defense=143,troops=659,skillid=2,itemnum=0,sound=459,},
+	[5] = { kind=112,color=5,name="姜维",desc="1级国家名将",corps=1,attack_base=84,attack_wash=59,attack_wash_limit=162,defense_base=65,defense_wash=41,defense_wash_limit=114,troops_base=61,troops_wash=50,troops_wash_limit=138,total_wash=360,attack=236,defense=143,troops=659,skillid=2,itemnum=0,sound=459,},
 },
 [113] = 
 { 
-	[5] = { kind=113,color=5,name="甘宁",desc="7级国家名将",corps=2,attack_base=89,attack_wash=63,attack_wash_limit=174,defense_base=64,defense_wash=41,defense_wash_limit=114,troops_base=57,troops_wash=46,troops_wash_limit=126,total_wash=360,attack=247,defense=143,troops=628,skillid=3,itemnum=0,sound=459,},
+	[5] = { kind=113,color=5,name="甘宁",desc="1级国家名将",corps=2,attack_base=89,attack_wash=63,attack_wash_limit=174,defense_base=64,defense_wash=41,defense_wash_limit=114,troops_base=57,troops_wash=46,troops_wash_limit=126,total_wash=360,attack=247,defense=143,troops=628,skillid=3,itemnum=0,sound=459,},
 },
 [114] = 
 { 
-	[5] = { kind=114,color=5,name="羊枯",desc="8级国家名将",corps=2,attack_base=49,attack_wash=24,attack_wash_limit=65,defense_base=75,defense_wash=54,defense_wash_limit=150,troops_base=96,troops_wash=72,troops_wash_limit=199,total_wash=370,attack=161,defense=163,troops=800,skillid=3,itemnum=0,sound=457,},
+	[5] = { kind=114,color=5,name="羊枯",desc="2级国家名将",corps=2,attack_base=49,attack_wash=24,attack_wash_limit=65,defense_base=75,defense_wash=54,defense_wash_limit=150,troops_base=96,troops_wash=72,troops_wash_limit=199,total_wash=370,attack=161,defense=163,troops=800,skillid=3,itemnum=0,sound=457,},
 },
 [115] = 
 { 
-	[5] = { kind=115,color=5,name="张飞",desc="8级国家名将",corps=0,attack_base=103,attack_wash=68,attack_wash_limit=187,defense_base=67,defense_wash=46,defense_wash_limit=126,troops_base=50,troops_wash=37,troops_wash_limit=102,total_wash=370,attack=255,defense=148,troops=573,skillid=1,itemnum=0,sound=455,},
+	[5] = { kind=115,color=5,name="张飞",desc="2级国家名将",corps=0,attack_base=103,attack_wash=68,attack_wash_limit=187,defense_base=67,defense_wash=46,defense_wash_limit=126,troops_base=50,troops_wash=37,troops_wash_limit=102,total_wash=370,attack=255,defense=148,troops=573,skillid=1,itemnum=0,sound=455,},
 },
 [116] = 
 { 
-	[5] = { kind=116,color=5,name="陆逊",desc="8级国家名将",corps=1,attack_base=67,attack_wash=46,attack_wash_limit=126,defense_base=96,defense_wash=59,defense_wash_limit=162,troops_base=57,troops_wash=46,troops_wash_limit=126,total_wash=370,attack=208,defense=169,troops=628,skillid=2,itemnum=0,sound=459,},
+	[5] = { kind=116,color=5,name="陆逊",desc="2级国家名将",corps=1,attack_base=67,attack_wash=46,attack_wash_limit=126,defense_base=96,defense_wash=59,defense_wash_limit=162,troops_base=57,troops_wash=46,troops_wash_limit=126,total_wash=370,attack=208,defense=169,troops=628,skillid=2,itemnum=0,sound=459,},
 },
 [117] = 
 { 
-	[5] = { kind=117,color=5,name="张辽",desc="9级国家名将",corps=0,attack_base=65,attack_wash=33,attack_wash_limit=90,defense_base=90,defense_wash=67,defense_wash_limit=186,troops_base=75,troops_wash=50,troops_wash_limit=138,total_wash=380,attack=182,defense=186,troops=667,skillid=1,itemnum=0,sound=457,},
+	[5] = { kind=117,color=5,name="张辽",desc="3级国家名将",corps=0,attack_base=65,attack_wash=33,attack_wash_limit=90,defense_base=90,defense_wash=67,defense_wash_limit=186,troops_base=75,troops_wash=50,troops_wash_limit=138,total_wash=380,attack=182,defense=186,troops=667,skillid=1,itemnum=0,sound=457,},
 },
 [118] = 
 { 
-	[5] = { kind=118,color=5,name="关羽",desc="9级国家名将",corps=1,attack_base=101,attack_wash=63,attack_wash_limit=174,defense_base=68,defense_wash=46,defense_wash_limit=126,troops_base=61,troops_wash=41,troops_wash_limit=114,total_wash=380,attack=249,defense=150,troops=612,skillid=2,itemnum=0,sound=455,},
+	[5] = { kind=118,color=5,name="关羽",desc="3级国家名将",corps=1,attack_base=101,attack_wash=63,attack_wash_limit=174,defense_base=68,defense_wash=46,defense_wash_limit=126,troops_base=61,troops_wash=41,troops_wash_limit=114,total_wash=380,attack=249,defense=150,troops=612,skillid=2,itemnum=0,sound=455,},
 },
 [119] = 
 { 
-	[5] = { kind=119,color=5,name="太史慈",desc="9级国家名将",corps=2,attack_base=86,attack_wash=46,attack_wash_limit=126,defense_base=83,defense_wash=63,defense_wash_limit=174,troops_base=61,troops_wash=41,troops_wash_limit=114,total_wash=380,attack=210,defense=178,troops=612,skillid=3,itemnum=0,sound=459,},
+	[5] = { kind=119,color=5,name="太史慈",desc="3级国家名将",corps=2,attack_base=86,attack_wash=46,attack_wash_limit=126,defense_base=83,defense_wash=63,defense_wash_limit=174,troops_base=61,troops_wash=41,troops_wash_limit=114,total_wash=380,attack=210,defense=178,troops=612,skillid=3,itemnum=0,sound=459,},
 },
 [120] = 
 { 
-	[5] = { kind=120,color=5,name="司马懿",desc="10级国家名将",corps=1,attack_base=68,attack_wash=46,attack_wash_limit=126,defense_base=90,defense_wash=72,defense_wash_limit=198,troops_base=77,troops_wash=33,troops_wash_limit=90,total_wash=390,attack=210,defense=191,troops=549,skillid=2,itemnum=0,sound=457,},
+	[5] = { kind=120,color=5,name="司马懿",desc="4级国家名将",corps=1,attack_base=68,attack_wash=46,attack_wash_limit=126,defense_base=90,defense_wash=72,defense_wash_limit=198,troops_base=77,troops_wash=33,troops_wash_limit=90,total_wash=390,attack=210,defense=191,troops=549,skillid=2,itemnum=0,sound=457,},
 },
 [121] = 
 { 
-	[5] = { kind=121,color=5,name="诸葛亮",desc="10级国家名将",corps=2,attack_base=79,attack_wash=59,attack_wash_limit=162,defense_base=57,defense_wash=33,defense_wash_limit=90,troops_base=99,troops_wash=59,troops_wash_limit=162,total_wash=390,attack=239,defense=130,troops=721,skillid=3,itemnum=0,sound=457,},
+	[5] = { kind=121,color=5,name="诸葛亮",desc="4级国家名将",corps=2,attack_base=79,attack_wash=59,attack_wash_limit=162,defense_base=57,defense_wash=33,defense_wash_limit=90,troops_base=99,troops_wash=59,troops_wash_limit=162,total_wash=390,attack=239,defense=130,troops=721,skillid=3,itemnum=0,sound=457,},
 },
 [122] = 
 { 
-	[5] = { kind=122,color=5,name="周瑜",desc="10级国家名将",corps=0,attack_base=90,attack_wash=72,attack_wash_limit=198,defense_base=79,defense_wash=24,defense_wash_limit=66,troops_base=66,troops_wash=54,troops_wash_limit=150,total_wash=390,attack=268,defense=117,troops=698,skillid=1,itemnum=0,sound=453,},
+	[5] = { kind=122,color=5,name="周瑜",desc="4级国家名将",corps=0,attack_base=90,attack_wash=72,attack_wash_limit=198,defense_base=79,defense_wash=24,defense_wash_limit=66,troops_base=66,troops_wash=54,troops_wash_limit=150,total_wash=390,attack=268,defense=117,troops=698,skillid=1,itemnum=0,sound=453,},
 },
 [123] = 
 { 
-	[5] = { kind=123,color=5,name="曹操",desc="君主",corps=1,attack_base=90,attack_wash=59,attack_wash_limit=162,defense_base=98,defense_wash=54,defense_wash_limit=150,troops_base=52,troops_wash=37,troops_wash_limit=102,total_wash=400,attack=242,defense=167,troops=588,skillid=2,itemnum=0,sound=450,},
+	[5] = { kind=123,color=5,name="曹操",desc="5级国家名将",corps=1,attack_base=90,attack_wash=59,attack_wash_limit=162,defense_base=98,defense_wash=54,defense_wash_limit=150,troops_base=52,troops_wash=37,troops_wash_limit=102,total_wash=400,attack=242,defense=167,troops=588,skillid=2,itemnum=0,sound=450,},
 },
 [124] = 
 { 
-	[5] = { kind=124,color=5,name="刘备",desc="君主",corps=0,attack_base=58,attack_wash=33,attack_wash_limit=91,defense_base=80,defense_wash=59,defense_wash_limit=162,troops_base=102,troops_wash=59,troops_wash_limit=162,total_wash=400,attack=184,defense=172,troops=729,skillid=1,itemnum=0,sound=451,},
+	[5] = { kind=124,color=5,name="刘备",desc="5级国家名将",corps=0,attack_base=58,attack_wash=33,attack_wash_limit=91,defense_base=80,defense_wash=59,defense_wash_limit=162,troops_base=102,troops_wash=59,troops_wash_limit=162,total_wash=400,attack=184,defense=172,troops=729,skillid=1,itemnum=0,sound=451,},
 },
 [125] = 
 { 
-	[5] = { kind=125,color=5,name="孙权",desc="君主",corps=2,attack_base=55,attack_wash=28,attack_wash_limit=79,defense_base=100,defense_wash=46,defense_wash_limit=126,troops_base=85,troops_wash=76,troops_wash_limit=209,total_wash=400,attack=176,defense=152,troops=846,skillid=3,itemnum=0,sound=452,},
+	[5] = { kind=125,color=5,name="孙权",desc="5级国家名将",corps=2,attack_base=55,attack_wash=28,attack_wash_limit=79,defense_base=100,defense_wash=46,defense_wash_limit=126,troops_base=85,troops_wash=76,troops_wash_limit=209,total_wash=400,attack=176,defense=152,troops=846,skillid=3,itemnum=0,sound=452,},
 },
 }

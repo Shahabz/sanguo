@@ -88,7 +88,7 @@ function SDK.pay( recvValue )
 			end
 		end
 	
-	elseif Const.platid == 20 then
+	elseif Const.platid == 19 then
 		if recvValue.m_paymode == 0 then
 			local jsonMsg = json.encode( info ); 
 			ChannelSDK.Instance:pay( jsonMsg );

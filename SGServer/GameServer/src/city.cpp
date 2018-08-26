@@ -102,7 +102,7 @@ extern EverydayEvent *g_everyday_event;
 extern int g_everyday_event_maxnum;
 
 extern char g_gm_outresult[MAX_OUTRESULT_LEN];
-
+extern int g_nation_actornum[3];
 extern int g_city_maxindex;
 City *g_city = NULL;
 int g_city_maxcount = 0;
@@ -462,6 +462,10 @@ int city_new( City *pCity )
 			for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_GROUP_MAX; tmpi++ )
 			{
 				g_city[city_index].underfire_groupindex[tmpi] = -1;
+			}
+			if ( pCity->nation >= 1 && pCity->nation <= 3 )
+			{
+				g_nation_actornum[pCity->nation - 1] += 1;
 			}
 			break;
 		}
@@ -4531,10 +4535,23 @@ int city_everyday_event_sendinfo( int actor_index )
 	pValue.m_textid = g_everyday_event[id].textid;
 	pValue.m_talkid0 = g_everyday_event[id].talkid[0];
 	pValue.m_talkid1 = g_everyday_event[id].talkid[1];
+
 	pValue.m_awardkind0 = g_everyday_event[id].awardkind[0];
 	pValue.m_awardnum0 = _city_everyday_event_awardnum_get( pCity, g_everyday_event[id].awardkind[0], g_everyday_event[id].awardnum[0] );
+	if ( pValue.m_awardnum0 == 0 )
+	{
+		pValue.m_awardkind0 = AWARDKIND_SILVER;
+		pValue.m_awardnum0 = city_yield_total( pCity, BUILDING_Silver, 1 );
+	}
+
 	pValue.m_awardkind1 = g_everyday_event[id].awardkind[1];
 	pValue.m_awardnum1 = _city_everyday_event_awardnum_get( pCity, g_everyday_event[id].awardkind[1], g_everyday_event[id].awardnum[1] );
+	if ( pValue.m_awardnum1 == 0 )
+	{
+		pValue.m_awardkind1 = AWARDKIND_SILVER;
+		pValue.m_awardnum1 = city_yield_total( pCity, BUILDING_Silver, 1 );
+	}
+
 	pValue.m_eventnum = pCity->edevent_num;
 	pValue.m_eventsec = pCity->edevent_sec;
 	netsend_everydayevent_S( actor_index, SENDTYPE_ACTOR, &pValue );
@@ -4556,6 +4573,12 @@ int city_everyday_event_getaward( int actor_index, int select )
 	}
 	int awardkind = g_everyday_event[id].awardkind[select];
 	int awardnum = _city_everyday_event_awardnum_get( pCity, awardkind, g_everyday_event[id].awardnum[select] );
+	if ( awardnum == 0 )
+	{
+		awardkind = AWARDKIND_SILVER;
+		awardnum = city_yield_total( pCity, BUILDING_Silver, 1 );
+	}
+
 	award_getaward( actor_index, awardkind, awardnum, -1, PATH_EVERYDAY_EVENT, NULL );
 
 	if ( pCity->edevent[1] > 0 )

@@ -371,7 +371,7 @@ function Activity4ModSelect( id )
 	system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_4, 1, id )
 	
 	if g_activity_04[id].type == 39 then
-		VipDlgShow()
+		--VipDlgShow()
 	end
 end
 

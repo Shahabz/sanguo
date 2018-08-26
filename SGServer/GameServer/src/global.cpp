@@ -629,8 +629,10 @@ int global_init()
 			global.token_sale_per = atoi( row[1] );
 		else if ( id == 232 )
 			global.token_ret_costmin = atoi( row[1] );
-		else if ( id == 232 )
+		else if ( id == 233 )
 			global.token_ret_token = atoi( row[1] );
+		else if ( id == 234 )
+			global.map_pickup_max = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

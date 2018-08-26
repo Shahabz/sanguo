@@ -378,7 +378,9 @@ function City.BuildingSetName( info )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
-
+	if unitObj == nil then
+		return
+	end
 	if kind <= BUILDING_Militiaman_Archer then
 		SetText( unitObj:Find("info/name"), T(kind) )
 		SetText( unitObj:Find("info/level"), info.m_level )
@@ -410,6 +412,9 @@ function City.BuildingSetShape( info, shape )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+	if unitObj == nil then
+		return
+	end
 	SetSprite( unitObj:Find("shape"), LoadSprite(shape) );
 end
 
@@ -429,6 +434,9 @@ function City.BuildingSetTimer( info )
 		unitObj = City.m_Buildings_res[kind][offset];
 	else
 		unitObj = City.m_Buildings[kind];
+	end
+	if unitObj == nil then
+		return
 	end
 	local timerObj = unitObj:GetComponent("CityBuilding").BuildingTimerMod;
 	if timerObj == nil and info.m_sec > 0 then
@@ -493,7 +501,9 @@ function City.BuildingSetUpgradeing( kind, offset, needsec, sec, op )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
-	
+	if unitObj == nil then
+		return
+	end
 	local timerObj = unitObj:GetComponent("CityBuilding").BuildingTimerMod;
 	if timerObj == nil then
 		timerObj = GameObject.Instantiate( City.m_BuildingTimerMod );
@@ -581,6 +591,9 @@ function City.BuildingSetFree( kind, offset )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+	if unitObj == nil then
+		return
+	end
 	local freeObj = unitObj:GetComponent("CityBuilding").BuildingFreeMod;
 	if freeObj == nil then
 		freeObj = GameObject.Instantiate( City.m_BuildingFreeMod );
@@ -610,6 +623,9 @@ function City.BuildingHideFree( kind, offset )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+	if unitObj == nil then
+		return
+	end
 	local freeObj = unitObj:GetComponent("CityBuilding").BuildingFreeMod;
 	if freeObj == nil then
 		return
@@ -625,6 +641,9 @@ function City.BuildingSetOver( kind )
 		return;
 	end
 	local unitObj = City.m_Buildings[kind];
+	if unitObj == nil then
+		return
+	end
 	local overObj = unitObj:GetComponent("CityBuilding").BuildingOverMod;
 	if overObj == nil then
 		overObj = GameObject.Instantiate( City.m_BuildingOverMod );
@@ -659,6 +678,9 @@ function City.BuildingHideOver( kind )
 		return;
 	end
 	local unitObj = City.m_Buildings[kind];
+	if unitObj == nil then
+		return
+	end
 	local overObj = unitObj:GetComponent("CityBuilding").BuildingOverMod;
 	if overObj == nil then
 		return
@@ -677,10 +699,13 @@ function City.BuildingSetWorkerQuick( kind, offset )
 	end
 	if unitObj == nil then
 		if kind >= BUILDING_Silver and kind <= BUILDING_Iron then
-			gamelog( "City.BuildingSetWorkerQuick:offset="..offset )
+			gamelog( "City.BuildingSetWorkerQuick:kind="..kind..",offset="..offset )
 			print( "City.BuildingSetWorkerQuick:offset="..offset )
-			return
+		else
+			gamelog( "City.BuildingSetWorkerQuick:kind="..kind )
+			print( "City.BuildingSetWorkerQuick:kind="..kind )
 		end
+		return
 	end
 	
 	local freeObj = unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod;
@@ -705,6 +730,10 @@ function City.BuildingHideWorkerQuick( kind, offset )
 	else
 		unitObj = City.m_Buildings[kind];
 	end
+	if unitObj == nil then
+		gamelog( "City.BuildingHideWorkerQuick:kind="..kind..",offset="..offset )
+		return
+	end
 	local freeObj = unitObj:GetComponent("CityBuilding").BuildingWorkerQuickMod;
 	if freeObj == nil then
 		return
@@ -719,6 +748,9 @@ function City.BuildingSetQuick( kind )
 		return
 	end
 	unitObj = City.m_Buildings[kind];
+	if unitObj == nil then
+		return
+	end
 	local quickObj = unitObj:GetComponent("CityBuilding").BuildingQuickMod;
 	if quickObj == nil then
 		quickObj = GameObject.Instantiate( City.m_BuildingQuickMod );
@@ -740,6 +772,9 @@ function City.BuildingHideQuick( kind )
 		return
 	end
 	unitObj = City.m_Buildings[kind];
+	if unitObj == nil then
+		return
+	end
 	local quickObj = unitObj:GetComponent("CityBuilding").BuildingQuickMod;
 	if quickObj == nil then
 		return

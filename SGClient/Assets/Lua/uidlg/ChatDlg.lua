@@ -312,7 +312,7 @@ function ChatDlgAddMsg( uiRoot, recvValue )
 	else
 		SetImage( uiArrow, LoadSprite("ui_chatdlg_talkarrow_1") );
 		SetImage( uiBack, LoadSprite("ui_chatdlg_talkback_1") );
-		SetRichTextColor( uiText, Hex2Color(0x685036FF) )
+		SetRichTextColor( uiText, Hex2Color(0x000000FF) )
 	end
 	
 	-- 名字等级区域等信息

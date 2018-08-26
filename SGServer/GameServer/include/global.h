@@ -206,6 +206,7 @@ typedef struct _global
 	short token_sale_per;
 	short token_ret_costmin;
 	short token_ret_token;
+	short map_pickup_max;
 }Global;
 int global_init();
 void global_reload();

@@ -33,6 +33,7 @@ local m_uiFreeItemText = nil; --UnityEngine.GameObject
 local m_uiFreeItemBtn = nil; --UnityEngine.GameObject
 local m_uiGodDot = nil; --UnityEngine.GameObject
 local m_uiItemInfo = nil; --UnityEngine.GameObject
+local m_uiWaiting = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_cacheAward = nil;
@@ -197,6 +198,7 @@ function HeroVisitDlgOnAwake( gameObject )
 	m_uiFreeItemBtn = objs[29];
 	m_uiGodDot = objs[30];
 	m_uiItemInfo = objs[31];
+	m_uiWaiting = objs[32];
 	--HeroVisitDlgGetObject();
 end
 
@@ -286,11 +288,13 @@ end
 function HeroVisitDlgShow()
 	HeroVisitDlgOpen()
 	m_cacheAward = nil;
+	SetTrue( m_uiWaiting )
 	system_askinfo( ASKINFO_HERO_VISIT, "", 0 );
 end
 
 -- m_hv_free_cd=0,m_hv_high_sec=0,m_hv_high_free=0,m_hv_low_num=0,m_hv_high_num=0,m_hv_progress=0,
 function HeroVisitDlgRecv( recvValue )
+	SetFalse( m_uiWaiting )
 	HeroVisitDlgGetObject();
 	m_recvValue = recvValue;
 	i_goodTimesNum = recvValue.m_hv_low_num ;

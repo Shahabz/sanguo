@@ -29,6 +29,7 @@ local m_uiPackContent = nil;
 local m_uiPackBtn = nil;
 local m_uiPackGrid = nil; 
 local m_uiPackToGrid = nil; 
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_LastOpenStamp = nil;
@@ -113,6 +114,10 @@ function WishingDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID == 205 then
 			WishingDlgOnBtnPack();
         end
+	elseif nType == UI_EVENT_PRESS then
+		if nControlID >= 10000 then
+			WishingDlgShowAwardLayer( nControlID-10000, value );
+		end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 1 then
 			SetFalse(m_uiTimer);
@@ -158,6 +163,8 @@ function WishingDlgOnAwake( gameObject )
 	m_uiPackBtn = objs[23];
 	m_uiPackGrid = objs[24];
 	m_uiPackToGrid = objs[25];
+	m_uiAwardDescLayer = objs[26];
+
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );		
@@ -327,9 +334,9 @@ function WishingDlgSetGrid(index, data)
 		SetImage( uiOpenItemIcon, sprite );
 		SetImage( uiOpenColor, color );
 		SetText( uiOpenName, name );		
-		SetText(uiOpenItemNum,"x"..data.m_awardnum);		
+		SetText(uiOpenItemNum,"x"..knum(data.m_awardnum));		
 		SetImage( uiOpenCostIcon, ResIcon(data.m_costkind - 50000) );		
-		SetText( uiOpenCostNum, data.m_costnum);
+		SetText( uiOpenCostNum, knum(data.m_costnum));
 	else
 		SetTrue(uiNoOpen);		
 		SetFalse(uiOpen);	
@@ -402,11 +409,11 @@ function WishingDlgBuyWishing(index,IsOpen)
 	if IsOpen == true then 
 		local sprite, color, name, c, desc = AwardInfo( m_recvWish.m_list[RealIndex].m_awardkind );	
 		local AwardNum = "x"..m_recvWish.m_list[RealIndex].m_awardnum;	
-		MsgBox( F(3008, CostNum,CostName,name,AwardNum ), function()
+		MsgBox( F(3008, knum(CostNum),CostName,name,knum(AwardNum) ), function()
 			system_askinfo( ASKINFO_WISHING, "", 2, m_recvWish.m_list[RealIndex].m_id ); -- 宝物购买
 		end)
 	else
-		MsgBox( F(3009, CostNum,CostName ), function()
+		MsgBox( F(3009, knum(CostNum),CostName ), function()
 			system_askinfo( ASKINFO_WISHING, "", 2, m_recvWish.m_list[RealIndex].m_id ); -- 直接购买
 		end)
 	end
@@ -425,6 +432,7 @@ function WishingDlgCreateInfoGrid(data)
 	SetImage( uiColor, color );
 	SetText(uiNum,"x"..data.m_awardnum);
 	
+	SetControlID( uiObj, 10000+data.m_awardkind )
 	uiObj.transform:SetParent( m_uiAwardContent.transform );
 	uiObj.transform.localScale = Vector3.one;
 	uiObj.gameObject:SetActive( true );
@@ -788,4 +796,15 @@ function WishingDlgOnBtnPack()
 	end
 	
 	system_askinfo( ASKINFO_WISHING, "", 6, data.m_id ); -- 打包
+end
+
+function WishingDlgShowAwardLayer( awardkind, value )
+	if value == 1 then
+		SetFalse( m_uiAwardDescLayer )
+		return
+	end
+	local sprite, color, name, c, desc = AwardInfo( awardkind );	
+	SetTrue( m_uiAwardDescLayer )
+	SetText( m_uiAwardDescLayer.transform:Find("Name"), name )
+	SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )	
 end

@@ -225,6 +225,11 @@ int map_pickup_get( int actor_index, int unit_index )
 		return -1;
 	if ( unit->index < 0 || unit->index >= g_map_pickup_maxcount )
 		return -1;
+	if ( actor_get_today_char_times( actor_index, TODAY_CHAR_MAP_PICKUP ) >= global.map_pickup_max )
+	{ // 今天拾取次数用完了，每天可拾取30次！
+		actor_notify_alert( actor_index, 3054 );
+		return -1;
+	}
 	if ( g_map_pickup[unit->index].kind == 0 )
 	{// 手慢了，已经被其它主公捷足先登了！
 		actor_notify_alert( actor_index, 3052 );
@@ -255,5 +260,6 @@ int map_pickup_get( int actor_index, int unit_index )
 		award_getaward( actor_index, config->awardkind, num, -1, PATH_MAPPICKUP, NULL );
 	}
 	map_pickup_delete( unit->index );
+	actor_add_today_char_times( actor_index, TODAY_CHAR_MAP_PICKUP );
 	return 0;
 }
