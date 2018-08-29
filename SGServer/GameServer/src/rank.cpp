@@ -255,6 +255,8 @@ int rank_server_sendlist( int actor_index, int page, int myrange )
 		pValue.m_list[pValue.m_count].m_rank = tmpi + 1;
 		pValue.m_list[pValue.m_count].m_place = g_rank_server[tmpi].place;
 		pValue.m_list[pValue.m_count].m_battlepower = g_rank_server[tmpi].battlepower;
+		if ( pValue.m_list[pValue.m_count].m_battlepower < 0 )
+			pValue.m_list[pValue.m_count].m_battlepower = 0;
 		pValue.m_list[pValue.m_count].m_level = g_rank_server[tmpi].level;
 		pValue.m_list[pValue.m_count].m_nation = g_city[city_index].nation;
 		strncpy( pValue.m_list[pValue.m_count].m_name, g_city[city_index].name, NAME_SIZE );

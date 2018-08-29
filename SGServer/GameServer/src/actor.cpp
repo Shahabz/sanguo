@@ -823,6 +823,8 @@ int actor_entercity( int actor_index )
 	actor_redinfo( actor_index, 2 );
 	// 活动
 	actor_redinfo( actor_index, 3 );
+	// 首日免费
+	actor_redinfo( actor_index, 4 );
 	// 上线提醒
 	nation_online_notify( actor_index );
 	// 政务次数

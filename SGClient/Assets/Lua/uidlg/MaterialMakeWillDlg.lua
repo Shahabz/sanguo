@@ -284,9 +284,19 @@ function MaterialMakeWillDlgSelect( id )
 	
 	-- 消耗
 	local cost = "";
-	cost = cost..F( matname[id], 1 )
-	cost = cost.."<color=#f7f3bb>,"..T(121).."x"..knum(g_material_make[id].silver)..","
-	cost = cost..T(122).."x"..knum(g_material_make[id].wood).."</color>"
+	cost = cost..F( matname[id], 1 ).."\n"
+	
+	if g_material_make[id].silver > GetPlayer().m_silver then
+		cost = cost..T(121).."：<color=#E80017FF>"..knum(g_material_make[id].silver).."</color>/"..knum(GetPlayer().m_silver).."\n"
+	else
+		cost = cost..T(121).."："..knum(g_material_make[id].silver).."/"..knum(GetPlayer().m_silver).."\n"
+	end
+	
+	if g_material_make[id].wood > GetPlayer().m_wood then
+		cost = cost..T(122).."：<color=#E80017FF>"..knum(g_material_make[id].wood).."</color>/"..knum(GetPlayer().m_wood)..""
+	else
+		cost = cost..T(122).."："..knum(g_material_make[id].wood).."/"..knum(GetPlayer().m_wood)..""
+	end
 	SetText( uiInfo.transform:Find("Cost"), T(912)..": "..cost )
 	
 	-- 耗时

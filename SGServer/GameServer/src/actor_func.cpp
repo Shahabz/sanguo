@@ -955,6 +955,20 @@ int actor_redinfo( int actor_index, char path )
 	{ // 红点-活动
 		pValue.m_has = activity_checkred( actor_index );
 	}
+	else if ( path == 4 )
+	{ // 首日免费
+		int endtime = g_actors[actor_index].createtime + 1 * 86400;
+		if ( (int)time( NULL ) < endtime )
+		{
+			pValue.m_has = 1;
+			pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+		}
+		else if ( g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0 )
+		{
+			pValue.m_has = 1;
+			pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+		}
+	}
 	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

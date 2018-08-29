@@ -21,7 +21,7 @@
 #define ACTIVITY_14	14	//	流寇资源
 #define ACTIVITY_15	15	//	经验翻倍
 #define ACTIVITY_16	16	//	作坊加速
-#define ACTIVITY_EVERYDAY_PAY	17	//	每日充值
+#define ACTIVITY_17	17	//	每日充值
 #define ACTIVITY_18	18	//	镔铁转盘
 #define ACTIVITY_19	19	//	采集翻倍
 #define ACTIVITY_20	20	//	屯田活动
@@ -29,7 +29,7 @@
 #define ACTIVITY_22	22	//	皇城采集
 #define ACTIVITY_23	23	//	官员召唤
 #define ACTIVITY_24	24	//	募兵翻倍
-#define ACTIVITY_25	25	//	消费有礼
+#define ACTIVITY_25	25	//	首日免费
 #define ACTIVITY_26	26	//	强国策
 #define ACTIVITY_27	27	//	西凉暴乱
 #define ACTIVITY_28	28	//	黄巾军暴乱
@@ -119,6 +119,10 @@ int activity_10_init();
 // 出师大宴活动
 int activity_11_sendinfo( int actor_index );
 int activity_11_get( int actor_index );
+
+// 首日免费
+int activity_25_sendinfo( int actor_index );
+int activity_25_get( int actor_index );
 
 // 充值排名活动
 #define ACTIVITY33_MEMBERMAX	100

@@ -315,7 +315,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 首充福利
 		elseif nControlID == 63 then
 			ActivityDlgShowByID( ACTIVITY_1 )
-			
+		
+		-- 首日免费
+		elseif nControlID == 64 then
+			ActivityDlgShowByID( ACTIVITY_25 )
+				
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -1356,12 +1360,38 @@ function MainDlgStopCutScenes()
 	SetFalse( m_uiCutScenes )
 end
 
+-- 首充
 function MainDlgFristPayShow( show )
 	if m_Dlg == nil then
 		return;
 	end
 	SetShow( m_uiTop_City.transform:Find("Right/FristPay"), show )
 	SetShow( m_uiTop_City.transform:Find("Right/PayBag"), not show )
+	if show == true then
+		SetFalse( m_uiTop_City.transform:Find("Right/FristPay/Back/Effect") )
+	end
+end
+
+-- 首日免费
+function MainDlgFristDayPayShow( show, sec )
+	if m_Dlg == nil then
+		return;
+	end
+	local FristDayPay = m_uiTop_City.transform:Find("Right/FristDayPay")
+	if show == true then
+		SetFalse( FristDayPay.transform:Find("Back/Effect") )
+		SetTrue( FristDayPay )
+		local Timer = FristDayPay.transform:Find("Back/Timer")
+		SetTimerOver( Timer, T(4247) )
+		SetTimer( Timer, sec, sec, 0 )
+		if sec > 0 then
+			SetTimer( Timer, sec, sec, 0 )
+		else
+			SetTimer( Timer, 1, 1, 0 )
+		end
+	else
+		SetFalse( FristDayPay )
+	end
 end
 
 -- 国家按钮红点

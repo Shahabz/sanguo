@@ -370,7 +370,7 @@ function InviteCodeDlgSetFriendObj( index, info )
 	end
 end
 
-function FriendDlgFriendClear()
+function InviteCodeDlgFriendClear()
 	local objs = {};
 	for i = 0 ,m_uiContent.transform.childCount - 1 do
 		table.insert( objs, m_uiContent.transform:GetChild(i).gameObject )
@@ -385,7 +385,7 @@ end
 
 function InviteCodeDlgGetList()
 	SetTrue( m_uiListLayer )
-	FriendDlgFriendClear()
+	InviteCodeDlgFriendClear()
 	local InviteCode = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	if InviteCode == "" then
 		return

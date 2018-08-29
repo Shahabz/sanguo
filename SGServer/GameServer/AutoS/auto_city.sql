@@ -139,5 +139,7 @@ CREATE TABLE `city` (
   `act12_state` tinyint(3) NOT NULL DEFAULT '0' COMMENT '南蛮入侵活动',
   `act12_turn` tinyint(3) NOT NULL DEFAULT '0' COMMENT '南蛮入侵活动',
   `act33_pay` int(11) NOT NULL DEFAULT '0' COMMENT '充值排名',
+  `edquest` varbinary(128) NOT NULL DEFAULT '' COMMENT '每日任务',
+  `edquest_isget` int(11) NOT NULL DEFAULT '0' COMMENT '每日任务奖励是否领取',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

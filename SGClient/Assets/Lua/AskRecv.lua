@@ -359,6 +359,8 @@ function RecvActorNotify(recvValue)
 			Activity8ModRecv( value[3], value[4] )
 		elseif value[1] == ACTIVITY_11 then
 			Activity11ModRecv( value[3], value[4] )
+		elseif value[1] == ACTIVITY_25 then
+			Activity25ModRecv( value[2], value[3], value[4], value[5] )
 		end
 	
 	-- 触发指引	

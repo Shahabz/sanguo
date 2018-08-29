@@ -531,6 +531,8 @@ function proc_changesilver_C( recvValue )
 		NationPlaceDlgRecv()
 		HeroLevyDlgUpdate()
 		EquipForgingDlgUpdate()
+	else
+		WishingDlgChangeView()
 	end
 end
 
@@ -550,6 +552,8 @@ function proc_changewood_C( recvValue )
 		BuildingUpgradeDlgUpdate()
 		NationUpgradeDlgSetCost()
 		HeroLevyDlgUpdate()
+	else
+		WishingDlgChangeView()
 	end
 end
 
@@ -569,6 +573,8 @@ function proc_changefood_C( recvValue )
 	if recvValue.m_add > 0 then
 		NationUpgradeDlgSetCost()
 		HeroLevyDlgUpdate()
+	else
+		WishingDlgChangeView()
 	end
 end
 
@@ -2489,6 +2495,12 @@ function proc_redinfo_C( recvValue )
 			MainDlgButtonActivityShow( true )
 		else
 			MainDlgButtonActivityShow( false )
+		end
+	elseif recvValue.m_path == 4 then
+		if recvValue.m_has == 1 then
+			MainDlgFristDayPayShow( true, recvValue.m_value )
+		else
+			MainDlgFristDayPayShow( false, 0 )
 		end
 	end
 end

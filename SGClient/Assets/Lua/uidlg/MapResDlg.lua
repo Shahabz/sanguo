@@ -262,6 +262,7 @@ function MapResDlgRecv( infoRecvValue )
 		SetImage( m_uiGatherInfo.transform:Find("TargetHero/Shape"), HeroHeadSprite(m_infoRecvValue.m_herokind) )
 		SetImage( m_uiGatherInfo.transform:Find("TargetHero/Color"), ItemColorSprite(m_infoRecvValue.m_herocolor) )
 		SetImage( m_uiGatherInfo.transform:Find("TargetHero/Corps"), CorpsSprite( g_heroinfo[m_infoRecvValue.m_herokind][m_infoRecvValue.m_herocolor].corps ) )
+		m_uiGatherInfo.transform:Find("TargetHero").transform.localPosition = Vector2.New( 0, 64 )
 		
 		-- 采集玩家
 		SetText( m_uiGatherInfo.transform:Find("Target").transform:GetChild(0), F( 997, "["..Nation(nation).."] Lv."..m_infoRecvValue.m_actorlevel.." "..m_recvValue.m_name ) )
@@ -462,7 +463,8 @@ end
 function MapResDlgFight()
 	MapResDlgHeroLayer()
 	SetFalse( m_uiResInfo );
-	m_uiGatherInfo.transform.localPosition = Vector2.New( 0, -290 )
+	m_uiGatherInfo.transform.localPosition = Vector2.New( 50, -260 )
+	m_uiGatherInfo.transform:Find("TargetHero").transform.localPosition = Vector2.New( -300, -130 )
 	SetControlID( m_uiBattleButton,3 )
 end
 

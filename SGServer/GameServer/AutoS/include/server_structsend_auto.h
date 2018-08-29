@@ -2331,6 +2331,7 @@ typedef struct _slk_NetS_FightHelperList SLK_NetS_FightHelperList;	//雇佣兵列表
 struct _slk_NetS_RedInfo {
 	char m_path;	//红点
 	char m_has;	//红点
+	int m_value;	//红点
 };
 typedef struct _slk_NetS_RedInfo SLK_NetS_RedInfo;	//红点
 

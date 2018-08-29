@@ -405,6 +405,10 @@ function LoginModOpenTestLogin()
 		end
 	end
 	
+	if m_uiVisitBtn and Const.platid == 11 then
+		SetFalse(m_uiVisitBtn)
+	end
+	
 	-- 请求服务器列表	
 	LoginModAskServerList()
 end
@@ -434,6 +438,11 @@ end
 
 -- 测试模式注册页
 function LoginModRegLayer()
+	if Const.platid == 11 then
+		LoginModWarning( "测试包不允许注册" );
+		return;
+	end
+	
 	m_uiRegLayer.gameObject:SetActive( true );
 	m_uiLoginLayer.gameObject:SetActive( false );
 	

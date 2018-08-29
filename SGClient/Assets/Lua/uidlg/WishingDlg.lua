@@ -30,6 +30,7 @@ local m_uiPackBtn = nil;
 local m_uiPackGrid = nil; 
 local m_uiPackToGrid = nil; 
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_uiPackItemDesc = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil;
 local m_LastOpenStamp = nil;
@@ -164,7 +165,7 @@ function WishingDlgOnAwake( gameObject )
 	m_uiPackGrid = objs[24];
 	m_uiPackToGrid = objs[25];
 	m_uiAwardDescLayer = objs[26];
-
+	m_uiPackItemDesc = objs[27];
 	
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );		
@@ -479,43 +480,46 @@ end
 
 -- 兑换界面View
 function WishingDlgChangeView()	
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
 	m_ChangeTab = {};	
 	if m_ChangeType == 1 then 			--银币兑换
 		SetImage(m_uiChangeRes,ItemSprite(120));
-		SetText( m_uiCostText, "x"..knum(m_recvChange.m_silver));
+		SetText( m_uiCostText, ""..knum(m_recvChange.m_silver).."/"..knum(GetPlayer().m_silver));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvChange.m_silver_to_wood});	
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvChange.m_silver_to_food});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 2 then 		--木材兑换
 		SetImage(m_uiChangeRes,ItemSprite(121))
-		SetText( m_uiCostText, "x"..knum(m_recvChange.m_wood));
+		SetText( m_uiCostText, ""..knum(m_recvChange.m_wood).."/"..knum(GetPlayer().m_wood));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvChange.m_wood_to_silver});	
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_FOOD, m_Sprite = 122, m_Num = m_recvChange.m_wood_to_food});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 3 then 		--粮草兑换
 		SetImage(m_uiChangeRes,ItemSprite(122))
-		SetText( m_uiCostText, "x"..knum(m_recvChange.m_food));
+		SetText( m_uiCostText, ""..knum(m_recvChange.m_food).."/"..knum(GetPlayer().m_food));
 		SetText(m_uiRankCostName,ResName(m_ChangeType));
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_SILVER, m_Sprite = 120, m_Num = m_recvChange.m_food_to_silver});	
 		table.insert(m_ChangeTab,{m_kind = AWARDKIND_WOOD, m_Sprite = 121, m_Num = m_recvChange.m_food_to_wood});
 		m_ChangeTab.Count = 2;
 	elseif m_ChangeType == 4 then 		--牛皮兑换
 		SetImage(m_uiChangeRes,ItemSprite(1));
-		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
+		SetText( m_uiCostText, ""..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(1));
 		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;
 	elseif m_ChangeType == 5 then 		--碎石兑换	
 		SetImage(m_uiChangeRes,ItemSprite(11));
-		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
+		SetText( m_uiCostText, ""..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(11));
 		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;	
 	elseif m_ChangeType == 6 then 		--朽木兑换
 		SetImage(m_uiChangeRes,ItemSprite(21));
-		SetText( m_uiCostText, "x"..global.wishing_green_to_draw);
+		SetText( m_uiCostText, ""..global.wishing_green_to_draw);
 		SetText(m_uiRankCostName,item_getname(21));
 		table.insert(m_ChangeTab,{m_kind = 42, m_Sprite = 42, m_Num = 1});	
 		m_ChangeTab.Count = 1;
@@ -550,12 +554,12 @@ function WishingDlgSetChangeRes(index,data,bShow)
 	SetImage(uiColor,color);
 	if m_ChangeType >= 1 and m_ChangeType <= 3 then 
 		SetText(uiName,ResName(data.m_kind-50000));	
-		SetText(uiNum,"x"..knum(data.m_Num));
+		SetText(uiNum,"+"..knum(data.m_Num));
 		SetImage(uiShape,sprite)
 		SetImage(uiColor,color)
 	elseif m_ChangeType >= 4 and m_ChangeType <= 6 then 
 		SetText(uiName,item_getname(data.m_kind));	
-		SetText(uiNum,"x1");
+		SetText(uiNum,"+1");
 	end	
 	SetTrue(uiObj);
 	SetControlID( uiBtnChang, 110 + index );
@@ -754,6 +758,7 @@ function WishingDlgSetPackToGrid(data)
 	SetImage(uiItemIcon,sprite);
 	SetImage(uiColor,color);
 	SetText(uiName,name);
+	SetText( m_uiPackItemDesc.transform:Find("Text"), desc )
 	SetText(uiItemNum,"x"..knum(data.m_awardnum));		
 	SetText(uiCostNum,knum(data.m_token));	
 	--设置资源的数量颜色

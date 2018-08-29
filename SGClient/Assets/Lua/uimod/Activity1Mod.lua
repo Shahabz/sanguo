@@ -35,7 +35,7 @@ function Activity1ModOnEvent( nType, nControlID, value, gameObject )
 		end
 	elseif nType == UI_EVENT_TIMECOUNTEND then
 		if nControlID == 0 then	
-			system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_1, 0 )
+			system_askinfo( ASKINFO_ACTIVITY, "", ACTIVITY_25, 0 )
 		end
 	end
 end

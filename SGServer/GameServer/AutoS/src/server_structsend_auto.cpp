@@ -3443,6 +3443,7 @@ int struct_NetS_RedInfo_send( char **pptr, int *psize, SLK_NetS_RedInfo *pValue 
 
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_path, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_has, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	return 0;
 }
 

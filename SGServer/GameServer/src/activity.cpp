@@ -467,6 +467,21 @@ int activity_sendlist( int actor_index )
 		pValue.m_count += 1;
 	}
 
+	// 首日免费
+	endtime = g_actors[actor_index].createtime + 86400;
+	if ( (int)time( NULL ) < endtime || (g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0) )
+	{
+		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_25;
+		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
+		pValue.m_list[pValue.m_count].m_endtime = endtime;
+		pValue.m_list[pValue.m_count].m_closetime = endtime;
+		if ( (int)time( NULL ) >= endtime )
+		{
+			pValue.m_list[pValue.m_count].m_red = 1;
+		}
+		pValue.m_count += 1;
+	}
+
 	// 首充礼包
 	int fristpay = city_get_sflag( pCity, CITY_SFLAG_FRISTPAY );
 	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
@@ -1321,6 +1336,36 @@ int activity_11_get( int actor_index )
 	else
 		return -1;
 	activity_11_sendinfo( actor_index );
+	return 0;
+}
+
+// 首日免费
+int activity_25_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int value[5] = { 0 };
+	value[0] = ACTIVITY_25;
+	value[1] = g_actors[actor_index].createtime + 86400 - (int)time(NULL);
+	value[2] = g_actors[actor_index].act25_point;
+	value[3] = g_actors[actor_index].act25_point * 10;
+	value[4] = g_actors[actor_index].act25_isget;
+	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 5, value, NULL );
+	return 0;
+}
+
+int activity_25_get( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( g_actors[actor_index].createtime + 86400 - (int)time( NULL ) > 0 )
+		return -1;
+	if ( g_actors[actor_index].act25_isget == 1 )
+		return -1;
+	if ( g_actors[actor_index].act25_point <= 0 )
+		return -1;
+	actor_change_token( actor_index, g_actors[actor_index].act25_point * 10, PATH_ACTIVITY25, 0 );
+	g_actors[actor_index].act25_isget = 1;
+	activity_25_sendinfo( actor_index );
+	actor_redinfo( actor_index, 4 );
 	return 0;
 }
 

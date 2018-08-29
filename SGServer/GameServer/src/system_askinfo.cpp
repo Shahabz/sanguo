@@ -936,6 +936,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_11_get( actor_index );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_25 )
+		{ // 首日免费
+			if ( pvalue[1] == 0 )
+			{
+				activity_25_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_25_get( actor_index );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_33 )
 		{ // 充值排行
 			if ( pvalue[1] == 0 )

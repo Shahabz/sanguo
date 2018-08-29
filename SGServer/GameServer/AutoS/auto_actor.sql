@@ -98,5 +98,7 @@ CREATE TABLE `actor` (
   `maidname` varbinary(22) NOT NULL DEFAULT '' COMMENT '侍女名称',
   `token_sale` int(11) NOT NULL DEFAULT '0' COMMENT '元宝抵扣点数',
   `token_ret` int(11) NOT NULL DEFAULT '0' COMMENT '返利次数',
+  `act25_point` int(11) NOT NULL DEFAULT '0' COMMENT '首日免费充值',
+  `act25_isget` tinyint(3) NOT NULL DEFAULT '0' COMMENT '首日免费是否完成',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
