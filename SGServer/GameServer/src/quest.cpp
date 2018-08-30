@@ -1136,7 +1136,7 @@ int everyday_quest_addvalue( City *pCity, int id, int value )
 	{ // ÉíÉÏ´æµµ
 		pCity->edquest[saveindex] += value;
 	}
-	else if ( saveindex < -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
+	else if ( saveindex <= -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
 	{ // char ´æµµ
 		actor_add_today_char_times( pCity->actor_index, -saveindex );
 	}
@@ -1156,7 +1156,7 @@ int everyday_quest_getvalue( City *pCity, int id )
 	{ // ÉíÉÏ´æµµ
 		return pCity->edquest[saveindex];
 	}
-	else if ( saveindex < -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
+	else if ( saveindex <= -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
 	{ // char ´æµµ
 		return actor_get_today_char_times( pCity->actor_index, -saveindex );
 	}
@@ -1175,6 +1175,23 @@ int everyday_quest_reset( int actor_index )
 	return 0;
 }
 
+int _city_everyday_quest_awardnum_get( City *pCity, int awardkind, int awardnum )
+{
+	int num = awardnum;
+	switch ( awardkind )
+	{
+	case AWARDKIND_EXP:
+	{
+		int exp = g_upgradeinfo[pCity->level].exp / awardnum;
+		if ( exp < 5 )
+			exp = 5;
+		num = exp;
+	}
+	break;
+	}
+	return num;
+}
+
 int everyday_quest_sendlist( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
@@ -1183,6 +1200,7 @@ int everyday_quest_sendlist( int actor_index )
 		return -1;
 	_check_fday( actor_index );
 	SLK_NetS_EDayQuestList pValue = { 0 };
+	pValue.m_mypoint = g_actors[actor_index].edquest_point;
 	for ( short id = 1; id < g_everyday_quest_maxnum; id++ )
 	{
 		if ( pCity->level < g_everyday_quest[id].levelmin || pCity->level > g_everyday_quest[id].levelmax )
@@ -1193,7 +1211,7 @@ int everyday_quest_sendlist( int actor_index )
 		pValue.m_list[pValue.m_count].m_needvalue = g_everyday_quest[id].needvalue;
 		pValue.m_list[pValue.m_count].m_sort = (char)g_everyday_quest[id].sort;
 		pValue.m_list[pValue.m_count].m_awardkind[0] = g_everyday_quest[id].awardkind[0];
-		pValue.m_list[pValue.m_count].m_awardnum[0] = g_everyday_quest[id].awardnum[0];
+		pValue.m_list[pValue.m_count].m_awardnum[0] = _city_everyday_quest_awardnum_get( pCity, g_everyday_quest[id].awardkind[0], g_everyday_quest[id].awardnum[0] );
 		pValue.m_list[pValue.m_count].m_awardkind[1] = g_everyday_quest[id].awardkind[1];
 		pValue.m_list[pValue.m_count].m_awardnum[1] = g_everyday_quest[id].awardnum[1];
 		if ( pCity->edquest_isget & (1 << id) )
@@ -1222,7 +1240,8 @@ int everyday_quest_getaward( int actor_index, int id )
 		return -1;
 	for ( int tmpi = 0; tmpi < 2; tmpi++ )
 	{
-		award_getaward( actor_index, g_everyday_quest[id].awardkind[tmpi], g_everyday_quest[id].awardnum[tmpi], 0, PATH_EVERYDAY_QUEST, NULL );
+		int awardnum = _city_everyday_quest_awardnum_get( pCity, g_everyday_quest[id].awardkind[tmpi], g_everyday_quest[id].awardnum[tmpi] );
+		award_getaward( actor_index, g_everyday_quest[id].awardkind[tmpi], awardnum, 0, PATH_EVERYDAY_QUEST, NULL );
 	}
 	pCity->edquest_isget |= (1 << id);
 	everyday_quest_sendlist( actor_index );

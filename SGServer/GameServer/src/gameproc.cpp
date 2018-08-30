@@ -950,6 +950,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 每日
+	if ( everydayquest_init_auto() < 0 )
+	{
+		printf_msg( "everydayquest_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 活动
 	activityinfo02_init_auto();
 	activityinfo03_init_auto();
@@ -1805,6 +1814,7 @@ int process_dbreload()
 	robotai_reload_auto();
 	robotbase_reload_auto();
 	everydayevent_reload_auto();
+	everydayquest_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

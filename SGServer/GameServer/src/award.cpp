@@ -644,6 +644,9 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	case AWARDKIND_TOKEN_RET: // 元宝返还次数
 		actor_change_token_ret( actor_index, num, path );
 		break;
+	case AWARDKIND_EVERYDAYPOINT: // 活跃度
+		actor_change_edpoint( actor_index, num, path );
+		break;
 	case AWARDKIND_PERMISSION_4:// 科技快研
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );
 		break;

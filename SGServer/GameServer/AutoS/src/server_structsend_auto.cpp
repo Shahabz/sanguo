@@ -3575,3 +3575,13 @@ int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopLis
 	return 0;
 }
 
+int struct_NetS_EDayPoint_send( char **pptr, int *psize, SLK_NetS_EDayPoint *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_total, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_add, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+

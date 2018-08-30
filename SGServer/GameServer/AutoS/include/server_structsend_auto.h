@@ -2420,6 +2420,13 @@ struct _slk_NetS_EDayShopList {
 };
 typedef struct _slk_NetS_EDayShopList SLK_NetS_EDayShopList;	//活跃度商店
 
+struct _slk_NetS_EDayPoint {
+	int m_total;	//活跃度
+	int m_add;	//活跃度
+	short m_path;	//活跃度
+};
+typedef struct _slk_NetS_EDayPoint SLK_NetS_EDayPoint;	//活跃度
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2683,5 +2690,6 @@ int struct_NetS_EDayQuest_send( char **pptr, int *psize, SLK_NetS_EDayQuest *pVa
 int struct_NetS_EDayQuestList_send( char **pptr, int *psize, SLK_NetS_EDayQuestList *pValue );
 int struct_NetS_EDayShop_send( char **pptr, int *psize, SLK_NetS_EDayShop *pValue );
 int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopList *pValue );
+int struct_NetS_EDayPoint_send( char **pptr, int *psize, SLK_NetS_EDayPoint *pValue );
 
 #endif

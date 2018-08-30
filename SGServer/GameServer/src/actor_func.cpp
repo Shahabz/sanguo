@@ -344,6 +344,28 @@ int actor_change_token_ret( int actor_index, int value, short path )
 	return 0;
 }
 
+// 活跃度
+int actor_change_edpoint( int actor_index, int value, short path )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( g_actors[actor_index].edquest_point + value < 0 )
+	{
+		return -2;
+	}
+	g_actors[actor_index].edquest_point += value;
+
+	SLK_NetS_EDayPoint Value = {};
+	Value.m_total = g_actors[actor_index].edquest_point;
+	Value.m_add = value;
+	Value.m_path = path;
+	netsend_NetS_EDayPoint_S( actor_index, SENDTYPE_ACTOR, &Value );
+
+	// 记录log
+	wlog( 0, LOGOP_EDPOINT, path, value, g_actors[actor_index].edquest_point, 0, g_actors[actor_index].actorid, city_mainlevel( actor_index ) );
+	return 0;
+}
+
 // 修改名称
 int actor_changename( int actor_index, char *pname, int type )
 {

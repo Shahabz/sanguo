@@ -122,7 +122,8 @@ int actor_change_token( int actor_index, int token, char path, int path_value );
 int actor_change_token_sale( int actor_index, int value, short path );
 // 元宝返还次数
 int actor_change_token_ret( int actor_index, int value, short path );
-
+// 活跃度
+int actor_change_edpoint( int actor_index, int value, short path );
 // 修改名称
 int actor_changename( int actor_index, char *pname, int type );
 

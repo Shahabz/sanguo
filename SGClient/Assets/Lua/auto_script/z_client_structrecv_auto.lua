@@ -3260,3 +3260,11 @@ function struct_NetS_EDayShopList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_EDayPoint_recv( buffer )
+	local recvValue = {};
+	recvValue.m_total = buffer:ReadInt();
+	recvValue.m_add = buffer:ReadInt();
+	recvValue.m_path = buffer:ReadShort();
+	return recvValue;
+end
+

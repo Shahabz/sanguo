@@ -30,6 +30,7 @@
 #define LOGOP_HEROEXP			24	// 英雄经验
 #define LOGOP_TOKEN_SALE		25	// 元宝抵扣点
 #define LOGOP_TOKEN_RET			26	// 元宝返还次数
+#define LOGOP_EDPOINT			27	// 活跃度
 
 /* 途径 */
 #define PATH_SYSTEM						1	// 系统

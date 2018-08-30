@@ -107,6 +107,7 @@ function Player:Init()
 	self.m_hero_washnum		= 0;
 	self.m_token_sale		= 0;
 	self.m_token_ret		= 0;
+	self.m_edquest_point	= 0;
 	
 	self.m_view_zoneid		=	0;
 	self.m_award_mailid		=	int64.new(0);

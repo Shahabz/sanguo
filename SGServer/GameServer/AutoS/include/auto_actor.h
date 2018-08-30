@@ -104,6 +104,7 @@ struct _actor {
 				int token_ret;	//返利次数
 				int act25_point;	//首日免费充值
 				char act25_isget;	//首日免费是否完成
+				int edquest_point;	//活跃度
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

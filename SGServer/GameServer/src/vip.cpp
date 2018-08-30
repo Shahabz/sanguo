@@ -345,7 +345,8 @@ int vipshop_buy( int actor_index, int id, int awardkind, int count )
 		return -1;
 	if ( g_vipshop[id].awardkind != awardkind )
 		return -1;
-
+	if ( count <= 0 )
+		return -1;
 	int addtimes = 0;
 	int costtoken = g_vipshop[id].token * count;
 	if ( g_vipshop[id].vip_buynum[viplevel] > 0 )
@@ -360,7 +361,7 @@ int vipshop_buy( int actor_index, int id, int awardkind, int count )
 		}
 	}
 	
-	if ( actor_change_token( actor_index, -costtoken, PATH_SHOP, 0 ) < 0 )
+	if ( actor_change_token( actor_index, -costtoken, PATH_VIPSHOP, 0 ) < 0 )
 		return -1;
 
 	if ( g_vipshop[id].awardkind == AWARDKIND_BUFF_TRAIN )

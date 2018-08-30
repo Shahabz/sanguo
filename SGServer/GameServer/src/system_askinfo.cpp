@@ -1267,6 +1267,7 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		if ( pvalue[0] == 0 )
 		{
 			everyday_quest_sendlist( actor_index );
+			everyday_shop( actor_index );
 		}
 		else if ( pvalue[0] == 1 )
 		{

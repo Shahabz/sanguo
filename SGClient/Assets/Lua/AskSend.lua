@@ -54,6 +54,7 @@ ASKINFO_FIGHTHELPER		=	51 -- 雇佣兵
 ASKINFO_INVITECODE		=   52 -- 邀请码
 ASKINFO_BUYRES			=	53 -- 购买资源
 ASKINFO_EVERYDAY_EVENT	=  	54 -- 政务
+ASKINFO_EVERYDAY_QUEST	=	55 -- 每日
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

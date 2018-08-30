@@ -855,11 +855,28 @@ function City.DayEventhMod( unitObj, show )
 			return
 		end
 	end
+	
+	-- 每日任务
+	local QuestMod = unitObj.transform:Find( "DayQuestMod" )
+	if show == true then
+		local QuestMod = unitObj.transform:Find( "DayQuestMod" )
+		if QuestMod then
+			QuestMod.gameObject:SetActive( false );
+		end
+	else
+		local QuestMod = unitObj.transform:Find( "DayQuestMod" )
+		if QuestMod then
+			QuestMod.gameObject:SetActive( true );
+		end
+	end
+	
+	-- 处理政务
 	local modObj = unitObj.transform:Find( "DayEventMod" )
 	if modObj == nil then
 		return
 	end
 	modObj.gameObject:SetActive( show );
+	
 end
 
 -- 闲置睡觉

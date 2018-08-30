@@ -481,7 +481,7 @@ function proc_experience_C( recvValue )
 	if recvValue.m_isup == 1 then
 		if recvValue.m_path ~= PATH_STORY and recvValue.m_path ~= PATH_STORY_SWEEP then
 			--pop( T(150) );
-			NotifyMiddle( T(150), {back=LoadSprite("ui_icon_back_8"),shape=PlayerHeadSprite(GetPlayer().m_shape)} )
+			NotifyMiddle( T(150).."  "..(GetPlayer().m_level-1).."->"..GetPlayer().m_level, {back=LoadSprite("ui_icon_back_8"),shape=PlayerHeadSprite(GetPlayer().m_shape)} )
 		end
 		MainDlgSetLevel();
 	end
@@ -2544,10 +2544,22 @@ end
 -- m_count=0,m_list={m_id=0,m_textid=0,m_value=0,m_needvalue=0,m_sort=0,m_awardkind={[2]},m_awardnum={[2]},[m_count]},m_mypoint=0,
 function proc_NetS_EDayQuestList_C( recvValue )
 	-- process.
+	EveryDayQuestDlgQuestRecv( recvValue )
 end
 
 -- m_count=0,m_list={m_id=0,m_awardkind=0,m_awardnum=0,m_point=0,[m_count]},
 function proc_NetS_EDayShopList_C( recvValue )
 	-- process.
+	EveryDayQuestDlgShopRecv( recvValue )
+end
+
+-- m_total=0,m_add=0,m_path=0,
+function proc_NetS_EDayPoint_C( recvValue )
+	-- process.
+	if recvValue.m_add > 0 then
+		AwardNotify( AWARDKIND_EVERYDAYPOINT, recvValue.m_add )
+	end
+	GetPlayer().m_edquest_point = recvValue.m_total;
+	EveryDayQuestDlgUpdatePoint()
 end
 
