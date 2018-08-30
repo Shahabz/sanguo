@@ -148,13 +148,15 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_EXP then	-- 角色经验
 		sprite = ItemSprite( 127 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(128)
+		c = 2
 		
 	elseif awardkind == AWARDKIND_VIPEXP then	-- VIP经验
 		sprite = LoadSprite( "item_icon_482" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(190)
+		c = 2
 		
 	elseif awardkind == AWARDKIND_AUTOBUILD	then -- 自动建造次数
 		sprite = LoadSprite( "item_icon_469" );

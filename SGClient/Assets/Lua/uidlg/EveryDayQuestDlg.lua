@@ -60,9 +60,10 @@ function EveryDayQuestDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 前往
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			EveryDayQuestDlgQuestGoto( nControlID-2000 )
-			
-		elseif nControlID >= 100000 and nControlID < 300000 then
-			EveryDayQuestDlgShopBuy( nControlID-100000 )
+		
+		-- 购买	
+		elseif nControlID >= 3000 and nControlID < 4000 then
+			EveryDayQuestDlgShopBuy( nControlID-3000 )
         end
 	end
 end
@@ -118,6 +119,8 @@ end
 ----------------------------------------
 function EveryDayQuestDlgShow()
 	EveryDayQuestDlgOpen()
+	SetFalse( m_uiQuestLayer )
+	SetFalse( m_uiShopLayer )
 	system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 0 )
 end
 
@@ -278,8 +281,8 @@ function EveryDayQuestDlgShopSet()
 		SetImage( uiColor, color );
 		SetText( uiName, name, NameColor(c) )
 		SetText( uiPoint, info.m_point )	
-		SetControlID( uiItem, 5000000+info.m_awardkind )
-		SetControlID( uiBuyBtn, 1000000+info.m_awardkind )
+		SetControlID( uiItem, 500000+info.m_awardkind )
+		SetControlID( uiBuyBtn, 3000+info.m_id )
 		
 		if info.m_awardnum > 1 then
 			SetTrue( uiNumBack )
@@ -323,7 +326,14 @@ function EveryDayQuestDlgShopBuy( id )
 	if info == nil then
 		return
 	end
-	system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 3, id, info.m_awardkind )
+	if GetPlayer().m_edquest_point < info.m_point then
+		pop(T(4254))
+		return
+	end
+	local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )
+	MsgBox( F(4253,info.m_point,NameColorText( name, c )), function()
+	  system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 3, id, info.m_awardkind )
+	end )
 end
 
 -- 领取
@@ -409,7 +419,7 @@ function EveryDayQuestDlgQuestGoto( id )
 		end
 		
 	elseif id == 25 then	
-			EveryDayQuestDlgClose()	
+		EveryDayQuestDlgClose()	
 	end
 	
 end
