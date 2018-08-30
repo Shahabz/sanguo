@@ -1324,6 +1324,9 @@ int equip_wash_free( int actor_index, int offset )
 	{
 		activity_04_addvalue_equipwash( actor_index );
 	}
+
+	// 每日
+	everyday_quest_addvalue( pCity, 22, 1 );
 	return 0;
 }
 
@@ -1410,6 +1413,9 @@ int equip_wash_token( int actor_index, int offset )
 	{
 		activity_04_addvalue_equipwash( actor_index );
 	}
+
+	// 每日
+	everyday_quest_addvalue( pCity, 22, 1 );
 	return 0;
 }
 
@@ -1479,6 +1485,9 @@ int equip_wash_super( int actor_index, int offset )
 
 	// 七日狂欢
 	activity_04_addvalue_equipwash( actor_index );
+
+	// 每日
+	everyday_quest_addvalue( pCity, 22, 1 );
 	return 0;
 }
 

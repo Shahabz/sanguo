@@ -261,5 +261,8 @@ int map_pickup_get( int actor_index, int unit_index )
 	}
 	map_pickup_delete( unit->index );
 	actor_add_today_char_times( actor_index, TODAY_CHAR_MAP_PICKUP );
+
+	// √ø»’
+	everyday_quest_addvalue( pCity, 19, 1 );
 	return 0;
 }

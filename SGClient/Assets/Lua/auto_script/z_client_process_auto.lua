@@ -2541,3 +2541,13 @@ function proc_activity33_C( recvValue )
 	Activity33ModRecv( recvValue )
 end
 
+-- m_count=0,m_list={m_id=0,m_textid=0,m_value=0,m_needvalue=0,m_sort=0,m_awardkind={[2]},m_awardnum={[2]},[m_count]},m_mypoint=0,
+function proc_NetS_EDayQuestList_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_id=0,m_awardkind=0,m_awardnum=0,m_point=0,[m_count]},
+function proc_NetS_EDayShopList_C( recvValue )
+	-- process.
+end
+

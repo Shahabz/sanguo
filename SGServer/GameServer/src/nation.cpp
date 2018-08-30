@@ -735,6 +735,9 @@ int nation_build( int actor_index )
 
 	// 国家荣誉排行
 	nation_rank_addvalue( pCity, NATION_RANK_BUILD, 1 );
+
+	// 每日
+	everyday_quest_addvalue( pCity, 24, 1 );
 	return 0;
 }
 

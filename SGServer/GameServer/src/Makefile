@@ -70,6 +70,7 @@ SRC = \
 ../AutoS/src/auto_city_building_res.cpp \
 ../AutoS/src/auto_data_world_questinfo.cpp \
 ../AutoS/src/auto_data_paystore.cpp \
+../AutoS/src/auto_data_everyday_quest.cpp \
 ../AutoS/src/auto_data_random_firstname.cpp \
 ../AutoS/src/auto_data_map_pickupinfo.cpp \
 ../AutoS/src/auto_data_girl_shop.cpp \
@@ -343,6 +344,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_world_questinfo.o: ../AutoS/src/auto_data_world_questinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_paystore.o: ../AutoS/src/auto_data_paystore.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_everyday_quest.o: ../AutoS/src/auto_data_everyday_quest.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_random_firstname.o: ../AutoS/src/auto_data_random_firstname.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

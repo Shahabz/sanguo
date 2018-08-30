@@ -148,7 +148,7 @@ struct _city {
 				char act12_state;	//南蛮入侵活动
 				char act12_turn;	//南蛮入侵活动
 				int act33_pay;	//充值排名
-				short edquest[32];	//每日任务
+				int edquest[16];	//每日任务
 				int edquest_isget;	//每日任务奖励是否领取
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件

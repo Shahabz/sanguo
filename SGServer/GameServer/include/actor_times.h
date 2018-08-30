@@ -40,6 +40,8 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_GIRLSHOP_UPDATE		17	// 女将商店刷新次数
 #define TODAY_CHAR_WORLDBOSS_RESET		18 // 今天重置世界boss次数
 #define TODAY_CHAR_MAP_PICKUP			19 // 世界拾取数量限制
+#define TODAY_CHAR_EVERYDAY_BEGIN		20 // 每日任务开始
+#define TODAY_CHAR_EVERYDAY_END			35 // 每日任务结束
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );

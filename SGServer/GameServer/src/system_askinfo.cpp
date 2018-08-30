@@ -1263,6 +1263,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			city_everyday_event_getaward( actor_index, pvalue[1] );
 		}
 		break;
+	case ASKINFO_EVERYDAY_QUEST: // √ø»’
+		if ( pvalue[0] == 0 )
+		{
+			everyday_quest_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			everyday_quest_getaward( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			everyday_shop( actor_index );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			everyday_shop_buy( actor_index, pvalue[1], pvalue[2] );
+		}
+		break;
 	default:
 		break;
 	}

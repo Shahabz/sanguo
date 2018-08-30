@@ -88,6 +88,7 @@
 #include "auto_data_robot_ai.h"
 #include "auto_data_robot_base.h"
 #include "auto_data_everyday_event.h"
+#include "auto_data_everyday_quest.h"
 #include "auto_actor_equip.h"
 #include "auto_actor_hero.h"
 #include "auto_actor_girl.h"

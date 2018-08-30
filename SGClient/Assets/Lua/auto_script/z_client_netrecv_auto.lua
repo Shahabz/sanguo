@@ -1075,6 +1075,16 @@ function netrecv_activity33_C( buffer )
 	proc_activity33_C( recvValue );
 end
 
+function netrecv_NetS_EDayQuestList_C( buffer )
+	local recvValue = struct_NetS_EDayQuestList_recv( buffer );
+	proc_NetS_EDayQuestList_C( recvValue );
+end
+
+function netrecv_NetS_EDayShopList_C( buffer )
+	local recvValue = struct_NetS_EDayShopList_recv( buffer );
+	proc_NetS_EDayShopList_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1291,6 +1301,8 @@ Proc_Command = {
 	[CMDS_TOKENSALE]=netrecv_tokensale_C;
 	[CMDS_TOKENRET]=netrecv_tokenret_C;
 	[CMDS_ACTIVITY33]=netrecv_activity33_C;
+	[CMDS_NETS_EDAYQUESTLIST]=netrecv_NetS_EDayQuestList_C;
+	[CMDS_NETS_EDAYSHOPLIST]=netrecv_NetS_EDayShopList_C;
 }
 
 function in_proc_command_C( cmd, buffer )

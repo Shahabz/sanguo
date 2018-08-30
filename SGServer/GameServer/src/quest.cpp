@@ -23,6 +23,7 @@
 #include "equip.h"
 #include "map_enemy.h"
 #include "city_attr.h"
+#include "shop.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -49,6 +50,9 @@ extern int g_tiance_quest_maxnum;
 
 extern OfficialForging *g_official_forging;
 extern int g_official_forging_maxnum;
+
+extern Shop *g_shop;
+extern int g_shop_maxnum;
 
 inline QuestInfo *quest_config( int questid )
 {
@@ -1114,5 +1118,151 @@ int tiance_quest_tech_activate( int actor_index, short kind )
 
 	tiance_quest_sendinfo( actor_index );
 	city_attr_reset( pCity );
+	return 0;
+}
+
+// 每日任务
+extern EverydayQuest *g_everyday_quest;
+extern int g_everyday_quest_maxnum;
+int everyday_quest_addvalue( City *pCity, int id, int value )
+{
+	if ( !pCity )
+		return -1;
+	if ( id < 0 || id >= 32 || id >= g_everyday_quest_maxnum )
+		return -1;
+	_check_fday( pCity->actor_index );
+	int saveindex = g_everyday_quest[id].saveindex;
+	if ( saveindex >= 0 && saveindex < 16 )
+	{ // 身上存档
+		pCity->edquest[saveindex] += value;
+	}
+	else if ( saveindex < -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
+	{ // char 存档
+		actor_add_today_char_times( pCity->actor_index, -saveindex );
+	}
+	else
+		return -1;
+	return 0;
+}
+
+int everyday_quest_getvalue( City *pCity, int id )
+{
+	if ( !pCity )
+		return 0;
+	if ( id < 0 || id >= 32 || id >= g_everyday_quest_maxnum )
+		return 0;
+	int saveindex = g_everyday_quest[id].saveindex;
+	if ( saveindex >= 0 && saveindex < 16 )
+	{ // 身上存档
+		return pCity->edquest[saveindex];
+	}
+	else if ( saveindex < -TODAY_CHAR_EVERYDAY_BEGIN && saveindex >= -TODAY_CHAR_EVERYDAY_END )
+	{ // char 存档
+		return actor_get_today_char_times( pCity->actor_index, -saveindex );
+	}
+	else
+		return 0;
+	return 0;
+}
+
+int everyday_quest_reset( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	memset( pCity->edquest, 0, sizeof( int ) * 16 );
+	pCity->edquest_isget = 0;
+	return 0;
+}
+
+int everyday_quest_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	_check_fday( actor_index );
+	SLK_NetS_EDayQuestList pValue = { 0 };
+	for ( short id = 1; id < g_everyday_quest_maxnum; id++ )
+	{
+		if ( pCity->level < g_everyday_quest[id].levelmin || pCity->level > g_everyday_quest[id].levelmax )
+			continue;
+		pValue.m_list[pValue.m_count].m_id = id;
+		pValue.m_list[pValue.m_count].m_textid = g_everyday_quest[id].textid;
+		pValue.m_list[pValue.m_count].m_value = everyday_quest_getvalue( pCity, id );
+		pValue.m_list[pValue.m_count].m_needvalue = g_everyday_quest[id].needvalue;
+		pValue.m_list[pValue.m_count].m_sort = (char)g_everyday_quest[id].sort;
+		pValue.m_list[pValue.m_count].m_awardkind[0] = g_everyday_quest[id].awardkind[0];
+		pValue.m_list[pValue.m_count].m_awardnum[0] = g_everyday_quest[id].awardnum[0];
+		pValue.m_list[pValue.m_count].m_awardkind[1] = g_everyday_quest[id].awardkind[1];
+		pValue.m_list[pValue.m_count].m_awardnum[1] = g_everyday_quest[id].awardnum[1];
+		if ( pCity->edquest_isget & (1 << id) )
+		{
+			pValue.m_list[pValue.m_count].m_isget = 1;
+		}
+		else
+		{
+			pValue.m_list[pValue.m_count].m_isget = 0;
+		}
+		pValue.m_count += 1;
+	}
+	netsend_NetS_EDayQuestList_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
+int everyday_quest_getaward( int actor_index, int id )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id < 0 || id >= 32 )
+		return -1;
+	if ( pCity->edquest_isget & (1 << id) )
+		return -1;
+	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		award_getaward( actor_index, g_everyday_quest[id].awardkind[tmpi], g_everyday_quest[id].awardnum[tmpi], 0, PATH_EVERYDAY_QUEST, NULL );
+	}
+	pCity->edquest_isget |= (1 << id);
+	everyday_quest_sendlist( actor_index );
+	return 0;
+}
+
+int everyday_shop( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int type = SHOPTYPE_EVERYDAY;
+	if ( type <= 0 || type >= g_shop_maxnum )
+		return -1;
+	SLK_NetS_EDayShopList pValue = { 0 };
+	for ( int tmpi = 0; tmpi < g_shop[type].maxnum; tmpi++ )
+	{
+		if ( g_shop[type].config[tmpi].awardkind <= 0 )
+			continue;
+		if ( g_actors[actor_index].level < g_shop[type].config[tmpi].actorlevel_min || g_actors[actor_index].level > g_shop[type].config[tmpi].actorlevel_max )
+			continue;
+		pValue.m_list[pValue.m_count].m_id = g_shop[type].config[tmpi].index;
+		pValue.m_list[pValue.m_count].m_awardkind = g_shop[type].config[tmpi].awardkind;
+		pValue.m_list[pValue.m_count].m_awardnum = g_shop[type].config[tmpi].awardnum;
+		pValue.m_list[pValue.m_count].m_point = g_shop[type].config[tmpi].token;
+		pValue.m_count += 1;
+	}
+	netsend_NetS_EDayShopList_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+int everyday_shop_buy( int actor_index, int id, int awardkind )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int type = SHOPTYPE_EVERYDAY;
+	if ( type <= 0 || type >= g_shop_maxnum )
+		return -1;
+
+	if ( id < 0 || id >= g_shop[type].maxnum )
+		return -1;
+	if ( g_shop[type].config[id].awardkind != awardkind )
+		return -1;
+	
+	award_getaward( actor_index, g_shop[type].config[id].awardkind, g_shop[type].config[id].awardnum, -1, PATH_EVERYDAY_SHOP, NULL );
 	return 0;
 }

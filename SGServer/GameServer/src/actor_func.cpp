@@ -228,6 +228,9 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
 	if ( g_actors[actor_index].token + token < 0 )
 	{
 		int value = 0;
@@ -257,12 +260,8 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 		// 全服返利活动
 		if ( activity_intime( ACTIVITY_6 ) )
 		{
-			City *pCity = city_getptr( actor_index );
-			if ( pCity )
-			{
-				// 本国玩家充值
-				nation_paytoken_add( pCity->nation, token );
-			}
+			// 本国玩家充值
+			nation_paytoken_add( pCity->nation, token );
 			// 全服充值
 			int serv_paytoken = world_data_getcache( WORLD_DATA_ACTIVITY06_PAYTOKEN ) + token;
 			world_data_set( WORLD_DATA_ACTIVITY06_PAYTOKEN, serv_paytoken, NULL, NULL );
@@ -276,6 +275,8 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 	}
 	else if ( token < 0 )
 	{ // 消耗量
+		// 每日
+		everyday_quest_addvalue( pCity, 25, -token );
 		// 记录消耗
 		wlog_token( 0, LOGOP_TOKEN, path, g_actors[actor_index].token, token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value, g_actors[actor_index].userid );
 	}

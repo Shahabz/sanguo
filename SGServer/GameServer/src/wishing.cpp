@@ -243,6 +243,9 @@ int wishing_shop_buy( int actor_index, int id )
 	wishing_shop_sendinfo( actor_index );
 	// 任务
 	quest_addvalue( city_getptr( actor_index ), QUEST_DATATYPE_WISHING, 0, 0, 1 );
+
+	// 每日
+	everyday_quest_addvalue( pCity, 18, 1 );
 	return 0;
 }
 

@@ -2228,6 +2228,9 @@ int city_levy( int actor_index )
 
 	// 任务
 	quest_main_addvalue( pCity, QUEST_DATATYPE_LEVYNUM, 0, 0, 1 );
+
+	// 每日
+	everyday_quest_addvalue( pCity, 17, 1 );
 	return 0;
 }
 
@@ -2580,6 +2583,9 @@ int city_train_get( int actor_index, int kind )
 	// 任务
 	quest_addvalue( pCity, QUEST_DATATYPE_TRAIN, corps + 1, 0, overnum );
 	quest_addvalue( pCity, QUEST_DATATYPE_TRAINCOUNT, corps + 1, 0, overnum );
+
+	// 每日
+	everyday_quest_addvalue( pCity, corps+1, overnum );
 	return 0;
 }
 
@@ -4387,6 +4393,9 @@ int city_spy( int actor_index, int unit_index, int type )
 		actor_notify_pop( actor_index, 2430 );
 	}
 
+	// 每日
+	everyday_quest_addvalue( pCity, 21, 1 );
+
 	return 0;
 }
 
@@ -4595,6 +4604,9 @@ int city_everyday_event_getaward( int actor_index, int select )
 
 	city_everyday_event_update( actor_index );
 	city_everyday_event_sendinfo( actor_index );
+
+	// 每日
+	everyday_quest_addvalue( pCity, 16, 1 );
 	return 0;
 }
 

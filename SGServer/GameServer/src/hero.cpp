@@ -2020,6 +2020,9 @@ int hero_wash_free( int actor_index, int herokind )
 	{
 		activity_04_addvalue_herowash( actor_index );
 	}
+	// 每日
+	everyday_quest_addvalue( pCity, 23, 1 );
+
 	pCity->hero_washnum -= 1;
 	if ( pCity->hero_washsec <= 0 )
 		pCity->hero_washsec = global.hero_wash_sec;
@@ -2103,6 +2106,8 @@ int hero_wash_token( int actor_index, int herokind )
 	{
 		activity_04_addvalue_herowash( actor_index );
 	}
+	// 每日
+	everyday_quest_addvalue( pCity, 23, 1 );
 	return 0;
 }
 

@@ -215,6 +215,9 @@ int army_vs_enemy( int army_index, Fight *pFight )
 			activity_04_addvalue( pCity->index, ACTIVITY_SEVENDAY_TYPE13, 1 );
 		}
 
+		// Ã¿ÈÕ
+		everyday_quest_addvalue( pCity, 20, 1 );
+
 		// É¾³ýÁ÷¿Ü
 		map_enemy_delete( g_army[army_index].to_index );
 	}

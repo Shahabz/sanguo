@@ -40,7 +40,8 @@ int shop_list( int actor_index, int type )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( type <= 0 || type >= g_shop_maxnum )
 		return -1;
-
+	if ( type == SHOPTYPE_EVERYDAY )
+		return -1;
 	if ( actor_get_today_char_times( actor_index, TODAY_CHAR_SHOP_SALEITEM ) == 0 )
 	{ // 随机打折物品
 		actor_set_today_char_times( actor_index, TODAY_CHAR_SHOP_SALEITEM, 1 );
@@ -142,6 +143,8 @@ int shop_buy( int actor_index, int type, int offset, int awardkind, int count, i
 {
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( type <= 0 || type >= g_shop_maxnum )
+		return -1;
+	if ( type == SHOPTYPE_EVERYDAY )
 		return -1;
 	if ( offset < 0 || offset >= g_shop[type].maxnum )
 		return -1;

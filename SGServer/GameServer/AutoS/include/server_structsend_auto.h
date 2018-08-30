@@ -2387,6 +2387,39 @@ struct _slk_NetS_Activity33 {
 };
 typedef struct _slk_NetS_Activity33 SLK_NetS_Activity33;	//充值排名
 
+struct _slk_NetS_EDayQuest {
+	short m_id;	//每日任务
+	int m_textid;	//每日任务
+	int m_value;	//每日任务
+	int m_needvalue;	//每日任务
+	char m_sort;	//每日任务
+	int m_awardkind[2];	//每日任务
+	int m_awardnum[2];	//每日任务
+	char m_isget;	//每日任务
+};
+typedef struct _slk_NetS_EDayQuest SLK_NetS_EDayQuest;	//每日任务
+
+struct _slk_NetS_EDayQuestList {
+	char m_count;	//每日任务列表
+	SLK_NetS_EDayQuest m_list[32];	//每日任务列表
+	int m_mypoint;	//每日任务列表
+};
+typedef struct _slk_NetS_EDayQuestList SLK_NetS_EDayQuestList;	//每日任务
+
+struct _slk_NetS_EDayShop {
+	short m_id;	//活跃度商店
+	int m_awardkind;	//活跃度商店
+	int m_awardnum;	//活跃度商店
+	int m_point;	//活跃度商店
+};
+typedef struct _slk_NetS_EDayShop SLK_NetS_EDayShop;	//活跃度商店
+
+struct _slk_NetS_EDayShopList {
+	char m_count;	//活跃度商店列表
+	SLK_NetS_EDayShop m_list[32];	//活跃度商店列表
+};
+typedef struct _slk_NetS_EDayShopList SLK_NetS_EDayShopList;	//活跃度商店
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2646,5 +2679,9 @@ int struct_NetS_TokenRet_send( char **pptr, int *psize, SLK_NetS_TokenRet *pValu
 int struct_NetS_Activity33Member_send( char **pptr, int *psize, SLK_NetS_Activity33Member *pValue );
 int struct_NetS_Activity33Award_send( char **pptr, int *psize, SLK_NetS_Activity33Award *pValue );
 int struct_NetS_Activity33_send( char **pptr, int *psize, SLK_NetS_Activity33 *pValue );
+int struct_NetS_EDayQuest_send( char **pptr, int *psize, SLK_NetS_EDayQuest *pValue );
+int struct_NetS_EDayQuestList_send( char **pptr, int *psize, SLK_NetS_EDayQuestList *pValue );
+int struct_NetS_EDayShop_send( char **pptr, int *psize, SLK_NetS_EDayShop *pValue );
+int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopList *pValue );
 
 #endif

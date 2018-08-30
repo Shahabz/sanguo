@@ -3524,3 +3524,54 @@ int struct_NetS_Activity33_send( char **pptr, int *psize, SLK_NetS_Activity33 *p
 	return 0;
 }
 
+int struct_NetS_EDayQuest_send( char **pptr, int *psize, SLK_NetS_EDayQuest *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_textid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_needvalue, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_sort, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 2*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 2*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isget, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EDayQuestList_send( char **pptr, int *psize, SLK_NetS_EDayQuestList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_EDayQuest_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypoint, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EDayShop_send( char **pptr, int *psize, SLK_NetS_EDayShop *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_point, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_EDayShop_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

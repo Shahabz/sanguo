@@ -5799,6 +5799,60 @@ int netsend_activity33_S( int actor_index, char send_type, SLK_NetS_Activity33 *
 	return 0;
 }
 
+int netsend_NetS_EDayQuestList_S( int actor_index, char send_type, SLK_NetS_EDayQuestList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_NETS_EDAYQUESTLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_NETS_EDAYQUESTLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_EDayQuestList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
+int netsend_NetS_EDayShopList_S( int actor_index, char send_type, SLK_NetS_EDayShopList *pValue )
+{
+	char tmpbuf[2048];
+	int tmpsize;
+	char *ptrsubdata;
+	char *ptr, *ptrsize;
+	short cmd=CMDS_NETS_EDAYSHOPLIST;
+
+	if( actor_index < 0 )
+		return -1;
+
+	ptr = tmpbuf;
+	tmpsize = 0;
+	ptr+=sizeof(short);
+	ptrsubdata = ptr;
+	*(short *)ptr = CMDS_NETS_EDAYSHOPLIST; ptr+=sizeof(short); tmpsize+=sizeof(short);
+	ptrsize = ptr;	ptr+=sizeof(short);tmpsize+=sizeof(short);
+
+	struct_NetS_EDayShopList_send( &ptr, &tmpsize, pValue );
+
+	*(short *)ptrsize = tmpsize - (int)sizeof(short)*2;
+	*(unsigned short *)tmpbuf = tmpsize;
+
+	actor_senddata( actor_index, send_type, tmpbuf, tmpsize );
+	return 0;
+}
+
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue )
 {

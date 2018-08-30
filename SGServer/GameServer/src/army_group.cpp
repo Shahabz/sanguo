@@ -870,6 +870,11 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 				army_carry_additem( army_index, AWARDKIND_WOOD, rob_wood );
 				army_carry_additem( army_index, AWARDKIND_FOOD, rob_food );
 				army_carry_additem( army_index, AWARDKIND_PEOPLE, rob_people );
+				// √ø»’
+				everyday_quest_addvalue( pCity, 8, rob_silver );
+				everyday_quest_addvalue( pCity, 9, rob_wood );
+				everyday_quest_addvalue( pCity, 10, rob_food );
+				everyday_quest_addvalue( pCity, 11, rob_people );
 				break;
 			}
 		}

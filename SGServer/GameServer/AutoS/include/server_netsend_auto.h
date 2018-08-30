@@ -217,6 +217,8 @@ int netsend_everydayevent_S( int actor_index, char send_type, SLK_NetS_EverydayE
 int netsend_tokensale_S( int actor_index, char send_type, SLK_NetS_TokenSale *pValue );
 int netsend_tokenret_S( int actor_index, char send_type, SLK_NetS_TokenRet *pValue );
 int netsend_activity33_S( int actor_index, char send_type, SLK_NetS_Activity33 *pValue );
+int netsend_NetS_EDayQuestList_S( int actor_index, char send_type, SLK_NetS_EDayQuestList *pValue );
+int netsend_NetS_EDayShopList_S( int actor_index, char send_type, SLK_NetS_EDayShopList *pValue );
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue );
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );

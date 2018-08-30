@@ -99,21 +99,29 @@ int army_mail_gather( int army_index )
 	{
 		restype = 1;
 		resnum = g_army[army_index].silver;
+		// 每日
+		everyday_quest_addvalue( pCity, 4, resnum );
 	}
 	else if ( g_army[army_index].wood > 0 )
 	{
 		restype = 2;
 		resnum = g_army[army_index].wood;
+		// 每日
+		everyday_quest_addvalue( pCity, 5, resnum );
 	}
 	else if ( g_army[army_index].food > 0 )
 	{
 		restype = 3;
 		resnum = g_army[army_index].food;
+		// 每日
+		everyday_quest_addvalue( pCity, 6, resnum );
 	}
 	else if ( g_army[army_index].iron > 0 )
 	{
 		restype = 4;
 		resnum = g_army[army_index].iron;
+		// 每日
+		everyday_quest_addvalue( pCity, 7, resnum );
 	}
 	
 	else if ( g_army[army_index].token > 0 )
