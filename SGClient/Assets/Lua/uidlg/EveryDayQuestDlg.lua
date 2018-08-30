@@ -11,6 +11,7 @@ local m_uiShopContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Shop = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_uiPoint = nil; --UnityEngine.GameObject
+local m_uiWindow = nil; --UnityEngine.GameObject
 
 local m_QuestRecvValue = nil
 local m_ShopRecvValue = nil
@@ -65,6 +66,10 @@ function EveryDayQuestDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 3000 and nControlID < 4000 then
 			EveryDayQuestDlgShopBuy( nControlID-3000 )
         end
+	elseif nType == UI_EVENT_PRESS then
+		if nControlID >= 100000 and nControlID < 200000 then
+			EveryDayQuestDlgShowItemDesc( nControlID-100000, value );
+		end
 	end
 end
 
@@ -82,6 +87,7 @@ function EveryDayQuestDlgOnAwake( gameObject )
 	m_uiUIP_Shop = objs[7];
 	m_uiAwardDescLayer = objs[8];
 	m_uiPoint = objs[9];
+	m_uiWindow = objs[10];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Quest", 16, 16, m_uiUIP_Quest);
@@ -281,8 +287,9 @@ function EveryDayQuestDlgShopSet()
 		SetImage( uiColor, color );
 		SetText( uiName, name, NameColor(c) )
 		SetText( uiPoint, info.m_point )	
-		SetControlID( uiItem, 500000+info.m_awardkind )
+		SetControlID( uiItem, 100000+info.m_awardkind )
 		SetControlID( uiBuyBtn, 3000+info.m_id )
+		info.m_uiItem = uiObj
 		
 		if info.m_awardnum > 1 then
 			SetTrue( uiNumBack )
@@ -421,5 +428,32 @@ function EveryDayQuestDlgQuestGoto( id )
 	elseif id == 25 then	
 		EveryDayQuestDlgClose()	
 	end
+end
+
+-- 道具描述
+function EveryDayQuestDlgShowItemDesc( awardkind, value )
+	if value == 1 then
+		SetFalse( m_uiAwardDescLayer )
+		return
+	end
 	
+	local uiItem = nil
+	for i=1, m_ShopRecvValue.m_count, 1 do
+		if m_ShopRecvValue.m_list[i].m_awardkind == awardkind then
+			uiItem = m_ShopRecvValue.m_list[i].m_uiItem
+			break
+		end
+	end
+	if uiItem == nil then
+		return
+	end
+	
+	local sprite, color, name, c, desc = AwardInfo( awardkind )
+	SetTrue( m_uiAwardDescLayer )
+	SetText( m_uiAwardDescLayer.transform:Find("Name"), name )
+	SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+
+	m_uiAwardDescLayer.transform:SetParent( uiItem.transform )
+	m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 280 )
+	m_uiAwardDescLayer.transform:SetParent( m_uiWindow.transform )
 end
