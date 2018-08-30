@@ -495,12 +495,15 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 		break;
 	case AWARDKIND_INFANTRY:// 步兵
 		city_changesoldiers( g_actors[actor_index].city_index, 0, num, path );
+		everyday_quest_addvalue( city_getptr( actor_index ), 1, num );
 		break;
 	case AWARDKIND_CAVALRY:// 骑兵
 		city_changesoldiers( g_actors[actor_index].city_index, 1, num, path );
+		everyday_quest_addvalue( city_getptr( actor_index ), 2, num );
 		break;
 	case AWARDKIND_ARCHER:// 弓兵
 		city_changesoldiers( g_actors[actor_index].city_index, 2, num, path );
+		everyday_quest_addvalue( city_getptr( actor_index ), 3, num );
 		break;
 	case AWARDKIND_EXP:// 角色经验
 		city_actorexp( g_actors[actor_index].city_index, num, path );

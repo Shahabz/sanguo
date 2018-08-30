@@ -866,7 +866,7 @@ function City.DayEventhMod( unitObj, show )
 	else
 		local QuestMod = unitObj.transform:Find( "DayQuestMod" )
 		if QuestMod then
-			QuestMod.gameObject:SetActive( true );
+			QuestMod.gameObject:SetActive( false );
 		end
 	end
 	

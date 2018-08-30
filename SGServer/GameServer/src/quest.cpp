@@ -1130,6 +1130,8 @@ int everyday_quest_addvalue( City *pCity, int id, int value )
 		return -1;
 	if ( id < 0 || id >= 32 || id >= g_everyday_quest_maxnum )
 		return -1;
+	if ( value <= 0 )
+		return -1;
 	_check_fday( pCity->actor_index );
 	int saveindex = g_everyday_quest[id].saveindex;
 	if ( saveindex >= 0 && saveindex < 16 )
@@ -1281,7 +1283,8 @@ int everyday_shop_buy( int actor_index, int id, int awardkind )
 		return -1;
 	if ( g_shop[type].config[id].awardkind != awardkind )
 		return -1;
-	
+	if ( actor_change_edpoint( actor_index, -g_shop[type].config[id].token, PATH_EVERYDAY_SHOP ) < 0 )
+		return -1;
 	award_getaward( actor_index, g_shop[type].config[id].awardkind, g_shop[type].config[id].awardnum, -1, PATH_EVERYDAY_SHOP, NULL );
 	return 0;
 }

@@ -10,6 +10,7 @@ local m_uiShopScroll = nil; --UnityEngine.GameObject
 local m_uiShopContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Shop = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_uiPoint = nil; --UnityEngine.GameObject
 
 local m_QuestRecvValue = nil
 local m_ShopRecvValue = nil
@@ -59,6 +60,9 @@ function EveryDayQuestDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 前往
 		elseif nControlID >= 2000 and nControlID < 3000 then
 			EveryDayQuestDlgQuestGoto( nControlID-2000 )
+			
+		elseif nControlID >= 100000 and nControlID < 300000 then
+			EveryDayQuestDlgShopBuy( nControlID-100000 )
         end
 	end
 end
@@ -76,10 +80,11 @@ function EveryDayQuestDlgOnAwake( gameObject )
 	m_uiShopContent = objs[6];
 	m_uiUIP_Shop = objs[7];
 	m_uiAwardDescLayer = objs[8];
+	m_uiPoint = objs[9];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
-	m_ObjectPool:CreatePool("m_uiUIP_Quest", 16, 16, m_uiUIP_Quest);
-	m_ObjectPool:CreatePool("m_uiUIP_Shop", 6, 6, m_uiUIP_Shop);
+	m_ObjectPool:CreatePool("UIP_Quest", 16, 16, m_uiUIP_Quest);
+	m_ObjectPool:CreatePool("UIP_Shop", 6, 6, m_uiUIP_Shop);
 end
 
 -- 界面初始化时调用
@@ -113,7 +118,7 @@ end
 ----------------------------------------
 function EveryDayQuestDlgShow()
 	EveryDayQuestDlgOpen()
-	system_askinfo( ASKINFO_EVERYDAY_QUEST, 0 )
+	system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 0 )
 end
 
 -- 任务
@@ -123,7 +128,9 @@ function EveryDayQuestDlgQuestShow()
 end
 -- m_count=0,m_list={m_id=0,m_textid=0,m_value=0,m_needvalue=0,m_sort=0,m_awardkind={[2]},m_awardnum={[2]},[m_count]},m_mypoint=0,
 function EveryDayQuestDlgQuestRecv( recvValue )
-	m_QuestRecvValue = recvValue	
+	m_QuestRecvValue = recvValue
+	GetPlayer().m_edquest_point = recvValue.m_mypoint;
+	EveryDayQuestDlgUpdatePoint()
 	EveryDayQuestDlgQuestSet()
 	EveryDayQuestDlgQuestShow()
 end
@@ -161,7 +168,7 @@ function EveryDayQuestDlgQuestSet()
 	for i=1, #tmptable, 1 do
 		local info = tmptable[i].info
 			
-		local uiObj = m_ObjectPool:Get( "m_uiUIP_Quest" );
+		local uiObj = m_ObjectPool:Get( "UIP_Quest" );
 		uiObj.transform:SetParent( m_uiQuestContent.transform );
 		uiObj.transform.localScale = Vector3.one;
 		uiObj.gameObject:SetActive( true );
@@ -172,14 +179,14 @@ function EveryDayQuestDlgQuestSet()
 		local uiStateBtn = objs[2]
 		local uiState = objs[3]
 		local uiGotoBtn = objs[4]
-		
+
 		SetControlID( uiStateBtn, 1000+info.m_id )
 		SetControlID( uiGotoBtn, 2000+info.m_id )
-		
-		if info.m_value > info.m_needvalue then
-			SetText( uiName, FQUEST(info.m_textid, info.m_needvalue, info.m_needvalue) )
+
+		if info.m_value >= info.m_needvalue then
+			SetText( uiName, Localization.text_quest(info.m_textid).."<color=#03DE27FF>"..info.m_needvalue.."/"..info.m_needvalue.."</color>" )
 		else
-			SetText( uiName, FQUEST(info.m_textid, info.m_value, info.m_needvalue) )
+			SetText( uiName, Localization.text_quest(info.m_textid).."<color=#E80017FF>"..info.m_value.."</color><color=#03DE27FF>/"..info.m_needvalue.."</color>" )
 		end
 		
 		if info.m_value >= info.m_needvalue then
@@ -208,7 +215,7 @@ function EveryDayQuestDlgQuestSet()
 			if awardkind > 0 then
 				local sprite, color, name, c = AwardInfo( awardkind )
 				SetTrue( awardObj )
-				SetControlID( awardObj, 1000000+awardkind )
+				--SetControlID( awardObj, 1000000+awardkind )
 				SetImage( awardObj.transform:Find("Shape"), sprite );
 				SetText( awardObj.transform:Find("Name"), name.."x"..awardnum, NameColor(c) );
 			else
@@ -225,8 +232,8 @@ function EveryDayQuestDlgQuestClear()
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "m_uiUIP_Quest(Clone)" then
-			m_ObjectPool:Release( "m_uiUIP_Quest", obj );
+		if obj.name == "UIP_Quest(Clone)" then
+			m_ObjectPool:Release( "UIP_Quest", obj );
 		end
 	end
 end
@@ -238,14 +245,51 @@ function EveryDayQuestDlgShopShow()
 	EveryDayQuestDlgShopSet()
 end
 -- m_count=0,m_list={m_id=0,m_awardkind=0,m_awardnum=0,m_point=0,[m_count]},
-function EveryDayQuestDlgShopRecv()
-	m_QuestRecvValue = recvValue
+function EveryDayQuestDlgShopRecv( recvValue )
+	m_ShopRecvValue = recvValue
 end
 function EveryDayQuestDlgShopSet()
 	if m_ShopRecvValue == nil then
 		return
 	end
 	EveryDayQuestDlgShopClear()
+	
+	-- 创建商店物品
+	for i=1, m_ShopRecvValue.m_count, 1 do
+		local info = m_ShopRecvValue.m_list[i];
+		
+		local uiObj = m_ObjectPool:Get( "UIP_Shop" );
+		uiObj.transform:SetParent( m_uiShopContent.transform );
+		uiObj.transform.localScale = Vector3.one;
+		uiObj.gameObject:SetActive( true );
+		
+		local objs = uiObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+		local uiItem = objs[0]
+		local uiShape = objs[1]
+		local uiColor = objs[2]
+		local uiNumBack = objs[3]
+		local uiNum = objs[4]
+		local uiName = objs[5]
+		local uiPoint = objs[6]
+		local uiBuyBtn = objs[7]
+		
+		local sprite, color, name, c, desc = AwardInfo( info.m_awardkind )
+		SetImage( uiShape, sprite );
+		SetImage( uiColor, color );
+		SetText( uiName, name, NameColor(c) )
+		SetText( uiPoint, info.m_point )	
+		SetControlID( uiItem, 5000000+info.m_awardkind )
+		SetControlID( uiBuyBtn, 1000000+info.m_awardkind )
+		
+		if info.m_awardnum > 1 then
+			SetTrue( uiNumBack )
+			SetText( uiNum, "x"..info.m_awardnum )
+		else
+			SetFalse( uiNumBack )
+			SetText( uiNum, "" )
+		end
+		
+	end
 	
 end
 function EveryDayQuestDlgShopClear()
@@ -255,8 +299,8 @@ function EveryDayQuestDlgShopClear()
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "m_uiUIP_Shop(Clone)" then
-			m_ObjectPool:Release( "m_uiUIP_Shop", obj );
+		if obj.name == "UIP_Shop(Clone)" then
+			m_ObjectPool:Release( "UIP_Shop", obj );
 		end
 	end
 end
@@ -264,11 +308,27 @@ function EveryDayQuestDlgUpdatePoint()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
+	SetText( m_uiPoint, F(4252,GetPlayer().m_edquest_point) )
+end
+
+-- 购买
+function EveryDayQuestDlgShopBuy( id )
+	local info = nil
+	for i=1, m_ShopRecvValue.m_count, 1 do
+		if m_ShopRecvValue.m_list[i].m_id == id then
+			info = m_ShopRecvValue.m_list[i]
+			break
+		end
+	end
+	if info == nil then
+		return
+	end
+	system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 3, id, info.m_awardkind )
 end
 
 -- 领取
 function EveryDayQuestDlgQuestAward( id )
-	system_askinfo( ASKINFO_EVERYDAY_QUEST, 1, id )
+	system_askinfo( ASKINFO_EVERYDAY_QUEST, "", 1, id )
 end
 
 -- 前往
