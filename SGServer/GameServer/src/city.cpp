@@ -1930,6 +1930,11 @@ int city_guard_upgrade( int city_index, int offset )
 	g_city[city_index].guard[offset].color += coloradd;
 	g_city[city_index].guard[offset].level += addlevel;
 
+	if ( coloradd == 0 && addlevel == 0 )
+	{ // 训练失败，没有获得任何提升
+		actor_notify_pop( g_city[city_index].actor_index, 4257 );
+	}
+
 	CityGuardInfoConfig *config = city_guard_config( monsterid, g_city[city_index].guard[offset].color );
 	if ( config )
 	{

@@ -18,6 +18,7 @@ local m_ShopRecvValue = nil
 
 -- 打开界面
 function EveryDayQuestDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_5" )
 	m_Dlg = eye.uiManager:Open( "EveryDayQuestDlg" );
 	--m_DialogFrameMod = DialogFrameModOpen( m_Dlg, T(0), nil, EveryDayQuestDlgClose );
 end
@@ -37,6 +38,7 @@ end
 -- 删除界面
 function EveryDayQuestDlgDestroy()
 	GameObject.Destroy( m_Dlg );
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_5" )
 	m_Dlg = nil;
 end
 

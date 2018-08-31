@@ -293,6 +293,7 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 	local uiArrow = objs[4];
 	local uiProgress = objs[5];
 	local uiFlag = objs[6];
+	local uiHp = objs[7];
 	-- 
 	if shape == nil then
 		if lock == true then
@@ -340,6 +341,7 @@ function CityGuardDlgSetObj( uiObj, shape, color, corps, level, hp, hpmax, arrow
 	else
 		SetTrue( uiProgress );
 		SetProgress( uiProgress, hp/hpmax );
+		SetText( uiHp, hp.."/"..hpmax );
 	end
 	
 	--

@@ -1062,7 +1062,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 			awardgroup_random( PAY_MONTH_AWARDGROUP, 0, &getinfo );
 			awardgroup_makestr( &getinfo, award_content );
 			mail_system( actor_index, pCity->actorid, 5036, 5532, v1, NULL, NULL, award_content, 0 );
-			actor_notify_alert( actor_index, 2201 );
+			//actor_notify_alert( actor_index, 2201 );
 		}
 	}
 	else if ( goodstype == PAY_GOODSTYPE_WEEKCARD )
@@ -1079,7 +1079,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 			awardgroup_random( PAY_WEEK_AWARDGROUP, 0, &getinfo );
 			awardgroup_makestr( &getinfo, award_content );
 			mail_system( actor_index, g_actors[actor_index].actorid, 5037, 5533, v1, NULL, NULL, award_content, 0 );
-			actor_notify_alert( actor_index, 2202 );
+			//actor_notify_alert( actor_index, 2202 );
 		}
 	}
 	else if ( awardgroup > 0 )

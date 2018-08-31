@@ -271,7 +271,7 @@ int map_event_changepos_randhaspos( int index, short posx, short posy )
 	short pPosx = -1;
 	short pPosy = -1;
 	int range = 2;
-	while ( range < 10 )
+	while ( range < 32 )
 	{
 		map_getrandpos_withrange( posx, posy, range, &pPosx, &pPosy );
 		if ( pPosx >= 0 && pPosy >= 0 )
