@@ -945,6 +945,7 @@ GameObject:
   - component: {fileID: 224335492583263300}
   - component: {fileID: 222440008777251310}
   - component: {fileID: 114435318407543986}
+  - component: {fileID: 114430390729411874}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1130,6 +1131,7 @@ GameObject:
   - component: {fileID: 224497354424094778}
   - component: {fileID: 222136842492077344}
   - component: {fileID: 114094267512107330}
+  - component: {fileID: 114611228186393664}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2482,16 +2484,16 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: b1f3da7754abc43229436a8e655bab35, type: 3}
     m_FontSize: 26
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 40
+    m_MaxSize: 26
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6B66\u5C06\u9632\u5B88\u987A\u5E8F"
+  m_Text: "\u5FA1\u6797\u536B\u9632\u5B88\u987A\u5E8F"
   localizeID: 1246
   rtlAlignment: 0
   rtlReverseSign: 
@@ -3770,6 +3772,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114430390729411874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1443824864927826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114434095883911746
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4437,6 +4453,20 @@ MonoBehaviour:
   - {fileID: 1925585794119542}
   - {fileID: 1131186119581492}
   - {fileID: 1575185735991064}
+--- !u!114 &114611228186393664
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590486423348660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114630033734905998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5747,8 +5777,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6B66\u5C06\u9632\u5B88\u987A\u5E8F"
-  localizeID: 1246
+  m_Text: "\u5185\u9601\u5FA1\u6797\u536B\u6B66\u5C06\u9632\u5B88\u987A\u5E8F"
+  localizeID: 4255
   rtlAlignment: 0
   rtlReverseSign: 
 --- !u!222 &222045024848494912
@@ -6414,7 +6444,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 480, y: 113}
+  m_SizeDelta: {x: 536.3, y: 113}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224052291348991732
 RectTransform:

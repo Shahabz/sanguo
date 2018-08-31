@@ -9,7 +9,7 @@ local m_uiContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Goods = nil; --UnityEngine.GameObject
 local m_uiAward1 = nil; --UnityEngine.GameObject
 local m_uiAward2 = nil; --UnityEngine.GameObject
-
+local m_day = 0;
 local m_ObjectPool = nil;
 -- 打开界面
 function PayDlgOpen()
@@ -47,7 +47,7 @@ function PayDlgOnEvent( nType, nControlID, value, gameObject )
 			
 		-- 购买
 		elseif nControlID >= 1000 and nControlID <= 10000 then
-			PayDlgBuy( nControlID-1000 )
+			PayDlgBuyAsk( nControlID-1000 )
         end
 		
 	elseif nType == UI_EVENT_PRESS then
@@ -149,6 +149,7 @@ function PayDlgCreateGoods( info )
 	
 	if info.m_goodsid == 1 then
 		--SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
+		m_day = info.m_day;
 		if info.m_day > 0 then
 			SetText( uiObj.transform:Find("Name"), T(info.m_nameid).." <size=24>"..F(2115,info.m_day).."</size>" )
 		else
@@ -248,8 +249,22 @@ function PayDlgTips( id, show )
 	end
 end
 
+function PayDlgBuyAsk( goodsid )
+	if goodsid == 1 then
+		if m_day > 1 then
+			MsgBox( F(4256,m_day), function()
+				PayDlgBuy( goodsid )
+			end )
+			return
+		end
+	end
+	
+	PayDlgBuy( goodsid )
+end
+
 -- 购买
 function PayDlgBuy( goodsid )
+	
 	if Const.platid == 1 then
 		system_askinfo( ASKINFO_PAY, "", 3, goodsid )
 	else

@@ -1800,6 +1800,7 @@ int process_dbreload()
 	shop_reload_auto();
 	storyinfo_reload_auto();
 	upgradeinfo_reload_auto();
+	vipinfo_reload_auto();
 	vipbag_reload_auto();
 	vipshop_reload_auto();
 	worldbossinfo_reload_auto();
