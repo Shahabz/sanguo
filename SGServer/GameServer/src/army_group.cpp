@@ -900,6 +900,9 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pCity->name );
 
+		// 驻防玩家
+		armygroup_helpcity_mail( pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
+
 		// 随机迁移城主地图
 		char zoneid = map_zone_getid( pTargetCity->posx, pTargetCity->posy );
 		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
@@ -991,6 +994,9 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// 集结所有人发送邮件
 		armygroup_mail( group_index, 2, pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight, pTargetCity->name );
+
+		// 驻防玩家
+		armygroup_helpcity_mail( pTargetCity, MAIL_TYPE_FIGHT_CITY, title, content, "", pFight );
 
 		// 事件
 		city_battle_event_add( pCity->index, CITY_BATTLE_EVENT_ASSAULT, pTargetCity->name, 0, mailid );
@@ -1912,6 +1918,49 @@ int armygroup_mail( int group_index, char attack, City *defenseCity, char type, 
 			{ // 城战
 				city_battle_event_add( defenseCity->index, CITY_BATTLE_EVENT_DEFEND, name, fight->result, mailid );
 			}
+		}
+	}
+	return 0;
+}
+
+// 驻防人员发送邮件
+int armygroup_helpcity_mail( City *pCity, char type, char *title, char *content, char *attach, Fight *fight )
+{
+	if ( !pCity )
+		return -1;
+	// 需要过滤掉相同的玩家部队
+	int actorid_list[CITY_HELPDEFENSE_MAX] = { 0 };
+	int actorid_count = 0;
+	for ( int index = 0; index < CITY_HELPDEFENSE_MAX; index++ )
+	{
+		int army_index = pCity->help_armyindex[index];
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+			continue;
+		if ( g_army[army_index].state != ARMY_STATE_HELP )
+			continue;
+		City *pArmyCity = army_getcityptr( army_index );
+		if ( !pArmyCity )
+			continue;
+		char issend = 0;
+		for ( int i = 0; i < actorid_count; i++ )
+		{
+			if ( actorid_list[i] == pArmyCity->actorid )
+			{
+				issend = 1;
+				break;
+			}
+		}
+
+		if ( issend == 0 )
+		{
+			i64 mailid = mail( pArmyCity->actor_index, pArmyCity->actorid, type, title, content, "", 0, 0 );
+			if ( fight )
+			{
+				mail_fight( mailid, pArmyCity->actorid, fight->unit_json );
+			}
+
+			actorid_list[actorid_count] = pArmyCity->actorid;
+			actorid_count += 1;
 		}
 	}
 	return 0;

@@ -50,6 +50,7 @@
 #define	AWARDKIND_TOKEN_SALE	50041 // 元宝抵扣点数
 #define	AWARDKIND_TOKEN_RET		50042 // 元宝返还次数
 #define	AWARDKIND_EVERYDAYPOINT	50043 // 活跃度
+#define	AWARDKIND_HEROVISTPRO	50044 // 寻访进度
 #define AWARDKIND_PERMISSION_1	50051 // 购买步兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_2	50052 // 购买骑兵权限（只用于显示）
 #define AWARDKIND_PERMISSION_3	50053 // 购买弓兵权限（只用于显示）

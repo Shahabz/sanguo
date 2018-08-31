@@ -55,7 +55,8 @@ int armygroup_askhelp( int actor_index, int group_index, int group_id );
 
 // 集结所有人发送邮件
 int armygroup_mail( int group_index, char attack, City *defenseCity, char type, char *title, char *content, char *attach, Fight *fight, char *name );
-
+// 所有驻防人员邮件
+int armygroup_helpcity_mail( City *pCity, char type, char *title, char *content, char *attach, Fight *fight );
 // 雇佣兵
 int armygroup_fighthelper_sendlist( int actor_index, int group_index );
 int armygroup_fighthelper_buy( int actor_index, int group_index, int kind );

@@ -2030,6 +2030,11 @@ void city_guard_makestruct( City *pCity, SLK_NetS_CityGuard *pValue, char offset
 	{
 		pValue->m_troops = TROOPS( pCity->guard[offset].level, config->troops, config->troops_growth );
 	}
+	if ( pValue->m_soldiers > pValue->m_troops )
+	{
+		pCity->guard[offset].soldiers = pValue->m_troops;
+		pValue->m_soldiers = pValue->m_troops;
+	}
 }
 
 int city_guard_send( int actor_index, int offset )
@@ -4080,6 +4085,23 @@ int city_move( City *pCity, short posx, short posy )
 			continue;
 		map_event_changepos_randhaspos( pCity->mapevent_index[tmpi], pCity->posx, pCity->posy );
 	}
+	// ×¤·À²¿¶ÓÒªÇ²·µ
+	for ( int tmpi = 0; tmpi < CITY_HELPDEFENSE_MAX; tmpi++ )
+	{
+		int help_armyindex = pCity->help_armyindex[tmpi];
+		if ( help_armyindex < 0 || help_armyindex >= g_army_maxcount )
+			continue;
+		City *pHelpCity = army_getcityptr( help_armyindex );
+		if ( !pHelpCity )
+			continue;
+		g_army[help_armyindex].reback = ARMY_REBACK_REPATRIAT;
+		army_setstate( help_armyindex, ARMY_STATE_REBACK );
+		pCity->help_armyindex[tmpi] = -1;
+		char v1[32] = { 0 };
+		snprintf( v1, 32, "%s", pCity->name );
+		mail_system( MAIL_ACTORID, pHelpCity->actorid, 5051, 5546, v1, NULL, NULL, NULL, 1 );
+		break;
+	}
 
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
@@ -4506,9 +4528,45 @@ int _city_everyday_event_awardnum_get( City *pCity, int awardkind, int awardnum 
 	{
 	case AWARDKIND_EXP:
 	{
-		int exp = g_upgradeinfo[pCity->level].exp / 50;
-		if ( exp < 5 )
-			exp = 5;
+		int exp = 0;
+		if ( pCity->level <= 50 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 30;
+		}
+		else if ( pCity->level <= 60 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 35;
+		}
+		else if ( pCity->level <= 70 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 40;
+		}
+		else if ( pCity->level <= 80 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 50;
+		}
+		else if ( pCity->level <= 90 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 60;
+		}
+		else if ( pCity->level <= 100 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 70;
+		}
+		else if ( pCity->level <= 110 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 80;
+		}
+		else if ( pCity->level <= 120 )
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 90;
+		}
+		else
+		{
+			exp = g_upgradeinfo[pCity->level].exp / 100;
+		}
+		if ( exp < 10 )
+			exp = 10;
 		num = exp;
 	}
 		break;

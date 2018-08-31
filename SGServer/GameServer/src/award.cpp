@@ -650,6 +650,9 @@ int award_getaward( int actor_index, int kind, int num, char color, char path, A
 	case AWARDKIND_EVERYDAYPOINT: // 活跃度
 		actor_change_edpoint( actor_index, num, path );
 		break;
+	case AWARDKIND_HEROVISTPRO: // 寻访进度
+		hero_visit_setprogress( actor_index, num );
+		break;
 	case AWARDKIND_PERMISSION_4:// 科技快研
 		actor_set_sflag( actor_index, ACTOR_SFLAG_OFFICIAL_TECH, 1 );
 		break;
