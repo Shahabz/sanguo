@@ -425,7 +425,7 @@ function EveryDayQuestDlgQuestGoto( id )
 			pop(T(579))
 		end
 		
-	elseif id == 25 then	
+	elseif id == 12 then	
 		EveryDayQuestDlgClose()	
 	end
 end

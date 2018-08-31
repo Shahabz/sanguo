@@ -276,7 +276,7 @@ int actor_change_token( int actor_index, int token, char path, int path_value )
 	else if ( token < 0 )
 	{ // 消耗量
 		// 每日
-		everyday_quest_addvalue( pCity, 25, -token );
+		everyday_quest_addvalue( pCity, 12, -token );
 		// 记录消耗
 		wlog_token( 0, LOGOP_TOKEN, path, g_actors[actor_index].token, token, g_actors[actor_index].total_charge, g_actors[actor_index].actorid, path_value, g_actors[actor_index].userid );
 	}
