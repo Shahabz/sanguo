@@ -679,6 +679,11 @@ void city_logic_sec( int begin, int end )
 			}
 		}
 
+		// 如果是机器人就不走下面逻辑
+		if ( g_city[city_index].type == CityLairdType_Robot )
+			continue;
+		
+
 		// 回复体力
 		if ( g_city[city_index].body < global.body_max )
 		{

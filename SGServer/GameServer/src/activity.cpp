@@ -24,6 +24,7 @@
 #include "nation.h"
 #include "mail.h"
 #include "activity_04.h"
+#include "equip.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -60,6 +61,12 @@ extern int g_activity_08_maxnum;
 
 extern ActivityInfo10 *g_activity_10;
 extern int g_activity_10_maxnum;
+
+extern ActivityInfo17 *g_activity_17;
+extern int g_activity_17_maxnum;
+
+extern ActivityInfo33 *g_activity_33;
+extern int g_activity_33_maxnum;
 
 extern PayBag g_paybag[CITY_BAG_MAX];
 extern Nation g_nation[NATION_MAX];
@@ -358,6 +365,9 @@ int activity_onopen( int activityid )
 	case ACTIVITY_6:
 		activity_06_onopen();
 		break;
+	case ACTIVITY_17:
+		activity_17_onopen();
+		break;
 	case ACTIVITY_33:
 		activity_33_onopen();
 		break;
@@ -379,6 +389,9 @@ int activity_onend( int activityid )
 	case ACTIVITY_6:
 		activity_06_onend();
 		break;
+	case ACTIVITY_17:
+		activity_17_onend();
+		break;
 	case ACTIVITY_33:
 		activity_33_onend();
 		break;
@@ -399,6 +412,9 @@ int activity_onclose( int activityid )
 	{
 	case ACTIVITY_6:
 		activity_06_onclose();
+		break;
+	case ACTIVITY_17:
+		activity_17_onclose();
 		break;
 	case ACTIVITY_33:
 		activity_33_onclose();
@@ -458,6 +474,17 @@ int activity_sendlist( int actor_index )
 			for ( int id = 1; id < g_activity_06_maxnum; id++ )
 			{
 				if ( (pCity->act06_state & (1 << id)) == 0 && serv_paytoken >= g_activity_06[id].token )
+				{
+					pValue.m_list[pValue.m_count].m_red = 1;
+					break;
+				}
+			}
+		}
+		else if ( activityid == ACTIVITY_17 )
+		{ // 充值豪礼
+			for ( int id = 1; id < g_activity_17_maxnum; id++ )
+			{
+				if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
 				{
 					pValue.m_list[pValue.m_count].m_red = 1;
 					break;
@@ -702,6 +729,16 @@ char activity_checkred( int actor_index )
 			for ( int id = 1; id < g_activity_06_maxnum; id++ )
 			{
 				if ( (pCity->act06_state & (1 << id)) == 0 && serv_paytoken >= g_activity_06[id].token )
+				{
+					return 1;
+				}
+			}
+		}
+		else if ( activityid == ACTIVITY_17 )
+		{ // 充值豪礼
+			for ( int id = 1; id < g_activity_17_maxnum; id++ )
+			{
+				if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
 				{
 					return 1;
 				}
@@ -1339,6 +1376,87 @@ int activity_11_get( int actor_index )
 	return 0;
 }
 
+// 充值豪礼
+void activity_17_onopen()
+{
+	
+}
+void activity_17_onend()
+{
+	
+}
+void activity_17_onclose()
+{
+
+}
+int activity_17_sendinfo( int actor_index )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	SLK_NetS_Activity17 pValue = { 0 };
+	for ( int tmpi = 0; tmpi < g_activity_17_maxnum; tmpi++ )
+	{
+		if ( g_activity_17[tmpi].id <= 0 )
+			continue;
+		pValue.m_list[pValue.m_count].m_id = g_activity_17[tmpi].id;
+		pValue.m_list[pValue.m_count].m_pay = g_activity_17[tmpi].pay;
+		for ( int i = 0; i < 16; i++ )
+		{
+			pValue.m_list[pValue.m_count].m_awardkind[i] = g_activity_17[tmpi].awardkind[i];
+			pValue.m_list[pValue.m_count].m_awardnum[i] = g_activity_17[tmpi].awardnum[i];
+		}
+		if ( g_actors[actor_index].act17_state & (1 << g_activity_17[tmpi].id) )
+		{
+			pValue.m_list[pValue.m_count].m_isget = 1;
+		}
+		else
+		{
+			pValue.m_list[pValue.m_count].m_isget = 0;
+		}
+		pValue.m_count += 1;
+	}
+	pValue.m_mypay = g_actors[actor_index].charge_point;
+	netsend_activity17_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+int activity_17_get( int actor_index, int id )
+{
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( id <= 0 || id >= g_activity_17_maxnum )
+		return -1;
+	if ( g_actors[actor_index].act17_state & (1 << id) )
+		return -1;
+
+	int equipcount = 0;
+	for ( int tmpi = 0; tmpi < 16; tmpi++ )
+	{
+		if ( g_activity_17[id].awardkind[tmpi] > AWARDKIND_EQUIPBASE && g_activity_17[id].awardkind[tmpi] < AWARDKIND_HEROBASE )
+		{
+			equipcount += g_activity_17[id].awardnum[tmpi];
+		}
+	}
+
+	if ( equip_getempty( actor_index ) < equipcount )
+	{
+		char v1[32] = { 0 };
+		sprintf( v1, "%d", equipcount );
+		actor_notify_pop_v( actor_index, 526, v1, NULL );
+		return -1;
+	}
+	for ( int tmpi = 0; tmpi < 16; tmpi++ )
+	{
+		if ( g_activity_17[id].awardkind[tmpi] <= 0 )
+			continue;
+		award_getaward( actor_index, g_activity_17[id].awardkind[tmpi], g_activity_17[id].awardnum[tmpi], -1, PATH_ACTIVITY, NULL );
+	}
+	g_actors[actor_index].act17_state |= (1 << id);
+	activity_17_sendinfo( actor_index );
+	return 0;
+}
+
 // 首日免费
 int activity_25_sendinfo( int actor_index )
 {
@@ -1370,8 +1488,6 @@ int activity_25_get( int actor_index )
 }
 
 // 充值排名活动
-extern ActivityInfo33 *g_activity_33;
-extern int g_activity_33_maxnum;
 Activity33Rank g_activity33_rank[ACTIVITY33_MEMBERMAX];
 int activity_33_load()
 {

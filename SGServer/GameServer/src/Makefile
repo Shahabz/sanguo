@@ -34,6 +34,7 @@ SRC = \
 ../AutoS/src/auto_data_nation_mission.cpp \
 ../AutoS/src/auto_nation.cpp \
 ../AutoS/src/auto_data_activity_03.cpp \
+../AutoS/src/auto_data_activity_17.cpp \
 ../AutoS/src/auto_actor.cpp \
 ../AutoS/src/auto_data_teacher_award.cpp \
 ../AutoS/src/auto_data_tiance_quest.cpp \
@@ -272,6 +273,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_nation.o: ../AutoS/src/auto_nation.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_activity_03.o: ../AutoS/src/auto_data_activity_03.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_activity_17.o: ../AutoS/src/auto_data_activity_17.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor.o: ../AutoS/src/auto_actor.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@

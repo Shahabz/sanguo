@@ -101,5 +101,6 @@ CREATE TABLE `actor` (
   `act25_point` int(11) NOT NULL DEFAULT '0' COMMENT '首日免费充值',
   `act25_isget` tinyint(3) NOT NULL DEFAULT '0' COMMENT '首日免费是否完成',
   `edquest_point` int(11) NOT NULL DEFAULT '0' COMMENT '活跃度',
+  `act17_state` smallint(6) NOT NULL DEFAULT '0' COMMENT '充值豪礼',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

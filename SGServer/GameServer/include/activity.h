@@ -21,7 +21,7 @@
 #define ACTIVITY_14	14	//	流寇资源
 #define ACTIVITY_15	15	//	经验翻倍
 #define ACTIVITY_16	16	//	作坊加速
-#define ACTIVITY_17	17	//	每日充值
+#define ACTIVITY_17	17	//	充值豪礼
 #define ACTIVITY_18	18	//	镔铁转盘
 #define ACTIVITY_19	19	//	采集翻倍
 #define ACTIVITY_20	20	//	屯田活动
@@ -119,6 +119,13 @@ int activity_10_init();
 // 出师大宴活动
 int activity_11_sendinfo( int actor_index );
 int activity_11_get( int actor_index );
+
+// 充值豪礼
+void activity_17_onopen();
+void activity_17_onend();
+void activity_17_onclose();
+int activity_17_sendinfo( int actor_index );
+int activity_17_get( int actor_index, int id );
 
 // 首日免费
 int activity_25_sendinfo( int actor_index );

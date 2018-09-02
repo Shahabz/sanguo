@@ -220,6 +220,7 @@ int netsend_activity33_S( int actor_index, char send_type, SLK_NetS_Activity33 *
 int netsend_NetS_EDayQuestList_S( int actor_index, char send_type, SLK_NetS_EDayQuestList *pValue );
 int netsend_NetS_EDayShopList_S( int actor_index, char send_type, SLK_NetS_EDayShopList *pValue );
 int netsend_NetS_EDayPoint_S( int actor_index, char send_type, SLK_NetS_EDayPoint *pValue );
+int netsend_activity17_S( int actor_index, char send_type, SLK_NetS_Activity17 *pValue );
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue );
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );

@@ -75,6 +75,7 @@
 #include "auto_data_activity_08.h"
 #include "auto_data_activity_10.h"
 #include "auto_data_activity_12.h"
+#include "auto_data_activity_17.h"
 #include "auto_data_activity_33.h"
 #include "auto_data_girl.h"
 #include "auto_data_girl_love.h"

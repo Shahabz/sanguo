@@ -485,11 +485,11 @@ function LoginModReg()
 		return
 	end
 	
-	if friend_invite_code == "" then
-		SetTrue( m_uiMakeSureLayer ) 
-	else
+	--if friend_invite_code == "" then
+		--SetTrue( m_uiMakeSureLayer ) 
+	--else
 		LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
-	end
+	--end
 end
 
 function LoginModRegMakeSure()

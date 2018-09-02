@@ -329,6 +329,8 @@ int map_event_range_brush( short kind, short posx, short posy, int range, int ci
 int map_event_addcity( int city_index, int index )
 {
 	CITY_CHECK_INDEX( city_index );
+	if ( g_city[city_index].type == CityLairdType_Robot )
+		return -1;
 	for ( int tmpi = 0; tmpi < CITY_MAPEVENT_MAX; tmpi++ )
 	{
 		if ( g_city[city_index].mapevent_index[tmpi] < 0 )

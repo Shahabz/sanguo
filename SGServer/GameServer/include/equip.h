@@ -44,6 +44,7 @@ int equip_getequip( int actor_index, int equipkind, char path ); // 玩家获得装备
 int equip_lostequip( int actor_index, int equipoffset, char path );
 int equip_resolve( int actor_index, int equipoffset ); // 分解
 int equip_buyext( int actor_index ); // 购买扩展栏
+int equip_getempty( int actor_index ); // 获取剩余格子数量
 
 int equip_up( int actor_index, short herokind, int equip_offset ); // 装备上,带有替换效果
 int equip_down( int actor_index, short herokind, int index ); // 卸身上的装备

@@ -3585,3 +3585,28 @@ int struct_NetS_EDayPoint_send( char **pptr, int *psize, SLK_NetS_EDayPoint *pVa
 	return 0;
 }
 
+int struct_NetS_Activity17Award_send( char **pptr, int *psize, SLK_NetS_Activity17Award *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_pay, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 16*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 16*sizeof(int), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isget, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Activity17_send( char **pptr, int *psize, SLK_NetS_Activity17 *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Activity17Award_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypay, (*psize) );
+	return 0;
+}
+

@@ -968,6 +968,7 @@ int process_init( int max_connection )
 	activityinfo08_init_auto();
 	activityinfo10_init_auto();
 	activityinfo12_init_auto();
+	activityinfo17_init_auto();
 	activityinfo33_init_auto();
 
 	activity_init();
@@ -1825,6 +1826,7 @@ int process_dbreload()
 	activityinfo08_reload_auto();
 	activityinfo10_reload_auto();
 	activityinfo12_reload_auto();
+	activityinfo17_reload_auto();
 	activityinfo33_reload_auto();
 
 	db_closedata();

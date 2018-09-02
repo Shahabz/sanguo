@@ -3268,3 +3268,32 @@ function struct_NetS_EDayPoint_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Activity17Award_recv( buffer )
+	local recvValue = {};
+	recvValue.m_id = buffer:ReadShort();
+	recvValue.m_pay = buffer:ReadInt();
+	recvValue.m_awardkind={};
+	for tmpi=1,16,1 do
+		recvValue.m_awardkind[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_awardnum={};
+	for tmpi=1,16,1 do
+		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
+	end
+	recvValue.m_isget = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_Activity17_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Activity17Award_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_mypay = buffer:ReadInt();
+	return recvValue;
+end
+

@@ -9,6 +9,8 @@ local m_uiItemInfo = nil; --UnityEngine.GameObject
 local m_uiResBtn = nil; --UnityEngine.GameObject
 local m_uiDrawBtn = nil; --UnityEngine.GameObject
 local m_uiOtherBtn = nil; --UnityEngine.GameObject
+local m_uiTokenSale = nil; --UnityEngine.GameObject
+local m_uiTokenRet = nil; --UnityEngine.GameObject
 
 local m_uiUseNum = nil;
 local m_SelectItemIndex = -1;
@@ -93,6 +95,12 @@ function BagDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 1000 and nControlID < 2000 then
 			BagDlgSelectItem( nControlID-1000 )
         end
+	elseif nType == UI_EVENT_PRESS then
+		if value == 0 then
+			BagDlgTips( nControlID, true )
+		else
+			BagDlgTips( nControlID, false )
+		end
 	end
 end
 
@@ -107,6 +115,8 @@ function BagDlgOnAwake( gameObject )
 	m_uiResBtn = objs[4];
 	m_uiDrawBtn = objs[5];
 	m_uiOtherBtn = objs[6];
+	m_uiTokenSale = objs[7];
+	m_uiTokenRet = objs[8];
 end
 
 -- 界面初始化时调用
@@ -140,6 +150,10 @@ end
 ----------------------------------------
 function BagDlgShow()
 	BagDlgOpen()
+	m_uiTokenSale.transform:SetSiblingIndex(1000);
+	m_uiTokenRet.transform:SetSiblingIndex(1000);
+	BagDlgSetTokenSale()
+	BagDlgSetTokenRet()
 	BagDlgSelectType(1);
 end
 
@@ -488,4 +502,53 @@ function BagDlgItemUse()
 		system_askinfo( ASKINFO_ITEM, "", ITEM_PROCESS_USE, m_SelectItemIndex - 1, m_SelectItemNum, -1, 1 );
 	end	
 	BagDlgSelectItem( -1 )
+end
+
+-- 抵扣券
+function BagDlgSetTokenSale()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	
+	if GetPlayer().m_token_sale > 0 then
+		SetTrue( m_uiTokenSale )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_SALE )
+		SetImage( m_uiTokenSale.transform:Find("Shape"), sprite )
+		SetText( m_uiTokenSale.transform:Find("Name"), "x"..GetPlayer().m_token_sale )
+	else
+		SetFalse( m_uiTokenSale )
+	end
+end
+
+-- 返利券
+function BagDlgSetTokenRet()
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	
+	if GetPlayer().m_token_ret > 0 then
+		SetTrue( m_uiTokenRet )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_RET )
+		SetImage( m_uiTokenRet.transform:Find("Shape"), sprite )
+		SetText( m_uiTokenRet.transform:Find("Name"), "x"..GetPlayer().m_token_ret )
+	else
+		SetFalse( m_uiTokenRet )
+	end
+end
+
+-- 奖励显示
+function BagDlgTips( id, show )
+	if id == 20 then
+		SetShow( m_uiTokenSale.transform:Find("AwardInfo"), show )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_SALE )
+		SetText( m_uiTokenSale.transform:Find("AwardInfo/Name"), name, NameColor(c) )
+		SetText( m_uiTokenSale.transform:Find("AwardInfo/Desc"), desc )
+		
+	elseif id == 21 then
+		SetShow( m_uiTokenRet.transform:Find("AwardInfo"), show )
+		local sprite, color, name, c, desc = AwardInfo( AWARDKIND_TOKEN_RET )
+		SetText( m_uiTokenRet.transform:Find("AwardInfo/Name"), name, NameColor(c) )
+		SetText( m_uiTokenRet.transform:Find("AwardInfo/Desc"), desc )
+		
+	end
 end

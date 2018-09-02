@@ -476,6 +476,29 @@ int equip_buyext( int actor_index )
 	return 0;
 }
 
+// 获取剩余格子数
+int equip_getempty( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	int count = 0;
+	Actor *pActor = &g_actors[actor_index];
+	int maxnum = MAX_DEFAULT_EQUIPNUM + pActor->equipext;
+	if ( maxnum > MAX_ACTOR_EQUIPNUM )
+	{
+		maxnum = MAX_ACTOR_EQUIPNUM;
+	}
+
+	for ( int tmpi = 0; tmpi < maxnum; tmpi++ )
+	{
+		if ( pActor->equip[tmpi].kind <= 0 )
+		{
+			count += 1;
+		}
+	}
+	return count;
+}
+
 //-----------------------------------------------------------------------------
 // 函数说明: 装备单件装备并且如果有前一个装备卸载下前一个装备
 // 参数    : actor_index - 

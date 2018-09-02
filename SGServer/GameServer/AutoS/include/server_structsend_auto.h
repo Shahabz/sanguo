@@ -2427,6 +2427,22 @@ struct _slk_NetS_EDayPoint {
 };
 typedef struct _slk_NetS_EDayPoint SLK_NetS_EDayPoint;	//ªÓ‘æ∂»
 
+struct _slk_NetS_Activity17Award {
+	short m_id;	//≥‰÷µ∫¿¿Ò
+	int m_pay;	//≥‰÷µ∫¿¿Ò
+	int m_awardkind[16];	//≥‰÷µ∫¿¿Ò
+	int m_awardnum[16];	//≥‰÷µ∫¿¿Ò
+	char m_isget;	//≥‰÷µ∫¿¿Ò
+};
+typedef struct _slk_NetS_Activity17Award SLK_NetS_Activity17Award;	//≥‰÷µ∫¿¿Ò
+
+struct _slk_NetS_Activity17 {
+	char m_count;	//≥‰÷µ∫¿¿Ò
+	SLK_NetS_Activity17Award m_list[16];	//≥‰÷µ∫¿¿Ò
+	int m_mypay;	//≥‰÷µ∫¿¿Ò
+};
+typedef struct _slk_NetS_Activity17 SLK_NetS_Activity17;	//≥‰÷µ∫¿¿Ò
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2691,5 +2707,7 @@ int struct_NetS_EDayQuestList_send( char **pptr, int *psize, SLK_NetS_EDayQuestL
 int struct_NetS_EDayShop_send( char **pptr, int *psize, SLK_NetS_EDayShop *pValue );
 int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopList *pValue );
 int struct_NetS_EDayPoint_send( char **pptr, int *psize, SLK_NetS_EDayPoint *pValue );
+int struct_NetS_Activity17Award_send( char **pptr, int *psize, SLK_NetS_Activity17Award *pValue );
+int struct_NetS_Activity17_send( char **pptr, int *psize, SLK_NetS_Activity17 *pValue );
 
 #endif

@@ -936,6 +936,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_11_get( actor_index );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_17 )
+		{ // 充值豪礼
+			if ( pvalue[1] == 0 )
+			{
+				activity_17_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_17_get( actor_index, pvalue[2] );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_25 )
 		{ // 首日免费
 			if ( pvalue[1] == 0 )

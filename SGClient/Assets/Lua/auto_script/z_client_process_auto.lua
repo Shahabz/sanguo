@@ -2521,6 +2521,7 @@ function proc_tokensale_C( recvValue )
 	end
 	GetPlayer().m_token_sale = recvValue.m_total;
 	PayDlgSetTokenSale()
+	BagDlgSetTokenSale()
 end
 
 -- m_total=0,m_add=0,m_path=0,
@@ -2533,6 +2534,7 @@ function proc_tokenret_C( recvValue )
 	end
 	GetPlayer().m_token_ret = recvValue.m_total;
 	PayDlgSetTokenRet()
+	BagDlgSetTokenRet()
 end
 
 -- m_count=0,m_list={m_nation=0,m_namelen=0,m_name="[m_namelen]",m_pay=0,[m_count]},m_myrank=0,m_awardcount=0,m_awardlist={m_awardkind={[5]},m_awardnum={[5]},[m_awardcount]},m_mypay=0,
@@ -2561,5 +2563,11 @@ function proc_NetS_EDayPoint_C( recvValue )
 	end
 	GetPlayer().m_edquest_point = recvValue.m_total;
 	EveryDayQuestDlgUpdatePoint()
+end
+
+-- m_count=0,m_list={m_id=0,m_pay=0,m_awardkind={[12]},m_awardnum={[12]},[m_count]},m_mypay=0,
+function proc_activity17_C( recvValue )
+	-- process.
+	Activity17ModRecv( recvValue )
 end
 

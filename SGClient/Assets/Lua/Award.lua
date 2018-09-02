@@ -89,7 +89,7 @@ function AwardInfo( awardkind )
 	elseif awardkind <= AWARDKIND_BUILDINGBASE then
 		local kind = awardkind-AWARDKIND_HEROBASE;
 		sprite = HeroHeadSprite( kind )
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( hero_getnormalcolor(kind) );
 		name = HeroName( kind )
 		
 	-- 建筑	
@@ -101,56 +101,73 @@ function AwardInfo( awardkind )
 		
 	elseif awardkind == AWARDKIND_SILVER then -- 银币
 		sprite = ItemSprite( 120 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(121)
+		c = 1
+		desc = item_getdesc( 120 )
 		
 	elseif awardkind == AWARDKIND_WOOD then	-- 木材
 		sprite = ItemSprite( 121 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(122)
+		c = 1
+		desc = item_getdesc( 121 )
 		
 	elseif awardkind == AWARDKIND_FOOD then	-- 粮食
 		sprite = ItemSprite( 122 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(123)
 		c = 1
+		desc = item_getdesc( 122 )
 		
 	elseif awardkind == AWARDKIND_IRON then	-- 镔铁
 		sprite = ItemSprite( 123 );
 		color = ItemColorSprite( 1 );
 		name = T(124)
 		c = 1
+		desc = item_getdesc( 123 )
 		
 	elseif awardkind == AWARDKIND_TOKEN then-- 元宝
 		sprite = ItemSprite( 124 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 4 );
 		name = T(125)
+		c = 4
+		desc = item_getdesc( 124 )
 		
 	elseif awardkind == AWARDKIND_BODY then	 -- 体力
 		sprite = ItemSprite( 126 );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 1 );
 		name = T(126)
+		c = 1
+		desc = item_getdesc( 126 )
 		
 	elseif awardkind == AWARDKIND_INFANTRY then -- 步兵
 		sprite = LoadSprite( "item_icon_445" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(134)
+		c = 2
+		desc = item_getdesc( 128 )
 		
 	elseif awardkind == AWARDKIND_CAVALRY then -- 骑兵
 		sprite = LoadSprite( "item_icon_446" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(135)
+		c = 2
+		desc = item_getdesc( 129 )
 		
 	elseif awardkind == AWARDKIND_ARCHER then -- 弓兵
 		sprite = LoadSprite( "item_icon_447" );
-		color = ItemColorSprite( 0 );
+		color = ItemColorSprite( 2 );
 		name = T(136)
+		c = 2
+		desc = item_getdesc( 130 )
 		
 	elseif awardkind == AWARDKIND_EXP then	-- 角色经验
 		sprite = ItemSprite( 127 );
 		color = ItemColorSprite( 2 );
 		name = T(128)
 		c = 2
+		desc = item_getdesc( 127 )
 		
 	elseif awardkind == AWARDKIND_VIPEXP then	-- VIP经验
 		sprite = LoadSprite( "item_icon_482" );
@@ -173,12 +190,14 @@ function AwardInfo( awardkind )
 		color = ItemColorSprite( 2 );
 		name = T(127)
 		c = 2
+		desc = item_getdesc( 488 )
 		
 	elseif awardkind == AWARDKIND_PRESTIGE then	-- 威望值
 		sprite = LoadSprite( "item_icon_125" );
 		color = ItemColorSprite( 2 );
 		name = T(152)
 		c = 2
+		desc = item_getdesc( 125 )
 		
 	elseif awardkind == AWARDKIND_FRIENDSHIP then -- 友谊积分
 		sprite = LoadSprite( "item_icon_487" );
