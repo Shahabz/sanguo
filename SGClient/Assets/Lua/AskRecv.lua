@@ -28,6 +28,7 @@ NOTIFY_HEROGOD		  =	25	-- 神突成功
 NOTIFY_ACTIVITY		  =	26	-- 活动
 NOTIFY_GUIDE		  = 27  -- 指引
 NOTIFY_INVITECODE	  =	28	-- 邀请码
+NOTIFY_DELAYQUEUEPLAY =	29	-- 客户端延迟队列播放
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -370,6 +371,10 @@ function RecvActorNotify(recvValue)
 	-- 邀请码	
 	elseif msgid == NOTIFY_INVITECODE then
 		InviteCodeDlgOpRecv( value[1], value[2] )
+	
+	-- 延迟队列播放	
+	elseif msgid == NOTIFY_DELAYQUEUEPLAY then
+		DelayQueuePlay()
     end
 end
 

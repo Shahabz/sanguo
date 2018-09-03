@@ -734,16 +734,16 @@ char activity_checkred( int actor_index )
 				}
 			}
 		}
-		else if ( activityid == ACTIVITY_17 )
-		{ // ≥‰÷µ∫¿¿Ò
-			for ( int id = 1; id < g_activity_17_maxnum; id++ )
-			{
-				if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
-				{
-					return 1;
-				}
-			}
-		}
+		//else if ( activityid == ACTIVITY_17 )
+		//{ // ≥‰÷µ∫¿¿Ò
+		//	for ( int id = 1; id < g_activity_17_maxnum; id++ )
+		//	{
+		//		if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
+		//		{
+		//			return 1;
+		//		}
+		//	}
+		//}
 	}
 	
 	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 ) == 0 )
@@ -1453,7 +1453,12 @@ int activity_17_get( int actor_index, int id )
 		award_getaward( actor_index, g_activity_17[id].awardkind[tmpi], g_activity_17[id].awardnum[tmpi], -1, PATH_ACTIVITY, NULL );
 	}
 	g_actors[actor_index].act17_state |= (1 << id);
+
+	int value = 0;
+	actor_notify_value( actor_index, NOTIFY_DELAYQUEUEPLAY, 1, &value, NULL );
+
 	activity_17_sendinfo( actor_index );
+	actor_redinfo( actor_index, 5 );
 	return 0;
 }
 

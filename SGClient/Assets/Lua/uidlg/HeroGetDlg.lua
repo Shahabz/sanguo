@@ -37,6 +37,8 @@ function HeroGetDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	
+	DelayQueueNext()
 end
 
 -- 删除界面
@@ -154,4 +156,22 @@ end
 function HeroGetDlgWait( callback, value )
 	m_WaitCallback = callback;
 	m_WaitValue = value;
+end
+
+
+local s_delayQueue = Queue.new();
+function DelayQueueAdd( callback, value )
+	Queue.pushBack( s_delayQueue, { c=callback, v=value } );
+end
+
+function DelayQueuePlay()
+	DelayQueueNext()
+end
+
+function DelayQueueNext()
+	local queue = Queue.popFirst( s_delayQueue );
+	if queue == nil then
+		return;
+	end
+	queue.c( queue.v )
 end

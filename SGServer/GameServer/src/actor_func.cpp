@@ -55,6 +55,8 @@ extern char g_game_day_loop;
 
 extern char g_open_zone_sili;
 extern char g_open_zone_luoyang;
+
+extern int g_activity_17_maxnum;
 //-----------------------------------------------------------------------------
 // actor_getoffline_userid
 // 函数说明: 根据索引获取用户id
@@ -990,6 +992,17 @@ int actor_redinfo( int actor_index, char path )
 		{
 			pValue.m_has = 1;
 			pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+		}
+	}
+	else if ( path == 5 )
+	{ // 充值豪礼
+		for ( int id = 1; id < g_activity_17_maxnum; id++ )
+		{
+			if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 )
+			{
+				pValue.m_has = 1;
+				break;
+			}
 		}
 	}
 	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );

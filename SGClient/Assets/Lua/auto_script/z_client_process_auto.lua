@@ -891,6 +891,10 @@ function proc_heroget_C( recvValue )
 	if recvValue.m_path == PATH_HEROVISIT then
 	elseif recvValue.m_path == PATH_NATIONHERO then
 		NationHeroGetDlgShow( recvValue.m_kind )
+		
+	elseif recvValue.m_path == PATH_ACTIVITY then
+		DelayQueueAdd( HeroGetDlgShow, recvValue.m_hero )
+		
 	else
 		HeroGetDlgShow( recvValue.m_hero );
 	end
@@ -2364,7 +2368,11 @@ function proc_girlget_C( recvValue )
 	local pGirl = SLK_Girl.new();
 	pGirl:Set( recvValue.m_girl );
 	GetGirl():SetGirl( recvValue.m_girl.m_kind, pGirl );
-	GirlGetDlgShow( recvValue )
+	if recvValue.m_path == PATH_ACTIVITY then
+		DelayQueueAdd( GirlGetDlgShow, recvValue )
+	else	
+		GirlGetDlgShow( recvValue )
+	end
 end
 
 -- m_kind=0,m_love_level=0,m_love_exp=0,m_love_today=0,m_add=0,m_path=0,
@@ -2501,6 +2509,12 @@ function proc_redinfo_C( recvValue )
 			MainDlgFristDayPayShow( true, recvValue.m_value )
 		else
 			MainDlgFristDayPayShow( false, 0 )
+		end
+	elseif recvValue.m_path == 5 then
+		if recvValue.m_has == 1 then
+			MainDlgPayAwardShow( true )
+		else
+			MainDlgPayAwardShow( false )
 		end
 	end
 end

@@ -32,6 +32,8 @@ function GirlGetDlgClose()
 	end
 	m_WaitCallback = nil;
 	m_WaitValue = nil;
+	
+	DelayQueueNext()
 end
 
 -- 删除界面

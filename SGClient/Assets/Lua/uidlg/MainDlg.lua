@@ -319,7 +319,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 首日免费
 		elseif nControlID == 64 then
 			ActivityDlgShowByID( ACTIVITY_25 )
-				
+		
+		-- 充值豪礼
+		elseif nControlID == 65 then
+			ActivityDlgShowByID( ACTIVITY_17 )
+					
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -1391,6 +1395,18 @@ function MainDlgFristDayPayShow( show, sec )
 		end
 	else
 		SetFalse( FristDayPay )
+	end
+end
+
+-- 充值豪礼
+function MainDlgPayAwardShow( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/PayAward"), show )
+	SetShow( m_uiTop_City.transform:Find("Right/PayBag"), not show )
+	if show == true then
+		SetFalse( m_uiTop_City.transform:Find("Right/PayAward/Back/Effect") )
 	end
 end
 

@@ -34,6 +34,7 @@
 #define NOTIFY_ACTIVITY			26	// 活动
 #define NOTIFY_GUIDE			27	// 指引
 #define NOTIFY_INVITECODE		28	// 邀请码
+#define NOTIFY_DELAYQUEUEPLAY	29	// 客户端延迟队列播放
 
 // 发送给角色短消息 无参数
 int actor_notify( int actor_index, short msgid, const char *msg );
