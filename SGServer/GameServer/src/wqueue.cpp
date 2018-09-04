@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "script_auto.h"
 #include "map_zone.h"
+#include "activity.h"
 
 extern char g_open_town3;
 extern char g_open_town6;
@@ -220,6 +221,10 @@ int brush_enemy_queue_fetch()
 	else if ( type == BRUSH_ENEMY_QUEUE_PICKUP )
 	{
 		sc_Script_Exec( 3, zoneid, 0 );
+	}
+	else if ( type == BRUSH_ENEMY_QUEUE_ACTIVITY27 )
+	{
+		activity_27_brush_withzoneid( zoneid );
 	}
 	
 	// 头部步进

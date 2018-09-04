@@ -45,6 +45,7 @@
 #include "chat.h"
 #include "army.h"
 #include "army_group.h"
+#include "map_activity.h"
 #include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
@@ -817,6 +818,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 19 );
 
+	// 世界地图-活动怪
+	if ( mapactivityinfo_init_auto() < 0 )
+	{
+		printf_msg( "mapactivityinfo_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
 	// 世界地图-随机事件
 	if ( mapeventinfo_init_auto() < 0 )
 	{
@@ -1096,6 +1106,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 111 );
 
+	// 加载活动怪（严格顺序要求，不允许改变）
+	if ( map_activity_load() < 0 )
+	{
+		printf_msg( "map_activity_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 111 );
+
 	// 加载拾取物品（严格顺序要求，不允许改变）
 	if ( map_pickup_load() < 0 )
 	{
@@ -1265,6 +1284,10 @@ void process_close()
 
 	// 所有资源点保存
 	map_res_save( NULL );
+	printf_msg( "\n" );
+
+	// 所有活动怪保存
+	map_activity_save( NULL );
 	printf_msg( "\n" );
 
 	// 所有随机事件点保存

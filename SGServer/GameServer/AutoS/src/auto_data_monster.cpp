@@ -47,7 +47,7 @@ int monsterinfo_init_auto()
 	g_monster = (MonsterInfo *)malloc( sizeof(MonsterInfo)*g_monster_maxnum );
 	memset( g_monster, 0, sizeof(MonsterInfo)*g_monster_maxnum );
 
-	sprintf( szSQL, "select `monsterid`,`shape`,`level`,`color`,`corps`,`attack`,`defense`,`troops`,`attack_increase`,`defense_increase`,`assault`,`defend`,`line`,`skill` from monster;" );
+	sprintf( szSQL, "select `monsterid`,`shape`,`level`,`color`,`corps`,`attack`,`defense`,`troops`,`attack_growth`,`defense_growth`,`troops_growth`,`attack_increase`,`defense_increase`,`assault`,`defend`,`line`,`skill` from monster;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -69,6 +69,9 @@ int monsterinfo_init_auto()
 		g_monster[monsterid].attack = atoi(row[offset++]);
 		g_monster[monsterid].defense = atoi(row[offset++]);
 		g_monster[monsterid].troops = atoi(row[offset++]);
+		g_monster[monsterid].attack_growth = atoi(row[offset++]);
+		g_monster[monsterid].defense_growth = atoi(row[offset++]);
+		g_monster[monsterid].troops_growth = atoi(row[offset++]);
 		g_monster[monsterid].attack_increase = atoi(row[offset++]);
 		g_monster[monsterid].defense_increase = atoi(row[offset++]);
 		g_monster[monsterid].assault = atoi(row[offset++]);

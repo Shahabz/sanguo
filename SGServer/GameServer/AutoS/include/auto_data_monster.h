@@ -12,6 +12,9 @@ struct _monsterinfo {
 				short attack;	//
 				short defense;	//
 				int troops;	//
+				short attack_growth;	//
+				short defense_growth;	//
+				short troops_growth;	//
 				short attack_increase;	//
 				short defense_increase;	//
 				short assault;	//

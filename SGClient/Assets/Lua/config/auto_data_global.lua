@@ -233,3 +233,5 @@ global.token_sale_per = 20 --元宝抵扣百分比
 global.token_ret_costmin = 50 --元宝返还最低消费
 global.token_ret_token = 20 --元宝返还数量
 global.map_pickup_max = 30 --世界拾取数量限制
+global.activity27_brushmin = 10 --西凉骑兵多久刷新一次
+global.activity27_brushcount = 100 --西凉骑兵刷多少个

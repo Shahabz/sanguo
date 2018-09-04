@@ -7,11 +7,17 @@ MAPUNIT_TYPE_ARMY			=	2	-- 部队
 MAPUNIT_TYPE_TOWN			=	3	-- 城镇
 MAPUNIT_TYPE_ENEMY			=	4	-- 流寇
 MAPUNIT_TYPE_RES			=	5	-- 资源
+MAPUNIT_TYPE_RES			=	5	-- 资源
+MAPUNIT_TYPE_EVENT			=	6	-- 事件
+MAPUNIT_TYPE_NATIONHERO		=	7	-- 国家名将
+MAPUNIT_TYPE_PICKUP			=	8	-- 拾取事件
+MAPUNIT_TYPE_ACTIVITY		=	9	-- 活动怪
 
 g_map_enemy_maxcount		= 35000;-- 流寇最大数量
 g_map_res_maxcount			= 6000;	-- 资源点最大数量
 g_map_event_maxcount		= 100000;-- 地图事件最大数量
 g_map_pickup_maxcount		= 2000;-- 地图拾取物品最大数量
+g_map_activity_maxcount		= 3000;-- 活动怪最大数量
 
 local WORLD_DATA_BRUSH_ENEMY_TIMER		=	1		-- 刷新流寇计时
 local WORLD_DATA_BRUSH_RES_TIMER		=	2		-- 刷新资源点计时
@@ -37,6 +43,9 @@ function IN_OnWorldMapInit( nMaxWidth, nMaxHeight )
 	
 	-- 地图拾取物品最大数量
 	c_map_pickup_maxcount( g_map_pickup_maxcount );
+	
+	-- 活动怪最大数量
+	c_map_activity_maxcount( g_map_activity_maxcount );
 end
 
 -- 地图阻挡

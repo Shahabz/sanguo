@@ -12,6 +12,7 @@
 #define ARMY_STATE_GATHER			22	// 采集中
 #define ARMY_STATE_SHELTER			23	// 庇护中
 #define ARMY_STATE_HELP				24	// 援助中
+#define ARMY_STATE_TALK				25	// 交谈中
 #define ARMY_STATE_REBACK			30	// 返程中
 #define ARMY_STATE_KINGWAR_READY	40	// 皇城战已到集结点
 #define ARMY_STATE_KINGWAR_FIGHT	41	// 皇城战排队战斗中
@@ -119,6 +120,9 @@ void army_help( int army_index );
 
 // 驻扎中
 void army_occupy( int army_index );
+
+// 部队交谈中
+void army_talk( int army_index );
 
 // 部队战斗中
 void army_fight( int army_index );

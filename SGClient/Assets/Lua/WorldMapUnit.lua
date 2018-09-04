@@ -9,6 +9,7 @@ MAPUNIT_TYPE_RES		=	5	-- 资源点
 MAPUNIT_TYPE_EVENT		=	6	-- 随机事件
 MAPUNIT_TYPE_NATIONHERO	=	7	-- 国家名将
 MAPUNIT_TYPE_PICKUP		=	8	-- 拾取物品
+MAPUNIT_TYPE_ACTIVITY		= 9	-- 活动怪
 MAPUNIT_TYPE_KINGWAR_TOWN	= 10-- 皇城血战据点
 
 MAPUNIT_TYPE_TOWN_XIAN		= 1	-- 县
@@ -79,6 +80,7 @@ local MapUnitArmy 		= nil;
 local MapUnitTown 		= nil;
 local MapUnitEnemy 		= nil;
 local MapUnitRes 		= nil;
+local MapUnitActivity 	= nil;
 local MapUnitEvent 		= nil;
 local MapUnitNationHero = nil;
 local MapUnitPickup 	= nil;
@@ -157,6 +159,12 @@ MapUnitEventShapeList = {
 [5] = "mapunit_event_5",
 }
 
+-- 活动怪形象
+MapUnitActivityShapeList = {
+[1] = "mapunit_activity_1",
+[2] = "mapunit_activity_2",
+}
+
 -- 资源点名称
 MapUnitResNameList = {
 [1] = 171,
@@ -173,6 +181,12 @@ MapUnitEventNameList = {
 [3] = 1012,
 [4] = 1013,
 [5] = 1014,
+}
+
+-- 活动怪名称
+MapUnitActivityNameList = {
+[1] = 1081,
+[2] = 1082,
 }
 
 -- 范围颜色
@@ -225,6 +239,7 @@ MapUnit.objectPoolArmy 			= {}; 	-- 部队
 MapUnit.objectPoolTown 			= {}; 	-- 城镇
 MapUnit.objectPoolEnemy 		= {}; 	-- 流寇
 MapUnit.objectPoolRes 			= {}; 	-- 资源田
+MapUnit.objectPoolActivity 		= {}; 	-- 活动怪
 MapUnit.objectPoolEvent 		= {}; 	-- 事件
 MapUnit.objectPoolNationHero 	= {}; 	-- 国家名将
 MapUnit.objectPoolPickup 		= {}; 	-- 拾取物品
@@ -241,6 +256,7 @@ function MapUnit.init()
 		MapUnitTown 		= LoadPrefab("MapUnitTown");
 		MapUnitEnemy 		= LoadPrefab("MapUnitEnemy");
 		MapUnitRes 			= LoadPrefab("MapUnitRes");
+		MapUnitActivity 	= LoadPrefab("MapUnitActivity");
 		MapUnitEvent		= LoadPrefab("MapUnitEvent");
 		MapUnitNationHero	= LoadPrefab("MapUnitNationHero");
 		MapUnitPickup		= LoadPrefab("MapUnitPickup");
@@ -275,6 +291,7 @@ function MapUnit.clear()
 	MapUnitTown 		= nil;
 	MapUnitEnemy 		= nil;
 	MapUnitRes 			= nil;
+	MapUnitActivity 	= nil;
 	MapUnitEvent 		= nil;
 	MapUnitNationHero 	= nil;
 	MapUnitPickup 	= nil;
@@ -287,6 +304,7 @@ function MapUnit.clear()
 	MapUnit.objectPoolTown 		= {};
 	MapUnit.objectPoolEnemy 	= {};
 	MapUnit.objectPoolRes 		= {};
+	MapUnit.objectPoolActivity 	= {};
 	MapUnit.objectPoolEvent 	= {};
 	MapUnit.objectPoolNationHero= {};
 	MapUnit.objectPoolPickup	= {};
@@ -322,6 +340,10 @@ function MapUnit.add( unitRoot, recvValue )
 	elseif recvValue.m_type == MAPUNIT_TYPE_RES then
 		unit = MapUnit.createRes( recvValue );
 	
+	-- 活动怪
+	elseif recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then
+		unit = MapUnit.createActivity( recvValue );
+		
 	-- 随机事件
 	elseif recvValue.m_type == MAPUNIT_TYPE_EVENT then
 		unit = MapUnit.createEvent( recvValue );
@@ -1059,6 +1081,53 @@ function MapUnit.createRes( recvValue )
 		SetText( uiName, " "..T(MapUnitResNameList[restype]), Hex2Color( 0xFFFFFFFF ) )
 		uiEffectGather.gameObject:SetActive( false );
 	end
+	return unitObj;
+end
+
+-- 创建活动怪
+function MapUnit.createActivity( recvValue )
+	local state 	= recvValue.m_state;
+	local posx 		= recvValue.m_posx;
+	local posy 		= recvValue.m_posy;
+	local kind		= recvValue.m_char_value[1];
+	local level		= recvValue.m_char_value[1];
+	local type 		= recvValue.m_char_value[1];
+	local hp		= 0;
+	local maxhp		= 0;
+	
+	-- 先搜索缓存，如果缓存有，那么就更新
+	local unitObj = MapUnit.cache[recvValue.m_unit_index];
+	
+	-- 先检查对象缓存池是否有空余的
+	if unitObj == nil then
+		for index, unit in pairs( MapUnit.objectPoolActivity ) do
+			if unit and unit.gameObject.activeSelf == false then
+				unitObj = unit;
+				break;
+			end
+		end
+	end
+	
+	-- 没有空余的就新创建一个
+	if unitObj == nil then
+		unitObj = GameObject.Instantiate( MapUnitActivity );
+		unitObj.transform:SetParent( MapUnit.unitRoot );
+		table.insert( MapUnit.objectPoolActivity, unitObj );
+	end
+	
+	-- 位置
+	local cameraPosX, cameraPosY = WorldMap.ConvertGameToCamera( posx, posy );
+	posx, posy = MapUnit.getGridTrans( MAPUNIT_TYPE_ACTIVITY, 0, cameraPosX, cameraPosY );
+	unitObj.transform.localPosition = Vector3.New( posx, posy, posy-1 );
+	
+	-- 获取引用
+	local objs = unitObj.transform:GetComponent( typeof(Reference) ).relatedGameObject;
+	local uiShape = objs[0];
+	local uiName = objs[1];
+	
+	-- 形象
+    uiShape:GetComponent("SpriteRenderer").sprite = LoadSprite( MapUnitActivityShapeList[kind] );
+	SetText( uiName, T(MapUnitActivityNameList[kind]) )
 	return unitObj;
 end
 

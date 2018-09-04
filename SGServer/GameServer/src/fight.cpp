@@ -17,6 +17,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_activity.h"
 #include "army.h"
 #include "army_group.h"
 #include "server_netsend_auto.h"
@@ -69,6 +70,9 @@ extern int g_map_enemy_maxcount;
 
 extern MapRes *g_map_res;
 extern int g_map_res_maxcount;
+
+extern MapActivity *g_map_activity;
+extern int g_map_activity_maxcount;
 
 extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
@@ -279,7 +283,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 
 	fight_debug( "\n\n============================================== FIGHT START ==============================================" );
 	int result = 0;
-
+	short attack_actorlevel = 0;
 	// 攻击方为玩家
 	if ( g_army[attack_armyindex].from_type == MAPUNIT_TYPE_CITY )
 	{
@@ -299,6 +303,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
 			if ( !config )
 				continue;
+			attack_actorlevel = pCity->level;
 			fight_add_hero( FIGHT_ATTACK, MAPUNIT_TYPE_ARMY, attack_armyindex, FIGHT_UNITTYPE_LEADER_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
 
@@ -370,6 +375,41 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		}
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
+	}
+	// 防御方为活动怪
+	else if ( defense_type == MAPUNIT_TYPE_ACTIVITY )
+	{
+		g_fight.type = FIGHTTYPE_ENEMY;
+		if ( defense_index < 0 || defense_index >= g_map_activity_maxcount )
+			return -1;
+		MapActivityInfo *config = map_activity_getconfig( g_map_activity[defense_index].kind );
+		if ( !config )
+			return -1;
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			short monsterid = config->monsterid[tmpi];
+			if ( monsterid <= 0 || monsterid >= g_monster_maxnum )
+				continue;
+			MonsterInfo *pMonster = &g_monster[monsterid];
+			if ( !pMonster )
+				continue;
+			short level = 0;
+			if ( pMonster->level > 0 )
+			{
+				level = pMonster->level;
+			}
+			else
+			{
+				level = attack_actorlevel;
+			}
+
+			int base_attack = ATTACK( level, pMonster->attack, pMonster->attack_growth );
+			int base_defense = DEFENSE( level, pMonster->defense, pMonster->defense_growth );
+			int base_troops = TROOPS( level, pMonster->troops, pMonster->troops_growth );
+
+			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ACTIVITY, defense_index, FIGHT_UNITTYPE_MONSTER, tmpi, monsterid, pMonster->shape, level, (char)pMonster->color, (char)pMonster->corps,
+				base_attack, base_defense, base_troops, base_troops, pMonster->attack_increase, pMonster->defense_increase, pMonster->assault, pMonster->defend, (char)pMonster->line, (char)pMonster->skill, 0 );
+		}
 	}
 	// 防御方为国家名将
 	else if ( defense_type == MAPUNIT_TYPE_NATIONHERO )
@@ -1605,7 +1645,7 @@ int fight_unit2json()
 			DefenseNation = g_map_town[townid].nation;
 		}
 	}
-	else if ( g_fight.defense_type == MAPUNIT_TYPE_ENEMY || g_fight.defense_type == MAPUNIT_TYPE_NATIONHERO )
+	else if ( g_fight.defense_type == MAPUNIT_TYPE_ENEMY || g_fight.defense_type == MAPUNIT_TYPE_ACTIVITY || g_fight.defense_type == MAPUNIT_TYPE_NATIONHERO )
 	{
 		FightUnit *pUnit = &g_fight.defense_unit[0];
 

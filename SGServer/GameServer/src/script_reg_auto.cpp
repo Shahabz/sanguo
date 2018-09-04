@@ -27,6 +27,7 @@ extern "C"
 #include "map_res.h"
 #include "map_event.h"
 #include "map_pickup.h"
+#include "map_activity.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -45,6 +46,9 @@ extern int g_map_event_maxcount;
 
 extern MapPickup *g_map_pickup;
 extern int g_map_pickup_maxcount;
+
+extern MapActivity *g_map_activity;
+extern int g_map_activity_maxcount;
 
 extern char g_open_zone_sili;
 extern char g_open_zone_luoyang;
@@ -116,6 +120,11 @@ static int lua_c_system_gettoday( lua_State *servL );
 static int lua_c_system_getweek( lua_State *servL );
 static int lua_c_system_getmonth( lua_State *servL );
 static int lua_c_award_getaward( lua_State *servL );
+static int lua_c_map_activity_maxcount( lua_State *servL );
+static int lua_c_map_activity_create( lua_State *servL );
+static int lua_c_map_activity_delete( lua_State *servL );
+static int lua_c_map_activity_info( lua_State *servL );
+static int lua_c_map_activity_num( lua_State *servL );
 
 void lua_func_register()
 {
@@ -184,6 +193,11 @@ void lua_func_register()
 	lua_register( servL, "c_system_getweek", lua_c_system_getweek );
 	lua_register( servL, "c_system_getmonth", lua_c_system_getmonth );
 	lua_register( servL, "c_award_getaward", lua_c_award_getaward );
+	lua_register( servL, "c_map_activity_maxcount", lua_c_map_activity_maxcount );
+	lua_register( servL, "c_map_activity_create", lua_c_map_activity_create );
+	lua_register( servL, "c_map_activity_delete", lua_c_map_activity_delete );
+	lua_register( servL, "c_map_activity_info", lua_c_map_activity_info );
+	lua_register( servL, "c_map_activity_num", lua_c_map_activity_num );
 }
 
 static int lua_c_item_name( lua_State *servL )
@@ -1492,6 +1506,121 @@ static int lua_c_map_pickup_num( lua_State *servL )
 	short kind = (short )lua_tointeger( servL, 2 );
 	//--Process script
 	int count = map_pickup_num( zoneid, kind );
+	lua_pushinteger( servL, count );
+	return 1;
+}
+
+static int lua_c_map_activity_maxcount( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int maxcount = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_activity_maxcount_set( maxcount );
+	return 0;
+}
+
+static int lua_c_map_activity_create( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 5 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	short kind = (short )lua_tointeger( servL, 1 );
+	short posx = (short )lua_tointeger( servL, 2 );
+	short posy = (short )lua_tointeger( servL, 3 );
+	int deltime = (int )lua_tointeger( servL, 4 );
+	int actorid = (int )lua_tointeger( servL, 5 );
+	//--Process script
+	map_activity_create( kind, posx, posy, deltime, actorid );
+	return 0;
+}
+
+static int lua_c_map_activity_delete( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	map_activity_delete( index );
+	return 0;
+}
+
+static int lua_c_map_activity_info( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 1 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	int index = (int )lua_tointeger( servL, 1 );
+	//--Process script
+	char type = 0;
+	short posx = 0;
+	short posy = 0;
+	int deltime = 0;
+	char selected_count = 0;
+	short kind = 0;
+	if ( index >= 0 && index < g_map_enemy_maxcount )
+	{
+		MapActivityInfo *config = map_activity_getconfig( g_map_activity[index].kind );
+		if ( config )
+		{
+			type = (char)config->type;
+			posx = g_map_activity[index].posx;
+			posy = g_map_activity[index].posy;
+			deltime = g_map_activity[index].deltime;
+			selected_count = 0;
+			kind = g_map_activity[index].kind;
+		}
+	}
+	lua_pushinteger( servL, type );
+	lua_pushinteger( servL, posx );
+	lua_pushinteger( servL, posy );
+	lua_pushinteger( servL, deltime );
+	lua_pushinteger( servL, selected_count );
+	lua_pushinteger( servL, kind );
+	return 6;
+}
+
+static int lua_c_map_activity_num( lua_State *servL )
+{
+	int num = lua_gettop(servL);
+	if ( num != 2 )
+	{
+		char szErrorMsg[128];
+		sprintf( szErrorMsg, "Incorrect argument to function '%s'", __FUNCTION__ );
+		lua_pushstring( servL, szErrorMsg );
+		lua_error( servL );
+		return 0;
+	}
+	char zoneid = (char )lua_tointeger( servL, 1 );
+	short kind = (short )lua_tointeger( servL, 2 );
+	//--Process script
+	int count = map_activity_num( zoneid, kind );
 	lua_pushinteger( servL, count );
 	return 1;
 }

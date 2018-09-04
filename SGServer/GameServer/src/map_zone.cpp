@@ -57,6 +57,9 @@ extern int g_zoneunit_maxcount;
 MapZone *g_map_zone = NULL;
 int g_map_zone_maxcount = 0;
 
+Pos g_mapzone_emptypos[MAPZONE_POSCOUNT] = { 0 };
+int g_mapzone_emptypos_count = 0;
+
 // 读档完毕的回调
 int map_zone_loadcb( int zoneid )
 {
@@ -418,6 +421,46 @@ int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope 
 	{
 		*pPosx = -1;
 		*pPosy = -1;
+	}
+	return 0;
+}
+
+// 随机所有空余点
+int map_zone_getemptypos( short zoneid )
+{
+	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
+		return -1;
+	memset( g_mapzone_emptypos, 0, sizeof( Pos )*MAPZONE_POSCOUNT );
+	g_mapzone_emptypos_count = 0;
+	for ( int tmpi = g_zoneinfo[zoneid].top_left_posx; tmpi <= g_zoneinfo[zoneid].bottom_right_posx; tmpi++ )
+	{
+		for ( int tmpj = g_zoneinfo[zoneid].top_left_posy; tmpj <= g_zoneinfo[zoneid].bottom_right_posy; tmpj++ )
+		{
+			short x = tmpi;
+			short y = tmpj;
+			if ( x <= 0 || y <= 0 || x >= g_map.m_nMaxWidth || y >= g_map.m_nMaxHeight )
+				continue;
+			if ( g_map.m_aTileData[x][y].unit_type > 0 )
+				continue;
+			// 找到所有的空余点
+			g_mapzone_emptypos[g_mapzone_emptypos_count].x = x;
+			g_mapzone_emptypos[g_mapzone_emptypos_count].y = y;
+			g_mapzone_emptypos_count += 1;
+			if ( g_mapzone_emptypos_count >= MAPZONE_POSCOUNT )
+				break;
+		}
+		if ( g_mapzone_emptypos_count >= MAPZONE_POSCOUNT )
+			break;
+	}
+
+	// 洗牌
+	for ( int tmpi = 0; tmpi < g_mapzone_emptypos_count; tmpi++ )
+	{
+		int index = rand() % g_mapzone_emptypos_count;
+		Pos swap;
+		memcpy( &swap, &g_mapzone_emptypos[tmpi], sizeof( Pos ) );
+		memcpy( &g_mapzone_emptypos[tmpi], &g_mapzone_emptypos[index], sizeof( Pos ) );
+		memcpy( &g_mapzone_emptypos[index], &swap, sizeof( Pos ) );
 	}
 	return 0;
 }

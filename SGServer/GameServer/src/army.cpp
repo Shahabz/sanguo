@@ -34,6 +34,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_activity.h"
 #include "map.h"
 #include "map_zone.h"
 #include "king_war.h"
@@ -126,6 +127,10 @@ int army_loadcb( int army_index )
 			map_res_setarmy( g_army[army_index].to_index, army_index );
 		}
 		hero_state = HERO_STATE_GATHER;
+	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ACTIVITY )
+	{ // 目的是活动怪
+		g_army[army_index].to_index = g_army[army_index].to_id;
 	}
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
 	{ // 目的是国家名将
@@ -306,13 +311,13 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 			pAttr->m_short_value[3] = pArmy->to_posy;
 
 			// 出发格子
-			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->from_type == MAPUNIT_TYPE_NATIONHERO )
+			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->from_type == MAPUNIT_TYPE_ACTIVITY || pArmy->from_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[1] = 1;
 			else if ( pArmy->from_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[1] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->from_index);
 
 			// 目的格子
-			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
+			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_ACTIVITY || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[3] = 1;
 			else if ( pArmy->to_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[3] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->to_index );
@@ -333,13 +338,13 @@ void army_makeunit( int army_index, SLK_NetS_AddMapUnit *pAttr )
 			pAttr->m_short_value[3] = pArmy->from_posy;
 
 			// 出发格子
-			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
+			if ( pArmy->to_type == MAPUNIT_TYPE_CITY || pArmy->to_type == MAPUNIT_TYPE_ARMY || pArmy->to_type == MAPUNIT_TYPE_ENEMY || pArmy->to_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_ACTIVITY || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[1] = 1;
 			else if ( pArmy->to_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[1] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->to_index );
 
 			// 目的格子
-			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
+			if ( pArmy->from_type == MAPUNIT_TYPE_CITY || pArmy->from_type == MAPUNIT_TYPE_ARMY || pArmy->from_type == MAPUNIT_TYPE_ENEMY || pArmy->from_type == MAPUNIT_TYPE_RES || pArmy->from_type == MAPUNIT_TYPE_ACTIVITY || pArmy->to_type == MAPUNIT_TYPE_NATIONHERO )
 				pAttr->m_char_value[3] = 1;
 			else if ( pArmy->from_type == MAPUNIT_TYPE_TOWN )
 				pAttr->m_char_value[3] = map_getobject_grid( MAPUNIT_TYPE_TOWN, pArmy->from_index );
@@ -915,6 +920,23 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			to_id = g_mapunit[info->m_to_unit_index].index;
 			hero_state = HERO_STATE_GATHER;
 		}
+		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_ACTIVITY )
+		{ // 活动怪
+			MapActivity *activity = map_activity_getptr( g_mapunit[info->m_to_unit_index].index );
+			if ( !activity )
+				return -1;
+			//if ( pCity->zone != map_zone_getid( enemy->posx, enemy->posy ) )
+			//{// 不在同一区域
+			//	actor_notify_alert( pCity->actor_index, 1322 );
+			//	return -1;
+			//}
+			// 消耗粮食
+			if ( cost_food > pCity->food )
+				return -1;
+			city_changefood( pCity->index, -cost_food, PATH_MARCH );
+			to_type = MAPUNIT_TYPE_ACTIVITY;
+			to_id = g_mapunit[info->m_to_unit_index].index;
+		}
 		else if ( g_mapunit[info->m_to_unit_index].type == MAPUNIT_TYPE_NATIONHERO )
 		{ // 国家名将
 			//if ( pCity->zone != map_zone_getid( info->m_to_posx, info->m_to_posy ) )
@@ -1121,6 +1143,12 @@ int army_create( char from_type, int from_id, char to_type, int to_id, char stat
 		int index = g_army[army_index].to_id;
 		g_army[army_index].to_index = index;
 		map_res_getpos( index, &g_army[army_index].to_posx, &g_army[army_index].to_posy );
+	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ACTIVITY )
+	{ // 目的是活动怪
+		int index = g_army[army_index].to_id;
+		g_army[army_index].to_index = index;
+		map_activity_getpos( index, &g_army[army_index].to_posx, &g_army[army_index].to_posy );
 	}
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )
 	{ // 目的是国家名将
@@ -1397,6 +1425,11 @@ void army_setstate( int army_index, char state )
 		g_army[army_index].unit_index = -1;
 		army_marchroute_del( army_index );
 		break;
+	case ARMY_STATE_TALK:				// 交谈中
+		mapunit_del( MAPUNIT_TYPE_ARMY, army_index, g_army[army_index].unit_index );
+		g_army[army_index].unit_index = -1;
+		army_marchroute_del( army_index );
+		break;
 	case ARMY_STATE_MARCH:				// 行军中
 	case ARMY_STATE_REBACK:				// 返程中
 		army_march_time( army_index );
@@ -1452,6 +1485,9 @@ void army_logic( int army_index )
 		break;
 	case ARMY_STATE_HELP:				// 援助中
 		army_help( army_index );
+		break;
+	case ARMY_STATE_TALK:				// 交谈中
+		army_talk( army_index );
 		break;
 	case ARMY_STATE_REBACK:				// 返程中
 		army_reback( army_index );
@@ -1575,6 +1611,10 @@ char *army_getname_target( int army_index )
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ENEMY )
 	{ // 目的是怪物
 	
+	}
+	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ACTIVITY )
+	{ // 目的是活动怪
+
 	}
 	else if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
 	{ // 目的是城镇
@@ -1876,7 +1916,7 @@ int army_gather( int army_index )
 	g_army[army_index].statetime += 1;
 
 	// 天气系统下采集时长
-	if ( weather_attr_checkgather( config->type ) )
+	if ( weather_attr_checkgather( (char)config->type ) )
 	{
 		g_army[army_index].gatherbuff += 1;
 	}
@@ -1914,6 +1954,17 @@ void army_occupy( int army_index )
 		return;
 	if ( g_army[army_index].action == ARMY_ACTION_OCCUPY )
 		return;
+}
+
+// 部队交谈中
+void army_talk( int army_index )
+{
+	// 已经援助时长
+	g_army[army_index].statetime += 1;
+	if ( g_army[army_index].statetime >= 2 )
+	{
+		army_setstate( army_index, ARMY_STATE_REBACK );
+	}
 }
 
 // 部队战斗
@@ -1976,6 +2027,11 @@ void army_fight( int army_index )
 			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_RES )
 			{
 				army_vs_res( army_index, &g_fight );
+			}
+			// 防御方是活动怪
+			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_ACTIVITY )
+			{
+				army_vs_activity( army_index, &g_fight );
 			}
 			// 防御方是国家名将
 			else if ( g_army[army_index].to_type == MAPUNIT_TYPE_NATIONHERO )

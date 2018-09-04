@@ -523,7 +523,7 @@ function HeroInfoDlgSet( path, pHero, up )
 	
 	-- 子女，女将
 	SetTrue(m_uiGirlBtn);	
-	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
+	--if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_FANGSHI ) == 1 then
 		-- 子女按钮
 		if g_girlson[pHero.m_kind] == nil then
 			SetFalse(m_uiSonBtn);
@@ -542,7 +542,7 @@ function HeroInfoDlgSet( path, pHero, up )
 		else
 			SetImage(m_uiGirlPicture,LoadSprite("ui_icon_back_4"));
 		end		
-	end
+	--end
 	
 	if IsGuiding() then
 		if GetCurrentGuideType() == GUIDE_SZ then

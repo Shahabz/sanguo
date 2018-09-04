@@ -42,6 +42,7 @@
 #include "mail.h"
 #include "army.h"
 #include "army_group.h"
+#include "map_activity.h"
 #include "map_zone.h"
 #include "map_town.h"
 #include "map_enemy.h"
@@ -212,6 +213,8 @@ void actors_on_core()
 	map_enemy_save( fp );
 	// 所有资源点保存
 	map_res_save( fp );
+	// 所有活动怪保存
+	map_activity_save( fp );
 	// 所有随机事件点保存
 	map_event_save( fp );
 	// 所有召唤保存

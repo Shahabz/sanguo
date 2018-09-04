@@ -236,7 +236,17 @@ function MapBattleDlgShow( recvValue, action, group_index )
 		-- 按钮名称
 		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
 		SetTrue( m_uiAttackDesc )
-			
+	
+	elseif recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then -- 活动怪
+		local kind	= recvValue.m_char_value[1];
+		SetText( m_uiTitle.transform:Find("Text"), T(MapUnitActivityNameList[kind]) )
+		SetImage( m_uiShape, LoadSprite(MapUnitActivityShapeList[kind]) )
+		SetText( m_uiName, F(4270, T(MapUnitActivityNameList[kind]), posx, posy) )
+
+		-- 按钮名称
+		SetText( m_uiBattleButton.transform:Find("Back/Text"), T(961) );
+		SetTrue( m_uiAttackDesc )
+				
 	elseif recvValue.m_type == MAPUNIT_TYPE_KINGWAR_TOWN then-- 皇城血战
 		townid = 200
 		-- 标题
@@ -476,7 +486,7 @@ function MapBattleDlgSetCost()
 		SetText( m_uiCost, "" )
 	
 	-- 流寇
-	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_type == MAPUNIT_TYPE_NATIONHERO then
+	elseif m_recvValue.m_type == MAPUNIT_TYPE_ENEMY or m_recvValue.m_type == MAPUNIT_TYPE_NATIONHERO or m_recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then
 		m_cost_food = math.ceil(global.army_march_food_v1*total + global.army_march_food_v2*(m_marchtime*m_marchtime) + global.army_march_food_v3*m_marchtime)
 		if m_cost_food > GetPlayer().m_food then
 			SetText( m_uiCost, F(965, total, knum(m_cost_food), knum(GetPlayer().m_food) ) )
@@ -624,7 +634,15 @@ function MapBattleDlgBattle()
 			return
 		end
 		sendValue.m_id = m_recvValue.m_short_value[1];
-
+		
+	-- 活动怪
+	elseif m_recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then
+		if m_cost_food > GetPlayer().m_food then
+			JumpRes(3,m_cost_food-GetPlayer().m_food)
+			return
+		end
+		sendValue.m_id = m_recvValue.m_char_value[1];
+		
 	end
 	
 	-- 派出武将

@@ -32,6 +32,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_activity.h"
 #include "map.h"
 #include "map_zone.h"
 #include "nation_hero.h"
@@ -358,6 +359,29 @@ void army_arrived( int army_index )
 			}
 
 			army_setstate( army_index, ARMY_STATE_FIGHT );
+		}
+		else if ( pUnit->type == MAPUNIT_TYPE_ACTIVITY )
+		{ // 目标是活动怪
+			MapActivity *pActivity = map_activity_getptr( pUnit->index );
+			if ( !pActivity )
+			{
+				army_setstate( army_index, ARMY_STATE_REBACK );
+				return;
+			}
+			MapActivityInfo *config = map_activity_getconfig( pActivity->kind );
+			if ( !config )
+			{
+				army_setstate( army_index, ARMY_STATE_REBACK );
+				return;
+			}
+			if ( config->type == 0 )
+			{ // 战斗
+				army_setstate( army_index, ARMY_STATE_FIGHT );
+			}
+			else if ( config->type == 1 )
+			{ // 交谈
+				army_setstate( army_index, ARMY_STATE_TALK );
+			}
 		}
 	}
 	else

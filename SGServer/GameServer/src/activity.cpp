@@ -11,6 +11,7 @@
 #include "script_auto.h"
 #include "server_netsend_auto.h"
 #include "activity.h"
+#include "wqueue.h"
 #include "timegmcmd.h"
 #include "gmcmd.h"
 #include "system.h"
@@ -25,6 +26,9 @@
 #include "mail.h"
 #include "activity_04.h"
 #include "equip.h"
+#include "map.h"
+#include "map_activity.h"
+#include "map_zone.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -70,6 +74,12 @@ extern int g_activity_33_maxnum;
 
 extern PayBag g_paybag[CITY_BAG_MAX];
 extern Nation g_nation[NATION_MAX];
+
+extern MapZoneInfo *g_zoneinfo;
+extern int g_zoneinfo_maxnum;
+
+extern Pos g_mapzone_emptypos[MAPZONE_POSCOUNT];
+extern int g_mapzone_emptypos_count;
 
 // 系统初始化
 int activity_init()
@@ -348,6 +358,9 @@ int activity_onwarning( int activityid, int lefttime )
 	{
 	case ACTIVITY_NORMAL:
 		break;
+	case ACTIVITY_27:
+		activity_27_onwarning( lefttime );
+		break;
 	default:
 		break;
 	}
@@ -367,6 +380,9 @@ int activity_onopen( int activityid )
 		break;
 	case ACTIVITY_17:
 		activity_17_onopen();
+		break;
+	case ACTIVITY_27:
+		activity_27_onopen();
 		break;
 	case ACTIVITY_33:
 		activity_33_onopen();
@@ -392,6 +408,9 @@ int activity_onend( int activityid )
 	case ACTIVITY_17:
 		activity_17_onend();
 		break;
+	case ACTIVITY_27:
+		activity_27_onend();
+		break;
 	case ACTIVITY_33:
 		activity_33_onend();
 		break;
@@ -416,6 +435,9 @@ int activity_onclose( int activityid )
 	case ACTIVITY_17:
 		activity_17_onclose();
 		break;
+	case ACTIVITY_27:
+		activity_27_onclose();
+		break;
 	case ACTIVITY_33:
 		activity_33_onclose();
 		break;
@@ -434,6 +456,9 @@ int activity_onlogic( int activityid )
 	switch( activityid )
 	{
 	case 0:
+		break;
+	case ACTIVITY_27:
+		activity_27_onlogic();
 		break;
 	default:
 		sc_ActivityOnLogic( activityid );
@@ -490,6 +515,10 @@ int activity_sendlist( int actor_index )
 					break;
 				}
 			}
+		}
+		else if ( activityid == ACTIVITY_27 )
+		{ // 西凉暴乱
+			
 		}
 		pValue.m_count += 1;
 	}
@@ -744,6 +773,10 @@ char activity_checkred( int actor_index )
 		//		}
 		//	}
 		//}
+		else if ( activityid == ACTIVITY_27 )
+		{ // 西凉暴乱
+			
+		}
 	}
 	
 	if ( nowtime->tm_hour >= 12 && nowtime->tm_hour <= 14 && actor_get_today_char_times( actor_index, TODAY_CHAR_ACTIVITY_BODYGET1 ) == 0 )
@@ -1489,6 +1522,80 @@ int activity_25_get( int actor_index )
 	g_actors[actor_index].act25_isget = 1;
 	activity_25_sendinfo( actor_index );
 	actor_redinfo( actor_index, 4 );
+	return 0;
+}
+
+// 西凉暴乱
+int g_activity_27_brushtime = 0;
+void activity_27_onwarning( int lefttime )
+{
+	if ( lefttime < 0 )
+		return;
+	int countdown = lefttime / 60; //倒计时（分钟）
+	
+	// 6033	据前哨来报，西凉暴乱，{0}分钟后将出现大量西凉铁骑，各位英雄速速前往平叛！
+	if ( countdown == 10 || countdown == 5 || countdown == 1 )
+	{
+		char v1[64] = { 0 };
+		sprintf( v1, "%d", countdown );
+		system_talkjson_world( 6033, v1, NULL, NULL, NULL, NULL, NULL, 2 );
+	}
+}
+void activity_27_onopen()
+{
+	g_activity_27_brushtime = 0;
+	activity_27_brush();
+}
+void activity_27_onend()
+{
+	// 6035	西凉叛军已被剿灭，我们大获全胜，还望各位英雄加固城防，积蓄粮草，训练勇士，以防叛军再犯！
+	system_talkjson_world( 6035, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
+	map_activity_delete_withactivityid( ACTIVITY_27 );
+}
+void activity_27_onclose()
+{
+	
+}
+void activity_27_onlogic()
+{
+	g_activity_27_brushtime += 1;
+	if ( g_activity_27_brushtime >= global.activity27_brushmin )
+	{
+		g_activity_27_brushtime = 0;
+		activity_27_brush();
+
+		// 6034	西凉铁骑增援部队出现！
+		system_talkjson_world( 6034, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
+	}
+}
+int activity_27_brush()
+{
+	// 按地区刷新
+	for ( char zoneid = 1; zoneid < g_zoneinfo_maxnum; zoneid++ )
+	{
+		brush_enemy_queue_add( BRUSH_ENEMY_QUEUE_ACTIVITY27, zoneid );
+	}	
+	return 0;
+}
+int activity_27_brush_withzoneid( int zoneid )
+{
+	// 获得已经存在的
+	int hasnum = map_activity_num_withactivityid( zoneid, ACTIVITY_27 );
+	int brushnum = global.activity27_brushcount - hasnum;
+	if ( brushnum > 0 )
+	{
+		// 随机所有的空余位置
+		map_zone_getemptypos( zoneid );
+		for ( int tmpi = 0; tmpi < brushnum; tmpi++ )
+		{
+			map_activity_create( 1, g_mapzone_emptypos[tmpi].x, g_mapzone_emptypos[tmpi].y, 0, 0 );
+		}
+	}
+	return 0;
+}
+int activity_27_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
 	return 0;
 }
 

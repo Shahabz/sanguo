@@ -474,7 +474,23 @@ function MailDlgSetMail( recvValue )
 			else
 				SetRichText( uiContent, F(1111, name, heroname ) )
 			end
-			SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_8") )
+		
+		-- 活动怪
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY then
+			local win = recvValue.m_content_json["win"];
+			local name = recvValue.m_content_json["name"];
+			local kind = recvValue.m_content_json["kind"];
+			local level = recvValue.m_content_json["lv"];
+			local pos = recvValue.m_content_json["pos"];
+			local tpos = recvValue.m_content_json["tpos"];
+			local monstername = T(MapUnitActivityNameList[kind])
+			if win == 1 then
+				SetRichText( uiContent, F(1110, name, monstername ) )
+			else
+				SetRichText( uiContent, F(1111, name, monstername ) )
+			end
+			SetImage( uiShape, LoadSprite("ui_mail_icon_11") )
 		end
 	end
 
@@ -500,6 +516,11 @@ function MailDlgSetMail( recvValue )
 		else
 			SetText( uiTitle, GetMail().m_localize_text[textid] )
 		end
+	-- 活动怪	
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY then
+		local kind = recvValue.m_content_json["kind"];
+		local title = GetMail():GetString( recvValue.m_title );
+		SetText(uiTitle, Utils.StringFormat(title, T(MapUnitActivityNameList[kind])))
 	else
 		-- 其它类型解析
 		local title = GetMail():GetString( recvValue.m_title );

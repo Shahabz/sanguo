@@ -5,6 +5,7 @@
 #define MAPZONE_TYPE_SILI		1 // 司隶
 #define MAPZONE_CENTERID		5 // 司隶
 #define MAPZONE_MAXNUM			10 // 1-9
+#define MAPZONE_POSCOUNT		10000 // 一个区域格子数量
 
 int map_zone_load();
 int map_zone_save( FILE *fp );
@@ -37,6 +38,9 @@ int map_zone_randpos( short zoneid, short *pPosx, short *pPosy, int scope );
 
 // 指定地区和国家领土随机一个空坐标
 int map_zone_nation_randpos( char nation, short *pPosx, short *pPosy, int scope );
+
+// 随机所有空余点
+int map_zone_getemptypos( short zoneid );
 
 // 地区切换
 void map_zone_change( int actor_index, short posx, short posy, char areaupdate );

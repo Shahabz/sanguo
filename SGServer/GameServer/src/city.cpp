@@ -30,6 +30,7 @@
 #include "army_group.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_activity.h"
 #include "map_event.h"
 #include "map_call.h"
 #include "mail.h"
@@ -4332,6 +4333,16 @@ int city_spy( int actor_index, int unit_index, int type )
 							if ( res )
 							{
 								kind = res->kind;
+							}
+							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, kind );
+						}
+						else if ( pArmy->to_type == MAPUNIT_TYPE_ACTIVITY )
+						{
+							int kind = 0;
+							MapActivity *activity = map_activity_getptr( pArmy->to_index );
+							if ( activity )
+							{
+								kind = activity->kind;
 							}
 							sprintf( szInfo, "\"armystate\":%d,\"armytime\":%d,\"totype\":%d,\"tokind\":%d", pArmy->state, pArmy->statetime, pArmy->to_type, kind );
 						}

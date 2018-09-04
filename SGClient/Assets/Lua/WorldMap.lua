@@ -940,6 +940,11 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			MapNationHeroDlgShow( recvValue )
 			return
 			
+		-- 活动怪	
+		elseif recvValue.m_type == MAPUNIT_TYPE_ACTIVITY then
+			MapClickEffect.gameObject:SetActive( false );
+			MapActivityDlgShow( recvValue )
+			return
 		end
 	end
 	

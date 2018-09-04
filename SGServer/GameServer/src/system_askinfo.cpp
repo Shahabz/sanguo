@@ -31,6 +31,7 @@
 #include "map_town.h"
 #include "map_enemy.h"
 #include "map_res.h"
+#include "map_activity.h"
 #include "map_event.h"
 #include "map_call.h"
 #include "map_pickup.h"
@@ -544,6 +545,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 15 )
 		{  // Ê°È¡
 			map_pickup_get( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 16 )
+		{  // »î¶¯¹Ö½±Àø
+			map_activity_sendaward( actor_index, pvalue[1] );
 		}
 		break;
 	case ASKINFO_MAP_EVENT:

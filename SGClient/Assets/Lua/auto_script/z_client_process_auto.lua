@@ -403,6 +403,8 @@ function proc_awardinfolist_C( recvValue )
 		MapNationHeroDlgRecvAward( recvValue )
 	elseif recvValue.m_callback_code == 5 then
 		FangshiDlgPlaceInfoRecv( recvValue )
+	elseif recvValue.m_callback_code == 6 then
+		MapActivityDlgRecvAward( recvValue )
 	end
 end
 

@@ -50,6 +50,7 @@ int exec_queue_fetch();
 #define	BRUSH_ENEMY_QUEUE_ENEMY		0
 #define	BRUSH_ENEMY_QUEUE_RES		1
 #define	BRUSH_ENEMY_QUEUE_PICKUP	2
+#define	BRUSH_ENEMY_QUEUE_ACTIVITY27	3
 
 // 创建队列防止同一帧做太多事情
 typedef struct _brush_enemy_queue

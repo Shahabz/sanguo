@@ -131,6 +131,16 @@ int activity_17_get( int actor_index, int id );
 int activity_25_sendinfo( int actor_index );
 int activity_25_get( int actor_index );
 
+// 西凉暴乱
+void activity_27_onwarning( int lefttime );
+void activity_27_onopen();
+void activity_27_onend();
+void activity_27_onclose();
+void activity_27_onlogic();
+int activity_27_brush();
+int activity_27_brush_withzoneid( int zoneid );
+int activity_27_sendinfo( int actor_index );
+
 // 充值排名活动
 #define ACTIVITY33_MEMBERMAX	100
 typedef struct _activity_33_rank

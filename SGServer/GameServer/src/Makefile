@@ -45,6 +45,7 @@ SRC = \
 ../AutoS/src/auto_data_monster.cpp \
 ../AutoS/src/auto_data_robot_base.cpp \
 ../AutoS/src/auto_data_nation_official.cpp \
+../AutoS/src/auto_data_map_activityinfo.cpp \
 ../AutoS/src/server_structrecv_auto.cpp \
 ../AutoS/src/auto_data_official_gov.cpp \
 ../AutoS/src/auto_data_activity_05.cpp \
@@ -102,6 +103,7 @@ SRC = \
 ../AutoS/src/auto_data_story.cpp \
 ../AutoS/src/auto_city_building_barracks.cpp \
 ../AutoS/src/auto_actor_friend.cpp \
+../AutoS/src/auto_map_activity.cpp \
 ../AutoS/src/auto_data_weather.cpp \
 ../AutoS/src/auto_data_map_towninfo.cpp \
 ../AutoS/src/auto_data_vipbag.cpp \
@@ -132,6 +134,7 @@ world_quest.cpp \
 map_zone.cpp \
 actor_friend.cpp \
 client.cpp \
+map_activity.cpp \
 king_war.cpp \
 story.cpp \
 system_askinfo.cpp \
@@ -296,6 +299,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_nation_official.o: ../AutoS/src/auto_data_nation_official.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_map_activityinfo.o: ../AutoS/src/auto_data_map_activityinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/server_structrecv_auto.o: ../AutoS/src/server_structrecv_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_official_gov.o: ../AutoS/src/auto_data_official_gov.cpp 
@@ -410,6 +415,8 @@ $(EXE) : $(OBJ)
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_actor_friend.o: ../AutoS/src/auto_actor_friend.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_map_activity.o: ../AutoS/src/auto_map_activity.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_weather.o: ../AutoS/src/auto_data_weather.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_towninfo.o: ../AutoS/src/auto_data_map_towninfo.cpp 
@@ -469,6 +476,8 @@ map_zone.o: map_zone.cpp
 actor_friend.o: actor_friend.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 client.o: client.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+map_activity.o: map_activity.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 king_war.o: king_war.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

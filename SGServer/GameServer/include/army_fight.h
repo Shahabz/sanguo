@@ -7,6 +7,9 @@ int army_vs_enemy( int army_index, Fight *pFight );
 // 与采集资源的部队战斗结果
 int army_vs_res( int army_index, Fight *pFight );
 
+// 与活动怪的部队战斗结果
+int army_vs_activity( int army_index, Fight *pFight );
+
 // 与国家名将战斗结果
 int army_vs_nationhero( int army_index, Fight *pFight );
 #endif

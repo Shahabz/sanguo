@@ -145,6 +145,7 @@
 #define PATH_ACTIVITY25					110	// 首日免费
 #define PATH_EVERYDAY_QUEST				111 // 每日任务
 #define PATH_EVERYDAY_SHOP				112 // 每日商店
+#define PATH_ACTIVITY_MONSTER			113	// 活动怪
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

@@ -390,7 +390,7 @@ function MapMainDlgBattleSet( root, index, info )
 			elseif info.m_to_type == MAPUNIT_TYPE_TOWN then
 				SetText( uiState, T(969) )
 				SetTrue( uiGpsBtn )
-			elseif info.m_to_type == MAPUNIT_TYPE_ENEMY or info.m_to_type == MAPUNIT_TYPE_NATIONHERO then
+			elseif info.m_to_type == MAPUNIT_TYPE_ENEMY or info.m_to_type == MAPUNIT_TYPE_NATIONHERO or info.m_to_type == MAPUNIT_TYPE_ACTIVITY then
 				SetText( uiState, T(974) )
 				SetTrue( uiQuickBtn )
 			elseif info.m_to_type == MAPUNIT_TYPE_RES then
