@@ -50,6 +50,7 @@ local f_awardPosition = {}; --存储十连抽每个奖励的位置
 local i_tweenId = 1; --十连寻访每个奖励物品的nControlID 
 local i_freeTimes = 0 ; --免费寻访次数
 local i_itemTimes = 0 ;--道具数量
+local h_freeTimes = 0 ; --免费寻访次数
 local t_getHero ={} ; --已用于英雄列表
 local objCache = {
  [101] = 17 ,[102] = 18,[103] = 19,[104] = 20,[105]= 21,[106] = 22,[107] = 23,[108] = 24,[109] = 25,
@@ -299,7 +300,7 @@ function HeroVisitDlgRecv( recvValue )
 	m_recvValue = recvValue;
 	i_goodTimesNum = recvValue.m_hv_low_num ;
 	i_godTimesNum = recvValue.m_hv_high_num ;
-	if	recvValue.m_hv_free_cd == 0 then
+	if	recvValue.m_hv_free_cd <= 0 then
 		i_freeTimes = 1;
 		SetTrue(m_uiDot);
 		SetFalse(m_uiOpenTime);
@@ -312,8 +313,8 @@ function HeroVisitDlgRecv( recvValue )
 		SetTimer( m_uiOpenTime, recvValue.m_hv_free_cd, recvValue.m_hv_free_cd, 1,T(1950) );
 	end
 	if recvValue.m_hv_high_sec > 0  then
-		i_freeTimes = recvValue.m_hv_high_free;
-		if i_freeTimes > 0 then
+		h_freeTimes = recvValue.m_hv_high_free;
+		if recvValue.m_hv_high_free > 0 then
 			SetTrue(m_uiGodDot);
 		else
 			SetFalse(m_uiGodDot);
@@ -553,6 +554,7 @@ function HeroVisitDlgOpenAward( controlid )
 				tokenCount=tokenCount+1;
 			end
 		end	
+		
 	elseif controlid == 3 then
 		SetText(m_uiOneUpText,T(1961));
 		i_TimesNum = global.hero_visit_high_max - i_godTimesNum ;
@@ -591,28 +593,42 @@ function HeroVisitDlgOpenAward( controlid )
 end
 --设置奖励页面下排按钮显示
 function HeroVisitDlgDownBtn()
-	if i_freeTimes > 0 or i_itemTimes > 0 then
-		SetFalse(m_uiOnceBtn);
-		SetFalse(m_uiTenthBtn);
-		SetTrue( m_uiFreeItemBtnGroup );
-		if i_freeTimes > 0 then
-			SetText(m_uiFreeItemText,T(1971));
-		else
-			if i_controlID == 2 then
+	
+	-- 良将
+	if i_controlID == 2 then	
+		if i_freeTimes > 0 or i_itemTimes > 0 then
+			SetFalse(m_uiOnceBtn);
+			SetFalse(m_uiTenthBtn);
+			SetTrue( m_uiFreeItemBtnGroup );
+			if i_freeTimes > 0 then
+				SetText(m_uiFreeItemText,T(1971));
+			else
 				SetText(m_uiFreeItemText,F(1969,global.hero_visit_low_itemnum ,i_itemTimes));
-			elseif i_controlID == 3 then
-				
+			end
+		else
+			SetTrue(m_uiOnceBtn);
+			SetTrue(m_uiTenthBtn);
+			SetFalse( m_uiFreeItemBtnGroup );
+			SetText(m_uiOnceText,global.hero_visit_low_token);	
+			SetText(m_uiTenthText,global.hero_visit_low_token10);	
+			
+		end
+	
+	-- 名将
+	elseif i_controlID == 3 then
+		if h_freeTimes > 0 or i_itemTimes > 0 then
+			SetFalse(m_uiOnceBtn);
+			SetFalse(m_uiTenthBtn);
+			SetTrue( m_uiFreeItemBtnGroup );
+			if m_recvValue.m_hv_high_free > 0 then
+				SetText(m_uiFreeItemText,T(1971));
+			else
 				SetText(m_uiFreeItemText,F(1970,global.hero_visit_high_itemnum,i_itemTimes));
 			end
-		end
-	else
-		SetTrue(m_uiOnceBtn);
-		SetTrue(m_uiTenthBtn);
-		SetFalse( m_uiFreeItemBtnGroup );
-		if i_controlID == 2 then
-			SetText(m_uiOnceText,global.hero_visit_low_token);	
-			SetText(m_uiTenthText,global.hero_visit_low_token10);		
-		elseif i_controlID == 3 then
+		else
+			SetTrue(m_uiOnceBtn);
+			SetTrue(m_uiTenthBtn);
+			SetFalse( m_uiFreeItemBtnGroup );
 			SetText(m_uiOnceText,global.hero_visit_high_token);
 			SetText(m_uiTenthText,global.hero_visit_high_token10);
 		end
@@ -686,25 +702,52 @@ function HeroVisitDlgSetCell(uiHeroObj,value)
 end
 --单次寻访开始前判断灰化哪种按钮
 function HeroVisitDlgVisitBefore()
-	if i_freeTimes > 0 or i_itemTimes > 0 then 
-		SetButtonFalse(m_uiFreeItemBtn);
-	else
-		SetButtonFalse(m_uiOnceBtn);
-		SetButtonFalse(m_uiTenthBtn);
+	if i_controlID == 2 then
+		if i_freeTimes > 0 or i_itemTimes > 0 then 
+			SetButtonFalse(m_uiFreeItemBtn);
+		else
+			SetButtonFalse(m_uiOnceBtn);
+			SetButtonFalse(m_uiTenthBtn);
+		end
+	
+	elseif i_controlID == 3 then
+		if h_freeTimes > 0 or i_itemTimes > 0 then
+			SetButtonFalse(m_uiFreeItemBtn);
+		else
+			SetButtonFalse(m_uiOnceBtn);
+			SetButtonFalse(m_uiTenthBtn);
+		end
+		
 	end
+	
 end
 --单次寻访结束后执行的一系列方法
 function HeroVisitDlgVisitLater()
-	if i_freeTimes > 0 or i_itemTimes > 0 then 
-		SetButtonTrue(m_uiFreeItemBtn);
-		if	i_freeTimes > 0 then
-			i_freeTimes = 0;
-		elseif i_itemTimes > 0 then
-			i_itemTimes = i_itemTimes -1;
+	if i_controlID == 2 then
+		if i_freeTimes > 0 or i_itemTimes > 0 then 
+			SetButtonTrue(m_uiFreeItemBtn);
+			if	i_freeTimes > 0 then
+				i_freeTimes = 0;
+			elseif i_itemTimes > 0 then
+				i_itemTimes = i_itemTimes -1;
+			end
+		else
+			SetButtonTrue(m_uiOnceBtn);
+			SetButtonTrue(m_uiTenthBtn);
 		end
-	else
-		SetButtonTrue(m_uiOnceBtn);
-		SetButtonTrue(m_uiTenthBtn);
+	
+	elseif i_controlID == 3 then
+		if h_freeTimes > 0 or i_itemTimes > 0 then 
+			SetButtonTrue(m_uiFreeItemBtn);
+			if	h_freeTimes > 0 then
+				h_freeTimes = h_freeTimes - 1;
+			elseif i_itemTimes > 0 then
+				i_itemTimes = i_itemTimes -1;
+			end
+		else
+			SetButtonTrue(m_uiOnceBtn);
+			SetButtonTrue(m_uiTenthBtn);
+		end
 	end
 	HeroVisitDlgDownBtn();
 end

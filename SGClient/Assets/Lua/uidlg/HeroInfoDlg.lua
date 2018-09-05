@@ -244,8 +244,13 @@ function HeroInfoDlgSet( path, pHero, up )
 	SetText( m_uiName, HeroNameEx(pHero.m_kind ) )
 	
 	-- 经验
-	SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
-	SetText( m_uiExpPanel.transform:Find("Text"), knum(pHero.m_exp).."/"..knum(pHero.m_exp_max) )
+	if pHero.m_exp_max == -1 then
+		SetProgress( m_uiExpPanel.transform:Find("Progress"), 1 )
+		SetText( m_uiExpPanel.transform:Find("Text"), "MAX" )
+	else
+		SetProgress( m_uiExpPanel.transform:Find("Progress"), pHero.m_exp/pHero.m_exp_max )
+		SetText( m_uiExpPanel.transform:Find("Text"), knum(pHero.m_exp).."/"..knum(pHero.m_exp_max) )
+	end
 	
 	-- 兵力
 	SetProgress( m_uiSoldierPanel.transform:Find("Progress"), pHero.m_soldiers/pHero.m_troops )

@@ -218,6 +218,10 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				city_everyday_event_add( pCity );
 			}
 		}
+		else if ( pValue[0] == 12 )
+		{
+
+		}
 		break;
 	case GMC_SC:
 		sc_Script_Command( pValue[0], pValue[1], pValue[2], pValue[3], pMsg, actor_index );
