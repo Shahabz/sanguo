@@ -1445,9 +1445,17 @@ void activity_12_onopen()
 		g_city[tmpi].act12_turn = 0;
 		g_city[tmpi].act12_idx = -1;
 	}
+	SLK_NetS_RedInfo pValue = { 0 };
+	pValue.m_path = 6;
+	pValue.m_has = 1;
+	netsend_redinfo_S( 0, SENDTYPE_WORLD, &pValue );
 }
 void activity_12_onend()
 {
+	SLK_NetS_RedInfo pValue = { 0 };
+	pValue.m_path = 6;
+	pValue.m_has = 0;
+	netsend_redinfo_S( 0, SENDTYPE_WORLD, &pValue );
 }
 void activity_12_onclose()
 {
@@ -1724,12 +1732,22 @@ void activity_27_onopen()
 {
 	g_activity_27_brushtime = 0;
 	activity_27_brush();
+
+	SLK_NetS_RedInfo pValue = { 0 };
+	pValue.m_path = 7;
+	pValue.m_has = 1;
+	netsend_redinfo_S( 0, SENDTYPE_WORLD, &pValue );
 }
 void activity_27_onend()
 {
 	// 6035	西凉叛军已被剿灭，我们大获全胜，还望各位英雄加固城防，积蓄粮草，训练勇士，以防叛军再犯！
 	system_talkjson_world( 6035, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
 	map_activity_delete_withactivityid( ACTIVITY_27 );
+
+	SLK_NetS_RedInfo pValue = { 0 };
+	pValue.m_path = 7;
+	pValue.m_has = 0;
+	netsend_redinfo_S( 0, SENDTYPE_WORLD, &pValue );
 }
 void activity_27_onclose()
 {

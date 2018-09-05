@@ -1466,6 +1466,42 @@ int process_oclock_process( int hour )
 		nation_hero_subloyal();
 	}
 
+	if ( hour == 8 )
+	{ // 8点开始预热今天的活动
+		int nowstamp = (int)time( NULL );
+		int week = system_getweek();
+		if ( week == 1 || week == 3 || week == 6 )
+		{ // 南蛮入侵
+			time_t t;
+			time( &t );
+			struct tm *nowtime = localtime( &t );
+			struct tm BeginTm = { 0 };
+			BeginTm.tm_year = nowtime->tm_year;
+			BeginTm.tm_mon = nowtime->tm_mon;
+			BeginTm.tm_mday = nowtime->tm_mday;
+			BeginTm.tm_hour = global.activity12_begintime;
+			BeginTm.tm_min = 0;
+			BeginTm.tm_sec = 0;
+			int beginstamp = (int)mktime( &BeginTm );
+			activity_set( ACTIVITY_12, nowstamp, beginstamp, beginstamp + global.activity12_duration, beginstamp + global.activity12_duration + 3600 );
+		}
+		else if ( week == 0 || week == 2 || week == 4 )
+		{ // 西凉暴乱
+			time_t t;
+			time( &t );
+			struct tm *nowtime = localtime( &t );
+			struct tm BeginTm = { 0 };
+			BeginTm.tm_year = nowtime->tm_year;
+			BeginTm.tm_mon = nowtime->tm_mon;
+			BeginTm.tm_mday = nowtime->tm_mday;
+			BeginTm.tm_hour = global.activity27_begintime;
+			BeginTm.tm_min = 0;
+			BeginTm.tm_sec = 0;
+			int beginstamp = (int)mktime( &BeginTm );
+			activity_set( ACTIVITY_27, nowstamp, beginstamp, beginstamp + global.activity27_duration, beginstamp + global.activity27_duration + 3600 );
+		}
+	}
+
 	if ( hour == global.nation_quest_timer[0] || hour == global.nation_quest_timer[1] || hour == global.nation_quest_timer[2] )
 	{ // 刷新国家任务
 		nation_quest_update();
@@ -1815,6 +1851,7 @@ int process_dbreload()
 	mapeventinfo_reload_auto();
 	mapresinfo_reload_auto();
 	maptowninfo_reload_auto();
+	mapactivityinfo_reload_auto();
 	monsterinfo_reload_auto();
 	fighthelper_reload_auto();
 	paygoods_reload_auto();

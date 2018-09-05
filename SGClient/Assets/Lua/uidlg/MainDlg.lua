@@ -323,7 +323,15 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 充值豪礼
 		elseif nControlID == 65 then
 			ActivityDlgShowByID( ACTIVITY_17 )
-					
+		
+		-- 南蛮入侵
+		elseif nControlID == 66 then
+			ActivityDlgShowByID( ACTIVITY_12 )
+			
+		-- 西凉暴乱
+		elseif nControlID == 67 then
+			ActivityDlgShowByID( ACTIVITY_27 )
+						
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -1420,6 +1428,22 @@ function MainDlgPayAwardShow( show )
 	if show == true then
 		SetFalse( m_uiTop_City.transform:Find("Right/PayAward/Back/Effect") )
 	end
+end
+
+-- 南蛮入侵
+function MainDlgActivity12Show( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/Activity12"), show )
+end
+
+-- 南蛮入侵
+function MainDlgActivity27Show( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/Activity27"), show )
 end
 
 -- 国家按钮红点

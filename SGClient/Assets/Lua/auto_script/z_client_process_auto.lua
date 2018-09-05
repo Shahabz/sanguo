@@ -2514,11 +2514,26 @@ function proc_redinfo_C( recvValue )
 		else
 			MainDlgFristDayPayShow( false, 0 )
 		end
+		
 	elseif recvValue.m_path == 5 then
 		if recvValue.m_has == 1 then
 			MainDlgPayAwardShow( true )
 		else
 			MainDlgPayAwardShow( false )
+		end
+		
+	elseif recvValue.m_path == 6 then
+		if recvValue.m_has == 1 then
+			MainDlgActivity12Show( true )
+		else
+			MainDlgActivity12Show( false )
+		end
+		
+	elseif recvValue.m_path == 7 then
+		if recvValue.m_has == 1 then
+			MainDlgActivity27Show( true )
+		else
+			MainDlgActivity27Show( false )
 		end
 	end
 end

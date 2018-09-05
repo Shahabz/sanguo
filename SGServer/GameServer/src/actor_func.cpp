@@ -1008,6 +1008,23 @@ int actor_redinfo( int actor_index, char path )
 			}
 		}
 	}
+	else if ( path == 6 )
+	{ // ÄÏÂùÈëÇÖ
+		if ( activity_intime( ACTIVITY_12 ) )
+		{
+			if ( pCity->act12_state == 0 )
+			{
+				pValue.m_has = 1;
+			}
+		}
+	}
+	else if ( path == 7 )
+	{ // Î÷Á¹±©ÂÒ
+		if ( activity_intime( ACTIVITY_27 ) )
+		{
+			pValue.m_has = 1;
+		}
+	}
 	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

@@ -637,6 +637,14 @@ int global_init()
 			global.activity27_brushmin = atoi( row[1] );
 		else if ( id == 236 )
 			global.activity27_brushcount = atoi( row[1] );
+		else if ( id == 237 )
+			global.activity27_duration = atoi( row[1] );
+		else if ( id == 238 )
+			global.activity12_duration = atoi( row[1] );
+		else if ( id == 239 )
+			global.activity27_begintime = atoi( row[1] );
+		else if ( id == 240 )
+			global.activity12_begintime = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

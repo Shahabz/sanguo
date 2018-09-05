@@ -209,6 +209,10 @@ typedef struct _global
 	short map_pickup_max;
 	short activity27_brushmin;
 	short activity27_brushcount;
+	int activity27_duration;
+	int activity12_duration;
+	short activity27_begintime;
+	short activity12_begintime;
 }Global;
 int global_init();
 void global_reload();
