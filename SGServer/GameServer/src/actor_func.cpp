@@ -996,12 +996,15 @@ int actor_redinfo( int actor_index, char path )
 	}
 	else if ( path == 5 )
 	{ // ≥‰÷µ∫¿¿Ò
-		for ( int id = 1; id < g_activity_17_maxnum; id++ )
+		if ( activity_inclose( ACTIVITY_17 ) )
 		{
-			if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 )
+			for ( int id = 1; id < g_activity_17_maxnum; id++ )
 			{
-				pValue.m_has = 1;
-				break;
+				if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 )
+				{
+					pValue.m_has = 1;
+					break;
+				}
 			}
 		}
 	}

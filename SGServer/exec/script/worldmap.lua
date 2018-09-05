@@ -17,7 +17,7 @@ g_map_enemy_maxcount		= 35000;-- 流寇最大数量
 g_map_res_maxcount			= 6000;	-- 资源点最大数量
 g_map_event_maxcount		= 100000;-- 地图事件最大数量
 g_map_pickup_maxcount		= 2000;-- 地图拾取物品最大数量
-g_map_activity_maxcount		= 3000;-- 活动怪最大数量
+g_map_activity_maxcount		= 5000;-- 活动怪最大数量
 
 local WORLD_DATA_BRUSH_ENEMY_TIMER		=	1		-- 刷新流寇计时
 local WORLD_DATA_BRUSH_RES_TIMER		=	2		-- 刷新资源点计时

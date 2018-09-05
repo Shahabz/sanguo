@@ -309,12 +309,14 @@ function LoginModOnAwake( gameObject )
 	m_uiRegUserEdit = objs[23];
 	m_uiRegPwdEdit = objs[24];
 	m_uiRegPwdReEdit = objs[25];
-	m_uiRegPhoneEdit = objs[26];
-	m_uiRegQQEdit = objs[27];
-	m_uiRegWeiXinEdit = objs[28];
-	m_uiRegInviteCodeEdit = objs[29];
-	m_uiMakeSureLayer = objs[30];
-	m_uiVisitBtn = objs[31];
+	if Const.platid ~= 10 then
+		m_uiRegPhoneEdit = objs[26];
+		m_uiRegQQEdit = objs[27];
+		m_uiRegWeiXinEdit = objs[28];
+		m_uiRegInviteCodeEdit = objs[29];
+		m_uiMakeSureLayer = objs[30];
+		m_uiVisitBtn = objs[31];
+	end
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -458,10 +460,17 @@ function LoginModReg()
 	local userName = m_uiRegUserEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local passWord = m_uiRegPwdEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local passWordRe = m_uiRegPwdReEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	local phone = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	local qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	local wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	local friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local phone = ""
+	local qq = ""
+	local wchat = ""
+	local friend_invite_code = ""
+	
+	if Const.platid ~= 10 then
+		phone = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	end
 	
 	-- 非法检查
 	local len = string.len( userName );

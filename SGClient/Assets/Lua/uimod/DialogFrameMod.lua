@@ -2,6 +2,7 @@ local m_Mod = {};
 local m_uiTokenText = {};
 local m_closefun = {};
 local m_helptable = 0
+local g_id = 0;
 ----------------------------------------
 -- 事件
 ----------------------------------------
@@ -30,8 +31,10 @@ end
 
 -- 载入时调用
 function DialogFrameModOnAwake( gameObject )
+	gameObject:GetComponent( "UIMod" ).id = g_id;
 	local id = gameObject:GetComponent( "UIMod" ).id;
 	m_Mod[id] = gameObject;
+	g_id = g_id + 1;
 end
 
 -- 界面初始化时调用
@@ -51,7 +54,10 @@ end
 
 -- 界面删除时调用
 function DialogFrameModOnDestroy( gameObject )
-	
+	local id = gameObject:GetComponent( "UIMod" ).id;
+	m_Mod[id] = nil;
+	m_uiTokenText[id] = nil;
+	m_closefun[id] = nil;	
 end
 
 -- 每帧调用

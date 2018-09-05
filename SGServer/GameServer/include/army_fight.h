@@ -12,5 +12,8 @@ int army_vs_activity( int army_index, Fight *pFight );
 
 // 与国家名将战斗结果
 int army_vs_nationhero( int army_index, Fight *pFight );
+
+// 活动怪和玩家城池
+int army_activity_vs_city( int army_index, City *pTargetCity, Fight *pFight );
 #endif
 

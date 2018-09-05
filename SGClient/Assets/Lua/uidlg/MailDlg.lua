@@ -491,6 +491,19 @@ function MailDlgSetMail( recvValue )
 				SetRichText( uiContent, F(1111, name, monstername ) )
 			end
 			SetImage( uiShape, LoadSprite("ui_mail_icon_11") )
+		
+		-- 南蛮入侵
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY12 then
+			local win = recvValue.m_content_json["win"];
+			local name = recvValue.m_content_json["name"];
+			local kind = recvValue.m_content_json["kind"];
+			local monstername = T(MapUnitActivityNameList[kind])
+			if win == 1 then
+				SetRichText( uiContent, F(1110, name, monstername ) )
+			else
+				SetRichText( uiContent, F(1111, name, monstername ) )
+			end
+			SetImage( uiShape, LoadSprite("ui_mail_icon_9") )
 		end
 	end
 
@@ -516,11 +529,20 @@ function MailDlgSetMail( recvValue )
 		else
 			SetText( uiTitle, GetMail().m_localize_text[textid] )
 		end
+		
 	-- 活动怪	
 	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY then
 		local kind = recvValue.m_content_json["kind"];
 		local title = GetMail():GetString( recvValue.m_title );
 		SetText(uiTitle, Utils.StringFormat(title, T(MapUnitActivityNameList[kind])))
+	
+	-- 南蛮入侵	
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY12 then
+		local kind = recvValue.m_content_json["kind"];
+		local turn = recvValue.m_content_json["turn"];
+		local title = GetMail():GetString( recvValue.m_title );
+		SetText(uiTitle, Utils.StringFormat(title, T(MapUnitActivityNameList[kind]), turn))
+		
 	else
 		-- 其它类型解析
 		local title = GetMail():GetString( recvValue.m_title );

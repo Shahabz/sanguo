@@ -29,6 +29,8 @@
 #include "map.h"
 #include "map_activity.h"
 #include "map_zone.h"
+#include "mapunit.h"
+#include "army.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -41,6 +43,9 @@ extern int g_command_count;
 extern City * g_city;
 extern int g_city_maxcount;
 extern int g_city_maxindex;
+
+extern Army *g_army;
+extern int g_army_maxcount;
 
 ActivityItem *g_activity_item;
 int g_activity_count = MAX_ACTIVITY_COUNT;
@@ -66,6 +71,9 @@ extern int g_activity_08_maxnum;
 extern ActivityInfo10 *g_activity_10;
 extern int g_activity_10_maxnum;
 
+extern ActivityInfo12 *g_activity_12;
+extern int g_activity_12_maxnum;
+
 extern ActivityInfo17 *g_activity_17;
 extern int g_activity_17_maxnum;
 
@@ -80,6 +88,9 @@ extern int g_zoneinfo_maxnum;
 
 extern Pos g_mapzone_emptypos[MAPZONE_POSCOUNT];
 extern int g_mapzone_emptypos_count;
+
+extern MapActivity *g_map_activity;
+extern int g_map_activity_maxcount;
 
 // 系统初始化
 int activity_init()
@@ -1409,6 +1420,174 @@ int activity_11_get( int actor_index )
 	return 0;
 }
 
+// 南蛮入侵
+void activity_12_onwarning( int lefttime )
+{
+	if ( lefttime < 0 )
+		return;
+	int countdown = lefttime / 60; //倒计时（分钟）
+
+	// 6036	南蛮入侵活动将在{0}分钟后开启，请参加守城的玩家前往活动信息页面开启活动！
+	if ( countdown == 10 || countdown == 5 || countdown == 1 )
+	{
+		char v1[64] = { 0 };
+		sprintf( v1, "%d", countdown );
+		system_talkjson_world( 6036, v1, NULL, NULL, NULL, NULL, NULL, 2 );
+	}
+}
+void activity_12_onopen()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		g_city[tmpi].act12_state = 0;
+		g_city[tmpi].act12_turn = 0;
+		g_city[tmpi].act12_idx = -1;
+	}
+}
+void activity_12_onend()
+{
+}
+void activity_12_onclose()
+{
+	for ( int tmpi = 0; tmpi < g_city_maxcount; tmpi++ )
+	{
+		if ( g_city[tmpi].actorid < MINACTORID )
+			continue;
+		g_city[tmpi].act12_state = 0;
+		g_city[tmpi].act12_turn = 0;
+		g_city[tmpi].act12_idx = -1;
+	}
+	map_activity_delete_withactivityid( ACTIVITY_12 );
+}
+void activity_12_onlogic()
+{
+}
+int activity_12_sendinfo( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	int value[5] = { 0 };
+	value[0] = ACTIVITY_12;
+	value[1] = pCity->act12_state;
+	value[2] = pCity->act12_turn;
+	if ( pCity->act12_idx >= 0 && pCity->act12_idx < g_map_activity_maxcount )
+	{
+		int army_index = g_map_activity[pCity->act12_idx].army_index;
+		if ( army_index >= 0 && army_index < g_army_maxcount )
+		{
+			value[3] = g_army[army_index].statetime;
+			value[4] = g_army[army_index].stateduration;
+		}
+		else
+		{
+			pCity->act12_state = 2;
+			value[1] = pCity->act12_state;
+		}
+	}
+	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 5, value, NULL );
+
+	// 发奖励
+	if ( pCity->act12_state == 1 && pCity->act12_turn > 0 && pCity->act12_turn < g_activity_12_maxnum )
+	{
+		SLK_NetS_AwardInfoList pValue = { 0 };
+		pValue.m_callback_code = 7;
+		pValue.m_value = pCity->act12_turn;
+		pValue.m_count = 0;
+		
+		for ( int i = 0; i < 4; i++ )
+		{
+			if ( g_activity_12[pCity->act12_turn].awardkind[i] > 0 )
+			{
+				pValue.m_list[pValue.m_count].m_kind = g_activity_12[pCity->act12_turn].awardkind[i];
+				pValue.m_list[pValue.m_count].m_num = g_activity_12[pCity->act12_turn].awardnum[i];
+				pValue.m_count += 1;
+			}
+		}
+
+		netsend_awardinfolist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+	return 0;
+}
+int activity_12_manualopen( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( activity_intime( ACTIVITY_12 ) == 0 )
+		return -1;
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( pCity->act06_state == 1 )
+		return -1;
+	pCity->act12_state = 1;
+	pCity->act12_turn = 1;
+
+	int unit_index = map_activity_range_brush( 2, pCity->posx, pCity->posy, 4, 0, 0, &pCity->act12_idx );
+	if ( unit_index < 0 )
+	{
+		return -1;
+	}
+	activity_12_createarmy( pCity );
+	activity_12_sendinfo( actor_index );
+	return 0;
+}
+
+int activity_12_createarmy( City *pCity )
+{
+	if ( !pCity )
+		return -1;
+	if ( pCity->act12_idx < 0 || pCity->act12_idx >= g_map_activity_maxcount )
+		return -1;
+	SLK_NetC_MapBattle info = { 0 };
+	info.m_to_unit_type = MAPUNIT_TYPE_CITY;
+	info.m_to_unit_index = pCity->unit_index;
+	info.m_id = pCity->actorid;
+	info.m_to_posx = pCity->posx;
+	info.m_to_posy = pCity->posy;
+	info.m_appdata = pCity->act12_turn;
+	info.m_action = ARMY_ACTION_FIGHT;
+	info.m_group_index = -1;
+	info.m_herokind[0] = 1002;
+	int army_index = army_create( MAPUNIT_TYPE_ACTIVITY, pCity->act12_idx, MAPUNIT_TYPE_CITY, pCity->actorid, ARMY_STATE_MARCH, &info );
+	if ( army_index < 0 )
+		return -1;
+	g_army[army_index].totals = 0;
+	if ( pCity->act12_idx >= 0 && pCity->act12_idx < g_map_activity_maxcount )
+	{
+		map_activity_setarmy( pCity->act12_idx, army_index );
+	}
+	// 目标是玩家
+	City *pTargetCity = army_getcityptr_target( army_index );
+	if ( pTargetCity )
+	{
+		if ( info.m_action == ARMY_ACTION_FIGHT )
+		{// 被攻击列表
+			city_underfire_add( pTargetCity, army_index );
+		}
+	}
+	return 0;
+}
+
+// 计算行军时间
+int activity_12_army_marchtime( int army_index )
+{
+	if ( army_index < 0 || army_index >= g_army_maxcount )
+		return -1;
+	int index = g_army[army_index].appdata;
+	if ( index > 0 && index < g_activity_12_maxnum )
+	{
+		g_army[army_index].stateduration = g_activity_12[index].marchtime;
+	}
+	else
+	{
+		g_army[army_index].stateduration = 120;
+	}
+	return 0;
+}
+
 // 充值豪礼
 void activity_17_onopen()
 {
@@ -1588,7 +1767,7 @@ int activity_27_brush_withzoneid( int zoneid )
 		map_zone_getemptypos( zoneid );
 		for ( int tmpi = 0; tmpi < brushnum; tmpi++ )
 		{
-			map_activity_create( 1, g_mapzone_emptypos[tmpi].x, g_mapzone_emptypos[tmpi].y, 0, 0 );
+			map_activity_create( 1, g_mapzone_emptypos[tmpi].x, g_mapzone_emptypos[tmpi].y, 0, 0, NULL );
 		}
 	}
 	return 0;

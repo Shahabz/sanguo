@@ -120,6 +120,17 @@ int activity_10_init();
 int activity_11_sendinfo( int actor_index );
 int activity_11_get( int actor_index );
 
+// ƒœ¬˘»Î«÷
+void activity_12_onwarning( int lefttime );
+void activity_12_onopen();
+void activity_12_onend();
+void activity_12_onclose();
+void activity_12_onlogic();
+int activity_12_sendinfo( int actor_index );
+int activity_12_manualopen( int actor_index );
+int activity_12_createarmy( City *pCity );
+int activity_12_army_marchtime( int army_index );
+
 // ≥‰÷µ∫¿¿Ò
 void activity_17_onopen();
 void activity_17_onend();

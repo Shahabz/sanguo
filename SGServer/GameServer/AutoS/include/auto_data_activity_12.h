@@ -5,8 +5,8 @@
 struct _activityinfo12 {
 //--Automatically generated
 				int id;	//
+				short level;	//
 				int marchtime;	//
-				short monsterid[4];	//
 				short attack;	//
 				short defense;	//
 				int troops;	//

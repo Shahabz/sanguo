@@ -941,6 +941,17 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 				activity_11_get( actor_index );
 			}
 		}
+		else if ( pvalue[0] == ACTIVITY_12 )
+		{ // ƒœ¬˘»Î«÷
+			if ( pvalue[1] == 0 )
+			{
+				activity_12_sendinfo( actor_index );
+			}
+			else if ( pvalue[1] == 1 )
+			{
+				activity_12_manualopen( actor_index );
+			}
+		}
 		else if ( pvalue[0] == ACTIVITY_17 )
 		{ // ≥‰÷µ∫¿¿Ò
 			if ( pvalue[1] == 0 )

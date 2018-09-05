@@ -250,6 +250,12 @@ int map_call_response( int actor_index, int index )
 	if ( !pCity )
 		return -1;
 	
+	if ( pCity->act12_state == 1 )
+	{ // 南蛮入侵活动进行中，不可迁城！
+		actor_notify_alert( actor_index, 4278 );
+		return -1;
+	}
+
 	// 武将有出征的
 	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
 	{

@@ -147,6 +147,7 @@ struct _city {
 				char edevent_num;	//政务系统
 				char act12_state;	//南蛮入侵活动
 				char act12_turn;	//南蛮入侵活动
+				int act12_idx;	//南蛮入侵活动
 				int act33_pay;	//充值排名
 				int edquest[16];	//每日任务
 				int edquest_isget;	//每日任务奖励是否领取

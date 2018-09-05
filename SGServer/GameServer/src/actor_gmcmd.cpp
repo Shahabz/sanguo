@@ -26,6 +26,7 @@
 #include "mail.h"
 #include "building.h"
 #include "map_town.h"
+#include "map_activity.h"
 #include "quest.h"
 #include "world_quest.h"
 #include "world_boss.h"
@@ -890,6 +891,18 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		if ( pCity )
 		{
 			fangshi_palace_update( pCity->actor_index );
+		}
+		break;
+	case GMC_A12: // ÄÏÂùÈëÇÖ
+		if ( pCity )
+		{
+			pCity->act12_state = 0;
+			pCity->act12_turn = 0;
+			if ( pCity->act12_idx >= 0 )
+			{
+				map_activity_delete( pCity->act12_idx );
+			}
+			pCity->act12_idx = -1;
 		}
 		break;
 	default:

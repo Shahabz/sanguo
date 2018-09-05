@@ -1544,7 +1544,7 @@ static int lua_c_map_activity_create( lua_State *servL )
 	int deltime = (int )lua_tointeger( servL, 4 );
 	int actorid = (int )lua_tointeger( servL, 5 );
 	//--Process script
-	map_activity_create( kind, posx, posy, deltime, actorid );
+	map_activity_create( kind, posx, posy, deltime, actorid, NULL );
 	return 0;
 }
 

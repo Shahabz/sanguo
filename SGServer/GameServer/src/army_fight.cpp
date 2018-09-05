@@ -90,6 +90,12 @@ extern int g_army_maxcount;
 extern int g_army_count;
 extern int g_army_maxindex;
 
+extern ActivityInfo12 *g_activity_12;
+extern int g_activity_12_maxnum;
+
+extern MapActivity *g_map_activity;
+extern int g_map_activity_maxcount;
+
 // 与流寇战斗结果
 int army_vs_enemy( int army_index, Fight *pFight )
 {
@@ -502,6 +508,117 @@ int army_vs_nationhero( int army_index, Fight *pFight )
 	if ( mailid > 0 )
 	{
 		mail_fight( mailid, pCity->actorid, pFight->unit_json );
+	}
+	return 0;
+}
+
+// 活动怪和玩家城池
+int army_activity_vs_city( int army_index, City *pTargetCity, Fight *pFight )
+{
+	i64 mailid = 0;
+	char title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+	MapActivity *activity = map_activity_getptr( g_army[army_index].from_index );
+	if ( !activity )
+	{
+		pTargetCity->act12_state = 2;
+		map_activity_delete( pTargetCity->act12_idx );
+		pTargetCity->act12_idx = -1;
+		return -1;
+	}
+	MapActivityInfo *config = map_activity_getconfig( activity->kind );
+	if ( !config )
+	{
+		pTargetCity->act12_state = 2;
+		map_activity_delete( pTargetCity->act12_idx );
+		pTargetCity->act12_idx = -1;
+		return -1;
+	}
+	army_delete( army_index );
+
+	int turn = pTargetCity->act12_turn;
+	if ( turn <= 0 || turn >= g_activity_12_maxnum )
+	{
+		return -1;
+	}
+
+	if ( pFight->result == FIGHT_WIN )
+	{ // 玩家防守失败
+		pTargetCity->act12_state = 2;
+		map_activity_delete( pTargetCity->act12_idx );
+		pTargetCity->act12_idx = -1;
+
+		// 发送失败邮件
+		char title[MAIL_TITLE_MAXSIZE] = { 0 };
+		sprintf( title, "%s%d", TAG_TEXTID, 5055 );
+
+		char attach[MAIL_ATTACH_MAXSIZE] = { 0 };
+
+		// 内容
+		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":0,\"my\":2,\"name\":\"%s\",\"kind\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\",\"turn\":%d}",
+			TAG_TEXTID, 5548, pTargetCity->name, config->kind, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], attach, pTargetCity->act12_turn );
+		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY12, title, content, "", 0, 0 );
+	}
+	else
+	{ // 玩家防守成功
+		// 获得的奖励
+		AwardGetInfo awardinfo = { 0 };
+		for ( int i = 0; i < 4; i++ )
+		{
+			if ( g_activity_12[turn].awardkind[i] > 0 )
+			{
+				award_getaward( pTargetCity->actor_index, g_activity_12[turn].awardkind[i], g_activity_12[turn].awardnum[i], 0, PATH_ACTIVITY_MONSTER, &awardinfo );
+			}
+		}
+
+		// 发送胜利邮件
+		char title[MAIL_TITLE_MAXSIZE] = { 0 };
+		sprintf( title, "%s%d", TAG_TEXTID, 5054 );
+
+		// 奖励展示不是附件的
+		char attach[MAIL_ATTACH_MAXSIZE] = { 0 };
+		if ( awardinfo.count > 0 )
+		{
+			for ( int tmpi = 0; tmpi < awardinfo.count; tmpi++ )
+			{
+				if ( awardinfo.kind[tmpi] <= 0 )
+					continue;
+				char tempitem[32] = { 0 };
+				sprintf( tempitem, "%d,%d@", awardinfo.kind[tmpi], awardinfo.num[tmpi] );
+				strcat( attach, tempitem );
+			}
+		}
+
+		// 内容
+		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+		sprintf( content, "{\"text\":\"%s%d\",\"win\":1,\"my\":2,\"name\":\"%s\",\"kind\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\",\"turn\":%d}",
+			TAG_TEXTID, 5547, pTargetCity->name, config->kind, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], attach, pTargetCity->act12_turn );
+		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY12, title, content, "", 0, 0 );
+
+		if ( pTargetCity->act12_turn < g_activity_12_maxnum-1 )
+		{
+			pTargetCity->act12_turn += 1;
+			activity_12_createarmy( pTargetCity );
+		}
+	}
+
+	// 插入战斗详情邮件
+	if ( mailid > 0 )
+	{
+		mail_fight( mailid, pTargetCity->actorid, pFight->unit_json );
+	}
+
+	// 刷新界面
+	activity_12_sendinfo( pTargetCity->actor_index );
+
+	if ( pTargetCity )
+	{
+		// 城墙守卫
+		city_guard_sendnum( pTargetCity->actor_index );
+
+		// 自动补兵
+		hero_addsoldiers_audo( pTargetCity );
 	}
 	return 0;
 }

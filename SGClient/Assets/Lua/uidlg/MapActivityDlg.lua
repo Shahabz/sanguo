@@ -116,10 +116,16 @@ function MapActivityDlgShow( recvValue )
 	-- 西凉铁骑
 	if kind == 1 then
 		SetImage( m_uiShape, LoadSprite("enemyface_1") )
+		SetTrue( m_uiBattleButton )
+		SetTrue( m_uiMarchTime )
+		SetText( m_uiTalk, T(4282) )
 		
-	-- 摸金校尉
+	-- 南蛮兵
 	elseif kind == 2 then
-		SetImage( m_uiShape, LoadSprite("enemyface_3") )
+		SetImage( m_uiShape, LoadSprite("enemyface_2") )
+		SetFalse( m_uiBattleButton )
+		SetFalse( m_uiMarchTime )
+		SetText( m_uiTalk, T(4283) )
 	end
 
 	-- 行军时间
@@ -140,7 +146,7 @@ function MapActivityDlgRecvAward( recvValue )
 		SetImage( uiObj.transform:Find("Color"), color );
 		SetText( uiObj.transform:Find("Name"), name, NameColor(c) );
 		if recvValue.m_list[i+1].m_num > 1 then
-			SetText( uiObj.transform:Find("Num"), recvValue.m_list[i+1].m_num  );
+			SetText( uiObj.transform:Find("Num"), knum(recvValue.m_list[i+1].m_num) );
 			SetTrue( uiObj.transform:Find("NumBack") )
 		else
 			SetText( uiObj.transform:Find("Num"), "" );

@@ -61,6 +61,7 @@ local GMCMD_SERVER = {
 [67]="raddq",
 [68]="paymode",
 [69]="fangshi",
+[70]="a12",
 }
  
 -- 发到客户端本地指令

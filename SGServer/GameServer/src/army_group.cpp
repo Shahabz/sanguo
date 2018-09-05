@@ -905,7 +905,7 @@ int armygroup_vs_city( int group_index, Fight *pFight )
 
 		// 随机迁移城主地图
 		char zoneid = map_zone_getid( pTargetCity->posx, pTargetCity->posy );
-		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum )
+		if ( zoneid > 0 && zoneid < g_zoneinfo_maxnum && pTargetCity ->act12_state != 1 )
 		{
 			short move_posx, move_posy;
 			if ( zoneid == MAPZONE_CENTERID )

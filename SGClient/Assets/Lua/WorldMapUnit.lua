@@ -650,6 +650,11 @@ function MapUnit.createArmy( recvValue )
 			
 			if from_type == MAPUNIT_TYPE_TOWN and heroid[1] >= 1000 then
 				SetText( uiHero.transform:Find("Name"), T(1330) )
+				
+			elseif from_type == MAPUNIT_TYPE_ACTIVITY and heroid[1] >= 1000 then
+				local kind = heroid[1] - 1000
+				SetText( uiHero.transform:Find("Name"), T(MapUnitActivityNameList[kind]).."("..nation..")" )
+				nation = 7
 			else
 				SetText( uiHero.transform:Find("Name"), recvValue.m_name )
 			end	

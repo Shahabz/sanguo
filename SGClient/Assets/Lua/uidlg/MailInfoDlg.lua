@@ -250,6 +250,14 @@ function MailInfoDlgByRecvValue( recvValue )
 		local kind = recvValue.m_content_json["kind"];
 		local title = GetMail():GetString( recvValue.m_title );
 		SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), Utils.StringFormat(title, T(MapUnitActivityNameList[kind])))
+		
+	-- 南蛮入侵	
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY12 then
+		local kind = recvValue.m_content_json["kind"];
+		local turn = recvValue.m_content_json["turn"];
+		local title = GetMail():GetString( recvValue.m_title );
+		SetText(m_uiDialogFrameMod.transform:Find("Top/TitleText"), Utils.StringFormat(title, T(MapUnitActivityNameList[kind]), turn))
+		
 	else
 		local title = GetMail():GetString( recvValue.m_title );
 		SetText( m_uiDialogFrameMod.transform:Find("Top/TitleText"), title )
@@ -756,6 +764,52 @@ function MailInfoDlgByRecvValue( recvValue )
 			end
 			m_share_a_name = name;
 			m_share_d_name = enemyname;
+			
+		elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY12 then
+			local win = recvValue.m_content_json["win"];
+			local name = recvValue.m_content_json["name"];
+			local kind = recvValue.m_content_json["kind"];
+			enemyname =  T(MapUnitActivityNameList[kind])
+			
+			-- 伤兵恢复
+			local ws0 = recvValue.m_content_json["ws0"];
+			local ws1 = recvValue.m_content_json["ws1"];
+			local ws2 = recvValue.m_content_json["ws2"];
+			local ws_str = ""
+			if ws0 ~= nil and ws1 ~= nil and ws2 ~= nil then
+				if ws0 > 0 or ws1 > 0 or ws2 > 0 then
+					ws_str = "\n"..T(5534)
+					if ws0 > 0 then
+						ws_str = ws_str..T(134).."x"..ws0.." "
+					end
+					if ws1 > 0 then
+						ws_str = ws_str..T(135).."x"..ws1.." "
+					end
+					if ws2 > 0 then
+						ws_str = ws_str..T(136).."x"..ws2.." "
+					end
+				end
+			end
+
+			if win == 1 then
+				local awardstr = ""
+				local award = recvValue.m_content_json["award"];
+				local awardList = string.split( award, '@' )
+				for i= 1, #awardList, 1 do
+					local awardinfo = string.split( awardList[i], ',' )
+					if #awardinfo == 2 then
+						local kind = tonumber(awardinfo[1]);
+						local num = tonumber(awardinfo[2]);
+						local sprite, color, name = AwardInfo( kind )
+						awardstr = awardstr .. name.."x"..knum(num).." "
+					end
+				end
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name, awardstr )..ws_str, MailOnLinkClick )
+			else
+				SetRichText( m_uiMailContent.transform:Find("Text"), F(contentid, name )..ws_str, MailOnLinkClick )
+			end
+			m_share_a_name = name;
+			m_share_d_name = enemyname;
 		end
 	end
 
@@ -805,7 +859,10 @@ function MailInfoDlgByRecvValue( recvValue )
 	end
 	
 	-- 获取战斗信息
-	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO or recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY or recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or recvValue.m_type == MAIL_TYPE_GATHER_FIGHT or ( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
+	if recvValue.m_type == MAIL_TYPE_FIGHT_ENEMY or recvValue.m_type == MAIL_TYPE_FIGHT_NATIONHERO or 
+		recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY or recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY12 or 
+		recvValue.m_type == MAIL_TYPE_FIGHT_CITY or recvValue.m_type == MAIL_TYPE_FIGHT_NATION or recvValue.m_type == MAIL_TYPE_GATHER_FIGHT or 
+		( recvValue.m_type == MAIL_TYPE_CITY_SPY and m_spy_hashero == 1) then
 		-- 没缓存，去服务器拿
 		if recvValue.m_fight_content == nil or recvValue.m_fight_content == "" then
 			-- 自己看自己的邮件

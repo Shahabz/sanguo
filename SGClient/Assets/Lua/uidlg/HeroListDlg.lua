@@ -570,7 +570,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 
 			elseif index == 4 then
@@ -579,7 +579,7 @@ function HeroListDlgSetHero( uiHeroObj, pHero, index )
 					--SetImage( uiShape, LoadSprite("ui_icon_back_2") )
 				else
 					SetText( uiName, "" )
-					SetImage( uiShape, LoadSprite("ui_icon_back_4") )
+					--SetImage( uiShape, LoadSprite("ui_icon_back_4") )
 				end
 			end
 		end

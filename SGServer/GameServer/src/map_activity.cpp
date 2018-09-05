@@ -169,7 +169,7 @@ int map_activity_getfreeindex()
 }
 
 // 创建一个活动怪
-int map_activity_create( short kind, short posx, short posy, int deltime, int actorid )
+int map_activity_create( short kind, short posx, short posy, int deltime, int actorid, int *outindex )
 {
 	if ( kind <= 0 || kind >= g_activityinfo_maxnum )
 		return -1;
@@ -186,6 +186,11 @@ int map_activity_create( short kind, short posx, short posy, int deltime, int ac
 	g_map_activity[index].hp = g_activityinfo[kind].maxhp;
 	g_map_activity[index].maxhp = g_activityinfo[kind].maxhp;
 	g_map_activity[index].unit_index = mapunit_add( MAPUNIT_TYPE_ACTIVITY, index );
+	g_map_activity[index].army_index = -1;
+	if ( outindex )
+	{
+		*outindex = index;
+	}
 	map_addobject( MAPUNIT_TYPE_ACTIVITY, index, posx, posy );
 	return g_map_activity[index].unit_index;
 }
@@ -195,10 +200,15 @@ int map_activity_delete( int index )
 {
 	if ( index < 0 || index >= g_map_activity_maxcount )
 		return -1;
+	if ( g_map_activity[index].army_index >= 0 )
+	{
+		army_delete( g_map_activity[index].army_index );
+	}
 	mapunit_del( MAPUNIT_TYPE_ACTIVITY, index, g_map_activity[index].unit_index );
 	map_delobject( MAPUNIT_TYPE_ACTIVITY, index, g_map_activity[index].posx, g_map_activity[index].posy );
 	memset( &g_map_activity[index], 0, sizeof( MapActivity ) );
 	g_map_activity[index].unit_index = -1;
+	g_map_activity[index].army_index = -1;
 	return 0;
 }
 
@@ -246,8 +256,19 @@ int map_activity_num_withactivityid( int zoneid, int activityid )
 	return num;
 }
 
+// 获取活动id
+int map_activity_getactivityid( int index )
+{
+	if ( index < 0 || index >= g_map_activity_maxcount )
+		return 0;
+	MapActivityInfo *config = map_activity_getconfig( g_map_activity[index].kind );
+	if ( !config )
+		return 0;
+	return config->activityid;
+}
+
 // 根据一个点的范围进行生成
-int map_activity_range_brush( short kind, short posx, short posy, int range, int deltime, int actorid )
+int map_activity_range_brush( short kind, short posx, short posy, int range, int deltime, int actorid, int *outindex )
 {
 	short pPosx = -1;
 	short pPosy = -1;
@@ -263,9 +284,18 @@ int map_activity_range_brush( short kind, short posx, short posy, int range, int
 	}
 	if ( pPosx >= 0 && pPosy >= 0 )
 	{
-		map_activity_create( kind, pPosx, pPosy, deltime, actorid );
+		return map_activity_create( kind, pPosx, pPosy, deltime, actorid, outindex );
 	}
 	return -1;
+}
+
+// 设置出征部队
+int map_activity_setarmy( int index, int army_index )
+{
+	if ( index < 0 || index >= g_map_activity_maxcount )
+		return -1;
+	g_map_activity[index].army_index = army_index;
+	return 0;
 }
 
 // 获取活动怪奖励

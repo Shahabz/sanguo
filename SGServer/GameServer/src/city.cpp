@@ -3461,11 +3461,15 @@ int city_underfire_add( City *pCity, int army_index )
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-		// 军情数量
-		//city_alarm_sendnum( pCity );
-
-		// 通知自己的界面更新
-		//actor_dialogupdate( pCity->actor_index, 4 );
+		SLK_NetS_CityWarInfo pValue = { 0 };
+		pValue.m_group_index = 1000000 + army_index;
+		pValue.m_group_id = 0;
+		pValue.m_from_nation = g_army[army_index].appdata;
+		pValue.m_from_posx = g_army[army_index].from_posx;
+		pValue.m_from_posy = g_army[army_index].from_posy;
+		pValue.m_statetime = g_army[army_index].statetime;
+		pValue.m_stateduration = g_army[army_index].stateduration;
+		netsend_citywarinfo_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 	else
 	{
@@ -3500,11 +3504,9 @@ int city_underfire_del( City *pCity, int army_index )
 	// 通知该玩家
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-		// 军情数量
-		//city_alarm_sendnum( pCity );
-
-		// 通知自己的界面更新
-		//actor_dialogupdate( pCity->actor_index, 4 );
+		SLK_NetS_CityWarDel pValue = { 0 };
+		pValue.m_group_index = 1000000 + army_index;
+		netsend_citywardel_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 	return 0;
 }
@@ -3547,11 +3549,9 @@ int city_underfire_del_equal( City *pCity, int equal_army_index )
 	// 通知该国王
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
 	{
-		// 军情数量
-		//city_alarm_sendnum( pCity );
-
-		// 通知自己的界面更新
-		//actor_dialogupdate( pCity->actor_index, 4 );
+		//SLK_NetS_CityWarDel pValue = { 0 };
+		//pValue.m_group_index = 1000000 + army_index;
+		//netsend_citywardel_S( pCity->actor_index, SENDTYPE_ACTOR, &pValue );
 	}
 	return 0;
 }
@@ -3691,6 +3691,31 @@ int city_underfire_sendlist( int actor_index )
 			continue;
 		city_underfire_makestruct( group_index, &pValue.m_list[pValue.m_count] );
 		pValue.m_count += 1;
+		if ( pValue.m_count >= 16 )
+		{
+			break;
+		}
+	}
+	if ( pValue.m_count < 16 )
+	{
+		for ( int tmpi = 0; tmpi < CITY_UNDERFIRE_MAX; tmpi++ )
+		{
+			int army_index = pCity->underfire_armyindex[tmpi];
+			if ( army_index < 0 || army_index >= g_army_maxcount )
+				continue;
+			pValue.m_list[pValue.m_count].m_group_index = 1000000 + army_index;
+			pValue.m_list[pValue.m_count].m_group_id = 0;
+			pValue.m_list[pValue.m_count].m_from_nation = g_army[army_index].appdata;
+			pValue.m_list[pValue.m_count].m_from_posx = g_army[army_index].from_posx;
+			pValue.m_list[pValue.m_count].m_from_posy = g_army[army_index].from_posy;
+			pValue.m_list[pValue.m_count].m_statetime = g_army[army_index].statetime;
+			pValue.m_list[pValue.m_count].m_stateduration = g_army[army_index].stateduration;
+			pValue.m_count += 1;
+			if ( pValue.m_count >= 16 )
+			{
+				break;
+			}
+		}
 	}
 	netsend_citywarlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
@@ -3868,6 +3893,11 @@ int city_move_actor( int actor_index, short posx, short posy, int itemkind )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	if ( pCity->act12_state == 1 )
+	{ // 南蛮入侵活动进行中，不可迁城！
+		actor_notify_alert( actor_index, 4278 );
+		return -1;
+	}
 	// 武将有出征的
 	for ( int tmpi = 0; tmpi < HERO_CITY_MAX; tmpi++ )
 	{
@@ -4048,6 +4078,10 @@ int city_move( City *pCity, short posx, short posy )
 {
 	if ( !pCity )
 		return -1;
+	if ( pCity->act12_state == 1 )
+	{
+		return -1;
+	}
 	if ( map_canmove( posx, posy ) == 0 )
 		return -1;
 	short lastposx = pCity->posx;

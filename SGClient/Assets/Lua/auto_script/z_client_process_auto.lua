@@ -405,6 +405,8 @@ function proc_awardinfolist_C( recvValue )
 		FangshiDlgPlaceInfoRecv( recvValue )
 	elseif recvValue.m_callback_code == 6 then
 		MapActivityDlgRecvAward( recvValue )
+	elseif recvValue.m_callback_code == 7 then
+		Activity12ModRecvAward( recvValue )
 	end
 end
 

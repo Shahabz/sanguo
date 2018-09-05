@@ -1317,8 +1317,14 @@ function MainDlgCreateWarObj( info )
 	local uiObj = m_uiWarTable.m_uiUIP_WarText
 	--local uiObj = m_ObjectPool:Get( "UIP_WarText" );
 	uiObj.transform:SetParent( m_uiWarTable.m_uiWarContent.transform );
-	local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
-	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )		
+	
+	if info.m_group_index < 1000000 then
+		local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
+		SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	else
+		local warn = F( 4284, info.m_from_nation ).." {0}";
+		SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	end	
 	return uiObj
 end
 
@@ -1328,8 +1334,14 @@ function MainDlgUpdateWarObj( uiObj, info )
 		return
 	end
 	uiObj.transform:SetParent( m_uiWarTable.m_uiWarContent.transform );
-	local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
-	SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	
+	if info.m_group_index < 1000000 then
+		local warn = F( 1345, Nation( info.m_from_nation ), info.m_name, info.m_from_posx, info.m_from_posy ).." {0}";
+		SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	else
+		local warn = F( 4284, info.m_from_nation ).." {0}";
+		SetTimer( uiObj.transform:Find( "Text" ), info.m_stateduration-info.m_statetime, info.m_stateduration, 0, warn )
+	end
 end
 	
 function MainDlgClearWarObj()

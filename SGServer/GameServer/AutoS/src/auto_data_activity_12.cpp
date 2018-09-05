@@ -47,7 +47,7 @@ int activityinfo12_init_auto()
 	g_activity_12 = (ActivityInfo12 *)malloc( sizeof(ActivityInfo12)*g_activity_12_maxnum );
 	memset( g_activity_12, 0, sizeof(ActivityInfo12)*g_activity_12_maxnum );
 
-	sprintf( szSQL, "select `id`,`marchtime`,`monsterid0`,`monsterid1`,`monsterid2`,`monsterid3`,`attack`,`defense`,`troops`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3` from activity_12;" );
+	sprintf( szSQL, "select `id`,`level`,`marchtime`,`attack`,`defense`,`troops`,`awardkind0`,`awardkind1`,`awardkind2`,`awardkind3`,`awardnum0`,`awardnum1`,`awardnum2`,`awardnum3` from activity_12;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -62,11 +62,8 @@ int activityinfo12_init_auto()
 		if ( id < 0 || id >= g_activity_12_maxnum  )
 			continue;
 		g_activity_12[id].id = atoi(row[offset++]);
+		g_activity_12[id].level = atoi(row[offset++]);
 		g_activity_12[id].marchtime = atoi(row[offset++]);
-		g_activity_12[id].monsterid[0] = atoi(row[offset++]);
-		g_activity_12[id].monsterid[1] = atoi(row[offset++]);
-		g_activity_12[id].monsterid[2] = atoi(row[offset++]);
-		g_activity_12[id].monsterid[3] = atoi(row[offset++]);
 		g_activity_12[id].attack = atoi(row[offset++]);
 		g_activity_12[id].defense = atoi(row[offset++]);
 		g_activity_12[id].troops = atoi(row[offset++]);

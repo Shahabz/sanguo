@@ -14,6 +14,7 @@ struct _map_activity {
 				int maxhp;	//血量
 				char activityid;	//所属活动
 				int unit_index;	//显示索引
+				int army_index;	//出征的索引
 };
 typedef struct _map_activity MapActivity;
 

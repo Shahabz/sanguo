@@ -772,6 +772,12 @@ int map_zone_goto_sili( int actor_index )
 		return -1;
 	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_MAPZONE_GO_ZC ) == 1 )
 		return -1;
+	if ( pCity->act12_state == 1 )
+	{ // 南蛮入侵活动进行中，不可迁城！
+		actor_notify_alert( actor_index, 4278 );
+		return -1;
+	}
+
 	// 当前的地区
 	char cur_zoneid = pCity->zone;
 	char boss1_complete = 0;

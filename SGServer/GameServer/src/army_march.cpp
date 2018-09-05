@@ -256,6 +256,10 @@ void army_arrived( int army_index )
 					{
 						army_delete( army_index );
 					}
+					else if ( g_army[army_index].from_type == MAPUNIT_TYPE_ACTIVITY )
+					{
+						army_delete( army_index );
+					}
 					else
 					{
 						//army_mail_invalid( army_index );
@@ -270,6 +274,12 @@ void army_arrived( int army_index )
 					if ( pUnit->type == MAPUNIT_TYPE_CITY && pTargetCity->ptsec > 0 )
 					{
 						//army_mail_invalid( army_index );
+						army_setstate( army_index, ARMY_STATE_REBACK );
+						return;
+					}
+					else if ( pUnit->type == MAPUNIT_TYPE_CITY && pTargetCity->act12_state == 1 )
+					{
+						// 活动进行中
 						army_setstate( army_index, ARMY_STATE_REBACK );
 						return;
 					}
