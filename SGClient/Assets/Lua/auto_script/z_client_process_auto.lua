@@ -220,6 +220,8 @@ function proc_buildinglist_C( recvValue )
 			City.BuildingLandShow( BUILDING_Militiaman_Infantry, -1 )
 		end
 	end
+	-- ¾º¼¼³¡
+	GetPlayer():SetBuilding( BUILDING_Coliseum,{ m_kind = BUILDING_Coliseum, m_offset = 0,m_level = 0,m_sec = 0,m_needsec = 0,m_quick = 0, m_overvalue=0 } )
 	MainDlgSetButtons( -1 );
 	GetPlayer():SetBuildingWorker( recvValue )
 	GetPlayer():SetBuildingLevy( recvValue.m_levynum )

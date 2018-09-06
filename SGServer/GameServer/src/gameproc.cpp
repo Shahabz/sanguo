@@ -1514,6 +1514,8 @@ int process_oclock_process( int hour )
 
 	if ( hour == 5 )
 	{
+		// 6037	服务器将在凌晨5点进行所有玩家的数据备份，预计2-5分钟，如有卡顿敬请谅解，祝游戏开心，万事如意！
+		system_talkjson_world( 6037, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
 		write_gamelog( "[SAVESTART]" );
 		// 开启一个新事务
 		mysql_query( myGame, "START TRANSACTION" );

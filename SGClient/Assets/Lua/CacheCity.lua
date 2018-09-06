@@ -137,7 +137,8 @@ function City.BuildingSelect( transform )
 		WishingDlgShow();
 	elseif building.kind == BUILDING_Help then -- 帮助
 		HelpDlgShow();
-		--FangshiDlgShow();
+	elseif building.kind == BUILDING_Coliseum then-- 竞技场
+		ColiseumDlgShow();
 	else
 		-- 科技有完成的，直接领取
 		if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then

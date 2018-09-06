@@ -20,6 +20,8 @@ void process_close();
 int process_onclose( int client_index );
 int process_error( int client_index, int err );
 int process_ondestory();
+// 整点
+int process_oclock_process( int hour );
 // 设定服务器自动退出时间
 int process_set_exit( int weekday, int hour, int min, int isnotify );
 // 数据表重读

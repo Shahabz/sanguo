@@ -220,7 +220,7 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		else if ( pValue[0] == 12 )
 		{
-
+			process_oclock_process( pValue[1] );
 		}
 		break;
 	case GMC_SC:

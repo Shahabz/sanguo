@@ -37,6 +37,7 @@
 #define	BUILDING_Hero		35	// 聚贤馆
 #define	BUILDING_Wishing	36	// 聚宝盆
 #define	BUILDING_Help		37	// 帮助
+#define	BUILDING_Coliseum	38	// 竞技场
 
 #define	BUILDING_OP_BUILD	1	// 建造
 #define	BUILDING_OP_UPGRADE	2	// 升级

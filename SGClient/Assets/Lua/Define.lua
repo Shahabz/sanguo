@@ -51,6 +51,7 @@ BUILDING_Shop		    =  34	-- 商店
 BUILDING_Hero		    =  35	-- 聚贤馆
 BUILDING_Wishing	    =  36	-- 聚宝盆
 BUILDING_Help		    =  37	-- 帮助
+BUILDING_Coliseum		=  38	-- 竞技场
 
 -- 功能入口
 CITY_FUNCTION_SMITHY		=0	-- 铁匠铺
@@ -97,6 +98,7 @@ BuildingPrefab={
 [BUILDING_Hero] = { prefab = "BUILDING_Hero", land="BuildingLand16" },
 [BUILDING_Wishing] = { prefab = "BUILDING_Wishing", land="BuildingLand17" },
 [BUILDING_Help] = { prefab = "BUILDING_Help", land="BuildingLand18" },
+[BUILDING_Coliseum] = { prefab = "BUILDING_Coliseum", land="BuildingLand19" },
 } 
 --[[
 	if kind == BUILDING_Main then
