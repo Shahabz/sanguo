@@ -208,7 +208,7 @@ int area_checklist( int areaidx )
 		{
 			pArea->unit_head = -1;
 			pArea->unit_tail = -1;
-			write_gamelog( "AreaTailError: Area[%d] Tail[%d(%d)]", areaidx, area_index, tail );
+			write_gamelog( "AreaTailError: Area[%d] Tail[%d(%d)(%d,%d)]", areaidx, area_index, tail, posx, posy );
 			return -1;
 		}
 	}

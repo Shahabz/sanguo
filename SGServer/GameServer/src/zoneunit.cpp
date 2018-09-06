@@ -73,11 +73,11 @@ int zoneunit_getattr( int unit_index, SLK_NetS_ZoneUnit *pAttr )
 {
 	if ( unit_index < 0 || unit_index >= g_zoneunit_maxcount )
 		return -1;
-	ZoneUnit *pMapUnit = &g_zoneunit[unit_index];
-	switch ( pMapUnit->type )
+	ZoneUnit *pZoneUnit = &g_zoneunit[unit_index];
+	switch ( pZoneUnit->type )
 	{
 	case MAPUNIT_TYPE_CITY:	// 玩家城池
-		city_makezoneunit( pMapUnit->index, pAttr );
+		city_makezoneunit( pZoneUnit->index, pAttr );
 		break;
 	default:
 		return -1;
@@ -90,11 +90,11 @@ int zoneunit_getpos( int unit_index, short *posx, short *posy )
 {
 	if ( unit_index < 0 || unit_index >= g_zoneunit_maxcount )
 		return -1;
-	ZoneUnit *pMapUnit = &g_zoneunit[unit_index];
-	switch ( pMapUnit->type )
+	ZoneUnit *pZoneUnit = &g_zoneunit[unit_index];
+	switch ( pZoneUnit->type )
 	{
 	case MAPUNIT_TYPE_CITY:// 玩家城池
-		city_getpos( pMapUnit->index, posx, posy );
+		city_getpos( pZoneUnit->index, posx, posy );
 		break;
 	default:
 		break;
@@ -190,15 +190,15 @@ int zoneunit_del( char type, int index, int unit_index )
 int zoneunit_update( char type, int index, int unit_index )
 {
 	if ( unit_index < 0 )
-		unit_index = mapunit_getindex( type, index );
+		unit_index = zoneunit_getindex( type, index );
 	if ( unit_index < 0 )
 		return -1;
-	// 已经在外部更新完毕的结构
-	SLK_NetS_AddMapUnit unitinfo = { 0 };
-	mapunit_getattr( unit_index, &unitinfo );
+	//// 已经在外部更新完毕的结构
+	//SLK_NetS_AddMapUnit unitinfo = { 0 };
+	//mapunit_getattr( unit_index, &unitinfo );
 
-	SLK_NetS_UpdateMapUnit updateinfo = { 0 };
-	memcpy( &updateinfo.m_info, &unitinfo, sizeof( SLK_NetS_AddMapUnit ) );
+	//SLK_NetS_UpdateMapUnit updateinfo = { 0 };
+	//memcpy( &updateinfo.m_info, &unitinfo, sizeof( SLK_NetS_AddMapUnit ) );
 
 	//// 组织信息
 	//char tmpbuf[2048];
