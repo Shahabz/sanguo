@@ -1574,7 +1574,7 @@ int process_oclock_process( int hour )
 
 		// 上一次存档完毕时间
 		char szSQL[512] = { 0 };
-		sprintf( szSQL, "replace into world_data ( id, value, strvalue) values('%d',now(),'');", WORLD_DATA_SAVEFLAG );
+		sprintf( szSQL, "replace into world_data ( id, value, strvalue) values('%d','%d','save');", WORLD_DATA_SAVEFLAG, (int)time(NULL) );
 		if ( mysql_query( myGame, szSQL ) )
 		{
 			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
