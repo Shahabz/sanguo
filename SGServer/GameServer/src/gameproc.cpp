@@ -1511,6 +1511,74 @@ int process_oclock_process( int hour )
 	{ // 城主奖励
 		map_town_owner_award();
 	}
+
+	if ( hour == 5 )
+	{
+		write_gamelog( "[SAVESTART]" );
+		// 开启一个新事务
+		mysql_query( myGame, "START TRANSACTION" );
+
+		// 所有玩家数据保存
+		actors_save_everyone( 1 );
+
+		// 所有城池保存
+		city_save( NULL );
+
+		// 所有国家保存
+		nation_save( NULL );
+
+		// 所有部队保存
+		army_save( NULL );
+
+		// 所有集结保存
+		armygroup_save( NULL );
+
+		// 所有地区保存
+		map_zone_save( NULL );
+
+		// 所有城镇保存
+		map_town_save( NULL );
+
+		// 所有流寇保存
+		map_enemy_save( NULL );
+
+		// 所有资源点保存
+		map_res_save( NULL );
+
+		// 所有活动怪保存
+		map_activity_save( NULL );
+
+		// 所有随机事件点保存
+		map_event_save( NULL );
+
+		// 所有召唤保存
+		map_call_save( NULL );
+
+		// 所有国家名将保存
+		nation_hero_save( NULL );
+
+		// 所有拾取物保存
+		map_pickup_save( NULL );
+
+		// 所有世界boss
+		world_boss_save( NULL );
+
+		// 所有血战皇城据点保存
+		kingwar_town_save( NULL );
+
+		// 提交
+		mysql_query( myGame, "COMMIT;" );
+		write_gamelog( "[SAVEEND]" );
+
+		// 上一次存档完毕时间
+		char szSQL[512] = { 0 };
+		sprintf( szSQL, "replace into world_data ( id, value, strvalue) values('%d',now(),'');", WORLD_DATA_SAVEFLAG );
+		if ( mysql_query( myGame, szSQL ) )
+		{
+			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+			write_gamelog( "%s", szSQL );
+		}
+	}
 	sc_OnClockProcess( hour );
 	return 0;
 }
