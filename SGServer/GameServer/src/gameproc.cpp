@@ -1466,7 +1466,7 @@ int process_oclock_process( int hour )
 		nation_hero_subloyal();
 	}
 
-	if ( hour == 8 )
+	if ( hour == 8 && g_Config.servplat == 0 )
 	{ // 8点开始预热今天的活动
 		int nowstamp = (int)time( NULL );
 		int week = system_getweek();

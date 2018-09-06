@@ -32,6 +32,7 @@
 #include "mapunit.h"
 #include "army.h"
 
+extern SConfig g_Config;
 extern MYSQL *myGame;
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -527,26 +528,25 @@ int activity_sendlist( int actor_index )
 				}
 			}
 		}
-		else if ( activityid == ACTIVITY_27 )
-		{ // 西凉暴乱
-			
-		}
 		pValue.m_count += 1;
 	}
 
 	// 首日免费
-	endtime = g_actors[actor_index].createtime + 86400;
-	if ( (int)time( NULL ) < endtime || (g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0) )
+	if ( g_Config.servplat == 0 )
 	{
-		pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_25;
-		pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
-		pValue.m_list[pValue.m_count].m_endtime = endtime;
-		pValue.m_list[pValue.m_count].m_closetime = endtime;
-		if ( (int)time( NULL ) >= endtime )
+		endtime = g_actors[actor_index].createtime + 86400;
+		if ( (int)time( NULL ) < endtime || (g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0) )
 		{
-			pValue.m_list[pValue.m_count].m_red = 1;
+			pValue.m_list[pValue.m_count].m_activityid = ACTIVITY_25;
+			pValue.m_list[pValue.m_count].m_starttime = g_actors[actor_index].createtime;
+			pValue.m_list[pValue.m_count].m_endtime = endtime;
+			pValue.m_list[pValue.m_count].m_closetime = endtime;
+			if ( (int)time( NULL ) >= endtime )
+			{
+				pValue.m_list[pValue.m_count].m_red = 1;
+			}
+			pValue.m_count += 1;
 		}
-		pValue.m_count += 1;
 	}
 
 	// 首充礼包

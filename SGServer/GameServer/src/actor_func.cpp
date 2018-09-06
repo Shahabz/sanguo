@@ -982,16 +982,19 @@ int actor_redinfo( int actor_index, char path )
 	}
 	else if ( path == 4 )
 	{ //  ◊»’√‚∑—
-		int endtime = g_actors[actor_index].createtime + 1 * 86400;
-		if ( (int)time( NULL ) < endtime )
+		if ( g_Config.servplat == 0 )
 		{
-			pValue.m_has = 1;
-			pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
-		}
-		else if ( g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0 )
-		{
-			pValue.m_has = 1;
-			pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+			int endtime = g_actors[actor_index].createtime + 1 * 86400;
+			if ( (int)time( NULL ) < endtime )
+			{
+				pValue.m_has = 1;
+				pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+			}
+			else if ( g_actors[actor_index].act25_point > 0 && g_actors[actor_index].act25_isget == 0 )
+			{
+				pValue.m_has = 1;
+				pValue.m_value = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
+			}
 		}
 	}
 	else if ( path == 5 )

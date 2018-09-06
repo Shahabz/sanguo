@@ -414,6 +414,10 @@ int configprocess( const char *pSign, const char *pValue )
 	{
 		g_Config.usenetlog = atoi( pValue );
 	}
+	else if ( strcmp( pSign, "SERVPLAT" ) == 0 )
+	{
+		g_Config.servplat = atoi( pValue );
+	}
 
 	return 0;
 }
@@ -592,6 +596,7 @@ int main( int argc, char *argv[] )
 	g_Config.global_port = 0;
 	g_Config.usegate = 0;
 	g_Config.usenetlog = 1;
+	g_Config.servplat = 0;
 	u_getcfg( "server.cfg", configprocess );
 	u_loginit( LOG_PATH );
 

@@ -215,6 +215,7 @@ typedef struct _sconfig {
 	char use_zh;
 	char usegate;
 	char usenetlog;
+	char servplat;
 
 	char log_host[64];
 	unsigned short log_port;
