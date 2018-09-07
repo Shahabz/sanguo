@@ -12,7 +12,7 @@ local m_uiUIP_Shop = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
 local m_uiPoint = nil; --UnityEngine.GameObject
 local m_uiWindow = nil; --UnityEngine.GameObject
-
+local m_ObjectPool = nil
 local m_QuestRecvValue = nil
 local m_ShopRecvValue = nil
 
