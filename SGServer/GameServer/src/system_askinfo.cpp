@@ -1309,6 +1309,28 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			everyday_shop_buy( actor_index, pvalue[1], pvalue[2] );
 		}
 		break;
+	case ASKINFO_COLISEUM: // 竞技场
+		if ( pvalue[0] == 0 )
+		{ // 进入竞技场
+			
+		}
+		else if ( pvalue[0] == 1 )
+		{ // 排行榜
+
+		}
+		else if ( pvalue[0] == 2 )
+		{ // 挑战
+
+		}
+		else if ( pvalue[0] == 3 )
+		{ // 换一批
+
+		}
+		else if ( pvalue[0] == 4 )
+		{ // 替换阵容
+
+		}
+		break;
 	default:
 		break;
 	}

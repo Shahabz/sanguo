@@ -45,6 +45,7 @@ function SLK_Hero:empty()
 	self.m_troops			=	0;-- 兵力
 	self.m_attack_increase 	= 	0;-- 强攻
 	self.m_defense_increase	=	0;-- 强防
+	self.m_bpower			=	0;-- 战力
 	
 	-- 英雄装备
 	self.m_Equip			=	{};
@@ -84,6 +85,7 @@ function SLK_Hero:Set( recvValue )
 	self.m_troops			=	recvValue.m_troops;-- 兵力
 	self.m_attack_increase 	= 	recvValue.m_attack_increase;-- 强攻
 	self.m_defense_increase	=	recvValue.m_defense_increase;-- 强防
+	self.m_bpower			=	recvValue.m_bpower;-- 战力
 end
 
 -- 国家名将部分信息结构

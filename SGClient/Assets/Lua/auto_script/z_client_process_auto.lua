@@ -2606,3 +2606,13 @@ function proc_activity17_C( recvValue )
 	Activity17ModRecv( recvValue )
 end
 
+-- m_count=0,m_list={m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},[m_count]},m_maxrank=0,m_myrank=0,m_todaynum=0,m_maxtodaynum=0,m_myteam={[3]},
+function proc_coliseumlist_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_bpower=0,m_value=0,[m_count]},
+function proc_coliseumranklist_C( recvValue )
+	-- process.
+end
+

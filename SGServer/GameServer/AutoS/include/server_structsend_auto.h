@@ -438,6 +438,7 @@ typedef struct _slk_NetS_HeroEquip SLK_NetS_HeroEquip;	//英雄装备
 
 struct _slk_NetS_Hero {
 	short m_kind;	//
+	int m_bpower;	//
 	char m_color;	//
 	short m_level;	//
 	char m_corps;	//
@@ -2443,6 +2444,51 @@ struct _slk_NetS_Activity17 {
 };
 typedef struct _slk_NetS_Activity17 SLK_NetS_Activity17;	//充值豪礼
 
+struct _slk_NetS_ColiseumHero {
+	short m_kind;	//竞技场-匹配对手武将
+	char m_color;	//竞技场-匹配对手武将
+	short m_level;	//竞技场-匹配对手武将
+};
+typedef struct _slk_NetS_ColiseumHero SLK_NetS_ColiseumHero;	//竞技场武将
+
+struct _slk_NetS_ColiseumCity {
+	char m_namelen;	//竞技场-匹配对手
+	char m_name[32];	//竞技场-匹配对手
+	int m_bpower;	//竞技场-匹配对手
+	int m_rank;	//竞技场-匹配对手
+	char m_nation;	//竞技场-匹配对手
+	SLK_NetS_ColiseumHero m_hero[3];	//竞技场-匹配对手
+};
+typedef struct _slk_NetS_ColiseumCity SLK_NetS_ColiseumCity;	//竞技场对手
+
+struct _slk_NetS_ColiseumList {
+	char m_count;	//竞技场-匹配列表
+	SLK_NetS_ColiseumCity m_list[3];	//竞技场-匹配列表
+	int m_maxrank;	//竞技场-匹配列表
+	int m_myrank;	//竞技场-匹配列表
+	char m_todaynum;	//竞技场-匹配列表
+	char m_maxtodaynum;	//竞技场-匹配列表
+	short m_myteam[3];	//竞技场-匹配列表
+};
+typedef struct _slk_NetS_ColiseumList SLK_NetS_ColiseumList;	//竞技场列表
+
+struct _slk_NetS_ColiseumRank {
+	int m_rank;	//竞技场-排行榜
+	char m_namelen;	//竞技场-排行榜
+	char m_name[32];	//竞技场-排行榜
+	char m_nation;	//竞技场-排行榜
+	short m_level;	//竞技场-排行榜
+	int m_bpower;	//竞技场-排行榜
+	int m_value;	//竞技场-排行榜
+};
+typedef struct _slk_NetS_ColiseumRank SLK_NetS_ColiseumRank;	//竞技场排行榜
+
+struct _slk_NetS_ColiseumRankList {
+	char m_count;	//竞技场-排行榜列表
+	SLK_NetS_ColiseumRank m_list[30];	//竞技场-排行榜列表
+};
+typedef struct _slk_NetS_ColiseumRankList SLK_NetS_ColiseumRankList;	//竞技场排行榜
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2709,5 +2755,10 @@ int struct_NetS_EDayShopList_send( char **pptr, int *psize, SLK_NetS_EDayShopLis
 int struct_NetS_EDayPoint_send( char **pptr, int *psize, SLK_NetS_EDayPoint *pValue );
 int struct_NetS_Activity17Award_send( char **pptr, int *psize, SLK_NetS_Activity17Award *pValue );
 int struct_NetS_Activity17_send( char **pptr, int *psize, SLK_NetS_Activity17 *pValue );
+int struct_NetS_ColiseumHero_send( char **pptr, int *psize, SLK_NetS_ColiseumHero *pValue );
+int struct_NetS_ColiseumCity_send( char **pptr, int *psize, SLK_NetS_ColiseumCity *pValue );
+int struct_NetS_ColiseumList_send( char **pptr, int *psize, SLK_NetS_ColiseumList *pValue );
+int struct_NetS_ColiseumRank_send( char **pptr, int *psize, SLK_NetS_ColiseumRank *pValue );
+int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_ColiseumRankList *pValue );
 
 #endif

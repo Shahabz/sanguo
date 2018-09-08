@@ -235,3 +235,7 @@ global.token_ret_token = 20 --元宝返还数量
 global.map_pickup_max = 30 --世界拾取数量限制
 global.activity27_brushmin = 10 --西凉骑兵多久刷新一次
 global.activity27_brushcount = 100 --西凉骑兵刷多少个
+global.activity27_duration = 2700 --西凉暴乱持续时间
+global.activity12_duration = 7200 --南蛮入侵持续时间
+global.activity27_begintime = 20 --西凉开始时间
+global.activity12_begintime = 20 --南蛮开始时间

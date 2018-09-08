@@ -661,6 +661,7 @@ int struct_NetS_Hero_send( char **pptr, int *psize, SLK_NetS_Hero *pValue )
 	int tmpi = 0;
 
 	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bpower, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_corps, (*psize) );
@@ -3607,6 +3608,77 @@ int struct_NetS_Activity17_send( char **pptr, int *psize, SLK_NetS_Activity17 *p
 		struct_NetS_Activity17Award_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_mypay, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumHero_send( char **pptr, int *psize, SLK_NetS_ColiseumHero *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_kind, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_color, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumCity_send( char **pptr, int *psize, SLK_NetS_ColiseumCity *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bpower, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	for( tmpi = 0; tmpi < 3; tmpi++ )
+	{
+		struct_NetS_ColiseumHero_send( pptr, psize, &pValue->m_hero[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_ColiseumList_send( char **pptr, int *psize, SLK_NetS_ColiseumList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ColiseumCity_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_maxrank, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_myrank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_todaynum, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maxtodaynum, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_myteam, 3*sizeof(short), (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumRank_send( char **pptr, int *psize, SLK_NetS_ColiseumRank *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_bpower, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_ColiseumRankList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ColiseumRank_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
 	return 0;
 }
 

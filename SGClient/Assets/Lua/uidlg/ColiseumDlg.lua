@@ -18,7 +18,8 @@ local m_uiWaiting = nil; --UnityEngine.GameObject
 local m_ObjectPool = nil
 local m_MatchRecvValue = nil;
 local m_RankRecvValue = nil;
-local m_TeamRecvValue = nil;
+local m_myteam = nil;
+local m_mypower = 0;
 
 -- 打开界面
 function ColiseumDlgOpen()
@@ -36,7 +37,7 @@ function ColiseumDlgClose()
 	eye.uiManager:Close( "ColiseumDlg" );
 	m_MatchRecvValue = nil;
 	m_RankRecvValue = nil;
-	m_TeamRecvValue = nil;
+	m_myteam = nil;
 end
 
 -- 删除界面
@@ -45,7 +46,7 @@ function ColiseumDlgDestroy()
 	m_Dlg = nil;
 	m_MatchRecvValue = nil;
 	m_RankRecvValue = nil;
-	m_TeamRecvValue = nil;
+	m_myteam = nil;
 end
 
 ----------------------------------------
@@ -161,6 +162,7 @@ function ColiseumDlgMatchRecv( recvValue )
 	SetText( m_uiMaxRank, F(4295,m_MatchRecvValue.m_maxrank) )
 	SetText( m_uiMyRank, F(4288,m_MatchRecvValue.m_myrank) )
 	SetText( m_uiTodayNum, F(4289,m_MatchRecvValue.m_todaynum,m_MatchRecvValue.m_maxtodaynum) )
+	ColiseumDlgRecvUpdateCD( m_MatchRecvValue.m_updatecd )
 	
 	-- 对手列表
 	for i=1, 3, 1 do	
@@ -168,20 +170,38 @@ function ColiseumDlgMatchRecv( recvValue )
 		local info = m_MatchRecvValue.m_list[i]
 		ColiseumDlgCreateMatch( i-1, uiObj, info )
 	end
+	
+	-- 我的队伍
+	ColiseumDlgTeamRecv(m_MatchRecvValue.m_myteam)
 end
 
 -- 我的队伍信息
-function ColiseumDlgTeamRecv( recvValue )
+function ColiseumDlgTeamRecv( myteam )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
-	m_TeamRecvValue = recvValue;
+	m_myteam = myteam;
 	-- 我的阵容
-	SetText( m_uiMyPower, F(4293, m_TeamRecvValue.mypower ) )
+	m_mypower = 0;
 	for i=1, 3, 1 do
 		local uiObj = m_uiMyTeamList.transform:GetChild(i-1);
-		local kind = m_TeamRecvValue.m_myteam[i]
+		local kind = m_myteam[i]
 		ColiseumDlgCreateMyTeamHero( uiObj, kind )
+	end
+	SetText( m_uiMyPower, F(4293, m_mypower ) )
+end
+
+function ColiseumDlgRecvUpdateCD( cd )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	if cd > 0 then
+		SetTimer( m_uiUpdateCD, cd, cd, 0, T(4299) )
+		SetTrue( m_uiUpdateCD )
+		SetFalse( m_uiUpdateBtn )
+	else
+		SetFalse( m_uiUpdateCD )
+		SetTrue( m_uiUpdateBtn )
 	end
 end
 
@@ -194,11 +214,11 @@ function ColiseumDlgCreateMatch( index, uiObj, info )
 	local uiHeroList = objs[3]
 	SetControlID( uiObj, 100+index )
 	SetText( uiName, info.m_name )
-	SetText( uiPower, F( 4290, info.m_power ) )
+	SetText( uiPower, F( 4290, info.m_bpower ) )
 	SetText( uiRank, F( 4291, info.m_rank ) )
 	for i=1, 3, 1 do
 		local uiHeroObj = uiHeroList.transform:GetChild(i-1);
-		local heroinfo = info.m_herolist[i]
+		local heroinfo = info.m_hero[i]
 		ColiseumDlgCreateHero( uiHeroObj, hero )
 	end
 end
@@ -224,6 +244,7 @@ function ColiseumDlgCreateMyTeamHero( uiHeroObj, kind )
 		SetImage( uiHeroObj.transform:Find("Shape"), HeroFaceSprite(pHero.m_kind) );
 		SetText( uiHeroObj.transform:Find("Name"), "lv."..pHero.m_level );
 		SetTrue( uiHeroObj.transform:Find("NameBack") )
+		m_mypower = m_mypower + pHero.m_bpower
 	else
 		SetImage( uiHeroObj.transform:Find("Color"), HeroColorSprite(0) );
 		SetImage( uiHeroObj.transform:Find("Shape"), HeroFaceSprite(0) );
@@ -239,6 +260,7 @@ end
 
 -- 替换阵容
 function ColiseumDlgReplace()
+	ColiseumTeamDlgShow( m_myteam )
 end
 
 -- 换一批
@@ -316,7 +338,7 @@ function ColiseumDlgRankCreate( uiObj, info )
 	SetImage( uiNation, NationSprite(info.m_nation) );
 	SetText( uiName, info.m_name );
 	SetTrue( uiLevel, info.m_level )
-	SetTrue( uiPower, info.m_power )
+	SetTrue( uiPower, info.m_bpower )
 end
 
 

@@ -560,6 +560,7 @@ end
 function struct_NetS_Hero_recv( buffer )
 	local recvValue = {};
 	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_bpower = buffer:ReadInt();
 	recvValue.m_color = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_corps = buffer:ReadSByte();
@@ -3294,6 +3295,74 @@ function struct_NetS_Activity17_recv( buffer )
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	recvValue.m_mypay = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ColiseumHero_recv( buffer )
+	local recvValue = {};
+	recvValue.m_kind = buffer:ReadShort();
+	recvValue.m_color = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_ColiseumCity_recv( buffer )
+	local recvValue = {};
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_bpower = buffer:ReadInt();
+	recvValue.m_rank = buffer:ReadInt();
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_hero = {};
+	for tmpi=1,3,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ColiseumHero_recv( buffer );
+		table.insert( recvValue.m_hero, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_ColiseumList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ColiseumCity_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_maxrank = buffer:ReadInt();
+	recvValue.m_myrank = buffer:ReadInt();
+	recvValue.m_todaynum = buffer:ReadSByte();
+	recvValue.m_maxtodaynum = buffer:ReadSByte();
+	recvValue.m_myteam={};
+	for tmpi=1,3,1 do
+		recvValue.m_myteam[tmpi] = buffer:ReadShort();
+	end
+	return recvValue;
+end
+
+function struct_NetS_ColiseumRank_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rank = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_bpower = buffer:ReadInt();
+	recvValue.m_value = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_ColiseumRankList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ColiseumRank_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
 	return recvValue;
 end
 
