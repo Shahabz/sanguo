@@ -36,6 +36,12 @@ extern int g_city_maxcount;
 extern int g_city_maxindex;
 extern Fight g_fight;
 
+extern LastName *g_lastname;
+extern int g_lastname_maxnum;
+
+extern FirstName *g_firstname;
+extern int g_firstname_maxnum;
+
 int g_maxrank = 1;
 SLK_NetS_ColiseumRankList g_ColiseumRankList = { 0 };
 
@@ -94,8 +100,29 @@ int coliseum_enter( int actor_index )
 	{
 		coliseum_match( actor_index );
 	}
+	coliseum_sendlist( actor_index );
+
 	// 频繁限制
 	actor_set_uselimit_cd( actor_index, USELIMIT_CD_COLISEUM_ENTER, 3 );
+	return 0;
+}
+
+// 发送列表
+int coliseum_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	SLK_NetS_ColiseumList pValue = { 0 };
+	pValue.m_updatecd = actor_check_uselimit_cd( actor_index, USELIMIT_CD_COLISEUM_UPDATE );
+	pValue.m_todaynum = actor_get_today_char_times( actor_index, TODAY_CHAR_COLISEUM_TODAYNUM );
+	pValue.m_maxtodaynum = global.coliseum_todaynum;
+	pValue.m_maxrank = g_actors[actor_index].coliseum_maxrank;
+	pValue.m_myrank = g_actors[actor_index].coliseum_rank;
+	memcpy( pValue.m_list, g_actors[actor_index].coliseum_list, sizeof( SLK_NetS_ColiseumCity ) * 3 );
+	pValue.m_count = COLISEUMLIST_MAX;
+	pValue.m_myteam[0] = g_actors[actor_index].coliseum_team[0];
+	pValue.m_myteam[1] = g_actors[actor_index].coliseum_team[1];
+	pValue.m_myteam[2] = g_actors[actor_index].coliseum_team[2];
+	netsend_coliseumlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -496,19 +523,6 @@ int coliseum_match( int actor_index )
 {
 	// 获取相近排名玩家数据
 	coliseum_list_load( actor_index, "match_list" );
-
-	SLK_NetS_ColiseumList pValue = { 0 };
-	pValue.m_updatecd = actor_check_uselimit_cd( actor_index, USELIMIT_CD_COLISEUM_UPDATE );
-	pValue.m_todaynum = actor_get_today_char_times( actor_index, TODAY_CHAR_COLISEUM_TODAYNUM );
-	pValue.m_maxtodaynum = global.coliseum_todaynum;
-	pValue.m_maxrank = g_actors[actor_index].coliseum_maxrank;
-	pValue.m_myrank = g_actors[actor_index].coliseum_rank;
-	memcpy( pValue.m_list, g_actors[actor_index].coliseum_list, sizeof( SLK_NetS_ColiseumCity ) * 3 );
-	pValue.m_count = COLISEUMLIST_MAX;
-	pValue.m_myteam[0] = g_actors[actor_index].coliseum_team[0];
-	pValue.m_myteam[1] = g_actors[actor_index].coliseum_team[1];
-	pValue.m_myteam[2] = g_actors[actor_index].coliseum_team[2];
-	netsend_coliseumlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 
@@ -525,6 +539,8 @@ int coliseum_update( int actor_index )
 
 	// 重新匹配
 	coliseum_match( actor_index );
+
+	coliseum_sendlist( actor_index );
 	return 0;
 }
 
@@ -651,6 +667,10 @@ int coliseum_change_rank( int actor_index, int index, char winflag )
 		g_actors[actor_index].pattr[0]->name, g_actors[actor_index].pattr[0]->level, winner2, rank_transform, fight_index, topchange ) < 0 )
 		return -1;*/
 
+	if ( winflag == FIGHT_WIN )
+	{
+		coliseum_match( actor_index );
+	}
 	return 0;
 }
 
@@ -773,7 +793,7 @@ int coliseum_robot_checkinit()
 	return coliseum_robot_init();
 }
 /* 竞技场机器人初始化 */
-int coliseum_robot_init( MYSQL *db )
+int coliseum_robot_init()
 {
 	/* 先检查竞技场列表中是否有数据 */
 	if ( coliseum_robot_check() > 0 )
@@ -783,10 +803,7 @@ int coliseum_robot_init( MYSQL *db )
 	coliseum_robot_delete( "match_list" );
 	coliseum_robot_delete( "match_attr" );
 
-	/* 2.创建名字库 */
-	//randname_init();
-
-	/* 3.开始创建 */
+	/* 2.开始创建 */
 	printf( "coliseum robot create begin \n" );
 	coliseum_robot_create( COLISEUM_ROBOT_COUNT );
 	printf( "coliseum robot create end \n" );
@@ -900,118 +917,139 @@ int coliseum_robot_match_list_insert( Actor *pActor, City *pCity, Hero *pHero, i
 }
 
 /* 创建数据 */
-int coliseum_robot_create( MYSQL *db, int robotcount )
+int coliseum_robot_create( int robotcount )
 {
 	int partnerid = 1;
 	int itemid = 1;
 	for ( int tmpi = 0; tmpi < robotcount; tmpi++ )
 	{
-		Actor actor = {0};
+		Actor actor = { 0 };
+		City city = { 0 };
 		Hero hero[COLISEUMLIST_HERO_MAX] = { 0 };
-
+		int nation_level = 0;
+		int nation_count = 0;
+		char hero_randomtype = 0;
+		/***************************************************** 角色部分 ******************************************************/
 		/* 角色竞技场排名 */
 		actor.coliseum_rank = tmpi + 1;
-
 		/* 角色id */
 		actor.actorid = COLISEUM_ROBOT_ACTORID_OFFSET + tmpi;
-
 		/* 主角等级 */
 		if ( tmpi <= robotcount * 1 / 5 )
-			actor.level = random( 90, 100 );
+		{
+			actor.level = random( 95, 105 );
+			nation_level = random( actor.level - 10, actor.level );
+			nation_count = 5;
+			city.place = random( 10, 20 );
+			city.attr.hero_row_num = 2;
+			hero_randomtype = 1;
+		}
 		else if ( tmpi <= robotcount * 2 / 5 )
-			actor.level = random( 80, 90 );
+		{
+			actor.level = random( 85, 95 );
+			nation_level = random( actor.level - 20, actor.level - 5 );
+			nation_count = 4;
+			city.place = random( 8, 15 );
+			city.attr.hero_row_num = 2;
+			hero_randomtype = 2;
+		}
 		else if ( tmpi <= robotcount * 3 / 5 )
-			actor.level = random( 70, 80 );
+		{
+			actor.level = random( 75, 85 );
+			nation_level = random( actor.level - 30, actor.level - 10 );
+			nation_count = 3;
+			city.place = random( 5, 10 );
+			city.attr.hero_row_num = 2;
+			hero_randomtype = 3;
+		}
 		else if ( tmpi <= robotcount * 4 / 5 )
-			actor.level = random( 60, 70 );
-		else if ( tmpi <= robotcount * 5 / 5 )
-			actor.level = random( 50, 60 );
-
+		{
+			actor.level = random( 65, 75 );
+			nation_level = random( actor.level - 30, actor.level - 15 );
+			nation_count = 2;
+			city.place = random( 3, 8 );
+			city.attr.hero_row_num = 1;
+			hero_randomtype = 4;
+		}
+		else
+		{
+			actor.level = random( 50, 65 );
+			nation_level = random( actor.level - 40, actor.level - 20 );
+			nation_count = 1;
+			city.place = random( 1, 5 );
+			city.attr.hero_row_num = 1;
+			hero_randomtype = 5;
+		}
 		/* 角色名称 */
-		randname_get( pMainActorAttr->name );
-
+		coliseum_randomname( actor.name );
 		/* 国家 */
 		actor.nation = random( 1, 3 );
 
+		/***************************************************** 城池部分 ******************************************************/
+		// 国器
+		for ( int type = 0; type < nation_count; type++ )
+		{
+			nation_level = nation_level <= 0 ? 1 : nation_level;
+			city.neq_lv[type] = nation_level;
+		}
 
-		/***************************************************** 伙伴部分 ******************************************************/
-		/* 伙伴 */
-		static int s_partnerkindlist[] = { 1, 2, 3, 4 };
 
-		char colortype = 1;
-		if ( pMainActorAttr->level >= 23 )
-			colortype = 4;
-		else if ( pMainActorAttr->level >= 21 )
-			colortype = 3;
-		else if ( pMainActorAttr->level >= 19 )
-			colortype = 2;
-		else
-			colortype = 1;
+		/***************************************************** 武将部分 ******************************************************/
+		static int s_herokindlist1[] = { 14, 15, 17, 22, 23, 25, 26, 27, 28, 29, 30, 31, 41, 42, 44, 45, 46, 47, 48, 49, 50, 56, 57, 51, 52, 58, 59, 60, 61, 62, 63, 64, 65, 66, 91, 92, 93, 94, 97, 99 };
+		static int s_herokindlist2[] = { 31, 41, 42, 44, 45, 46, 47, 48, 49, 50, 56, 57, 51, 52, 58, 59, 60, 61, 62, 63, 64, 65, 66, 91, 92, 93, 94, 97, 99 };
+		static int s_herokindlist_token[] = { 50, 58, 59, 60, 61, 62, 63, 64, 65, 66, 91, 92, 93, 94, 95, 96, 97, 98, 99, 71 };
 
-		int partnerkindlist[4] = { 0, 0, 0, 0 };
-		int partnercolorlist[4] = { 0, 0, 0, 0 };
+		int herokind[3] = { 0, 0, 0 };
+		int herocolor[3] = { 0, 0, 0 };
 		int index = 0;
-		if ( colortype == 1 )
+		if ( hero_randomtype == 1 )
 		{
-			ruffle( s_partnerkindlist, sizeof( s_partnerkindlist ) / sizeof( s_partnerkindlist[0] ) );
-			partnerkindlist[0] = s_partnerkindlist[0];					partnercolorlist[0] = g_partnerinfo[partnerkindlist[0]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[1] = s_partnerkindlist[1];					partnercolorlist[1] = g_partnerinfo[partnerkindlist[1]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[2] = s_partnerkindlist[2];					partnercolorlist[2] = g_partnerinfo[partnerkindlist[2]][PARTNER_INIT_COLOR].normalcolor;
-			partnerkindlist[3] = s_partnerkindlist[3];					partnercolorlist[3] = g_partnerinfo[partnerkindlist[3]][PARTNER_INIT_COLOR].normalcolor;
+			ruffle( s_herokindlist_token, sizeof( s_herokindlist_token ) / sizeof( s_herokindlist_token[0] ) );
+			herokind[0] = s_herokindlist_token[0];	herocolor[0] = hero_defaultcolor( herokind[0] );
+			herokind[1] = s_herokindlist_token[1];	herocolor[1] = hero_defaultcolor( herokind[1] );
+			herokind[2] = s_herokindlist_token[2];	herocolor[2] = hero_defaultcolor( herokind[2] );
 		}
-		else if ( colortype == 2 )
+		else if ( hero_randomtype == 2 )
 		{
-			ruffle( s_partnerkindlist, sizeof( s_partnerkindlist ) / sizeof( s_partnerkindlist[0] ) );
-			partnerkindlist[0] = s_partnerkindlist[0];					partnercolorlist[0] = g_partnerinfo[partnerkindlist[0]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[1] = s_partnerkindlist[1];					partnercolorlist[1] = g_partnerinfo[partnerkindlist[1]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[2] = s_partnerkindlist[2];					partnercolorlist[2] = g_partnerinfo[partnerkindlist[2]][PARTNER_INIT_COLOR].normalcolor + random( 0, 1 );
-			partnerkindlist[3] = s_partnerkindlist[3];					partnercolorlist[3] = g_partnerinfo[partnerkindlist[3]][PARTNER_INIT_COLOR].normalcolor;
+			ruffle( s_herokindlist2, sizeof( s_herokindlist2 ) / sizeof( s_herokindlist2[0] ) );
+			herokind[0] = s_herokindlist2[0];	herocolor[0] = hero_defaultcolor( herokind[0] );
+			herokind[1] = s_herokindlist2[1];	herocolor[1] = hero_defaultcolor( herokind[1] );
+			herokind[2] = s_herokindlist2[2];	herocolor[2] = hero_defaultcolor( herokind[2] );
 		}
-		else if ( colortype == 3 )
+		else
 		{
-			ruffle( s_partnerkindlist, sizeof( s_partnerkindlist ) / sizeof( s_partnerkindlist[0] ) );
-			partnerkindlist[0] = s_partnerkindlist[0];					partnercolorlist[0] = g_partnerinfo[partnerkindlist[0]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[1] = s_partnerkindlist[1];					partnercolorlist[1] = g_partnerinfo[partnerkindlist[1]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[2] = s_partnerkindlist[2];					partnercolorlist[2] = g_partnerinfo[partnerkindlist[2]][PARTNER_INIT_COLOR].normalcolor + 1;
-			partnerkindlist[3] = s_partnerkindlist[3];					partnercolorlist[3] = g_partnerinfo[partnerkindlist[3]][PARTNER_INIT_COLOR].normalcolor + 1;
+			ruffle( s_herokindlist1, sizeof( s_herokindlist1 ) / sizeof( s_herokindlist1[0] ) );
+			herokind[0] = s_herokindlist1[0];	herocolor[0] = hero_defaultcolor( herokind[0] );
+			herokind[1] = s_herokindlist1[1];	herocolor[1] = hero_defaultcolor( herokind[1] );
+			herokind[2] = s_herokindlist1[2];	herocolor[2] = hero_defaultcolor( herokind[2] );
 		}
-		else if ( colortype == 4 )
-		{
-			ruffle( s_partnerkindlist, sizeof( s_partnerkindlist ) / sizeof( s_partnerkindlist[0] ) );
-			partnerkindlist[0] = s_partnerkindlist[0];					partnercolorlist[0] = g_partnerinfo[partnerkindlist[0]][PARTNER_INIT_COLOR].normalcolor + random( 1, 2 );
-			partnerkindlist[1] = s_partnerkindlist[1];					partnercolorlist[1] = g_partnerinfo[partnerkindlist[1]][PARTNER_INIT_COLOR].normalcolor + random( 1, 2 );
-			partnerkindlist[2] = s_partnerkindlist[2];					partnercolorlist[2] = g_partnerinfo[partnerkindlist[2]][PARTNER_INIT_COLOR].normalcolor + random( 1, 2 );
-			partnerkindlist[3] = s_partnerkindlist[3];					partnercolorlist[3] = g_partnerinfo[partnerkindlist[3]][PARTNER_INIT_COLOR].normalcolor + random( 1, 2 );
-		}
+		
 
-		int sortindex[4] = { 0, 1, 2, 3 };
-		ruffle( sortindex, 4 );
-		for ( int member = 0; member < 4; member++ )
+		int sortindex[3] = { 0, 1, 2 };
+		ruffle( sortindex, 3 );
+		for ( int member = 0; member < 3; member++ )
 		{
-			Partner[member].m_partnerid = partnerid;
-			Partner[member].m_teamoffset = member + 1;
-			Partner[member].m_partnerkind = partnerkindlist[sortindex[member]];
-			Partner[member].m_color = partnercolorlist[sortindex[member]];
-			Partner[member].m_level = random( pMainActorAttr->level - 2, pMainActorAttr->level );
-			Partner[member].m_skill.skillexp[0] = Partner[member].m_level;
-			/* 统计战力 */
-			ActorAttr pPartnerAttr = { 0 };
-			partner_create( &Partner[member], &pPartnerAttr );
-			MainActor.combatpower_attr += combatpower_calc( &pPartnerAttr );
-
-			partnerid += 1;
+			hero[member].offset = HERO_COLISEUMOFFSET + member;
+			hero[member].kind = herokind[sortindex[member]];
+			hero[member].color = herocolor[sortindex[member]];
+			hero[member].level = random( actor.level - 3, actor.level );
 		}
 
 		/* 插入列表 */
-		coliseum_robot_match_list_insert( db, &MainActor, Partner, 4 );
-
-		/* 插入属性 */
-		coliseum_robot_match_attr_insert( db, &MainActor );
-
-		pMainActorAttr = NULL;
+		coliseum_robot_match_list_insert( &actor, &city, hero, 3, "match_list" );
 		char szMsg[16] = { 0 };
 		sprintf( szMsg, "%d\r", tmpi );
 		puts( szMsg );
 	}
+	return 0;
+}
+
+// 随机名称
+int coliseum_randomname( char *name )
+{
+	int lastindex = random( 1, g_lastname_maxnum - 1 );
+	int firstindex = random( 1, g_firstname_maxnum - 1 );
+	snprintf( name, NAME_SIZE, "%s%s", g_lastname[lastindex].str, g_firstname[lastindex].str );
+	name[NAME_SIZE - 1] = 0;
 	return 0;
 }

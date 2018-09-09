@@ -1232,6 +1232,15 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 118 );
 
+	// 竞技场机器人
+	if ( coliseum_robot_checkinit() < 0 )
+	{
+		printf_msg( "coliseum_robot_checkinit Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 118 );
+
 	// 数据库多线程启动
 	if ( dbwork_start() >= 0 )
 		printf_msg( "dbwork Module ready!" );

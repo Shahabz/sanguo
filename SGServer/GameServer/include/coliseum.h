@@ -5,6 +5,7 @@
 
 int coliseum_init();
 int coliseum_enter( int actor_index );
+int coliseum_sendlist( int actor_index );
 int coliseum_getrank( int actorid );
 int coliseum_setrank( int actorid, int rank );
 void coliseum_checkrank();
@@ -43,4 +44,6 @@ int coliseum_robot_delete( char *pTab );
 /* 竞技场机器人创建 */
 int coliseum_robot_create( int robotcount );
 
+// 随机名称
+int coliseum_randomname( char *name );
 #endif
