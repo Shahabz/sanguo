@@ -79,6 +79,7 @@ int mail_make( int actorid, char type, char *title, int *title_len, char *conten
 			return -1;
 		*attach_len = len;
 		db_escape( attach, szAttach, 0 );
+		deltime += MAX_MAIL_SAVETIME;
 	}
 
 	char bigint[21];
@@ -935,4 +936,23 @@ void mail_notice( int titleid, int contentid, char *attach )
 			mail( g_city[tmpi].actor_index, g_city[tmpi].actorid, MAIL_TYPE_NOTIFY, title, content, attach, 0, 1 );
 		}
 	}
+}
+
+/* 邮件过期检查 */
+int mail_overdue()
+{
+	char szSQL[256] = { 0 };
+	int thistime = (int)time( NULL );
+
+	// 删除过期的邮件
+	sprintf( szSQL, "DELETE FROM `mail` WHERE deltime < %d", thistime );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	return 0;
 }

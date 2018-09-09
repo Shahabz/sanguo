@@ -129,4 +129,7 @@ void mail_sendall( int titleid, int contentid, char *v1, char *v2, char *v3, cha
 
 // 给所有城池发送公告邮件
 void mail_notice( int titleid, int contentid, char *attach );
+
+// 邮件过期检查
+int mail_overdue();
 #endif

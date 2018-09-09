@@ -69,6 +69,7 @@ int actor_set_today_int_times( int actor_index, int offset, int value );
 #define USELIMIT_CD_WISHING_CHANGE	1 // 聚宝盆兑换冷却
 #define USELIMIT_CD_COLISEUM_ENTER	2 // 竞技场出入限制
 #define USELIMIT_CD_COLISEUM_UPDATE	3 // 竞技场换一批CD限制
+#define USELIMIT_CD_COLISEUM_TEAM	4 // 竞技场更换阵容CD限制
 int actor_set_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_add_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_check_uselimit_cd( int actor_index, char index );

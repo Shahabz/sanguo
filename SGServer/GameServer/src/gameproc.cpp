@@ -61,6 +61,7 @@
 #include "wishing.h"
 #include "girl.h"
 #include "robot.h"
+#include "mail.h"
 #include "coliseum.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
@@ -1231,15 +1232,9 @@ int process_init( int max_connection )
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 118 );
-
 	// 竞技场机器人
-	if ( coliseum_robot_checkinit() < 0 )
-	{
-		printf_msg( "coliseum_robot_checkinit Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	serv_setstat( 118 );
+	coliseum_robot_checkinit();
+
 
 	// 数据库多线程启动
 	if ( dbwork_start() >= 0 )
@@ -1464,7 +1459,6 @@ int process_oclock_process( int hour )
 		paycard_give();
 		// 刷新国家荣誉任务
 		nation_mission_update();
-
 		// 刷新国家荣誉排行榜
 		if ( system_getweek() == 5 )
 		{
@@ -1476,64 +1470,18 @@ int process_oclock_process( int hour )
 	}
 	else if ( hour == 1 )
 	{
+
 	}
-	
-	
-	// 减忠诚
-	if ( hour == 4 || hour == 8 || hour == 12 || hour == 16 || hour == 20 )
+	else if ( hour == 2 )
+	{	
+		// 邮件过期
+		mail_overdue();
+		// 战报过期
+		coliseum_log_overdue();
+	}
+	else if ( hour == 4 )
 	{
-		nation_hero_subloyal();
-	}
-
-	if ( hour == 8 && g_Config.servplat == 0 )
-	{ // 8点开始预热今天的活动
-		int nowstamp = (int)time( NULL );
-		int week = system_getweek();
-		if ( week == 1 || week == 3 || week == 6 )
-		{ // 南蛮入侵
-			time_t t;
-			time( &t );
-			struct tm *nowtime = localtime( &t );
-			struct tm BeginTm = { 0 };
-			BeginTm.tm_year = nowtime->tm_year;
-			BeginTm.tm_mon = nowtime->tm_mon;
-			BeginTm.tm_mday = nowtime->tm_mday;
-			BeginTm.tm_hour = global.activity12_begintime;
-			BeginTm.tm_min = 0;
-			BeginTm.tm_sec = 0;
-			int beginstamp = (int)mktime( &BeginTm );
-			activity_set( ACTIVITY_12, nowstamp, beginstamp, beginstamp + global.activity12_duration, beginstamp + global.activity12_duration + 3600 );
-		}
-		else if ( week == 0 || week == 2 || week == 4 )
-		{ // 西凉暴乱
-			time_t t;
-			time( &t );
-			struct tm *nowtime = localtime( &t );
-			struct tm BeginTm = { 0 };
-			BeginTm.tm_year = nowtime->tm_year;
-			BeginTm.tm_mon = nowtime->tm_mon;
-			BeginTm.tm_mday = nowtime->tm_mday;
-			BeginTm.tm_hour = global.activity27_begintime;
-			BeginTm.tm_min = 0;
-			BeginTm.tm_sec = 0;
-			int beginstamp = (int)mktime( &BeginTm );
-			activity_set( ACTIVITY_27, nowstamp, beginstamp, beginstamp + global.activity27_duration, beginstamp + global.activity27_duration + 3600 );
-		}
-	}
-
-	if ( hour == global.nation_quest_timer[0] || hour == global.nation_quest_timer[1] || hour == global.nation_quest_timer[2] )
-	{ // 刷新国家任务
-		nation_quest_update();
-	}
-
-	if ( hour == global.town_owner_award )
-	{ // 城主奖励
-		map_town_owner_award();
-	}
-
-	if ( hour == 5 )
-	{
-		// 6037	服务器将在凌晨5点进行所有玩家的数据备份，预计2-5分钟，如有卡顿敬请谅解，祝游戏开心，万事如意！
+		// 6037	服务器将在凌晨4点进行所有玩家的数据备份，预计2-5分钟，如有卡顿敬请谅解，祝游戏开心，万事如意！
 		system_talkjson_world( 6037, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
 		write_gamelog( "[SAVESTART]" );
 		// 开启一个新事务
@@ -1593,13 +1541,71 @@ int process_oclock_process( int hour )
 
 		// 上一次存档完毕时间
 		char szSQL[512] = { 0 };
-		sprintf( szSQL, "replace into world_data ( id, value, strvalue) values('%d','%d','save');", WORLD_DATA_SAVEFLAG, (int)time(NULL) );
+		sprintf( szSQL, "replace into world_data ( id, value, strvalue) values('%d','%d','save');", WORLD_DATA_SAVEFLAG, (int)time( NULL ) );
 		if ( mysql_query( myGame, szSQL ) )
 		{
 			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
 			write_gamelog( "%s", szSQL );
 		}
 	}
+	else if ( hour == 22 )
+	{ // 竞技场每日结算
+		coliseum_award_everyday();
+	}
+	
+	
+	// 减忠诚
+	if ( hour == 4 || hour == 8 || hour == 12 || hour == 16 || hour == 20 )
+	{
+		nation_hero_subloyal();
+	}
+
+	if ( hour == 8 && g_Config.servplat == 0 )
+	{ // 8点开始预热今天的活动
+		int nowstamp = (int)time( NULL );
+		int week = system_getweek();
+		if ( week == 1 || week == 3 || week == 6 )
+		{ // 南蛮入侵
+			time_t t;
+			time( &t );
+			struct tm *nowtime = localtime( &t );
+			struct tm BeginTm = { 0 };
+			BeginTm.tm_year = nowtime->tm_year;
+			BeginTm.tm_mon = nowtime->tm_mon;
+			BeginTm.tm_mday = nowtime->tm_mday;
+			BeginTm.tm_hour = global.activity12_begintime;
+			BeginTm.tm_min = 0;
+			BeginTm.tm_sec = 0;
+			int beginstamp = (int)mktime( &BeginTm );
+			activity_set( ACTIVITY_12, nowstamp, beginstamp, beginstamp + global.activity12_duration, beginstamp + global.activity12_duration + 3600 );
+		}
+		else if ( week == 0 || week == 2 || week == 4 )
+		{ // 西凉暴乱
+			time_t t;
+			time( &t );
+			struct tm *nowtime = localtime( &t );
+			struct tm BeginTm = { 0 };
+			BeginTm.tm_year = nowtime->tm_year;
+			BeginTm.tm_mon = nowtime->tm_mon;
+			BeginTm.tm_mday = nowtime->tm_mday;
+			BeginTm.tm_hour = global.activity27_begintime;
+			BeginTm.tm_min = 0;
+			BeginTm.tm_sec = 0;
+			int beginstamp = (int)mktime( &BeginTm );
+			activity_set( ACTIVITY_27, nowstamp, beginstamp, beginstamp + global.activity27_duration, beginstamp + global.activity27_duration + 3600 );
+		}
+	}
+
+	if ( hour == global.nation_quest_timer[0] || hour == global.nation_quest_timer[1] || hour == global.nation_quest_timer[2] )
+	{ // 刷新国家任务
+		nation_quest_update();
+	}
+
+	if ( hour == global.town_owner_award )
+	{ // 城主奖励
+		map_town_owner_award();
+	}
+
 	sc_OnClockProcess( hour );
 	return 0;
 }

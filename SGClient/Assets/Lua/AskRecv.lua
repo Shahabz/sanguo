@@ -29,6 +29,7 @@ NOTIFY_ACTIVITY		  =	26	-- 活动
 NOTIFY_GUIDE		  = 27  -- 指引
 NOTIFY_INVITECODE	  =	28	-- 邀请码
 NOTIFY_DELAYQUEUEPLAY =	29	-- 客户端延迟队列播放
+NOTIFY_COLISEUM		  = 30  -- 竞技场
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -377,6 +378,14 @@ function RecvActorNotify(recvValue)
 	-- 延迟队列播放	
 	elseif msgid == NOTIFY_DELAYQUEUEPLAY then
 		DelayQueuePlay()
+		
+	elseif msgid == NOTIFY_COLISEUM then
+		if value[1] == 0 then
+			ColiseumDlgTeamRecv( {value[2],value[3],value[4]} )
+			ColiseumDlgTeamReplaceCD( value[5] )
+		elseif value[1] == 1 then
+			ColiseumDlgTodayUpdate( value[2] )
+		end
     end
 end
 

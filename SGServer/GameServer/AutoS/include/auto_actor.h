@@ -113,6 +113,7 @@ struct _actor {
 				int coliseum_losenum;	//竞技场失败场次
 				SLK_NetS_ColiseumCity coliseum_list[3];	//竞技场对手列表
 				short coliseum_team[3];	//竞技场我的队伍
+				SLK_NetS_ColiseumCity coliseum_my;	//竞技场我的属性
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

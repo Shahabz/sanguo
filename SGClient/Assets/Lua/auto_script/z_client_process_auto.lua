@@ -2615,6 +2615,17 @@ end
 -- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_bpower=0,m_value=0,[m_count]},
 function proc_coliseumranklist_C( recvValue )
 	-- process.
-	ColiseumDlgRankRecv( recvValue )
+	ColiseumInfoDlgRankRecv( recvValue )
+end
+
+-- m_attack={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_defense={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_fightid=0,m_optime=0,
+function proc_coliseumlog_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_attack={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_defense={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_fightid=0,m_optime=0,[m_count]},
+function proc_coliseumloglist_C( recvValue )
+	-- process.
+	ColiseumDlgLogRecv( recvValue )
 end
 

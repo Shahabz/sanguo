@@ -137,8 +137,13 @@ function City.BuildingSelect( transform )
 		WishingDlgShow();
 	elseif building.kind == BUILDING_Help then -- 帮助
 		HelpDlgShow();
-	elseif building.kind == BUILDING_Coliseum then-- 竞技场
-		ColiseumDlgShow();
+		
+	elseif building.kind == BUILDING_Coliseum then -- 竞技场
+		if GetPlayer().m_level < 50 then
+			pop(T(4302))
+		else
+			BuildingOpratorModShow( true, building.kind, building.offset, transform );
+		end
 	else
 		-- 科技有完成的，直接领取
 		if building.kind == BUILDING_Tech and GetPlayer():BuildingOverValue( building.kind ) > 0 then

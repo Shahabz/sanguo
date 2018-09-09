@@ -6,6 +6,7 @@ local m_uiEnter = nil; --UnityEngine.GameObject
 local m_uiTrain = nil; --UnityEngine.GameObject
 local m_uiSpeed = nil; --UnityEngine.GameObject
 local m_uiDelete = nil; --UnityEngine.GameObject
+local m_uiInfo = nil; --UnityEngine.GameObject
 
 local m_kind = 0;
 local m_offset = -1;
@@ -51,6 +52,8 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 				EquipForgingDlgShow();
 			elseif m_kind == BUILDING_Wash then
 				EquipWashDlgShow();
+			elseif m_kind == BUILDING_Coliseum then
+				ColiseumDlgShow();	
 			end
 			
 		-- 招募
@@ -72,6 +75,12 @@ function BuildingOpratorModOnEvent( nType, nControlID, value )
 				BuildingCreateDlgShowByID( 1, m_kind )
 			elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
 				BuildingCreateDlgShowByRes( m_kind, m_offset )
+			end
+		
+		-- 信息	
+		elseif nControlID == 6 then
+			if m_kind == BUILDING_Coliseum then
+				ColiseumInfoDlgShow();	
 			end
         end
 		City.BuildingUnSelect();
@@ -97,6 +106,7 @@ function BuildingOpratorModOnAwake( gameObject )
 	m_uiTrain = objs[3];
 	m_uiSpeed = objs[4];
 	m_uiDelete = objs[5];
+	m_uiInfo = objs[6];
    
     BuildingOpratorModClose();
 end
@@ -202,13 +212,13 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 		-- 资源	
 		elseif m_kind >= BUILDING_Silver and m_kind <= BUILDING_Iron then
 			if m_kind == BUILDING_Silver then
-					eye.audioManager:Play(320);
+				eye.audioManager:Play(320);
 			elseif m_kind == BUILDING_Wood then
-					eye.audioManager:Play(321);
+				eye.audioManager:Play(321);
 			elseif m_kind == BUILDING_Food then
-					eye.audioManager:Play(322);
+				eye.audioManager:Play(322);
 			elseif m_kind == BUILDING_Iron then
-					eye.audioManager:Play(323);
+				eye.audioManager:Play(323);
 			end
 			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
 			if pBuilding.m_level <= 0 then
@@ -243,7 +253,12 @@ function BuildingOpratorModShow( show, kind, offset, parent )
 					m_uiEnter:SetActive(true);
 				end
 			end
-			
+		
+		-- 竞技场
+		elseif m_kind == BUILDING_Coliseum then
+			m_uiInfo:SetActive(true);
+			m_uiEnter:SetActive(true);
+
 		else
 			local pBuilding = GetPlayer():GetBuilding( m_kind, m_offset );
 			if pBuilding.m_level < #g_building_upgrade[m_kind] then
@@ -380,7 +395,7 @@ function ShowMod()
 			BuildingOpratorModEffectShow(3);
 		elseif m_kind == BUILDING_Tech then
 			BuildingOpratorModEffectShow(2);
-		elseif pBuilding.m_level < #g_building_upgrade[m_kind] then
+		elseif g_building_upgrade[m_kind] and pBuilding.m_level < #g_building_upgrade[m_kind] then
 			BuildingOpratorModEffectShow(1);
 		end
 	else
@@ -407,6 +422,7 @@ function BuildingOpratorModHideAllEffect()
 	SetFalse(m_uiEnter.transform:Find("Back/Effect"));
 	SetFalse(m_uiTrain.transform:Find("Back/Effect"));
 	SetFalse(m_uiSpeed.transform:Find("Back/Effect"));
+	SetFalse(m_uiInfo.transform:Find("Back/Effect"));
 end
 
 function BuildingOpratorModIsOpen()

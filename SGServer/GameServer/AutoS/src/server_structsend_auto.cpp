@@ -3630,8 +3630,9 @@ int struct_NetS_ColiseumCity_send( char **pptr, int *psize, SLK_NetS_ColiseumCit
 	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_bpower, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
 	for( tmpi = 0; tmpi < 3; tmpi++ )
 	{
 		struct_NetS_ColiseumHero_send( pptr, psize, &pValue->m_hero[tmpi] );
@@ -3654,6 +3655,7 @@ int struct_NetS_ColiseumList_send( char **pptr, int *psize, SLK_NetS_ColiseumLis
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maxtodaynum, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_myteam, 3*sizeof(short), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_updatecd, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_replacecd, (*psize) );
 	return 0;
 }
 
@@ -3668,7 +3670,6 @@ int struct_NetS_ColiseumRank_send( char **pptr, int *psize, SLK_NetS_ColiseumRan
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
 	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_bpower, (*psize) );
-	LKSET_DWORD_SEND( (*pptr), &pValue->m_value, (*psize) );
 	return 0;
 }
 
@@ -3680,6 +3681,31 @@ int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_Coliseu
 	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
 	{
 		struct_NetS_ColiseumRank_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_ColiseumLog_send( char **pptr, int *psize, SLK_NetS_ColiseumLog *pValue )
+{
+	int tmpi = 0;
+
+	struct_NetS_ColiseumCity_send( pptr, psize, &pValue->m_attack );
+	struct_NetS_ColiseumCity_send( pptr, psize, &pValue->m_defense );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_fightid, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_win, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_ColiseumLogList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ColiseumLog_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
 	return 0;
 }

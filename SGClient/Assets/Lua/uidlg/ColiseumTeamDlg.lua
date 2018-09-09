@@ -116,14 +116,14 @@ end
 function ColiseumTeamDlgCreateList()
 	ColiseumTeamDlgClear()
 	-- 主将进入临时缓存
-	--[[for offset = 0, 11, 1 do	
+	for offset = 0, 11, 1 do	
 		local pHero = GetHero().m_CityHero[offset];
 		if pHero ~= nil and pHero.m_kind > 0 then
 			local base = pHero.m_attack_base+pHero.m_defense_base+pHero.m_troops_base;
 			local wash = pHero.m_attack_wash+pHero.m_defense_wash+pHero.m_troops_wash;
 			table.insert(m_CacheHeroCache, { m_kind = pHero.m_kind, m_pHero = pHero, total = base+wash });
 		end
-	end--]]
+	end
 	
 	-- 聚贤阁进临时缓存			
 	for offset = 0, MAX_HERONUM-1, 1 do
@@ -269,4 +269,5 @@ end
 
 function ColiseumTeamDlgSave()
 	system_askinfo( ASKINFO_COLISEUM, "", 4, m_team[1], m_team[2], m_team[3] )
+	ColiseumTeamDlgClose()
 end

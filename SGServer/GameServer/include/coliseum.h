@@ -7,7 +7,7 @@ int coliseum_init();
 int coliseum_enter( int actor_index );
 int coliseum_sendlist( int actor_index );
 int coliseum_getrank( int actorid );
-int coliseum_setrank( int actorid, int rank );
+int coliseum_setrank( int actorid, int rank, SLK_NetS_ColiseumCity *pInfo );
 void coliseum_checkrank();
 int coliseum_save( int actor_index );
 int coliseum_list_save( int actor_index, char *pTab );
@@ -17,14 +17,21 @@ int coliseum_match_attr_save( int actorid, int offset, Hero *pHero, char *pTab )
 int coliseum_match_attr_load( int actorid, Hero *pHero, int count, char *pTab );
 int coliseum_match( int actor_index );
 int coliseum_random( int actor_index );
+int coliseum_todaynum_reset( int actor_index );
 int coliseum_update( int actor_index );
 int coliseum_replaceteam( int actor_index, int kind0, int kind1, int kind2 );
 int coliseum_fight( int actor_index, int index );
 int coliseum_change_rank( int actor_index, int index, char winflag );
 int coliseum_check_Historyrank( int actor_index );
+int coliseum_fight_insert( char *json, int optime );
+int coliseum_log_insert( SLK_NetS_ColiseumCity *pAttack, SLK_NetS_ColiseumCity *pDefense, char result, int fightid );
+int coliseum_log_overdue();
+int coliseum_loglist( int actor_index, int lastid );
 int coliseum_load_ranklist();
 int coliseum_ranklist( int actor_index );
 int coliseum_serieswin_set( int actor_index, char flag );
+int coliseum_award_everyday();
+int coliseum_awardget( int actorid, int rank );
 
 // 机器人
 #define COLISEUM_ROBOT_COUNT			2000	// 竞技场机器人数量

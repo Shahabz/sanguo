@@ -3312,8 +3312,9 @@ function struct_NetS_ColiseumCity_recv( buffer )
 	recvValue.m_namelen = buffer:ReadSByte();
 	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
 	recvValue.m_bpower = buffer:ReadInt();
-	recvValue.m_rank = buffer:ReadInt();
 	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_rank = buffer:ReadInt();
 	recvValue.m_hero = {};
 	for tmpi=1,3,1 do
 		local tmpValue={};
@@ -3341,6 +3342,7 @@ function struct_NetS_ColiseumList_recv( buffer )
 		recvValue.m_myteam[tmpi] = buffer:ReadShort();
 	end
 	recvValue.m_updatecd = buffer:ReadInt();
+	recvValue.m_replacecd = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -3352,7 +3354,6 @@ function struct_NetS_ColiseumRank_recv( buffer )
 	recvValue.m_nation = buffer:ReadSByte();
 	recvValue.m_level = buffer:ReadShort();
 	recvValue.m_bpower = buffer:ReadInt();
-	recvValue.m_value = buffer:ReadInt();
 	return recvValue;
 end
 
@@ -3363,6 +3364,29 @@ function struct_NetS_ColiseumRankList_recv( buffer )
 	for tmpi=1,recvValue.m_count,1 do
 		local tmpValue={};
 		tmpValue = struct_NetS_ColiseumRank_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_ColiseumLog_recv( buffer )
+	local recvValue = {};
+	recvValue.m_attack = struct_NetS_ColiseumCity_recv( buffer );
+	recvValue.m_defense = struct_NetS_ColiseumCity_recv( buffer );
+	recvValue.m_fightid = buffer:ReadInt();
+	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_id = buffer:ReadInt();
+	recvValue.m_win = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_ColiseumLogList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_ColiseumLog_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
 	return recvValue;

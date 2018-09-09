@@ -2456,8 +2456,9 @@ struct _slk_NetS_ColiseumCity {
 	char m_namelen;	//竞技场-匹配对手
 	char m_name[32];	//竞技场-匹配对手
 	int m_bpower;	//竞技场-匹配对手
-	int m_rank;	//竞技场-匹配对手
 	char m_nation;	//竞技场-匹配对手
+	short m_level;	//竞技场-匹配对手
+	int m_rank;	//竞技场-匹配对手
 	SLK_NetS_ColiseumHero m_hero[3];	//竞技场-匹配对手
 };
 typedef struct _slk_NetS_ColiseumCity SLK_NetS_ColiseumCity;	//竞技场对手
@@ -2471,6 +2472,7 @@ struct _slk_NetS_ColiseumList {
 	char m_maxtodaynum;	//竞技场-匹配列表
 	short m_myteam[3];	//竞技场-匹配列表
 	int m_updatecd;	//竞技场-匹配列表
+	int m_replacecd;	//竞技场-匹配列表
 };
 typedef struct _slk_NetS_ColiseumList SLK_NetS_ColiseumList;	//竞技场列表
 
@@ -2481,7 +2483,6 @@ struct _slk_NetS_ColiseumRank {
 	char m_nation;	//竞技场-排行榜
 	short m_level;	//竞技场-排行榜
 	int m_bpower;	//竞技场-排行榜
-	int m_value;	//竞技场-排行榜
 };
 typedef struct _slk_NetS_ColiseumRank SLK_NetS_ColiseumRank;	//竞技场排行榜
 
@@ -2490,6 +2491,22 @@ struct _slk_NetS_ColiseumRankList {
 	SLK_NetS_ColiseumRank m_list[30];	//竞技场-排行榜列表
 };
 typedef struct _slk_NetS_ColiseumRankList SLK_NetS_ColiseumRankList;	//竞技场排行榜
+
+struct _slk_NetS_ColiseumLog {
+	SLK_NetS_ColiseumCity m_attack;	//竞技场-日志
+	SLK_NetS_ColiseumCity m_defense;	//竞技场-日志
+	int m_fightid;	//竞技场-日志
+	int m_optime;	//竞技场-日志
+	int m_id;	//竞技场-日志
+	char m_win;	//竞技场-日志
+};
+typedef struct _slk_NetS_ColiseumLog SLK_NetS_ColiseumLog;	//竞技场日志
+
+struct _slk_NetS_ColiseumLogList {
+	char m_count;	//竞技场-日志列表
+	SLK_NetS_ColiseumLog m_list[10];	//竞技场-日志列表
+};
+typedef struct _slk_NetS_ColiseumLogList SLK_NetS_ColiseumLogList;	//竞技场日志列表
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -2762,5 +2779,7 @@ int struct_NetS_ColiseumCity_send( char **pptr, int *psize, SLK_NetS_ColiseumCit
 int struct_NetS_ColiseumList_send( char **pptr, int *psize, SLK_NetS_ColiseumList *pValue );
 int struct_NetS_ColiseumRank_send( char **pptr, int *psize, SLK_NetS_ColiseumRank *pValue );
 int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_ColiseumRankList *pValue );
+int struct_NetS_ColiseumLog_send( char **pptr, int *psize, SLK_NetS_ColiseumLog *pValue );
+int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_ColiseumLogList *pValue );
 
 #endif

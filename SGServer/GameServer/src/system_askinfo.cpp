@@ -1331,6 +1331,20 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 替换阵容
 			coliseum_replaceteam( actor_index, pvalue[1], pvalue[2], pvalue[3] );
 		}
+		else if ( pvalue[0] == 5 )
+		{ // 战报
+			coliseum_loglist( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 6 )
+		{ // 观战
+		}
+		else if ( pvalue[0] == 7 )
+		{ // 精彩对决
+		}
+		else if ( pvalue[0] == 8 )
+		{ // 重置今日次数
+			coliseum_todaynum_reset( actor_index );
+		}
 		break;
 	default:
 		break;

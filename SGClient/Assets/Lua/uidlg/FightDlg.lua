@@ -266,6 +266,11 @@ function FightDlgShow( recvValue )
 		SetText( m_uiTypeName, T(2000+fighttype-1) )
 	end
 	
+	-- 缩放界面，不是关闭
+	if fighttype == FIGHTTYPE_COLISEUM then
+		ColiseumDlgScale( 0 )
+	end
+	
 	-- 是否可以跳过战斗
 	if fighttype == FIGHTTYPE_QUEST then
 		SetFalse( m_uiBottom )
@@ -291,7 +296,7 @@ function FightDlgShow( recvValue )
 	end
 	
 	-- 显示战前信息
-	if fighttype ~= FIGHTTYPE_QUEST then
+	if fighttype ~= FIGHTTYPE_QUEST and fighttype ~= FIGHTTYPE_COLISEUM then
 		FightInfoDlgShow( info );
 	end
 	
@@ -367,7 +372,7 @@ function FightDlgShow( recvValue )
 	FightDlgUnitUpdate()
 	
 	-- 任务战特殊处理
-	if fighttype == FIGHTTYPE_QUEST then
+	if fighttype == FIGHTTYPE_QUEST or fighttype == FIGHTTYPE_COLISEUM then
 		FightDlgStart()
 	end
 end
@@ -853,6 +858,10 @@ function FightDlgResultLayerShow()
 		unitlist = m_jsonFightInfo["d_unit"];
 	end
 	
+	if fighttype == FIGHTTYPE_COLISEUM then 
+		unitlist={};
+	end
+	
 	local index = 0;
 	for k, v in pairs(unitlist) do
 		if v.t == FIGHT_UNITTYPE_LEADER_HERO then
@@ -986,6 +995,11 @@ function FightDlgResultLayerShow()
 		SetFalse( m_uiSweepBtn )
 		SetFalse( m_uiStar )
 		SetFalse( m_uiStarWarn )
+	end
+	
+	-- 缩放界面，不是关闭
+	if fighttype == FIGHTTYPE_COLISEUM then
+		ColiseumDlgScale( 1 )
 	end
 end
 
