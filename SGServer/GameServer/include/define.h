@@ -144,7 +144,7 @@
 #define HERO_ACTOR_MAX				80	// 未上英雄
 #define HERO_CITY_MAX				12	// 上阵英雄
 #define HERO_BASEOFFSET				1000	// 上阵英雄索引起始
-#define NATIONHERO_BASEOFFSET		2000	// 国家名将索引起始
+#define HERO_COLISEUMOFFSET			2000	// 竞技场索引起始
 #define NATIONHERO_MAX				15		// 国家名将数量
 #define SHAPE_MAX					32		// 形象
 #define ACTOR_BLACKLIST_MAX			50		// 黑名单

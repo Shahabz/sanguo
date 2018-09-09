@@ -1112,6 +1112,93 @@ int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue )
 	return 0;
 }
 
+// 战斗启动-竞技场
+int fight_start_bycoliseum( int actor_index, Hero *pAttack, Hero *pDefense, int count )
+{
+	g_gm_isout = 0;
+	g_gm_outresult[0] = '\0';
+	ACTOR_CHECK_INDEX( actor_index );
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+	if ( !pAttack || !pDefense )
+		return -1;
+
+	memset( &g_fight, 0, sizeof( Fight ) );
+	g_fight.attack_armyindex = -1;
+	g_fight.defense_index = -1;
+	// 为这场战斗创建一个随机种子，随机要根据这个值，保证客户端服务器同步
+	g_fight.randspeed = (int)time( NULL ) / 7;
+	g_fight.randspeed_init = g_fight.randspeed;
+
+	fight_debug( "\n\n============================================== COLISEUM FIGHT START ==============================================" );
+	int result = 0;
+	g_fight.type = FIGHTTYPE_COLISEUM;
+	// 攻击方出战英雄
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		Hero *pHero = &pAttack[tmpi];
+		if ( !pHero )
+			continue;
+		if ( pHero->kind > 0 )
+		{
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_ATTACK, 0, -1, FIGHT_UNITTYPE_LEADER_HERO, -1, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, (char)pHero->colorup/*拿这个字段当排数*/, (char)config->skillid, 0 );
+		}
+	}
+
+	// 防御方出战英雄
+	for ( int tmpi = 0; tmpi < count; tmpi++ )
+	{
+		Hero *pHero = &pDefense[tmpi];
+		if ( !pHero )
+			continue;
+		if ( pHero->kind > 0 )
+		{
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, 0, -1, FIGHT_UNITTYPE_LEADER_HERO, -1, pHero->kind, pHero->kind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->troops, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, (char)pHero->colorup/*拿这个字段当排数*/, (char)config->skillid, 0 );
+		}
+	}
+
+	// 战斗回合
+	for ( int tmpi = 0; tmpi < FIGHT_TURNS_MAX; tmpi++ )
+	{
+		result = fight_oneturn();
+		if ( result > 0 )
+		{
+			break;
+		}
+	}
+	if ( result == 0 )
+	{
+		//  超过%回合
+		fight_debug( "[pass turns]" );
+		g_fight.result = FIGHT_LOSE;
+	}
+	else
+	{
+		if ( result == FIGHT_WIN )
+		{
+			fight_debug( "[ATK WIN]" );
+			g_fight.result = FIGHT_WIN;
+		}
+		else if ( result == FIGHT_LOSE )
+		{
+			fight_debug( "[DEF WIN]" );
+			g_fight.result = FIGHT_LOSE;
+		}
+	}
+	// 信息转json
+	fight_unit2json();
+	return 0;
+}
+
 // 战斗每一回合
 int fight_oneturn()
 {

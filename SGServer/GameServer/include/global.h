@@ -213,6 +213,7 @@ typedef struct _global
 	int activity12_duration;
 	short activity27_begintime;
 	short activity12_begintime;
+	char coliseum_todaynum;
 }Global;
 int global_init();
 void global_reload();

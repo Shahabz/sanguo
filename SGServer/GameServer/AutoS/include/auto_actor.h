@@ -106,6 +106,13 @@ struct _actor {
 				char act25_isget;	//首日免费是否完成
 				int edquest_point;	//活跃度
 				short act17_state;	//充值豪礼
+				int coliseum_maxrank;	//竞技场历史最高
+				int coliseum_rank;	//竞技场排名
+				short coliseum_serieswin;	//竞技场连胜
+				int coliseum_winnum;	//竞技场胜利场次
+				int coliseum_losenum;	//竞技场失败场次
+				SLK_NetS_ColiseumCity coliseum_list[3];	//竞技场对手列表
+				short coliseum_team[3];	//竞技场我的队伍
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

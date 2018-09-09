@@ -26,6 +26,7 @@
 #define FIGHTTYPE_KINGWAR	7 // 皇城血战
 #define FIGHTTYPE_STORYSWEEP 8 // 副本扫荡
 #define FIGHTTYPE_QUEST		 9 // 任务战
+#define FIGHTTYPE_COLISEUM	10 // 竞技场战斗
 // 一个战斗单元
 typedef struct _fightunit
 {
@@ -118,6 +119,9 @@ int fight_start_bystory( int actor_index, SLK_NetC_StoryBattle *pValue );
 
 // 战斗启动-世界boss
 int fight_start_byworldboss( int actor_index, SLK_NetC_WorldBossBattle *pValue );
+
+// 战斗启动-竞技场
+int fight_start_bycoliseum( int actor_index, Hero *pAttack, Hero *pDefense, int count );
 
 // 战斗每一回合
 int fight_oneturn();

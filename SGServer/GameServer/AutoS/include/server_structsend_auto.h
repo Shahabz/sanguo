@@ -2452,6 +2452,7 @@ struct _slk_NetS_ColiseumHero {
 typedef struct _slk_NetS_ColiseumHero SLK_NetS_ColiseumHero;	//竞技场武将
 
 struct _slk_NetS_ColiseumCity {
+	int m_actorid;	//竞技场-匹配对手
 	char m_namelen;	//竞技场-匹配对手
 	char m_name[32];	//竞技场-匹配对手
 	int m_bpower;	//竞技场-匹配对手
@@ -2469,6 +2470,7 @@ struct _slk_NetS_ColiseumList {
 	char m_todaynum;	//竞技场-匹配列表
 	char m_maxtodaynum;	//竞技场-匹配列表
 	short m_myteam[3];	//竞技场-匹配列表
+	int m_updatecd;	//竞技场-匹配列表
 };
 typedef struct _slk_NetS_ColiseumList SLK_NetS_ColiseumList;	//竞技场列表
 

@@ -61,6 +61,7 @@
 #include "wishing.h"
 #include "girl.h"
 #include "robot.h"
+#include "coliseum.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -1217,6 +1218,15 @@ int process_init( int max_connection )
 	if ( activity_33_load() < 0 )
 	{
 		printf_msg( "activity_33_load Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 118 );
+
+	// 竞技场
+	if ( coliseum_init() < 0 )
+	{
+		printf_msg( "coliseum_init Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );

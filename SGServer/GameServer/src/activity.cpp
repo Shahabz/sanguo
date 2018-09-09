@@ -370,6 +370,9 @@ int activity_onwarning( int activityid, int lefttime )
 	{
 	case ACTIVITY_NORMAL:
 		break;
+	case ACTIVITY_12:
+		activity_12_onwarning( lefttime );
+		break;
 	case ACTIVITY_27:
 		activity_27_onwarning( lefttime );
 		break;
@@ -389,6 +392,9 @@ int activity_onopen( int activityid )
 	{
 	case ACTIVITY_6:
 		activity_06_onopen();
+		break;
+	case ACTIVITY_12:
+		activity_12_onopen();
 		break;
 	case ACTIVITY_17:
 		activity_17_onopen();
@@ -416,6 +422,9 @@ int activity_onend( int activityid )
 	{
 	case ACTIVITY_6:
 		activity_06_onend();
+		break;
+	case ACTIVITY_12:
+		activity_12_onend();
 		break;
 	case ACTIVITY_17:
 		activity_17_onend();

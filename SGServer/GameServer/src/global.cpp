@@ -645,6 +645,8 @@ int global_init()
 			global.activity27_begintime = atoi( row[1] );
 		else if ( id == 240 )
 			global.activity12_begintime = atoi( row[1] );
+		else if ( id == 241 )
+			global.coliseum_todaynum = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

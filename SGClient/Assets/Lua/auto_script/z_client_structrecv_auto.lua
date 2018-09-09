@@ -3308,6 +3308,7 @@ end
 
 function struct_NetS_ColiseumCity_recv( buffer )
 	local recvValue = {};
+	recvValue.m_actorid = buffer:ReadInt();
 	recvValue.m_namelen = buffer:ReadSByte();
 	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
 	recvValue.m_bpower = buffer:ReadInt();
@@ -3339,6 +3340,7 @@ function struct_NetS_ColiseumList_recv( buffer )
 	for tmpi=1,3,1 do
 		recvValue.m_myteam[tmpi] = buffer:ReadShort();
 	end
+	recvValue.m_updatecd = buffer:ReadInt();
 	return recvValue;
 end
 

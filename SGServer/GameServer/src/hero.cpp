@@ -1773,13 +1773,14 @@ int hero_attr_calc( City *pCity, Hero *pHero )
 	{ // 御林卫武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_NORMAL );
 	}
-	else if ( pHero->offset >= HERO_BASEOFFSET + 12 && pHero->offset < HERO_BASEOFFSET + 15 )
+	else if ( pHero->offset >= HERO_COLISEUMOFFSET && pHero->offset < HERO_COLISEUMOFFSET + 3 )
 	{ // 竞技场武将
 		pHero->troops = hero_troops * hero_getline( pCity, HERO_STATE_FIGHT );
 	}
 
 	// 顺路计算这个英雄的单独战力
-	//if ( pHero->offset >= HERO_BASEOFFSET && pHero->offset < HERO_BASEOFFSET + 4 )
+	if ( pHero->offset >= HERO_BASEOFFSET && pHero->offset < HERO_BASEOFFSET + 4 || 
+		 pHero->offset >= HERO_COLISEUMOFFSET && pHero->offset < HERO_COLISEUMOFFSET + 3 )
 	{
 		// 英雄基础属性战力
 		float bp_attack = base_attack * global.battlepower_attack;

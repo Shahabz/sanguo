@@ -239,3 +239,4 @@ global.activity27_duration = 2700 --西凉暴乱持续时间
 global.activity12_duration = 7200 --南蛮入侵持续时间
 global.activity27_begintime = 20 --西凉开始时间
 global.activity12_begintime = 20 --南蛮开始时间
+global.coliseum_todaynum = 5 --竞技场每日挑战次数

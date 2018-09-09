@@ -42,6 +42,8 @@ int actor_get_sflag( int actor_index, int offset );
 #define TODAY_CHAR_MAP_PICKUP			19 // 世界拾取数量限制
 #define TODAY_CHAR_EVERYDAY_BEGIN		20 // 每日任务开始
 #define TODAY_CHAR_EVERYDAY_END			35 // 每日任务结束
+#define TODAY_CHAR_COLISEUM_TODAYNUM	39 // 竞技场竞技次数
+#define TODAY_CHAR_COLISEUM_TODAYNUM_RESETNUM	40 // 竞技场重置竞技次数
 
 int actor_get_today_char_times( int actor_index, int offset );
 int actor_add_today_char_times( int actor_index, int offset );
@@ -65,6 +67,8 @@ int actor_set_today_int_times( int actor_index, int offset, int value );
 #define USELIMIT_CD_MAXCOUNT 8
 #define USELIMIT_CD_TOWN_DEV		0 // 都城开发冷却
 #define USELIMIT_CD_WISHING_CHANGE	1 // 聚宝盆兑换冷却
+#define USELIMIT_CD_COLISEUM_ENTER	2 // 竞技场出入限制
+#define USELIMIT_CD_COLISEUM_UPDATE	3 // 竞技场换一批CD限制
 int actor_set_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_add_uselimit_cd( int actor_index, char index, int cdtime );
 int actor_check_uselimit_cd( int actor_index, char index );

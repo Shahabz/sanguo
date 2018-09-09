@@ -212,14 +212,15 @@ function ColiseumDlgCreateMatch( index, uiObj, info )
 	local uiPower = objs[1]
 	local uiRank = objs[2]
 	local uiHeroList = objs[3]
-	SetControlID( uiObj, 100+index )
+	local uiPkBtn = objs[4]
+	SetControlID( uiPkBtn, 100+index )
 	SetText( uiName, info.m_name )
 	SetText( uiPower, F( 4290, info.m_bpower ) )
 	SetText( uiRank, F( 4291, info.m_rank ) )
 	for i=1, 3, 1 do
 		local uiHeroObj = uiHeroList.transform:GetChild(i-1);
 		local heroinfo = info.m_hero[i]
-		ColiseumDlgCreateHero( uiHeroObj, hero )
+		ColiseumDlgCreateHero( uiHeroObj, heroinfo )
 	end
 end
 
@@ -294,7 +295,7 @@ function ColiseumDlgRankRecv( recvValue )
 		uiObj.transform:SetParent( m_uiRankContent.transform );
 		uiObj.transform.localScale = Vector3.one;
 		uiObj.gameObject:SetActive( true );
-		ColiseumDlgCreateRank( uiObj, info )
+		ColiseumDlgRankCreate( uiObj, info )
 	end
 end
 

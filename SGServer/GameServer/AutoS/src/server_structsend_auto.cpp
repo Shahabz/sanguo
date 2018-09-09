@@ -3625,6 +3625,7 @@ int struct_NetS_ColiseumCity_send( char **pptr, int *psize, SLK_NetS_ColiseumCit
 {
 	int tmpi = 0;
 
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actorid, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
 	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
 		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
@@ -3652,6 +3653,7 @@ int struct_NetS_ColiseumList_send( char **pptr, int *psize, SLK_NetS_ColiseumLis
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_todaynum, (*psize) );
 	LKSET_SBYTE_SEND( (*pptr), &pValue->m_maxtodaynum, (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_myteam, 3*sizeof(short), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_updatecd, (*psize) );
 	return 0;
 }
 
