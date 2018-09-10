@@ -24,6 +24,7 @@ local m_RecordRecvValue = nil;
 local m_RuleAwardRecvValue = nil;
 -- 打开界面
 function ColiseumInfoDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_5" )
 	m_Dlg = eye.uiManager:Open( "ColiseumInfoDlg" );
 end
 
@@ -36,16 +37,15 @@ function ColiseumInfoDlgClose()
 	eye.uiManager:Close( "ColiseumInfoDlg" );
 	m_RankRecvValue = nil;
 	m_RecordRecvValue = nil;
-	m_RuleAwardRecvValue = nil;
 end
 
 -- 删除界面
 function ColiseumInfoDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_5" )
 	m_RankRecvValue = nil;
 	m_RecordRecvValue = nil;
-	m_RuleAwardRecvValue = nil;
 end
 
 ----------------------------------------
@@ -140,7 +140,7 @@ end
 ----------------------------------------
 function ColiseumInfoDlgShow()
 	ColiseumInfoDlgOpen()
-	ColiseumInfoDlgShowRankLayer()
+	ColiseumInfoDlgShowRuleLayer()
 end
 
 function ColiseumInfoDlgScale( scale )

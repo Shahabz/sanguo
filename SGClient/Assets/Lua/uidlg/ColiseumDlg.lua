@@ -27,6 +27,7 @@ local m_mypower = 0;
 
 -- 打开界面
 function ColiseumDlgOpen()
+	ResourceManager.LoadAssetBundle( "_ab_ui_static_pic_5" )
 	m_Dlg = eye.uiManager:Open( "ColiseumDlg" );
 end
 
@@ -46,6 +47,7 @@ end
 function ColiseumDlgDestroy()
 	GameObject.Destroy( m_Dlg );
 	m_Dlg = nil;
+	ResourceManager.UnloadAssetBundle( "_ab_ui_static_pic_5" )
 	m_MatchRecvValue = nil;
 	m_LogRecvValue = nil;
 	m_myteam = nil;

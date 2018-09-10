@@ -588,7 +588,7 @@ int coliseum_update( int actor_index )
 		actor_notify_alert( actor_index, 4300 );
 		return -1;
 	}
-	actor_set_uselimit_cd( actor_index, USELIMIT_CD_COLISEUM_UPDATE, 30 );
+	actor_set_uselimit_cd( actor_index, USELIMIT_CD_COLISEUM_UPDATE, 180 );
 
 	// 重新匹配
 	coliseum_match( actor_index );
@@ -820,7 +820,7 @@ int coliseum_check_Historyrank( int actor_index )
 	if ( g_actors[actor_index].coliseum_maxrank > g_actors[actor_index].coliseum_rank )
 	{   // max{ （你的排名-对手排名）/100 + 2000/你的排名，5 }
 		// max{ （最高比较-你的排名）/100 + 2000/你的排名，5 }
-		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 100.0f + 2000 / g_actors[actor_index].coliseum_rank);
+		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 10.0f + 2000 / g_actors[actor_index].coliseum_rank);
 		if ( token < 5 )
 			token = 5;
 		
@@ -832,7 +832,7 @@ int coliseum_check_Historyrank( int actor_index )
 		sprintf( v1, "%d", g_actors[actor_index].coliseum_rank );
 		sprintf( v2, "%d", g_actors[actor_index].coliseum_maxrank );
 		sprintf( attach, "%d,%d@", AWARDKIND_TOKEN, token );
-		mail_system( MAIL_ACTORID, g_actors[actor_index].actorid, 5056, 5549, v1, v2, NULL, attach, 1 );
+		mail_system( MAIL_ACTORID, g_actors[actor_index].actorid, 5056, 5549, v1, v2, NULL, attach, 0 );
 
 		/* 设置最新最高排名 */
 		g_actors[actor_index].coliseum_maxrank = g_actors[actor_index].coliseum_rank;

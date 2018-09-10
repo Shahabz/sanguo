@@ -1007,6 +1007,9 @@ function FightDlgResultLayerShow()
 		local lastrank = m_recvValue.m_content_json["lastrank"];
 		local nowrank = m_recvValue.m_content_json["nowrank"];
 		if lastrank and nowrank then
+			if nowrank > lastrank then
+				nowrank = lastrank
+			end
 			SetTrue( m_uiColiseum )
 			SetText( m_uiColiseum.transform:Find("Desc"), T(4310) )
 			SetText( m_uiColiseum.transform:Find("LeftRank"), lastrank )
