@@ -29,7 +29,7 @@ end
 
 -- 切到后台和退出游戏调用
 function notification_register_all()
-	gamelog("notification_register_all")
+	--[[gamelog("notification_register_all")
 	
 	-- 体力值什么时候满(6分钟一点)
 	local left = global.body_max - GetPlayer().m_body;
@@ -52,13 +52,13 @@ function notification_register_all()
 			NotificationManager.Instance:Register( v.id, v.title, trigger_time, false );
 			gamelog( "notification_register_all:"..v.title.." trigger_time:"..trigger_time )
 		end
-	end
+	end--]]
 end
 
 -- 切到前台调用	
 function notification_unregister_all()
-	for k,v in pairs(notificationConfig) do
+	--[[for k,v in pairs(notificationConfig) do
 		NotificationManager.Instance:Unregister( v.id );
 	end
-	NotificationManager.Instance:ClearAll ();
+	NotificationManager.Instance:ClearAll ();--]]
 end

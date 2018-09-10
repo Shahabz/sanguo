@@ -199,7 +199,8 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 设置
 		elseif nControlID == 16 then
 			m_Setting_state = 0
-			SettingDlgOptionShow()
+			--SettingDlgOptionShow()
+			SysConfigDlgShow()
 			
 		-- 联系客服
 		elseif nControlID == 17 then
