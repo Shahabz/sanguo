@@ -15,6 +15,8 @@ local m_uiRuleContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Rule = nil; --UnityEngine.GameObject
 local m_uiWaiting = nil; --UnityEngine.GameObject
 local m_uiUIP_RuleAward = nil; --UnityEngine.GameObject
+local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_uiWindow = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil
 local m_RankRecvValue = nil;
@@ -72,6 +74,10 @@ function ColiseumInfoDlgOnEvent( nType, nControlID, value, gameObject )
 		elseif nControlID >= 10000 then
 			ColiseumInfoDlgRecordView( nControlID-10000 )
         end
+	elseif nType == UI_EVENT_PRESS then
+		if nControlID > -2000000 and nControlID < -1000000 then
+			ColiseumInfoDlgSelectAward( -(nControlID+1000000), value );
+		end
 	end
 end
 
@@ -94,6 +100,8 @@ function ColiseumInfoDlgOnAwake( gameObject )
 	m_uiUIP_Rule = objs[12];
 	m_uiWaiting = objs[13];
 	m_uiUIP_RuleAward = objs[14];
+	m_uiAwardDescLayer = objs[15];
+	m_uiWindow = objs[16];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Rank", 30, 30, m_uiUIP_Rank);
@@ -390,13 +398,13 @@ function ColiseumInfoDlgRuleAwardCreate( uiObj, info )
 	end
 	
 	for i=1, 5, 1 do
-		local awardObj = uiAwardList.transform:GetChild(i-1);
+		local awardObj = uiObj.transform:Find("AwardList").transform:GetChild(i-1);
 		if info.m_award[i] and info.m_award[i].m_kind > 0 then
 			local sprite, color, name = AwardInfo( info.m_award[i].m_kind )
 			SetTrue( awardObj )
-			SetControlID( awardObj, 1000000+awardkind[i] )
+			SetControlID( awardObj, -1000000-info.m_award[i].m_kind )
 			SetImage( awardObj.transform:Find("Shape"), sprite );
-			if awardnum[i] > 1 then
+			if info.m_award[i].m_num > 1 then
 				SetTrue( awardObj.transform:Find("NumBack") )
 				SetText( awardObj.transform:Find("Num"), knum(info.m_award[i].m_num) );
 			else
@@ -407,4 +415,16 @@ function ColiseumInfoDlgRuleAwardCreate( uiObj, info )
 			SetFalse( awardObj )
 		end
 	end
+end
+
+function ColiseumInfoDlgSelectAward( awardkind, value )
+	if value == 1 then
+		SetFalse( m_uiAwardDescLayer )
+		return
+	end
+
+	local sprite, color, name, c, desc = AwardInfo( awardkind )
+	SetTrue( m_uiAwardDescLayer )
+	SetText( m_uiAwardDescLayer.transform:Find("Name"), name )
+	SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
 end
