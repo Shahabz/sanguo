@@ -821,8 +821,8 @@ int coliseum_check_Historyrank( int actor_index )
 	{   // max{ （你的排名-对手排名）/100 + 2000/你的排名，5 }
 		// max{ （最高比较-你的排名）/100 + 2000/你的排名，5 }
 		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 100.0f + 2000 / g_actors[actor_index].coliseum_rank);
-		if ( token < 10 )
-			token = 10;
+		if ( token < 5 )
+			token = 5;
 		
 		/* 发送奖励邮件 */
 		// 5549	恭喜您本次排名<color = 03de27ff>( { 0 } )< / color>超过您的历史最高排名<color = 03de27ff>( { 1 } )< / color>，为了表彰您在竞技场中的突出表现，以及超越自我，特送奖励如下：
