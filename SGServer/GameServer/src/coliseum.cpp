@@ -1557,7 +1557,7 @@ int coliseum_robot_create( int robotcount )
 			herokind[2] = s_herokindlist1[2];	herocolor[2] = hero_defaultcolor( herokind[2] );
 		}
 		
-
+		int equipkind[6] = { 3, 13, 23, 33, 43, 53 };
 		int sortindex[3] = { 0, 1, 2 };
 		ruffle( sortindex, 3 );
 		for ( int member = 0; member < 3; member++ )
@@ -1566,6 +1566,10 @@ int coliseum_robot_create( int robotcount )
 			hero[member].kind = herokind[sortindex[member]];
 			hero[member].color = herocolor[sortindex[member]];
 			hero[member].level = random( actor.level - 3, actor.level );
+			for ( int equipindex = 0; equipindex < 6; equipindex++ )
+			{
+				hero[member].equip[equipindex].kind = equipkind[equipindex];
+			}
 		}
 
 		/* ²åÈëÁÐ±í */

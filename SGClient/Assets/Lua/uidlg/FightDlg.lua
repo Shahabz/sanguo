@@ -1006,7 +1006,7 @@ function FightDlgResultLayerShow()
 		
 		local lastrank = m_recvValue.m_content_json["lastrank"];
 		local nowrank = m_recvValue.m_content_json["nowrank"];
-		if lastrank and nowrank then
+		if fightResult == 1 and lastrank and nowrank then
 			if nowrank > lastrank then
 				nowrank = lastrank
 			end
