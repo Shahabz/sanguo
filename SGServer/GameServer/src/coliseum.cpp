@@ -820,8 +820,7 @@ int coliseum_check_Historyrank( int actor_index )
 	if ( g_actors[actor_index].coliseum_maxrank > g_actors[actor_index].coliseum_rank )
 	{   // max{ （你的排名-对手排名）/100 + 2000/你的排名，5 }
 		// max{ （最高比较-你的排名）/100 + 2000/你的排名，5 }
-		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 10.0f + 2000 / g_actors[actor_index].coliseum_rank);
-		token = token * 10;
+		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 10.0f + 20000 / g_actors[actor_index].coliseum_rank);
 		if ( token < 5 )
 			token = 5;
 		
