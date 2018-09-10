@@ -124,6 +124,7 @@ SRC = \
 login_user.cpp \
 map_pickup.cpp \
 activity_04.cpp \
+coliseum.cpp \
 army_march.cpp \
 wishing.cpp \
 fight.cpp \
@@ -456,6 +457,8 @@ login_user.o: login_user.cpp
 map_pickup.o: map_pickup.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 activity_04.o: activity_04.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+coliseum.o: coliseum.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 army_march.o: army_march.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
