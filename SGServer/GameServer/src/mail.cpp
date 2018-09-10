@@ -316,6 +316,7 @@ int mail_fight_read( int actor_index, i64 mailid )
 	{
 		// 发送一个已经不存在的消息
 		mysql_free_result( res );
+		actor_notify_pop( actor_index, 4307 );
 		return -1;
 	}
 	mysql_free_result( res );

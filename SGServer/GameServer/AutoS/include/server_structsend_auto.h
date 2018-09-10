@@ -2505,8 +2505,17 @@ typedef struct _slk_NetS_ColiseumLog SLK_NetS_ColiseumLog;	//竞技场日志
 struct _slk_NetS_ColiseumLogList {
 	char m_count;	//竞技场-日志列表
 	SLK_NetS_ColiseumLog m_list[10];	//竞技场-日志列表
+	char m_type;	//竞技场-日志列表
 };
 typedef struct _slk_NetS_ColiseumLogList SLK_NetS_ColiseumLogList;	//竞技场日志列表
+
+struct _slk_NetS_ColiseumFight {
+	char m_flag;	//战斗回放
+	short m_content_length;	//战斗回放
+	char m_content[1800];	//战斗回放
+	char m_type;	//战斗回放
+};
+typedef struct _slk_NetS_ColiseumFight SLK_NetS_ColiseumFight;	//竞技场战斗录像
 
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
@@ -2781,5 +2790,6 @@ int struct_NetS_ColiseumRank_send( char **pptr, int *psize, SLK_NetS_ColiseumRan
 int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_ColiseumRankList *pValue );
 int struct_NetS_ColiseumLog_send( char **pptr, int *psize, SLK_NetS_ColiseumLog *pValue );
 int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_ColiseumLogList *pValue );
+int struct_NetS_ColiseumFight_send( char **pptr, int *psize, SLK_NetS_ColiseumFight *pValue );
 
 #endif

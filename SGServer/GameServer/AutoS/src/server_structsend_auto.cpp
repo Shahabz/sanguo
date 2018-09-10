@@ -3707,6 +3707,19 @@ int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_Coliseum
 	{
 		struct_NetS_ColiseumLog_send( pptr, psize, &pValue->m_list[tmpi] );
 	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumFight_send( char **pptr, int *psize, SLK_NetS_ColiseumFight *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_flag, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_content_length, (*psize) );
+	if( pValue->m_content_length > 0 && pValue->m_content_length <= 1800 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_content, pValue->m_content_length*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
 	return 0;
 }
 

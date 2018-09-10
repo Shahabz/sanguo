@@ -225,6 +225,7 @@ int netsend_coliseumlist_S( int actor_index, char send_type, SLK_NetS_ColiseumLi
 int netsend_coliseumranklist_S( int actor_index, char send_type, SLK_NetS_ColiseumRankList *pValue );
 int netsend_coliseumlog_S( int actor_index, char send_type, SLK_NetS_ColiseumLog *pValue );
 int netsend_coliseumloglist_S( int actor_index, char send_type, SLK_NetS_ColiseumLogList *pValue );
+int netsend_coliseumfight_S( int actor_index, char send_type, SLK_NetS_ColiseumFight *pValue );
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue );
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );

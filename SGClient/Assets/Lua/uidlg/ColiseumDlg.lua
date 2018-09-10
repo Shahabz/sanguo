@@ -438,6 +438,7 @@ end
 
 -- 观战
 function ColiseumDlgLogView( fightid )
+	SetTrue( m_uiWaiting )
 	system_askinfo( ASKINFO_COLISEUM, "", 6, fightid )
 end
 

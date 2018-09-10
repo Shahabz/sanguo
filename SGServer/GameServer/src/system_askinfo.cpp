@@ -1333,17 +1333,23 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		}
 		else if ( pvalue[0] == 5 )
 		{ // 战报
-			coliseum_loglist( actor_index, pvalue[1] );
+			coliseum_loglist( actor_index, 0 );
 		}
 		else if ( pvalue[0] == 6 )
 		{ // 观战
+			coliseum_fight_read( actor_index, pvalue[1], 0 );
 		}
 		else if ( pvalue[0] == 7 )
 		{ // 精彩对决
+			coliseum_loglist( actor_index, 1 );
 		}
 		else if ( pvalue[0] == 8 )
 		{ // 重置今日次数
 			coliseum_todaynum_reset( actor_index );
+		}
+		else if ( pvalue[0] == 9 )
+		{ // 精彩对决观战
+			coliseum_fight_read( actor_index, pvalue[1], 1 );
 		}
 		break;
 	default:

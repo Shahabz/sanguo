@@ -269,6 +269,7 @@ function FightDlgShow( recvValue )
 	-- 缩放界面，不是关闭
 	if fighttype == FIGHTTYPE_COLISEUM then
 		ColiseumDlgScale( 0 )
+		ColiseumInfoDlgScale( 0 )
 	end
 	
 	-- 是否可以跳过战斗
@@ -1000,6 +1001,7 @@ function FightDlgResultLayerShow()
 	-- 缩放界面，不是关闭
 	if fighttype == FIGHTTYPE_COLISEUM then
 		ColiseumDlgScale( 1 )
+		ColiseumInfoDlgScale( 1 )
 	end
 end
 

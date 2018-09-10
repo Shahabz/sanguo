@@ -129,6 +129,16 @@ function ColiseumInfoDlgShow()
 	ColiseumInfoDlgShowRankLayer()
 end
 
+function ColiseumInfoDlgScale( scale )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	m_Dlg.transform.localScale = Vector3.New(scale,scale,scale)
+	if scale == 1 then
+		SetFalse( m_uiWaiting )
+	end
+end
+
 -- 排行榜	
 function ColiseumInfoDlgShowRankLayer()
 	SetTrue(m_uiRankLayer)
@@ -262,7 +272,12 @@ function ColiseumInfoDlgRecordCreate( uiObj, info )
 	local uiDRank = objs[8]
 	local uiDHeroList = objs[9]
 	local uiViewBtn = objs[10]
+	local uiOptime = objs[11]
+	local uiALose = objs[12]
+	local uiDLose = objs[13]
+	
 	SetControlID( uiViewBtn, 10000+info.m_fightid )
+	SetText( uiOptime, os.date( "%m-%d %H:%M", info.m_optime ) )
 	
 	SetImage( uiANation, NationSprite(info.m_attack.m_nation) );
 	SetImage( uiDNation, NationSprite(info.m_defense.m_nation) );
@@ -275,6 +290,14 @@ function ColiseumInfoDlgRecordCreate( uiObj, info )
 	
 	SetText( uiARank, F(4290,info.m_attack.m_rank) );
 	SetText( uiDRank, F(4290,info.m_defense.m_rank) );
+	
+	if info.m_win == 1 then
+		SetFalse( uiALose )
+		SetTrue( uiDLose )
+	else
+		SetTrue( uiALose )
+		SetFalse( uiDLose )
+	end
 	
 	for i=1, 3, 1 do
 		local uiHeroObj = uiAHeroList.transform:GetChild(i-1);
@@ -302,7 +325,7 @@ end
 
 -- 观战
 function ColiseumInfoDlgRecordView( fightid )
-	system_askinfo( ASKINFO_COLISEUM, "", 6, fightid )
+	system_askinfo( ASKINFO_COLISEUM, "", 9, fightid )
 end
 
 

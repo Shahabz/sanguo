@@ -3389,6 +3389,16 @@ function struct_NetS_ColiseumLogList_recv( buffer )
 		tmpValue = struct_NetS_ColiseumLog_recv( buffer );
 		table.insert( recvValue.m_list, tmpValue );
 	end
+	recvValue.m_type = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_ColiseumFight_recv( buffer )
+	local recvValue = {};
+	recvValue.m_flag = buffer:ReadSByte();
+	recvValue.m_content_length = buffer:ReadShort();
+	recvValue.m_content = buffer:ReadStringWithLen( recvValue.m_content_length );
+	recvValue.m_type = buffer:ReadSByte();
 	return recvValue;
 end
 

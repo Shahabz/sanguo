@@ -705,10 +705,10 @@ int coliseum_fight( int actor_index, int index )
 	fight_play( actor_index, g_fight.unit_json, content );
 
 	// 战斗信息插入
-	int fightid = coliseum_fight_insert( g_fight.unit_json, (int)time(NULL) );
+	int fightid = coliseum_fight_insert( g_fight.unit_json, (int)time(NULL), "match_fight" );
 	if ( fightid > 0 )
 	{
-		coliseum_log_insert( &g_actors[actor_index].coliseum_my, &g_actors[actor_index].coliseum_list[index], g_fight.result, fightid );
+		coliseum_log_insert( &g_actors[actor_index].coliseum_my, &g_actors[actor_index].coliseum_list[index], g_fight.result, fightid, "match_log" );
 	}
 
 	// 今日次数
@@ -720,6 +720,16 @@ int coliseum_fight( int actor_index, int index )
 
 	// 交换排名以及记录消息
 	coliseum_change_rank( actor_index, index, g_fight.result );
+
+	// 精彩对决信息插入
+	if ( g_fight.result == FIGHT_WIN && g_actors[actor_index].coliseum_rank <= 5 )
+	{
+		int fightid = coliseum_fight_insert( g_fight.unit_json, (int)time( NULL ), "match_fight_wonderful" );
+		if ( fightid > 0 )
+		{
+			coliseum_log_insert( &g_actors[actor_index].coliseum_my, &g_actors[actor_index].coliseum_list[index], g_fight.result, fightid, "match_log_wonderful" );
+		}
+	}
 
 	return 0;
 }
@@ -853,11 +863,11 @@ int coliseum_check_Historyrank( int actor_index )
 }
 
 // 战斗日志
-int coliseum_fight_insert( char *json, int optime )
+int coliseum_fight_insert( char *json, int optime, char *pTab )
 {
 	if ( json )
 		db_escape( json, g_szFightJson, 0 );
-	sprintf( g_szFightSql, "INSERT INTO match_fight (content,optime) VALUES ('%s','%d')", g_szFightJson, optime );
+	sprintf( g_szFightSql, "INSERT INTO %s (content,optime) VALUES ('%s','%d')", pTab, g_szFightJson, optime );
 	if ( mysql_query( myGame, g_szFightSql ) )
 	{
 		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -870,7 +880,7 @@ int coliseum_fight_insert( char *json, int optime )
 }
 
 // 对阵信息
-int coliseum_log_insert( SLK_NetS_ColiseumCity *pAttack, SLK_NetS_ColiseumCity *pDefense, char result, int fightid )
+int coliseum_log_insert( SLK_NetS_ColiseumCity *pAttack, SLK_NetS_ColiseumCity *pDefense, char result, int fightid, char *pTab )
 {
 	if ( !pAttack || !pDefense )
 		return -1;
@@ -880,8 +890,8 @@ int coliseum_log_insert( SLK_NetS_ColiseumCity *pAttack, SLK_NetS_ColiseumCity *
 	int member = 0;
 
 	// 攻击方
-	sprintf( szSQL, "INSERT INTO match_log (a_actorid,a_name,a_rank,a_nation,a_level,a_bpower,a_herokind0,a_herocolor0,a_herolevel0,a_herokind1,a_herocolor1,a_herolevel1,a_herokind2,a_herocolor2,a_herolevel2,d_actorid,d_name,d_rank,d_nation,d_level,d_bpower,d_herokind0,d_herocolor0,d_herolevel0,d_herokind1,d_herocolor1,d_herolevel1,d_herokind2,d_herocolor2,d_herolevel2,win,fightid,optime) "
-		"VALUES( '%d','%s','%d','%d','%d','%d'",
+	sprintf( szSQL, "INSERT INTO %s (a_actorid,a_name,a_rank,a_nation,a_level,a_bpower,a_herokind0,a_herocolor0,a_herolevel0,a_herokind1,a_herocolor1,a_herolevel1,a_herokind2,a_herocolor2,a_herolevel2,d_actorid,d_name,d_rank,d_nation,d_level,d_bpower,d_herokind0,d_herocolor0,d_herolevel0,d_herokind1,d_herocolor1,d_herolevel1,d_herokind2,d_herocolor2,d_herolevel2,win,fightid,optime) "
+		"VALUES( '%d','%s','%d','%d','%d','%d'", pTab,
 		pAttack->m_actorid, db_escape( (const char *)pAttack->m_name, szText_name, 0 ), pAttack->m_rank, pAttack->m_nation, pAttack->m_level, pAttack->m_bpower );
 
 	member = 0;
@@ -961,7 +971,7 @@ int coliseum_log_overdue()
 }
 
 // 战报日志列表
-int coliseum_loglist( int actor_index, int lastid )
+int coliseum_loglist( int actor_index, char type )
 {
 	MYSQL_RES *res;
 	MYSQL_ROW row;
@@ -969,7 +979,17 @@ int coliseum_loglist( int actor_index, int lastid )
 	ACTOR_CHECK_INDEX( actor_index );
 	SLK_NetS_ColiseumLogList pValue = { 0 };
 	//int size = sizeof( SLK_NetS_ColiseumLogList );
-	sprintf( szSQL, "select a_actorid,a_name,a_rank,a_nation,a_level,a_bpower,a_herokind0,a_herocolor0,a_herolevel0,a_herokind1,a_herocolor1,a_herolevel1,a_herokind2,a_herocolor2,a_herolevel2,d_actorid,d_name,d_rank,d_nation,d_level,d_bpower,d_herokind0,d_herocolor0,d_herolevel0,d_herokind1,d_herocolor1,d_herolevel1,d_herokind2,d_herocolor2,d_herolevel2,win,fightid,optime from match_log where a_actorid='%d' or d_actorid='%d' order by optime desc limit 8;", g_actors[actor_index].actorid, g_actors[actor_index].actorid );
+	if ( type == 0 )
+	{
+		sprintf( szSQL, "select a_actorid,a_name,a_rank,a_nation,a_level,a_bpower,a_herokind0,a_herocolor0,a_herolevel0,a_herokind1,a_herocolor1,a_herolevel1,a_herokind2,a_herocolor2,a_herolevel2,d_actorid,d_name,d_rank,d_nation,d_level,d_bpower,d_herokind0,d_herocolor0,d_herolevel0,d_herokind1,d_herocolor1,d_herolevel1,d_herokind2,d_herocolor2,d_herolevel2,win,fightid,optime from match_log where a_actorid='%d' or d_actorid='%d' order by optime desc limit 8;", g_actors[actor_index].actorid, g_actors[actor_index].actorid );
+	}
+	else if ( type == 1 )
+	{
+		sprintf( szSQL, "select a_actorid,a_name,a_rank,a_nation,a_level,a_bpower,a_herokind0,a_herocolor0,a_herolevel0,a_herokind1,a_herocolor1,a_herolevel1,a_herokind2,a_herocolor2,a_herolevel2,d_actorid,d_name,d_rank,d_nation,d_level,d_bpower,d_herokind0,d_herocolor0,d_herolevel0,d_herokind1,d_herocolor1,d_herolevel1,d_herokind2,d_herocolor2,d_herolevel2,win,fightid,optime from match_log_wonderful order by optime desc limit 8;" );
+	}
+	else
+		return -1;
+
 	if ( mysql_query( myGame, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -1021,6 +1041,7 @@ int coliseum_loglist( int actor_index, int lastid )
 			break;
 		}
 	}
+	pValue.m_type = type;
 	netsend_coliseumloglist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -1159,6 +1180,86 @@ int coliseum_awardget( int actorid, int rank )
 	char v1[32] = { 0 };
 	sprintf( v1, "%d", rank );
 	mail_system( MAIL_ACTORID, actorid, 5057, 5550, v1, NULL, NULL, attach, 1 );
+	return 0;
+}
+
+// 读取战斗详细内容
+int coliseum_fight_read( int actor_index, int fightid, char type )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char szSQL[256];
+	if ( type == 0 )
+	{ 
+		sprintf( szSQL, "select content from match_fight where id='%d'", fightid );
+	}
+	else if ( type == 1 )
+	{
+		sprintf( szSQL, "select content from match_fight_wonderful where id='%d'", fightid );
+	}
+	else
+		return -1;
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+	res = mysql_store_result( myGame );
+	if ( (row = mysql_fetch_row( res )) )
+	{
+		coliseum_fight_send( actor_index, row[0] );
+	}
+	else
+	{
+		// 发送一个已经不存在的消息
+		mysql_free_result( res );
+		actor_notify_pop( actor_index, 4307 );
+		return -1;
+	}
+	mysql_free_result( res );
+	return 0;
+}
+
+// 发送战斗详细内容
+int coliseum_fight_send( int actor_index, char *content )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	if ( !content )
+		return -1;
+	SLK_NetS_ColiseumFight pValue = { 0 };
+
+	// 发送开始
+	pValue.m_flag = 0;
+	pValue.m_content_length = 0;
+	netsend_coliseumfight_S( actor_index, SENDTYPE_ACTOR, &pValue );
+
+	// 发内容过程
+	pValue.m_flag = 1;
+	int total_length = strlen( content );
+	int offset = 0;
+	while ( total_length > 0 )
+	{
+		int length = strlen( content + offset );
+		if ( length > 1600 )
+			length = 1600;
+		pValue.m_content_length = length;
+		memcpy( pValue.m_content, content + offset, sizeof( char )*length );
+		offset += length;
+		total_length -= length;
+		netsend_coliseumfight_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	}
+
+	// 发送完毕
+	pValue.m_flag = 2;
+	pValue.m_content_length = 0;
+	pValue.m_type = 0;
+	netsend_coliseumfight_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
 

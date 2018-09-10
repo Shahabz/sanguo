@@ -2629,3 +2629,21 @@ function proc_coliseumloglist_C( recvValue )
 	ColiseumDlgLogRecv( recvValue )
 end
 
+-- m_flag=0,m_content_length=0,m_content="[m_content_length]",m_type=0,
+function proc_coliseumfight_C( recvValue )
+	-- process.
+	if recvValue.m_type == 0 then
+		if recvValue.m_flag == 0 then -- 准备发送
+			ColiseumFightContent = "";
+			
+		elseif recvValue.m_flag == 1 then -- 发送中
+			ColiseumFightContent = ColiseumFightContent..recvValue.m_content;
+
+			
+		elseif recvValue.m_flag == 2 then -- 发送完毕
+			FightDlgShow( ColiseumFightContent )
+			
+		end
+	end
+end
+
