@@ -601,6 +601,13 @@ int army_activity_vs_city( int army_index, City *pTargetCity, Fight *pFight )
 			pTargetCity->act12_turn += 1;
 			activity_12_createarmy( pTargetCity );
 		}
+		else
+		{ // 最后一波了
+			pTargetCity->act12_turn += 1;
+			pTargetCity->act12_state = 2;
+			map_activity_delete( pTargetCity->act12_idx );
+			pTargetCity->act12_idx = -1;
+		}
 	}
 
 	// 插入战斗详情邮件

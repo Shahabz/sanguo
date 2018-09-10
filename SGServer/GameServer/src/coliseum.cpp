@@ -701,7 +701,7 @@ int coliseum_fight( int actor_index, int index )
 
 	// 播放战斗
 	char content[256] = { 0 };
-	sprintf( content, "{\"rankup\":%d}", g_actors[actor_index].coliseum_list[index].m_rank - g_actors[actor_index].coliseum_rank );
+	sprintf( content, "{\"lastrank\":%d,\"nowrank\":%d}", g_actors[actor_index].coliseum_rank, g_actors[actor_index].coliseum_list[index].m_rank );
 	fight_play( actor_index, g_fight.unit_json, content );
 
 	// 战斗信息插入
@@ -818,56 +818,12 @@ int coliseum_check_Historyrank( int actor_index )
 
 	/* 检查名次 */
 	if ( g_actors[actor_index].coliseum_maxrank > g_actors[actor_index].coliseum_rank )
-	{
-		/* 名次都<=50 */
-		if ( g_actors[actor_index].coliseum_maxrank <= 50 && g_actors[actor_index].coliseum_rank <= 50 )
-		{
-			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
-			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
-			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
-			token *= 2;
-		}
-		/* 名次都<=100 */
-		else if ( g_actors[actor_index].coliseum_maxrank <= 100 && g_actors[actor_index].coliseum_rank <= 100 )
-		{
-			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
-			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
-			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
-			token /= 2;
-		}
-		/*进100的*/
-		else if ( g_actors[actor_index].coliseum_maxrank > 100 && g_actors[actor_index].coliseum_rank <= 100 )
-		{
-			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
-			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
-			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
-			token /= 5;
-		}
-		/* 名次都<=1000 */
-		else if ( g_actors[actor_index].coliseum_maxrank <= 1000 && g_actors[actor_index].coliseum_rank <= 1000 )
-		{
-			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
-			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
-			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
-			token /= 10;
-		}
-		/* 名次都>1000 */
-		else if ( g_actors[actor_index].coliseum_maxrank > 1000 && g_actors[actor_index].coliseum_rank > 1000 )
-		{
-			token = int( (g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank)*0.03 );
-			token /= 10;
-		}
-		/* 只有上次名次>1000 */
-		else if ( g_actors[actor_index].coliseum_maxrank > 1000 )
-		{
-			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
-			token = (int)(((fcurvalue + 0.01)*(1000 - g_actors[actor_index].coliseum_rank) + 1) / 2 + (g_actors[actor_index].coliseum_maxrank - 1000)*0.03);
-			token /= 10;
-		}
-
-		if ( token <= 0 )
-			token = 1;
-
+	{   // max{ （你的排名-对手排名）/100 + 2000/你的排名，5 }
+		// max{ （最高比较-你的排名）/100 + 2000/你的排名，5 }
+		token = (int)((g_actors[actor_index].coliseum_maxrank-g_actors[actor_index].coliseum_rank) / 100.0f + 2000 / g_actors[actor_index].coliseum_rank);
+		if ( token < 10 )
+			token = 10;
+		
 		/* 发送奖励邮件 */
 		// 5549	恭喜您本次排名<color = 03de27ff>( { 0 } )< / color>超过您的历史最高排名<color = 03de27ff>( { 1 } )< / color>，为了表彰您在竞技场中的突出表现，以及超越自我，特送奖励如下：
 		char v1[32] = { 0 };
@@ -1206,6 +1162,81 @@ int coliseum_awardget( int actorid, int rank )
 	return 0;
 }
 
+int coliseum_rankaward_sendlist( int actor_index )
+{
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	SLK_NetS_ColiseumAwardList pValue = { 0 };
+
+	awardgroup_allget( 320, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 1;
+	pValue.m_list[pValue.m_count].m_maxrank = 1;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 321, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 2;
+	pValue.m_list[pValue.m_count].m_maxrank = 2;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 322, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 3;
+	pValue.m_list[pValue.m_count].m_maxrank = 3;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 323, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 4;
+	pValue.m_list[pValue.m_count].m_maxrank = 4;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 324, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 5;
+	pValue.m_list[pValue.m_count].m_maxrank = 5;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 325, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 6;
+	pValue.m_list[pValue.m_count].m_maxrank = 10;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 326, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 11;
+	pValue.m_list[pValue.m_count].m_maxrank = 20;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 327, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 21;
+	pValue.m_list[pValue.m_count].m_maxrank = 50;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 328, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 51;
+	pValue.m_list[pValue.m_count].m_maxrank = 100;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 329, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 101;
+	pValue.m_list[pValue.m_count].m_maxrank = 200;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 330, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 201;
+	pValue.m_list[pValue.m_count].m_maxrank = 400;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 331, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 401;
+	pValue.m_list[pValue.m_count].m_maxrank = 1000;
+	pValue.m_count += 1;
+
+	awardgroup_allget( 332, &pValue.m_list[pValue.m_count] );
+	pValue.m_list[pValue.m_count].m_minrank = 1001;
+	pValue.m_list[pValue.m_count].m_maxrank = 2000;
+	pValue.m_count += 1;
+
+	netsend_coliseumawardlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+
 // 读取战斗详细内容
 int coliseum_fight_read( int actor_index, int fightid, char type )
 {
@@ -1306,6 +1337,9 @@ int coliseum_robot_init()
 	printf( "coliseum robot create begin \n" );
 	coliseum_robot_create( COLISEUM_ROBOT_COUNT );
 	printf( "coliseum robot create end \n" );
+
+	// 初始化排行榜
+	coliseum_load_ranklist();
 	return 0;
 }
 

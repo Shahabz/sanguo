@@ -32,6 +32,7 @@ int coliseum_ranklist( int actor_index );
 int coliseum_serieswin_set( int actor_index, char flag );
 int coliseum_award_everyday();
 int coliseum_awardget( int actorid, int rank );
+int coliseum_rankaward_sendlist( int actor_index );
 int coliseum_fight_read( int actor_index, int fightid, char type );
 int coliseum_fight_send( int actor_index, char *content );
 

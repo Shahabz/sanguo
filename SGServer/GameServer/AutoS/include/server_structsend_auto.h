@@ -2517,6 +2517,20 @@ struct _slk_NetS_ColiseumFight {
 };
 typedef struct _slk_NetS_ColiseumFight SLK_NetS_ColiseumFight;	//竞技场战斗录像
 
+struct _slk_NetS_ColiseumAward {
+	char m_count;	//竞技场奖励
+	SLK_NetS_AwardInfo m_award[8];	//竞技场奖励
+	short m_minrank;	//竞技场奖励
+	short m_maxrank;	//竞技场奖励
+};
+typedef struct _slk_NetS_ColiseumAward SLK_NetS_ColiseumAward;	//竞技场奖励
+
+struct _slk_NetS_ColiseumAwardList {
+	char m_count;	//竞技场奖励
+	SLK_NetS_ColiseumAward m_list[16];	//竞技场奖励
+};
+typedef struct _slk_NetS_ColiseumAwardList SLK_NetS_ColiseumAwardList;	//竞技场奖励
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2791,5 +2805,7 @@ int struct_NetS_ColiseumRankList_send( char **pptr, int *psize, SLK_NetS_Coliseu
 int struct_NetS_ColiseumLog_send( char **pptr, int *psize, SLK_NetS_ColiseumLog *pValue );
 int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_ColiseumLogList *pValue );
 int struct_NetS_ColiseumFight_send( char **pptr, int *psize, SLK_NetS_ColiseumFight *pValue );
+int struct_NetS_ColiseumAward_send( char **pptr, int *psize, SLK_NetS_ColiseumAward *pValue );
+int struct_NetS_ColiseumAwardList_send( char **pptr, int *psize, SLK_NetS_ColiseumAwardList *pValue );
 
 #endif

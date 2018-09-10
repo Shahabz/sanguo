@@ -14,10 +14,12 @@ local m_uiRuleScroll = nil; --UnityEngine.GameObject
 local m_uiRuleContent = nil; --UnityEngine.GameObject
 local m_uiUIP_Rule = nil; --UnityEngine.GameObject
 local m_uiWaiting = nil; --UnityEngine.GameObject
+local m_uiUIP_RuleAward = nil; --UnityEngine.GameObject
 
 local m_ObjectPool = nil
 local m_RankRecvValue = nil;
 local m_RecordRecvValue = nil;
+local m_RuleAwardRecvValue = nil;
 -- 打开界面
 function ColiseumInfoDlgOpen()
 	m_Dlg = eye.uiManager:Open( "ColiseumInfoDlg" );
@@ -32,6 +34,7 @@ function ColiseumInfoDlgClose()
 	eye.uiManager:Close( "ColiseumInfoDlg" );
 	m_RankRecvValue = nil;
 	m_RecordRecvValue = nil;
+	m_RuleAwardRecvValue = nil;
 end
 
 -- 删除界面
@@ -40,6 +43,7 @@ function ColiseumInfoDlgDestroy()
 	m_Dlg = nil;
 	m_RankRecvValue = nil;
 	m_RecordRecvValue = nil;
+	m_RuleAwardRecvValue = nil;
 end
 
 ----------------------------------------
@@ -89,10 +93,12 @@ function ColiseumInfoDlgOnAwake( gameObject )
 	m_uiRuleContent = objs[11];
 	m_uiUIP_Rule = objs[12];
 	m_uiWaiting = objs[13];
+	m_uiUIP_RuleAward = objs[14];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Rank", 30, 30, m_uiUIP_Rank);
 	m_ObjectPool:CreatePool("UIP_Record", 5, 5, m_uiUIP_Record);
+	m_ObjectPool:CreatePool("UIP_RuleAward", 10, 10, m_uiUIP_RuleAward);
 end
 
 -- 界面初始化时调用
@@ -335,5 +341,70 @@ function ColiseumInfoDlgShowRuleLayer()
 	SetFalse(m_uiRankLayer)
 	SetFalse(m_uiRecordLayer)
 	SetTrue(m_uiRuleLayer)
+	if m_RuleAwardRecvValue == nil then
+		SetTrue( m_uiWaiting )
+		system_askinfo( ASKINFO_COLISEUM, "", 10 )
+	else
+		ColiseumInfoDlgRuleAwardRecv( m_RuleAwardRecvValue )
+	end
 end
 
+-- 收到奖励
+function ColiseumInfoDlgRuleAwardRecv( recvValue )
+	if m_Dlg == nil or IsActive( m_Dlg ) == false then
+		return;
+	end
+	ColiseumInfoDlgRuleAwardClear()
+	SetFalse( m_uiWaiting )
+	m_RuleAwardRecvValue = recvValue
+	for i=1, recvValue.m_count, 1 do
+		local info = recvValue.m_list[i]
+		local uiObj = m_ObjectPool:Get( "UIP_RuleAward" );
+		uiObj.transform:SetParent( m_uiRuleContent.transform );
+		uiObj.transform.localScale = Vector3.one;
+		uiObj.gameObject:SetActive( true );
+		ColiseumInfoDlgRuleAwardCreate( uiObj, info )
+	end
+end
+
+-- 重置奖励列表
+function ColiseumInfoDlgRuleAwardClear()
+	local objs = {};
+	for i=0,m_uiRuleContent.transform.childCount-1 do
+		table.insert(objs,m_uiRuleContent.transform:GetChild(i).gameObject);
+	end
+	for k, v in pairs(objs) do
+		local obj = v;
+		if obj.name == "UIP_RuleAward(Clone)" then
+			m_ObjectPool:Release( "UIP_RuleAward", obj );
+		end
+	end
+end
+
+-- 创建奖励
+function ColiseumInfoDlgRuleAwardCreate( uiObj, info )
+	if info.m_minrank == info.m_maxrank then
+		SetText( uiObj.transform:Find("Rank"), info.m_minrank )
+	else
+		SetText( uiObj.transform:Find("Rank"), info.m_minrank.."~"..info.m_maxrank )
+	end
+	
+	for i=1, 5, 1 do
+		local awardObj = uiAwardList.transform:GetChild(i-1);
+		if info.m_award[i] and info.m_award[i].m_kind > 0 then
+			local sprite, color, name = AwardInfo( info.m_award[i].m_kind )
+			SetTrue( awardObj )
+			SetControlID( awardObj, 1000000+awardkind[i] )
+			SetImage( awardObj.transform:Find("Shape"), sprite );
+			if awardnum[i] > 1 then
+				SetTrue( awardObj.transform:Find("NumBack") )
+				SetText( awardObj.transform:Find("Num"), knum(info.m_award[i].m_num) );
+			else
+				SetFalse( awardObj.transform:Find("NumBack") )
+				SetText( awardObj.transform:Find("Num"), "" );
+			end
+		else
+			SetFalse( awardObj )
+		end
+	end
+end

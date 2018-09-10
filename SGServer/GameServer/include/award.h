@@ -118,6 +118,7 @@ int awardgroup_random( int awardgroup, int level, AwardGetInfo *getinfo );
 
 // 奖励结构序列化字符串
 int awardgroup_makestr( AwardGetInfo *awardInfo, char *awardContent );
+int awardgroup_allget( int awardgroup, SLK_NetS_ColiseumAward *list );
 
 // 奖励组 发放到邮件内容里面
 int awardgroup_mail( int awardgroup, int level, char * itemContent );

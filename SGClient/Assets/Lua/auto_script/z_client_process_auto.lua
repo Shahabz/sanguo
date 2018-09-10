@@ -2654,3 +2654,9 @@ function proc_coliseumfight_C( recvValue )
 	end
 end
 
+-- m_count=0,m_list={m_count=0,m_award={m_kind=0,m_num=0,[m_count]},m_minrank=0,m_maxrank=0,[m_count]},
+function proc_coliseumawardlist_C( recvValue )
+	-- process.
+	ColiseumInfoDlgRuleAwardRecv( recvValue )
+end
+

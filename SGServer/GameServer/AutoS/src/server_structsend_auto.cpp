@@ -3723,3 +3723,29 @@ int struct_NetS_ColiseumFight_send( char **pptr, int *psize, SLK_NetS_ColiseumFi
 	return 0;
 }
 
+int struct_NetS_ColiseumAward_send( char **pptr, int *psize, SLK_NetS_ColiseumAward *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_AwardInfo_send( pptr, psize, &pValue->m_award[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_minrank, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_maxrank, (*psize) );
+	return 0;
+}
+
+int struct_NetS_ColiseumAwardList_send( char **pptr, int *psize, SLK_NetS_ColiseumAwardList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_ColiseumAward_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

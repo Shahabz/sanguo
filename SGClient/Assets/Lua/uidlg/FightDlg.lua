@@ -35,6 +35,7 @@ local m_uiStar = nil; --UnityEngine.GameObject
 local m_uiStarWarn = nil; --UnityEngine.GameObject
 local m_uiWarn = nil; --UnityEngine.GameObject
 local m_uiSweepBtn = nil; --UnityEngine.GameObject
+local m_uiColiseum = nil; --UnityEngine.GameObject
 
 local m_recvValue = nil;
 local m_jsonFightInfo = nil
@@ -214,6 +215,7 @@ function FightDlgOnAwake( gameObject )
 	m_uiStarWarn = objs[32];
 	m_uiWarn = objs[33];
 	m_uiSweepBtn = objs[34];
+	m_uiColiseum = objs[35];
 end
 
 -- 界面初始化时调用
@@ -838,12 +840,12 @@ function FightDlgResultLayerShow()
 		index = 4
 	end
 	for i=0, index-1, 1 do
-		local sprite, color, name = AwardInfo( awardTable[i].kind )
+		local sprite, color, name, c = AwardInfo( awardTable[i].kind )
 		local uiAward = m_uiAwardGrid.transform:GetChild( i )
 		SetTrue( uiAward )
 		SetImage( uiAward.transform:Find("Icon"), sprite );
 		SetImage( uiAward.transform:Find("Color"), color )
-		SetText( uiAward.transform:Find("Name"), name )
+		SetText( uiAward.transform:Find("Name"), name, NameColor(c) )
 		SetText( uiAward.transform:Find("Num"), knum(awardTable[i].num) )
 	end			
 	
@@ -941,7 +943,7 @@ function FightDlgResultLayerShow()
 			local uiObj = m_uiHeroList.transform:GetChild( i-1 )
 			SetTrue( uiObj )
 			SetTrue( uiObj.transform:Find("Lock") )
-			SetTrue( uiObj.transform:Find("Warn") )
+			SetFalse( uiObj.transform:Find("Warn") )
 			SetFalse( uiObj.transform:Find("Shape") )
 			SetFalse( uiObj.transform:Find("Color") )
 			SetFalse( uiObj.transform:Find("Exp") )
@@ -973,10 +975,13 @@ function FightDlgResultLayerShow()
 	end		
 	-- 副本战斗返回按钮
 	if fighttype == FIGHTTYPE_STORY then
+		SetTrue( m_uiAwardGrid )
+		SetTrue( m_uiHeroList )
 		SetFalse( m_uiCloseBtn )
 		SetTrue( m_uiReturnCityBtn )
 		SetTrue( m_uiReturnStoryBtn )
 		SetFalse( m_uiSweepBtn )
+		SetFalse( m_uiColiseum )
 		local star = m_recvValue.m_content_json["star"]
 		if star ~= nil and star > 0 then
 			SetFalse( m_uiWarn )
@@ -988,7 +993,9 @@ function FightDlgResultLayerShow()
 			SetFalse( m_uiStar )
 			SetFalse( m_uiStarWarn )
 		end
-	else
+	elseif fighttype == FIGHTTYPE_COLISEUM then 
+		SetFalse( m_uiAwardGrid )
+		SetFalse( m_uiHeroList )
 		SetFalse( m_uiWarn )
 		SetTrue( m_uiCloseBtn )
 		SetFalse( m_uiReturnCityBtn )
@@ -996,6 +1003,28 @@ function FightDlgResultLayerShow()
 		SetFalse( m_uiSweepBtn )
 		SetFalse( m_uiStar )
 		SetFalse( m_uiStarWarn )
+		
+		local lastrank = m_recvValue.m_content_json["lastrank"];
+		local nowrank = m_recvValue.m_content_json["nowrank"];
+		if lastrank and nowrank then
+			SetTrue( m_uiColiseum )
+			SetText( m_uiColiseum.transform:Find("Desc"), T(4310) )
+			SetText( m_uiColiseum.transform:Find("LeftRank"), lastrank )
+			SetText( m_uiColiseum.transform:Find("RightRank"), nowrank )
+		else
+			SetFalse( m_uiColiseum )
+		end
+	else
+		SetTrue( m_uiAwardGrid )
+		SetTrue( m_uiHeroList )
+		SetFalse( m_uiWarn )
+		SetTrue( m_uiCloseBtn )
+		SetFalse( m_uiReturnCityBtn )
+		SetFalse( m_uiReturnStoryBtn )
+		SetFalse( m_uiSweepBtn )
+		SetFalse( m_uiStar )
+		SetFalse( m_uiStarWarn )
+		SetFalse( m_uiColiseum )
 	end
 	
 	-- 缩放界面，不是关闭
@@ -1019,15 +1048,18 @@ function FightDlgSweepResult( recvValue )
 	SetTrue( m_uiPicWin ) 
 	SetFalse( m_uiPicLose ) 
 	eye.audioManager:Play(408);
-			
+	
+	SetTrue( m_uiAwardGrid )
+	SetTrue( m_uiHeroList )		
 	SetFalse( m_uiCloseBtn )
 	SetFalse( m_uiReturnCityBtn )
 	SetTrue( m_uiReturnStoryBtn )
 	SetTrue( m_uiSweepBtn )
 	SetFalse( m_uiStar )
 	SetFalse( m_uiStarWarn )
-	SetTrue( m_uiWarn )
+	SetFalse( m_uiWarn )
 	SetText( m_uiWarn, T(2034) )
+	SetFalse( m_uiColiseum )
 	
 	for i=0, 3, 1 do
 		SetFalse( m_uiAwardGrid.transform:GetChild( i ) )
@@ -1062,12 +1094,12 @@ function FightDlgSweepResult( recvValue )
 		index = 4
 	end
 	for i=0, index-1, 1 do
-		local sprite, color, name = AwardInfo( awardTable[i].kind )
+		local sprite, color, name, c = AwardInfo( awardTable[i].kind )
 		local uiAward = m_uiAwardGrid.transform:GetChild( i )
 		SetTrue( uiAward )
 		SetImage( uiAward.transform:Find("Icon"), sprite );
 		SetImage( uiAward.transform:Find("Color"), color )
-		SetText( uiAward.transform:Find("Name"), name )
+		SetText( uiAward.transform:Find("Name"), name, NameColor(c) )
 		SetText( uiAward.transform:Find("Num"), knum(awardTable[i].num) )
 	end
 	

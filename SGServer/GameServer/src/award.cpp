@@ -369,6 +369,28 @@ int awardgroup_makestr( AwardGetInfo *awardInfo, char *awardContent )
 	return 0;
 }
 
+int awardgroup_allget( int awardgroup, SLK_NetS_ColiseumAward *list )
+{
+	if ( awardgroup < 0 || awardgroup >= g_awardgroup_count )
+		return -1;
+	if ( !list )
+		return -1;
+	for ( int tmpi = 0; tmpi < g_awardgroup[awardgroup].allcount; tmpi++ )
+	{
+		if ( g_awardgroup[awardgroup].kind[tmpi] > 0 )
+		{
+			list->m_award[list->m_count].m_kind = g_awardgroup[awardgroup].kind[tmpi];
+			list->m_award[list->m_count].m_num = g_awardgroup[awardgroup].minnum[tmpi];
+			list->m_count++;
+			if ( list->m_count >= 8 )
+			{
+				break;
+			}
+		}
+	}
+	return 0;
+}
+
 // 发放奖励到邮件 ,通过邮件领取
 int awardgroup_mail( int awardgroup, int level, char *itemContent )
 {

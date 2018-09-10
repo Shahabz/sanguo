@@ -1351,6 +1351,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{ // 精彩对决观战
 			coliseum_fight_read( actor_index, pvalue[1], 1 );
 		}
+		else if ( pvalue[0] == 10 )
+		{ // 奖励
+			coliseum_rankaward_sendlist( actor_index );
+		}
 		break;
 	default:
 		break;

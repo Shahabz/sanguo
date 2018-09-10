@@ -337,7 +337,10 @@ int activity_logic()
 			activity_onclose( activityid );
 			continue;
 		}
-		activity_onlogic( activityid );
+		if ( timestamp < g_activity_item[activityid].m_endtime )
+		{
+			activity_onlogic( activityid );
+		}
 	}
 	return 0;
 }
@@ -455,6 +458,9 @@ int activity_onclose( int activityid )
 		break;
 	case ACTIVITY_17:
 		activity_17_onclose();
+		break;
+	case  ACTIVITY_12:
+		activity_12_onclose();
 		break;
 	case ACTIVITY_27:
 		activity_27_onclose();
