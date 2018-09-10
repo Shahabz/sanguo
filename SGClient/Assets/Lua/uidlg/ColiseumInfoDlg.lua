@@ -325,6 +325,7 @@ end
 
 -- 观战
 function ColiseumInfoDlgRecordView( fightid )
+	SetTrue( m_uiWaiting )
 	system_askinfo( ASKINFO_COLISEUM, "", 9, fightid )
 end
 

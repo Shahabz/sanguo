@@ -1530,11 +1530,13 @@ int paycard_give()
 		{
 			sprintf( v1, "%d", g_city[city_index].mcard );
 			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5036, 5532, v1, NULL, NULL, m_award, 1 );
+			g_city[city_index].mcard -= 1;
 		}
 		if ( g_city[city_index].wcard > 0 )
 		{
 			sprintf( v1, "%d", g_city[city_index].wcard );
 			mail_system( g_city[city_index].actor_index, g_city[city_index].actorid, 5037, 5533, v1, NULL, NULL, w_award, 1 );
+			g_city[city_index].wcard -= 1;
 		}
 	}
 	return 0;

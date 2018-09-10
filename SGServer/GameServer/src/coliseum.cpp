@@ -1529,3 +1529,4 @@ int coliseum_randomname( char *name )
 	name[NAME_SIZE - 1] = 0;
 	return 0;
 }
+

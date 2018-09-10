@@ -955,5 +955,17 @@ int mail_overdue()
 			db_reconnect_game();
 		return -1;
 	}
+
+	// 删除过期的邮件
+	sprintf( szSQL, "DELETE FROM `mail_fight` WHERE recvtime < %d", thistime - MAX_MAIL_SAVETIME );
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myGame ), __FUNCTION__, __LINE__ );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
 	return 0;
 }
+

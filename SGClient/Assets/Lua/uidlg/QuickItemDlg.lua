@@ -11,7 +11,7 @@ local m_buildingkind = 0;
 local m_buildingoffset = 0;
 local m_op = 0;
 
-local m_itemlist = { 142, 134, 135 }
+local m_itemlist = { 142, 134, 135, 136 }
 
 -- 打开界面
 function QuickItemDlgOpen()
@@ -150,13 +150,20 @@ function QuickItemDlgSet( sec, update )
 		else
 			local itemnum = GetItem():GetCount(kind)
 			if itemnum > 0 then
+				if kind == 136 then
+					SetTrue( m_uiUIP_QuickItem[i] )
+				end
 				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), itemnum );
 				SetTrue( m_uiUIP_QuickItem[i].transform:Find("UseButton") )
 				SetFalse( m_uiUIP_QuickItem[i].transform:Find("BuyButton") )
 			else
-				SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..item_gettoken(kind) );
-				SetFalse( m_uiUIP_QuickItem[i].transform:Find("UseButton") )
-				SetTrue( m_uiUIP_QuickItem[i].transform:Find("BuyButton") )
+				if kind == 136 then
+					SetFalse( m_uiUIP_QuickItem[i] )
+				else
+					SetText( m_uiUIP_QuickItem[i].transform:Find("Back/Num"), T(125)..item_gettoken(kind) );
+					SetFalse( m_uiUIP_QuickItem[i].transform:Find("UseButton") )
+					SetTrue( m_uiUIP_QuickItem[i].transform:Find("BuyButton") )
+				end
 			end
 		end
 	end

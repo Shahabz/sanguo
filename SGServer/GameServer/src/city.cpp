@@ -4140,7 +4140,6 @@ int city_move( City *pCity, short posx, short posy )
 		char v1[32] = { 0 };
 		snprintf( v1, 32, "%s", pCity->name );
 		mail_system( MAIL_ACTORID, pHelpCity->actorid, 5051, 5546, v1, NULL, NULL, NULL, 1 );
-		break;
 	}
 
 	if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum )
@@ -4335,7 +4334,7 @@ int city_spy( int actor_index, int unit_index, int type )
 				if ( pHero->state == 0 || !pArmy )
 				{ // 未出征状态
 					sprintf( szTmp, "%c{\"kd\":%d,\"lv\":%d,\"cr\":%d,\"cs\":%d,\"hp\":%d,\"state\":0}",
-						sflag, pHero->kind, pHero->level, config->corps, pHero->color, pHero->soldiers );
+						sflag, pHero->kind, pHero->level, pHero->color, config->corps, pHero->soldiers );
 				}
 				else
 				{ // 外出要显示更详细内容
