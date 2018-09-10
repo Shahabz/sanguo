@@ -2626,7 +2626,11 @@ end
 -- m_count=0,m_list={m_attack={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_defense={m_actorid=0,m_namelen=0,m_name="[m_namelen]",m_bpower=0,m_rank=0,m_nation=0,m_hero={m_kind=0,m_color=0,m_level=0,[3]},},m_fightid=0,m_optime=0,[m_count]},
 function proc_coliseumloglist_C( recvValue )
 	-- process.
-	ColiseumDlgLogRecv( recvValue )
+	if recvValue.m_type == 0 then
+		ColiseumDlgLogRecv( recvValue )
+	elseif recvValue.m_type == 1 then
+		 ColiseumInfoDlgRecordRecv( recvValue )
+	end
 end
 
 -- m_flag=0,m_content_length=0,m_content="[m_content_length]",m_type=0,
@@ -2641,7 +2645,10 @@ function proc_coliseumfight_C( recvValue )
 
 			
 		elseif recvValue.m_flag == 2 then -- ·¢ËÍÍê±Ï
-			FightDlgShow( ColiseumFightContent )
+			local t = {};
+			t.m_content_json = {};
+			t.m_fight_content = ColiseumFightContent
+			FightDlgShow( t )
 			
 		end
 	end

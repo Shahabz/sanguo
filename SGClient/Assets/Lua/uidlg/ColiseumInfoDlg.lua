@@ -252,8 +252,8 @@ function ColiseumInfoDlgRecordClear()
 	end
 	for k, v in pairs(objs) do
 		local obj = v;
-		if obj.name == "UIP_Log(Clone)" then
-			m_ObjectPool:Release( "UIP_Log", obj );
+		if obj.name == "UIP_Record(Clone)" then
+			m_ObjectPool:Release( "UIP_Record", obj );
 		end
 	end
 end
@@ -288,8 +288,8 @@ function ColiseumInfoDlgRecordCreate( uiObj, info )
 	SetText( uiAPower, F(4290,info.m_attack.m_bpower) );
 	SetText( uiDPower, F(4290,info.m_defense.m_bpower) );
 	
-	SetText( uiARank, F(4290,info.m_attack.m_rank) );
-	SetText( uiDRank, F(4290,info.m_defense.m_rank) );
+	SetText( uiARank, F(4291,info.m_attack.m_rank) );
+	SetText( uiDRank, F(4291,info.m_defense.m_rank) );
 	
 	if info.m_win == 1 then
 		SetFalse( uiALose )

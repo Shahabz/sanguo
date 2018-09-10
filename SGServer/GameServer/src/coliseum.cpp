@@ -718,11 +718,8 @@ int coliseum_fight( int actor_index, int index )
 	g_actors[actor_index].coliseum_rank = coliseum_getrank( g_actors[actor_index].actorid );
 	g_actors[actor_index].coliseum_list[index].m_rank = coliseum_getrank( g_actors[actor_index].coliseum_list[index].m_actorid );
 
-	// 交换排名以及记录消息
-	coliseum_change_rank( actor_index, index, g_fight.result );
-
 	// 精彩对决信息插入
-	if ( g_fight.result == FIGHT_WIN && g_actors[actor_index].coliseum_rank <= 5 )
+	if ( g_fight.result == FIGHT_WIN && g_actors[actor_index].coliseum_list[index].m_rank <= 5 )
 	{
 		int fightid = coliseum_fight_insert( g_fight.unit_json, (int)time( NULL ), "match_fight_wonderful" );
 		if ( fightid > 0 )
@@ -731,6 +728,8 @@ int coliseum_fight( int actor_index, int index )
 		}
 	}
 
+	// 交换排名以及记录消息
+	coliseum_change_rank( actor_index, index, g_fight.result );
 	return 0;
 }
 
@@ -820,8 +819,32 @@ int coliseum_check_Historyrank( int actor_index )
 	/* 检查名次 */
 	if ( g_actors[actor_index].coliseum_maxrank > g_actors[actor_index].coliseum_rank )
 	{
+		/* 名次都<=50 */
+		if ( g_actors[actor_index].coliseum_maxrank <= 50 && g_actors[actor_index].coliseum_rank <= 50 )
+		{
+			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
+			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
+			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
+			token *= 2;
+		}
+		/* 名次都<=100 */
+		else if ( g_actors[actor_index].coliseum_maxrank <= 100 && g_actors[actor_index].coliseum_rank <= 100 )
+		{
+			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
+			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
+			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
+			token /= 2;
+		}
+		/*进100的*/
+		else if ( g_actors[actor_index].coliseum_maxrank > 100 && g_actors[actor_index].coliseum_rank <= 100 )
+		{
+			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
+			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
+			token = int( ((fcurvalue + fhistoryvalue)*(g_actors[actor_index].coliseum_maxrank - g_actors[actor_index].coliseum_rank) + 1) / 2 );
+			token /= 5;
+		}
 		/* 名次都<=1000 */
-		if ( g_actors[actor_index].coliseum_maxrank <= 1000 && g_actors[actor_index].coliseum_rank <= 1000 )
+		else if ( g_actors[actor_index].coliseum_maxrank <= 1000 && g_actors[actor_index].coliseum_rank <= 1000 )
 		{
 			fcurvalue = 10 - (g_actors[actor_index].coliseum_rank - 1)*0.01;
 			fhistoryvalue = 10 - (g_actors[actor_index].coliseum_maxrank - 1)*0.01;
