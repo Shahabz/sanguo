@@ -483,6 +483,9 @@ function WishingDlgChangeView()
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
 		return;
 	end
+	if m_recvChange == nil then
+		return
+	end
 	m_ChangeTab = {};	
 	if m_ChangeType == 1 then 			--银币兑换
 		SetImage(m_uiChangeRes,ItemSprite(120));
