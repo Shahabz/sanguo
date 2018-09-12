@@ -263,6 +263,8 @@ function FangshiDlgSetPlaceState(index,bOver,bReturn)
 	local uiColor = objs[1];
 	local uiRFoot = objs[2];
 	local uiBack = objs[4];
+	local uiName = objs[5];
+	SetText( uiName, T(4140+index) )
 	if bOver == false then 
 		SetTrue(uiFoot);
 		SetImage(uiFoot,LoadSprite("ui_fangshi_footoff"))
@@ -358,11 +360,13 @@ function FangshiDlgPlaceInfoShow()
 	local ChildIndex = FangshiDlgNodetoChild(m_placeSelect)
 	local uiObj = m_uiPlaceLayer.transform:GetChild( ChildIndex );
 	if ChildIndex == 4 or ChildIndex == 6 then
-		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x+60, uiObj.localPosition.y+200, 0);
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x+150, uiObj.localPosition.y+180, 0);
+	elseif ChildIndex == 1 then
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x-110, uiObj.localPosition.y+180, 0);
 	elseif ChildIndex == 2 then
-		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x-60, uiObj.localPosition.y+200, 0);
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x-150, uiObj.localPosition.y+180, 0);
 	else
-		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x, uiObj.localPosition.y+200, 0);
+		m_uiPlaceInfo.transform.localPosition = Vector3.New( uiObj.localPosition.x, uiObj.localPosition.y+180, 0);
 	end
 	FangshiDlgSetPlaceSelect(ChildIndex);
 	

@@ -830,7 +830,7 @@ function MailInfoDlgByRecvValue( recvValue )
 				uiObj.transform:SetParent( m_uiMailAttach.transform );
 				SetImage( uiObj.transform:Find("Shape"), sprite )
 				SetImage( uiObj.transform:Find("Color"), color )
-				SetText( uiObj.transform:Find("Name"), name.."x"..num )
+				SetText( uiObj.transform:Find("Name"), name.."x"..knum(num) )
 			end
 		end
 		if recvValue.m_attachget == 1 then

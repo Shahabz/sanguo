@@ -46,13 +46,13 @@ public static class XCodePostProcess
 			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
 			//project.overwriteBuildSetting( "CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
 		}
-		else if(projectName== "zaya")
-		{ // 在野
+		else if(projectName== "lvke")
+		{ // 绿壳
 			//project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
 			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
 			//project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
-			EditorPlistZaya(path);
-			EditorCodeZaya(path);
+			EditorPlistLvke(path);
+			EditorCodeLvke(path);
 		}
 		// Finally save the xcode project
 		project.Save();
@@ -79,6 +79,8 @@ public static class XCodePostProcess
 		XCPlist2 list = new XCPlist2(filePath);
 
 		string Plist_url_types = @"
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>This app requires access to the photo library.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>This app requires access to the photo library.</string>
 		<key>NSCameraUsageDescription</key>
@@ -114,28 +116,43 @@ public static class XCodePostProcess
 		//UnityAppController.WriteBelow("[GetAppController().unityView recreateGLESSurfaceIfNeeded];\n\t}\n","\t[[SplusInterfaceKit sharedInstance] applicationWillEnterForeground:application];");
     }
 
-	// 在野SDK
-	private static void EditorPlistZaya(string filePath)
+	// 绿壳sdk
+	private static void EditorPlistLvke(string filePath)
 	{
 		XCPlist2 list = new XCPlist2(filePath);
 
-		string Infolist = @"
+		/*string Infolist = @"
 		<key>Privacy - Photo Library Usage Description</key>
 		<string>此App需要您同意才能读取媒体资料库</string>
-		";
+		";*/
+
+		string Infolist = @"
+		<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLIconFile</key>
+		<string></string>
+		<key>CFBundleURLName</key>
+		<string></string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>hchuleg.com1435853907</string>
+		</array>
+		</dict>
+		</array>";
 		list.AddKey(Infolist);
 
 		//保存
 		list.Save();
 	}
-	private static void EditorCodeZaya(string filePath)
+	private static void EditorCodeLvke(string filePath)
 	{
 		// UnityAppController.mm
 		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
-		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <ZAYAGame/ZaYaGameHeader.h>");
-		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <ZayaSdkConector.h>");
-		UnityAppController.WriteBelow("[GetAppController().unityView recreateGLESSurfaceIfNeeded];","[[ZaYaGame sharedInstance] setSDKEnterForeground];");
-		UnityAppController.WriteBelow("[KeyboardDelegate Initialize];","[[ZaYaGame sharedInstance]\n     setAppID:9002\n     AppKey:@\"18b33bcedf1b2c907611c7305e8dcdb3\"\n     UmengKey:@\"579c09afe0f55a498a002028\"\n     TalkingDataAdTracking:@\"76047EF6A58B87AE5CF4C86E61FCDF19\"\n     GameOrientation:GAMEInterfaceOrientationPortrait\n     LaunchOptions:launchOptions];");
+		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <GameFramework/GameFramework.h>");
+		UnityAppController.WriteBelow("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);","[Game_Api Game_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];");
 	}
 
 	// ipx 齐刘海适配

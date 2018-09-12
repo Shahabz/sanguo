@@ -129,7 +129,7 @@ function Network.OnConnect()
 		local str = Global.GetValue( "GetDeviceDesc" );
 		if str == "" then
 			--str = DeviceHelper.GetDeviceDesc();
-			str = "android"
+			str = "empty"
 			Global.AddValue( "GetDeviceDesc", str );
 		end
 		local str = "";

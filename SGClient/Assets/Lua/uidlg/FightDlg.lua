@@ -299,7 +299,7 @@ function FightDlgShow( recvValue )
 	end
 	
 	-- 显示战前信息
-	if fighttype ~= FIGHTTYPE_QUEST and fighttype ~= FIGHTTYPE_COLISEUM then
+	if fighttype ~= FIGHTTYPE_STORY and fighttype ~= FIGHTTYPE_QUEST and fighttype ~= FIGHTTYPE_COLISEUM then
 		FightInfoDlgShow( info );
 	end
 	
@@ -375,7 +375,7 @@ function FightDlgShow( recvValue )
 	FightDlgUnitUpdate()
 	
 	-- 任务战特殊处理
-	if fighttype == FIGHTTYPE_QUEST or fighttype == FIGHTTYPE_COLISEUM then
+	if fighttype == FIGHTTYPE_STORY or fighttype == FIGHTTYPE_QUEST or fighttype == FIGHTTYPE_COLISEUM then
 		FightDlgStart()
 	end
 end

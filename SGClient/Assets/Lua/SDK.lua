@@ -148,7 +148,7 @@ function SDK.pay( recvValue )
 	elseif Const.platid == 22 then	
 		if recvValue.m_paymode == 0 then
 			local url = Global.GetValue("SERVERACCESS_URL");
-			info["product_ext"] = recvValue.m_ext.."#"..recvValue.m_orderid
+			info["product_ext"] = WWW.EscapeURL(recvValue.m_ext.."#"..recvValue.m_orderid)
 			info["product_price"] = recvValue.m_price*100
 			info["product_actorid"] = GetPlayer().m_actorid
 			info["product_name"] = T(recvValue.m_nameid)
@@ -170,10 +170,10 @@ function SDK.pay( recvValue )
 	-- 绿壳ios(单位：元)
 	elseif Const.platid == 23 then	
 		local url = Global.GetValue("SERVERACCESS_URL");
-		info["product_ext"] = recvValue.m_ext
-		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_actorid"] = tostring(GetPlayer().m_actorid)
 		info["product_name"] = T(recvValue.m_nameid)
-		info["product_sid"] = Const.serverid
+		info["product_sid"] = tostring(Const.serverid)
 		info["product_sname"] = Const.servername;
 		info["product_actorname"] = GetPlayer().m_name;
 		local jsonMsg = json.encode( info ); 
@@ -233,7 +233,34 @@ function SDK.setExtendData( step )
 		info["createtime"]= tostring(GetPlayer().m_createtime)
 		info["levelmtime"]= "0"
 		info["serverid"] = tostring(Const.serverid)
-		info["servername"] = "s"..Const.serverid
+		info["servername"] = Const.servername
+		local jsonMsg = json.encode( info );   
+		ChannelSDK.Instance:setExtendData( jsonMsg );
+		
+	-- 绿壳	
+	elseif Const.platid == 23 then
+		local json = require "cjson"
+		local info = {}
+		if step == "enterServer" then
+			step = "1"
+		elseif step == "createrole" then
+			step = "2"
+		elseif step == "levelup" then
+			step = "3"
+		elseif step == "exit" then
+			step = "4"
+		end
+		info["step"] = step
+		info["actorname"] = GetPlayer().m_name
+		info["actorid"] = tostring(GetPlayer().m_actorid)
+		info["actorlevel"]= tostring(GetPlayer().m_level)
+		info["actorvip"]= tostring(GetPlayer().m_viplevel)
+		info["actortoken"]= tostring(GetPlayer().m_token)
+		info["clubname"]= Nation(GetPlayer().m_nation)
+		info["createtime"]= tostring(GetPlayer().m_createtime)
+		info["levelmtime"]= "2"
+		info["serverid"] = tostring(Const.serverid)
+		info["servername"] = Const.servername
 		local jsonMsg = json.encode( info );   
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	end

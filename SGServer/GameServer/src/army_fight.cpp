@@ -563,38 +563,35 @@ int army_activity_vs_city( int army_index, City *pTargetCity, Fight *pFight )
 	else
 	{ // 玩家防守成功
 		// 获得的奖励
-		AwardGetInfo awardinfo = { 0 };
-		for ( int i = 0; i < 4; i++ )
-		{
-			if ( g_activity_12[turn].awardkind[i] > 0 )
-			{
-				award_getaward( pTargetCity->actor_index, g_activity_12[turn].awardkind[i], g_activity_12[turn].awardnum[i], 0, PATH_ACTIVITY_MONSTER, &awardinfo );
-			}
-		}
+		//AwardGetInfo awardinfo = { 0 };
+		//for ( int i = 0; i < 4; i++ )
+		//{
+		//	if ( g_activity_12[turn].awardkind[i] > 0 )
+		//	{
+		//		awardgroup_withid( pTargetCity->actor_index, g_activity_12[turn].awardkind[i], g_activity_12[turn].awardnum[i], 0, PATH_ACTIVITY_MONSTER, &awardinfo );
+		//	}
+		//}
 
 		// 发送胜利邮件
 		char title[MAIL_TITLE_MAXSIZE] = { 0 };
 		sprintf( title, "%s%d", TAG_TEXTID, 5054 );
 
-		// 奖励展示不是附件的
+		// 奖励附件
 		char attach[MAIL_ATTACH_MAXSIZE] = { 0 };
-		if ( awardinfo.count > 0 )
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
 		{
-			for ( int tmpi = 0; tmpi < awardinfo.count; tmpi++ )
-			{
-				if ( awardinfo.kind[tmpi] <= 0 )
-					continue;
-				char tempitem[32] = { 0 };
-				sprintf( tempitem, "%d,%d@", awardinfo.kind[tmpi], awardinfo.num[tmpi] );
-				strcat( attach, tempitem );
-			}
+			if ( g_activity_12[turn].awardkind[tmpi] <= 0 )
+				continue;
+			char tempitem[32] = { 0 };
+			sprintf( tempitem, "%d,%d@", g_activity_12[turn].awardkind[tmpi], g_activity_12[turn].awardnum[tmpi] );
+			strcat( attach, tempitem );
 		}
 
 		// 内容
 		char content[MAIL_CONTENT_MAXSIZE] = { 0 };
 		sprintf( content, "{\"text\":\"%s%d\",\"win\":1,\"my\":2,\"name\":\"%s\",\"kind\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d,\"award\":\"%s\",\"turn\":%d}",
-			TAG_TEXTID, 5547, pTargetCity->name, config->kind, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], attach, pTargetCity->act12_turn );
-		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY12, title, content, "", 0, 0 );
+			TAG_TEXTID, 5547, pTargetCity->name, config->kind, pTargetCity->temp_wounded_soldiers[0], pTargetCity->temp_wounded_soldiers[1], pTargetCity->temp_wounded_soldiers[2], "", pTargetCity->act12_turn );
+		mailid = mail( pTargetCity->actor_index, pTargetCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY12, title, content, attach, 0, 0 );
 
 		if ( pTargetCity->act12_turn < g_activity_12_maxnum-1 )
 		{
