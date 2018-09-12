@@ -25,6 +25,9 @@ struct _paygoods {
 				char productid_d[64];	//
 				char productid_e[64];	//
 				char productid_f[64];	//
+				char productid_g[64];	//
+				char productid_h[64];	//
+				char productid_i[64];	//
 };
 typedef struct _paygoods PayGoods;
 

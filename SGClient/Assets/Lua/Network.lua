@@ -162,11 +162,16 @@ function Network.OnConnect()
 		buffer:WriteShort( Localization.languageCustomID( Localization.currentLanguage ) );
 		-- 无用
 		buffer:WriteInt(0);
-		-- 渠道信息
-		if Const.sdk_channelId == "" then
-			Const.sdk_channelId = 0;
+		
+		if Const.platid == 22 then -- 易接渠道是字符串
+			buffer:WriteInt(0);
+		else
+			-- 渠道信息
+			if Const.sdk_channelId == "" then
+				Const.sdk_channelId = 0;
+			end
+			buffer:WriteInt( tonumber(Const.sdk_channelId) );
 		end
-		buffer:WriteInt( tonumber(Const.sdk_channelId) );
 		-- 详细设备信息
 		buffer:WriteString( str.."|"..Const.sdk_channelId );
 		-- 发送首包

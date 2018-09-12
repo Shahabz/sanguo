@@ -279,6 +279,7 @@ function GirlDlgHeadLayerCreate()
 			end
 		end
 	end
+	
 	-- 不可突破排序
 	table.sort( m_GirlCantBreak, function(a,b) 
 		if a.m_state > b.m_state then
@@ -488,7 +489,7 @@ function GirlDlgCreateInfo( pGirl )
 		SetFalse(m_uiLoveLayer);
 		SetTrue( m_uiSingleLayer )
 		SetFalse( m_uiDoubleLayer )
-		SetText( m_uiGirlName, GirlName( kind ) )
+		SetText( m_uiGirlName, GirlName( kind ).."("..GirlType( config.type )..")" )
 		SetImage( m_uiGirlShape, GirlFaceSprite( kind ) )
 		
 		-- 属性
@@ -679,10 +680,14 @@ function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
 	local uiAttrText = objs[4];
 	local uiBack = objs[5];
 	local uiNameBack = objs[6];
+	local config = girlconfig( kind, color )
+	if config == nil then
+		return
+	end
 	--SetImage( uiColor, ItemColorSprite( color ) )
 	SetImage( uiBack, HeroColorSprite( color ) )
 	SetImage( uiNameBack, HeroNameColorSprite( color ) )
-	SetText( uiName, GirlName( kind ) )
+	SetText( uiName, GirlName( kind ).."("..GirlType( config.type )..")" )
 	SetImage( uiShape, GirlFaceSprite( kind ) )
 	if color >= ITEM_COLOR_LEVEL_RED then
 		SetText( uiAttrName, T(3350) ) -- 突破已满

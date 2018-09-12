@@ -1054,7 +1054,7 @@ function LoginModSDKLoginProc()
 	sendValue.m_username = Const.sdk_uid
 	sendValue.m_username_length = string.len( sendValue.m_username );
 	
-	sendValue.m_password = Const.sdk_token.."_"..Const.sdk_timestamp
+	sendValue.m_password = Const.sdk_channelId.."_".. Const.sdk_token.."_"..Const.sdk_timestamp
 	sendValue.m_password_length = string.len( sendValue.m_password );
 	
 	sendValue.m_deviceid = Utils.deviceUniqueIdentifier;

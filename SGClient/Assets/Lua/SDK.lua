@@ -26,12 +26,19 @@ end
 function SDK.onLogin( jsonResult )
 	local json = require "cjson"
 	local info = json.decode( jsonResult );   
-	
+
 	local result 	    = info["result"];
 	if result == "1" then
-		Const.sdk_uid 		= info["uid"];
-		Const.sdk_token 	= info["token"];
-		Const.sdk_isverify 	= info["isverify"];
+		if Const.platid == 22 then
+			Const.sdk_timestamp = info["appId"];
+			Const.sdk_channelId = info["ChannelId"];
+			Const.sdk_uid 		= info["ChannelUserId"];
+			Const.sdk_token 	= info["token"];
+		else
+			Const.sdk_uid 		= info["uid"];
+			Const.sdk_token 	= info["token"];
+			Const.sdk_isverify 	= info["isverify"];
+		end
 	else
 		SDK.login()
 	end
@@ -107,6 +114,7 @@ function SDK.pay( recvValue )
 		
 	elseif Const.platid == 16 then
 		IAppPay_fysgz( recvValue )
+		
 	elseif Const.platid == 17 then
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_price"] = recvValue.m_price*100
@@ -134,6 +142,42 @@ function SDK.pay( recvValue )
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
 							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+	
+	
+	-- 易接android,可自由转化到完美数卡支付(单位：分)
+	elseif Const.platid == 22 then	
+		if recvValue.m_paymode == 0 then
+			local url = Global.GetValue("SERVERACCESS_URL");
+			info["product_ext"] = recvValue.m_ext.."#"..recvValue.m_orderid
+			info["product_price"] = recvValue.m_price*100
+			info["product_actorid"] = GetPlayer().m_actorid
+			info["product_name"] = T(recvValue.m_nameid)
+			--info["product_notifyurl"] = url.."tlsg_yj/pay.php"
+			info["product_notifyurl"] = ""
+			info["product_notifyurl_params"] = "";
+			local jsonMsg = json.encode( info ); 
+			ChannelSDK.Instance:pay( jsonMsg );
+		else
+			local url = Global.GetValue("CLIENTACCESS_URL");
+			Application.OpenURL( url.."weizuo/wmcard.php"
+							.."?product_id="..recvValue.m_productid
+							.."&product_price="..(recvValue.m_price*100)
+							.."&product_orider="..recvValue.m_orderid
+							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
+							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+		end
+		
+	-- 绿壳ios(单位：元)
+	elseif Const.platid == 23 then	
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_ext"] = recvValue.m_ext
+		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_sid"] = Const.serverid
+		info["product_sname"] = Const.servername;
+		info["product_actorname"] = GetPlayer().m_name;
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 
@@ -163,7 +207,7 @@ function SDK.userCenter()
 end
 
 -- 传额外参数
-function SDK.setExtendData()
+function SDK.setExtendData( step )
 	if Const.platid == 13 or Const.platid == 14 or Const.platid == 15 or Const.platid == 16 then
 		local json = require "cjson"
 		local info = {}
@@ -171,10 +215,27 @@ function SDK.setExtendData()
 		info["actorid"] = GetPlayer().m_actorid
 		info["actorlevel"]= GetPlayer().m_level
 		info["serverid"] = Const.serverid
+		info["servername"] = Const.servername
+		local jsonMsg = json.encode( info );   
+		ChannelSDK.Instance:setExtendData( jsonMsg );
+	
+	-- 易接	
+	elseif Const.platid == 22 then
+		local json = require "cjson"
+		local info = {}
+		info["step"] = step
+		info["actorname"] = GetPlayer().m_name
+		info["actorid"] = tostring(GetPlayer().m_actorid)
+		info["actorlevel"]= tostring(GetPlayer().m_level)
+		info["actorvip"]= tostring(GetPlayer().m_viplevel)
+		info["actortoken"]= tostring(GetPlayer().m_token)
+		info["clubname"]= Nation(GetPlayer().m_nation)
+		info["createtime"]= tostring(GetPlayer().m_createtime)
+		info["levelmtime"]= "0"
+		info["serverid"] = tostring(Const.serverid)
 		info["servername"] = "s"..Const.serverid
 		local jsonMsg = json.encode( info );   
 		ChannelSDK.Instance:setExtendData( jsonMsg );
-	else
 	end
 end
 

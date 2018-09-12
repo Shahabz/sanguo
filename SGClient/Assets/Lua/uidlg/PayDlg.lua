@@ -119,6 +119,9 @@ function PayDlgRecv( recvValue )
 		for i=1, recvValue.m_count, 1 do
 			PayDlgCreateGoods( recvValue.m_list[i] )
 		end
+		if GetPlayer().m_usertype == 100 then
+			PayDlgCreateGoods( {m_goodsid=3,m_price=0.01,m_token=1,m_day=0,m_nameid=2113,m_icon=1,m_gift_token=0} )
+		end
 		PayDlgUpdateVip()
 		PayDlgSetTokenSale()
 		PayDlgSetTokenRet()
