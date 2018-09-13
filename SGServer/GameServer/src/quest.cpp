@@ -688,6 +688,12 @@ int quest_getaward( int actor_index, int questid )
 
 	quest_sendlist( actor_index );
 	quest_checkcomplete( actor_index );
+
+	// 世界按钮竟然没了
+	if ( pCity->questid[0] >= 80 && city_function_check( pCity, CITY_FUNCTION_WORLD ) == 0 )
+	{
+		city_function_open( pCity, CITY_FUNCTION_WORLD );
+	}
 	return 0;
 }
 

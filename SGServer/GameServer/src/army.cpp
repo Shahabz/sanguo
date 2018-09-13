@@ -2060,7 +2060,10 @@ void army_fight( int army_index )
 		}
 
 		// 战斗结算
-		fight_lost_calc();
+		if ( g_army[army_index].from_type != MAPUNIT_TYPE_ACTIVITY )
+		{
+			fight_lost_calc();
+		}
 
 		// 攻击方是城池的部队
 		if ( g_army[army_index].from_type == MAPUNIT_TYPE_CITY )

@@ -109,7 +109,7 @@ char g_test_mod = 0;
 #endif
 
 // µ÷ÊÔÊä³ö
-#define FIGHT_DEBUG
+//#define FIGHT_DEBUG
 int fight_debug( const char *format, ... )
 {
 #ifdef FIGHT_DEBUG
@@ -1657,7 +1657,7 @@ int fight_lost_calc_single( FightUnit *pUnit )
 }
 int fight_lost_calc()
 {
-	if ( g_fight.type == FIGHTTYPE_STORY || g_fight.type == FIGHTTYPE_WORLDBOSS )
+	if ( g_fight.type == FIGHTTYPE_STORY || g_fight.type == FIGHTTYPE_WORLDBOSS || g_fight.type == FIGHTTYPE_COLISEUM )
 		return -1;
 	for ( int tmpi = 0; tmpi < FIGHT_UNIT_MAX; tmpi++ )
 	{
