@@ -377,6 +377,7 @@ GameObject:
   - component: {fileID: 224807245267318766}
   - component: {fileID: 222641650800099268}
   - component: {fileID: 114682839713879280}
+  - component: {fileID: 114513376403135166}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -950,6 +951,7 @@ GameObject:
   - component: {fileID: 224721190109097260}
   - component: {fileID: 222021658587748254}
   - component: {fileID: 114688820202623878}
+  - component: {fileID: 114134670896539498}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1337,6 +1339,7 @@ GameObject:
   - component: {fileID: 224397399477443076}
   - component: {fileID: 222987739944612086}
   - component: {fileID: 114743502027802876}
+  - component: {fileID: 114035147499736328}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1821,6 +1824,7 @@ GameObject:
   - component: {fileID: 224421963335395632}
   - component: {fileID: 222305378887348006}
   - component: {fileID: 114842673497230250}
+  - component: {fileID: 114591677443039016}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2572,6 +2576,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114035147499736328
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1543610656272948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114042879461193536
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2878,6 +2896,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114134670896539498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1390985749724552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114134940632772828
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4336,6 +4368,20 @@ MonoBehaviour:
   progress: {fileID: 114973408916770182}
   fullProgress: {fileID: 114498485334501762}
   mode: 1
+--- !u!114 &114513376403135166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1137588242029144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114522460808237302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4562,6 +4608,20 @@ MonoBehaviour:
   clickInterval: 0
   uiMod: {fileID: 114373479579058398}
   audioID: 0
+--- !u!114 &114591677443039016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1826861552540222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114593007379885332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5099,7 +5159,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: b1f3da7754abc43229436a8e655bab35, type: 3}
-    m_FontSize: 21
+    m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -5149,7 +5209,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: b1f3da7754abc43229436a8e655bab35, type: 3}
-    m_FontSize: 21
+    m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -5364,7 +5424,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: b1f3da7754abc43229436a8e655bab35, type: 3}
-    m_FontSize: 21
+    m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -5779,7 +5839,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: b1f3da7754abc43229436a8e655bab35, type: 3}
-    m_FontSize: 21
+    m_FontSize: 26
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10

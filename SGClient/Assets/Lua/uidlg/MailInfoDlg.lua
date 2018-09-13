@@ -815,29 +815,33 @@ function MailInfoDlgByRecvValue( recvValue )
 
 	
 	-- 附件状态
-	if recvValue.m_attach == "" then
-		SetFalse( m_uiMailAttach );
-	else
-		SetTrue( m_uiMailAttach );
-		local AttachList = string.split( recvValue.m_attach, '@' )
-		for i= 1, #AttachList, 1 do
-			local Attach = string.split( AttachList[i], ',' )
-			if #Attach == 2 then
-				local kind = tonumber(Attach[1]);
-				local num = tonumber(Attach[2]);
-				local sprite, color, name = AwardInfo( kind )
-				local uiObj = m_ObjectPool:Get( "UIP_Item" );
-				uiObj.transform:SetParent( m_uiMailAttach.transform );
-				SetImage( uiObj.transform:Find("Shape"), sprite )
-				SetImage( uiObj.transform:Find("Color"), color )
-				SetText( uiObj.transform:Find("Name"), name.."x"..knum(num) )
+	if recvValue.m_viewpath == 0 then
+		if recvValue.m_attach == "" then
+			SetFalse( m_uiMailAttach );
+		else
+			SetTrue( m_uiMailAttach );
+			local AttachList = string.split( recvValue.m_attach, '@' )
+			for i= 1, #AttachList, 1 do
+				local Attach = string.split( AttachList[i], ',' )
+				if #Attach == 2 then
+					local kind = tonumber(Attach[1]);
+					local num = tonumber(Attach[2]);
+					local sprite, color, name = AwardInfo( kind )
+					local uiObj = m_ObjectPool:Get( "UIP_Item" );
+					uiObj.transform:SetParent( m_uiMailAttach.transform );
+					SetImage( uiObj.transform:Find("Shape"), sprite )
+					SetImage( uiObj.transform:Find("Color"), color )
+					SetText( uiObj.transform:Find("Name"), name.."x"..knum(num) )
+				end
+			end
+			if recvValue.m_attachget == 1 then
+				SetFalse( m_uiMailAttach.transform:Find("GetAttachBtn") );
+			else
+				SetTrue( m_uiMailAttach.transform:Find("GetAttachBtn") );
 			end
 		end
-		if recvValue.m_attachget == 1 then
-			SetFalse( m_uiMailAttach.transform:Find("GetAttachBtn") );
-		else
-			SetTrue( m_uiMailAttach.transform:Find("GetAttachBtn") );
-		end
+	else
+		SetFalse( m_uiMailAttach );
 	end
 	
 	-- 未读设已读

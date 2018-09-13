@@ -173,7 +173,7 @@ function Activity33ModShowAwardList()
 		local obj = m_uiAwardContent.transform:GetChild(i-1).gameObject
 		SetImage( obj.transform:Find("Back"), LoadSprite("activity_back_5") )
 		local awardObj = obj.transform:Find("AwardList")
-		for j=1,4,1 do
+		for j=1,5,1 do
 			local awardkind = m_recvValue.m_awardlist[i].m_awardkind[j]
 			local awardnum = m_recvValue.m_awardlist[i].m_awardnum[j]
 			local sprite, color, name = AwardInfo( awardkind )

@@ -773,7 +773,15 @@ function HeroInfoDlgEquipWash( index )
 	end
 	EquipWashDlgShow()
 	if m_up == true then
-		EquipWashDlgSelectHero( m_pCacheHero.m_kind, m_pCacheHero.m_Equip[index].m_offset )
+		
+		if m_pCacheHero.m_offset >= 1004 and m_pCacheHero.m_offset < 1008 then -- 财赋署武将
+			EquipWashDlgSelectTag( 2, m_pCacheHero.m_kind, m_pCacheHero.m_Equip[index].m_offset )
+		elseif m_pCacheHero.m_offset >= 1008 and m_pCacheHero.m_offset < 1012 then -- 御林卫武将
+			EquipWashDlgSelectTag( 3, m_pCacheHero.m_kind, m_pCacheHero.m_Equip[index].m_offset )
+		else
+			EquipWashDlgSelectHero( m_pCacheHero.m_kind, m_pCacheHero.m_Equip[index].m_offset )
+		end
+		
 	end
 end
 
