@@ -133,7 +133,7 @@ end
 function PlayerDlgShow()
 	PlayerDlgOpen()
 	-- 送福利-邀请码
-	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		SetFalse( m_uiPayButton );
 		SetTrue( m_uiCodeButton );
 	else

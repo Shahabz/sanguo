@@ -281,6 +281,10 @@ end
 
 -- 前往世界地图
 function WorldMap.GotoWorldMap( posx, posy )
+	if CacheQuest and CacheQuest.m_list[1] and CacheQuest.m_list[1].m_questid < 75 then;
+		pop( T(4315) )
+		return
+	end
 	MainDlgPlayCutScenes()
 	
 	Invoke( function() 

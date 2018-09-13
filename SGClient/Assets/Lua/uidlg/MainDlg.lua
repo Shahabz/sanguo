@@ -1024,8 +1024,9 @@ function MainDlgSetButtons( openoffset )
 	-- 世界
 	SetParent( ButtonTable.m_uiButtonWorld, m_uiButtonBack[4] );
 	SetParent( ButtonTable.m_uiButtonCity, m_uiButtonBack[4] );
-	SetFalse( ButtonTable.m_uiButtonWorld );
+	SetTrue( ButtonTable.m_uiButtonWorld );
 	SetFalse( ButtonTable.m_uiButtonCity );
+	
 	m_hasButton[4] = true;
 	if Utils.get_int_sflag( GetPlayer().m_function, CITY_FUNCTION_WORLD ) == 1 then
 		SetTrue( ButtonTable.m_uiButtonWorld );
@@ -1181,7 +1182,7 @@ function MainDlgSetButtons( openoffset )
 	end	
 	
 	-- 用户中心
-	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 21 then
+	if Const.platid == 1 or Const.platid >= 13 and Const.platid <= 21 or Const.platid == 24 or Const.platid == 25 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonUserCenter, m_uiButtonBack[offset] );
@@ -1190,7 +1191,7 @@ function MainDlgSetButtons( openoffset )
 	end
 	
 	-- 送福利
-	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+	if Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonInviteCode, m_uiButtonBack[offset] );

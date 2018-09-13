@@ -319,6 +319,17 @@ int map_event_range_brush( short kind, short posx, short posy, int range, int ci
 	short pPosx = -1;
 	short pPosy = -1;
 	map_getrandpos_withrange( posx, posy, range, &pPosx, &pPosy );
+	while ( range < 32 )
+	{
+		map_getrandpos_withrange( posx, posy, range, &pPosx, &pPosy );
+		if ( pPosx >= 0 && pPosy >= 0 )
+		{
+			break;
+		}
+		range += 1;
+	}
+
+
 	if ( pPosx >= 0 && pPosy >= 0 )
 	{
 		map_event_create( kind, pPosx, pPosy, city_index );

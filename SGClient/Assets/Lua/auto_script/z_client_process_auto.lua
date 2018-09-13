@@ -9,7 +9,7 @@ function proc_login_C( recvValue )
 		print( "Login Result:"..recvValue.m_result );
 		eye.networkManager:Logout();
 		
-		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 			LoginModOpenTestLogin();
 		else
 			LoginModOpenSDKLogin();

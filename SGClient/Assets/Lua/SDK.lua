@@ -125,7 +125,7 @@ function SDK.pay( recvValue )
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
 		
-	elseif Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+	elseif Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		local url = Global.GetValue("CLIENTACCESS_URL");
 		Application.OpenURL( url.."wmcard.php"
 							.."?product_id="..recvValue.m_productid
@@ -200,7 +200,7 @@ function SDK.userCenter()
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 21 then -- fysgz-android 爱贝登录-完美舒卡支付
 		ChannelSDK.Instance:user_center( '' );
-	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 then
+	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		UserInfoDlgShow()
 	else
 	end
