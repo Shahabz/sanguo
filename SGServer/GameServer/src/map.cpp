@@ -35,6 +35,9 @@ extern int g_zoneinfo_maxnum;
 extern MapTownInfo *g_towninfo;
 extern int g_towninfo_maxnum;
 
+extern MapUnit *g_mapunit;
+extern int g_mapunit_maxcount;
+
 Map g_map;
 int g_nUnitQueueNumLimit;		// 单个队列的极限，超过后不再分配
 int *g_pTmpEnterArmy;
@@ -114,6 +117,16 @@ void map_sendinfo( int actor_index, short tposx, short tposy )
 	City *pCity = city_getptr( actor_index );
 	if ( pCity )
 	{
+		// 这里对玩家城池位置做校验
+		short posx = -1, posy = -1;
+		mapunit_getpos( pCity->unit_index, &posx, &posy );
+		if ( posx != pCity->posx || posy != pCity->posy )
+		{// 根据位置，重新计算区域
+			write_gamelog( "CityPosError: city(%d,%d,%d) unit(%d,%d,%d)", pCity->index, pCity->posx, pCity->posy, pCity->unit_index, posx, posy );
+			mapunit_del( MAPUNIT_TYPE_CITY, pCity->index, pCity->unit_index );
+			pCity->unit_index = mapunit_add( MAPUNIT_TYPE_CITY, pCity->index );
+		}
+		
 		info.m_citystate = pCity->state;
 		info.m_my_city_unit_index = pCity->unit_index;
 		info.m_my_city_posx = pCity->posx;
