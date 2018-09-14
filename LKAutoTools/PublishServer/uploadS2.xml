@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="release" basedir=".">
+	
+	<!-- 开始编译打包任务 -->
+	<target name="release" depends ="s2">
+			
+					 
+	</target>
+		
+	<!-- 上传到外网服务器 s2 -->
+	<target name="s2">
+			
+		<scp todir="root:game123,./@39.105.96.198:/usr/local/sanguo_s2/" port="22" trust="true">
+		   <fileset file="./sgserver.tar.gz"/>
+		</scp>
+
+		<scp todir="root:game123,./@39.105.96.198:/usr/local/sanguo_s2/" port="22" trust="true">
+		   <fileset file="./sgsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:game123,./@39.105.96.198:/usr/local/sanguo_s2/sql" port="22" trust="true">
+		   <fileset file="./sg_game_patch.sql"/>
+		</scp>
+		 
+		<sshexec host="39.105.96.198"  port="22" username="root"  password="game123,./"
+         		trust="true" command="cd /usr/local/sanguo_s2;./stop_shell;./sql_shell;./start_shell"/>
+         		
+	</target>
+	
+</project>
