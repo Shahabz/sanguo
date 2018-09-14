@@ -1566,6 +1566,31 @@ int coliseum_robot_create( int robotcount )
 			hero[member].kind = herokind[sortindex[member]];
 			hero[member].color = herocolor[sortindex[member]];
 			hero[member].level = random( actor.level - 3, actor.level );
+
+			if ( hero[member].level > 90 )
+			{
+				hero[member].color = random( hero[member].color, hero[member].color + 2 );
+				if ( hero[member].color > 5 )
+					hero[member].color = 5;
+			}
+
+			if ( hero[member].level > 100 )
+			{
+				if ( rand() % 10 == 0 )
+				{
+					hero[member].color = 5;
+					hero[member].god = 1;
+				}
+			}
+
+			HeroInfoConfig *config = hero_getconfig( hero[member].kind, hero[member].color );
+			if ( config )
+			{
+				hero[member].troops_wash += random( 30, config->troops_wash_limit );
+				if ( hero[member].troops_wash > config->troops_wash_limit )
+					hero[member].troops_wash = config->troops_wash_limit;
+			}
+
 			for ( int equipindex = 0; equipindex < 6; equipindex++ )
 			{
 				hero[member].equip[equipindex].kind = equipkind[equipindex];

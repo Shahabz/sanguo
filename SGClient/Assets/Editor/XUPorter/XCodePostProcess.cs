@@ -121,10 +121,12 @@ public static class XCodePostProcess
 	{
 		XCPlist2 list = new XCPlist2(filePath);
 
-		/*string Infolist = @"
-		<key>Privacy - Photo Library Usage Description</key>
-		<string>此App需要您同意才能读取媒体资料库</string>
-		";*/
+		string PhotoInfolist = @"
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>以照片的形式为您保存账号密码</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>以照片的形式为您保存账号密码</string>";
+		list.AddKey(PhotoInfolist);
 
 		string Infolist = @"
 		<key>CFBundleURLTypes</key>

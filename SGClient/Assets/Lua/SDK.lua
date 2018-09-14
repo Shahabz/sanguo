@@ -34,6 +34,11 @@ function SDK.onLogin( jsonResult )
 			Const.sdk_channelId = info["ChannelId"];
 			Const.sdk_uid 		= info["ChannelUserId"];
 			Const.sdk_token 	= info["token"];
+		elseif Const.platid == 26 then
+			Const.sdk_timestamp = info["timestamp"];
+			Const.sdk_channelId = info["ChannelId"];
+			Const.sdk_uid 		= info["ChannelUserId"];
+			Const.sdk_token 	= info["token"];
 		else
 			Const.sdk_uid 		= info["uid"];
 			Const.sdk_token 	= info["token"];
@@ -178,6 +183,19 @@ function SDK.pay( recvValue )
 		info["product_actorname"] = GetPlayer().m_name;
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
+		
+	-- 绿壳android(单位：分)
+	elseif Const.platid == 26 then	
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_price"] = tostring(recvValue.m_price*100)
+		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_actorid"] = tostring(GetPlayer().m_actorid)
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_sid"] = tostring(Const.serverid)
+		info["product_sname"] = Const.servername;
+		info["product_actorname"] = GetPlayer().m_name;
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 
@@ -238,7 +256,7 @@ function SDK.setExtendData( step )
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 		
 	-- 绿壳	
-	elseif Const.platid == 23 then
+	elseif Const.platid == 23 or Const.platid == 26 then
 		local json = require "cjson"
 		local info = {}
 		if step == "enterServer" then
