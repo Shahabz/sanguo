@@ -620,7 +620,17 @@ function LoginModAskServerList()
 		else
 			--有登陆过就选择最后一次登陆的服务器
 			m_LoginUsedServerList = json.decode( loginUsedServerJson )
-			LoginModSelectServer( m_LoginUsedServerList[#m_LoginUsedServerList]["sid"] );
+			if m_LoginUsedServerList[#m_LoginUsedServerList] == nil then
+				m_LoginUsedServerList = nil;
+				local newserver = LoginModGetNewServer();
+				if newserver == nil then
+					LoginModOpenServerList(); 
+				else
+					LoginModSelectServer( newserver["sid"] );	
+				end
+			else
+				LoginModSelectServer( m_LoginUsedServerList[#m_LoginUsedServerList]["sid"] );
+			end
 		end 
 			
 		-- 需要显示的

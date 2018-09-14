@@ -134,10 +134,19 @@ public static class Localization
         currentLanguage = userIni.ReadValue( "LANGUAGE", "" ).ToString();
         if ( currentLanguage == "" )
         {
-            // 没有存档的，使用设备当前的
-            currentLanguage = DeviceHelper.getLanguage();
-            userIni.WriteValue("LANGUAGE", currentLanguage );
+            // 没有存档的，那么使用配置文件默认的
+			IniUtil appIni = new IniUtil();
+			appIni.OpenFromData( "app.txt" );
+			currentLanguage = appIni.ReadValue( "DEFAULT_LANGUAGE", "" ).ToString();
+			userIni.WriteValue("LANGUAGE", currentLanguage );
         }
+
+		if ( currentLanguage == "" )
+		{
+			// 没有默认的，那么使用设备当前的
+			currentLanguage = DeviceHelper.getLanguage();
+			userIni.WriteValue("LANGUAGE", currentLanguage );
+		}
 
         // 读取使用国家
         currentCountry = userIni.ReadValue( "COUNTRY", "" ).ToString();
