@@ -54,6 +54,11 @@ public static class XCodePostProcess
 			EditorPlistLvke(path);
 			EditorCodeLvke(path);
 		}
+		else if(projectName== "lsqxz")
+		{ // 繁体海外
+			EditorPlistFacebook(path);
+			EditorCodeFacebook(path);
+		}
 		// Finally save the xcode project
 		project.Save();
 
@@ -155,6 +160,50 @@ public static class XCodePostProcess
 		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
 		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <GameFramework/GameFramework.h>");
 		UnityAppController.WriteBelow("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);","[Game_Api Game_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];");
+	}
+
+	// Facebook
+	private static void EditorPlistFacebook(string filePath)
+	{
+		XCPlist2 list = new XCPlist2(filePath);
+
+		string FacebookDialogsInfolist = @"
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+		  <string>fbapi</string>
+		  <string>fb-messenger-api</string>
+		  <string>fbauth2</string>
+		  <string>fbshareextension</string>
+		</array>";
+		list.AddKey(FacebookDialogsInfolist);
+
+		string Infolist = @"
+		<key>CFBundleURLTypes</key>
+		<array>
+		  <dict>
+		  <key>CFBundleURLSchemes</key>
+		  <array>
+		    <string>fb1093672920808279</string>
+		  </array>
+		  </dict>
+		</array>
+		<key>FacebookAppID</key>
+		<string>1093672920808279</string>
+		<key>FacebookDisplayName</key>
+		<string>乱世群雄转</string>";
+		list.AddKey(Infolist);
+
+		//保存
+		list.Save();
+	}
+	private static void EditorCodeFacebook(string filePath)
+	{
+		// UnityAppController.mm
+		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
+		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <FBSDKCoreKit/FBSDKCoreKit.h>");
+		UnityAppController.WriteBelow("_didResignActive = false;","[FBSDKAppEvents activateApp];");
+		UnityAppController.WriteBelow("[KeyboardDelegate Initialize];","[[FBSDKApplicationDelegate sharedInstance] application:application\n                           didFinishLaunchingWithOptions:launchOptions];");
+		UnityAppController.Replace("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return YES;","AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return [[FBSDKApplicationDelegate sharedInstance] application:application\n                                                         openURL:url\n                                               sourceApplication:sourceApplication\n                                                      annotation:annotation];;");
 	}
 
 	// ipx 齐刘海适配

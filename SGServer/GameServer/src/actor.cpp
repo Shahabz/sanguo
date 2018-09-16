@@ -834,6 +834,8 @@ int actor_entercity( int actor_index )
 	actor_redinfo( actor_index, 6 );
 	// 西凉暴乱
 	actor_redinfo( actor_index, 7 );
+	// 洛阳血战
+	actor_redinfo( actor_index, 8 );
 	// 上线提醒
 	nation_online_notify( actor_index );
 	// 政务次数

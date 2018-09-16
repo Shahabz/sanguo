@@ -188,12 +188,17 @@ function SDK.pay( recvValue )
 	elseif Const.platid == 26 then	
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_price"] = tostring(recvValue.m_price*100)
-		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_ext"] = string.gsub(recvValue.m_ext, "#", "_");
 		info["product_actorid"] = tostring(GetPlayer().m_actorid)
 		info["product_name"] = T(recvValue.m_nameid)
 		info["product_sid"] = tostring(Const.serverid)
 		info["product_sname"] = Const.servername;
 		info["product_actorname"] = GetPlayer().m_name;
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
+	
+	-- 海外繁体
+	elseif Const.platid == 27 then
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
 	end

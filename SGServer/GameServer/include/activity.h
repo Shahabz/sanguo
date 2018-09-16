@@ -26,7 +26,7 @@
 #define ACTIVITY_19	19	//	采集翻倍
 #define ACTIVITY_20	20	//	屯田活动
 #define ACTIVITY_21	21	//	国器暴击
-#define ACTIVITY_22	22	//	皇城采集
+#define ACTIVITY_22	22	//	洛阳血战
 #define ACTIVITY_23	23	//	官员召唤
 #define ACTIVITY_24	24	//	募兵翻倍
 #define ACTIVITY_25	25	//	首日免费

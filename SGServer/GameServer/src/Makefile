@@ -189,6 +189,7 @@ global.cpp \
 quest.cpp \
 area.cpp \
 mem_dump.cpp \
+activity_22.cpp \
 gameproc.cpp \
 gamelog.cpp \
 main.cpp \
@@ -587,6 +588,8 @@ quest.o: quest.cpp
 area.o: area.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 mem_dump.o: mem_dump.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+activity_22.o: activity_22.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 gameproc.o: gameproc.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

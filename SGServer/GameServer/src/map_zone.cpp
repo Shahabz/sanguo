@@ -694,23 +694,35 @@ int map_zone_master( short zoneid )
 {
 	if ( zoneid <= 0 || zoneid >= g_zoneinfo_maxnum )
 		return -1;
-	int townid = g_zoneinfo[zoneid].center_townid;
-	MapTown *pTown = map_town_getptr( townid );
-	if ( !pTown )
-		return -1;
-	int city_index = pTown->own_city_index;
-	if ( city_index < 0 )
-		return -1;
-	City *pCity = city_indexptr( city_index );
-	if ( !pCity )
-		return -1;
-	SLK_NetS_ZoneMaster pValue = { 0 };
-	pValue.m_nation = pCity->nation;
-	pValue.m_shape = pCity->shape;
-	strncpy( pValue.m_name, pCity->name, NAME_SIZE );
-	pValue.m_namelen = strlen( pValue.m_name );
-	pValue.m_zoneid = (char)zoneid;
-	netsend_zonemaster_S( 0, SENDTYPE_WORLDMAP, &pValue );
+	City *pCity = NULL;
+	if ( zoneid == MAPZONE_CENTERID )
+	{ // 司隶，看看谁是皇帝
+
+	}
+	else
+	{
+		int townid = g_zoneinfo[zoneid].center_townid;
+		MapTown *pTown = map_town_getptr( townid );
+		if ( !pTown )
+			return -1;
+		int city_index = pTown->own_city_index;
+		if ( city_index < 0 )
+			return -1;
+		City *pCity = city_indexptr( city_index );
+		if ( !pCity )
+			return -1;
+	}
+	
+	if ( pCity )
+	{
+		SLK_NetS_ZoneMaster pValue = { 0 };
+		pValue.m_nation = pCity->nation;
+		pValue.m_shape = pCity->shape;
+		strncpy( pValue.m_name, pCity->name, NAME_SIZE );
+		pValue.m_namelen = strlen( pValue.m_name );
+		pValue.m_zoneid = (char)zoneid;
+		netsend_zonemaster_S( 0, SENDTYPE_WORLDMAP, &pValue );
+	}
 	return 0;
 }
 int map_zone_masterlist( int actor_index )

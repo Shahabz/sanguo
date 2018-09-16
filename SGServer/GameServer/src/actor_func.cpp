@@ -1028,6 +1028,13 @@ int actor_redinfo( int actor_index, char path )
 			pValue.m_has = 1;
 		}
 	}
+	else if ( path == 8 )
+	{ // ÂåÑôÑªÕ½
+		if ( activity_intime( ACTIVITY_22 ) )
+		{
+			pValue.m_has = 1;
+		}
+	}
 	netsend_redinfo_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }

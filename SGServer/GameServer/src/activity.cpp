@@ -25,6 +25,7 @@
 #include "nation.h"
 #include "mail.h"
 #include "activity_04.h"
+#include "activity_22.h"
 #include "equip.h"
 #include "map.h"
 #include "map_activity.h"
@@ -376,6 +377,9 @@ int activity_onwarning( int activityid, int lefttime )
 	case ACTIVITY_12:
 		activity_12_onwarning( lefttime );
 		break;
+	case ACTIVITY_22:
+		activity_22_onwarning( lefttime );
+		break;
 	case ACTIVITY_27:
 		activity_27_onwarning( lefttime );
 		break;
@@ -401,6 +405,9 @@ int activity_onopen( int activityid )
 		break;
 	case ACTIVITY_17:
 		activity_17_onopen();
+		break;
+	case ACTIVITY_22:
+		activity_22_onopen();
 		break;
 	case ACTIVITY_27:
 		activity_27_onopen();
@@ -432,6 +439,9 @@ int activity_onend( int activityid )
 	case ACTIVITY_17:
 		activity_17_onend();
 		break;
+	case ACTIVITY_22:
+		activity_22_onend();
+		break;
 	case ACTIVITY_27:
 		activity_27_onend();
 		break;
@@ -462,6 +472,9 @@ int activity_onclose( int activityid )
 	case  ACTIVITY_12:
 		activity_12_onclose();
 		break;
+	case  ACTIVITY_22:
+		activity_22_onclose();
+		break;
 	case ACTIVITY_27:
 		activity_27_onclose();
 		break;
@@ -486,6 +499,9 @@ int activity_onlogic( int activityid )
 		break;
 	case ACTIVITY_27:
 		activity_27_onlogic();
+		break;
+	case ACTIVITY_22:
+		activity_22_onlogic();
 		break;
 	default:
 		sc_ActivityOnLogic( activityid );
