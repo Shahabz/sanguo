@@ -11,6 +11,8 @@ function proc_login_C( recvValue )
 		
 		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 			LoginModOpenTestLogin();
+		elseif Const.platid == 27 or Const.platid == 28 then
+			LoginModOpenTestLogin();
 		else
 			LoginModOpenSDKLogin();
 		end

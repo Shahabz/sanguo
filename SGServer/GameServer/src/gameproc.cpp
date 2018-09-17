@@ -251,29 +251,6 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 7 );
 
-	//// 商品初始化
-	//if ( paygoods_init() >= 0 )
-	//	printf_msg( "PayGoods Module ready!" );
-	//else
-	//{
-	//	printf_msg( "PayGoods Module Error!" );
-	//	return -1;
-	//}
-	//LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	//paycountry_init();
-	//serv_setstat( 10 );
-
-	//// 支付商店初始化
-	//if ( paystore_init() >= 0 )
-	//	printf_msg( "PayStore Module ready!" );
-	//else
-	//{
-	//	printf_msg( "PayStore Module Error!" );
-	//	return -1;
-	//}
-	//LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	//serv_setstat( 11 );
-
 	// 角色数据初始化
 	if ( actors_init() >= 0 )
 		printf_msg( "Actor Module ready!" );
@@ -679,17 +656,7 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 8 );
 
-	// 多国支付地区信息
-	if ( paycountry_init() >= 0 )
-		printf_msg( "paycountry_init Module ready!" );
-	else
-	{
-		printf_msg( "paycountry_init Module Error!" );
-		return -1;
-	}
-	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
-	serv_setstat( 9 );
-
+	
 	// 商品初始化
 	if ( paygoods_init_auto() >= 0 )
 		printf_msg( "paygoods_init_auto Module ready!" );

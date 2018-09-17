@@ -2,7 +2,7 @@ HttpRequest = {};
 local SECRET_KEY = "eye^sanguo"
 
 -- 注册用户
-function HttpRequest.RegisterUser( username, pwd, phone, qq, wchat, friend_invite_code, callback )
+function HttpRequest.RegisterUser( username, pwd, phone, qq, wchat, friend_invite_code, email, callback )
 	local paramString = "c=userinfo&m=register"
 	.."&username="..username
 	.."&pwd="..pwd
@@ -16,6 +16,7 @@ function HttpRequest.RegisterUser( username, pwd, phone, qq, wchat, friend_invit
 	.."&qq="..qq
 	.."&wchat="..wchat
 	.."&friend_invite_code="..friend_invite_code
+	.."&email="..email
 
 	HttpRequest.Get( paramString, callback );
 end

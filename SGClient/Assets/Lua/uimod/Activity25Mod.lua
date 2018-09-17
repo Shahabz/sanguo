@@ -89,7 +89,13 @@ function Activity25ModRecv( sec, point, token, isget )
 		return
 	end
 	m_red = 0;	
-	SetText( m_uiActivityTime.transform:Find("FristDayPay"), F(4245,point) )
+	
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then	
+		SetText( m_uiActivityTime.transform:Find("FristDayPay"), F(4245,moneySymbol,point) )
+	else
+		SetText( m_uiActivityTime.transform:Find("FristDayPay"), F(4245,moneySymbol,string.format("%.2f",point/divider)) )
+	end
 	SetRichText( m_uiActivityTime.transform:Find("Token"), "<icon=token>x"..token )
 	
 	-- 活动状态

@@ -43,6 +43,8 @@ function SDK.onLogin( jsonResult )
 			Const.sdk_uid 		= info["uid"];
 			Const.sdk_token 	= info["token"];
 			Const.sdk_isverify 	= info["isverify"];
+			Const.sdk_timestamp = 0;
+			Const.sdk_channelId = 0;
 		end
 	else
 		SDK.login()
@@ -197,10 +199,13 @@ function SDK.pay( recvValue )
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
 	
-	-- 海外繁体
+	-- 海外繁体ios
 	elseif Const.platid == 27 then
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
+	
+	-- 海外繁体android	
+	elseif Const.platid == 28 then
 	end
 end
 
@@ -224,6 +229,8 @@ function SDK.userCenter()
 	elseif Const.platid == 21 then -- fysgz-android 爱贝登录-完美舒卡支付
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
+		UserInfoDlgShow()
+	elseif Const.platid == 27 or Const.platid == 28 then
 		UserInfoDlgShow()
 	else
 	end

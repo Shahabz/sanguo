@@ -12,7 +12,7 @@ CREATE TABLE `actor` (
   `level` smallint(6) NOT NULL DEFAULT '0' COMMENT '级别',
   `token` int(11) NOT NULL DEFAULT '0' COMMENT '钻石',
   `total_charge` int(11) NOT NULL DEFAULT '0' COMMENT '总充值',
-  `charge_dollar` double NOT NULL DEFAULT '0' COMMENT '总消费多少钱',
+  `charge_dollar` int(11) NOT NULL DEFAULT '0' COMMENT '总消费多少钱',
   `itemext` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩展的背包栏位数',
   `equipext` tinyint(3) NOT NULL DEFAULT '0' COMMENT '扩展的装备栏位数',
   `quest_talkid` int(11) NOT NULL DEFAULT '0' COMMENT '任务对话',

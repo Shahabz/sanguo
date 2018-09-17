@@ -22,29 +22,7 @@
 enum PayCoin
 {
 	USD = 0,//	美元
-	CAD,	//	加元
-	MXN,	//	墨西哥元
-	AUD,	//	澳元
-	NZD,	//	新西兰元
-	JPY,	//	日元
-	Euro,	//	欧元
-	DKK,	//	丹麦克朗
-	SEK,	//	瑞典克朗
-	CHF,	//	瑞士法郎
-	NOK,	//	挪威克朗
-	GBP,	//	英镑
 	CNY,	//	人民币元
-	SGD,	//	新加坡元
-	HKD,	//	港元
-	TWD,	//	新台币
-	RUB,	//	俄罗斯卢布
-	TRY,	//	土耳其里拉
-	INR,	//	印度卢比
-	IDR,	//	印尼卢比
-	ILS,	//	以色列新锡克尔
-	ZAR,	//	南非兰特
-	SAR,	//	沙特沙亚币
-	AED,	//	阿联酋迪拉姆
 	PAYCOINMAX,
 };
 
@@ -54,13 +32,6 @@ typedef struct _payprice
 	int price[PAYCOINMAX];
 }PayPrice;
 
-// 支付国家配置
-typedef struct _paycountry
-{
-	short	country_code;	// 国家数字代码
-	char	country_str[3];	// 国家英文代码
-	char	offset;			// 偏移值
-}PayCountry;
 
 typedef struct _paybag
 {
@@ -72,8 +43,6 @@ typedef struct _paybag
 }PayBag;
 
 int payprice_init();
-int paycountry_init();
-int paycountry_reload();
 
 // 本服务器推送的礼包
 int paybag_load();

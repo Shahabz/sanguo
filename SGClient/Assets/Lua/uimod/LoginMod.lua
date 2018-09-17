@@ -32,6 +32,9 @@ local m_uiRegWeiXinEdit = nil; --UnityEngine.GameObject
 local m_uiRegInviteCodeEdit = nil; --UnityEngine.GameObject
 local m_uiMakeSureLayer = nil; --UnityEngine.GameObject
 local m_uiVisitBtn = nil; --UnityEngine.GameObject
+local m_uiRegDesc = nil; --UnityEngine.GameObject
+local m_uiRegEmailEdit = nil; --UnityEngine.GameObject
+local m_uiRegBtn = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -118,6 +121,8 @@ function LoginModOnEvent( nType, nControlID, value )
 		-- 切换账号
 		elseif nControlID == 4 then
 			if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
+				LoginModLoginLayer()
+			elseif Const.platid == 27 or Const.platid == 28 then
 				LoginModLoginLayer()
 			elseif Const.platid > 11 then
 				SDK.logout()
@@ -275,6 +280,14 @@ function LoginModOnEvent( nType, nControlID, value )
 			else
 				SetFalse( m_uiRegInviteCodeEdit.transform:Find("Input/Hint") )
 			end
+			
+		elseif nControlID == 10 then
+			local text = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text;
+			if text == "" then
+				SetTrue( m_uiRegEmailEdit.transform:Find("Input/Hint") )
+			else
+				SetFalse( m_uiRegEmailEdit.transform:Find("Input/Hint") )
+			end
 		end
 	end
 end
@@ -316,7 +329,11 @@ function LoginModOnAwake( gameObject )
 		m_uiRegInviteCodeEdit = objs[29];
 		m_uiMakeSureLayer = objs[30];
 		m_uiVisitBtn = objs[31];
+		m_uiRegDesc = objs[32];
+		m_uiRegEmailEdit = objs[33];
+		m_uiRegBtn = objs[34];
 	end
+	
 
 	-- 对象池
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
@@ -332,6 +349,8 @@ function LoginModOnStart()
 	m_uiVersion:GetComponent( typeof(UIText) ).text = "[p"..Const.platid.."]v"..Application.version.."("..Global.GetValue("RESOURCE_VERSION")..")"..DeviceHelper.getLanguage().."-"..DeviceHelper.getCountry()
 	-- 平台
 	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
+		LoginModOpenTestLogin();
+	elseif Const.platid == 27 or Const.platid == 28 then
 		LoginModOpenTestLogin();
 	elseif Const.platid > 11 then
 		SDK.init()
@@ -436,6 +455,8 @@ function LoginModLoginLayer()
 	-- 读取上次登陆过的账户密码
 	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
 	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
+	SetRichText( m_uiVisitBtn.transform:Find("Back/Text"), T(315) )
+	SetRichText( m_uiRegBtn.transform:Find("Back/Text"), T(316) )
 end
 
 -- 测试模式注册页
@@ -453,6 +474,20 @@ function LoginModRegLayer()
 	else
 		SetFalse( m_uiRegInviteCodeEdit );
 	end
+	
+	if Const.platid == 27 or Const.platid == 28 then
+		SetText( m_uiRegDesc, T( 327 ) )
+		SetTrue( m_uiRegEmailEdit )
+		SetFalse( m_uiRegPhoneEdit )
+		SetFalse( m_uiRegQQEdit )
+		SetFalse( m_uiRegWeiXinEdit )
+	else
+		SetText( m_uiRegDesc, T( 326 ) )
+		SetFalse( m_uiRegEmailEdit )
+		SetTrue( m_uiRegPhoneEdit )
+		SetTrue( m_uiRegQQEdit )
+		SetFalse( m_uiRegWeiXinEdit )
+	end
 end
 
 -- 注册
@@ -464,12 +499,14 @@ function LoginModReg()
 	local qq = ""
 	local wchat = ""
 	local friend_invite_code = ""
+	local email = ""
 	
 	if Const.platid ~= 10 then
 		phone = m_uiRegPhoneEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 		qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 		wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 		friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	end
 	
 	-- 非法检查
@@ -497,7 +534,7 @@ function LoginModReg()
 	--if friend_invite_code == "" then
 		--SetTrue( m_uiMakeSureLayer ) 
 	--else
-		LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
+		LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code, email )
 	--end
 end
 
@@ -510,12 +547,13 @@ function LoginModRegMakeSure()
 	local qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
+	local email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code, email )
 end
 
-function LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code )
+function LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code, email )
 	LoginModWaitOpen()
-	HttpRequest.RegisterUser( userName, passWord, phone, qq, wchat, friend_invite_code, function( response )
+	HttpRequest.RegisterUser( userName, passWord, phone, qq, wchat, friend_invite_code, email, function( response )
 		LoginModWaitClose()
 		local json = require "cjson"
 		local info = json.decode( response );
@@ -548,7 +586,7 @@ end
 
 -- 进入游戏
 function LoginModEnterGame()
-	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 or Const.platid == 24 or Const.platid == 25 then
+	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 or Const.platid == 24 or Const.platid == 25 or Const.platid == 27 or Const.platid == 28 then
 		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
 		if loginType == "2" then
 			LoginModQuickLogin();

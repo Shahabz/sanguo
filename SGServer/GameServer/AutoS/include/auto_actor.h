@@ -23,7 +23,7 @@ struct _actor {
 				int city_index;	//城池索引
 				int token;	//钻石
 				int total_charge;	//总充值
-				float charge_dollar;	//总消费多少钱
+				int charge_dollar;	//总消费多少钱
 				unsigned char itemext;	//扩展的背包栏位数
 				Item item[300];	//角色携带的道具
 				Equip equip[180];	//角色携带的装备

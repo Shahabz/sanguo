@@ -550,12 +550,24 @@ int activity_sendlist( int actor_index )
 		}
 		else if ( activityid == ACTIVITY_17 )
 		{ // ≥‰÷µ∫¿¿Ò
+			int platid = client_getplatid( actor_index );
 			for ( int id = 1; id < g_activity_17_maxnum; id++ )
 			{
-				if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
+				if ( platid == 27 || platid == 28 )
 				{
-					pValue.m_list[pValue.m_count].m_red = 1;
-					break;
+					if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_dollar >= g_activity_17[id].dollar )
+					{
+						pValue.m_list[pValue.m_count].m_red = 1;
+						break;
+					}
+				}
+				else
+				{
+					if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
+					{
+						pValue.m_list[pValue.m_count].m_red = 1;
+						break;
+					}
 				}
 			}
 		}
@@ -805,16 +817,6 @@ char activity_checkred( int actor_index )
 				}
 			}
 		}
-		//else if ( activityid == ACTIVITY_17 )
-		//{ // ≥‰÷µ∫¿¿Ò
-		//	for ( int id = 1; id < g_activity_17_maxnum; id++ )
-		//	{
-		//		if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_point >= g_activity_17[id].pay )
-		//		{
-		//			return 1;
-		//		}
-		//	}
-		//}
 		else if ( activityid == ACTIVITY_27 )
 		{ // Œ˜¡π±©¬“
 			
@@ -1645,13 +1647,21 @@ int activity_17_sendinfo( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	int platid = client_getplatid( actor_index );
 	SLK_NetS_Activity17 pValue = { 0 };
 	for ( int tmpi = 0; tmpi < g_activity_17_maxnum; tmpi++ )
 	{
 		if ( g_activity_17[tmpi].id <= 0 )
 			continue;
 		pValue.m_list[pValue.m_count].m_id = g_activity_17[tmpi].id;
-		pValue.m_list[pValue.m_count].m_pay = g_activity_17[tmpi].pay;
+		if ( platid == 27 || platid == 28 )
+		{
+			pValue.m_list[pValue.m_count].m_pay = g_activity_17[tmpi].dollar;
+		}
+		else
+		{
+			pValue.m_list[pValue.m_count].m_pay = g_activity_17[tmpi].pay;
+		}
 		for ( int i = 0; i < 16; i++ )
 		{
 			pValue.m_list[pValue.m_count].m_awardkind[i] = g_activity_17[tmpi].awardkind[i];
@@ -1667,7 +1677,15 @@ int activity_17_sendinfo( int actor_index )
 		}
 		pValue.m_count += 1;
 	}
-	pValue.m_mypay = g_actors[actor_index].charge_point;
+
+	if ( platid == 27 || platid == 28 )
+	{
+		pValue.m_mypay = g_actors[actor_index].charge_dollar;
+	}
+	else
+	{
+		pValue.m_mypay = g_actors[actor_index].charge_point;
+	}
 	netsend_activity17_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -1721,7 +1739,15 @@ int activity_25_sendinfo( int actor_index )
 	value[0] = ACTIVITY_25;
 	value[1] = g_actors[actor_index].createtime + 86400 - (int)time(NULL);
 	value[2] = g_actors[actor_index].act25_point;
-	value[3] = g_actors[actor_index].act25_point * 10;
+	int platid = client_getplatid( actor_index );
+	if ( platid == 27 || platid == 28 )
+	{
+		value[3] = g_actors[actor_index].act25_point;
+	}
+	else
+	{
+		value[3] = g_actors[actor_index].act25_point * 10;
+	}
 	value[4] = g_actors[actor_index].act25_isget;
 	actor_notify_value( actor_index, NOTIFY_ACTIVITY, 5, value, NULL );
 	return 0;
@@ -1736,7 +1762,15 @@ int activity_25_get( int actor_index )
 		return -1;
 	if ( g_actors[actor_index].act25_point <= 0 )
 		return -1;
-	actor_change_token( actor_index, g_actors[actor_index].act25_point * 10, PATH_ACTIVITY25, 0 );
+	int platid = client_getplatid( actor_index );
+	if ( platid == 27 || platid == 28 )
+	{
+		actor_change_token( actor_index, g_actors[actor_index].act25_point, PATH_ACTIVITY25, 0 );
+	}
+	else
+	{
+		actor_change_token( actor_index, g_actors[actor_index].act25_point * 10, PATH_ACTIVITY25, 0 );
+	}
 	g_actors[actor_index].act25_isget = 1;
 	activity_25_sendinfo( actor_index );
 	actor_redinfo( actor_index, 4 );

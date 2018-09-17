@@ -909,7 +909,13 @@ function ShopDlgPayBagCreateItem( index, scrollPage, info )
 	else
 		SetFalse( uiTimer )
 	end
-	SetText( uiBuyButton.transform:Find("Back/Text"), PayDlgGetMoneySymbol()..info.m_price )
+	
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then
+		SetText( uiBuyButton.transform:Find("Back/Text"), moneySymbol.." "..info.m_price )
+	else
+		SetText( uiBuyButton.transform:Find("Back/Text"), moneySymbol.." "..string.format("%.2f",info.m_price/divider) )
+	end
 	SetControlID( uiBuyButton, 3000 + index  )
 end
 

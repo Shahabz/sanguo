@@ -89,6 +89,6 @@ void activity_22_onlogic()
 }
 int activity_22_sendinfo( int actor_index )
 {
-
+	return 0;
 }
 

@@ -6,6 +6,7 @@ struct _activityinfo17 {
 //--Automatically generated
 				int id;	//
 				int pay;	//
+				int dollar;	//
 				int awardkind[16];	//
 				int awardnum[16];	//
 };

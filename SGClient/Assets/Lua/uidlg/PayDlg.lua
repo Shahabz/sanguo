@@ -147,8 +147,12 @@ function PayDlgCreateGoods( info )
 	else
 		SetText( uiObj.transform:Find("Gift"), "" )
 	end
-	
-	SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol().." "..info.m_price )
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then
+		SetText( uiObj.transform:Find("Price"), moneySymbol.." "..info.m_price )
+	else
+		SetText( uiObj.transform:Find("Price"), moneySymbol.." "..string.format("%.2f",info.m_price/divider) )
+	end
 	
 	if info.m_goodsid == 1 then
 		--SetText( uiObj.transform:Find("Flag/Text"), T(2099) )
@@ -277,10 +281,8 @@ end
 
 -- 获取国家货币符号
 function PayDlgGetMoneySymbol()
-    if Const.platid < 100 then
-        return "￥";
-    else
-        return "$";
-    end
-    return "";
+	if Const.platid == 27 or Const.platid == 28 then
+		return "$",100;
+	end
+    return "￥",1;
 end

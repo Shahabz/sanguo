@@ -53,9 +53,6 @@ extern int g_platinfo_maxnum;
 PayPrice *g_PayPrice = NULL;
 int g_PayPriceCount = 0;
 
-PayCountry *g_PayCountry = NULL;
-int g_PayCountryCount = 0;
-
 PayBag g_paybag[CITY_BAG_MAX] = { 0 };
 
 extern PayGoods *g_paygoods;
@@ -64,44 +61,16 @@ extern int g_paygoods_maxnum;
 extern PayStore *g_paystore;
 extern int g_paystore_maxnum;
 
-const char *g_PayCoinString[PAYCOINMAX] = {
-	"USD",	//	美元
-	"CAD",	//	加元
-	"MXN",	//	墨西哥元
-	"AUD",	//	澳元
-	"NZD",	//	新西兰元
-	"JPY",	//	日元
-	"Euro",	//	欧元
-	"DKK",	//	丹麦克朗
-	"SEK",	//	瑞典克朗
-	"CHF",	//	瑞士法郎
-	"NOK",	//	挪威克朗
-	"GBP",	//	英镑
-	"CNY",	//	人民币元
-	"SGD",	//	新加坡元
-	"HKD",	//	港元
-	"TWD",	//	新台币
-	"RUB",	//	俄罗斯卢布
-	"TRY",	//	土耳其里拉
-	"INR",	//	印度卢比
-	"IDR",	//	印尼卢比
-	"ILS",	//	以色列新锡克尔
-	"ZAR",	//	南非兰特
-	"SAR",	//	沙特沙亚币
-	"AED",	//	阿联酋迪拉姆
-};
-
-
 // 获取货币简称对应的索引
 int paycoin_getindex_withplat( int platid )
 {
-	if ( platid < 100 )
-	{ // 国内
-		return 12;
-	}
-	else
+	if ( platid == 27 || platid == 28 )
 	{ // 国外
 		return 0;
+	}
+	else
+	{ // 国内
+		return 1;
 	}
 	return 0;
 }
@@ -163,73 +132,6 @@ int payprice_init()
 		}
 	}
 	mysql_free_result( res );
-	return 0;
-}
-
-int paycountry_init()
-{
-	MYSQL_RES		*res;
-	MYSQL_ROW		row;
-	char	szSQL[1024];
-
-	// 获得表格中最大的任务ID
-	sprintf( szSQL, "select count(*) from paycountry" );
-	if ( mysql_query( myData, szSQL ) )
-	{
-		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
-		write_gamelog( "%s", szSQL );
-		return -1;
-	}
-	res = mysql_store_result( myData );
-	if ( (row = mysql_fetch_row( res )) )
-	{
-		if ( row[0] )
-			g_PayCountryCount = atoi( row[0] ) + 1;
-		else
-			g_PayCountryCount = 0;
-	}
-	else
-	{
-		mysql_free_result( res );
-		return -1;
-	}
-	mysql_free_result( res );
-
-	// 分配空间
-	g_PayCountry = (PayCountry *)malloc( sizeof( PayCountry )*g_PayCountryCount );
-	memset( g_PayCountry, 0, sizeof( PayCountry )*g_PayCountryCount );
-
-	sprintf( szSQL, "select country_code, country_str, offset from paycountry" );
-	if ( mysql_query( myData, szSQL ) )
-	{
-		printf_msg( "Query failed (%s) [%s](%d)\n", mysql_error( myData ), __FUNCTION__, __LINE__ );
-		write_gamelog( "%s", szSQL );
-		return -1;
-	}
-	res = mysql_store_result( myData );
-	int offset = 0;
-	while ( (row = mysql_fetch_row( res )) )
-	{
-		int index = 0;
-		g_PayCountry[offset].country_code = atoi( row[index++] );
-		strncpy( g_PayCountry[offset].country_str, row[index++], 2 );
-		g_PayCountry[offset].country_str[2] = 0;
-		g_PayCountry[offset].offset = atoi( row[index++] );
-		offset += 1;
-	}
-	mysql_free_result( res );
-	return 0;
-}
-
-int paycountry_reload()
-{
-	if ( g_PayCountry )
-	{
-		free( g_PayCountry );
-		g_PayCountry = NULL;
-	}
-	g_PayCountryCount = 0;
-	paycountry_init();
 	return 0;
 }
 
@@ -1150,19 +1052,36 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 
 	}
 
-	// 记录总充值多少钱
-	if ( money )
-		g_actors[actor_index].charge_dollar += (float)atof( money );
-
-	// 总充值积分（人民币，由于玩家不一定是美金支付的，有可能是欧元什么的）
-	g_actors[actor_index].charge_point += g_paygoods[goodsid].point;
-
-	// 首日免费
-	if ( (int)time(NULL) < g_actors[actor_index].createtime + 86400 )
-	{
-		g_actors[actor_index].act25_point += g_paygoods[goodsid].point;
-		activity_25_sendinfo( actor_index );
+	int platid = client_getplatid( actor_index );
+	if ( platid == 27 || platid == 28 )
+	{// 总充值（美分）
+		int coinindex = paycoin_getindex_withplat( platid );
+		if ( coinindex >= 0 && coinindex < PAYCOINMAX )
+		{
+			int tier = g_paygoods[goodsid].tier;
+			if ( tier > 0 && tier < g_PayPriceCount )
+			{
+				g_actors[actor_index].charge_dollar += g_PayPrice[tier].price[coinindex];
+				// 首日免费
+				if ( (int)time( NULL ) < g_actors[actor_index].createtime + 86400 )
+				{
+					g_actors[actor_index].act25_point += g_PayPrice[tier].price[coinindex];
+					activity_25_sendinfo( actor_index );
+				}
+			}
+		}
 	}
+	else
+	{ // 总充值（人民币）
+		g_actors[actor_index].charge_point += g_paygoods[goodsid].point;
+		// 首日免费
+		if ( (int)time( NULL ) < g_actors[actor_index].createtime + 86400 )
+		{
+			g_actors[actor_index].act25_point += g_paygoods[goodsid].point;
+			activity_25_sendinfo( actor_index );
+		}
+	}
+
 	// 充值排行
 	activity_33_addvalue( actor_index, g_paygoods[goodsid].point );
 	//// 发送购买成功通知邮件

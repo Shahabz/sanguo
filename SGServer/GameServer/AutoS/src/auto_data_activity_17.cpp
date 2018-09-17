@@ -47,7 +47,7 @@ int activityinfo17_init_auto()
 	g_activity_17 = (ActivityInfo17 *)malloc( sizeof(ActivityInfo17)*g_activity_17_maxnum );
 	memset( g_activity_17, 0, sizeof(ActivityInfo17)*g_activity_17_maxnum );
 
-	sprintf( szSQL, "select `id`,`pay`,`awardkind00`,`awardkind01`,`awardkind02`,`awardkind03`,`awardkind04`,`awardkind05`,`awardkind06`,`awardkind07`,`awardkind08`,`awardkind09`,`awardkind10`,`awardkind11`,`awardkind12`,`awardkind13`,`awardkind14`,`awardkind15`,`awardnum00`,`awardnum01`,`awardnum02`,`awardnum03`,`awardnum04`,`awardnum05`,`awardnum06`,`awardnum07`,`awardnum08`,`awardnum09`,`awardnum10`,`awardnum11`,`awardnum12`,`awardnum13`,`awardnum14`,`awardnum15` from activity_17;" );
+	sprintf( szSQL, "select `id`,`pay`,`dollar`,`awardkind00`,`awardkind01`,`awardkind02`,`awardkind03`,`awardkind04`,`awardkind05`,`awardkind06`,`awardkind07`,`awardkind08`,`awardkind09`,`awardkind10`,`awardkind11`,`awardkind12`,`awardkind13`,`awardkind14`,`awardkind15`,`awardnum00`,`awardnum01`,`awardnum02`,`awardnum03`,`awardnum04`,`awardnum05`,`awardnum06`,`awardnum07`,`awardnum08`,`awardnum09`,`awardnum10`,`awardnum11`,`awardnum12`,`awardnum13`,`awardnum14`,`awardnum15` from activity_17;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,6 +63,7 @@ int activityinfo17_init_auto()
 			continue;
 		g_activity_17[id].id = atoi(row[offset++]);
 		g_activity_17[id].pay = atoi(row[offset++]);
+		g_activity_17[id].dollar = atoi(row[offset++]);
 		g_activity_17[id].awardkind[0] = atoi(row[offset++]);
 		g_activity_17[id].awardkind[1] = atoi(row[offset++]);
 		g_activity_17[id].awardkind[2] = atoi(row[offset++]);

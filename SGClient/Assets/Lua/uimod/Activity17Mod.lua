@@ -97,7 +97,13 @@ function Activity17ModRecv( recvValue )
 	Activity17ModClear()
 	m_red = 0;
 	
-	SetText( m_uiMyPay, F(4259,recvValue.m_mypay) )
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then	
+		SetText( m_uiMyPay, F(4259,moneySymbol,recvValue.m_mypay) )
+	else
+		SetText( m_uiMyPay, F(4259,moneySymbol,string.format("%.2f",recvValue.m_mypay/divider)) )
+	end
+	
 	-- 已完成的排序后面
 	local tmptable = {}
 	for i=1, recvValue.m_count, 1 do
@@ -135,7 +141,13 @@ function Activity17ModCreate( info )
 	
 	SetControlID( uiStateBtn, 1000 + info.m_id )
 	SetImage( uiBack, LoadSprite("activity_back_4") )
-	SetText( uiName, F(4260, info.m_pay) )
+	
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then	
+		SetText( uiName, F(4260,moneySymbol,info.m_pay) )
+	else
+		SetText( uiName, F(4260,moneySymbol,string.format("%.2f",info.m_pay/divider)) )
+	end
 	
 	if m_recvValue.m_mypay >= info.m_pay then
 		if info.m_isget == 1 then-- 完成已经领取

@@ -176,7 +176,12 @@ function Activity10ModSelect( page )
 	-- 剩余次数
 	SetText( m_uiLeftCount, F( 2333, info.m_bag_num ) )
 	-- 价格
-	SetText( m_uiBuyText, PayDlgGetMoneySymbol()..info.m_price )
+	local moneySymbol, divider = PayDlgGetMoneySymbol()
+	if divider == 1 then
+		SetText( m_uiBuyText, moneySymbol.." "..info.m_price )
+	else
+		SetText( m_uiBuyText, moneySymbol.." "..string.format("%.2f",info.m_price/divider) )
+	end
 	-- 原价
 	if info.m_sale > 0 then
 		SetText( m_uiPrice, PayDlgGetMoneySymbol()..math.floor(info.m_price*(1+info.m_sale/100)) )
