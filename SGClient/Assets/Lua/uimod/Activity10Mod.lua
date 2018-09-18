@@ -152,7 +152,7 @@ function Activity10ModCreateItem( index, scrollPage, info )
 	
 	if info.m_sale > 0 then
 		SetTrue( uiSale )
-		SetText( uiSaleText, "-"..info.m_sale.."%" )
+		SetText( uiSaleText, T(info.m_sale) )
 	else
 		SetFalse( uiSale )
 	end
@@ -183,8 +183,12 @@ function Activity10ModSelect( page )
 		SetText( m_uiBuyText, moneySymbol.." "..string.format("%.2f",info.m_price/divider) )
 	end
 	-- 原价
-	if info.m_sale > 0 then
-		SetText( m_uiPrice, PayDlgGetMoneySymbol()..math.floor(info.m_price*(1+info.m_sale/100)) )
+	if info.m_worth > 0 then
+		if divider == 1 then
+			SetText( m_uiPrice, PayDlgGetMoneySymbol()..math.floor(info.m_worth) )
+		else
+			SetText( m_uiBuyText, moneySymbol.." "..string.format("%.2f",info.m_worth/divider) )
+		end
 		SetTrue( m_uiRedLine )
 	else
 		SetText( m_uiPrice, "" )

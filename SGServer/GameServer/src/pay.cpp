@@ -1393,6 +1393,9 @@ int activity_paybag_list( int actor_index, int path )
 		int tier = g_paygoods[goodsid].tier;
 		if ( tier <= 0 || tier >= g_PayPriceCount )
 			continue;
+		int worthtier = g_paygoods[goodsid].worth;
+		if ( worthtier < 0 || worthtier >= g_PayPriceCount )
+			continue; // 此处小于0
 
 		store.m_list[store.m_count].m_goodsid = goodsid;
 		store.m_list[store.m_count].m_price = g_PayPrice[tier].price[coinindex];
@@ -1400,7 +1403,7 @@ int activity_paybag_list( int actor_index, int path )
 		store.m_list[store.m_count].m_descid = g_paygoods[goodsid].descid;
 		store.m_list[store.m_count].m_icon = g_paygoods[goodsid].icon;
 		store.m_list[store.m_count].m_sale = g_paygoods[goodsid].sale;
-		store.m_list[store.m_count].m_worth = g_paygoods[goodsid].worth;
+		store.m_list[store.m_count].m_worth = g_PayPrice[worthtier].price[coinindex];
 		store.m_list[store.m_count].m_bag_time = actionbag_endtime;
 		store.m_list[store.m_count].m_bag_num = actionbag_count;
 

@@ -896,12 +896,18 @@ function ShopDlgPayBagCreateItem( index, scrollPage, info )
 	
 	if info.m_sale > 0 then
 		SetTrue( uiSale )
-		SetText( uiSaleText, "-"..info.m_sale.."%" )
+		SetText( uiSaleText, T(info.m_sale) )
 	else
 		SetFalse( uiSale )
 	end
 	SetText( uiName, T(info.m_nameid) )
-	SetRichText( uiWorth, F(2278, info.m_worth) )
+	SetFalse( uiWorth )
+	--[[if info.m_worth > 0 then
+		SetTrue( uiWorth )
+		SetRichText( uiWorth, F(2278, info.m_worth) )
+	else
+		SetFalse( uiWorth )
+	end--]]
 	if info.m_bag_time > 0 then
 		SetTrue( uiTimer )
 		local lefttime = info.m_bag_time-GetServerTime()
