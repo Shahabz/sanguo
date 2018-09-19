@@ -3774,6 +3774,9 @@ int struct_NetS_EverydaySigninList_send( char **pptr, int *psize, SLK_NetS_Every
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
 	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
 	LKSET_DWORD_SEND( (*pptr), &pValue->m_today, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_morrow_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_morrow_time, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_morrow_isget, (*psize) );
 	return 0;
 }
 

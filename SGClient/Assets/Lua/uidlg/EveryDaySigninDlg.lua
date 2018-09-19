@@ -7,9 +7,14 @@ local m_uiAwardGet = nil; --UnityEngine.GameObject
 local m_uiProgressAward = nil; --UnityEngine.GameObject
 local m_uiProgressNum = nil; --UnityEngine.GameObject
 local m_uiAwardDescLayer = nil; --UnityEngine.GameObject
+local m_uiWindow = nil; --UnityEngine.GameObject
+local m_uiAwardProgressLayer = nil; --UnityEngine.GameObject
+local m_uiMorrowLayer = nil; --UnityEngine.GameObject
 local m_recvValue = nil
 local m_totalNum = 0;
 local m_ObjectPool = nil;
+local m_AwardDescLayerShow = false
+local m_AwardProgressLayerShow = false
 
 -- 打开界面
 function EveryDaySigninDlgOpen()
@@ -41,11 +46,29 @@ function EveryDaySigninDlgOnEvent( nType, nControlID, value, gameObject )
 	if nType == UI_EVENT_CLICK then
         if nControlID == -1 then
             EveryDaySigninDlgClose();
+		elseif nControlID == -2 then
+			EveryDaySigninDlgAwardDescLayer()
+		elseif nControlID == -3 then
+			EveryDaySigninDlgProgressLayer()
 		elseif nControlID == 1 then	
 			EveryDaySigninDlgGetAward()
+		elseif nControlID == 2 then	
+			EveryDaySigninDlgCallHero()
 		elseif nControlID >= 100 and nControlID < 200 then
-			EveryDaySigninDlgReset( nControlID-100 )
+			EveryDaySigninDlgClickItem( nControlID-100, value )
+		elseif nControlID >= 200 and nControlID < 300 then
+			EveryDaySigninDlgReset( nControlID-200, value )
+		
+		elseif nControlID >= 1000 and nControlID < 2000 then
+			EveryDaySigninDlgClickProgress( nControlID-1000, value )
+			
+		elseif nControlID >= 2000 and nControlID < 3000 then
+			EveryDaySigninDlgProgressGetAward( nControlID-2000 )
         end
+	elseif nType == UI_EVENT_TIMECOUNTEND then
+		if nControlID == 0 then
+			system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 0 )
+		end
 	end
 end
 
@@ -60,6 +83,9 @@ function EveryDaySigninDlgOnAwake( gameObject )
 	m_uiProgressAward = objs[4];
 	m_uiProgressNum = objs[5];
 	m_uiAwardDescLayer = objs[6];
+	m_uiWindow = objs[7];
+	m_uiAwardProgressLayer = objs[8];
+	m_uiMorrowLayer = objs[9];
 	
 	m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	m_ObjectPool:CreatePool("UIP_Award", 30, 30, m_uiUIP_Award);
@@ -111,6 +137,28 @@ function EveryDaySigninDlgRecv( recvValue )
 		EveryDaySigninDlgCreate( info, recvValue.m_today )
 	end
 	SetText( m_uiProgressNum, F( 4320, m_totalNum ) )
+	EveryDaySigninDlgProgressCreate()
+	
+	-- 次日
+	if recvValue.m_morrow_isget == 1 then
+		SetFalse( m_uiMorrowLayer )
+	else
+		SetTrue( m_uiMorrowLayer )
+		local herokind = recvValue.m_morrow_awardkind - AWARDKIND_HEROBASE;
+		local color = hero_getnormalcolor( herokind )
+		SetImage( m_uiMorrowLayer.transform:Find("Shape"), HeroFaceSprite(herokind) );
+		SetText( m_uiMorrowLayer.transform:Find("Talk/Name"), HeroName(herokind), NameColor(color) )	
+		SetText( m_uiMorrowLayer.transform:Find("Talk/Text"), T(4326) )
+		
+		if recvValue.m_morrow_time > 0 then
+			SetTrue( m_uiMorrowLayer.transform:Find("Timer") )
+			SetTimer( m_uiMorrowLayer.transform:Find("Timer"), recvValue.m_morrow_time, recvValue.m_morrow_time, 0 )
+			SetButtonFalse( m_uiMorrowLayer.transform:Find("CallHeroBtn") )
+		else
+			SetFalse( m_uiMorrowLayer.transform:Find("Timer") )
+			SetButtonTrue( m_uiMorrowLayer.transform:Find("CallHeroBtn") )
+		end
+	end
 end
 
 function EveryDaySigninDlgCreate( info, today )
@@ -177,38 +225,182 @@ function EveryDaySigninDlgClear()
 	end
 end
 
-function EveryDaySigninDlgProgressCreate( info )
-	
+-- 进度
+local numtable = { 3, 7, 14, 21, 28 }
+function EveryDaySigninDlgProgressCreate()
+	for i=1, 5, 1 do
+		local uiObj = m_uiProgressAward.transform:GetChild( i-1 );
+		SetText( uiObj.transform:Find("Name"), F(4325,numtable[i]) )
+		SetControlID( uiObj, 1000+i )
+		if m_totalNum >= numtable[i] then
+			SetGray( uiObj.transform:Find("Back"), false )
+		else
+			SetGray( uiObj.transform:Find("Back"), true )
+		end
+		local sflag = Utils.get_int_sflag( m_recvValue.m_progress_isget, i )
+		if sflag == 1 then
+			SetTrue( uiObj.transform:Find("Flag") )
+			SetFalse( uiObj.transform:Find("Effect") )
+		else
+			SetFalse( uiObj.transform:Find("Flag") )
+			if m_totalNum >= numtable[i] then
+				SetTrue( uiObj.transform:Find("Effect") )
+			end
+		end
+	end
 end
 
 function EveryDaySigninDlgGetAward()
 	system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 1 )
 end
 
-function EveryDaySigninDlgReset( day )
+function EveryDaySigninDlgClickItem( day, uiObj )
 	local info = m_recvValue.m_list[day]
 	if info == nil then
 		return
 	end
-	
+
 	-- 显示奖励描述
 	if day > m_recvValue.m_today then
+		EveryDaySigninDlgAwardShow( info, uiObj, 0 )
 		
 	-- 直接领取
 	elseif day == m_recvValue.m_today then
-		EveryDaySigninDlgGetAward()
+		if info.m_isget == 0 then
+			EveryDaySigninDlgGetAward()
+		else
+			EveryDaySigninDlgAwardShow( info, uiObj, 1 )
+		end
 		
 	elseif day < m_recvValue.m_today then
-		
-		if info.m_isget == 1 then
-			-- 显示奖励描述
-			
-		else
-			-- 补签
-			MsgBox( F( 4322, info.m_token ), function()
-				system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 2, day )
-			end )
-		end
+		EveryDaySigninDlgAwardShow( info, uiObj, 1 )
 	end
 end
 
+function EveryDaySigninDlgReset( day, uiObj )
+	local info = m_recvValue.m_list[day]
+	if info == nil then
+		return
+	end
+	if info.m_isget == 0 then
+		-- 补签
+		MsgBox( F( 4322, info.m_token ), function()
+			system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 2, day )
+		end )
+	end
+	EveryDaySigninDlgAwardDescLayer()
+end
+
+-- 奖励描述
+function EveryDaySigninDlgAwardDescLayer()
+	SetFalse( m_uiAwardDescLayer )
+	m_AwardDescLayerShow = false
+end
+function EveryDaySigninDlgAwardShow( info, uiObj, step )
+	EveryDaySigninDlgAwardDescLayer()
+	EveryDaySigninDlgProgressLayer()
+	if info == nil then
+		return
+	end
+	
+	if step == 0 then
+		SetFalse( m_uiAwardDescLayer.transform:Find("ResetBtn") )
+		SetFalse( m_uiAwardDescLayer.transform:Find("Has") )
+	else
+		if info.m_isget == 0 then
+			SetTrue( m_uiAwardDescLayer.transform:Find("ResetBtn") )
+			SetFalse( m_uiAwardDescLayer.transform:Find("Has") )
+		else
+			SetFalse( m_uiAwardDescLayer.transform:Find("ResetBtn") )
+			SetTrue( m_uiAwardDescLayer.transform:Find("Has") )
+		end
+	end
+	
+	if info.m_awardkind > AWARDKIND_HEROBASE and info.m_awardkind < AWARDKIND_BUILDINGBASE then
+		local herokind = info.m_awardkind - AWARDKIND_HEROBASE
+		local color = hero_getnormalcolor( herokind )
+		SetText( m_uiAwardDescLayer.transform:Find("Name"), HeroName(herokind), NameColor(color) )	
+		SetText( m_uiAwardDescLayer.transform:Find("Desc"), "" )
+	else
+		m_uiAwardDescLayer.transform:SetParent( uiObj.transform )
+		m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 0, 80 )
+		m_uiAwardDescLayer.transform:SetParent( m_uiWindow.transform )
+		--print( m_uiAwardDescLayer.transform.anchoredPosition.x )
+		--print( m_uiAwardDescLayer.transform.localPosition.x )
+		if m_uiAwardDescLayer.transform.anchoredPosition.x < -300 then
+			m_uiAwardDescLayer.transform.anchoredPosition = Vector2( -220, m_uiAwardDescLayer.transform.anchoredPosition.y )
+		elseif m_uiAwardDescLayer.transform.anchoredPosition.x > 300 then
+			m_uiAwardDescLayer.transform.anchoredPosition = Vector2( 220, m_uiAwardDescLayer.transform.anchoredPosition.y )
+		end
+		local _, _, name, c, desc = AwardInfo( info.m_awardkind )
+		SetText( m_uiAwardDescLayer.transform:Find("Name"), name, NameColor(c) )	
+		SetText( m_uiAwardDescLayer.transform:Find("Desc"), desc )
+	end
+	SetControlID( m_uiAwardDescLayer.transform:Find("ResetBtn"), 200+info.m_id )
+	SetTrue( m_uiAwardDescLayer )
+	m_AwardDescLayerShow = true
+end
+
+-- 点击进度
+function EveryDaySigninDlgProgressLayer()
+	SetFalse( m_uiAwardProgressLayer )
+	m_AwardProgressLayerShow = false
+end
+function EveryDaySigninDlgClickProgress( index, uiObj )
+	EveryDaySigninDlgAwardDescLayer()
+	EveryDaySigninDlgProgressLayer()
+	if m_recvValue == nil then
+		return
+	end
+	
+	local awardkind = m_recvValue.m_awardkind[index];
+	if awardkind > AWARDKIND_HEROBASE and awardkind < AWARDKIND_BUILDINGBASE then
+		local herokind = awardkind - AWARDKIND_HEROBASE
+		local color = hero_getnormalcolor( herokind )
+		SetImage( m_uiAwardProgressLayer.transform:Find("Shape"), HeroHeadSprite(herokind) )
+		SetImage( m_uiAwardProgressLayer.transform:Find("Color"), ItemColorSprite(herokind) )
+		SetText( m_uiAwardProgressLayer.transform:Find("Name"), HeroName(herokind), NameColor(color) )	
+		SetText( m_uiAwardProgressLayer.transform:Find("Desc"), "" )
+	else
+		m_uiAwardProgressLayer.transform:SetParent( uiObj.transform )
+		m_uiAwardProgressLayer.transform.anchoredPosition = Vector2( 0, 80 )
+		m_uiAwardProgressLayer.transform:SetParent( m_uiWindow.transform )
+		if m_uiAwardProgressLayer.transform.anchoredPosition.x < -280 then
+			m_uiAwardProgressLayer.transform.anchoredPosition = Vector2( -200, m_uiAwardProgressLayer.transform.anchoredPosition.y )
+		elseif m_uiAwardProgressLayer.transform.anchoredPosition.x > 280 then
+			m_uiAwardProgressLayer.transform.anchoredPosition = Vector2( 200, m_uiAwardProgressLayer.transform.anchoredPosition.y )
+		end
+		local sprite, color, name, c, desc = AwardInfo( awardkind )
+		SetImage( m_uiAwardProgressLayer.transform:Find("Shape"), sprite )
+		SetImage( m_uiAwardProgressLayer.transform:Find("Color"), color )
+		SetText( m_uiAwardProgressLayer.transform:Find("Name"), name, NameColor(c) )	
+		SetText( m_uiAwardProgressLayer.transform:Find("Desc"), desc )
+	end
+	if m_totalNum >= numtable[index] then
+		local sflag = Utils.get_int_sflag( m_recvValue.m_progress_isget, index )
+		if sflag == 0 then
+			SetTrue( m_uiAwardProgressLayer.transform:Find("GetBtn") )
+			SetControlID( m_uiAwardProgressLayer.transform:Find("GetBtn"), 2000+index )
+		else
+			SetFalse( m_uiAwardProgressLayer.transform:Find("GetBtn") )
+		end
+	else
+		SetFalse( m_uiAwardProgressLayer.transform:Find("GetBtn") )
+	end
+	SetTrue( m_uiAwardProgressLayer )
+	m_AwardProgressLayerShow = true
+end
+function EveryDaySigninDlgProgressGetAward( index )
+	system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 3, index )
+	EveryDaySigninDlgProgressLayer()
+end
+
+function EveryDaySigninDlgCallHero()
+	if m_recvValue == nil then
+		return
+	end
+	if m_recvValue.m_morrow_time > 0 then
+		return
+	end
+	system_askinfo( ASKINFO_EVERYDAY_SIGNIN, "", 4 )
+end

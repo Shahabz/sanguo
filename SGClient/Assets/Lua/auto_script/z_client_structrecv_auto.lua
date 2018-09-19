@@ -3457,6 +3457,9 @@ function struct_NetS_EverydaySigninList_recv( buffer )
 		recvValue.m_awardnum[tmpi] = buffer:ReadInt();
 	end
 	recvValue.m_today = buffer:ReadInt();
+	recvValue.m_morrow_awardkind = buffer:ReadInt();
+	recvValue.m_morrow_time = buffer:ReadInt();
+	recvValue.m_morrow_isget = buffer:ReadSByte();
 	return recvValue;
 end
 

@@ -2547,6 +2547,9 @@ struct _slk_NetS_EverydaySigninList {
 	int m_awardkind[5];	//签到
 	int m_awardnum[5];	//签到
 	int m_today;	//签到
+	int m_morrow_awardkind;	//签到
+	int m_morrow_time;	//签到
+	char m_morrow_isget;	//签到
 };
 typedef struct _slk_NetS_EverydaySigninList SLK_NetS_EverydaySigninList;	//签到
 

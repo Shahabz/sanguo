@@ -147,4 +147,5 @@ int everyday_signin_sendlist( int actor_index );
 int everyday_signin_getaward( int actor_index, int today );
 int everyday_signin_reset( int actor_index, int day );
 int everyday_signin_progress_getaward( int actor_index, int index );
+int everyday_signin_herocall( int actor_index );
 #endif

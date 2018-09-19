@@ -152,9 +152,9 @@ g_heroinfo = {
 },
 [46] = 
 { 
-	[3] = { kind=46,color=3,name="于禁",desc="七日登陆活动",corps=1,attack_base=24,attack_wash=21,attack_wash_limit=38,defense_base=49,defense_wash=44,defense_wash_limit=79,troops_base=27,troops_wash=24,troops_wash_limit=43,total_wash=139,attack=160,defense=155,troops=508,skillid=0,itemnum=100,sound=455,},
-	[4] = { kind=46,color=4,name="于禁",desc="",corps=1,attack_base=31,attack_wash=21,attack_wash_limit=51,defense_base=64,defense_wash=44,defense_wash_limit=105,troops_base=35,troops_wash=24,troops_wash_limit=57,total_wash=185,attack=185,defense=191,troops=588,skillid=0,itemnum=100,sound=455,},
-	[5] = { kind=46,color=5,name="于禁",desc="",corps=1,attack_base=38,attack_wash=21,attack_wash_limit=76,defense_base=79,defense_wash=44,defense_wash_limit=158,troops_base=43,troops_wash=24,troops_wash_limit=86,total_wash=278,attack=210,defense=227,troops=674,skillid=0,itemnum=100,sound=455,},
+	[3] = { kind=46,color=3,name="于禁",desc="七日登陆活动",corps=1,attack_base=24,attack_wash=21,attack_wash_limit=38,defense_base=49,defense_wash=44,defense_wash_limit=79,troops_base=27,troops_wash=24,troops_wash_limit=43,total_wash=155,attack=160,defense=155,troops=508,skillid=0,itemnum=100,sound=455,},
+	[4] = { kind=46,color=4,name="于禁",desc="",corps=1,attack_base=31,attack_wash=21,attack_wash_limit=51,defense_base=64,defense_wash=44,defense_wash_limit=105,troops_base=35,troops_wash=24,troops_wash_limit=57,total_wash=215,attack=185,defense=191,troops=588,skillid=0,itemnum=100,sound=455,},
+	[5] = { kind=46,color=5,name="于禁",desc="",corps=1,attack_base=38,attack_wash=21,attack_wash_limit=76,defense_base=79,defense_wash=44,defense_wash_limit=158,troops_base=43,troops_wash=24,troops_wash_limit=86,total_wash=275,attack=210,defense=227,troops=674,skillid=0,itemnum=100,sound=455,},
 },
 [47] = 
 { 
@@ -303,8 +303,9 @@ g_heroinfo = {
 },
 [76] = 
 { 
-	[4] = { kind=76,color=4,name="皇甫嵩",desc="原38章副本（未放）",corps=1,attack_base=49,attack_wash=54,attack_wash_limit=111,defense_base=18,defense_wash=21,defense_wash_limit=42,troops_base=40,troops_wash=45,troops_wash_limit=91,total_wash=212,attack=230,defense=108,troops=625,skillid=0,itemnum=100,sound=455,},
-	[5] = { kind=76,color=5,name="皇甫嵩",desc="",corps=1,attack_base=63,attack_wash=54,attack_wash_limit=166,defense_base=23,defense_wash=21,defense_wash_limit=62,troops_base=51,troops_wash=45,troops_wash_limit=136,total_wash=317,attack=276,defense=122,troops=737,skillid=0,itemnum=100,sound=455,},
+	[3] = { kind=76,color=3,name="皇甫嵩",desc="次日放出",corps=1,attack_base=50,attack_wash=25,attack_wash_limit=60,defense_base=57,defense_wash=46,defense_wash_limit=110,troops_base=33,troops_wash=19,troops_wash_limit=33,total_wash=150,attack=173,defense=168,troops=481,skillid=0,itemnum=100,sound=455,},
+	[4] = { kind=76,color=4,name="皇甫嵩",desc="",corps=1,attack_base=58,attack_wash=25,attack_wash_limit=68,defense_base=72,defense_wash=46,defense_wash_limit=119,troops_base=40,troops_wash=19,troops_wash_limit=55,total_wash=210,attack=202,defense=205,troops=543,skillid=0,itemnum=100,sound=455,},
+	[5] = { kind=76,color=5,name="皇甫嵩",desc="",corps=1,attack_base=66,attack_wash=25,attack_wash_limit=80,defense_base=87,defense_wash=46,defense_wash_limit=135,troops_base=47,troops_wash=19,troops_wash_limit=64,total_wash=270,attack=231,defense=241,troops=612,skillid=0,itemnum=100,sound=455,},
 },
 [77] = 
 { 

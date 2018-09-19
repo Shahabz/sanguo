@@ -1344,6 +1344,12 @@ int everyday_signin_sendlist( int actor_index )
 		pValue.m_awardkind[i] = g_everyday_signin[51 + i].awardkind[0];
 		pValue.m_awardnum[i] = g_everyday_signin[51 + i].awardnum[0];
 	}
+
+	// ¥Œ»’
+	char sflag = actor_get_sflag( actor_index, ACTOR_SFLAG_SIGNIN_AWARDGET );
+	pValue.m_morrow_awardkind = g_everyday_signin[50].awardkind[0];
+	pValue.m_morrow_isget = sflag;
+	pValue.m_morrow_time = g_actors[actor_index].createtime + 86400 - (int)time( NULL );
 	netsend_everydaysigninlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
 	return 0;
 }
@@ -1385,13 +1391,26 @@ int everyday_signin_progress_getaward( int actor_index, int index )
 	ACTOR_CHECK_INDEX( actor_index );
 	if ( g_everyday_signin_maxnum <= 55 )
 		return -1;
-	if ( index < 0 || index >= 5 )
+	if ( index <= 0 || index > 5 )
 		return -1;
 	if ( g_actors[actor_index].edsignin_pro & (1 << index) )
 		return -1;
-	award_getaward( actor_index, g_everyday_signin[51 + index].awardkind[0], g_everyday_signin[51 + index].awardnum[0], 0, PATH_EVERYDAY_SIGNIN, NULL );	
+	award_getaward( actor_index, g_everyday_signin[50 + index].awardkind[0], g_everyday_signin[50 + index].awardnum[0], 0, PATH_EVERYDAY_SIGNIN, NULL );	
 	g_actors[actor_index].edsignin_pro |= (1 << index);
 	everyday_signin_sendlist( actor_index );
 	return 0;
 }
-
+int everyday_signin_herocall( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( actor_get_sflag( actor_index, ACTOR_SFLAG_SIGNIN_AWARDGET ) == 1 )
+	{
+		return -1;
+	}
+	if ( g_actors[actor_index].createtime + 86400 - (int)time( NULL ) > 0 )
+		return -1;
+	award_getaward( actor_index, g_everyday_signin[50].awardkind[0], g_everyday_signin[50].awardnum[0], 0, PATH_EVERYDAY_SIGNIN, NULL );
+	actor_set_sflag( actor_index, ACTOR_SFLAG_SIGNIN_AWARDGET, 1 );
+	everyday_signin_sendlist( actor_index );
+	return 0;
+}

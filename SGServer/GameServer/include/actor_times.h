@@ -15,6 +15,7 @@
 #define	ACTOR_SFLAG_ACTIVITY08_OPEN	10 // 是否开启成长计划
 #define	ACTOR_SFLAG_ACTIVITY05_CALL	11 // 是否完成七星拜将
 #define	ACTOR_SFLAG_FRISTPAY_AWARDGET	12 // 首充礼包是否领取
+#define	ACTOR_SFLAG_SIGNIN_AWARDGET		13 // 签到次日奖励
 void actor_set_sflag( int actor_index, int offset, char value );
 int actor_get_sflag( int actor_index, int offset );
 

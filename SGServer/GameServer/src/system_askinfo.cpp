@@ -1373,6 +1373,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			everyday_signin_progress_getaward( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 4 )
+		{
+			everyday_signin_herocall( actor_index );
+		}
 		break;
 	default:
 		break;

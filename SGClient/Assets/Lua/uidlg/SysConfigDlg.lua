@@ -121,6 +121,12 @@ function SysConfigDlgShow()
 	SysConfigDlgOpen()
 	SysConfigDlgBaseReset()
 	SysConfigDlgLangReset()
+	
+	if Const.platid == 23 then
+		SetFalse(m_uiCDKey)
+	else
+		SetTrue(m_uiCDKey)
+	end
 end
 
 function SysConfigDlgBaseReset()
