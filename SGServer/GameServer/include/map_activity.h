@@ -1,6 +1,7 @@
 #ifndef _MAP_ACTIVITY_H_
 #define _MAP_ACTIVITY_H_
 #include "define.h"
+#include "auto_data_map_activityinfo.h"
 
 int map_activity_load();
 int map_activity_save( FILE *fp );

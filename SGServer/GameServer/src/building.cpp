@@ -18,6 +18,7 @@
 #include "hero.h"
 #include "vip.h"
 #include "quest.h"
+#include "auto_data_building_res_unlock.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

@@ -59,6 +59,7 @@
 #define ASKINFO_EVERYDAY_EVENT	54 // 政务
 #define ASKINFO_EVERYDAY_QUEST	55 // 每日
 #define ASKINFO_COLISEUM		56 // 竞技场
+#define ASKINFO_EVERYDAY_SIGNIN 57 // 签到
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 

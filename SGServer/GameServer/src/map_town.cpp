@@ -34,6 +34,8 @@
 #include "nation.h"
 #include "chat.h"
 #include "army_group.h"
+#include "auto_data_monster.h"
+#include "auto_data_map_towninfo.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

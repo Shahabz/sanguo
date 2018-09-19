@@ -18,6 +18,7 @@
 #include "server_netsend_auto.h"
 #include "actor_notify.h"
 #include "mail.h"
+#include "auto_data_platinfo.h"
 
 extern SConfig g_Config;
 extern int g_tick;

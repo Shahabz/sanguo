@@ -30,6 +30,7 @@ NOTIFY_GUIDE		  = 27  -- 指引
 NOTIFY_INVITECODE	  =	28	-- 邀请码
 NOTIFY_DELAYQUEUEPLAY =	29	-- 客户端延迟队列播放
 NOTIFY_COLISEUM		  = 30  -- 竞技场
+NOTIFY_EVERYDAY_SIGNIN=	31	-- 签到
 
 -- 处理接收到的消息
 function RecvActorNotify(recvValue)
@@ -386,6 +387,10 @@ function RecvActorNotify(recvValue)
 		elseif value[1] == 1 then
 			ColiseumDlgTodayUpdate( value[2] )
 		end
+	
+	-- 签到	
+	elseif msgid == NOTIFY_EVERYDAY_SIGNIN then
+
     end
 end
 

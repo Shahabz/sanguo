@@ -108,5 +108,8 @@ CREATE TABLE `actor` (
   `coliseum_winnum` int(11) NOT NULL DEFAULT '0' COMMENT '竞技场胜利场次',
   `coliseum_losenum` int(11) NOT NULL DEFAULT '0' COMMENT '竞技场失败场次',
   `coliseum_team` varbinary(12) NOT NULL DEFAULT '' COMMENT '竞技场我的队伍',
+  `edsignin` int(11) NOT NULL DEFAULT '0' COMMENT '签到',
+  `edsignin_fmonth` int(11) NOT NULL DEFAULT '0' COMMENT '签到月份',
+  `edsignin_pro` tinyint(3) NOT NULL DEFAULT '0' COMMENT '签到进度领取',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

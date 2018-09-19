@@ -3749,3 +3749,31 @@ int struct_NetS_ColiseumAwardList_send( char **pptr, int *psize, SLK_NetS_Colise
 	return 0;
 }
 
+int struct_NetS_EverydaySignin_send( char **pptr, int *psize, SLK_NetS_EverydaySignin *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_id, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardkind, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_awardnum, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_token, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_isget, (*psize) );
+	return 0;
+}
+
+int struct_NetS_EverydaySigninList_send( char **pptr, int *psize, SLK_NetS_EverydaySigninList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_EverydaySignin_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_progress_isget, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardkind, 5*sizeof(int), (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_awardnum, 5*sizeof(int), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_today, (*psize) );
+	return 0;
+}
+

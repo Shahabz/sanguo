@@ -25,6 +25,15 @@
 #include "quest.h"
 #include "activity_04.h"
 #include "girl.h"
+#include "auto_data_equip.h"
+#include "auto_data_equip_wash.h"
+#include "auto_data_nation_equip.h"
+#include "auto_data_nation_place.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_hero_colorup.h"
+#include "auto_data_hero_visit.h"
+#include "auto_data_girl_son.h"
+#include "auto_data_girl.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

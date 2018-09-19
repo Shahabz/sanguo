@@ -55,6 +55,7 @@ ButtonTable.m_uiButtonGirl = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonEquip = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonUserCenter = nil; --UnityEngine.GameObject
 ButtonTable.m_uiButtonInviteCode = nil; --UnityEngine.GameObject
+ButtonTable.m_uiButtonSignin = nil; --UnityEngine.GameObject
 
 local m_uiFunctionPanel = nil; --UnityEngine.GameObject
 local m_uiMorePanel = nil; --UnityEngine.GameObject
@@ -332,7 +333,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 西凉暴乱
 		elseif nControlID == 67 then
 			ActivityDlgShowByID( ACTIVITY_27 )
-						
+		
+		-- 每日签到
+		elseif nControlID == 68 then
+			EveryDaySigninDlgShow()
+
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -521,6 +526,7 @@ function MainDlgOnAwake( gameObject )
 	ButtonTable.m_uiButtonEquip = objs[88];
 	ButtonTable.m_uiButtonUserCenter = objs[89];
 	ButtonTable.m_uiButtonInviteCode = objs[90];
+	ButtonTable.m_uiButtonSignin = objs[91];
 	--m_ObjectPool = gameObject:GetComponent( typeof(ObjectPoolManager) );
 	--m_ObjectPool:CreatePool("UIP_WarText", 2, 2, m_uiWarTable.m_uiUIP_WarText);
 
@@ -1137,6 +1143,13 @@ function MainDlgSetButtons( openoffset )
 		end
 	end	
 	
+	-- 签到
+	local offset, root = MainDlgGetEmptyButton();
+	if root ~= nil then
+		SetParent( ButtonTable.m_uiButtonSignin, m_uiButtonBack[offset] );
+		m_hasButton[offset] = true;
+	end
+	
 	-- 系统公告
 	local offset, root = MainDlgGetEmptyButton();
 	if root ~= nil then
@@ -1430,6 +1443,14 @@ function MainDlgPayAwardShow( show )
 	if show == true then
 		SetFalse( m_uiTop_City.transform:Find("Right/PayAward/Back/Effect") )
 	end
+end
+
+-- 签到
+function MainDlgSigninShow( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/Signin"), show )
 end
 
 -- 南蛮入侵

@@ -38,6 +38,14 @@
 #include "world_quest.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_monster.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_nation_upgrade.h"
+#include "auto_data_nation_place.h"
+#include "auto_data_nation_quest.h"
+#include "auto_data_nation_mission.h"
+#include "auto_data_nation_official.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

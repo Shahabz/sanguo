@@ -23,6 +23,7 @@
 #include "global.h"
 #include "building.h"
 #include "vip.h"
+#include "auto_data_item.h"
 
 extern MYSQL *myData;
 extern MYSQL *myGame;

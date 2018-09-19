@@ -2542,6 +2542,20 @@ function proc_redinfo_C( recvValue )
 		else
 			MainDlgActivity27Show( false )
 		end
+		
+	elseif recvValue.m_path == 8 then
+		if recvValue.m_has == 1 then
+			
+		else
+			
+		end
+		
+	elseif recvValue.m_path == 9 then
+		if recvValue.m_has == 1 then
+			MainDlgSigninShow( true )
+		else
+			MainDlgSigninShow( false )
+		end
 	end
 end
 
@@ -2663,5 +2677,12 @@ end
 function proc_coliseumawardlist_C( recvValue )
 	-- process.
 	ColiseumInfoDlgRuleAwardRecv( recvValue )
+end
+
+
+-- m_count=0,m_list={m_id=0,m_awardkind=0,m_awardnum=0,m_token=0,m_isget=0,[m_count]},m_progress_isget=0,m_awardkind={[5]},m_awardnum={[5]},m_today=0,
+function proc_everydaysigninlist_C( recvValue )
+	-- process.
+	EveryDaySigninDlgRecv( recvValue )
 end
 

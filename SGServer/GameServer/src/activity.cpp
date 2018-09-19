@@ -32,6 +32,18 @@
 #include "map_zone.h"
 #include "mapunit.h"
 #include "army.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_activity_02.h"
+#include "auto_data_activity_03.h"
+#include "auto_data_activity_04.h"
+#include "auto_data_activity_05.h"
+#include "auto_data_activity_06.h"
+#include "auto_data_activity_08.h"
+#include "auto_data_activity_10.h"
+#include "auto_data_activity_12.h"
+#include "auto_data_activity_17.h"
+#include "auto_data_activity_33.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

@@ -1125,6 +1125,11 @@ function netrecv_coliseumawardlist_C( buffer )
 	proc_coliseumawardlist_C( recvValue );
 end
 
+function netrecv_everydaysigninlist_C( buffer )
+	local recvValue = struct_NetS_EverydaySigninList_recv( buffer );
+	proc_everydaysigninlist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1351,6 +1356,7 @@ Proc_Command = {
 	[CMDS_COLISEUMLOGLIST]=netrecv_coliseumloglist_C;
 	[CMDS_COLISEUMFIGHT]=netrecv_coliseumfight_C;
 	[CMDS_COLISEUMAWARDLIST]=netrecv_coliseumawardlist_C;
+	[CMDS_EVERYDAYSIGNINLIST]=netrecv_everydaysigninlist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

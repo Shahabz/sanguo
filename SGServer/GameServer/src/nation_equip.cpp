@@ -34,6 +34,10 @@
 #include "nation.h"
 #include "nation_equip.h"
 #include "activity_04.h"
+#include "auto_data_city_tech.h"
+#include "auto_data_nation_equip_open.h"
+#include "auto_data_nation_equip.h"
+#include "auto_data_nation_equip_remake.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

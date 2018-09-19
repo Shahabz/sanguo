@@ -25,6 +25,9 @@
 #include "story.h"
 #include "fight.h"
 #include "quest.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_story.h"
+#include "auto_data_monster.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

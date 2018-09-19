@@ -18,6 +18,7 @@
 #include "server_netsend_auto.h"
 #include "actor_send.h"
 #include "actor_notify.h"
+#include "auto_data_item.h"
 
 extern Global global;
 extern MYSQL *myData;

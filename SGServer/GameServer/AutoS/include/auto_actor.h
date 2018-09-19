@@ -114,6 +114,9 @@ struct _actor {
 				SLK_NetS_ColiseumCity coliseum_list[3];	//竞技场对手列表
 				short coliseum_team[3];	//竞技场我的队伍
 				SLK_NetS_ColiseumCity coliseum_my;	//竞技场我的属性
+				int edsignin;	//签到
+				int edsignin_fmonth;	//签到月份
+				char edsignin_pro;	//签到进度领取
 				int talkspeed_frame;	//说话延迟
 				char cdkeywait;	//CDKEY等待
 				short mail_notreadnum;	//未读邮件数量

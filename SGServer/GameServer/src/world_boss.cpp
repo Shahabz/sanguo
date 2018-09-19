@@ -25,6 +25,8 @@
 #include "chat.h"
 #include "world_quest.h"
 #include "world_boss.h"
+#include "auto_data_monster.h"
+#include "auto_data_world_bossinfo.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

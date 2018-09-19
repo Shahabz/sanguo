@@ -30,6 +30,7 @@
 #include "army.h"
 #include "map.h"
 #include "map_event.h"
+#include "auto_data_map_zoneinfo.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

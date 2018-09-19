@@ -1,6 +1,7 @@
 #ifndef _MAP_PICKUP_H_
 #define _MAP_PICKUP_H_
 #include "define.h"
+#include "auto_data_map_pickupinfo.h"
 
 int map_pickup_load();
 int map_pickup_save( FILE *fp );

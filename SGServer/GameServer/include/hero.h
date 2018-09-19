@@ -1,6 +1,7 @@
 #ifndef _HERO_H_
 #define _HERO_H_
 #include "define.h"
+#include "auto_data_hero.h"
 
 #define HERO_STATE_NORMAL	0	// ÏÐ
 #define HERO_STATE_FIGHT	1	// Õ½¶·

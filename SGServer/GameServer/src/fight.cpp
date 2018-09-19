@@ -29,6 +29,17 @@
 #include "world_boss.h"
 #include "nation_hero.h"
 #include "girl.h"
+#include "auto_data_hero.h"
+#include "auto_data_item.h"
+#include "auto_data_map_enemyinfo.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_monster.h"
+#include "auto_data_fight_helper.h"
+#include "auto_data_hero_skill.h"
+#include "auto_data_hero_corpsmul.h"
+#include "auto_data_story.h"
+#include "auto_data_activity_12.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

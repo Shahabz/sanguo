@@ -24,6 +24,8 @@
 #include "king_war.h"
 #include "nation.h"
 #include "map_town.h"
+#include "auto_data_world_questinfo.h"
+#include "auto_data_map_zoneinfo.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

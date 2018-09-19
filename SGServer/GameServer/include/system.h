@@ -9,6 +9,7 @@ int system_getfweek();
 int system_gettoday();
 int system_getmonth();
 int system_getweek();
+int system_gettoday_number();
 int system_getmaxday( int year, int month );
 int system_getfday_withstamp( int stamp );
 int system_getcurmonth_maxday();

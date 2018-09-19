@@ -147,6 +147,7 @@
 #define PATH_EVERYDAY_SHOP				112 // 每日商店
 #define PATH_ACTIVITY_MONSTER			113	// 活动怪
 #define PATH_COLISEUM					114 // 竞技场
+#define PATH_EVERYDAY_SIGNIN			115 // 签到
 
 int log_init();
 int wlog( char type, int op, short path, int object, int objectnum, i64 objectid, int source, int target );

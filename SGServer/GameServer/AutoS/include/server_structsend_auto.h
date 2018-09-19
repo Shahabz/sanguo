@@ -2531,6 +2531,25 @@ struct _slk_NetS_ColiseumAwardList {
 };
 typedef struct _slk_NetS_ColiseumAwardList SLK_NetS_ColiseumAwardList;	//竞技场奖励
 
+struct _slk_NetS_EverydaySignin {
+	short m_id;	//签到
+	int m_awardkind;	//签到
+	int m_awardnum;	//签到
+	short m_token;	//签到
+	char m_isget;	//签到
+};
+typedef struct _slk_NetS_EverydaySignin SLK_NetS_EverydaySignin;	//签到
+
+struct _slk_NetS_EverydaySigninList {
+	char m_count;	//签到
+	SLK_NetS_EverydaySignin m_list[32];	//签到
+	char m_progress_isget;	//签到
+	int m_awardkind[5];	//签到
+	int m_awardnum[5];	//签到
+	int m_today;	//签到
+};
+typedef struct _slk_NetS_EverydaySigninList SLK_NetS_EverydaySigninList;	//签到
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2807,5 +2826,7 @@ int struct_NetS_ColiseumLogList_send( char **pptr, int *psize, SLK_NetS_Coliseum
 int struct_NetS_ColiseumFight_send( char **pptr, int *psize, SLK_NetS_ColiseumFight *pValue );
 int struct_NetS_ColiseumAward_send( char **pptr, int *psize, SLK_NetS_ColiseumAward *pValue );
 int struct_NetS_ColiseumAwardList_send( char **pptr, int *psize, SLK_NetS_ColiseumAwardList *pValue );
+int struct_NetS_EverydaySignin_send( char **pptr, int *psize, SLK_NetS_EverydaySignin *pValue );
+int struct_NetS_EverydaySigninList_send( char **pptr, int *psize, SLK_NetS_EverydaySigninList *pValue );
 
 #endif

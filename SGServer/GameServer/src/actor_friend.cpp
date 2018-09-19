@@ -19,6 +19,8 @@
 #include "rank.h"
 #include "map_zone.h"
 #include "actor_times.h"
+#include "auto_data_teacher_award.h"
+#include "auto_data_teacher_shop.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

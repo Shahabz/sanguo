@@ -16,6 +16,7 @@
 #include "actor_send.h"
 #include "script_auto.h"
 #include "actor_notify.h"
+#include "auto_data_weather.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;
@@ -98,6 +99,14 @@ int system_gettoday()
 	struct tm *newtime = localtime( &t );
 
 	return ((1900+newtime->tm_year)*10000 + (newtime->tm_mon+1)*100 + newtime->tm_mday);
+}
+
+int system_gettoday_number()
+{
+	time_t t;
+	time( &t );
+	struct tm *newtime = localtime( &t );
+	return newtime->tm_mday;
 }
 /* 获取月份 */
 int system_getmonth()

@@ -25,6 +25,9 @@
 #include "activity_04.h"
 #include "vip.h"
 #include "quest.h"
+#include "auto_data_platinfo.h"
+#include "auto_data_paygoods.h"
+#include "auto_data_paystore.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;

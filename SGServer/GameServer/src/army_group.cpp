@@ -40,6 +40,13 @@
 #include "nation.h"
 #include "nation_hero.h"
 #include "activity_04.h"
+#include "auto_data_hero.h"
+#include "auto_data_item.h"
+#include "auto_data_map_enemyinfo.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_monster.h"
+#include "auto_data_fight_helper.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

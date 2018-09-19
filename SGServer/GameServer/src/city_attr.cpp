@@ -21,6 +21,12 @@
 #include "vip.h"
 #include "hero.h"
 #include "nation.h"
+#include "auto_data_vip.h"
+#include "auto_data_item.h"
+#include "auto_data_city_tech.h"
+#include "auto_data_nation_place.h"
+#include "auto_data_nation_equip.h"
+#include "auto_data_tiance_quest.h"
 
 extern Global global;
 extern SConfig g_Config;

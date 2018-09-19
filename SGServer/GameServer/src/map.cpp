@@ -20,6 +20,8 @@
 #include "city.h"
 #include "world_quest.h"
 #include "quest.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_map_towninfo.h"
 
 extern Global global;
 extern SConfig g_Config;

@@ -25,6 +25,10 @@
 #include "city_attr.h"
 #include "quest.h"
 #include "activity_04.h"
+#include "auto_data_official_forging.h"
+#include "auto_data_equip_washrule.h"
+#include "auto_data_equip_wash.h"
+#include "auto_data_equip.h"
 
 extern Global global;
 extern MYSQL *myData;

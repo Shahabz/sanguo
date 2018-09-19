@@ -57,6 +57,7 @@
 #include "vip.h"
 #include "pay.h"
 #include "girl.h"
+#include "auto_data_upgrade.h"
 
 extern Global global;
 extern SConfig g_Config;
@@ -836,11 +837,12 @@ int actor_entercity( int actor_index )
 	actor_redinfo( actor_index, 7 );
 	// 洛阳血战
 	actor_redinfo( actor_index, 8 );
+	// 签到
+	actor_redinfo( actor_index, 9 );
 	// 上线提醒
 	nation_online_notify( actor_index );
 	// 政务次数
 	city_everyday_event_update( actor_index );
-
 	// 地图的州牧和皇帝
 	map_zone_masterlist( actor_index );
 	return 0;

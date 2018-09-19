@@ -27,6 +27,11 @@
 #include "equip.h"
 #include "map_town.h"
 #include "activity_04.h"
+#include "auto_data_activity_04.h"
+#include "auto_data_equip.h"
+#include "auto_data_equip_wash.h"
+#include "auto_data_equip_washrule.h"
+#include "auto_data_map_towninfo.h"
 
 extern MYSQL *myGame;
 extern Actor *g_actors;

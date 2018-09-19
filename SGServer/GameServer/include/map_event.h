@@ -1,6 +1,7 @@
 #ifndef _MAP_EVENT_H_
 #define _MAP_EVENT_H_
 #include "define.h"
+#include "auto_data_map_eventinfo.h"
 
 int map_event_load();
 int map_event_save( FILE *fp );

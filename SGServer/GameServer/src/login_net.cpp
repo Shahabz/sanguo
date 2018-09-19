@@ -23,6 +23,7 @@
 #include "define.h"
 #include "server_netsend_auto.h"
 #include "actor_send.h"
+#include "auto_data_platinfo.h"
 
 extern SConfig g_Config;
 extern int g_tick;

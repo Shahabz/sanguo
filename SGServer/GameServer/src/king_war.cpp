@@ -36,6 +36,9 @@
 #include "world_quest.h"
 #include "king_war.h"
 #include "girl.h"
+#include "auto_data_kingwar_towninfo.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_kingwar.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

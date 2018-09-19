@@ -1,6 +1,7 @@
 #ifndef _NATION_HERO_H_
 #define _NATION_HERO_H_
 #include "define.h"
+#include "auto_data_nation_heroinfo.h"
 
 #define NATIONHERO_STATE_CATCH	1	// ±»×¥²¶
 #define NATIONHERO_STATE_EMPLOY	2	// ¹éË³

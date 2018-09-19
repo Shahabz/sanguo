@@ -25,6 +25,8 @@
 #include "army_group.h"
 #include "world_quest.h"
 #include "chat.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_map_towninfo.h"
 
 extern Global global;
 extern SConfig g_Config;

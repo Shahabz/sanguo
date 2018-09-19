@@ -1,6 +1,7 @@
 #ifndef _MAP_ENEMY_H_
 #define _MAP_ENEMY_H_
 #include "define.h"
+#include "auto_data_map_enemyinfo.h"
 
 int map_enemy_load();
 int map_enemy_save( FILE *fp );

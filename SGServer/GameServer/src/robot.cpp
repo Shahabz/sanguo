@@ -37,6 +37,13 @@
 #include "nation_equip.h"
 #include "nation_hero.h"
 #include "robot.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_city_tech.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_robot_ai.h"
+#include "auto_data_robot_base.h"
+#include "auto_data_random_lastname.h"
+#include "auto_data_random_firstname.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

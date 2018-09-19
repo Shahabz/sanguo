@@ -17,6 +17,8 @@
 #include "quest.h"
 #include "hero.h"
 #include "army.h"
+#include "auto_data_official_tech.h"
+#include "auto_data_city_tech.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

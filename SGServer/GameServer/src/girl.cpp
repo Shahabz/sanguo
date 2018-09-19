@@ -24,6 +24,13 @@
 #include "city_attr.h"
 #include "mail.h"
 #include "girl.h"
+#include "auto_data_item.h"
+#include "auto_data_girl_love.h"
+#include "auto_data_girl_son.h"
+#include "auto_data_fangshi_node.h"
+#include "auto_data_fangshi_palace.h"
+#include "auto_data_girl_shop.h"
+#include "auto_data_girl_shop_update.h"
 
 extern Global global;
 extern MYSQL *myData;

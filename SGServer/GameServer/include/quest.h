@@ -1,7 +1,9 @@
 #ifndef _QUEST_H_
 #define _QUEST_H_
 #include "define.h"
-
+#include "auto_data_quest.h"
+#include "auto_data_quest_talk.h"
+#include "auto_data_tiance_quest.h"
 #define QUEST_COMPLETEFLAG_NORMAL	0	// 缺省
 #define QUEST_COMPLETEFLAG_SUCCESS	1	// 完成
 #define QUEST_COMPLETEFLAG_AWARDED	2	// 已经领取奖励
@@ -139,4 +141,10 @@ int everyday_quest_sendlist( int actor_index );
 int everyday_quest_getaward( int actor_index, int id );
 int everyday_shop( int actor_index );
 int everyday_shop_buy( int actor_index, int id, int awardkind );
+
+// 每日签到
+int everyday_signin_sendlist( int actor_index );
+int everyday_signin_getaward( int actor_index, int today );
+int everyday_signin_reset( int actor_index, int day );
+int everyday_signin_progress_getaward( int actor_index, int index );
 #endif

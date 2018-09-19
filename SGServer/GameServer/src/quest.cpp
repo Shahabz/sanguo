@@ -11,6 +11,7 @@
 #include "define.h"
 #include "city.h"
 #include "building.h"
+#include "system.h"
 #include "actor.h"
 #include "actor_send.h"
 #include "actor_notify.h"
@@ -24,6 +25,12 @@
 #include "map_enemy.h"
 #include "city_attr.h"
 #include "shop.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_building_upgrade.h"
+#include "auto_data_official_forging.h"
+#include "auto_data_shop.h"
+#include "auto_data_everyday_quest.h"
+#include "auto_data_everyday_signin.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1294,3 +1301,97 @@ int everyday_shop_buy( int actor_index, int id, int awardkind )
 	award_getaward( actor_index, g_shop[type].config[id].awardkind, g_shop[type].config[id].awardnum, -1, PATH_EVERYDAY_SHOP, NULL );
 	return 0;
 }
+
+
+// Ã¿ÈÕÇ©µ½
+extern everydaySignin *g_everyday_signin;
+extern int g_everyday_signin_maxnum;
+int everyday_signin_sendlist( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int month = system_getmonth();
+	if ( g_actors[actor_index].edsignin_fmonth != month )
+	{
+		g_actors[actor_index].edsignin_fmonth = month;
+		g_actors[actor_index].edsignin = 0;
+		g_actors[actor_index].edsignin_pro = 0;
+	}
+	int maxday = system_getcurmonth_maxday();
+	if ( maxday >= g_everyday_signin_maxnum || g_everyday_signin_maxnum <= 55 )
+		return -1;
+
+	SLK_NetS_EverydaySigninList pValue = { 0 };
+	for ( int day = 1; day <= maxday; day++ )
+	{
+		pValue.m_list[pValue.m_count].m_id = day;
+		pValue.m_list[pValue.m_count].m_awardkind = g_everyday_signin[day].awardkind[0];
+		pValue.m_list[pValue.m_count].m_awardnum = g_everyday_signin[day].awardnum[0];
+		pValue.m_list[pValue.m_count].m_token = g_everyday_signin[day].token;
+		if ( g_actors[actor_index].edsignin & (1 << (day-1)) )
+		{
+			pValue.m_list[pValue.m_count].m_isget = 1;
+		}
+		else
+		{
+			pValue.m_list[pValue.m_count].m_isget = 0;
+		}
+		pValue.m_count++;
+	}
+	pValue.m_today = system_gettoday_number();
+	pValue.m_progress_isget = g_actors[actor_index].edsignin_pro;
+	for ( int i = 0; i < 5; i++ )
+	{
+		pValue.m_awardkind[i] = g_everyday_signin[51 + i].awardkind[0];
+		pValue.m_awardnum[i] = g_everyday_signin[51 + i].awardnum[0];
+	}
+	netsend_everydaysigninlist_S( actor_index, SENDTYPE_ACTOR, &pValue );
+	return 0;
+}
+int everyday_signin_getaward( int actor_index, int today )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int maxday = system_getcurmonth_maxday();
+	if ( maxday >= g_everyday_signin_maxnum || g_everyday_signin_maxnum <= 55 )
+		return -1;
+	if ( today <= 0 || today >= maxday )
+		return -1;
+	if ( g_actors[actor_index].edsignin & (1 << (today - 1)) )
+		return -1;
+	for ( int tmpi = 0; tmpi < 2; tmpi++ )
+	{
+		award_getaward( actor_index, g_everyday_signin[today].awardkind[tmpi], g_everyday_signin[today].awardnum[tmpi], 0, PATH_EVERYDAY_SIGNIN, NULL );
+	}
+	g_actors[actor_index].edsignin |= (1 << (today - 1));
+	everyday_signin_sendlist( actor_index );
+	return 0;
+}
+int everyday_signin_reset( int actor_index, int day )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	int maxday = system_getcurmonth_maxday();
+	if ( maxday >= g_everyday_signin_maxnum || g_everyday_signin_maxnum <= 55 )
+		return -1;
+	if ( day <= 0 || day >= maxday )
+		return -1;
+	if ( g_actors[actor_index].edsignin & (1 << (day - 1)) )
+		return -1;
+	if ( actor_change_token( actor_index, -g_everyday_signin[day].token, PATH_EVERYDAY_SIGNIN, 0 ) < 0 )
+		return -1;
+	everyday_signin_getaward( actor_index, day );
+	return 0;
+}
+int everyday_signin_progress_getaward( int actor_index, int index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+	if ( g_everyday_signin_maxnum <= 55 )
+		return -1;
+	if ( index < 0 || index >= 5 )
+		return -1;
+	if ( g_actors[actor_index].edsignin_pro & (1 << index) )
+		return -1;
+	award_getaward( actor_index, g_everyday_signin[51 + index].awardkind[0], g_everyday_signin[51 + index].awardnum[0], 0, PATH_EVERYDAY_SIGNIN, NULL );	
+	g_actors[actor_index].edsignin_pro |= (1 << index);
+	everyday_signin_sendlist( actor_index );
+	return 0;
+}
+

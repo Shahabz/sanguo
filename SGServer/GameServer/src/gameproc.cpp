@@ -24,6 +24,89 @@
 #include "server_netrecv_auto.h"
 #include "actor_notify.h"
 #include "system.h"
+#include "auto_data_item.h"
+#include "auto_data_equip.h"
+#include "auto_data_equip_wash.h"
+#include "auto_data_equip_washrule.h"
+#include "auto_data_platinfo.h"
+#include "auto_data_paygoods.h"
+#include "auto_data_paystore.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_building_res_unlock.h"
+#include "auto_data_building_upgrade.h"
+#include "auto_data_vip.h"
+#include "auto_data_vipbag.h"
+#include "auto_data_vipshop.h"
+#include "auto_data_hero.h"
+#include "auto_data_hero_colorup.h"
+#include "auto_data_hero_corpsmul.h"
+#include "auto_data_hero_skill.h"
+#include "auto_data_hero_visit.h"
+#include "auto_data_quest.h"
+#include "auto_data_quest_talk.h"
+#include "auto_data_city_guard.h"
+#include "auto_data_city_tech.h"
+#include "auto_data_trainlong.h"
+#include "auto_data_trainqueue.h"
+#include "auto_data_bodytoken.h"
+#include "auto_data_official_forging.h"
+#include "auto_data_official_gov.h"
+#include "auto_data_official_tech.h"
+#include "auto_data_material_make.h"
+#include "auto_data_monster.h"
+#include "auto_data_fight_helper.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_map_enemyinfo.h"
+#include "auto_data_map_resinfo.h"
+#include "auto_data_map_eventinfo.h"
+#include "auto_data_map_pickupinfo.h"
+#include "auto_data_map_activityinfo.h"
+#include "auto_data_nation_equip.h"
+#include "auto_data_nation_equip_open.h"
+#include "auto_data_nation_equip_remake.h"
+#include "auto_data_nation_upgrade.h"
+#include "auto_data_nation_place.h"
+#include "auto_data_nation_quest.h"
+#include "auto_data_nation_mission.h"
+#include "auto_data_nation_official.h"
+#include "auto_data_nation_heroinfo.h"
+#include "auto_data_weather.h"
+#include "auto_data_wishing_shop.h"
+#include "auto_data_wishing_pack.h"
+#include "auto_data_shop.h"
+#include "auto_data_story.h"
+#include "auto_data_world_bossinfo.h"
+#include "auto_data_world_questinfo.h"
+#include "auto_data_kingwar_towninfo.h"
+#include "auto_data_kingwar.h"
+#include "auto_data_tiance_quest.h"
+#include "auto_data_teacher_award.h"
+#include "auto_data_teacher_shop.h"
+#include "auto_data_activity_02.h"
+#include "auto_data_activity_03.h"
+#include "auto_data_activity_04.h"
+#include "auto_data_activity_05.h"
+#include "auto_data_activity_06.h"
+#include "auto_data_activity_08.h"
+#include "auto_data_activity_10.h"
+#include "auto_data_activity_12.h"
+#include "auto_data_activity_17.h"
+#include "auto_data_activity_33.h"
+#include "auto_data_girl.h"
+#include "auto_data_girl_love.h"
+#include "auto_data_girl_son.h"
+#include "auto_data_girl_shop.h"
+#include "auto_data_girl_shop_update.h"
+#include "auto_data_fangshi_node.h"
+#include "auto_data_fangshi_palace.h"
+#include "auto_data_random_lastname.h"
+#include "auto_data_random_firstname.h"
+#include "auto_data_robot_ai.h"
+#include "auto_data_robot_base.h"
+#include "auto_data_everyday_event.h"
+#include "auto_data_everyday_quest.h"
+#include "auto_data_everyday_signin.h"
 #include "item.h"
 #include "equip.h"
 #include "global.h"
@@ -933,6 +1016,15 @@ int process_init( int max_connection )
 	if ( everydayquest_init_auto() < 0 )
 	{
 		printf_msg( "everydayquest_init_auto Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+	serv_setstat( 19 );
+
+	// Ç©µ½
+	if ( everydaysignin_init_auto() < 0 )
+	{
+		printf_msg( "everydaysignin_init_auto Module Error!" );
 		return -1;
 	}
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
@@ -1939,6 +2031,7 @@ int process_dbreload()
 	robotbase_reload_auto();
 	everydayevent_reload_auto();
 	everydayquest_reload_auto();
+	everydaysignin_reload_auto();
 
 	activityinfo02_reload_auto();
 	activityinfo03_reload_auto();

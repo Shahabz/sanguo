@@ -17,6 +17,9 @@
 #include "item.h"
 #include "building.h"
 #include "vip.h"
+#include "auto_data_vip.h"
+#include "auto_data_vipbag.h"
+#include "auto_data_vipshop.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

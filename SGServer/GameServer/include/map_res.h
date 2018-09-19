@@ -1,6 +1,7 @@
 #ifndef _MAP_RES_H_
 #define _MAP_RES_H_
 #include "define.h"
+#include "auto_data_map_resinfo.h"
 
 int map_res_load();
 int map_res_save( FILE *fp );

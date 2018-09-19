@@ -17,6 +17,7 @@
 #include "server_netsend_auto.h"
 #include "global.h"
 #include "script_auto.h"
+#include "auto_data_item.h"
 
 
 extern MYSQL *myData;

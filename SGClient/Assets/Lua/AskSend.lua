@@ -56,6 +56,7 @@ ASKINFO_BUYRES			=	53 -- 购买资源
 ASKINFO_EVERYDAY_EVENT	=  	54 -- 政务
 ASKINFO_EVERYDAY_QUEST	=	55 -- 每日
 ASKINFO_COLISEUM		=	56 -- 竞技场
+ASKINFO_EVERYDAY_SIGNIN =   57 -- 签到
 
 function system_askinfo( msgid, msg, ... )
 	-- 未进入游戏不允许发送通用短协议

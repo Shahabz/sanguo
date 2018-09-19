@@ -24,6 +24,8 @@
 #include "chat.h"
 #include "server_netsend_auto.h"
 #include "coliseum.h"
+#include "auto_data_random_lastname.h"
+#include "auto_data_random_firstname.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

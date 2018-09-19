@@ -28,6 +28,13 @@ extern "C"
 #include "map_event.h"
 #include "map_pickup.h"
 #include "map_activity.h"
+#include "auto_data_hero.h"
+#include "auto_data_item.h"
+#include "auto_data_map_enemyinfo.h"
+#include "auto_data_map_towninfo.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_monster.h"
+#include "auto_data_map_activityinfo.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;

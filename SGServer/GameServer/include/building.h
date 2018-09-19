@@ -2,6 +2,7 @@
 #define _BUILDING_H_
 #include "define.h"
 #include "server_netsend_auto.h"
+#include "auto_data_building_upgrade.h"
 
 #define BUILDING_MAXNUM				6 // 普通建筑数量
 #define BUILDING_BARRACKS_MAXNUM	4 // 兵营建筑数量

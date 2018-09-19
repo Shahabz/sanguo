@@ -1,6 +1,7 @@
 #ifndef _GIRL_H_
 #define _GIRL_H_
 #include "define.h"
+#include "auto_data_girl.h"
 #define ACTOR_GIRL_MAX	80
 
 #define GIRL_SFLAG_MARRY	0	// ÊÇ·ñ½á»é

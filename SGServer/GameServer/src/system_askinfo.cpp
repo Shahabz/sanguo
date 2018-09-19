@@ -1356,6 +1356,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			coliseum_rankaward_sendlist( actor_index );
 		}
 		break;
+	case ASKINFO_EVERYDAY_SIGNIN: // Ç©µ½
+		if ( pvalue[0] == 0 )
+		{
+			everyday_signin_sendlist( actor_index );
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			everyday_signin_getaward( actor_index, system_gettoday_number() );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			everyday_signin_reset( actor_index, pvalue[1] );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			everyday_signin_progress_getaward( actor_index, pvalue[1] );
+		}
+		break;
 	default:
 		break;
 	}

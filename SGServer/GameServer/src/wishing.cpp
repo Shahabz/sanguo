@@ -19,6 +19,8 @@
 #include "item.h"
 #include "quest.h"
 #include "wishing.h"
+#include "auto_data_wishing_shop.h"
+#include "auto_data_wishing_pack.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

@@ -28,6 +28,8 @@
 #include "nation.h"
 #include "activity.h"
 #include "activity_04.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_bodytoken.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -1031,6 +1033,14 @@ int actor_redinfo( int actor_index, char path )
 	else if ( path == 8 )
 	{ // ÂåÑôÑªÕ½
 		if ( activity_intime( ACTIVITY_22 ) )
+		{
+			pValue.m_has = 1;
+		}
+	}
+	else if ( path == 9 )
+	{ // Ç©µ½
+		int today = system_gettoday_number();
+		if ( (g_actors[actor_index].edsignin & (1 << (today - 1))) == 0 )
 		{
 			pValue.m_has = 1;
 		}

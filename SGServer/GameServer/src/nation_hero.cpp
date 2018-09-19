@@ -37,6 +37,8 @@
 #include "world_quest.h"
 #include "nation.h"
 #include "nation_hero.h"
+#include "auto_data_monster.h"
+#include "auto_data_hero.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

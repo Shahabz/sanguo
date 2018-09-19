@@ -29,6 +29,7 @@
 #include "map.h"
 #include "map_zone.h"
 #include "map_activity.h"
+#include "auto_data_map_zoneinfo.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

@@ -18,6 +18,8 @@
 #include "system.h"
 #include "item.h"
 #include "shop.h"
+#include "auto_data_vip.h"
+#include "auto_data_shop.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

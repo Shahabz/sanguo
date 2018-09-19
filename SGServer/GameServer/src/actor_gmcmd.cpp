@@ -40,6 +40,7 @@
 #include "city_attr.h"
 #include "girl.h"
 #include "robot.h"
+#include "auto_data_map_zoneinfo.h"
 
 extern Global global;
 extern MYSQL *myGame;

@@ -44,6 +44,17 @@
 #include "activity_04.h"
 #include "girl.h"
 #include "robot.h"
+#include "auto_data_trainlong.h"
+#include "auto_data_trainqueue.h"
+#include "auto_data_official_forging.h"
+#include "auto_data_official_gov.h"
+#include "auto_data_official_tech.h"
+#include "auto_data_city_tech.h"
+#include "auto_data_material_make.h"
+#include "auto_data_upgrade.h"
+#include "auto_data_map_zoneinfo.h"
+#include "auto_data_vipshop.h"
+#include "auto_data_everyday_event.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;

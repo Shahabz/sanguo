@@ -1,7 +1,7 @@
 #ifndef _CITY_H_
 #define _CITY_H_
 #include "define.h"
-
+#include "auto_data_city_guard.h"
 #define CITY_QUEST_MAX				16	// 任务数量
 #define CITY_TECH_MAX				40	// 城池科技
 #define CITY_GUARD_MAX				30	// 城墙守卫
