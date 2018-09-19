@@ -9,6 +9,7 @@ SRC = \
 ../AutoS/src/auto_actor_equip.cpp \
 ../AutoS/src/auto_data_platinfo.cpp \
 ../AutoS/src/auto_data_world_bossinfo.cpp \
+../AutoS/src/auto_data_everyday_signin.cpp \
 ../AutoS/src/auto_data_map_zoneinfo.cpp \
 ../AutoS/src/server_netrecv_auto.cpp \
 ../AutoS/src/auto_data_hero_visit.cpp \
@@ -228,6 +229,8 @@ $(EXE) : $(OBJ)
 ../AutoS/src/auto_data_platinfo.o: ../AutoS/src/auto_data_platinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_world_bossinfo.o: ../AutoS/src/auto_data_world_bossinfo.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+../AutoS/src/auto_data_everyday_signin.o: ../AutoS/src/auto_data_everyday_signin.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
 ../AutoS/src/auto_data_map_zoneinfo.o: ../AutoS/src/auto_data_map_zoneinfo.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
