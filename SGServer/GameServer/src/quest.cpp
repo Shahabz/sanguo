@@ -1369,6 +1369,7 @@ int everyday_signin_getaward( int actor_index, int today )
 	}
 	g_actors[actor_index].edsignin |= (1 << (today - 1));
 	everyday_signin_sendlist( actor_index );
+	actor_redinfo( actor_index, 9 );
 	return 0;
 }
 int everyday_signin_reset( int actor_index, int day )

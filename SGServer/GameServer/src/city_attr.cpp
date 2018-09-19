@@ -386,14 +386,14 @@ void city_battlepower_place_calc( City *pCity )
 {
 	if ( !pCity )
 		return;
-	if ( pCity->place < 0 || pCity->place >= g_nationequip_maxnum - 1 )
+	if ( pCity->place < 0 || pCity->place >= g_nation_place_maxnum - 1 )
 		return;
 	float battlepower = 0;
 	for ( int tmpi = 0; tmpi < 4; tmpi++ )
 	{
 		if ( pCity->hero[tmpi].kind <= 0 )
 			continue;
-		battlepower += g_nation_place[pCity->place + 1].value * global.battlepower_attack;
+		battlepower += g_nation_place[pCity->place].value * global.battlepower_attack;
 	}
 	pCity->battlepower_place = (int)battlepower;
 	city_battlepower_calc( pCity, BATTLEPOWER_PATH_PLACE );
