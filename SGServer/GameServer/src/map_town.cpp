@@ -337,7 +337,7 @@ void map_town_logic( int townid )
 			mapunit_update( MAPUNIT_TYPE_TOWN, townid, g_map_town[townid].unit_index );
 		}
 	}
-	else if ( g_map_town[townid].own_actorid > 0 )
+	else if ( g_map_town[townid].own_actorid > 0 && townid != MAPUNIT_KING_TOWNID )
 	{ // 有城主，减少任期
 		g_map_town[townid].own_sec -= 1;
 		if ( g_map_town[townid].own_sec <= 0 )
