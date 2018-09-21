@@ -729,12 +729,14 @@ void activity22_fight()
 		activity22_totalcalc( ACTIVITY22_ATTACK );
 		// 删除一个防守方
 		army_delete( defense_army_index );
+		activity22_sendupdate( ACTIVITY22_ATTACK );
 	}
 	else
 	{ // 防御方胜利
 		activity22_totalcalc( ACTIVITY22_DEFENSE );
 		// 删除一个攻击方
 		army_delete( attack_army_index );
+		activity22_sendupdate( ACTIVITY22_DEFENSE );
 	}
 	
 	// 战斗通知

@@ -780,7 +780,7 @@ end
 -- 血战皇城活动
 -- m_state=0,m_beginstamp=0,m_endstamp=0,m_nation=0,
 function MapMainDlgActivityKingWar( recvValue )
-	BloodyBattleDlgSetActivityInfo( recvValue )
+	--BloodyBattleDlgSetActivityInfo( recvValue )
 	-- 尚未开启
 	if recvValue.m_state == 0 and recvValue.m_beginstamp > 0 then
 		SetTrue( m_uiActivity1 )

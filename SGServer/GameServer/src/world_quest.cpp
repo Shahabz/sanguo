@@ -371,10 +371,10 @@ int worldquest_sendinfo( int actor_index )
 	// 是否需要通知血战皇城
 	if ( pValue.m_questid == 0 )
 	{
-		activity22_mapsendinfo( actor_index );
 		//kingwar_activity_sendinfo( actor_index );
 		//kingwar_treasure_sendinfo( actor_index );
 	}
+	activity22_mapsendinfo( actor_index );
 	return 0;
 }
 
