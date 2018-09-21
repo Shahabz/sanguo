@@ -2545,9 +2545,9 @@ function proc_redinfo_C( recvValue )
 		
 	elseif recvValue.m_path == 8 then
 		if recvValue.m_has == 1 then
-			
+			MainDlgActivity22Show( true )
 		else
-			
+			MainDlgActivity22Show( false )
 		end
 		
 	elseif recvValue.m_path == 9 then
@@ -2684,5 +2684,69 @@ end
 function proc_everydaysigninlist_C( recvValue )
 	-- process.
 	EveryDaySigninDlgRecv( recvValue )
+end
+
+
+
+-- m_army_index=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_totals=0,m_herokind={[4]},m_index=0,m_state=0,m_statetime=0,m_stateduration=0,
+function proc_act22army_C( recvValue )
+	-- process.
+end
+
+g_Act22FightRecvA = nil;
+g_Act22FightRecvD = nil;
+-- m_count=0,m_list={m_army_index=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_totals=0,m_herokind={[4]},m_index=0,m_state=0,m_statetime=0,m_stateduration=0,},m_attack=0,
+function proc_act22armylist_C( recvValue )
+	-- process.
+	
+	-- ¹¥»÷·½
+	if recvValue.m_attack == 1 then
+		if recvValue.m_path == 0 then
+			g_Act22FightRecvA = {}
+			g_Act22FightRecvA.m_count = 0;
+			g_Act22FightRecvA.m_attack = 1;
+			g_Act22FightRecvA.m_list = {}
+			
+		elseif recvValue.m_path == 1 then
+			for i=1,recvValue.m_count do
+				table.insert( g_Act22FightRecvA.m_list, recvValue.m_list[i] )
+				g_Act22FightRecvA.m_count = g_Act22FightRecvA.m_count + 1
+			end
+			
+		elseif recvValue.m_path == 2 then
+			Activity22FightDlgFightRecvA( g_Act22FightRecvA )
+		end
+	
+	-- ·ÀÓù·½	
+	elseif recvValue.m_attack == 2 then
+		if recvValue.m_path == 0 then
+			g_Act22FightRecvD = {}
+			g_Act22FightRecvD.m_count = 0;
+			g_Act22FightRecvD.m_attack = 2;
+			g_Act22FightRecvD.m_list = {};
+			
+		elseif recvValue.m_path == 1 then
+			for i=1,recvValue.m_count do
+				table.insert( g_Act22FightRecvD.m_list, recvValue.m_list[i] )
+				g_Act22FightRecvD.m_count = g_Act22FightRecvD.m_count + 1
+			end
+			
+		elseif recvValue.m_path == 2 then
+			Activity22FightDlgFightRecvD( g_Act22FightRecvD )
+		end
+		
+	end
+end
+
+-- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_kill=0,[m_count]},
+function proc_act22ranklist_C( recvValue )
+	-- process.
+	Activity22FightDlgRankRecv( recvValue )
+end
+
+-- m_value=0,
+function proc_act22update_C( recvValue )
+	-- process.
+	ColiseumInfoDlgFightUpdate( recvValue.m_value )
 end
 

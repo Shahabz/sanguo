@@ -1130,6 +1130,26 @@ function netrecv_everydaysigninlist_C( buffer )
 	proc_everydaysigninlist_C( recvValue );
 end
 
+function netrecv_act22army_C( buffer )
+	local recvValue = struct_NetS_Act22Army_recv( buffer );
+	proc_act22army_C( recvValue );
+end
+
+function netrecv_act22armylist_C( buffer )
+	local recvValue = struct_NetS_Act22ArmyList_recv( buffer );
+	proc_act22armylist_C( recvValue );
+end
+
+function netrecv_act22ranklist_C( buffer )
+	local recvValue = struct_NetS_Act22RankList_recv( buffer );
+	proc_act22ranklist_C( recvValue );
+end
+
+function netrecv_act22update_C( buffer )
+	local recvValue = struct_NetS_Act22Update_recv( buffer );
+	proc_act22update_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1357,6 +1377,10 @@ Proc_Command = {
 	[CMDS_COLISEUMFIGHT]=netrecv_coliseumfight_C;
 	[CMDS_COLISEUMAWARDLIST]=netrecv_coliseumawardlist_C;
 	[CMDS_EVERYDAYSIGNINLIST]=netrecv_everydaysigninlist_C;
+	[CMDS_ACT22ARMY]=netrecv_act22army_C;
+	[CMDS_ACT22ARMYLIST]=netrecv_act22armylist_C;
+	[CMDS_ACT22RANKLIST]=netrecv_act22ranklist_C;
+	[CMDS_ACT22UPDATE]=netrecv_act22update_C;
 }
 
 function in_proc_command_C( cmd, buffer )

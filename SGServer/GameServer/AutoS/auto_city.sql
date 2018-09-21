@@ -142,5 +142,6 @@ CREATE TABLE `city` (
   `act33_pay` int(11) NOT NULL DEFAULT '0' COMMENT '充值排名',
   `edquest` varbinary(64) NOT NULL DEFAULT '' COMMENT '每日任务',
   `edquest_isget` int(11) NOT NULL DEFAULT '0' COMMENT '每日任务奖励是否领取',
+  `act22kill` int(11) NOT NULL DEFAULT '0' COMMENT '洛阳血战杀敌',
   PRIMARY KEY (`actorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

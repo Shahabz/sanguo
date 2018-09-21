@@ -118,7 +118,7 @@ function MapMainDlgOnEvent( nType, nControlID, value, gameObject )
 		
 		-- 血战皇城
 		elseif nControlID == 12 then
-			BloodyBattleDlgShow();
+			ActivityDlgShowByID( ACTIVITY_22 )
 		
 		-- 挖宝
 		elseif nControlID == 13 then
@@ -403,6 +403,9 @@ function MapMainDlgBattleSet( root, index, info )
 		elseif info.m_action == ARMY_ACTION_HELP_TROOP then
 			SetText( uiState, T(977) )
 			SetTrue( uiQuickBtn )
+		elseif info.m_action == ARMY_ACTION_ACTIVITY22 then
+		SetText( uiState, T(974) )
+			SetTrue( uiQuickBtn )
 		end
 		SetTrue( uiRebackBtn )
 		if info.m_state == ARMY_STATE_GROUP_END then
@@ -421,6 +424,10 @@ function MapMainDlgBattleSet( root, index, info )
 		SetTrue( uiQuickBtn )
 	elseif info.m_state >= ARMY_STATE_KINGWAR_READY and info.m_state <= ARMY_STATE_KINGWAR_DEAD then
 		SetText( uiState, T(1400) )
+	elseif info.m_state >= ARMY_STATE_ACTIVITY22_READY then
+		SetText( uiState, T(1400) )
+		SetTrue( uiRebackBtn )
+		SetTrue( uiGpsBtn )
 	end
 	
 	if info.m_action == ARMY_ACTION_GROUP_CREATE or info.m_action == ARMY_ACTION_GROUP_ATTACK or info.m_action == ARMY_ACTION_GROUP_DEFENSE then
@@ -443,6 +450,8 @@ function MapMainDlgBattleSet( root, index, info )
 		
 	-- 状态时间
 	if info.m_state >= ARMY_STATE_KINGWAR_READY and info.m_state <= ARMY_STATE_KINGWAR_DEAD then
+		SetFalse( uiTimer )
+	elseif info.m_state >= ARMY_STATE_ACTIVITY22_READY then
 		SetFalse( uiTimer )
 	else
 		SetTrue( uiTimer )

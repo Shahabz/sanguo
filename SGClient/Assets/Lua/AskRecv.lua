@@ -364,6 +364,8 @@ function RecvActorNotify(recvValue)
 			Activity11ModRecv( value[3], value[4] )
 		elseif value[1] == ACTIVITY_12 then
 			Activity12ModRecv( value[2], value[3], value[4], value[5] )
+		elseif value[1] == ACTIVITY_22 then
+			Activity22ModRecv( value[2], value[3], value[4], value[5] )
 		elseif value[1] == ACTIVITY_25 then
 			Activity25ModRecv( value[2], value[3], value[4], value[5] )
 		end

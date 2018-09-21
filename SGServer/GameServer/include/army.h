@@ -18,6 +18,7 @@
 #define ARMY_STATE_KINGWAR_FIGHT	41	// 皇城战排队战斗中
 #define ARMY_STATE_KINGWAR_WAITSOS	42	// 皇城战死亡等待救援中
 #define ARMY_STATE_KINGWAR_DEAD		43	// 皇城战战斗已经死亡
+#define ARMY_STATE_ACTIVITY22_READY	44	// 洛阳守卫战已经抵达
 
 // 行为
 #define ARMY_ACTION_IDLE				0	// 空闲
@@ -31,6 +32,7 @@
 #define ARMY_ACTION_NATION_ATTACK		13	// 参与国战(攻击方)
 #define ARMY_ACTION_NATION_DEFENSE		14	// 参与国战(防御方)
 #define ARMY_ACTION_KINGWAR				20	// 皇城战
+#define ARMY_ACTION_ACTIVITY22			22	// 新洛阳战
 
 #define ARMY_REBACK_NORMAL			0	// 返程类型-正常
 #define ARMY_REBACK_RETURN			1	// 返程类型-操作返回

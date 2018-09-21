@@ -3780,3 +3780,68 @@ int struct_NetS_EverydaySigninList_send( char **pptr, int *psize, SLK_NetS_Every
 	return 0;
 }
 
+int struct_NetS_Act22Army_send( char **pptr, int *psize, SLK_NetS_Act22Army *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_army_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_totals, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_herokind, 4*sizeof(short), (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_index, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_state, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_statetime, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_stateduration, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Act22ArmyList_send( char **pptr, int *psize, SLK_NetS_Act22ArmyList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Act22Army_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_attack, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_path, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Act22Rank_send( char **pptr, int *psize, SLK_NetS_Act22Rank *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_rank, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_kill, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Act22RankList_send( char **pptr, int *psize, SLK_NetS_Act22RankList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Act22Rank_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+
+int struct_NetS_Act22Update_send( char **pptr, int *psize, SLK_NetS_Act22Update *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_value, (*psize) );
+	return 0;
+}
+

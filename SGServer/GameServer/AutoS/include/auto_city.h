@@ -151,6 +151,7 @@ struct _city {
 				int act33_pay;	//充值排名
 				int edquest[16];	//每日任务
 				int edquest_isget;	//每日任务奖励是否领取
+				int act22kill;	//洛阳血战杀敌
 				SLK_NetS_CityEvent city_event[4];	//城内事件
 				SLK_NetS_BattleEvent battle_event[4];	//军事事件
 				CityAttr attr;	//属性加成

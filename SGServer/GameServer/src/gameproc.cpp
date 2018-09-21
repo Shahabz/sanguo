@@ -146,6 +146,7 @@
 #include "robot.h"
 #include "mail.h"
 #include "coliseum.h"
+#include "activity_22.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -1185,6 +1186,9 @@ int process_init( int max_connection )
 	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
 	serv_setstat( 111 );
 
+	// 洛阳血战
+	activity_22_load();
+
 	// 加载皇城血战据点（严格顺序要求，不允许改变）
 	if ( kingwar_town_load() < 0 )
 	{
@@ -1778,6 +1782,7 @@ int process_logic()
 	else if ( tick == 6 )
 	{
 		kingwar_activity_logic();
+		activity22_fightlogic();
 		nation_official_logic();
 		map_call_logic();
 		nation_hero_logic();

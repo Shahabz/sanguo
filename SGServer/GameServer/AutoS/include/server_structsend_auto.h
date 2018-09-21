@@ -2553,6 +2553,48 @@ struct _slk_NetS_EverydaySigninList {
 };
 typedef struct _slk_NetS_EverydaySigninList SLK_NetS_EverydaySigninList;	//签到
 
+struct _slk_NetS_Act22Army {
+	int m_army_index;	//洛阳血战
+	char m_namelen;	//洛阳血战
+	char m_name[32];	//洛阳血战
+	char m_nation;	//洛阳血战
+	int m_totals;	//洛阳血战
+	short m_herokind[4];	//洛阳血战
+	short m_index;	//洛阳血战
+	char m_state;	//洛阳血战
+	int m_statetime;	//洛阳血战
+	int m_stateduration;	//洛阳血战
+};
+typedef struct _slk_NetS_Act22Army SLK_NetS_Act22Army;	//血战洛阳
+
+struct _slk_NetS_Act22ArmyList {
+	char m_count;	//洛阳血战列表
+	SLK_NetS_Act22Army m_list[24];	//洛阳血战列表
+	char m_attack;	//洛阳血战列表
+	char m_path;	//洛阳血战列表
+};
+typedef struct _slk_NetS_Act22ArmyList SLK_NetS_Act22ArmyList;	//血战洛阳
+
+struct _slk_NetS_Act22Rank {
+	int m_rank;	//洛阳血战-排行榜
+	char m_namelen;	//洛阳血战-排行榜
+	char m_name[32];	//洛阳血战-排行榜
+	char m_nation;	//洛阳血战-排行榜
+	int m_kill;	//洛阳血战-排行榜
+};
+typedef struct _slk_NetS_Act22Rank SLK_NetS_Act22Rank;	//血战洛阳
+
+struct _slk_NetS_Act22RankList {
+	char m_count;	//洛阳血战-排行榜列表
+	SLK_NetS_Act22Rank m_list[30];	//洛阳血战-排行榜列表
+};
+typedef struct _slk_NetS_Act22RankList SLK_NetS_Act22RankList;	//血战洛阳
+
+struct _slk_NetS_Act22Update {
+	char m_value;	//洛阳血战更新
+};
+typedef struct _slk_NetS_Act22Update SLK_NetS_Act22Update;	//血战洛阳
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2831,5 +2873,10 @@ int struct_NetS_ColiseumAward_send( char **pptr, int *psize, SLK_NetS_ColiseumAw
 int struct_NetS_ColiseumAwardList_send( char **pptr, int *psize, SLK_NetS_ColiseumAwardList *pValue );
 int struct_NetS_EverydaySignin_send( char **pptr, int *psize, SLK_NetS_EverydaySignin *pValue );
 int struct_NetS_EverydaySigninList_send( char **pptr, int *psize, SLK_NetS_EverydaySigninList *pValue );
+int struct_NetS_Act22Army_send( char **pptr, int *psize, SLK_NetS_Act22Army *pValue );
+int struct_NetS_Act22ArmyList_send( char **pptr, int *psize, SLK_NetS_Act22ArmyList *pValue );
+int struct_NetS_Act22Rank_send( char **pptr, int *psize, SLK_NetS_Act22Rank *pValue );
+int struct_NetS_Act22RankList_send( char **pptr, int *psize, SLK_NetS_Act22RankList *pValue );
+int struct_NetS_Act22Update_send( char **pptr, int *psize, SLK_NetS_Act22Update *pValue );
 
 #endif

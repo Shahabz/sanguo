@@ -49,6 +49,7 @@
 #include "activity_04.h"
 #include "girl.h"
 #include "coliseum.h"
+#include "activity_22.h"
 
 extern Actor *g_actors;
 extern int g_maxactornum;
@@ -1376,6 +1377,24 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		else if ( pvalue[0] == 4 )
 		{
 			everyday_signin_herocall( actor_index );
+		}
+		break;
+	case ASKINFO_ACTIVITY22: // ÂåÑôÑªÕ½
+		if ( pvalue[0] == 0 )
+		{
+			
+		}
+		else if ( pvalue[0] == 1 )
+		{
+			activity22_sendlist( actor_index, 1 );
+		}
+		else if ( pvalue[0] == 2 )
+		{
+			activity22_sendlist( actor_index, 2 );
+		}
+		else if ( pvalue[0] == 3 )
+		{
+			activity22_rank_sendlist( actor_index );
 		}
 		break;
 	default:

@@ -3463,3 +3463,63 @@ function struct_NetS_EverydaySigninList_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Act22Army_recv( buffer )
+	local recvValue = {};
+	recvValue.m_army_index = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_totals = buffer:ReadInt();
+	recvValue.m_herokind={};
+	for tmpi=1,4,1 do
+		recvValue.m_herokind[tmpi] = buffer:ReadShort();
+	end
+	recvValue.m_index = buffer:ReadShort();
+	recvValue.m_state = buffer:ReadSByte();
+	recvValue.m_statetime = buffer:ReadInt();
+	recvValue.m_stateduration = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_Act22ArmyList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Act22Army_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	recvValue.m_attack = buffer:ReadSByte();
+	recvValue.m_path = buffer:ReadSByte();
+	return recvValue;
+end
+
+function struct_NetS_Act22Rank_recv( buffer )
+	local recvValue = {};
+	recvValue.m_rank = buffer:ReadInt();
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_kill = buffer:ReadInt();
+	return recvValue;
+end
+
+function struct_NetS_Act22RankList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Act22Rank_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+
+function struct_NetS_Act22Update_recv( buffer )
+	local recvValue = {};
+	recvValue.m_value = buffer:ReadSByte();
+	return recvValue;
+end
+

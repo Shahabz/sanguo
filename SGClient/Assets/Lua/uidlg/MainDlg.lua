@@ -337,7 +337,11 @@ function MainDlgOnEvent( nType, nControlID, value, gameObject )
 		-- 每日签到
 		elseif nControlID == 68 then
 			EveryDaySigninDlgShow()
-
+		
+		-- 洛阳血战
+		elseif nControlID == 69 then
+			ActivityDlgShowByID( ACTIVITY_22 )
+			
 		-- 角色信息	
 		elseif nControlID == 100 then
 			PlayerDlgShow();
@@ -1467,6 +1471,15 @@ function MainDlgActivity27Show( show )
 		return;
 	end
 	SetShow( m_uiTop_City.transform:Find("Right/Activity27"), show )
+end
+
+-- 洛阳血战
+function MainDlgActivity22Show( show )
+	if m_Dlg == nil then
+		return;
+	end
+	SetShow( m_uiTop_City.transform:Find("Right/Activity22"), show )
+	g_Activity22Open = show
 end
 
 -- 国家按钮红点

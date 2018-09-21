@@ -702,6 +702,7 @@ int kingwar_activity_save( FILE *fp )
 // 活动逻辑，每秒
 void kingwar_activity_logic()
 {
+return;
 	if ( g_open_zone_luoyang == 0 )
 	{ // 世界任务董卓
 		return;
@@ -755,16 +756,16 @@ void kingwar_activity_logic()
 // 活动启动
 int kingwar_activity_open()
 {
-	int week = system_getweek();
-	if ( week == 6 && week == 0 )
-	{ // 星期六星期日不用隔周了
-		g_kingwar_activity_openweek = system_getfweek();
-	}
-	else
-	{
-		//g_kingwar_activity_openweek = system_getfweek() + 1;
-		g_kingwar_activity_openweek = system_getfweek();
-	}
+	//int week = system_getweek();
+	//if ( week == 6 && week == 0 )
+	//{ // 星期六星期日不用隔周了
+	//	g_kingwar_activity_openweek = system_getfweek();
+	//}
+	//else
+	//{
+	//	//g_kingwar_activity_openweek = system_getfweek() + 1;
+	//	g_kingwar_activity_openweek = system_getfweek();
+	//}
 	return 0;
 }
 

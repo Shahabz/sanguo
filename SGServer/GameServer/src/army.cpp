@@ -48,6 +48,7 @@
 #include "auto_data_map_towninfo.h"
 #include "auto_data_map_zoneinfo.h"
 #include "auto_data_activity_12.h"
+#include "activity_22.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -203,6 +204,19 @@ int army_loadcb( int army_index )
 	{
 		// 被攻击列表
 		city_underfire_add( pTargetCity, army_index );
+	}
+
+	// 洛阳血战
+	if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN )
+	{
+		if ( g_army[army_index].state == ARMY_STATE_ACTIVITY22_READY )
+		{
+			activity22_queueadd( activity22_attack_or_defense( army_index ), army_index );
+		}
+		else if ( g_army[army_index].action == ARMY_ACTION_ACTIVITY22 )
+		{
+			activity22_marchadd( activity22_attack_or_defense( army_index ), army_index );
+		}
 	}
 
 	// 总距离(不是计算行军时间的距离，这是两点之间的直线距离)
@@ -848,6 +862,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 				// 已经加入国战防守部队
 				actor_notify_alert( pCity->actor_index, 1299 );
 			}
+			else if ( info->m_action == ARMY_ACTION_ACTIVITY22 )
+			{ // 参与洛阳争夺战
+				actor_notify_pop( pCity->actor_index, 4340 );
+			}
+
 			to_type = MAPUNIT_TYPE_TOWN;
 			to_id = g_mapunit[info->m_to_unit_index].index;
 		}
@@ -1099,6 +1118,11 @@ int army_battle( City *pCity, SLK_NetC_MapBattle *info )
 			city_underfire_add( pTargetCity, army_index );
 		}
 	}
+	// 洛阳血战
+	if ( g_army[army_index].to_type == MAPUNIT_TYPE_TOWN && g_army[army_index].action == ARMY_ACTION_ACTIVITY22 )
+	{
+		activity22_marchadd( activity22_attack_or_defense( army_index ), army_index );
+	}
 	return army_index;
 }
 
@@ -1311,6 +1335,17 @@ void army_delete( int army_index )
 		{ // 删除后计算排行榜连杀
 			kingwar_rankcalc( army_index );
 		}
+		else if ( g_army[army_index].action == ARMY_ACTION_ACTIVITY22 )
+		{// 洛阳血战
+			if ( g_army[army_index].state == ARMY_STATE_ACTIVITY22_READY )
+			{
+				activity22_queuedel( activity22_attack_or_defense( army_index ), army_index );
+			}
+			else
+			{
+				activity22_marchdel( activity22_attack_or_defense( army_index ), army_index );
+			}
+		}
 	}
 	else if ( g_army[army_index].from_type == MAPUNIT_TYPE_TOWN )
 	{
@@ -1490,6 +1525,11 @@ void army_setstate( int army_index, char state )
 		army_marchroute_del( army_index );
 		break;
 	case ARMY_STATE_TALK:				// 交谈中
+		mapunit_del( MAPUNIT_TYPE_ARMY, army_index, g_army[army_index].unit_index );
+		g_army[army_index].unit_index = -1;
+		army_marchroute_del( army_index );
+		break;
+	case ARMY_STATE_ACTIVITY22_READY:	// 洛阳血战中
 		mapunit_del( MAPUNIT_TYPE_ARMY, army_index, g_army[army_index].unit_index );
 		g_army[army_index].unit_index = -1;
 		army_marchroute_del( army_index );

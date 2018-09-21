@@ -296,6 +296,7 @@ end
 function LoginModOnAwake( gameObject )
     m_Dlg = gameObject;
 	local objs = gameObject:GetComponent( "UIMod" ).relatedGameObject;
+	local Length = gameObject:GetComponent( "UIMod" ).relatedGameObject.Length
 	m_uiVersion = objs[0];
 	m_uiAccountEdit = objs[1];
 	m_uiPasswordEdit = objs[2];
@@ -329,9 +330,11 @@ function LoginModOnAwake( gameObject )
 		m_uiRegInviteCodeEdit = objs[29];
 		m_uiMakeSureLayer = objs[30];
 		m_uiVisitBtn = objs[31];
-		m_uiRegDesc = objs[32];
-		m_uiRegEmailEdit = objs[33];
-		m_uiRegBtn = objs[34];
+		if Length >= 35 then
+			m_uiRegDesc = objs[32];
+			m_uiRegEmailEdit = objs[33];
+			m_uiRegBtn = objs[34];
+		end
 	end
 	
 
@@ -456,7 +459,9 @@ function LoginModLoginLayer()
 	m_uiAccountEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "USERNAME", "" );
 	m_uiPasswordEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text = GameManager.ini( "PASSTOKEN", "" );
 	SetRichText( m_uiVisitBtn.transform:Find("Back/Text"), T(315) )
-	SetRichText( m_uiRegBtn.transform:Find("Back/Text"), T(316) )
+	if m_uiRegBtn then
+		SetRichText( m_uiRegBtn.transform:Find("Back/Text"), T(316) )
+	end
 end
 
 -- 测试模式注册页
@@ -476,14 +481,22 @@ function LoginModRegLayer()
 	end
 	
 	if Const.platid == 27 or Const.platid == 28 then
-		SetText( m_uiRegDesc, T( 327 ) )
-		SetTrue( m_uiRegEmailEdit )
+		if m_uiRegDesc then
+			SetText( m_uiRegDesc, T( 327 ) )
+		end
+		if m_uiRegEmailEdit then
+			SetTrue( m_uiRegEmailEdit )
+		end
 		SetFalse( m_uiRegPhoneEdit )
 		SetFalse( m_uiRegQQEdit )
 		SetFalse( m_uiRegWeiXinEdit )
 	else
-		SetText( m_uiRegDesc, T( 326 ) )
-		SetFalse( m_uiRegEmailEdit )
+		if m_uiRegDesc then
+			SetText( m_uiRegDesc, T( 326 ) )
+		end
+		if m_uiRegEmailEdit then
+			SetFalse( m_uiRegEmailEdit )
+		end
 		SetTrue( m_uiRegPhoneEdit )
 		SetTrue( m_uiRegQQEdit )
 		SetFalse( m_uiRegWeiXinEdit )
@@ -506,7 +519,9 @@ function LoginModReg()
 		qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 		wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 		friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-		email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		if m_uiRegEmailEdit then
+			email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+		end
 	end
 	
 	-- 非法检查
@@ -547,7 +562,10 @@ function LoginModRegMakeSure()
 	local qq = m_uiRegQQEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local wchat = m_uiRegWeiXinEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
 	local friend_invite_code = m_uiRegInviteCodeEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
-	local email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	local email = ""
+	if m_uiRegEmailEdit then
+		email = m_uiRegEmailEdit.transform:Find("Input"):GetComponent( "UIInputField" ).text
+	end
 	LoginModRegProc( userName, passWord, phone, qq, wchat, friend_invite_code, email )
 end
 

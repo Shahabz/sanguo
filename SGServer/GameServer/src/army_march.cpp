@@ -42,6 +42,8 @@
 #include "auto_data_map_enemyinfo.h"
 #include "auto_data_map_towninfo.h"
 #include "auto_data_map_zoneinfo.h"
+#include "activity_22.h"
+
 extern SConfig g_Config;
 extern MYSQL *myGame;
 extern MYSQL *myData;
@@ -319,6 +321,11 @@ void army_arrived( int army_index )
 			{
 				// 集结完
 				army_setstate( army_index, ARMY_STATE_GROUP_END );
+			}
+			else if ( g_army[army_index].action == ARMY_ACTION_ACTIVITY22 )
+			{ // 洛阳守卫战
+				army_setstate( army_index, ARMY_STATE_ACTIVITY22_READY );
+				activity22_marcharrived( activity22_attack_or_defense( army_index ), army_index );
 			}
 			else
 			{ // 无行为
@@ -711,6 +718,10 @@ int actor_army_return( int actor_index, int army_index, int unit_index )
 	{ // 正在驻防中
 		city_helparmy_del( army_getcityptr_target( army_index ), army_index );
 	}
+	else if ( g_army[army_index].state == ARMY_STATE_ACTIVITY22_READY )
+	{// 洛阳血战中
+		activity22_queuedel( activity22_attack_or_defense( army_index ), army_index );
+	}
 	
 	if ( g_army[army_index].state == ARMY_STATE_GROUP_END )
 	{ // 已经到达集结地点
@@ -792,6 +803,10 @@ int actor_army_callback( int actor_index, int army_index, int itemkind )
 		else if ( g_army[army_index].action == ARMY_ACTION_NATION_ATTACK || g_army[army_index].action == ARMY_ACTION_NATION_DEFENSE )
 		{
 			armygroup_delarmy( army_index, map_zone_getid( g_army[army_index].posx, g_army[army_index].posy ) );
+		}
+		else if ( g_army[army_index].action == ARMY_ACTION_ACTIVITY22 )
+		{// 洛阳血战
+			activity22_marchdel( activity22_attack_or_defense( army_index ), army_index );
 		}
 
 		if ( g_army[army_index].action == ARMY_ACTION_GROUP_CREATE || g_army[army_index].action == ARMY_ACTION_GROUP_ATTACK )

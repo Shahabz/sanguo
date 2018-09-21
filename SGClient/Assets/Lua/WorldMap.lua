@@ -915,8 +915,13 @@ function WorldMap.OnSelect( unit, gameCoorX, gameCoorY, unit_index )
 			local townid 		= recvValue.m_short_value[1]
 			local type 			= g_towninfo[townid].type
 			if type == MAPUNIT_TYPE_TOWN_LUOYANG then
-				BloodyBattleDlgTownClick( recvValue )
-				MapClickEffect.gameObject:SetActive( false );
+				if g_Activity22Open then
+					Activity22FightDlgShow( recvValue )
+					MapClickEffect.gameObject:SetActive( false );
+				else
+					BloodyBattleDlgTownClick( recvValue )
+					MapClickEffect.gameObject:SetActive( false );
+				end
 				return
 			end
 			

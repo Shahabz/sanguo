@@ -232,6 +232,8 @@ void global_reload();
 #define WORLD_DATA_ACTIVITY06_PAYTOKEN	31		// 服务器全服返利活动充值总量
 #define WORLD_DATA_BRUSH_PICKUP_TIMER	32		// 刷新拾取物品计时
 #define WORLD_DATA_PAYMODE				33		// 支付商店模式
+#define WORLD_DATA_ACTIVITY22_NATION	34		// 洛阳血战当前占领国
+#define WORLD_DATA_ACTIVITY22_ACTORID	35		// 洛阳血战当前占领玩家
 #define WORLD_DATA_SAVEFLAG				99		// 存档的标记时间
 #define WORLD_DATA_SAVEFILE_FLAG		100		// 崩溃执行完毕的标记时间
 #define WORLD_DATA_SERVERINIT			101		// 服务器首次初始化

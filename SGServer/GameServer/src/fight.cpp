@@ -423,6 +423,38 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
 	}
+	// 防御方为城镇
+	else if ( defense_type == MAPUNIT_TYPE_TOWN )
+	{
+		g_fight.type = FIGHTTYPE_KINGWAR;
+		int army_index = defense_index;
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		City *pCity = army_getcityptr( army_index );
+		if ( !pCity )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			short herokind = g_army[army_index].herokind[tmpi];
+			if ( herokind <= 0 )
+				continue;
+			int hero_index = city_hero_getindex( pCity->index, herokind );
+			if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+				continue;
+			Hero *pHero = &pCity->hero[hero_index];
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
+		}
+	}
 	// 防御方为活动怪
 	else if ( defense_type == MAPUNIT_TYPE_ACTIVITY )
 	{

@@ -24,6 +24,7 @@
 #include "king_war.h"
 #include "nation.h"
 #include "map_town.h"
+#include "activity_22.h"
 #include "auto_data_world_questinfo.h"
 #include "auto_data_map_zoneinfo.h"
 
@@ -370,8 +371,9 @@ int worldquest_sendinfo( int actor_index )
 	// 是否需要通知血战皇城
 	if ( pValue.m_questid == 0 )
 	{
-		kingwar_activity_sendinfo( actor_index );
-		kingwar_treasure_sendinfo( actor_index );
+		activity22_mapsendinfo( actor_index );
+		//kingwar_activity_sendinfo( actor_index );
+		//kingwar_treasure_sendinfo( actor_index );
 	}
 	return 0;
 }

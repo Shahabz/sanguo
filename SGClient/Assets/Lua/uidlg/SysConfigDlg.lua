@@ -122,7 +122,7 @@ function SysConfigDlgShow()
 	SysConfigDlgBaseReset()
 	SysConfigDlgLangReset()
 	
-	if Const.platid == 23 then
+	if Const.platid == 15 or Const.platid == 23 or Const.platid == 27 then
 		SetFalse(m_uiCDKey)
 	else
 		SetTrue(m_uiCDKey)

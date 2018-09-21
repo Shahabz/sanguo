@@ -8,6 +8,7 @@
 #define MAPUNIT_TYPE_TOWN_ZHFD		4	// 诸侯封地
 #define MAPUNIT_TYPE_TOWN_GJFD		5	// 国家封地
 #define MAPUNIT_TYPE_TOWN_LUOYANG	6	// 洛阳
+#define MAPUNIT_TYPE_TOWN_RANK		7	// 关口
 #define MAPUNIT_KING_TOWNID			200		// 洛阳
 
 #define MAP_TOWN_JOIN_MAX				128	// 参战人员

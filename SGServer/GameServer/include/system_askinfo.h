@@ -60,6 +60,7 @@
 #define ASKINFO_EVERYDAY_QUEST	55 // 每日
 #define ASKINFO_COLISEUM		56 // 竞技场
 #define ASKINFO_EVERYDAY_SIGNIN 57 // 签到
+#define ASKINFO_ACTIVITY22		58 // 洛阳血战
 
 int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue );
 
