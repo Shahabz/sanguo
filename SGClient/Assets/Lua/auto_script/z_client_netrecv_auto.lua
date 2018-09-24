@@ -1150,6 +1150,16 @@ function netrecv_act22update_C( buffer )
 	proc_act22update_C( recvValue );
 end
 
+function netrecv_act22log_C( buffer )
+	local recvValue = struct_NetS_Act22Log_recv( buffer );
+	proc_act22log_C( recvValue );
+end
+
+function netrecv_act22loglist_C( buffer )
+	local recvValue = struct_NetS_Act22LogList_recv( buffer );
+	proc_act22loglist_C( recvValue );
+end
+
 Proc_Command = {
 	[CMDS_LOGIN]=netrecv_login_C;
 	[CMDS_LIST]=netrecv_list_C;
@@ -1381,6 +1391,8 @@ Proc_Command = {
 	[CMDS_ACT22ARMYLIST]=netrecv_act22armylist_C;
 	[CMDS_ACT22RANKLIST]=netrecv_act22ranklist_C;
 	[CMDS_ACT22UPDATE]=netrecv_act22update_C;
+	[CMDS_ACT22LOG]=netrecv_act22log_C;
+	[CMDS_ACT22LOGLIST]=netrecv_act22loglist_C;
 }
 
 function in_proc_command_C( cmd, buffer )

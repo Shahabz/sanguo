@@ -423,6 +423,38 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 		fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_LEADER_HERO, 0, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
 			pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_GATHER ), (char)config->skillid, pHero->exp );
 	}
+	// 防御方为部队
+	else if ( defense_type == MAPUNIT_TYPE_ARMY )
+	{
+		g_fight.type = FIGHTTYPE_KINGWAR;
+		int army_index = defense_index;
+		if ( army_index < 0 || army_index >= g_army_maxcount )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		City *pCity = army_getcityptr( army_index );
+		if ( !pCity )
+		{
+			g_fight.result = FIGHT_WIN;
+			return 0;
+		}
+		for ( int tmpi = 0; tmpi < 4; tmpi++ )
+		{
+			short herokind = g_army[army_index].herokind[tmpi];
+			if ( herokind <= 0 )
+				continue;
+			int hero_index = city_hero_getindex( pCity->index, herokind );
+			if ( hero_index < 0 || hero_index >= HERO_CITY_MAX )
+				continue;
+			Hero *pHero = &pCity->hero[hero_index];
+			HeroInfoConfig *config = hero_getconfig( pHero->kind, pHero->color );
+			if ( !config )
+				continue;
+			fight_add_hero( FIGHT_DEFENSE, MAPUNIT_TYPE_ARMY, army_index, FIGHT_UNITTYPE_HERO, tmpi, herokind, herokind, pHero->level, pHero->color, (char)config->corps,
+				pHero->attack, pHero->defense, pHero->soldiers, pHero->troops, pHero->attack_increase, pHero->defense_increase, pHero->assault, pHero->defend, hero_getline( pCity, HERO_STATE_FIGHT ), (char)config->skillid, pHero->exp );
+		}
+	}
 	// 防御方为城镇
 	else if ( defense_type == MAPUNIT_TYPE_TOWN )
 	{
@@ -646,7 +678,7 @@ int fight_start( int attack_armyindex, char defense_type, int defense_index )
 	}
 
 	// 信息转json
-	if ( g_fight.type != FIGHTTYPE_KINGWAR )
+	//if ( g_fight.type != FIGHTTYPE_KINGWAR )
 	{
 		fight_unit2json();
 	}
@@ -1522,6 +1554,17 @@ City *fight_getcityptr( int pos )
 				return NULL;
 			pCity = &g_city[city_index];
 		}
+		else if ( g_fight.type == FIGHTTYPE_KINGWAR )
+		{
+			if ( g_fight.attack_armyindex < 0 || g_fight.attack_armyindex >= g_army_maxcount )
+				return NULL;
+			if ( g_army[g_fight.attack_armyindex].from_type != MAPUNIT_TYPE_CITY )
+				return NULL;
+			int city_index = g_army[g_fight.attack_armyindex].from_index;
+			if ( city_index < 0 )
+				return NULL;
+			pCity = &g_city[city_index];
+		}
 	}
 	else
 	{
@@ -1550,9 +1593,11 @@ City *fight_getcityptr( int pos )
 				return NULL;
 			pCity = army_getcityptr( army_index );
 		}
-		else if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN )
+		else if ( g_fight.defense_type == MAPUNIT_TYPE_TOWN && g_fight.type == FIGHTTYPE_KINGWAR )
 		{
-			
+			if ( g_fight.defense_index < 0 || g_fight.defense_index >= g_army_maxcount )
+				return NULL;
+			pCity = army_getcityptr( g_fight.defense_index );
 		}
 	}
 	return pCity;

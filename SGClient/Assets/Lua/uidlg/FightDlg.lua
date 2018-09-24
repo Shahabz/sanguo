@@ -313,7 +313,7 @@ function FightDlgShow( recvValue )
 	local my = m_recvValue.m_content_json["my"];
 	if my == nil or my == 1 then
 		-- 攻击方
-		SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"], info["a_nation"] ) );
 		if info["a_nation"] > 0 then
 			SetTrue( m_uiLeftNation )
 			SetImage( m_uiLeftNation, NationSprite( info["a_nation"] ) );
@@ -321,7 +321,7 @@ function FightDlgShow( recvValue )
 			SetFalse( m_uiLeftNation )
 		end
 		-- 防御方
-		SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"],info["d_nation"] ) );
 		if info["d_nation"] > 0 then
 			SetTrue( m_uiRightNation )
 			SetImage( m_uiRightNation, NationSprite( info["d_nation"] ) );
@@ -344,7 +344,7 @@ function FightDlgShow( recvValue )
 	-- 我是防御方，防御方显示左面
 	else
 		-- 攻击方
-		SetText( m_uiLeftName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		SetText( m_uiLeftName, FightInfoDlgGetName( info["d_type"], info["d_name"], info["d_nation"] ) );
 		if info["d_nation"] > 0 then
 			SetTrue( m_uiLeftNation )
 			SetImage( m_uiLeftNation, NationSprite( info["d_nation"] ) );
@@ -352,7 +352,7 @@ function FightDlgShow( recvValue )
 			SetFalse( m_uiLeftNation )
 		end
 		-- 防御方
-		SetText( m_uiRightName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		SetText( m_uiRightName, FightInfoDlgGetName( info["a_type"], info["a_name"], info["a_nation"] ) );
 		if info["a_nation"] > 0 then
 			SetTrue( m_uiRightNation )
 			SetImage( m_uiRightNation, NationSprite( info["a_nation"] ) );

@@ -141,31 +141,32 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 		else if ( pValue[0] == 4 )
 		{
-			if ( pValue[1] == 0 )
-			{
-				extern int g_kingwar_activity_openweek;
-				time_t t;
-				time( &t );
-				t += 60;
-				struct tm *nowtime = localtime( &t );
-				global.kingwar_activity_week = nowtime->tm_wday;
-				global.kingwar_activity_hour = nowtime->tm_hour;
-				global.kingwar_activity_minute = nowtime->tm_min;
-				g_kingwar_activity_openweek = system_getfweek();
-				kingwar_activity_sendinfo( -1 );
-			}
-			else if( pValue[1] == -1 )
-			{
-				extern int g_kingwar_activity_endstamp; // 活动结束时间戳
-				g_kingwar_activity_endstamp = (int)time( NULL ) + 30;
-				kingwar_activity_sendinfo( -1 );
-			}	
-			else if ( pValue[1] == -2 )
-			{
-				extern int g_kingwar_treasure_endstamp; // 挖宝结束时间戳
-				g_kingwar_treasure_endstamp = (int)time( NULL ) + 30;
-				kingwar_treasure_sendinfo( -1 );
-			}
+			activity_set( 22, (int)time( NULL ), (int)time( NULL ) + 120, (int)time( NULL ) + 120 + 300, (int)time( NULL ) + 120 + 300 + 300 );
+			//if ( pValue[1] == 0 )
+			//{
+			//	extern int g_kingwar_activity_openweek;
+			//	time_t t;
+			//	time( &t );
+			//	t += 60;
+			//	struct tm *nowtime = localtime( &t );
+			//	global.kingwar_activity_week = nowtime->tm_wday;
+			//	global.kingwar_activity_hour = nowtime->tm_hour;
+			//	global.kingwar_activity_minute = nowtime->tm_min;
+			//	g_kingwar_activity_openweek = system_getfweek();
+			//	kingwar_activity_sendinfo( -1 );
+			//}
+			//else if( pValue[1] == -1 )
+			//{
+			//	extern int g_kingwar_activity_endstamp; // 活动结束时间戳
+			//	g_kingwar_activity_endstamp = (int)time( NULL ) + 30;
+			//	kingwar_activity_sendinfo( -1 );
+			//}	
+			//else if ( pValue[1] == -2 )
+			//{
+			//	extern int g_kingwar_treasure_endstamp; // 挖宝结束时间戳
+			//	g_kingwar_treasure_endstamp = (int)time( NULL ) + 30;
+			//	kingwar_treasure_sendinfo( -1 );
+			//}
 		}
 		else if ( pValue[0] == 5 )
 		{

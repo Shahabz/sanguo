@@ -316,7 +316,7 @@ function MailDlgSetMail( recvValue )
 		local restype = recvValue.m_content_json["res"];
 		local resnum = recvValue.m_content_json["num"];
 		SetRichText( uiContent, F( 5506, ResName( restype ).."x"..resnum ) )
-		SetImage( uiShape, LoadSprite("ui_mail_icon_2") )
+		SetImage( uiShape, LoadSprite("ui_mail_icon_13") )
 	
 	-- 采集战斗
 	elseif recvValue.m_type == MAIL_TYPE_GATHER_FIGHT then
@@ -328,7 +328,7 @@ function MailDlgSetMail( recvValue )
 		else
 			SetRichText( uiContent, F(1111, name, tname ) )
 		end
-		SetImage( uiShape, LoadSprite("ui_mail_icon_8") )
+		SetImage( uiShape, LoadSprite("ui_mail_icon_13") )
 		
 	-- 侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_SPY then
@@ -338,7 +338,7 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
 		SetRichText( uiContent, F( 5511, Nation(nation), level, name, pos ) );
-		SetImage( uiShape, LoadSprite("ui_mail_icon_3") )
+		SetImage( uiShape, LoadSprite("ui_mail_icon_14") )
 		
 	-- 被侦察
 	elseif recvValue.m_type == MAIL_TYPE_CITY_BESPY then
@@ -348,7 +348,7 @@ function MailDlgSetMail( recvValue )
 		local name = recvValue.m_content_json["na"];
 		local pos = recvValue.m_content_json["pos"];
 		SetRichText( uiContent, F( 5513, Nation(nation), level, name, pos ) );
-		SetImage( uiShape, LoadSprite("ui_mail_icon_3") )
+		SetImage( uiShape, LoadSprite("ui_mail_icon_14") )
 	
 	-- 城战
 	elseif recvValue.m_type == MAIL_TYPE_FIGHT_CITY then
@@ -375,6 +375,19 @@ function MailDlgSetMail( recvValue )
 		else
 			SetRichText( uiContent, F(1111, name, "["..Nation(tn).."]"..MapTownName(townid) ) )
 			SetImage( uiShape, LoadSprite("ui_mail_icon_7") )
+		end
+		
+	-- 皇城血战
+	elseif recvValue.m_type == MAIL_TYPE_FIGHT_ACTIVITY22 then
+		local win = recvValue.m_content_json["win"];
+		local name = recvValue.m_content_json["na"];
+		local tname = recvValue.m_content_json["tna"];
+		if win == 1 then
+			SetRichText( uiContent, F(1110, name, tname ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_12") )
+		else
+			SetRichText( uiContent, F(1111, name, tname ) )
+			SetImage( uiShape, LoadSprite("ui_mail_icon_12") )
 		end
 	else
 		-- 解析内容
@@ -542,7 +555,7 @@ function MailDlgSetMail( recvValue )
 		local turn = recvValue.m_content_json["turn"];
 		local title = GetMail():GetString( recvValue.m_title );
 		SetText(uiTitle, Utils.StringFormat(title, T(MapUnitActivityNameList[kind]), turn))
-		
+	
 	else
 		-- 其它类型解析
 		local title = GetMail():GetString( recvValue.m_title );

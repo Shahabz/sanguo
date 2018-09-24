@@ -59,4 +59,6 @@ int activity22_rank_sendlist( int actor_index );
 
 // 活动信息
 int activity22_mapsendinfo( int actor_index );
+
+int activity22_log_sendlist( int actor_index );
 #endif

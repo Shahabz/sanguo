@@ -232,6 +232,8 @@ int netsend_act22army_S( int actor_index, char send_type, SLK_NetS_Act22Army *pV
 int netsend_act22armylist_S( int actor_index, char send_type, SLK_NetS_Act22ArmyList *pValue );
 int netsend_act22ranklist_S( int actor_index, char send_type, SLK_NetS_Act22RankList *pValue );
 int netsend_act22update_S( int actor_index, char send_type, SLK_NetS_Act22Update *pValue );
+int netsend_act22log_S( int actor_index, char send_type, SLK_NetS_Act22Log *pValue );
+int netsend_act22loglist_S( int actor_index, char send_type, SLK_NetS_Act22LogList *pValue );
 
 int netsend_invitecodeed_S( int actor_index, char send_type, SLK_NetU_InviteCodeed *pValue );
 int netsend_userawarded_S( int actor_index, char send_type, SLK_NetU_UserAwarded *pValue );

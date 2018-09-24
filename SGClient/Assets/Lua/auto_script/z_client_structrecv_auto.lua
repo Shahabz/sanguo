@@ -3523,3 +3523,40 @@ function struct_NetS_Act22Update_recv( buffer )
 	return recvValue;
 end
 
+function struct_NetS_Act22LogUnit_recv( buffer )
+	local recvValue = {};
+	recvValue.m_namelen = buffer:ReadSByte();
+	recvValue.m_name = buffer:ReadStringWithLen( recvValue.m_namelen );
+	recvValue.m_nation = buffer:ReadSByte();
+	recvValue.m_level = buffer:ReadShort();
+	recvValue.m_totals = buffer:ReadInt();
+	recvValue.m_lost = buffer:ReadInt();
+	recvValue.m_herokind={};
+	for tmpi=1,4,1 do
+		recvValue.m_herokind[tmpi] = buffer:ReadShort();
+	end
+	return recvValue;
+end
+
+function struct_NetS_Act22Log_recv( buffer )
+	local recvValue = {};
+	recvValue.m_attack = struct_NetS_Act22LogUnit_recv( buffer );
+	recvValue.m_defense = struct_NetS_Act22LogUnit_recv( buffer );
+	recvValue.m_optime = buffer:ReadInt();
+	recvValue.m_win = buffer:ReadSByte();
+	recvValue.m_index = buffer:ReadShort();
+	return recvValue;
+end
+
+function struct_NetS_Act22LogList_recv( buffer )
+	local recvValue = {};
+	recvValue.m_count = buffer:ReadSByte();
+	recvValue.m_list = {};
+	for tmpi=1,recvValue.m_count,1 do
+		local tmpValue={};
+		tmpValue = struct_NetS_Act22Log_recv( buffer );
+		table.insert( recvValue.m_list, tmpValue );
+	end
+	return recvValue;
+end
+

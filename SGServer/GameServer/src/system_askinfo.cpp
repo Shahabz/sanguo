@@ -1396,6 +1396,10 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 		{
 			activity22_rank_sendlist( actor_index );
 		}
+		else if ( pvalue[0] == 4 )
+		{
+			activity22_log_sendlist( actor_index );
+		}
 		break;
 	default:
 		break;

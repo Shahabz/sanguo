@@ -1254,18 +1254,29 @@ function WorldMap.MarchTime(fposx, fposy, tposx, tposy)
         return 0;
     end
 	
+    local duration = math.floor(distance) * speed;
+    duration = math.ceil(duration*( 1.0-GetPlayer().m_attr.m_movespeed_per[1]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[2]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[3]/100) );
+    duration = math.max(duration, speed);
+	
 	-- 优先检查皇城区域向非皇城区域行军
 	if fposx >= g_zoneinfo[MAPZONE_CENTERID].top_left_posx and fposx <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx and 
 		fposy >= g_zoneinfo[MAPZONE_CENTERID].top_left_posy and fposy <= g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy then
 		if  tposx < g_zoneinfo[MAPZONE_CENTERID].top_left_posx or tposx > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posx or
 			tposy < g_zoneinfo[MAPZONE_CENTERID].top_left_posy or tposy > g_zoneinfo[MAPZONE_CENTERID].bottom_right_posy then
-			return global.army_move_kingzone;
+			if duration > global.army_move_kingzone then
+				return global.army_move_kingzone;
+			end
 		end
 	end
 	
-    local duration = math.floor(distance) * speed;
-    duration = math.ceil(duration*( 1.0-GetPlayer().m_attr.m_movespeed_per[1]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[2]/100)*( 1.0-GetPlayer().m_attr.m_movespeed_per[3]/100) );
-    duration = math.max(duration, speed);
+	-- 洛阳血战行军
+	if tposx == g_towninfo[200].posx and tposy == g_towninfo[200].posy then
+		if g_Activity22Open then
+			if duration > global.army_move_kingzone then
+				return global.army_move_kingzone;
+			end
+		end
+	end
     return duration;
 end
 

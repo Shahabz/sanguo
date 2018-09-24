@@ -3845,3 +3845,42 @@ int struct_NetS_Act22Update_send( char **pptr, int *psize, SLK_NetS_Act22Update 
 	return 0;
 }
 
+int struct_NetS_Act22LogUnit_send( char **pptr, int *psize, SLK_NetS_Act22LogUnit *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_namelen, (*psize) );
+	if( pValue->m_namelen > 0 && pValue->m_namelen <= 32 )
+		LKSET_MEM_SEND( (*pptr), pValue->m_name, pValue->m_namelen*sizeof(char), (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_nation, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_totals, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_lost, (*psize) );
+	LKSET_MEM_SEND( (*pptr), pValue->m_herokind, 4*sizeof(short), (*psize) );
+	return 0;
+}
+
+int struct_NetS_Act22Log_send( char **pptr, int *psize, SLK_NetS_Act22Log *pValue )
+{
+	int tmpi = 0;
+
+	struct_NetS_Act22LogUnit_send( pptr, psize, &pValue->m_attack );
+	struct_NetS_Act22LogUnit_send( pptr, psize, &pValue->m_defense );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_optime, (*psize) );
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_win, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_Act22LogList_send( char **pptr, int *psize, SLK_NetS_Act22LogList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_SBYTE_SEND( (*pptr), &pValue->m_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_count; tmpi++ )
+	{
+		struct_NetS_Act22Log_send( pptr, psize, &pValue->m_list[tmpi] );
+	}
+	return 0;
+}
+

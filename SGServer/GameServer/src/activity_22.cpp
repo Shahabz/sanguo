@@ -105,13 +105,13 @@ void activity_22_onwarning( int lefttime )
 {
 	if ( lefttime < 0 )
 		return;
-	int countdown = lefttime / 60; //倒计时（分钟）
+	int countdown = lefttime; //倒计时
 
 	// 6039	洛阳血战将在{0}分钟后开启，请参加血战的玩家前往司隶！
-	if ( countdown == 30 || countdown == 5 || countdown == 1 )
+	if ( countdown == 600 || countdown == 300 || countdown == 60 )
 	{
 		char v1[64] = { 0 };
-		sprintf( v1, "%d", countdown );
+		sprintf( v1, "%d", countdown/60 );
 		system_talkjson_world( 6039, v1, NULL, NULL, NULL, NULL, NULL, 2 );
 	}
 }
@@ -710,7 +710,7 @@ void activity22_fight()
 	}
 
 	// 双方都有人，战斗
-	if ( fight_start( attack_army_index, MAPUNIT_TYPE_TOWN, defense_army_index ) < 0 )
+	if ( fight_start( attack_army_index, MAPUNIT_TYPE_ARMY, defense_army_index ) < 0 )
 	{
 		return;
 	}
@@ -724,8 +724,55 @@ void activity22_fight()
 	activity22_addkill( attack_army_index, g_fight.attack_total_damage );
 	activity22_addkill( defense_army_index, g_fight.defense_total_damage );
 
+	char v1[32] = { 0 };
+	char v2[32] = { 0 };
+	char v3[32] = { 0 };
+	char v4[32] = { 0 };
+	char v5[32] = { 0 };
+	char v6[32] = { 0 };
+
+	i64 mailid = 0;
+	char title[MAIL_TITLE_MAXSIZE] = { 0 };
+	char content[MAIL_CONTENT_MAXSIZE] = { 0 };
+
+	City *pAttackCity = fight_getcityptr( FIGHT_ATTACK );
+	City *pDefenseCity = fight_getcityptr( FIGHT_DEFENSE );
+
 	if ( g_fight.result == FIGHT_WIN )
 	{ // 进攻方胜利
+
+		if ( pAttackCity && pDefenseCity )
+		{
+			// 6043	洛阳战报: (进攻方)[{0}]{1}<color=E80017FF>损兵{2}</color> 战胜 (防守方)[{3}]{4}<color=E80017FF>损兵{5}</color>
+			sprintf( v1, "%s%d", TAG_NATION, pAttackCity->nation );
+			sprintf( v2, "%s", pAttackCity->name );
+			sprintf( v3, "%d", g_fight.defense_total_damage );
+			sprintf( v4, "%s%d", TAG_NATION, pDefenseCity->nation );
+			sprintf( v5, "%s", pDefenseCity->name );
+			sprintf( v6, "%d", g_fight.attack_total_damage );
+			system_talkjson_world( 6043, v1, v2, v3, v4, v5, v6, -1 );
+
+			// 进攻成功邮件
+			sprintf( title, "%s%d", TAG_TEXTID, 5059 );// 进攻胜利
+			sprintf( content, "{\"my\":1,\"win\":1,\"na\":\"%s\",\"n\":%d,\"tna\":\"%s\",\"tn\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+				pAttackCity->name, pAttackCity->nation, pDefenseCity->name, pDefenseCity->nation, pAttackCity->temp_wounded_soldiers[0], pAttackCity->temp_wounded_soldiers[1], pAttackCity->temp_wounded_soldiers[2] );
+			mailid = mail( pAttackCity->actor_index, pAttackCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY22, title, content, "", 0, 0 );
+			if ( mailid > 0 )
+			{
+				mail_fight( mailid, pAttackCity->actorid, g_fight.unit_json );
+			}
+
+			// 防守失败邮件
+			sprintf( title, "%s%d", TAG_TEXTID, 5062 );// 防守失败
+			sprintf( content, "{\"my\":2,\"win\":0,\"na\":\"%s\",\"n\":%d,\"tna\":\"%s\",\"tn\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+				pDefenseCity->name, pDefenseCity->nation, pAttackCity->name, pAttackCity->nation, pDefenseCity->temp_wounded_soldiers[0], pDefenseCity->temp_wounded_soldiers[1], pDefenseCity->temp_wounded_soldiers[2] );
+			mailid = mail( pDefenseCity->actor_index, pDefenseCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY22, title, content, "", 0, 0 );
+			if ( mailid > 0 )
+			{
+				mail_fight( mailid, pDefenseCity->actorid, g_fight.unit_json );
+			}
+		}
+
 		activity22_totalcalc( ACTIVITY22_ATTACK );
 		// 删除一个防守方
 		army_delete( defense_army_index );
@@ -733,46 +780,44 @@ void activity22_fight()
 	}
 	else
 	{ // 防御方胜利
+
+		if ( pAttackCity && pDefenseCity )
+		{
+			// 6044 洛阳战报: (防守方)[{0}]{1}<color=E80017FF>损兵{2}</color> 战胜 (进攻方)[{3}]{4}<color=E80017FF>损兵{5}</color>
+			sprintf( v1, "%s%d", TAG_NATION, pDefenseCity->nation );
+			sprintf( v2, "%s", pDefenseCity->name );
+			sprintf( v3, "%d", g_fight.attack_total_damage );
+			sprintf( v4, "%s%d", TAG_NATION, pAttackCity->nation );
+			sprintf( v5, "%s", pAttackCity->name );
+			sprintf( v6, "%d", g_fight.defense_total_damage );
+			system_talkjson_world( 6044, v1, v2, v3, v4, v5, v6, -1 );
+
+			// 进攻失败邮件
+			sprintf( title, "%s%d", TAG_TEXTID, 5060 );// 进攻失败
+			sprintf( content, "{\"my\":1,\"win\":0,\"na\":\"%s\",\"n\":%d,\"tna\":\"%s\",\"tn\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+				pAttackCity->name, pAttackCity->nation, pDefenseCity->name, pDefenseCity->nation, pAttackCity->temp_wounded_soldiers[0], pAttackCity->temp_wounded_soldiers[1], pAttackCity->temp_wounded_soldiers[2] );
+			mailid = mail( pAttackCity->actor_index, pAttackCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY22, title, content, "", 0, 0 );
+			if ( mailid > 0 )
+			{
+				mail_fight( mailid, pAttackCity->actorid, g_fight.unit_json );
+			}
+
+			// 防守失败邮件
+			sprintf( title, "%s%d", TAG_TEXTID, 5061 );// 防守胜利
+			sprintf( content, "{\"my\":2,\"win\":1,\"na\":\"%s\",\"n\":%d,\"tna\":\"%s\",\"tn\":%d,\"ws0\":%d,\"ws1\":%d,\"ws2\":%d}",
+				pDefenseCity->name, pDefenseCity->nation, pAttackCity->name, pAttackCity->nation, pDefenseCity->temp_wounded_soldiers[0], pDefenseCity->temp_wounded_soldiers[1], pDefenseCity->temp_wounded_soldiers[2] );
+			mailid = mail( pDefenseCity->actor_index, pDefenseCity->actorid, MAIL_TYPE_FIGHT_ACTIVITY22, title, content, "", 0, 0 );
+			if ( mailid > 0 )
+			{
+				mail_fight( mailid, pDefenseCity->actorid, g_fight.unit_json );
+			}
+		}
+
 		activity22_totalcalc( ACTIVITY22_DEFENSE );
 		// 删除一个攻击方
 		army_delete( attack_army_index );
 		activity22_sendupdate( ACTIVITY22_DEFENSE );
 	}
-	
-	// 战斗通知
-	/*SLK_NetS_KingWarNotify pValue = { 0 };
-	pValue.m_id = id;
-	pValue.m_result = g_fight.result;
-
-	pValue.m_a_losthp = g_fight.defense_total_damage;
-	pValue.m_d_losthp = g_fight.attack_total_damage;
-
-	pValue.m_a_nation = army_getnation( attack_army_index );
-	pValue.m_d_nation = army_getnation( defense_army_index );
-
-	pValue.m_a_heroid = g_army[attack_army_index].herokind[0];
-	pValue.m_d_heroid = g_army[defense_army_index].herokind[0];
-
-	City *pACity = army_getcityptr( attack_army_index );
-	if ( pACity )
-	{
-		pACity->kw_totalkill += g_fight.attack_total_damage;
-		pValue.m_a_color = hero_getcolor( pACity, pValue.m_a_heroid );
-		strncpy( pValue.m_a_name, pACity->name, NAME_SIZE );
-		pValue.m_a_name_len = strlen( pValue.m_a_name );
-	}
-
-	City *pDCity = army_getcityptr( defense_army_index );
-	if ( pDCity )
-	{
-		pDCity->kw_totalkill += g_fight.defense_total_damage;
-		pValue.m_d_heroid = hero_getcolor( pDCity, pValue.m_d_heroid );
-		strncpy( pValue.m_d_name, pDCity->name, NAME_SIZE );
-		pValue.m_d_name_len = strlen( pValue.m_d_name );
-	}
-
-	netsend_kingwarnotify_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE_NATION + pValue.m_a_nation, &pValue );
-	netsend_kingwarnotify_S( SUBSCRIBE_CMD_KINGWARDLG, SENDTYPE_SUBSCRIBE_NATION + pValue.m_d_nation, &pValue );*/
 }
 
 void activity22_army_makestruct( int index, Army *pArmy, SLK_NetS_Act22Army *pValue )
@@ -1014,5 +1059,10 @@ int activity22_mapsendinfo( int actor_index )
 	{
 		netsend_kingwaractivity_S( 0, SENDTYPE_WORLDMAP, &pValue );
 	}
+	return 0;
+}
+
+int activity22_log_sendlist( int actor_index )
+{
 	return 0;
 }

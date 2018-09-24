@@ -1470,13 +1470,13 @@ void activity_12_onwarning( int lefttime )
 {
 	if ( lefttime < 0 )
 		return;
-	int countdown = lefttime / 60; //倒计时（分钟）
+	int countdown = lefttime; //倒计时
 
 	// 6036	南蛮入侵活动将在{0}分钟后开启，请参加守城的玩家前往活动信息页面开启活动！
-	if ( countdown == 10 || countdown == 5 || countdown == 1 )
+	if ( countdown == 600 || countdown == 300 || countdown == 60 )
 	{
 		char v1[64] = { 0 };
-		sprintf( v1, "%d", countdown );
+		sprintf( v1, "%d", countdown/60 );
 		system_talkjson_world( 6036, v1, NULL, NULL, NULL, NULL, NULL, 2 );
 	}
 }
@@ -1795,13 +1795,13 @@ void activity_27_onwarning( int lefttime )
 {
 	if ( lefttime < 0 )
 		return;
-	int countdown = lefttime / 60; //倒计时（分钟）
+	int countdown = lefttime; //倒计时（分钟）
 	
 	// 6033	据前哨来报，西凉暴乱，{0}分钟后将出现大量西凉铁骑，各位英雄速速前往平叛！
-	if ( countdown == 10 || countdown == 5 || countdown == 1 )
+	if ( countdown == 600 || countdown == 300 || countdown == 60 )
 	{
 		char v1[64] = { 0 };
-		sprintf( v1, "%d", countdown );
+		sprintf( v1, "%d", countdown/60 );
 		system_talkjson_world( 6033, v1, NULL, NULL, NULL, NULL, NULL, 2 );
 	}
 }
@@ -1833,7 +1833,7 @@ void activity_27_onclose()
 void activity_27_onlogic()
 {
 	g_activity_27_brushtime += 1;
-	if ( g_activity_27_brushtime >= global.activity27_brushmin )
+	if ( g_activity_27_brushtime >= global.activity27_brushmin*60 )
 	{
 		g_activity_27_brushtime = 0;
 		activity_27_brush();

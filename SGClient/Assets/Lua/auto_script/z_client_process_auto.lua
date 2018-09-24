@@ -1586,15 +1586,17 @@ function proc_systalkjson_C( recvValue )
 	else
 		msg = T( msgjson["text"] )
 	end
-			
-	local info = {}
-	info.m_actorid = -1;
-	info.m_name = T(564);
-	info.m_msg = msg
-	info.m_optime = recvValue.m_optime;
-	MainDlgSetChat( info );
-	BloodyBattleDlgSetChat( info );
-	ChatDlgRecv( info );
+	
+	if recvValue.m_roll and recvValue.m_roll >= 0 then		
+		local info = {}
+		info.m_actorid = -1;
+		info.m_name = T(564);
+		info.m_msg = msg
+		info.m_optime = recvValue.m_optime;
+		MainDlgSetChat( info );
+		--BloodyBattleDlgSetChat( info );
+		ChatDlgRecv( info );
+	end
 	
 	-- 有滚动消息
 	if recvValue.m_roll == 1 then
@@ -1606,6 +1608,16 @@ function proc_systalkjson_C( recvValue )
 		RollingMsgDlgShowMsg( "", msg );
 		RollingMsgDlgShowMsg( "", msg );
 		RollingMsgDlgShowMsg( "", msg );
+	
+	elseif recvValue.m_roll == -1 then
+		RollingMsgTopDlgShowMsg( "", msg );
+	elseif recvValue.m_roll == -2 then
+		RollingMsgTopDlgShowMsg( "", msg );
+		RollingMsgTopDlgShowMsg( "", msg );
+	elseif recvValue.m_roll == -3 then
+		RollingMsgTopDlgShowMsg( "", msg );
+		RollingMsgTopDlgShowMsg( "", msg );
+		RollingMsgTopDlgShowMsg( "", msg );
 	end
 end
 
@@ -2741,12 +2753,22 @@ end
 -- m_count=0,m_list={m_rank=0,m_namelen=0,m_name="[m_namelen]",m_nation=0,m_kill=0,[m_count]},
 function proc_act22ranklist_C( recvValue )
 	-- process.
-	Activity22FightDlgRankRecv( recvValue )
+	Activity22RankDlgRecv( recvValue )
 end
 
 -- m_value=0,
 function proc_act22update_C( recvValue )
 	-- process.
 	ColiseumInfoDlgFightUpdate( recvValue.m_value )
+end
+
+-- m_attack={m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_totals=0,m_lost=0,m_herokind={[4]},},m_defense={m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_totals=0,m_lost=0,m_herokind={[4]},},m_optime=0,m_win=0,m_index=0,
+function proc_act22log_C( recvValue )
+	-- process.
+end
+
+-- m_count=0,m_list={m_attack={m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_totals=0,m_lost=0,m_herokind={[4]},},m_defense={m_namelen=0,m_name="[m_namelen]",m_nation=0,m_level=0,m_totals=0,m_lost=0,m_herokind={[4]},},m_optime=0,m_win=0,m_index=0,[m_count]},
+function proc_act22loglist_C( recvValue )
+	-- process.
 end
 

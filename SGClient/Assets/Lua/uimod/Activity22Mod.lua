@@ -4,6 +4,7 @@ local m_uiMask = nil; --UnityEngine.GameObject
 local m_uiBack2 = nil; --UnityEngine.GameObject
 local m_uiActivityTime = nil; --UnityEngine.GameObject
 local m_uiGotoBtn = nil; --UnityEngine.GameObject
+local m_uiRankBtn = nil; --UnityEngine.GameObject
 g_Activity22Open = 0;
 ----------------------------------------
 -- 事件
@@ -15,6 +16,8 @@ function Activity22ModOnEvent( nType, nControlID, value, gameObject )
 		--print( "Button Clicked, nControlID:" .. nControlID );
 		if nControlID == 1 then
 			Activity22ModGoto()
+		elseif nControlID == 2 then
+			Activity22RankDlgShow()
 		end
 	elseif nType == UI_EVENT_PRESS then
 		if value == 0 then
@@ -34,6 +37,7 @@ function Activity22ModOnAwake( gameObject )
 	m_uiBack2 = objs[2];
 	m_uiActivityTime = objs[3];
 	m_uiGotoBtn = objs[4];
+	m_uiRankBtn = objs[5];
 end
 
 -- 界面初始化时调用
@@ -92,16 +96,18 @@ function Activity22ModSetTime()
 		SetTimer( m_uiActivityTime.transform:Find("Time"), info.m_starttime-servertime, info.m_starttime-servertime, 0, T(4267) )
 		SetTrue( m_uiActivityTime.transform:Find("Time") )
 		SetFalse( m_uiActivityTime.transform:Find("TimeOver") )
+		SetFalse( m_uiRankBtn )
 		
 	elseif servertime < info.m_endtime then
 		SetTimer( m_uiActivityTime.transform:Find("Time"), info.m_endtime-servertime, info.m_endtime-servertime, 0, T(4268) )
 		SetTrue( m_uiActivityTime.transform:Find("Time") )
 		SetFalse( m_uiActivityTime.transform:Find("TimeOver") )
-		
+		SetTrue( m_uiRankBtn )
 	else
 		SetFalse( m_uiActivityTime.transform:Find("Time") )
 		SetTrue( m_uiActivityTime.transform:Find("TimeOver") )
 		SetText( m_uiActivityTime.transform:Find("TimeOver"), T(4269) )
+		SetTrue( m_uiRankBtn )
 	end
 end
 

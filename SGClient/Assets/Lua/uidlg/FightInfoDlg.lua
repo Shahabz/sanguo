@@ -139,7 +139,7 @@ function FightInfoDlgShow( info )
 		if info["a_type"] == 0 and info["a_name"] == "" then 
 			SetText( m_uiLeftName, T(1360) );
 		else
-			SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+			SetText( m_uiLeftName, FightInfoDlgGetName( info["a_type"], info["a_name"], info["a_nation"] ) );
 		end
 		if info["a_nation"] > 0 then
 			SetTrue( m_uiLeftNation )
@@ -151,7 +151,7 @@ function FightInfoDlgShow( info )
 		if info["d_type"] == 0 and info["d_name"] == "" then 
 			SetText( m_uiRightName, T(1361) );
 		else
-			SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+			SetText( m_uiRightName, FightInfoDlgGetName( info["d_type"], info["d_name"], info["d_nation"] ) );
 		end
 		if info["d_nation"] > 0 then
 			SetTrue( m_uiRightNation )
@@ -175,7 +175,7 @@ function FightInfoDlgShow( info )
 	-- 我是防御方，防御方显示左面
 	else
 		-- 攻击方
-		SetText( m_uiLeftName, FightInfoDlgGetName( info["d_type"], info["d_name"] ) );
+		SetText( m_uiLeftName, FightInfoDlgGetName( info["d_type"], info["d_name"], info["d_nation"] ) );
 		if info["d_nation"] > 0 then
 			SetTrue( m_uiLeftNation )
 			SetImage( m_uiLeftNation, NationSprite( info["d_nation"] ) );
@@ -183,7 +183,7 @@ function FightInfoDlgShow( info )
 			SetFalse( m_uiLeftNation )
 		end
 		-- 防御方
-		SetText( m_uiRightName, FightInfoDlgGetName( info["a_type"], info["a_name"] ) );
+		SetText( m_uiRightName, FightInfoDlgGetName( info["a_type"], info["a_name"], info["a_nation"] ) );
 		if info["a_nation"] > 0 then
 			SetTrue( m_uiRightNation )
 			SetImage( m_uiRightNation, NationSprite( info["a_nation"] ) );
@@ -318,7 +318,7 @@ function FightDlgGetCenterImage(a_Corps,d_Corps)
 end
 
 -- 设置双方主角信息
-function FightInfoDlgGetName( type, name )
+function FightInfoDlgGetName( type, name, nation )
 	-- 玩家 部队 资源点
 	if type == MAPUNIT_TYPE_CITY or type == MAPUNIT_TYPE_ARMY or type == MAPUNIT_TYPE_RES then
 		return name;

@@ -171,7 +171,7 @@ int g_mysql_wait = 0;
 int g_save_wait = 0;
 
 int g_last_cmd = 0;
-
+extern char g_open_zone_luoyang;
 int g_maxactornum = 512;
 int g_frame_count;
 extern int g_nReadQueueHead;
@@ -1640,7 +1640,7 @@ int process_oclock_process( int hour )
 			BeginTm.tm_min = 0;
 			BeginTm.tm_sec = 0;
 			int beginstamp = (int)mktime( &BeginTm );
-			activity_set( ACTIVITY_12, nowstamp, beginstamp, beginstamp + global.activity12_duration, beginstamp + global.activity12_duration + 3600 );
+			activity_set( ACTIVITY_12, nowstamp, beginstamp, beginstamp + global.activity12_duration, beginstamp + global.activity12_duration + 7200 );
 		}
 		else if ( week == 0 || week == 2 || week == 4 )
 		{ // Î÷Á¹±©ÂÒ
@@ -1655,7 +1655,22 @@ int process_oclock_process( int hour )
 			BeginTm.tm_min = 0;
 			BeginTm.tm_sec = 0;
 			int beginstamp = (int)mktime( &BeginTm );
-			activity_set( ACTIVITY_27, nowstamp, beginstamp, beginstamp + global.activity27_duration, beginstamp + global.activity27_duration + 3600 );
+			activity_set( ACTIVITY_27, nowstamp, beginstamp, beginstamp + global.activity27_duration, beginstamp + global.activity27_duration + 7200 );
+		}
+		else if ( week == 5 && g_open_zone_luoyang == 1 )
+		{ // ÑªÕ½»Ê³Ç
+			time_t t;
+			time( &t );
+			struct tm *nowtime = localtime( &t );
+			struct tm BeginTm = { 0 };
+			BeginTm.tm_year = nowtime->tm_year;
+			BeginTm.tm_mon = nowtime->tm_mon;
+			BeginTm.tm_mday = nowtime->tm_mday;
+			BeginTm.tm_hour = global.activity22_begintime;
+			BeginTm.tm_min = 0;
+			BeginTm.tm_sec = 0;
+			int beginstamp = (int)mktime( &BeginTm );
+			activity_set( ACTIVITY_22, nowstamp, beginstamp, beginstamp + global.activity22_duration, beginstamp + global.activity22_duration + 7200 );
 		}
 	}
 
@@ -1781,7 +1796,8 @@ int process_logic()
 	}
 	else if ( tick == 6 )
 	{
-		kingwar_activity_logic();
+		activity_logic();
+		//kingwar_activity_logic();
 		activity22_fightlogic();
 		nation_official_logic();
 		map_call_logic();
@@ -1799,7 +1815,6 @@ int process_logic()
 		process_oclock_check();
 		weather_logic();
 		time_gmcmd_logic();
-		activity_logic();
 	}
 	else if ( tick == 10 )
 	{

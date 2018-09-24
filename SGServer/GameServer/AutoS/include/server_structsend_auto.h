@@ -2595,6 +2595,32 @@ struct _slk_NetS_Act22Update {
 };
 typedef struct _slk_NetS_Act22Update SLK_NetS_Act22Update;	//血战洛阳
 
+struct _slk_NetS_Act22LogUnit {
+	char m_namelen;	//洛阳血战战报
+	char m_name[32];	//洛阳血战战报
+	char m_nation;	//洛阳血战战报
+	short m_level;	//洛阳血战战报
+	int m_totals;	//洛阳血战战报
+	int m_lost;	//洛阳血战战报
+	short m_herokind[4];	//洛阳血战战报
+};
+typedef struct _slk_NetS_Act22LogUnit SLK_NetS_Act22LogUnit;	//战报
+
+struct _slk_NetS_Act22Log {
+	SLK_NetS_Act22LogUnit m_attack;	//洛阳血战战报
+	SLK_NetS_Act22LogUnit m_defense;	//洛阳血战战报
+	int m_optime;	//洛阳血战战报
+	char m_win;	//洛阳血战战报
+	short m_index;	//洛阳血战战报
+};
+typedef struct _slk_NetS_Act22Log SLK_NetS_Act22Log;	//战报
+
+struct _slk_NetS_Act22LogList {
+	char m_count;	//洛阳血战战报列表
+	SLK_NetS_Act22Log m_list[5];	//洛阳血战战报列表
+};
+typedef struct _slk_NetS_Act22LogList SLK_NetS_Act22LogList;	//战报列表
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -2878,5 +2904,8 @@ int struct_NetS_Act22ArmyList_send( char **pptr, int *psize, SLK_NetS_Act22ArmyL
 int struct_NetS_Act22Rank_send( char **pptr, int *psize, SLK_NetS_Act22Rank *pValue );
 int struct_NetS_Act22RankList_send( char **pptr, int *psize, SLK_NetS_Act22RankList *pValue );
 int struct_NetS_Act22Update_send( char **pptr, int *psize, SLK_NetS_Act22Update *pValue );
+int struct_NetS_Act22LogUnit_send( char **pptr, int *psize, SLK_NetS_Act22LogUnit *pValue );
+int struct_NetS_Act22Log_send( char **pptr, int *psize, SLK_NetS_Act22Log *pValue );
+int struct_NetS_Act22LogList_send( char **pptr, int *psize, SLK_NetS_Act22LogList *pValue );
 
 #endif
