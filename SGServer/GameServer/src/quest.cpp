@@ -166,6 +166,20 @@ int quest_addvalue( City *pCity, int datatype, int datakind, int dataoffset, int
 				}
 			}
 		}
+		else if ( questinfo->datatype == QUEST_DATATYPE_HERO_UP )
+		{ // 上阵武将
+			if ( questinfo->datakind >= 0 )
+			{
+				pCity->questvalue[tmpi] += value;
+				if ( pCity->questvalue[tmpi] >= questinfo->needvalue )
+				{
+					if ( pCity->actor_index >= 0 && pCity->actor_index < g_maxactornum && tmpi == 0 )
+					{ // 任务完成，通知领奖
+						quest_sendawardinfo( pCity->actor_index, questid, QUEST_TYPE_MAIN );
+					}
+				}
+			}
+		}
 		else
 		{
 			if ( questinfo->datakind > 0 && questinfo->datakind == datakind || questinfo->datakind == 0 )

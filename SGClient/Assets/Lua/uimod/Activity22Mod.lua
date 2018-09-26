@@ -42,7 +42,13 @@ end
 
 -- 界面初始化时调用
 function Activity22ModOnStart( gameObject )
+	ResourceManager.LoadAssetBundle( "_ab_activity_pic_16" )
+	ResourceManager.LoadAssetBundle( "_ab_activity_pic_21" )
+	ResourceManager.LoadAssetBundle( "_ab_activity_back_4" )
 	
+	SetImage( m_uiBack, LoadSprite("activity_pic_16") )
+	SetImage( m_uiMask.transform:Find("Shape"), LoadSprite("activity_pic_21") )
+	SetImage( m_uiBack2, LoadSprite("activity_back_4") )
 end
 
 -- 界面显示时调用
@@ -58,6 +64,9 @@ end
 -- 界面删除时调用
 function Activity22ModOnDestroy( gameObject )
 	m_Mod = nil
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_21" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_16" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_4" )
 end
 
 -- 每帧调用

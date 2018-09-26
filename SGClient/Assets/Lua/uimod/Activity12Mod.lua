@@ -82,6 +82,8 @@ end
 -- 界面删除时调用
 function Activity12ModOnDestroy( gameObject )
 	m_Mod = nil
+	ResourceManager.UnloadAssetBundle( "_ab_activity_pic_16" )
+	ResourceManager.UnloadAssetBundle( "_ab_activity_back_4" )
 end
 
 -- 每帧调用

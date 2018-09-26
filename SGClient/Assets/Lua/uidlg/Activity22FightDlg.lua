@@ -172,7 +172,7 @@ function Activity22FightDlgFightRecvA( recvValue )
 		ColiseumInfoDlgFightCreate( uiObj, info )
 		m_AttackTotals = m_AttackTotals + info.m_totals
 	end
-	SetText( m_uiAttackInfo.transform:Find("Totals"),F(4336,m_AttackTotals ) )
+	SetText( m_uiAttackInfo.transform:Find("Totals"),F(4337,m_AttackTotals ) )
 end
 function Activity22FightDlgFightRecvD( recvValue )
 	if m_Dlg == nil or IsActive( m_Dlg ) == false then
