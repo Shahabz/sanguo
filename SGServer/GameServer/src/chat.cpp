@@ -43,6 +43,13 @@ int chat_actortalk( int actor_index, char channel, char msgtype, char *msg )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	if ( g_actors[actor_index].level < global.chat_actorlevel )
+	{
+		char v1[16] = { 0 };
+		sprintf( v1, "%d", 20 );
+		actor_notify_pop_v( actor_index, 1744, v1, NULL );
+		return -1;
+	}
 	if ( g_actors[actor_index].forbidtime - (int)time( NULL ) > 0 )
 	{
 		actor_notify_pop( actor_index, 525 );

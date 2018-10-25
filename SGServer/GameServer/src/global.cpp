@@ -651,6 +651,8 @@ int global_init()
 			global.activity22_begintime = atoi( row[1] );
 		else if ( id == 243 )
 			global.activity22_duration = atoi( row[1] );
+		else if ( id == 244 )
+			global.chat_actorlevel = atoi( row[1] );
 	}
 	lua_setglobal( servL, "global" );
 	mysql_free_result( res );

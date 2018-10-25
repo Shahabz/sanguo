@@ -1,4 +1,5 @@
 #ifndef _GLOBAL_H_
+#define _GLOBAL_H_
 #include "share_memory.h"
 
 // 全局变量
@@ -216,6 +217,7 @@ typedef struct _global
 	char coliseum_todaynum;
 	int activity22_begintime;
 	int activity22_duration;
+	short chat_actorlevel;
 }Global;
 int global_init();
 void global_reload();

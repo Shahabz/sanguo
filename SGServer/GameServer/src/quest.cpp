@@ -1373,7 +1373,7 @@ int everyday_signin_getaward( int actor_index, int today )
 	int maxday = system_getcurmonth_maxday();
 	if ( maxday >= g_everyday_signin_maxnum || g_everyday_signin_maxnum <= 55 )
 		return -1;
-	if ( today <= 0 || today >= maxday )
+	if ( today <= 0 || today > maxday )
 		return -1;
 	if ( g_actors[actor_index].edsignin & (1 << (today - 1)) )
 		return -1;
