@@ -12,13 +12,19 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>5.6.3p4</UnityVersion>
     <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -27,7 +33,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,68 +43,87 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;ASYNC_MODE</DefineConstants>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_3;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_ANDROID;ENABLE_SUBSTANCE;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;UNITY_PRO_LICENSE;UNITY_HAS_GOOGLEVR</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Core" />
-    <Reference Include="Boo.Lang" />
-    <Reference Include="UnityScript.Lang" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="mscorlib">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/System.XML.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript.Lang">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/UnityScript.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Mono/lib/mono/unity/System.Xml.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library\UnityAssemblies\UnityEngine.TestRunner.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
-      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
-      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="LKCamera">
-      <HintPath>Assets\Plugins\LKCamera.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Assets\ThirdPartyPlugin\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Debugger">
-      <HintPath>Assets\ThirdPartyPlugin\Debugger.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/Debugger.dll</HintPath>
     </Reference>
     <Reference Include="ArabicSupport">
-      <HintPath>Assets\ThirdPartyPlugin\ArabicSupport.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/ArabicSupport.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
-      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/DOTween/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="DOTween43">
-      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween43.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/DOTween/DOTween43.dll</HintPath>
     </Reference>
     <Reference Include="DOTween50">
-      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween50.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/DOTween/DOTween50.dll</HintPath>
     </Reference>
     <Reference Include="DOTween46">
-      <HintPath>Assets\ThirdPartyPlugin\DOTween\DOTween46.dll</HintPath>
+      <HintPath>Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -305,6 +330,9 @@
     <Compile Include="Assets\Source\Generate\UITweenScaleWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenSizeDeltaWrap.cs" />
     <Compile Include="Assets\Source\Generate\UITweenWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UniWebViewHelperWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UniWebViewTransitionEdgeWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UniWebViewWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationBlendModeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationClipWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_AnimationStateWrap.cs" />
@@ -381,6 +409,7 @@
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_SliderWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_TextWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_UI_ToggleWrap.cs" />
+    <Compile Include="Assets\Source\Generate\UnityEngine_WWWFormWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_WWWWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UtilsWrap.cs" />
@@ -547,6 +576,16 @@
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnitySlot.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityTextureData.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\DragonBones\src\DragonBones\unity\UnityUGUIDisplay.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Interface\UniWebViewAndroid.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Interface\UniWebViewCocoa.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Interface\UniWebViewPlaceholder.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebView.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewHelper.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewLogger.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewMessage.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewNativeListener.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewToolbarPosition.cs" />
+    <Compile Include="Assets\ThirdPartyPlugin\UniWebView\Script\UniWebViewTransitionEdge.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyAssetIdentify.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyDelegateUtil.cs" />
     <Compile Include="Assets\ThirdPartyPlugin\YLYRichText\Scripts\YlyRichText.cs" />
@@ -606,7 +645,6 @@
   <ItemGroup>
     <None Include="Assets\PackAssets\Data\MaskWord.txt" />
     <None Include="Assets\PackAssets\Data\app.txt" />
-    <None Include="Assets\PackAssets\Data\app_.txt" />
     <None Include="Assets\PackAssets\Data\audio.txt" />
     <None Include="Assets\PackAssets\Data\en-us\localize.txt" />
     <None Include="Assets\PackAssets\Data\en-us\localize_item.txt" />
@@ -614,7 +652,6 @@
     <None Include="Assets\PackAssets\Data\localization_country.txt" />
     <None Include="Assets\PackAssets\Data\localization_language.txt" />
     <None Include="Assets\PackAssets\Data\plat.txt" />
-    <None Include="Assets\PackAssets\Data\plat_.txt" />
     <None Include="Assets\PackAssets\Data\resmap_object.txt" />
     <None Include="Assets\PackAssets\Data\resmap_prefab.txt" />
     <None Include="Assets\PackAssets\Data\resmap_sprite.txt" />
@@ -622,8 +659,12 @@
     <None Include="Assets\PackAssets\Data\zh-cn\localize.txt" />
     <None Include="Assets\PackAssets\Data\zh-cn\localize_item.txt" />
     <None Include="Assets\PackAssets\Data\zh-cn\localize_quest.txt" />
+    <None Include="Assets\PackAssets\Data\zh-tw\localize.txt" />
+    <None Include="Assets\PackAssets\Data\zh-tw\localize_item.txt" />
+    <None Include="Assets\PackAssets\Data\zh-tw\localize_quest.txt" />
     <None Include="Assets\PackAssets\Shader\AnimationAdditive.shader" />
     <None Include="Assets\PackAssets\Shader\AnimationAdditive_Cull.shader" />
+    <None Include="Assets\PackAssets\Shader\ColorGradation_HSV.shader" />
     <None Include="Assets\PackAssets\Shader\Dissolution.shader" />
     <None Include="Assets\PackAssets\Shader\Dissolution3D.shader" />
     <None Include="Assets\PackAssets\Shader\DoubleAnimationAdditive.shader" />
@@ -702,6 +743,7 @@
     <None Include="Assets\StreamingAssets\Data\zh-cn\localize_quest.txt" />
     <None Include="Assets\StreamingAssets\android_files.txt" />
     <None Include="Assets\StreamingAssets\resver.txt" />
+    <None Include="Assets\ThirdPartyPlugin\UniWebView\README.txt" />
     <None Include="Assets\ThirdPartyPlugin\YLYRichText\Shaders\YlyUISeqFrameAni.shader" />
     <None Include="Assets\ToLua\readme.txt" />
   </ItemGroup>
