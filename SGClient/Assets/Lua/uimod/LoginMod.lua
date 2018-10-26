@@ -35,6 +35,7 @@ local m_uiVisitBtn = nil; --UnityEngine.GameObject
 local m_uiRegDesc = nil; --UnityEngine.GameObject
 local m_uiRegEmailEdit = nil; --UnityEngine.GameObject
 local m_uiRegBtn = nil; --UnityEngine.GameObject
+local m_uiOverseas = nil; --UnityEngine.GameObject
 
 local m_uiSelectGroup = nil -- 选择的服务器分组
 local m_uiGroupCache = {} -- 服务器组对象缓存
@@ -175,7 +176,19 @@ function LoginModOnEvent( nType, nControlID, value )
 		-- 确定注册
 		elseif nControlID == 15 then
 			LoginModRegMakeSure()
-			
+		
+		-- Facebook登录
+		elseif nControlID == 21 then
+			SDK.FacebookLogin()
+		
+		-- Google登录
+		elseif nControlID == 22 then
+			SDK.GoogleLogin()
+		
+		-- Guest登录
+		elseif nControlID == 23 then
+			SDK.GuestLogin()
+					
 		-- 点击推荐分组	
 		elseif nControlID == 1000 then	
 			LoginModSelectGroup( nControlID );
@@ -335,6 +348,9 @@ function LoginModOnAwake( gameObject )
 			m_uiRegEmailEdit = objs[33];
 			m_uiRegBtn = objs[34];
 		end
+		if Length >= 36 then
+			m_uiOverseas = objs[35];
+		end
 	end
 	
 
@@ -355,6 +371,9 @@ function LoginModOnStart()
 		LoginModOpenTestLogin();
 	elseif Const.platid == 27 or Const.platid == 28 then
 		LoginModOpenTestLogin();
+	elseif Const.platid == 31 or Const.platid == 32 then
+		SDK.init()
+		LoginModOpenOverseasLogin();
 	elseif Const.platid > 11 then
 		SDK.init()
 		LoginModOpenSDKLogin();
@@ -641,6 +660,29 @@ function LoginModCloseSDKLogin()
 	end
 	-- 需要隐藏的
 	LoginModCloseTestLogin()
+end
+
+-- 显示海外登陆
+function LoginModOpenOverseasLogin()
+	if m_Dlg == nil then
+		return;
+	end
+	-- 需要隐藏的
+	LoginModCloseTestLogin()
+	SetTrue( m_uiOverseas )
+	SetFalse( m_uiServerInfo )
+	SetFalse( m_uiGameEnter )
+	SetFalse( m_uiButtonList )
+end
+
+-- 关闭海外登陆
+function LoginModCloseOverseasLogin()
+	if m_Dlg == nil then
+		return;
+	end
+	-- 需要隐藏的
+	LoginModCloseTestLogin()
+	
 end
 
 -- 请求服务器列表

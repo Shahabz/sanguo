@@ -54,6 +54,14 @@ public static class XCodePostProcess
 			EditorPlistLvke(path);
 			EditorCodeLvke(path);
 		}
+		else if(projectName== "yaya")
+		{ // 呀呀游戏
+			//project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
+			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
+			//project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
+			EditorPlistYaya(path);
+			EditorCodeYaya(path);
+		}
 		else if(projectName== "lsqxz")
 		{ // 繁体海外
 			EditorPlistFacebook(path);
@@ -121,7 +129,7 @@ public static class XCodePostProcess
 		//UnityAppController.WriteBelow("[GetAppController().unityView recreateGLESSurfaceIfNeeded];\n\t}\n","\t[[SplusInterfaceKit sharedInstance] applicationWillEnterForeground:application];");
     }
 
-	// 绿壳sdk
+	// 传娱sdk
 	private static void EditorPlistLvke(string filePath)
 	{
 		XCPlist2 list = new XCPlist2(filePath);
@@ -160,6 +168,47 @@ public static class XCodePostProcess
 		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
 		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <GameFramework/GameFramework.h>");
 		UnityAppController.WriteBelow("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);","[Game_Api Game_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];");
+	}
+
+	// 呀呀游戏
+	private static void EditorPlistYaya(string filePath)
+	{
+		XCPlist2 list = new XCPlist2(filePath);
+
+		string PhotoInfolist = @"
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>以照片的形式为您保存账号密码</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>以照片的形式为您保存账号密码</string>";
+		list.AddKey(PhotoInfolist);
+
+		string Infolist = @"
+		<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLIconFile</key>
+		<string></string>
+		<key>CFBundleURLName</key>
+		<string></string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>com.xxsg.zhangm1438496089</string>
+		</array>
+		</dict>
+		</array>";
+		list.AddKey(Infolist);
+
+		//保存
+		list.Save();
+	}
+	private static void EditorCodeYaya(string filePath)
+	{
+		// UnityAppController.mm
+		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
+		UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"","#import <GameUser_framwork/YvGameUserAPIManage.h>\n#define SDK_APPID    @\"1438496089\"");
+		UnityAppController.WriteBelow("[KeyboardDelegate Initialize];","[[YvGameUserAPIManage shareInstance] initWithAppId:SDK_APPID channelId:@\"xxsg001\" urlScheme:@\"com.xxsg.zhangm1438496089\" isTest:NO];");
 	}
 
 	// Facebook

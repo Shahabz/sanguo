@@ -35,8 +35,8 @@ public class ChannelSDK : MonoBehaviour
 	[DllImport("__Internal")]
 	private static extern void sdkSetExtendData( string jsonString );// 数据统计
 #endif
-	// 初始化
-	public void init( string jsonString )
+    // 初始化
+    public void init( string jsonString )
 	{
 #if UNITY_EDITOR
 #elif UNITY_ANDROID

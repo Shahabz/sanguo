@@ -13,13 +13,34 @@ function SDK.onInit( jsonResult )
 	local result =  info["result"];
 	if result == "1" then
 		Const.sdk_isinit = true;
-		SDK.login()
+		if Const.platid == 31 or Const.platid == 32 then
+			
+		else
+			SDK.login()
+		end
 	end
 end
 
 -- SDK登陆
 function SDK.login()
 	ChannelSDK.Instance:login("");
+end
+function SDK.GoogleLogin()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "google"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
+end
+function SDK.FacebookLogin()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "facebook"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
+end
+function SDK.GuestLogin()
+
 end
 
 -- SDK登陆回调

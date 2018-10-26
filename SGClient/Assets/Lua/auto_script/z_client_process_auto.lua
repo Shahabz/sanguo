@@ -13,6 +13,8 @@ function proc_login_C( recvValue )
 			LoginModOpenTestLogin();
 		elseif Const.platid == 27 or Const.platid == 28 then
 			LoginModOpenTestLogin();
+		elseif Const.platid == 31 or Const.platid == 32 then
+			LoginModOpenOverseasLogin();
 		else
 			LoginModOpenSDKLogin();
 		end
