@@ -1,5 +1,12 @@
 -- 渠道SDK
 SDK = SDK or {};
+
+-- Google
+SDK.logintype = ""
+SDK.GoogleUserName = ""
+SDK.GoogleUserId = ""
+SDK.GoogleIdToken = ""
+SDK.GoogleServerAuthCode = ""
 	
 -- SDK初始化
 function SDK.init()
@@ -50,26 +57,43 @@ function SDK.onLogin( jsonResult )
 
 	local result 	    = info["result"];
 	if result == "1" then
-		if Const.platid == 22 then
-			Const.sdk_timestamp = info["appId"];
-			Const.sdk_channelId = info["ChannelId"];
-			Const.sdk_uid 		= info["ChannelUserId"];
-			Const.sdk_token 	= info["token"];
-		elseif Const.platid == 26 then
-			Const.sdk_timestamp = info["timestamp"];
-			Const.sdk_channelId = info["ChannelId"];
-			Const.sdk_uid 		= info["ChannelUserId"];
-			Const.sdk_token 	= info["token"];
+		if info["logintype"] ~= nil then
+			if info["logintype"] == "google" then
+				
+			elseif info["logintype"] == "facebook" then
+				
+			end
 		else
-			Const.sdk_uid 		= info["uid"];
-			Const.sdk_token 	= info["token"];
-			Const.sdk_isverify 	= info["isverify"];
-			Const.sdk_timestamp = 0;
-			Const.sdk_channelId = 0;
+			if Const.platid == 22 then
+				Const.sdk_timestamp = info["appId"];
+				Const.sdk_channelId = info["ChannelId"];
+				Const.sdk_uid 		= info["ChannelUserId"];
+				Const.sdk_token 	= info["token"];
+			elseif Const.platid == 26 then
+				Const.sdk_timestamp = info["timestamp"];
+				Const.sdk_channelId = info["ChannelId"];
+				Const.sdk_uid 		= info["ChannelUserId"];
+				Const.sdk_token 	= info["token"];
+			else
+				Const.sdk_uid 		= info["uid"];
+				Const.sdk_token 	= info["token"];
+				Const.sdk_isverify 	= info["isverify"];
+				Const.sdk_timestamp = 0;
+				Const.sdk_channelId = 0;
+			end
 		end
 	else
 		SDK.login()
 	end
+end
+function SDK.onGoogleLogin( info )
+	SDK.logintype = info["logintype"]
+	SDK.GoogleUserName = info["UserName"]
+	SDK.GoogleUserId = info["UserId"]
+	SDK.GoogleIdToken = info["IdToken"]
+	SDK.GoogleServerAuthCode = info["ServerAuthCode"]
+end
+function SDK.onFacebookLogin( info )
 end
 
 -- SDK登出
