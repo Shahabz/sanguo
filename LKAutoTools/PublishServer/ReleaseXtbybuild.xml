@@ -21,15 +21,15 @@
 	<!-- 更新data数据库和基础game表 -->
 	<target name="sdata">
 			
-		<scp todir="root:game123,./@47.74.252.4:/data/three_base" port="22" trust="true">
+		<scp todir="root:BQpVqigXuHL2@47.74.252.4:/data/three_base" port="22" trust="true">
 		   <fileset file="./sgsql.tar.gz"/>
 		</scp>
 		
-		<scp todir="root:game123,./@47.74.252.4:/data/three_base/sql" port="22" trust="true">
+		<scp todir="root:BQpVqigXuHL2@47.74.252.4:/data/three_base/sql" port="22" trust="true">
 		   <fileset file="./sg_game_patch.sql"/>
 		</scp>
 
-		<sshexec host="47.74.252.4"  port="22" username="root"  password="game123,./"  
+		<sshexec host="47.74.252.4"  port="22" username="root"  password="BQpVqigXuHL2"  
          		trust="true" command="cd /data/three_base;./sql_shell"/>
          		
 	</target>
@@ -37,19 +37,19 @@
 	<!-- 上传到外网服务器 -->
 	<target name="s1">
 			
-		<scp todir="root:game123,./@47.74.252.4:/usr/local/three_s1/" port="22" trust="true">
+		<scp todir="root:BQpVqigXuHL2@47.74.252.4:/usr/local/three_s1/" port="22" trust="true">
 		   <fileset file="./sgserver.tar.gz"/>
 		</scp>
 
-		<scp todir="root:game123,./@47.74.252.4:/usr/local/three_s1/" port="22" trust="true">
+		<scp todir="root:BQpVqigXuHL2@47.74.252.4:/usr/local/three_s1/" port="22" trust="true">
 		   <fileset file="./sgsql.tar.gz"/>
 		</scp>
 		
-		<scp todir="root:game123,./@47.74.252.4:/usr/local/three_s1/sql" port="22" trust="true">
+		<scp todir="root:BQpVqigXuHL2@47.74.252.4:/usr/local/three_s1/sql" port="22" trust="true">
 		   <fileset file="./sg_game_patch.sql"/>
 		</scp>
 		 
-		<sshexec host="47.74.252.4"  port="22" username="root"  password="game123,./"
+		<sshexec host="47.74.252.4"  port="22" username="root"  password="BQpVqigXuHL2"
          		trust="true" command="cd /usr/local/three_s1;./stop_shell;./sql_shell;./start_shell"/>
          		
 	</target>
