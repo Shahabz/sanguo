@@ -4,9 +4,7 @@ SDK = SDK or {};
 -- Google
 SDK.logintype = ""
 SDK.GoogleUserName = ""
-SDK.GoogleUserId = ""
-SDK.GoogleIdToken = ""
-SDK.GoogleServerAuthCode = ""
+SDK.FirebaseUserId = ""
 	
 -- SDK初始化
 function SDK.init()
@@ -89,9 +87,7 @@ end
 function SDK.onGoogleLogin( info )
 	SDK.logintype = info["logintype"]
 	SDK.GoogleUserName = info["UserName"]
-	SDK.GoogleUserId = info["UserId"]
-	SDK.GoogleIdToken = info["IdToken"]
-	SDK.GoogleServerAuthCode = info["ServerAuthCode"]
+	SDK.FirebaseUserId = info["UserId"]
 end
 function SDK.onFacebookLogin( info )
 end

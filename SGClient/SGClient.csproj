@@ -116,24 +116,6 @@
     <Reference Include="DOTween46">
       <HintPath>Assets/ThirdPartyPlugin/DOTween/DOTween46.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Compat">
-      <HintPath>Assets/Parse/Plugins/Unity.Compat.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Auth">
-      <HintPath>Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.MiniJson">
-      <HintPath>Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.App">
-      <HintPath>Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Platform">
-      <HintPath>Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Tasks">
-      <HintPath>Assets/Parse/Plugins/Unity.Tasks.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEditor.dll</HintPath>
     </Reference>
@@ -661,12 +643,6 @@
     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Firebase\Editor\AppDependencies.xml" />
-    <None Include="Assets\Firebase\Editor\AuthDependencies.xml" />
-    <None Include="Assets\Firebase\Editor\FirebaseAuth_version-5.4.0_manifest.txt" />
-    <None Include="Assets\Firebase\Plugins\link.xml" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-app-unity\maven-metadata.xml" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-auth-unity\maven-metadata.xml" />
     <None Include="Assets\PackAssets\Data\MaskWord.txt" />
     <None Include="Assets\PackAssets\Data\app.txt" />
     <None Include="Assets\PackAssets\Data\audio.txt" />
@@ -740,19 +716,7 @@
     <None Include="Assets\PackAssets\Tiled2Unity\Tiled2Unity.export.txt" />
     <None Include="Assets\PackAssets\UI_Font\BMFont_Number_Big.fnt" />
     <None Include="Assets\PackAssets\UI_Font\BMFont_vipfont.fnt" />
-    <None Include="Assets\PlayServicesResolver\Editor\play-services-resolver_v1.2.92.0.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\Firebase\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-app-unity-5.4.0\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-app-unity-5.4.0\R.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-app-unity-5.4.0\proguard.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-auth-unity-5.4.0\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-auth-unity-5.4.0\R.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-auth-unity-5.4.0\proguard.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-common-16.0.3\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-common-16.0.3\R.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-common-16.0.3\proguard.txt" />
-    <None Include="Assets\Plugins\Android\com.google.firebase.firebase-common-16.0.3\third_party_licenses.txt" />
     <None Include="Assets\Resources\PackAssets\Effect\E1_DrogonMount\TransparentNoCull.shader" />
     <None Include="Assets\Resources\PackAssets\Effect\E1_DrogonMount\UI-Default.shader" />
     <None Include="Assets\Resources\PackAssets\Effect\E1_Lich_King\Unlit-Normal.shader" />
