@@ -40,7 +40,6 @@ public class UnityEngine_InputWrap
 		L.RegVar("stylusTouchSupported", get_stylusTouchSupported, null);
 		L.RegVar("touchSupported", get_touchSupported, null);
 		L.RegVar("multiTouchEnabled", get_multiTouchEnabled, set_multiTouchEnabled);
-		L.RegVar("location", get_location, null);
 		L.RegVar("compass", get_compass, null);
 		L.RegVar("deviceOrientation", get_deviceOrientation, null);
 		L.RegVar("imeCompositionMode", get_imeCompositionMode, set_imeCompositionMode);
@@ -592,20 +591,6 @@ public class UnityEngine_InputWrap
 		try
 		{
 			LuaDLL.lua_pushboolean(L, UnityEngine.Input.multiTouchEnabled);
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_location(IntPtr L)
-	{
-		try
-		{
-			ToLua.PushObject(L, UnityEngine.Input.location);
 			return 1;
 		}
 		catch(Exception e)
