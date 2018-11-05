@@ -153,6 +153,7 @@ public static class ToLuaExport
         "UIWidget.showHandlesWithMoveTool",
         "UIWidget.showHandles",
         "Input.IsJoystickPreconfigured",
+        "Input.location", // 会涉及GPS权限，比较敏感
         "UIDrawCall.isActive"
     };
 
