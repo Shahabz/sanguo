@@ -39,36 +39,41 @@ public static class XCodePostProcess
 		EditorPlist_all(path);
 		//TODO implement generic settings as a module option
 		Debug.Log(projectName);
-		if(projectName== "test")
-		{// 测试版
-			//project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Developer: JiaJia Wen (WT35G7885B)", "Release");
-			//project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
-			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
-			//project.overwriteBuildSetting( "CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
-		}
-		else if(projectName== "lvke")
-		{ // 绿壳
-			//project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
-			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
-			//project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
-			EditorPlistLvke(path);
-			EditorCodeLvke(path);
-		}
-		else if(projectName== "yaya")
-		{ // 呀呀游戏
-			//project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
-			//project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
-			//project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
-			EditorPlistYaya(path);
-			EditorCodeYaya(path);
-		}
-		else if(projectName== "lsqxz")
-		{ // 繁体海外
-			EditorPlistFacebook(path);
-			EditorCodeFacebook(path);
-		}
-		// Finally save the xcode project
-		project.Save();
+        if (projectName == "test")
+        {// 测试版
+         //project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Developer: JiaJia Wen (WT35G7885B)", "Release");
+         //project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
+         //project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
+         //project.overwriteBuildSetting( "CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
+        }
+        else if (projectName == "lvke")
+        { // 绿壳
+          //project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
+          //project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
+          //project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
+            EditorPlistLvke(path);
+            EditorCodeLvke(path);
+        }
+        else if (projectName == "yaya")
+        { // 呀呀游戏
+          //project.overwriteBuildSetting( "DEVELOPMENT_TEAM", "9C3LHQ7ULB", "Release");
+          //project.overwriteBuildSetting( "PROVISIONING_PROFILE_SPECIFIER", "dist_zysg", "Release");
+          //project.overwriteBuildSetting ("CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Distribution: JiaJia Wen (9C3LHQ7ULB)", "Release");
+            EditorPlistYaya(path);
+            EditorCodeYaya(path);
+        }
+        else if (projectName == "lsqxz")
+        { // 繁体海外
+            EditorPlistLsqxz(path);
+            EditorCodeLsqxz(path);
+        }
+        else if (projectName == "xtby")
+        {   // 海外独代
+            EditorPlistXtby(path);
+            EditorCodeXtby(path);
+        }
+        // Finally save the xcode project
+        project.Save();
 
 	}
 #endif
@@ -211,8 +216,8 @@ public static class XCodePostProcess
 		UnityAppController.WriteBelow("[KeyboardDelegate Initialize];","[[YvGameUserAPIManage shareInstance] initWithAppId:SDK_APPID channelId:@\"xxsg001\" urlScheme:@\"com.xxsg.zhangm1438496089\" isTest:NO];");
 	}
 
-	// Facebook
-	private static void EditorPlistFacebook(string filePath)
+	// lsqxz
+	private static void EditorPlistLsqxz(string filePath)
 	{
 		XCPlist2 list = new XCPlist2(filePath);
 
@@ -245,7 +250,7 @@ public static class XCodePostProcess
 		//保存
 		list.Save();
 	}
-	private static void EditorCodeFacebook(string filePath)
+	private static void EditorCodeLsqxz(string filePath)
 	{
 		// UnityAppController.mm
 		XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
@@ -255,8 +260,52 @@ public static class XCodePostProcess
 		UnityAppController.Replace("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return YES;","AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return [[FBSDKApplicationDelegate sharedInstance] application:application\n                                                         openURL:url\n                                               sourceApplication:sourceApplication\n                                                      annotation:annotation];;");
 	}
 
-	// ipx 齐刘海适配
-	public static void EditIphoneXCode(string path) 
+    // xtby
+    private static void EditorPlistXtby(string filePath)
+    {
+        XCPlist2 list = new XCPlist2(filePath);
+
+        string FacebookDialogsInfolist = @"
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+          <string>fbapi</string>
+          <string>fb-messenger-api</string>
+          <string>fbauth2</string>
+          <string>fbshareextension</string>
+        </array>";
+        list.AddKey(FacebookDialogsInfolist);
+
+        string Infolist = @"
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>fb951132541753415</string>
+          </array>
+          </dict>
+        </array>
+        <key>FacebookAppID</key>
+        <string>951132541753415</string>
+        <key>FacebookDisplayName</key>
+        <string>雄圖霸業</string>";
+        list.AddKey(Infolist);
+
+        //保存
+        list.Save();
+    }
+    private static void EditorCodeXtby(string filePath)
+    {
+        // UnityAppController.mm
+        XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
+        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <FBSDKCoreKit/FBSDKCoreKit.h>");
+        UnityAppController.WriteBelow("_didResignActive = false;", "[FBSDKAppEvents activateApp];");
+        UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", "[[FBSDKApplicationDelegate sharedInstance] application:application\n                           didFinishLaunchingWithOptions:launchOptions];");
+        UnityAppController.Replace("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return YES;", "AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return [[FBSDKApplicationDelegate sharedInstance] application:application\n                                                         openURL:url\n                                               sourceApplication:sourceApplication\n                                                      annotation:annotation];;");
+    }
+
+    // ipx 齐刘海适配
+    public static void EditIphoneXCode(string path) 
 	{
 		//插入代码
 		//读取UnityAppController.mm文件

@@ -3,8 +3,9 @@ SDK = SDK or {};
 
 -- Google
 SDK.logintype = ""
-SDK.GoogleUserName = ""
 SDK.FirebaseUserId = ""
+SDK.FirebaseUserName = ""
+SDK.provider = nil
 	
 -- SDK初始化
 function SDK.init()
@@ -19,7 +20,14 @@ function SDK.onInit( jsonResult )
 	if result == "1" then
 		Const.sdk_isinit = true;
 		if Const.platid == 31 or Const.platid == 32 then
-			
+			local logintype = GameManager.ini("OVERSEAS_LOGINTYPE", "");
+			if logintype == "google" then
+				SDK.GoogleLogin()
+			elseif logintype == "facebook" then
+				SDK.FacebookLogin()
+			elseif logintype == "anonymous" then
+				SDK.GuestLogin()
+			end
 		else
 			SDK.login()
 		end
@@ -45,7 +53,11 @@ function SDK.FacebookLogin()
 	ChannelSDK.Instance:login(jsonMsg);
 end
 function SDK.GuestLogin()
-
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "anonymous"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
 end
 
 -- SDK登陆回调
@@ -55,12 +67,16 @@ function SDK.onLogin( jsonResult )
 
 	local result 	    = info["result"];
 	if result == "1" then
-		if info["logintype"] ~= nil then
+		if info["logintype"] ~= nil then	
 			if info["logintype"] == "google" then
-				
+				SDK.onFirebaseLogin( info )
 			elseif info["logintype"] == "facebook" then
-				
+				SDK.onFirebaseLogin( info )
+			elseif info["logintype"] == "anonymous" then
+				SDK.onFirebaseLogin( info )
 			end
+			GameManager.writeini( "OVERSEAS_LOGINTYPE", info["logintype"] )
+			LoginModSetDesc( jsonResult )
 		else
 			if Const.platid == 22 then
 				Const.sdk_timestamp = info["appId"];
@@ -84,12 +100,20 @@ function SDK.onLogin( jsonResult )
 		SDK.login()
 	end
 end
-function SDK.onGoogleLogin( info )
+function SDK.onFirebaseLogin( info )
 	SDK.logintype = info["logintype"]
-	SDK.GoogleUserName = info["UserName"]
-	SDK.FirebaseUserId = info["UserId"]
-end
-function SDK.onFacebookLogin( info )
+	if info["provider"] ~= nil then
+		SDK.provider = info["provider"]
+	else
+		SDK.provider = nil
+	end
+	SDK.FirebaseUserId = info["userid"]
+	if info["username"] ~= nil then
+		SDK.FirebaseUserName = info["username"]
+	else
+		SDK.FirebaseUserName = ""
+	end
+	LoginModCloseOverseasLogin()
 end
 
 -- SDK登出
@@ -111,6 +135,12 @@ function SDK.onLogout( jsonResult )
 		GameManager.Restart();
 		GameManager.Logout( 1 );
 		SDK.login()
+	elseif result == "3" then
+		if Const.platid == 31 or Const.platid == 32 then
+			GameManager.writeini( "OVERSEAS_LOGINTYPE", "" )
+		end
+		GameManager.Restart();
+		GameManager.Logout( 1 );
 	end
 end
 
@@ -247,6 +277,20 @@ function SDK.pay( recvValue )
 	
 	-- 海外繁体android	
 	elseif Const.platid == 28 then
+	
+	-- 海外独代ios
+	elseif Const.platid == 31 then
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_notifyurl"] = url.."server/xtby/iap_verify.php"
+		local jsonMsg = json.encode( info );
+		ChannelSDK.Instance:pay( jsonMsg );
+	
+	-- 海外独代android http://47.74.252.4/three/server/xtby/google_iap_verify.php
+	elseif Const.platid == 32 then
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_notifyurl"] = url.."server/xtby/google_iap_verify.php"
+		local jsonMsg = json.encode( info );
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 
@@ -335,5 +379,41 @@ function SDK.setExtendData( step )
 		local jsonMsg = json.encode( info );   
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	end
+end
+
+-- 绑定Facebook
+function SDK.BindFacebook()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "fb_bind"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
+end
+
+-- 绑定Google
+function SDK.BindGoogle()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "gp_bind"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
+end
+
+-- 解绑Facebook
+function SDK.UnBindFacebook()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "fb_unbind"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
+end
+
+-- 解绑Google
+function SDK.UnBindGoogle()
+	local json = require "cjson"
+	local info = {}
+	info["logintype"] = "gp_unbind"
+	local jsonMsg = json.encode( info ); 
+	ChannelSDK.Instance:login(jsonMsg);
 end
 

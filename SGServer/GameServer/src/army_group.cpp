@@ -1216,7 +1216,7 @@ int armygroup_vs_town( int group_index, Fight *pFight )
 		sprintf( v2, "%s%d", TAG_TOWNID, townid );
 		sprintf( v3, "%d,%d", g_towninfo[townid].posx, g_towninfo[townid].posy );
 		sprintf( v4, "%s", attackName );
-		sprintf( v5, "%s%d", TAG_NATION, g_map_town[townid].nation );
+		sprintf( v5, "%s%d", TAG_NATION, attackNation );
 		system_talkjson( 0, pTown->nation, 6001, v1, v2, v3, v5, v4, NULL, 1 );
 
 		if ( g_towninfo[townid].type == MAPUNIT_TYPE_TOWN_XIAN )

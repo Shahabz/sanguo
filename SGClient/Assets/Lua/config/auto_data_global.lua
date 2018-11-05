@@ -240,3 +240,6 @@ global.activity12_duration = 7200 --南蛮入侵持续时间
 global.activity27_begintime = 20 --西凉开始时间
 global.activity12_begintime = 20 --南蛮开始时间
 global.coliseum_todaynum = 5 --竞技场每日挑战次数
+global.activity22_begintime = 20 --洛阳血战开始时间
+global.activity22_duration = 3600 --洛阳血战持续时间
+global.chat_actorlevel = 20 --聊天等级限制

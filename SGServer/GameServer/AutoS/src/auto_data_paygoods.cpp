@@ -47,7 +47,7 @@ int paygoods_init_auto()
 	g_paygoods = (PayGoods *)malloc( sizeof(PayGoods)*g_paygoods_maxnum );
 	memset( g_paygoods, 0, sizeof(PayGoods)*g_paygoods_maxnum );
 
-	sprintf( szSQL, "select `goodsid`,`tier`,`point`,`token`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount`,`productid_a`,`productid_b`,`productid_c`,`productid_d`,`productid_e`,`productid_f`,`productid_g`,`productid_h`,`productid_i` from paygoods;" );
+	sprintf( szSQL, "select `goodsid`,`tier`,`point`,`token`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount`,`productid_a`,`productid_b`,`productid_c`,`productid_d`,`productid_e`,`productid_f`,`productid_g`,`productid_h`,`productid_i`,`productid_j`,`productid_k`,`productid_l`,`productid_m`,`productid_n`,`productid_o` from paygoods;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -85,6 +85,12 @@ int paygoods_init_auto()
 		memcpy( g_paygoods[goodsid].productid_g, row[offset++], 64 ); g_paygoods[goodsid].productid_g[63]=0;
 		memcpy( g_paygoods[goodsid].productid_h, row[offset++], 64 ); g_paygoods[goodsid].productid_h[63]=0;
 		memcpy( g_paygoods[goodsid].productid_i, row[offset++], 64 ); g_paygoods[goodsid].productid_i[63]=0;
+		memcpy( g_paygoods[goodsid].productid_j, row[offset++], 64 ); g_paygoods[goodsid].productid_j[63]=0;
+		memcpy( g_paygoods[goodsid].productid_k, row[offset++], 64 ); g_paygoods[goodsid].productid_k[63]=0;
+		memcpy( g_paygoods[goodsid].productid_l, row[offset++], 64 ); g_paygoods[goodsid].productid_l[63]=0;
+		memcpy( g_paygoods[goodsid].productid_m, row[offset++], 64 ); g_paygoods[goodsid].productid_m[63]=0;
+		memcpy( g_paygoods[goodsid].productid_n, row[offset++], 64 ); g_paygoods[goodsid].productid_n[63]=0;
+		memcpy( g_paygoods[goodsid].productid_o, row[offset++], 64 ); g_paygoods[goodsid].productid_o[63]=0;
 	}
 	mysql_free_result( res );
 	return 0;

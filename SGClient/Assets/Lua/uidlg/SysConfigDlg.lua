@@ -10,6 +10,7 @@ local m_uiCDKey = nil; --UnityEngine.GameObject
 local m_uiSignatureInput = nil; --UnityEngine.GameObject
 local m_uiCDKeyInput = nil; --UnityEngine.GameObject
 local m_uiWaiting = nil; --UnityEngine.GameObject
+local m_uiUnBindBtn = nil; --UnityEngine.GameObject
 
 -- 打开界面
 function SysConfigDlgOpen()
@@ -51,6 +52,8 @@ function SysConfigDlgOnEvent( nType, nControlID, value, gameObject )
 			SysConfigDlgSendSignature()
 		elseif nControlID == 22 then
 			SysConfigDlgSendCdkey()	
+		elseif nControlID == 31 then
+			SysConfigDlgUnBind()
         end
 		
 	elseif nType == UI_EVENT_INPUTVALUECHANGED then
@@ -86,6 +89,7 @@ function SysConfigDlgOnAwake( gameObject )
 	m_uiSignatureInput = objs[7];
 	m_uiCDKeyInput = objs[8];
 	m_uiWaiting = objs[9];
+	m_uiUnBindBtn = objs[10];
 end
 
 -- 界面初始化时调用
@@ -122,11 +126,13 @@ function SysConfigDlgShow()
 	SysConfigDlgBaseReset()
 	SysConfigDlgLangReset()
 	
-	if Const.platid == 15 or Const.platid == 23 or Const.platid == 27 then
+	if Const.platid == 15 or Const.platid == 23 or Const.platid == 27 or Const.platid == 31 then
 		SetFalse(m_uiCDKey)
 	else
 		SetTrue(m_uiCDKey)
 	end
+	
+	SysConfigDlgUnBindSetInfo()
 end
 
 function SysConfigDlgBaseReset()
@@ -263,4 +269,26 @@ function SysConfigDlgSendCdkey()
 		return
 	end
 	system_askinfo( ASKINFO_CDKEY, cdkey, 0 );
+end
+
+-- 解绑
+function SysConfigDlgUnBindSetInfo()
+	if SDK.logintype == "google" then
+		SetTrue( m_uiUnBindBtn )
+		SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(353) )
+	elseif SDK.logintype == "facebook" then
+		SetTrue( m_uiUnBindBtn )
+		SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(352) )
+	else
+		SetFalse( m_uiUnBindBtn )
+	end
+end
+
+-- 解绑
+function SysConfigDlgUnBind()
+	if SDK.logintype == "google" then
+		SDK.UnBindGoogle()
+	elseif SDK.logintype == "facebook" then
+		SDK.UnBindFacebook()
+	end
 end

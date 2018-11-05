@@ -125,6 +125,9 @@ function LoginModOnEvent( nType, nControlID, value )
 				LoginModLoginLayer()
 			elseif Const.platid == 27 or Const.platid == 28 then
 				LoginModLoginLayer()
+			elseif Const.platid == 31 or Const.platid == 32 then
+				GameManager.writeini( "OVERSEAS_LOGINTYPE", "" )
+				SDK.logout()
 			elseif Const.platid > 11 then
 				SDK.logout()
 			else
@@ -188,7 +191,23 @@ function LoginModOnEvent( nType, nControlID, value )
 		-- Guest登录
 		elseif nControlID == 23 then
 			SDK.GuestLogin()
-					
+		
+		-- 绑定Facebook
+		elseif nControlID == 24 then
+			SDK.BindFacebook()
+		
+		-- 绑定Google
+		elseif nControlID == 25 then
+			SDK.BindGoogle()
+		
+		-- 解绑Facebook
+		elseif nControlID == 26 then
+			SDK.UnBindFacebook()
+		
+		-- 解绑Google
+		elseif nControlID == 27 then
+			SDK.UnBindGoogle()
+							
 		-- 点击推荐分组	
 		elseif nControlID == 1000 then	
 			LoginModSelectGroup( nControlID );
@@ -636,6 +655,9 @@ function LoginModEnterGame()
 				LoginModLogin()
 			end
 		end
+	
+	elseif Const.platid == 31 or Const.platid == 32	then
+		LoginModOverseasLogin()
 	else
 		LoginModSDKLogin()
 	end
@@ -670,6 +692,15 @@ function LoginModOpenOverseasLogin()
 	-- 需要隐藏的
 	LoginModCloseTestLogin()
 	SetTrue( m_uiOverseas )
+	if Const.platid == 31 then
+		SetTrue( m_uiOverseas.transform:Find("FBLoginBtn") )
+		SetFalse( m_uiOverseas.transform:Find("GPLoginBtn") )
+	elseif Const.platid == 32 then
+		SetTrue( m_uiOverseas.transform:Find("FBLoginBtn") )
+		SetTrue( m_uiOverseas.transform:Find("GPLoginBtn") )
+	end
+	SetTrue( m_uiOverseas.transform:Find("GuestLoginBtn") )
+	SetFalse( m_uiOverseas.transform:Find("User") )
 	SetFalse( m_uiServerInfo )
 	SetFalse( m_uiGameEnter )
 	SetFalse( m_uiButtonList )
@@ -682,7 +713,86 @@ function LoginModCloseOverseasLogin()
 	end
 	-- 需要隐藏的
 	LoginModCloseTestLogin()
+	SetTrue( m_uiOverseas )
+	SetFalse( m_uiOverseas.transform:Find("FBLoginBtn") )
+	SetFalse( m_uiOverseas.transform:Find("GPLoginBtn") )
+	SetFalse( m_uiOverseas.transform:Find("GuestLoginBtn") )
+	SetTrue( m_uiOverseas.transform:Find("User") )
+	SetTrue( m_uiServerInfo )
+	SetTrue( m_uiGameEnter )
+	SetTrue( m_uiButtonList )
 	
+	if SDK.logintype == "anonymous" then
+		SetText( m_uiOverseas.transform:Find("User/Name"), "Guest" )
+		local FBBindBtn = m_uiOverseas.transform:Find("User/ButtonList/FBBindBtn")
+		local GPBindBtn = m_uiOverseas.transform:Find("User/ButtonList/GPBindBtn")
+		if Const.platid == 31 then
+			SetTrue( FBBindBtn )
+			SetFalse( GPBindBtn )
+		elseif Const.platid == 32 then
+			SetTrue( FBBindBtn )
+			SetTrue( GPBindBtn )
+		end
+		if SDK.provider then
+			for k, v in pairs( SDK.provider ) do
+				if v["id"] == "google.com" then
+					SetFalse( GPBindBtn )
+				elseif v["id"] == "facebook.com" then
+					SetFalse( FBBindBtn )
+				end
+			end
+		end
+	else
+		local FBBindBtn = m_uiOverseas.transform:Find("User/ButtonList/FBBindBtn")
+		local GPBindBtn = m_uiOverseas.transform:Find("User/ButtonList/GPBindBtn")
+		SetFalse( FBBindBtn )
+		SetFalse( GPBindBtn )
+		gamelog("xxxx SDK.logintype == "..SDK.logintype)
+		if SDK.logintype == "google" then
+			gamelog("SDK.logintype == google")
+			if SDK.FirebaseUserName == "" or SDK.FirebaseUserName == nil then
+				gamelog("google SDK.FirebaseUserName == empty")
+				if SDK.provider ~= nil then
+					gamelog("google SDK.provider ~= nil")
+					for k, v in pairs( SDK.provider ) do
+						gamelog("google id:"..v["id"])
+						if v["id"] == "google.com" then
+							SDK.FirebaseUserName = v["name"]
+							gamelog("google v[name]="..v["name"])
+							break
+						end
+					end
+				end
+			end
+		elseif SDK.logintype == "facebook" then
+			gamelog("SDK.logintype == facebook")
+			if SDK.FirebaseUserName == "" or SDK.FirebaseUserName == nil then
+				gamelog("facebook SDK.FirebaseUserName == empty")
+				if SDK.provider ~= nil then
+					gamelog("facebook SDK.provider ~= nil")
+					for k, v in pairs( SDK.provider ) do
+						gamelog("facebook id:"..v["id"])
+						if v["id"] == "facebook.com" then
+							SDK.FirebaseUserName = v["name"]
+							gamelog("facebook v[name]="..v["name"])
+							break
+						end
+					end
+				end
+			end
+		end
+		SetText( m_uiOverseas.transform:Find("User/Name"), SDK.FirebaseUserName )
+	end
+	Const.sdk_uid = SDK.FirebaseUserId
+		
+	-- 请求服务器列表
+	LoginModAskServerList()
+end
+
+function LoginModSetDesc( desc )
+	gamelog( desc )
+	--SetTrue( m_uiOverseas.transform:Find("User") )
+	--SetText( m_uiOverseas.transform:Find("User/Desc"), desc )
 end
 
 -- 请求服务器列表
@@ -1126,6 +1236,30 @@ function LoginModSDKLogin()
 	if serverinfo == nil then
 		AlertMsg( T(411) )
 		LoginModOpenSDKLogin()
+		return
+	end
+	Network.SDKConnectServer( serverinfo["h"], serverinfo["p"] );
+	LoginModUsedServerSave()
+end
+
+-- 海外模式登陆
+function LoginModOverseasLogin()
+	if Const.sdk_uid == "" then
+		LoginModOpenOverseasLogin()
+		return
+	end
+	
+	LoginModCloseSDKLogin();
+	LoginModCloseTestLogin();
+	LoginModLoginQueue( true );
+	SetFalse( m_uiOverseas )
+	
+	GameManager.writeini( "LASTSERVERID", Const.serverid );
+	GameManager.writeini( "LASTLOGINTYPE", 3 );	
+	local serverinfo = LoginModGetServerInfo( Const.serverid )
+	if serverinfo == nil then
+		AlertMsg( T(411) )
+		LoginModOpenOverseasLogin()
 		return
 	end
 	Network.SDKConnectServer( serverinfo["h"], serverinfo["p"] );

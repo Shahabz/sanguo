@@ -988,21 +988,27 @@ int map_town_owner_award_actor( int townid )
 		awardgroup = g_towninfo[townid].other_award;
 	}
 
-	// ½±Àø£¬2¸ö
-	char attach[256] = { 0 };
-	awardgroup_mail( awardgroup, 0, attach );
-	awardgroup_mail( awardgroup, 0, attach );
+	if ( townid == MAPUNIT_KING_TOWNID )
+	{ // ÂåÑô
+	}
+	else
+	{
+		// ½±Àø£¬2¸ö
+		char attach[256] = { 0 };
+		awardgroup_mail( awardgroup, 0, attach );
+		awardgroup_mail( awardgroup, 0, attach );
 
-	char v1[32] = { 0 };
-	sprintf( v1, "%s%d", TAG_TOWNID, townid );
+		char v1[32] = { 0 };
+		sprintf( v1, "%s%d", TAG_TOWNID, townid );
 
-	char v2[32] = { 0 };
-	sprintf( v2, "%d", global.town_owner_award );
+		char v2[32] = { 0 };
+		sprintf( v2, "%d", global.town_owner_award );
 
-	char v3[32] = { 0 };
-	sprintf( v3, "%d", g_map_town[townid].own_sec/86400 );
+		char v3[32] = { 0 };
+		sprintf( v3, "%d", g_map_town[townid].own_sec / 86400 );
 
-	mail_system( MAIL_ACTORID, g_map_town[townid].own_actorid, 5031, 5527, v1, v2, v3, attach, 0 );
+		mail_system( MAIL_ACTORID, g_map_town[townid].own_actorid, 5031, 5527, v1, v2, v3, attach, 0 );
+	}
 	return 0;
 }
 int map_town_owner_award()

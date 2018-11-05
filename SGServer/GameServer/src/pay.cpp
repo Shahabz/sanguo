@@ -489,6 +489,30 @@ int paystore_get_productid( int platid, char paymode, int goodsid, char *out )
 	{
 		strncpy( out, g_paygoods[goodsid].productid_i, 63 );
 	}
+	else if ( strncmp( paystr, "j", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_j, 63 );
+	}
+	else if ( strncmp( paystr, "k", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_k, 63 );
+	}
+	else if ( strncmp( paystr, "l", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_l, 63 );
+	}
+	else if ( strncmp( paystr, "m", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_m, 63 );
+	}
+	else if ( strncmp( paystr, "n", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_n, 63 );
+	}
+	else if ( strncmp( paystr, "o", 2 ) == 0 )
+	{
+		strncpy( out, g_paygoods[goodsid].productid_o, 63 );
+	}
 	return 0;
 }
 
