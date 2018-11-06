@@ -281,7 +281,7 @@ end
 
 -- 获取国家货币符号
 function PayDlgGetMoneySymbol()
-	if Const.platid == 27 or Const.platid == 28 then
+	if Const.platid == 27 or Const.platid == 28 or Const.platid == 31 or Const.platid == 32 then
 		return "$",100;
 	end
     return "￥",1;

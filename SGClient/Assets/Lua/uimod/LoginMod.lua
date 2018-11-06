@@ -747,34 +747,25 @@ function LoginModCloseOverseasLogin()
 		local GPBindBtn = m_uiOverseas.transform:Find("User/ButtonList/GPBindBtn")
 		SetFalse( FBBindBtn )
 		SetFalse( GPBindBtn )
-		gamelog("xxxx SDK.logintype == "..SDK.logintype)
 		if SDK.logintype == "google" then
-			gamelog("SDK.logintype == google")
 			if SDK.FirebaseUserName == "" or SDK.FirebaseUserName == nil then
-				gamelog("google SDK.FirebaseUserName == empty")
 				if SDK.provider ~= nil then
-					gamelog("google SDK.provider ~= nil")
+					PrintTable( SDK.provider )
 					for k, v in pairs( SDK.provider ) do
-						gamelog("google id:"..v["id"])
-						if v["id"] == "google.com" then
-							SDK.FirebaseUserName = v["name"]
-							gamelog("google v[name]="..v["name"])
+						if v.id == "google.com" then
+							SDK.FirebaseUserName = v.name
 							break
 						end
 					end
 				end
 			end
 		elseif SDK.logintype == "facebook" then
-			gamelog("SDK.logintype == facebook")
 			if SDK.FirebaseUserName == "" or SDK.FirebaseUserName == nil then
-				gamelog("facebook SDK.FirebaseUserName == empty")
 				if SDK.provider ~= nil then
-					gamelog("facebook SDK.provider ~= nil")
+					PrintTable( SDK.provider )
 					for k, v in pairs( SDK.provider ) do
-						gamelog("facebook id:"..v["id"])
-						if v["id"] == "facebook.com" then
-							SDK.FirebaseUserName = v["name"]
-							gamelog("facebook v[name]="..v["name"])
+						if v.id == "facebook.com" then
+							SDK.FirebaseUserName = v.name
 							break
 						end
 					end

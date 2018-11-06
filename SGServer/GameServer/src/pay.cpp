@@ -67,7 +67,7 @@ extern int g_paystore_maxnum;
 // 获取货币简称对应的索引
 int paycoin_getindex_withplat( int platid )
 {
-	if ( platid == 27 || platid == 28 )
+	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
 	{ // 国外
 		return 0;
 	}
@@ -1080,7 +1080,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	}
 
 	int platid = client_getplatid( actor_index );
-	if ( platid == 27 || platid == 28 )
+	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
 	{// 总充值（美分）
 		int coinindex = paycoin_getindex_withplat( platid );
 		if ( coinindex >= 0 && coinindex < PAYCOINMAX )

@@ -56,6 +56,7 @@ function SDK.GuestLogin()
 	local json = require "cjson"
 	local info = {}
 	info["logintype"] = "anonymous"
+	info["deviceid"] = Utils.deviceUniqueIdentifier;
 	local jsonMsg = json.encode( info ); 
 	ChannelSDK.Instance:login(jsonMsg);
 end
