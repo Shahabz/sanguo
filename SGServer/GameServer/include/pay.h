@@ -6,9 +6,11 @@
 #define PAY_GOODSTYPE_PUSH					1		// 推送类型
 #define PAY_GOODSTYPE_DEFAULT				2		// 轮播图礼包
 #define PAY_GOODSTYPE_ACTIVITY				3		// 活动类型
-
+#define PAY_GOODSTYPE_RECHARGE_RMB          10      // 任意额度充值(人民币)
+#define PAY_GOODSTYPE_RECHARGE_DOLLAR       11      // 任意额度充值(美分)
 #define PAY_GOODSTYPE_MONTHCARD             101     // 月卡礼包
 #define PAY_GOODSTYPE_WEEKCARD              102     // 周卡礼包
+
 
 #define PAY_ACTIVITY_MAXCOUNT			10
 #define PAY_INT_MONTH_DAY				30         // 一个月30天
@@ -62,7 +64,7 @@ int paystore_buy( int actor_index, int goodsid );
 int paystore_addorder( int actor_index, int goodsid, char *pOrderID );
 
 // 添加离线订单
-int paystore_payoffline( int actor_index, int goodsid, char *pOrderID );
+int paystore_payoffline( int actor_index, int goodsid, char *pOrderID, int money, int token );
 int paystore_payoffline_get( int actor_index );
 
 // 购买月卡
@@ -91,6 +93,7 @@ int paystore_getid( int goodsid );
 
 // 支付成功
 int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *currency );
+int actor_recharge( int actorid, int goodsid, char *pOrderID, int money, int token );
 
 // 推送礼包信息
 int actor_pushbaginfo( int actor_index );

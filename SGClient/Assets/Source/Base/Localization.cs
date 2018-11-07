@@ -165,7 +165,7 @@ public static class Localization
             if ( localizeDir == "" )
             {
                 //localizeDir = languageDirectory( "en" );
-                localizeDir = languageDirectory( "zh" );
+                localizeDir = languageDirectory( "tw" );
                 if ( localizeDir == "" )
                 {
                     return -3;
@@ -181,7 +181,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "zh" ) + "/";
+            localizeDir = languageDirectory( "tw" ) + "/";
             if ( _localizetxt.OpenFromData( localizeDir + "localize.txt" ) == false )
             {
                 return -4;
@@ -203,7 +203,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "zh" ) + "/";
+            localizeDir = languageDirectory("tw") + "/";
             if ( _localizeItemTxt.OpenFromData( localizeDir + "localize_item.txt" ) == false )
             {
                 return -5;
@@ -225,7 +225,7 @@ public static class Localization
         {
             // 没有对应的语言文件夹，用英语的
             //localizeDir = languageDirectory( "en" ) + "/";
-            localizeDir = languageDirectory( "zh" ) + "/";
+            localizeDir = languageDirectory("tw") + "/";
             if ( _localizeQuestTxt.OpenFromData( localizeDir + "localize_quest.txt" ) == false )
             {
                 return -6;
@@ -242,7 +242,7 @@ public static class Localization
 
         // 容错处理，所有找不到的文字使用英文
         //localizeDir = languageDirectory( "en" ) + "/";
-        localizeDir = languageDirectory( "zh" ) + "/";
+        localizeDir = languageDirectory("tw") + "/";
 
         // 读取基础文字表
         TableUtil localizetxt_en_us = new TableUtil();

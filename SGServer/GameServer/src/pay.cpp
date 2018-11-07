@@ -596,7 +596,7 @@ int paystore_addorder( int actor_index, int goodsid, char *pOrderID )
 }
 
 // 添加离线订单
-int paystore_payoffline( int actorid, int goodsid, char *pOrderID )
+int paystore_payoffline( int actorid, int goodsid, char *pOrderID, int money, int token )
 {
 	char szSQL[2048];
 	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
@@ -604,7 +604,7 @@ int paystore_payoffline( int actorid, int goodsid, char *pOrderID )
 	if ( pOrderID == NULL )
 		return -1;
 
-	sprintf( szSQL, "insert into pay_offline( actorid, orderid, goodsid, optime ) values( '%d','%s','%d','%d' )", actorid, pOrderID, goodsid, (int)time( NULL ) );
+	sprintf( szSQL, "insert into pay_offline( actorid, orderid, goodsid, money, token, optime ) values( '%d','%s','%d','%d','%d','%d' )", actorid, pOrderID, goodsid, money, token, ( int )time( NULL ) );
 
 	if ( mysql_query( myGame, szSQL ) )
 	{
@@ -647,7 +647,7 @@ int paystore_payoffline_get( int actor_index )
 	}
 	if ( paycount > 0 )
 	{
-		sprintf( szSQL, "select orderid, goodsid from pay_offline where actorid='%d'", g_actors[actor_index].actorid );
+		sprintf( szSQL, "select orderid, goodsid, money, token from pay_offline where actorid='%d'", g_actors[actor_index].actorid );
 		if ( mysql_query( myGame, szSQL ) )
 		{
 			printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
@@ -663,9 +663,21 @@ int paystore_payoffline_get( int actor_index )
 			strncpy( szOrderid, row[0], 127 );
 
 			int goodsid = atoi( row[1] );
-
-			// 充值
-			actor_pay( g_actors[actor_index].actorid, goodsid, szOrderid, "0", "0" );
+			int money = atoi( row[2] );
+			int token = atoi( row[3] );
+			if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
+				continue;
+			int goodstype = g_paygoods[goodsid].type;
+			if ( goodstype == PAY_GOODSTYPE_RECHARGE_RMB || goodstype == PAY_GOODSTYPE_RECHARGE_DOLLAR )
+			{
+				// 充值
+				actor_recharge( g_actors[actor_index].actorid, goodsid, szOrderid, money, token );
+			}
+			else
+			{
+				// 充值
+				actor_pay( g_actors[actor_index].actorid, goodsid, szOrderid, "0", "0" );
+			}
 
 			// 删除掉
 			sprintf( szSQL, "delete from pay_offline where orderid='%s'", szOrderid );
@@ -901,7 +913,7 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 	{
 		// 不在线插入数据库，上线以后读取
-		paystore_payoffline( actorid, goodsid, pOrderID );
+		paystore_payoffline( actorid, goodsid, pOrderID, 0, 0 );
 		return -1;
 	}
 	City *pCity = city_getptr( actor_index );
@@ -1141,6 +1153,89 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )
 	{
 		g_actors[actor_index].pay_maxtier = g_paygoods[goodsid].tier;
+	}
+
+	return 0;
+}
+
+// 任意额度充值
+int actor_recharge( int actorid, int goodsid, char *pOrderID, int money, int token )
+{
+	char szSQL[1024];
+	if ( !pOrderID )
+		return -1;
+
+	// 玩家在线状态
+	int actor_index = actor_getindex_withid( actorid );
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+	{
+		// 不在线插入数据库，上线以后读取
+		paystore_payoffline( actorid, goodsid, pOrderID, money, token );
+		return -1;
+	}
+	City *pCity = city_getptr( actor_index );
+	if ( !pCity )
+		return -1;
+
+	// 给钻石
+	if ( token > 0 )
+	{
+		actor_change_token( actor_index, token, PATH_PAY, 0 );
+	}
+
+
+	// 更新订单状态
+	char szUserID[21];
+	i64 userid = client_getuserid( actor_index );
+	lltoa( userid, szUserID, 10 );
+
+	int awardgroup = paygoods_getawardgroup( actor_index, goodsid );
+	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
+	char productid[64] = { 0 };
+	paystore_get_productid( client_getplatid( actor_index ), paymode, goodsid, productid );
+	sprintf( szSQL, "insert into pay_order( orderid, platid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, optime ) values( '%s','%d','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d' )",
+		pOrderID, client_getplatid( actor_index ), szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), productid, goodsid, awardgroup, client_getip( actor_index ), 1, (int)time( NULL ) );
+
+	if ( mysql_query( myGame, szSQL ) )
+	{
+		printf_msg( "Query failed (%s)\n", mysql_error( myGame ) );
+		write_gamelog( "%s", szSQL );
+		if ( mysql_ping( myGame ) != 0 )
+			db_reconnect_game();
+		return -1;
+	}
+
+	int platid = client_getplatid( actor_index );
+	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+	{// 总充值（美分）
+		g_actors[actor_index].charge_dollar += money; // 美分
+		// 首日免费
+		if ( (int)time( NULL ) < g_actors[actor_index].createtime + 86400 )
+		{
+			g_actors[actor_index].act25_point += money;
+			activity_25_sendinfo( actor_index );
+		}
+	}
+	else
+	{ // 总充值（人民币）
+		g_actors[actor_index].charge_point += g_paygoods[goodsid].point;
+		// 首日免费
+		if ( (int)time( NULL ) < g_actors[actor_index].createtime + 86400 )
+		{
+			g_actors[actor_index].act25_point += money;
+			activity_25_sendinfo( actor_index );
+		}
+	}
+
+	// 充值排行
+	activity_33_addvalue( actor_index, token/10 );
+
+	// 充过值
+	city_set_sflag( pCity, CITY_SFLAG_FRISTPAY, 1 );
+	int fristpay_awardget = actor_get_sflag( actor_index, ACTOR_SFLAG_FRISTPAY_AWARDGET );
+	if ( fristpay_awardget == 0 )
+	{
+		activity_01_sendinfo( actor_index );
 	}
 
 	return 0;

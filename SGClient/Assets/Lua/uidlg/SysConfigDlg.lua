@@ -273,12 +273,16 @@ end
 
 -- 解绑
 function SysConfigDlgUnBindSetInfo()
-	if SDK.logintype == "google" then
-		SetTrue( m_uiUnBindBtn )
-		SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(353) )
-	elseif SDK.logintype == "facebook" then
-		SetTrue( m_uiUnBindBtn )
-		SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(352) )
+	if GetPlayer().m_usertype >= 100 then
+		if SDK.logintype == "google" then
+			SetTrue( m_uiUnBindBtn )
+			SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(353) )
+		elseif SDK.logintype == "facebook" then
+			SetTrue( m_uiUnBindBtn )
+			SetText( m_uiUnBindBtn.transform:Find("Back/Text"), T(352) )
+		else
+			SetFalse( m_uiUnBindBtn )
+		end
 	else
 		SetFalse( m_uiUnBindBtn )
 	end

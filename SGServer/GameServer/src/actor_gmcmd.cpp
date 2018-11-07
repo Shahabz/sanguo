@@ -681,6 +681,64 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 		}
 	}
 	break;
+	case GMC_RECHARGE:
+	{
+		if ( pMsg == NULL )
+		{
+			break;
+		}
+		if ( pCity )
+		{
+			char *pOrderID = NULL;
+			char *pMoney;
+			char *pToken;
+
+			int tmpi = 0;
+			char *strp;
+			char *str = pMsg;
+			char sign = '|';
+			strp = str;
+			while ( *str )
+			{
+				if ( *str == sign )
+				{
+					if ( tmpi == 0 )
+						pOrderID = strp;
+					else if ( tmpi == 1 )
+						pMoney = strp;
+					else if ( tmpi == 2 )
+						pToken = strp;
+					*str = 0;
+					str++;
+					strp = str;
+					tmpi++;
+					if ( tmpi >= 3 )
+						break;
+				}
+				else
+					str++;
+			}
+			if ( tmpi == 0 )
+				pOrderID = strp;
+			else if ( tmpi == 1 )
+				pMoney = strp;
+			else if ( tmpi == 2 )
+				pToken = strp;
+			tmpi++;
+			if ( tmpi == 1 )
+			{
+				pMoney = strp;
+				pToken = strp;
+			}
+			else if ( tmpi == 2 )
+			{
+				pToken = strp;
+			}
+
+			actor_recharge( pCity->actorid, pValue[0], pOrderID, pValue[1], pValue[2] );
+		}
+	}
+	break;
 	case GMC_BUFFCLEAR:
 		if ( pCity )
 		{

@@ -735,9 +735,9 @@ function LoginModCloseOverseasLogin()
 		end
 		if SDK.provider then
 			for k, v in pairs( SDK.provider ) do
-				if v["id"] == "google.com" then
+				if v.id == "google.com" then
 					SetFalse( GPBindBtn )
-				elseif v["id"] == "facebook.com" then
+				elseif v.id == "facebook.com" then
 					SetFalse( FBBindBtn )
 				end
 			end

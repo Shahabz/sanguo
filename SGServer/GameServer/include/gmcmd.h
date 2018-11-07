@@ -73,6 +73,7 @@
 #define GMC_PAYMODE				(GMC_BASE+68)	// 支付模式
 #define GMC_FANGSHI				(GMC_BASE+69)	// 坊市
 #define GMC_A12					(GMC_BASE+70)	// 南蛮入侵
+#define GMC_RECHARGE			(GMC_BASE+71)	// 充值任意额度 
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功
