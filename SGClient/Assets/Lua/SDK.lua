@@ -336,7 +336,7 @@ function SDK.setExtendData( step )
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	
 	-- 易接	
-	elseif Const.platid == 22 then
+	elseif Const.platid == 22 or Const.platid == 32 then
 		local json = require "cjson"
 		local info = {}
 		info["step"] = step
