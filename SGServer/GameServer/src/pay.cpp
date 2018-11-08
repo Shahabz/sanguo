@@ -1193,7 +1193,7 @@ int actor_recharge( int actorid, int goodsid, char *pOrderID, int money, int tok
 	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
 	char productid[64] = { 0 };
 	paystore_get_productid( client_getplatid( actor_index ), paymode, goodsid, productid );
-	sprintf( szSQL, "insert into pay_order( orderid, platid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, money, token optime ) values( '%s','%d','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d','%d','%d' )",
+	sprintf( szSQL, "insert into pay_order( orderid, platid, userid, actorid, actorlevel, citylevel, productid, goodsid, awardgroup, ip, status, money, token, optime ) values( '%s','%d','%s','%d','%d','%d','%s','%d','%d','%s','%d','%d','%d','%d' )",
 		pOrderID, client_getplatid( actor_index ), szUserID, g_actors[actor_index].actorid, g_actors[actor_index].level, city_mainlevel( g_actors[actor_index].city_index ), productid, goodsid, awardgroup, client_getip( actor_index ), 1, money, token, ( int )time( NULL ) );
 
 	if ( mysql_query( myGame, szSQL ) )
