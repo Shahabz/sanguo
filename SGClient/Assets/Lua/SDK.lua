@@ -292,6 +292,17 @@ function SDK.pay( recvValue )
 		info["product_notifyurl"] = url.."server/xtby/google_iap_verify.php"
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
+	
+	-- 国内独代quick	
+	elseif Const.platid == 34 then
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_notifyurl"] = ""
+		info["product_notifyurl_params"] = "";
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
 	end
 end
 
@@ -336,7 +347,7 @@ function SDK.setExtendData( step )
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	
 	-- 易接	
-	elseif Const.platid == 22 or Const.platid == 32 then
+	elseif Const.platid == 22 or Const.platid == 32 or Const.platid == 34 then
 		local json = require "cjson"
 		local info = {}
 		info["step"] = step
@@ -347,7 +358,7 @@ function SDK.setExtendData( step )
 		info["actortoken"]= tostring(GetPlayer().m_token)
 		info["clubname"]= Nation(GetPlayer().m_nation)
 		info["createtime"]= tostring(GetPlayer().m_createtime)
-		info["levelmtime"]= "0"
+		info["levelmtime"]= tostring(GetServerTime())
 		info["serverid"] = tostring(Const.serverid)
 		info["servername"] = Const.servername
 		local jsonMsg = json.encode( info );   
