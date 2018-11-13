@@ -64,7 +64,7 @@ end
 -- SDK获取用户信息
 function HttpRequest.GetSDKUserInfo()
 	local paramString = "c=userinfo&m=get"
-	.."&uid="..Const.sdk_uid
+	.."&uid="..WWW.EscapeURL(Const.sdk_uid)
 	.."&lang="..DeviceHelper.getLanguage()
 	.."&country="..DeviceHelper.getCountry()
 	.."&channelId="..Const.sdk_channelId
@@ -77,8 +77,13 @@ end
 
 -- 获取服务器信息列表
 function HttpRequest.GetServerList( callback )
+	local uid = WWW.EscapeURL( Const.sdk_uid )
+	if Const.platid == 33 or Const.platid == 34 or Const.platid == 35 then
+		uid = string.gsub(uid, "%(", "%%28")
+		uid = string.gsub(uid, "%)", "%%29")
+	end
 	local paramString = "c=serverinfo&m=getlist"
-	.."&uid="..Const.sdk_uid
+	.."&uid="..uid
 	.."&country="..DeviceHelper.getCountry()
 	.."&channelId="..Const.sdk_channelId
 	.."&os="..Const.sdk_sysType

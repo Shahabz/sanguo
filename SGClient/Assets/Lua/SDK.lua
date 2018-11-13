@@ -89,6 +89,11 @@ function SDK.onLogin( jsonResult )
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
+			elseif Const.platid == 33 or Const.platid == 34 then
+				Const.sdk_channelId = info["ChannelId"];
+				Const.sdk_uid 		= info["ChannelUserId"];
+				Const.sdk_token 	= info["token"];
+				Const.sdk_timestamp = 0;
 			else
 				Const.sdk_uid 		= info["uid"];
 				Const.sdk_token 	= info["token"];
@@ -140,6 +145,9 @@ function SDK.onLogout( jsonResult )
 		if Const.platid == 31 or Const.platid == 32 then
 			GameManager.writeini( "OVERSEAS_LOGINTYPE", "" )
 		end
+		GameManager.Restart();
+		GameManager.Logout( 1 );
+	elseif result == "4" then
 		GameManager.Restart();
 		GameManager.Logout( 1 );
 	end
