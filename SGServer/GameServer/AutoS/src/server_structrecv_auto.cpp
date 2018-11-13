@@ -11,7 +11,7 @@ int struct_NetC_Login_recv( char **pptr, int *psize, SLK_NetC_Login *pValue )
 		return -1;
 	LKSET_MEM_RECV( pValue->m_username, (*pptr), pValue->m_username_length*sizeof(char), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_password_length, (*pptr), (*psize) );
-	if( pValue->m_password_length < 0 || pValue->m_password_length > (*psize)*(int)sizeof(char) || pValue->m_password_length > 256 )
+	if( pValue->m_password_length < 0 || pValue->m_password_length > (*psize)*(int)sizeof(char) || pValue->m_password_length > 800 )
 		return -1;
 	LKSET_MEM_RECV( pValue->m_password, (*pptr), pValue->m_password_length*sizeof(char), (*psize) );
 	LKSET_WORD_RECV( &pValue->m_deviceid_length, (*pptr), (*psize) );

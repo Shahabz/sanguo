@@ -89,7 +89,7 @@ function SDK.onLogin( jsonResult )
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
-			elseif Const.platid == 33 or Const.platid == 34 then
+			elseif Const.platid == 33 or Const.platid == 34 or Const.platid == 35 then
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
@@ -302,7 +302,7 @@ function SDK.pay( recvValue )
 		ChannelSDK.Instance:pay( jsonMsg );
 	
 	-- 国内独代quick	
-	elseif Const.platid == 34 then
+	elseif Const.platid == 34 or Const.platid == 35 then
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = GetPlayer().m_actorid

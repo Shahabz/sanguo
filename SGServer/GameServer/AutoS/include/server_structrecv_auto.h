@@ -6,7 +6,7 @@ struct _slk_NetC_Login {
 	short m_username_length;	//客户端请求-用户名长度
 	char m_username[51];	//客户端请求-用户名
 	short m_password_length;	//客户端请求-密码长度
-	char m_password[256];	//客户端请求-密码
+	char m_password[800];	//客户端请求-密码
 	short m_deviceid_length;	//客户端请求-设备标示长度
 	char m_deviceid[65];	//客户端请求-设备标示
 	short m_isnew;	//客户端请求-是否新用户
