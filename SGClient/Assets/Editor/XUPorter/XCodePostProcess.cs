@@ -72,6 +72,16 @@ public static class XCodePostProcess
             EditorPlistXtby(path);
             EditorCodeXtby(path);
         }
+        else if (projectName == "fqquick")
+        {   // 丰趣Quick
+            EditorPlistFQQuick(path);
+            EditorCodeFQQuick(path);
+        }
+        else if (projectName == "fqplay")
+        {   // 丰趣SDK
+            EditorPlistFQPlay(path);
+            EditorCodeFQPlay(path);
+        }
         // Finally save the xcode project
         project.Save();
 
@@ -302,6 +312,138 @@ public static class XCodePostProcess
         UnityAppController.WriteBelow("_didResignActive = false;", "[FBSDKAppEvents activateApp];");
         UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", "[[FBSDKApplicationDelegate sharedInstance] application:application\n                           didFinishLaunchingWithOptions:launchOptions];");
         UnityAppController.Replace("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return YES;", "AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return [[FBSDKApplicationDelegate sharedInstance] application:application\n                                                         openURL:url\n                                               sourceApplication:sourceApplication\n                                                      annotation:annotation];;");
+    }
+
+    // 丰趣quicksdk
+    private static void EditorPlistFQQuick(string filePath)
+    {
+        XCPlist2 list = new XCPlist2(filePath);
+
+        string PhotoInfolist = @"
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>以照片的形式为您保存账号密码</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>以照片的形式为您保存账号密码</string>";
+        list.AddKey(PhotoInfolist);
+        //保存
+        list.Save();
+    }
+    private static void EditorCodeFQQuick(string filePath)
+    {
+        // UnityAppController.mm
+        XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
+        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <SMPCQuickSDK/SMPCQuickSDK.h>\n #define PRODUCT_CODE    @\"17146096886039250016747327504916\"\n#define PRODUCT_KEY     @\"73034002\"");
+        UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", @"[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector: @selector(smpcQpInitResult:)
+                                                 name: kSmpcQuickSDKNotiInitDidFinished
+                                               object:nil]; 
+        SMPCQuickSDKInitConfigure *cfg = [[SMPCQuickSDKInitConfigure alloc] init];
+        cfg.productKey = PRODUCT_KEY;
+        cfg.productCode = PRODUCT_CODE;
+        [[SMPCQuickSDK defaultInstance] initWithConfig:cfg application:application didFinishLaunchingWithOptions:launchOptions];");
+
+        UnityAppController.WriteBelow("extern void SensorsCleanup();\n    SensorsCleanup();\n}", @"- (void)smpcQpInitResult:(NSNotification *)notify {
+            NSDictionary *userInfo = notify.userInfo;
+            int errorCode = [userInfo[kSmpcQuickSDKKeyError] intValue];
+            switch (errorCode) 
+            {
+                case SMPC_QUICK_SDK_ERROR_NONE:
+                {//初始化成功
+                  
+                }
+                break;
+                case SMPC_QUICK_SDK_ERROR_INIT_FAILED:
+                default:
+                {//初始化失败
+                  
+                }
+                break;
+            }
+        
+        }");
+
+        UnityAppController.WriteBelow("::printf(\"-> applicationWillResignActive()\\n\");", "[[SMPCQuickSDK defaultInstance] applicationWillResignActive:application];");
+        UnityAppController.WriteBelow("::printf(\"-> applicationDidEnterBackground()\\n\");", "[[SMPCQuickSDK defaultInstance] applicationDidEnterBackground:application];");
+        UnityAppController.WriteBelow("::printf(\"-> applicationWillEnterForeground()\\n\");", "[[SMPCQuickSDK defaultInstance] applicationWillEnterForeground:application];");
+        UnityAppController.WriteBelow("::printf(\"-> applicationDidBecomeActive()\\n\");", "[[SMPCQuickSDK defaultInstance] applicationDidBecomeActive:application];");
+        UnityAppController.WriteBelow("::printf(\"-> applicationWillTerminate()\\n\");", "[[SMPCQuickSDK defaultInstance] applicationWillTerminate:application];");
+        UnityAppController.WriteBelow("UnitySendDeviceToken(deviceToken);", "[[SMPCQuickSDK defaultInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];");
+        UnityAppController.WriteBelow("UnitySendRemoteNotificationError(error);", "[[SMPCQuickSDK defaultInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];");
+        UnityAppController.WriteBelow("supportedInterfaceOrientationsForWindow:(UIWindow*)window\n{", "[[SMPCQuickSDK defaultInstance] application:application supportedInterfaceOrientationsForWindow:window];");
+        //UnityAppController.WriteBelow("", "");
+        UnityAppController.WriteBelow("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);", "[[SMPCQuickSDK defaultInstance] openURL:url sourceApplication:sourceApplication application:application annotation:annotation];");
+        //UnityAppController.WriteBelow("", "");
+        //UnityAppController.WriteBelow("", "");
+    }
+
+    // 丰趣SDK
+    private static void EditorPlistFQPlay(string filePath)
+    {
+        XCPlist2 list = new XCPlist2(filePath);
+
+        string PhotoInfolist = @"
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>以照片的形式为您保存账号密码</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>以照片的形式为您保存账号密码</string>
+        <key>NSAppTransportSecurity</key>
+        <dict>
+          <key>NSAllowsArbitraryLoads</key>
+          <true />
+        </dict>
+        <key>Privacy - Location Always Usage Description</key>
+        <string>需要使⽤地理位置信息</string>
+        <key>Privacy - Location Always Usage Description</key>
+        <string>需要使⽤地理位置信息</string>
+        <key>Privacy - Location When In Use Usage Description</key>
+        <string>需要使⽤地理位置信息</string>
+        <key>Privacy - Microphone Usage Description</key>
+        <string>需要使⽤麦克风</string>
+        <key>Privacy - Photo Library Usage Description</key>
+        <string>需要读取媒体资料库</string>";
+
+        list.AddKey(PhotoInfolist);
+
+        string Infolist = @"
+        <key>CFBundleURLTypes</key>
+        <array>
+        <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLIconFile</key>
+        <string></string>
+        <key>CFBundleURLName</key>
+        <string></string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+        <string>app100412.sfplay.cn</string>
+        </array>
+        </dict>
+        </array>";
+        list.AddKey(Infolist);
+
+        //保存
+        list.Save();
+    }
+    private static void EditorCodeFQPlay(string filePath)
+    {
+        // UnityAppController.mm
+        XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
+        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <SFGameSDK/SDKManagers.h>\n#import <SFGameSDK/PublicDefineFile.h>\n#define APPID    @\"100412\"\n#define APPKEY   @\"668ca10ea6221ba7c1978d79bfad5865\"\n#define ADVERTISERID   @\"1004001\"\n#define REYUNID   @\"b86fcf1f0031c8c2f70dc91a48b50a2a\"\n#define REYUNKEY   @\"d01ba8b8ccc64eb132917ff11c00601b\"");
+
+        UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", @"[[SDKManagers sharedInstance] SetAppId:APPID];
+    [[SDKManagers sharedInstance] SetKey:APPKEY];
+    [[SDKManagers sharedInstance] SetAdvertiserId:ADVERTISERID];
+    [[SDKManagers sharedInstance] SetReyunGameAppId:REYUNID];
+    [[SDKManagers sharedInstance] SetReyunAppkey:REYUNKEY];
+    [[SDKManagers sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];");
+
+        UnityAppController.WriteBelow("::printf(\"-> applicationDidBecomeActive()\\n\");", "[[SDKManagers sharedInstance] applicationDidBecomeActive:application];");
+        UnityAppController.WriteBelow("::printf(\"-> applicationWillTerminate()\\n\");", "[[SDKManagers sharedInstance] applicationWillTerminate:application]; ");
+        UnityAppController.WriteBelow("UnitySendDeviceToken(deviceToken);", "[[SDKManagers sharedInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];");
+        UnityAppController.WriteBelow("handler(UIBackgroundFetchResultNoData);\n    }", "[[SDKManagers sharedInstance]application:application didReceiveRemoteNotification:userInfo];");
+        UnityAppController.WriteBelow("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);", "[[SDKManagers sharedInstance] application:application openURL:url sourceApplication:sourceApplication annotation:annotation];");
+
     }
 
     // ipx 齐刘海适配

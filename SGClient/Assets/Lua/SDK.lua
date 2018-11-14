@@ -89,7 +89,7 @@ function SDK.onLogin( jsonResult )
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
-			elseif Const.platid == 33 or Const.platid == 34 or Const.platid == 35 then
+			elseif Const.platid == 33 or Const.platid == 34 or Const.platid == 36 or Const.platid == 37 then
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
@@ -309,6 +309,21 @@ function SDK.pay( recvValue )
 		info["product_name"] = T(recvValue.m_nameid)
 		info["product_notifyurl"] = ""
 		info["product_notifyurl_params"] = "";
+		
+		if Const.platid == 35 then
+			info["product_price"] = recvValue.m_price*100
+		end
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
+	
+	-- 武汉桐与祥quick	
+	elseif Const.platid == 36 or Const.platid == 37 then
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_notifyurl"] = ""
+		info["product_notifyurl_params"] = "";
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
 	end
@@ -354,8 +369,8 @@ function SDK.setExtendData( step )
 		local jsonMsg = json.encode( info );   
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	
-	-- 易接	
-	elseif Const.platid == 22 or Const.platid == 32 or Const.platid == 34 then
+	-- 易接等
+	elseif Const.platid == 22 or Const.platid == 32 or Const.platid == 33 or Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 then
 		local json = require "cjson"
 		local info = {}
 		info["step"] = step

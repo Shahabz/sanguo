@@ -5,7 +5,7 @@
 
 #define MAX_LOGINQUEUENUM			256 // 登陆队列长度
 
-#define COMMAND_PACK_LEN			1024
+#define COMMAND_PACK_LEN			2048
 #define RETURN_PACK_LEN				256
 
 #define USERCMDS_LOGIN				1

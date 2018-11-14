@@ -378,7 +378,7 @@ int login_recv_proc( short cmd, char *recv_buf )
 // 用户服务的发送线程
 int login_send_proc()
 {
-	char send_buf[COMMAND_PACK_LEN];
+	char send_buf[2048];
 	char *pstr;
 	int package_len;
 	int packsize;

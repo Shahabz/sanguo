@@ -656,7 +656,7 @@ function LoginModEnterGame()
 			end
 		end
 	
-	elseif Const.platid == 31 or Const.platid == 32	then
+	elseif Const.platid == 31 or Const.platid == 32 then
 		LoginModOverseasLogin()
 	else
 		LoginModSDKLogin()
