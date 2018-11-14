@@ -1096,8 +1096,8 @@ int _fangshi_palace_getaward( City *pCity, int type, int *out_awardkind, int *ou
 				continue;
 			if ( g_nation_hero[herokind].createtime <= 0 )
 				continue;
-			if ( (nowtime - g_nation_hero[herokind].createtime) < global.fangshi_nationhero_time )
-				continue;
+			//if ( (nowtime - g_nation_hero[herokind].createtime) < global.fangshi_nationhero_time )
+			//	continue;
 		}
 		else if ( type == 1 )
 		{
@@ -1250,7 +1250,8 @@ int fangshi_palace_update( int actor_index )
 int fangshi_palace_sendinfo( int actor_index )
 {
 	ACTOR_CHECK_INDEX( actor_index );
-	int fweek = system_getfweek();
+	//int fweek = system_getfweek();
+	int fweek = system_getfday();
 	if ( g_actors[actor_index].fs_fweek != fweek )
 	{
 		fangshi_palace_update( actor_index );

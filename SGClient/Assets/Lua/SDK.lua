@@ -89,7 +89,7 @@ function SDK.onLogin( jsonResult )
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
-			elseif Const.platid == 33 or Const.platid == 34 or Const.platid == 36 or Const.platid == 37 then
+			elseif Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 then
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
