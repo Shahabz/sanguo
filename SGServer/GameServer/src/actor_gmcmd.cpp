@@ -41,6 +41,7 @@
 #include "girl.h"
 #include "robot.h"
 #include "auto_data_map_zoneinfo.h"
+#include "army.h"
 
 extern Global global;
 extern MYSQL *myGame;
@@ -967,6 +968,25 @@ int actor_command( int actor_index, short cmd, int *pValue, char *pMsg )
 				map_activity_delete( pCity->act12_idx );
 			}
 			pCity->act12_idx = -1;
+		}
+		break;
+	case GMC_ARMYDELETE:
+		if ( pCity )
+		{
+			// 删除他的部队
+			for ( int tmpi = 0; tmpi < CITY_BATTLEQUEUE_MAX; tmpi++ )
+			{
+				int army_index = pCity->battle_armyindex[tmpi];
+				if ( army_index < 0 )
+					continue;
+				army_delete( army_index );
+			}
+		}
+		break;
+	case GMC_HEROSTATE:// 武将状态
+		if ( pCity )
+		{
+			hero_changestate( pCity->index, pValue[0], pValue[1] );
 		}
 		break;
 	default:

@@ -74,6 +74,8 @@
 #define GMC_FANGSHI				(GMC_BASE+69)	// 坊市
 #define GMC_A12					(GMC_BASE+70)	// 南蛮入侵
 #define GMC_RECHARGE			(GMC_BASE+71)	// 充值任意额度 
+#define GMC_ARMYDELETE			(GMC_BASE+72)	// 删除玩家所有部队 
+#define GMC_HEROSTATE			(GMC_BASE+73)	// 武将状态
 
 // GM指令使用信息
 #define GMR_OK					1		// 成功
