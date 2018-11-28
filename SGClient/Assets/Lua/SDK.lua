@@ -301,7 +301,19 @@ function SDK.pay( recvValue )
 		local jsonMsg = json.encode( info );
 		ChannelSDK.Instance:pay( jsonMsg );
 	
-	-- 国内独代quick	
+	-- 国内独代丰趣
+	elseif Const.platid == 33 then
+		local url = Global.GetValue("SERVERACCESS_URL");
+		info["product_price"] = recvValue.m_price*100
+		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
+		info["product_actorid"] = GetPlayer().m_actorid
+		info["product_name"] = T(recvValue.m_nameid)
+		info["product_notifyurl"] = ""
+		info["product_notifyurl_params"] = "";
+		local jsonMsg = json.encode( info ); 
+		ChannelSDK.Instance:pay( jsonMsg );
+		
+	-- 国内独代丰趣quick	
 	elseif Const.platid == 34 or Const.platid == 35 then
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
@@ -309,13 +321,9 @@ function SDK.pay( recvValue )
 		info["product_name"] = T(recvValue.m_nameid)
 		info["product_notifyurl"] = ""
 		info["product_notifyurl_params"] = "";
-		
-		if Const.platid == 35 then
-			info["product_price"] = recvValue.m_price*100
-		end
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
-	
+		
 	-- 武汉桐与祥quick	
 	elseif Const.platid == 36 or Const.platid == 37 then
 		local url = Global.GetValue("SERVERACCESS_URL");
