@@ -123,7 +123,7 @@ function LoginModOnEvent( nType, nControlID, value )
 		elseif nControlID == 4 then
 			if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 				LoginModLoginLayer()
-			elseif Const.platid == 27 or Const.platid == 28 then
+			elseif Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 				LoginModLoginLayer()
 			elseif Const.platid == 31 or Const.platid == 32 then
 				GameManager.writeini( "OVERSEAS_LOGINTYPE", "" )
@@ -388,7 +388,7 @@ function LoginModOnStart()
 	-- 平台
 	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		LoginModOpenTestLogin();
-	elseif Const.platid == 27 or Const.platid == 28 then
+	elseif Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 		LoginModOpenTestLogin();
 	elseif Const.platid == 31 or Const.platid == 32 then
 		SDK.init()
@@ -518,7 +518,7 @@ function LoginModRegLayer()
 		SetFalse( m_uiRegInviteCodeEdit );
 	end
 	
-	if Const.platid == 27 or Const.platid == 28 then
+	if Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 		if m_uiRegDesc then
 			SetText( m_uiRegDesc, T( 327 ) )
 		end
@@ -642,7 +642,7 @@ end
 
 -- 进入游戏
 function LoginModEnterGame()
-	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 or Const.platid == 24 or Const.platid == 25 or Const.platid == 27 or Const.platid == 28 then
+	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 or Const.platid == 24 or Const.platid == 25 or Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
 		if loginType == "2" then
 			LoginModQuickLogin();

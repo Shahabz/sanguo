@@ -92,7 +92,7 @@ function Network.OnSocket(cmd, buffer)
 			-- 请求登陆验证
 			if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 				LoginModTestLoginProc()
-			elseif Const.platid == 27 or Const.platid == 28 then
+			elseif Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 				LoginModTestLoginProc()
 			else
 				LoginModSDKLoginProc();
@@ -189,7 +189,7 @@ function Network.OnConnectFail( buffer )
 	if Const.NetStatus < 2 then
 		if Const.platid <= 11 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 			LoginModOpenTestLogin();
-		elseif Const.platid == 27 or Const.platid == 28 then
+		elseif Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 			LoginModOpenTestLogin();
 		elseif Const.platid == 31 or Const.platid == 32 then
 			LoginModOpenOverseasLogin();

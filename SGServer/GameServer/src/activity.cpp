@@ -565,7 +565,7 @@ int activity_sendlist( int actor_index )
 			int platid = client_getplatid( actor_index );
 			for ( int id = 1; id < g_activity_17_maxnum; id++ )
 			{
-				if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+				if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 				{
 					if ( (g_actors[actor_index].act17_state & (1 << id)) == 0 && g_actors[actor_index].charge_dollar >= g_activity_17[id].dollar )
 					{
@@ -1666,7 +1666,7 @@ int activity_17_sendinfo( int actor_index )
 		if ( g_activity_17[tmpi].id <= 0 )
 			continue;
 		pValue.m_list[pValue.m_count].m_id = g_activity_17[tmpi].id;
-		if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+		if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 		{
 			pValue.m_list[pValue.m_count].m_pay = g_activity_17[tmpi].dollar;
 		}
@@ -1690,7 +1690,7 @@ int activity_17_sendinfo( int actor_index )
 		pValue.m_count += 1;
 	}
 
-	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+	if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 	{
 		pValue.m_mypay = g_actors[actor_index].charge_dollar;
 	}
@@ -1752,7 +1752,7 @@ int activity_25_sendinfo( int actor_index )
 	value[1] = g_actors[actor_index].createtime + 86400 - (int)time(NULL);
 	value[2] = g_actors[actor_index].act25_point;
 	int platid = client_getplatid( actor_index );
-	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+	if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 	{
 		value[3] = g_actors[actor_index].act25_point;
 	}
@@ -1775,7 +1775,7 @@ int activity_25_get( int actor_index )
 	if ( g_actors[actor_index].act25_point <= 0 )
 		return -1;
 	int platid = client_getplatid( actor_index );
-	if ( platid == 27 || platid == 28 || platid == 31 || platid == 32 )
+	if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 	{
 		actor_change_token( actor_index, g_actors[actor_index].act25_point, PATH_ACTIVITY25, 0 );
 	}

@@ -280,7 +280,7 @@ function SDK.pay( recvValue )
 		ChannelSDK.Instance:pay( jsonMsg );
 	
 	-- 海外繁体ios
-	elseif Const.platid == 27 then
+	elseif Const.platid == 27 or Const.platid == 38 then
 		local jsonMsg = json.encode( info ); 
 		ChannelSDK.Instance:pay( jsonMsg );
 	
@@ -358,7 +358,7 @@ function SDK.userCenter()
 		ChannelSDK.Instance:user_center( '' );
 	elseif Const.platid == 1 or Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid == 24 or Const.platid == 25 then
 		UserInfoDlgShow()
-	elseif Const.platid == 27 or Const.platid == 28 then
+	elseif Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 		UserInfoDlgShow()
 	else
 	end
