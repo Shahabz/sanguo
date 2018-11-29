@@ -33,7 +33,7 @@
 #define ACTIVITY_26	26	//	强国策
 #define ACTIVITY_27	27	//	西凉暴乱
 #define ACTIVITY_28	28	//	黄巾军暴乱
-#define ACTIVITY_29	29	//	体力大卖
+#define ACTIVITY_29	29	//	充值双倍
 #define ACTIVITY_30	30	//	图纸活动
 #define ACTIVITY_31	31	//	全民寻宝
 #define ACTIVITY_32	32	//	抢夺封地

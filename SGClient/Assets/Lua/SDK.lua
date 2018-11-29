@@ -160,6 +160,14 @@ function SDK.onSwitchAccount( jsonResult )
 	SDK.login()
 end
 
+function SDK.payGoodsName( recvValue )
+	if recvValue.m_nameid > 0 then
+		return T(info.m_nameid)
+	else
+		return F(2119,info.m_descid)
+	end
+end
+		
 -- 支付
 -- m_orderid_len=0,m_orderid="[m_orderid_len]",m_ext_len=0,m_ext="[m_ext_len]",m_goodsid=0,m_productid=0,m_nameid=0,m_descid=0,m_price=0,
 function SDK.pay( recvValue )
@@ -193,7 +201,7 @@ function SDK.pay( recvValue )
 							.."&product_price="..(recvValue.m_price*100)
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
-							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+							.."&product_name="..WWW.EscapeURL(SDK.payGoodsName(recvValue)) )
 		end
 		
 	elseif Const.platid == 14 then
@@ -206,7 +214,7 @@ function SDK.pay( recvValue )
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_price"] = recvValue.m_price*100
 		info["product_actorid"] = GetPlayer().m_actorid
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_notifyurl"] = url.."iapppay_fysgz_trpay/trpay.php"
 		info["product_notifyurl_params"] = "ext="..recvValue.m_ext
 		local jsonMsg = json.encode( info );
@@ -219,7 +227,7 @@ function SDK.pay( recvValue )
 							.."&product_price="..(recvValue.m_price*100)
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
-							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+							.."&product_name="..WWW.EscapeURL(SDK.payGoodsName(recvValue)) )
 							
 	elseif Const.platid == 21 then
 		local url = Global.GetValue("CLIENTACCESS_URL");
@@ -228,7 +236,7 @@ function SDK.pay( recvValue )
 							.."&product_price="..(recvValue.m_price*100)
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
-							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+							.."&product_name="..WWW.EscapeURL(SDK.payGoodsName(recvValue)) )
 	
 	
 	-- 易接android,可自由转化到完美数卡支付(单位：分)
@@ -238,7 +246,7 @@ function SDK.pay( recvValue )
 			info["product_ext"] = WWW.EscapeURL(recvValue.m_ext.."#"..recvValue.m_orderid)
 			info["product_price"] = recvValue.m_price*100
 			info["product_actorid"] = GetPlayer().m_actorid
-			info["product_name"] = T(recvValue.m_nameid)
+			info["product_name"] = SDK.payGoodsName(recvValue)
 			--info["product_notifyurl"] = url.."tlsg_yj/pay.php"
 			info["product_notifyurl"] = ""
 			info["product_notifyurl_params"] = "";
@@ -251,7 +259,7 @@ function SDK.pay( recvValue )
 							.."&product_price="..(recvValue.m_price*100)
 							.."&product_orider="..recvValue.m_orderid
 							.."&product_ext="..WWW.EscapeURL(recvValue.m_ext)
-							.."&product_name="..WWW.EscapeURL(T(recvValue.m_nameid)) )
+							.."&product_name="..WWW.EscapeURL(SDK.payGoodsName(recvValue)) )
 		end
 		
 	-- 绿壳ios(单位：元)
@@ -259,7 +267,7 @@ function SDK.pay( recvValue )
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = tostring(GetPlayer().m_actorid)
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_sid"] = tostring(Const.serverid)
 		info["product_sname"] = Const.servername;
 		info["product_actorname"] = GetPlayer().m_name;
@@ -272,7 +280,7 @@ function SDK.pay( recvValue )
 		info["product_price"] = tostring(recvValue.m_price*100)
 		info["product_ext"] = string.gsub(recvValue.m_ext, "#", "_");
 		info["product_actorid"] = tostring(GetPlayer().m_actorid)
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_sid"] = tostring(Const.serverid)
 		info["product_sname"] = Const.servername;
 		info["product_actorname"] = GetPlayer().m_name;
@@ -307,7 +315,7 @@ function SDK.pay( recvValue )
 		info["product_price"] = recvValue.m_price*100
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = GetPlayer().m_actorid
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_notifyurl"] = ""
 		info["product_notifyurl_params"] = "";
 		local jsonMsg = json.encode( info ); 
@@ -318,7 +326,7 @@ function SDK.pay( recvValue )
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = GetPlayer().m_actorid
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_notifyurl"] = ""
 		info["product_notifyurl_params"] = "";
 		local jsonMsg = json.encode( info ); 
@@ -329,7 +337,7 @@ function SDK.pay( recvValue )
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = GetPlayer().m_actorid
-		info["product_name"] = T(recvValue.m_nameid)
+		info["product_name"] = SDK.payGoodsName(recvValue)
 		info["product_notifyurl"] = ""
 		info["product_notifyurl_params"] = "";
 		local jsonMsg = json.encode( info ); 

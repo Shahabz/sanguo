@@ -47,7 +47,7 @@ int paystore_init_auto()
 	g_paystore = (PayStore *)malloc( sizeof(PayStore)*g_paystore_maxnum );
 	memset( g_paystore, 0, sizeof(PayStore)*g_paystore_maxnum );
 
-	sprintf( szSQL, "select `id`,`goodsid`,`limitbuy_gifttoken`,`limitbuy_saveindex`,`limitbuy_count`,`everyday_gifttoken`,`everyday_saveindex`,`everyday_count`,`gift_token` from paystore;" );
+	sprintf( szSQL, "select `id`,`goodsid`,`limitbuy_gifttoken`,`limitbuy_saveindex`,`limitbuy_count`,`everyday_gifttoken`,`everyday_saveindex`,`everyday_count`,`gift_token`,`gift_token_hy` from paystore;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -70,6 +70,7 @@ int paystore_init_auto()
 		g_paystore[id].everyday_saveindex = atoi(row[offset++]);
 		g_paystore[id].everyday_count = atoi(row[offset++]);
 		g_paystore[id].gift_token = atoi(row[offset++]);
+		g_paystore[id].gift_token_hy = atoi(row[offset++]);
 	}
 	mysql_free_result( res );
 	return 0;

@@ -6,8 +6,11 @@ struct _paygoods {
 //--Automatically generated
 				int goodsid;	//
 				short tier;	//
+				short tier_hy;	//
 				int point;	//
+				int point_hy;	//
 				int token;	//
+				int token_hy;	//
 				int awardgroup;	//
 				short type;	//
 				int nameid;	//

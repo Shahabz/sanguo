@@ -47,7 +47,7 @@ int paygoods_init_auto()
 	g_paygoods = (PayGoods *)malloc( sizeof(PayGoods)*g_paygoods_maxnum );
 	memset( g_paygoods, 0, sizeof(PayGoods)*g_paygoods_maxnum );
 
-	sprintf( szSQL, "select `goodsid`,`tier`,`point`,`token`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount`,`productid_a`,`productid_b`,`productid_c`,`productid_d`,`productid_e`,`productid_f`,`productid_g`,`productid_h`,`productid_i`,`productid_j`,`productid_k`,`productid_l`,`productid_m`,`productid_n`,`productid_o` from paygoods;" );
+	sprintf( szSQL, "select `goodsid`,`tier`,`tier_hy`,`point`,`point_hy`,`token`,`token_hy`,`awardgroup`,`type`,`nameid`,`descid`,`icon`,`sale`,`worth`,`day`,`nextid`,`nextcd`,`nextcount`,`productid_a`,`productid_b`,`productid_c`,`productid_d`,`productid_e`,`productid_f`,`productid_g`,`productid_h`,`productid_i`,`productid_j`,`productid_k`,`productid_l`,`productid_m`,`productid_n`,`productid_o` from paygoods;" );
 	if( mysql_query( myData, szSQL ) )
 	{
 		printf( "Query failed (%s)\n", mysql_error(myData) );
@@ -63,8 +63,11 @@ int paygoods_init_auto()
 			continue;
 		g_paygoods[goodsid].goodsid = atoi(row[offset++]);
 		g_paygoods[goodsid].tier = atoi(row[offset++]);
+		g_paygoods[goodsid].tier_hy = atoi(row[offset++]);
 		g_paygoods[goodsid].point = atoi(row[offset++]);
+		g_paygoods[goodsid].point_hy = atoi(row[offset++]);
 		g_paygoods[goodsid].token = atoi(row[offset++]);
+		g_paygoods[goodsid].token_hy = atoi(row[offset++]);
 		g_paygoods[goodsid].awardgroup = atoi(row[offset++]);
 		g_paygoods[goodsid].type = atoi(row[offset++]);
 		g_paygoods[goodsid].nameid = atoi(row[offset++]);

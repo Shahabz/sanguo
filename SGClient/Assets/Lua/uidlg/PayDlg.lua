@@ -168,7 +168,11 @@ function PayDlgCreateGoods( info )
 		SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
 		SetText( uiObj.transform:Find("Price"), PayDlgGetMoneySymbol().."0.01" )
 	else
-		SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
+		if info.m_nameid > 0 then
+			SetText( uiObj.transform:Find("Name"), T(info.m_nameid) )
+		else
+			SetText( uiObj.transform:Find("Name"), F(2119,info.m_token) )
+		end
 	end
 end
 

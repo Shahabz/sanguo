@@ -62,7 +62,7 @@ public static class XCodePostProcess
             EditorPlistYaya(path);
             EditorCodeYaya(path);
         }
-        else if (projectName == "lsqxz")
+        else if (projectName == "lsqxz" || projectName == "zlsg")
         { // 繁体海外
             EditorPlistLsqxz(path);
             EditorCodeLsqxz(path);

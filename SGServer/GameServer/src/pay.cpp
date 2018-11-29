@@ -315,7 +315,8 @@ int paystore_list( int actor_index )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
-	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	int platid = client_getplatid( actor_index );
+	int coinindex = paycoin_getindex_withplat( platid );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
 	int paymode = world_data_getcache( WORLD_DATA_PAYMODE );
@@ -328,12 +329,25 @@ int paystore_list( int actor_index )
 		if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
 			continue;
 		int tier = g_paygoods[goodsid].tier;
+		if ( platid == 31 || platid == 32 )
+		{
+			tier = g_paygoods[goodsid].tier_hy;
+		}
 		if ( tier <= 0 || tier >= g_PayPriceCount )
 			continue;
 		store.m_list[store.m_count].m_goodsid = goodsid;
 		store.m_list[store.m_count].m_price = (unsigned int)(g_PayPrice[tier].price[coinindex]);
-		store.m_list[store.m_count].m_token = g_paygoods[goodsid].token;
-		store.m_list[store.m_count].m_gift_token = g_paystore[id].gift_token;
+
+		if ( platid == 31 || platid == 32 )
+		{
+			store.m_list[store.m_count].m_token = g_paygoods[goodsid].token_hy;
+			store.m_list[store.m_count].m_gift_token = g_paystore[id].gift_token_hy;
+		}
+		else
+		{
+			store.m_list[store.m_count].m_token = g_paygoods[goodsid].token;
+			store.m_list[store.m_count].m_gift_token = g_paystore[id].gift_token;
+		}
 		//// 永久限购
 		//if ( g_paystore[id].limitbuy_count > 0 )
 		//{
@@ -384,13 +398,17 @@ int pay_goodsinfo( int actor_index, int type, int goodsid )
 		return -1;
 	if ( goodsid <= 0 || goodsid >= g_paygoods_maxnum )
 		return -1;
-
-	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
+	int platid = client_getplatid( actor_index );
+	int coinindex = paycoin_getindex_withplat( platid );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
 
 	SLK_NetS_GoodsInfo pValue = { 0 };
 	int tier = g_paygoods[goodsid].tier;
+	if ( platid == 31 || platid == 32 )
+	{
+		tier = g_paygoods[goodsid].tier_hy;
+	}
 	if ( tier <= 0 || tier >= g_PayPriceCount )
 		return -1;
 
@@ -556,8 +574,22 @@ int paystore_buy( int actor_index, int goodsid )
 
 	info.m_goodsid = goodsid;
 	info.m_nameid = g_paygoods[goodsid].nameid;
-	info.m_descid = g_paygoods[goodsid].descid;
-	info.m_price = (int)( g_PayPrice[g_paygoods[goodsid].tier].price[coinindex] );
+
+	int tier = 0;
+	if ( platid == 31 || platid == 32 )
+	{
+		info.m_descid = g_paygoods[goodsid].token_hy;
+		tier = g_paygoods[goodsid].tier_hy;
+	}
+	else
+	{
+		info.m_descid = g_paygoods[goodsid].token;
+		tier = g_paygoods[goodsid].tier;
+	}
+	if ( tier <= 0 || tier >= g_PayPriceCount )
+		return -1;
+
+	info.m_price = (int)(g_PayPrice[tier].price[coinindex]);
 	netsend_payorder_S( actor_index, SENDTYPE_ACTOR, &info );
 	return 0;
 }
@@ -920,16 +952,35 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	if ( !pCity )
 		return -1;
 
+	int platid = client_getplatid( actor_index );
 	if ( goodstype == PAY_GOODSTYPE_BASE )
 	{ // 基础商店的商品
-		token = g_paygoods[goodsid].token;
+		if ( platid == 31 || platid == 32 )
+		{
+			token = g_paygoods[goodsid].token_hy;
+		}
+		else
+		{
+			token = g_paygoods[goodsid].token;
+		}
 		int id = paystore_getid( goodsid );
 		if ( id > 0 )
 		{
 			// 赠送
-			if ( g_paystore[id].gift_token > 0 )
+			if ( platid == 31 || platid == 32 )
 			{
-				gifttoken = g_paystore[id].gift_token;
+
+				if ( g_paystore[id].gift_token_hy > 0 )
+				{
+					gifttoken = g_paystore[id].gift_token_hy;
+				}
+			}
+			else
+			{
+				if ( g_paystore[id].gift_token > 0 )
+				{
+					gifttoken = g_paystore[id].gift_token;
+				}
 			}
 
 			// 永久限购
@@ -975,17 +1026,16 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 			}
 		}
 	}
-	else if ( goodstype == PAY_GOODSTYPE_PUSH )
+	else if ( goodstype == PAY_GOODSTYPE_PUSH || goodstype == PAY_GOODSTYPE_DEFAULT || goodstype == PAY_GOODSTYPE_ACTIVITY )
 	{ // 精准推送的礼包
-		token = g_paygoods[goodsid].token;
-	}
-	else if ( goodstype == PAY_GOODSTYPE_DEFAULT )
-	{ // 轮播图礼包
-		token = g_paygoods[goodsid].token;
-	}
-	else if ( goodstype == PAY_GOODSTYPE_ACTIVITY )
-	{ // 活动的礼包
-		token = g_paygoods[goodsid].token;
+		if ( platid == 31 || platid == 32 )
+		{
+			token = g_paygoods[goodsid].token_hy;
+		}
+		else
+		{
+			token = g_paygoods[goodsid].token;
+		}
 	}
 
 	// 给钻石
@@ -1005,7 +1055,14 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	{ // 月卡累计时间，因为当时给了一次，所以每次都是29
 		if ( pCity )
 		{
-			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			if ( platid == 31 || platid == 32 )
+			{
+				actor_change_token( actor_index, g_paygoods[goodsid].token_hy, PATH_PAY, 0 );
+			}
+			else
+			{
+				actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			}
 			pCity->mcard += (PAY_INT_MONTH_DAY - 1);
 			// 发邮件
 			char v1[64] = { 0 };
@@ -1022,7 +1079,14 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	{// 周卡
 		if ( pCity )
 		{
-			actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			if ( platid == 31 || platid == 32 )
+			{
+				actor_change_token( actor_index, g_paygoods[goodsid].token_hy, PATH_PAY, 0 );
+			}
+			else
+			{
+				actor_change_token( actor_index, g_paygoods[goodsid].token, PATH_PAY, 0 );
+			}
 			pCity->wcard += (PAY_INT_WEEK_DAY - 1);
 			// 发邮件
 			char v1[64] = { 0 };
@@ -1091,13 +1155,16 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 
 	}
 
-	int platid = client_getplatid( actor_index );
 	if ( platid == 27 || platid == 28 || platid == 38 || platid == 31 || platid == 32 )
 	{// 总充值（美分）
 		int coinindex = paycoin_getindex_withplat( platid );
 		if ( coinindex >= 0 && coinindex < PAYCOINMAX )
 		{
 			int tier = g_paygoods[goodsid].tier;
+			if ( platid == 31 || platid == 32 )
+			{
+				tier = g_paygoods[goodsid].tier_hy;
+			}
 			if ( tier > 0 && tier < g_PayPriceCount )
 			{
 				g_actors[actor_index].charge_dollar += g_PayPrice[tier].price[coinindex];
@@ -1122,7 +1189,14 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	}
 
 	// 充值排行
-	activity_33_addvalue( actor_index, g_paygoods[goodsid].point );
+	if ( platid == 31 || platid == 32 )
+	{
+		activity_33_addvalue( actor_index, g_paygoods[goodsid].point_hy );
+	}
+	else
+	{
+		activity_33_addvalue( actor_index, g_paygoods[goodsid].point );
+	}
 	//// 发送购买成功通知邮件
 	//char szItemGet[512] = { 0 };
 	//char szTempGet[64] = { 0 };
@@ -1150,9 +1224,19 @@ int actor_pay( int actorid, int goodsid, char *pOrderID, char *money, char *curr
 	}
 
 	// 单笔付费
-	if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )
+	if ( platid == 31 || platid == 32 )
 	{
-		g_actors[actor_index].pay_maxtier = g_paygoods[goodsid].tier;
+		if ( g_paygoods[goodsid].tier_hy > g_actors[actor_index].pay_maxtier )
+		{
+			g_actors[actor_index].pay_maxtier = g_paygoods[goodsid].tier_hy;
+		}
+	}
+	else
+	{
+		if ( g_paygoods[goodsid].tier > g_actors[actor_index].pay_maxtier )
+		{
+			g_actors[actor_index].pay_maxtier = g_paygoods[goodsid].tier;
+		}
 	}
 
 	return 0;
@@ -1487,6 +1571,7 @@ int activity_paybag_list( int actor_index, int path )
 	City *pCity = city_getptr( actor_index );
 	if ( !pCity )
 		return -1;
+	int platid = client_getplatid( actor_index );
 	int coinindex = paycoin_getindex_withplat( client_getplatid( actor_index ) );
 	if ( coinindex < 0 || coinindex > PAYCOINMAX )
 		coinindex = 0;
@@ -1513,6 +1598,10 @@ int activity_paybag_list( int actor_index, int path )
 		}
 
 		int tier = g_paygoods[goodsid].tier;
+		if ( platid == 31 || platid == 32 )
+		{
+			tier = g_paygoods[goodsid].tier_hy;
+		}
 		if ( tier <= 0 || tier >= g_PayPriceCount )
 			continue;
 		int worthtier = g_paygoods[goodsid].worth;
