@@ -308,10 +308,15 @@ public static class XCodePostProcess
     {
         // UnityAppController.mm
         XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
-        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <FBSDKCoreKit/FBSDKCoreKit.h>");
+        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <FBSDKCoreKit/FBSDKCoreKit.h>\n#import <AppsFlyerLib/AppsFlyerTracker.h>");
         UnityAppController.WriteBelow("_didResignActive = false;", "[FBSDKAppEvents activateApp];");
-        UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", "[[FBSDKApplicationDelegate sharedInstance] application:application\n                           didFinishLaunchingWithOptions:launchOptions];");
+        UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", @"[AppsFlyerTracker sharedTracker].appsFlyerDevKey = @""dz2eqVEhio3jEBLnTwkUw4"";
+    [AppsFlyerTracker sharedTracker].appleAppID = @""1441275954"";
+    //[AppsFlyerTracker sharedTracker].delegate = self;
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];");
         UnityAppController.Replace("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return YES;", "AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n    return [[FBSDKApplicationDelegate sharedInstance] application:application\n                                                         openURL:url\n                                               sourceApplication:sourceApplication\n                                                      annotation:annotation];;");
+        UnityAppController.WriteBelow("::printf(\"-> applicationDidBecomeActive()\\n\");", "[[AppsFlyerTracker sharedTracker] trackAppLaunch];");
     }
 
     // 丰趣quicksdk

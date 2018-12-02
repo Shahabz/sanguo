@@ -292,7 +292,7 @@ int hero_gethero( int actor_index, int kind, short path )
 		SLK_NetS_HeroGet pValue = { 0 };
 		pValue.m_kind = kind;
 		pValue.m_path = path;
-		if ( path == PATH_HEROVISIT )
+		//if ( path == PATH_HEROVISIT )
 		{
 			if ( config )
 			{
