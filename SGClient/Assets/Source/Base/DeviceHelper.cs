@@ -49,9 +49,19 @@ public static class DeviceHelper
         if ( Application.isEditor )
             return "cn";
         string Country = string.Empty;
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName+".LocaleHelper" ) )
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
         {
-            Country = jc.CallStatic<string>( "getCurrentCountry" );
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.LocaleHelper"))
+            {
+                Country = jc.CallStatic<string>("getCurrentCountry");
+            }
+        }
+        else
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass(DeviceHelper.AndroidPackageName + ".LocaleHelper"))
+            {
+                Country = jc.CallStatic<string>("getCurrentCountry");
+            }
         }
         return Country.ToLower();
     }
@@ -61,10 +71,19 @@ public static class DeviceHelper
         if ( Application.isEditor )
             return "zh";
         string Language = string.Empty;
-		string classname = DeviceHelper.AndroidPackageName + ".LocaleHelper";
-		using ( AndroidJavaClass jc = new AndroidJavaClass( classname ) )
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
         {
-            Language = jc.CallStatic<string>( "getCurrentLanguage" );
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.LocaleHelper"))
+            {
+                Language = jc.CallStatic<string>("getCurrentLanguage");
+            }
+        }
+        else
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass(DeviceHelper.AndroidPackageName + ".LocaleHelper"))
+            {
+                Language = jc.CallStatic<string>("getCurrentLanguage");
+            }
         }
         return Language.ToLower();
     }
@@ -77,9 +96,20 @@ public static class DeviceHelper
         if ( Application.isEditor )
             return "2|CC:3A:61:D0:B7:DE|357748052440339|1080*1920|GT-I9508|android 4.4.2|Wi-Fi|中国联通";
 		string rtn;
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName+".SdkFun" ) )
+
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
         {
-			rtn = jc.CallStatic<string>("getDeviceDesc");
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                rtn = jc.CallStatic<string>("getDeviceDesc");
+            }
+        }
+        else
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass(DeviceHelper.AndroidPackageName + ".SdkFun"))
+            {
+                rtn = jc.CallStatic<string>("getDeviceDesc");
+            }
         }
 		return rtn;
     }

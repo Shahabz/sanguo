@@ -162,9 +162,9 @@ end
 
 function SDK.payGoodsName( recvValue )
 	if recvValue.m_nameid > 0 then
-		return T(info.m_nameid)
+		return T(recvValue.m_nameid)
 	else
-		return F(2119,info.m_descid)
+		return F(2119,recvValue.m_descid)
 	end
 end
 		

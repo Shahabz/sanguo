@@ -36,64 +36,94 @@ public class ChannelSDK : MonoBehaviour
 	private static extern void sdkSetExtendData( string jsonString );// 数据统计
 #endif
     // 初始化
-    public void init( string jsonString )
-	{
+    public void init(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using (AndroidJavaClass jc = new AndroidJavaClass (DeviceHelper.AndroidPackageName+".SdkFun"))
-		{
-			jc.CallStatic ("init", jsonString);
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("init", jsonString);
+            }
+        }
+        else
+        {
+    		using (AndroidJavaClass jc = new AndroidJavaClass (DeviceHelper.AndroidPackageName+".SdkFun"))
+    		{
+    			jc.CallStatic ("init", jsonString);
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkInit( jsonString );
 #else
 #endif
-	}
+    }
 
-	// 初始化回调
-	public void onInit( string jsonResult )
+    // 初始化回调
+    public void onInit( string jsonResult )
 	{
 		LuaFun.Call( "SDK.onInit", jsonResult );
 	}
 
-	// 登录
-	public void login( string jsonString )
-	{
+    // 登录
+    public void login(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-			jc.CallStatic( "login", jsonString );
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("login", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    			jc.CallStatic( "login", jsonString );
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkLogin( jsonString );
 #else
 #endif
-	}
+    }
 
-	// 登陆回调
-	void onLogin( string jsonResult )
+    // 登陆回调
+    void onLogin( string jsonResult )
 	{
 		LuaFun.Call( "SDK.onLogin", jsonResult );
 	}
 
-	// 登出
-	public void logout( string jsonString )
-	{
+    // 登出
+    public void logout(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-			jc.CallStatic( "logout", jsonString );
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("logout", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    			jc.CallStatic( "logout", jsonString );
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkLogout( jsonString );
 #else
 #endif
-	}
+    }
 
-	// 登出回调
-	void onLogout( string jsonResult )
+    // 登出回调
+    void onLogout( string jsonResult )
 	{
 		LuaFun.Call( "SDK.onLogout", jsonResult );
 	}
@@ -104,70 +134,110 @@ public class ChannelSDK : MonoBehaviour
 		LuaFun.Call( "SDK.onSwitchAccount", jsonResult );
 	}
 
-	// 充值
-	public void pay( string jsonString )
-	{
+    // 充值
+    public void pay(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-			jc.CallStatic( "pay", jsonString );
-		}
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("pay", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    			jc.CallStatic( "pay", jsonString );
+    		}
+        }
 #elif  UNITY_IPHONE  || UNITY_IOS
 		sdkPay( jsonString );
 #else
 #endif
     }
 
-	// 充值回调
-	void onPay( string jsonResult )
+    // 充值回调
+    void onPay( string jsonResult )
 	{
 		LuaFun.Call( "SDK.onPay", jsonResult );
 	}
 
-	// 用户中心
-	public void user_center( string jsonString )
-	{
+    // 用户中心
+    public void user_center(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-		jc.CallStatic( "user_center", jsonString );
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("user_center", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    		    jc.CallStatic( "user_center", jsonString );
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkUserCenter( jsonString );
 #else
 #endif
-	}
+    }
 
-	// 反馈
-	public void gmbug( string jsonString )
-	{
+    // 反馈
+    public void gmbug(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-			jc.CallStatic( "gmbug", jsonString );
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("gmbug", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    			jc.CallStatic( "gmbug", jsonString );
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkGmBug( jsonString );
 #else
 #endif
-	}
+    }
 
-	// 传送扩展数据
-	public void setExtendData( string jsonString )
-	{
+    // 传送扩展数据
+    public void setExtendData(string jsonString)
+    {
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
-		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
-		{
-			jc.CallStatic( "setExtendData", jsonString );
-		}
-#elif  UNITY_IPHONE || UNITY_IOS
+        if (DeviceHelper.AndroidPackageName.Contains("tlsgqk") || DeviceHelper.AndroidPackageName.Contains("fqplay"))
+        {
+            using (AndroidJavaClass jc = new AndroidJavaClass("com.eye.lib.SdkFun"))
+            {
+                jc.CallStatic ("setExtendData", jsonString);
+            }
+        }
+        else
+        {
+    		using ( AndroidJavaClass jc = new AndroidJavaClass( DeviceHelper.AndroidPackageName + ".SdkFun" ) )
+    		{
+    			jc.CallStatic( "setExtendData", jsonString );
+    		}
+        }
+#elif UNITY_IPHONE || UNITY_IOS
 		sdkSetExtendData( jsonString );
 #else
 #endif
-	}
+    }
 
 }
