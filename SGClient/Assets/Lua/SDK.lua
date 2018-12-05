@@ -89,7 +89,7 @@ function SDK.onLogin( jsonResult )
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
-			elseif Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 then
+			elseif Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 or Const.platid == 40 or Const.platid == 41 then
 				Const.sdk_channelId = info["ChannelId"];
 				Const.sdk_uid 		= info["ChannelUserId"];
 				Const.sdk_token 	= info["token"];
@@ -322,7 +322,7 @@ function SDK.pay( recvValue )
 		ChannelSDK.Instance:pay( jsonMsg );
 		
 	-- 国内独代丰趣quick	
-	elseif Const.platid == 34 or Const.platid == 35 then
+	elseif Const.platid == 34 or Const.platid == 35 or Const.platid == 40 or Const.platid == 41 then
 		local url = Global.GetValue("SERVERACCESS_URL");
 		info["product_ext"] = WWW.EscapeURL(recvValue.m_ext)
 		info["product_actorid"] = GetPlayer().m_actorid
@@ -386,7 +386,7 @@ function SDK.setExtendData( step )
 		ChannelSDK.Instance:setExtendData( jsonMsg );
 	
 	-- 易接等
-	elseif Const.platid == 22 or Const.platid == 32 or Const.platid == 33 or Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 then
+	elseif Const.platid == 22 or Const.platid == 32 or Const.platid == 33 or Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 or Const.platid == 40 or Const.platid == 41 then
 		local json = require "cjson"
 		local info = {}
 		info["step"] = step

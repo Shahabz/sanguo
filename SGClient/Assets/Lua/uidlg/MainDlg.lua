@@ -1183,7 +1183,7 @@ function MainDlgSetButtons( openoffset )
 	end
 	
 	-- 重新创角
-	if Const.platid <= 11 then
+	if Const.platid <= 12 then
 		local offset, root = MainDlgGetEmptyButton();
 		if root ~= nil then
 			SetParent( ButtonTable.m_uiButtonRestart, m_uiButtonBack[offset] );

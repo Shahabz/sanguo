@@ -128,7 +128,7 @@ function LoginModOnEvent( nType, nControlID, value )
 			elseif Const.platid == 31 or Const.platid == 32 then
 				GameManager.writeini( "OVERSEAS_LOGINTYPE", "" )
 				SDK.logout()
-			elseif Const.platid > 11 then
+			elseif Const.platid > 12 then
 				SDK.logout()
 			else
 				LoginModLoginLayer()
@@ -393,7 +393,7 @@ function LoginModOnStart()
 	elseif Const.platid == 31 or Const.platid == 32 then
 		SDK.init()
 		LoginModOpenOverseasLogin();
-	elseif Const.platid > 11 then
+	elseif Const.platid > 12 then
 		SDK.init()
 		LoginModOpenSDKLogin();
 	else
@@ -642,7 +642,7 @@ end
 
 -- 进入游戏
 function LoginModEnterGame()
-	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 11 or Const.platid == 24 or Const.platid == 25 or Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
+	if Const.platid == 18 or Const.platid == 19 or Const.platid == 20 or Const.platid <= 12 or Const.platid == 24 or Const.platid == 25 or Const.platid == 27 or Const.platid == 28 or Const.platid == 38 then
 		local loginType = GameManager.ini( "LASTLOGINTYPE", 0 );
 		if loginType == "2" then
 			LoginModQuickLogin();

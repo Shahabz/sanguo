@@ -78,7 +78,7 @@ end
 -- 获取服务器信息列表
 function HttpRequest.GetServerList( callback )
 	local uid = WWW.EscapeURL( Const.sdk_uid )
-	if Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 then
+	if Const.platid == 34 or Const.platid == 35 or Const.platid == 36 or Const.platid == 37 or Const.platid == 40 or Const.platid == 41 then
 		uid = string.gsub(uid, "%(", "%%28")
 		uid = string.gsub(uid, "%)", "%%29")
 	end
