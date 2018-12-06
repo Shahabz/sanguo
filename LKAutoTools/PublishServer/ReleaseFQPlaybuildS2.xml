@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="release" basedir=".">
+	
+		<!-- 开始编译打包任务 -->
+	<target name="release" depends ="s2">
+			
+					 
+	</target>
+
+	<!-- 上传到外网服务器2 -->
+	<target name="s2">
+			
+		<scp todir="root:GAME@root20181112*net@47.107.228.49:/usr/local/three_s2/" port="22" trust="true">
+		   <fileset file="./sgserver.tar.gz"/>
+		</scp>
+
+		<scp todir="root:GAME@root20181112*net@47.107.228.49:/usr/local/three_s2/" port="22" trust="true">
+		   <fileset file="./sgsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:GAME@root20181112*net@47.107.228.49:/usr/local/three_s2/sql" port="22" trust="true">
+		   <fileset file="./sg_game_patch.sql"/>
+		</scp>
+		 
+		<sshexec host="47.107.228.49"  port="22" username="root"  password="GAME@root20181112*net"
+         		trust="true" command="cd /usr/local/three_s2;./stop_shell;./sql_shell;./start_shell"/>
+         		
+	</target>
+	
+</project>
