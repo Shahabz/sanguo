@@ -75,7 +75,12 @@ public static class XCodePostProcess
         else if (projectName == "fqquick")
         {   // 丰趣Quick
             EditorPlistFQQuick(path);
-            EditorCodeFQQuick(path);
+            EditorCodeFQQuick(path,0);
+        }
+        else if (projectName == "fqquick_mhsg")
+        {   // 丰趣Quick
+            EditorPlistFQQuick(path);
+            EditorCodeFQQuick(path,1);
         }
         else if (projectName == "fqplay")
         {   // 丰趣SDK
@@ -333,11 +338,18 @@ public static class XCodePostProcess
         //保存
         list.Save();
     }
-    private static void EditorCodeFQQuick(string filePath)
+    private static void EditorCodeFQQuick(string filePath, int type )
     {
         // UnityAppController.mm
         XClass UnityAppController = new XClass(filePath + "/Classes/UnityAppController.mm");
-        UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <SMPCQuickSDK/SMPCQuickSDK.h>\n #define PRODUCT_CODE    @\"17146096886039250016747327504916\"\n#define PRODUCT_KEY     @\"73034002\"");
+        if (type == 0)
+        {
+            UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <SMPCQuickSDK/SMPCQuickSDK.h>\n #define PRODUCT_CODE    @\"17146096886039250016747327504916\"\n#define PRODUCT_KEY     @\"73034002\"");
+        }
+        else if(type == 1)
+        {
+            UnityAppController.WriteBelow("#include \"PluginBase/AppDelegateListener.h\"", "#import <SMPCQuickSDK/SMPCQuickSDK.h>\n #define PRODUCT_CODE    @\"43059057627852238591735604895770\"\n#define PRODUCT_KEY     @\"17517084\"");
+        }
         UnityAppController.WriteBelow("[KeyboardDelegate Initialize];", @"[[NSNotificationCenter defaultCenter] addObserver:self
                                              selector: @selector(smpcQpInitResult:)
                                                  name: kSmpcQuickSDKNotiInitDidFinished
