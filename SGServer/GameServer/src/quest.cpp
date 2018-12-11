@@ -25,6 +25,7 @@
 #include "map_enemy.h"
 #include "city_attr.h"
 #include "shop.h"
+#include "hero.h"
 #include "auto_data_upgrade.h"
 #include "auto_data_building_upgrade.h"
 #include "auto_data_official_forging.h"
@@ -1145,6 +1146,9 @@ int tiance_quest_tech_activate( int actor_index, short kind )
 
 	tiance_quest_sendinfo( actor_index );
 	city_attr_reset( pCity );
+
+	hero_attr_calc_all( pCity, 0 );
+	city_battlepower_hero_calc( pCity );
 	return 0;
 }
 
