@@ -660,6 +660,11 @@ int hero_down( int actor_index, int kind, char equip_down )
 	Hero *pHero = city_hero_getptr( pCity->index, HERO_BASEOFFSET + heroindex );
 	if ( !pHero )
 		return -1;
+	if ( pHero->state != HERO_STATE_NORMAL )
+	{
+		POP( actor_index, 845 );
+		return -1;
+	}
 
 	// 玩家英雄栏找到一个空位
 	int offset = -1;

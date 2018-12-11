@@ -1993,15 +1993,18 @@ int fight_unit2json()
 			}
 
 			// ¼ÆËãÍþÍû
-			if ( g_fight.type == FIGHTTYPE_CITY || g_fight.type == FIGHTTYPE_RES )
+			if ( g_fight.attack_type != MAPUNIT_TYPE_ACTIVITY )
 			{
-				pUnit->prestige = (int)ceil( 0.8*(float)pUnit->damage + 0.2*(float)(pUnit->maxhp - pUnit->hp) );
+				if ( g_fight.type == FIGHTTYPE_CITY || g_fight.type == FIGHTTYPE_RES )
+				{
+					pUnit->prestige = (int)ceil( 0.8*(float)pUnit->damage + 0.2*(float)(pUnit->maxhp - pUnit->hp) );
+				}
+				else if ( g_fight.type == FIGHTTYPE_NATION )
+				{
+					pUnit->prestige = pUnit->maxhp - pUnit->hp;
+				}
+				sprintf( vwstr, ",\"vw\":%d", pUnit->prestige );
 			}
-			else if ( g_fight.type == FIGHTTYPE_NATION )
-			{
-				pUnit->prestige = pUnit->maxhp - pUnit->hp;
-			}
-			sprintf( vwstr, ",\"vw\":%d", pUnit->prestige );
 
 			// ÉË±ø»Ö¸´
 			if ( pUnit->buff_forest == 1 )

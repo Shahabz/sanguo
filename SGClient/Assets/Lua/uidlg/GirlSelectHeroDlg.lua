@@ -30,6 +30,7 @@ function GirlSelectHeroDlgClose()
 	eye.uiManager:Close( "GirlSelectHeroDlg" );
 	m_selectHerokind = 0;
 	m_selectGirlKind = 0;
+	m_selectObj = nil;
 end
 
 -- 删除界面

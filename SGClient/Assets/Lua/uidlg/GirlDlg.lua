@@ -594,10 +594,10 @@ function GirlDlgCreateInfo( pGirl )
 end
 
 -- 拼属性
-local function MakeAttrText( uiAttrText, config )
+local function MakeAttrText( uiAttrText, config, herokind )
 	local msg = "";
 	if config  then
-		if config.private_herokind > 0 then
+		if config.private_herokind > 0 and herokind == config.private_herokind then
 			if config.attack_increase > 0 then
 				msg = msg.."<color=#FFDE00FF>"..T(165).."+"..(config.attack_increase+config.private_attack_increase).."</color>\n"
 			end
@@ -666,7 +666,7 @@ function GirlDlgDoubleLayerSetHero( uiHeroObj, config, herokind )
 	SetImage( uiNameBack, HeroNameColorSprite( pHero.m_color ) )
 	SetText( uiName, HeroName( herokind ) )
 	SetImage( uiShape, HeroFaceSprite( herokind ) )
-	MakeAttrText( uiAttrText, config )
+	MakeAttrText( uiAttrText, config, herokind )
 	
 end
 
@@ -694,7 +694,7 @@ function GirlDlgDoubleLayerSetGirl( uiGirlObj, kind, color )
 		SetText( uiAttrText, "" )
 	else
 		SetText( uiAttrName, T(3349) ) -- 下次突破加成属性
-		MakeAttrText( uiAttrText, girlconfig( kind, color+1 ) )
+		MakeAttrText( uiAttrText, girlconfig( kind, color+1 ), 0 )
 	end
 end
 
